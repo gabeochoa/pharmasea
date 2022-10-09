@@ -29,6 +29,8 @@ void world() {
 int main(void) {
     InitWindow(WIN_W, WIN_H, "pharmasea");
 
+    // SetTargetFPS(1);
+
     Cam cam;
     world();
 

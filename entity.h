@@ -1,10 +1,12 @@
 
 #pragma once
 
+#include "astar.h"
 #include "external_include.h"
 #include "globals.h"
 #include "random.h"
 #include "raylib.h"
+#include "vec_util.h"
 
 BoundingBox get_bounds(vec3 position) {
     const float half_tile = TILESIZE / 2.f;
@@ -40,6 +42,8 @@ struct Entity {
         DrawCube(position, TILESIZE, TILESIZE, TILESIZE, this->color);
         DrawBoundingBox(this->bounds(), MAROON);
     }
+
+    vec3 snap_position() { return vec::snap(this->position); }
 
     virtual void update(float) {}
 };
@@ -160,7 +164,6 @@ struct AIPerson : public Person {
         int range = 10;
         this->target =
             (vec2){1.f * randIn(-range, range), 1.f * randIn(-range, range)};
-        this->local_target = this->target;
         std::cout << this->target.value().x << "," << this->target.value().y
                   << std::endl;
     }
@@ -170,16 +173,26 @@ struct AIPerson : public Person {
         if (!target.has_value()) {
             return;
         }
-        return;
+        this->path =
+            astar::find_path({this->snap_position().x, this->snap_position().z},
+                             this->target.value(), [](const vec2& p) {
+                                 if (abs(p.x) > 10.f) return false;
+                                 if (abs(p.y) > 10.f) return false;
+                                 return true;
+                             });
+        // std::cout << "path " << this->path.value().size() << std::endl;
     }
 
     void ensure_local_target() {
         // already have one
         if (this->local_target.has_value()) {
             return;
-        }  
+        }
         // no active path
         if (!this->path.has_value()) {
+            return;
+        }
+        if (this->path.value().empty()) {
             return;
         }
         this->local_target = this->path.value()[0];
@@ -220,6 +233,8 @@ struct AIPerson : public Person {
             std::cout << this->position.x << "," << this->position.z
                       << std::endl;
             this->target.reset();
+            this->path.reset();
+            this->local_target.reset();
         }
         // then handle the normal position stuff
         Person::update(dt);

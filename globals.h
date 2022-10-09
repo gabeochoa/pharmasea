@@ -10,7 +10,10 @@ constexpr int WIN_W = 1920 / 2;
 constexpr int MAP_H = 33;
 // constexpr int MAP_W = 12;
 // constexpr float WIN_RATIO = WIN_W * 1.f / WIN_H;
-constexpr int TILESIZE = 2.0f;
+
+// TODO currently astar only supports tiles that are on the grid
+// if you change this here, then go in there and add support as well
+constexpr int TILESIZE = 1.0f;
 
 struct GlobalValueRegister {
     std::map<std::string, void*> globals;
