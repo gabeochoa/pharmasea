@@ -6,7 +6,7 @@ libraries used:
 
 
 Core engine TODOs:
-1. Allow an Entity to pick up / drop an Item
+1. ~~Allow an Entity to pick up / drop an Item~~
 2. ~~Fix A* algorithm~~
 3. ~~Allow for an Item to be walkable or not (influences Entity movement)~~
 4. Create Doors
@@ -15,6 +15,8 @@ Core engine TODOs:
 7. Disallow target cube from going outside of bounds
 8. Add some way for entities to subscribe to certain keys 
     so we can more easily keep track of what keys are being requested over lifetime
+9. Paint front-facing indicator (another cube, different color face, some shape)
+10. When Entities change direction, change the front-facing indicator to face the direction they're moving
 
 Gameplay Ideas
 - Pharmacy
@@ -30,3 +32,4 @@ Gameplay Ideas
     - Cleaning tools after use, otherwise risk contamination
     - Clients will have to have distinct names
     - Difficulty modifiers at end of day (Like Plateup's)?
+    -
