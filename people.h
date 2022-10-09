@@ -148,7 +148,9 @@ struct AIPerson : public Person {
             vec::to2(GLOBALS.get<TargetCube>("targetcube").snap_position());
         snap_near_cube.x += TILESIZE;
         snap_near_cube.y += TILESIZE;
-        this->target = snap_near_cube;
+        if (EntityHelper::isWalkable(snap_near_cube)) {
+            this->target = snap_near_cube;
+        }
     }
 
     void ensure_target() {

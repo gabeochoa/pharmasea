@@ -12,6 +12,7 @@ Core engine TODOs:
 4. Create Doors
 5. Create Nav mesh for "walkability"
 6. ~~ Add new target entity that moves via arrows keys / alternative keys ~~
+7. Disallow target cube from going outside of bounds
 
 Gameplay Ideas
 - Pharmacy
