@@ -1,9 +1,8 @@
 #pragma once
 
-#include "entity.h"
 #include "external_include.h"
 #include "globals.h"
-#include "raylib.h"
+#include "people.h"
 
 struct Cam {
     Camera3D camera;

@@ -7,6 +7,7 @@
 
 #include "camera.h"
 #include "entity.h"
+#include "people.h"
 
 void debug_ui() {
     DrawFPS(0, 0);
