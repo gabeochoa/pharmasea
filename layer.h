@@ -2,8 +2,7 @@
 #pragma once
 
 #include "external_include.h"
-
-struct Event;
+#include "event.h"
 
 static std::atomic_int s_layer_id;
 struct Layer {
@@ -19,7 +18,7 @@ struct Layer {
     virtual void onAttach() {}
     virtual void onDetach() {}
     virtual void onUpdate(float elapsed) = 0;
-    virtual bool onEvent(int key) = 0;
+    virtual void onEvent(Event&) = 0;
 
     const std::string& getname() const { return name; }
 };

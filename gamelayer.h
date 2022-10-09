@@ -2,10 +2,10 @@
 
 #include "camera.h"
 #include "external_include.h"
-#include "layer.h"
-#include "world.h"
-#include "menu.h"
 #include "input.h"
+#include "layer.h"
+#include "menu.h"
+#include "world.h"
 
 struct GameLayer : public Layer {
     World world;
@@ -16,8 +16,14 @@ struct GameLayer : public Layer {
     virtual void onAttach() override {}
     virtual void onDetach() override {}
 
-    virtual bool onEvent(int key) override {
-        if (key == KEY_ESCAPE) {
+    virtual void onEvent(Event& event) override {
+        EventDispatcher dispatcher(event);
+        dispatcher.dispatch<KeyPressedEvent>(
+            std::bind(&GameLayer::onKeyPressed, this, std::placeholders::_1));
+    }
+
+    bool onKeyPressed(KeyPressedEvent& event) {
+        if (event.keycode == KEY_ESCAPE) {
             Menu::get().state = Menu::State::Root;
             return true;
         }
@@ -29,7 +35,7 @@ struct GameLayer : public Layer {
         // Dont quit window on escape
         SetExitKey(KEY_NULL);
 
-        /// 
+        ///
 
         // TODO replace passing Player with passing Player*
         // update

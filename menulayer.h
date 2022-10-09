@@ -2,10 +2,10 @@
 
 #include "camera.h"
 #include "external_include.h"
+#include "input.h"
 #include "layer.h"
 #include "menu.h"
 #include "raylib.h"
-#include "input.h"
 
 struct MenuLayer : public Layer {
     MenuCam cam;
@@ -15,8 +15,14 @@ struct MenuLayer : public Layer {
     virtual void onAttach() override {}
     virtual void onDetach() override {}
 
-    virtual bool onEvent(int key) override {
-        if (key == KEY_ENTER) {
+    virtual void onEvent(Event& event) override {
+        EventDispatcher dispatcher(event);
+        dispatcher.dispatch<KeyPressedEvent>(
+            std::bind(&MenuLayer::onKeyPressed, this, std::placeholders::_1));
+    }
+
+    bool onKeyPressed(KeyPressedEvent& event) {
+        if (event.keycode == KEY_ENTER) {
             Menu::get().state = Menu::State::Game;
             return true;
         }

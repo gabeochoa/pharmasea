@@ -2,6 +2,7 @@
 #pragma once
 
 #include "external_include.h"
+#include "event.h"
 
 struct Input;
 static std::shared_ptr<Input> input;
@@ -12,8 +13,9 @@ struct Input {
         pressedSinceLast.clear();
         while (true) {
             int key = GetKeyPressed();
-            if (key != 0)
-                std::cout << "keypressed: " << key << std::endl;
+            if (key != 0){
+                // std::cout << "keypressed: " << key << std::endl;
+            }
             else {
                 break;
             }
@@ -28,3 +30,4 @@ struct Input {
     }
 
 };
+
