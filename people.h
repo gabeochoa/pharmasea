@@ -35,6 +35,9 @@ struct Person : public Entity {
             if(!entity->is_collidable()){
                 return EntityHelper::ForEachFlow::Continue;
             }
+            if(!this->is_collidable()){
+                return EntityHelper::ForEachFlow::Continue;
+            }
             if (CheckCollisionBoxes(new_bounds_x, entity->bounds())) {
                 would_collide_x = true;
             }
@@ -80,9 +83,29 @@ struct Player : public Person {
     }
 };
 
-struct Cube : public Entity {
-    Cube(vec3 p, Color c) : Entity(p, c) {}
-    Cube(vec2 p, Color c) : Entity(p, c) {}
+struct TargetCube : public Person {
+    TargetCube(vec3 p, Color c) : Person(p, c) {}
+    TargetCube(vec2 p, Color c) : Person(p, c) {}
+
+    virtual vec3 update_xaxis_position(float dt) override {
+        float speed = 10.0f * dt;
+        auto new_pos_x = this->raw_position;
+        if (IsKeyDown(KEY_RIGHT)) new_pos_x.x += speed;
+        if (IsKeyDown(KEY_LEFT)) new_pos_x.x -= speed;
+        return new_pos_x;
+    }
+
+    virtual vec3 update_zaxis_position(float dt) override {
+        float speed = 10.0f * dt;
+        auto new_pos_z = this->raw_position;
+        if (IsKeyDown(KEY_UP)) new_pos_z.z -= speed;
+        if (IsKeyDown(KEY_DOWN)) new_pos_z.z += speed;
+        return new_pos_z;
+    }
+
+    virtual bool is_collidable() override {
+        return false;
+    }
 };
 
 struct AIPerson : public Person {
@@ -105,11 +128,7 @@ struct AIPerson : public Person {
         }
     }
 
-    void ensure_target() {
-        if (target.has_value()) {
-            return;
-        }
-        /*
+    void random_target(){
         // TODO add cooldown so that not all time is spent here
         int max_tries = 10;
         int range = 10;
@@ -124,14 +143,21 @@ struct AIPerson : public Person {
                 break;
             }
         }
-        */
-        auto snap_near_player = vec::to2(GLOBALS.get<Player>("player").snap_position());
-        snap_near_player.x += TILESIZE;
-        snap_near_player.y += TILESIZE;
-        this->target = snap_near_player;
-        
-        
-        // std::cout << this->target.value() << ", " << walkable << std::endl;
+    }
+
+    void target_cube_target(){
+        auto snap_near_cube = vec::to2(GLOBALS.get<TargetCube>("targetcube").snap_position());
+        snap_near_cube.x += TILESIZE;
+        snap_near_cube.y += TILESIZE;
+        this->target = snap_near_cube;
+    }
+
+    void ensure_target() {
+        if (target.has_value()) {
+            return;
+        }
+        // this->random_target();
+        this->target_cube_target();
     }
 
     void ensure_path() {
@@ -191,12 +217,17 @@ struct AIPerson : public Person {
         return new_pos_z;
     }
 
+    int path_length(){
+        if(!this->path.has_value()) return 0;
+        return (int)this->path.value().size();
+    }
+
     virtual void update(float dt) override {
         this->ensure_target();
         this->ensure_path();
         this->ensure_local_target();
 
-        if (IsKeyReleased(KEY_P)) {
+        if (IsKeyReleased(KEY_P) || this->path_length() == 0) {
             std::cout << this->raw_position << ";; " << this->position
                       << std::endl;
             this->target.reset();

@@ -23,7 +23,7 @@ const std::string EXAMPLE_MAP = R"(
     #########.###############.###############.###########################
     #...................................................................#
     #...................................................................#
-    #...........................................A.......................#
+    #.......T...................................A.......................#
     #...................................................................#
     #...................................................................#
     #...................................................................#
@@ -55,7 +55,6 @@ struct World {
 
         vec2 origin = find_origin(lines);
 
-        bool placed_player = false;
         for (int i = 0; i < (int)lines.size(); i++) {
             auto line = lines[i];
             for (int j = 0; j < (int)line.size(); j++) {
@@ -71,7 +70,7 @@ struct World {
                         break;
                     }
                     case '@': {
-                        if (placed_player) {
+                        if (GLOBALS.contains("player")) {
                             std::cout << "WorldGen: "
                                       << "cant have two players (yet) "
                                       << std::endl;
@@ -81,15 +80,27 @@ struct World {
                         player.reset(new Player(location));
                         GLOBALS.set("player", player.get());
                         EntityHelper::addEntity(player);
-                        placed_player = true;
                         break;
                     }
                     case 'A': {
                         std::shared_ptr<AIPerson> aiperson;
                         aiperson.reset(
                             new AIPerson(location, (Color){255, 0, 0, 255}));
-
                         EntityHelper::addEntity(aiperson);
+                        break;
+                    }
+                    case 'T': {
+                        if (GLOBALS.contains("targetcube")) {
+                            std::cout << "WorldGen: "
+                                      << "cant have two targetcubes (yet) "
+                                      << std::endl;
+                            break;
+                        }
+                        std::shared_ptr<TargetCube> targetcube;
+                        targetcube.reset(
+                            new TargetCube(location, (Color){255, 16, 240, 255}));
+                        EntityHelper::addEntity(targetcube);
+                        GLOBALS.set("targetcube", targetcube.get());
                         break;
                     }
                     case '.':

@@ -8,10 +8,10 @@ libraries used:
 Core engine TODOs:
 1. Allow an Entity to pick up / drop an Item
 2. ~~Fix A* algorithm~~
-3. Allow for an Item to be walkable or not (influences Entity movement)
+3. ~~Allow for an Item to be walkable or not (influences Entity movement)~~
 4. Create Doors
 5. Create Nav mesh for "walkability"
-6. Add new target entity that moves via arrows keys / alternative keys
+6. ~~ Add new target entity that moves via arrows keys / alternative keys ~~
 
 Gameplay Ideas
 - Pharmacy
