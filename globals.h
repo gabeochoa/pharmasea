@@ -13,7 +13,7 @@ constexpr int MAP_H = 33;
 
 // TODO currently astar only supports tiles that are on the grid
 // if you change this here, then go in there and add support as well
-constexpr int TILESIZE = 1.0f;
+constexpr float TILESIZE = 1.0f;
 
 struct GlobalValueRegister {
     std::map<std::string, void*> globals;

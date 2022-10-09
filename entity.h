@@ -30,6 +30,8 @@ struct Entity {
     bool cleanup = false;
 
     Entity(vec3 p, Color c) : id(ENTITY_ID_GEN++), position(p), color(c) {}
+   Entity(vec2 p, Color c)
+        : id(ENTITY_ID_GEN++), position({p.x, 0, p.y}), color(c) {}
     virtual ~Entity() {}
 
     virtual BoundingBox bounds() const { return get_bounds(this->position); }
@@ -84,4 +86,3 @@ struct EntityHelper {
     }
 #pragma clang diagnostic pop
 };
-

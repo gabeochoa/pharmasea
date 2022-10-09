@@ -23,6 +23,13 @@ std::ostream& operator<<(std::ostream& os, const vec2& v) {
     return os;
 }
 
+vec2 operator-(vec2 lhs, const vec2& rhs) {
+    lhs.x -= rhs.x;
+    lhs.y -= rhs.y;
+    return lhs;
+}
+
+
 namespace vec {
 
 float distance(vec2 a, vec2 b) {

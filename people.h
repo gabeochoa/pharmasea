@@ -1,12 +1,12 @@
 
-#pragma once 
+#pragma once
 
+#include "entity.h"
 #include "external_include.h"
-#include "entity.h" 
 
 struct Person : public Entity {
-
     Person(vec3 p, Color c) : Entity(p, c) {}
+    Person(vec2 p, Color c) : Entity(p, c) {}
 
     virtual vec3 update_xaxis_position(float dt) = 0;
     virtual vec3 update_zaxis_position(float dt) = 0;
@@ -46,7 +46,9 @@ struct Person : public Entity {
 };
 
 struct Player : public Person {
-    Player() : Person({}, {0, 255, 0, 255}) {}
+    Player() : Person({0,0,0}, {0, 255, 0, 255}) {}
+    Player(vec2 location)
+       : Person({location.x, 0, location.y}, {0, 255, 0, 255}) {}
 
     virtual vec3 update_xaxis_position(float dt) override {
         float speed = 10.0f * dt;
@@ -67,6 +69,7 @@ struct Player : public Person {
 
 struct Cube : public Entity {
     Cube(vec3 p, Color c) : Entity(p, c) {}
+    Cube(vec2 p, Color c) : Entity(p, c) {}
 };
 
 struct AIPerson : public Person {
@@ -76,6 +79,7 @@ struct AIPerson : public Person {
     float base_speed = 10.f;
 
     AIPerson(vec3 p, Color c) : Person(p, c) {}
+    AIPerson(vec2 p, Color c) : Person(p, c) {}
 
     void ensure_target() {
         if (target.has_value()) {
