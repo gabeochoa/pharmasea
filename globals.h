@@ -4,6 +4,14 @@
 #include <map>
 #include <string>
 
+constexpr int WIN_H = 1080 / 2;
+constexpr int WIN_W = 1920 / 2;
+
+constexpr int MAP_H = 33;
+// constexpr int MAP_W = 12;
+// constexpr float WIN_RATIO = WIN_W * 1.f / WIN_H;
+constexpr int TILESIZE = 2.0f;
+
 struct GlobalValueRegister {
     std::map<std::string, void*> globals;
 

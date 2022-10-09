@@ -2,6 +2,8 @@
 #pragma once
 
 #include "external_include.h"
+#include "globals.h"
+#include "raylib.h"
 
 
 struct Entity {
@@ -12,9 +14,29 @@ struct Entity {
     Entity(vec3 p, Color c) : position(p), color(c) {}
     virtual ~Entity(){}
 
-    virtual void render() {
-        DrawCube(position, 2.0f, 2.0f, 2.0f, this->color);
-        DrawCubeWires(position, 2.0f, 2.0f, 2.0f, MAROON);
+    virtual BoundingBox bounds() const {
+        const float half_tile = TILESIZE / 2.f;
+        return {
+            (vec3){
+                position.x - half_tile, 
+                position.y - half_tile, 
+                position.z - half_tile, 
+            },
+            (vec3){
+                position.x + half_tile, 
+                position.y + half_tile, 
+                position.z + half_tile, 
+            }
+        };
+    }
+
+    virtual bool collides(BoundingBox b) const {
+        return CheckCollisionBoxes(this->bounds(), b);
+    }
+
+    virtual void render() const {
+        DrawCube(position, TILESIZE, TILESIZE, TILESIZE, this->color);
+        DrawBoundingBox(this->bounds(), MAROON);
     }
 
     virtual void update(float dt) {}
