@@ -5,6 +5,7 @@
 #include "entity.h" 
 
 struct Person : public Entity {
+
     Person(vec3 p, Color c) : Entity(p, c) {}
 
     virtual vec3 update_xaxis_position(float dt) = 0;

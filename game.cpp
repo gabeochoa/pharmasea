@@ -8,6 +8,7 @@
 #include "camera.h"
 #include "entity.h"
 #include "people.h"
+#include "furniture.h"
 
 void debug_ui() {
     DrawFPS(0, 0);
@@ -25,8 +26,14 @@ void world() {
 
     GLOBALS.set("player", player.get());
 
+    std::shared_ptr<Wall> wall;
+    wall.reset(new Wall((vec3){-TILESIZE * 2, 0.0f, -TILESIZE * 2},
+                                (Color){155, 75, 0, 255}));
+
+
     EntityHelper::addEntity(aiperson);
     EntityHelper::addEntity(player);
+    EntityHelper::addEntity(wall);
 }
 
 int main(void) {
