@@ -80,19 +80,15 @@ struct EntityHelper {
 #pragma clang diagnostic pop
 };
 
-struct Player : public Entity {
-    Player() : Entity({0}, {0, 255, 0, 255}) {}
+struct Person : public Entity {
+    Person(vec3 p, Color c) : Entity(p, c) {}
 
-    virtual void update(float dt) {
-        float speed = 10.0f * dt;
+    virtual vec3 update_xaxis_position(float dt) = 0;
+    virtual vec3 update_zaxis_position(float dt) = 0;
 
-        auto new_pos_x = this->position;
-        auto new_pos_z = this->position;
-
-        if (IsKeyDown(KEY_D)) new_pos_x.x += speed;
-        if (IsKeyDown(KEY_A)) new_pos_x.x -= speed;
-        if (IsKeyDown(KEY_W)) new_pos_z.z -= speed;
-        if (IsKeyDown(KEY_S)) new_pos_z.z += speed;
+    virtual void update(float dt) override {
+        auto new_pos_x = this->update_xaxis_position(dt);
+        auto new_pos_z = this->update_zaxis_position(dt);
 
         auto new_bounds_x = get_bounds(new_pos_x);  // horizontal check
         auto new_bounds_y = get_bounds(new_pos_z);  // vertical check
@@ -124,6 +120,38 @@ struct Player : public Entity {
     }
 };
 
+struct Player : public Person {
+    Player() : Person({}, {0, 255, 0, 255}) {}
+
+    virtual vec3 update_xaxis_position(float dt) override {
+        float speed = 10.0f * dt;
+        auto new_pos_x = this->position;
+        if (IsKeyDown(KEY_D)) new_pos_x.x += speed;
+        if (IsKeyDown(KEY_A)) new_pos_x.x -= speed;
+        return new_pos_x;
+    }
+
+    virtual vec3 update_zaxis_position(float dt) override {
+        float speed = 10.0f * dt;
+        auto new_pos_z = this->position;
+        if (IsKeyDown(KEY_W)) new_pos_z.z -= speed;
+        if (IsKeyDown(KEY_S)) new_pos_z.z += speed;
+        return new_pos_z;
+    }
+};
+
 struct Cube : public Entity {
     Cube(vec3 p, Color c) : Entity(p, c) {}
+};
+
+struct AIPerson : public Person {
+    AIPerson(vec3 p, Color c) : Person(p, c) {}
+
+    virtual vec3 update_xaxis_position(float dt) override {
+        return this->position;
+    }
+
+    virtual vec3 update_zaxis_position(float dt) override {
+        return this->position;
+    }
 };
