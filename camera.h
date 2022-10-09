@@ -3,6 +3,7 @@
 #include "entity.h"
 #include "external_include.h"
 #include "globals.h"
+#include "raylib.h"
 
 struct Cam {
     Camera3D camera;
@@ -82,7 +83,7 @@ struct Cam {
             -cosf(angle.x) * target_distance * cosf(angle.y) + camera.target.z;
 
         // Update angle is there is a mouse delta
-        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             auto mouseDelta = GetMouseDelta();
 
             angle.x += mouseDelta.x / 100.0;
