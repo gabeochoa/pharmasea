@@ -3,6 +3,7 @@
 
 #include "external_include.h"
 #include "globals.h"
+#include "random.h"
 #include "raylib.h"
 
 BoundingBox get_bounds(vec3 position) {
@@ -145,31 +146,81 @@ struct Cube : public Entity {
 };
 
 struct AIPerson : public Person {
-
-    vec2 target;
-    std::vector<vec2> path;
-    vec2 local_target;
+    std::optional<vec2> target;
+    std::optional<std::vector<vec2>> path;
+    std::optional<vec2> local_target;
+    float base_speed = 10.f;
 
     AIPerson(vec3 p, Color c) : Person(p, c) {}
 
+    void ensure_target() {
+        if (target.has_value()) {
+            return;
+        }
+        int range = 10;
+        this->target =
+            (vec2){1.f * randIn(-range, range), 1.f * randIn(-range, range)};
+        this->local_target = this->target;
+        std::cout << this->target.value().x << "," << this->target.value().y
+                  << std::endl;
+    }
+
+    void ensure_path() {
+        // no active target
+        if (!target.has_value()) {
+            return;
+        }
+        return;
+    }
+
+    void ensure_local_target() {
+        // already have one
+        if (this->local_target.has_value()) {
+            return;
+        }  
+        // no active path
+        if (!this->path.has_value()) {
+            return;
+        }
+        this->local_target = this->path.value()[0];
+    }
+
     virtual vec3 update_xaxis_position(float dt) override {
-        float speed = 10.0f * dt;
+        if (!this->local_target.has_value()) {
+            return this->position;
+        }
+        vec2 tar = this->local_target.value();
+        float speed = this->base_speed * dt;
+
         auto new_pos_x = this->position;
-        if (IsKeyDown(KEY_RIGHT)) new_pos_x.x += speed;
-        if (IsKeyDown(KEY_LEFT)) new_pos_x.x -= speed;
+        if (tar.x > this->position.x) new_pos_x.x += speed;
+        if (tar.x < this->position.x) new_pos_x.x -= speed;
         return new_pos_x;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
-        float speed = 10.0f * dt;
+        if (!this->local_target.has_value()) {
+            return this->position;
+        }
+        vec2 tar = this->local_target.value();
+        float speed = this->base_speed * dt;
+
         auto new_pos_z = this->position;
-        if (IsKeyDown(KEY_UP)) new_pos_z.z -= speed;
-        if (IsKeyDown(KEY_DOWN)) new_pos_z.z += speed;
+        if (tar.y > this->position.z) new_pos_z.z += speed;
+        if (tar.y < this->position.z) new_pos_z.z -= speed;
         return new_pos_z;
     }
 
     virtual void update(float dt) override {
+        this->ensure_target();
+        this->ensure_path();
+        this->ensure_local_target();
 
+        if (IsKeyReleased(KEY_P)) {
+            std::cout << this->position.x << "," << this->position.z
+                      << std::endl;
+            this->target.reset();
+        }
         // then handle the normal position stuff
         Person::update(dt);
     }
