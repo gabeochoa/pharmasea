@@ -4,7 +4,7 @@
 #include "globals.h"
 #include "people.h"
 
-struct Cam {
+struct GameCam {
     Camera3D camera;
     float target_distance = 0.0f;
     float free_distance_min_clamp = 10.0f;
@@ -47,7 +47,7 @@ struct Cam {
         updateTargetAngle(dx, dy, dz);
     }
 
-    Cam() {
+    GameCam() {
         auto player = GLOBALS.get<Player>("player");
 
         this->camera = {};
@@ -114,6 +114,28 @@ struct Cam {
         std::cout << "\tprojection:" << camera.projection << std::endl;
         std::cout << "\ttarget_distance:" << target_distance << std::endl
                   << std::endl;
+    }
+
+    Camera3D get() { return this->camera; }
+    Camera3D* get_ptr() { return &(this->camera); }
+};
+
+struct MenuCam {
+    Camera3D camera;
+
+    MenuCam() {
+
+        this->camera = {};
+        this->camera.position = (vec3){0.0f, 10.0f, 10.0f};
+        this->camera.target = (vec3){0.f};
+        this->camera.up = (vec3){0.0f, 1.0f, 0.0f};
+        this->camera.fovy = 45.0f;
+        this->camera.projection = CAMERA_PERSPECTIVE;
+
+        SetCameraMode(this->camera, CAMERA_FREE);
+    }
+
+    void updateCamera() {
     }
 
     Camera3D get() { return this->camera; }
