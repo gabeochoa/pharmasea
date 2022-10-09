@@ -15,13 +15,17 @@ struct MenuLayer : public Layer {
     virtual void onAttach() override {}
     virtual void onDetach() override {}
 
+    virtual bool onEvent(int key) override {
+        if (key == KEY_ENTER) {
+            Menu::get().state = Menu::State::Game;
+            return true;
+        }
+        return false;
+    }
+
     virtual void onUpdate(float) override {
         if (Menu::get().state != Menu::State::Root) return;
         SetExitKey(KEY_ESCAPE);
-        if (input.eat(KEY_ENTER)) {
-            Menu::get().state = Menu::State::Game;
-            return;
-        }
 
         // TODO with gamelayer, support events
         if (minimized) {

@@ -23,5 +23,16 @@ struct App {
         for (Layer* layer : layerstack) {
             layer->onUpdate(dt);
         }
+
+        for (auto event: input.pressedSinceLast) {
+            for (Layer* layer : layerstack) {
+                bool resp = layer->onEvent(event);
+                if(resp){
+                    // we ate the event
+                    // go to next event
+                    break; 
+                }
+            }
+        }
     }
 };

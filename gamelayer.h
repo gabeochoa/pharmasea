@@ -16,16 +16,21 @@ struct GameLayer : public Layer {
     virtual void onAttach() override {}
     virtual void onDetach() override {}
 
+    virtual bool onEvent(int key) override {
+        if (key == KEY_ESCAPE) {
+            Menu::get().state = Menu::State::Root;
+            return true;
+        }
+        return false;
+    }
+
     virtual void onUpdate(float dt) override {
         if (Menu::get().state != Menu::State::Game) return;
-
         // Dont quit window on escape
         SetExitKey(KEY_NULL);
 
-        if (input.eat(KEY_ESCAPE)) {
-            Menu::get().state = Menu::State::Root;
-            return;
-        }
+        /// 
+
         // TODO replace passing Player with passing Player*
         // update
         cam.updateToTarget(GLOBALS.get<Player>("player"));

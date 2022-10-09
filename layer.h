@@ -19,6 +19,7 @@ struct Layer {
     virtual void onAttach() {}
     virtual void onDetach() {}
     virtual void onUpdate(float elapsed) = 0;
+    virtual bool onEvent(int key) = 0;
 
     const std::string& getname() const { return name; }
 };

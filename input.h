@@ -4,20 +4,19 @@
 #include "external_include.h"
 
 struct Input {
-    std::map<int, bool> pressedSinceLast;
+    std::deque<int> pressedSinceLast;
 
     void onUpdate(float) {
-        int key = GetKeyPressed();
-        if (key != 0) std::cout << "keypressed: " << key << std::endl;
-        pressedSinceLast[key] = true;
-    }
-
-    bool pressed(int key) { return pressedSinceLast[key]; }
-
-    bool eat(int key) {
-        bool pressed = pressedSinceLast[key];
-        pressedSinceLast[key] = false;
-        return pressed;
+        pressedSinceLast.clear();
+        while (true) {
+            int key = GetKeyPressed();
+            if (key != 0)
+                std::cout << "keypressed: " << key << std::endl;
+            else {
+                break;
+            }
+            pressedSinceLast.push_back(key);
+        }
     }
 
     // TODO migrate to globals
