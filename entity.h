@@ -53,9 +53,10 @@ struct Entity {
     }
 
     virtual void render() const {
-        DrawCube(this->position, this->size().x, this->size().y, this->size().z, this->color);
-        // DrawCube(this->raw_position, this->size().x, this->size().y, this->size().z, BLUE);
-        // DrawBoundingBox(this->bounds(), MAROON);
+        DrawCube(this->position, this->size().x, this->size().y, this->size().z,
+                 this->color);
+        // DrawCube(this->raw_position, this->size().x, this->size().y,
+        // this->size().z, BLUE); DrawBoundingBox(this->bounds(), MAROON);
     }
 
     vec3 snap_position() const { return vec::snap(this->raw_position); }
@@ -97,5 +98,22 @@ struct EntityHelper {
             if (fef == 2) break;
         }
     }
+
+    // TODO replace with navmesh
+    // each target get and path find runs through all entities
+    // so this will just get slower and slower over time
+    static bool isWalkable(const vec2& pos) {
+        auto bounds = get_bounds({pos.x, 0.f, pos.y}, {TILESIZE});
+        bool hit_impassible_entity = false;
+        forEachEntity([&](auto entity) {
+            if (entity->collides(bounds)) {
+                hit_impassible_entity = true;
+                return ForEachFlow::Break;
+            }
+            return ForEachFlow::Continue;
+        });
+        return !hit_impassible_entity;
+    }
+
 #pragma clang diagnostic pop
 };

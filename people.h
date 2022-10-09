@@ -11,16 +11,20 @@ struct Person : public Entity {
     virtual vec3 update_xaxis_position(float dt) = 0;
     virtual vec3 update_zaxis_position(float dt) = 0;
 
-    virtual vec3 size() const override { return (vec3){TILESIZE * 0.8, TILESIZE * 0.8, TILESIZE * 0.8}; }
+    virtual vec3 size() const override {
+        return (vec3){TILESIZE * 0.8, TILESIZE * 0.8, TILESIZE * 0.8};
+    }
 
     virtual void update(float dt) override {
-            std::cout << this->raw_position << ";; " << this->position
-                      << std::endl;
+        // std::cout << this->raw_position << ";; " << this->position <<
+        // std::endl;
         auto new_pos_x = this->update_xaxis_position(dt);
         auto new_pos_z = this->update_zaxis_position(dt);
 
-        auto new_bounds_x = get_bounds(new_pos_x, this->size());  // horizontal check
-        auto new_bounds_y = get_bounds(new_pos_z, this->size());  // vertical check
+        auto new_bounds_x =
+            get_bounds(new_pos_x, this->size());  // horizontal check
+        auto new_bounds_y =
+            get_bounds(new_pos_z, this->size());  // vertical check
 
         bool would_collide_x = false;
         bool would_collide_y = false;
@@ -53,9 +57,9 @@ struct Person : public Entity {
 };
 
 struct Player : public Person {
-    Player() : Person({0,0,0}, {0, 255, 0, 255}) {}
+    Player() : Person({0, 0, 0}, {0, 255, 0, 255}) {}
     Player(vec2 location)
-       : Person({location.x, 0, location.y}, {0, 255, 0, 255}) {}
+        : Person({location.x, 0, location.y}, {0, 255, 0, 255}) {}
 
     virtual vec3 update_xaxis_position(float dt) override {
         float speed = 10.0f * dt;
@@ -92,11 +96,21 @@ struct AIPerson : public Person {
         if (target.has_value()) {
             return;
         }
+        // TODO add cooldown so that not all time is spent here 
+        int max_tries = 10;
         int range = 10;
-        this->target =
-            (vec2){1.f * randIn(-range, range), 1.f * randIn(-range, range)};
-        std::cout << this->target.value().x << "," << this->target.value().y
-                  << std::endl;
+        bool walkable = false;
+        int i = 0;
+        while (!walkable) {
+            this->target = (vec2){1.f * randIn(-range, range),
+                                  1.f * randIn(-range, range)};
+            walkable = EntityHelper::isWalkable(this->target.value());
+            i++;
+            if(i > max_tries){
+                break;
+            }
+        }
+        // std::cout << this->target.value() << ", " << walkable << std::endl;
     }
 
     void ensure_path() {
@@ -104,13 +118,9 @@ struct AIPerson : public Person {
         if (!target.has_value()) {
             return;
         }
-        this->path =
-            astar::find_path({this->position.x, this->position.z},
-                             this->target.value(), [](const vec2& p) {
-                                 if (abs(p.x) > 10.f) return false;
-                                 if (abs(p.y) > 10.f) return false;
-                                 return true;
-                             });
+        this->path = astar::find_path(
+            {this->position.x, this->position.z}, this->target.value(),
+            std::bind(EntityHelper::isWalkable, std::placeholders::_1));
         // std::cout << "path " << this->path.value().size() << std::endl;
     }
 
