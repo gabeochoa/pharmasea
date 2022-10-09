@@ -5,27 +5,31 @@
 #include "globals.h"
 #include "raylib.h"
 
+BoundingBox get_bounds(vec3 position) {
+    const float half_tile = TILESIZE / 2.f;
+    return {(vec3){
+                position.x - half_tile,
+                position.y - half_tile,
+                position.z - half_tile,
+            },
+            (vec3){
+                position.x + half_tile,
+                position.y + half_tile,
+                position.z + half_tile,
+            }};
+}
+
+static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
+    int id;
     vec3 position;
     Color color;
     bool cleanup = false;
 
-    Entity(vec3 p, Color c) : position(p), color(c) {}
+    Entity(vec3 p, Color c) : id(ENTITY_ID_GEN++), position(p), color(c) {}
     virtual ~Entity() {}
 
-    virtual BoundingBox bounds() const {
-        const float half_tile = TILESIZE / 2.f;
-        return {(vec3){
-                    position.x - half_tile,
-                    position.y - half_tile,
-                    position.z - half_tile,
-                },
-                (vec3){
-                    position.x + half_tile,
-                    position.y + half_tile,
-                    position.z + half_tile,
-                }};
-    }
+    virtual BoundingBox bounds() const { return get_bounds(this->position); }
 
     virtual bool collides(BoundingBox b) const {
         return CheckCollisionBoxes(this->bounds(), b);
@@ -38,23 +42,6 @@ struct Entity {
 
     virtual void update(float) {}
 };
-
-struct Player : public Entity {
-    Player() : Entity({0}, {0, 255, 0, 255}) {}
-
-    virtual void update(float dt) {
-        float speed = 10.0f * dt;
-        if (IsKeyDown(KEY_D)) this->position.x += speed;
-        if (IsKeyDown(KEY_A)) this->position.x -= speed;
-        if (IsKeyDown(KEY_W)) this->position.z -= speed;
-        if (IsKeyDown(KEY_S)) this->position.z += speed;
-    }
-};
-
-struct Cube : public Entity {
-    Cube(vec3 p, Color c) : Entity(p, c) {}
-};
-
 static std::vector<std::shared_ptr<Entity>> entities_DO_NOT_USE;
 
 struct EntityHelper {
@@ -92,3 +79,39 @@ struct EntityHelper {
     }
 #pragma clang diagnostic pop
 };
+
+
+struct Player : public Entity {
+    Player() : Entity({0}, {0, 255, 0, 255}) {}
+
+    virtual void update(float dt) {
+        float speed = 10.0f * dt;
+        vec3 new_pos = this->position;
+        if (IsKeyDown(KEY_D)) new_pos.x += speed;
+        if (IsKeyDown(KEY_A)) new_pos.x -= speed;
+        if (IsKeyDown(KEY_W)) new_pos.z -= speed;
+        if (IsKeyDown(KEY_S)) new_pos.z += speed;
+
+        auto new_bounds = get_bounds(new_pos);
+        bool would_collide = false;
+        EntityHelper::forEachEntity([&](auto entity) {
+            if (this->id == entity->id) {
+                return EntityHelper::ForEachFlow::Continue;
+            }
+            if(CheckCollisionBoxes(new_bounds, entity->bounds())){
+                would_collide = true;
+                return EntityHelper::ForEachFlow::Break;
+            }
+            return EntityHelper::ForEachFlow::None;
+        });
+
+        if(!would_collide){
+            this->position = new_pos;
+        }
+    }
+};
+
+struct Cube : public Entity {
+    Cube(vec3 p, Color c) : Entity(p, c) {}
+};
+
