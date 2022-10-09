@@ -15,16 +15,16 @@ void debug_ui() {
 }
 
 void world() {
-    std::shared_ptr<Cube> cube;
-    cube.reset(
-        new Cube((vec3){-TILESIZE, 0.0f, -TILESIZE}, (Color){255, 0, 0, 255}));
+    std::shared_ptr<AIPerson> aiperson;
+    aiperson.reset(new AIPerson((vec3){-TILESIZE, 0.0f, -TILESIZE},
+                                (Color){255, 0, 0, 255}));
 
     std::shared_ptr<Player> player;
     player.reset(new Player());
 
     GLOBALS.set("player", player.get());
 
-    EntityHelper::addEntity(cube);
+    EntityHelper::addEntity(aiperson);
     EntityHelper::addEntity(player);
 }
 

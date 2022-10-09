@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "external_include.h"
 #include "globals.h"
 
@@ -8,10 +7,8 @@
 #define EPSILON 0.000001f
 #endif
 
-bool operator<(const vec2& l, const vec2& r) {
-    if (l.x < r.x) return true;
-    if (l.y < r.y) return true;
-    return false;
+inline bool operator<(const vec2& l, const vec2& r) {
+    return (l.x < r.x) || ((l.x == r.x) && (l.y < r.y));
 }
 
 bool operator==(const vec2& p, const vec2& q) {
