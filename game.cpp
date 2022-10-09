@@ -22,6 +22,8 @@ void world() {
     std::shared_ptr<Player> player;
     player.reset(new Player());
 
+    GLOBALS.set("player", player.get());
+
     EntityHelper::addEntity(cube);
     EntityHelper::addEntity(player);
 }
@@ -29,14 +31,15 @@ void world() {
 int main(void) {
     InitWindow(WIN_W, WIN_H, "pharmasea");
 
-    Cam cam;
     world();
+    Cam cam;
 
     while (!WindowShouldClose()) {
         float dt = GetFrameTime();
 
         // update
-        UpdateCamera(cam.get_ptr());
+        cam.updateToTarget(GLOBALS.get<Player>("player"));
+        cam.updateCamera();
 
         EntityHelper::forEachEntity([&](auto entity) {
             entity->update(dt);
