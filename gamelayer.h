@@ -1,24 +1,25 @@
-#pragma once 
+#pragma once
 
+#include "camera.h"
 #include "external_include.h"
 #include "layer.h"
-
 #include "world.h"
-#include "camera.h"
+#include "menu.h"
 
 struct GameLayer : public Layer {
-    // TODO Move these into globals? 
     World world;
-    Cam cam;
+    GameCam cam;
 
-    GameLayer() : Layer("Game") {
-    }
+    GameLayer() : Layer("Game") { minimized = false; }
     virtual ~GameLayer() {}
     virtual void onAttach() override {}
     virtual void onDetach() override {}
 
     virtual void onUpdate(float dt) override {
-        if(minimized) {
+        if (Menu::get().state != Menu::State::Game) return;
+        SetExitKey(KEY_NULL);
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            Menu::get().state = Menu::State::Root;
             return;
         }
         // TODO replace passing Player with passing Player*
@@ -35,6 +36,7 @@ struct GameLayer : public Layer {
         BeginDrawing();
         {
             ClearBackground(RAYWHITE);
+            DrawText(Menu::get().tostring(), 19, 20, 20, LIGHTGRAY);
             BeginMode3D(cam.get());
             {
                 EntityHelper::forEachEntity([&](auto entity) {
@@ -46,8 +48,5 @@ struct GameLayer : public Layer {
             EndMode3D();
         }
         EndDrawing();
-
     }
-
 };
-
