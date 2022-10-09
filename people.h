@@ -50,9 +50,8 @@ struct Person : public Entity {
         if (!would_collide_y) {
             this->raw_position.z = new_pos_z.z;
         }
-
-        // set snap position
-        this->position = this->snap_position();
+        
+        Entity::update(dt);
     }
 };
 

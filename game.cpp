@@ -20,7 +20,6 @@ int main(void) {
     // TODO Move these into globals? 
     World world;
     Cam cam;
-
     while (!WindowShouldClose()) {
         float dt = GetFrameTime();
 

@@ -34,6 +34,13 @@ vec2 operator-(vec2 lhs, const vec2& rhs) {
     return lhs;
 }
 
+vec3 operator/(vec3 lhs, float divisor) {
+    lhs.x /= divisor;
+    lhs.y /= divisor;
+    lhs.z /= divisor;
+    return lhs;
+}
+
 namespace vec {
 
 float distance(vec2 a, vec2 b) {
@@ -42,6 +49,10 @@ float distance(vec2 a, vec2 b) {
 
 vec3 to3(vec2 position) {
     return { position.x, 0, position.y};
+}
+
+vec2 to2(vec3 position) {
+    return { position.x, position.z };
 }
 
 vec2 snap(vec2 position) {
