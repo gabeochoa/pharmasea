@@ -1,0 +1,24 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-c",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-g",
+      "-I/Users/gabeochoa/homebrew/Cellar/raylib/4.2.0/include",
+      "-Ivendor/",
+      "-o",
+      "pharmasea",
+      "game.cpp"
+    ],
+    "directory": "/Users/gabeochoa/Dropbox/P/pharmasea",
+    "file": "/Users/gabeochoa/Dropbox/P/pharmasea/game.cpp",
+    "output": "/Users/gabeochoa/Dropbox/P/pharmasea/pharmasea"
+  }
+]
