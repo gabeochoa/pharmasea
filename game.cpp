@@ -7,6 +7,8 @@
 
 #include "camera.h"
 #include "world.h"
+#include "app.h"
+#include "gamelayer.h"
 
 void debug_ui() {
     DrawFPS(0, 0);
@@ -16,40 +18,14 @@ void debug_ui() {
 
 int main(void) {
     InitWindow(WIN_W, WIN_H, "pharmasea");
+    App app;
 
-    // TODO Move these into globals? 
-    World world;
-    Cam cam;
+    GameLayer* gamelayer = new GameLayer();
+    app.pushLayer(gamelayer);
+
     while (!WindowShouldClose()) {
         float dt = GetFrameTime();
-
-        // TODO replace passing Player with passing Player*
-        // update
-        cam.updateToTarget(GLOBALS.get<Player>("player"));
-        cam.updateCamera();
-
-        EntityHelper::forEachEntity([&](auto entity) {
-            entity->update(dt);
-            return EntityHelper::ForEachFlow::None;
-        });
-
-        // draw
-        BeginDrawing();
-        {
-            ClearBackground(RAYWHITE);
-            BeginMode3D(cam.get());
-            {
-                EntityHelper::forEachEntity([&](auto entity) {
-                    entity->render();
-                    return EntityHelper::ForEachFlow::None;
-                });
-                DrawGrid(40, TILESIZE);
-            }
-            EndMode3D();
-
-            debug_ui();
-        }
-        EndDrawing();
+        app.run(dt);
     }
 
     CloseWindow();
