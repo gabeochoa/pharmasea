@@ -2,9 +2,9 @@
 #pragma once
 
 #include "external_include.h"
-#include "layer.h"
 #include "globals.h"
 #include "input.h"
+#include "layer.h"
 
 struct App {
     LayerStack layerstack;
@@ -19,18 +19,18 @@ struct App {
     void pushOverlay(Layer* layer) { layerstack.pushOverlay(layer); }
 
     void run(float dt) {
-        input.onUpdate(dt);
+        Input::get().onUpdate(dt);
         for (Layer* layer : layerstack) {
             layer->onUpdate(dt);
         }
 
-        for (auto event: input.pressedSinceLast) {
+        for (auto event : Input::get().pressedSinceLast) {
             for (Layer* layer : layerstack) {
                 bool resp = layer->onEvent(event);
-                if(resp){
+                if (resp) {
                     // we ate the event
                     // go to next event
-                    break; 
+                    break;
                 }
             }
         }

@@ -3,6 +3,8 @@
 
 #include "external_include.h"
 
+struct Input;
+static std::shared_ptr<Input> input;
 struct Input {
     std::deque<int> pressedSinceLast;
 
@@ -19,5 +21,10 @@ struct Input {
         }
     }
 
-    // TODO migrate to globals
-} input;
+    inline static Input* create() { return new Input(); }
+    inline static Input& get() {
+        if (!input) input.reset(Input::create());
+        return *input;
+    }
+
+};
