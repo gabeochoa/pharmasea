@@ -39,7 +39,7 @@ struct Entity {
     virtual ~Entity() {}
 
     virtual BoundingBox bounds() const {
-        return get_bounds(this->position, this->size() / 2.0f );
+        return get_bounds(this->position, this->size() / 2.0f);
     }
 
     virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
@@ -53,22 +53,20 @@ struct Entity {
     }
 
     virtual void render() const {
-        //DrawCube(this->position, this->size().x, this->size().y, this->size().z,
-        //         this->color);
-        DrawCube(this->raw_position, this->size().x, this->size().y, this->size().z, this->color); 
+        // DrawCube(this->position, this->size().x, this->size().y,
+        // this->size().z,
+        //          this->color);
+        DrawCube(this->raw_position, this->size().x, this->size().y,
+                 this->size().z, this->color);
         DrawBoundingBox(this->bounds(), MAROON);
-        //DrawBoundingBox(this->raw_bounds(), PINK);
+        // DrawBoundingBox(this->raw_bounds(), PINK);
     }
 
     vec3 snap_position() const { return vec::snap(this->raw_position); }
 
-    virtual void update(float) {
-        this->position = this->snap_position();
-    }
+    virtual void update(float) { this->position = this->snap_position(); }
 
-    virtual bool is_collidable() {
-        return true;
-    }
+    virtual bool is_collidable() { return true; }
 };
 static std::vector<std::shared_ptr<Entity>> entities_DO_NOT_USE;
 

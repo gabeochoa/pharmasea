@@ -32,10 +32,10 @@ struct Person : public Entity {
             if (this->id == entity->id) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if(!entity->is_collidable()){
+            if (!entity->is_collidable()) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if(!this->is_collidable()){
+            if (!this->is_collidable()) {
                 return EntityHelper::ForEachFlow::Continue;
             }
             if (CheckCollisionBoxes(new_bounds_x, entity->bounds())) {
@@ -56,7 +56,7 @@ struct Person : public Entity {
         if (!would_collide_y) {
             this->raw_position.z = new_pos_z.z;
         }
-        
+
         Entity::update(dt);
     }
 };
@@ -103,9 +103,7 @@ struct TargetCube : public Person {
         return new_pos_z;
     }
 
-    virtual bool is_collidable() override {
-        return false;
-    }
+    virtual bool is_collidable() override { return false; }
 };
 
 struct AIPerson : public Person {
@@ -128,7 +126,7 @@ struct AIPerson : public Person {
         }
     }
 
-    void random_target(){
+    void random_target() {
         // TODO add cooldown so that not all time is spent here
         int max_tries = 10;
         int range = 10;
@@ -145,8 +143,9 @@ struct AIPerson : public Person {
         }
     }
 
-    void target_cube_target(){
-        auto snap_near_cube = vec::to2(GLOBALS.get<TargetCube>("targetcube").snap_position());
+    void target_cube_target() {
+        auto snap_near_cube =
+            vec::to2(GLOBALS.get<TargetCube>("targetcube").snap_position());
         snap_near_cube.x += TILESIZE;
         snap_near_cube.y += TILESIZE;
         this->target = snap_near_cube;
@@ -217,8 +216,8 @@ struct AIPerson : public Person {
         return new_pos_z;
     }
 
-    int path_length(){
-        if(!this->path.has_value()) return 0;
+    int path_length() {
+        if (!this->path.has_value()) return 0;
         return (int)this->path.value().size();
     }
 
@@ -237,7 +236,8 @@ struct AIPerson : public Person {
         // then handle the normal position stuff
         Person::update(dt);
 
-        if (this->local_target.has_value() && vec::to2(this->position) == this->local_target.value()) {
+        if (this->local_target.has_value() &&
+            vec::to2(this->position) == this->local_target.value()) {
             this->local_target.reset();
         }
     }

@@ -97,8 +97,8 @@ struct World {
                             break;
                         }
                         std::shared_ptr<TargetCube> targetcube;
-                        targetcube.reset(
-                            new TargetCube(location, (Color){255, 16, 240, 255}));
+                        targetcube.reset(new TargetCube(
+                            location, (Color){255, 16, 240, 255}));
                         EntityHelper::addEntity(targetcube);
                         GLOBALS.set("targetcube", targetcube.get());
                         break;
