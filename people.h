@@ -3,6 +3,7 @@
 
 #include "entity.h"
 #include "external_include.h"
+#include "input.h"
 
 struct Person : public Entity {
     Person(vec3 p, Color c) : Entity(p, c) {}
@@ -69,16 +70,16 @@ struct Player : public Person {
     virtual vec3 update_xaxis_position(float dt) override {
         float speed = 10.0f * dt;
         auto new_pos_x = this->raw_position;
-        if (IsKeyDown(KEY_D)) new_pos_x.x += speed;
-        if (IsKeyDown(KEY_A)) new_pos_x.x -= speed;
+        if (input.eat(KEY_D)) new_pos_x.x += speed;
+        if (input.eat(KEY_A)) new_pos_x.x -= speed;
         return new_pos_x;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
         float speed = 10.0f * dt;
         auto new_pos_z = this->raw_position;
-        if (IsKeyDown(KEY_W)) new_pos_z.z -= speed;
-        if (IsKeyDown(KEY_S)) new_pos_z.z += speed;
+        if (input.eat(KEY_W)) new_pos_z.z -= speed;
+        if (input.eat(KEY_S)) new_pos_z.z += speed;
         return new_pos_z;
     }
 
@@ -88,7 +89,7 @@ struct Player : public Person {
     }
 
     virtual void grab_or_drop_item() {
-        if (IsKeyReleased(KEY_SPACE)) {
+        if (input.eat(KEY_SPACE)) {
             if (held_item != nullptr) {
                 held_item = nullptr;
             }
@@ -120,16 +121,16 @@ struct TargetCube : public Person {
     virtual vec3 update_xaxis_position(float dt) override {
         float speed = 10.0f * dt;
         auto new_pos_x = this->raw_position;
-        if (IsKeyDown(KEY_RIGHT)) new_pos_x.x += speed;
-        if (IsKeyDown(KEY_LEFT)) new_pos_x.x -= speed;
+        if (input.eat(KEY_RIGHT)) new_pos_x.x += speed;
+        if (input.eat(KEY_LEFT)) new_pos_x.x -= speed;
         return new_pos_x;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
         float speed = 10.0f * dt;
         auto new_pos_z = this->raw_position;
-        if (IsKeyDown(KEY_UP)) new_pos_z.z -= speed;
-        if (IsKeyDown(KEY_DOWN)) new_pos_z.z += speed;
+        if (input.eat(KEY_UP)) new_pos_z.z -= speed;
+        if (input.eat(KEY_DOWN)) new_pos_z.z += speed;
         return new_pos_z;
     }
 
@@ -258,7 +259,7 @@ struct AIPerson : public Person {
         this->ensure_path();
         this->ensure_local_target();
 
-        if (IsKeyReleased(KEY_P) || this->path_length() == 0) {
+        if (input.eat(KEY_P) || this->path_length() == 0) {
             //std::cout << this->raw_position << ";; " << this->position
             //          << std::endl;
             this->target.reset();

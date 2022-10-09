@@ -5,6 +5,7 @@
 #include "layer.h"
 #include "menu.h"
 #include "raylib.h"
+#include "input.h"
 
 struct MenuLayer : public Layer {
     MenuCam cam;
@@ -17,7 +18,7 @@ struct MenuLayer : public Layer {
     virtual void onUpdate(float) override {
         if (Menu::get().state != Menu::State::Root) return;
         SetExitKey(KEY_ESCAPE);
-        if (IsKeyPressed(KEY_ENTER)) {
+        if (input.eat(KEY_ENTER)) {
             Menu::get().state = Menu::State::Game;
             return;
         }

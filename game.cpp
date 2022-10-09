@@ -13,11 +13,7 @@
 #include "menulayer.h"
 
 int main(void) {
-    InitWindow(WIN_W, WIN_H, "pharmasea");
     App app;
-
-    // Disable global esc to close window
-    SetExitKey(KEY_NULL);
 
     GameLayer* gamelayer = new GameLayer();
     app.pushLayer(gamelayer);
@@ -28,7 +24,6 @@ int main(void) {
     
     Menu::get().state = Menu::State::Game;
     // Menu::get().state = Menu::State::Root;
-
 
     while (!WindowShouldClose()) {
         float dt = GetFrameTime();

@@ -5,6 +5,7 @@
 #include "layer.h"
 #include "world.h"
 #include "menu.h"
+#include "input.h"
 
 struct GameLayer : public Layer {
     World world;
@@ -17,8 +18,11 @@ struct GameLayer : public Layer {
 
     virtual void onUpdate(float dt) override {
         if (Menu::get().state != Menu::State::Game) return;
+
+        // Dont quit window on escape
         SetExitKey(KEY_NULL);
-        if (IsKeyPressed(KEY_ESCAPE)) {
+
+        if (input.eat(KEY_ESCAPE)) {
             Menu::get().state = Menu::State::Root;
             return;
         }
