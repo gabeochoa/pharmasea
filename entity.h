@@ -86,19 +86,15 @@ struct Player : public Entity {
 
     virtual void update(float dt) {
         float speed = 10.0f * dt;
-        vec3 new_pos = this->position;
-
-        if (IsKeyDown(KEY_D)) new_pos.x += speed;
-        if (IsKeyDown(KEY_A)) new_pos.x -= speed;
-        if (IsKeyDown(KEY_W)) new_pos.z -= speed;
-        if (IsKeyDown(KEY_S)) new_pos.z += speed;
         
-        auto new_pos_x = new_pos;
-        auto new_pos_z = new_pos;
+        auto new_pos_x = this->position;
+        auto new_pos_z = this->position;        
 
-        new_pos_x.z = this->position.z;
-        new_pos_z.x = this->position.x;
-
+        if (IsKeyDown(KEY_D)) new_pos_x.x += speed;
+        if (IsKeyDown(KEY_A)) new_pos_x.x -= speed;
+        if (IsKeyDown(KEY_W)) new_pos_z.z -= speed;
+        if (IsKeyDown(KEY_S)) new_pos_z.z += speed;
+        
         auto new_bounds_x = get_bounds(new_pos_x); // horizontal check
         auto new_bounds_y = get_bounds(new_pos_z); // vertical check
 
@@ -121,10 +117,10 @@ struct Player : public Entity {
         });
 
         if(!would_collide_x){
-            this->position.x = new_pos.x;
+            this->position.x = new_pos_x.x;
         }
         if (!would_collide_y) {
-            this->position.z = new_pos.z;
+            this->position.z = new_pos_z.z;
         }
     }
 };
