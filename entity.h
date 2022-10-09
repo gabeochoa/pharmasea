@@ -87,26 +87,44 @@ struct Player : public Entity {
     virtual void update(float dt) {
         float speed = 10.0f * dt;
         vec3 new_pos = this->position;
+
         if (IsKeyDown(KEY_D)) new_pos.x += speed;
         if (IsKeyDown(KEY_A)) new_pos.x -= speed;
         if (IsKeyDown(KEY_W)) new_pos.z -= speed;
         if (IsKeyDown(KEY_S)) new_pos.z += speed;
+        
+        auto new_pos_x = new_pos;
+        auto new_pos_z = new_pos;
 
-        auto new_bounds = get_bounds(new_pos);
-        bool would_collide = false;
+        new_pos_x.z = this->position.z;
+        new_pos_z.x = this->position.x;
+
+        auto new_bounds_x = get_bounds(new_pos_x); // horizontal check
+        auto new_bounds_y = get_bounds(new_pos_z); // vertical check
+
+        bool would_collide_x = false;
+        bool would_collide_y = false;
         EntityHelper::forEachEntity([&](auto entity) {
             if (this->id == entity->id) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if(CheckCollisionBoxes(new_bounds, entity->bounds())){
-                would_collide = true;
+            if(CheckCollisionBoxes(new_bounds_x, entity->bounds())){
+                would_collide_x = true;
+            }
+            if (CheckCollisionBoxes(new_bounds_y, entity->bounds())) {
+                would_collide_y = true;                
+            }
+            if (would_collide_x && would_collide_y) {
                 return EntityHelper::ForEachFlow::Break;
             }
             return EntityHelper::ForEachFlow::None;
         });
 
-        if(!would_collide){
-            this->position = new_pos;
+        if(!would_collide_x){
+            this->position.x = new_pos.x;
+        }
+        if (!would_collide_y) {
+            this->position.z = new_pos.z;
         }
     }
 };
