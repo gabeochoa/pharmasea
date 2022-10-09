@@ -229,8 +229,8 @@ struct AIPerson : public Person {
         this->ensure_local_target();
 
         if (IsKeyReleased(KEY_P) || this->path_length() == 0) {
-            std::cout << this->raw_position << ";; " << this->position
-                      << std::endl;
+            //std::cout << this->raw_position << ";; " << this->position
+            //          << std::endl;
             this->target.reset();
             this->path.reset();
             this->local_target.reset();

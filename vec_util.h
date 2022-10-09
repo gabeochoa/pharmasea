@@ -41,6 +41,12 @@ vec3 operator/(vec3 lhs, float divisor) {
     return lhs;
 }
 
+vec3 operator+(vec3 lhs, float offset) {
+    lhs.x += offset;
+    lhs.z += offset;
+    return lhs;
+}
+
 namespace vec {
 
 float distance(vec2 a, vec2 b) {
