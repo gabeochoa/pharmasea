@@ -90,6 +90,7 @@ struct World {
                             new AIPerson(location, (Color){255, 0, 0, 255}));
 
                         EntityHelper::addEntity(aiperson);
+                        break;
                     }
                     case '.':
                     default:

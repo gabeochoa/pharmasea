@@ -44,7 +44,7 @@ int main(void) {
                     entity->render();
                     return EntityHelper::ForEachFlow::None;
                 });
-                DrawGrid(10, 1.0f);
+                DrawGrid(40, TILESIZE);
             }
             EndMode3D();
 

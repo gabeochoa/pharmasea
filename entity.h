@@ -8,46 +8,59 @@
 #include "raylib.h"
 #include "vec_util.h"
 
-BoundingBox get_bounds(vec3 position) {
-    const float half_tile = TILESIZE / 2.f;
+BoundingBox get_bounds(vec3 position, vec3 size) {
     return {(vec3){
-                position.x - half_tile,
-                position.y - half_tile,
-                position.z - half_tile,
+                position.x - size.x / 2,
+                position.y - size.y / 2,
+                position.z - size.z / 2,
             },
             (vec3){
-                position.x + half_tile,
-                position.y + half_tile,
-                position.z + half_tile,
+                position.x + size.x / 2,
+                position.y + size.y / 2,
+                position.z + size.z / 2,
             }};
 }
 
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
     int id;
+    vec3 raw_position;
     vec3 position;
     Color color;
     bool cleanup = false;
 
-    Entity(vec3 p, Color c) : id(ENTITY_ID_GEN++), position(p), color(c) {}
-   Entity(vec2 p, Color c)
-        : id(ENTITY_ID_GEN++), position({p.x, 0, p.y}), color(c) {}
+    Entity(vec3 p, Color c) : id(ENTITY_ID_GEN++), raw_position(p), color(c) {
+        this->position = this->snap_position();
+    }
+    Entity(vec2 p, Color c)
+        : id(ENTITY_ID_GEN++), raw_position({p.x, 0, p.y}), color(c) {
+        this->position = this->snap_position();
+    }
     virtual ~Entity() {}
 
-    virtual BoundingBox bounds() const { return get_bounds(this->position); }
+    virtual BoundingBox bounds() const {
+        return get_bounds(this->position, this->size());
+    }
+
+    virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
+
+    virtual BoundingBox raw_bounds() const {
+        return get_bounds(this->raw_position, this->size());
+    }
 
     virtual bool collides(BoundingBox b) const {
         return CheckCollisionBoxes(this->bounds(), b);
     }
 
     virtual void render() const {
-        DrawCube(position, TILESIZE, TILESIZE, TILESIZE, this->color);
-        DrawBoundingBox(this->bounds(), MAROON);
+        DrawCube(this->position, this->size().x, this->size().y, this->size().z, this->color);
+        // DrawCube(this->raw_position, this->size().x, this->size().y, this->size().z, BLUE);
+        // DrawBoundingBox(this->bounds(), MAROON);
     }
 
-    vec3 snap_position() { return vec::snap(this->position); }
+    vec3 snap_position() const { return vec::snap(this->raw_position); }
 
-    virtual void update(float) {}
+    virtual void update(float) { this->position = this->snap_position(); }
 };
 static std::vector<std::shared_ptr<Entity>> entities_DO_NOT_USE;
 

@@ -11,12 +11,16 @@ struct Person : public Entity {
     virtual vec3 update_xaxis_position(float dt) = 0;
     virtual vec3 update_zaxis_position(float dt) = 0;
 
+    virtual vec3 size() const override { return (vec3){TILESIZE * 0.8, TILESIZE * 0.8, TILESIZE * 0.8}; }
+
     virtual void update(float dt) override {
+            std::cout << this->raw_position << ";; " << this->position
+                      << std::endl;
         auto new_pos_x = this->update_xaxis_position(dt);
         auto new_pos_z = this->update_zaxis_position(dt);
 
-        auto new_bounds_x = get_bounds(new_pos_x);  // horizontal check
-        auto new_bounds_y = get_bounds(new_pos_z);  // vertical check
+        auto new_bounds_x = get_bounds(new_pos_x, this->size());  // horizontal check
+        auto new_bounds_y = get_bounds(new_pos_z, this->size());  // vertical check
 
         bool would_collide_x = false;
         bool would_collide_y = false;
@@ -37,11 +41,14 @@ struct Person : public Entity {
         });
 
         if (!would_collide_x) {
-            this->position.x = new_pos_x.x;
+            this->raw_position.x = new_pos_x.x;
         }
         if (!would_collide_y) {
-            this->position.z = new_pos_z.z;
+            this->raw_position.z = new_pos_z.z;
         }
+
+        // set snap position
+        this->position = this->snap_position();
     }
 };
 
@@ -52,7 +59,7 @@ struct Player : public Person {
 
     virtual vec3 update_xaxis_position(float dt) override {
         float speed = 10.0f * dt;
-        auto new_pos_x = this->position;
+        auto new_pos_x = this->raw_position;
         if (IsKeyDown(KEY_D)) new_pos_x.x += speed;
         if (IsKeyDown(KEY_A)) new_pos_x.x -= speed;
         return new_pos_x;
@@ -60,7 +67,7 @@ struct Player : public Person {
 
     virtual vec3 update_zaxis_position(float dt) override {
         float speed = 10.0f * dt;
-        auto new_pos_z = this->position;
+        auto new_pos_z = this->raw_position;
         if (IsKeyDown(KEY_W)) new_pos_z.z -= speed;
         if (IsKeyDown(KEY_S)) new_pos_z.z += speed;
         return new_pos_z;
@@ -98,7 +105,7 @@ struct AIPerson : public Person {
             return;
         }
         this->path =
-            astar::find_path({this->snap_position().x, this->snap_position().z},
+            astar::find_path({this->position.x, this->position.z},
                              this->target.value(), [](const vec2& p) {
                                  if (abs(p.x) > 10.f) return false;
                                  if (abs(p.y) > 10.f) return false;
@@ -124,27 +131,27 @@ struct AIPerson : public Person {
 
     virtual vec3 update_xaxis_position(float dt) override {
         if (!this->local_target.has_value()) {
-            return this->position;
+            return this->raw_position;
         }
         vec2 tar = this->local_target.value();
         float speed = this->base_speed * dt;
 
-        auto new_pos_x = this->position;
-        if (tar.x > this->position.x) new_pos_x.x += speed;
-        if (tar.x < this->position.x) new_pos_x.x -= speed;
+        auto new_pos_x = this->raw_position;
+        if (tar.x > this->raw_position.x) new_pos_x.x += speed;
+        if (tar.x < this->raw_position.x) new_pos_x.x -= speed;
         return new_pos_x;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
         if (!this->local_target.has_value()) {
-            return this->position;
+            return this->raw_position;
         }
         vec2 tar = this->local_target.value();
         float speed = this->base_speed * dt;
 
-        auto new_pos_z = this->position;
-        if (tar.y > this->position.z) new_pos_z.z += speed;
-        if (tar.y < this->position.z) new_pos_z.z -= speed;
+        auto new_pos_z = this->raw_position;
+        if (tar.y > this->raw_position.z) new_pos_z.z += speed;
+        if (tar.y < this->raw_position.z) new_pos_z.z -= speed;
         return new_pos_z;
     }
 
@@ -154,7 +161,7 @@ struct AIPerson : public Person {
         this->ensure_local_target();
 
         if (IsKeyReleased(KEY_P)) {
-            std::cout << this->position.x << "," << this->position.z
+            std::cout << this->raw_position << ";; " << this->position
                       << std::endl;
             this->target.reset();
             this->path.reset();

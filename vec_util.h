@@ -19,7 +19,12 @@ bool operator==(const vec2& p, const vec2& q) {
 }
 
 std::ostream& operator<<(std::ostream& os, const vec2& v) {
-    os << "vec(" << v.x << ", " << v.y << ")";
+    os << "vec2(" << v.x << ", " << v.y << ")";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const vec3& v) {
+    os << "vec3(" << v.x << ", " << v.y << ", " << v.z << ")";
     return os;
 }
 
@@ -29,7 +34,6 @@ vec2 operator-(vec2 lhs, const vec2& rhs) {
     return lhs;
 }
 
-
 namespace vec {
 
 float distance(vec2 a, vec2 b) {
@@ -37,13 +41,13 @@ float distance(vec2 a, vec2 b) {
 }
 
 vec2 snap(vec2 position) {
-    return {TILESIZE * floor(position.x / TILESIZE),  //
-            TILESIZE * floor(position.y / TILESIZE)};
+    return {TILESIZE * round(position.x / TILESIZE),  //
+            TILESIZE * round(position.y / TILESIZE)};
 }
 vec3 snap(vec3 position) {
-    return {TILESIZE * floor(position.x / TILESIZE),  //
+    return {TILESIZE * round(position.x / TILESIZE),  //
             position.y,                               //
-            TILESIZE * floor(position.z / TILESIZE)};
+            TILESIZE * round(position.z / TILESIZE)};
 }
 
 }  // namespace vec
