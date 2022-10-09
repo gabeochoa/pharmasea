@@ -32,6 +32,9 @@ struct Person : public Entity {
             if (this->id == entity->id) {
                 return EntityHelper::ForEachFlow::Continue;
             }
+            if(!entity->is_collidable()){
+                return EntityHelper::ForEachFlow::Continue;
+            }
             if (CheckCollisionBoxes(new_bounds_x, entity->bounds())) {
                 would_collide_x = true;
             }

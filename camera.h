@@ -12,13 +12,12 @@ struct Cam {
     float free_angle_min = (-89.0f) * DEG2RAD;
     float free_angle_max = (0.0f) * DEG2RAD;
     float scroll_sensitivity = 1.0f;
-    vec2 angle = { -45.0f * DEG2RAD, -45.0f * DEG2RAD };
+    float default_angle = -45.f * DEG2RAD;
+    vec2 angle = {default_angle, default_angle};
 
     void angleMinMaxClamp() {
-        if (angle.y < free_angle_min)
-            angle.y = free_angle_min;
-        if (angle.y > free_angle_max)
-            angle.y = free_angle_max;
+        if (angle.y < free_angle_min) angle.y = free_angle_min;
+        if (angle.y > free_angle_max) angle.y = free_angle_max;
     }
 
     void updateTargetAngle(float dx, float dy, float dz) {
@@ -69,7 +68,7 @@ struct Cam {
 
     void updateCamera() {
         auto mouseWheelMove = GetMouseWheelMove();
-        
+
         // Camera zoom
         if (mouseWheelMove < 0) {
             target_distance -= (mouseWheelMove * scroll_sensitivity);
@@ -95,7 +94,7 @@ struct Cam {
 
             angle.x += mouseDelta.x / 100.0f;
             angle.y -= mouseDelta.y / 100.0f;
-            
+
             angleMinMaxClamp();
         }
     }

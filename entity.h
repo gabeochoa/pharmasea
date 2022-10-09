@@ -67,7 +67,7 @@ struct Entity {
     }
 
     virtual bool is_collidable() {
-        return false;
+        return true;
     }
 };
 static std::vector<std::shared_ptr<Entity>> entities_DO_NOT_USE;
