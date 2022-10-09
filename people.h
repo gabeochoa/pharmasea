@@ -84,7 +84,7 @@ struct Cube : public Entity {
 
 struct AIPerson : public Person {
     std::optional<vec2> target;
-    std::optional<std::vector<vec2>> path;
+    std::optional<std::deque<vec2>> path;
     std::optional<vec2> local_target;
     float base_speed = 10.f;
 
@@ -128,6 +128,10 @@ struct AIPerson : public Person {
         if (!target.has_value()) {
             return;
         }
+        // If we have a path, don't regenerate a new path so soon.
+        if (this->path.has_value()) {
+            return;
+        }
         this->path = astar::find_path(
             {this->position.x, this->position.z}, this->target.value(),
             std::bind(EntityHelper::isWalkable, std::placeholders::_1));
@@ -146,7 +150,8 @@ struct AIPerson : public Person {
         if (this->path.value().empty()) {
             return;
         }
-        this->local_target = this->path.value()[0];
+        this->local_target = this->path.value().front();
+        this->path.value().pop_front();
     }
 
     virtual vec3 update_xaxis_position(float dt) override {
@@ -189,5 +194,9 @@ struct AIPerson : public Person {
         }
         // then handle the normal position stuff
         Person::update(dt);
+
+        if (this->local_target.has_value() && vec::to2(this->position) == this->local_target.value()) {
+            this->local_target.reset();
+        }
     }
 };

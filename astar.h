@@ -55,18 +55,18 @@ std::vector<vec2> get_neighbors(vec2 start,
     return output;
 }
 
-std::vector<vec2> reconstruct_path(std::vector<vec2> path,
+std::deque<vec2> reconstruct_path(std::deque<vec2> path,
                                    std::map<vec2, vec2>& parent_map,
                                    vec2 current) {
     if (!parent_map.contains(current)) {
         return path;
     }
     auto parent = parent_map[current];
-    path.push_back(parent);
+    path.push_front(parent);
     return reconstruct_path(path, parent_map, parent);
 }
 
-std::vector<vec2> find_path_impl(vec2 start, vec2 end,
+std::deque<vec2> find_path_impl(vec2 start, vec2 end,
                                  std::function<bool(vec2 pos)> is_walkable) {
     std::set<vec2> openset;
     openset.insert(start);
@@ -120,10 +120,10 @@ std::vector<vec2> find_path_impl(vec2 start, vec2 end,
         }
     }
 
-    return std::vector<vec2>{};
+    return std::deque<vec2>{};
 }
 
-std::vector<vec2> find_path(vec2 start, vec2 end,
+std::deque<vec2> find_path(vec2 start, vec2 end,
                             std::function<bool(vec2 pos)> is_walkable) {
     // TODO add a cache
     return astar::find_path_impl(start, end, is_walkable);
