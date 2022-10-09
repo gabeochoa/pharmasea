@@ -68,6 +68,8 @@ std::deque<vec2> reconstruct_path(std::deque<vec2> path,
 
 std::deque<vec2> find_path_impl(vec2 start, vec2 end,
                                  std::function<bool(vec2 pos)> is_walkable) {
+    if (!is_walkable(end)) return std::deque<vec2>{};
+    
     std::set<vec2> openset;
     openset.insert(start);
 

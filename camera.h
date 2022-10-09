@@ -9,16 +9,24 @@ struct Cam {
     float target_distance = 0.0f;
     float free_distance_min_clamp = 10.0f;
     float free_distance_max_clamp = 20.0f;
-    float free_angle_min = (-70.0f) * DEG2RAD;
-    float free_angle_max = (-30.0f) * DEG2RAD;
+    float free_angle_min = (-89.0f) * DEG2RAD;
+    float free_angle_max = (0.0f) * DEG2RAD;
     float scroll_sensitivity = 1.0f;
-    vec3 angle;
+    vec2 angle = { -45.0f * DEG2RAD, -45.0f * DEG2RAD };
+
+    void angleMinMaxClamp() {
+        if (angle.y < free_angle_min)
+            angle.y = free_angle_min;
+        if (angle.y > free_angle_max)
+            angle.y = free_angle_max;
+    }
 
     void updateTargetAngle(float dx, float dy, float dz) {
         // Camera angle calculation
         angle.x = atan2f(dx, dz);
         // Camera angle in plane XZ (0 aligned with Z, move positive CCW)
         angle.y = atan2f(dy, sqrtf(dx * dx + dz * dz));
+        angleMinMaxClamp();
     }
 
     void updateTargetDistance() {
@@ -87,11 +95,8 @@ struct Cam {
 
             angle.x += mouseDelta.x / 100.0f;
             angle.y -= mouseDelta.y / 100.0f;
-
-            if (angle.y < free_angle_min)
-                angle.y = free_angle_min;
-            if (angle.y > free_angle_max)
-                angle.y = free_angle_max;
+            
+            angleMinMaxClamp();
         }
     }
 

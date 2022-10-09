@@ -65,6 +65,10 @@ struct Entity {
     virtual void update(float) {
         this->position = this->snap_position();
     }
+
+    virtual bool is_collidable() {
+        return false;
+    }
 };
 static std::vector<std::shared_ptr<Entity>> entities_DO_NOT_USE;
 
@@ -109,7 +113,7 @@ struct EntityHelper {
         auto bounds = get_bounds({pos.x, 0.f, pos.y}, {TILESIZE});
         bool hit_impassible_entity = false;
         forEachEntity([&](auto entity) {
-            if (entity->collides(bounds)) {
+            if (entity->is_collidable() && entity->collides(bounds)) {
                 hit_impassible_entity = true;
                 return ForEachFlow::Break;
             }

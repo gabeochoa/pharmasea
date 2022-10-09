@@ -106,6 +106,7 @@ struct AIPerson : public Person {
         if (target.has_value()) {
             return;
         }
+        /*
         // TODO add cooldown so that not all time is spent here
         int max_tries = 10;
         int range = 10;
@@ -120,6 +121,13 @@ struct AIPerson : public Person {
                 break;
             }
         }
+        */
+        auto snap_near_player = vec::to2(GLOBALS.get<Player>("player").snap_position());
+        snap_near_player.x += TILESIZE;
+        snap_near_player.y += TILESIZE;
+        this->target = snap_near_player;
+        
+        
         // std::cout << this->target.value() << ", " << walkable << std::endl;
     }
 
