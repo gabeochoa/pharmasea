@@ -13,6 +13,8 @@ Core engine TODOs:
 5. Create Nav mesh for "walkability"
 6. ~~ Add new target entity that moves via arrows keys / alternative keys ~~
 7. Disallow target cube from going outside of bounds
+8. Add some way for entities to subscribe to certain keys 
+    so we can more easily keep track of what keys are being requested over lifetime
 
 Gameplay Ideas
 - Pharmacy
