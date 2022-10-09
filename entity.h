@@ -23,7 +23,6 @@ BoundingBox get_bounds(vec3 position, vec3 size) {
 
 static std::atomic_int ITEM_ID_GEN = 0;
 struct Item {
-
     int id;
     float item_size = TILESIZE / 2;
     Color color;
@@ -31,23 +30,23 @@ struct Item {
     vec3 position;
     bool unpacked = false;
 
-    Item(vec3 p, Color c) : id(ITEM_ID_GEN++), raw_position(p), color(c) {
+    Item(vec3 p, Color c) : id(ITEM_ID_GEN++), color(c), raw_position(p) {
         this->position = this->snap_position();
     }
     Item(vec2 p, Color c)
-        : id(ITEM_ID_GEN++), raw_position({ p.x, 0, p.y }), color(c) {
+        : id(ITEM_ID_GEN++), color(c), raw_position({p.x, 0, p.y}) {
         this->position = this->snap_position();
     }
 
+    virtual ~Item(){}
+
     vec3 snap_position() const { return vec::snap(this->raw_position); }
 
-    virtual bool is_collidable() {
-        return unpacked;
-    }
+    virtual bool is_collidable() { return unpacked; }
 
     virtual void render() const {
-        DrawCube(position, this->size().x, this->size().y,
-            this->size().z, this->color);
+        DrawCube(position, this->size().x, this->size().y, this->size().z,
+                 this->color);
     }
 
     virtual void update_position(const vec3& p) {
@@ -58,8 +57,9 @@ struct Item {
         return get_bounds(this->position, this->size() / 2.0f);
     }
 
-    virtual vec3 size() const { return (vec3) { item_size, item_size, item_size
-    }; }
+    virtual vec3 size() const {
+        return (vec3){item_size, item_size, item_size};
+    }
 
     virtual BoundingBox raw_bounds() const {
         return get_bounds(this->raw_position, this->size());
@@ -68,7 +68,6 @@ struct Item {
     virtual bool collides(BoundingBox b) const {
         return CheckCollisionBoxes(this->bounds(), b);
     }
-
 };
 static std::vector<std::shared_ptr<Item>> items_DO_NOT_USE;
 
@@ -116,7 +115,7 @@ struct Entity {
 
     vec3 snap_position() const { return vec::snap(this->raw_position); }
 
-    virtual void update(float) { 
+    virtual void update(float) {
         this->position = this->snap_position();
         if (held_item != nullptr) {
             auto new_pos = this->position;
@@ -126,8 +125,6 @@ struct Entity {
     }
 
     virtual bool is_collidable() { return true; }
-
-    
 };
 
 static std::vector<std::shared_ptr<Entity>> entities_DO_NOT_USE;
