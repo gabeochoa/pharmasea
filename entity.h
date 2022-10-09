@@ -39,7 +39,7 @@ struct Entity {
         DrawBoundingBox(this->bounds(), MAROON);
     }
 
-    virtual void update(float dt) {}
+    virtual void update(float) {}
 };
 
 struct Player : public Entity {
