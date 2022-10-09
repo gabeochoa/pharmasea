@@ -12,8 +12,8 @@ struct Cam {
     float free_angle_min = (-89.0f) * DEG2RAD;
     float free_angle_max = (0.0f) * DEG2RAD;
     float scroll_sensitivity = 1.0f;
-    float default_angle = -45.f * DEG2RAD;
-    vec2 angle = {default_angle, default_angle};
+    float default_angle_y = -45.f * DEG2RAD;
+    vec2 angle = {0.0, 0.0};
 
     void angleMinMaxClamp() {
         if (angle.y < free_angle_min) angle.y = free_angle_min;
@@ -58,6 +58,7 @@ struct Cam {
         this->camera.projection = CAMERA_PERSPECTIVE;
 
         updateTargetDistanceAndAngle();
+        angle.y = default_angle_y;
 
         SetCameraMode(this->camera, CAMERA_CUSTOM);
     }
