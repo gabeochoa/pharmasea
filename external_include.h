@@ -13,3 +13,8 @@ typedef Vector4 vec4;
 #include <stdio.h>
 #include <iostream>
 #include <functional>
+#include <map>
+#include <set>
+#include <limits>
+#include <numeric>
+#include <ostream>
