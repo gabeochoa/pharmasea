@@ -88,7 +88,7 @@ struct Player : public Person {
     }
 
     virtual void grab_or_drop_item() {
-        if (IsKeyReleased(KEY_E)) {
+        if (IsKeyReleased(KEY_SPACE)) {
             if (held_item != nullptr) {
                 held_item = nullptr;
             }
@@ -96,7 +96,7 @@ struct Player : public Person {
                 std::shared_ptr<Item> closest_item = nullptr;
                 float best_distance = std::numeric_limits<float>::max();
                 for (auto item : items_DO_NOT_USE) {
-                    if (item->collides(bounds())) {
+                    if (item->collides(get_bounds(this->position, this->size() * 4.0f))) {
                         auto current_distance = vec::distance(vec::to2(item->position), vec::to2(this->position));
                         if (current_distance < best_distance) {
                             best_distance = current_distance;

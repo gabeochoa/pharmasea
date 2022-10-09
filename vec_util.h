@@ -41,6 +41,13 @@ vec3 operator/(vec3 lhs, float divisor) {
     return lhs;
 }
 
+vec3 operator*(vec3 lhs, float multiplier) {
+    lhs.x *= multiplier;
+    lhs.y *= multiplier;
+    lhs.z *= multiplier;
+    return lhs;
+}
+
 vec3 operator+(vec3 lhs, float offset) {
     lhs.x += offset;
     lhs.z += offset;
