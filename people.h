@@ -92,11 +92,22 @@ struct AIPerson : public Person {
     AIPerson(vec3 p, Color c) : Person(p, c) {}
     AIPerson(vec2 p, Color c) : Person(p, c) {}
 
+    virtual void render() const override {
+        Person::render();
+        if (!this->path.has_value()) {
+            return;
+        }
+        const float box_size = TILESIZE / 10.f;
+        for (auto location : this->path.value()) {
+            DrawCube(vec::to3(location), box_size, box_size, box_size, BLUE);
+        }
+    }
+
     void ensure_target() {
         if (target.has_value()) {
             return;
         }
-        // TODO add cooldown so that not all time is spent here 
+        // TODO add cooldown so that not all time is spent here
         int max_tries = 10;
         int range = 10;
         bool walkable = false;
@@ -106,7 +117,7 @@ struct AIPerson : public Person {
                                   1.f * randIn(-range, range)};
             walkable = EntityHelper::isWalkable(this->target.value());
             i++;
-            if(i > max_tries){
+            if (i > max_tries) {
                 break;
             }
         }

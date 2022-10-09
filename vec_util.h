@@ -40,6 +40,10 @@ float distance(vec2 a, vec2 b) {
     return sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
 
+vec3 to3(vec2 position) {
+    return { position.x, 0, position.y};
+}
+
 vec2 snap(vec2 position) {
     return {TILESIZE * round(position.x / TILESIZE),  //
             TILESIZE * round(position.y / TILESIZE)};
