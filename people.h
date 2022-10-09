@@ -89,7 +89,7 @@ struct Player : public Person {
     }
 
     virtual void grab_or_drop_item() {
-        if (IsKeyDown(KEY_SPACE)) {
+        if (IsKeyReleased(KEY_SPACE)) {
             if (held_item != nullptr) {
                 held_item = nullptr;
             }
