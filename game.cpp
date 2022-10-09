@@ -16,16 +16,32 @@ struct Cube {
 
     Cube(vec3 p, Color c) : position(p), color(c) {}
 
-    void render() {
-        DrawCube(position, 2.0f, 2.0f, 2.0f, RED);
+    virtual void render() {
+        DrawCube(position, 2.0f, 2.0f, 2.0f, this->color);
         DrawCubeWires(position, 2.0f, 2.0f, 2.0f, MAROON);
     }
+
+    virtual void update(float dt) {}
 };
+
+struct Player : public Cube {
+    Player() : Cube({0}, {0, 255, 0, 255}) {}
+
+    virtual void update(float dt) {
+        float speed = 10.0f * dt;
+        if (IsKeyDown(KEY_RIGHT)) this->position.x += speed;
+        if (IsKeyDown(KEY_LEFT)) this->position.x -= speed;
+        if (IsKeyDown(KEY_UP)) this->position.z -= speed;
+        if (IsKeyDown(KEY_DOWN)) this->position.z += speed;
+    }
+
+} player;
 
 void debug_ui() { DrawFPS(0, 0); }
 
 int main(void) {
     InitWindow(WIN_W, WIN_H, "pharmasea");
+    // SetTargetFPS(60);
 
     // Define the camera to look into our 3d world
     Camera3D camera = {0};
@@ -43,12 +59,17 @@ int main(void) {
 
     while (!WindowShouldClose()) {
         UpdateCamera(&camera);
+        float dt = GetFrameTime();
+
+        player.update(dt);
+
         BeginDrawing();
         {
             ClearBackground(RAYWHITE);
             BeginMode3D(camera);
             {
                 c.render();
+                player.render();
                 DrawGrid(10, 1.0f);
             }
             EndMode3D();
