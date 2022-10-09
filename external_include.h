@@ -10,3 +10,5 @@ typedef Vector4 vec4;
 #include <optional>
 #include <vector>
 #include <memory>
+#include <stdio.h>
+#include <iostream>

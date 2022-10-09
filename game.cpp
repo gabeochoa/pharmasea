@@ -15,27 +15,44 @@ constexpr int TILESIZE = (WIN_H * 0.95) / MAP_H;
 
 void debug_ui() { DrawFPS(0, 0); }
 
+void world() {
+    std::shared_ptr<Cube> cube;
+    cube.reset(new Cube((vec3){0.0f, 0.0f, 0.0f}, (Color){255, 0, 0, 255}));
+
+    std::shared_ptr<Player> player;
+    player.reset(new Player());
+
+    EntityHelper::addEntity(cube);
+    EntityHelper::addEntity(player);
+}
+
 int main(void) {
     InitWindow(WIN_W, WIN_H, "pharmasea");
 
     Cam cam;
-    Cube c((vec3){0.0f, 0.0f, 0.0f}, (Color){255, 0, 0, 255});
+    world();
 
     while (!WindowShouldClose()) {
         float dt = GetFrameTime();
 
-        // update 
+        // update
         UpdateCamera(cam.get_ptr());
-        player.update(dt);
 
-        // draw 
+        EntityHelper::forEachEntity([&](auto entity) {
+            entity->update(dt);
+            return EntityHelper::ForEachFlow::None;
+        });
+
+        // draw
         BeginDrawing();
         {
             ClearBackground(RAYWHITE);
             BeginMode3D(cam.get());
             {
-                c.render();
-                player.render();
+                EntityHelper::forEachEntity([&](auto entity) {
+                    entity->render();
+                    return EntityHelper::ForEachFlow::None;
+                });
                 DrawGrid(10, 1.0f);
             }
             EndMode3D();
