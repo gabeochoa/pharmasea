@@ -16,7 +16,8 @@ void debug_ui() {
 
 void world() {
     std::shared_ptr<Cube> cube;
-    cube.reset(new Cube((vec3){-TILESIZE, 0.0f, -TILESIZE}, (Color){255, 0, 0, 255}));
+    cube.reset(
+        new Cube((vec3){-TILESIZE, 0.0f, -TILESIZE}, (Color){255, 0, 0, 255}));
 
     std::shared_ptr<Player> player;
     player.reset(new Player());

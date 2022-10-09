@@ -5,29 +5,26 @@
 #include "globals.h"
 #include "raylib.h"
 
-
 struct Entity {
     vec3 position;
     Color color;
     bool cleanup = false;
 
     Entity(vec3 p, Color c) : position(p), color(c) {}
-    virtual ~Entity(){}
+    virtual ~Entity() {}
 
     virtual BoundingBox bounds() const {
         const float half_tile = TILESIZE / 2.f;
-        return {
-            (vec3){
-                position.x - half_tile, 
-                position.y - half_tile, 
-                position.z - half_tile, 
-            },
-            (vec3){
-                position.x + half_tile, 
-                position.y + half_tile, 
-                position.z + half_tile, 
-            }
-        };
+        return {(vec3){
+                    position.x - half_tile,
+                    position.y - half_tile,
+                    position.z - half_tile,
+                },
+                (vec3){
+                    position.x + half_tile,
+                    position.y + half_tile,
+                    position.z + half_tile,
+                }};
     }
 
     virtual bool collides(BoundingBox b) const {
@@ -52,15 +49,13 @@ struct Player : public Entity {
         if (IsKeyDown(KEY_W)) this->position.z -= speed;
         if (IsKeyDown(KEY_S)) this->position.z += speed;
     }
-
 };
 
 struct Cube : public Entity {
     Cube(vec3 p, Color c) : Entity(p, c) {}
 };
 
-static std::vector<std::shared_ptr<Entity>>
-    entities_DO_NOT_USE;
+static std::vector<std::shared_ptr<Entity>> entities_DO_NOT_USE;
 
 struct EntityHelper {
 #pragma clang diagnostic push
