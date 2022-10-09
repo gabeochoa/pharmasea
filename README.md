@@ -3,4 +3,3 @@
 
 libraries used: 
 - raylib
-- glm 

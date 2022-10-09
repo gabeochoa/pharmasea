@@ -80,23 +80,22 @@ struct EntityHelper {
 #pragma clang diagnostic pop
 };
 
-
 struct Player : public Entity {
     Player() : Entity({0}, {0, 255, 0, 255}) {}
 
     virtual void update(float dt) {
         float speed = 10.0f * dt;
-        
+
         auto new_pos_x = this->position;
-        auto new_pos_z = this->position;        
+        auto new_pos_z = this->position;
 
         if (IsKeyDown(KEY_D)) new_pos_x.x += speed;
         if (IsKeyDown(KEY_A)) new_pos_x.x -= speed;
         if (IsKeyDown(KEY_W)) new_pos_z.z -= speed;
         if (IsKeyDown(KEY_S)) new_pos_z.z += speed;
-        
-        auto new_bounds_x = get_bounds(new_pos_x); // horizontal check
-        auto new_bounds_y = get_bounds(new_pos_z); // vertical check
+
+        auto new_bounds_x = get_bounds(new_pos_x);  // horizontal check
+        auto new_bounds_y = get_bounds(new_pos_z);  // vertical check
 
         bool would_collide_x = false;
         bool would_collide_y = false;
@@ -104,11 +103,11 @@ struct Player : public Entity {
             if (this->id == entity->id) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if(CheckCollisionBoxes(new_bounds_x, entity->bounds())){
+            if (CheckCollisionBoxes(new_bounds_x, entity->bounds())) {
                 would_collide_x = true;
             }
             if (CheckCollisionBoxes(new_bounds_y, entity->bounds())) {
-                would_collide_y = true;                
+                would_collide_y = true;
             }
             if (would_collide_x && would_collide_y) {
                 return EntityHelper::ForEachFlow::Break;
@@ -116,7 +115,7 @@ struct Player : public Entity {
             return EntityHelper::ForEachFlow::None;
         });
 
-        if(!would_collide_x){
+        if (!would_collide_x) {
             this->position.x = new_pos_x.x;
         }
         if (!would_collide_y) {
@@ -128,4 +127,3 @@ struct Player : public Entity {
 struct Cube : public Entity {
     Cube(vec3 p, Color c) : Entity(p, c) {}
 };
-
