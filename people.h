@@ -81,6 +81,36 @@ struct Player : public Person {
         if (IsKeyDown(KEY_S)) new_pos_z.z += speed;
         return new_pos_z;
     }
+
+    virtual void update(float dt) override {
+        Person::update(dt);
+        grab_or_drop_item();
+    }
+
+    virtual void grab_or_drop_item() {
+        if (IsKeyReleased(KEY_E)) {
+            if (held_item != nullptr) {
+                held_item = nullptr;
+            }
+            else {
+                std::shared_ptr<Item> closest_item = nullptr;
+                float best_distance = std::numeric_limits<float>::max();
+                for (auto item : items_DO_NOT_USE) {
+                    if (item->collides(bounds())) {
+                        auto current_distance = vec::distance(vec::to2(item->position), vec::to2(this->position));
+                        if (current_distance < best_distance) {
+                            best_distance = current_distance;
+                            closest_item = item;
+                        }
+                    }
+                }
+                //std::cout << "Grabbing item:" << closest_item << std::endl;
+                if (closest_item != nullptr) {
+                    this->held_item = closest_item;
+                }
+            }
+        }
+    }
 };
 
 struct TargetCube : public Person {

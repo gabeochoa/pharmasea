@@ -43,6 +43,12 @@ struct GameLayer : public Layer {
                     entity->render();
                     return EntityHelper::ForEachFlow::None;
                 });
+
+                EntityHelper::forEachItem([&](auto item) {
+                    item->render();
+                    return EntityHelper::ForEachFlow::None;
+                });
+
                 DrawGrid(40, TILESIZE);
             }
             EndMode3D();

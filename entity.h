@@ -117,39 +117,17 @@ struct Entity {
     vec3 snap_position() const { return vec::snap(this->raw_position); }
 
     virtual void update(float) { 
-        this->position = this->snap_position(); 
+        this->position = this->snap_position();
         if (held_item != nullptr) {
-            held_item->update_position(this->position + TILESIZE);
+            auto new_pos = this->position;
+            new_pos.z += TILESIZE;
+            held_item->update_position(new_pos);
         }
-
     }
 
     virtual bool is_collidable() { return true; }
 
-    virtual void grab_or_drop_item() {
-        if (IsKeyReleased(KEY_E)) {
-            if (held_item != nullptr) {
-                held_item = nullptr;
-            }
-            else {
-                std::shared_ptr<Item> closest_item = nullptr;
-                float best_distance = std::numeric_limits<float>::max();
-                for (auto item : items_DO_NOT_USE) {
-                    if (item->collides(bounds())) {
-                        auto current_distance = vec::distance(vec::to2(item->position), vec::to2(this->position));
-                        if (current_distance < best_distance) {
-                            best_distance = current_distance;
-                            closest_item = item;
-                        }
-                    }
-                }
-                std::cout << "Grabbing item:" << closest_item << std::endl;
-                if (closest_item != nullptr) {
-                    this->held_item = closest_item;
-                }
-            }
-        }
-    }
+    
 };
 
 static std::vector<std::shared_ptr<Entity>> entities_DO_NOT_USE;
