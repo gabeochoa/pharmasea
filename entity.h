@@ -145,13 +145,32 @@ struct Cube : public Entity {
 };
 
 struct AIPerson : public Person {
+
+    vec2 target;
+    std::vector<vec2> path;
+    vec2 local_target;
+
     AIPerson(vec3 p, Color c) : Person(p, c) {}
 
     virtual vec3 update_xaxis_position(float dt) override {
-        return this->position;
+        float speed = 10.0f * dt;
+        auto new_pos_x = this->position;
+        if (IsKeyDown(KEY_RIGHT)) new_pos_x.x += speed;
+        if (IsKeyDown(KEY_LEFT)) new_pos_x.x -= speed;
+        return new_pos_x;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
-        return this->position;
+        float speed = 10.0f * dt;
+        auto new_pos_z = this->position;
+        if (IsKeyDown(KEY_UP)) new_pos_z.z -= speed;
+        if (IsKeyDown(KEY_DOWN)) new_pos_z.z += speed;
+        return new_pos_z;
+    }
+
+    virtual void update(float dt) override {
+
+        // then handle the normal position stuff
+        Person::update(dt);
     }
 };
