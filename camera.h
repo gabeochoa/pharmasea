@@ -92,7 +92,7 @@ struct Cam {
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             auto mouseDelta = GetMouseDelta();
 
-            angle.x += mouseDelta.x / 100.0f;
+            angle.x -= mouseDelta.x / 100.0f;
             angle.y -= mouseDelta.y / 100.0f;
 
             angleMinMaxClamp();
