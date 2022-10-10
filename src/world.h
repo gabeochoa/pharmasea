@@ -64,8 +64,8 @@ const std::string WALL_TEST = R"(
 ...........#......
 ..................)";
 
-// const std::string ACTIVE_MAP = WALL_TEST;
-const std::string ACTIVE_MAP = EXAMPLE_MAP;
+const std::string ACTIVE_MAP = WALL_TEST;
+//const std::string ACTIVE_MAP = EXAMPLE_MAP;
 
 struct World {
     std::vector<std::string> lines;
@@ -76,7 +76,7 @@ struct World {
 
    private:
     vec2 find_origin() {
-        vec2 origin;
+        vec2 origin{0.0, 0.0};
         for (int i = 0; i < (int) lines.size(); i++) {
             auto line = lines[i];
             for (int j = 0; j < (int) line.size(); j++) {
