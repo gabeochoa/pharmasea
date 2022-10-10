@@ -14,8 +14,8 @@ struct MenuLayer : public Layer {
 
     std::shared_ptr<ui::UIContext> ui_context;
 
-    MenuLayer() : Layer("Menu") { 
-        minimized = false; 
+    MenuLayer() : Layer("Menu") {
+        minimized = false;
 
         ui_context.reset(new ui::UIContext());
         ui_context.get()->init();
@@ -47,10 +47,12 @@ struct MenuLayer : public Layer {
 
         ui_context->begin(mouseDown, mousepos);
 
-        if (button(MK_UUID(id, ROOT_ID),
-                   WidgetConfig({.position = vec2{500.f, 0.f},
-                                 .size = vec2{200.f, 200.f}}))) {
-            std::cout << "clicked button" << std::endl;
+        if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
+                                             .position = vec2{500.f, 50.f},
+                                             .size = vec2{100.f, 50.f},
+                                             .text = std::string("Play"),
+                                         }))) {
+            Menu::get().state = Menu::State::Game;
         }
 
         ui_context->end();

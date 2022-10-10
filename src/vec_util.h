@@ -60,6 +60,12 @@ vec2 operator/(vec2 lhs, float divisor) {
     return lhs;
 }
 
+vec2 operator*(vec2 lhs, float multiplier) {
+    lhs.x *= multiplier;
+    lhs.y *= multiplier;
+    return lhs;
+}
+
 vec3 operator*(vec3 lhs, float multiplier) {
     lhs.x *= multiplier;
     lhs.y *= multiplier;

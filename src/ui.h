@@ -24,6 +24,7 @@ struct WidgetConfig {
     vec2 position;
     vec2 size;
     float rotation;
+    std::string text;
 
     struct Theme {
         enum ColorType {
@@ -192,6 +193,22 @@ inline void handle_tabbing(const uuid id) {
     get().last_processed = id;
 }
 
+bool _text_impl(const uuid id, const WidgetConfig& config) {
+    // NOTE: currently id is only used for focus and hot/active,
+    // we could potentially also track "selections"
+    // with a range so the user can highlight text
+    // not needed for supermarket but could be in the future?
+    (void)id;
+    // No need to render if text is empty
+    if (config.text.empty()) return false;
+
+    DrawText(config.text.c_str(), config.position.x, config.position.y,
+             config.size.x,
+             config.theme.color(WidgetConfig::Theme::ColorType::FONT));
+
+    return true;
+}
+
 inline void _button_render(const uuid id, const WidgetConfig& config) {
     draw_if_kb_focus(id, [&]() {
         // TODO support config.size + vec2{0.1f, 0.1f}
@@ -220,19 +237,20 @@ inline void _button_render(const uuid id, const WidgetConfig& config) {
     get().draw_widget(config.position, config.size, config.rotation,
                       config.theme.color(), config.theme.texture);
 
-    // if (config.text.size() != 0) {
-    // float sign = config.flipTextY ? 1 : -1;
-    //
-    // WidgetConfig textConfig(config);
-    // // TODO detect if the button color is dark
-    // // and change the color to white automatically
-    // textConfig.theme.fontColor = getOppositeColor(config.theme.color());
-    // textConfig.position =
-    // config.position + glm::vec2{(-config.size.x / 2.f) + 0.10f,
-    // config.size.y * sign * 0.5f};
-    // textConfig.size = 0.75f * glm::vec2{config.size.y, config.size.y};
-    // text(MK_UUID(id.ownerLayer, 0), textConfig);
-    // }
+    if (config.text.size() != 0) {
+        WidgetConfig textConfig(config);
+        // TODO detect if the button color is dark
+        // and change the color to white automatically
+        // textConfig.theme.fontColor = getOppositeColor(config.theme.color());
+        textConfig.position =
+            config.position + vec2{
+                config.size.x * 0.05f,
+                config.size.y * 0.25f
+            };
+        textConfig.size = vec2{config.size.y, config.size.y} * 0.75f;
+
+        _text_impl(MK_UUID(id.ownerLayer, 0), textConfig);
+    }
 }
 
 inline bool _button_pressed(const uuid id) {
@@ -250,6 +268,26 @@ inline bool _button_pressed(const uuid id) {
     return false;
 }
 
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+
+bool text(const uuid id, const WidgetConfig& config) {
+    return _text_impl(id, config);
+}
 bool button(const uuid id, WidgetConfig config) {
     // no state
     // config.position = get().widget_center(config.position, config.size);
