@@ -239,10 +239,12 @@ inline void handle_tabbing(const uuid id) {
         if (get().pressed("Widget Next") ||
             get().pressed("Widget Value Down")) {
             get().kb_focus_id = ROOT_ID;
-            if (get().is_held_down("Widget Mod") ||
-                get().pressed("Widget Value Up")) {
+            if (get().is_held_down("Widget Mod")) {
                 get().kb_focus_id = get().last_processed;
             }
+        }
+        if (get().pressed("Widget Value Up")) {
+            get().kb_focus_id = get().last_processed;
         }
     }
     // before any returns
