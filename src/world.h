@@ -64,8 +64,8 @@ const std::string WALL_TEST = R"(
 ...........#......
 ..................)";
 
-const std::string ACTIVE_MAP = WALL_TEST;
-//const std::string ACTIVE_MAP = EXAMPLE_MAP;
+//const std::string ACTIVE_MAP = WALL_TEST;
+const std::string ACTIVE_MAP = EXAMPLE_MAP;
 
 struct World {
     std::vector<std::string> lines;
