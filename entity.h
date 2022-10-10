@@ -141,7 +141,19 @@ struct Entity {
         this->position = this->snap_position();
         if (held_item != nullptr) {
             auto new_pos = this->position;
-            new_pos.z += TILESIZE;
+            if (this->face_direction == FrontFaceDirection::FORWARD) {
+                new_pos.z += TILESIZE;
+            }
+            else if (this->face_direction == FrontFaceDirection::RIGHT) {
+                new_pos.x += TILESIZE;
+            }
+            else if (this->face_direction == FrontFaceDirection::BACK) {
+                new_pos.z -= TILESIZE;
+            }
+            else if (this->face_direction == FrontFaceDirection::LEFT) {
+                new_pos.x -= TILESIZE;
+            }
+            
             held_item->update_position(new_pos);
         }
     }
