@@ -16,7 +16,7 @@ struct Settings {
 
     void update_window_size(vec2 size) {
         window_size = size;
-        WindowResizeEvent* event = new WindowResizeEvent(size.x, size.y);
+        WindowResizeEvent* event = new WindowResizeEvent(static_cast<int>(size.x), static_cast<int>(size.y));
         App::get().processEvent(*event);
         delete event;
     }

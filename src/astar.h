@@ -44,7 +44,7 @@ std::vector<vec2> get_neighbors(vec2 start,
     const float x[8] = {0, 0, 1, -1, -1, 1, -1, 1};
     const float y[8] = {1, -1, 0, 0, -1, -1, 1, 1};
     std::vector<vec2> output;
-    int step = TILESIZE;
+    int step = static_cast<int>(TILESIZE);
     for (int i = 0; i < 8; i++) {
         vec2 neighbor = {start.x + (x[i] * step), start.y + (y[i] * step)};
         neighbor = vec::snap(neighbor);

@@ -11,7 +11,9 @@ struct Wall : public Entity {
         CORNER,
         TEE,
         DOUBLE_TEE,
-    } type;
+    };
+
+    Type type = FULL;
 
     Wall(vec3 p, Color c) : Entity(p, c) {}
     Wall(vec2 p, Color c) : Entity(p, c) {}

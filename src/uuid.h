@@ -23,7 +23,7 @@ struct uuid {
 
     uuid(int layer, std::size_t ownerHash, const std::string& s1, int i1) {
         ownerLayer = layer;
-        auto h0 = std::hash<int>{}(ownerHash);
+        auto h0 = std::hash<int>{}(static_cast<int>(ownerHash));
         auto h1 = std::hash<std::string>{}(s1);
         auto h2 = std::hash<int>{}(i1);
         hash = h0 ^ (h1 << 1) ^ (h2 << 2);
@@ -32,7 +32,7 @@ struct uuid {
     uuid(int o, std::size_t ownerHash, const std::string& s1, int i1,
          int index) {
         ownerLayer = o;
-        auto h0 = std::hash<int>{}(ownerHash);
+        auto h0 = std::hash<int>{}(static_cast<int>(ownerHash));
         auto h1 = std::hash<std::string>{}(s1);
         auto h2 = std::hash<int>{}(i1);
         auto h3 = std::hash<int>{}(index);

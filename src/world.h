@@ -105,8 +105,8 @@ struct World {
             5 6 7
         */
         std::vector<char> output;
-        const float x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
-        const float y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
+        const int x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+        const int y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
         for (int a = 0; a < 8; a++) {
             char neighbor = get_char(i + x[a], j + y[a]);
             output.push_back(neighbor);

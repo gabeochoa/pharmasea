@@ -72,11 +72,11 @@ struct UIContext {
     uuid kb_focus_id;
     uuid last_processed;
 
-    bool lmouse_down;
-    vec2 mouse;
+    bool lmouse_down = false;
+    vec2 mouse = vec2{0.0,0.0};
 
-    int key;
-    int mod;
+    int key = -1;
+    int mod = -1;
 
     inline static UIContext* create() { return new UIContext(); }
     inline static UIContext& get() {
@@ -128,8 +128,8 @@ struct UIContext {
     }
 
     void draw_widget(vec2 pos, vec2 size, float, Color color, std::string) {
-        DrawRectangle(pos.x, pos.y,    //
-                      size.x, size.y,  //
+        DrawRectangle(static_cast<int>(pos.x), static_cast<int>(pos.y),    //
+            static_cast<int>(size.x), static_cast<int>(size.y),  //
                       color);
     }
 
@@ -260,8 +260,8 @@ bool _text_impl(const uuid id, const WidgetConfig& config) {
     // No need to render if text is empty
     if (config.text.empty()) return false;
 
-    DrawText(config.text.c_str(), config.position.x, config.position.y,
-             config.size.x,
+    DrawText(config.text.c_str(), static_cast<int>(config.position.x), static_cast<int>(config.position.y),
+        static_cast<int>(config.size.x),
              config.theme.color(WidgetConfig::Theme::ColorType::FONT));
 
     return true;
@@ -349,7 +349,7 @@ bool _button_list_impl(const uuid id, WidgetConfig config,
     // Generate all the button ids
     std::vector<uuid> ids;
     for (size_t i = 0; i < configs.size(); i++) {
-        ids.push_back(MK_UUID_LOOP(id.ownerLayer, id.hash, i));
+        ids.push_back(MK_UUID_LOOP(id.ownerLayer, id.hash, static_cast<int>(i)));
     }
 
     for (size_t i = 0; i < configs.size(); i++) {
@@ -361,7 +361,7 @@ bool _button_list_impl(const uuid id, WidgetConfig config,
         // bwlconfig.theme.backgroundColor = configs[i].theme.color();
 
         if (button_with_label(button_id, bwlconfig)) {
-            state->selected = i;
+            state->selected = static_cast<int>(i);
             pressed = true;
         }
     }
@@ -397,7 +397,7 @@ bool _button_list_impl(const uuid id, WidgetConfig config,
         if (get().pressed("Widget Value Down")) {
             state->selected = state->selected + 1;
             if (state->selected > (int) configs.size() - 1)
-                state->selected = configs.size() - 1;
+                state->selected = static_cast<int>(configs.size() - 1);
             get().kb_focus_id = ids[state->selected];
         }
     }
@@ -414,7 +414,7 @@ bool _button_list_impl(const uuid id, WidgetConfig config,
         // if you got the kb focus somehow
         // (ie by clicking or tabbing)
         // then we will just make you selected
-        if (has_kb_focus(ids[i])) state->selected = i;
+        if (has_kb_focus(ids[i])) state->selected = static_cast<int>(i);
         state->hasFocus = state->hasFocus | has_kb_focus(ids[i]);
     }
 
