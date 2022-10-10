@@ -11,6 +11,11 @@
 
 namespace ui {
 
+const Menu::State STATE = Menu::State::UI;
+struct UIContext;
+static std::shared_ptr<UIContext> _uicontext;
+UIContext* globalContext;
+
 namespace color {
 static const Color white = Color{255};
 static const Color black = Color{0};
@@ -52,9 +57,6 @@ struct WidgetConfig {
     } theme;
 };
 
-struct UIContext;
-static std::shared_ptr<UIContext> _uicontext;
-UIContext* globalContext;
 struct UIContext {
     uuid hot_id;
     uuid active_id;
@@ -81,11 +83,11 @@ struct UIContext {
 
     bool process_keyevent(KeyPressedEvent event) {
         int code = event.keycode;
-        if (!KeyMap::does_layer_map_contain_key(Menu::State::UI, code)) {
+        if (!KeyMap::does_layer_map_contain_key(STATE, code)) {
             return false;
         }
-        // TODO make this a map if we have more 
-        if (code == KeyMap::get_key_code(Menu::State::UI, "Widget Mod")) {
+        // TODO make this a map if we have more
+        if (code == KeyMap::get_key_code(STATE, "Widget Mod")) {
             mod = code;
             return true;
         }
@@ -94,7 +96,7 @@ struct UIContext {
     }
 
     bool pressed(std::string name) {
-        int code = KeyMap::get_key_code(Menu::State::UI, name);
+        int code = KeyMap::get_key_code(STATE, name);
         bool a = pressedWithoutEat(code);
         if (a) eatKey();
         return a;
@@ -109,7 +111,7 @@ struct UIContext {
     // is held down
     bool is_held_down(std::string name) {
         // TODO
-        return KeyMap::is_event(Menu::State::UI, name);
+        return KeyMap::is_event(STATE, name);
     }
 
     void draw_widget(vec2 pos, vec2 size, float, Color color, std::string) {
@@ -203,10 +205,16 @@ inline void draw_if_kb_focus(const uuid& id, std::function<void(void)> cb) {
 }
 
 inline void handle_tabbing(const uuid id) {
+    // TODO How do we handle something that wants to use
+    // Widget Value Down/Up to control the value?
+    // Do we mark the widget type with "nextable"? (tab will always work but not
+    // very discoverable
     if (has_kb_focus(id)) {
-        if (get().pressed("Widget Next")) {
+        if (get().pressed("Widget Next") ||
+            get().pressed("Widget Value Down")) {
             get().kb_focus_id = ROOT_ID;
-            if (get().is_held_down("Widget Mod")) {
+            if (get().is_held_down("Widget Mod") ||
+                get().pressed("Widget Value Up")) {
                 get().kb_focus_id = get().last_processed;
             }
         }
@@ -303,7 +311,6 @@ bool text(const uuid id, const WidgetConfig& config) {
 }
 bool button(const uuid id, WidgetConfig config) {
     // no state
-    // config.position = get().widget_center(config.position, config.size);
     active_if_mouse_inside(id, Rectangle{config.position.x, config.position.y,
                                          config.size.x, config.size.y});
     try_to_grab_kb(id);

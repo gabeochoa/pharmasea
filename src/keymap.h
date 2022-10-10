@@ -7,6 +7,8 @@
 struct KeyMap;
 static std::shared_ptr<KeyMap> keymap;
 
+// TODO do we need to make this int[] to support multiple things
+// mapping to the same string?
 typedef std::map<std::string, int> LayerMapping;
 typedef std::map<Menu::State, LayerMapping> FullMap;
 
@@ -42,7 +44,11 @@ struct KeyMap {
         LayerMapping& game_map = this->get_or_create_layer_map(Menu::State::UI);
         game_map["Widget Next"] = KEY_TAB;
         game_map["Widget Mod"] = KEY_LEFT_SHIFT;
+
         game_map["Widget Press"] = KEY_ENTER;
+
+        game_map["Widget Value Up"] = KEY_UP;
+        game_map["Widget Value Down"] = KEY_DOWN;
     }
 
     void load_default_keys() {
@@ -75,13 +81,12 @@ struct KeyMap {
         return false;
     }
 
-    static bool does_layer_map_contain_key(Menu::State state,
-                                         int keycode) {
-        // We dont even have this Layer Map 
-        if(!KeyMap::get().mapping.contains(state)) return false;
+    static bool does_layer_map_contain_key(Menu::State state, int keycode) {
+        // We dont even have this Layer Map
+        if (!KeyMap::get().mapping.contains(state)) return false;
         LayerMapping layermap = KeyMap::get().mapping[state];
-        for(auto pair : layermap){
-            if(keycode == pair.second) return true;
+        for (auto pair : layermap) {
+            if (keycode == pair.second) return true;
         }
         return false;
     }
