@@ -456,12 +456,14 @@ bool _dropdown_impl(const uuid id, WidgetConfig config,
          WidgetConfig(
              // TODO support getOppositeColor
              // {.fontColor = getOppositeColor(config.theme.color()),
-             {.theme =
+             {
+             .position = config.position + offset,
+             .rotation = state->on ? 90.f : 270.f,
+             .text = ">",
+             .theme =
                   WidgetTheme(config.theme.color(WidgetTheme::ColorType::FONT),
-                              config.theme.color()),
-              .rotation = state->on ? 90.f : 270.f,
-              .text = ">",
-              .position = config.position + offset}));
+                              config.theme.color())
+              }));
 
     bool childrenHaveFocus = false;
 

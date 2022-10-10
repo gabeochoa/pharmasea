@@ -38,7 +38,15 @@ struct LayerStack {
         }
     }
 
-    void push(Layer* layer) { insert = layers.emplace(insert, layer); }
+    void push(Layer* layer) {
+        if (layers.empty()) {
+            layers.push_back(layer);
+            insert = layers.begin();
+        }
+        else {
+            insert = layers.emplace(insert, layer);
+        }
+    }
     void pop(Layer* layer) {
         auto it = std::find(layers.begin(), layers.end(), layer);
         if (it != layers.end()) {

@@ -52,10 +52,10 @@ struct SettingsLayer : public Layer {
         theme.backgroundColor = Color{76, 225, 127, 255};
 
         WidgetConfig dropdownMain = WidgetConfig({
-            .theme = theme,
             .position = vec2{150.f, 200.f},  //
             .size = vec2{100.f, 50.f},       //
             .text = "",                      //
+            .theme = theme
         });
 
         if (ui::dropdown(ui::MK_UUID(id, ui::ROOT_ID), dropdownMain,

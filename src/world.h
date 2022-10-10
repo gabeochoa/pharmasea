@@ -116,10 +116,11 @@ struct World {
 
     void init_wall(int i, int j, vec2 loc) {
         auto d_color = (Color){155, 75, 0, 255};
+        typedef Entity::FrontFaceDirection EntityDir;
         const auto create_wall = [](const vec2& loc, Color c,
                                     const Wall::Type& type = Wall::Type::FULL,
-                                    const EntityDir direction =
-                                        EntityDir::FORWARD) {
+                                    const Entity::FrontFaceDirection direction =
+                                        Entity::FrontFaceDirection::FORWARD) {
             std::shared_ptr<Wall> wall;
             wall.reset(new Wall(loc, c));
             wall->type = type;
