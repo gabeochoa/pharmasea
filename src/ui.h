@@ -211,12 +211,7 @@ bool _text_impl(const uuid id, const WidgetConfig& config) {
 
 inline void _button_render(const uuid id, const WidgetConfig& config) {
     draw_if_kb_focus(id, [&]() {
-        // TODO support config.size + vec2{0.1f, 0.1f}
-        get().draw_widget(config.position,
-                          (vec2){
-                              config.size.x + 0.1f,
-                              config.size.y + 0.1f,
-                          },
+        get().draw_widget(config.position, config.size + vec2{0.1f, 0.1f},
                           config.rotation, color::teal, "TEXTURE");
     });
 
