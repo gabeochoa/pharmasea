@@ -3,16 +3,18 @@
 
 #include "external_include.h"
 #include "menu.h"
+#include "singleton.h"
 
-struct KeyMap;
-static std::shared_ptr<KeyMap> keymap;
 
 // TODO do we need to make this int[] to support multiple things
 // mapping to the same string?
 typedef std::map<std::string, int> LayerMapping;
 typedef std::map<Menu::State, LayerMapping> FullMap;
 
+SINGLETON_FWD(KeyMap)
 struct KeyMap {
+    SINGLETON(KeyMap)
+
     FullMap mapping;
 
     KeyMap() { load_default_keys(); }
@@ -54,12 +56,6 @@ struct KeyMap {
     void load_default_keys() {
         load_game_keys();
         load_ui_keys();
-    }
-
-    inline static KeyMap* create() { return new KeyMap(); }
-    inline static KeyMap& get() {
-        if (!keymap) keymap.reset(KeyMap::create());
-        return *keymap;
     }
 
     static int get_key_code(Menu::State state, const std::string& name) {

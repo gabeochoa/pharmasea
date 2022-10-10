@@ -1,33 +1,26 @@
 
 #pragma once
 
-#include "external_include.h"
 #include "event.h"
+#include "external_include.h"
+#include "singleton.h"
 
-struct Input;
-static std::shared_ptr<Input> input;
+SINGLETON_FWD(Input)
 struct Input {
+    SINGLETON(Input)
+
     std::deque<int> pressedSinceLast;
 
     void onUpdate(float) {
         pressedSinceLast.clear();
         while (true) {
             int key = GetKeyPressed();
-            if (key != 0){
+            if (key != 0) {
                 // std::cout << "keypressed: " << key << std::endl;
-            }
-            else {
+            } else {
                 break;
             }
             pressedSinceLast.push_back(key);
         }
     }
-
-    inline static Input* create() { return new Input(); }
-    inline static Input& get() {
-        if (!input) input.reset(Input::create());
-        return *input;
-    }
-
 };
-

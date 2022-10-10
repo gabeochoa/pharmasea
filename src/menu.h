@@ -2,11 +2,11 @@
 #pragma once
 
 #include "external_include.h"
+#include "singleton.h"
 
-struct Menu;
-static std::shared_ptr<Menu> menu;
-
+SINGLETON_FWD(Menu)
 struct Menu {
+    SINGLETON(Menu)
     enum State {
         Root = 0,
         Game = 1,
@@ -19,11 +19,6 @@ struct Menu {
     };
 
     State state;
-    inline static Menu* create() { return new Menu(); }
-    inline static Menu& get() {
-        if (!menu) menu.reset(Menu::create());
-        return *menu;
-    }
 
     inline const char* tostring() {
         switch (state) {
