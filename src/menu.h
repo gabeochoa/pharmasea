@@ -12,7 +12,7 @@ struct Menu {
         Game = 1,
         Paused = 2,
 
-        UITest = 98,
+        UI = 98,
         Any = 99,
     };
 
@@ -31,8 +31,8 @@ struct Menu {
                 return "Game";
             case Menu::State::Paused:
                 return "Paused";
-            case Menu::State::UITest:
-                return "UI Test";
+            case Menu::State::UI:
+                return "UI";
             default:
                 std::cout << "Invalid state" << std::endl;
                 return "MenuState no stateToString";

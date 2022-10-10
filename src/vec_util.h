@@ -28,6 +28,12 @@ std::ostream& operator<<(std::ostream& os, const vec3& v) {
     return os;
 }
 
+std::ostream& operator<<(std::ostream& os, const Rectangle& v) {
+    os << "Rect(" << v.x << ", " << v.y << ", " << v.width << ", " << v.height
+       << ")";
+    return os;
+}
+
 vec2 operator-(vec2 lhs, const vec2& rhs) {
     lhs.x -= rhs.x;
     lhs.y -= rhs.y;
@@ -48,6 +54,12 @@ vec3 operator/(vec3 lhs, float divisor) {
     return lhs;
 }
 
+vec2 operator/(vec2 lhs, float divisor) {
+    lhs.x /= divisor;
+    lhs.y /= divisor;
+    return lhs;
+}
+
 vec3 operator*(vec3 lhs, float multiplier) {
     lhs.x *= multiplier;
     lhs.y *= multiplier;
@@ -57,8 +69,22 @@ vec3 operator*(vec3 lhs, float multiplier) {
 
 vec3 operator+(vec3 lhs, float offset) {
     lhs.x += offset;
+    lhs.y += offset;
     lhs.z += offset;
     return lhs;
+}
+
+vec2 operator+(vec2 lhs, float offset) {
+    lhs.x += offset;
+    lhs.y += offset;
+    return lhs;
+}
+
+vec2 operator+(const vec2& lhs, const vec2& rhs) {
+    vec2 out;
+    out.x = lhs.x + rhs.x;
+    out.y = lhs.y + rhs.y;
+    return out;
 }
 
 namespace vec {
@@ -67,13 +93,9 @@ float distance(vec2 a, vec2 b) {
     return sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
 
-vec3 to3(vec2 position) {
-    return { position.x, 0, position.y};
-}
+vec3 to3(vec2 position) { return {position.x, 0, position.y}; }
 
-vec2 to2(vec3 position) {
-    return { position.x, position.z };
-}
+vec2 to2(vec3 position) { return {position.x, position.z}; }
 
 vec2 snap(vec2 position) {
     return {TILESIZE * round(position.x / TILESIZE),  //
