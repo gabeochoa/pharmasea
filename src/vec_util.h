@@ -86,7 +86,20 @@ vec2 operator+(vec2 lhs, float offset) {
     return lhs;
 }
 
+vec2 operator+=(vec2 lhs, float offset) {
+    lhs.x += offset;
+    lhs.y += offset;
+    return lhs;
+}
+
 vec2 operator+(const vec2& lhs, const vec2& rhs) {
+    vec2 out;
+    out.x = lhs.x + rhs.x;
+    out.y = lhs.y + rhs.y;
+    return out;
+}
+
+vec2 operator+=(const vec2& lhs, const vec2& rhs) {
     vec2 out;
     out.x = lhs.x + rhs.x;
     out.y = lhs.y + rhs.y;

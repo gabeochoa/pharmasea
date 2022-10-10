@@ -20,4 +20,5 @@ typedef Vector4 vec4;
 #include <numeric>
 #include <ostream>
 #include <deque>
+#include <sstream>
 

@@ -61,16 +61,18 @@ struct uuid {
 
     operator std::size_t() const { return this->hash; }
 
-    // TODO
-    // operator std::string() const {
+    operator std::string() const {
+        std::stringstream ss;
+        ss << "layer: ";
+        ss << this->ownerLayer;
+        ss << " hash: ";
+        ss << this->hash;
+        return ss.str();
+    }
 };
 
 std::ostream& operator<<(std::ostream& os, const uuid& obj) {
-    os << "layer: ";
-    os << obj.ownerLayer;
-    os << " hash: ";
-    os << obj.hash;
-    os << std::endl;
+    os << std::string(obj);
     return os;
 }
 

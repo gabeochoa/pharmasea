@@ -5,14 +5,15 @@
 #include "globals.h"
 ///
 
-#include "camera.h"
-#include "world.h"
-#include "menu.h"
-#include "app.h"
-#include "gamelayer.h"
-#include "menulayer.h"
 #include "aboutlayer.h"
+#include "app.h"
+#include "camera.h"
+#include "gamelayer.h"
+#include "menu.h"
+#include "menulayer.h"
 #include "menustatelayer.h"
+#include "settingslayer.h"
+#include "world.h"
 
 int main(void) {
     App app = App::get();
@@ -22,6 +23,9 @@ int main(void) {
 
     AboutLayer* aboutlayer = new AboutLayer();
     app.pushLayer(aboutlayer);
+
+    SettingsLayer* settingslayer = new SettingsLayer();
+    app.pushLayer(settingslayer);
 
     MenuLayer* menulayer = new MenuLayer();
     app.pushLayer(menulayer);
