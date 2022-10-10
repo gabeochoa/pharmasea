@@ -106,6 +106,19 @@ vec2 operator+=(const vec2& lhs, const vec2& rhs) {
     return out;
 }
 
+BoundingBox get_bounds(vec3 position, vec3 size) {
+    return {(vec3){
+                position.x - size.x / 2,
+                position.y - size.y / 2,
+                position.z - size.z / 2,
+            },
+            (vec3){
+                position.x + size.x / 2,
+                position.y + size.y / 2,
+                position.z + size.z / 2,
+            }};
+}
+
 namespace vec {
 
 float distance(vec2 a, vec2 b) {
@@ -125,5 +138,6 @@ vec3 snap(vec3 position) {
             position.y,                               //
             TILESIZE * round(position.z / TILESIZE)};
 }
+
 
 }  // namespace vec
