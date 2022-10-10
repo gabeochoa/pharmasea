@@ -7,11 +7,15 @@
 #include "keymap.h"
 
 struct Person : public Entity {
+    Person(vec3 p, Color face_color_in, Color base_color_in) : Entity(p, face_color_in, base_color_in) {}
+    Person(vec2 p, Color face_color_in, Color base_color_in) : Entity(p, face_color_in, base_color_in) {}
     Person(vec3 p, Color c) : Entity(p, c) {}
     Person(vec2 p, Color c) : Entity(p, c) {}
 
     virtual vec3 update_xaxis_position(float dt) = 0;
     virtual vec3 update_zaxis_position(float dt) = 0;
+
+    vec3 prev_position;
 
     virtual vec3 size() const override {
         return (vec3){TILESIZE * 0.8, TILESIZE * 0.8, TILESIZE * 0.8};
@@ -20,8 +24,25 @@ struct Person : public Entity {
     virtual void update(float dt) override {
         // std::cout << this->raw_position << ";; " << this->position <<
         // std::endl;
+
         auto new_pos_x = this->update_xaxis_position(dt);
         auto new_pos_z = this->update_zaxis_position(dt);
+
+        vec3 delta_distance_x = new_pos_x - this->raw_position;
+        if (delta_distance_x.x > 0) {
+            this->face_direction = FrontFaceDirection::RIGHT;
+        }
+        else if (delta_distance_x.x < 0) {
+            this->face_direction = FrontFaceDirection::LEFT;
+        }
+
+        vec3 delta_distance_z = new_pos_z - this->raw_position;
+        if (delta_distance_z.z > 0) {
+            this->face_direction = FrontFaceDirection::FORWARD;
+        }
+        else if (delta_distance_z.z < 0) {
+            this->face_direction = FrontFaceDirection::BACK;
+        }
 
         auto new_bounds_x =
             get_bounds(new_pos_x, this->size());  // horizontal check
@@ -64,17 +85,23 @@ struct Person : public Entity {
 };
 
 struct Player : public Person {
-    Player() : Person({0, 0, 0}, {0, 255, 0, 255}) {}
+    Player(vec3 p, Color face_color_in, Color base_color_in) : Person(p, face_color_in, base_color_in) {}
+    Player(vec2 p, Color face_color_in, Color base_color_in) : Person(p, face_color_in, base_color_in) {}
+    Player() : Person({ 0, 0, 0 }, { 0, 255, 0, 255 }, {255, 0, 0, 255}) {}
     Player(vec2 location)
-        : Person({location.x, 0, location.y}, {0, 255, 0, 255}) {}
+        : Person({location.x, 0, location.y}, {0, 255, 0, 255}, { 255, 0, 0, 255 }) {}
 
     virtual vec3 update_xaxis_position(float dt) override {
         float speed = 10.0f * dt;
         auto new_pos_x = this->raw_position;
         bool left = KeyMap::is_event(Menu::State::Game, "Player Left");
         bool right = KeyMap::is_event(Menu::State::Game, "Player Right");
-        if (left) new_pos_x.x -= speed;
-        if (right) new_pos_x.x += speed;
+        if (left) { 
+            new_pos_x.x -= speed;
+        }
+        if (right) {
+            new_pos_x.x += speed;
+        }
         return new_pos_x;
     }
 
@@ -83,8 +110,12 @@ struct Player : public Person {
         auto new_pos_z = this->raw_position;
         bool up = KeyMap::is_event(Menu::State::Game, "Player Forward");
         bool down = KeyMap::is_event(Menu::State::Game, "Player Back");
-        if (up) new_pos_z.z -= speed;
-        if (down) new_pos_z.z += speed;
+        if (up) {
+            new_pos_z.z -= speed;
+        }
+        if (down) {
+            new_pos_z.z += speed;
+        }
         return new_pos_z;
     }
 
@@ -122,6 +153,9 @@ struct Player : public Person {
 };
 
 struct TargetCube : public Person {
+
+    TargetCube(vec3 p, Color face_color_in, Color base_color_in) : Person(p, face_color_in, base_color_in) {}
+    TargetCube(vec2 p, Color face_color_in, Color base_color_in) : Person(p, face_color_in, base_color_in) {}
     TargetCube(vec3 p, Color c) : Person(p, c) {}
     TargetCube(vec2 p, Color c) : Person(p, c) {}
 
@@ -154,6 +188,8 @@ struct AIPerson : public Person {
     std::optional<vec2> local_target;
     float base_speed = 10.f;
 
+    AIPerson(vec3 p, Color face_color_in, Color base_color_in) : Person(p, face_color_in, base_color_in) {}
+    AIPerson(vec2 p, Color face_color_in, Color base_color_in) : Person(p, face_color_in, base_color_in) {}
     AIPerson(vec3 p, Color c) : Person(p, c) {}
     AIPerson(vec2 p, Color c) : Person(p, c) {}
 

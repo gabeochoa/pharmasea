@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "raylib.h"
+#include "drawing_util.h"
 
 typedef Vector2 vec2;
 typedef Vector3 vec3;

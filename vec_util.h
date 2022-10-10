@@ -34,6 +34,13 @@ vec2 operator-(vec2 lhs, const vec2& rhs) {
     return lhs;
 }
 
+vec3 operator-(vec3 lhs, const vec3& rhs) {
+    lhs.x -= rhs.x;
+    lhs.y -= rhs.y;
+    lhs.z -= rhs.z;
+    return lhs;
+}
+
 vec3 operator/(vec3 lhs, float divisor) {
     lhs.x /= divisor;
     lhs.y /= divisor;

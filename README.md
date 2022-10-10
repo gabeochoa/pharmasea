@@ -15,8 +15,9 @@ Core engine TODOs:
 7. Disallow target cube from going outside of bounds
 8. Add some way for entities to subscribe to certain keys 
     so we can more easily keep track of what keys are being requested over lifetime
-9. Paint front-facing indicator (another cube, different color face, some shape)
-10. When Entities change direction, change the front-facing indicator to face the direction they're moving
+9. ~~Paint front-facing indicator (another cube, different color face, some shape)~~
+10. ~~When Entities change direction, change the front-facing indicator to face the direction they're moving~~
+11. When Entities change direction, change the location of any held item to face the direction they're moving
 
 Gameplay Ideas
 - Pharmacy

@@ -73,20 +73,42 @@ static std::vector<std::shared_ptr<Item>> items_DO_NOT_USE;
 
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
+
+    enum FrontFaceDirection{
+        FORWARD = 0, // 0 degrees
+        RIGHT = 90,  // 90 degrees
+        BACK = 180,  // 180 degrees
+        LEFT = 270   // 270 degrees
+    };
+
     int id;
     vec3 raw_position;
+    vec3 prev_position;
     vec3 position;
-    Color color;
+    Color face_color;
+    Color base_color;
     bool cleanup = false;
+    FrontFaceDirection face_direction = FrontFaceDirection::FORWARD;
     std::shared_ptr<Item> held_item = nullptr;
 
-    Entity(vec3 p, Color c) : id(ENTITY_ID_GEN++), raw_position(p), color(c) {
+    Entity(vec3 p, Color face_color_in, Color base_color_in) : id(ENTITY_ID_GEN++), raw_position(p), face_color(face_color_in), base_color(base_color_in) {
         this->position = this->snap_position();
     }
+
+    Entity(vec2 p, Color face_color_in, Color base_color_in)
+        : id(ENTITY_ID_GEN++), raw_position({p.x, 0, p.y}), face_color(face_color_in), base_color(base_color_in) {
+        this->position = this->snap_position();
+    }
+
+    Entity(vec3 p, Color c) : id(ENTITY_ID_GEN++), raw_position(p), face_color(c), base_color(c) {
+        this->position = this->snap_position();
+    }
+
     Entity(vec2 p, Color c)
-        : id(ENTITY_ID_GEN++), raw_position({p.x, 0, p.y}), color(c) {
+        : id(ENTITY_ID_GEN++), raw_position({ p.x, 0, p.y }), face_color(c), base_color(c) {
         this->position = this->snap_position();
     }
+
     virtual ~Entity() {}
 
     virtual BoundingBox bounds() const {
@@ -107,8 +129,8 @@ struct Entity {
         // DrawCube(this->position, this->size().x, this->size().y,
         // this->size().z,
         //          this->color);
-        DrawCube(this->raw_position, this->size().x, this->size().y,
-                 this->size().z, this->color);
+        DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
+                 this->size().z, static_cast<float>(face_direction), this->face_color, this->base_color);
         DrawBoundingBox(this->bounds(), MAROON);
         // DrawBoundingBox(this->raw_bounds(), PINK);
     }

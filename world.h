@@ -85,7 +85,7 @@ struct World {
                     case 'A': {
                         std::shared_ptr<AIPerson> aiperson;
                         aiperson.reset(
-                            new AIPerson(location, (Color){255, 0, 0, 255}));
+                            new AIPerson(location, (Color){255, 0, 0, 255}, { 0, 255, 0, 255 }));
                         EntityHelper::addEntity(aiperson);
                         break;
                     }
@@ -98,7 +98,7 @@ struct World {
                         }
                         std::shared_ptr<TargetCube> targetcube;
                         targetcube.reset(new TargetCube(
-                            location, (Color){255, 16, 240, 255}));
+                            location, (Color){255, 16, 240, 255}, (Color){ 16, 255, 240, 255 }));
                         EntityHelper::addEntity(targetcube);
                         GLOBALS.set("targetcube", targetcube.get());
                         break;
