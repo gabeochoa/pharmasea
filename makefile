@@ -5,4 +5,4 @@ INCLUDES = -Ivendor/
 
 
 all: 
-	clang++ $(FLAGS) game.cpp `pkg-config --libs --cflags raylib` $(INCLUDES) -o pharmasea && ./pharmasea
+	clang++ $(FLAGS) src/game.cpp `pkg-config --libs --cflags raylib` $(INCLUDES) -o pharmasea && ./pharmasea
