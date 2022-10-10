@@ -15,7 +15,7 @@
 #include "menustatelayer.h"
 
 int main(void) {
-    App app;
+    App app = App::get();
 
     GameLayer* gamelayer = new GameLayer();
     app.pushLayer(gamelayer);

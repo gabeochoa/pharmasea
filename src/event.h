@@ -62,10 +62,10 @@ struct EventDispatcher {
     EventDispatcher(Event& e) : event(e) {}
     Event& event;
 
-    template <typename T>
+    template<typename T>
     bool dispatch(std::function<bool(T&)> func) {
         if (event.getEventType() == T::getStaticType()) {
-            event.handled = func(*(T*)&event);
+            event.handled = func(*(T*) &event);
             return true;
         }
         return false;
@@ -86,5 +86,17 @@ struct KeyPressedEvent : public KeyEvent {
     KeyPressedEvent(int k, int r) : KeyEvent(k), repeatCount(r) {}
     int repeatCount;
     int getRepeatCount() const { return repeatCount; }
+};
 
+struct WindowResizeEvent : public Event {
+    unsigned int width, height;
+    WindowResizeEvent(unsigned int w, unsigned int h)
+        : width(w), height(h) {}
+
+    // std::string toString() const override {
+    // return fmt::format("WindowResizeEvent: {}, {}", Width, Height);
+    // }
+
+    MACRO_EVENT_TYPE(WindowResize)
+    MACRO_EVENT_CATEGORY(EventCategoryApplication)
 };

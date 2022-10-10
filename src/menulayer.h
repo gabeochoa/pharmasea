@@ -7,6 +7,7 @@
 #include "raylib.h"
 #include "ui.h"
 #include "uuid.h"
+#include "settings.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -55,6 +56,20 @@ struct MenuLayer : public Layer {
                                              .text = std::string("About"),
                                          }))) {
             Menu::get().state = Menu::State::About;
+        }
+
+        if (button(MK_UUID(id, ROOT_ID),
+                   WidgetConfig({
+                       .position = vec2{50.f, 325.f},
+                       .size = vec2{100.f, 50.f},
+                       .text = std::string("Change Window Size"),
+                   }))) {
+            auto& settings = Settings::get();
+            if (settings.window_size.x == WIN_W) {
+                settings.update_window_size({800, 600});
+            } else {
+                settings.update_window_size({WIN_W, WIN_H});
+            }
         }
 
         ui_context->end();
