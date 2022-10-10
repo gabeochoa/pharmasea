@@ -138,7 +138,13 @@ struct Entity {
     vec3 snap_position() const { return vec::snap(this->raw_position); }
 
     virtual void update(float) {
-        this->position = this->snap_position();
+        if (this->is_snappable()) {
+            this->position = this->snap_position();
+        }
+        else {
+            this->position = this->raw_position;
+        }
+        
         if (held_item != nullptr) {
             auto new_pos = this->position;
             if (this->face_direction == FrontFaceDirection::FORWARD) {
@@ -159,6 +165,7 @@ struct Entity {
     }
 
     virtual bool is_collidable() { return true; }
+    virtual bool is_snappable() { return false; }
 };
 
 static std::vector<std::shared_ptr<Entity>> entities_DO_NOT_USE;

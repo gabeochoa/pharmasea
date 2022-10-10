@@ -321,4 +321,6 @@ struct AIPerson : public Person {
             this->local_target.reset();
         }
     }
+
+    virtual bool is_snappable() { return true; }
 };
