@@ -322,5 +322,5 @@ struct AIPerson : public Person {
         }
     }
 
-    virtual bool is_snappable() { return true; }
+    virtual bool is_snappable() override { return true; }
 };

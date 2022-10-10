@@ -51,6 +51,7 @@ struct GameLayer : public Layer {
         BeginDrawing();
         {
             ClearBackground(RAYWHITE);
+            DrawFPS(0, 0);
             DrawText(Menu::get().tostring(), 19, 20, 20, LIGHTGRAY);
             BeginMode3D(cam.get());
             {
