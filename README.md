@@ -18,6 +18,9 @@ Core engine TODOs:
 9. ~~Paint front-facing indicator (another cube, different color face, some shape)~~
 10. ~~When Entities change direction, change the front-facing indicator to face the direction they're moving~~
 11. ~~When Entities change direction, change the location of any held item to face the direction they're moving~~
+12. Add a pause menu with textual options
+13. In pause menu, remap key bindings in layer for arrows keys to choose options
+14. Add easy-to-use UI buttons
 
 Gameplay Ideas
 - Pharmacy
