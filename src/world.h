@@ -64,8 +64,8 @@ const std::string WALL_TEST = R"(
 ...........#......
 ..................)";
 
-const std::string ACTIVE_MAP = WALL_TEST;
-// const std::string ACTIVE_MAP = EXAMPLE_MAP;
+// const std::string ACTIVE_MAP = WALL_TEST;
+const std::string ACTIVE_MAP = EXAMPLE_MAP;
 
 struct World {
     std::vector<std::string> lines;
@@ -254,11 +254,16 @@ struct World {
              nb(3, '#') /*         */ && nb(4, '#') &&  //
              nb(5, '.') && nb(6, '.') && nb(7, '#')     //
              ) ||                                       //
+            (nb(0, '#') && nb(1, '.') && nb(2, '.') &&  //
+             nb(3, '#') /*         */ && nb(4, '#') &&  //
+             nb(5, '#') && nb(6, '.') && nb(7, '.')     //
+             ) ||                                       //
             false                                       //
         ) {
             create_wall(loc, d_color, WallType::HALF, EntityDir::RIGHT);
             return;
         }
+
 
         if ((nb(0, '.') && nb(1, '#') && nb(2, '.') &&  //
              nb(3, '.') /*         */ && nb(4, '.') &&  //
