@@ -28,11 +28,8 @@ struct MenuLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (event.keycode == KEY_ENTER) {
-            Menu::get().state = Menu::State::Game;
-            return true;
-        }
-        return false;
+        if (Menu::get().state != Menu::State::Root) return false;
+        return ui_context.get()->process_keyevent(event);
     }
 
     void draw_ui() {

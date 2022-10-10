@@ -36,10 +36,19 @@ struct KeyMap {
         game_map["Target Back"] = KEY_DOWN;
         game_map["Target Left"] = KEY_LEFT;
         game_map["Target Right"] = KEY_RIGHT;
-
     }
 
-    void load_default_keys() { load_game_keys(); }
+    void load_ui_keys() {
+        LayerMapping& game_map = this->get_or_create_layer_map(Menu::State::UI);
+        game_map["Widget Next"] = KEY_TAB;
+        game_map["Widget Mod"] = KEY_LEFT_SHIFT;
+        game_map["Widget Press"] = KEY_ENTER;
+    }
+
+    void load_default_keys() {
+        load_game_keys();
+        load_ui_keys();
+    }
 
     inline static KeyMap* create() { return new KeyMap(); }
     inline static KeyMap& get() {
@@ -58,10 +67,22 @@ struct KeyMap {
         return false;
     }
 
-    static bool is_event_once_DO_NOT_USE(Menu::State state, const std::string& name) {
+    static bool is_event_once_DO_NOT_USE(Menu::State state,
+                                         const std::string& name) {
         int left = KeyMap::get_key_code(state, name);
         if (IsKeyPressed(left)) return true;
         // TODO also check gamepad
+        return false;
+    }
+
+    static bool does_layer_map_contain_key(Menu::State state,
+                                         int keycode) {
+        // We dont even have this Layer Map 
+        if(!KeyMap::get().mapping.contains(state)) return false;
+        LayerMapping layermap = KeyMap::get().mapping[state];
+        for(auto pair : layermap){
+            if(keycode == pair.second) return true;
+        }
         return false;
     }
 };

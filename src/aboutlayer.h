@@ -30,11 +30,12 @@ struct AboutLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
+        if (Menu::get().state != Menu::State::About) return false;
         if (event.keycode == KEY_ESCAPE) {
             Menu::get().state = Menu::State::Root;
             return true;
         }
-        return false;
+        return ui_context.get()->process_keyevent(event);
     }
 
     void draw_ui() {

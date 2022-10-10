@@ -2,6 +2,7 @@
 #pragma once
 
 #include "assert.h"
+#include "event.h"
 #include "external_include.h"
 #include "keymap.h"
 #include "raylib.h"
@@ -63,6 +64,9 @@ struct UIContext {
     bool lmouse_down;
     vec2 mouse;
 
+    int key;
+    int mod;
+
     inline static UIContext* create() { return new UIContext(); }
     inline static UIContext& get() {
         if (globalContext) return *globalContext;
@@ -75,16 +79,37 @@ struct UIContext {
                mouse.y >= rect.y && mouse.y <= rect.y + rect.height;
     }
 
-    // Press and Released
-    bool pressed(int) {
-        // TODO
-        return false;
+    bool process_keyevent(KeyPressedEvent event) {
+        int code = event.keycode;
+        if (!KeyMap::does_layer_map_contain_key(Menu::State::UI, code)) {
+            return false;
+        }
+        // TODO make this a map if we have more 
+        if (code == KeyMap::get_key_code(Menu::State::UI, "Widget Mod")) {
+            mod = code;
+            return true;
+        }
+        key = code;
+        return true;
+    }
+
+    bool pressed(std::string name) {
+        int code = KeyMap::get_key_code(Menu::State::UI, name);
+        bool a = pressedWithoutEat(code);
+        if (a) eatKey();
+        return a;
+    }
+
+    void eatKey() { key = int(); }
+
+    bool pressedWithoutEat(int code) const {
+        return key == code || mod == code;
     }
 
     // is held down
-    bool is_held_down(int) {
+    bool is_held_down(std::string name) {
         // TODO
-        return false;
+        return KeyMap::is_event(Menu::State::UI, name);
     }
 
     void draw_widget(vec2 pos, vec2 size, float, Color color, std::string) {
@@ -178,13 +203,10 @@ inline void draw_if_kb_focus(const uuid& id, std::function<void(void)> cb) {
 }
 
 inline void handle_tabbing(const uuid id) {
-    bool next = KeyMap::is_event(Menu::State::UI, "Widget Next");
-    bool mod = KeyMap::is_event(Menu::State::UI, "Widget Mod");
-
     if (has_kb_focus(id)) {
-        if (get().pressed(next)) {
+        if (get().pressed("Widget Next")) {
             get().kb_focus_id = ROOT_ID;
-            if (get().is_held_down(mod)) {
+            if (get().is_held_down("Widget Mod")) {
                 get().kb_focus_id = get().last_processed;
             }
         }
@@ -211,8 +233,8 @@ bool _text_impl(const uuid id, const WidgetConfig& config) {
 
 inline void _button_render(const uuid id, const WidgetConfig& config) {
     draw_if_kb_focus(id, [&]() {
-        get().draw_widget(config.position, config.size + vec2{0.1f, 0.1f},
-                          config.rotation, color::teal, "TEXTURE");
+        get().draw_widget(config.position, config.size * 1.05f, config.rotation,
+                          color::teal, "TEXTURE");
     });
 
     if (get().hot_id == id) {
@@ -246,10 +268,9 @@ inline void _button_render(const uuid id, const WidgetConfig& config) {
 }
 
 inline bool _button_pressed(const uuid id) {
-    bool press = KeyMap::is_event(Menu::State::UI, "Widget Press");
     // check click
     if (has_kb_focus(id)) {
-        if (get().pressed(press)) {
+        if (get().pressed("Widget Press")) {
             return true;
         }
     }

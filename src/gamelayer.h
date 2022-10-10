@@ -47,7 +47,7 @@ struct GameLayer : public Layer {
         });
     }
 
-    virtual void onDraw(float dt) override {
+    virtual void onDraw(float) override {
         if (Menu::get().state != Menu::State::Game) return;
         if(minimized) return;
 
