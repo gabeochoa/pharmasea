@@ -11,6 +11,8 @@ struct Menu {
         Root = 0,
         Game = 1,
         Paused = 2,
+        Settings = 3,
+        About = 4,
 
         UI = 98,
         Any = 99,
@@ -33,6 +35,10 @@ struct Menu {
                 return "Paused";
             case Menu::State::UI:
                 return "UI";
+            case Menu::State::Settings:
+                return "Settings";
+            case Menu::State::About:
+                return "About";
             default:
                 std::cout << "Invalid state" << std::endl;
                 return "MenuState no stateToString";

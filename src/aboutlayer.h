@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include "camera.h"
@@ -9,30 +10,30 @@
 #include "ui.h"
 #include "uuid.h"
 
-struct MenuLayer : public Layer {
+struct AboutLayer : public Layer {
     MenuCam cam;
 
     std::shared_ptr<ui::UIContext> ui_context;
 
-    MenuLayer() : Layer("Menu") {
+    AboutLayer() : Layer("About") {
         minimized = false;
 
         ui_context.reset(new ui::UIContext());
         ui_context.get()->init();
     }
-    virtual ~MenuLayer() {}
+    virtual ~AboutLayer() {}
     virtual void onAttach() override {}
     virtual void onDetach() override {}
 
     virtual void onEvent(Event& event) override {
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(
-            std::bind(&MenuLayer::onKeyPressed, this, std::placeholders::_1));
+            std::bind(&AboutLayer::onKeyPressed, this, std::placeholders::_1));
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (event.keycode == KEY_ENTER) {
-            Menu::get().state = Menu::State::Game;
+        if (event.keycode == KEY_ESCAPE) {
+            Menu::get().state = Menu::State::Root;
             return true;
         }
         return false;
@@ -48,27 +49,19 @@ struct MenuLayer : public Layer {
         ui_context->begin(mouseDown, mousepos);
 
         if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
-                                             .position = vec2{250.f, 150.f},
+                                             .position = vec2{500.f, 50.f},
                                              .size = vec2{100.f, 50.f},
-                                             .text = std::string("Play"),
+                                             .text = std::string("Back"),
                                          }))) {
-            Menu::get().state = Menu::State::Game;
-        }
-
-        if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
-                                             .position = vec2{250.f, 225.f},
-                                             .size = vec2{100.f, 50.f},
-                                             .text = std::string("About"),
-                                         }))) {
-            Menu::get().state = Menu::State::About;
+            Menu::get().state = Menu::State::Root;
         }
 
         ui_context->end();
     }
 
     virtual void onUpdate(float) override {
-        if (Menu::get().state != Menu::State::Root) return;
-        SetExitKey(KEY_ESCAPE);
+        if (Menu::get().state != Menu::State::About) return;
+        SetExitKey(KEY_NULL);
 
         // TODO with gamelayer, support events
         if (minimized) {
@@ -78,6 +71,7 @@ struct MenuLayer : public Layer {
         BeginDrawing();
         {
             ClearBackground(BLACK);
+            DrawText(Menu::get().tostring(), 19, 20, 20, LIGHTGRAY);
             draw_ui();
         }
         EndDrawing();

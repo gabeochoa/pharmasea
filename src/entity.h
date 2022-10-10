@@ -38,7 +38,7 @@ struct Item {
         this->position = this->snap_position();
     }
 
-    virtual ~Item(){}
+    virtual ~Item() {}
 
     vec3 snap_position() const { return vec::snap(this->raw_position); }
 
@@ -73,12 +73,11 @@ static std::vector<std::shared_ptr<Item>> items_DO_NOT_USE;
 
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
-
-    enum FrontFaceDirection{
-        FORWARD = 0, // 0 degrees
-        RIGHT = 90,  // 90 degrees
-        BACK = 180,  // 180 degrees
-        LEFT = 270   // 270 degrees
+    enum FrontFaceDirection {
+        FORWARD = 0,  // 0 degrees
+        RIGHT = 90,   // 90 degrees
+        BACK = 180,   // 180 degrees
+        LEFT = 270    // 270 degrees
     };
 
     int id;
@@ -91,21 +90,32 @@ struct Entity {
     FrontFaceDirection face_direction = FrontFaceDirection::FORWARD;
     std::shared_ptr<Item> held_item = nullptr;
 
-    Entity(vec3 p, Color face_color_in, Color base_color_in) : id(ENTITY_ID_GEN++), raw_position(p), face_color(face_color_in), base_color(base_color_in) {
+    Entity(vec3 p, Color face_color_in, Color base_color_in)
+        : id(ENTITY_ID_GEN++),
+          raw_position(p),
+          face_color(face_color_in),
+          base_color(base_color_in) {
         this->position = this->snap_position();
     }
 
     Entity(vec2 p, Color face_color_in, Color base_color_in)
-        : id(ENTITY_ID_GEN++), raw_position({p.x, 0, p.y}), face_color(face_color_in), base_color(base_color_in) {
+        : id(ENTITY_ID_GEN++),
+          raw_position({p.x, 0, p.y}),
+          face_color(face_color_in),
+          base_color(base_color_in) {
         this->position = this->snap_position();
     }
 
-    Entity(vec3 p, Color c) : id(ENTITY_ID_GEN++), raw_position(p), face_color(c), base_color(c) {
+    Entity(vec3 p, Color c)
+        : id(ENTITY_ID_GEN++), raw_position(p), face_color(c), base_color(c) {
         this->position = this->snap_position();
     }
 
     Entity(vec2 p, Color c)
-        : id(ENTITY_ID_GEN++), raw_position({ p.x, 0, p.y }), face_color(c), base_color(c) {
+        : id(ENTITY_ID_GEN++),
+          raw_position({p.x, 0, p.y}),
+          face_color(c),
+          base_color(c) {
         this->position = this->snap_position();
     }
 
@@ -130,7 +140,8 @@ struct Entity {
         // this->size().z,
         //          this->color);
         DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                 this->size().z, static_cast<float>(face_direction), this->face_color, this->base_color);
+                       this->size().z, static_cast<float>(face_direction),
+                       this->face_color, this->base_color);
         DrawBoundingBox(this->bounds(), MAROON);
         // DrawBoundingBox(this->raw_bounds(), PINK);
     }
@@ -140,26 +151,22 @@ struct Entity {
     virtual void update(float) {
         if (this->is_snappable()) {
             this->position = this->snap_position();
-        }
-        else {
+        } else {
             this->position = this->raw_position;
         }
-        
+
         if (held_item != nullptr) {
             auto new_pos = this->position;
             if (this->face_direction == FrontFaceDirection::FORWARD) {
                 new_pos.z += TILESIZE;
-            }
-            else if (this->face_direction == FrontFaceDirection::RIGHT) {
+            } else if (this->face_direction == FrontFaceDirection::RIGHT) {
                 new_pos.x += TILESIZE;
-            }
-            else if (this->face_direction == FrontFaceDirection::BACK) {
+            } else if (this->face_direction == FrontFaceDirection::BACK) {
                 new_pos.z -= TILESIZE;
-            }
-            else if (this->face_direction == FrontFaceDirection::LEFT) {
+            } else if (this->face_direction == FrontFaceDirection::LEFT) {
                 new_pos.x -= TILESIZE;
             }
-            
+
             held_item->update_position(new_pos);
         }
     }

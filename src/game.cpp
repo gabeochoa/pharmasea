@@ -11,6 +11,7 @@
 #include "app.h"
 #include "gamelayer.h"
 #include "menulayer.h"
+#include "aboutlayer.h"
 
 int main(void) {
     App app;
@@ -20,6 +21,9 @@ int main(void) {
 
     MenuLayer* menulayer = new MenuLayer();
     app.pushLayer(menulayer);
+
+    AboutLayer* aboutlayer = new AboutLayer();
+    app.pushLayer(aboutlayer);
 
     // Menu::get().state = Menu::State::Game;
     Menu::get().state = Menu::State::Root;

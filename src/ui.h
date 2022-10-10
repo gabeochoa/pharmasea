@@ -198,7 +198,7 @@ bool _text_impl(const uuid id, const WidgetConfig& config) {
     // we could potentially also track "selections"
     // with a range so the user can highlight text
     // not needed for supermarket but could be in the future?
-    (void)id;
+    (void) id;
     // No need to render if text is empty
     if (config.text.empty()) return false;
 
@@ -242,11 +242,8 @@ inline void _button_render(const uuid id, const WidgetConfig& config) {
         // TODO detect if the button color is dark
         // and change the color to white automatically
         // textConfig.theme.fontColor = getOppositeColor(config.theme.color());
-        textConfig.position =
-            config.position + vec2{
-                config.size.x * 0.05f,
-                config.size.y * 0.25f
-            };
+        textConfig.position = config.position + vec2{config.size.x * 0.05f,
+                                                     config.size.y * 0.25f};
         textConfig.size = vec2{config.size.y, config.size.y} * 0.75f;
 
         _text_impl(MK_UUID(id.ownerLayer, 0), textConfig);
