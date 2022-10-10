@@ -1,6 +1,5 @@
 #pragma once
 
-#include "camera.h"
 #include "external_include.h"
 #include "input.h"
 #include "layer.h"
@@ -10,8 +9,6 @@
 #include "uuid.h"
 
 struct MenuLayer : public Layer {
-    MenuCam cam;
-
     std::shared_ptr<ui::UIContext> ui_context;
 
     MenuLayer() : Layer("Menu") {
@@ -48,7 +45,7 @@ struct MenuLayer : public Layer {
         ui_context->begin(mouseDown, mousepos);
 
         if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
-                                             .position = vec2{250.f, 150.f},
+                                             .position = vec2{50.f, 150.f},
                                              .size = vec2{100.f, 50.f},
                                              .text = std::string("Play"),
                                          }))) {
@@ -56,7 +53,7 @@ struct MenuLayer : public Layer {
         }
 
         if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
-                                             .position = vec2{250.f, 225.f},
+                                             .position = vec2{50.f, 225.f},
                                              .size = vec2{100.f, 50.f},
                                              .text = std::string("About"),
                                          }))) {
@@ -69,17 +66,14 @@ struct MenuLayer : public Layer {
     virtual void onUpdate(float) override {
         if (Menu::get().state != Menu::State::Root) return;
         SetExitKey(KEY_ESCAPE);
+    }
 
-        // TODO with gamelayer, support events
+    virtual void onDraw(float) override {
+        if (Menu::get().state != Menu::State::Root) return;
         if (minimized) {
             return;
         }
-
-        BeginDrawing();
-        {
-            ClearBackground(BLACK);
-            draw_ui();
-        }
-        EndDrawing();
+        ClearBackground(BLACK);
+        draw_ui();
     }
 };

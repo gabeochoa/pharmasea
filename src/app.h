@@ -34,9 +34,15 @@ struct App {
 
     void run(float dt) {
         Input::get().onUpdate(dt);
+
         for (Layer* layer : layerstack) {
             layer->onUpdate(dt);
         }
+        BeginDrawing();
+        for (Layer* layer : layerstack) {
+            layer->onDraw(dt);
+        }
+        EndDrawing();
 
         for (int key : Input::get().pressedSinceLast) {
             KeyPressedEvent* event = new KeyPressedEvent(key, 0);

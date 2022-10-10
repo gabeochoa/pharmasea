@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "camera.h"
 #include "external_include.h"
 #include "input.h"
 #include "layer.h"
@@ -11,7 +10,6 @@
 #include "uuid.h"
 
 struct AboutLayer : public Layer {
-    MenuCam cam;
 
     std::shared_ptr<ui::UIContext> ui_context;
 
@@ -48,8 +46,24 @@ struct AboutLayer : public Layer {
 
         ui_context->begin(mouseDown, mousepos);
 
+        // NOTE: this is not aligned on purpose
+        std::string about_info = R"(
+PharmaSea
+
+A game by: 
+    Gabe 
+    Brett
+    Alice
+
+        )";
+        text(MK_UUID(id, ROOT_ID), WidgetConfig({
+                                       .position = vec2{50.f, 50.f},
+                                       .size = vec2{20.f, 10.f},
+                                       .text = about_info,
+                                   }));
+
         if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
-                                             .position = vec2{500.f, 50.f},
+                                             .position = vec2{50.f, 300.f},
                                              .size = vec2{100.f, 50.f},
                                              .text = std::string("Back"),
                                          }))) {
@@ -67,13 +81,16 @@ struct AboutLayer : public Layer {
         if (minimized) {
             return;
         }
+    }
 
-        BeginDrawing();
-        {
-            ClearBackground(BLACK);
-            DrawText(Menu::get().tostring(), 19, 20, 20, LIGHTGRAY);
-            draw_ui();
+    virtual void onDraw(float) override {
+        if (Menu::get().state != Menu::State::About) return;
+        // TODO with gamelayer, support events
+        if (minimized) {
+            return;
         }
-        EndDrawing();
+
+        ClearBackground(BLACK);
+        draw_ui();
     }
 };
