@@ -55,7 +55,7 @@ struct SettingsLayer : public Layer {
             .theme = theme,
             .position = vec2{150.f, 200.f},  //
             .size = vec2{100.f, 50.f},       //
-            .text = "",                    //
+            .text = "",                      //
         });
 
         if (ui::dropdown(ui::MK_UUID(id, ui::ROOT_ID), dropdownMain,
@@ -64,13 +64,11 @@ struct SettingsLayer : public Layer {
             // std::cout << "dropdown selected: ";
             // std::cout << dropdownConfigs[windowSizeDropdownIndex].text;
             // std::cout << std::endl;
-            if(windowSizeDropdownIndex == 0){
+            if (windowSizeDropdownIndex == 0) {
                 settings.update_window_size({960, 540});
-            }
-            else if(windowSizeDropdownIndex == 1){
+            } else if (windowSizeDropdownIndex == 1) {
                 settings.update_window_size({1920, 1080});
-            }
-            else if(windowSizeDropdownIndex == 2){
+            } else if (windowSizeDropdownIndex == 2) {
                 settings.update_window_size({800, 600});
             }
         }
