@@ -147,7 +147,7 @@ struct SettingsLayer : public Layer {
             return;
         }
 
-        ClearBackground(BLACK);
+        ClearBackground(Color{30, 30, 30, 255});
         draw_ui();
     }
 };

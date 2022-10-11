@@ -28,8 +28,8 @@ void startup() {
 
 
     // Menu::get().state = Menu::State::Game;
-    Menu::get().state = Menu::State::Root;
-    // Menu::get().state = Menu::State::Settings;
+    // Menu::get().state = Menu::State::Root;
+    Menu::get().state = Menu::State::Settings;
 
     GameLayer* gamelayer = new GameLayer();
     App::get().pushLayer(gamelayer);

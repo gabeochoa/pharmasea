@@ -91,7 +91,7 @@ A game by:
             return;
         }
 
-        ClearBackground(BLACK);
+        ClearBackground(Color{30, 30, 30, 255});
         draw_ui();
     }
 };

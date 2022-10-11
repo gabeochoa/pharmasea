@@ -9,8 +9,8 @@
 #include "ui_widget_config.h"
 #include "uuid.h"
 
-// for font, 
-// TODO extract font loading from app 
+// for font,
+// TODO extract font loading from app
 #include "app.h"
 
 namespace ui {
@@ -158,8 +158,9 @@ bool _text_impl(const uuid id, const WidgetConfig& config) {
     // No need to render if text is empty
     if (config.text.empty()) return false;
 
-     DrawTextEx(App::get().font, config.text.c_str(), config.position, config.size.x, 0, 
-             config.theme.color(WidgetConfig::Theme::ColorType::FONT));
+    DrawTextEx(App::get().font, config.text.c_str(), config.position,
+               config.size.x, 0,
+               config.theme.color(WidgetConfig::Theme::ColorType::FONT));
 
     return true;
 }
@@ -193,8 +194,8 @@ inline void _button_render(const uuid id, const WidgetConfig& config) {
         // TODO detect if the button color is dark
         // and change the color to white automatically
         textConfig.theme.fontColor = color::getOppositeColor(color);
-        textConfig.position = config.position + vec2{config.size.x * 0.05f,
-                                                     config.size.y * 0.1f};
+        textConfig.position =
+            config.position + vec2{config.size.x * 0.05f, config.size.y * 0.1f};
         textConfig.size = vec2{config.size.y, config.size.y};
 
         _text_impl(MK_UUID(id.ownerLayer, 0), textConfig);
@@ -406,13 +407,16 @@ inline void _slider_render(const uuid id, const WidgetConfig& config,
     const float maxScale = 0.8f;
     const float pos_offset =
         value * (config.vertical ? cs.y * maxScale : cs.x * maxScale);
-    const auto col = is_active_or_hot(id) ? color::green : color::blue;
+    // TODO chose a better color here 
     const auto pos = config.position;
     const auto tex = config.theme.texture;
 
     _draw_focus_ring(id, config);
     // slider rail
-    get().draw_widget(pos, cs, config.rotation, color::red, tex);
+    Color rail = has_kb_focus(id)
+                     ? color::getOppositeColor(config.theme.color())
+                     : config.theme.color();
+    get().draw_widget(pos, cs, config.rotation, rail, tex);
 
     // slide
     vec2 offset =
@@ -420,6 +424,7 @@ inline void _slider_render(const uuid id, const WidgetConfig& config,
     vec2 size =
         config.vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
 
+    const auto col = is_active_or_hot(id) ? color::red : color::getOppositeColor(rail);
     get().draw_widget(config.position + offset, size, config.rotation, col,
                       tex);
 }
