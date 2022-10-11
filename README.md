@@ -22,6 +22,8 @@ Core engine TODOs:
 12. Add a pause menu with textual options
 13. In pause menu, remap key bindings in layer for arrows keys to choose options
 14. Add easy-to-use UI buttons
+15. Add system for exporting resources to code for easier binary packaging (see branch packager)
+    https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html
 
 Gameplay Ideas
 - Pharmacy
