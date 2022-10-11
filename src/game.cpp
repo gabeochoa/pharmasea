@@ -95,6 +95,10 @@ int main(void) {
         .strictness=  1.f
     };
     root.first = &child1;
+    root.last = &child1;
+    root.next = &child1;
+
+    child1.parent = &root;
 
     std::cout << "before\n" << root << std::endl;
 
