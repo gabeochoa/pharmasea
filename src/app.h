@@ -9,6 +9,8 @@
 #include "layer.h"
 #include "raylib.h"
 #include "singleton.h"
+#include "Karmina_Regular_256.h"
+
 SINGLETON_FWD(App)
 struct App {
     SINGLETON(App)
@@ -20,8 +22,8 @@ struct App {
         InitWindow(WIN_W, WIN_H, "pharmasea"); 
         // TODO - load fonts from install folder, instead of local path
         // Font loading must happen after InitWindow
-        font = LoadFontEx("./fonts/Karmina-Regular.ttf", 256, 0, 0);
-        // font = LoadFontEx("./fonts/constan.ttf", 96, 0, 0);
+        font = LoadFont_KarminaRegular256();
+        // font = LoadFontEx("./resources/fonts/constan.ttf", 96, 0, 0);
         GenTextureMipmaps(&font.texture);
         SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);
     }

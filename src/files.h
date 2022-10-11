@@ -38,28 +38,29 @@ struct Files {
         fs::path full_path = game_folder() / file;
         return full_path;
     }
-    
+
     // TODO add a full cleanup to write folders in case we need to reset
 
     void folder_locations() {
-        std::cout << "Config: " << sago::getConfigHome() << "\n";
-        std::cout << "Data: " << sago::getDataHome() << "\n";
-        std::cout << "State: " << sago::getStateDir() << "\n";
-        std::cout << "Cache: " << sago::getCacheDir() << "\n";
-        std::cout << "Documents: " << sago::getDocumentsFolder() << "\n";
-        std::cout << "Desktop: " << sago::getDesktopFolder() << "\n";
-        std::cout << "Pictures: " << sago::getPicturesFolder() << "\n";
-        std::cout << "Public: " << sago::getPublicFolder() << "\n";
-        std::cout << "Music: " << sago::getMusicFolder() << "\n";
-        std::cout << "Video: " << sago::getVideoFolder() << "\n";
-        std::cout << "Download: " << sago::getDownloadFolder() << "\n";
-        std::cout << "Save Games 1: " << sago::getSaveGamesFolder1() << "\n";
-        std::cout << "Save Games 2: " << sago::getSaveGamesFolder2() << "\n";
-        std::vector<std::string> extraData;
-        sago::appendAdditionalDataDirectories(extraData);
+        using namespace std;
+        using namespace sago;
+        cout << "Config: " << getConfigHome() << "\n";
+        cout << "Data: " << getDataHome() << "\n";
+        cout << "State: " << getStateDir() << "\n";
+        cout << "Cache: " << getCacheDir() << "\n";
+        cout << "Documents: " << getDocumentsFolder() << "\n";
+        cout << "Desktop: " << getDesktopFolder() << "\n";
+        cout << "Pictures: " << getPicturesFolder() << "\n";
+        cout << "Public: " << getPublicFolder() << "\n";
+        cout << "Music: " << getMusicFolder() << "\n";
+        cout << "Video: " << getVideoFolder() << "\n";
+        cout << "Download: " << getDownloadFolder() << "\n";
+        cout << "Save Games 1: " << getSaveGamesFolder1() << "\n";
+        cout << "Save Games 2: " << getSaveGamesFolder2() << "\n";
+        vector<string> extraData;
+        appendAdditionalDataDirectories(extraData);
         for (size_t i = 0; i < extraData.size(); ++i) {
-            std::cout << "Additional data " << i << ": " << extraData.at(i)
-                      << "\n";
+            cout << "Additional data " << i << ": " << extraData.at(i) << "\n";
         }
     }
 };
