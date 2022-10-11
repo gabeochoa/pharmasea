@@ -46,28 +46,19 @@ struct Customer : public AIPerson {
             0.f,               //
             this->position.z   //
         );
-        // rlTranslatef(               //
-        // 0.f,                    //
-        // -1.f * TILESIZE * 2.f,  //
-        // 0.f                     //
-        // );
-        // rlRotatef(180.0f, 0.0f, 1.0f, 0.0f);
         rlRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-        // rlRotatef(90.0f, 0.0f, 0.0f, -1.0f);
-
-        vec3 name_offset = vec3{0.f, 0.f};
 
         rlTranslatef(          //
             -0.5f * TILESIZE,  //
             0.f,               //
-            -1.05 * TILESIZE    // this is Y
+            -1.05 * TILESIZE   // this is Y
         );
 
         DrawText3D(           //
             App::get().font,  //
             name.c_str(),     //
-            name_offset,      //
-            96,              // font size
+            {0.f},            //
+            96,               // font size
             4,                // font spacing
             4,                // line spacing
             true,             // backface
