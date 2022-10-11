@@ -67,7 +67,45 @@ void teardown() {
 #endif
 }
 
+#include "ui_widget.h"
+
 int main(void) {
+    using namespace ui;
+    Widget root;
+    root.size_expected[0] = SizeExpectation{
+        .mode = SizeMode::Pixels,
+        .value= WIN_W,
+        .strictness=  1.f
+    };
+    root.size_expected[1] = SizeExpectation{
+        .mode = SizeMode::Pixels,
+        .value= WIN_H,
+        .strictness=  1.f
+    };
+
+    Widget child1;
+    child1.size_expected[0] = SizeExpectation{
+        .mode = SizeMode::Percent,
+        .value= 0.5f,
+        .strictness=  1.f
+    };
+    child1.size_expected[1] = SizeExpectation{
+        .mode = SizeMode::Percent,
+        .value= 0.5f,
+        .strictness=  1.f
+    };
+    root.first = &child1;
+
+    std::cout << "before\n" << root << std::endl;
+
+    process_widget(&root);
+
+    std::cout << "after\n" << root << std::endl;
+    std::cout << child1 << std::endl;
+    
+
+    return 0;
+    //
     startup();
     App::get().run();
     teardown();

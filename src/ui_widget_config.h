@@ -2,11 +2,15 @@
 #pragma once
 
 #include "external_include.h"
+#include "raylib.h"
 #include "ui_color.h"
 
 namespace ui {
 
 struct WidgetConfig {
+    //
+
+
     vec2 position;
     vec2 size;
     float rotation;
@@ -21,9 +25,8 @@ struct WidgetConfig {
             BG,
         };
 
-        Theme(){}
-        Theme(Color font, Color bg)
-            : fontColor(font), backgroundColor(bg){}
+        Theme() {}
+        Theme(Color font, Color bg) : fontColor(font), backgroundColor(bg) {}
         Theme(Color font, Color bg, std::string tex)
             : fontColor(font), backgroundColor(bg), texture(tex) {}
 
