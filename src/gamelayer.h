@@ -1,23 +1,25 @@
 #pragma once
 
-#include "camera.h"
 #include "external_include.h"
-#include "files.h"
+//
 #include "globals.h"
+//
+#include "camera.h"
+#include "files.h"
 #include "input.h"
 #include "layer.h"
 #include "menu.h"
 #include "world.h"
+// temporary for face cube test
+#include "texture_library.h"
 
 struct GameLayer : public Layer {
     World world;
     GameCam cam;
-    Texture2D facetex;
 
     GameLayer() : Layer("Game") {
         minimized = false;
-        facetex = LoadTexture(
-            Files::get().fetch_resource_path("images", "face.png").c_str());
+        TextureLibrary::get().load(Files::get().fetch_resource_path("images", "face.png").c_str(), "face");
     }
     virtual ~GameLayer() {}
     virtual void onAttach() override {}
@@ -73,7 +75,7 @@ struct GameLayer : public Layer {
 
             DrawGrid(40, TILESIZE);
 
-            DrawBillboard(cam.camera, facetex,
+            DrawBillboard(cam.camera, TextureLibrary::get().get("face"),
                           {
                               1.f,
                               0.f,
