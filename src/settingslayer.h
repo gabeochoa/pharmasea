@@ -54,11 +54,9 @@ struct SettingsLayer : public Layer {
         dropdownConfigs.push_back(ui::WidgetConfig({.text = "800x600"}));
 
         auto theme = WidgetTheme();
-        theme.backgroundColor = Color{76, 225, 127, 255};
-
         text(MK_UUID(id, ROOT_ID), WidgetConfig({
                                        .position = vec2{25.f, 150.f},
-                                       .size = vec2{20.f, 10.f},
+                                       .size = vec2{30.f, 5.f},
                                        .text = "Resolution",
                                    }));
 
@@ -99,7 +97,7 @@ struct SettingsLayer : public Layer {
         using namespace ui;
         text(MK_UUID(id, ROOT_ID), WidgetConfig({
                                        .position = vec2{25.f, 100.f},
-                                       .size = vec2{20.f, 10.f},
+                                       .size = vec2{30.f, 5.f},
                                        .text = "Master Volume",
                                    }));
 

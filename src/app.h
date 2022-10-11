@@ -20,8 +20,8 @@ struct App {
         InitWindow(WIN_W, WIN_H, "pharmasea"); 
         // TODO - load fonts from install folder, instead of local path
         // Font loading must happen after InitWindow
-        font = LoadFont("./fonts/Karmina-Regular.ttf");
-        // font = LoadFont("./constan.ttf");
+        font = LoadFontEx("./fonts/Karmina-Regular.ttf", 256, 0, 0);
+        // font = LoadFontEx("./fonts/constan.ttf", 96, 0, 0);
         GenTextureMipmaps(&font.texture);
         SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);
     }

@@ -407,7 +407,6 @@ inline void _slider_render(const uuid id, const WidgetConfig& config,
     const float maxScale = 0.8f;
     const float pos_offset =
         value * (config.vertical ? cs.y * maxScale : cs.x * maxScale);
-    // TODO chose a better color here 
     const auto pos = config.position;
     const auto tex = config.theme.texture;
 
@@ -424,7 +423,9 @@ inline void _slider_render(const uuid id, const WidgetConfig& config,
     vec2 size =
         config.vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
 
-    const auto col = is_active_or_hot(id) ? color::red : color::getOppositeColor(rail);
+    // TODO chose a better color here or put one in theme
+    const auto col =
+        is_active_or_hot(id) ? color::red : color::getOppositeColor(rail);
     get().draw_widget(config.position + offset, size, config.rotation, col,
                       tex);
 }

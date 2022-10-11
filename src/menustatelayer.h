@@ -4,6 +4,7 @@
 #include "external_include.h"
 #include "layer.h"
 #include "menu.h"
+#include "app.h"
 
 struct MenuStateLayer : public Layer {
     MenuStateLayer() : Layer("MenuState") { minimized = false; }
@@ -18,6 +19,11 @@ struct MenuStateLayer : public Layer {
         if (minimized) {
             return;
         }
-        DrawText(Menu::get().tostring(), 19, 20, 20, LIGHTGRAY);
+        DrawTextEx(
+                App::get().font, 
+                Menu::get().tostring(), 
+                {19, 20},
+                20, 0,
+                LIGHTGRAY);
     }
 };
