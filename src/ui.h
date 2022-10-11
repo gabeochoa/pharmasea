@@ -3,8 +3,8 @@
 
 #include "external_include.h"
 //
-#include "ui_context.h"
 #include "ui_color.h"
+#include "ui_context.h"
 #include "ui_state.h"
 #include "ui_widget_config.h"
 #include "uuid.h"
@@ -65,8 +65,21 @@ bool slider(
     // max value
     float mxf);
 
-
+///////// ////// ////// ////// ////// ////// ////// //////
+///////// ////// ////// ////// ////// ////// ////// //////
+///////// ////// ////// ////// ////// ////// ////// //////
+///////// ////// ////// ////// ////// ////// ////// //////
+///////// ////// ////// ////// ////// ////// ////// //////
+///////// ////// ////// ////// ////// ////// ////// //////
+///////// ////// ////// ////// ////// ////// ////// //////
+///////// ////// ////// ////// ////// ////// ////// //////
+///////// ////// ////// ////// ////// ////// ////// //////
+///////// ////// ////// ////// ////// ////// ////// //////
+///////// ////// ////// ////// ////// ////// ////// //////
+///////// ////// ////// ////// ////// ////// ////// //////
+///
 inline bool is_hot(const uuid& id) { return (get().hot_id == id); }
+
 inline bool is_active(const uuid& id) { return (get().active_id == id); }
 inline bool is_active_or_hot(const uuid& id) {
     return is_hot(id) || is_active(id);
@@ -118,6 +131,20 @@ inline void handle_tabbing(const uuid id) {
     get().last_processed = id;
 }
 
+void _draw_focus_ring(const uuid id, const WidgetConfig& config) {
+    draw_if_kb_focus(id, [&]() {
+        const auto cs = config.size;
+        const auto border_width = 0.1f;
+        const auto offset = vec2{config.size.x * (border_width / 2),
+                                 config.size.y * (border_width / 2)};
+        get().draw_widget(config.position - offset,   //
+                          cs * (1.f + border_width),  //
+                          config.rotation,            //
+                          color::teal,                //
+                          "TEXTURE");
+    });
+}
+
 bool _text_impl(const uuid id, const WidgetConfig& config) {
     // NOTE: currently id is only used for focus and hot/active,
     // we could potentially also track "selections"
@@ -136,10 +163,7 @@ bool _text_impl(const uuid id, const WidgetConfig& config) {
 }
 
 inline void _button_render(const uuid id, const WidgetConfig& config) {
-    draw_if_kb_focus(id, [&]() {
-        get().draw_widget(config.position, config.size * 1.05f, config.rotation,
-                          color::teal, "TEXTURE");
-    });
+    _draw_focus_ring(id, config);
 
     if (get().hot_id == id) {
         if (get().active_id == id) {
@@ -381,11 +405,7 @@ inline void _slider_render(const uuid id, const WidgetConfig& config,
     const auto pos = config.position;
     const auto tex = config.theme.texture;
 
-    draw_if_kb_focus(id, [&]() {
-        get().draw_widget(pos,                  //
-                          config.size * 1.05f,  //
-                          config.rotation, color::teal, tex);
-    });
+    _draw_focus_ring(id, config);
     // slider rail
     get().draw_widget(pos, cs, config.rotation, color::red, tex);
 
