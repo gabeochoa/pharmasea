@@ -7,14 +7,29 @@
 #include "aiperson.h"
 //
 #include "app.h"
+#include "camera.h"
 #include "globals.h"
 #include "text_util.h"
+#include "texture_library.h"
 
 struct SpeechBubble {
-    // vec<Icon>
-    // iconIndex
+    vec3 position;
+    std::string icon_tex_name;
 
+    SpeechBubble() { icon_tex_name = "jug"; }
+
+    void update(float, vec3 pos) { this->position = pos; }
     void render() const {
+        GameCam cam = GLOBALS.get<GameCam>("game_cam");
+        {
+            Texture texture = TextureLibrary::get().get("bubble");
+            DrawBillboard(cam.camera, texture,
+                          vec3{position.x,                      //
+                               position.y + (TILESIZE * 1.5f),  //
+                               position.z},                     //
+                          TILESIZE,                             //
+                          WHITE);
+        }
     }
 };
 
@@ -39,17 +54,26 @@ struct Customer : public AIPerson {
         if (target.has_value()) {
             return;
         }
-        // this->random_target();
+        this->random_target();
     }
+    virtual float base_speed() override { return 5.f; }
 
-    virtual void update(float dt) override { AIPerson::update(dt); }
+    virtual void update(float dt) override {
+        AIPerson::update(dt);
+        // TODO just for debug purposes
+        if (!bubble.has_value()) {
+            bubble = SpeechBubble();
+        } else {
+            bubble.value().update(dt, this->raw_position);
+        }
+    }
 
     void render_name() const {
         rlPushMatrix();
-        rlTranslatef(          //
-            this->position.x,  //
-            0.f,               //
-            this->position.z   //
+        rlTranslatef(              //
+            this->raw_position.x,  //
+            0.f,                   //
+            this->raw_position.z   //
         );
         rlRotatef(90.0f, 1.0f, 0.0f, 0.0f);
 
@@ -73,29 +97,13 @@ struct Customer : public AIPerson {
     }
 
     void render_speech_bubble() const {
-        if(this->bubble.has_value()) return;
-        rlPushMatrix();
-        rlTranslatef(          //
-            this->position.x,  //
-            0.f,               //
-            this->position.z   //
-        );
-        rlRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-
-        rlTranslatef(          //
-            -0.5f * TILESIZE,  //
-            0.f,               //
-            -1.05 * TILESIZE   // this is Y
-        );
-
+        if (!this->bubble.has_value()) return;
         this->bubble.value().render();
-
-        rlPopMatrix();
     }
-
 
     virtual void render() const override {
         AIPerson::render();
+        this->render_speech_bubble();
         this->render_name();
     }
 };

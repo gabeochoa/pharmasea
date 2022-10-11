@@ -40,7 +40,6 @@ struct AIPerson : public Person {
     std::optional<vec2> target;
     std::optional<std::deque<vec2>> path;
     std::optional<vec2> local_target;
-    float base_speed = 10.f;
 
     AIPerson(vec3 p, Color face_color_in, Color base_color_in)
         : Person(p, face_color_in, base_color_in) {}
@@ -48,6 +47,10 @@ struct AIPerson : public Person {
         : Person(p, face_color_in, base_color_in) {}
     AIPerson(vec3 p, Color c) : Person(p, c) {}
     AIPerson(vec2 p, Color c) : Person(p, c) {}
+
+    virtual float base_speed(){
+        return 10.f;
+    }
 
     virtual void render() const override {
         Person::render();
@@ -131,7 +134,7 @@ struct AIPerson : public Person {
             return this->raw_position;
         }
         vec2 tar = this->local_target.value();
-        float speed = this->base_speed * dt;
+        float speed = this->base_speed() * dt;
 
         auto new_pos_x = this->raw_position;
         if (tar.x > this->raw_position.x) new_pos_x.x += speed;
@@ -144,7 +147,7 @@ struct AIPerson : public Person {
             return this->raw_position;
         }
         vec2 tar = this->local_target.value();
-        float speed = this->base_speed * dt;
+        float speed = this->base_speed() * dt;
 
         auto new_pos_z = this->raw_position;
         if (tar.y > this->raw_position.z) new_pos_z.z += speed;

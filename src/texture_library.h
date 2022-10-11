@@ -28,6 +28,9 @@ struct TextureLibrary {
     auto empty() const { return textures.empty(); }
 
     void load(const char* filename, const char* name) {
+        // TODO add debug mode
+        std::cout << "loading texture: " << name << " from " << filename
+                  << std::endl;
         this->add(name, LoadTexture(filename));
     }
 
@@ -44,7 +47,14 @@ struct TextureLibrary {
         return name;
     }
 
-    Texture& get(const std::string& name) { return textures[name]; }
+    Texture& get(const std::string& name) {
+        if (!this->contains(name)) {
+            std::cout << "asking for texture: " << name
+                      << " but nothing has been loaded with that name yet"
+                      << std::endl;
+        }
+        return textures[name];
+    }
 
     bool contains(const std::string& name) {
         return (textures.find(name) != textures.end());

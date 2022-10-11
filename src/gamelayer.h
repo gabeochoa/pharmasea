@@ -19,11 +19,26 @@ struct GameLayer : public Layer {
 
     GameLayer() : Layer("Game") {
         minimized = false;
-        TextureLibrary::get().load(Files::get().fetch_resource_path("images", "face.png").c_str(), "face");
+        GLOBALS.set("game_cam", &cam);
+        preload_textures();
     }
     virtual ~GameLayer() {}
     virtual void onAttach() override {}
     virtual void onDetach() override {}
+
+    void preload_textures() {
+        TextureLibrary::get().load(
+            Files::get().fetch_resource_path("images", "face.png").c_str(),
+            "face");
+
+        TextureLibrary::get().load(
+            Files::get().fetch_resource_path("images", "jug.png").c_str(),
+            "jug");
+
+        TextureLibrary::get().load(
+            Files::get().fetch_resource_path("images", "bubble.png").c_str(),
+            "bubble");
+    }
 
     virtual void onEvent(Event& event) override {
         EventDispatcher dispatcher(event);

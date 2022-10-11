@@ -24,6 +24,7 @@ Core engine TODOs:
 14. Add easy-to-use UI buttons
 15. Add system for exporting resources to code for easier binary packaging (see branch packager)
     https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html
+16. BUG: if customer runs into someone you both get stuck
 
 Gameplay Ideas
 - Pharmacy
@@ -43,12 +44,14 @@ Gameplay Ideas
 
 Changelog
 
-alpha_0.01
+alpha_0.22.10.10
 - nicer buttons and colors across all UI (unified theme :) )
 - new font!!
 - added texture loading with an image file 
 - cleaned up a bunch of code (maybe making folders next? wdyt)
 - added a new customer person that has a name above their head (see video) 
+- added a texture library 
+- Speech Bubble on Customer (though with billboard cant place anything on it yet)
 
 pre-history
 - added a library for finding the right savegame folder (like AppData etc) cause its different on every platform. 
