@@ -1,54 +1,62 @@
 
 #include "external_include.h"
 
+// Global Defines
+
+// uncomment to enable writing / reading files :
+// settings file 
+// save file
+// #define WRITE_FILES
+
 ///
 #include "globals.h"
 ///
 
-#include "aboutlayer.h"
 #include "app.h"
-#include "camera.h"
-#include "gamelayer.h"
 #include "menu.h"
+#include "settings.h"
+//
+#include "aboutlayer.h"
+#include "gamelayer.h"
 #include "menulayer.h"
 #include "menustatelayer.h"
 #include "settingslayer.h"
-#include "world.h"
 
-int main(void) {
+void startup() {
     // Disable all that startup logging
     SetTraceLogLevel(LOG_WARNING);
-
-    Settings::get().write_save_file();
-    Settings::get().load_save_file();
-
-    App app = App::get();
-
-    GameLayer* gamelayer = new GameLayer();
-    app.pushLayer(gamelayer);
-
-    AboutLayer* aboutlayer = new AboutLayer();
-    app.pushLayer(aboutlayer);
-
-    SettingsLayer* settingslayer = new SettingsLayer();
-    app.pushLayer(settingslayer);
-
-    MenuLayer* menulayer = new MenuLayer();
-    app.pushLayer(menulayer);
-
-    MenuStateLayer* menustatelayer = new MenuStateLayer();
-    app.pushLayer(menustatelayer);
 
     // Menu::get().state = Menu::State::Game;
     Menu::get().state = Menu::State::Root;
     // Menu::get().state = Menu::State::Settings;
 
-    while (!WindowShouldClose()) {
-        float dt = GetFrameTime();
-        app.run(dt);
-    }
+    GameLayer* gamelayer = new GameLayer();
+    App::get().pushLayer(gamelayer);
 
-    CloseWindow();
+    AboutLayer* aboutlayer = new AboutLayer();
+    App::get().pushLayer(aboutlayer);
 
+    SettingsLayer* settingslayer = new SettingsLayer();
+    App::get().pushLayer(settingslayer);
+
+    MenuLayer* menulayer = new MenuLayer();
+    App::get().pushLayer(menulayer);
+
+    MenuStateLayer* menustatelayer = new MenuStateLayer();
+    App::get().pushLayer(menustatelayer);
+
+    Settings::get().load_save_file();
+}
+
+void teardown() {
+#ifdef WRITE_FILES
+    Settings::get().write_save_file();
+#endif
+}
+
+int main(void) {
+    startup();
+    App::get().run();
+    teardown();
     return 0;
 }

@@ -1,41 +1,41 @@
 
 #pragma once
 
-#include "event.h"
 #include "external_include.h"
+//
+#include "event.h"
 #include "globals.h"
 #include "input.h"
 #include "layer.h"
 #include "singleton.h"
-
 SINGLETON_FWD(App)
 struct App {
     SINGLETON(App)
 
     LayerStack layerstack;
 
-    App() {
-        InitWindow(WIN_W, WIN_H, "pharmasea");
-    }
+    App() { InitWindow(WIN_W, WIN_H, "pharmasea"); }
+
+    ~App() {}
 
     void pushLayer(Layer* layer) { layerstack.push(layer); }
     void pushOverlay(Layer* layer) { layerstack.pushOverlay(layer); }
 
-    void onEvent(Event& event){
+    void onEvent(Event& event) {
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<WindowResizeEvent>(
             std::bind(&App::onWindowResize, this, std::placeholders::_1));
     }
 
-    bool onWindowResize(WindowResizeEvent event){
+    bool onWindowResize(WindowResizeEvent event) {
+        std::cout << "Got Window Resize Event: " << event.width  << ", " << event.height << std::endl;
         SetWindowSize(event.width, event.height);
         return true;
     }
 
-
     void processEvent(Event& e) {
         this->onEvent(e);
-        if(e.handled){
+        if (e.handled) {
             return;
         }
 
@@ -51,7 +51,15 @@ struct App {
         }
     }
 
-    void run(float dt) {
+    void run() {
+        while (!WindowShouldClose()) {
+            float dt = GetFrameTime();
+            this->loop(dt);
+        }
+        CloseWindow();
+    }
+
+    void loop(float dt) {
         Input::get().onUpdate(dt);
 
         for (Layer* layer : layerstack) {

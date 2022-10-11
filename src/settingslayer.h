@@ -1,6 +1,7 @@
 #pragma once
 
 #include "external_include.h"
+//
 #include "input.h"
 #include "layer.h"
 #include "menu.h"
@@ -20,6 +21,8 @@ struct SettingsLayer : public Layer {
 
         ui_context.reset(new ui::UIContext());
         ui_context.get()->init();
+
+        masterVolumeSliderValue = Settings::get().data.masterVolume;
     }
     virtual ~SettingsLayer() {}
     virtual void onAttach() override {}
@@ -107,7 +110,6 @@ struct SettingsLayer : public Layer {
                        .vertical = false,
                    }),
                    &masterVolumeSliderValue, 0.f, 1.f)) {
-            std::cout << "slider" << masterVolumeSliderValue << std::endl;
             Settings::get().update_master_volume(masterVolumeSliderValue);
         }
     }

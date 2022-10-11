@@ -38,6 +38,8 @@ struct Files {
         fs::path full_path = game_folder() / file;
         return full_path;
     }
+    
+    // TODO add a full cleanup to write folders in case we need to reset
 
     void folder_locations() {
         std::cout << "Config: " << sago::getConfigHome() << "\n";

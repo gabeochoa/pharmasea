@@ -1,9 +1,12 @@
 
 #pragma once
 
+//
+#include "external_include.h"
+//
+
 #include "app.h"
 #include "event.h"
-#include "external_include.h"
 #include "files.h"
 #include "globals.h"
 #include "singleton.h"
@@ -46,7 +49,8 @@ struct Settings {
     bool load_save_file() {
         std::ifstream ifs(Files::get().settings_filepath());
         if (!ifs.is_open()) {
-            std::cout << ("failed to find settings file (read)") << std::endl;
+            // std::cout << ("failed to find settings file (read)") <<
+            // std::endl;
             return false;
         }
 
@@ -57,11 +61,12 @@ struct Settings {
             auto tokens = util::split_string(line, ",");
             if (tokens[0] == "version") {
                 data.version = atoi(tokens[1].c_str());
-            } else if ("window_size") {
-                data.window_size.x = atof(tokens[1].c_str());
-                data.window_size.y = atof(tokens[2].c_str());
-            } else if ("master_volume") {
-                data.masterVolume = atof(tokens[1].c_str());
+            } else if (tokens[0] == "window_size") {
+                float x = atof(tokens[1].c_str());
+                float y = atof(tokens[2].c_str());
+                update_window_size({x, y});
+            } else if (tokens[0] == "master_volume") {
+                update_master_volume(atof(tokens[1].c_str()));
             } else {
                 // TODO handle unknown data
             }
