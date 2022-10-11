@@ -7,14 +7,24 @@
 #include "globals.h"
 #include "input.h"
 #include "layer.h"
+#include "raylib.h"
 #include "singleton.h"
 SINGLETON_FWD(App)
 struct App {
     SINGLETON(App)
 
     LayerStack layerstack;
+    Font font;
 
-    App() { InitWindow(WIN_W, WIN_H, "pharmasea"); }
+    App() { 
+        InitWindow(WIN_W, WIN_H, "pharmasea"); 
+        // TODO - load fonts from install folder, instead of local path
+        // Font loading must happen after InitWindow
+        font = LoadFont("./fonts/Karmina-Regular.ttf");
+        // font = LoadFont("./constan.ttf");
+        GenTextureMipmaps(&font.texture);
+        SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);
+    }
 
     ~App() {}
 

@@ -59,12 +59,12 @@ A game by:
         )";
         text(MK_UUID(id, ROOT_ID), WidgetConfig({
                                        .position = vec2{50.f, 50.f},
-                                       .size = vec2{20.f, 10.f},
+                                       .size = vec2{30.f, 5.f},
                                        .text = about_info,
                                    }));
 
         if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
-                                             .position = vec2{50.f, 300.f},
+                                             .position = vec2{50.f, 400.f},
                                              .size = vec2{100.f, 50.f},
                                              .text = std::string("Back"),
                                          }))) {

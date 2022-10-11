@@ -5,9 +5,9 @@
 #include "layer.h"
 #include "menu.h"
 #include "raylib.h"
+#include "settings.h"
 #include "ui.h"
 #include "uuid.h"
-#include "settings.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -42,9 +42,11 @@ struct MenuLayer : public Layer {
 
         ui_context->begin(mouseDown, mousepos);
 
+        const vec2 b_size = {140.f, 50.f};
+
         if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
                                              .position = vec2{50.f, 150.f},
-                                             .size = vec2{100.f, 50.f},
+                                             .size = b_size,
                                              .text = std::string("Play"),
                                          }))) {
             Menu::get().state = Menu::State::Game;
@@ -52,20 +54,19 @@ struct MenuLayer : public Layer {
 
         if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
                                              .position = vec2{50.f, 225.f},
-                                             .size = vec2{120.f, 50.f},
+                                             .size = b_size,
                                              .text = std::string("About"),
                                          }))) {
             Menu::get().state = Menu::State::About;
         }
 
-        if (button(MK_UUID(id, ROOT_ID),
-                   WidgetConfig({
-                       .position = vec2{50.f, 325.f},
-                       .size = vec2{175.f, 50.f},
-                       .text = std::string("Settings"),
-                   }))) {
+        if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
+                                             .position = vec2{50.f, 325.f},
+                                             .size = b_size,
+                                             .text = std::string("Settings"),
+                                         }))) {
             Menu::get().state = Menu::State::Settings;
-       }
+        }
 
         ui_context->end();
     }

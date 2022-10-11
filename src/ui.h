@@ -9,6 +9,10 @@
 #include "ui_widget_config.h"
 #include "uuid.h"
 
+// for font, 
+// TODO extract font loading from app 
+#include "app.h"
+
 namespace ui {
 
 // TODO add more info about begin()/end()
@@ -134,7 +138,7 @@ inline void handle_tabbing(const uuid id) {
 void _draw_focus_ring(const uuid id, const WidgetConfig& config) {
     draw_if_kb_focus(id, [&]() {
         const auto cs = config.size;
-        const auto border_width = 0.1f;
+        const auto border_width = 0.05f;
         const auto offset = vec2{config.size.x * (border_width / 2),
                                  config.size.y * (border_width / 2)};
         get().draw_widget(config.position - offset,   //
@@ -154,9 +158,7 @@ bool _text_impl(const uuid id, const WidgetConfig& config) {
     // No need to render if text is empty
     if (config.text.empty()) return false;
 
-    DrawText(config.text.c_str(), static_cast<int>(config.position.x),
-             static_cast<int>(config.position.y),
-             static_cast<int>(config.size.x),
+     DrawTextEx(App::get().font, config.text.c_str(), config.position, config.size.x, 0, 
              config.theme.color(WidgetConfig::Theme::ColorType::FONT));
 
     return true;
@@ -192,8 +194,8 @@ inline void _button_render(const uuid id, const WidgetConfig& config) {
         // and change the color to white automatically
         textConfig.theme.fontColor = color::getOppositeColor(color);
         textConfig.position = config.position + vec2{config.size.x * 0.05f,
-                                                     config.size.y * 0.25f};
-        textConfig.size = vec2{config.size.y, config.size.y} * 0.75f;
+                                                     config.size.y * 0.1f};
+        textConfig.size = vec2{config.size.y, config.size.y};
 
         _text_impl(MK_UUID(id.ownerLayer, 0), textConfig);
     }

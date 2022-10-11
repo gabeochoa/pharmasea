@@ -26,6 +26,7 @@ void startup() {
     // Disable all that startup logging
     SetTraceLogLevel(LOG_WARNING);
 
+
     // Menu::get().state = Menu::State::Game;
     Menu::get().state = Menu::State::Root;
     // Menu::get().state = Menu::State::Settings;
