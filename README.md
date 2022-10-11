@@ -40,3 +40,18 @@ Gameplay Ideas
     - Clients will have to have distinct names
     - Difficulty modifiers at end of day (Like Plateup's)?
     -
+
+Changelog
+
+alpha_0.01
+- nicer buttons and colors across all UI (unified theme :) )
+- new font!!
+- added texture loading with an image file 
+- cleaned up a bunch of code (maybe making folders next? wdyt)
+- added a new customer person that has a name above their head (see video) 
+
+pre-history
+- added a library for finding the right savegame folder (like AppData etc) cause its different on every platform. 
+- added loading / writing settings files (uncomment #define WRITE_FILES to test it out) 
+- added a focus ring so its more obvious what you are tabbed into on ui
+
