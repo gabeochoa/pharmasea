@@ -1,10 +1,10 @@
 #pragma once
 
-#include "entity.h"
 #include "external_include.h"
+//
+#include "entities.h"
 #include "furniture.h"
 #include "globals.h"
-#include "people.h"
 #include "util.h"
 #include "vec_util.h"
 
@@ -64,7 +64,7 @@ const std::string WALL_TEST = R"(
 ...........#......
 ..................)";
 
-//const std::string ACTIVE_MAP = WALL_TEST;
+// const std::string ACTIVE_MAP = WALL_TEST;
 const std::string ACTIVE_MAP = EXAMPLE_MAP;
 
 struct World {
@@ -264,7 +264,6 @@ struct World {
             return;
         }
 
-
         if ((nb(0, '.') && nb(1, '#') && nb(2, '.') &&  //
              nb(3, '.') /*         */ && nb(4, '.') &&  //
              nb(5, '.') && nb(6, '.') && nb(7, '.')     //
@@ -299,7 +298,6 @@ struct World {
             create_wall(loc, d_color, WallType::HALF, EntityDir::FORWARD);
             return;
         }
-
 
         // Corners
         if ((nb(0, '.') && nb(1, '#') && nb(2, '.') &&  //

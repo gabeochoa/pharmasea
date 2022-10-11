@@ -1,8 +1,9 @@
 #pragma once
 
 #include "external_include.h"
+//
 #include "globals.h"
-#include "people.h"
+#include "player.h"
 
 struct GameCam {
     Camera3D camera;
