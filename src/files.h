@@ -39,6 +39,12 @@ struct Files {
         return full_path;
     }
 
+    fs::path resource_folder() { return fs::path("./resources"); }
+
+    std::string fetch_resource_path(std::string group, std::string name) {
+        return (resource_folder() / fs::path(group) / fs::path(name)).string();
+    }
+
     // TODO add a full cleanup to write folders in case we need to reset
 
     void folder_locations() {

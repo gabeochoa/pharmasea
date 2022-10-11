@@ -19,14 +19,19 @@
 #include "aboutlayer.h"
 #include "fpslayer.h"
 #include "gamelayer.h"
-#include "versionlayer.h"
 #include "menulayer.h"
 #include "menustatelayer.h"
 #include "settingslayer.h"
+#include "versionlayer.h"
 
 void startup() {
     // Disable all that startup logging
     SetTraceLogLevel(LOG_WARNING);
+    // Force the app to be created.
+    // This unlocks GPU access so we can load textures
+    App::get();
+
+    // -------- Its unlikely anything should go above this line ----- //
 
     // Menu::get().state = Menu::State::Game;
     Menu::get().state = Menu::State::Root;

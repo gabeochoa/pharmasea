@@ -2,6 +2,8 @@
 
 #include "camera.h"
 #include "external_include.h"
+#include "files.h"
+#include "globals.h"
 #include "input.h"
 #include "layer.h"
 #include "menu.h"
@@ -10,8 +12,13 @@
 struct GameLayer : public Layer {
     World world;
     GameCam cam;
+    Texture2D facetex;
 
-    GameLayer() : Layer("Game") { minimized = false; }
+    GameLayer() : Layer("Game") {
+        minimized = false;
+        facetex = LoadTexture(
+            Files::get().fetch_resource_path("images", "face.png").c_str());
+    }
     virtual ~GameLayer() {}
     virtual void onAttach() override {}
     virtual void onDetach() override {}
@@ -32,7 +39,7 @@ struct GameLayer : public Layer {
 
     virtual void onUpdate(float dt) override {
         if (Menu::get().state != Menu::State::Game) return;
-        if(minimized) return;
+        if (minimized) return;
         // Dont quit window on escape
         SetExitKey(KEY_NULL);
 
@@ -49,7 +56,7 @@ struct GameLayer : public Layer {
 
     virtual void onDraw(float) override {
         if (Menu::get().state != Menu::State::Game) return;
-        if(minimized) return;
+        if (minimized) return;
 
         ClearBackground(Color{200, 200, 200, 255});
         BeginMode3D(cam.get());
@@ -65,6 +72,14 @@ struct GameLayer : public Layer {
             });
 
             DrawGrid(40, TILESIZE);
+
+            DrawBillboard(cam.camera, facetex,
+                          {
+                              1.f,
+                              0.f,
+                              1.f,
+                          },
+                          TILESIZE, WHITE);
         }
         EndMode3D();
     }
