@@ -80,6 +80,13 @@ vec3 operator+(vec3 lhs, float offset) {
     return lhs;
 }
 
+vec3 operator+(vec3 lhs, vec3 rhs) {
+    lhs.x += rhs.x;
+    lhs.y += rhs.y;
+    lhs.z += rhs.z;
+    return lhs;
+}
+
 vec2 operator+(vec2 lhs, float offset) {
     lhs.x += offset;
     lhs.y += offset;

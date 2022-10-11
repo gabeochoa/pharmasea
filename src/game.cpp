@@ -33,8 +33,8 @@ void startup() {
 
     // -------- Its unlikely anything should go above this line ----- //
 
-    // Menu::get().state = Menu::State::Game;
-    Menu::get().state = Menu::State::Root;
+    Menu::get().state = Menu::State::Game;
+    // Menu::get().state = Menu::State::Root;
     // Menu::get().state = Menu::State::Settings;
 
     GameLayer* gamelayer = new GameLayer();

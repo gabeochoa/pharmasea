@@ -23,7 +23,7 @@ const std::string EXAMPLE_MAP = R"(
 #########.###############.##########.###############
 #..................................................#
 #..................................................#
-#.......T..............................A...........#
+#.......T.....C........................A...........#
 #..................................................#
 #..................................................#
 #..................................................#
@@ -112,6 +112,78 @@ struct World {
             output.push_back(neighbor);
         }
         return output;
+    }
+
+
+    void init_map() {
+        vec2 origin = find_origin();
+        for (int i = 0; i < (int) this->lines.size(); i++) {
+            auto line = this->lines[i];
+            for (int j = 0; j < (int) line.size(); j++) {
+                vec2 raw_location = vec2{i * TILESIZE, j * TILESIZE};
+                vec2 location = raw_location - origin;
+                auto ch = get_char(i, j);
+                switch (ch) {
+                    case '#': {
+                        init_wall(i, j, location);
+                        break;
+                    }
+                    case '@': {
+                        if (GLOBALS.contains("player")) {
+                            std::cout << "WorldGen: "
+                                      << "cant have two players (yet) "
+                                      << std::endl;
+                            break;
+                        }
+                        std::shared_ptr<Player> player;
+                        player.reset(new Player(location));
+                        GLOBALS.set("player", player.get());
+                        EntityHelper::addEntity(player);
+                        break;
+                    }
+                    case 'A': {
+                        std::shared_ptr<AIPerson> aiperson;
+                        aiperson.reset(new AIPerson(location,
+                                                    (Color){255, 0, 0, 255},
+                                                    {0, 255, 0, 255}));
+                        EntityHelper::addEntity(aiperson);
+                        break;
+                    }
+                    case 'T': {
+                        if (GLOBALS.contains("targetcube")) {
+                            std::cout << "WorldGen: "
+                                      << "cant have two targetcubes (yet) "
+                                      << std::endl;
+                            break;
+                        }
+                        std::shared_ptr<TargetCube> targetcube;
+                        targetcube.reset(
+                            new TargetCube(location, (Color){255, 16, 240, 255},
+                                           (Color){16, 255, 240, 255}));
+                        EntityHelper::addEntity(targetcube);
+                        GLOBALS.set("targetcube", targetcube.get());
+                        break;
+                    }
+                    case 'I': {
+                        std::shared_ptr<Item> item;
+                        item.reset(
+                            new Item(location, (Color){255, 16, 240, 255}));
+                        EntityHelper::addItem(item);
+                        break;
+                    }
+                    case 'C': {
+                        std::shared_ptr<Customer> customer;
+                        customer.reset(
+                            new Customer(location, RED ));
+                        EntityHelper::addEntity(customer);
+                        break;
+                    }
+                    case '.':
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     void init_wall(int i, int j, vec2 loc) {
@@ -348,69 +420,5 @@ struct World {
            ...
 
           */
-    }
-
-    void init_map() {
-        vec2 origin = find_origin();
-        for (int i = 0; i < (int) this->lines.size(); i++) {
-            auto line = this->lines[i];
-            for (int j = 0; j < (int) line.size(); j++) {
-                vec2 raw_location = vec2{i * TILESIZE, j * TILESIZE};
-                vec2 location = raw_location - origin;
-                auto ch = get_char(i, j);
-                switch (ch) {
-                    case '#': {
-                        init_wall(i, j, location);
-                        break;
-                    }
-                    case '@': {
-                        if (GLOBALS.contains("player")) {
-                            std::cout << "WorldGen: "
-                                      << "cant have two players (yet) "
-                                      << std::endl;
-                            break;
-                        }
-                        std::shared_ptr<Player> player;
-                        player.reset(new Player(location));
-                        GLOBALS.set("player", player.get());
-                        EntityHelper::addEntity(player);
-                        break;
-                    }
-                    case 'A': {
-                        std::shared_ptr<AIPerson> aiperson;
-                        aiperson.reset(new AIPerson(location,
-                                                    (Color){255, 0, 0, 255},
-                                                    {0, 255, 0, 255}));
-                        EntityHelper::addEntity(aiperson);
-                        break;
-                    }
-                    case 'T': {
-                        if (GLOBALS.contains("targetcube")) {
-                            std::cout << "WorldGen: "
-                                      << "cant have two targetcubes (yet) "
-                                      << std::endl;
-                            break;
-                        }
-                        std::shared_ptr<TargetCube> targetcube;
-                        targetcube.reset(
-                            new TargetCube(location, (Color){255, 16, 240, 255},
-                                           (Color){16, 255, 240, 255}));
-                        EntityHelper::addEntity(targetcube);
-                        GLOBALS.set("targetcube", targetcube.get());
-                        break;
-                    }
-                    case 'I': {
-                        std::shared_ptr<Item> item;
-                        item.reset(
-                            new Item(location, (Color){255, 16, 240, 255}));
-                        EntityHelper::addItem(item);
-                        break;
-                    }
-                    case '.':
-                    default:
-                        break;
-                }
-            }
-        }
     }
 };

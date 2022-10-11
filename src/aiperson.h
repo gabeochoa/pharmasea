@@ -63,7 +63,7 @@ struct AIPerson : public Person {
     void random_target() {
         // TODO add cooldown so that not all time is spent here
         int max_tries = 10;
-        int range = 10;
+        int range = 20;
         bool walkable = false;
         int i = 0;
         while (!walkable) {
@@ -87,7 +87,7 @@ struct AIPerson : public Person {
         }
     }
 
-    void ensure_target() {
+    virtual void ensure_target() {
         if (target.has_value()) {
             return;
         }
