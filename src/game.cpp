@@ -33,8 +33,9 @@ int main(void) {
     MenuStateLayer* menustatelayer = new MenuStateLayer();
     app.pushLayer(menustatelayer);
 
-    Menu::get().state = Menu::State::Game;
+    // Menu::get().state = Menu::State::Game;
     // Menu::get().state = Menu::State::Root;
+    Menu::get().state = Menu::State::Settings;
 
     while (!WindowShouldClose()) {
         float dt = GetFrameTime();

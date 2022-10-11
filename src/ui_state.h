@@ -44,6 +44,10 @@ struct ButtonListState : public UIState {
     State<bool> hasFocus;
 };
 
+struct SliderState : public UIState {
+    State<float> value;
+};
+
 
 
 
@@ -78,6 +82,7 @@ struct StateManager {
         }
     }
 };
+
 
 ////////////////
 ////////////////

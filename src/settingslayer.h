@@ -13,6 +13,8 @@ struct SettingsLayer : public Layer {
     bool windowSizeDropdownState = false;
     int windowSizeDropdownIndex = 0;
 
+    float masterVolumeSliderValue = 0.5f;
+
     SettingsLayer() : Layer("Settings") {
         minimized = false;
 
@@ -51,12 +53,17 @@ struct SettingsLayer : public Layer {
         auto theme = WidgetTheme();
         theme.backgroundColor = Color{76, 225, 127, 255};
 
-        WidgetConfig dropdownMain = WidgetConfig({
-            .position = vec2{150.f, 200.f},  //
-            .size = vec2{100.f, 50.f},       //
-            .text = "",                      //
-            .theme = theme
-        });
+        text(MK_UUID(id, ROOT_ID), WidgetConfig({
+                                       .position = vec2{25.f, 150.f},
+                                       .size = vec2{20.f, 10.f},
+                                       .text = "Resolution",
+                                   }));
+
+        WidgetConfig dropdownMain =
+            WidgetConfig({.position = vec2{200.f, 150.f},  //
+                          .size = vec2{100.f, 30.f},       //
+                          .text = "",                      //
+                          .theme = theme});
 
         if (ui::dropdown(ui::MK_UUID(id, ui::ROOT_ID), dropdownMain,
                          dropdownConfigs, &windowSizeDropdownState,
@@ -74,6 +81,37 @@ struct SettingsLayer : public Layer {
         }
     }
 
+    void back_button() {
+        using namespace ui;
+        if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
+                                             .position = vec2{25.f, 300.f},
+                                             .size = vec2{100.f, 50.f},
+                                             .text = std::string("Back"),
+                                         }))) {
+            Menu::get().state = Menu::State::Root;
+        }
+    }
+
+    void volume_sliders() {
+        using namespace ui;
+        text(MK_UUID(id, ROOT_ID), WidgetConfig({
+                                       .position = vec2{25.f, 100.f},
+                                       .size = vec2{20.f, 10.f},
+                                       .text = "Master Volume",
+                                   }));
+
+        if (slider(MK_UUID(id, ROOT_ID),
+                   WidgetConfig({
+                       .position = vec2{200.f, 100.f},
+                       .size = vec2{150.f, 25.f},
+                       .vertical = false,
+                   }),
+                   &masterVolumeSliderValue, 0.f, 1.f)) {
+            std::cout << "slider" << masterVolumeSliderValue << std::endl;
+            Settings::get().update_master_volume(masterVolumeSliderValue);
+        }
+    }
+
     void draw_ui() {
         using namespace ui;
 
@@ -84,14 +122,8 @@ struct SettingsLayer : public Layer {
         ui_context->begin(mouseDown, mousepos);
 
         window_size_dropdown();
-
-        if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
-                                             .position = vec2{50.f, 300.f},
-                                             .size = vec2{100.f, 50.f},
-                                             .text = std::string("Back"),
-                                         }))) {
-            Menu::get().state = Menu::State::Root;
-        }
+        volume_sliders();
+        back_button();
 
         ui_context->end();
     }

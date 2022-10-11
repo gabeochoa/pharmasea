@@ -12,6 +12,7 @@ struct WidgetConfig {
     float rotation;
     std::string text;
     WidgetConfig* child;
+    bool vertical;
 
     struct Theme {
         enum ColorType {

@@ -59,6 +59,16 @@ bool dropdown(
     // which item is selected
     int* selectedIndex);
 
+bool slider(
+    // returns true if slider moved
+    const uuid id, WidgetConfig config,
+    // Current value of the slider
+    float* value,
+    // min value
+    float mnf,
+    // max value
+    float mxf);
+
 const Menu::State STATE = Menu::State::UI;
 struct UIContext;
 static std::shared_ptr<UIContext> _uicontext;
@@ -73,7 +83,7 @@ struct UIContext {
     uuid last_processed;
 
     bool lmouse_down = false;
-    vec2 mouse = vec2{0.0,0.0};
+    vec2 mouse = vec2{0.0, 0.0};
 
     int key = -1;
     int mod = -1;
@@ -129,7 +139,7 @@ struct UIContext {
 
     void draw_widget(vec2 pos, vec2 size, float, Color color, std::string) {
         DrawRectangle(static_cast<int>(pos.x), static_cast<int>(pos.y),    //
-            static_cast<int>(size.x), static_cast<int>(size.y),  //
+                      static_cast<int>(size.x), static_cast<int>(size.y),  //
                       color);
     }
 
@@ -260,8 +270,9 @@ bool _text_impl(const uuid id, const WidgetConfig& config) {
     // No need to render if text is empty
     if (config.text.empty()) return false;
 
-    DrawText(config.text.c_str(), static_cast<int>(config.position.x), static_cast<int>(config.position.y),
-        static_cast<int>(config.size.x),
+    DrawText(config.text.c_str(), static_cast<int>(config.position.x),
+             static_cast<int>(config.position.y),
+             static_cast<int>(config.size.x),
              config.theme.color(WidgetConfig::Theme::ColorType::FONT));
 
     return true;
@@ -349,7 +360,8 @@ bool _button_list_impl(const uuid id, WidgetConfig config,
     // Generate all the button ids
     std::vector<uuid> ids;
     for (size_t i = 0; i < configs.size(); i++) {
-        ids.push_back(MK_UUID_LOOP(id.ownerLayer, id.hash, static_cast<int>(i)));
+        ids.push_back(
+            MK_UUID_LOOP(id.ownerLayer, id.hash, static_cast<int>(i)));
     }
 
     for (size_t i = 0; i < configs.size(); i++) {
@@ -456,14 +468,12 @@ bool _dropdown_impl(const uuid id, WidgetConfig config,
          WidgetConfig(
              // TODO support getOppositeColor
              // {.fontColor = getOppositeColor(config.theme.color()),
-             {
-             .position = config.position + offset,
-             .rotation = state->on ? 90.f : 270.f,
-             .text = ">",
-             .theme =
+             {.position = config.position + offset,
+              .rotation = state->on ? 90.f : 270.f,
+              .text = ">",
+              .theme =
                   WidgetTheme(config.theme.color(WidgetTheme::ColorType::FONT),
-                              config.theme.color())
-              }));
+                              config.theme.color())}));
 
     bool childrenHaveFocus = false;
 
@@ -502,6 +512,83 @@ bool _dropdown_impl(const uuid id, WidgetConfig config,
     if (pressed) state->on = !state->on;
     if (dropdownState) *dropdownState = state->on;
     return ret;
+}
+
+inline void _slider_render(const uuid id, const WidgetConfig& config,
+                           const float value) {
+    const auto cs = config.size;
+    const float maxScale = 0.8f;
+    const float pos_offset =
+        value * (config.vertical ? cs.y * maxScale : cs.x * maxScale);
+    const auto col = is_active_or_hot(id) ? color::green : color::blue;
+    const auto pos = config.position;
+    const auto tex = config.theme.texture;
+
+    draw_if_kb_focus(id, [&]() {
+        get().draw_widget(pos,                  //
+                          config.size * 1.05f,  //
+                          config.rotation, color::teal, tex);
+    });
+    // slider rail
+    get().draw_widget(pos, cs, config.rotation, color::red, tex);
+
+    // slide
+    vec2 offset =
+        config.vertical ? vec2{0.f, pos_offset} : vec2{pos_offset, 0.f};
+    vec2 size =
+        config.vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
+
+    get().draw_widget(config.position + offset, size, config.rotation, col,
+                      tex);
+}
+
+bool _slider_impl(const uuid id, WidgetConfig config, float* value, float mnf,
+                  float mxf) {
+    // TODO be able to scroll this bar with the scroll wheel
+    auto state = get().widget_init<SliderState>(id);
+    if (value) state->value.set(*value);
+
+    active_if_mouse_inside(id, Rectangle{config.position.x, config.position.y,
+                                         config.size.x, config.size.y});
+    // dont mind if i do
+    try_to_grab_kb(id);
+    _slider_render(id, config, state->value.asT());
+    handle_tabbing(id);
+
+    bool value_changed = false;
+    if (has_kb_focus(id)) {
+        if (get().pressed("Value Up")) {
+            state->value = state->value + 0.005;
+            if (state->value > mxf) state->value = mxf;
+
+            (*value) = state->value;
+            value_changed = true;
+        }
+        if (get().pressed("Value Down")) {
+            state->value = state->value - 0.005;
+            if (state->value < mnf) state->value = mnf;
+            (*value) = state->value;
+            value_changed = true;
+        }
+    }
+
+    if (get().active_id == id) {
+        get().kb_focus_id = id;
+        float v;
+        if (config.vertical) {
+            v = (config.position.y - get().mouse.y) / config.size.y;
+        } else {
+            v = (get().mouse.x - config.position.x) / config.size.x;
+        }
+        if (v < mnf) v = mnf;
+        if (v > mxf) v = mxf;
+        if (v != *value) {
+            state->value = v;
+            (*value) = state->value;
+            value_changed = true;
+        }
+    }
+    return value_changed;
 }
 
 //////
@@ -550,4 +637,8 @@ bool dropdown(const uuid id, WidgetConfig config,
     return _dropdown_impl(id, config, configs, dropdownState, selectedIndex);
 }
 
+bool slider(const uuid id, WidgetConfig config, float* value, float mnf,
+            float mxf) {
+    return _slider_impl(id, config, value, mnf, mxf);
+}
 }  // namespace ui
