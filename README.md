@@ -3,6 +3,7 @@
 
 libraries used: 
 - raylib
+- AppData stuff https://github.com/sago007/PlatformFolders
 
 
 Core engine TODOs:
