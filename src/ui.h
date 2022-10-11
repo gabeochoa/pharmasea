@@ -140,7 +140,7 @@ void _draw_focus_ring(const uuid id, const WidgetConfig& config) {
         get().draw_widget(config.position - offset,   //
                           cs * (1.f + border_width),  //
                           config.rotation,            //
-                          color::teal,                //
+                          color::white,               //
                           "TEXTURE");
     });
 }
@@ -176,18 +176,21 @@ inline void _button_render(const uuid id, const WidgetConfig& config) {
         }
     } else {
         get().draw_widget(config.position, config.size, config.rotation,
-                          color::blue, "TEXTURE");
+                          color::black, "TEXTURE");
     }
 
-    get().draw_widget(config.position, config.size, config.rotation,
-                      config.theme.color(), config.theme.texture);
+    Color color = has_kb_focus(id)
+                      ? color::getOppositeColor(config.theme.color())
+                      : config.theme.color();
+
+    get().draw_widget(config.position, config.size, config.rotation, color,
+                      config.theme.texture);
 
     if (config.text.size() != 0) {
         WidgetConfig textConfig(config);
         // TODO detect if the button color is dark
         // and change the color to white automatically
-        // textConfig.theme.fontColor =
-        // getOppositeColor(config.theme.color());
+        textConfig.theme.fontColor = color::getOppositeColor(color);
         textConfig.position = config.position + vec2{config.size.x * 0.05f,
                                                      config.size.y * 0.25f};
         textConfig.size = vec2{config.size.y, config.size.y} * 0.75f;

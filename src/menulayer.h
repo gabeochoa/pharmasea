@@ -52,7 +52,7 @@ struct MenuLayer : public Layer {
 
         if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
                                              .position = vec2{50.f, 225.f},
-                                             .size = vec2{100.f, 50.f},
+                                             .size = vec2{120.f, 50.f},
                                              .text = std::string("About"),
                                          }))) {
             Menu::get().state = Menu::State::About;
@@ -61,7 +61,7 @@ struct MenuLayer : public Layer {
         if (button(MK_UUID(id, ROOT_ID),
                    WidgetConfig({
                        .position = vec2{50.f, 325.f},
-                       .size = vec2{100.f, 50.f},
+                       .size = vec2{175.f, 50.f},
                        .text = std::string("Settings"),
                    }))) {
             Menu::get().state = Menu::State::Settings;
@@ -80,7 +80,7 @@ struct MenuLayer : public Layer {
         if (minimized) {
             return;
         }
-        ClearBackground(BLACK);
+        ClearBackground(Color{30, 30, 30, 255});
         draw_ui();
     }
 };

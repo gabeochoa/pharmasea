@@ -20,13 +20,14 @@ struct WidgetConfig {
             FG = 0,
             BG,
         };
+
         Theme(){}
         Theme(Color font, Color bg)
             : fontColor(font), backgroundColor(bg){}
         Theme(Color font, Color bg, std::string tex)
             : fontColor(font), backgroundColor(bg), texture(tex) {}
 
-        Color fontColor = color::magenta;
+        Color fontColor = RAYWHITE;
         Color backgroundColor = color::black;
         std::string texture = "TEXTURE";
 

@@ -5,8 +5,8 @@
 //
 #include "assert.h"
 #include "event.h"
-#include "menu.h"
 #include "keymap.h"
+#include "menu.h"
 #include "vec_util.h"
 //
 #include "ui_color.h"
@@ -84,9 +84,8 @@ struct UIContext {
     }
 
     void draw_widget(vec2 pos, vec2 size, float, Color color, std::string) {
-        DrawRectangle(static_cast<int>(pos.x), static_cast<int>(pos.y),    //
-                      static_cast<int>(size.x), static_cast<int>(size.y),  //
-                      color);
+        Rectangle rect = {pos.x, pos.y, size.x, size.y};
+        DrawRectangleRounded(rect, 0.15f, 4, color);
     }
 
     inline vec2 widget_center(vec2 position, vec2 size) {
