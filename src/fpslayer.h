@@ -1,14 +1,11 @@
-
 #pragma once
 
 #include "external_include.h"
 #include "layer.h"
-#include "menu.h"
-#include "app.h"
 
-struct MenuStateLayer : public Layer {
-    MenuStateLayer() : Layer("MenuState") { minimized = false; }
-    virtual ~MenuStateLayer() {}
+struct FPSLayer: public Layer {
+    FPSLayer() : Layer("FPS") { minimized = false; }
+    virtual ~FPSLayer() {}
     virtual void onAttach() override {}
     virtual void onDetach() override {}
     virtual void onEvent(Event&) override {}
@@ -19,11 +16,6 @@ struct MenuStateLayer : public Layer {
         if (minimized) {
             return;
         }
-        DrawTextEx(
-                App::get().font, 
-                Menu::get().tostring(), 
-                {5, 20},
-                10, 0,
-                LIGHTGRAY);
+        DrawFPS(0, 0);
     }
 };

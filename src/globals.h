@@ -4,6 +4,8 @@
 #include <map>
 #include <string>
 
+const std::string VERSION = "alpha_0.01";
+
 constexpr int WIN_H = 1080 / 2;
 constexpr int WIN_W = 1920 / 2;
 

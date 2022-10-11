@@ -1,14 +1,13 @@
-
 #pragma once
 
 #include "external_include.h"
 #include "layer.h"
-#include "menu.h"
+#include "globals.h"
 #include "app.h"
 
-struct MenuStateLayer : public Layer {
-    MenuStateLayer() : Layer("MenuState") { minimized = false; }
-    virtual ~MenuStateLayer() {}
+struct VersionLayer: public Layer {
+    VersionLayer() : Layer("Version") { minimized = false; }
+    virtual ~VersionLayer() {}
     virtual void onAttach() override {}
     virtual void onDetach() override {}
     virtual void onEvent(Event&) override {}
@@ -21,8 +20,8 @@ struct MenuStateLayer : public Layer {
         }
         DrawTextEx(
                 App::get().font, 
-                Menu::get().tostring(), 
-                {5, 20},
+                VERSION.c_str(),
+                {5, 30},
                 10, 0,
                 LIGHTGRAY);
     }

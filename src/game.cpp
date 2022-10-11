@@ -4,7 +4,7 @@
 // Global Defines
 
 // uncomment to enable writing / reading files :
-// settings file 
+// settings file
 // save file
 // #define WRITE_FILES
 
@@ -17,7 +17,9 @@
 #include "settings.h"
 //
 #include "aboutlayer.h"
+#include "fpslayer.h"
 #include "gamelayer.h"
+#include "versionlayer.h"
 #include "menulayer.h"
 #include "menustatelayer.h"
 #include "settingslayer.h"
@@ -26,10 +28,9 @@ void startup() {
     // Disable all that startup logging
     SetTraceLogLevel(LOG_WARNING);
 
-
     // Menu::get().state = Menu::State::Game;
-    // Menu::get().state = Menu::State::Root;
-    Menu::get().state = Menu::State::Settings;
+    Menu::get().state = Menu::State::Root;
+    // Menu::get().state = Menu::State::Settings;
 
     GameLayer* gamelayer = new GameLayer();
     App::get().pushLayer(gamelayer);
@@ -45,6 +46,12 @@ void startup() {
 
     MenuStateLayer* menustatelayer = new MenuStateLayer();
     App::get().pushLayer(menustatelayer);
+
+    FPSLayer* fpslayer = new FPSLayer();
+    App::get().pushLayer(fpslayer);
+
+    VersionLayer* versionlayer = new VersionLayer();
+    App::get().pushLayer(versionlayer);
 
     Settings::get().load_save_file();
 }
