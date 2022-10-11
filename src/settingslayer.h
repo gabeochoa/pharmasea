@@ -121,8 +121,8 @@ struct SettingsLayer : public Layer {
 
         ui_context->begin(mouseDown, mousepos);
 
-        window_size_dropdown();
         volume_sliders();
+        window_size_dropdown();
         back_button();
 
         ui_context->end();

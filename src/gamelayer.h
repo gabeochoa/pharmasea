@@ -51,7 +51,7 @@ struct GameLayer : public Layer {
         if (Menu::get().state != Menu::State::Game) return;
         if(minimized) return;
 
-        ClearBackground(RAYWHITE);
+        ClearBackground(Color{200, 200, 200, 255});
         BeginMode3D(cam.get());
         {
             EntityHelper::forEachEntity([&](auto entity) {
