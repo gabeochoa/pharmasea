@@ -32,11 +32,20 @@ Gameplay Ideas
         - Ailments should have an poor OTC solution and good Rx solution
         - Poor solutions mean people are more likely to come back later in the day
         - Good solutions mean people are good for the day 
-    - Small / Medium / Large perscription size
-    - Label Dosage on the bag / pill bottle?
+    - Small / Medium / Large pill bottle
+    - Weigh station
+        - Auto-weigher upgrade? 
+    - Label maker
+        - automatically labels held bottle
     - Generic medication stocking
-    - Cashier? (Part of job?)
-    - Auto-weigher? / Conveyer belts or tractor beam
+        - Able to load up a whole shelf at a time
+        - Grab box from pallet and drop on shelf to refil 
+        - Each pallet holds 10 refills
+        - How to get a new pallet
+    - Cash Register
+        - multiple lines per register
+        - People at register dont lose patience
+    - Conveyer belts or tractor beam
     - Phone will ring from doctor with prescription information 
         - (Include key bindings for picking up the phone)
         - QTEs for writing down the right information
