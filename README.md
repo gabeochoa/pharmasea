@@ -53,6 +53,7 @@ alpha_0.22.10.10
 - added a texture library 
 - Speech Bubble on Customer (though with billboard cant place anything on it yet)
 - Started work on a UI autolayout-er
+- Added a tests/ folder with a way for all tests to run on startup
 
 pre-history
 - added a library for finding the right savegame folder (like AppData etc) cause its different on every platform. 
