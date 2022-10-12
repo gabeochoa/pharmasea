@@ -35,8 +35,7 @@ void startup() {
     App::get();
 
     // -------- Its unlikely anything should go above this line ----- //
-    
-    
+
     tests::run_all();
 
     Menu::get().state = Menu::State::Game;
@@ -74,9 +73,6 @@ void teardown() {
 }
 
 int main(void) {
-
-    return 0;
-    //
     startup();
     App::get().run();
     teardown();
