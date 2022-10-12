@@ -19,8 +19,8 @@ void test_just_root() {
         .mode = SizeMode::Pixels, .value = WIN_H, .strictness = 1.f};
     process_widget(&root);
 
-    M_ASSERT(root.computed_size[0] == WIN_W, "value should match exactly");
-    M_ASSERT(root.computed_size[1] == WIN_H, "value should match exactly");
+    M_TEST_EQ(root.computed_size[0], WIN_W, "value should match exactly");
+    M_TEST_EQ(root.computed_size[1], WIN_H, "value should match exactly");
 }
 
 void test_single_child() {
@@ -46,13 +46,13 @@ void test_single_child() {
 
     process_widget(&root);
 
-    M_ASSERT(root.computed_size[0] == WIN_W, "value should match exactly");
-    M_ASSERT(root.computed_size[1] == WIN_H, "value should match exactly");
+    M_TEST_EQ(root.computed_size[0], WIN_W, "value should match exactly");
+    M_TEST_EQ(root.computed_size[1], WIN_H, "value should match exactly");
 
-    M_ASSERT(child1.computed_size[0] == WIN_W * 0.5f,
-             "value should match exactly");
-    M_ASSERT(child1.computed_size[1] == WIN_H * 0.5f,
-             "value should match exactly");
+    M_TEST_EQ(child1.computed_size[0], WIN_W * 0.5f,
+              "value should match exactly");
+    M_TEST_EQ(child1.computed_size[1], WIN_H * 0.5f,
+              "value should match exactly");
 }
 
 void test_two_children() {
@@ -88,18 +88,18 @@ void test_two_children() {
 
     process_widget(&root);
 
-    M_ASSERT(root.computed_size[0] == WIN_W, "value should match exactly");
-    M_ASSERT(root.computed_size[1] == WIN_H, "value should match exactly");
+    M_TEST_EQ(root.computed_size[0], WIN_W, "value should match exactly");
+    M_TEST_EQ(root.computed_size[1], WIN_H, "value should match exactly");
 
-    M_ASSERT(child1.computed_size[0] == WIN_W * 0.5f,
-             "value should match exactly");
-    M_ASSERT(child1.computed_size[1] == WIN_H * 0.5f,
-             "value should match exactly");
+    M_TEST_EQ(child1.computed_size[0], WIN_W * 0.5f,
+              "value should match exactly");
+    M_TEST_EQ(child1.computed_size[1], WIN_H * 0.5f,
+              "value should match exactly");
 
-    M_ASSERT(child2.computed_size[0] == WIN_W * 0.5f,
-             "value should match exactly");
-    M_ASSERT(child2.computed_size[1] == WIN_H * 0.25f,
-             "value should match exactly");
+    M_TEST_EQ(child2.computed_size[0], WIN_W * 0.5f,
+              "value should match exactly");
+    M_TEST_EQ(child2.computed_size[1], WIN_H * 0.25f,
+              "value should match exactly");
 }
 
 void test_two_children_parent_size() {
@@ -135,17 +135,17 @@ void test_two_children_parent_size() {
 
     process_widget(&root);
 
-    M_ASSERT(root.computed_size[0] ==
-                 child1.computed_size[0] + child2.computed_size[0],
-             "value should match size of both children together");
-    M_ASSERT(root.computed_size[1] == WIN_H,
-             "value should match size in pixels");
+    M_TEST_EQ(root.computed_size[0],
+              child1.computed_size[0] + child2.computed_size[0],
+              "value should match size of both children together");
+    M_TEST_EQ(root.computed_size[1], WIN_H,
+              "value should match size in pixels");
 
-    M_ASSERT(child1.computed_size[0] == 100.f, "value should match exactly");
-    M_ASSERT(child1.computed_size[1] == 100.f, "value should match exactly");
+    M_TEST_EQ(child1.computed_size[0], 100.f, "value should match exactly");
+    M_TEST_EQ(child1.computed_size[1], 100.f, "value should match exactly");
 
-    M_ASSERT(child2.computed_size[0] == 50.f, "value should match exactly");
-    M_ASSERT(child2.computed_size[1] == 25.f, "value should match exactly");
+    M_TEST_EQ(child2.computed_size[0], 50.f, "value should match exactly");
+    M_TEST_EQ(child2.computed_size[1], 25.f, "value should match exactly");
 }
 
 void test_two_children_parent_size_too_small() {
@@ -184,27 +184,54 @@ void test_two_children_parent_size_too_small() {
     // std::cout << child1 << std::endl;
     // std::cout << child2 << std::endl;
 
-    M_ASSERT(root.computed_size[0] == 100.f, "value should match size exactly");
-    M_ASSERT(root.computed_size[1] == 100.f, "value should match size exactly");
+    M_TEST_EQ(root.computed_size[0], 100.f, "value should match size exactly");
+    M_TEST_EQ(root.computed_size[1], 100.f, "value should match size exactly");
 
-    M_ASSERT(child1.computed_size[0] <= 100.f,
-             "value should be smaller than max size");
-    M_ASSERT(child1.computed_size[1] <= 100.f,
-             "value should be smaller than max size");
-    M_ASSERT(child2.computed_size[0] <= 100.f,
-             "value should be smaller than max size");
-    M_ASSERT(child2.computed_size[1] <= 100.f,
-             "value should be smaller than max size");
+    M_TEST_LEQ(child1.computed_size[0], 100.f,
+               "value should be smaller than max size");
+    M_TEST_LEQ(child1.computed_size[1], 100.f,
+               "value should be smaller than max size");
+    M_TEST_LEQ(child2.computed_size[0], 100.f,
+               "value should be smaller than max size");
+    M_TEST_LEQ(child2.computed_size[1], 100.f,
+               "value should be smaller than max size");
 
-    M_ASSERT(child1.computed_size[0] + child2.computed_size[0] <= 100.f,
-             "value of all children should be <= max size");
-    M_ASSERT(child1.computed_size[1] + child2.computed_size[1] <= 100.f,
-             "value of all children should be <= max size");
+    M_TEST_LEQ(child1.computed_size[0] + child2.computed_size[0], 100.f,
+               "value of all children should be , max size");
+    M_TEST_LEQ(child1.computed_size[1] + child2.computed_size[1], 100.f,
+               "value of all children should be , max size");
 
-    M_ASSERT(child2.computed_size[1] == 99.f,
-             "1.f strictness should be enforced");
-    M_ASSERT(child1.computed_size[1] <= 200.f,
-             "<1.f strictness could have been compromised on");
+    M_TEST_LEQ(child1.computed_size[1], 200.f,
+               "<1.f strictness could have been compromised on");
+    M_TEST_EQ(child2.computed_size[1], 99.f,
+              "1.f strictness should be enforced");
+}
+
+void test_add_child() {
+    using namespace ui;
+    Widget root;
+
+    root.size_expected[0] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 100.f, .strictness = 1.f};
+    root.size_expected[1] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 100.f, .strictness = 1.f};
+
+    Widget child;
+    child.size_expected[0] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 200.f, .strictness = 0.1f};
+    child.size_expected[1] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 200.f, .strictness = 0.1f};
+
+    root.add_child(&child);
+
+    M_TEST_EQ(child.parent, &root, "Parent of child should be root");
+    M_TEST_EQ(root.first, &child, "Parent of child should be root");
+    M_TEST_EQ(root.last, &child,
+              "Last child of root should be child since there is only one");
+    M_TEST_EQ(root.first->next, nullptr, "root should only have one child");
+    M_TEST_EQ(child.next, nullptr, "child should have no siblings");
+    M_TEST_EQ(child.next, root.first->next,
+              "root's first child's next should be same as child's next");
 }
 
 void test_ui_widget() {
@@ -214,5 +241,6 @@ void test_ui_widget() {
     test_two_children();
     test_two_children_parent_size();
     test_two_children_parent_size_too_small();
+    test_add_child();
 }
 }  // namespace tests

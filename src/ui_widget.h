@@ -18,43 +18,16 @@ struct SizeExpectation {
     float strictness;
 };
 
-// Process order
-//
-// - (any) compute solos (doesnt rely on parent/child / other widgets)
-// - (pre) parent sizes
-// - (post) children
-// - (pre) solve violations
-// - (pre) compute relative positions
-/*
- pre order me -> left -> right
- post order left -> right -> me
-
- (Any order is acceptable) Calculate “standalone” sizes. These are sizes that do
-not depend on other widgets and can be calculated purely with the information
-that comes from the single widget that is having its size calculated.
-(UI_SizeKind_Pixels, UI_SizeKind_TextContent)
-
-(Pre-order) Calculate “upwards-dependent” sizes. These are sizes that strictly
-depend on an ancestor’s size, other than ancestors that have
-“downwards-dependent” sizes on the given axis. (UI_SizeKind_PercentOfParent)
-
-(Post-order) Calculate “downwards-dependent” sizes. These are sizes that depend
-on sizes of descendants. (UI_SizeKind_ChildrenSum)
-
-(Pre-order) Solve violations. For each level in the hierarchy, this will verify
-that the children do not extend past the boundaries of a given parent (unless
-explicitly allowed to do so; for example, in the case of a parent that is
-scrollable on the given axis), to the best of the algorithm’s ability. If there
-is a violation, it will take a proportion of each child widget’s size (on the
-given axis) proportional to both the size of the violation, and (1-strictness),
-where strictness is that specified in the semantic size on the child widget for
-the given axis.
-
-(Pre-order) Finally, given the calculated sizes of each widget, compute the
-relative positions of each widget (by laying out on an axis which can be
-specified on any parent node). This stage can also compute the final
-screen-coordinates rectangle.
- * */
+std::ostream& operator<<(std::ostream& os, const SizeExpectation& exp) {
+    os << "SizeExpectation(";
+    os << exp.mode;
+    os << ", ";
+    os << exp.value;
+    os << ", ";
+    os << exp.strictness;
+    os << ")";
+    return os;
+}
 
 struct Widget {
     SizeExpectation size_expected[2];
@@ -68,18 +41,25 @@ struct Widget {
     Widget* prev = nullptr;
     Widget* next = nullptr;
     Widget* parent = nullptr;
-};
 
-std::ostream& operator<<(std::ostream& os, const SizeExpectation& exp) {
-    os << "SizeExpectation(";
-    os << exp.mode;
-    os << ", ";
-    os << exp.value;
-    os << ", ";
-    os << exp.strictness;
-    os << ")";
-    return os;
-}
+    void add_child(Widget* child) {
+        if(!this->first){
+            this->first = child;
+            this->last = child;
+            child->parent = this;
+            return;
+        }
+
+        Widget* c = this->first;
+        while (c->next) {
+            c = c->next;
+        }
+        c->next = child;
+        child->prev = c;
+        child->parent = this;
+        this->last = child;
+    }
+};
 
 std::ostream& operator<<(std::ostream& os, const Widget& w) {
     os << "Widget(";
@@ -260,7 +240,7 @@ void fix_violating_children(Widget* widget, int exp_index, float error,
 
 void solve_violations(Widget* widget) {
     int num_children = _get_num_children(widget);
-    if(num_children == 0) return;
+    if (num_children == 0) return;
 
     // me -> left -> right
 
