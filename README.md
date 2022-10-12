@@ -12,7 +12,7 @@ Core engine TODOs:
 3. ~~Allow for an Item to be walkable or not (influences Entity movement)~~
 4. Create Doors
 5. Create Nav mesh for "walkability"
-6. ~~ Add new target entity that moves via arrows keys / alternative keys ~~
+6. ~~Add new target entity that moves via arrows keys / alternative keys~~
 7. Disallow target cube from going outside of bounds
 8. Add some way for entities to subscribe to certain keys 
     so we can more easily keep track of what keys are being requested over lifetime
@@ -52,6 +52,7 @@ alpha_0.22.10.10
 - added a new customer person that has a name above their head (see video) 
 - added a texture library 
 - Speech Bubble on Customer (though with billboard cant place anything on it yet)
+- Started work on a UI autolayout-er
 
 pre-history
 - added a library for finding the right savegame folder (like AppData etc) cause its different on every platform. 
