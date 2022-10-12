@@ -67,6 +67,16 @@ Gameplay Ideas
         - Global Pandemic: Adds more sick people & doubles the amount of vax patients
         - Beep Beep: Adds a metal detector that slows down thieves
         - Mall RoboCop: Adds an AI robot that tries to catch thieves
+    - Different game modes
+        - Big Box: Acquired by a franchise. 
+            - More customers
+            - Have to show advertising (takes up space) 
+            - Have to pay x% of income to them at end of day 
+            - Replace names with shapes 
+        - Drive through
+            - Only surve through one window 
+        - Hospital
+            - More sick customers
     - Customers have attributes?
         - Loud customers (giant speech bubble) 
         - Rude customers () 
