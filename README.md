@@ -40,6 +40,10 @@ Gameplay Ideas
     - Cleaning tools after use, otherwise risk contamination
     - Clients will have to have distinct names
     - Difficulty modifiers at end of day (Like Plateup's)?
+        - SpeedWalkers: Customers walk 1.5x as fast
+        - Hypocondriacs: Customers always get more than once prescription
+        - SelfMedicated: Customers heavily prefer OTC medicine
+        - Chatty Doctors: Doctors spend twice as long on the phone 
     -
 
 Changelog
