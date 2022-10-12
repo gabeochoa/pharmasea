@@ -58,7 +58,7 @@ screen-coordinates rectangle.
 
 struct Widget {
     SizeExpectation size_expected[2];
-    float computed_relative_pos[2] = {0.f, 0.f} ;
+    float computed_relative_pos[2] = {0.f, 0.f};
     float computed_size[2] = {-1.f, -1.f};
     Rectangle rect;
     GrowDir growdir = GrowDir::Column;
@@ -111,7 +111,7 @@ std::ostream& operator<<(std::ostream& os, const Widget& w) {
 }
 
 float compute_size_for_standalone_expectation(Widget* widget, int exp_index) {
-    std::cout << "csfse" << widget << " " << exp_index << std::endl;
+    // std::cout << "csfse" << widget << " " << exp_index << std::endl;
     SizeExpectation exp = widget->size_expected[exp_index];
     switch (exp.mode) {
         case SizeMode::Pixels:
@@ -125,7 +125,7 @@ float compute_size_for_standalone_expectation(Widget* widget, int exp_index) {
 }
 
 float compute_size_for_parent_expectation(Widget* widget, int exp_index) {
-    std::cout << "csfpe" << widget << " " << exp_index << std::endl;
+    // std::cout << "csfpe" << widget << " " << exp_index << std::endl;
     float no_change = widget->computed_size[exp_index];
     if (!widget->parent) return no_change;
     float parent_size = widget->parent->computed_size[exp_index];
@@ -139,7 +139,7 @@ float compute_size_for_parent_expectation(Widget* widget, int exp_index) {
 }
 
 float compute_size_for_child_expectation(Widget* widget, int exp_index) {
-    std::cout << "csfce" << widget << " " << exp_index << std::endl;
+    // std::cout << "csfce" << widget << " " << exp_index << std::endl;
     float no_change = widget->computed_size[exp_index];
     if (!widget->first) return no_change;
 
@@ -208,58 +208,84 @@ void calculate_those_with_children(Widget* widget) {
     widget->computed_size[1] = size_y;
 }
 
+float _get_total_child_size(Widget* widget, int exp_index) {
+    Widget* child = widget->first;
+    float sum = 0.f;
+    while (child) {
+        sum += child->computed_size[exp_index];
+        child = child->next;
+    }
+    return sum;
+}
+
+int _get_num_children(Widget* widget) {
+    int i = 0;
+    Widget* child = widget->first;
+    while (child) {
+        i++;
+        child = child->next;
+    }
+    return i;
+}
+
 void fix_violating_children(Widget* widget, int exp_index, float error,
                             int num_children) {
-    float error_left = error;
-    while (error_left) {
-        float approx_epc = error_left / num_children;
-        Widget* child = widget->first;
-        while (child) {
-            SizeExpectation exp = child->size_expected[exp_index];
-            if (exp.strictness != 1.f) {
-                child->computed_size[exp_index] =
-                    (child->computed_size[exp_index] -
-                     ((1.f - exp.strictness) * approx_epc));
-
-                // Reduce strictness every round
-                // so that eventually we will get there
-                exp.strictness -= 0.1f;
-                child->size_expected[exp_index] = exp;
-            }
-            child = child->next;
+    M_ASSERT(num_children != 0, "Should never have zero children");
+    float approx_epc = error / num_children;
+    Widget* child = widget->first;
+    while (child) {
+        SizeExpectation exp = child->size_expected[exp_index];
+        float portion_of_error = (1.f - exp.strictness) * approx_epc;
+        // std::cout << "hi" << exp.strictness << std::endl;
+        if (exp.strictness == 0.f) {
+            // If 0 then accept all the error
+            portion_of_error = error;
+            float cur_size = child->computed_size[exp_index];
+            child->computed_size[exp_index] = cur_size - portion_of_error;
+            break;
+        } else if (exp.strictness == 1.f) {
+            // If 1.f, then we dont want to touch it
+        } else {
+            float cur_size = child->computed_size[exp_index];
+            child->computed_size[exp_index] = cur_size - portion_of_error;
+            // Reduce strictness every round
+            // so that eventually we will get there
+            exp.strictness = fmaxf(0.f, exp.strictness - 0.1f);
+            child->size_expected[exp_index] = exp;
         }
+        // next iteration
+        child = child->next;
     }
 }
 
 void solve_violations(Widget* widget) {
+    int num_children = _get_num_children(widget);
+    if(num_children == 0) return;
+
     // me -> left -> right
 
     float my_size_x = widget->computed_size[0];
     float my_size_y = widget->computed_size[1];
-    float all_children_x = 0.f;
-    float all_children_y = 0.f;
-    int num_children = 0;
 
-    Widget* child = widget->first;
-    while (child) {
-        all_children_x += child->computed_size[0];
-        all_children_y += child->computed_size[1];
-        num_children++;
-        child = child->next;
-    }
-
+    float all_children_x = _get_total_child_size(widget, 0);
     float error_x = all_children_x - my_size_x;
-    float error_y = all_children_y - my_size_y;
-
-    if (error_x > 1.f) {
+    while (error_x > 0.5f) {
+        // std::cout << "current error" << error_x << std::endl;
         fix_violating_children(widget, 0, error_x, num_children);
+        all_children_x = _get_total_child_size(widget, 0);
+        error_x = all_children_x - my_size_x;
     }
-    if (error_y > 1.f) {
+
+    float all_children_y = _get_total_child_size(widget, 1);
+    float error_y = all_children_y - my_size_y;
+    while (error_y > 0.5f) {
         fix_violating_children(widget, 1, error_y, num_children);
+        all_children_y = _get_total_child_size(widget, 1);
+        error_y = all_children_y - my_size_y;
     }
 
     // Solve for children
-    child = widget->first;
+    Widget* child = widget->first;
     while (child) {
         solve_violations(child);
         child = child->next;
