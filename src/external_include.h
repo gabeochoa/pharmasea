@@ -15,8 +15,9 @@
 #include "raylib.h"
 #include "drawing_util.h"
 
+#ifdef WRITE_FILES
 #include "../vendor/sago/platform_folders.h"
-
+#endif
 
 #ifdef __APPLE__
 #pragma clang diagnostic pop

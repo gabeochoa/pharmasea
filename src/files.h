@@ -16,7 +16,11 @@ struct Files {
     Files() { ensure_game_folder_exists(); }
 
     fs::path game_folder() {
+#ifdef WRITE_FILES
         const fs::path master_folder(sago::getSaveGamesFolder1());
+#else 
+        const fs::path master_folder("./");
+#endif 
         return master_folder / fs::path(GAME_FOLDER);
     }
 
@@ -47,6 +51,7 @@ struct Files {
 
     // TODO add a full cleanup to write folders in case we need to reset
 
+#ifdef WRITE_FILES
     void folder_locations() {
         using namespace std;
         using namespace sago;
@@ -69,4 +74,5 @@ struct Files {
             cout << "Additional data " << i << ": " << extraData.at(i) << "\n";
         }
     }
+#endif 
 };
