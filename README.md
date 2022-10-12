@@ -29,22 +29,49 @@ Core engine TODOs:
 Gameplay Ideas
 - Pharmacy
     - AI players need status conditions ("Ailments")
+        - Ailments should have an poor OTC solution and good Rx solution
+        - Poor solutions mean people are more likely to come back later in the day
+        - Good solutions mean people are good for the day 
     - Small / Medium / Large perscription size
     - Label Dosage on the bag / pill bottle?
     - Generic medication stocking
     - Cashier? (Part of job?)
     - Auto-weigher? / Conveyer belts or tractor beam
-    - Phone will ring from doctor with perscription information (Include key bindings for picking up the phone)
-    - Phone will ring from clients with questions about whether or not their perscription is ready
-    - Allow to put people on hold?
+    - Phone will ring from doctor with prescription information 
+        - (Include key bindings for picking up the phone)
+        - QTEs for writing down the right information
+        - Upgrade to a fax machine that automatically takes info with single press
+    - Phone will ring from clients with questions about whether or not their prescription is ready
+        - Webserver upgrade that you scan a completed rx on to mark "is ready for pickup"
+        - Second hand Upgrade Allow to put people on hold?
     - Cleaning tools after use, otherwise risk contamination
     - Clients will have to have distinct names
-    - Difficulty modifiers at end of day (Like Plateup's)?
+    - Difficulty modifiers 
         - SpeedWalkers: Customers walk 1.5x as fast
         - Hypocondriacs: Customers always get more than once prescription
         - SelfMedicated: Customers heavily prefer OTC medicine
         - Chatty Doctors: Doctors spend twice as long on the phone 
-    -
+        - Doctor Writing: Fax machine output harder to read
+        - Bad Insurance Rates: make half as much money 
+        - Curious customers: Customers ask questions while paying 
+        - Chatty Customers: Customers take twice as long to pay
+        - Mummblers: Customer names are harder to read 
+        - Bad Knees: You walk slow? Get tired more easily? Have to sit down? 
+        - Gimme a pack of reds: Sell cigarettes (more money) but get more customers (more sick) 
+        - It fell off a truck: sell Rx on the side, Double Income but risk getting caught
+        - While I'm here: 
+            - Adds food / snacks / drinks to sell 
+            - Customers who are waiting a while will pick up more (causing cashier step to take longer) 
+        - We have 4 seasons here: Adds weather which increases mess, but less people come in on those days
+        - Vax Shot: More customers but only have to stab them (quick compared to rx) 
+        - Global Pandemic: Adds more sick people & doubles the amount of vax patients
+        - 
+    - Customers have attributes?
+        - Loud customers (giant speech bubble) 
+        - Rude customers () 
+        - Sick customers (more likely to have other customers return back later for more Rx)
+        - Poor customers (cant pay but need lifesaving medicine)
+        - Undercover cop (only if you take the double income, if you sell to them you lose immediately) 
 
 Changelog
 
