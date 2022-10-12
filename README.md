@@ -65,13 +65,15 @@ Gameplay Ideas
         - We have 4 seasons here: Adds weather which increases mess, but less people come in on those days
         - Vax Shot: More customers but only have to stab them (quick compared to rx) 
         - Global Pandemic: Adds more sick people & doubles the amount of vax patients
-        - 
+        - Beep Beep: Adds a metal detector that slows down thieves
+        - Mall RoboCop: Adds an AI robot that tries to catch thieves
     - Customers have attributes?
         - Loud customers (giant speech bubble) 
         - Rude customers () 
         - Sick customers (more likely to have other customers return back later for more Rx)
         - Poor customers (cant pay but need lifesaving medicine)
         - Undercover cop (only if you take the double income, if you sell to them you lose immediately) 
+        - Thieves (easily identifiable and have to grab them before they leave) 
 
 Changelog
 
