@@ -36,7 +36,7 @@ struct Item {
     }
 
     virtual void update_position(const vec3& p) {
-        this->position = vec::snap(p);
+        this->position = p;
     }
 
     virtual BoundingBox bounds() const {

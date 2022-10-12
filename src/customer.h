@@ -56,7 +56,7 @@ struct Customer : public AIPerson {
         }
         this->random_target();
     }
-    virtual float base_speed() override { return 5.f; }
+    virtual float base_speed() override { return 2.5f; }
 
     virtual void update(float dt) override {
         AIPerson::update(dt);
