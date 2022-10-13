@@ -1,5 +1,7 @@
 
+#include "../assert.h"
 #include "../globals.h"
+#include "../ui_autolayout.h"
 #include "../ui_widget.h"
 
 namespace tests {
@@ -7,7 +9,7 @@ namespace tests {
 void test_empty() {
     using namespace ui;
     Widget root;
-    process_widget(&root);
+    autolayout::process_widget(&root);
 }
 
 void test_just_root() {
@@ -17,7 +19,7 @@ void test_just_root() {
         .mode = SizeMode::Pixels, .value = WIN_W, .strictness = 1.f};
     root.size_expected[1] = SizeExpectation{
         .mode = SizeMode::Pixels, .value = WIN_H, .strictness = 1.f};
-    process_widget(&root);
+    autolayout::process_widget(&root);
 
     M_TEST_EQ(root.computed_size[0], WIN_W, "value should match exactly");
     M_TEST_EQ(root.computed_size[1], WIN_H, "value should match exactly");
@@ -44,7 +46,7 @@ void test_single_child() {
 
     child1.parent = &root;
 
-    process_widget(&root);
+    autolayout::process_widget(&root);
 
     M_TEST_EQ(root.computed_size[0], WIN_W, "value should match exactly");
     M_TEST_EQ(root.computed_size[1], WIN_H, "value should match exactly");
@@ -86,7 +88,7 @@ void test_two_children() {
     child1.next = &child2;
     child2.prev = &child1;
 
-    process_widget(&root);
+    autolayout::process_widget(&root);
 
     M_TEST_EQ(root.computed_size[0], WIN_W, "value should match exactly");
     M_TEST_EQ(root.computed_size[1], WIN_H, "value should match exactly");
@@ -133,7 +135,7 @@ void test_two_children_parent_size() {
     child1.next = &child2;
     child2.prev = &child1;
 
-    process_widget(&root);
+    autolayout::process_widget(&root);
 
     M_TEST_EQ(root.computed_size[0],
               child1.computed_size[0] + child2.computed_size[0],
@@ -179,7 +181,7 @@ void test_two_children_parent_size_too_small() {
     child1.next = &child2;
     child2.prev = &child1;
 
-    process_widget(&root);
+    autolayout::process_widget(&root);
 
     // std::cout << child1 << std::endl;
     // std::cout << child2 << std::endl;
@@ -251,11 +253,12 @@ void test_add_child_again() {
                "Last child of root should not be child since there is two ");
     M_TEST_EQ(root.last, &child2,
               "Last child of root should be child2 since there is two ");
-    M_TEST_NEQ(root.first->next, nullptr, "root should have more than one child");
+    M_TEST_NEQ(root.first->next, nullptr,
+               "root should have more than one child");
 
     M_TEST_EQ(child.next, &child2, "child should have one sibling (child2) ");
     M_TEST_EQ(child2.prev, &child, "child2 should have one sibling (child) ");
-    M_TEST_EQ(child2.next , nullptr, "child2 should be the last child");
+    M_TEST_EQ(child2.next, nullptr, "child2 should be the last child");
     M_TEST_EQ(child.next, root.first->next,
               "root's first child's next should be same as child's next");
 }
