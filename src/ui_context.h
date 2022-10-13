@@ -10,19 +10,67 @@
 #include "raylib.h"
 #include "vec_util.h"
 //
-#include "ui_color.h"
 #include "ui_state.h"
+#include "ui_theme.h"
+#include "ui_widget.h"
 #include "uuid.h"
+
+// TODO theres got to be a better way....
+// ****************************************************** start kludge
+namespace ui {
+struct FZInfo {
+    const std::string content;
+    float width;
+    float height;
+};
+}  // namespace ui
+
+namespace std {
+
+template<>
+struct std::hash<ui::FZInfo> {
+    std::size_t operator()(const ui::FZInfo& info) const {
+        using std::hash;
+        using std::size_t;
+        using std::string;
+        return ((hash<string>()(info.content) ^
+                 (hash<float>()(info.width) << 1)) >>
+                1) ^
+               (hash<float>()(info.height) << 1);
+    }
+};
+
+}  // namespace std
+
+namespace ui {
+bool operator==(const FZInfo& info, const FZInfo& other) {
+    return std::hash<FZInfo>()(info) == std::hash<FZInfo>()(other);
+}
+}  // namespace ui
+
+// ****************************************************** end kludge
 
 namespace ui {
 const Menu::State STATE = Menu::State::UI;
 
 struct UIContext;
 static std::shared_ptr<UIContext> _uicontext;
+// TODO do we need both _uicontext and globalContext?
+// if not we can switch to using the SINGLETON macro
 UIContext* globalContext;
-
 struct UIContext {
+    inline static UIContext* create() { return new UIContext(); }
+    inline static UIContext& get() {
+        if (globalContext) return *globalContext;
+        if (!_uicontext) _uicontext.reset(UIContext::create());
+        return *_uicontext;
+    }
+
     StateManager statemanager;
+    std::stack<UITheme> themestack;
+    Font font;
+    Widget* root;
+    std::stack<Widget*> parentstack;
 
     uuid hot_id;
     uuid active_id;
@@ -35,13 +83,6 @@ struct UIContext {
     int key = -1;
     int mod = -1;
     GamepadButton button;
-
-    inline static UIContext* create() { return new UIContext(); }
-    inline static UIContext& get() {
-        if (globalContext) return *globalContext;
-        if (!_uicontext) _uicontext.reset(UIContext::create());
-        return *_uicontext;
-    }
 
     bool is_mouse_inside(const Rectangle& rect) {
         return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
@@ -121,15 +162,6 @@ struct UIContext {
         return KeyMap::is_event(STATE, name);
     }
 
-    void draw_widget(vec2 pos, vec2 size, float, Color color, std::string) {
-        Rectangle rect = {pos.x, pos.y, size.x, size.y};
-        DrawRectangleRounded(rect, 0.15f, 4, color);
-    }
-
-    inline vec2 widget_center(vec2 position, vec2 size) {
-        return position + (size / 2.f);
-    }
-
     //
     bool inited = false;
     bool began_and_not_ended = false;
@@ -172,6 +204,8 @@ struct UIContext {
         // mod = int();
         // button = GAMEPAD_BUTTON_UNKNOWN;
         //
+        key = int();
+        mod = int();
         // keychar = int();
         // modchar = int();
         globalContext = nullptr;
@@ -188,6 +222,123 @@ struct UIContext {
             // std::string(id), type_name<T>());
         }
         return state;
+    }
+
+    void set_font(Font f) { font = f; }
+
+    void push_theme(UITheme theme) { themestack.push(theme); }
+
+    void pop_theme() { themestack.pop(); }
+
+    UITheme active_theme() {
+        if (themestack.empty()) return DEFAULT_THEME;
+        return themestack.top();
+    }
+
+    void push_parent(Widget* widget) { parentstack.push(widget); }
+    void pop_parent() { parentstack.pop(); }
+
+    Widget* active_parent() {
+        if (parentstack.empty()) {
+            return nullptr;
+        }
+        return parentstack.top();
+    }
+
+    void add_child(Widget* child) { active_parent()->add_child(child); }
+
+    void draw_widget(Widget widget, theme::Usage usage) {
+        DrawRectangleRounded(widget.rect, 0.15f, 4,
+                             active_theme().from_usage(usage));
+    }
+
+    std::unordered_map<FZInfo, int> _font_size_memo;
+
+    int get_font_size_impl(const std::string& content, float width,
+                           float height) {
+        float spacing = 0.f;
+        int font_size = 1;
+        int last_size = 1;
+        vec2 size;
+
+        // how big can we make the size in powers of 2,
+        // before growing outside our bounds
+        do {
+            last_size = font_size;
+            font_size <<= 1;
+            size = MeasureTextEx(font, content.c_str(), font_size, spacing);
+            // std::cout << "got " << size.x << ", " << size.y << " for "
+            // << font_size << " and " << width << ", " << height
+            // << " and last was: " << last_size << std::endl;
+        } while (size.x <= width && size.y <= height);
+
+        // return the last one that passed
+        return last_size;
+    }
+
+    int get_font_size(const std::string& content, float width, float height) {
+        FZInfo fzinfo =
+            FZInfo{.content = content, .width = width, .height = height};
+        if (!_font_size_memo.contains(fzinfo)) {
+            _font_size_memo[fzinfo] =
+                get_font_size_impl(content, width, height);
+        } else {
+            // std::cout << "found value in cache" << std::endl;
+        }
+        int result = _font_size_memo[fzinfo];
+        // std::cout << "cache value " << result << std::endl;
+        return result;
+    }
+
+    std::vector<std::function<void()>> queued_render_calls;
+    void render_all() {
+        for (auto render_call : queued_render_calls) {
+            render_call();
+        }
+        queued_render_calls.clear();
+    }
+    void schedule_render_call(std::function<void()> cb) {
+        queued_render_calls.push_back(cb);
+    }
+
+    void draw_text(Widget* widget, const std::string& content) {
+        std::cout << "drawing text for " << widget << " "
+                  << (widget->cant_render() ? "cant render" : "can render")
+                  << " " << widget->rect << std::endl;
+        float spacing = 0.f;
+        // TODO would there ever be more direction types? (reverse row? )
+        float font_size =
+            get_font_size(content, widget->rect.width, widget->rect.height);
+        // std::cout << "selected font size: " << font_size << " for "
+        // << widget.rect.width << ", " << widget.rect.height
+        // << std::endl;
+        DrawTextEx(font,                                          //
+                   content.c_str(),                               //
+                   {widget->rect.x, widget->rect.y},              //
+                   font_size, spacing,                            //
+                   active_theme().from_usage(theme::Usage::Font)  //
+        );
+    }
+
+    void schedule_draw_text(Widget* widget, const std::string& content) {
+        std::cout << "scheduling text render for " << widget << std::endl;
+        get().schedule_render_call(
+            std::bind(&UIContext::draw_text, this, widget, content));
+    }
+
+    void draw_text_old(const char* text, vec2 position, vec2 size) {
+        DrawTextEx(font, text, position, size.x, 0,
+                   active_theme().from_usage(theme::Usage::Font));
+    }
+
+    void draw_widget_old(vec2 pos, vec2 size, float, Color color, std::string) {
+        std::cout << "render old" << std::endl;
+        Rectangle rect = {pos.x, pos.y, size.x, size.y};
+        DrawRectangleRounded(rect, 0.15f, 4, color);
+    }
+
+    inline vec2 widget_center(vec2 position, vec2 size) {
+        return position + (size / 2.f);
     }
 };
 

@@ -6,33 +6,29 @@
 #include "ui_color.h"
 #include "ui_context.h"
 #include "ui_state.h"
+#include "ui_widget.h"
 #include "ui_widget_config.h"
 #include "uuid.h"
-
-// for font,
-// TODO extract font loading from app
-#include "app.h"
 
 namespace ui {
 
 // TODO add more info about begin()/end()
 
 bool text(
-    // returns true always
-    const uuid,
-    //
-    const WidgetConfig&);
+    // returns true if content isnt empty
+    const Widget& widget,
+    // the text to render
+    const std::string& content);
 
-/* button
-       returns true if the button was clicked else false
+bool button(
+    // returns true if the button was clicked else false
+    const Widget& widget);
 
-    button_with_label
-        returns true if the button was clicked else false
-        if config has .text will draw text directly through button() call
-        if not then will check config.child for a separate text config
-*/
-bool button(const uuid id, WidgetConfig config);
-bool button_with_label(const uuid id, WidgetConfig config);
+bool button_with_label(
+    // returns true if the button was clicked else false
+    const Widget& widget,
+    // button label
+    const std::string& content);
 
 // TODO is this what we want?
 bool button_list(
@@ -46,7 +42,7 @@ bool button_list(
     int* selectedIndex = nullptr,
     //
     bool* hasFocus = nullptr);
-//
+
 bool dropdown(
     // returns true if dropdown value was changed
     const uuid id,
@@ -138,71 +134,67 @@ inline void handle_tabbing(const uuid id) {
     get().last_processed = id;
 }
 
-void _draw_focus_ring(const uuid id, const WidgetConfig& config) {
-    draw_if_kb_focus(id, [&]() {
-        const auto cs = config.size;
+void _draw_focus_ring(const Widget& widget) {
+    draw_if_kb_focus(widget.id, [&]() {
+        const auto position = vec2{
+            widget.rect.x,
+            widget.rect.y,
+        };
+        const auto cs = vec2{widget.rect.width, widget.rect.height};
         const auto border_width = 0.05f;
-        const auto offset = vec2{config.size.x * (border_width / 2),
-                                 config.size.y * (border_width / 2)};
-        get().draw_widget(config.position - offset,   //
-                          cs * (1.f + border_width),  //
-                          config.rotation,            //
-                          color::white,               //
-                          "TEXTURE");
+        const auto offset =
+            vec2{cs.x * (border_width / 2), cs.y * (border_width / 2)};
+        get().draw_widget_old(position - offset,          //
+                              cs * (1.f + border_width),  //
+                              0.f,                        //
+                              color::white,               //
+                              "TEXTURE");
     });
 }
 
-bool _text_impl(const uuid id, const WidgetConfig& config) {
-    // NOTE: currently id is only used for focus and hot/active,
-    // we could potentially also track "selections"
-    // with a range so the user can highlight text
-    // not needed for supermarket but could be in the future?
-    (void) id;
-    // No need to render if text is empty
-    if (config.text.empty()) return false;
+inline void _button_render(Widget* widget_ptr) {
+    Widget& widget = *widget_ptr;
+    _draw_focus_ring(widget);
 
-    DrawTextEx(App::get().font, config.text.c_str(), config.position,
-               config.size.x, 0,
-               config.theme.color(WidgetConfig::Theme::ColorType::FONT));
+    vec2 position = {
+        widget.rect.x,
+        widget.rect.y,
+    };
+    vec2 size = {
+        widget.rect.width,
+        widget.rect.height,
+    };
+    std::cout << "button render " << position << "  " << size << std::endl;
 
-    return true;
-}
-
-inline void _button_render(const uuid id, const WidgetConfig& config) {
-    _draw_focus_ring(id, config);
-
-    if (get().hot_id == id) {
-        if (get().active_id == id) {
-            get().draw_widget(config.position, config.size, config.rotation,
-                              color::red, "TEXTURE");
+    if (get().hot_id == widget.id) {
+        if (get().active_id == widget.id) {
+            get().draw_widget_old(position, size, 0.f, color::red, "TEXTURE");
         } else {
             // Hovered
-            get().draw_widget(config.position, config.size, config.rotation,
-                              color::green, "TEXTURE");
+            get().draw_widget_old(position, size, 0.f, color::green, "TEXTURE");
         }
     } else {
-        get().draw_widget(config.position, config.size, config.rotation,
-                          color::black, "TEXTURE");
+        get().draw_widget_old(position, size, 0.f, color::black, "TEXTURE");
     }
 
-    Color color = has_kb_focus(id)
-                      ? color::getOppositeColor(config.theme.color())
-                      : config.theme.color();
+    UITheme theme = get().active_theme();
+    Color color = has_kb_focus(widget.id)
+                      ? theme.from_usage(theme::Usage::Primary)
+                      : theme.from_usage(theme::Usage::Secondary);
 
-    get().draw_widget(config.position, config.size, config.rotation, color,
-                      config.theme.texture);
+    get().draw_widget_old(position, size, 0.f, color, "TEXTURE");
 
-    if (config.text.size() != 0) {
-        WidgetConfig textConfig(config);
-        // TODO detect if the button color is dark
-        // and change the color to white automatically
-        textConfig.theme.fontColor = color::getOppositeColor(color);
-        textConfig.position =
-            config.position + vec2{config.size.x * 0.05f, config.size.y * 0.1f};
-        textConfig.size = vec2{config.size.y, config.size.y};
-
-        _text_impl(MK_UUID(id.ownerLayer, 0), textConfig);
-    }
+    // if (config.text.size() != 0) {
+    // WidgetConfig textConfig(config);
+    // // TODO detect if the button color is dark
+    // // and change the color to white automatically
+    // textConfig.theme.fontColor = color::getOppositeColor(color);
+    // textConfig.position =
+    // config.position + vec2{config.size.x * 0.05f, config.size.y * 0.1f};
+    // textConfig.size = vec2{config.size.y, config.size.y};
+    //
+    // text_old(MK_UUID(id.ownerLayer, 0), textConfig);
+    // }
 }
 
 inline bool _button_pressed(const uuid id) {
@@ -219,17 +211,18 @@ inline bool _button_pressed(const uuid id) {
     return false;
 }
 
-bool _button_impl(const uuid id, WidgetConfig config) {
+bool _button_impl(const Widget& widget) {
     // no state
-    active_if_mouse_inside(id, Rectangle{config.position.x, config.position.y,
-                                         config.size.x, config.size.y});
-    try_to_grab_kb(id);
-    _button_render(id, config);
-    handle_tabbing(id);
-    bool pressed = _button_pressed(id);
+    active_if_mouse_inside(widget.id, widget.rect);
+    try_to_grab_kb(widget.id);
+    std::cout << "scheduling old render for " << &widget << std::endl;
+    get().schedule_render_call(std::bind(_button_render, widget.me));
+    handle_tabbing(widget.id);
+    bool pressed = _button_pressed(widget.id);
     return pressed;
 }
 
+/*
 bool _button_list_impl(const uuid id, WidgetConfig config,
                        const std::vector<WidgetConfig>& configs,
                        int* selectedIndex = nullptr, bool* hasFocus = nullptr) {
@@ -354,16 +347,16 @@ bool _dropdown_impl(const uuid id, WidgetConfig config,
     // offset the V a little more than ^ in order to make it look nice
     auto offset =
         vec2{config.size.x - (state->on ? 1.f : 1.6f), config.size.y * -0.25f};
-    text(MK_UUID(id.ownerLayer, id.hash),
-         WidgetConfig(
-             // TODO support getOppositeColor
-             // {.fontColor = getOppositeColor(config.theme.color()),
-             {.position = config.position + offset,
-              .rotation = state->on ? 90.f : 270.f,
-              .text = ">",
-              .theme =
-                  WidgetTheme(config.theme.color(WidgetTheme::ColorType::FONT),
-                              config.theme.color())}));
+    text_old(MK_UUID(id.ownerLayer, id.hash),
+             WidgetConfig(
+                 // TODO support getOppositeColor
+                 // {.fontColor = getOppositeColor(config.theme.color()),
+                 {.position = config.position + offset,
+                  .rotation = state->on ? 90.f : 270.f,
+                  .text = ">",
+                  .theme = WidgetTheme(
+                      config.theme.color(WidgetTheme::ColorType::FONT),
+                      config.theme.color())}));
 
     bool childrenHaveFocus = false;
 
@@ -418,7 +411,7 @@ inline void _slider_render(const uuid id, const WidgetConfig& config,
     Color rail = has_kb_focus(id)
                      ? color::getOppositeColor(config.theme.color())
                      : config.theme.color();
-    get().draw_widget(pos, cs, config.rotation, rail, tex);
+    get().draw_widget_old(pos, cs, config.rotation, rail, tex);
 
     // slide
     vec2 offset =
@@ -429,8 +422,8 @@ inline void _slider_render(const uuid id, const WidgetConfig& config,
     // TODO chose a better color here or put one in theme
     const auto col =
         is_active_or_hot(id) ? color::red : color::getOppositeColor(rail);
-    get().draw_widget(config.position + offset, size, config.rotation, col,
-                      tex);
+    get().draw_widget_old(config.position + offset, size, config.rotation, col,
+                          tex);
 }
 
 bool _slider_impl(const uuid id, WidgetConfig config, float* value, float mnf,
@@ -481,6 +474,7 @@ bool _slider_impl(const uuid id, WidgetConfig config, float* value, float mnf,
     }
     return value_changed;
 }
+*/
 
 //////
 //////
@@ -499,23 +493,47 @@ bool _slider_impl(const uuid id, WidgetConfig config, float* value, float mnf,
 //////
 //////
 
-bool text(const uuid id, const WidgetConfig& config) {
-    return _text_impl(id, config);
+bool padding(const Widget& widget) {
+    get().add_child(widget.me);
+    return true;
 }
-bool button(const uuid id, WidgetConfig config) {
-    return _button_impl(id, config);
+
+bool div(const Widget& widget) {
+    get().add_child(widget.me);
+    return true;
 }
 
-bool button_with_label(const uuid id, WidgetConfig config) {
-    auto pressed = button(id, config);
-    if (config.text == "") {
-        // apply offset so text is relative to button position
-        config.child->position += config.position;
-        text(MK_UUID(id.ownerLayer, 0), *config.child);
+bool text(const Widget& widget, const std::string& content) {
+    std::cout << "text" << widget.me << std::endl;
+    get().add_child(widget.me);
+    // No need to render if text is empty
+    if (content.empty()) return false;
+    get().schedule_draw_text(widget.me, content);
+    return true;
+}
+
+bool button(const Widget& widget) {
+    std::cout << "button" << widget.me << std::endl;
+    get().add_child(widget.me);
+    return _button_impl(widget);
+}
+
+bool button_with_label(const Widget& widget, const std::string& content) {
+    get().add_child(widget.me);
+    bool pressed = false;
+    get().push_parent(widget.me);
+    {
+        std::shared_ptr<Widget> internal_button(
+            new Widget({.mode = Percent, .value = 1.f, .strictness = 1.0f},
+                       {.mode = Percent, .value = 1.f, .strictness = 1.0f}));
+        pressed = button(*internal_button);
+        // text(widget, content);
     }
+    get().pop_parent();
     return pressed;
 }
 
+/*
 bool button_list(const uuid id, WidgetConfig config,
                  const std::vector<WidgetConfig>& configs, int* selectedIndex,
                  bool* hasFocus) {
@@ -532,4 +550,5 @@ bool slider(const uuid id, WidgetConfig config, float* value, float mnf,
             float mxf) {
     return _slider_impl(id, config, value, mnf, mxf);
 }
+*/
 }  // namespace ui

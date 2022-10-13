@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "settings.h"
 #include "ui.h"
+#include "ui_theme.h"
 #include "uuid.h"
 
 struct MenuLayer : public Layer {
@@ -46,7 +47,7 @@ struct MenuLayer : public Layer {
         vec2 mousepos = GetMousePosition();
 
         ui_context->begin(mouseDown, mousepos);
-
+        ui_context->push_theme(DEFAULT_THEME);
         const vec2 b_size = {140.f, 50.f};
 
         if (button(MK_UUID(id, ROOT_ID), WidgetConfig({
