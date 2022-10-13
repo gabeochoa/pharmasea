@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "assert.h"
 #include "external_include.h"
 #include "ui_widget.h"
 
@@ -37,16 +38,14 @@ float compute_size_for_parent_expectation(Widget* widget, int exp_index) {
 float compute_size_for_child_expectation(Widget* widget, int exp_index) {
     // std::cout << "csfce" << widget << " " << exp_index << std::endl;
     float no_change = widget->computed_size[exp_index];
-    if (!widget->first) return no_change;
+    if (widget->children.empty()) return no_change;
 
     float total_child_size = 0.f;
-    Widget* child = widget->first;
-    while (child) {
+    for (Widget* child : widget->children) {
         // TODO are children guaranteed to have been solved by now?
         float cs = child->computed_size[exp_index];
         M_ASSERT(cs != -1, "expect that all children have been solved by now");
         total_child_size += cs;
-        child = child->next;
     }
 
     SizeExpectation exp = widget->size_expected[exp_index];
@@ -67,10 +66,8 @@ void calculate_standalone(Widget* widget) {
     widget->computed_size[0] = size_x;
     widget->computed_size[1] = size_y;
 
-    Widget* child = widget->first;
-    while (child) {
+    for (Widget* child : widget->children) {
         calculate_standalone(child);
-        child = child->next;
     }
 }
 
@@ -82,20 +79,16 @@ void calculate_those_with_parents(Widget* widget) {
     widget->computed_size[0] = size_x;
     widget->computed_size[1] = size_y;
 
-    Widget* child = widget->first;
-    while (child) {
+    for (Widget* child : widget->children) {
         calculate_those_with_parents(child);
-        child = child->next;
     }
 }
 
 void calculate_those_with_children(Widget* widget) {
     if (widget == nullptr) return;
 
-    Widget* child = widget->first;
-    while (child) {
+    for (Widget* child : widget->children) {
         calculate_those_with_children(child);
-        child = child->next;
     }
 
     auto size_x = compute_size_for_child_expectation(widget, 0);
@@ -105,31 +98,18 @@ void calculate_those_with_children(Widget* widget) {
 }
 
 float _get_total_child_size(Widget* widget, int exp_index) {
-    Widget* child = widget->first;
     float sum = 0.f;
-    while (child) {
+    for (Widget* child : widget->children) {
         sum += child->computed_size[exp_index];
-        child = child->next;
     }
     return sum;
-}
-
-int _get_num_children(Widget* widget) {
-    int i = 0;
-    Widget* child = widget->first;
-    while (child) {
-        i++;
-        child = child->next;
-    }
-    return i;
 }
 
 void fix_violating_children(Widget* widget, int exp_index, float error,
                             int num_children) {
     M_ASSERT(num_children != 0, "Should never have zero children");
     float approx_epc = error / num_children;
-    Widget* child = widget->first;
-    while (child) {
+    for (Widget* child : widget->children) {
         SizeExpectation exp = child->size_expected[exp_index];
         float portion_of_error = (1.f - exp.strictness) * approx_epc;
         // std::cout << "hi" << exp.strictness << std::endl;
@@ -149,13 +129,11 @@ void fix_violating_children(Widget* widget, int exp_index, float error,
             exp.strictness = fmaxf(0.f, exp.strictness - 0.1f);
             child->size_expected[exp_index] = exp;
         }
-        // next iteration
-        child = child->next;
     }
 }
 
 void solve_violations(Widget* widget) {
-    int num_children = _get_num_children(widget);
+    int num_children = widget->children.size();
     if (num_children == 0) return;
 
     // me -> left -> right
@@ -165,106 +143,129 @@ void solve_violations(Widget* widget) {
 
     float all_children_x = _get_total_child_size(widget, 0);
     float error_x = all_children_x - my_size_x;
+    int i_x = 0;
     while (error_x > 0.5f) {
-        // std::cout << "current error" << error_x << std::endl;
+        i_x++;
+        // std::cout << "errorx" << error_x << std::endl;
         fix_violating_children(widget, 0, error_x, num_children);
         all_children_x = _get_total_child_size(widget, 0);
         error_x = all_children_x - my_size_x;
+        if (i_x > 100) break;
     }
 
     float all_children_y = _get_total_child_size(widget, 1);
     float error_y = all_children_y - my_size_y;
+    int i_y = 0;
     while (error_y > 0.5f) {
+        i_y++;
+        // std::cout << "errory" << error_y << std::endl;
         fix_violating_children(widget, 1, error_y, num_children);
         all_children_y = _get_total_child_size(widget, 1);
         error_y = all_children_y - my_size_y;
+        if (i_y > 100) break;
     }
 
     // Solve for children
-    Widget* child = widget->first;
-    while (child) {
+    for (Widget* child : widget->children) {
         solve_violations(child);
-        child = child->next;
     }
 }
 
 void compute_relative_positions(Widget* widget) {
+    // Assuming we dont care about things smaller than 1 pixel
+    widget->computed_size[0] = round(widget->computed_size[0]);
+    widget->computed_size[1] = round(widget->computed_size[1]);
     float sx = widget->computed_size[0];
     float sy = widget->computed_size[1];
 
     float offx = 0.f;
     float offy = 0.f;
 
-    float col_w = 0.f;
-    float col_h = 0.f;
-
     float max_child_w = 0.f;
     float max_child_h = 0.f;
 
-    Widget* child = widget->first;
-    while (child) {
+    for (Widget* child : widget->children) {
         float cx = child->computed_size[0];
         float cy = child->computed_size[1];
         if (cx > max_child_w) max_child_w = cx;
         if (cy > max_child_h) max_child_h = cy;
-        child = child->next;
     }
 
-    switch (widget->growdir) {
-        case GrowDir::Column:
-            col_h = sy;
-            col_w = max_child_w;
-            break;
-        case GrowDir::Row:
-            col_w = sx;
-            col_h = max_child_h;
-            break;
+    float col_w = max_child_w;
+    float col_h = max_child_h;
+    if (widget->growflags & GrowFlags::Column) {
+        col_h = sy;
+    }
+    if (widget->growflags & GrowFlags::Row) {
+        col_w = sx;
     }
 
-    child = widget->first;
-    while (child) {
+    for (Widget* child : widget->children) {
         float cx = child->computed_size[0];
         float cy = child->computed_size[1];
 
-        switch (widget->growdir) {
-            case GrowDir::Column:
-                // hit max height, wrap
-                if (cy + offy > sy) {
-                    offy = 0;
-                    offx += col_w;
-                }
-                child->computed_relative_pos[0] = offx;
-                child->computed_relative_pos[1] = offy;
-                break;
-            case GrowDir::Row:
-                // hit max width, wrap
-                if (cx + offx > sx) {
-                    offx = 0;
-                    offy += col_h;
-                }
-                child->computed_relative_pos[0] = offx;
-                child->computed_relative_pos[1] = offy;
-                break;
+        bool will_hit_max_x = false;
+        bool will_hit_max_y = false;
+
+        will_hit_max_x = cx + offx == sx;
+        will_hit_max_y = cy + offy == sy;
+
+        // We cant grow and are going over the limit
+        if (widget->growflags & GrowFlags::None &&
+            (will_hit_max_x || will_hit_max_y)) {
+            child->computed_relative_pos[0] = sx;
+            child->computed_relative_pos[1] = sy;
         }
+
+        will_hit_max_x = cx + offx == sx;
+        will_hit_max_y = cy + offy == sy;
+
+        if (widget->growflags & GrowFlags::Column && will_hit_max_y) {
+            offy = 0;
+            offx += col_w;
+        }
+
+        will_hit_max_x = cx + offx == sx;
+        will_hit_max_y = cy + offy == sy;
+
+        if (widget->growflags & GrowFlags::Row && will_hit_max_x) {
+            offx = 0;
+            offy += col_h;
+        }
+
+        child->computed_relative_pos[0] = offx;
+        child->computed_relative_pos[1] = offy;
+
+        if (widget->growflags & GrowFlags::Column && will_hit_max_y) {
+            offy += cy;
+        }
+        if (widget->growflags & GrowFlags::Row && will_hit_max_x) {
+            offx += cx;
+        }
+
         compute_relative_positions(child);
-        child = child->next;
     }
 }
 
-void compute_rect_bounds(Widget* widget){
+void compute_rect_bounds(Widget* widget) {
+    std::cout << "computing rect bounds for " << widget << std::endl;
+    vec2 offset = vec2{0.f, 0.f};
+    Widget* parent = widget->parent;
+    if (parent) {
+        offset = {parent->computed_relative_pos[0],
+                  parent->computed_relative_pos[1]};
+    }
 
     Rectangle rect;
-    rect.x = widget->computed_relative_pos[0];
-    rect.y = widget->computed_relative_pos[1];
+    rect.x = offset.x + widget->computed_relative_pos[0];
+    rect.y = offset.y + widget->computed_relative_pos[1];
     rect.width = widget->computed_size[0];
     rect.height = widget->computed_size[1];
 
     widget->rect = rect;
 
-    Widget* child = widget->first;
-    while(child){
+    for (Widget* child : widget->children) {
         compute_rect_bounds(child);
-        child = child->next;
     }
 }
 
