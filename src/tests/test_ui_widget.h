@@ -234,6 +234,32 @@ void test_add_child() {
               "root's first child's next should be same as child's next");
 }
 
+void test_add_child_again() {
+    using namespace ui;
+    Widget root;
+
+    Widget child;
+    root.add_child(&child);
+
+    Widget child2;
+    root.add_child(&child2);
+
+    M_TEST_EQ(child.parent, &root, "Parent of child should be root");
+    M_TEST_EQ(root.first, &child, "Parent of child should be root");
+
+    M_TEST_NEQ(root.last, &child,
+               "Last child of root should not be child since there is two ");
+    M_TEST_EQ(root.last, &child2,
+              "Last child of root should be child2 since there is two ");
+    M_TEST_NEQ(root.first->next, nullptr, "root should have more than one child");
+
+    M_TEST_EQ(child.next, &child2, "child should have one sibling (child2) ");
+    M_TEST_EQ(child2.prev, &child, "child2 should have one sibling (child) ");
+    M_TEST_EQ(child2.next , nullptr, "child2 should be the last child");
+    M_TEST_EQ(child.next, root.first->next,
+              "root's first child's next should be same as child's next");
+}
+
 void test_ui_widget() {
     test_empty();
     test_just_root();
@@ -242,5 +268,6 @@ void test_ui_widget() {
     test_two_children_parent_size();
     test_two_children_parent_size_too_small();
     test_add_child();
+    test_add_child_again();
 }
 }  // namespace tests
