@@ -39,12 +39,7 @@ void test_single_child() {
     child1.size_expected[1] = SizeExpectation{
         .mode = SizeMode::Percent, .value = 0.5f, .strictness = 1.f};
 
-    root.first = &child1;
-    root.last = &child1;
-
-    root.next = &child1;
-
-    child1.parent = &root;
+    root.add_child(&child1);
 
     autolayout::process_widget(&root);
 
@@ -78,15 +73,8 @@ void test_two_children() {
     child2.size_expected[1] = SizeExpectation{
         .mode = SizeMode::Percent, .value = 0.25f, .strictness = 1.f};
 
-    root.first = &child1;
-    root.last = &child2;
-    root.next = &child1;
-
-    child1.parent = &root;
-    child2.parent = &root;
-
-    child1.next = &child2;
-    child2.prev = &child1;
+    root.add_child(&child1);
+    root.add_child(&child2);
 
     autolayout::process_widget(&root);
 
@@ -125,15 +113,8 @@ void test_two_children_parent_size() {
     child2.size_expected[1] = SizeExpectation{
         .mode = SizeMode::Pixels, .value = 25.f, .strictness = 1.f};
 
-    root.first = &child1;
-    root.last = &child2;
-    root.next = &child1;
-
-    child1.parent = &root;
-    child2.parent = &root;
-
-    child1.next = &child2;
-    child2.prev = &child1;
+    root.add_child(&child1);
+    root.add_child(&child2);
 
     autolayout::process_widget(&root);
 
@@ -171,20 +152,10 @@ void test_two_children_parent_size_too_small() {
     child2.size_expected[1] = SizeExpectation{
         .mode = SizeMode::Pixels, .value = 99.f, .strictness = 1.f};
 
-    root.first = &child1;
-    root.last = &child2;
-    root.next = &child1;
-
-    child1.parent = &root;
-    child2.parent = &root;
-
-    child1.next = &child2;
-    child2.prev = &child1;
+    root.add_child(&child1);
+    root.add_child(&child2);
 
     autolayout::process_widget(&root);
-
-    // std::cout << child1 << std::endl;
-    // std::cout << child2 << std::endl;
 
     M_TEST_EQ(root.computed_size[0], 100.f, "value should match size exactly");
     M_TEST_EQ(root.computed_size[1], 100.f, "value should match size exactly");
@@ -227,13 +198,10 @@ void test_add_child() {
     root.add_child(&child);
 
     M_TEST_EQ(child.parent, &root, "Parent of child should be root");
-    M_TEST_EQ(root.first, &child, "Parent of child should be root");
-    M_TEST_EQ(root.last, &child,
+    M_TEST_EQ(*root.children.begin(), &child, "Parent of child should be root");
+    M_TEST_EQ(*root.children.rbegin(), &child,
               "Last child of root should be child since there is only one");
-    M_TEST_EQ(root.first->next, nullptr, "root should only have one child");
-    M_TEST_EQ(child.next, nullptr, "child should have no siblings");
-    M_TEST_EQ(child.next, root.first->next,
-              "root's first child's next should be same as child's next");
+    M_TEST_EQ(root.children.size(), 1, "root should only have one child");
 }
 
 void test_add_child_again() {
@@ -247,20 +215,16 @@ void test_add_child_again() {
     root.add_child(&child2);
 
     M_TEST_EQ(child.parent, &root, "Parent of child should be root");
-    M_TEST_EQ(root.first, &child, "Parent of child should be root");
+    M_TEST_EQ(*root.children.begin(), &child, "Parent of child should be root");
 
-    M_TEST_NEQ(root.last, &child,
+    M_TEST_NEQ(*root.children.rbegin(), &child,
                "Last child of root should not be child since there is two ");
-    M_TEST_EQ(root.last, &child2,
+    M_TEST_EQ(*root.children.rbegin(), &child2,
               "Last child of root should be child2 since there is two ");
-    M_TEST_NEQ(root.first->next, nullptr,
+    M_TEST_NEQ(root.children.size(), 1,
                "root should have more than one child");
-
-    M_TEST_EQ(child.next, &child2, "child should have one sibling (child2) ");
-    M_TEST_EQ(child2.prev, &child, "child2 should have one sibling (child) ");
-    M_TEST_EQ(child2.next, nullptr, "child2 should be the last child");
-    M_TEST_EQ(child.next, root.first->next,
-              "root's first child's next should be same as child's next");
+    M_TEST_EQ(root.children.size(), 2,
+               "root should have two children");
 }
 
 void test_ui_widget() {
