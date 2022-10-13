@@ -89,26 +89,34 @@ A game by:
     Alice
         )";
 
-        ui_context->push_parent(&root);
+        ui_context.get()->push_parent(&root);
         {
             padding(left_padding);
             div(content);
 
-            ui_context->push_parent(&content);
+            ui_context.get()->push_parent(&content);
             {
                 text(about_text, about_info);
                 button_with_label(back_button, "Back");
                 padding(button_padding);
                 button_with_label(back_button2, "Back");
             }
-            ui_context->pop_parent();
+            ui_context.get()->pop_parent();
         }
-        ui_context->pop_parent();
+        ui_context.get()->pop_parent();
 
         // after all children are done, process
+        std::cout << "process widget" << std::endl;
         autolayout::process_widget(&root);
-        // now we have the info needed to render
-        ui_context->render_all();
+
+
+        std::cout << "render widget" << std::endl;
+        ui_context.get()->render_all();
+
+        // root.print_tree();
+
+        std::cout << "********************** END FRAME **************** " << std::endl;
+
         ui_context->end();
     }
 
