@@ -3,13 +3,13 @@
 
 #include "external_include.h"
 //
+#include "Karmina_Regular_256.h"
 #include "event.h"
 #include "globals.h"
-#include "input.h"
+#include "keymap.h"
 #include "layer.h"
 #include "raylib.h"
 #include "singleton.h"
-#include "Karmina_Regular_256.h"
 
 SINGLETON_FWD(App)
 struct App {
@@ -18,8 +18,8 @@ struct App {
     LayerStack layerstack;
     Font font;
 
-    App() { 
-        InitWindow(WIN_W, WIN_H, "pharmasea"); 
+    App() {
+        InitWindow(WIN_W, WIN_H, "pharmasea");
         // TODO - load fonts from install folder, instead of local path
         // Font loading must happen after InitWindow
         font = LoadFont_KarminaRegular256();
@@ -40,7 +40,8 @@ struct App {
     }
 
     bool onWindowResize(WindowResizeEvent event) {
-        std::cout << "Got Window Resize Event: " << event.width  << ", " << event.height << std::endl;
+        std::cout << "Got Window Resize Event: " << event.width << ", "
+                  << event.height << std::endl;
         SetWindowSize(event.width, event.height);
         return true;
     }
@@ -71,8 +72,24 @@ struct App {
         CloseWindow();
     }
 
+    void check_input(){
+        while (true) {
+            int key = GetKeyPressed();
+            if (key != 0) {
+                // std::cout << "keypressed: " << key << std::endl;
+            } else {
+                break;
+            }
+            KeyPressedEvent* event = new KeyPressedEvent(key, 0);
+            this->processEvent(*event);
+            delete event;
+        }
+
+        KeyMap::get().forEachInputInMap(
+            std::bind(&App::processEvent, this, std::placeholders::_1));
+    }
+
     void loop(float dt) {
-        Input::get().onUpdate(dt);
 
         for (Layer* layer : layerstack) {
             layer->onUpdate(dt);
@@ -83,10 +100,5 @@ struct App {
         }
         EndDrawing();
 
-        for (int key : Input::get().pressedSinceLast) {
-            KeyPressedEvent* event = new KeyPressedEvent(key, 0);
-            this->processEvent(*event);
-            delete event;
-        }
     }
 };

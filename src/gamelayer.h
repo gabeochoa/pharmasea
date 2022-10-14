@@ -6,7 +6,6 @@
 //
 #include "camera.h"
 #include "files.h"
-#include "input.h"
 #include "layer.h"
 #include "menu.h"
 #include "world.h"

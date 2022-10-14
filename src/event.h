@@ -2,6 +2,8 @@
 #pragma once
 
 #include "external_include.h"
+#include "gamepad_axis_with_dir.h"
+
 
 enum class EventType {
     None = 0,
@@ -21,6 +23,8 @@ enum class EventType {
     KeyReleased,
     KeyTyped,
     CharPressed,
+    GamepadAxisMoved,
+    GamepadButtonPressed,
 };
 
 #define BIT(x) (1 << x)
@@ -31,6 +35,7 @@ enum EventCategory {
     EventCategoryKeyboard = BIT(2),
     EventCategoryMouse = BIT(3),
     EventCategoryMouseButton = BIT(4),
+    EventCategoryGamepad = BIT(5),
 };
 
 #define MACRO_EVENT_TYPE(type)                                   \
@@ -90,8 +95,7 @@ struct KeyPressedEvent : public KeyEvent {
 
 struct WindowResizeEvent : public Event {
     unsigned int width, height;
-    WindowResizeEvent(unsigned int w, unsigned int h)
-        : width(w), height(h) {}
+    WindowResizeEvent(unsigned int w, unsigned int h) : width(w), height(h) {}
 
     // std::string toString() const override {
     // return fmt::format("WindowResizeEvent: {}, {}", Width, Height);
@@ -99,4 +103,23 @@ struct WindowResizeEvent : public Event {
 
     MACRO_EVENT_TYPE(WindowResize)
     MACRO_EVENT_CATEGORY(EventCategoryApplication)
+};
+
+struct GamepadButtonPressedEvent : public Event {
+
+    GamepadButton button;
+
+    GamepadButtonPressedEvent(GamepadButton butt) : button(butt) {}
+
+    MACRO_EVENT_TYPE(GamepadButtonPressed)
+    MACRO_EVENT_CATEGORY(EventCategoryGamepad | EventCategoryInput)
+};
+
+struct GamepadAxisMovedEvent : public Event {
+    GamepadAxisWithDir data;
+
+    GamepadAxisMovedEvent(GamepadAxisWithDir info) : data(info) {}
+
+    MACRO_EVENT_TYPE(GamepadAxisMoved)
+    MACRO_EVENT_CATEGORY(EventCategoryGamepad | EventCategoryInput)
 };

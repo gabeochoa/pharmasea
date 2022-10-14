@@ -2,7 +2,6 @@
 #pragma once
 
 #include "external_include.h"
-#include "input.h"
 #include "layer.h"
 #include "menu.h"
 #include "raylib.h"

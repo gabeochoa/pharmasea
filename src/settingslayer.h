@@ -2,7 +2,6 @@
 
 #include "external_include.h"
 //
-#include "input.h"
 #include "layer.h"
 #include "menu.h"
 #include "settings.h"

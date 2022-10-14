@@ -1,17 +1,14 @@
 
 #pragma once
-
 #include "external_include.h"
+#include "raylib.h"
+
+#include "gamepad_axis_with_dir.h"
+#include "event.h"
 #include "files.h"
 #include "menu.h"
-#include "raylib.h"
 #include "singleton.h"
 #include "util.h"
-
-struct GamepadAxisWithDir {
-    GamepadAxis axis;
-    int dir = -1;
-};
 
 typedef std::variant<int, GamepadAxisWithDir, GamepadButton> AnyInput;
 typedef std::vector<AnyInput> AnyInputs;
@@ -37,6 +34,70 @@ struct KeyMap {
             mapping[state] = LayerMapping();
         }
         return mapping[state];
+    }
+
+    static float visit_key(int keycode) {
+        if (IsKeyDown(keycode)) {
+            return 1.f;
+        }
+        return 0.f;
+    }
+
+    static float visit_axis(GamepadAxisWithDir axis_with_dir) {
+        float mvt = GetGamepadAxisMovement(0, axis_with_dir.axis);
+        if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > 0.25f) {
+            return abs(mvt);
+        }
+        return 0.f;
+    }
+
+    static float visit_button(GamepadButton button) {
+        if (IsGamepadButtonDown(0, button)) {
+            return 1.f;
+        }
+        return 0.f;
+    }
+
+    void forEachInputInMap(std::function<void(Event&)> cb) {
+        for (auto& fm_kv : mapping) {
+            for (auto& lm_kv : fm_kv.second) {
+                for (auto& input : lm_kv.second) {
+                    std::visit(
+                        util::overloaded{
+                            [&](int keycode) {
+                                if (visit_key(keycode) > 0.f) {
+                                    KeyPressedEvent* event =
+                                        new KeyPressedEvent(keycode, 0);
+                                    cb(*event);
+                                    delete event;
+                                }
+                            },
+                            [&](GamepadAxisWithDir axis_with_dir) {
+                                float res = visit_axis(axis_with_dir);
+                                if (res > 0.f) {
+                                    GamepadAxisMovedEvent* event =
+                                        new GamepadAxisMovedEvent(
+                                            GamepadAxisWithDir(
+                                                {.axis = axis_with_dir.axis,
+                                                 .dir = res}));
+
+                                    cb(*event);
+                                    delete event;
+                                }
+                            },
+                            [&](GamepadButton button) {
+                                if (visit_button(button) > 0.f) {
+                                    GamepadButtonPressedEvent* event =
+                                        new GamepadButtonPressedEvent(button);
+                                    cb(*event);
+                                    delete event;
+                                }
+                            },
+                            [](auto) {}},
+                        input);
+                }
+            }
+        }
     }
 
     void load_game_keys() {
@@ -84,7 +145,6 @@ struct KeyMap {
         game_map["Target Back"] = {KEY_DOWN};
         game_map["Target Left"] = {KEY_LEFT};
         game_map["Target Right"] = {KEY_RIGHT};
-
     }
 
     void load_ui_keys() {
@@ -124,29 +184,18 @@ struct KeyMap {
 
         float value = 0.f;
         for (auto& input : valid_inputs) {
-            value = fmax(value, std::visit(
-                util::overloaded{[](int keycode) {
-                                     if (IsKeyDown(keycode)) {
-                                         return 1.f;
-                                     }
-                                     return 0.f;
-                                 },
-                                 [](GamepadAxisWithDir axis_with_dir) {
-                                     float mvt = GetGamepadAxisMovement(
-                                         0, axis_with_dir.axis);
-                                     if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > 0.25f) {
-                                         return abs(mvt);
-                                     }
-                                     return 0.f;
-                                 },
-                                 [](GamepadButton button) {
-                                     if (IsGamepadButtonDown(0, button)) {
-                                         return 1.f;
-                                     }
-                                     return 0.f;
-                                 },
-                                 [](auto) {}},
-                input));
+            value = fmax(
+                value,
+                std::visit(util::overloaded{
+                               [](int keycode) { return visit_key(keycode); },
+                               [](GamepadAxisWithDir axis_with_dir) {
+                                   return visit_axis(axis_with_dir);
+                               },
+                               [](GamepadButton button) {
+                                   return visit_button(button);
+                               },
+                               [](auto) {}},
+                           input));
         }
         return value;
     }
@@ -158,27 +207,15 @@ struct KeyMap {
         bool matches_named_event = false;
         for (auto& input : valid_inputs) {
             matches_named_event |= std::visit(
-                util::overloaded{[](int keycode) {
-                                     if (IsKeyPressed(keycode)) {
-                                         return true;
-                                     }
-                                     return false;
-                                 },
-                                 [](GamepadAxisWithDir axis_with_dir) {
-                                     float mvt = GetGamepadAxisMovement(
-                                         0, axis_with_dir.axis);
-                                     if (util::sgn(mvt) == axis_with_dir.dir) {
-                                         return true;
-                                     }
-                                     return false;
-                                 },
-                                 [](GamepadButton button) {
-                                     if (IsGamepadButtonPressed(0, button)) {
-                                         return true;
-                                     }
-                                     return false;
-                                 },
-                                 [](auto) {}},
+                util::overloaded{
+                    [](int keycode) { return visit_key(keycode) > 0.f; },
+                    [](GamepadAxisWithDir axis_with_dir) {
+                        return visit_axis(axis_with_dir) > 0.f;
+                    },
+                    [](GamepadButton button) {
+                        return visit_button(button) > 0.f;
+                    },
+                    [](auto) {}},
                 input);
         }
         return matches_named_event;

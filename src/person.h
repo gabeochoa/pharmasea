@@ -6,7 +6,6 @@
 #include "entity.h"
 #include "entityhelper.h"
 //
-#include "input.h"
 #include "keymap.h"
 
 struct Person : public Entity {
