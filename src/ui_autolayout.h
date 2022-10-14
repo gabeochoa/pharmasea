@@ -37,7 +37,7 @@ float compute_size_for_parent_expectation(Widget* widget, int exp_index) {
 }
 
 float compute_size_for_child_expectation(Widget* widget, int exp_index) {
-    // std::cout << "csfce" << widget << " " << exp_index << std::endl;
+    // std::cout << "csfce" << *widget << " " << exp_index << std::endl;
     float no_change = widget->computed_size[exp_index];
     if (widget->children.empty()) return no_change;
 
@@ -251,9 +251,9 @@ void compute_relative_positions(Widget* widget) {
 void compute_rect_bounds(Widget* widget) {
     vec2 offset = vec2{0.f, 0.f};
     Widget* parent = widget->parent;
-    while (parent) {
+    if (parent) {
         offset = offset + vec2{parent->rect.x, parent->rect.y};
-        parent = parent->parent;
+        // parent = parent->parent;
     }
 
     Rectangle rect;

@@ -11,6 +11,8 @@ struct State {
     T value = T();
 
    public:
+    bool changed_since = false;
+
     State() {}
     State(T val) : value(val) {}
     State(const State<T>& s) : value(s.value) {}

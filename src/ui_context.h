@@ -198,6 +198,11 @@ struct UIContext {
         return state;
     }
 
+    template<typename T>
+    std::shared_ptr<T> get_widget_state(const uuid id){
+        return statemanager.get_as<T>(id);
+    }
+
     void set_font(Font f) { font = f; }
 
     void push_theme(UITheme theme) { themestack.push(theme); }
