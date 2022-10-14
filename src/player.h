@@ -70,10 +70,12 @@ struct Player : public Person {
     }
 
     virtual void rotate_furniture(){
-        std::shared_ptr<Furniture> match= EntityHelper::getClosestMatchingEntity<Furniture>(vec::to2(this->position), TILESIZE * player_reach, [](auto && ){return true;});
-        if(match && match->can_rotate()){
-            float rotate = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game, "Player Rotate Furniture");
-            if(rotate > 0.5f) match->rotate_facing_clockwise();
+        if(GLOBALS.get_or_default("in_planning", false)){
+            std::shared_ptr<Furniture> match= EntityHelper::getClosestMatchingEntity<Furniture>(vec::to2(this->position), TILESIZE * player_reach, [](auto && ){return true;});
+            if(match && match->can_rotate()){
+                float rotate = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game, "Player Rotate Furniture");
+                if(rotate > 0.5f) match->rotate_facing_clockwise();
+            }
         }
     }
 
@@ -93,6 +95,7 @@ struct Player : public Person {
             return;
         }
 
+        // TODO need to auto drop when "in_planning" changes
         if(this->held_furniture){
             const auto _drop_furniture = [&](){
                 this->held_furniture= nullptr;
