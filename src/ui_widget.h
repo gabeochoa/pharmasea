@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "ui_color.h"
 #include "uuid.h"
+#include "vec_util.h"
 
 namespace ui {
 
@@ -120,6 +121,9 @@ struct Widget {
 
     std::string print() const {
         std::stringstream ss;
+
+        const auto a = (this->parent ? this->parent->rect : Rectangle());
+
         ss << "Widget(" << this->element << "\n";
         ss << "x(" << this->size_expected[0] << " ; ";
         ss << "y(" << this->size_expected[1] << "\n";
@@ -131,9 +135,10 @@ struct Widget {
         ss << "computed size(";
         ss << this->computed_size[0] << ", " << this->computed_size[1];
         ss << ")\n";
+        ss << "rect(" << this->rect << ")\n";
         ss << "Dir " << this->growflags << "\n";
         ss << "Children:" << this->children.size() << " ";
-        ss << "Parent:" << &(this->parent) << "\n";
+        ss << "Parent:" << &(this->parent) << " " << a << "\n";
         return ss.str();
     }
 

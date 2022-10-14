@@ -4,6 +4,7 @@
 #include "assert.h"
 #include "external_include.h"
 #include "ui_widget.h"
+#include "vec_util.h"
 
 namespace ui {
 namespace autolayout {
@@ -172,15 +173,10 @@ void solve_violations(Widget* widget) {
 }
 
 void compute_relative_positions(Widget* widget) {
-    float parent_offset_x = 0.f;
-    float parent_offset_y = 0.f;
     if (widget->parent == nullptr) {
         // This already happens by default, but lets be explicit about it
         widget->computed_relative_pos[0] = 0.f;
         widget->computed_relative_pos[1] = 0.f;
-    } else {
-        parent_offset_x = widget->parent->computed_relative_pos[0];
-        parent_offset_y = widget->parent->computed_relative_pos[1];
     }
 
     // Assuming we dont care about things smaller than 1 pixel
@@ -215,8 +211,8 @@ void compute_relative_positions(Widget* widget) {
         // We cant grow and are going over the limit
         if (widget->growflags & GrowFlags::None &&
             (will_hit_max_x || will_hit_max_y)) {
-            child->computed_relative_pos[0] = sx + parent_offset_x;
-            child->computed_relative_pos[1] = sy + parent_offset_y;
+            child->computed_relative_pos[0] = sx;
+            child->computed_relative_pos[1] = sy;
             continue;
         }
 
@@ -236,8 +232,8 @@ void compute_relative_positions(Widget* widget) {
             col_h = cy;
         }
 
-        child->computed_relative_pos[0] = offx + parent_offset_x;
-        child->computed_relative_pos[1] = offy + parent_offset_y;
+        child->computed_relative_pos[0] = offx;
+        child->computed_relative_pos[1] = offy;
 
         // Setup for next child placement
         if (widget->growflags & GrowFlags::Column) {
@@ -255,9 +251,9 @@ void compute_relative_positions(Widget* widget) {
 void compute_rect_bounds(Widget* widget) {
     vec2 offset = vec2{0.f, 0.f};
     Widget* parent = widget->parent;
-    if (parent) {
-        offset = {parent->computed_relative_pos[0],
-                  parent->computed_relative_pos[1]};
+    while (parent) {
+        offset = offset + vec2{parent->rect.x, parent->rect.y};
+        parent = parent->parent;
     }
 
     Rectangle rect;
@@ -284,7 +280,7 @@ void process_widget(Widget* widget) {
     solve_violations(widget);
     // - (pre) compute relative positions
     compute_relative_positions(widget);
-    // - (any) compute rect bounds
+    // - (pre) compute rect bounds
     compute_rect_bounds(widget);
 }
 }  // namespace autolayout

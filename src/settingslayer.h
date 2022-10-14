@@ -64,12 +64,21 @@ struct SettingsLayer : public Layer {
         ui::Widget root(
             {.mode = ui::SizeMode::Pixels, .value = WIN_W, .strictness = 1.f},
             {.mode = ui::SizeMode::Pixels, .value = WIN_H, .strictness = 1.f});
-        root.growflags = ui::GrowFlags::Column;
+        root.growflags = ui::GrowFlags::Row;
+
+        Widget left_padding(
+            {.mode = Pixels, .value = 100.f, .strictness = 1.f},
+            {.mode = Pixels, .value = WIN_H, .strictness = 1.f});
+
+        Widget content({.mode = Children},
+                       {.mode = Percent, .value = 1.f, .strictness = 1.0f},
+                       ui::GrowFlags::Column);
 
         Widget volume_slider_container(
             {.mode = Children},
             {.mode = Percent, .value = 1.f, .strictness = 1.0f});
         volume_slider_container.growflags = GrowFlags::Row;
+
         Widget volume_widget(
             // TODO replace with text size
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
@@ -80,7 +89,8 @@ struct SettingsLayer : public Layer {
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
             {.mode = Pixels, .value = 50.f, .strictness = 1.f});
 
-        Widget back_button({.mode = Pixels, .value = 120.f},
+        Widget back_button(MK_UUID(id, ROOT_ID),
+                           {.mode = Pixels, .value = 120.f},
                            {.mode = Pixels, .value = 50.f});
 
         Widget window_size_container(
@@ -105,40 +115,47 @@ struct SettingsLayer : public Layer {
 
         ui_context->push_parent(&root);
         {
-            // volume_sliders()
-            div(volume_slider_container);
-            ui_context->push_parent(&volume_slider_container);
-            {
-                text(volume_widget, "Master Volume");
+            padding(left_padding);
+            div(content);
 
-                if (slider(slider_widget, false, &masterVolumeSliderValue, 0.f,
-                           1.f)) {
-                    Settings::get().update_master_volume(
-                        masterVolumeSliderValue);
-                }
-            }
-            ui_context->pop_parent();
-
-            // window_size_dropdown()
-            div(window_size_container);
-            ui_context->push_parent(&window_size_container);
+            ui_context->push_parent(&content);
             {
-                text(resolution_widget, "Resolution");
-                if (dropdown(dropdown_widget, dropdownConfigs,
-                             &windowSizeDropdownState,
-                             &windowSizeDropdownIndex)) {
-                    if (windowSizeDropdownIndex == 0) {
-                        settings.update_window_size({960, 540});
-                    } else if (windowSizeDropdownIndex == 1) {
-                        settings.update_window_size({1920, 1080});
-                    } else if (windowSizeDropdownIndex == 2) {
-                        settings.update_window_size({800, 600});
+                // volume_sliders()
+                div(volume_slider_container);
+                ui_context->push_parent(&volume_slider_container);
+                {
+                    text(volume_widget, "Master Volume");
+
+                    if (slider(slider_widget, false, &masterVolumeSliderValue,
+                               0.f, 1.f)) {
+                        Settings::get().update_master_volume(
+                            masterVolumeSliderValue);
                     }
                 }
-            }
-            ui_context->pop_parent();
+                ui_context->pop_parent();
 
-            button_with_label(back_button, "Back");
+                // window_size_dropdown()
+                div(window_size_container);
+                ui_context->push_parent(&window_size_container);
+                {
+                    text(resolution_widget, "Resolution");
+                    if (dropdown(dropdown_widget, dropdownConfigs,
+                                 &windowSizeDropdownState,
+                                 &windowSizeDropdownIndex)) {
+                        if (windowSizeDropdownIndex == 0) {
+                            settings.update_window_size({960, 540});
+                        } else if (windowSizeDropdownIndex == 1) {
+                            settings.update_window_size({1920, 1080});
+                        } else if (windowSizeDropdownIndex == 2) {
+                            settings.update_window_size({800, 600});
+                        }
+                    }
+                }
+                ui_context->pop_parent();  // end dropdown
+
+                button_with_label(back_button, "Back");
+            }
+            ui_context->pop_parent();  // end content
         }
         ui_context->pop_parent();
         ui_context->end(&root);
