@@ -14,7 +14,7 @@ const std::string EXAMPLE_MAP = R"(
 #..................................................#
 #........@....I....................................#
 #............0.....................................#
-#........#.........................................#
+#........#....R....................................#
 #..................................................#
 #..................................................#
 #..................................................#
@@ -176,6 +176,13 @@ struct World {
                         customer.reset(
                             new Customer(location, RED ));
                         EntityHelper::addEntity(customer);
+                        break;
+                    }
+                    case 'R': {
+                        std::shared_ptr<Register> cash_register;
+                        cash_register.reset(
+                            new Register(location));
+                        EntityHelper::addEntity(cash_register);
                         break;
                     }
                     case '.':
