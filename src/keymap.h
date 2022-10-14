@@ -77,12 +77,14 @@ struct KeyMap {
 
         game_map["Player Pickup"] = {
             KEY_SPACE,
+            GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
         };
 
         game_map["Target Forward"] = {KEY_UP};
         game_map["Target Back"] = {KEY_DOWN};
         game_map["Target Left"] = {KEY_LEFT};
         game_map["Target Right"] = {KEY_RIGHT};
+
     }
 
     void load_ui_keys() {
