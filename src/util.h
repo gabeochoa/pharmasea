@@ -3,6 +3,16 @@
 #include "external_include.h"
 
 namespace util {
+
+template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+// explicit deduction guide (not needed as of C++20)
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
+template<typename T>
+int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
+
 std::vector<std::string> split_string(const std::string& str,
                                       const std::string& delimiter) {
     std::vector<std::string> strings;

@@ -1,41 +1,37 @@
 
-#pragma once 
+#pragma once
 
 #include "keymap.h"
 #include "person.h"
+#include "raylib.h"
 
 struct Player : public Person {
-    Player(vec3 p, Color face_color_in, Color base_color_in) : Person(p, face_color_in, base_color_in) {}
-    Player(vec2 p, Color face_color_in, Color base_color_in) : Person(p, face_color_in, base_color_in) {}
-    Player() : Person({ 0, 0, 0 }, { 0, 255, 0, 255 }, {255, 0, 0, 255}) {}
+    Player(vec3 p, Color face_color_in, Color base_color_in)
+        : Person(p, face_color_in, base_color_in) {}
+    Player(vec2 p, Color face_color_in, Color base_color_in)
+        : Person(p, face_color_in, base_color_in) {}
+    Player() : Person({0, 0, 0}, {0, 255, 0, 255}, {255, 0, 0, 255}) {}
     Player(vec2 location)
-        : Person({location.x, 0, location.y}, {0, 255, 0, 255}, { 255, 0, 0, 255 }) {}
+        : Person({location.x, 0, location.y}, {0, 255, 0, 255},
+                 {255, 0, 0, 255}) {}
 
     virtual vec3 update_xaxis_position(float dt) override {
         float speed = 10.0f * dt;
         auto new_pos_x = this->raw_position;
-        bool left = KeyMap::is_event(Menu::State::Game, "Player Left");
-        bool right = KeyMap::is_event(Menu::State::Game, "Player Right");
-        if (left) { 
-            new_pos_x.x -= speed;
-        }
-        if (right) {
-            new_pos_x.x += speed;
-        }
+        float left = KeyMap::is_event(Menu::State::Game, "Player Left");
+        float right = KeyMap::is_event(Menu::State::Game, "Player Right");
+        new_pos_x.x -= left * speed;
+        new_pos_x.x += right * speed;
         return new_pos_x;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
         float speed = 10.0f * dt;
         auto new_pos_z = this->raw_position;
-        bool up = KeyMap::is_event(Menu::State::Game, "Player Forward");
-        bool down = KeyMap::is_event(Menu::State::Game, "Player Back");
-        if (up) {
-            new_pos_z.z -= speed;
-        }
-        if (down) {
-            new_pos_z.z += speed;
-        }
+        float up = KeyMap::is_event(Menu::State::Game, "Player Forward");
+        float down = KeyMap::is_event(Menu::State::Game, "Player Back");
+        new_pos_z.z -= up * speed;
+        new_pos_z.z += down * speed;
         return new_pos_z;
     }
 
@@ -45,7 +41,8 @@ struct Player : public Person {
     }
 
     virtual void grab_or_drop_item() {
-        bool pickup = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game, "Player Pickup");
+        bool pickup = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game,
+                                                       "Player Pickup");
         if (pickup) {
             if (held_item != nullptr) {
                 held_item = nullptr;

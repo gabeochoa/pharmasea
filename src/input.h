@@ -3,7 +3,9 @@
 
 #include "event.h"
 #include "external_include.h"
+#include "raylib.h"
 #include "singleton.h"
+
 
 SINGLETON_FWD(Input)
 struct Input {

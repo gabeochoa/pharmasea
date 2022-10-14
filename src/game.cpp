@@ -28,6 +28,7 @@
 #include "./tests/all_tests.h"
 
 void startup() {
+    // SetTargetFPS(10);
     // Disable all that startup logging
     SetTraceLogLevel(LOG_WARNING);
     // Force the app to be created.
