@@ -221,10 +221,98 @@ void test_add_child_again() {
                "Last child of root should not be child since there is two ");
     M_TEST_EQ(*root.children.rbegin(), &child2,
               "Last child of root should be child2 since there is two ");
-    M_TEST_NEQ(root.children.size(), 1,
-               "root should have more than one child");
-    M_TEST_EQ(root.children.size(), 2,
-               "root should have two children");
+    M_TEST_NEQ(root.children.size(), 1, "root should have more than one child");
+    M_TEST_EQ(root.children.size(), 2, "root should have two children");
+}
+
+void test_autolayout_wrap_column() {
+    using namespace ui;
+    Widget root;
+
+    root.size_expected[0] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 100.f, .strictness = 1.f};
+    root.size_expected[1] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 50.f, .strictness = 1.f};
+    root.growflags = GrowFlags::Column;
+
+    Widget column1;
+    column1.size_expected[0] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 25.f, .strictness = 1.0f};
+    column1.size_expected[1] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 25.f, .strictness = 1.0f};
+    root.add_child(&column1);
+
+    Widget column2a;
+    column2a.size_expected[0] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 75.f, .strictness = 1.f};
+    column2a.size_expected[1] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 45.f, .strictness = 1.f};
+    root.add_child(&column2a);
+
+    // Note that 2b does fit vertically and is less wide than 2a;
+    Widget column2b;
+    column2b.size_expected[0] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 25.f, .strictness = 1.f};
+    column2b.size_expected[1] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 5.f, .strictness = 1.f};
+    root.add_child(&column2b);
+
+    Widget column3;
+    column3.size_expected[0] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 25.f, .strictness = 1.f};
+    column3.size_expected[1] = SizeExpectation{
+        .mode = SizeMode::Pixels, .value = 50.f, .strictness = 1.f};
+    root.add_child(&column3);
+
+    autolayout::process_widget(&root);
+
+    // std::cout << root << std::endl;
+    // std::cout << column1 << std::endl;
+    // std::cout << column2a << std::endl;
+    // std::cout << column2b << std::endl;
+    // std::cout << column3 << std::endl;
+
+    M_TEST_EQ(column1.parent, &root, "Parent of column1 should be root");
+    M_TEST_EQ(*root.children.begin(), &column1,
+              "Parent of column1 should be root");
+    M_TEST_EQ(*root.children.rbegin(), &column3,
+              "Last column1 of root should be column3");
+    M_TEST_EQ(root.children.size(), 4, "root should only have three children");
+
+    M_TEST_EQ(root.computed_size[0], 100, "Root should be 100 px wide");
+    M_TEST_EQ(root.computed_size[1], 50, "Root should be 50 px tall");
+
+    M_TEST_EQ(column1.computed_size[0], 25, "Root should be 25 px wide");
+    M_TEST_EQ(column1.computed_size[1], 25, "Root should be 25 px tall");
+
+    M_TEST_EQ(column2a.computed_size[0], 75, "column2a should be 75 px wide");
+    M_TEST_EQ(column2a.computed_size[1], 45, "column2a should be 45 px tall");
+
+    M_TEST_EQ(column2b.computed_size[0], 25, "column2b should be 25 px wide");
+    M_TEST_EQ(column2b.computed_size[1], 5, "column2b should be 5 px tall");
+
+    M_TEST_EQ(column3.computed_size[0], 25, "column3 should be 25 px wide");
+    M_TEST_EQ(column3.computed_size[1], 50, "column3 should be 50 px tall");
+
+    M_TEST_EQ(root.computed_relative_pos[0], 0, "Root should be at 0 x");
+    M_TEST_EQ(root.computed_relative_pos[1], 0, "Root should be at 0 y");
+
+    M_TEST_EQ(column1.computed_relative_pos[0], 0, "column1 should be at 0 x");
+    M_TEST_EQ(column1.computed_relative_pos[1], 0, "column1 should be at 0 y");
+
+    M_TEST_EQ(column2a.computed_relative_pos[0], 25,
+              "column2a should be at 25 x");
+    M_TEST_EQ(column2a.computed_relative_pos[1], 0,
+              "column2a should be at 0 y");
+
+    M_TEST_EQ(column2b.computed_relative_pos[0], 25,
+              "column2b should be at 25 x");
+    M_TEST_EQ(column2b.computed_relative_pos[1], 45,
+              "column2b should be at 45 y");
+
+    M_TEST_EQ(column3.computed_relative_pos[0], 100,
+              "column3 should be at 100 x");
+    M_TEST_EQ(column3.computed_relative_pos[1], 0, "column3 should be at 0 y");
 }
 
 void test_ui_widget() {
@@ -236,5 +324,6 @@ void test_ui_widget() {
     test_two_children_parent_size_too_small();
     test_add_child();
     test_add_child_again();
+    test_autolayout_wrap_column();
 }
 }  // namespace tests
