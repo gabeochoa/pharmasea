@@ -60,22 +60,20 @@ struct MenuLayer : public Layer {
         ui_context->begin(mouseDown, mousepos);
 
         ui::Widget root(
-            MK_UUID(id, ROOT_ID),
             {.mode = ui::SizeMode::Pixels, .value = WIN_W, .strictness = 1.f},
             {.mode = ui::SizeMode::Pixels, .value = WIN_H, .strictness = 1.f});
         root.growflags = ui::GrowFlags::Row;
 
         Widget left_padding(
-            MK_UUID(id, ROOT_ID),
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
             {.mode = Pixels, .value = WIN_H, .strictness = 1.f});
 
-        Widget content(MK_UUID(id, ROOT_ID), {.mode = Children},
+        Widget content({.mode = Children},
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f});
         content.growflags = ui::GrowFlags::Column;
 
         Widget play_button(MK_UUID(id, ROOT_ID), button_x, button_y);
-        Widget button_padding(MK_UUID(id, ROOT_ID), padd_x, padd_y);
+        Widget button_padding(padd_x, padd_y);
         Widget about_button(MK_UUID(id, ROOT_ID), button_x, button_y);
         Widget settings_button(MK_UUID(id, ROOT_ID), button_x, button_y);
 
@@ -86,6 +84,7 @@ struct MenuLayer : public Layer {
 
             ui_context->push_parent(&content);
             {
+                padding(button_padding);
                 if (button_with_label(play_button, "Play")) {
                     Menu::get().state = Menu::State::Game;
                 }
