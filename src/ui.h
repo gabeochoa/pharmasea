@@ -525,7 +525,26 @@ bool _slider_impl(const Widget& widget, bool vertical, float* value, float mnf,
 //////
 //////
 
-void init_widget(const Widget& widget, const char* func) {
+void init_widget(const Widget& widget, const char* func,
+                 bool uses_state = false) {
+    // TODO today because of the layer check we cant use this
+    // which means no good error reports on this issue
+    // you will just segfault 
+    //
+    // Basically the issue is that because the MK_UUID is in widget constructor
+    // the hash is the same for two ui elements. 
+    // 
+    // This will only happen if you have two Widgets that you construct on the same layer.
+    // This is because we use layer id (static atomic inc) as a hash key
+    // In order for us to get the "default" state id for a layer, we need either the 
+    // layer id or an example widget
+    // if (uses_state && widget.id == get().default_state_id) {
+        // std::cout << "You need to initialize the id on this widget, because it "
+                     // "uses global state."
+                     // " In your widget contructor pass 'MK_UUID(id, ROOT_ID)' "
+                     // "as the first parameter."
+                  // << std::endl;
+    // }
     Widget::set_element(widget, func);
     get().add_child(widget.me);
 }
@@ -576,19 +595,19 @@ bool button_with_label(const Widget& widget, const std::string& content) {
 
 bool button_list(const Widget& widget, const std::vector<std::string>& options,
                  int* selectedIndex, bool* hasFocus) {
-    init_widget(widget, __FUNCTION__);
+    init_widget(widget, __FUNCTION__, true);
     return _button_list_impl(widget, options, selectedIndex, hasFocus);
 }
 
 bool dropdown(const Widget& widget, const std::vector<std::string>& options,
               bool* dropdownState, int* selectedIndex) {
-    init_widget(widget, __FUNCTION__);
+    init_widget(widget, __FUNCTION__, true);
     return _dropdown_impl(widget, options, dropdownState, selectedIndex);
 }
 
 bool slider(const Widget& widget, bool vertical, float* value, float mnf,
             float mxf) {
-    init_widget(widget, __FUNCTION__);
+    init_widget(widget, __FUNCTION__, true);
     return _slider_impl(widget, vertical, value, mnf, mxf);
 }
 

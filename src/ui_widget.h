@@ -66,21 +66,39 @@ struct Widget {
     }
     // TODO Support rotations
 
+    uuid default_id() const { return MK_UUID(id, ROOT_ID); }
+
     Widget() {
-        this->id = MK_UUID(id, ROOT_ID);
+        this->id = default_id();
         this->me = this;
     }
 
     Widget(SizeExpectation x, SizeExpectation y) {
         this->me = this;
-        this->id = MK_UUID(id, ROOT_ID);
+        this->id = default_id();
+        this->size_expected[0] = x;
+        this->size_expected[1] = y;
+    }
+
+    Widget(const uuid& id, SizeExpectation x, SizeExpectation y) {
+        this->me = this;
+        this->id = id;
         this->size_expected[0] = x;
         this->size_expected[1] = y;
     }
 
     Widget(SizeExpectation x, SizeExpectation y, GrowFlags flags) {
         this->me = this;
-        this->id = MK_UUID(id, ROOT_ID);
+        this->id = default_id();
+        this->size_expected[0] = x;
+        this->size_expected[1] = y;
+        this->growflags = flags;
+    }
+
+    Widget(const uuid& id, SizeExpectation x, SizeExpectation y,
+           GrowFlags flags) {
+        this->me = this;
+        this->id = id;
         this->size_expected[0] = x;
         this->size_expected[1] = y;
         this->growflags = flags;
