@@ -3,7 +3,7 @@
 #include "external_include.h"
 //
 #include "entities.h"
-#include "furniture.h"
+#include "furnitures.h"
 #include "globals.h"
 #include "util.h"
 #include "vec_util.h"

@@ -56,6 +56,37 @@ struct EntityHelper {
         }
     }
 
+    template <typename T>
+    static constexpr std::vector<std::shared_ptr<T>> getEntitiesInRange(
+        vec2 pos, float range) {
+        std::vector<std::shared_ptr<T>> matching;
+        for (auto& e : entities_DO_NOT_USE) {
+            auto s = dynamic_pointer_cast<T>(e);
+            if (!s) continue;
+            if (vec::distance(pos, vec::to2(e->position)) < range) {
+                matching.push_back(s);
+            }
+        }
+        return matching;
+    }
+    
+    template<typename T>
+        static constexpr std::shared_ptr<T> getClosestMatchingEntity(vec2 pos, float range){
+        float best_distance = range;
+        std::shared_ptr<T> best_so_far;
+        for (auto& e : entities_DO_NOT_USE) {
+            auto s = dynamic_pointer_cast<T>(e);
+            if (!s) continue;
+            float d = vec::distance(pos, vec::to2(e->position));
+            if(d > range) continue;
+            if(d < best_distance){
+                best_so_far = s;
+                best_distance = d;
+            }
+        }
+        return best_so_far;
+    }
+
     // TODO replace with navmesh
     // each target get and path find runs through all entities
     // so this will just get slower and slower over time

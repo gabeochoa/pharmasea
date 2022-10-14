@@ -144,6 +144,11 @@ struct KeyMap {
 
         game_map["Player Pickup"] = {
             KEY_SPACE,
+            GAMEPAD_BUTTON_RIGHT_FACE_DOWN,
+        };
+
+        game_map["Player Rotate Furniture"] = {
+            KEY_R,
             GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
         };
 

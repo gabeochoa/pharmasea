@@ -16,7 +16,7 @@ struct Entity {
         FORWARD = 0,  // 0 degrees
         RIGHT = 90,   // 90 degrees
         BACK = 180,   // 180 degrees
-        LEFT = 270    // 270 degrees
+        LEFT = 270,    // 270 degrees
     };
 
     int id;
@@ -86,6 +86,10 @@ struct Entity {
     }
 
     vec3 snap_position() const { return vec::snap(this->raw_position); }
+
+    void rotate_facing_clockwise(){
+        this->face_direction = static_cast<FrontFaceDirection>((this->face_direction + 90) % 360);
+    }
 
     virtual void update(float) {
         if (this->is_snappable()) {

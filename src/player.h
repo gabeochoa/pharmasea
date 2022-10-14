@@ -1,11 +1,16 @@
 
 #pragma once
 
+#include "globals.h"
 #include "keymap.h"
 #include "person.h"
 #include "raylib.h"
+//
+#include "furniture.h"
 
 struct Player : public Person {
+    float player_reach = 4.f;
+
     Player(vec3 p, Color face_color_in, Color base_color_in)
         : Person(p, face_color_in, base_color_in) {}
     Player(vec2 p, Color face_color_in, Color base_color_in)
@@ -37,7 +42,17 @@ struct Player : public Person {
 
     virtual void update(float dt) override {
         Person::update(dt);
+
         grab_or_drop_item();
+        rotate_furniture();
+    }
+
+    virtual void rotate_furniture(){
+        std::shared_ptr<Furniture> match= EntityHelper::getClosestMatchingEntity<Furniture>(vec::to2(this->position), TILESIZE * player_reach);
+        if(match){
+            float rotate = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game, "Player Rotate Furniture");
+            if(rotate > 0.5f) match->rotate_facing_clockwise();
+        }
     }
 
     virtual void grab_or_drop_item() {
@@ -51,7 +66,7 @@ struct Player : public Person {
                 float best_distance = std::numeric_limits<float>::max();
                 for (auto item : items_DO_NOT_USE) {
                     if (item->collides(
-                            get_bounds(this->position, this->size() * 4.0f))) {
+                            get_bounds(this->position, this->size() * player_reach))) {
                         auto current_distance = vec::distance(
                             vec::to2(item->position), vec::to2(this->position));
                         if (current_distance < best_distance) {
