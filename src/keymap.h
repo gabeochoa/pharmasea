@@ -2,10 +2,13 @@
 #pragma once
 #include "event.h"
 #include "external_include.h"
+#include "raylib.h"
+
+#include "gamepad_axis_with_dir.h"
+#include "event.h"
 #include "files.h"
 #include "gamepad_axis_with_dir.h"
 #include "menu.h"
-#include "raylib.h"
 #include "singleton.h"
 #include "util.h"
 
