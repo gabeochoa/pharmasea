@@ -490,19 +490,23 @@ bool _slider_impl(const uuid id, WidgetConfig config, float* value, float mnf,
 //////
 //////
 
-bool padding(const Widget& widget) {
+void init_widget(const Widget& widget, const char* func){
+    Widget::set_element(widget, func);
     get().add_child(widget.me);
+}
+
+bool padding(const Widget& widget) {
+    init_widget(widget, __FUNCTION__);
     return true;
 }
 
 bool div(const Widget& widget) {
-    get().add_child(widget.me);
+    init_widget(widget, __FUNCTION__);
     return true;
 }
 
 bool text(const Widget& widget, const std::string& content) {
-    std::cout << "text" << widget.me << std::endl;
-    get().add_child(widget.me);
+    init_widget(widget, __FUNCTION__);
     // No need to render if text is empty
     if (content.empty()) return false;
     get().schedule_draw_text(widget.me, content);
@@ -510,13 +514,12 @@ bool text(const Widget& widget, const std::string& content) {
 }
 
 bool button(const Widget& widget) {
-    std::cout << "button" << widget.me << std::endl;
-    get().add_child(widget.me);
+    init_widget(widget, __FUNCTION__);
     return _button_impl(widget);
 }
 
 bool button_with_label(const Widget& widget, const std::string& content) {
-    get().add_child(widget.me);
+    init_widget(widget, __FUNCTION__);
     bool pressed = false;
     get().push_parent(widget.me);
     {
