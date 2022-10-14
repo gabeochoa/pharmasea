@@ -172,6 +172,17 @@ void solve_violations(Widget* widget) {
 }
 
 void compute_relative_positions(Widget* widget) {
+    float parent_offset_x = 0.f;
+    float parent_offset_y = 0.f;
+    if (widget->parent == nullptr) {
+        // This already happens by default, but lets be explicit about it
+        widget->computed_relative_pos[0] = 0.f;
+        widget->computed_relative_pos[1] = 0.f;
+    } else {
+        parent_offset_x = widget->parent->computed_relative_pos[0];
+        parent_offset_y = widget->parent->computed_relative_pos[1];
+    }
+
     // Assuming we dont care about things smaller than 1 pixel
     widget->computed_size[0] = round(widget->computed_size[0]);
     widget->computed_size[1] = round(widget->computed_size[1]);
@@ -204,19 +215,18 @@ void compute_relative_positions(Widget* widget) {
         // We cant grow and are going over the limit
         if (widget->growflags & GrowFlags::None &&
             (will_hit_max_x || will_hit_max_y)) {
-            child->computed_relative_pos[0] = sx;
-            child->computed_relative_pos[1] = sy;
+            child->computed_relative_pos[0] = sx + parent_offset_x;
+            child->computed_relative_pos[1] = sy + parent_offset_y;
             continue;
         }
 
-        // We can grow vertically and current child will push us over height 
+        // We can grow vertically and current child will push us over height
         // lets wrap
         if (widget->growflags & GrowFlags::Column && cy + offy > sy) {
             offy = 0;
             offx += col_w;
             col_w = cx;
         }
-
 
         // We can grow horizontally and current child will push us over width
         // lets wrap
@@ -226,14 +236,14 @@ void compute_relative_positions(Widget* widget) {
             col_h = cy;
         }
 
-        child->computed_relative_pos[0] = offx;
-        child->computed_relative_pos[1] = offy;
+        child->computed_relative_pos[0] = offx + parent_offset_x;
+        child->computed_relative_pos[1] = offy + parent_offset_y;
 
         // Setup for next child placement
         if (widget->growflags & GrowFlags::Column) {
             offy += cy;
         }
-        if (widget->growflags & GrowFlags::Row){
+        if (widget->growflags & GrowFlags::Row) {
             offx += cx;
         }
 
