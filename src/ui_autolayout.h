@@ -188,7 +188,7 @@ void compute_relative_positions(Widget* widget) {
 
     const auto update_max_size = [&](float cx, float cy) {
         col_w = fmax(cx, col_w);
-        col_h = fmax(cx, col_h);
+        col_h = fmax(cy, col_h);
     };
 
     for (Widget* child : widget->children) {
