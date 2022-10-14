@@ -312,9 +312,10 @@ bool _button_list_impl(const Widget& widget,
 bool _dropdown_impl(const Widget widget,
                     const std::vector<std::string>& options,
                     bool* dropdownState, int* selectedIndex) {
-    auto state = get().widget_init<DropdownState>(widget.me->id);
+    auto state = get().widget_init<DropdownState>(widget.id);
     if (dropdownState) state->on.set(*dropdownState);
     auto selected_option = options[selectedIndex ? *selectedIndex : 0];
+
     // TODO when you tab to the dropdown
     // it would be nice if it opened
     // try_to_grab_kb(id);
@@ -375,7 +376,7 @@ bool _dropdown_impl(const Widget widget,
         // 2. open should have children focused anyway
         // 3. we dont eat the input, so it doesnt break the button_list value
         // up/down
-        if (has_kb_focus(widget.me->id)) {
+        if (has_kb_focus(widget.id)) {
             if (get().pressedWithoutEat("Widget Value Up") ||
                 get().pressedWithoutEat("Widget Value Down")) {
                 state->on = true;
@@ -399,7 +400,7 @@ bool _dropdown_impl(const Widget widget,
             if (button_list(*button_list_widget, options, selectedIndex,
                             &childrenHaveFocus)) {
                 state->on = false;
-                get().kb_focus_id = widget.me->id;
+                get().kb_focus_id = widget.id;
             }
             get().temp_widgets.push_back(button_list_widget);
         }
@@ -410,7 +411,7 @@ bool _dropdown_impl(const Widget widget,
         // NOTE: this has to happen after ret
         // because its not a real selection, just
         // a tab out
-        if (!childrenHaveFocus && !has_kb_focus(widget.me->id)) {
+        if (!childrenHaveFocus && !has_kb_focus(widget.id)) {
             state->on = false;
         }
     }
