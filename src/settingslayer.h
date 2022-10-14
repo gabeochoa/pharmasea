@@ -74,10 +74,11 @@ struct SettingsLayer : public Layer {
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f},
                        ui::GrowFlags::Column);
 
-        Widget volume_slider_container(
-            {.mode = Children},
-            {.mode = Percent, .value = 1.f, .strictness = 1.0f});
-        volume_slider_container.growflags = GrowFlags::Row;
+        Widget top_padding({.mode = Pixels, .value = 100.f},
+                           {.mode = Pixels, .value = 100.f});
+
+        Widget volume_slider_container({.mode = Children}, {.mode = Children},
+                                       GrowFlags::Row);
 
         Widget volume_widget(
             // TODO replace with text size
@@ -87,16 +88,14 @@ struct SettingsLayer : public Layer {
         Widget slider_widget(
             MK_UUID(id, ROOT_ID),
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-            {.mode = Pixels, .value = 50.f, .strictness = 1.f});
+            {.mode = Pixels, .value = 30.f, .strictness = 1.f});
 
         Widget back_button(MK_UUID(id, ROOT_ID),
                            {.mode = Pixels, .value = 120.f},
                            {.mode = Pixels, .value = 50.f});
 
-        Widget window_size_container(
-            {.mode = Children},
-            {.mode = Percent, .value = 1.f, .strictness = 1.0f},
-            GrowFlags::Row);
+        Widget window_size_container({.mode = Children}, {.mode = Children},
+                                     GrowFlags::Row);
 
         std::vector<std::string> dropdownConfigs;
         dropdownConfigs.push_back("960x540");
@@ -111,7 +110,7 @@ struct SettingsLayer : public Layer {
         Widget dropdown_widget(
             MK_UUID(id, ROOT_ID),
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-            {.mode = Pixels, .value = 50.f, .strictness = 1.f});
+            {.mode = Pixels, .value = 500.f, .strictness = 1.f});
 
         ui_context->push_parent(&root);
         {
@@ -120,6 +119,7 @@ struct SettingsLayer : public Layer {
 
             ui_context->push_parent(&content);
             {
+                padding(top_padding);
                 // volume_sliders()
                 div(volume_slider_container);
                 ui_context->push_parent(&volume_slider_container);
@@ -139,17 +139,24 @@ struct SettingsLayer : public Layer {
                 ui_context->push_parent(&window_size_container);
                 {
                     text(resolution_widget, "Resolution");
-                    if (dropdown(dropdown_widget, dropdownConfigs,
-                                 &windowSizeDropdownState,
-                                 &windowSizeDropdownIndex)) {
-                        if (windowSizeDropdownIndex == 0) {
-                            settings.update_window_size({960, 540});
-                        } else if (windowSizeDropdownIndex == 1) {
-                            settings.update_window_size({1920, 1080});
-                        } else if (windowSizeDropdownIndex == 2) {
-                            settings.update_window_size({800, 600});
-                        }
-                    }
+                    // TODO dropdown doesnt work because now that we enforce
+                    // staying within the bounds of your parent we cant fit the
+                    // maximized dropdown
+                    //
+                    // We need to add a way to have "overlays" or negative
+                    // margin or something
+
+                    // if (dropdown(dropdown_widget,
+                    // dropdownConfigs, &windowSizeDropdownState,
+                    // &windowSizeDropdownIndex)) {
+                    // if (windowSizeDropdownIndex == 0) {
+                    // settings.update_window_size({960, 540});
+                    // } else if (windowSizeDropdownIndex == 1) {
+                    // settings.update_window_size({1920, 1080});
+                    // } else if (windowSizeDropdownIndex == 2) {
+                    // settings.update_window_size({800, 600});
+                    // }
+                    // }
                 }
                 ui_context->pop_parent();  // end dropdown
 

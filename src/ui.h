@@ -112,19 +112,21 @@ inline void handle_tabbing(const uuid id) {
     // Do we mark the widget type with "nextable"? (tab will always work but
     // not very discoverable
     if (has_kb_focus(id)) {
-        if (get().pressed("Widget Next") ||
-            get().pressed("Widget Value Down")) {
+        if (get().pressed("Widget Next") /*||
+            get().pressed("Widget Value Down")*/) {
             get().kb_focus_id = ROOT_ID;
             if (get().is_held_down("Widget Mod")) {
                 get().kb_focus_id = get().last_processed;
             }
         }
+        /*
         if (get().pressed("Widget Value Up")) {
             get().kb_focus_id = get().last_processed;
         }
         if (get().pressed("Widget Back")) {
             get().kb_focus_id = get().last_processed;
         }
+        */
     }
     // before any returns
     get().last_processed = id;
@@ -234,17 +236,18 @@ bool _button_list_impl(const Widget& widget,
     std::vector<std::shared_ptr<Widget>> children;
     for (int i = 0; i < (int) options.size(); i++) {
         auto option = options[i];
-        std::shared_ptr<Widget> button(new Widget(
-            {
-                .mode = Percent,
-                .value = 1.f,
-                .strictness = 1.f,
-            },
-            {
-                .mode = Percent,
-                .value = (1.f / options.size()),
-                .strictness = 0.9f,
-            }));
+        std::shared_ptr<Widget> button(
+            new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
+                       {
+                           .mode = Percent,
+                           .value = 1.f,
+                           .strictness = 1.f,
+                       },
+                       {
+                           .mode = Percent,
+                           .value = (1.f / options.size()),
+                           .strictness = 0.9f,
+                       }));
 
         if (button_with_label(*button, option)) {
             state->selected = static_cast<int>(i);
@@ -320,6 +323,8 @@ bool _dropdown_impl(const Widget widget,
     auto state = get().widget_init<DropdownState>(widget.id);
     if (dropdownState) state->on.set(*dropdownState);
     auto selected_option = options[selectedIndex ? *selectedIndex : 0];
+    // Num options + 1 for the current selected
+    int num_all = options.size() + 2;
 
     // TODO when you tab to the dropdown
     // it would be nice if it opened
@@ -333,17 +338,18 @@ bool _dropdown_impl(const Widget widget,
 
     get().push_parent(widget.me);
     {
-        std::shared_ptr<Widget> selected_widget(new Widget(
-            {
-                .mode = Percent,
-                .value = 1.f,
-                .strictness = 1.f,
-            },
-            {
-                .mode = Percent,
-                .value = (1.f / options.size()),
-                .strictness = 0.9f,
-            }));
+        std::shared_ptr<Widget> selected_widget(
+            new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
+                       {
+                           .mode = Percent,
+                           .value = 1.f,
+                           .strictness = 1.f,
+                       },
+                       {
+                           .mode = Percent,
+                           .value = (1.f / num_all),
+                           .strictness = 0.9f,
+                       }));
 
         // TODO We should instead have get().request_temp() which returns
         // shared_ptr and ads to temp automatically
@@ -355,23 +361,6 @@ bool _dropdown_impl(const Widget widget,
         // TODO right now you can change values through tab or through
         // arrow keys, maybe we should only allow arrows
         // and then tab just switches to the next non dropdown widget
-
-        // Text drawn after button so it shows up on top...
-        //
-        // TODO rotation is not really working correctly and so we have to
-        // offset the V a little more than ^ in order to make it look nice
-        // auto offset = vec2{config.size.x - (state->on ? 1.f : 1.6f),
-        // config.size.y * -0.25f};
-        // text_old(MK_UUID(id.ownerLayer, id.hash),
-        // WidgetConfig(
-        // // TODO support getOppositeColor
-        // // {.fontColor = getOppositeColor(config.theme.color()),
-        // {.position = config.position + offset,
-        // .rotation = state->on ? 90.f : 270.f,
-        // .text = ">",
-        // .theme = WidgetTheme(
-        // config.theme.color(WidgetTheme::ColorType::FONT),
-        // config.theme.color())}));
 
         bool childrenHaveFocus = false;
 
@@ -390,17 +379,18 @@ bool _dropdown_impl(const Widget widget,
         }
 
         if (state->on) {
-            std::shared_ptr<Widget> button_list_widget(new Widget(
-                {
-                    .mode = Percent,
-                    .value = 1.f,
-                    .strictness = 1.f,
-                },
-                {
-                    .mode = Percent,
-                    .value = (1.f / options.size()),
-                    .strictness = 0.9f,
-                }));
+            std::shared_ptr<Widget> button_list_widget(
+                new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
+                           {
+                               .mode = Percent,
+                               .value = 1.f,
+                               .strictness = 1.f,
+                           },
+                           {
+                               .mode = Percent,
+                               .value = (1.f / num_all),
+                               .strictness = 0.9f,
+                           }));
 
             if (button_list(*button_list_widget, options, selectedIndex,
                             &childrenHaveFocus)) {
@@ -430,6 +420,9 @@ bool _dropdown_impl(const Widget widget,
 inline void _slider_render(Widget* widget_ptr, const bool vertical,
                            const float value) {
     Widget& widget = *widget_ptr;
+
+    active_if_mouse_inside(widget.id, widget.rect);
+
     const auto cs = vec2{
         widget.rect.width,
         widget.rect.height,
@@ -461,22 +454,12 @@ inline void _slider_render(Widget* widget_ptr, const bool vertical,
     get().draw_widget_old(pos + offset, size, 0.f, col, "TEXTURE");
 }
 
-bool _slider_impl(const Widget& widget, bool vertical, float* value, float mnf,
-                  float mxf) {
-    // TODO be able to scroll this bar with the scroll wheel
-    auto state = get().widget_init<SliderState>(widget.id);
-    if (value) state->value.set(*value);
-
-    // TODO rect isnt yet set....
-    active_if_mouse_inside(widget.id, widget.rect);
-    // dont mind if i do
-    try_to_grab_kb(widget.id);
-    get().schedule_render_call(
-        std::bind(_slider_render, widget.me, vertical, state->value.asT()));
-    handle_tabbing(widget.id);
+void _slider_value_management(const Widget* widget, bool vertical, float* value,
+                              float mnf, float mxf) {
+    auto state = get().get_widget_state<SliderState>(widget->id);
 
     bool value_changed = false;
-    if (has_kb_focus(widget.id)) {
+    if (has_kb_focus(widget->id)) {
         if (get().pressed("Value Up")) {
             state->value = state->value + 0.005;
             if (state->value > mxf) state->value = mxf;
@@ -492,13 +475,13 @@ bool _slider_impl(const Widget& widget, bool vertical, float* value, float mnf,
         }
     }
 
-    if (get().active_id == widget.id) {
-        get().kb_focus_id = widget.id;
+    if (get().active_id == widget->id) {
+        get().kb_focus_id = widget->id;
         float v;
         if (vertical) {
-            v = (get().mouse.y - widget.rect.y) / widget.rect.height;
+            v = (get().mouse.y - widget->rect.y) / widget->rect.height;
         } else {
-            v = (get().mouse.x - widget.rect.x) / widget.rect.width;
+            v = (get().mouse.x - widget->rect.x) / widget->rect.width;
         }
         if (v < mnf) v = mnf;
         if (v > mxf) v = mxf;
@@ -508,7 +491,25 @@ bool _slider_impl(const Widget& widget, bool vertical, float* value, float mnf,
             value_changed = true;
         }
     }
-    return value_changed;
+    state->value.changed_since = value_changed;
+}
+
+bool _slider_impl(const Widget& widget, bool vertical, float* value, float mnf,
+                  float mxf) {
+    // TODO be able to scroll this bar with the scroll wheel
+    auto state = get().widget_init<SliderState>(widget.id);
+    bool changed_previous_frame = state->value.changed_since;
+    state->value.changed_since = false;
+    if (value) state->value.set(*value);
+
+    // dont mind if i do
+    try_to_grab_kb(widget.id);
+    get().schedule_render_call(
+        std::bind(_slider_render, widget.me, vertical, state->value.asT()));
+    handle_tabbing(widget.id);
+    get().schedule_render_call(std::bind(_slider_value_management, widget.me,
+                                         vertical, value, mnf, mxf));
+    return changed_previous_frame;
 }
 
 //////
