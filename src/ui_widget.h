@@ -121,8 +121,8 @@ struct Widget {
     std::string print() const {
         std::stringstream ss;
         ss << "Widget(" << this->element << "\n";
-        ss << "x-axis " << this->size_expected[0] << "\n";
-        ss << "y-axis " << this->size_expected[1] << "\n";
+        ss << "x(" << this->size_expected[0] << " ; ";
+        ss << "y(" << this->size_expected[1] << "\n";
         ss << "rel_pos(";
         ss << this->computed_relative_pos[0];
         ss << ", ";
@@ -131,8 +131,8 @@ struct Widget {
         ss << "computed size(";
         ss << this->computed_size[0] << ", " << this->computed_size[1];
         ss << ")\n";
-        ss << "Dir" << this->growflags << "\n";
-        ss << "Children:" << this->children.size() << "\n";
+        ss << "Dir " << this->growflags << "\n";
+        ss << "Children:" << this->children.size() << " ";
         ss << "Parent:" << &(this->parent) << "\n";
         return ss.str();
     }
