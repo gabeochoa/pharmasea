@@ -17,12 +17,12 @@
 #include "settings.h"
 //
 #include "aboutlayer.h"
-// #include "fpslayer.h"
-// #include "gamelayer.h"
+#include "fpslayer.h"
+#include "gamelayer.h"
 #include "menulayer.h"
-// #include "menustatelayer.h"
-// #include "settingslayer.h"
-// #include "versionlayer.h"
+#include "menustatelayer.h"
+#include "settingslayer.h"
+#include "versionlayer.h"
 //
 // This one should be last
 #include "./tests/all_tests.h"
@@ -43,27 +43,27 @@ void startup() {
     Menu::get().state = Menu::State::Root;
     // Menu::get().state = Menu::State::Settings;
 
-    // GameLayer* gamelayer = new GameLayer();
-    // App::get().pushLayer(gamelayer);
+    GameLayer* gamelayer = new GameLayer();
+    App::get().pushLayer(gamelayer);
 
     AboutLayer* aboutlayer = new AboutLayer();
     App::get().pushLayer(aboutlayer);
 
-    // SettingsLayer* settingslayer = new SettingsLayer();
-    // App::get().pushLayer(settingslayer);
-//
+    SettingsLayer* settingslayer = new SettingsLayer();
+    App::get().pushLayer(settingslayer);
+
     MenuLayer* menulayer = new MenuLayer();
     App::get().pushLayer(menulayer);
-//
-    // MenuStateLayer* menustatelayer = new MenuStateLayer();
-    // App::get().pushLayer(menustatelayer);
-//
-    // FPSLayer* fpslayer = new FPSLayer();
-    // App::get().pushLayer(fpslayer);
-//
-    // VersionLayer* versionlayer = new VersionLayer();
-    // App::get().pushLayer(versionlayer);
-//
+
+    MenuStateLayer* menustatelayer = new MenuStateLayer();
+    App::get().pushLayer(menustatelayer);
+
+    FPSLayer* fpslayer = new FPSLayer();
+    App::get().pushLayer(fpslayer);
+
+    VersionLayer* versionlayer = new VersionLayer();
+    App::get().pushLayer(versionlayer);
+
     Settings::get().load_save_file();
 }
 

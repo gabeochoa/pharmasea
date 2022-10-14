@@ -117,7 +117,7 @@ struct MenuLayer : public Layer {
         if (minimized) {
             return;
         }
-        ClearBackground(Color{30, 30, 30, 255});
+        ClearBackground(ui_context->active_theme().background);
         draw_ui();
     }
 };
