@@ -496,11 +496,9 @@ bool _slider_impl(const Widget& widget, bool vertical, float* value, float mnf,
         get().kb_focus_id = widget.id;
         float v;
         if (vertical) {
-            v = (get().mouse.y - widget.computed_relative_pos[1]) /
-                widget.computed_size[1];
+            v = (get().mouse.y - widget.rect.y) / widget.rect.height;
         } else {
-            v = (get().mouse.x - widget.computed_relative_pos[0]) /
-                widget.computed_size[0];
+            v = (get().mouse.x - widget.rect.x) / widget.rect.width;
         }
         if (v < mnf) v = mnf;
         if (v > mxf) v = mxf;

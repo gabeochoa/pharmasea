@@ -21,6 +21,11 @@ struct AboutLayer : public Layer {
 
         ui_context.get()->init();
         ui_context.get()->set_font(App::get().font);
+        // TODO we should probably enforce that you cant do this
+        // and we should have ->set_base_theme()
+        // and push_theme separately, if you end() with any stack not empty...
+        // thats a flag
+        ui_context->push_theme(ui::DEFAULT_THEME);
     }
     virtual ~AboutLayer() {}
     virtual void onAttach() override {}
@@ -69,15 +74,9 @@ struct AboutLayer : public Layer {
         Widget about_text({.mode = Pixels, .value = 120.f},
                           {.mode = Pixels, .value = 400.f});
 
-        Widget back_button({.mode = Pixels, .value = 120.f},
+        Widget back_button(MK_UUID(id, ROOT_ID),
+                           {.mode = Pixels, .value = 120.f},
                            {.mode = Pixels, .value = 50.f});
-
-        Widget button_padding(
-            {.mode = Pixels, .value = 120.f, .strictness = 0.9},
-            {.mode = Pixels, .value = 25.f, .strictness = 1.f});
-
-        Widget back_button2({.mode = Pixels, .value = 120.f},
-                            {.mode = Pixels, .value = 50.f});
 
         // NOTE: this is not aligned on purpose
         std::string about_info = R"(
@@ -98,8 +97,6 @@ A game by:
             {
                 text(about_text, about_info);
                 button_with_label(back_button, "Back");
-                padding(button_padding);
-                button_with_label(back_button2, "Back");
             }
             ui_context.get()->pop_parent();
         }

@@ -193,7 +193,15 @@ struct UIContext {
         mouse = mousePos;
     }
 
-    void end() {
+    void end(Widget* tree_root) {
+        autolayout::process_widget(tree_root);
+        // tree_root->print_tree();
+        // exit(0);
+        render_all();
+        cleanup();
+    }
+
+    void cleanup() {
         began_and_not_ended = false;
         if (lmouse_down) {
             if (active_id == ROOT_ID) {

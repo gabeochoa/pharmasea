@@ -106,12 +106,13 @@ vec2 operator+(const vec2& lhs, const vec2& rhs) {
     return out;
 }
 
-vec2 operator+=(const vec2& lhs, const vec2& rhs) {
-    vec2 out;
-    out.x = lhs.x + rhs.x;
-    out.y = lhs.y + rhs.y;
-    return out;
-}
+// TODO this wasnt working, so im disabling it until we can figure out why 
+// vec2 operator+=(const vec2& lhs, const vec2& rhs) {
+    // vec2 out;
+    // out.x = lhs.x + rhs.x;
+    // out.y = lhs.y + rhs.y;
+    // return out;
+// }
 
 BoundingBox get_bounds(vec3 position, vec3 size) {
     return {(vec3){
