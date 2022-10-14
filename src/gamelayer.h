@@ -9,6 +9,7 @@
 #include "files.h"
 #include "layer.h"
 #include "menu.h"
+#include "raylib.h"
 #include "world.h"
 // temporary for face cube test
 #include "texture_library.h"
@@ -16,11 +17,15 @@
 struct GameLayer : public Layer {
     World world;
     GameCam cam;
+    // TODO move to pharmacy.h
+    bool in_planning_mode = false;
 
     GameLayer() : Layer("Game") {
         minimized = false;
         GLOBALS.set("game_cam", &cam);
+        GLOBALS.set("in_planning", &in_planning_mode);
         preload_textures();
+
     }
     virtual ~GameLayer() {}
     virtual void onAttach() override {}
@@ -61,6 +66,11 @@ struct GameLayer : public Layer {
             Menu::get().state = Menu::State::Root;
             return true;
         }
+        // TODO remove once we have gameplay loop
+        if (KeyMap::get_key_code(Menu::State::Game, "Toggle Planning [Debug]") == event.keycode) {
+            in_planning_mode = !in_planning_mode;
+            return true;
+        }
         return false;
     }
 
@@ -88,6 +98,7 @@ struct GameLayer : public Layer {
         ClearBackground(Color{200, 200, 200, 255});
         BeginMode3D(cam.get());
         {
+
             EntityHelper::forEachEntity([&](auto entity) {
                 entity->render();
                 return EntityHelper::ForEachFlow::None;
@@ -107,7 +118,17 @@ struct GameLayer : public Layer {
                               1.f,
                           },
                           TILESIZE, WHITE);
+
+
         }
         EndMode3D();
+
+            if(in_planning_mode){
+                DrawTextEx(App::get().font, "IN PLANNING MODE" , vec2{100, 100},
+                           20, 0,
+                           RED);
+
+            }
+
     }
 };

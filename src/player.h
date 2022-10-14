@@ -10,11 +10,6 @@
 
 
 
-// TODO Add to Pharmacy.h
-// while in planning you cant pick up items (and they shoudlnt render) 
-//
-bool in_planning_mode = true;
-
 
 struct Player : public Person {
     float player_reach = 4.f;
@@ -109,7 +104,7 @@ struct Player : public Person {
         // TODO support finding things in the direction the player is facing, instead of in a box 
         // around him 
 
-        if(in_planning_mode){
+        if(GLOBALS.get_or_default("in_planning", false)){
             std::shared_ptr<Furniture> closest_furniture = EntityHelper::getClosestMatchingEntity<Furniture>(
                     vec::to2(this->position), 
                     TILESIZE * player_reach, 

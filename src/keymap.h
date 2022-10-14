@@ -161,6 +161,8 @@ struct KeyMap {
         game_map["Target Back"] = {KEY_DOWN};
         game_map["Target Left"] = {KEY_LEFT};
         game_map["Target Right"] = {KEY_RIGHT};
+
+        game_map["Toggle Planning [Debug]"] = {KEY_P};
     }
 
     void load_ui_keys() {
