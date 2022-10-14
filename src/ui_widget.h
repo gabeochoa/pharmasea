@@ -60,7 +60,7 @@ struct Widget {
     SizeExpectation size_expected[2];
     float computed_relative_pos[2] = {0.f, 0.f};
     float computed_size[2] = {-1.f, -1.f};
-    Rectangle rect;
+    Rectangle rect = {-1.f, 0.f, 0.f, 0.f};
     int growflags = GrowFlags::None;
     bool cant_render() const {
         return computed_size[0] == -1.f || computed_size[1] == -1.f;

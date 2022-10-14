@@ -74,39 +74,61 @@ bool slider(
 ///////// ////// ////// ////// ////// ////// ////// //////
 ///////// ////// ////// ////// ////// ////// ////// //////
 ///
-inline bool is_hot(const uuid& id) { return (get().hot_id == id); }
 
-inline bool is_active(const uuid& id) { return (get().active_id == id); }
+inline bool is_hot(const uuid& id) { return get().is_hot(id); }
+
+inline bool is_active(const uuid& id) {
+    auto state = get().statemanager.get(id);
+    return state->active;
+}
 inline bool is_active_or_hot(const uuid& id) {
     return is_hot(id) || is_active(id);
 }
+
 inline bool is_active_and_hot(const uuid& id) {
     return is_hot(id) && is_active(id);
 }
 
-inline void active_if_mouse_inside(const uuid id, const Rectangle& rect) {
+inline bool has_kb_focus(const uuid& id) {
+    auto state = get().statemanager.get(id);
+    return state->active;
+}
+
+inline void set_kb_focus(const uuid& id) { get().set_kb_focus(id); }
+
+inline void set_active(const uuid& id) { get().set_active(id); }
+
+inline void set_hot(const uuid& id) { get().set_hot(id); }
+
+inline void active_if_mouse_inside(const uuid& id) {
+    auto state = get().statemanager.get(id);
+    if (!state->has_rect()) {
+        return;
+    }
+    auto rect = state->rect();
+    auto root_state = get().statemanager.get(ROOT_ID);
     bool inside = get().is_mouse_inside(rect);
     if (inside) {
-        get().hot_id = id;
-        if (get().active_id == ROOT_ID && get().lmouse_down) {
-            get().active_id = id;
+        set_hot(id);
+        if (is_active(ROOT_ID) && get().lmouse_down) {
+            std::cout << "active" << std::endl;
+            set_active(id);
         }
     }
     return;
 }
 
-inline void try_to_grab_kb(const uuid id) {
-    if (get().kb_focus_id == ROOT_ID) {
-        get().kb_focus_id = id;
+inline void try_to_grab_kb(const uuid& id) {
+    if (has_kb_focus(ROOT_ID)) {
+        set_kb_focus(id);
     }
 }
 
-inline bool has_kb_focus(const uuid& id) { return (get().kb_focus_id == id); }
-inline void draw_if_kb_focus(const uuid& id, std::function<void(void)> cb) {
+inline void draw_if_kb_focus(const uuid id, std::function<void(void)> cb) {
     if (has_kb_focus(id)) cb();
 }
 
-inline void handle_tabbing(const uuid id) {
+inline void handle_tabbing(const uuid& id) {
     // TODO How do we handle something that wants to use
     // Widget Value Down/Up to control the value?
     // Do we mark the widget type with "nextable"? (tab will always work but
@@ -114,9 +136,9 @@ inline void handle_tabbing(const uuid id) {
     if (has_kb_focus(id)) {
         if (get().pressed("Widget Next") /*||
             get().pressed("Widget Value Down")*/) {
-            get().kb_focus_id = ROOT_ID;
+            set_kb_focus(ROOT_ID);
             if (get().is_held_down("Widget Mod")) {
-                get().kb_focus_id = get().last_processed;
+                set_kb_focus(get().last_processed);
             }
         }
         /*
@@ -147,9 +169,12 @@ void _draw_focus_ring(const Widget& widget) {
     });
 }
 
-inline void _button_render(Widget* widget_ptr) {
-    Widget& widget = *widget_ptr;
-    active_if_mouse_inside(widget.id, widget.rect);
+inline void _button_render(const Widget& widget) {
+    auto state = get().statemanager.get(widget.id);
+    if (!state->has_rect()) {
+        return;
+    }
+
     _draw_focus_ring(widget);
 
     vec2 position = {
@@ -161,8 +186,8 @@ inline void _button_render(Widget* widget_ptr) {
         widget.rect.height,
     };
 
-    if (get().hot_id == widget.id) {
-        if (get().active_id == widget.id) {
+    if (is_hot(widget.id)) {
+        if (is_active(widget.id)) {
             get().draw_widget_old(position, size, 0.f, color::red, "TEXTURE");
         } else {
             // Hovered
@@ -192,7 +217,7 @@ inline void _button_render(Widget* widget_ptr) {
     // }
 }
 
-inline bool _button_pressed(const uuid id) {
+inline bool _button_pressed(const uuid& id) {
     // check click
     if (has_kb_focus(id)) {
         if (get().pressed("Widget Press")) {
@@ -200,16 +225,18 @@ inline bool _button_pressed(const uuid id) {
         }
     }
     if (!get().lmouse_down && is_active_and_hot(id)) {
-        get().kb_focus_id = id;
+        set_kb_focus(id);
         return true;
     }
     return false;
 }
 
 bool _button_impl(const Widget& widget) {
-    // no state
+    auto state = get().widget_init<ButtonState>(widget.id);
+
+    active_if_mouse_inside(widget.id);
     try_to_grab_kb(widget.id);
-    get().schedule_render_call(std::bind(_button_render, widget.me));
+    _button_render(widget);
     handle_tabbing(widget.id);
     bool pressed = _button_pressed(widget.id);
     return pressed;
@@ -278,14 +305,14 @@ bool _button_list_impl(const Widget& widget,
         if (get().pressed("Widget Value Up")) {
             state->selected = state->selected - 1;
             if (state->selected < 0) state->selected = 0;
-            get().kb_focus_id = children[state->selected]->id;
+            set_kb_focus(children[state->selected]->id);
         }
 
         if (get().pressed("Widget Value Down")) {
             state->selected = state->selected + 1;
             if (state->selected > (int) options.size() - 1)
                 state->selected = static_cast<int>(options.size() - 1);
-            get().kb_focus_id = children[state->selected]->id;
+            set_kb_focus(children[state->selected]->id);
         }
     }
 
@@ -306,7 +333,7 @@ bool _button_list_impl(const Widget& widget,
         state->hasFocus = state->hasFocus | has_kb_focus(children[i]->id);
     }
 
-    if (state->hasFocus) get().kb_focus_id = children[state->selected]->id;
+    if (state->hasFocus) set_kb_focus(children[state->selected]->id);
     if (hasFocus) *hasFocus = state->hasFocus;
     if (selectedIndex) *selectedIndex = state->selected;
     return pressed;
@@ -390,7 +417,7 @@ bool _dropdown_impl(const Widget widget,
             if (button_list(*button_list_widget, options, selectedIndex,
                             &childrenHaveFocus)) {
                 state->on = false;
-                get().kb_focus_id = widget.id;
+                set_kb_focus(widget.id);
             }
             get().temp_widgets.push_back(button_list_widget);
         }
@@ -416,7 +443,7 @@ inline void _slider_render(Widget* widget_ptr, const bool vertical,
                            const float value) {
     Widget& widget = *widget_ptr;
 
-    active_if_mouse_inside(widget.id, widget.rect);
+    active_if_mouse_inside(widget.id);
 
     const auto cs = vec2{
         widget.rect.width,
@@ -470,8 +497,8 @@ void _slider_value_management(const Widget* widget, bool vertical, float* value,
         }
     }
 
-    if (get().active_id == widget->id) {
-        get().kb_focus_id = widget->id;
+    if (is_active(widget->id)) {
+        set_kb_focus(widget->id);
         float v;
         if (vertical) {
             v = (get().mouse.y - widget->rect.y) / widget->rect.height;

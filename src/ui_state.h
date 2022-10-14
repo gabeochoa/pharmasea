@@ -11,6 +11,7 @@ struct State {
     T value = T();
 
    public:
+    // TODO remove
     bool changed_since = false;
 
     State() {}
@@ -32,8 +33,23 @@ struct State {
 
 // Base statetype for any UI component
 struct UIState {
+    bool hot;
+    bool active;
+    bool has_kb_focus;
+
+    std::optional<Rectangle> rectangle;
+
     virtual ~UIState() {}
+
+    bool has_rect() { return rectangle.has_value(); }
+
+    Rectangle& rect() { return rectangle.value(); }
+    void set_rect(Rectangle r) { rectangle = r; }
 };
+
+struct RootState : public UIState {};
+struct FakeState : public UIState {};
+struct ButtonState : public UIState {};
 
 struct ToggleState : public UIState {
     State<bool> on;
@@ -50,9 +66,6 @@ struct SliderState : public UIState {
     State<float> value;
 };
 
-
-
-
 ////////////////
 ////////////////
 ////////////////
@@ -63,6 +76,29 @@ struct StateManager {
 
     void addState(const uuid id, const std::shared_ptr<UIState>& state) {
         states[id] = state;
+    }
+
+    void reset_active() {
+        for (auto& kv : states) {
+            kv.second->active = false;
+        }
+    }
+
+    void reset_kb_focus() {
+        for (auto& kv : states) {
+            kv.second->has_kb_focus = false;
+        }
+    }
+
+    void reset_hot() {
+        for (auto& kv : states) {
+            kv.second->hot = false;
+        }
+    }
+
+    void set_rect(const uuid& id, Rectangle r) { 
+        if(!states.contains(id)) return;
+        states[id]->rectangle = r; 
     }
 
     template<typename T>
@@ -84,7 +120,6 @@ struct StateManager {
         }
     }
 };
-
 
 ////////////////
 ////////////////

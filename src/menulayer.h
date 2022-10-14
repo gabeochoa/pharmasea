@@ -61,16 +61,16 @@ struct MenuLayer : public Layer {
 
         ui::Widget root(
             {.mode = ui::SizeMode::Pixels, .value = WIN_W, .strictness = 1.f},
-            {.mode = ui::SizeMode::Pixels, .value = WIN_H, .strictness = 1.f});
-        root.growflags = ui::GrowFlags::Row;
+            {.mode = ui::SizeMode::Pixels, .value = WIN_H, .strictness = 1.f},
+            ui::GrowFlags::Row);
 
         Widget left_padding(
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
             {.mode = Pixels, .value = WIN_H, .strictness = 1.f});
 
         Widget content({.mode = Children},
-                       {.mode = Percent, .value = 1.f, .strictness = 1.0f});
-        content.growflags = ui::GrowFlags::Column;
+                       {.mode = Percent, .value = 1.f, .strictness = 1.0f},
+                       ui::GrowFlags::Column);
 
         Widget play_button(MK_UUID(id, ROOT_ID), button_x, button_y);
         Widget button_padding(padd_x, padd_y);

@@ -48,7 +48,6 @@ struct AboutLayer : public Layer {
     }
 
     void draw_ui() {
-        SetExitKey(KEY_ESCAPE);
         using namespace ui;
 
         // TODO move to input
@@ -57,19 +56,18 @@ struct AboutLayer : public Layer {
 
         ui_context->begin(mouseDown, mousepos);
 
-        ui::Widget root;
-        root.set_expectation(
+        ui::Widget root(
             {.mode = ui::SizeMode::Pixels, .value = WIN_W, .strictness = 1.f},
-            {.mode = ui::SizeMode::Pixels, .value = WIN_H, .strictness = 1.f});
-        root.growflags = ui::GrowFlags::Row;
+            {.mode = ui::SizeMode::Pixels, .value = WIN_H, .strictness = 1.f},
+            ui::GrowFlags::Row);
 
         Widget left_padding(
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
             {.mode = Pixels, .value = WIN_H, .strictness = 1.f});
 
         Widget content({.mode = Children},
-                       {.mode = Percent, .value = 1.f, .strictness = 1.0f});
-        content.growflags = ui::GrowFlags::Column;
+                       {.mode = Percent, .value = 1.f, .strictness = 1.0f},
+                       ui::GrowFlags::Column);
 
         Widget about_text({.mode = Pixels, .value = 120.f},
                           {.mode = Pixels, .value = 400.f});

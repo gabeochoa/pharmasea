@@ -8,6 +8,7 @@
 #include "keymap.h"
 #include "menu.h"
 #include "raylib.h"
+#include "ui.h"
 #include "vec_util.h"
 //
 #include "ui_autolayout.h"
@@ -74,9 +75,6 @@ struct UIContext {
     std::stack<Widget*> parentstack;
     std::vector<std::shared_ptr<Widget>> temp_widgets;
 
-    uuid hot_id;
-    uuid active_id;
-    uuid kb_focus_id;
     uuid last_processed;
 
     bool lmouse_down = false;
@@ -127,6 +125,34 @@ struct UIContext {
         return KeyMap::is_event(STATE, name);
     }
 
+    inline void set_kb_focus(const uuid& id) {
+        statemanager.reset_kb_focus();
+        auto state = statemanager.get(id);
+        state->has_kb_focus = true;
+    }
+
+    inline void set_active(const uuid& id) {
+        statemanager.reset_active();
+        auto state = statemanager.get(id);
+        state->active = true;
+    }
+
+    inline void set_hot(const uuid& id) {
+        statemanager.reset_active();
+        auto state = statemanager.get(id);
+        state->hot = true;
+    }
+
+    inline bool is_active(const uuid& id) {
+        auto state = get().statemanager.get(id);
+        return state->active;
+    }
+
+inline bool is_hot(const uuid& id) {
+    auto state = get().statemanager.get(id);
+    return state->hot;
+}
+
     //
     bool inited = false;
     bool began_and_not_ended = false;
@@ -135,14 +161,16 @@ struct UIContext {
         inited = true;
         began_and_not_ended = false;
 
-        hot_id = ROOT_ID;
-        active_id = ROOT_ID;
-        kb_focus_id = ROOT_ID;
+        auto root_state = widget_init<RootState>(ROOT_ID);
+        auto fake_state = widget_init<FakeState>(FAKE_ID);
+
+        set_hot(ROOT_ID);
+        set_active(ROOT_ID);
+        set_kb_focus(ROOT_ID);
 
         lmouse_down = false;
         mouse = vec2{};
     }
-
 
     void begin(bool mouseDown, const vec2& mousePos) {
         M_ASSERT(inited, "UIContext must be inited before you begin()");
@@ -151,14 +179,30 @@ struct UIContext {
                  "again ");
         began_and_not_ended = true;
 
-        globalContext = this;
-        hot_id = ROOT_ID;
+        set_hot(ROOT_ID);
+
         lmouse_down = mouseDown;
         mouse = mousePos;
+
+        globalContext = this;
+    }
+
+    void update_rects(Widget* cur){
+        if(cur){
+            if(cur->rect.x == -1){
+                return;
+            }
+            statemanager.set_rect(cur->id, cur->rect);
+            for(const auto& child : cur->children){
+                update_rects(child);
+            }
+        }
     }
 
     void end(Widget* tree_root) {
         autolayout::process_widget(tree_root);
+        update_rects(tree_root);
+
         // tree_root->print_tree();
         // exit(0);
         render_all();
@@ -167,12 +211,17 @@ struct UIContext {
 
     void cleanup() {
         began_and_not_ended = false;
+
+        set_hot(ROOT_ID);
+        set_active(ROOT_ID);
+        set_kb_focus(ROOT_ID);
+
         if (lmouse_down) {
-            if (active_id == ROOT_ID) {
-                active_id = FAKE_ID;
+            if (is_active(ROOT_ID)) {
+                set_active(FAKE_ID);
             }
         } else {
-            active_id = ROOT_ID;
+            set_active(ROOT_ID);
         }
         key = int();
         mod = int();
@@ -199,7 +248,7 @@ struct UIContext {
     }
 
     template<typename T>
-    std::shared_ptr<T> get_widget_state(const uuid id){
+    std::shared_ptr<T> get_widget_state(const uuid id) {
         return statemanager.get_as<T>(id);
     }
 
