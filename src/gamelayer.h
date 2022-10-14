@@ -36,7 +36,7 @@ struct GameLayer : public Layer {
             "jug");
 
         TextureLibrary::get().load(
-            Files::get().fetch_resource_path("images", "bubble.png").c_str(),
+            Files::get().fetch_resource_path("images", "sleepyico.png").c_str(),
             "bubble");
     }
 
