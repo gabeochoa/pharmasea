@@ -22,6 +22,10 @@ struct AboutLayer : public Layer {
 
         ui_context.get()->init();
         ui_context.get()->set_font(App::get().font);
+        // TODO we should probably enforce that you cant do this
+        // and we should have ->set_base_theme() 
+        // and push_theme separately, if you end() with any stack not empty... thats a flag
+        ui_context->push_theme(ui::DEFAULT_THEME);
     }
     virtual ~AboutLayer() {}
     virtual void onAttach() override {}
@@ -51,7 +55,6 @@ struct AboutLayer : public Layer {
         vec2 mousepos = GetMousePosition();
 
         ui_context->begin(mouseDown, mousepos);
-        ui_context->push_theme(DEFAULT_THEME);
 
         ui::Widget root;
         root.set_expectation(
@@ -105,12 +108,7 @@ A game by:
             ui_context->pop_parent();
         }
         ui_context->pop_parent();
-
-        // after all children are done, process
-        autolayout::process_widget(&root);
-        // now we have the info needed to render
-        ui_context->render_all();
-        ui_context->end();
+        ui_context->end(&root);
     }
 
     virtual void onUpdate(float) override {
@@ -130,7 +128,7 @@ A game by:
             return;
         }
 
-        ClearBackground(Color{30, 30, 30, 255});
+        ClearBackground(ui_context->active_theme().background);
         draw_ui();
     }
 };

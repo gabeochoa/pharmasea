@@ -141,10 +141,10 @@ void _draw_focus_ring(const Widget& widget) {
         const auto border_width = 0.05f;
         const auto offset =
             vec2{cs.x * (border_width / 2), cs.y * (border_width / 2)};
-        get().draw_widget_old(position - offset,          //
-                              cs * (1.f + border_width),  //
-                              0.f,                        //
-                              color::white,               //
+        get().draw_widget_old(position - offset,            //
+                              cs * (1.f + border_width),    //
+                              0.f,                          //
+                              get().active_theme().accent,  //
                               "TEXTURE");
     });
 }
@@ -161,7 +161,6 @@ inline void _button_render(Widget* widget_ptr) {
         widget.rect.width,
         widget.rect.height,
     };
-    std::cout << "button render " << position << "  " << size << std::endl;
 
     if (get().hot_id == widget.id) {
         if (get().active_id == widget.id) {
@@ -212,7 +211,6 @@ bool _button_impl(const Widget& widget) {
     // no state
     active_if_mouse_inside(widget.id, widget.rect);
     try_to_grab_kb(widget.id);
-    std::cout << "scheduling old render for " << &widget << std::endl;
     get().schedule_render_call(std::bind(_button_render, widget.me));
     handle_tabbing(widget.id);
     bool pressed = _button_pressed(widget.id);
@@ -490,7 +488,7 @@ bool _slider_impl(const uuid id, WidgetConfig config, float* value, float mnf,
 //////
 //////
 
-void init_widget(const Widget& widget, const char* func){
+void init_widget(const Widget& widget, const char* func) {
     Widget::set_element(widget, func);
     get().add_child(widget.me);
 }

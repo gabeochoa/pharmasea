@@ -243,7 +243,6 @@ void compute_relative_positions(Widget* widget) {
 }
 
 void compute_rect_bounds(Widget* widget) {
-    std::cout << "computing rect bounds for " << widget << std::endl;
     vec2 offset = vec2{0.f, 0.f};
     Widget* parent = widget->parent;
     if (parent) {

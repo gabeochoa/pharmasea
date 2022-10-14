@@ -10,6 +10,7 @@
 #include "raylib.h"
 #include "vec_util.h"
 //
+#include "ui_autolayout.h"
 #include "ui_state.h"
 #include "ui_theme.h"
 #include "ui_widget.h"
@@ -155,7 +156,13 @@ struct UIContext {
         mouse = mousePos;
     }
 
-    void end() {
+    void end(Widget* tree_root) {
+        autolayout::process_widget(tree_root);
+        render_all();
+        cleanup();
+    }
+
+    void cleanup() {
         began_and_not_ended = false;
         if (lmouse_down) {
             if (active_id == ROOT_ID) {
@@ -228,9 +235,6 @@ struct UIContext {
             last_size = font_size;
             font_size <<= 1;
             size = MeasureTextEx(font, content.c_str(), font_size, spacing);
-            // std::cout << "got " << size.x << ", " << size.y << " for "
-            // << font_size << " and " << width << ", " << height
-            // << " and last was: " << last_size << std::endl;
         } while (size.x <= width && size.y <= height);
 
         // return the last one that passed
@@ -247,7 +251,6 @@ struct UIContext {
             // std::cout << "found value in cache" << std::endl;
         }
         int result = _font_size_memo[fzinfo];
-        // std::cout << "cache value " << result << std::endl;
         return result;
     }
 
@@ -263,16 +266,10 @@ struct UIContext {
     }
 
     void draw_text(Widget* widget, const std::string& content) {
-        std::cout << "drawing text for " << widget << " "
-                  << (widget->cant_render() ? "cant render" : "can render")
-                  << " " << widget->rect << std::endl;
         float spacing = 0.f;
         // TODO would there ever be more direction types? (reverse row? )
         float font_size =
             get_font_size(content, widget->rect.width, widget->rect.height);
-        // std::cout << "selected font size: " << font_size << " for "
-        // << widget.rect.width << ", " << widget.rect.height
-        // << std::endl;
         DrawTextEx(font,                                          //
                    content.c_str(),                               //
                    {widget->rect.x, widget->rect.y},              //
@@ -282,7 +279,6 @@ struct UIContext {
     }
 
     void schedule_draw_text(Widget* widget, const std::string& content) {
-        std::cout << "scheduling text render for " << widget << std::endl;
         get().schedule_render_call(
             std::bind(&UIContext::draw_text, this, widget, content));
     }
@@ -293,7 +289,6 @@ struct UIContext {
     }
 
     void draw_widget_old(vec2 pos, vec2 size, float, Color color, std::string) {
-        std::cout << "render old" << std::endl;
         Rectangle rect = {pos.x, pos.y, size.x, size.y};
         DrawRectangleRounded(rect, 0.15f, 4, color);
     }
