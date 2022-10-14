@@ -82,13 +82,13 @@ struct UIContext {
     }
 
     void eatButton() { 
-        button = GAMEPAD_BUTTON_UNKNOWN; }
+        button = GAMEPAD_BUTTON_UNKNOWN;
+    }
 
     bool pressed(std::string name) {
         int code = KeyMap::get_key_code(STATE, name);
         bool a = _pressedWithoutEat(code);
         if (a) {
-            std::cout << "ate key " << name << std::endl;
             eatKey();
             return a;
         }
@@ -98,13 +98,13 @@ struct UIContext {
         GamepadButton butt = KeyMap::get_button(STATE, name);
         bool b = _pressedButtonWithoutEat(butt);
         if (b) {
-            std::cout << "ate button " << name << std::endl;
             eatButton();
         }
         return b;
     }
 
     bool _pressedWithoutEat(int code) const {
+        if (code == KEY_NULL) return false;
         return key == code || mod == code;
     }
     // TODO is there a better way to do eat(string)?
