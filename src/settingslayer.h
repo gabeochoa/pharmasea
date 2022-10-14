@@ -76,6 +76,7 @@ struct SettingsLayer : public Layer {
             {.mode = Pixels, .value = 50.f, .strictness = 1.f});
 
         Widget slider_widget(
+            MK_UUID(id, ROOT_ID),
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
             {.mode = Pixels, .value = 50.f, .strictness = 1.f});
 
@@ -84,8 +85,8 @@ struct SettingsLayer : public Layer {
 
         Widget window_size_container(
             {.mode = Children},
-            {.mode = Percent, .value = 1.f, .strictness = 1.0f});
-        window_size_container.growflags = GrowFlags::Row;
+            {.mode = Percent, .value = 1.f, .strictness = 1.0f},
+            GrowFlags::Row);
 
         std::vector<std::string> dropdownConfigs;
         dropdownConfigs.push_back("960x540");
@@ -98,6 +99,7 @@ struct SettingsLayer : public Layer {
             {.mode = Pixels, .value = 50.f, .strictness = 1.f});
 
         Widget dropdown_widget(
+            MK_UUID(id, ROOT_ID),
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
             {.mode = Pixels, .value = 50.f, .strictness = 1.f});
 

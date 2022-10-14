@@ -179,6 +179,7 @@ struct UIContext {
         mouse = vec2{};
     }
 
+
     void begin(bool mouseDown, const vec2& mousePos) {
         M_ASSERT(inited, "UIContext must be inited before you begin()");
         M_ASSERT(!began_and_not_ended,
@@ -218,6 +219,9 @@ struct UIContext {
         std::shared_ptr<T> state = statemanager.getAndCreateIfNone<T>(id);
         if (state == nullptr) {
             // TODO add log support
+            std::cout << "State for your id is of wrong type. Check to make "
+                         "sure your ids are globally unique"
+                      << std::endl;
             // log_error(
             // "State for id ({}) of wrong type, expected {}. Check to "
             // "make sure your id's are globally unique",
