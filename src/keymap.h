@@ -42,6 +42,13 @@ struct KeyMap {
         return 0.f;
     }
 
+    static float visit_key_down(int keycode) {
+        if (IsKeyDown(keycode)) {
+            return 1.f;
+        }
+        return 0.f;
+    }
+
     static float visit_axis(GamepadAxisWithDir axis_with_dir) {
         float mvt = GetGamepadAxisMovement(0, axis_with_dir.axis);
         if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > 0.25f) {
@@ -212,7 +219,7 @@ struct KeyMap {
             value = fmax(
                 value,
                 std::visit(util::overloaded{
-                               [](int keycode) { return visit_key(keycode); },
+                               [](int keycode) { return visit_key_down(keycode); },
                                [](GamepadAxisWithDir axis_with_dir) {
                                    return visit_axis(axis_with_dir);
                                },
