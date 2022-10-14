@@ -109,7 +109,7 @@ struct Widget {
         ss << ")\n";
         ss << "Dir" << this->growflags << "\n";
         ss << "Children:" << this->children.size() << "\n";
-        ss << "Parent:" << this->parent << "\n";
+        ss << "Parent:" << &(this->parent) << "\n";
         return ss.str();
     }
 
@@ -132,7 +132,7 @@ struct DropdownConfig : public Widget {
 };
 
 std::ostream& operator<<(std::ostream& os, const Widget& w) {
-    os << w;
+    os << w.print();
     return os;
 }
 
