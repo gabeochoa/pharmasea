@@ -303,4 +303,23 @@ struct KeyMap {
         }
         return false;
     }
+
+    static bool does_layer_map_contain_button(Menu::State state,
+                                              GamepadButton button) {
+        // We dont even have this Layer Map
+        if (!KeyMap::get().mapping.contains(state)) return false;
+        LayerMapping layermap = KeyMap::get().mapping[state];
+        for (auto pair : layermap) {
+            const auto valid_inputs = pair.second;
+            for (auto input : valid_inputs) {
+                std::visit(util::overloaded{[&](GamepadButton butt) {
+                                                if (butt == button) return true;
+                                                return false;
+                                            },
+                                            [](auto&&) { return false; }},
+                           input);
+            }
+        }
+        return false;
+    }
 };

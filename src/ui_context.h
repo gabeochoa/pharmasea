@@ -135,8 +135,6 @@ struct UIContext {
             return a;
         }
 
-        return a;
-
         GamepadButton butt = KeyMap::get_button(STATE, name);
         bool b = _pressedButtonWithoutEat(butt);
         if (b) {
@@ -210,8 +208,6 @@ struct UIContext {
         } else {
             active_id = ROOT_ID;
         }
-        // key = int();
-        // mod = int();
         // button = GAMEPAD_BUTTON_UNKNOWN;
         //
         key = int();
