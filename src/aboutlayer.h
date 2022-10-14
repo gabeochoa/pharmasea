@@ -99,7 +99,7 @@ A game by:
             {
                 text(about_text, about_info);
                 button_with_label(back_button, "Back");
-                padding(button_padding);
+                // padding(button_padding);
                 button_with_label(back_button2, "Back");
             }
             ui_context.get()->pop_parent();
@@ -114,7 +114,7 @@ A game by:
         std::cout << "render widget" << std::endl;
         ui_context.get()->render_all();
 
-        // root.print_tree();
+        root.print_tree();
 
         std::cout << "********************** END FRAME **************** " << std::endl;
 

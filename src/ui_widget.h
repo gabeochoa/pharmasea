@@ -49,6 +49,12 @@ std::ostream& operator<<(std::ostream& os, const SizeExpectation& exp) {
 struct Widget {
     Widget* me;
     uuid id;
+    std::string element = "";
+
+    static void set_element(const Widget& widget, std::string e) {
+        auto& w = const_cast<Widget&>(widget);
+        w.element = e;
+    }
     // Layout computed size stuffs
     SizeExpectation size_expected[2];
     float computed_relative_pos[2] = {0.f, 0.f};
@@ -96,7 +102,7 @@ struct Widget {
 
     std::string print() const {
         std::stringstream ss;
-        ss << "Widget(\n";
+        ss << "Widget(" << this->element << "\n";
         ss << "x-axis " << this->size_expected[0] << "\n";
         ss << "y-axis " << this->size_expected[1] << "\n";
         ss << "rel_pos(";
