@@ -31,8 +31,12 @@ Gameplay Ideas
     - AI players need status conditions ("Ailments")
         - Ailments should have an poor OTC solution and good Rx solution
         - Poor solutions mean people are more likely to come back later in the day
+            - Returning people with differing appearance for differentiation
+            - Can't take an OTC solution again
         - Good solutions mean people are good for the day 
     - Small / Medium / Large pill bottle
+    - How do upgrades work?
+        - Options: Deterministic Skill Tree or RNG + money(Like Plateup)
     - Weigh station
         - Auto-weigher upgrade? 
     - Label maker
@@ -45,6 +49,7 @@ Gameplay Ideas
     - Cash Register
         - multiple lines per register
         - People at register dont lose patience
+            - Or maybe lose patience when not floating still and regenerate a little bit on snapping
     - Conveyer belts or tractor beam
     - Phone will ring from doctor with prescription information 
         - (Include key bindings for picking up the phone)
@@ -63,9 +68,11 @@ Gameplay Ideas
         - Doctor Writing: Fax machine output harder to read
         - Bad Insurance Rates: make half as much money 
         - Curious customers: Customers ask questions while paying 
+            - Decrease patience of other customers in the same line (implicitly)
         - Chatty Customers: Customers take twice as long to pay
+            - Need some fish jokes
         - Mummblers: Customer names are harder to read 
-        - Bad Knees: You walk slow? Get tired more easily? Have to sit down? 
+        - Bad Fins: You swim slow? Get tired more easily? Have to rest? 
         - Gimme a pack of reds: Sell cigarettes (more money) but get more customers (more sick) 
         - It fell off a truck: sell Rx on the side, Double Income but risk getting caught
         - While I'm here: 
@@ -73,9 +80,9 @@ Gameplay Ideas
             - Customers who are waiting a while will pick up more (causing cashier step to take longer) 
         - We have 4 seasons here: Adds weather which increases mess, but less people come in on those days
         - Vax Shot: More customers but only have to stab them (quick compared to rx) 
-        - Global Pandemic: Adds more sick people & doubles the amount of vax patients
+            - Global Pandemic: Adds more sick people & doubles the amount of vax patients
         - Beep Beep: Adds a metal detector that slows down thieves
-        - Mall RoboCop: Adds an AI robot that tries to catch thieves
+            - Mall RoboCop: Adds an AI robot that tries to catch thieves
     - Different game modes
         - Big Box: Acquired by a franchise. 
             - More customers
@@ -83,7 +90,7 @@ Gameplay Ideas
             - Have to pay x% of income to them at end of day 
             - Replace names with shapes 
         - Drive through
-            - Only surve through one window 
+            - Only serve through one window 
         - Hospital
             - More sick customers
     - Customers have attributes?
