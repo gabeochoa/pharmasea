@@ -67,9 +67,9 @@ const std::string WALL_TEST = R"(
 // const std::string ACTIVE_MAP = WALL_TEST;
 const std::string ACTIVE_MAP = EXAMPLE_MAP;
 
-struct World {
+struct WorldGen {
     std::vector<std::string> lines;
-    World() {
+    WorldGen() {
         this->lines = util::split_string(ACTIVE_MAP, "\n");
         this->init_map();
     }

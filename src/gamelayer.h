@@ -9,15 +9,18 @@
 #include "files.h"
 #include "layer.h"
 #include "menu.h"
-#include "world.h"
+#include "worldgen.h"
 // temporary for face cube test
 #include "texture_library.h"
 
 struct GameLayer : public Layer {
-    World world;
+    // TODO support loading the world from a save and deserializing the savegame
+    // Generate the world and starting entities.
+    WorldGen world;
     GameCam cam;
 
     GameLayer() : Layer("Game") {
+
         minimized = false;
         GLOBALS.set("game_cam", &cam);
         preload_textures();
