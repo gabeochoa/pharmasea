@@ -186,7 +186,6 @@ struct KeyMap {
 
     static GamepadButton get_button(Menu::State state,
                                     const std::string& name) {
-        return GAMEPAD_BUTTON_UNKNOWN;
 
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
@@ -196,6 +195,7 @@ struct KeyMap {
                 input);
             if (r != GAMEPAD_BUTTON_UNKNOWN) return r;
         }
+        // std::cout << "couldnt find any button for " << name << std::endl;
         return GAMEPAD_BUTTON_UNKNOWN;
     }
 

@@ -72,6 +72,7 @@ struct UIContext {
     }
 
     bool _pressedButtonWithoutEat(GamepadButton butt) const {
+        if (butt == GAMEPAD_BUTTON_UNKNOWN) return false;
         return button == butt;
     }
 
@@ -80,19 +81,26 @@ struct UIContext {
         return _pressedWithoutEat(code);
     }
 
-    void eatButton() { button = GAMEPAD_BUTTON_UNKNOWN; }
+    void eatButton() { 
+        button = GAMEPAD_BUTTON_UNKNOWN; }
 
     bool pressed(std::string name) {
         int code = KeyMap::get_key_code(STATE, name);
         bool a = _pressedWithoutEat(code);
         if (a) {
+            std::cout << "ate key " << name << std::endl;
             eatKey();
             return a;
         }
 
+        return a;
+
         GamepadButton butt = KeyMap::get_button(STATE, name);
         bool b = _pressedButtonWithoutEat(butt);
-        if (b) eatButton();
+        if (b) {
+            std::cout << "ate button " << name << std::endl;
+            eatButton();
+        }
         return b;
     }
 
