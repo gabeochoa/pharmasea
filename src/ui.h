@@ -529,6 +529,7 @@ bool button_with_label(const Widget& widget, const std::string& content) {
         std::shared_ptr<Widget> internal_button(
             new Widget({.mode = Percent, .value = 1.f, .strictness = 1.0f},
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f}));
+        get().temp_widgets.push_back(internal_button);
         pressed = button(*internal_button);
         // text(widget, content);
     }
