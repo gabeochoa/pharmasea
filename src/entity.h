@@ -64,6 +64,10 @@ struct Entity {
         return get_bounds(this->position, this->size() / 2.0f);
     }
 
+    virtual void update_position(const vec3& p) {
+        this->raw_position = p;
+    }
+
     virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
 
     virtual BoundingBox raw_bounds() const {

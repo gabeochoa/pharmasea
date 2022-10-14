@@ -6,6 +6,7 @@
 
 //
 #include "entity.h"
+#include "item.h"
 
 static std::vector<std::shared_ptr<Entity>> entities_DO_NOT_USE;
 
@@ -71,16 +72,31 @@ struct EntityHelper {
     }
     
     template<typename T>
-        static constexpr std::shared_ptr<T> getClosestMatchingEntity(vec2 pos, float range){
+        static constexpr std::shared_ptr<T> getClosestMatchingEntity(vec2 pos, float range, std::function<bool(std::shared_ptr<T>)> filter){
         float best_distance = range;
         std::shared_ptr<T> best_so_far;
         for (auto& e : entities_DO_NOT_USE) {
             auto s = dynamic_pointer_cast<T>(e);
             if (!s) continue;
+            if (!filter(s)) continue;
             float d = vec::distance(pos, vec::to2(e->position));
             if(d > range) continue;
             if(d < best_distance){
                 best_so_far = s;
+                best_distance = d;
+            }
+        }
+        return best_so_far;
+    }
+
+   static std::shared_ptr<Item> getClosestMatchingItem(vec2 pos, float range){
+        float best_distance = range;
+        std::shared_ptr<Item> best_so_far;
+        for (auto& i : items_DO_NOT_USE) {
+            float d = vec::distance(pos, vec::to2(i->position));
+            if(d > range) continue;
+            if(d < best_distance){
+                best_so_far = i;
                 best_distance = d;
             }
         }
