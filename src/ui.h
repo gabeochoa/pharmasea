@@ -150,6 +150,7 @@ void _draw_focus_ring(const Widget& widget) {
 
 inline void _button_render(Widget* widget_ptr) {
     Widget& widget = *widget_ptr;
+    active_if_mouse_inside(widget.id, widget.rect);
     _draw_focus_ring(widget);
 
     vec2 position = {
@@ -209,7 +210,6 @@ inline bool _button_pressed(const uuid id) {
 
 bool _button_impl(const Widget& widget) {
     // no state
-    active_if_mouse_inside(widget.id, widget.rect);
     try_to_grab_kb(widget.id);
     std::cout << "scheduling old render for " << &widget << std::endl;
     get().schedule_render_call(std::bind(_button_render, widget.me));
@@ -583,7 +583,8 @@ bool button_with_label(const Widget& widget, const std::string& content) {
     get().push_parent(widget.me);
     {
         std::shared_ptr<Widget> internal_button(
-            new Widget({.mode = Percent, .value = 1.f, .strictness = 1.0f},
+            new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
+                       {.mode = Percent, .value = 1.f, .strictness = 1.0f},
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f}));
         get().temp_widgets.push_back(internal_button);
 
