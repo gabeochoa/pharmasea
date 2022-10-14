@@ -33,11 +33,9 @@ bool button_with_label(
 // TODO is this what we want?
 bool button_list(
     // returns true if any button pressed
-    const uuid id,
-    //
-    WidgetConfig config,
+    const Widget& widget,
     // List of text configs that should show in the dropdown
-    const std::vector<WidgetConfig>& configs,
+    const std::vector<std::string>& options,
     // which item is selected
     int* selectedIndex = nullptr,
     //
@@ -45,11 +43,9 @@ bool button_list(
 
 bool dropdown(
     // returns true if dropdown value was changed
-    const uuid id,
-    // config
-    WidgetConfig config,
+    const Widget& widget,
     // List of text configs that should show in the dropdown
-    const std::vector<WidgetConfig>& configs,
+    const std::vector<std::string>& options,
     // whether or not the dropdown is open
     bool* dropdownState,
     // which item is selected
@@ -57,7 +53,7 @@ bool dropdown(
 
 bool slider(
     // returns true if slider moved
-    const uuid id, WidgetConfig config,
+    const Widget& widget,
     // Current value of the slider
     float* value,
     // min value
@@ -222,44 +218,42 @@ bool _button_impl(const Widget& widget) {
     return pressed;
 }
 
-/*
-bool _button_list_impl(const uuid id, WidgetConfig config,
-                       const std::vector<WidgetConfig>& configs,
+bool _button_list_impl(const Widget& widget,
+                       const std::vector<std::string>& options,
                        int* selectedIndex = nullptr, bool* hasFocus = nullptr) {
-    auto state = get().widget_init<ButtonListState>(id);
+    auto state = get().widget_init<ButtonListState>(widget.id);
     if (selectedIndex) state->selected.set(*selectedIndex);
 
     // TODO :HASFOCUS do we ever want to read the value
     // or do we want to reset focus each frame
     // if (hasFocus) state->hasFocus.set(*hasFocus);
     state->hasFocus.set(false);
-
     auto pressed = false;
-    float spacing = config.size.y * 1.0f;
-    // TODO support flipping text?
-    // float sign = config.flipTextY ? 1.f : -1.f;
-    float sign = 1.f;
 
-    // Generate all the button ids
-    std::vector<uuid> ids;
-    for (size_t i = 0; i < configs.size(); i++) {
-        ids.push_back(
-            MK_UUID_LOOP(id.ownerLayer, id.hash, static_cast<int>(i)));
-    }
+    get().push_parent(widget.me);
+    std::vector<std::shared_ptr<Widget>> children;
+    for (int i = 0; i < (int) options.size(); i++) {
+        auto option = options[i];
+        std::shared_ptr<Widget> button(new Widget(
+            {
+                .mode = Percent,
+                .value = 1.f,
+                .strictness = 1.f,
+            },
+            {
+                .mode = Percent,
+                .value = (1.f / options.size()),
+                .strictness = 0.9f,
+            }));
 
-    for (size_t i = 0; i < configs.size(); i++) {
-        const uuid button_id = ids[i];
-        WidgetConfig bwlconfig(config);
-        bwlconfig.position =
-            config.position + vec2{0.f, sign * spacing * (i + 1)};
-        bwlconfig.text = configs[i].text;
-        // bwlconfig.theme.backgroundColor = configs[i].theme.color();
-
-        if (button_with_label(button_id, bwlconfig)) {
+        if (button_with_label(*button, option)) {
             state->selected = static_cast<int>(i);
             pressed = true;
         }
+        get().temp_widgets.push_back(button);
+        children.push_back(button);
     }
+    get().pop_parent();
 
     // NOTE: hasFocus is generally a readonly variable because
     // we dont insert it into state on button_list start see :HASFOCUS
@@ -278,22 +272,22 @@ bool _button_list_impl(const uuid id, WidgetConfig config,
     // ** in this situation they have to be visible, so no worries about
     // arrow keying your way into a dropdown
     //
-    for (size_t i = 0; i < configs.size(); i++) {
-        somethingFocused |= has_kb_focus(ids[i]);
+    for (size_t i = 0; i < options.size(); i++) {
+        somethingFocused |= has_kb_focus(children[i]->id);
     }
 
     if (somethingFocused) {
         if (get().pressed("Widget Value Up")) {
             state->selected = state->selected - 1;
             if (state->selected < 0) state->selected = 0;
-            get().kb_focus_id = ids[state->selected];
+            get().kb_focus_id = children[state->selected]->id;
         }
 
         if (get().pressed("Widget Value Down")) {
             state->selected = state->selected + 1;
-            if (state->selected > (int) configs.size() - 1)
-                state->selected = static_cast<int>(configs.size() - 1);
-            get().kb_focus_id = ids[state->selected];
+            if (state->selected > (int) options.size() - 1)
+                state->selected = static_cast<int>(options.size() - 1);
+            get().kb_focus_id = children[state->selected]->id;
         }
     }
 
@@ -305,31 +299,27 @@ bool _button_list_impl(const uuid id, WidgetConfig config,
     // where neither the dropdown parent nor its children are in focus
     // and that causes the dropdown to close on selection change which isnt
     // what we want
-    for (size_t i = 0; i < configs.size(); i++) {
+    for (size_t i = 0; i < options.size(); i++) {
         // if you got the kb focus somehow
         // (ie by clicking or tabbing)
         // then we will just make you selected
-        if (has_kb_focus(ids[i])) state->selected = static_cast<int>(i);
-        state->hasFocus = state->hasFocus | has_kb_focus(ids[i]);
+        if (has_kb_focus(children[i]->id))
+            state->selected = static_cast<int>(i);
+        state->hasFocus = state->hasFocus | has_kb_focus(children[i]->id);
     }
 
-    if (state->hasFocus) get().kb_focus_id = ids[state->selected];
+    if (state->hasFocus) get().kb_focus_id = children[state->selected]->id;
     if (hasFocus) *hasFocus = state->hasFocus;
     if (selectedIndex) *selectedIndex = state->selected;
     return pressed;
 }
 
-bool _dropdown_impl(const uuid id, WidgetConfig config,
-                    const std::vector<WidgetConfig>& configs,
+bool _dropdown_impl(const Widget widget,
+                    const std::vector<std::string>& options,
                     bool* dropdownState, int* selectedIndex) {
-    auto state = get().widget_init<DropdownState>(id);
+    auto state = get().widget_init<DropdownState>(widget.me->id);
     if (dropdownState) state->on.set(*dropdownState);
-
-    config.text = configs[selectedIndex ? *selectedIndex : 0].text;
-
-    // Draw the main body of the dropdown
-    auto pressed = button(id, config);
-
+    auto selected_option = options[selectedIndex ? *selectedIndex : 0];
     // TODO when you tab to the dropdown
     // it would be nice if it opened
     // try_to_grab_kb(id);
@@ -337,110 +327,155 @@ bool _dropdown_impl(const uuid id, WidgetConfig config,
     // state->on = true;
     // }
 
-    // TODO right now you can change values through tab or through
-    // arrow keys, maybe we should only allow arrows
-    // and then tab just switches to the next non dropdown widget
+    bool return_value = false;
+    bool pressed = false;
 
-    // Text drawn after button so it shows up on top...
-    //
-    // TODO rotation is not really working correctly and so we have to
-    // offset the V a little more than ^ in order to make it look nice
-    auto offset =
-        vec2{config.size.x - (state->on ? 1.f : 1.6f), config.size.y * -0.25f};
-    text_old(MK_UUID(id.ownerLayer, id.hash),
-             WidgetConfig(
-                 // TODO support getOppositeColor
-                 // {.fontColor = getOppositeColor(config.theme.color()),
-                 {.position = config.position + offset,
-                  .rotation = state->on ? 90.f : 270.f,
-                  .text = ">",
-                  .theme = WidgetTheme(
-                      config.theme.color(WidgetTheme::ColorType::FONT),
-                      config.theme.color())}));
+    get().push_parent(widget.me);
+    {
+        std::shared_ptr<Widget> selected_widget(new Widget(
+            {
+                .mode = Percent,
+                .value = 1.f,
+                .strictness = 1.f,
+            },
+            {
+                .mode = Percent,
+                .value = (1.f / options.size()),
+                .strictness = 0.9f,
+            }));
 
-    bool childrenHaveFocus = false;
+        // TODO We should instead have get().request_temp() which returns
+        // shared_ptr and ads to temp automatically
+        get().temp_widgets.push_back(selected_widget);
 
-    // NOTE: originally we only did this when the dropdown wasnt already
-    // open but we should be safe to always do this
-    // 1. doesnt toggle on, sets on directly
-    // 2. open should have children focused anyway
-    // 3. we dont eat the input, so it doesnt break the button_list value
-    // up/down
-    if (has_kb_focus(id)) {
-        if (get().pressedWithoutEat("Widget Value Up") ||
-            get().pressedWithoutEat("Widget Value Down")) {
-            state->on = true;
-            childrenHaveFocus = true;
+        // Draw the main body of the dropdown
+        pressed = button_with_label(*selected_widget, selected_option);
+
+        // TODO right now you can change values through tab or through
+        // arrow keys, maybe we should only allow arrows
+        // and then tab just switches to the next non dropdown widget
+
+        // Text drawn after button so it shows up on top...
+        //
+        // TODO rotation is not really working correctly and so we have to
+        // offset the V a little more than ^ in order to make it look nice
+        // auto offset = vec2{config.size.x - (state->on ? 1.f : 1.6f),
+        // config.size.y * -0.25f};
+        // text_old(MK_UUID(id.ownerLayer, id.hash),
+        // WidgetConfig(
+        // // TODO support getOppositeColor
+        // // {.fontColor = getOppositeColor(config.theme.color()),
+        // {.position = config.position + offset,
+        // .rotation = state->on ? 90.f : 270.f,
+        // .text = ">",
+        // .theme = WidgetTheme(
+        // config.theme.color(WidgetTheme::ColorType::FONT),
+        // config.theme.color())}));
+
+        bool childrenHaveFocus = false;
+
+        // NOTE: originally we only did this when the dropdown wasnt already
+        // open but we should be safe to always do this
+        // 1. doesnt toggle on, sets on directly
+        // 2. open should have children focused anyway
+        // 3. we dont eat the input, so it doesnt break the button_list value
+        // up/down
+        if (has_kb_focus(widget.me->id)) {
+            if (get().pressedWithoutEat("Widget Value Up") ||
+                get().pressedWithoutEat("Widget Value Down")) {
+                state->on = true;
+                childrenHaveFocus = true;
+            }
         }
-    }
 
-    if (state->on) {
-        if (button_list(MK_UUID(id.ownerLayer, id.hash), config, configs,
-                        selectedIndex, &childrenHaveFocus)) {
+        if (state->on) {
+            std::shared_ptr<Widget> button_list_widget(new Widget(
+                {
+                    .mode = Percent,
+                    .value = 1.f,
+                    .strictness = 1.f,
+                },
+                {
+                    .mode = Percent,
+                    .value = (1.f / options.size()),
+                    .strictness = 0.9f,
+                }));
+
+            if (button_list(*button_list_widget, options, selectedIndex,
+                            &childrenHaveFocus)) {
+                state->on = false;
+                get().kb_focus_id = widget.me->id;
+            }
+            get().temp_widgets.push_back(button_list_widget);
+        }
+
+        return_value =
+            *dropdownState != state->on.asT() || (pressed && state->on.asT());
+
+        // NOTE: this has to happen after ret
+        // because its not a real selection, just
+        // a tab out
+        if (!childrenHaveFocus && !has_kb_focus(widget.me->id)) {
             state->on = false;
-            get().kb_focus_id = id;
         }
     }
-
-    auto ret =
-        *dropdownState != state->on.asT() || (pressed && state->on.asT());
-
-    // NOTE: this has to happen after ret
-    // because its not a real selection, just
-    // a tab out
-    if (!childrenHaveFocus && !has_kb_focus(id)) {
-        state->on = false;
-    }
+    get().pop_parent();
 
     if (pressed) state->on = !state->on;
     if (dropdownState) *dropdownState = state->on;
-    return ret;
+    return return_value;
 }
 
-inline void _slider_render(const uuid id, const WidgetConfig& config,
+inline void _slider_render(Widget* widget_ptr, const bool vertical,
                            const float value) {
-    const auto cs = config.size;
+    Widget& widget = *widget_ptr;
+    const auto cs = vec2{
+        widget.rect.width,
+        widget.rect.height,
+    };
     const float maxScale = 0.8f;
-    const float pos_offset =
-        value * (config.vertical ? cs.y * maxScale : cs.x * maxScale);
-    const auto pos = config.position;
-    const auto tex = config.theme.texture;
 
-    _draw_focus_ring(id, config);
+    const float pos_offset =
+        value * (vertical ? cs.y * maxScale : cs.x * maxScale);
+    const auto pos = vec2{
+        widget.rect.x,
+        widget.rect.y,
+    };
+
+    _draw_focus_ring(widget);
     // slider rail
-    Color rail = has_kb_focus(id)
-                     ? color::getOppositeColor(config.theme.color())
-                     : config.theme.color();
-    get().draw_widget_old(pos, cs, config.rotation, rail, tex);
+    Color rail = has_kb_focus(widget.id) ? get().active_theme().primary
+                                         : get().active_theme().secondary;
+
+    get().draw_widget_old(pos, cs, 0.f, rail, "TEXTURE");
 
     // slide
-    vec2 offset =
-        config.vertical ? vec2{0.f, pos_offset} : vec2{pos_offset, 0.f};
-    vec2 size =
-        config.vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
+    vec2 offset = vertical ? vec2{0.f, pos_offset} : vec2{pos_offset, 0.f};
+    vec2 size = vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
 
     // TODO chose a better color here or put one in theme
-    const auto col =
-        is_active_or_hot(id) ? color::red : color::getOppositeColor(rail);
-    get().draw_widget_old(config.position + offset, size, config.rotation, col,
-                          tex);
+    const auto col = is_active_or_hot(widget.id)
+                         ? color::red
+                         : color::getOppositeColor(rail);
+    get().draw_widget_old(pos + offset, size, 0.f, col, "TEXTURE");
 }
 
-bool _slider_impl(const uuid id, WidgetConfig config, float* value, float mnf,
+bool _slider_impl(const Widget& widget, bool vertical, float* value, float mnf,
                   float mxf) {
     // TODO be able to scroll this bar with the scroll wheel
-    auto state = get().widget_init<SliderState>(id);
+    auto state = get().widget_init<SliderState>(widget.id);
     if (value) state->value.set(*value);
 
-    active_if_mouse_inside(id, Rectangle{config.position.x, config.position.y,
-                                         config.size.x, config.size.y});
+    // TODO rect isnt yet set....
+    active_if_mouse_inside(widget.id, widget.rect);
     // dont mind if i do
-    try_to_grab_kb(id);
-    _slider_render(id, config, state->value.asT());
-    handle_tabbing(id);
+    try_to_grab_kb(widget.id);
+    get().schedule_render_call(
+        std::bind(_slider_render, widget.me, vertical, state->value.asT()));
+    handle_tabbing(widget.id);
 
     bool value_changed = false;
-    if (has_kb_focus(id)) {
+    if (has_kb_focus(widget.id)) {
         if (get().pressed("Value Up")) {
             state->value = state->value + 0.005;
             if (state->value > mxf) state->value = mxf;
@@ -456,13 +491,15 @@ bool _slider_impl(const uuid id, WidgetConfig config, float* value, float mnf,
         }
     }
 
-    if (get().active_id == id) {
-        get().kb_focus_id = id;
+    if (get().active_id == widget.id) {
+        get().kb_focus_id = widget.id;
         float v;
-        if (config.vertical) {
-            v = (config.position.y - get().mouse.y) / config.size.y;
+        if (vertical) {
+            v = (get().mouse.y - widget.computed_relative_pos[1]) /
+                widget.computed_size[1];
         } else {
-            v = (get().mouse.x - config.position.x) / config.size.x;
+            v = (get().mouse.x - widget.computed_relative_pos[0]) /
+                widget.computed_size[0];
         }
         if (v < mnf) v = mnf;
         if (v > mxf) v = mxf;
@@ -474,7 +511,6 @@ bool _slider_impl(const uuid id, WidgetConfig config, float* value, float mnf,
     }
     return value_changed;
 }
-*/
 
 //////
 //////
@@ -542,22 +578,22 @@ bool button_with_label(const Widget& widget, const std::string& content) {
     return pressed;
 }
 
-/*
-bool button_list(const uuid id, WidgetConfig config,
-                 const std::vector<WidgetConfig>& configs, int* selectedIndex,
-                 bool* hasFocus) {
-    return _button_list_impl(id, config, configs, selectedIndex, hasFocus);
+bool button_list(const Widget& widget, const std::vector<std::string>& options,
+                 int* selectedIndex, bool* hasFocus) {
+    init_widget(widget, __FUNCTION__);
+    return _button_list_impl(widget, options, selectedIndex, hasFocus);
 }
 
-bool dropdown(const uuid id, WidgetConfig config,
-              const std::vector<WidgetConfig>& configs, bool* dropdownState,
-              int* selectedIndex) {
-    return _dropdown_impl(id, config, configs, dropdownState, selectedIndex);
+bool dropdown(const Widget& widget, const std::vector<std::string>& options,
+              bool* dropdownState, int* selectedIndex) {
+    init_widget(widget, __FUNCTION__);
+    return _dropdown_impl(widget, options, dropdownState, selectedIndex);
 }
 
-bool slider(const uuid id, WidgetConfig config, float* value, float mnf,
+bool slider(const Widget& widget, bool vertical, float* value, float mnf,
             float mxf) {
-    return _slider_impl(id, config, value, mnf, mxf);
+    init_widget(widget, __FUNCTION__);
+    return _slider_impl(widget, vertical, value, mnf, mxf);
 }
-*/
+
 }  // namespace ui
