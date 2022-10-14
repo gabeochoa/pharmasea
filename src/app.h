@@ -26,6 +26,8 @@ struct App {
         // font = LoadFontEx("./resources/fonts/constan.ttf", 96, 0, 0);
         GenTextureMipmaps(&font.texture);
         SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);
+
+        KeyMap::get();
     }
 
     ~App() {}
@@ -100,5 +102,6 @@ struct App {
         }
         EndDrawing();
 
+        check_input();
     }
 };

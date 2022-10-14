@@ -1,5 +1,6 @@
 #pragma once
 
+#include "event.h"
 #include "external_include.h"
 //
 #include "globals.h"
@@ -43,10 +44,20 @@ struct GameLayer : public Layer {
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(
             std::bind(&GameLayer::onKeyPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(
+            &GameLayer::onGamepadButtonPressed, this, std::placeholders::_1));
+    }
+
+    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
+        if (KeyMap::get_button(Menu::State::Game, "Pause") == event.button) {
+            Menu::get().state = Menu::State::Root;
+            return true;
+        }
+        return false;
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (event.keycode == KEY_ESCAPE) {
+        if (KeyMap::get_key_code(Menu::State::Game, "Pause") == event.keycode) {
             Menu::get().state = Menu::State::Root;
             return true;
         }

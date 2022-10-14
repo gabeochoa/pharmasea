@@ -1,12 +1,11 @@
 
 #pragma once
-#include "external_include.h"
-#include "raylib.h"
-
-#include "gamepad_axis_with_dir.h"
 #include "event.h"
+#include "external_include.h"
 #include "files.h"
+#include "gamepad_axis_with_dir.h"
 #include "menu.h"
+#include "raylib.h"
 #include "singleton.h"
 #include "util.h"
 
@@ -52,7 +51,7 @@ struct KeyMap {
     }
 
     static float visit_button(GamepadButton button) {
-        if (IsGamepadButtonDown(0, button)) {
+        if (IsGamepadButtonPressed(0, button)) {
             return 1.f;
         }
         return 0.f;
@@ -141,6 +140,11 @@ struct KeyMap {
             GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
         };
 
+        game_map["Pause"] = {
+            KEY_ESCAPE,
+            GAMEPAD_BUTTON_MIDDLE_RIGHT,
+        };
+
         game_map["Target Forward"] = {KEY_UP};
         game_map["Target Back"] = {KEY_DOWN};
         game_map["Target Left"] = {KEY_LEFT};
@@ -166,12 +170,25 @@ struct KeyMap {
     static int get_key_code(Menu::State state, const std::string& name) {
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
-            int r = std::visit(util::overloaded{[&](int k) { return k; },
+            int r = std::visit(util::overloaded{[](int k) { return k; },
                                                 [](auto&&) { return 0; }},
                                input);
             if (r) return r;
         }
         return KEY_NULL;
+    }
+
+    static GamepadButton get_button(Menu::State state,
+                                    const std::string& name) {
+        AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
+        for (auto input : valid_inputs) {
+            auto r = std::visit(
+                util::overloaded{[](GamepadButton button) { return button; },
+                                 [](auto&&) { return GAMEPAD_BUTTON_UNKNOWN; }},
+                input);
+            if (r != GAMEPAD_BUTTON_UNKNOWN) return r;
+        }
+        return GAMEPAD_BUTTON_UNKNOWN;
     }
 
     static AnyInputs get_valid_inputs(Menu::State state,
