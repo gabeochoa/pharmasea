@@ -28,7 +28,7 @@
 #include "./tests/all_tests.h"
 
 void startup() {
-    // SetTargetFPS(10);
+    SetTargetFPS(120);
     // Disable all that startup logging
     SetTraceLogLevel(LOG_WARNING);
     // Force the app to be created.
@@ -40,7 +40,7 @@ void startup() {
     tests::run_all();
 
     Menu::get().state = Menu::State::Game;
-    // Menu::get().state = Menu::State::Root;
+    Menu::get().state = Menu::State::Root;
     // Menu::get().state = Menu::State::Settings;
 
     GameLayer* gamelayer = new GameLayer();

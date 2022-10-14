@@ -36,7 +36,7 @@ struct KeyMap {
     }
 
     static float visit_key(int keycode) {
-        if (IsKeyDown(keycode)) {
+        if (IsKeyPressed(keycode)) {
             return 1.f;
         }
         return 0.f;
@@ -153,10 +153,16 @@ struct KeyMap {
 
     void load_ui_keys() {
         LayerMapping& game_map = this->get_or_create_layer_map(Menu::State::UI);
-        game_map["Widget Next"] = {KEY_TAB};
+        game_map["Widget Next"] = {
+            KEY_TAB,
+            GAMEPAD_BUTTON_LEFT_FACE_DOWN,
+        };
+        game_map["Widget Back"] = {
+            GAMEPAD_BUTTON_LEFT_FACE_UP,
+        };
         game_map["Widget Mod"] = {KEY_LEFT_SHIFT};
 
-        game_map["Widget Press"] = {KEY_ENTER};
+        game_map["Widget Press"] = {KEY_ENTER, GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
 
         game_map["Widget Value Up"] = {KEY_UP};
         game_map["Widget Value Down"] = {KEY_DOWN};
@@ -180,6 +186,8 @@ struct KeyMap {
 
     static GamepadButton get_button(Menu::State state,
                                     const std::string& name) {
+        return GAMEPAD_BUTTON_UNKNOWN;
+
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
             auto r = std::visit(
@@ -247,6 +255,25 @@ struct KeyMap {
             for (auto input : valid_inputs) {
                 std::visit(util::overloaded{[&](int k) {
                                                 if (k == keycode) return true;
+                                                return false;
+                                            },
+                                            [](auto&&) { return false; }},
+                           input);
+            }
+        }
+        return false;
+    }
+
+    static bool does_layer_map_contain_button(Menu::State state,
+                                              GamepadButton button) {
+        // We dont even have this Layer Map
+        if (!KeyMap::get().mapping.contains(state)) return false;
+        LayerMapping layermap = KeyMap::get().mapping[state];
+        for (auto pair : layermap) {
+            const auto valid_inputs = pair.second;
+            for (auto input : valid_inputs) {
+                std::visit(util::overloaded{[&](GamepadButton butt) {
+                                                if (butt == button) return true;
                                                 return false;
                                             },
                                             [](auto&&) { return false; }},

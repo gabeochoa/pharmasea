@@ -25,11 +25,17 @@ struct MenuLayer : public Layer {
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(
             std::bind(&MenuLayer::onKeyPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(
+            &MenuLayer::onGamepadButtonPressed, this, std::placeholders::_1));
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
         if (Menu::get().state != Menu::State::Root) return false;
         return ui_context.get()->process_keyevent(event);
+    }
+
+    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
+        return ui_context.get()->process_gamepad_button_event(event);
     }
 
     void draw_ui() {

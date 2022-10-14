@@ -74,25 +74,12 @@ struct App {
         CloseWindow();
     }
 
-    void check_input(){
-        while (true) {
-            int key = GetKeyPressed();
-            if (key != 0) {
-                // std::cout << "keypressed: " << key << std::endl;
-            } else {
-                break;
-            }
-            KeyPressedEvent* event = new KeyPressedEvent(key, 0);
-            this->processEvent(*event);
-            delete event;
-        }
-
+    void check_input() {
         KeyMap::get().forEachInputInMap(
             std::bind(&App::processEvent, this, std::placeholders::_1));
     }
 
     void loop(float dt) {
-
         for (Layer* layer : layerstack) {
             layer->onUpdate(dt);
         }

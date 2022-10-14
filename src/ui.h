@@ -127,7 +127,7 @@ inline void handle_tabbing(const uuid id) {
                 get().kb_focus_id = get().last_processed;
             }
         }
-        if (get().pressed("Widget Value Up")) {
+        if (get().pressed("Widget Value Up") || get().pressed("Widget Back")) {
             get().kb_focus_id = get().last_processed;
         }
     }

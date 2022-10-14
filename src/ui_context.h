@@ -7,6 +7,7 @@
 #include "event.h"
 #include "keymap.h"
 #include "menu.h"
+#include "raylib.h"
 #include "vec_util.h"
 //
 #include "ui_color.h"
@@ -33,6 +34,7 @@ struct UIContext {
 
     int key = -1;
     int mod = -1;
+    GamepadButton button;
 
     inline static UIContext* create() { return new UIContext(); }
     inline static UIContext& get() {
@@ -60,12 +62,40 @@ struct UIContext {
         return true;
     }
 
+    bool process_gamepad_button_event(GamepadButtonPressedEvent event) {
+        GamepadButton code = event.button;
+        if (!KeyMap::does_layer_map_contain_button(STATE, code)) {
+            return false;
+        }
+        button = code;
+        return true;
+    }
+
+    bool _pressedButtonWithoutEat(GamepadButton butt) const {
+        return button == butt;
+    }
+
+    bool pressedButtonWithoutEat(std::string name) const {
+        GamepadButton code = KeyMap::get_button(STATE, name);
+        return _pressedWithoutEat(code);
+    }
+
+    void eatButton() { button = GAMEPAD_BUTTON_UNKNOWN; }
+
     bool pressed(std::string name) {
         int code = KeyMap::get_key_code(STATE, name);
         bool a = _pressedWithoutEat(code);
-        if (a) eatKey();
-        return a;
+        if (a) {
+            eatKey();
+            return a;
+        }
+
+        GamepadButton butt = KeyMap::get_button(STATE, name);
+        bool b = _pressedButtonWithoutEat(butt);
+        if (b) eatButton();
+        return b;
     }
+
     bool _pressedWithoutEat(int code) const {
         return key == code || mod == code;
     }
@@ -132,6 +162,7 @@ struct UIContext {
         }
         // key = int();
         // mod = int();
+        // button = GAMEPAD_BUTTON_UNKNOWN;
         //
         // keychar = int();
         // modchar = int();
