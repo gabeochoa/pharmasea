@@ -29,6 +29,9 @@
 #pragma GCC diagnostic pop
 #endif
 
+#ifdef _MSC_VER
+#define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif
 
 typedef Vector2 vec2;
 typedef Vector3 vec3;
@@ -52,3 +55,4 @@ typedef Vector4 vec4;
 #include <fstream>
 #include <stack>
 #include <unordered_map>
+#include <cassert>
