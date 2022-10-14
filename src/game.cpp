@@ -19,7 +19,7 @@
 #include "aboutlayer.h"
 // #include "fpslayer.h"
 // #include "gamelayer.h"
-// #include "menulayer.h"
+#include "menulayer.h"
 // #include "menustatelayer.h"
 // #include "settingslayer.h"
 // #include "versionlayer.h"
@@ -52,8 +52,8 @@ void startup() {
     // SettingsLayer* settingslayer = new SettingsLayer();
     // App::get().pushLayer(settingslayer);
 //
-    // MenuLayer* menulayer = new MenuLayer();
-    // App::get().pushLayer(menulayer);
+    MenuLayer* menulayer = new MenuLayer();
+    App::get().pushLayer(menulayer);
 //
     // MenuStateLayer* menustatelayer = new MenuStateLayer();
     // App::get().pushLayer(menustatelayer);
