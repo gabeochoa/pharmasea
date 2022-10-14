@@ -71,6 +71,7 @@ struct UIContext {
     Font font;
     Widget* root;
     std::stack<Widget*> parentstack;
+    std::vector<std::shared_ptr<Widget>> temp_widgets;
 
     uuid hot_id;
     uuid active_id;
@@ -168,6 +169,7 @@ struct UIContext {
         // keychar = int();
         // modchar = int();
         globalContext = nullptr;
+        temp_widgets.clear();
     }
 
     template<typename T>
