@@ -21,8 +21,9 @@ struct MenuLayer : public Layer {
         ui_context->init();
         ui_context->set_font(App::get().font);
         // TODO we should probably enforce that you cant do this
-        // and we should have ->set_base_theme() 
-        // and push_theme separately, if you end() with any stack not empty... thats a flag
+        // and we should have ->set_base_theme()
+        // and push_theme separately, if you end() with any stack not empty...
+        // thats a flag
         ui_context->push_theme(ui::DEFAULT_THEME);
     }
     virtual ~MenuLayer() {}
@@ -51,29 +52,32 @@ struct MenuLayer : public Layer {
         const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
         const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
 
-        const SizeExpectation padd_x = {.mode = Pixels, .value = 120.f, .strictness = 0.9f};
-        const SizeExpectation padd_y= {.mode = Pixels, .value = 25.f, .strictness = 0.5f};
+        const SizeExpectation padd_x = {
+            .mode = Pixels, .value = 120.f, .strictness = 0.9f};
+        const SizeExpectation padd_y = {
+            .mode = Pixels, .value = 25.f, .strictness = 0.5f};
 
         ui_context->begin(mouseDown, mousepos);
 
-        ui::Widget root;
-        root.set_expectation(
+        ui::Widget root(
+            MK_UUID(id, ROOT_ID),
             {.mode = ui::SizeMode::Pixels, .value = WIN_W, .strictness = 1.f},
             {.mode = ui::SizeMode::Pixels, .value = WIN_H, .strictness = 1.f});
         root.growflags = ui::GrowFlags::Row;
 
         Widget left_padding(
+            MK_UUID(id, ROOT_ID),
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
             {.mode = Pixels, .value = WIN_H, .strictness = 1.f});
 
-        Widget content({.mode = Children},
+        Widget content(MK_UUID(id, ROOT_ID), {.mode = Children},
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f});
         content.growflags = ui::GrowFlags::Column;
 
-        Widget play_button(button_x, button_y);
-        Widget button_padding(padd_x, padd_y);
-        Widget about_button(button_x, button_y);
-        Widget settings_button(button_x, button_y);
+        Widget play_button(MK_UUID(id, ROOT_ID), button_x, button_y);
+        Widget button_padding(MK_UUID(id, ROOT_ID), padd_x, padd_y);
+        Widget about_button(MK_UUID(id, ROOT_ID), button_x, button_y);
+        Widget settings_button(MK_UUID(id, ROOT_ID), button_x, button_y);
 
         ui_context->push_parent(&root);
         {
@@ -82,24 +86,22 @@ struct MenuLayer : public Layer {
 
             ui_context->push_parent(&content);
             {
-                if(button_with_label(play_button, "Play")){
+                if (button_with_label(play_button, "Play")) {
                     Menu::get().state = Menu::State::Game;
                 }
                 padding(button_padding);
-                if(button_with_label(about_button, "About")){
-                    Menu::get().state = Menu::State::Game;
+                if (button_with_label(about_button, "About")) {
+                    Menu::get().state = Menu::State::About;
                 }
                 padding(button_padding);
-                if(button_with_label(settings_button, "Settings")){
-                    Menu::get().state = Menu::State::Game;
+                if (button_with_label(settings_button, "Settings")) {
+                    Menu::get().state = Menu::State::Settings;
                 }
-                padding(button_padding);
             }
             ui_context->pop_parent();
         }
         ui_context->pop_parent();
         ui_context->end(&root);
-
     }
 
     virtual void onUpdate(float) override {
