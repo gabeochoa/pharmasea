@@ -178,7 +178,7 @@ inline void _button_render(Widget* widget_ptr) {
                       ? theme.from_usage(theme::Usage::Primary)
                       : theme.from_usage(theme::Usage::Secondary);
 
-    get().draw_widget_old(position, size, 0.f, color, "TEXTURE");
+    // get().draw_widget_old(position, size, 0.f, color, "TEXTURE");
 
     // if (config.text.size() != 0) {
     // WidgetConfig textConfig(config);
