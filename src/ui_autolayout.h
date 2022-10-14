@@ -181,24 +181,15 @@ void compute_relative_positions(Widget* widget) {
     float offx = 0.f;
     float offy = 0.f;
 
-    float max_child_w = 0.f;
-    float max_child_h = 0.f;
+    // Represents the current wrap's largest
+    // ex. on Column mode we only care about where to start the next column
+    float col_w = 0.f;
+    float col_h = 0.f;
 
-    for (Widget* child : widget->children) {
-        float cx = child->computed_size[0];
-        float cy = child->computed_size[1];
-        if (cx > max_child_w) max_child_w = cx;
-        if (cy > max_child_h) max_child_h = cy;
-    }
-
-    float col_w = max_child_w;
-    float col_h = max_child_h;
-    if (widget->growflags & GrowFlags::Column) {
-        col_h = sy;
-    }
-    if (widget->growflags & GrowFlags::Row) {
-        col_w = sx;
-    }
+    const auto update_max_size = [&](float cx, float cy) {
+        col_w = fmax(cx, col_w);
+        col_h = fmax(cx, col_h);
+    };
 
     for (Widget* child : widget->children) {
         float cx = child->computed_size[0];
@@ -207,42 +198,46 @@ void compute_relative_positions(Widget* widget) {
         bool will_hit_max_x = false;
         bool will_hit_max_y = false;
 
-        will_hit_max_x = cx + offx == sx;
-        will_hit_max_y = cy + offy == sy;
+        will_hit_max_x = cx + offx > sx;
+        will_hit_max_y = cy + offy > sy;
 
         // We cant grow and are going over the limit
         if (widget->growflags & GrowFlags::None &&
             (will_hit_max_x || will_hit_max_y)) {
             child->computed_relative_pos[0] = sx;
             child->computed_relative_pos[1] = sy;
+            continue;
         }
 
-        will_hit_max_x = cx + offx == sx;
-        will_hit_max_y = cy + offy == sy;
-
-        if (widget->growflags & GrowFlags::Column && will_hit_max_y) {
+        // We can grow vertically and current child will push us over height 
+        // lets wrap
+        if (widget->growflags & GrowFlags::Column && cy + offy > sy) {
             offy = 0;
             offx += col_w;
+            col_w = cx;
         }
 
-        will_hit_max_x = cx + offx == sx;
-        will_hit_max_y = cy + offy == sy;
 
-        if (widget->growflags & GrowFlags::Row && will_hit_max_x) {
+        // We can grow horizontally and current child will push us over width
+        // lets wrap
+        if (widget->growflags & GrowFlags::Row && cx + offx > sx) {
             offx = 0;
             offy += col_h;
+            col_h = cy;
         }
 
         child->computed_relative_pos[0] = offx;
         child->computed_relative_pos[1] = offy;
 
-        if (widget->growflags & GrowFlags::Column && will_hit_max_y) {
+        // Setup for next child placement
+        if (widget->growflags & GrowFlags::Column) {
             offy += cy;
         }
-        if (widget->growflags & GrowFlags::Row && will_hit_max_x) {
+        if (widget->growflags & GrowFlags::Row){
             offx += cx;
         }
 
+        update_max_size(cx, cy);
         compute_relative_positions(child);
     }
 }
