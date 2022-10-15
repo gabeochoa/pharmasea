@@ -193,7 +193,6 @@ struct UIContext {
         return KeyMap::is_event(STATE, name);
     }
 
-    //
     bool inited = false;
     bool began_and_not_ended = false;
 

@@ -81,6 +81,7 @@ struct MenuLayer : public Layer {
         Widget button_padding(padd_x, padd_y);
         Widget about_button(MK_UUID(id, ROOT_ID), button_x, button_y);
         Widget settings_button(MK_UUID(id, ROOT_ID), button_x, button_y);
+        Widget exit_button(MK_UUID(id, ROOT_ID), button_x, button_y);
 
         ui_context->push_parent(&root);
         {
@@ -100,6 +101,10 @@ struct MenuLayer : public Layer {
                 padding(button_padding);
                 if (button_with_label(settings_button, "Settings")) {
                     Menu::get().state = Menu::State::Settings;
+                }
+                padding(button_padding);
+                if (button_with_label(exit_button, "Exit")) {
+                    exit(0);
                 }
             }
             ui_context->pop_parent();
