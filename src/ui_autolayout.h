@@ -43,9 +43,17 @@ float compute_size_for_child_expectation(Widget* widget, int exp_index) {
 
     float total_child_size = 0.f;
     for (Widget* child : widget->children) {
-        // TODO are children guaranteed to have been solved by now?
         float cs = child->computed_size[exp_index];
-        M_ASSERT(cs != -1, "expect that all children have been solved by now");
+        if (cs == -1) {
+            if (child->size_expected[exp_index].mode == SizeMode::Percent &&
+                widget->size_expected[exp_index].mode == SizeMode::Children) {
+                M_ASSERT(false,
+                         "Parents sized with mode 'children' cannot have "
+                         "children sized with mode 'percent'.");
+            }
+            // Instead of silently ignoring this, check the cases above
+            M_ASSERT(false, "expect that all children have been solved by now");
+        }
         total_child_size += cs;
     }
 
