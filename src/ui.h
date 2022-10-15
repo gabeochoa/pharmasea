@@ -209,7 +209,145 @@ inline bool _button_pressed(const uuid id) {
     return false;
 }
 
-bool _button_impl(const Widget& widget) {
+inline void _slider_render(Widget* widget_ptr, const bool vertical,
+                           const float value) {
+    Widget& widget = *widget_ptr;
+
+    active_if_mouse_inside(widget.id, widget.rect);
+
+    const auto cs = vec2{
+        widget.rect.width,
+        widget.rect.height,
+    };
+    const float maxScale = 0.8f;
+
+    const float pos_offset =
+        value * (vertical ? cs.y * maxScale : cs.x * maxScale);
+    const auto pos = vec2{
+        widget.rect.x,
+        widget.rect.y,
+    };
+
+    _draw_focus_ring(widget);
+    // slider rail
+    Color rail = has_kb_focus(widget.id) ? get().active_theme().primary
+                                         : get().active_theme().secondary;
+
+    get().draw_widget_old(pos, cs, 0.f, rail, "TEXTURE");
+
+    // slide
+    vec2 offset = vertical ? vec2{0.f, pos_offset} : vec2{pos_offset, 0.f};
+    vec2 size = vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
+
+    // TODO chose a better color here or put one in theme
+    const auto col = is_active_or_hot(widget.id)
+                         ? color::red
+                         : color::getOppositeColor(rail);
+    get().draw_widget_old(pos + offset, size, 0.f, col, "TEXTURE");
+}
+
+void _slider_value_management(const Widget* widget, bool vertical, float* value,
+                              float mnf, float mxf) {
+    auto state = get().get_widget_state<SliderState>(widget->id);
+
+    bool value_changed = false;
+    if (has_kb_focus(widget->id)) {
+        if (get().pressed("Value Up")) {
+            state->value = state->value + 0.005;
+            if (state->value > mxf) state->value = mxf;
+
+            (*value) = state->value;
+            value_changed = true;
+        }
+        if (get().pressed("Value Down")) {
+            state->value = state->value - 0.005;
+            if (state->value < mnf) state->value = mnf;
+            (*value) = state->value;
+            value_changed = true;
+        }
+    }
+
+    if (get().active_id == widget->id) {
+        get().kb_focus_id = widget->id;
+        float v;
+        if (vertical) {
+            v = (get().mouse.y - widget->rect.y) / widget->rect.height;
+        } else {
+            v = (get().mouse.x - widget->rect.x) / widget->rect.width;
+        }
+        if (v < mnf) v = mnf;
+        if (v > mxf) v = mxf;
+        if (v != *value) {
+            state->value = v;
+            (*value) = state->value;
+            value_changed = true;
+        }
+    }
+    state->value.changed_since = value_changed;
+}
+
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+//////
+
+void init_widget(const Widget& widget, const char* func,
+                 bool uses_state = false) {
+    // TODO today because of the layer check we cant use this
+    // which means no good error reports on this issue
+    // you will just segfault
+    //
+    // Basically the issue is that because the MK_UUID is in widget constructor
+    // the hash is the same for two ui elements.
+    //
+    // This will only happen if you have two Widgets that you construct on the
+    // same layer. This is because we use layer id (static atomic inc) as a hash
+    // key In order for us to get the "default" state id for a layer, we need
+    // either the layer id or an example widget
+
+    // if (uses_state && widget.id ==
+    // get().default_state_id) { std::cout << "You need to initialize the id on
+    // this widget, because it " "uses global state." " In your widget
+    // contructor pass 'MK_UUID(id, ROOT_ID)' " "as the first parameter."
+    // << std::endl;
+    // }
+    Widget::set_element(widget, func);
+    get().add_child(widget.me);
+}
+
+bool padding(const Widget& widget) {
+    init_widget(widget, __FUNCTION__);
+    return true;
+}
+
+bool div(const Widget& widget) {
+    init_widget(widget, __FUNCTION__);
+    return true;
+}
+
+bool text(const Widget& widget, const std::string& content,
+          theme::Usage color_usage) {
+    init_widget(widget, __FUNCTION__);
+    // No need to render if text is empty
+    if (content.empty()) return false;
+    get().schedule_draw_text(widget.me, content, color_usage);
+    return true;
+}
+
+bool button(const Widget& widget) {
+    init_widget(widget, __FUNCTION__);
     UIContext::LastFrame lf = get().get_last_frame(widget.id);
     bool pressed = false;
     if (lf.rect.has_value()) {
@@ -224,9 +362,31 @@ bool _button_impl(const Widget& widget) {
     return pressed;
 }
 
-bool _button_list_impl(const Widget& widget,
-                       const std::vector<std::string>& options,
-                       int* selectedIndex = nullptr, bool* hasFocus = nullptr) {
+bool button_with_label(const Widget& widget, const std::string& content) {
+    init_widget(widget, __FUNCTION__);
+    bool pressed = false;
+    get().push_parent(widget.me);
+    {
+        std::shared_ptr<Widget> internal_button(
+            new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
+                       {.mode = Percent, .value = 1.f, .strictness = 1.0f},
+                       {.mode = Percent, .value = 1.f, .strictness = 1.0f}));
+        get().temp_widgets.push_back(internal_button);
+
+        pressed = button(*internal_button);
+        std::shared_ptr<Widget> internal_text(
+            new Widget({.mode = Percent, .value = 1.f, .strictness = 1.0f},
+                       {.mode = Percent, .value = 1.f, .strictness = 1.0f}));
+        get().temp_widgets.push_back(internal_text);
+        text(*internal_text, content, theme::Usage::DarkFont);
+    }
+    get().pop_parent();
+    return pressed;
+}
+
+bool button_list(const Widget& widget, const std::vector<std::string>& options,
+                 int* selectedIndex, bool* hasFocus) {
+    init_widget(widget, __FUNCTION__, true);
     auto state = get().widget_init<ButtonListState>(widget.id);
     if (selectedIndex) state->selected.set(*selectedIndex);
 
@@ -321,9 +481,9 @@ bool _button_list_impl(const Widget& widget,
     return pressed;
 }
 
-bool _dropdown_impl(const Widget widget,
-                    const std::vector<std::string>& options,
-                    bool* dropdownState, int* selectedIndex) {
+bool dropdown(const Widget& widget, const std::vector<std::string>& options,
+              bool* dropdownState, int* selectedIndex) {
+    init_widget(widget, __FUNCTION__, true);
     auto state = get().widget_init<DropdownState>(widget.id);
     if (dropdownState) state->on.set(*dropdownState);
     auto selected_option = options[selectedIndex ? *selectedIndex : 0];
@@ -421,85 +581,9 @@ bool _dropdown_impl(const Widget widget,
     return return_value;
 }
 
-inline void _slider_render(Widget* widget_ptr, const bool vertical,
-                           const float value) {
-    Widget& widget = *widget_ptr;
-
-    active_if_mouse_inside(widget.id, widget.rect);
-
-    const auto cs = vec2{
-        widget.rect.width,
-        widget.rect.height,
-    };
-    const float maxScale = 0.8f;
-
-    const float pos_offset =
-        value * (vertical ? cs.y * maxScale : cs.x * maxScale);
-    const auto pos = vec2{
-        widget.rect.x,
-        widget.rect.y,
-    };
-
-    _draw_focus_ring(widget);
-    // slider rail
-    Color rail = has_kb_focus(widget.id) ? get().active_theme().primary
-                                         : get().active_theme().secondary;
-
-    get().draw_widget_old(pos, cs, 0.f, rail, "TEXTURE");
-
-    // slide
-    vec2 offset = vertical ? vec2{0.f, pos_offset} : vec2{pos_offset, 0.f};
-    vec2 size = vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
-
-    // TODO chose a better color here or put one in theme
-    const auto col = is_active_or_hot(widget.id)
-                         ? color::red
-                         : color::getOppositeColor(rail);
-    get().draw_widget_old(pos + offset, size, 0.f, col, "TEXTURE");
-}
-
-void _slider_value_management(const Widget* widget, bool vertical, float* value,
-                              float mnf, float mxf) {
-    auto state = get().get_widget_state<SliderState>(widget->id);
-
-    bool value_changed = false;
-    if (has_kb_focus(widget->id)) {
-        if (get().pressed("Value Up")) {
-            state->value = state->value + 0.005;
-            if (state->value > mxf) state->value = mxf;
-
-            (*value) = state->value;
-            value_changed = true;
-        }
-        if (get().pressed("Value Down")) {
-            state->value = state->value - 0.005;
-            if (state->value < mnf) state->value = mnf;
-            (*value) = state->value;
-            value_changed = true;
-        }
-    }
-
-    if (get().active_id == widget->id) {
-        get().kb_focus_id = widget->id;
-        float v;
-        if (vertical) {
-            v = (get().mouse.y - widget->rect.y) / widget->rect.height;
-        } else {
-            v = (get().mouse.x - widget->rect.x) / widget->rect.width;
-        }
-        if (v < mnf) v = mnf;
-        if (v > mxf) v = mxf;
-        if (v != *value) {
-            state->value = v;
-            (*value) = state->value;
-            value_changed = true;
-        }
-    }
-    state->value.changed_since = value_changed;
-}
-
-bool _slider_impl(const Widget& widget, bool vertical, float* value, float mnf,
-                  float mxf) {
+bool slider(const Widget& widget, bool vertical, float* value, float mnf,
+            float mxf) {
+    init_widget(widget, __FUNCTION__, true);
     // TODO be able to scroll this bar with the scroll wheel
     auto state = get().widget_init<SliderState>(widget.id);
     bool changed_previous_frame = state->value.changed_since;
@@ -514,111 +598,6 @@ bool _slider_impl(const Widget& widget, bool vertical, float* value, float mnf,
     get().schedule_render_call(std::bind(_slider_value_management, widget.me,
                                          vertical, value, mnf, mxf));
     return changed_previous_frame;
-}
-
-//////
-//////
-//////
-//////
-//////
-//////
-//////
-//////
-//////
-//////
-//////
-//////
-//////
-//////
-//////
-//////
-
-void init_widget(const Widget& widget, const char* func,
-                 bool uses_state = false) {
-    // TODO today because of the layer check we cant use this
-    // which means no good error reports on this issue
-    // you will just segfault
-    //
-    // Basically the issue is that because the MK_UUID is in widget constructor
-    // the hash is the same for two ui elements.
-    //
-    // This will only happen if you have two Widgets that you construct on the
-    // same layer. This is because we use layer id (static atomic inc) as a hash
-    // key In order for us to get the "default" state id for a layer, we need
-    // either the layer id or an example widget
-
-    // if (uses_state && widget.id ==
-    // get().default_state_id) { std::cout << "You need to initialize the id on
-    // this widget, because it " "uses global state." " In your widget
-    // contructor pass 'MK_UUID(id, ROOT_ID)' " "as the first parameter."
-    // << std::endl;
-    // }
-    Widget::set_element(widget, func);
-    get().add_child(widget.me);
-}
-
-bool padding(const Widget& widget) {
-    init_widget(widget, __FUNCTION__);
-    return true;
-}
-
-bool div(const Widget& widget) {
-    init_widget(widget, __FUNCTION__);
-    return true;
-}
-
-bool text(const Widget& widget, const std::string& content,
-          theme::Usage color_usage) {
-    init_widget(widget, __FUNCTION__);
-    // No need to render if text is empty
-    if (content.empty()) return false;
-    get().schedule_draw_text(widget.me, content, color_usage);
-    return true;
-}
-
-bool button(const Widget& widget) {
-    init_widget(widget, __FUNCTION__);
-    return _button_impl(widget);
-}
-
-bool button_with_label(const Widget& widget, const std::string& content) {
-    init_widget(widget, __FUNCTION__);
-    bool pressed = false;
-    get().push_parent(widget.me);
-    {
-        std::shared_ptr<Widget> internal_button(
-            new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
-                       {.mode = Percent, .value = 1.f, .strictness = 1.0f},
-                       {.mode = Percent, .value = 1.f, .strictness = 1.0f}));
-        get().temp_widgets.push_back(internal_button);
-
-        pressed = button(*internal_button);
-        std::shared_ptr<Widget> internal_text(
-            new Widget({.mode = Percent, .value = 1.f, .strictness = 1.0f},
-                       {.mode = Percent, .value = 1.f, .strictness = 1.0f}));
-        get().temp_widgets.push_back(internal_text);
-        text(*internal_text, content, theme::Usage::DarkFont);
-    }
-    get().pop_parent();
-    return pressed;
-}
-
-bool button_list(const Widget& widget, const std::vector<std::string>& options,
-                 int* selectedIndex, bool* hasFocus) {
-    init_widget(widget, __FUNCTION__, true);
-    return _button_list_impl(widget, options, selectedIndex, hasFocus);
-}
-
-bool dropdown(const Widget& widget, const std::vector<std::string>& options,
-              bool* dropdownState, int* selectedIndex) {
-    init_widget(widget, __FUNCTION__, true);
-    return _dropdown_impl(widget, options, dropdownState, selectedIndex);
-}
-
-bool slider(const Widget& widget, bool vertical, float* value, float mnf,
-            float mxf) {
-    init_widget(widget, __FUNCTION__, true);
-    return _slider_impl(widget, vertical, value, mnf, mxf);
 }
 
 }  // namespace ui
