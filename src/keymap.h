@@ -2,13 +2,10 @@
 #pragma once
 #include "event.h"
 #include "external_include.h"
-#include "raylib.h"
-
-#include "gamepad_axis_with_dir.h"
-#include "event.h"
 #include "files.h"
 #include "gamepad_axis_with_dir.h"
 #include "menu.h"
+#include "raylib.h"
 #include "singleton.h"
 #include "util.h"
 
@@ -181,8 +178,11 @@ struct KeyMap {
 
         game_map["Widget Press"] = {KEY_ENTER, GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
 
-        game_map["Widget Value Up"] = {KEY_UP};
-        game_map["Widget Value Down"] = {KEY_DOWN};
+        game_map["Value Up"] = {KEY_UP};
+        game_map["Value Down"] = {KEY_DOWN};
+
+        game_map["Value Left"] = {KEY_LEFT};
+        game_map["Value Right"] = {KEY_RIGHT};
     }
 
     void load_default_keys() {
@@ -203,7 +203,6 @@ struct KeyMap {
 
     static GamepadButton get_button(Menu::State state,
                                     const std::string& name) {
-
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
             auto r = std::visit(
@@ -226,18 +225,19 @@ struct KeyMap {
 
         float value = 0.f;
         for (auto& input : valid_inputs) {
-            value = fmax(
-                value,
-                std::visit(util::overloaded{
-                               [](int keycode) { return visit_key_down(keycode); },
-                               [](GamepadAxisWithDir axis_with_dir) {
-                                   return visit_axis(axis_with_dir);
-                               },
-                               [](GamepadButton button) {
-                                   return visit_button(button);
-                               },
-                               [](auto) {}},
-                           input));
+            value = fmax(value,
+                         std::visit(util::overloaded{
+                                        [](int keycode) {
+                                            return visit_key_down(keycode);
+                                        },
+                                        [](GamepadAxisWithDir axis_with_dir) {
+                                            return visit_axis(axis_with_dir);
+                                        },
+                                        [](GamepadButton button) {
+                                            return visit_button(button);
+                                        },
+                                        [](auto) {}},
+                                    input));
         }
         return value;
     }
@@ -271,13 +271,15 @@ struct KeyMap {
         for (auto pair : layermap) {
             const auto valid_inputs = pair.second;
             for (auto input : valid_inputs) {
-                contains = std::visit(util::overloaded{[&](int k) {
-                                                if (k == keycode) return true;
-                                                return false;
-                                            },
-                                            [](auto&&) { return false; }},
-                           input);
-                if(contains) return true;
+                contains =
+                    std::visit(util::overloaded{[&](int k) {
+                                                    if (k == keycode)
+                                                        return true;
+                                                    return false;
+                                                },
+                                                [](auto&&) { return false; }},
+                               input);
+                if (contains) return true;
             }
         }
         return false;
@@ -292,16 +294,17 @@ struct KeyMap {
         for (auto pair : layermap) {
             const auto valid_inputs = pair.second;
             for (auto input : valid_inputs) {
-                contains = std::visit(util::overloaded{[&](GamepadButton butt) {
-                                                if (butt == button) return true;
-                                                return false;
-                                            },
-                                            [](auto&&) { return false; }},
-                           input);
-                if(contains) return true;
+                contains =
+                    std::visit(util::overloaded{[&](GamepadButton butt) {
+                                                    if (butt == button)
+                                                        return true;
+                                                    return false;
+                                                },
+                                                [](auto&&) { return false; }},
+                               input);
+                if (contains) return true;
             }
         }
         return false;
     }
-
 };

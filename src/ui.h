@@ -115,24 +115,18 @@ inline void handle_tabbing(const uuid id) {
     // Do we mark the widget type with "nextable"? (tab will always work but
     // not very discoverable
     if (has_kb_focus(id)) {
-        if (get().pressed("Widget Next") /*||
-            get().pressed("Widget Value Down")*/) {
+        if (get().pressed("Widget Next") || get().pressed("Value Down")) {
             get().kb_focus_id = ROOT_ID;
             if (get().is_held_down("Widget Mod")) {
                 get().kb_focus_id = get().last_processed;
             }
         }
-        /*
-        if (get().pressed("Widget Value Up")) {
+        if (get().pressed("Value Up")) {
             get().kb_focus_id = get().last_processed;
         }
         if (get().pressed("Widget Back")) {
             get().kb_focus_id = get().last_processed;
         }
-        if (get().pressed("Widget Back")) {
-            get().kb_focus_id = get().last_processed;
-        }
-        */
     }
     // before any returns
     get().last_processed = id;
@@ -155,135 +149,6 @@ void _draw_focus_ring(const Widget& widget) {
             get().active_theme().from_usage(theme::Usage::Accent),  //
             "TEXTURE");
     });
-}
-
-inline void _button_render(Widget* widget_ptr) {
-    Widget& widget = *widget_ptr;
-
-    //
-    auto lf = UIContext::LastFrame({.rect = widget.rect});
-    get().write_last_frame(widget.id, lf);
-    //
-
-    _draw_focus_ring(widget);
-
-    vec2 position = {
-        widget.rect.x,
-        widget.rect.y,
-    };
-    vec2 size = {
-        widget.rect.width,
-        widget.rect.height,
-    };
-
-    // if (is_hot(widget.id)) {
-    // if (is_active(widget.id)) {
-    // get().draw_widget_old(position, size, 0.f, color::red, "TEXTURE");
-    // } else {
-    // // Hovered
-    // get().draw_widget_old(position, size, 0.f, color::green, "TEXTURE");
-    // }
-    // } else {
-    // get().draw_widget_old(position, size, 0.f, color::black, "TEXTURE");
-    // }
-
-    UITheme theme = get().active_theme();
-    Color color = is_active_and_hot(widget.id)
-                      ? theme.from_usage(theme::Usage::Secondary)
-                      : theme.from_usage(theme::Usage::Primary);
-
-    get().draw_widget_old(position, size, 0.f, color, "TEXTURE");
-}
-
-inline bool _button_pressed(const uuid id) {
-    // check click
-    if (has_kb_focus(id)) {
-        if (get().pressed("Widget Press")) {
-            return true;
-        }
-    }
-    if (get().lmouse_down && is_active_and_hot(id)) {
-        get().kb_focus_id = id;
-        return true;
-    }
-    return false;
-}
-
-inline void _slider_render(Widget* widget_ptr, const bool vertical,
-                           const float value) {
-    Widget& widget = *widget_ptr;
-
-    active_if_mouse_inside(widget.id, widget.rect);
-
-    const auto cs = vec2{
-        widget.rect.width,
-        widget.rect.height,
-    };
-    const float maxScale = 0.8f;
-
-    const float pos_offset =
-        value * (vertical ? cs.y * maxScale : cs.x * maxScale);
-    const auto pos = vec2{
-        widget.rect.x,
-        widget.rect.y,
-    };
-
-    _draw_focus_ring(widget);
-    // slider rail
-    Color rail = has_kb_focus(widget.id) ? get().active_theme().primary
-                                         : get().active_theme().secondary;
-
-    get().draw_widget_old(pos, cs, 0.f, rail, "TEXTURE");
-
-    // slide
-    vec2 offset = vertical ? vec2{0.f, pos_offset} : vec2{pos_offset, 0.f};
-    vec2 size = vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
-
-    // TODO chose a better color here or put one in theme
-    const auto col = is_active_or_hot(widget.id)
-                         ? color::red
-                         : color::getOppositeColor(rail);
-    get().draw_widget_old(pos + offset, size, 0.f, col, "TEXTURE");
-}
-
-void _slider_value_management(const Widget* widget, bool vertical, float* value,
-                              float mnf, float mxf) {
-    auto state = get().get_widget_state<SliderState>(widget->id);
-
-    bool value_changed = false;
-    if (has_kb_focus(widget->id)) {
-        if (get().pressed("Value Up")) {
-            state->value = state->value + 0.005;
-            if (state->value > mxf) state->value = mxf;
-
-            (*value) = state->value;
-            value_changed = true;
-        }
-        if (get().pressed("Value Down")) {
-            state->value = state->value - 0.005;
-            if (state->value < mnf) state->value = mnf;
-            (*value) = state->value;
-            value_changed = true;
-        }
-    }
-
-    if (get().active_id == widget->id) {
-        get().kb_focus_id = widget->id;
-        float v;
-        if (vertical) {
-            v = (get().mouse.y - widget->rect.y) / widget->rect.height;
-        } else {
-            v = (get().mouse.x - widget->rect.x) / widget->rect.width;
-        }
-        if (v < mnf) v = mnf;
-        if (v > mxf) v = mxf;
-        if (v != *value) {
-            state->value = v;
-            (*value) = state->value;
-            value_changed = true;
-        }
-    }
-    state->value.changed_since = value_changed;
 }
 
 //////
@@ -347,6 +212,58 @@ bool text(const Widget& widget, const std::string& content,
 }
 
 bool button(const Widget& widget) {
+    const auto _button_render = [](Widget* widget_ptr) {
+        Widget& widget = *widget_ptr;
+
+        //
+        auto lf = UIContext::LastFrame({.rect = widget.rect});
+        get().write_last_frame(widget.id, lf);
+        //
+
+        _draw_focus_ring(widget);
+
+        vec2 position = {
+            widget.rect.x,
+            widget.rect.y,
+        };
+        vec2 size = {
+            widget.rect.width,
+            widget.rect.height,
+        };
+
+        // if (is_hot(widget.id)) {
+        // if (is_active(widget.id)) {
+        // get().draw_widget_old(position, size, 0.f, color::red, "TEXTURE");
+        // } else {
+        // // Hovered
+        // get().draw_widget_old(position, size, 0.f, color::green, "TEXTURE");
+        // }
+        // } else {
+        // get().draw_widget_old(position, size, 0.f, color::black, "TEXTURE");
+        // }
+
+        UITheme theme = get().active_theme();
+        Color color = is_active_and_hot(widget.id)
+                          ? theme.from_usage(theme::Usage::Secondary)
+                          : theme.from_usage(theme::Usage::Primary);
+
+        get().draw_widget_old(position, size, 0.f, color, "TEXTURE");
+    };
+
+    const auto _button_pressed = [](const uuid id) {
+        // check click
+        if (has_kb_focus(id)) {
+            if (get().pressed("Widget Press")) {
+                return true;
+            }
+        }
+        if (get().lmouse_down && is_active_and_hot(id)) {
+            get().kb_focus_id = id;
+            return true;
+        }
+        return false;
+    };
+
     init_widget(widget, __FUNCTION__);
     UIContext::LastFrame lf = get().get_last_frame(widget.id);
     bool pressed = false;
@@ -444,13 +361,13 @@ bool button_list(const Widget& widget, const std::vector<std::string>& options,
     }
 
     if (somethingFocused) {
-        if (get().pressed("Widget Value Up")) {
+        if (get().pressed("Value Up")) {
             state->selected = state->selected - 1;
             if (state->selected < 0) state->selected = 0;
             get().kb_focus_id = children[state->selected]->id;
         }
 
-        if (get().pressed("Widget Value Down")) {
+        if (get().pressed("Value Down")) {
             state->selected = state->selected + 1;
             if (state->selected > (int) options.size() - 1)
                 state->selected = static_cast<int>(options.size() - 1);
@@ -535,8 +452,8 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
         // 3. we dont eat the input, so it doesnt break the button_list value
         // up/down
         if (has_kb_focus(widget.id)) {
-            if (get().pressedWithoutEat("Widget Value Up") ||
-                get().pressedWithoutEat("Widget Value Down")) {
+            if (get().pressedWithoutEat("Value Up") ||
+                get().pressedWithoutEat("Value Down")) {
                 state->on = true;
                 childrenHaveFocus = true;
             }
@@ -583,18 +500,109 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
 
 bool slider(const Widget& widget, bool vertical, float* value, float mnf,
             float mxf) {
+    const auto _slider_render = [](Widget* widget_ptr, const bool vertical,
+                                   const float value) {
+        Widget& widget = *widget_ptr;
+
+        //
+        auto lf = UIContext::LastFrame({.rect = widget.rect});
+        get().write_last_frame(widget.id, lf);
+        //
+
+        active_if_mouse_inside(widget.id, widget.rect);
+
+        const auto cs = vec2{
+            widget.rect.width,
+            widget.rect.height,
+        };
+        const float maxScale = 0.8f;
+
+        const float pos_offset =
+            value * (vertical ? cs.y * maxScale : cs.x * maxScale);
+        const auto pos = vec2{
+            widget.rect.x,
+            widget.rect.y,
+        };
+
+        _draw_focus_ring(widget);
+        // slider rail
+        Color rail = has_kb_focus(widget.id) ? 
+                                             get().active_theme().secondary
+                                             : 
+            get().active_theme().primary
+                                             ;
+
+        get().draw_widget_old(pos, cs, 0.f, rail, "TEXTURE");
+
+        // slide
+        vec2 offset = vertical ? vec2{0.f, pos_offset} : vec2{pos_offset, 0.f};
+        vec2 size = vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
+
+        // TODO chose a better color here or put one in theme
+        // const auto col = is_active_or_hot(widget.id)
+        // ? color::red
+        // : color::getOppositeColor(rail);
+        const auto col = get().active_theme().accent;
+        get().draw_widget_old(pos + offset, size, 0.f, col, "TEXTURE");
+    };
+
+    const auto _slider_value_management = [](const Widget* widget,
+                                             bool vertical, float* value,
+                                             float mnf, float mxf) {
+        auto state = get().get_widget_state<SliderState>(widget->id);
+
+        bool value_changed = false;
+        if (has_kb_focus(widget->id)) {
+            if (get().is_held_down("Value Right")) {
+                state->value = state->value + 0.005;
+                if (state->value > mxf) state->value = mxf;
+
+                (*value) = state->value;
+                value_changed = true;
+            }
+            if (get().is_held_down("Value Left")) {
+                state->value = state->value - 0.005;
+                if (state->value < mnf) state->value = mnf;
+                (*value) = state->value;
+                value_changed = true;
+            }
+        }
+
+        if (get().active_id == widget->id) {
+            get().kb_focus_id = widget->id;
+            float v;
+            if (vertical) {
+                v = (get().mouse.y - widget->rect.y) / widget->rect.height;
+            } else {
+                v = (get().mouse.x - widget->rect.x) / widget->rect.width;
+            }
+            if (v < mnf) v = mnf;
+            if (v > mxf) v = mxf;
+            if (v != *value) {
+                state->value = v;
+                (*value) = state->value;
+                value_changed = true;
+            }
+        }
+        state->value.changed_since = value_changed;
+    };
+
     init_widget(widget, __FUNCTION__, true);
+    UIContext::LastFrame lf = get().get_last_frame(widget.id);
     // TODO be able to scroll this bar with the scroll wheel
     auto state = get().widget_init<SliderState>(widget.id);
     bool changed_previous_frame = state->value.changed_since;
     state->value.changed_since = false;
     if (value) state->value.set(*value);
 
-    // dont mind if i do
-    try_to_grab_kb(widget.id);
+    if (lf.rect.has_value()) {
+        try_to_grab_kb(widget.id);
+        _slider_render(widget.me, vertical, state->value.asT());
+        handle_tabbing(widget.id);
+    }
+
     get().schedule_render_call(
         std::bind(_slider_render, widget.me, vertical, state->value.asT()));
-    handle_tabbing(widget.id);
     get().schedule_render_call(std::bind(_slider_value_management, widget.me,
                                          vertical, value, mnf, mxf));
     return changed_previous_frame;
