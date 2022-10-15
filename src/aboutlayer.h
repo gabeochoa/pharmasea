@@ -101,20 +101,8 @@ A game by:
             ui_context.get()->pop_parent();
         }
         ui_context.get()->pop_parent();
-
-        // after all children are done, process
-        std::cout << "process widget" << std::endl;
-        autolayout::process_widget(&root);
-
-
-        std::cout << "render widget" << std::endl;
-        ui_context.get()->render_all();
-
-        // root.print_tree();
-
-        std::cout << "********************** END FRAME **************** " << std::endl;
-
-        ui_context->end();
+        ui_context->end(&root);
+        // std::cout << "********************** END FRAME **************** " << std::endl;
     }
 
     virtual void onUpdate(float) override {

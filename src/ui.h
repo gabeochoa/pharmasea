@@ -166,7 +166,6 @@ inline void _button_render(Widget* widget_ptr) {
         widget.rect.width,
         widget.rect.height,
     };
-    std::cout << "button render " << position << "  " << size << std::endl;
 
     if (get().hot_id == widget.id) {
         if (get().active_id == widget.id) {
@@ -216,7 +215,6 @@ inline bool _button_pressed(const uuid id) {
 bool _button_impl(const Widget& widget) {
     // no state
     try_to_grab_kb(widget.id);
-    std::cout << "scheduling old render for " << &widget << std::endl;
     get().schedule_render_call(std::bind(_button_render, widget.me));
     handle_tabbing(widget.id);
     bool pressed = _button_pressed(widget.id);
