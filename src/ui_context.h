@@ -67,12 +67,15 @@ struct UIContext {
         return *_uicontext;
     }
 
+   private:
+    std::vector<std::shared_ptr<Widget>> temp_widgets;
+
+   public:
     StateManager statemanager;
     std::stack<UITheme> themestack;
     Font font;
     Widget* root;
     std::stack<Widget*> parentstack;
-    std::vector<std::shared_ptr<Widget>> temp_widgets;
 
     struct LastFrame {
         bool was_written_this_frame = false;
@@ -382,6 +385,12 @@ struct UIContext {
 
     inline vec2 widget_center(vec2 position, vec2 size) {
         return position + (size / 2.f);
+    }
+
+    std::shared_ptr<Widget> make_temp_widget(Widget* widget) {
+        std::shared_ptr<Widget> temp(widget);
+        temp_widgets.push_back(temp);
+        return temp;
     }
 };
 

@@ -284,17 +284,15 @@ bool button_with_label(const Widget& widget, const std::string& content) {
     bool pressed = false;
     get().push_parent(widget.me);
     {
-        std::shared_ptr<Widget> internal_button(
+        std::shared_ptr<Widget> internal_button = get().make_temp_widget(
             new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f},
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f}));
-        get().temp_widgets.push_back(internal_button);
 
         pressed = button(*internal_button);
-        std::shared_ptr<Widget> internal_text(
+        std::shared_ptr<Widget> internal_text = get().make_temp_widget(
             new Widget({.mode = Percent, .value = 1.f, .strictness = 1.0f},
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f}));
-        get().temp_widgets.push_back(internal_text);
         text(*internal_text, content, theme::Usage::DarkFont);
     }
     get().pop_parent();
@@ -317,7 +315,7 @@ bool button_list(const Widget& widget, const std::vector<std::string>& options,
     std::vector<std::shared_ptr<Widget>> children;
     for (int i = 0; i < (int) options.size(); i++) {
         auto option = options[i];
-        std::shared_ptr<Widget> button(
+        std::shared_ptr<Widget> button = get().make_temp_widget(
             new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
                        {
                            .mode = Percent,
@@ -334,7 +332,6 @@ bool button_list(const Widget& widget, const std::vector<std::string>& options,
             state->selected = static_cast<int>(i);
             pressed = true;
         }
-        get().temp_widgets.push_back(button);
         children.push_back(button);
     }
     get().pop_parent();
@@ -419,7 +416,7 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
 
     get().push_parent(widget.me);
     {
-        std::shared_ptr<Widget> selected_widget(
+        std::shared_ptr<Widget> selected_widget = get().make_temp_widget(
             new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
                        {
                            .mode = Percent,
@@ -430,11 +427,9 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
                            .mode = Percent,
                            .value = (1.f / num_all),
                            .strictness = 0.9f,
-                       }));
+                       })
 
-        // TODO We should instead have get().request_temp() which returns
-        // shared_ptr and ads to temp automatically
-        get().temp_widgets.push_back(selected_widget);
+        );
 
         // Draw the main body of the dropdown
         pressed = button_with_label(*selected_widget, selected_option);
@@ -460,7 +455,7 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
         }
 
         if (state->on) {
-            std::shared_ptr<Widget> button_list_widget(
+            std::shared_ptr<Widget> button_list_widget = get().make_temp_widget(
                 new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
                            {
                                .mode = Percent,
@@ -478,7 +473,6 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
                 state->on = false;
                 get().kb_focus_id = widget.id;
             }
-            get().temp_widgets.push_back(button_list_widget);
         }
 
         return_value =
@@ -526,22 +520,13 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
 
         _draw_focus_ring(widget);
         // slider rail
-        Color rail = has_kb_focus(widget.id) ? 
-                                             get().active_theme().secondary
-                                             : 
-            get().active_theme().primary
-                                             ;
-
+        Color rail = get().active_theme().primary;
         get().draw_widget_old(pos, cs, 0.f, rail, "TEXTURE");
 
         // slide
         vec2 offset = vertical ? vec2{0.f, pos_offset} : vec2{pos_offset, 0.f};
         vec2 size = vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
 
-        // TODO chose a better color here or put one in theme
-        // const auto col = is_active_or_hot(widget.id)
-        // ? color::red
-        // : color::getOppositeColor(rail);
         const auto col = get().active_theme().accent;
         get().draw_widget_old(pos + offset, size, 0.f, col, "TEXTURE");
     };
