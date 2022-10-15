@@ -39,9 +39,9 @@ void startup() {
 
     tests::run_all();
 
-    Menu::get().state = Menu::State::Game;
     Menu::get().state = Menu::State::Root;
     Menu::get().state = Menu::State::Settings;
+    Menu::get().state = Menu::State::Game;
 
     GameLayer* gamelayer = new GameLayer();
     App::get().pushLayer(gamelayer);
