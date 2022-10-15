@@ -74,6 +74,39 @@ struct UIContext {
     std::stack<Widget*> parentstack;
     std::vector<std::shared_ptr<Widget>> temp_widgets;
 
+    struct LastFrame {
+        bool was_written_this_frame = false;
+        std::optional<Rectangle> rect;
+    };
+    std::map<uuid, LastFrame> last_frame;
+    LastFrame get_last_frame(uuid id) {
+        if (!last_frame.contains(id)) {
+            return LastFrame();
+        }
+        return last_frame[id];
+    }
+    void write_last_frame(const uuid& id, LastFrame f){
+        f.was_written_this_frame = true;
+        last_frame[id] = f;
+    }
+
+    void reset_last_frame(){
+        // Cleanup any things that were not written to 
+        // this frame
+        auto it = last_frame.begin();
+        while (it != last_frame.end()) {
+            if (!(*it).second.was_written_this_frame) {
+                last_frame.erase(it);
+                continue;
+            }
+            it++;
+        }
+        // 
+        for(auto& kv : last_frame){
+            kv.second.was_written_this_frame = false;
+        }
+    }
+
     uuid hot_id;
     uuid active_id;
     uuid kb_focus_id;
@@ -124,9 +157,7 @@ struct UIContext {
         return _pressedWithoutEat(code);
     }
 
-    void eatButton() { 
-        button = GAMEPAD_BUTTON_UNKNOWN;
-    }
+    void eatButton() { button = GAMEPAD_BUTTON_UNKNOWN; }
 
     bool pressed(std::string name) {
         int code = KeyMap::get_key_code(STATE, name);
@@ -178,7 +209,6 @@ struct UIContext {
         mouse = vec2{};
     }
 
-
     void begin(bool mouseDown, const vec2& mousePos) {
         M_ASSERT(inited, "UIContext must be inited before you begin()");
         M_ASSERT(!began_and_not_ended,
@@ -217,6 +247,7 @@ struct UIContext {
         // modchar = int();
         globalContext = nullptr;
         temp_widgets.clear();
+        reset_last_frame();
     }
 
     template<typename T>
@@ -236,7 +267,7 @@ struct UIContext {
     }
 
     template<typename T>
-    std::shared_ptr<T> get_widget_state(const uuid id){
+    std::shared_ptr<T> get_widget_state(const uuid id) {
         return statemanager.get_as<T>(id);
     }
 

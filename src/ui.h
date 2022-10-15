@@ -88,20 +88,21 @@ inline void active_if_mouse_inside(const uuid id, const Rectangle& rect) {
     bool inside = get().is_mouse_inside(rect);
     if (inside) {
         get().hot_id = id;
-        if (get().active_id == ROOT_ID && get().lmouse_down) {
+        if (is_active(ROOT_ID) && get().lmouse_down) {
             get().active_id = id;
         }
     }
     return;
 }
 
+inline bool has_kb_focus(const uuid& id) { return (get().kb_focus_id == id); }
+
 inline void try_to_grab_kb(const uuid id) {
-    if (get().kb_focus_id == ROOT_ID) {
+    if (has_kb_focus(ROOT_ID)) {
         get().kb_focus_id = id;
     }
 }
 
-inline bool has_kb_focus(const uuid& id) { return (get().kb_focus_id == id); }
 inline void draw_if_kb_focus(const uuid& id, std::function<void(void)> cb) {
     if (has_kb_focus(id)) cb();
 }
@@ -155,7 +156,12 @@ void _draw_focus_ring(const Widget& widget) {
 
 inline void _button_render(Widget* widget_ptr) {
     Widget& widget = *widget_ptr;
-    active_if_mouse_inside(widget.id, widget.rect);
+
+    //
+    auto lf = UIContext::LastFrame({.rect = widget.rect});
+    get().write_last_frame(widget.id, lf);
+    //
+
     _draw_focus_ring(widget);
 
     vec2 position = {
@@ -167,8 +173,8 @@ inline void _button_render(Widget* widget_ptr) {
         widget.rect.height,
     };
 
-    if (get().hot_id == widget.id) {
-        if (get().active_id == widget.id) {
+    if (is_hot(widget.id)) {
+        if (is_active(widget.id)) {
             get().draw_widget_old(position, size, 0.f, color::red, "TEXTURE");
         } else {
             // Hovered
@@ -184,40 +190,40 @@ inline void _button_render(Widget* widget_ptr) {
                       : theme.from_usage(theme::Usage::Secondary);
 
     // get().draw_widget_old(position, size, 0.f, color, "TEXTURE");
-
-    // if (config.text.size() != 0) {
-    // WidgetConfig textConfig(config);
-    // // TODO detect if the button color is dark
-    // // and change the color to white automatically
-    // textConfig.theme.fontColor = color::getOppositeColor(color);
-    // textConfig.position =
-    // config.position + vec2{config.size.x * 0.05f, config.size.y * 0.1f};
-    // textConfig.size = vec2{config.size.y, config.size.y};
-    //
-    // text_old(MK_UUID(id.ownerLayer, 0), textConfig);
-    // }
 }
 
 inline bool _button_pressed(const uuid id) {
+    std::cout << "bp";
+    std::cout << " active " << is_active(id);
+    std::cout << " hot " << is_hot(id);
+    std::cout << " mousedown " << get().lmouse_down;
     // check click
     if (has_kb_focus(id)) {
         if (get().pressed("Widget Press")) {
             return true;
         }
     }
-    if (!get().lmouse_down && is_active_and_hot(id)) {
+    if (get().lmouse_down && is_active_and_hot(id)) {
+        std::cout << " pressed" << std::endl;
         get().kb_focus_id = id;
         return true;
     }
+        std::cout << " not pressed" << std::endl;
     return false;
 }
 
 bool _button_impl(const Widget& widget) {
-    // no state
-    try_to_grab_kb(widget.id);
+    UIContext::LastFrame lf = get().get_last_frame(widget.id);
+    bool pressed = false;
+    if (lf.rect.has_value()) {
+        active_if_mouse_inside(widget.id, lf.rect.value());
+
+        try_to_grab_kb(widget.id);
+        _button_render(widget.me);
+        handle_tabbing(widget.id);
+        pressed = _button_pressed(widget.id);
+    }
     get().schedule_render_call(std::bind(_button_render, widget.me));
-    handle_tabbing(widget.id);
-    bool pressed = _button_pressed(widget.id);
     return pressed;
 }
 
