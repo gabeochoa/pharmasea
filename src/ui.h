@@ -189,8 +189,8 @@ inline void _button_render(Widget* widget_ptr) {
 
     UITheme theme = get().active_theme();
     Color color = is_active_and_hot(widget.id)
-                      ? theme.from_usage(theme::Usage::Primary)
-                      : theme.from_usage(theme::Usage::Secondary);
+                      ? theme.from_usage(theme::Usage::Secondary)
+                      : theme.from_usage(theme::Usage::Primary);
 
     get().draw_widget_old(position, size, 0.f, color, "TEXTURE");
 }
