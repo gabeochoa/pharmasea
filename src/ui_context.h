@@ -85,13 +85,13 @@ struct UIContext {
         }
         return last_frame[id];
     }
-    void write_last_frame(const uuid& id, LastFrame f){
+    void write_last_frame(const uuid& id, LastFrame f) {
         f.was_written_this_frame = true;
         last_frame[id] = f;
     }
 
-    void reset_last_frame(){
-        // Cleanup any things that were not written to 
+    void reset_last_frame() {
+        // Cleanup any things that were not written to
         // this frame
         auto it = last_frame.begin();
         while (it != last_frame.end()) {
@@ -101,8 +101,8 @@ struct UIContext {
             }
             it++;
         }
-        // 
-        for(auto& kv : last_frame){
+        //
+        for (auto& kv : last_frame) {
             kv.second.was_written_this_frame = false;
         }
     }
@@ -348,7 +348,8 @@ struct UIContext {
         queued_render_calls.push_back(cb);
     }
 
-    void draw_text(Widget* widget, const std::string& content) {
+    void draw_text(Widget* widget, const std::string& content,
+                   theme::Usage color_usage) {
         float spacing = 0.f;
         // TODO would there ever be more direction types? (reverse row? )
         float font_size =
@@ -356,17 +357,18 @@ struct UIContext {
         // std::cout << "selected font size: " << font_size << " for "
         // << widget.rect.width << ", " << widget.rect.height
         // << std::endl;
-        DrawTextEx(font,                                          //
-                   content.c_str(),                               //
-                   {widget->rect.x, widget->rect.y},              //
-                   font_size, spacing,                            //
-                   active_theme().from_usage(theme::Usage::Font)  //
+        DrawTextEx(font,                                   //
+                   content.c_str(),                        //
+                   {widget->rect.x, widget->rect.y},       //
+                   font_size, spacing,                     //
+                   active_theme().from_usage(color_usage)  //
         );
     }
 
-    void schedule_draw_text(Widget* widget, const std::string& content) {
-        get().schedule_render_call(
-            std::bind(&UIContext::draw_text, this, widget, content));
+    void schedule_draw_text(Widget* widget, const std::string& content,
+                            theme::Usage color_usage) {
+        get().schedule_render_call(std::bind(&UIContext::draw_text, this,
+                                             widget, content, color_usage));
     }
 
     void draw_text_old(const char* text, vec2 position, vec2 size) {

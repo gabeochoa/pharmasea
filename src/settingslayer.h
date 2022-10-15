@@ -160,7 +160,9 @@ struct SettingsLayer : public Layer {
                 }
                 ui_context->pop_parent();  // end dropdown
 
-                button_with_label(back_button, "Back");
+                if(button_with_label(back_button, "Back")){
+                    Menu::get().state = Menu::State::Root;
+                }
             }
             ui_context->pop_parent();  // end content
         }

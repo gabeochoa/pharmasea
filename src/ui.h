@@ -18,7 +18,9 @@ bool text(
     // returns true if content isnt empty
     const Widget& widget,
     // the text to render
-    const std::string& content);
+    const std::string& content,
+    // what color to use
+    theme::Usage color_usage = theme::Usage::Font);
 
 bool button(
     // returns true if the button was clicked else false
@@ -146,11 +148,12 @@ void _draw_focus_ring(const Widget& widget) {
         const auto border_width = 0.05f;
         const auto offset =
             vec2{cs.x * (border_width / 2), cs.y * (border_width / 2)};
-        get().draw_widget_old(position - offset,          //
-                              cs * (1.f + border_width),  //
-                              0.f,                        //
-                              color::white,               //
-                              "TEXTURE");
+        get().draw_widget_old(
+            position - offset,                                      //
+            cs * (1.f + border_width),                              //
+            0.f,                                                    //
+            get().active_theme().from_usage(theme::Usage::Accent),  //
+            "TEXTURE");
     });
 }
 
@@ -173,30 +176,26 @@ inline void _button_render(Widget* widget_ptr) {
         widget.rect.height,
     };
 
-    if (is_hot(widget.id)) {
-        if (is_active(widget.id)) {
-            get().draw_widget_old(position, size, 0.f, color::red, "TEXTURE");
-        } else {
-            // Hovered
-            get().draw_widget_old(position, size, 0.f, color::green, "TEXTURE");
-        }
-    } else {
-        get().draw_widget_old(position, size, 0.f, color::black, "TEXTURE");
-    }
+    // if (is_hot(widget.id)) {
+    // if (is_active(widget.id)) {
+    // get().draw_widget_old(position, size, 0.f, color::red, "TEXTURE");
+    // } else {
+    // // Hovered
+    // get().draw_widget_old(position, size, 0.f, color::green, "TEXTURE");
+    // }
+    // } else {
+    // get().draw_widget_old(position, size, 0.f, color::black, "TEXTURE");
+    // }
 
     UITheme theme = get().active_theme();
-    Color color = has_kb_focus(widget.id)
+    Color color = is_active_and_hot(widget.id)
                       ? theme.from_usage(theme::Usage::Primary)
                       : theme.from_usage(theme::Usage::Secondary);
 
-    // get().draw_widget_old(position, size, 0.f, color, "TEXTURE");
+    get().draw_widget_old(position, size, 0.f, color, "TEXTURE");
 }
 
 inline bool _button_pressed(const uuid id) {
-    std::cout << "bp";
-    std::cout << " active " << is_active(id);
-    std::cout << " hot " << is_hot(id);
-    std::cout << " mousedown " << get().lmouse_down;
     // check click
     if (has_kb_focus(id)) {
         if (get().pressed("Widget Press")) {
@@ -204,11 +203,9 @@ inline bool _button_pressed(const uuid id) {
         }
     }
     if (get().lmouse_down && is_active_and_hot(id)) {
-        std::cout << " pressed" << std::endl;
         get().kb_focus_id = id;
         return true;
     }
-        std::cout << " not pressed" << std::endl;
     return false;
 }
 
@@ -570,11 +567,12 @@ bool div(const Widget& widget) {
     return true;
 }
 
-bool text(const Widget& widget, const std::string& content) {
+bool text(const Widget& widget, const std::string& content,
+          theme::Usage color_usage) {
     init_widget(widget, __FUNCTION__);
     // No need to render if text is empty
     if (content.empty()) return false;
-    get().schedule_draw_text(widget.me, content);
+    get().schedule_draw_text(widget.me, content, color_usage);
     return true;
 }
 
@@ -599,7 +597,7 @@ bool button_with_label(const Widget& widget, const std::string& content) {
             new Widget({.mode = Percent, .value = 1.f, .strictness = 1.0f},
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f}));
         get().temp_widgets.push_back(internal_text);
-        text(*internal_text, content);
+        text(*internal_text, content, theme::Usage::DarkFont);
     }
     get().pop_parent();
     return pressed;

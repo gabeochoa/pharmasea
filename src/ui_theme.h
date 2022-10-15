@@ -10,6 +10,7 @@ namespace ui {
 namespace theme {
 enum Usage {
     Font,
+    DarkFont,
     Background,
     Primary,
     Secondary,
@@ -19,6 +20,7 @@ enum Usage {
 
 struct UITheme {
     Color font;
+    Color darkfont;
     Color background;
 
     Color primary;
@@ -27,18 +29,26 @@ struct UITheme {
 
     UITheme()
         : font(color::isabelline),
+          darkfont(color::oxford_blue),
           background(color::oxford_blue),
           primary(color::pacific_blue),
           secondary(color::tea_green),
           accent(color::orange_soda) {}
 
-    UITheme(Color f, Color bg, Color p, Color s, Color a)
-        : font(f), background(bg), primary(p), secondary(s), accent(a) {}
+    UITheme(Color f, Color df, Color bg, Color p, Color s, Color a)
+        : font(f),
+          darkfont(df),
+          background(bg),
+          primary(p),
+          secondary(s),
+          accent(a) {}
 
     Color from_usage(theme::Usage cu) {
         switch (cu) {
             case theme::Usage::Font:
                 return font;
+            case theme::Usage::DarkFont:
+                return darkfont;
             case theme::Usage::Background:
                 return background;
             case theme::Usage::Primary:
@@ -53,7 +63,7 @@ struct UITheme {
 
 static const UITheme DEFAULT_THEME = UITheme();
 static const UITheme GRAYSCALE =
-    UITheme(color::white, color::grey, color::black, color::cool_grey,
-            color::off_white);
+    UITheme(color::white, color::grey, color::grey, color::black,
+            color::cool_grey, color::off_white);
 
 }  // namespace ui

@@ -96,7 +96,9 @@ A game by:
             ui_context.get()->push_parent(&content);
             {
                 text(about_text, about_info);
-                button_with_label(back_button, "Back");
+                if(button_with_label(back_button, "Back")){
+                    Menu::get().state = Menu::State::Root;
+                }
             }
             ui_context.get()->pop_parent();
         }
