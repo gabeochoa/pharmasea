@@ -8,8 +8,8 @@
 // YY / MM / DD (Monday of week) 
 const std::string VERSION = "alpha_0.22.10.10";
 
-constexpr int WIN_H = 1080 / 2;
-constexpr int WIN_W = 1920 / 2;
+constexpr int WIN_H = 720;
+constexpr int WIN_W = 1280;
 
 constexpr int MAP_H = 33;
 // constexpr int MAP_W = 12;

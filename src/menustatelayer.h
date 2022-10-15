@@ -23,7 +23,7 @@ struct MenuStateLayer : public Layer {
                 App::get().font, 
                 Menu::get().tostring(), 
                 {5, 20},
-                10, 0,
+                20, 0,
                 LIGHTGRAY);
     }
 };

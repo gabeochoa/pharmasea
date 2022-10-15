@@ -124,7 +124,7 @@ A game by:
             return;
         }
 
-        ClearBackground(Color{30, 30, 30, 255});
+        ClearBackground(ui_context->active_theme().background);
         draw_ui();
     }
 };

@@ -22,7 +22,7 @@ struct VersionLayer: public Layer {
                 App::get().font, 
                 VERSION.c_str(),
                 {5, 30},
-                10, 0,
+                20, 0,
                 LIGHTGRAY);
     }
 };
