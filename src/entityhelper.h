@@ -23,7 +23,7 @@ struct EntityHelper {
         }
         auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
         // Note: addShape merges shapes next to each other
-        //      this reduces the amount of loops overall 
+        //      this reduces the amount of loops overall
 
         // nav->addShape(getPolyForEntity(e));
         nav->addEntity(e->id, getPolyForEntity(e));
@@ -110,6 +110,32 @@ struct EntityHelper {
     }
 
     template<typename T>
+    static std::shared_ptr<T> getMatchingEntityInFront(
+        vec2 pos, int range, Entity::FrontFaceDirection direction,
+        std::function<bool(std::shared_ptr<T>)> filter) {
+        std::vector<vec2> steps;
+        for (int i = 0; i < range; i++) {
+            steps.push_back(
+                vec::snap(Entity::tile_infront_given_pos(pos, i, direction)));
+        }
+
+        for (auto& e : entities_DO_NOT_USE) {
+            auto s = dynamic_pointer_cast<T>(e);
+            if (!s) continue;
+            if (!filter(s)) continue;
+            float d = vec::distance(pos, vec::to2(s->position));
+            if (d > range) continue;
+            for (auto step : steps) {
+                d = vec::distance(step, vec::snap(vec::to2(s->position)));
+                std::cout << "sta" << step << " " << d << std::endl;
+                if (abs(d) <= EPSILON) return s;
+            }
+            return s;
+        }
+        return {};
+    }
+
+    template<typename T>
     static constexpr std::shared_ptr<T> getClosestMatchingEntity(
         vec2 pos, float range, std::function<bool(std::shared_ptr<T>)> filter) {
         float best_distance = range;
@@ -143,9 +169,9 @@ struct EntityHelper {
     }
 
     // TODO i think this is slower because we are doing "outside mesh" as
-    // outside we should probably have jsut some tiles for inside the map ('.'
-    // on map for example) and use those to mark where people can walk and where
-    // they cant
+    // outside we should probably have just make some tiles for inside the map
+    // ('.' on map for example) and use those to mark where people can walk and
+    // where they cant
     static bool isWalkable_impl(const vec2& pos) {
         auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
         if (!nav) {

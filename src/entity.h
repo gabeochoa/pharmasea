@@ -127,9 +127,9 @@ struct Entity {
         };
     }
 
-    virtual vec2 tile_infront(int distance) {
-        vec2 tile = vec::to2(this->snap_position());
-        switch (this->face_direction) {
+    static vec2 tile_infront_given_pos(vec2 tile, int distance,
+                                       FrontFaceDirection direction) {
+        switch (direction) {
             case FORWARD:
                 tile.y += distance * TILESIZE;
                 break;
@@ -146,8 +146,13 @@ struct Entity {
         return tile;
     }
 
+    virtual vec2 tile_infront(int distance) {
+        vec2 tile = vec::to2(this->snap_position());
+        return tile_infront_given_pos(tile, distance, this->face_direction);
+    }
+
     virtual void turn_to_face_entity(Entity* target) {
-        if(!target) return;
+        if (!target) return;
 
         // dot product visualizer https://www.falstad.com/dotproduct/
 
@@ -178,6 +183,7 @@ struct Entity {
     virtual bool is_collidable() { return true; }
     virtual bool is_snappable() { return false; }
     virtual bool add_to_navmesh() { return false; }
+    virtual bool can_place_item_into() { return false; }
 };
 
 typedef Entity::FrontFaceDirection EntityDir;

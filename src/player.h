@@ -8,11 +8,8 @@
 //
 #include "furniture.h"
 
-
-
-
 struct Player : public Person {
-    float player_reach = 4.f;
+    float player_reach = 2.25f;
     std::shared_ptr<Furniture> held_furniture;
 
     Player(vec3 p, Color face_color_in, Color base_color_in)
@@ -49,9 +46,8 @@ struct Player : public Person {
         grab_or_drop();
         rotate_furniture();
 
-
         // TODO if cannot be placed in this spot
-        // make it obvious to the user 
+        // make it obvious to the user
         if (held_furniture != nullptr) {
             auto new_pos = this->position;
             if (this->face_direction == FrontFaceDirection::FORWARD) {
@@ -68,12 +64,16 @@ struct Player : public Person {
         }
     }
 
-    virtual void rotate_furniture(){
-        if(GLOBALS.get_or_default("in_planning", false)){
-            std::shared_ptr<Furniture> match= EntityHelper::getClosestMatchingEntity<Furniture>(vec::to2(this->position), TILESIZE * player_reach, [](auto && ){return true;});
-            if(match && match->can_rotate()){
-                float rotate = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game, "Player Rotate Furniture");
-                if(rotate > 0.5f) match->rotate_facing_clockwise();
+    virtual void rotate_furniture() {
+        if (GLOBALS.get_or_default("in_planning", false)) {
+            std::shared_ptr<Furniture> match =
+                EntityHelper::getClosestMatchingEntity<Furniture>(
+                    vec::to2(this->position), TILESIZE * player_reach,
+                    [](auto&&) { return true; });
+            if (match && match->can_rotate()) {
+                float rotate = KeyMap::is_event_once_DO_NOT_USE(
+                    Menu::State::Game, "Player Rotate Furniture");
+                if (rotate > 0.5f) match->rotate_facing_clockwise();
             }
         }
     }
@@ -81,49 +81,59 @@ struct Player : public Person {
     virtual void grab_or_drop() {
         bool pickup = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game,
                                                        "Player Pickup");
-        if(!pickup){
+        if (!pickup) {
             return;
         }
 
-        // Do we already have something in our hands? 
-        if(this->held_item){
-            const auto _drop_item = [&](){
-                this->held_item = nullptr;
+        // Do we already have something in our hands?
+        if (this->held_item) {
+            const auto _drop_item = [&]() {
+                std::shared_ptr<Furniture> closest_furniture =
+                    EntityHelper::getMatchingEntityInFront<Furniture>(
+                        vec::to2(this->position), TILESIZE * player_reach,
+                        this->face_direction, [](std::shared_ptr<Furniture> f) {
+                            return f->can_place_item_into();
+                        });
+                if (closest_furniture) {
+                    this->held_item->update_position(
+                        vec::snap(closest_furniture->position));
+                    this->held_item = nullptr;
+                }
             };
             _drop_item();
             return;
         }
 
         // TODO need to auto drop when "in_planning" changes
-        if(this->held_furniture){
-            const auto _drop_furniture = [&](){
+        if (this->held_furniture) {
+            const auto _drop_furniture = [&]() {
                 EntityHelper::addEntity(this->held_furniture);
-                this->held_furniture= nullptr;
+                this->held_furniture = nullptr;
             };
             _drop_furniture();
             return;
         }
 
-        // TODO support finding things in the direction the player is facing, instead of in a box 
-        // around him 
+        // TODO support finding things in the direction the player is facing,
+        // instead of in a box around him
 
-        if(GLOBALS.get_or_default("in_planning", false)){
-            std::shared_ptr<Furniture> closest_furniture = EntityHelper::getClosestMatchingEntity<Furniture>(
-                    vec::to2(this->position), 
-                    TILESIZE * player_reach, 
-                    [](std::shared_ptr<Furniture> f){ return f->can_be_picked_up();}
-            );
+        if (GLOBALS.get_or_default("in_planning", false)) {
+            std::shared_ptr<Furniture> closest_furniture =
+                EntityHelper::getMatchingEntityInFront<Furniture>(
+                    vec::to2(this->position), TILESIZE * player_reach,
+                    this->face_direction, [](std::shared_ptr<Furniture> f) {
+                        return f->can_be_picked_up();
+                    });
             this->held_furniture = closest_furniture;
             auto nv = GLOBALS.get_ptr<NavMesh>("navmesh");
             nv->removeEntity(this->held_furniture->id);
             return;
-        }
-        else{
-            std::shared_ptr<Item> closest_item = EntityHelper::getClosestMatchingItem(
-                    vec::to2(this->position), TILESIZE * player_reach);
+        } else {
+            std::shared_ptr<Item> closest_item =
+                EntityHelper::getClosestMatchingItem(vec::to2(this->position),
+                                                     TILESIZE * player_reach);
             this->held_item = closest_item;
             return;
         }
     }
-
 };
