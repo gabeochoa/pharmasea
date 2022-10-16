@@ -18,6 +18,10 @@ struct Entity {
         RIGHT = 90,   // 90 degrees
         BACK = 180,   // 180 degrees
         LEFT = 270,   // 270 degrees
+        NE = 45,  // 45 degrees
+        SE = 135,   // 135 degrees
+        SW = 225,   // 225 degrees
+        NW = 315,   // 315 degrees
     };
 
     int id;

@@ -1,5 +1,5 @@
 
-#pragma once 
+#pragma once
 
 #include "external_include.h"
 //
@@ -9,9 +9,10 @@
 #include "keymap.h"
 
 struct Person : public Entity {
-
-    Person(vec3 p, Color face_color_in, Color base_color_in) : Entity(p, face_color_in, base_color_in) {}
-    Person(vec2 p, Color face_color_in, Color base_color_in) : Entity(p, face_color_in, base_color_in) {}
+    Person(vec3 p, Color face_color_in, Color base_color_in)
+        : Entity(p, face_color_in, base_color_in) {}
+    Person(vec2 p, Color face_color_in, Color base_color_in)
+        : Entity(p, face_color_in, base_color_in) {}
     Person(vec3 p, Color c) : Entity(p, c) {}
     Person(vec2 p, Color c) : Entity(p, c) {}
 
@@ -31,20 +32,43 @@ struct Person : public Entity {
         auto new_pos_x = this->update_xaxis_position(dt);
         auto new_pos_z = this->update_zaxis_position(dt);
 
+        int facedir_x = -1;
+        int facedir_z = -1;
+
         vec3 delta_distance_x = new_pos_x - this->raw_position;
         if (delta_distance_x.x > 0) {
-            this->face_direction = FrontFaceDirection::RIGHT;
-        }
-        else if (delta_distance_x.x < 0) {
-            this->face_direction = FrontFaceDirection::LEFT;
+            facedir_x = FrontFaceDirection::RIGHT;
+        } else if (delta_distance_x.x < 0) {
+            facedir_x = FrontFaceDirection::LEFT;
         }
 
         vec3 delta_distance_z = new_pos_z - this->raw_position;
         if (delta_distance_z.z > 0) {
-            this->face_direction = FrontFaceDirection::FORWARD;
+            facedir_z = FrontFaceDirection::FORWARD;
+        } else if (delta_distance_z.z < 0) {
+            facedir_z = FrontFaceDirection::BACK;
         }
-        else if (delta_distance_z.z < 0) {
-            this->face_direction = FrontFaceDirection::BACK;
+
+        if (facedir_x == -1 && facedir_z == -1) {
+            // do nothing
+        } else if (facedir_x == -1) {
+            this->face_direction = static_cast<FrontFaceDirection>(facedir_z);
+        } else if (facedir_x == FrontFaceDirection::RIGHT) {
+            this->face_direction = FrontFaceDirection::RIGHT;
+            if (facedir_z == FrontFaceDirection::BACK) {
+                this->face_direction = FrontFaceDirection::SE;
+            }
+            if (facedir_z == FrontFaceDirection::FORWARD) {
+                this->face_direction = FrontFaceDirection::NE;
+            }
+        } else if (facedir_x == FrontFaceDirection::LEFT) {
+            this->face_direction = FrontFaceDirection::LEFT;
+            if (facedir_z == FrontFaceDirection::BACK) {
+                this->face_direction = FrontFaceDirection::SW;
+            }
+            if (facedir_z == FrontFaceDirection::FORWARD) {
+                this->face_direction = FrontFaceDirection::NW;
+            }
         }
 
         auto new_bounds_x =
@@ -86,4 +110,3 @@ struct Person : public Entity {
         Entity::update(dt);
     }
 };
-

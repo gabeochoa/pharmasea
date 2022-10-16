@@ -25,6 +25,8 @@ Core engine TODOs:
 15. Add system for exporting resources to code for easier binary packaging (see branch packager)
     https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html
 16. BUG: if customer runs into someone you both get stuck
+17. highlight furniture under selection 
+18. ~~add diagonal facing direction~~
 
 Gameplay Ideas
 - Pharmacy
