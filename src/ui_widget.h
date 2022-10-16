@@ -11,7 +11,7 @@
 namespace ui {
 
 enum SizeMode { Null, Pixels, Text, Percent, Children };
-enum GrowFlags { None = (1 << 0), Row = (1 << 1), Column = (1 << 2) };
+enum GrowFlags { None = (1 << 0), Row = (1 << 1), Column = (1 << 2)};
 
 struct SizeExpectation {
     SizeMode mode = Pixels;
@@ -32,7 +32,7 @@ std::ostream& operator<<(std::ostream& os, const SizeExpectation& exp) {
             os << "Size of given text";
             break;
         case Percent:
-            os << exp.value << " percent";
+            os << exp.value * 100.f << " percent";
             break;
         case Children:
             os << "Width of all children";
@@ -42,8 +42,8 @@ std::ostream& operator<<(std::ostream& os, const SizeExpectation& exp) {
             break;
     }
     os << " @ ";
-    os << exp.strictness;
-    os << ")";
+    os << round(exp.strictness * 100.f);
+    os << "%)";
     return os;
 }
 
@@ -95,7 +95,7 @@ struct Widget {
         this->size_expected[1] = y;
     }
 
-    Widget(SizeExpectation x, SizeExpectation y, GrowFlags flags) {
+    Widget(SizeExpectation x, SizeExpectation y, int flags) {
         this->me = this;
         this->id = default_id();
         this->size_expected[0] = x;
@@ -132,18 +132,22 @@ struct Widget {
         std::string tabs(t, '\t');
 
         const auto a = (this->parent ? this->parent->rect : Rectangle());
-        ss << tabs << "Widget(" << this->element << "\n";
-        ss << tabs << "x(" << this->size_expected[0] << " ; y(" << this->size_expected[1] << "\n";
-        ss << tabs << "rel_pos(" << this->computed_relative_pos[0] << ", " << this->computed_relative_pos[1]<< ")\n";
-        ss << tabs << "computed size(" << this->computed_size[0] << ", " << this->computed_size[1] << ")\n";
+        ss << tabs << "Widget(" << this->element << " ";
+        ss << "x(" << this->size_expected[0] << " ; y("
+           << this->size_expected[1] << "\n";
+        ss << tabs << "rel_pos(" << this->computed_relative_pos[0] << ", "
+           << this->computed_relative_pos[1] << ") ";
+        ss << "computed size(" << this->computed_size[0] << ", "
+           << this->computed_size[1] << ")\n";
         ss << tabs << "rect(" << this->rect << ")\n";
         ss << tabs << "Dir " << this->growflags << "\n";
-        ss << tabs << "Children:" << this->children.size() << " Parent:" << &(this->parent) << " " << a << "\n";
+        ss << tabs << "Children:" << this->children.size()
+           << " Parent:" << &(this->parent) << " " << a << "\n";
         return ss.str();
     }
 
     void print_tree(int t = 0) const {
-        std::cout << me->print(t) << "\n" ;
+        std::cout << me->print(t) << "\n";
         for (const Widget* child : children) {
             if (child) child->print_tree(t + 2);
         }

@@ -40,11 +40,10 @@ struct FZInfo {
 
 namespace std {
 
-template <class T>
-inline void hash_combine(std::size_t & s, const T & v)
-{
-  std::hash<T> h;
-  s^= h(v) + 0x9e3779b9 + (s<< 6) + (s>> 2);
+template<class T>
+inline void hash_combine(std::size_t& s, const T& v) {
+    std::hash<T> h;
+    s ^= h(v) + 0x9e3779b9 + (s << 6) + (s >> 2);
 }
 
 template<>
@@ -331,11 +330,19 @@ struct UIContext {
         int last_size = 1;
         vec2 size;
 
-        // how big can we make the size in powers of 2,
-        // before growing outside our bounds
+        // NOTE: if you are looking at a way to speed this up switch to using
+        // powers of two and theres no need to ceil or cast to int. also
+        // shifting ( font_size <<= 1) is a clean way to do this
+        //
+
+        // lets see how big can we make the size before growing
+        // outside our bounds
         do {
             last_size = font_size;
-            font_size <<= 1;
+            // the smaller the number we multiply by (>1) the better fitting the
+            // text will be
+            font_size = (int) ceil(font_size * 1.25f);
+            // std::cout << "measuring for " << font_size << std::endl;
             size = MeasureTextEx(font, content.c_str(), font_size, spacing);
             // std::cout << "got " << size.x << ", " << size.y << " for "
             // << font_size << " and " << width << ", " << height

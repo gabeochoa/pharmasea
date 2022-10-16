@@ -224,7 +224,7 @@ bool text(const Widget& widget, const std::string& content,
 }
 
 bool button(const Widget& widget, const std::string& content) {
-    const auto _write_lf = [](Widget* widget_ptr){
+    const auto _write_lf = [](Widget* widget_ptr) {
         Widget& widget = *widget_ptr;
         auto lf = UIContext::LastFrame({.rect = widget.rect});
         get().write_last_frame(widget.id, lf);
@@ -276,7 +276,6 @@ bool button(const Widget& widget, const std::string& content) {
         }
         return false;
     };
-
 
     init_widget(widget, __FUNCTION__);
     UIContext::LastFrame lf = get().get_last_frame(widget.id);

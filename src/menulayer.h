@@ -53,10 +53,6 @@ struct MenuLayer : public Layer {
         bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
         vec2 mousepos = GetMousePosition();
 
-        // TODO replace with expectation that these use the text size
-        const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
-        const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
-
         const SizeExpectation padd_x = {
             .mode = Pixels, .value = 120.f, .strictness = 0.9f};
         const SizeExpectation padd_y = {
@@ -64,29 +60,49 @@ struct MenuLayer : public Layer {
 
         ui_context->begin(mouseDown, mousepos);
 
-        ui::Widget root(
-            {.mode = ui::SizeMode::Pixels, .value = WIN_W, .strictness = 1.f},
-            {.mode = ui::SizeMode::Pixels, .value = WIN_H, .strictness = 1.f});
-        root.growflags = ui::GrowFlags::Row;
+        ui::Widget root({.mode = Pixels, .value = WIN_W, .strictness = 1.f},
+                        {.mode = Pixels, .value = WIN_H, .strictness = 1.f},
+                        GrowFlags::Row);
 
         Widget left_padding(
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
             {.mode = Pixels, .value = WIN_H, .strictness = 1.f});
 
-        Widget content({.mode = Children},
-                       {.mode = Percent, .value = 1.f, .strictness = 1.0f});
-        content.growflags = ui::GrowFlags::Column;
+        Widget content({.mode = Children, .strictness = 1.f},
+                       {.mode = Percent, .value = 1.f, .strictness = 1.0f},
+                       Column);
 
-        Widget top_padding(
-            {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-            {.mode = Pixels, .value = 100.f, .strictness = 1.f});
+        Widget top_padding({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                           {.mode = Percent, .value = 1.f, .strictness = 0.f});
 
+        const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
+        const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
 
         Widget play_button(MK_UUID(id, ROOT_ID), button_x, button_y);
         Widget button_padding(padd_x, padd_y);
         Widget about_button(MK_UUID(id, ROOT_ID), button_x, button_y);
         Widget settings_button(MK_UUID(id, ROOT_ID), button_x, button_y);
         Widget exit_button(MK_UUID(id, ROOT_ID), button_x, button_y);
+
+        Widget bottom_padding(
+            {.mode = Pixels, .value = 100.f, .strictness = 1.f},
+            {.mode = Percent, .value = 1.f, .strictness = 0.f});
+
+        Widget title_left_padding(
+            {.mode = Pixels, .value = 200.f, .strictness = 1.f},
+            {.mode = Pixels, .value = WIN_H, .strictness = 1.f});
+
+        ui::Widget title_card(
+            {.mode = Percent, .value = 1.f, .strictness = 0.f},
+            {.mode = Pixels, .value = WIN_H, .strictness = 1.f},
+            GrowFlags::Column);
+
+        Widget title_padding(
+            {.mode = Percent, .value = 1.f, .strictness = 0.f},
+            {.mode = Pixels, .value = 100.f, .strictness = 1.f});
+
+        Widget title_text({.mode = Percent, .value = 1.f, .strictness = 0.5f},
+                          {.mode = Pixels, .value = 100.f, .strictness = 1.f});
 
         ui_context->push_parent(&root);
         {
@@ -111,6 +127,17 @@ struct MenuLayer : public Layer {
                 if (button(exit_button, "Exit")) {
                     exit(0);
                 }
+                padding(bottom_padding);
+            }
+            ui_context->pop_parent();
+
+            padding(title_left_padding);
+
+            div(title_card);
+            ui_context->push_parent(&title_card);
+            {
+                padding(title_padding);
+                text(title_text, "Pharmasea");
             }
             ui_context->pop_parent();
         }

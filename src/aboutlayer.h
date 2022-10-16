@@ -78,7 +78,7 @@ struct AboutLayer : public Layer {
             {.mode = Pixels, .value = 50.f, .strictness = 1.f},
             {.mode = Percent, .value = 0.5f, .strictness = 0.f});
 
-        Widget about_text({.mode = Pixels, .value = 120.f},
+        Widget about_text({.mode = Pixels, .value = 200.f},
                           {.mode = Pixels, .value = 400.f});
 
         Widget back_button(MK_UUID(id, ROOT_ID),
@@ -87,13 +87,10 @@ struct AboutLayer : public Layer {
 
         // NOTE: this is not aligned on purpose
         std::string about_info = R"(
-PharmaSea
-
 A game by: 
     Gabe 
     Brett
-    Alice
-        )";
+    Alice)";
 
         ui_context.get()->push_parent(&root);
         {
