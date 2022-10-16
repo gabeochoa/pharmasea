@@ -3,8 +3,10 @@
 #include "external_include.h"
 //
 #include "globals.h"
+#include "modellibrary.h"
 #include "random.h"
 #include "raylib.h"
+#include "ui_color.h"
 #include "vec_util.h"
 
 static std::atomic_int ITEM_ID_GEN = 0;
@@ -31,13 +33,17 @@ struct Item {
     virtual bool is_collidable() { return unpacked; }
 
     virtual void render() const {
-        DrawCube(position, this->size().x, this->size().y, this->size().z,
-                 this->color);
+        std::optional<Model> m = this->model();
+        if (m.has_value()) {
+            DrawModel(m.value(), this->position, this->size().x * 0.25f,
+                      ui::color::tan_brown);
+        } else {
+            DrawCube(position, this->size().x, this->size().y, this->size().z,
+                     this->color);
+        }
     }
 
-    virtual void update_position(const vec3& p) {
-        this->position = p;
-    }
+    virtual void update_position(const vec3& p) { this->position = p; }
 
     virtual BoundingBox bounds() const {
         return get_bounds(this->position, this->size() / 2.0f);
@@ -54,5 +60,16 @@ struct Item {
     virtual bool collides(BoundingBox b) const {
         return CheckCollisionBoxes(this->bounds(), b);
     }
+
+    virtual std::optional<Model> model() const { return {}; }
 };
 static std::vector<std::shared_ptr<Item>> items_DO_NOT_USE;
+
+struct Bag : public Item {
+    Bag(vec3 p, Color c) : Item(p, c) {} 
+    Bag(vec2 p, Color c) : Item(p, c) {} 
+
+    virtual std::optional<Model> model() const override {
+        return ModelLibrary::get().get("bag");
+    }
+};

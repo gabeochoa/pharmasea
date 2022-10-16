@@ -11,13 +11,16 @@
 #include "layer.h"
 #include "menu.h"
 #include "raylib.h"
+#include "ui_color.h"
 #include "world.h"
 // temporary for face cube test
 #include "texture_library.h"
+#include "modellibrary.h"
 
 struct GameLayer : public Layer {
     World world;
     GameCam cam;
+    Model bag_model;
     // TODO move to pharmacy.h
     bool in_planning_mode = false;
 
@@ -43,6 +46,10 @@ struct GameLayer : public Layer {
         TextureLibrary::get().load(
             Files::get().fetch_resource_path("images", "sleepyico.png").c_str(),
             "bubble");
+
+        ModelLibrary::get().load(
+            Files::get().fetch_resource_path("models", "bag.obj").c_str(),
+            "bag");
     }
 
     virtual void onEvent(Event& event) override {
@@ -129,6 +136,8 @@ struct GameLayer : public Layer {
                     DrawLineStrip2Din3D(kv.hull, PINK);
                 }
             }
+
+            DrawModel(bag_model, vec3{0, 0, 0}, 0.1f, ui::color::tan_brown);
         }
         EndMode3D();
 

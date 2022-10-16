@@ -22,6 +22,9 @@ struct EntityHelper {
             return;
         }
         auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
+        // Note: addShape merges shapes next to each other
+        //      this reduces the amount of loops overall 
+
         // nav->addShape(getPolyForEntity(e));
         nav->addEntity(e->id, getPolyForEntity(e));
     }
@@ -139,6 +142,10 @@ struct EntityHelper {
         return best_so_far;
     }
 
+    // TODO i think this is slower because we are doing "outside mesh" as
+    // outside we should probably have jsut some tiles for inside the map ('.'
+    // on map for example) and use those to mark where people can walk and where
+    // they cant
     static bool isWalkable_impl(const vec2& pos) {
         auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
         if (!nav) {
