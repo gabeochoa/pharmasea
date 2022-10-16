@@ -9,7 +9,7 @@
 #include "furniture.h"
 
 struct Player : public Person {
-    float player_reach = 2.f;
+    float player_reach = 1.25f;
     std::shared_ptr<Furniture> held_furniture;
 
     Player(vec3 p, Color face_color_in, Color base_color_in)
@@ -43,8 +43,19 @@ struct Player : public Person {
         return new_pos_z;
     }
 
+    void highlight_facing_furniture() {
+        auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
+            vec::to2(this->position), player_reach,
+            this->face_direction,
+            [](std::shared_ptr<Furniture> f) { return true; });
+        if (match) {
+            match->is_highlighted = true;
+        }
+    }
+
     virtual void update(float dt) override {
         Person::update(dt);
+        highlight_facing_furniture();
         grab_or_drop();
         rotate_furniture();
 
@@ -70,7 +81,7 @@ struct Player : public Person {
         if (GLOBALS.get_or_default("in_planning", false)) {
             std::shared_ptr<Furniture> match =
                 EntityHelper::getClosestMatchingEntity<Furniture>(
-                    vec::to2(this->position), TILESIZE * player_reach,
+                    vec::to2(this->position), player_reach,
                     [](auto&&) { return true; });
             if (match && match->can_rotate()) {
                 float rotate = KeyMap::is_event_once_DO_NOT_USE(
@@ -92,7 +103,7 @@ struct Player : public Person {
             const auto _drop_item = [&]() {
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
-                        vec::to2(this->position), TILESIZE * player_reach,
+                        vec::to2(this->position), player_reach,
                         this->face_direction, [](std::shared_ptr<Furniture> f) {
                             return f->can_place_item_into();
                         });
@@ -109,6 +120,9 @@ struct Player : public Person {
         // TODO need to auto drop when "in_planning" changes
         if (this->held_furniture) {
             const auto _drop_furniture = [&]() {
+                // TODO need to make sure it doesnt place ontop of another one
+                this->held_furniture->update_position(
+                    vec::snap(this->held_furniture->position));
                 EntityHelper::addEntity(this->held_furniture);
                 this->held_furniture = nullptr;
             };
@@ -122,7 +136,7 @@ struct Player : public Person {
         if (GLOBALS.get_or_default("in_planning", false)) {
             std::shared_ptr<Furniture> closest_furniture =
                 EntityHelper::getMatchingEntityInFront<Furniture>(
-                    vec::to2(this->position), TILESIZE * player_reach,
+                    vec::to2(this->position), player_reach,
                     this->face_direction, [](std::shared_ptr<Furniture> f) {
                         return f->can_be_picked_up();
                     });

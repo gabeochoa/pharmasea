@@ -57,3 +57,4 @@ typedef Vector4 vec4;
 #include <unordered_map>
 #include <array>
 #include <cassert>
+#include <algorithm>

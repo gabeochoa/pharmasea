@@ -18,10 +18,10 @@ struct Entity {
         RIGHT = 90,   // 90 degrees
         BACK = 180,   // 180 degrees
         LEFT = 270,   // 270 degrees
-        NE = 45,  // 45 degrees
-        SE = 135,   // 135 degrees
-        SW = 225,   // 225 degrees
-        NW = 315,   // 315 degrees
+        NE = 45,      // 45 degrees
+        SE = 135,     // 135 degrees
+        SW = 225,     // 225 degrees
+        NW = 315,     // 315 degrees
     };
 
     int id;
@@ -31,6 +31,7 @@ struct Entity {
     Color face_color;
     Color base_color;
     bool cleanup = false;
+    bool is_highlighted = false;
     FrontFaceDirection face_direction = FrontFaceDirection::FORWARD;
     std::shared_ptr<Item> held_item = nullptr;
 
@@ -85,11 +86,19 @@ struct Entity {
         // DrawCube(this->position, this->size().x, this->size().y,
         // this->size().z,
         //          this->color);
-        DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                       this->size().z, static_cast<float>(face_direction),
-                       this->face_color, this->base_color);
+
+        if (this->is_highlighted) {
+            Color f = ui::color::getHighlighted(this->face_color);
+            Color b = ui::color::getHighlighted(this->base_color);
+            DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
+                           this->size().z, static_cast<float>(face_direction),
+                           f, b);
+        } else {
+            DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
+                           this->size().z, static_cast<float>(face_direction),
+                           this->face_color, this->base_color);
+        }
         DrawBoundingBox(this->bounds(), MAROON);
-        // DrawBoundingBox(this->raw_bounds(), PINK);
     }
 
     vec3 snap_position() const { return vec::snap(this->raw_position); }
@@ -100,6 +109,7 @@ struct Entity {
     }
 
     virtual void update(float) {
+        is_highlighted = false;
         if (this->is_snappable()) {
             this->position = this->snap_position();
         } else {
@@ -144,6 +154,23 @@ struct Entity {
                 tile.y -= distance * TILESIZE;
                 break;
             case LEFT:
+                tile.x += distance * TILESIZE;
+                break;
+            //
+            case NW:
+                tile.y += distance * TILESIZE;
+                tile.x += distance * TILESIZE;
+                break;
+            case NE:
+                tile.y += distance * TILESIZE;
+                tile.x -= distance * TILESIZE;
+                break;
+            case SW:
+                tile.y -= distance * TILESIZE;
+                tile.x -= distance * TILESIZE;
+                break;
+            case SE:
+                tile.y -= distance * TILESIZE;
                 tile.x += distance * TILESIZE;
                 break;
         }

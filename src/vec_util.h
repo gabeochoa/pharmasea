@@ -7,6 +7,10 @@
 #define EPSILON 0.000001f
 #endif
 
+inline float comp_max(const vec2& a){
+    return fmax(a.x, a.y);
+}
+
 inline bool operator<(const vec2& l, const vec2& r) {
     return (l.x < r.x) || ((l.x == r.x) && (l.y < r.y));
 }
