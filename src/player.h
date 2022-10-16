@@ -9,7 +9,7 @@
 #include "furniture.h"
 
 struct Player : public Person {
-    float player_reach = 2.25f;
+    float player_reach = 2.f;
     std::shared_ptr<Furniture> held_furniture;
 
     Player(vec3 p, Color face_color_in, Color base_color_in)
@@ -21,8 +21,10 @@ struct Player : public Person {
         : Person({location.x, 0, location.y}, {0, 255, 0, 255},
                  {255, 0, 0, 255}) {}
 
+    virtual float base_speed() override { return 7.5f; }
+
     virtual vec3 update_xaxis_position(float dt) override {
-        float speed = 10.0f * dt;
+        float speed = this->base_speed() * dt;
         auto new_pos_x = this->raw_position;
         float left = KeyMap::is_event(Menu::State::Game, "Player Left");
         float right = KeyMap::is_event(Menu::State::Game, "Player Right");
@@ -32,7 +34,7 @@ struct Player : public Person {
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
-        float speed = 10.0f * dt;
+        float speed = this->base_speed() * dt;
         auto new_pos_z = this->raw_position;
         float up = KeyMap::is_event(Menu::State::Game, "Player Forward");
         float down = KeyMap::is_event(Menu::State::Game, "Player Back");

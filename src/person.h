@@ -18,6 +18,8 @@ struct Person : public Entity {
     virtual vec3 update_xaxis_position(float dt) = 0;
     virtual vec3 update_zaxis_position(float dt) = 0;
 
+    virtual float base_speed() { return 10.f; }
+
     virtual vec3 size() const override {
         return (vec3){TILESIZE * 0.8f, TILESIZE * 0.8f, TILESIZE * 0.8f};
     }

@@ -22,7 +22,7 @@ struct AIPerson : public Person {
     AIPerson(vec3 p, Color c) : Person(p, c) {}
     AIPerson(vec2 p, Color c) : Person(p, c) {}
 
-    virtual float base_speed() { return 10.f; }
+    virtual float base_speed() override { return 10.f; }
 
     virtual void render() const override {
         Person::render();

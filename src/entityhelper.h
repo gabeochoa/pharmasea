@@ -127,7 +127,6 @@ struct EntityHelper {
             if (d > range) continue;
             for (auto step : steps) {
                 d = vec::distance(step, vec::snap(vec::to2(s->position)));
-                std::cout << "sta" << step << " " << d << std::endl;
                 if (abs(d) <= EPSILON) return s;
             }
             return s;
