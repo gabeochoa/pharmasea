@@ -43,6 +43,11 @@ struct MenuLayer : public Layer {
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
+        if (Menu::get().state != Menu::State::Root) return false;
+        if (KeyMap::get_button(Menu::State::UI, "Pause") == event.button) {
+            Menu::get().state = Menu::State::Game;
+            return true;
+        }
         return ui_context.get()->process_gamepad_button_event(event);
     }
 

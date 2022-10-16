@@ -166,23 +166,32 @@ struct KeyMap {
     }
 
     void load_ui_keys() {
-        LayerMapping& game_map = this->get_or_create_layer_map(Menu::State::UI);
-        game_map["Widget Next"] = {
+        LayerMapping& ui_map = this->get_or_create_layer_map(Menu::State::UI);
+        ui_map["Widget Next"] = {
             KEY_TAB,
             GAMEPAD_BUTTON_LEFT_FACE_DOWN,
         };
-        game_map["Widget Back"] = {
+        ui_map["Widget Back"] = {
             GAMEPAD_BUTTON_LEFT_FACE_UP,
         };
-        game_map["Widget Mod"] = {KEY_LEFT_SHIFT};
+        ui_map["Widget Mod"] = {KEY_LEFT_SHIFT};
 
-        game_map["Widget Press"] = {KEY_ENTER, GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
+        ui_map["Widget Press"] = {KEY_ENTER, GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
 
-        game_map["Value Up"] = {KEY_UP};
-        game_map["Value Down"] = {KEY_DOWN};
+        ui_map["Value Up"] = {KEY_UP};
+        ui_map["Value Down"] = {KEY_DOWN};
 
-        game_map["Value Left"] = {KEY_LEFT};
-        game_map["Value Right"] = {KEY_RIGHT};
+        ui_map["Value Left"] = {KEY_LEFT};
+        ui_map["Value Right"] = {KEY_RIGHT};
+
+        ui_map["Pause"] = {
+            GAMEPAD_BUTTON_MIDDLE_RIGHT
+        };
+
+        LayerMapping& root_map = this->get_or_create_layer_map(Menu::State::Root);
+        for (auto kv: ui_map){
+            root_map[kv.first] = kv.second;
+        }
     }
 
     void load_default_keys() {

@@ -53,6 +53,7 @@ struct GameLayer : public Layer {
     }
 
     virtual void onEvent(Event& event) override {
+        if (Menu::get().state != Menu::State::Game) return;
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(
             std::bind(&GameLayer::onKeyPressed, this, std::placeholders::_1));
@@ -137,7 +138,6 @@ struct GameLayer : public Layer {
                 }
             }
 
-            DrawModel(bag_model, vec3{0, 0, 0}, 0.1f, ui::color::tan_brown);
         }
         EndMode3D();
 
