@@ -7,3 +7,6 @@ INCLUDES = -Ivendor/
 
 all: 
 	clang++ $(FLAGS) $(NOFLAGS) src/game.cpp `pkg-config --libs --cflags raylib` $(INCLUDES) -o pharmasea >> log && ./pharmasea >> log
+
+count: 
+	git ls-files | grep "src" | grep -v "vendor"| grep -v "resources"   | xargs wc -l | sort -rn
