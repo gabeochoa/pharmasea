@@ -276,8 +276,8 @@ void test_autolayout_wrap_column() {
     M_TEST_EQ(*root.children.begin(), &column1,
               "Parent of column1 should be root");
     M_TEST_EQ(*root.children.rbegin(), &column3,
-              "Last column1 of root should be column3");
-    M_TEST_EQ(root.children.size(), 4, "root should only have three children");
+              "Last child of root should be column3");
+    M_TEST_EQ(root.children.size(), 4, "root should only have 4 children");
 
     M_TEST_EQ(root.computed_size[0], 100, "Root should be 100 px wide");
     M_TEST_EQ(root.computed_size[1], 50, "Root should be 50 px tall");
@@ -315,6 +315,271 @@ void test_autolayout_wrap_column() {
     M_TEST_EQ(column3.computed_relative_pos[1], 0, "column3 should be at 0 y");
 }
 
+void test_widget_fill_space_after_column_small() {
+    using namespace ui;
+
+    Widget root({.mode = Pixels, .value = 1000, .strictness = 1.f},
+                {.mode = Pixels, .value = 1000, .strictness = 1.f},
+                GrowFlags::Row);
+
+    Widget left({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                {.mode = Pixels, .value = 100.f, .strictness = 1.f});
+
+    Widget middle({.mode = Pixels, .value = 200.f, .strictness = 1.f},
+                  {.mode = Pixels, .value = 100.f, .strictness = 1.f});
+
+    Widget right({.mode = Percent, .value = 1.f, .strictness = 0.f},
+                 {.mode = Pixels, .value = 1000, .strictness = 1.f});
+
+    root.add_child(&left);
+    root.add_child(&middle);
+    root.add_child(&right);
+
+    autolayout::process_widget(&root);
+
+    M_TEST_EQ(*root.children.begin(), &left,
+              "Parent of left_padding should be root");
+    M_TEST_EQ(*root.children.rbegin(), &right,
+              "Last child of root should be title_card");
+    M_TEST_EQ(root.children.size(), 3, "root should only have three children");
+
+    M_TEST_EQ(left.computed_size[0], 100.f, "left should be 100");
+    M_TEST_EQ(middle.computed_size[0], 200.f, "");
+    M_TEST_EQ(right.computed_size[0], 700.f, "");
+
+    M_TEST_EQ(left.computed_size[1], 100.f, "size bad");
+    M_TEST_EQ(middle.computed_size[1], 100.f, "");
+    M_TEST_EQ(right.computed_size[1], 1000.f, "");
+}
+
+void test_widget_fill_space_after_column_with_child() {
+    using namespace ui;
+
+    Widget root({.mode = Pixels, .value = 1000, .strictness = 1.f},
+                {.mode = Pixels, .value = 1000, .strictness = 1.f},
+                GrowFlags::Row);
+
+    Widget left({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                {.mode = Pixels, .value = 100.f, .strictness = 1.f});
+
+    Widget middle({.mode = Pixels, .value = 200.f, .strictness = 1.f},
+                  {.mode = Pixels, .value = 100.f, .strictness = 1.f});
+
+    Widget right({.mode = Percent, .value = 1.f, .strictness = 0.f},
+                 {.mode = Percent, .value = 1.f, .strictness = 1.f},
+                 (GrowFlags::Column | GrowFlags::Row));
+
+    Widget right_child({.mode = Percent, .value = 1.f, .strictness = 0.f},
+                       {.mode = Percent, .value = 1.f, .strictness = 1.f});
+
+    root.add_child(&left);
+    root.add_child(&middle);
+    root.add_child(&right);
+
+    right.add_child(&right_child);
+
+    autolayout::process_widget(&root);
+
+    M_TEST_EQ(*root.children.begin(), &left,
+              "Parent of left_padding should be root");
+    M_TEST_EQ(*root.children.rbegin(), &right,
+              "Last child of root should be title_card");
+    M_TEST_EQ(root.children.size(), 3, "root should only have three children");
+
+    M_TEST_EQ(left.computed_size[0], 100.f, "left should be 100");
+    M_TEST_EQ(middle.computed_size[0], 200.f, "");
+    M_TEST_EQ(right.computed_size[0], 700.f, "");
+    M_TEST_EQ(right_child.computed_size[0], 700.f, "");
+
+    M_TEST_EQ(left.computed_size[1], 100.f, "size bad");
+    M_TEST_EQ(middle.computed_size[1], 100.f, "");
+    M_TEST_EQ(right.computed_size[1], 1000.f, "");
+
+    M_TEST_EQ(right_child.computed_size[1], 1000.f, "");
+}
+
+void test_widget_fill_space_after_column_with_children() {
+    using namespace ui;
+
+    Widget root({.mode = Pixels, .value = 1000, .strictness = 1.f},
+                {.mode = Pixels, .value = 1000, .strictness = 1.f},
+                GrowFlags::Row);
+
+    Widget child({.mode = Percent, .value = 1.f, .strictness = 0.f},
+                 {.mode = Percent, .value = 1.f, .strictness = 1.f},
+                 (GrowFlags::Column));
+
+    Widget child_top({.mode = Percent, .value = 1.f, .strictness = 0.f},
+                     {.mode = Percent, .value = 0.2f, .strictness = 1.f});
+
+    Widget child_middle({.mode = Percent, .value = 1.f, .strictness = 0.f},
+                        {.mode = Percent, .value = 0.2f, .strictness = 1.f});
+
+    Widget child_bottom({.mode = Percent, .value = 1.f, .strictness = 0.f},
+                        {.mode = Percent, .value = 0.2f, .strictness = 1.f});
+
+    root.add_child(&child);
+
+    child.add_child(&child_top);
+    child.add_child(&child_middle);
+    child.add_child(&child_bottom);
+
+    autolayout::process_widget(&root);
+
+    // root.print_tree();
+
+    M_TEST_EQ(*root.children.begin(), &child,
+              "Parent of left_padding should be root");
+    M_TEST_EQ(*root.children.rbegin(), &child,
+              "Last child of root should be child");
+    M_TEST_EQ(root.children.size(), 1, "root should only have three children");
+
+    M_TEST_EQ(child.computed_size[0], 1000.f, "");
+
+    M_TEST_EQ(child_top.computed_size[0], 1000.f, "");
+    M_TEST_EQ(child_middle.computed_size[0], 1000.f, "");
+    M_TEST_EQ(child_bottom.computed_size[0], 1000.f, "");
+
+    M_TEST_EQ(child.computed_size[1], 1000.f, "");
+
+    M_TEST_EQ(child_top.computed_size[1], 200.f, "");
+    M_TEST_EQ(child_middle.computed_size[1], 200.f, "");
+    M_TEST_EQ(child_bottom.computed_size[1], 200.f, "");
+}
+
+void test_widget_fill_space_after_column() {
+    using namespace ui;
+
+    Widget root({.mode = Pixels, .value = 1000.f, .strictness = 1.f},
+                {.mode = Pixels, .value = 1000.f, .strictness = 1.f},
+                GrowFlags::Row);
+
+    Widget left_padding({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                        {.mode = Pixels, .value = 1000.f, .strictness = 1.f});
+
+    Widget content({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                   {.mode = Percent, .value = 1.f, .strictness = 1.0f}, Column);
+
+    Widget title_card({.mode = Percent, .value = 0.75f, .strictness = 0.f},
+                      {.mode = Pixels, .value = 1000.f, .strictness = 1.f},
+                      (GrowFlags::Column | GrowFlags::Row));
+
+    Widget title_right_padding(
+        {.mode = Percent, .value = 1.f, .strictness = 0.f},
+        {.mode = Percent, .value = 1.f, .strictness = 1.f});
+
+    root.add_child(&left_padding);
+    root.add_child(&content);
+    root.add_child(&title_card);
+
+    title_card.add_child(&title_right_padding);
+
+    autolayout::process_widget(&root);
+
+    M_TEST_EQ(*root.children.begin(), &left_padding,
+              "Parent of left_padding should be root");
+    M_TEST_EQ(*root.children.rbegin(), &title_card,
+              "Last child of root should be title_card");
+    M_TEST_EQ(root.children.size(), 3, "root should only have three children");
+
+    M_TEST_EQ(root.computed_size[0], 1000.f, "Value for xaxis should match");
+    M_TEST_EQ(left_padding.computed_size[0], 100.f,
+              "Value for xaxis should match");
+    M_TEST_EQ(content.computed_size[0], 100.f, "Value for xaxis should match");
+
+    float remaining_width =
+        root.size_expected[0].value -
+        (left_padding.computed_size[0] + content.computed_size[0]);
+    M_TEST_EQ(title_card.computed_size[0], remaining_width,
+              "Value for xaxis should match");
+    M_TEST_EQ(title_right_padding.computed_size[0], remaining_width,
+              "Value for xaxis should match");
+
+    M_TEST_EQ(root.computed_size[1], 1000.f, "Value for yaxis should match");
+    M_TEST_EQ(left_padding.computed_size[1], 1000.f,
+              "Value for yaxis should match");
+    M_TEST_EQ(content.computed_size[1], 1000.f, "Value for yaxis should match");
+    M_TEST_EQ(title_card.computed_size[1], 1000.f,
+              "Value for yaxis should match");
+    M_TEST_EQ(title_right_padding.computed_size[1], 1000.f,
+              "Value for yaxis should match");
+}
+
+void test_widget_fill_space_after_column_complex() {
+    using namespace ui;
+
+    Widget root({.mode = Pixels, .value = 1000.f, .strictness = 1.f},
+                {.mode = Pixels, .value = 1000.f, .strictness = 1.f},
+                GrowFlags::Row);
+
+    Widget left_padding({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                        {.mode = Pixels, .value = 1000.f, .strictness = 1.f});
+
+    Widget content({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                   {.mode = Percent, .value = 1.f, .strictness = 1.0f}, Column);
+
+    Widget title_card({.mode = Percent, .value = 0.75f, .strictness = 0.f},
+                      {.mode = Pixels, .value = 1000.f, .strictness = 1.f},
+                      (GrowFlags::Column | GrowFlags::Row));
+
+    Widget title_top_padding(
+        {.mode = Pixels, .value = 100.f, .strictness = 1.f},
+        {.mode = Pixels, .value = 100.f, .strictness = 1.f});
+
+    Widget title_text({.mode = Pixels, .value = 200.f, .strictness = 1.f},
+                      {.mode = Pixels, .value = 100.f, .strictness = 1.f});
+
+    Widget title_right_padding(
+        {.mode = Percent, .value = 1.f, .strictness = 0.f},
+        {.mode = Percent, .value = 1.f, .strictness = 1.f});
+
+    root.add_child(&left_padding);
+    root.add_child(&content);
+    root.add_child(&title_card);
+
+    title_card.add_child(&title_top_padding);
+    title_card.add_child(&title_text);
+    title_card.add_child(&title_right_padding);
+
+    autolayout::process_widget(&root);
+
+    M_TEST_EQ(*root.children.begin(), &left_padding,
+              "Parent of left_padding should be root");
+    M_TEST_EQ(*root.children.rbegin(), &title_card,
+              "Last child of root should be title_card");
+    M_TEST_EQ(root.children.size(), 3, "root should only have three children");
+
+    M_TEST_EQ(root.computed_size[0], 1000.f, "Value for xaxis should match");
+    M_TEST_EQ(left_padding.computed_size[0], 100.f,
+              "Value for xaxis should match");
+    M_TEST_EQ(content.computed_size[0], 100.f, "Value for xaxis should match");
+
+    float remaining_width =
+        root.size_expected[0].value -
+        (left_padding.computed_size[0] + content.computed_size[0]);
+    M_TEST_EQ(title_card.computed_size[0], remaining_width,
+              "Value for xaxis should match");
+    M_TEST_EQ(title_top_padding.computed_size[0], 100.f,
+              "Value for xaxis should match");
+    M_TEST_EQ(title_text.computed_size[0], 200.f,
+              "Value for xaxis should match");
+    M_TEST_EQ(title_right_padding.computed_size[0], remaining_width,
+              "Value for xaxis should match");
+
+    M_TEST_EQ(root.computed_size[1], 1000.f, "Value for yaxis should match");
+    M_TEST_EQ(left_padding.computed_size[1], 1000.f,
+              "Value for yaxis should match");
+    M_TEST_EQ(content.computed_size[1], 1000.f, "Value for yaxis should match");
+    M_TEST_EQ(title_card.computed_size[1], 1000.f,
+              "Value for yaxis should match");
+    M_TEST_EQ(title_top_padding.computed_size[1], 100.f,
+              "Value for yaxis should match");
+    M_TEST_EQ(title_text.computed_size[1], 100.f,
+              "Value for yaxis should match");
+    M_TEST_EQ(title_right_padding.computed_size[1], 1000.f,
+              "Value for yaxis should match");
+}
+
 void test_ui_widget() {
     test_empty();
     test_just_root();
@@ -325,5 +590,9 @@ void test_ui_widget() {
     test_add_child();
     test_add_child_again();
     test_autolayout_wrap_column();
+    test_widget_fill_space_after_column_small();
+    test_widget_fill_space_after_column_with_children();
+    test_widget_fill_space_after_column();
+    test_widget_fill_space_after_column_complex();
 }
 }  // namespace tests
