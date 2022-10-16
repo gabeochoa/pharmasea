@@ -1,21 +1,56 @@
 
-#pragma once 
+#pragma once
 
 #include "external_include.h"
 //
+#include "globals.h"
+#include "navmesh.h"
 
 //
 #include "entity.h"
 #include "item.h"
 
 static std::vector<std::shared_ptr<Entity>> entities_DO_NOT_USE;
+static std::map<vec2, bool> cache_is_walkable;
 
 struct EntityHelper {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     static void addEntity(std::shared_ptr<Entity> e) {
         entities_DO_NOT_USE.push_back(e);
+        if (!e->add_to_navmesh()) {
+            return;
+        }
+        auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
+        // nav->addShape(getPolyForEntity(e));
+        nav->addEntity(e->id, getPolyForEntity(e));
     }
+
+    static void removeEntity(std::shared_ptr<Entity> e) {
+        auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
+        nav->removeEntity(e->id);
+
+        auto it = entities_DO_NOT_USE.begin();
+        while (it != entities_DO_NOT_USE.end()) {
+            if ((*it)->id == e->id) {
+                entities_DO_NOT_USE.erase(it);
+                continue;
+            }
+            it++;
+        }
+    }
+
+    static Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
+        vec2 pos = vec::to2(e->snap_position());
+        Rectangle rect = {
+            pos.x,
+            pos.y,
+            TILESIZE,
+            TILESIZE,
+        };
+        return Polygon(rect);
+    }
+
     static void addItem(std::shared_ptr<Item> item) {
         items_DO_NOT_USE.push_back(item);
     }
@@ -57,7 +92,7 @@ struct EntityHelper {
         }
     }
 
-    template <typename T>
+    template<typename T>
     static constexpr std::vector<std::shared_ptr<T>> getEntitiesInRange(
         vec2 pos, float range) {
         std::vector<std::shared_ptr<T>> matching;
@@ -70,9 +105,10 @@ struct EntityHelper {
         }
         return matching;
     }
-    
+
     template<typename T>
-        static constexpr std::shared_ptr<T> getClosestMatchingEntity(vec2 pos, float range, std::function<bool(std::shared_ptr<T>)> filter){
+    static constexpr std::shared_ptr<T> getClosestMatchingEntity(
+        vec2 pos, float range, std::function<bool(std::shared_ptr<T>)> filter) {
         float best_distance = range;
         std::shared_ptr<T> best_so_far;
         for (auto& e : entities_DO_NOT_USE) {
@@ -80,8 +116,8 @@ struct EntityHelper {
             if (!s) continue;
             if (!filter(s)) continue;
             float d = vec::distance(pos, vec::to2(e->position));
-            if(d > range) continue;
-            if(d < best_distance){
+            if (d > range) continue;
+            if (d < best_distance) {
                 best_so_far = s;
                 best_distance = d;
             }
@@ -89,13 +125,13 @@ struct EntityHelper {
         return best_so_far;
     }
 
-   static std::shared_ptr<Item> getClosestMatchingItem(vec2 pos, float range){
+    static std::shared_ptr<Item> getClosestMatchingItem(vec2 pos, float range) {
         float best_distance = range;
         std::shared_ptr<Item> best_so_far;
         for (auto& i : items_DO_NOT_USE) {
             float d = vec::distance(pos, vec::to2(i->position));
-            if(d > range) continue;
-            if(d < best_distance){
+            if (d > range) continue;
+            if (d < best_distance) {
                 best_so_far = i;
                 best_distance = d;
             }
@@ -103,10 +139,29 @@ struct EntityHelper {
         return best_so_far;
     }
 
-    // TODO replace with navmesh
+    static bool isWalkable_impl(const vec2& pos) {
+        auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
+        if (!nav) {
+            return true;
+        }
+
+        for (auto kv : nav->entityShapes) {
+            auto s = kv.second;
+            if (s.inside(pos)) return false;
+        }
+        return true;
+    }
+
+    static bool isWalkable(const vec2& pos) {
+        if (!cache_is_walkable.contains(pos)) {
+            cache_is_walkable[pos] = isWalkableRawEntities(pos);
+        }
+        return cache_is_walkable[pos];
+    }
+
     // each target get and path find runs through all entities
     // so this will just get slower and slower over time
-    static bool isWalkable(const vec2& pos) {
+    static bool isWalkableRawEntities(const vec2& pos) {
         auto bounds = get_bounds({pos.x, 0.f, pos.y}, {TILESIZE});
         bool hit_impassible_entity = false;
         forEachEntity([&](auto entity) {

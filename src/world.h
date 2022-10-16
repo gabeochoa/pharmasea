@@ -5,14 +5,25 @@
 #include "entities.h"
 #include "furnitures.h"
 #include "globals.h"
+#include "navmesh.h"
 #include "util.h"
 #include "vec_util.h"
+
+
+const std::string TINY = R"(
+.........
+.........
+..A.0..T
+.........
+..@......
+........#)";
+
 
 const std::string EXAMPLE_MAP = R"(
 ####################################################
 #..................................................#
 #..................................................#
-#........@....I....................................#
+#........@.........................................#
 #..................................................#
 #........R....0....................................#
 #..................................................#
@@ -70,6 +81,7 @@ const std::string ACTIVE_MAP = EXAMPLE_MAP;
 struct World {
     std::vector<std::string> lines;
     World() {
+        GLOBALS.set("navmesh", &__navmesh___DO_NOT_USE_DIRECTLY);
         this->lines = util::split_string(ACTIVE_MAP, "\n");
         this->init_map();
     }
@@ -113,7 +125,6 @@ struct World {
         }
         return output;
     }
-
 
     void init_map() {
         vec2 origin = find_origin();
@@ -173,15 +184,13 @@ struct World {
                     }
                     case 'C': {
                         std::shared_ptr<Customer> customer;
-                        customer.reset(
-                            new Customer(location, RED ));
+                        customer.reset(new Customer(location, RED));
                         EntityHelper::addEntity(customer);
                         break;
                     }
                     case 'R': {
                         std::shared_ptr<Register> cash_register;
-                        cash_register.reset(
-                            new Register(location));
+                        cash_register.reset(new Register(location));
                         EntityHelper::addEntity(cash_register);
                         break;
                     }

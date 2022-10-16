@@ -44,7 +44,7 @@ std::vector<vec2> get_neighbors(vec2 start,
     const float x[8] = {0, 0, 1, -1, -1, 1, -1, 1};
     const float y[8] = {1, -1, 0, 0, -1, -1, 1, 1};
     std::vector<vec2> output;
-    int step = static_cast<int>(TILESIZE);
+    int step = static_cast<int>(floor(TILESIZE));
     for (int i = 0; i < 8; i++) {
         vec2 neighbor = {start.x + (x[i] * step), start.y + (y[i] * step)};
         neighbor = vec::snap(neighbor);
@@ -56,8 +56,8 @@ std::vector<vec2> get_neighbors(vec2 start,
 }
 
 std::deque<vec2> reconstruct_path(std::deque<vec2> path,
-                                   std::map<vec2, vec2>& parent_map,
-                                   vec2 current) {
+                                  std::map<vec2, vec2>& parent_map,
+                                  vec2 current) {
     if (!parent_map.contains(current)) {
         return path;
     }
@@ -67,9 +67,11 @@ std::deque<vec2> reconstruct_path(std::deque<vec2> path,
 }
 
 std::deque<vec2> find_path_impl(vec2 start, vec2 end,
-                                 std::function<bool(vec2 pos)> is_walkable) {
-    if (!is_walkable(end)) return std::deque<vec2>{};
-    
+                                std::function<bool(vec2 pos)> is_walkable) {
+    if (!is_walkable(end)) {
+        return std::deque<vec2>{};
+    }
+
     std::set<vec2> openset;
     openset.insert(start);
 
@@ -85,7 +87,7 @@ std::deque<vec2> find_path_impl(vec2 start, vec2 end,
 
     while (!openset.empty()) {
         i++;
-        if (i > 10000) {
+        if (i > 1000) {
             // std::cout << "astar: hit interation limit" << std::endl;
             break;
         }
@@ -126,7 +128,7 @@ std::deque<vec2> find_path_impl(vec2 start, vec2 end,
 }
 
 std::deque<vec2> find_path(vec2 start, vec2 end,
-                            std::function<bool(vec2 pos)> is_walkable) {
+                           std::function<bool(vec2 pos)> is_walkable) {
     // TODO add a cache
     return astar::find_path_impl(start, end, is_walkable);
 }

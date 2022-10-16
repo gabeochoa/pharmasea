@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "entityhelper.h"
 #include "external_include.h"
 //
 #include "aiperson.h"
@@ -84,7 +85,7 @@ struct Customer : public AIPerson {
         std::shared_ptr<Register> reg;
         if (this->target.has_value()) {
             reg = EntityHelper::getClosestMatchingEntity<Register>(
-                this->target.value(), 0.f, [](auto&&) { return true; });
+                this->target.value(), 1.f, [](auto&&) { return true; });
         }
         return nullptr;
     }
@@ -144,5 +145,11 @@ struct Customer : public AIPerson {
         AIPerson::render();
         this->render_speech_bubble();
         this->render_name();
+
+        if (this->target.has_value()) {
+            const float box_size = TILESIZE / 10.f;
+            DrawCube(vec::to3(this->target.value()), box_size, box_size,
+                     box_size, BLUE);
+        }
     }
 };

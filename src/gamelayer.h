@@ -1,5 +1,6 @@
 #pragma once
 
+#include "drawing_util.h"
 #include "event.h"
 #include "external_include.h"
 //
@@ -25,7 +26,6 @@ struct GameLayer : public Layer {
         GLOBALS.set("game_cam", &cam);
         GLOBALS.set("in_planning", &in_planning_mode);
         preload_textures();
-
     }
     virtual ~GameLayer() {}
     virtual void onAttach() override {}
@@ -67,7 +67,8 @@ struct GameLayer : public Layer {
             return true;
         }
         // TODO remove once we have gameplay loop
-        if (KeyMap::get_key_code(Menu::State::Game, "Toggle Planning [Debug]") == event.keycode) {
+        if (KeyMap::get_key_code(Menu::State::Game,
+                                 "Toggle Planning [Debug]") == event.keycode) {
             in_planning_mode = !in_planning_mode;
             return true;
         }
@@ -98,7 +99,6 @@ struct GameLayer : public Layer {
         ClearBackground(Color{200, 200, 200, 255});
         BeginMode3D(cam.get());
         {
-
             EntityHelper::forEachEntity([&](auto entity) {
                 entity->render();
                 return EntityHelper::ForEachFlow::None;
@@ -119,16 +119,22 @@ struct GameLayer : public Layer {
                           },
                           TILESIZE, WHITE);
 
+            auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
+            if (nav) {
+                for (auto kv : nav->entityShapes) {
+                    DrawLineStrip2Din3D(kv.second.hull, PINK);
+                }
 
+                for (auto kv : nav->shapes) {
+                    DrawLineStrip2Din3D(kv.hull, PINK);
+                }
+            }
         }
         EndMode3D();
 
-            if(in_planning_mode){
-                DrawTextEx(App::get().font, "IN PLANNING MODE" , vec2{100, 100},
-                           20, 0,
-                           RED);
-
-            }
-
+        if (in_planning_mode) {
+            DrawTextEx(App::get().font, "IN PLANNING MODE", vec2{100, 100}, 20,
+                       0, RED);
+        }
     }
 };

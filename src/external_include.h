@@ -13,7 +13,6 @@
 #endif
 
 #include "raylib.h"
-#include "drawing_util.h"
 
 #ifdef WRITE_FILES
 #include "../vendor/sago/platform_folders.h"
@@ -37,6 +36,7 @@ typedef Vector2 vec2;
 typedef Vector3 vec3;
 typedef Vector4 vec4;
 
+
 #include <atomic>
 #include <optional>
 #include <vector>
@@ -55,4 +55,5 @@ typedef Vector4 vec4;
 #include <fstream>
 #include <stack>
 #include <unordered_map>
+#include <array>
 #include <cassert>

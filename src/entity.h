@@ -177,6 +177,7 @@ struct Entity {
 
     virtual bool is_collidable() { return true; }
     virtual bool is_snappable() { return false; }
+    virtual bool add_to_navmesh() { return false; }
 };
 
 typedef Entity::FrontFaceDirection EntityDir;

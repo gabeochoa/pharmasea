@@ -2,10 +2,14 @@
 #pragma once 
 
 #include "../external_include.h"
+#include "../drawing_util.h"
+//
 #include "../entity.h"
 #include "../globals.h"
+//
+#include "../furniture.h"
 
-struct Wall : public Entity {
+struct Wall : public Furniture {
     enum Type {
         FULL,
         HALF,
@@ -17,8 +21,8 @@ struct Wall : public Entity {
 
     Type type = FULL;
 
-    Wall(vec3 p, Color c) : Entity(p, c) {}
-    Wall(vec2 p, Color c) : Entity(p, c) {}
+    Wall(vec3 p, Color c) : Furniture(p, c) {}
+    Wall(vec2 p, Color c) : Furniture(p, c) {}
 
     virtual vec3 size() const override {
         return {TILESIZE, TILESIZE, TILESIZE};

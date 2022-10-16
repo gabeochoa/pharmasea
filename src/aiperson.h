@@ -1,12 +1,14 @@
 
 #pragma once
 
+#include "astar.h"
 #include "entityhelper.h"
 #include "external_include.h"
 //
 #include "globals.h"
 #include "person.h"
 #include "targetcube.h"
+#include "ui_color.h"
 
 struct AIPerson : public Person {
     std::optional<vec2> target;
@@ -24,12 +26,13 @@ struct AIPerson : public Person {
 
     virtual void render() const override {
         Person::render();
-        if (!this->path.has_value()) {
-            return;
-        }
+
         const float box_size = TILESIZE / 10.f;
-        for (auto location : this->path.value()) {
-            DrawCube(vec::to3(location), box_size, box_size, box_size, BLUE);
+        if (this->path.has_value()) {
+            for (auto location : this->path.value()) {
+                DrawCube(vec::to3(location), box_size, box_size, box_size,
+                         BLUE);
+            }
         }
     }
 
@@ -69,6 +72,7 @@ struct AIPerson : public Person {
             return;
         }
         this->random_target();
+        // this->target_cube_target();
     }
 
     void ensure_path() {
@@ -83,6 +87,7 @@ struct AIPerson : public Person {
         this->path = astar::find_path(
             {this->position.x, this->position.z}, this->target.value(),
             std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+        // std::cout << "target" << this->target.value() << std::endl;
         // std::cout << "path " << this->path.value().size() << std::endl;
     }
 

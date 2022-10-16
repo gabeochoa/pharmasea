@@ -46,7 +46,6 @@ struct Player : public Person {
 
     virtual void update(float dt) override {
         Person::update(dt);
-
         grab_or_drop();
         rotate_furniture();
 
@@ -98,6 +97,7 @@ struct Player : public Person {
         // TODO need to auto drop when "in_planning" changes
         if(this->held_furniture){
             const auto _drop_furniture = [&](){
+                EntityHelper::addEntity(this->held_furniture);
                 this->held_furniture= nullptr;
             };
             _drop_furniture();
@@ -114,6 +114,8 @@ struct Player : public Person {
                     [](std::shared_ptr<Furniture> f){ return f->can_be_picked_up();}
             );
             this->held_furniture = closest_furniture;
+            auto nv = GLOBALS.get_ptr<NavMesh>("navmesh");
+            nv->removeEntity(this->held_furniture->id);
             return;
         }
         else{
