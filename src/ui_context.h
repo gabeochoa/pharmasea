@@ -16,7 +16,17 @@
 #include "ui_widget.h"
 #include "uuid.h"
 
-// TODO theres got to be a better way....
+// TODO is there a better way to do this? 
+//
+// Because we want the UI to be as simple as possible to write,
+// devs dont have to specify the font size since its dynamic based on size. 
+//
+// This means that like size, its caculated every frame. In case this causes
+// any rendering lag**, we need some way of caching the font sizes given a certiain
+// (content + width + height) 
+//
+// ** I never actually noticed any frame drop so this optimization was premature
+//
 // ****************************************************** start kludge
 namespace ui {
 struct FZInfo {
