@@ -3,7 +3,7 @@
 
 #include "external_include.h"
 //
-#include "Karmina_Regular_256.h"
+#include "resources/fonts/Karmina_Regular_256.h"
 #include "event.h"
 #include "globals.h"
 #include "keymap.h"
