@@ -8,6 +8,7 @@
 #include "item.h"
 #include "random.h"
 #include "raylib.h"
+#include "util.h"
 #include "vec_util.h"
 
 static std::atomic_int ENTITY_ID_GEN = 0;
@@ -16,7 +17,7 @@ struct Entity {
         FORWARD = 0,  // 0 degrees
         RIGHT = 90,   // 90 degrees
         BACK = 180,   // 180 degrees
-        LEFT = 270,    // 270 degrees
+        LEFT = 270,   // 270 degrees
     };
 
     int id;
@@ -64,9 +65,7 @@ struct Entity {
         return get_bounds(this->position, this->size() / 2.0f);
     }
 
-    virtual void update_position(const vec3& p) {
-        this->raw_position = p;
-    }
+    virtual void update_position(const vec3& p) { this->raw_position = p; }
 
     virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
 
@@ -91,8 +90,9 @@ struct Entity {
 
     vec3 snap_position() const { return vec::snap(this->raw_position); }
 
-    void rotate_facing_clockwise(){
-        this->face_direction = static_cast<FrontFaceDirection>((this->face_direction + 90) % 360);
+    void rotate_facing_clockwise() {
+        this->face_direction =
+            static_cast<FrontFaceDirection>((this->face_direction + 90) % 360);
     }
 
     virtual void update(float) {
@@ -115,6 +115,63 @@ struct Entity {
             }
 
             held_item->update_position(new_pos);
+        }
+    }
+
+    virtual vec2 get_heading() {
+        const int target_facing_deg = (int) this->face_direction;
+        const float target_facing_ang = util::deg2rad(target_facing_deg);
+        return vec2{
+            cosf(target_facing_ang),
+            sinf(target_facing_ang),
+        };
+    }
+
+    virtual vec2 tile_infront(int distance) {
+        vec2 tile = vec::to2(this->snap_position());
+        switch (this->face_direction) {
+            case FORWARD:
+                tile.y += distance * TILESIZE;
+                break;
+            case RIGHT:
+                tile.x -= distance * TILESIZE;
+                break;
+            case BACK:
+                tile.y -= distance * TILESIZE;
+                break;
+            case LEFT:
+                tile.x += distance * TILESIZE;
+                break;
+        }
+        return tile;
+    }
+
+    virtual void turn_to_face_entity(Entity* target) {
+        if(!target) return;
+
+        // dot product visualizer https://www.falstad.com/dotproduct/
+
+        // the angle between two vecs is
+        // @ = arccos(  (a dot b) / ( |a| * |b| ) )
+
+        // first get the headings and normalise so |x| = 1
+        const vec2 my_heading = vec::norm(this->get_heading());
+        const vec2 tar_heading = vec::norm(target->get_heading());
+        // dp = ( (a dot b )/ 1)
+        float dot_product = vec::dot2(my_heading, tar_heading);
+        // arccos(dp)
+        float theta_rad = acosf(dot_product);
+        float theta_deg = util::rad2deg(theta_rad);
+        int turn_degrees = (180 - (int) theta_deg) % 360;
+
+        if (turn_degrees > 0 && turn_degrees <= 45) {
+            this->face_direction = static_cast<FrontFaceDirection>(0);
+        } else if (turn_degrees > 45 && turn_degrees <= 135) {
+            this->face_direction = static_cast<FrontFaceDirection>(90);
+        } else if (turn_degrees > 135 && turn_degrees <= 225) {
+            this->face_direction = static_cast<FrontFaceDirection>(180);
+        } else if (turn_degrees > 225) {
+            this->face_direction = static_cast<FrontFaceDirection>(270);
         }
     }
 

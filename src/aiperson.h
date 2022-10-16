@@ -1,40 +1,12 @@
 
 #pragma once
 
+#include "entityhelper.h"
 #include "external_include.h"
 //
+#include "globals.h"
 #include "person.h"
-
-struct TargetCube : public Person {
-
-    TargetCube(vec3 p, Color face_color_in, Color base_color_in) : Person(p, face_color_in, base_color_in) {}
-    TargetCube(vec2 p, Color face_color_in, Color base_color_in) : Person(p, face_color_in, base_color_in) {}
-    TargetCube(vec3 p, Color c) : Person(p, c) {}
-    TargetCube(vec2 p, Color c) : Person(p, c) {}
-
-    virtual vec3 update_xaxis_position(float dt) override {
-        float speed = 10.0f * dt;
-        auto new_pos_x = this->raw_position;
-        bool left = KeyMap::is_event(Menu::State::Game, "Target Left");
-        bool right = KeyMap::is_event(Menu::State::Game, "Target Right");
-        if (left) new_pos_x.x -= speed;
-        if (right) new_pos_x.x += speed;
-        return new_pos_x;
-    }
-
-    virtual vec3 update_zaxis_position(float dt) override {
-        float speed = 10.0f * dt;
-        auto new_pos_z = this->raw_position;
-        bool up = KeyMap::is_event(Menu::State::Game, "Target Forward");
-        bool down = KeyMap::is_event(Menu::State::Game, "Target Back");
-        if (up) new_pos_z.z -= speed;
-        if (down) new_pos_z.z += speed;
-        return new_pos_z;
-    }
-
-    virtual bool is_collidable() override { return false; }
-};
-
+#include "targetcube.h"
 
 struct AIPerson : public Person {
     std::optional<vec2> target;
@@ -48,9 +20,7 @@ struct AIPerson : public Person {
     AIPerson(vec3 p, Color c) : Person(p, c) {}
     AIPerson(vec2 p, Color c) : Person(p, c) {}
 
-    virtual float base_speed(){
-        return 10.f;
-    }
+    virtual float base_speed() { return 10.f; }
 
     virtual void render() const override {
         Person::render();
@@ -81,10 +51,14 @@ struct AIPerson : public Person {
     }
 
     void target_cube_target() {
-        auto snap_near_cube =
-            vec::to2(GLOBALS.get<TargetCube>("targetcube").snap_position());
-        snap_near_cube.x += TILESIZE;
-        snap_near_cube.y += TILESIZE;
+        std::shared_ptr<TargetCube> closest_target =
+            EntityHelper::getClosestMatchingEntity<TargetCube>(
+                vec::to2(this->position), TILESIZE * 100.f,
+                [](auto&&) { return true; });
+
+        if (!closest_target) return;
+
+        auto snap_near_cube = closest_target->tile_infront(0);
         if (EntityHelper::isWalkable(snap_near_cube)) {
             this->target = snap_near_cube;
         }
@@ -94,8 +68,7 @@ struct AIPerson : public Person {
         if (target.has_value()) {
             return;
         }
-        // this->random_target();
-        this->target_cube_target();
+        this->random_target();
     }
 
     void ensure_path() {
@@ -160,25 +133,29 @@ struct AIPerson : public Person {
         return (int) this->path.value().size();
     }
 
-    virtual void update(float dt) override {
-        this->ensure_target();
-        this->ensure_path();
-        this->ensure_local_target();
-
-        if (this->path_length() == 0) {
-            // std::cout << this->raw_position << ";; " << this->position
-            //           << std::endl;
-            this->target.reset();
-            this->path.reset();
-            this->local_target.reset();
-        }
-        // then handle the normal position stuff
-        Person::update(dt);
-
+    void reset_local_target() {
         if (this->local_target.has_value() &&
             vec::to2(this->position) == this->local_target.value()) {
             this->local_target.reset();
         }
+    }
+
+    virtual void reset_to_find_new_target() {
+        if (this->path_length() == 0) {
+            this->target.reset();
+            this->path.reset();
+            this->local_target.reset();
+        }
+    }
+
+    virtual void update(float dt) override {
+        Person::update(dt);
+
+        this->ensure_target();
+        this->ensure_path();
+        this->ensure_local_target();
+        reset_to_find_new_target();
+        reset_local_target();
     }
 
     virtual bool is_snappable() override { return true; }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "external_include.h"
+//
+#include <cmath>
 
 namespace util {
 
@@ -11,6 +13,15 @@ template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 template<typename T>
 int sgn(T val) {
     return (T(0) < val) - (val < T(0));
+
+}
+
+float deg2rad(float deg) {
+    return deg * M_PI / 180.0;
+}
+
+float rad2deg(float rad) {
+    return rad * (180.f / M_PI);
 }
 
 std::vector<std::string> split_string(const std::string& str,

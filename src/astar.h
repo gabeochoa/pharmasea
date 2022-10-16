@@ -85,7 +85,7 @@ std::deque<vec2> find_path_impl(vec2 start, vec2 end,
 
     while (!openset.empty()) {
         i++;
-        if (i > 100) {
+        if (i > 10000) {
             // std::cout << "astar: hit interation limit" << std::endl;
             break;
         }

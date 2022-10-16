@@ -9,6 +9,7 @@
 #include "keymap.h"
 
 struct Person : public Entity {
+
     Person(vec3 p, Color face_color_in, Color base_color_in) : Entity(p, face_color_in, base_color_in) {}
     Person(vec2 p, Color face_color_in, Color base_color_in) : Entity(p, face_color_in, base_color_in) {}
     Person(vec3 p, Color c) : Entity(p, c) {}

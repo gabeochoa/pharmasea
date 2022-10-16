@@ -38,10 +38,11 @@ void startup() {
     // -------- Its unlikely anything should go above this line ----- //
 
     tests::run_all();
+    std::cout << "All tests ran successfully" << std::endl;
 
-    Menu::get().state = Menu::State::Root;
+    // Menu::get().state = Menu::State::Root;
     // Menu::get().state = Menu::State::About;
-    // Menu::get().state = Menu::State::Game;
+    Menu::get().state = Menu::State::Game;
 
     GameLayer* gamelayer = new GameLayer();
     App::get().pushLayer(gamelayer);

@@ -106,12 +106,12 @@ vec2 operator+(const vec2& lhs, const vec2& rhs) {
     return out;
 }
 
-// TODO this wasnt working, so im disabling it until we can figure out why 
+// TODO this wasnt working, so im disabling it until we can figure out why
 // vec2 operator+=(const vec2& lhs, const vec2& rhs) {
-    // vec2 out;
-    // out.x = lhs.x + rhs.x;
-    // out.y = lhs.y + rhs.y;
-    // return out;
+// vec2 out;
+// out.x = lhs.x + rhs.x;
+// out.y = lhs.y + rhs.y;
+// return out;
 // }
 
 BoundingBox get_bounds(vec3 position, vec3 size) {
@@ -132,6 +132,16 @@ namespace vec {
 float distance(vec2 a, vec2 b) {
     return sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
+float dot2(const vec2& a, const vec2& b) {
+    float result = (a.x * b.x + a.y * b.y);
+    return result;
+}
+
+vec2 norm(const vec2& a) {
+    float mag = dot2(a, a);
+    return (a / mag);
+}
+
 
 vec3 to3(vec2 position) { return {position.x, 0, position.y}; }
 
@@ -146,6 +156,5 @@ vec3 snap(vec3 position) {
             position.y,                               //
             TILESIZE * round(position.z / TILESIZE)};
 }
-
 
 }  // namespace vec
