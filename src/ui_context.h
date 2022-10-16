@@ -350,32 +350,30 @@ struct UIContext {
         queued_render_calls.push_back(cb);
     }
 
-    void draw_text(Widget* widget, const std::string& content,
-                   theme::Usage color_usage) {
+    void _draw_text(Rectangle rect, const std::string& content,
+                    theme::Usage color_usage) {
         float spacing = 0.f;
-        // TODO would there ever be more direction types? (reverse row? )
-        float font_size =
-            get_font_size(content, widget->rect.width, widget->rect.height);
-        // std::cout << "selected font size: " << font_size << " for "
-        // << widget.rect.width << ", " << widget.rect.height
-        // << std::endl;
+        float font_size = get_font_size(content, rect.width, rect.height);
+        // std::cout << "selected font size: " << font_size << " for " << rect.x
+                  // << ", " << rect.y << ", " << rect.width << ", " << rect.height
+                  // << std::endl;
         DrawTextEx(font,                                   //
                    content.c_str(),                        //
-                   {widget->rect.x, widget->rect.y},       //
+                   {rect.x, rect.y},                       //
                    font_size, spacing,                     //
                    active_theme().from_usage(color_usage)  //
         );
+    }
+
+    void draw_text(Widget* widget, const std::string& content,
+                   theme::Usage color_usage) {
+        _draw_text(widget->rect, content, color_usage);
     }
 
     void schedule_draw_text(Widget* widget, const std::string& content,
                             theme::Usage color_usage) {
         get().schedule_render_call(std::bind(&UIContext::draw_text, this,
                                              widget, content, color_usage));
-    }
-
-    void draw_text_old(const char* text, vec2 position, vec2 size) {
-        DrawTextEx(font, text, position, size.x, 0,
-                   active_theme().from_usage(theme::Usage::Font));
     }
 
     void draw_widget_old(vec2 pos, vec2 size, float, Color color, std::string) {

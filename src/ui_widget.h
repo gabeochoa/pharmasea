@@ -17,7 +17,7 @@ struct SizeExpectation {
     SizeMode mode = Pixels;
     // TODO is there a better default?
     float value = fminf(WIN_H, WIN_W);
-    float strictness = 0.1f;
+    float strictness = 0.5f;
 };
 
 std::ostream& operator<<(std::ostream& os, const SizeExpectation& exp) {
@@ -51,6 +51,7 @@ struct Widget {
     Widget* me;
     uuid id;
     std::string element = "";
+    bool ignore_size = false;
 
     static void set_element(const Widget& widget, std::string e) {
         auto& w = const_cast<Widget&>(widget);
@@ -72,6 +73,12 @@ struct Widget {
     Widget() {
         this->id = default_id();
         this->me = this;
+    }
+
+    Widget(const Widget& other) {
+        this->id = default_id();
+        this->me = this;
+        this->rect = other.rect;
     }
 
     Widget(SizeExpectation x, SizeExpectation y) {
@@ -119,36 +126,27 @@ struct Widget {
         child->parent = this;
     }
 
-    std::string print() const {
+    std::string print(int t = 0) const {
         std::stringstream ss;
 
-        const auto a = (this->parent ? this->parent->rect : Rectangle());
+        std::string tabs(t, '\t');
 
-        ss << "Widget(" << this->element << "\n";
-        ss << "x(" << this->size_expected[0] << " ; ";
-        ss << "y(" << this->size_expected[1] << "\n";
-        ss << "rel_pos(";
-        ss << this->computed_relative_pos[0];
-        ss << ", ";
-        ss << this->computed_relative_pos[1];
-        ss << ")\n";
-        ss << "computed size(";
-        ss << this->computed_size[0] << ", " << this->computed_size[1];
-        ss << ")\n";
-        ss << "rect(" << this->rect << ")\n";
-        ss << "Dir " << this->growflags << "\n";
-        ss << "Children:" << this->children.size() << " ";
-        ss << "Parent:" << &(this->parent) << " " << a << "\n";
+        const auto a = (this->parent ? this->parent->rect : Rectangle());
+        ss << tabs << "Widget(" << this->element << "\n";
+        ss << tabs << "x(" << this->size_expected[0] << " ; y(" << this->size_expected[1] << "\n";
+        ss << tabs << "rel_pos(" << this->computed_relative_pos[0] << ", " << this->computed_relative_pos[1]<< ")\n";
+        ss << tabs << "computed size(" << this->computed_size[0] << ", " << this->computed_size[1] << ")\n";
+        ss << tabs << "rect(" << this->rect << ")\n";
+        ss << tabs << "Dir " << this->growflags << "\n";
+        ss << tabs << "Children:" << this->children.size() << " Parent:" << &(this->parent) << " " << a << "\n";
         return ss.str();
     }
 
-    void print_tree() const {
-        std::cout << me->print() << std::endl;
-        std::cout << "start children for " << this << std::endl;
+    void print_tree(int t = 0) const {
+        std::cout << me->print(t) << "\n" ;
         for (const Widget* child : children) {
-            if (child) child->print_tree();
+            if (child) child->print_tree(t + 2);
         }
-        std::cout << "end children for " << this << std::endl;
     }
 };
 

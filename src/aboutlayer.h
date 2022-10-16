@@ -71,6 +71,13 @@ struct AboutLayer : public Layer {
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f});
         content.growflags = ui::GrowFlags::Column;
 
+        Widget top_padding({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                           {.mode = Percent, .value = 0.5f, .strictness = 0.f});
+
+        Widget bottom_padding(
+            {.mode = Pixels, .value = 50.f, .strictness = 1.f},
+            {.mode = Percent, .value = 0.5f, .strictness = 0.f});
+
         Widget about_text({.mode = Pixels, .value = 120.f},
                           {.mode = Pixels, .value = 400.f});
 
@@ -95,16 +102,19 @@ A game by:
 
             ui_context.get()->push_parent(&content);
             {
+                padding(top_padding);
                 text(about_text, about_info);
-                if(button_with_label(back_button, "Back")){
+                if (button(back_button, "Back")) {
                     Menu::get().state = Menu::State::Root;
                 }
+                padding(bottom_padding);
             }
             ui_context.get()->pop_parent();
         }
         ui_context.get()->pop_parent();
         ui_context->end(&root);
-        // std::cout << "********************** END FRAME **************** " << std::endl;
+        // std::cout << "********************** END FRAME **************** " <<
+        // std::endl;
     }
 
     virtual void onUpdate(float) override {

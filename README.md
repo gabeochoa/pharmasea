@@ -60,6 +60,7 @@ Gameplay Ideas
         - Second hand Upgrade Allow to put people on hold?
     - Cleaning tools after use, otherwise risk contamination
     - Clients will have to have distinct names
+    - Rerolls have chance for really rare things (sloth in SAPs)
     - Difficulty modifiers 
         - SpeedWalkers: Customers walk 1.5x as fast
         - Hypocondriacs: Customers always get more than once prescription

@@ -6,11 +6,28 @@
 #include "ui_color.h"
 #include "ui_context.h"
 #include "ui_state.h"
+#include "ui_theme.h"
 #include "ui_widget.h"
 #include "ui_widget_config.h"
 #include "uuid.h"
 
 namespace ui {
+
+// NOTE: Because we use mutate widget's data during layout
+//       do not pass the same widget twice. (even if they are the same size).
+//       You can only do this if they are .strictness 1.0 or .ignore_size = true
+//
+//  Bad:
+//          Widget b = ...;
+//          button(b);
+//          button(b);
+//
+//  Good:
+//          Widget a = ...;
+//          Widget b = ...;
+//          button(a);
+//          button(b);
+//
 
 // TODO add more info about begin()/end()
 
@@ -24,13 +41,9 @@ bool text(
 
 bool button(
     // returns true if the button was clicked else false
-    const Widget& widget);
-
-bool button_with_label(
-    // returns true if the button was clicked else false
     const Widget& widget,
-    // button label
-    const std::string& content);
+    // button label if needed
+    const std::string& content = "");
 
 // TODO is this what we want?
 bool button_list(
@@ -168,8 +181,7 @@ void _draw_focus_ring(const Widget& widget) {
 //////
 //////
 
-void init_widget(const Widget& widget, const char* func,
-                 bool uses_state = false) {
+void init_widget(const Widget& widget, const char* func) {
     // TODO today because of the layer check we cant use this
     // which means no good error reports on this issue
     // you will just segfault
@@ -211,14 +223,15 @@ bool text(const Widget& widget, const std::string& content,
     return true;
 }
 
-bool button(const Widget& widget) {
-    const auto _button_render = [](Widget* widget_ptr) {
+bool button(const Widget& widget, const std::string& content) {
+    const auto _write_lf = [](Widget* widget_ptr){
         Widget& widget = *widget_ptr;
-
-        //
         auto lf = UIContext::LastFrame({.rect = widget.rect});
         get().write_last_frame(widget.id, lf);
-        //
+    };
+
+    const auto _button_render = [](Widget* widget_ptr) {
+        Widget& widget = *widget_ptr;
 
         _draw_focus_ring(widget);
 
@@ -264,44 +277,26 @@ bool button(const Widget& widget) {
         return false;
     };
 
+
     init_widget(widget, __FUNCTION__);
     UIContext::LastFrame lf = get().get_last_frame(widget.id);
     bool pressed = false;
     if (lf.rect.has_value()) {
+        widget.me->rect = lf.rect.value();
         active_if_mouse_inside(widget.id, lf.rect.value());
-
         try_to_grab_kb(widget.id);
         _button_render(widget.me);
+        get()._draw_text(widget.rect, content, theme::Usage::Font);
         handle_tabbing(widget.id);
         pressed = _button_pressed(widget.id);
     }
-    get().schedule_render_call(std::bind(_button_render, widget.me));
-    return pressed;
-}
-
-bool button_with_label(const Widget& widget, const std::string& content) {
-    init_widget(widget, __FUNCTION__);
-    bool pressed = false;
-    get().push_parent(widget.me);
-    {
-        std::shared_ptr<Widget> internal_button = get().make_temp_widget(
-            new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
-                       {.mode = Percent, .value = 1.f, .strictness = 1.0f},
-                       {.mode = Percent, .value = 1.f, .strictness = 1.0f}));
-
-        pressed = button(*internal_button);
-        std::shared_ptr<Widget> internal_text = get().make_temp_widget(
-            new Widget({.mode = Percent, .value = 1.f, .strictness = 1.0f},
-                       {.mode = Percent, .value = 1.f, .strictness = 1.0f}));
-        text(*internal_text, content, theme::Usage::DarkFont);
-    }
-    get().pop_parent();
+    get().schedule_render_call(std::bind(_write_lf, widget.me));
     return pressed;
 }
 
 bool button_list(const Widget& widget, const std::vector<std::string>& options,
                  int* selectedIndex, bool* hasFocus) {
-    init_widget(widget, __FUNCTION__, true);
+    init_widget(widget, __FUNCTION__);
     auto state = get().widget_init<ButtonListState>(widget.id);
     if (selectedIndex) state->selected.set(*selectedIndex);
 
@@ -315,7 +310,7 @@ bool button_list(const Widget& widget, const std::vector<std::string>& options,
     std::vector<std::shared_ptr<Widget>> children;
     for (int i = 0; i < (int) options.size(); i++) {
         auto option = options[i];
-        std::shared_ptr<Widget> button = get().make_temp_widget(
+        std::shared_ptr<Widget> button_w = get().make_temp_widget(
             new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
                        {
                            .mode = Percent,
@@ -328,11 +323,11 @@ bool button_list(const Widget& widget, const std::vector<std::string>& options,
                            .strictness = 0.9f,
                        }));
 
-        if (button_with_label(*button, option)) {
+        if (button(*button_w, option)) {
             state->selected = static_cast<int>(i);
             pressed = true;
         }
-        children.push_back(button);
+        children.push_back(button_w);
     }
     get().pop_parent();
 
@@ -397,7 +392,7 @@ bool button_list(const Widget& widget, const std::vector<std::string>& options,
 
 bool dropdown(const Widget& widget, const std::vector<std::string>& options,
               bool* dropdownState, int* selectedIndex) {
-    init_widget(widget, __FUNCTION__, true);
+    init_widget(widget, __FUNCTION__);
     auto state = get().widget_init<DropdownState>(widget.id);
     if (dropdownState) state->on.set(*dropdownState);
     auto selected_option = options[selectedIndex ? *selectedIndex : 0];
@@ -432,7 +427,7 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
         );
 
         // Draw the main body of the dropdown
-        pressed = button_with_label(*selected_widget, selected_option);
+        pressed = button(*selected_widget, selected_option);
 
         // TODO right now you can change values through tab or through
         // arrow keys, maybe we should only allow arrows
@@ -572,7 +567,7 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
         state->value.changed_since = value_changed;
     };
 
-    init_widget(widget, __FUNCTION__, true);
+    init_widget(widget, __FUNCTION__);
     UIContext::LastFrame lf = get().get_last_frame(widget.id);
     // TODO be able to scroll this bar with the scroll wheel
     auto state = get().widget_init<SliderState>(widget.id);
@@ -581,6 +576,7 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
     if (value) state->value.set(*value);
 
     if (lf.rect.has_value()) {
+        widget.me->rect = lf.rect.value();
         try_to_grab_kb(widget.id);
         _slider_render(widget.me, vertical, state->value.asT());
         handle_tabbing(widget.id);

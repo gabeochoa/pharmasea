@@ -77,6 +77,11 @@ struct MenuLayer : public Layer {
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f});
         content.growflags = ui::GrowFlags::Column;
 
+        Widget top_padding(
+            {.mode = Pixels, .value = 100.f, .strictness = 1.f},
+            {.mode = Pixels, .value = 100.f, .strictness = 1.f});
+
+
         Widget play_button(MK_UUID(id, ROOT_ID), button_x, button_y);
         Widget button_padding(padd_x, padd_y);
         Widget about_button(MK_UUID(id, ROOT_ID), button_x, button_y);
@@ -90,20 +95,20 @@ struct MenuLayer : public Layer {
 
             ui_context->push_parent(&content);
             {
-                padding(button_padding);
-                if (button_with_label(play_button, "Play")) {
+                padding(top_padding);
+                if (button(play_button, "Play")) {
                     Menu::get().state = Menu::State::Game;
                 }
                 padding(button_padding);
-                if (button_with_label(about_button, "About")) {
+                if (button(about_button, "About")) {
                     Menu::get().state = Menu::State::About;
                 }
                 padding(button_padding);
-                if (button_with_label(settings_button, "Settings")) {
+                if (button(settings_button, "Settings")) {
                     Menu::get().state = Menu::State::Settings;
                 }
                 padding(button_padding);
-                if (button_with_label(exit_button, "Exit")) {
+                if (button(exit_button, "Exit")) {
                     exit(0);
                 }
             }

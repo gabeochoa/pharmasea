@@ -237,9 +237,9 @@ void test_autolayout_wrap_column() {
 
     Widget column1;
     column1.size_expected[0] = SizeExpectation{
-        .mode = SizeMode::Pixels, .value = 25.f, .strictness = 1.0f};
+        .mode = SizeMode::Pixels, .value = 25.f, .strictness = 1.f};
     column1.size_expected[1] = SizeExpectation{
-        .mode = SizeMode::Pixels, .value = 25.f, .strictness = 1.0f};
+        .mode = SizeMode::Pixels, .value = 25.f, .strictness = 1.f};
     root.add_child(&column1);
 
     Widget column2a;

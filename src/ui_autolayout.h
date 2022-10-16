@@ -8,6 +8,9 @@
 
 namespace ui {
 namespace autolayout {
+
+const float ACCEPTABLE_ERROR = 0.5f;
+
 float compute_size_for_standalone_expectation(Widget* widget, int exp_index) {
     // std::cout << "csfse" << widget << " " << exp_index << std::endl;
     SizeExpectation exp = widget->size_expected[exp_index];
@@ -117,22 +120,84 @@ float _get_total_child_size(Widget* widget, int exp_index) {
 void fix_violating_children(Widget* widget, int exp_index, float error,
                             int num_children) {
     M_ASSERT(num_children != 0, "Should never have zero children");
-    float approx_epc = error / num_children;
+    //
+
+    // std::vector<std::vector<Widget*>::iterator>
+    // proxy(widget->children.size()); for(auto iter = widget->children.begin();
+    // iter != widget->children.end();
+    // ++iter){
+    // proxy.push_back(iter);
+    // }
+    // std::sort(proxy.begin(), proxy.end(), [&](auto it, auto it2) {
+    // return (*it)->size_expected[exp_index].strictness <
+    // (*it2)->size_expected[exp_index].strictness;
+    // });
+    //
+    // for(auto iter : proxy){
+    // SizeExpectation exp = (*iter)->size_expected[exp_index];
+    // if(exp.strictness == 0.f){
+    //
+    // }
+    // }
+
+    int num_optional_children = 0;
+    int num_absolute_children = 0;
+    int num_ignorable_children = 0;
+    for (Widget* child : widget->children) {
+        SizeExpectation exp = child->size_expected[exp_index];
+        if (exp.strictness == 0.f) {
+            num_optional_children++;
+        }
+        if (exp.strictness == 1.f) {
+            num_absolute_children++;
+        }
+        if (child->ignore_size) {
+            num_ignorable_children++;
+        }
+    }
+
+    // Solve error for all optional children
+    if (num_optional_children != 0) {
+        float approx_epc = error / num_optional_children;
+        for (Widget* child : widget->children) {
+            SizeExpectation exp = child->size_expected[exp_index];
+            if (exp.strictness == 0.f) {
+                float cur_size = child->computed_size[exp_index];
+                child->computed_size[exp_index] = fmaxf(0, cur_size - approx_epc);
+                if(cur_size > approx_epc) error -= approx_epc;
+            }
+        }
+        if (error <= ACCEPTABLE_ERROR) {
+            return;
+        }
+    }
+
+    // If there is any error left,
+    // we have to take away from the normal children;
+
+    int num_resizeable_children = num_children - num_absolute_children -
+                                  num_optional_children -
+                                  num_ignorable_children;
+
+    // TODO we cannot enforce the assert below in the case of wrapping
+    // because the positioning happens after error correction
+    if (error > ACCEPTABLE_ERROR && num_resizeable_children == 0 &&
+        widget->growflags == GrowFlags::None) {
+        M_ASSERT(
+            num_resizeable_children > 0,
+            "Cannot fit all children inside parent and unable to resize any of "
+            "the children");
+    }
+
+    float approx_epc = error / (num_resizeable_children + num_optional_children);
     for (Widget* child : widget->children) {
         SizeExpectation exp = child->size_expected[exp_index];
         float portion_of_error = (1.f - exp.strictness) * approx_epc;
-        // std::cout << "hi" << exp.strictness << std::endl;
-        if (exp.strictness == 0.f) {
-            // If 0 then accept all the error
-            portion_of_error = error;
-            float cur_size = child->computed_size[exp_index];
-            child->computed_size[exp_index] = cur_size - portion_of_error;
-            break;
-        } else if (exp.strictness == 1.f) {
+        if (exp.strictness == 1.f || child->ignore_size) {
             // If 1.f, then we dont want to touch it
         } else {
             float cur_size = child->computed_size[exp_index];
-            child->computed_size[exp_index] = cur_size - portion_of_error;
+            child->computed_size[exp_index] = fmaxf(0, cur_size - portion_of_error);
             // Reduce strictness every round
             // so that eventually we will get there
             exp.strictness = fmaxf(0.f, exp.strictness - 0.1f);
@@ -153,7 +218,7 @@ void solve_violations(Widget* widget) {
     float all_children_x = _get_total_child_size(widget, 0);
     float error_x = all_children_x - my_size_x;
     int i_x = 0;
-    while (error_x > 0.5f) {
+    while (error_x > ACCEPTABLE_ERROR) {
         i_x++;
         // std::cout << "errorx" << error_x << std::endl;
         fix_violating_children(widget, 0, error_x, num_children);
@@ -165,7 +230,7 @@ void solve_violations(Widget* widget) {
     float all_children_y = _get_total_child_size(widget, 1);
     float error_y = all_children_y - my_size_y;
     int i_y = 0;
-    while (error_y > 0.5f) {
+    while (error_y > ACCEPTABLE_ERROR) {
         i_y++;
         // std::cout << "errory" << error_y << std::endl;
         fix_violating_children(widget, 1, error_y, num_children);
@@ -232,8 +297,8 @@ void compute_relative_positions(Widget* widget) {
             col_w = cx;
         }
 
-        // We can grow horizontally and current child will push us over width
-        // lets wrap
+        // We can grow horizontally and current child will push us over
+        // width lets wrap
         if (widget->growflags & GrowFlags::Row && cx + offx > sx) {
             offx = 0;
             offy += col_h;
