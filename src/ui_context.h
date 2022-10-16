@@ -16,27 +16,36 @@
 #include "ui_widget.h"
 #include "uuid.h"
 
-// TODO is there a better way to do this? 
+// TODO is there a better way to do this?
 //
 // Because we want the UI to be as simple as possible to write,
-// devs dont have to specify the font size since its dynamic based on size. 
+// devs dont have to specify the font size since its dynamic based on size.
 //
 // This means that like size, its caculated every frame. In case this causes
-// any rendering lag**, we need some way of caching the font sizes given a certiain
-// (content + width + height) 
+// any rendering lag**, we need some way of caching the font sizes given a
+// certiain (content + width + height)
 //
 // ** I never actually noticed any frame drop so this optimization was premature
 //
 // ****************************************************** start kludge
 namespace ui {
+
 struct FZInfo {
     const std::string content;
     float width;
     float height;
+    float spacing;
 };
 }  // namespace ui
 
 namespace std {
+
+template <class T>
+inline void hash_combine(std::size_t & s, const T & v)
+{
+  std::hash<T> h;
+  s^= h(v) + 0x9e3779b9 + (s<< 6) + (s>> 2);
+}
 
 template<>
 struct std::hash<ui::FZInfo> {
@@ -44,10 +53,13 @@ struct std::hash<ui::FZInfo> {
         using std::hash;
         using std::size_t;
         using std::string;
-        return ((hash<string>()(info.content) ^
-                 (hash<float>()(info.width) << 1)) >>
-                1) ^
-               (hash<float>()(info.height) << 1);
+
+        std::size_t out = 0;
+        hash_combine(out, info.content);
+        hash_combine(out, info.width);
+        hash_combine(out, info.height);
+        hash_combine(out, info.spacing);
+        return out;
     }
 };
 
@@ -314,8 +326,7 @@ struct UIContext {
     std::unordered_map<FZInfo, int> _font_size_memo;
 
     int get_font_size_impl(const std::string& content, float width,
-                           float height) {
-        float spacing = 0.f;
+                           float height, float spacing) {
         int font_size = 1;
         int last_size = 1;
         vec2 size;
@@ -335,12 +346,13 @@ struct UIContext {
         return last_size;
     }
 
-    int get_font_size(const std::string& content, float width, float height) {
+    int get_font_size(const std::string& content, float width, float height,
+                      float spacing) {
         FZInfo fzinfo =
             FZInfo{.content = content, .width = width, .height = height};
         if (!_font_size_memo.contains(fzinfo)) {
             _font_size_memo[fzinfo] =
-                get_font_size_impl(content, width, height);
+                get_font_size_impl(content, width, height, spacing);
         } else {
             // std::cout << "found value in cache" << std::endl;
         }
@@ -363,10 +375,11 @@ struct UIContext {
     void _draw_text(Rectangle rect, const std::string& content,
                     theme::Usage color_usage) {
         float spacing = 0.f;
-        float font_size = get_font_size(content, rect.width, rect.height);
+        float font_size =
+            get_font_size(content, rect.width, rect.height, spacing);
         // std::cout << "selected font size: " << font_size << " for " << rect.x
-                  // << ", " << rect.y << ", " << rect.width << ", " << rect.height
-                  // << std::endl;
+        // << ", " << rect.y << ", " << rect.width << ", " << rect.height
+        // << std::endl;
         DrawTextEx(font,                                   //
                    content.c_str(),                        //
                    {rect.x, rect.y},                       //
