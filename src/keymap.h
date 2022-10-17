@@ -162,7 +162,10 @@ struct KeyMap {
         game_map["Target Left"] = {KEY_LEFT};
         game_map["Target Right"] = {KEY_RIGHT};
 
-        game_map["Toggle Planning [Debug]"] = {KEY_P};
+        game_map["Toggle Planning [Debug]"] = {
+            KEY_P,
+            GAMEPAD_BUTTON_MIDDLE_LEFT,
+        };
     }
 
     void load_ui_keys() {
@@ -184,12 +187,11 @@ struct KeyMap {
         ui_map["Value Left"] = {KEY_LEFT};
         ui_map["Value Right"] = {KEY_RIGHT};
 
-        ui_map["Pause"] = {
-            GAMEPAD_BUTTON_MIDDLE_RIGHT
-        };
+        ui_map["Pause"] = {GAMEPAD_BUTTON_MIDDLE_RIGHT};
 
-        LayerMapping& root_map = this->get_or_create_layer_map(Menu::State::Root);
-        for (auto kv: ui_map){
+        LayerMapping& root_map =
+            this->get_or_create_layer_map(Menu::State::Root);
+        for (auto kv : ui_map) {
             root_map[kv.first] = kv.second;
         }
     }

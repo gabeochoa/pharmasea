@@ -20,7 +20,7 @@ struct MenuStateLayer : public Layer {
             return;
         }
         DrawTextEx(
-                App::get().font, 
+                Preload::get().font, 
                 Menu::get().tostring(), 
                 {5, 20},
                 20, 0,

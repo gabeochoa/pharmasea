@@ -27,14 +27,11 @@ Core engine TODOs:
 16. BUG: if customer runs into someone you both get stuck
 17. highlight furniture under selection 
 18. ~~add diagonal facing direction~~
-
-
-Better state management for AI 
-Fix corner walls 
-Better settings page 
-Put all things that have to be loaded in a single place
-Upgrade Astar to ThetaStar
-
+19. Better state management for AI 
+20. Fix corner walls 
+21. Better settings page 
+22. Put all things that have to be loaded in a single place
+23. Upgrade Astar to ThetaStar (worth doing?) 
 
 
 

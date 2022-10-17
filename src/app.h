@@ -3,30 +3,24 @@
 
 #include "external_include.h"
 //
-#include "resources/fonts/Karmina_Regular_256.h"
 #include "event.h"
 #include "globals.h"
 #include "keymap.h"
 #include "layer.h"
 #include "raylib.h"
 #include "singleton.h"
+#include "preload.h"
 
 SINGLETON_FWD(App)
 struct App {
     SINGLETON(App)
 
     LayerStack layerstack;
-    Font font;
 
     App() {
         InitWindow(WIN_W, WIN_H, "pharmasea");
-        // TODO - load fonts from install folder, instead of local path
-        // Font loading must happen after InitWindow
-        font = LoadFont_KarminaRegular256();
-        // font = LoadFontEx("./resources/fonts/constan.ttf", 96, 0, 0);
-        GenTextureMipmaps(&font.texture);
-        SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);
-
+        // Has to happen after init window due to font requirements
+        Preload::get();
         KeyMap::get();
     }
 

@@ -119,7 +119,7 @@ struct Customer : public AIPerson {
         );
 
         DrawText3D(           //
-            App::get().font,  //
+            Preload::get().font,  //
             name.c_str(),     //
             {0.f},            //
             96,               // font size

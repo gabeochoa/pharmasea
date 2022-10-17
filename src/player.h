@@ -47,7 +47,7 @@ struct Player : public Person {
         auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
             vec::to2(this->position), player_reach,
             this->face_direction,
-            [](std::shared_ptr<Furniture> f) { return true; });
+            [](std::shared_ptr<Furniture>) { return true; });
         if (match) {
             match->is_highlighted = true;
         }
