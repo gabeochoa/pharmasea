@@ -63,13 +63,16 @@ struct Player : public Person {
         // make it obvious to the user
         if (held_furniture != nullptr) {
             auto new_pos = this->position;
-            if (this->face_direction == FrontFaceDirection::FORWARD) {
+            if (this->face_direction & FrontFaceDirection::FORWARD) {
                 new_pos.z += TILESIZE;
-            } else if (this->face_direction == FrontFaceDirection::RIGHT) {
+            }
+            if (this->face_direction & FrontFaceDirection::RIGHT) {
                 new_pos.x += TILESIZE;
-            } else if (this->face_direction == FrontFaceDirection::BACK) {
+            }
+            if (this->face_direction & FrontFaceDirection::BACK) {
                 new_pos.z -= TILESIZE;
-            } else if (this->face_direction == FrontFaceDirection::LEFT) {
+            }
+            if (this->face_direction & FrontFaceDirection::LEFT) {
                 new_pos.x -= TILESIZE;
             }
 

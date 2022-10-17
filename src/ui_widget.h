@@ -68,7 +68,7 @@ struct Widget {
     }
     // TODO Support rotations
 
-    uuid default_id() const { return MK_UUID(id, ROOT_ID); }
+    uuid default_id() const { return static_cast<uuid>(MK_UUID(id, ROOT_ID)); }
 
     Widget() {
         this->id = default_id();

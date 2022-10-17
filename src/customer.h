@@ -115,7 +115,7 @@ struct Customer : public AIPerson {
         rlTranslatef(          //
             -0.5f * TILESIZE,  //
             0.f,               //
-            -1.05 * TILESIZE   // this is Y
+            -1.05f * TILESIZE   // this is Y
         );
 
         DrawText3D(           //

@@ -10,19 +10,45 @@
 #include "raylib.h"
 #include "util.h"
 #include "vec_util.h"
+#include <map>
 
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
     enum FrontFaceDirection {
-        FORWARD = 0,  // 0 degrees
-        RIGHT = 90,   // 90 degrees
-        BACK = 180,   // 180 degrees
-        LEFT = 270,   // 270 degrees
-        NE = 45,      // 45 degrees
-        SE = 135,     // 135 degrees
-        SW = 225,     // 225 degrees
-        NW = 315,     // 315 degrees
+        FORWARD = 0x1,
+        RIGHT = 0x2,
+        BACK = 0x4,
+        LEFT = 0x8
     };
+
+    const std::map<FrontFaceDirection, float> FrontFaceDirectionMap
+    {
+        {FORWARD, 0.0f},
+        {FORWARD | RIGHT, 45.0f},
+        {RIGHT, 90.0f},
+        {BACK | RIGHT, 135.0f},
+        {BACK, 180.0f},
+        {BACK | LEFT, 225.0f},
+        {LEFT, 270.0f},
+        {FORWARD | LEFT, 315.0f}
+    };
+
+    const std::map<int, FrontFaceDirection> DirectionToFrontFaceMap
+    {
+        {0, FORWARD},
+        {45, FORWARD | RIGHT},
+        {90, RIGHT},
+        {135, BACK | RIGHT},
+        {180, BACK},
+        {225, BACK | LEFT},
+        {270, LEFT},
+        {315, FORWARD | LEFT}
+    };
+
+    FrontFaceDirection offsetFaceDirection (FrontFaceDirection startingDirection, float offset) const {
+        const auto degreesOffset = static_cast<int>(FrontFaceDirectionMap.at(startingDirection) + static_cast<int>(offset));
+        return DirectionToFrontFaceMap.at(degreesOffset % 360);
+    }
 
     int id;
     vec3 raw_position;
@@ -91,11 +117,11 @@ struct Entity {
             Color f = ui::color::getHighlighted(this->face_color);
             Color b = ui::color::getHighlighted(this->base_color);
             DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                           this->size().z, static_cast<float>(face_direction),
+                           this->size().z, FrontFaceDirectionMap.at(face_direction),
                            f, b);
         } else {
             DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                           this->size().z, static_cast<float>(face_direction),
+                           this->size().z, FrontFaceDirectionMap.at(face_direction),
                            this->face_color, this->base_color);
         }
         DrawBoundingBox(this->bounds(), MAROON);
@@ -104,8 +130,7 @@ struct Entity {
     vec3 snap_position() const { return vec::snap(this->raw_position); }
 
     void rotate_facing_clockwise() {
-        this->face_direction =
-            static_cast<FrontFaceDirection>((this->face_direction + 90) % 360);
+        this->face_direction = offsetFaceDirection(this->face_direction, 90);
     }
 
     virtual void update(float) {
@@ -118,13 +143,16 @@ struct Entity {
 
         if (held_item != nullptr) {
             auto new_pos = this->position;
-            if (this->face_direction == FrontFaceDirection::FORWARD) {
+            if (this->face_direction & FrontFaceDirection::FORWARD) {
                 new_pos.z += TILESIZE;
-            } else if (this->face_direction == FrontFaceDirection::RIGHT) {
+            }
+            if (this->face_direction & FrontFaceDirection::RIGHT) {
                 new_pos.x += TILESIZE;
-            } else if (this->face_direction == FrontFaceDirection::BACK) {
+            }
+            if (this->face_direction & FrontFaceDirection::BACK) {
                 new_pos.z -= TILESIZE;
-            } else if (this->face_direction == FrontFaceDirection::LEFT) {
+            }
+            if (this->face_direction & FrontFaceDirection::LEFT) {
                 new_pos.x -= TILESIZE;
             }
 
@@ -133,8 +161,7 @@ struct Entity {
     }
 
     virtual vec2 get_heading() {
-        const int target_facing_deg = (int) this->face_direction;
-        const float target_facing_ang = util::deg2rad(target_facing_deg);
+        const float target_facing_ang = util::deg2rad(FrontFaceDirectionMap.at(this->face_direction));
         return vec2{
             cosf(target_facing_ang),
             sinf(target_facing_ang),
@@ -143,36 +170,18 @@ struct Entity {
 
     static vec2 tile_infront_given_pos(vec2 tile, int distance,
                                        FrontFaceDirection direction) {
-        switch (direction) {
-            case FORWARD:
-                tile.y += distance * TILESIZE;
-                break;
-            case RIGHT:
-                tile.x -= distance * TILESIZE;
-                break;
-            case BACK:
-                tile.y -= distance * TILESIZE;
-                break;
-            case LEFT:
-                tile.x += distance * TILESIZE;
-                break;
-            //
-            case NW:
-                tile.y += distance * TILESIZE;
-                tile.x += distance * TILESIZE;
-                break;
-            case NE:
-                tile.y += distance * TILESIZE;
-                tile.x -= distance * TILESIZE;
-                break;
-            case SW:
-                tile.y -= distance * TILESIZE;
-                tile.x -= distance * TILESIZE;
-                break;
-            case SE:
-                tile.y -= distance * TILESIZE;
-                tile.x += distance * TILESIZE;
-                break;
+        if (direction & FORWARD) {
+            tile.y += distance * TILESIZE;
+        }
+        if (direction & BACK) {
+            tile.y -= distance * TILESIZE;
+        }
+
+        if (direction & RIGHT) {
+            tile.x -= distance * TILESIZE;
+        }
+        if (direction & LEFT) {
+            tile.x += distance * TILESIZE;
         }
         return tile;
     }
@@ -199,7 +208,7 @@ struct Entity {
         float theta_rad = acosf(dot_product);
         float theta_deg = util::rad2deg(theta_rad);
         int turn_degrees = (180 - (int) theta_deg) % 360;
-
+        /*
         if (turn_degrees > 0 && turn_degrees <= 45) {
             this->face_direction = static_cast<FrontFaceDirection>(0);
         } else if (turn_degrees > 45 && turn_degrees <= 135) {
@@ -209,6 +218,7 @@ struct Entity {
         } else if (turn_degrees > 225) {
             this->face_direction = static_cast<FrontFaceDirection>(270);
         }
+        */
     }
 
     virtual bool is_collidable() { return true; }

@@ -35,7 +35,7 @@ vec3 toHSL(const Color color) {
     }
 
     if (abs(cmax - color.r) <= EPSILON) {
-        hsl.x = std::fmod((color.g - color.b) / delta, 6.f);
+        hsl.x = static_cast<float>(std::fmod((color.g - color.b) / delta, 6.f));
     } else if (abs(cmax - color.g) <= EPSILON) {
         hsl.x = (color.b - color.r) / delta + 2.f;
     } else {
@@ -88,7 +88,7 @@ Color toRGB(const vec3& hsl) {
 
 inline Color getHighlighted(const Color& color) {
     auto hsl = toHSL(color);
-    hsl.z = (hsl.z + 0.01);
+    hsl.z = (hsl.z + 0.01f);
     return toRGB(hsl);
 }
 

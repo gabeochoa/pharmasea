@@ -35,13 +35,13 @@ struct Wall : public Furniture {
                                this->size().x / 2,                  //
                                this->size().y,                      //
                                this->size().z,                      //
-                               static_cast<float>(face_direction),  //
+                               FrontFaceDirectionMap.at(face_direction),  //
                                this->face_color, this->base_color);
                 DrawCubeCustom(this->raw_position,                  //
                                this->size().x,                      //
                                this->size().y,                      //
                                this->size().z / 2,                  //
-                               static_cast<float>(face_direction),  //
+                               FrontFaceDirectionMap.at(face_direction),  //
                                this->face_color, this->base_color);
             } break;
             case Type::FULL: {
@@ -49,7 +49,7 @@ struct Wall : public Furniture {
                                this->size().x,                      //
                                this->size().y,                      //
                                this->size().z,                      //
-                               static_cast<float>(face_direction),  //
+                               FrontFaceDirectionMap.at(face_direction),  //
                                this->face_color, this->base_color);
             } break;
             case Type::HALF: {
@@ -57,7 +57,7 @@ struct Wall : public Furniture {
                                this->size().x,                      //
                                this->size().y,                      //
                                this->size().z / 2,                  //
-                               static_cast<float>(face_direction),  //
+                               FrontFaceDirectionMap.at(face_direction),  //
                                this->face_color, this->base_color);
             } break;
             case Type::CORNER: {
@@ -65,13 +65,13 @@ struct Wall : public Furniture {
                                this->size().x / 2,                  //
                                this->size().y,                      //
                                this->size().z,                      //
-                               static_cast<float>(face_direction),  //
+                               FrontFaceDirectionMap.at(face_direction),  //
                                this->face_color, this->base_color);
                 DrawCubeCustom(this->raw_position,                  //
                                this->size().x,                      //
                                this->size().y,                      //
                                this->size().z / 2,                  //
-                               static_cast<float>(face_direction),  //
+                               FrontFaceDirectionMap.at(face_direction),  //
                                this->face_color, this->base_color);
             } break;
             case Type::TEE: {
@@ -79,13 +79,13 @@ struct Wall : public Furniture {
                                this->size().x / 2,                  //
                                this->size().y,                      //
                                this->size().z,                      //
-                               static_cast<float>(face_direction),  //
+                               FrontFaceDirectionMap.at(face_direction),  //
                                this->face_color, this->base_color);
                 DrawCubeCustom(this->raw_position,                  //
                                this->size().x,                      //
                                this->size().y,                      //
                                this->size().z / 2,                  //
-                               static_cast<float>(face_direction),  //
+                               FrontFaceDirectionMap.at(face_direction),  //
                                this->face_color, this->base_color);
             } break;
             case Type::QUARTER:

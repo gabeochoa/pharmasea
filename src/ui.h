@@ -395,7 +395,7 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
     if (dropdownState) state->on.set(*dropdownState);
     auto selected_option = options[selectedIndex ? *selectedIndex : 0];
     // Num options + 1 for the current selected
-    int num_all = options.size() + 2;
+    size_t num_all = options.size() + 2;
 
     // TODO when you tab to the dropdown
     // it would be nice if it opened
@@ -532,14 +532,14 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
         bool value_changed = false;
         if (has_kb_focus(widget->id)) {
             if (get().is_held_down("Value Right")) {
-                state->value = state->value + 0.005;
+                state->value = state->value + 0.005f;
                 if (state->value > mxf) state->value = mxf;
 
                 (*value) = state->value;
                 value_changed = true;
             }
             if (get().is_held_down("Value Left")) {
-                state->value = state->value - 0.005;
+                state->value = state->value - 0.005f;
                 if (state->value < mnf) state->value = mnf;
                 (*value) = state->value;
                 value_changed = true;

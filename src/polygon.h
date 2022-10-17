@@ -42,7 +42,7 @@ struct Polygon {
     }
 
     // Returns the square of distance between two input points
-    int sqDist(vec2 p1, vec2 p2) const {
+    float sqDist(vec2 p1, vec2 p2) const {
         return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
     }
 
@@ -76,7 +76,7 @@ struct Polygon {
 
         std::vector<vec2> hullcopy(hull);
 
-        int n = hullcopy.size();
+        int n = static_cast<int>(hullcopy.size());
 
         // Multiplying with n to avoid floating point
         // arithmetic.
@@ -95,13 +95,13 @@ struct Polygon {
         // the convex hullcopy
         for (int i = 0, j; i < n; i++) {
             j = (i + 1) % n;
-            int x1 = hullcopy[i].x, x2 = hullcopy[j].x;
-            int y1 = hullcopy[i].y, y2 = hullcopy[j].y;
-            int a1 = y1 - y2;
-            int b1 = x2 - x1;
-            int c1 = x1 * y2 - y1 * x2;
-            int for_mid = a1 * mid.x + b1 * mid.y + c1;
-            int for_p = a1 * p.x + b1 * p.y + c1;
+            auto x1 = hullcopy[i].x, x2 = hullcopy[j].x;
+            auto y1 = hullcopy[i].y, y2 = hullcopy[j].y;
+            auto a1 = y1 - y2;
+            auto b1 = x2 - x1;
+            auto c1 = x1 * y2 - y1 * x2;
+            auto for_mid = a1 * mid.x + b1 * mid.y + c1;
+            auto for_p = a1 * p.x + b1 * p.y + c1;
             if (for_mid * for_p < 0) return false;
         }
 
@@ -154,7 +154,7 @@ struct Polygon {
 
     // https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain#C++
     void andrew_chain() {
-        int n = points.size();
+        int n = static_cast<int>(points.size());
         if (n <= 3) {
             hull = points;
             return;
@@ -184,7 +184,7 @@ struct Polygon {
 
         // point having minimum distance from the point p
         int ind = 0;
-        int n = hull.size();
+        size_t n = hull.size();
         for (int i = 1; i < n; i++)
             if (sqDist(p, hull[i]) < sqDist(p, hull[ind])) ind = i;
 
@@ -194,7 +194,7 @@ struct Polygon {
             up = (up + 1) % n;
 
         // Find the lower tangent
-        int low = ind;
+        size_t low = ind;
         while (orientation(p, hull[low], hull[(n + low - 1) % n]) <= 0)
             low = (n + low - 1) % n;
 

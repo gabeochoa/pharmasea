@@ -62,11 +62,11 @@ struct Settings {
             if (tokens[0] == "version") {
                 data.version = atoi(tokens[1].c_str());
             } else if (tokens[0] == "window_size") {
-                float x = atof(tokens[1].c_str());
-                float y = atof(tokens[2].c_str());
+                float x = static_cast<float>(atof(tokens[1].c_str()));
+                float y = static_cast<float>(atof(tokens[2].c_str()));
                 update_window_size({x, y});
             } else if (tokens[0] == "master_volume") {
-                update_master_volume(atof(tokens[1].c_str()));
+                update_master_volume(static_cast<float>(atof(tokens[1].c_str())));
             } else {
                 // TODO handle unknown data
             }

@@ -58,6 +58,7 @@ struct UITheme {
             case theme::Usage::Accent:
                 return accent;
         }
+        return background;
     }
 };
 

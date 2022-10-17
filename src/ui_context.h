@@ -322,12 +322,12 @@ struct UIContext {
                              active_theme().from_usage(usage));
     }
 
-    std::unordered_map<FZInfo, int> _font_size_memo;
+    std::unordered_map<FZInfo, float> _font_size_memo;
 
-    int get_font_size_impl(const std::string& content, float width,
+    float get_font_size_impl(const std::string& content, float width,
                            float height, float spacing) {
-        int font_size = 1;
-        int last_size = 1;
+        float font_size = 1.0f;
+        float last_size = 1.0f;
         vec2 size;
 
         // NOTE: if you are looking at a way to speed this up switch to using
@@ -341,7 +341,7 @@ struct UIContext {
             last_size = font_size;
             // the smaller the number we multiply by (>1) the better fitting the
             // text will be
-            font_size = (int) ceil(font_size * 1.25f);
+            font_size = ceilf(font_size * 1.25f);
             // std::cout << "measuring for " << font_size << std::endl;
             size = MeasureTextEx(font, content.c_str(), font_size, spacing);
             // std::cout << "got " << size.x << ", " << size.y << " for "
@@ -353,7 +353,7 @@ struct UIContext {
         return last_size;
     }
 
-    int get_font_size(const std::string& content, float width, float height,
+    float get_font_size(const std::string& content, float width, float height,
                       float spacing) {
         FZInfo fzinfo =
             FZInfo{.content = content, .width = width, .height = height};
@@ -363,7 +363,7 @@ struct UIContext {
         } else {
             // std::cout << "found value in cache" << std::endl;
         }
-        int result = _font_size_memo[fzinfo];
+        float result = _font_size_memo[fzinfo];
         // std::cout << "cache value " << result << std::endl;
         return result;
     }

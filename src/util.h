@@ -21,9 +21,9 @@ int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
 
-float deg2rad(float deg) { return deg * M_PI / 180.0; }
+float deg2rad(float deg) { return deg * static_cast<float>(M_PI) / 180.0f; }
 
-float rad2deg(float rad) { return rad * (180.f / M_PI); }
+float rad2deg(float rad) { return rad * (180.f / static_cast<float>(M_PI)); }
 
 std::vector<std::string> split_string(const std::string& str,
                                       const std::string& delimiter) {

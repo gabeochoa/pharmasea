@@ -104,11 +104,11 @@ void test_get_tile_in_front() {
     test_dir(Entity::FrontFaceDirection::LEFT , 1, 0);
     test_dir(Entity::FrontFaceDirection::RIGHT , -1, 0);
 
-    test_dir(Entity::FrontFaceDirection::NW, 1, 1);
-    test_dir(Entity::FrontFaceDirection::NE, -1, 1);
+    test_dir(Entity::FrontFaceDirection::FORWARD & Entity::FrontFaceDirection::LEFT, 1, 1);
+    test_dir(Entity::FrontFaceDirection::FORWARD & Entity::FrontFaceDirection::RIGHT, -1, 1);
 
-    test_dir(Entity::FrontFaceDirection::SW, -1, -1);
-    test_dir(Entity::FrontFaceDirection::SE, 1,-1);
+    test_dir(Entity::FrontFaceDirection::BACK & Entity::FrontFaceDirection::LEFT, -1, -1);
+    test_dir(Entity::FrontFaceDirection::BACK & Entity::FrontFaceDirection::RIGHT, 1,-1);
 }
 
 void test_get_matching_in_front() {

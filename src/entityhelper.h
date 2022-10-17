@@ -111,10 +111,11 @@ struct EntityHelper {
 
     template<typename T>
     static std::shared_ptr<T> getMatchingEntityInFront(
-        vec2 pos, int range, Entity::FrontFaceDirection direction,
+        vec2 pos, float range, Entity::FrontFaceDirection direction,
         std::function<bool(std::shared_ptr<T>)> filter) {
         std::vector<vec2> steps;
-        for (int i = 0; i < range; i++) {
+        // TODO fix this iterator up
+        for (int i = 0; i < static_cast<int>(range); i++) {
             steps.push_back(
                 vec::snap(Entity::tile_infront_given_pos(pos, i, direction)));
         }

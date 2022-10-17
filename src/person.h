@@ -32,8 +32,8 @@ struct Person : public Entity {
         auto new_pos_x = this->update_xaxis_position(dt);
         auto new_pos_z = this->update_zaxis_position(dt);
 
-        int facedir_x = -1;
-        int facedir_z = -1;
+        FrontFaceDirection facedir_x = static_cast<FrontFaceDirection>(-1);
+        FrontFaceDirection facedir_z = static_cast<FrontFaceDirection>(-1);
 
         vec3 delta_distance_x = new_pos_x - this->raw_position;
         if (delta_distance_x.x > 0) {
@@ -51,25 +51,18 @@ struct Person : public Entity {
 
         if (facedir_x == -1 && facedir_z == -1) {
             // do nothing
-        } else if (facedir_x == -1) {
-            this->face_direction = static_cast<FrontFaceDirection>(facedir_z);
-        } else if (facedir_x == FrontFaceDirection::RIGHT) {
-            this->face_direction = FrontFaceDirection::RIGHT;
-            if (facedir_z == FrontFaceDirection::BACK) {
-                this->face_direction = FrontFaceDirection::SE;
-            }
-            if (facedir_z == FrontFaceDirection::FORWARD) {
-                this->face_direction = FrontFaceDirection::NE;
-            }
-        } else if (facedir_x == FrontFaceDirection::LEFT) {
-            this->face_direction = FrontFaceDirection::LEFT;
-            if (facedir_z == FrontFaceDirection::BACK) {
-                this->face_direction = FrontFaceDirection::SW;
-            }
-            if (facedir_z == FrontFaceDirection::FORWARD) {
-                this->face_direction = FrontFaceDirection::NW;
-            }
         }
+        else if (facedir_x == -1) {
+            this->face_direction = facedir_z;
+        }
+        else if (facedir_z == -1) {
+            this->face_direction = facedir_x;
+        }
+        else {
+            this->face_direction = facedir_x | facedir_z;
+        }
+
+        //this->face_direction = FrontFaceDirection::BACK & FrontFaceDirection::LEFT;
 
         auto new_bounds_x =
             get_bounds(new_pos_x, this->size());  // horizontal check

@@ -59,3 +59,32 @@ typedef Vector4 vec4;
 #include <cassert>
 #include <algorithm>
 #include <variant>
+
+// For bitwise operations
+template< typename T >
+typename std::enable_if< std::is_enum< T >::value, T >::type
+operator~ (T a) { return static_cast<T>(~static_cast<int>(a)); }
+
+template< typename T >
+typename std::enable_if< std::is_enum< T >::value, T >::type
+operator| (T a, T b) { return static_cast<T>((static_cast<int>(a) | static_cast<int>(b))); }
+
+template< typename T >
+typename std::enable_if< std::is_enum< T >::value, T >::type
+operator& (T a, T b) { return static_cast<T>((static_cast<int> (a) & static_cast<int>(b))); }
+
+template< typename T >
+typename std::enable_if< std::is_enum< T >::value, T >::type
+operator^ (T a, T b) { return static_cast<T>((static_cast<int> (a) ^ static_cast<int>(b))); }
+
+template< typename T >
+typename std::enable_if< std::is_enum< T >::value, T >::type
+operator|= (T& a, T b) { return reinterpret_cast<T&>((reinterpret_cast<int&>(a) |= static_cast<int>(b))); }
+
+template< typename T >
+typename std::enable_if< std::is_enum< T >::value, T >::type
+operator&= (T& a, T b) { return reinterpret_cast<T&>((reinterpret_cast<int&>(a) &= static_cast<int>(b))); }
+
+template< typename T >
+typename std::enable_if< std::is_enum< T >::value, T >::type
+operator^= (T& a, T b) { return reinterpret_cast<T&>((reinterpret_cast<int&>(a) ^= static_cast<int>(b))); }

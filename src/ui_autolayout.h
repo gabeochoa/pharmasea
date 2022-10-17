@@ -234,7 +234,7 @@ void fix_violating_children(Widget* widget, int exp_index, float error,
             "the children");
     }
 
-    float approx_epc = error / (1.f * fmaxf(1, num_resizeable_children));
+    float approx_epc = error / (1.f * std::max(1, num_resizeable_children));
     for (Widget* child : widget->children) {
         SizeExpectation exp = child->size_expected[exp_index];
         if (exp.strictness == 1.f || child->ignore_size) {
@@ -282,7 +282,7 @@ void tax_refund(Widget* widget, int exp_index, float error) {
 }
 
 void solve_violations(Widget* widget) {
-    int num_children = widget->children.size();
+    int num_children = static_cast<int>(widget->children.size());
     if (num_children == 0) return;
 
     // me -> left -> right
