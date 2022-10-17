@@ -58,3 +58,4 @@ typedef Vector4 vec4;
 #include <array>
 #include <cassert>
 #include <algorithm>
+#include <variant>

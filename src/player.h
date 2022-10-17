@@ -141,8 +141,10 @@ struct Player : public Person {
                         return f->can_be_picked_up();
                     });
             this->held_furniture = closest_furniture;
-            auto nv = GLOBALS.get_ptr<NavMesh>("navmesh");
-            nv->removeEntity(this->held_furniture->id);
+            if (this->held_furniture) {
+                auto nv = GLOBALS.get_ptr<NavMesh>("navmesh");
+                nv->removeEntity(this->held_furniture->id);
+            }
             return;
         } else {
             std::shared_ptr<Item> closest_item =
