@@ -66,6 +66,11 @@ struct GameLayer : public Layer {
             Menu::get().state = Menu::State::Root;
             return true;
         }
+        if (KeyMap::get_button(Menu::State::Game,
+                                 "Toggle Planning [Debug]") == event.button) {
+            in_planning_mode = !in_planning_mode;
+            return true;
+        }
         return false;
     }
 
