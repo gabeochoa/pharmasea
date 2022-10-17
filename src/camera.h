@@ -4,6 +4,7 @@
 //
 #include "globals.h"
 #include "player.h"
+#include "raylib.h"
 
 struct GameCam {
     Camera3D camera;
@@ -97,6 +98,14 @@ struct GameCam {
             angle.x -= mouseDelta.x / 100.0f;
             angle.y -= mouseDelta.y / 100.0f;
 
+            angleMinMaxClamp();
+        }
+
+        float right_x_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X);
+        float right_y_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y);
+        if(abs(right_x_axis) > EPSILON || abs(right_y_axis) > EPSILON){
+            angle.x -= right_x_axis / 50.f;
+            angle.y -= right_y_axis / 50.f;
             angleMinMaxClamp();
         }
     }
