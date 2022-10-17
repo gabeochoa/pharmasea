@@ -127,7 +127,7 @@ struct EntityHelper {
             if (d > range) continue;
             for (auto step : steps) {
                 d = vec::distance(step, vec::snap(vec::to2(s->position)));
-                if (abs(d) <= EPSILON) return s;
+                if (abs(d) <= 1.f) return s;
             }
             return s;
         }
