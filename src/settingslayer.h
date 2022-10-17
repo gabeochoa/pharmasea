@@ -22,7 +22,7 @@ struct SettingsLayer : public Layer {
 
         ui_context.reset(new ui::UIContext());
         ui_context.get()->init();
-        ui_context->set_font(App::get().font);
+        ui_context->set_font(Preload::get().font);
         // TODO we should probably enforce that you cant do this
         // and we should have ->set_base_theme()
         // and push_theme separately, if you end() with any stack not empty...
