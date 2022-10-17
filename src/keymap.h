@@ -64,6 +64,13 @@ struct KeyMap {
         return 0.f;
     }
 
+    static float visit_button_down(GamepadButton button) {
+        if (IsGamepadButtonDown(0, button)) {
+            return 1.f;
+        }
+        return 0.f;
+    }
+
     void forEachInputInMap(std::function<void(Event&)> cb) {
         for (auto& fm_kv : mapping) {
             for (auto& lm_kv : fm_kv.second) {
@@ -174,6 +181,7 @@ struct KeyMap {
             KEY_TAB,
             GAMEPAD_BUTTON_LEFT_FACE_DOWN,
         };
+
         ui_map["Widget Back"] = {
             GAMEPAD_BUTTON_LEFT_FACE_UP,
         };
@@ -181,11 +189,32 @@ struct KeyMap {
 
         ui_map["Widget Press"] = {KEY_ENTER, GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
 
-        ui_map["Value Up"] = {KEY_UP};
-        ui_map["Value Down"] = {KEY_DOWN};
+        ui_map["Value Up"] = {
+            KEY_UP,
+            GAMEPAD_BUTTON_LEFT_FACE_UP,
+        };
 
-        ui_map["Value Left"] = {KEY_LEFT};
-        ui_map["Value Right"] = {KEY_RIGHT};
+        ui_map["Value Down"] = {
+            KEY_DOWN,
+            GAMEPAD_BUTTON_LEFT_FACE_DOWN,
+        };
+
+        ui_map["Value Left"] = {
+            KEY_LEFT,
+            GAMEPAD_BUTTON_LEFT_FACE_LEFT,
+            GamepadAxisWithDir{
+                .axis = GAMEPAD_AXIS_LEFT_X,
+                .dir = -1,
+            },
+        };
+        ui_map["Value Right"] = {
+            KEY_RIGHT,
+            GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
+            GamepadAxisWithDir{
+                .axis = GAMEPAD_AXIS_LEFT_X,
+                .dir = 1,
+            },
+        };
 
         ui_map["Pause"] = {GAMEPAD_BUTTON_MIDDLE_RIGHT};
 
@@ -210,6 +239,22 @@ struct KeyMap {
             if (r) return r;
         }
         return KEY_NULL;
+    }
+
+    static std::optional<GamepadAxisWithDir> get_axis(Menu::State state,
+                                                      const std::string& name) {
+        AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
+        for (auto input : valid_inputs) {
+            auto r = std::visit(
+                util::overloaded{
+                    [](GamepadAxisWithDir ax) {
+                        return std::optional<GamepadAxisWithDir>(ax);
+                    },
+                    [](auto&&) { return std::optional<GamepadAxisWithDir>(); }},
+                input);
+            if (r.has_value()) return r;
+        }
+        return {};
     }
 
     static GamepadButton get_button(Menu::State state,
@@ -245,7 +290,7 @@ struct KeyMap {
                                             return visit_axis(axis_with_dir);
                                         },
                                         [](GamepadButton button) {
-                                            return visit_button(button);
+                                            return visit_button_down(button);
                                         },
                                         [](auto) {}},
                                     input));
@@ -308,6 +353,29 @@ struct KeyMap {
                 contains =
                     std::visit(util::overloaded{[&](GamepadButton butt) {
                                                     if (butt == button)
+                                                        return true;
+                                                    return false;
+                                                },
+                                                [](auto&&) { return false; }},
+                               input);
+                if (contains) return true;
+            }
+        }
+        return false;
+    }
+
+    static bool does_layer_map_contain_axis(Menu::State state,
+                                            GamepadAxis axis) {
+        // We dont even have this Layer Map
+        if (!KeyMap::get().mapping.contains(state)) return false;
+        LayerMapping layermap = KeyMap::get().mapping[state];
+        bool contains = false;
+        for (auto pair : layermap) {
+            const auto valid_inputs = pair.second;
+            for (auto input : valid_inputs) {
+                contains =
+                    std::visit(util::overloaded{[&](GamepadAxisWithDir ax) {
+                                                    if (ax.axis == axis)
                                                         return true;
                                                     return false;
                                                 },

@@ -40,6 +40,12 @@ struct GameLayer : public Layer {
             std::bind(&GameLayer::onKeyPressed, this, std::placeholders::_1));
         dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(
             &GameLayer::onGamepadButtonPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<GamepadAxisMovedEvent>(std::bind(
+            &GameLayer::onGamepadAxisMoved, this, std::placeholders::_1));
+    }
+
+    bool onGamepadAxisMoved(GamepadAxisMovedEvent&) {
+        return false;
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {

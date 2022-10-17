@@ -39,6 +39,8 @@ struct SettingsLayer : public Layer {
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(std::bind(
             &SettingsLayer::onKeyPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(
+            &SettingsLayer::onGamepadButtonPressed, this, std::placeholders::_1));
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
@@ -48,6 +50,11 @@ struct SettingsLayer : public Layer {
             return true;
         }
         return ui_context.get()->process_keyevent(event);
+    }
+
+    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
+        if (Menu::get().state != Menu::State::Settings) return false;
+        return ui_context.get()->process_gamepad_button_event(event);
     }
 
     void draw_ui() {

@@ -5,6 +5,7 @@
 //
 #include "assert.h"
 #include "event.h"
+#include "gamepad_axis_with_dir.h"
 #include "keymap.h"
 #include "menu.h"
 #include "raylib.h"
@@ -142,6 +143,7 @@ struct UIContext {
     int key = -1;
     int mod = -1;
     GamepadButton button;
+    GamepadAxisWithDir axis_info;
 
     bool is_mouse_inside(const Rectangle& rect) {
         return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
@@ -171,6 +173,15 @@ struct UIContext {
         return true;
     }
 
+    bool process_gamepad_axis_event(GamepadAxisMovedEvent event) {
+        GamepadAxisWithDir info = event.data;
+        if (!KeyMap::does_layer_map_contain_axis(STATE, info.axis)) {
+            return false;
+        }
+        axis_info = info;
+        return true;
+    }
+
     bool _pressedButtonWithoutEat(GamepadButton butt) const {
         if (butt == GAMEPAD_BUTTON_UNKNOWN) return false;
         return button == butt;
@@ -195,8 +206,27 @@ struct UIContext {
         bool b = _pressedButtonWithoutEat(butt);
         if (b) {
             eatButton();
+            return b;
         }
-        return b;
+
+        std::optional<GamepadAxisWithDir> current_axis=
+            KeyMap::get_axis(STATE, name);
+        bool c = _readAxisWithoutEat(current_axis);
+        if(c){
+            eatAxis();
+        }
+        return c;
+    }
+
+    void eatAxis(){
+        axis_info = {};
+    }
+
+    bool _readAxisWithoutEat(std::optional<GamepadAxisWithDir> axis_opt) {
+        if (!axis_opt.has_value()) return false;
+        GamepadAxisWithDir axis = axis_opt.value();
+        return axis_info.axis == axis.axis &&
+               ((axis.dir - axis_info.dir) >= EPSILON);
     }
 
     bool _pressedWithoutEat(int code) const {
@@ -213,7 +243,6 @@ struct UIContext {
 
     // is held down
     bool is_held_down(std::string name) {
-        // TODO
         return KeyMap::is_event(STATE, name);
     }
 
@@ -325,7 +354,7 @@ struct UIContext {
     std::unordered_map<FZInfo, float> _font_size_memo;
 
     float get_font_size_impl(const std::string& content, float width,
-                           float height, float spacing) {
+                             float height, float spacing) {
         float font_size = 1.0f;
         float last_size = 1.0f;
         vec2 size;
@@ -354,7 +383,7 @@ struct UIContext {
     }
 
     float get_font_size(const std::string& content, float width, float height,
-                      float spacing) {
+                        float spacing) {
         FZInfo fzinfo =
             FZInfo{.content = content, .width = width, .height = height};
         if (!_font_size_memo.contains(fzinfo)) {
