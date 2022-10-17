@@ -52,9 +52,6 @@ float compute_size_for_parent_expectation(Widget* widget, int exp_index) {
     float new_size = exp.value * parent_size;
     switch (exp.mode) {
         case SizeMode::Percent:
-            // std::cout << "csfpe"
-            // << " " << exp_index << " pct value " << exp.value * 100.f
-            // << " result " << new_size << std::endl;
             return parent_size == -1 ? no_change : new_size;
         default:
             return no_change;

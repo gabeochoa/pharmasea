@@ -117,12 +117,10 @@ struct World {
             5 6 7
         */
         std::vector<char> output;
-        const int x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
-        const int y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
-        for (int a = 0; a < 8; a++) {
-            char neighbor = get_char(i + x[a], j + y[a]);
+        util::forEachNeighbor(i, j, [&](const vec2& v){
+            char neighbor = get_char(v.x, v.y);
             output.push_back(neighbor);
-        }
+        });
         return output;
     }
 

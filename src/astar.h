@@ -5,6 +5,7 @@
 
 #include "external_include.h"
 #include "globals.h"
+#include "util.h"
 #include "vec_util.h"
 
 namespace astar {
@@ -41,17 +42,17 @@ vec2 get_lowest_f(const std::set<vec2>& set,
 
 std::vector<vec2> get_neighbors(vec2 start,
                                 std::function<bool(vec2 pos)> is_walkable) {
-    const float x[8] = {0, 0, 1, -1, -1, 1, -1, 1};
-    const float y[8] = {1, -1, 0, 0, -1, -1, 1, 1};
     std::vector<vec2> output;
     int step = static_cast<int>(floor(TILESIZE));
-    for (int i = 0; i < 8; i++) {
-        vec2 neighbor = {start.x + (x[i] * step), start.y + (y[i] * step)};
-        neighbor = vec::snap(neighbor);
-        if (is_walkable(neighbor)) {
-            output.push_back(neighbor);
-        }
-    }
+    util::forEachNeighbor(
+        start.x, start.y,
+        [&](const vec2& v) {
+            auto neighbor = vec::snap(v);
+            if (is_walkable(neighbor)) {
+                output.push_back(neighbor);
+            }
+        },
+        step);
     return output;
 }
 
@@ -129,7 +130,6 @@ std::deque<vec2> find_path_impl(vec2 start, vec2 end,
 
 std::deque<vec2> find_path(vec2 start, vec2 end,
                            std::function<bool(vec2 pos)> is_walkable) {
-    // TODO add a cache
     return astar::find_path_impl(start, end, is_walkable);
 }
 

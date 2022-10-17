@@ -14,7 +14,6 @@ struct VersionLayer: public Layer {
     virtual void onUpdate(float) override {}
 
     virtual void onDraw(float) override {
-        // TODO with gamelayer, support events
         if (minimized) {
             return;
         }

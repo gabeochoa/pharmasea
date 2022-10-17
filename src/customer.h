@@ -35,11 +35,6 @@ struct SpeechBubble {
     }
 };
 
-struct Ailment {
-    // Name
-    // Treatment
-};
-
 struct Customer : public AIPerson {
     std::optional<SpeechBubble> bubble;
 

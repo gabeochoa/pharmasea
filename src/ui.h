@@ -8,7 +8,6 @@
 #include "ui_state.h"
 #include "ui_theme.h"
 #include "ui_widget.h"
-#include "ui_widget_config.h"
 #include "uuid.h"
 
 namespace ui {

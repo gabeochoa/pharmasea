@@ -3,4 +3,5 @@ pharmasea
 .cache/
 .DS_Store
 /.vs
+.vscode/
 log

@@ -28,6 +28,19 @@ Core engine TODOs:
 17. highlight furniture under selection 
 18. ~~add diagonal facing direction~~
 
+
+Better state management for AI 
+Fix corner walls 
+Better settings page 
+Put all things that have to be loaded in a single place
+Upgrade Astar to ThetaStar
+
+
+
+
+
+
+
 Gameplay Ideas
 - Pharmacy
     - AI players need status conditions ("Ailments")
