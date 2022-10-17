@@ -1,6 +1,6 @@
 
 
-FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow -Wmost -g -fsanitize=address
+FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow -Wmost -Wconversion -g -fsanitize=address
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers -Wno-c99-extensions -Wno-unused-function
 INCLUDES = -Ivendor/ 
 
