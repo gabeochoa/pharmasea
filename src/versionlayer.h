@@ -18,7 +18,7 @@ struct VersionLayer: public Layer {
             return;
         }
         DrawTextEx(
-                App::get().font, 
+                Preload::get().font, 
                 VERSION.c_str(),
                 {5, 30},
                 20, 0,

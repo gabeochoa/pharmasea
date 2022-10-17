@@ -53,7 +53,7 @@ struct SettingsLayer : public Layer {
     void draw_ui() {
         using namespace ui;
         // TODO select the acurate options based on current settings
-        auto& settings = Settings::get();
+        // auto& settings = Settings::get();
 
         // TODO move to input
         bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);

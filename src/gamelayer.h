@@ -28,29 +28,10 @@ struct GameLayer : public Layer {
         minimized = false;
         GLOBALS.set("game_cam", &cam);
         GLOBALS.set("in_planning", &in_planning_mode);
-        preload_textures();
     }
     virtual ~GameLayer() {}
     virtual void onAttach() override {}
     virtual void onDetach() override {}
-
-    void preload_textures() {
-        TextureLibrary::get().load(
-            Files::get().fetch_resource_path("images", "face.png").c_str(),
-            "face");
-
-        TextureLibrary::get().load(
-            Files::get().fetch_resource_path("images", "jug.png").c_str(),
-            "jug");
-
-        TextureLibrary::get().load(
-            Files::get().fetch_resource_path("images", "sleepyico.png").c_str(),
-            "bubble");
-
-        ModelLibrary::get().load(
-            Files::get().fetch_resource_path("models", "bag.obj").c_str(),
-            "bag");
-    }
 
     virtual void onEvent(Event& event) override {
         if (Menu::get().state != Menu::State::Game) return;
@@ -147,7 +128,7 @@ struct GameLayer : public Layer {
         EndMode3D();
 
         if (in_planning_mode) {
-            DrawTextEx(App::get().font, "IN PLANNING MODE", vec2{100, 100}, 20,
+            DrawTextEx(Preload::get().font, "IN PLANNING MODE", vec2{100, 100}, 20,
                        0, RED);
         }
     }
