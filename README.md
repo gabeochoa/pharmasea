@@ -32,8 +32,7 @@ Core engine TODOs:
 21. Better settings page 
 22. Put all things that have to be loaded in a single place
 23. Upgrade Astar to ThetaStar (worth doing?) 
-
-
+24. Need a build system to output producuction build
 
 
 
@@ -115,6 +114,27 @@ Gameplay Ideas
         - Thieves (easily identifiable and have to grab them before they leave) 
 
 Changelog
+
+alpha_0.22.10.17
+impact
+- added Controller movement for camera / menus
+- New ailment icons and bag model 
+- Switched from manually checking entities for pathfinding to using a navmesh w/ caching
+- Added Register furniture and customers now wait in line 
+- Remove all non theme'd ui color usages
+- Can now pick up and rotate furniture 
+better engineering
+- All loading happens in preloader now 
+- Rotational facing logic rehaul + diagonal walking 
+- Better font caching 
+- Reduced lots of warnings
+- Better testing infrastructure
+- Slowed down the customer and made picking up items easier
+soon
+- Tests for entity fetching 
+- System for highlighting selected items / furniture
+- Migration to autolayout 99% complete (missing dropdown ui element) 
+- Had windows issues with Sago library, blocked until we can figure out windows.h
 
 alpha_0.22.10.10
 - nicer buttons and colors across all UI (unified theme :) )
