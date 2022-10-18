@@ -36,8 +36,7 @@ Core engine TODOs:
 
 
 
-
-Gameplay Ideas
+Game Ideas
 - Pharmacy
     - AI players need status conditions ("Ailments")
         - Ailments should have an poor OTC solution and good Rx solution

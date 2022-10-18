@@ -47,6 +47,7 @@ struct Customer : public AIPerson {
     Customer(vec3 p, Color c) : AIPerson(p, c) {}
     Customer(vec2 p, Color c) : AIPerson(p, c) {}
 
+    /*
     virtual void reset_to_find_new_target() override {
         if (this->path_length() == 0) {
             Register* reg = get_target_register();
@@ -84,67 +85,72 @@ struct Customer : public AIPerson {
         }
         return nullptr;
     }
+    */
 
     virtual float base_speed() override { return 2.5f; }
+
+    virtual void process_job() override {
+        switch (job->type) {
+            case Wandering:
+                wandering();
+                break;
+            default:
+                break;
+        }
+    }
 
     virtual void update(float dt) override {
         AIPerson::update(dt);
 
-        Register* reg = get_target_register();
-        if (reg) {
-            this->turn_to_face_entity(reg);
-        }
-
-        // TODO just for debug purposes
-        if (!bubble.has_value()) {
-            bubble = SpeechBubble();
-        } else {
-            bubble.value().update(dt, this->raw_position);
-        }
-    }
-
-    void render_name() const {
-        rlPushMatrix();
-        rlTranslatef(              //
-            this->raw_position.x,  //
-            0.f,                   //
-            this->raw_position.z   //
-        );
-        rlRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-
-        rlTranslatef(          //
-            -0.5f * TILESIZE,  //
-            0.f,               //
-            -1.05f * TILESIZE   // this is Y
-        );
-
-        DrawText3D(           //
-            Preload::get().font,  //
-            name.c_str(),     //
-            {0.f},            //
-            96,               // font size
-            4,                // font spacing
-            4,                // line spacing
-            true,             // backface
-            BLACK);
-
-        rlPopMatrix();
-    }
-
-    void render_speech_bubble() const {
-        if (!this->bubble.has_value()) return;
-        this->bubble.value().render();
+        // Register* reg = get_target_register();
+        // if (reg) {
+        // this->turn_to_face_entity(reg);
+        // }
+        //
+        // // TODO just for debug purposes
+        // if (!bubble.has_value()) {
+        // bubble = SpeechBubble();
+        // } else {
+        // bubble.value().update(dt, this->raw_position);
+        // }
     }
 
     virtual void render() const override {
-        AIPerson::render();
-        this->render_speech_bubble();
-        this->render_name();
+        auto render_speech_bubble = [&]() {
+            if (!this->bubble.has_value()) return;
+            this->bubble.value().render();
+        };
 
-        if (this->target.has_value()) {
-            const float box_size = TILESIZE / 10.f;
-            DrawCube(vec::to3(this->target.value()), box_size, box_size,
-                     box_size, BLUE);
-        }
+        auto render_name = [&]() {
+            rlPushMatrix();
+            rlTranslatef(              //
+                this->raw_position.x,  //
+                0.f,                   //
+                this->raw_position.z   //
+            );
+            rlRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+
+            rlTranslatef(          //
+                -0.5f * TILESIZE,  //
+                0.f,               //
+                -1.05f * TILESIZE  // this is Y
+            );
+
+            DrawText3D(               //
+                Preload::get().font,  //
+                name.c_str(),         //
+                {0.f},                //
+                96,                   // font size
+                4,                    // font spacing
+                4,                    // line spacing
+                true,                 // backface
+                BLACK);
+
+            rlPopMatrix();
+        };
+
+        AIPerson::render();
+        render_speech_bubble();
+        render_name();
     }
 };

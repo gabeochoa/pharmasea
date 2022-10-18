@@ -6,13 +6,14 @@
 #include "external_include.h"
 //
 #include "globals.h"
+#include "job.h"
 #include "person.h"
 #include "targetcube.h"
 #include "ui_color.h"
 
 struct AIPerson : public Person {
-    std::optional<vec2> target;
-    std::optional<std::deque<vec2>> path;
+    std::shared_ptr<Job> job;
+
     std::optional<vec2> local_target;
 
     AIPerson(vec3 p, Color face_color_in, Color base_color_in)
@@ -28,90 +29,36 @@ struct AIPerson : public Person {
         Person::render();
 
         const float box_size = TILESIZE / 10.f;
-        if (this->path.has_value()) {
-            for (auto location : this->path.value()) {
+        if (job && !job->path.empty()) {
+            for (auto location : job->path) {
                 DrawCube(vec::to3(location), box_size, box_size, box_size,
                          BLUE);
             }
         }
     }
 
-    void random_target() {
-        // TODO add cooldown so that not all time is spent here
-        int max_tries = 10;
-        int range = 20;
-        bool walkable = false;
-        int i = 0;
-        while (!walkable) {
-            this->target = (vec2){1.f * randIn(-range, range),
-                                  1.f * randIn(-range, range)};
-            walkable = EntityHelper::isWalkable(this->target.value());
-            i++;
-            if (i > max_tries) {
-                break;
-            }
-        }
-    }
-
-    void target_cube_target() {
-        std::shared_ptr<TargetCube> closest_target =
-            EntityHelper::getClosestMatchingEntity<TargetCube>(
-                vec::to2(this->position), TILESIZE * 100.f,
-                [](auto&&) { return true; });
-
-        if (!closest_target) return;
-
-        auto snap_near_cube = closest_target->tile_infront(0);
-        if (EntityHelper::isWalkable(snap_near_cube)) {
-            this->target = snap_near_cube;
-        }
-    }
-
-    virtual void ensure_target() {
-        if (target.has_value()) {
-            return;
-        }
-        this->random_target();
-        // this->target_cube_target();
-    }
-
-    void ensure_path() {
-        // no active target
-        if (!target.has_value()) {
-            return;
-        }
-        // If we have a path, don't regenerate a new path so soon.
-        if (this->path.has_value()) {
-            return;
-        }
-        this->path = astar::find_path(
-            {this->position.x, this->position.z}, this->target.value(),
-            std::bind(EntityHelper::isWalkable, std::placeholders::_1));
-        // std::cout << "target" << this->target.value() << std::endl;
-        // std::cout << "path " << this->path.value().size() << std::endl;
-    }
-
-    void ensure_local_target() {
-        // already have one
-        if (this->local_target.has_value()) {
-            return;
-        }
-        // no active path
-        if (!this->path.has_value()) {
-            return;
-        }
-        if (this->path.value().empty()) {
-            return;
-        }
-        this->local_target = this->path.value().front();
-        this->path.value().pop_front();
-    }
+    // void target_cube_target() {
+    // std::shared_ptr<TargetCube> closest_target =
+    // EntityHelper::getClosestMatchingEntity<TargetCube>(
+    // vec::to2(this->position), TILESIZE * 100.f,
+    // [](auto&&) { return true; });
+    //
+    // if (!closest_target) return;
+    //
+    // auto snap_near_cube = closest_target->tile_infront(0);
+    // if (EntityHelper::isWalkable(snap_near_cube)) {
+    // this->target = snap_near_cube;
+    // }
+    // }
 
     virtual vec3 update_xaxis_position(float dt) override {
-        if (!this->local_target.has_value()) {
+        if (!job) {
             return this->raw_position;
         }
-        vec2 tar = this->local_target.value();
+        if (!job->local.has_value()) {
+            return this->raw_position;
+        }
+        vec2 tar = job->local.value();
         float speed = this->base_speed() * dt;
 
         auto new_pos_x = this->raw_position;
@@ -121,10 +68,13 @@ struct AIPerson : public Person {
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
-        if (!this->local_target.has_value()) {
+        if (!job) {
             return this->raw_position;
         }
-        vec2 tar = this->local_target.value();
+        if (!job->local.has_value()) {
+            return this->raw_position;
+        }
+        vec2 tar = job->local.value();
         float speed = this->base_speed() * dt;
 
         auto new_pos_z = this->raw_position;
@@ -133,34 +83,149 @@ struct AIPerson : public Person {
         return new_pos_z;
     }
 
-    int path_length() {
-        if (!this->path.has_value()) return 0;
-        return (int) this->path.value().size();
-    }
-
-    void reset_local_target() {
-        if (this->local_target.has_value() &&
-            vec::to2(this->position) == this->local_target.value()) {
-            this->local_target.reset();
+    virtual Job* get_wandering_job() {
+        // TODO add cooldown so that not all time is spent here
+        int max_tries = 10;
+        int range = 20;
+        bool walkable = false;
+        int i = 0;
+        vec2 target;
+        while (!walkable) {
+            target = (vec2){1.f * randIn(-range, range),
+                            1.f * randIn(-range, range)};
+            walkable = EntityHelper::isWalkable(target);
+            i++;
+            if (i > max_tries) {
+                return nullptr;
+            }
         }
+        return new Job({.type = Wandering,
+                        .start = vec::to2(this->position),
+                        .end = target});
     }
 
-    virtual void reset_to_find_new_target() {
-        if (this->path_length() == 0) {
-            this->target.reset();
-            this->path.reset();
-            this->local_target.reset();
+    virtual void get_starting_job() { job.reset(get_wandering_job()); }
+    virtual void get_idle_job() { job.reset(get_wandering_job()); }
+
+    virtual void wandering() {
+        auto ensure_has_path = [&]() {
+            // already there
+            if (job->reached_end) return;
+            // already have a path
+            if (!job->path.empty()) return;
+
+            vec2 start = vec::to2(this->position);
+            if (!job->reached_start && start == job->start) {
+                job->reached_start = true;
+                return;
+            }
+            if (job->start_completed && !job->reached_end &&
+                start == job->end) {
+                job->reached_end = true;
+                return;
+            }
+
+            vec2 end = job->reached_start ? job->end : job->start;
+            job->path = astar::find_path(
+                start, end,
+                std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+            // If path isnt solveable just mark it true and
+            // make a new target
+            if (job->path.size() == 0) {
+                job->is_complete = true;
+            }
+        };
+
+        auto ensure_local_target = [&]() {
+            if (job->path.empty()) return;       // no path yet
+            if (job->local.has_value()) return;  // already have local target
+            // grab next local
+            job->local = job->path.front();
+            job->path.pop_front();
+        };
+
+        auto reset_local_target = [&]() {
+            if (!job->local.has_value()) return;  // no local target yet
+
+            // TODO make sure this == works reasonably
+            // // TODO snap? vs normal? vs raw?
+            if (vec::to2(this->snap_position()) == job->local.value()) {
+                job->local.reset();
+            }
+        };
+
+        auto reset_to_find_new_target = [&]() {
+            if (!job->path.empty()) return;
+            // path empty means we got to our current global target
+            if (!job->reached_start &&
+                vec::to2(this->snap_position()) == job->start) {
+                job->reached_start = true;
+                return;
+            }
+            // we reached the start and now our path is empty again
+            // as long as we completed start we should be at the end
+            // TODO
+            if (job->start_completed &&
+                vec::to2(this->snap_position()) == job->end) {
+                job->reached_end = true;
+                return;
+            }
+        };
+
+        auto get_to_job = [&]() {
+            ensure_has_path();
+            ensure_local_target();
+            reset_local_target();
+            reset_to_find_new_target();
+        };
+
+        auto work_at_start = [&]() {
+            if (!job->reached_start) return;
+            if (job->start_completed) return;
+            // For wandering type, this is enough
+            job->start_completed = true;
+        };
+
+        auto work_at_end = [&]() {
+            // cant work if complete
+            if (job->is_complete) return;
+            // cant work unless we got there
+            if (!job->reached_end) return;
+            // For wandering type, reaching the end is complete
+            job->is_complete = true;
+        };
+
+        auto work_at_job = [&]() {
+            work_at_start();
+            work_at_end();
+        };
+
+        get_to_job();
+        work_at_job();
+    }
+
+    virtual void find_new_job() {
+        // AIPerson just walks around randomly
+        get_idle_job();
+    }
+
+    virtual void process_job() {
+        switch (job->type) {
+            case Wandering:
+                wandering();
+                break;
+            default:
+                break;
         }
     }
 
     virtual void update(float dt) override {
         Person::update(dt);
-
-        this->ensure_target();
-        this->ensure_path();
-        this->ensure_local_target();
-        reset_to_find_new_target();
-        reset_local_target();
+        if (!job || job->is_complete) {
+            find_new_job();
+            return;
+        }
+        process_job();
     }
 
     virtual bool is_snappable() override { return true; }
