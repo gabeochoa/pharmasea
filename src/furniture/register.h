@@ -3,11 +3,12 @@
 
 #include "../external_include.h"
 //
+#include "../assert.h"
 #include "../entity.h"
 #include "../globals.h"
 //
-#include "../furniture.h"
 #include "../aiperson.h"
+#include "../furniture.h"
 
 struct RegisterNextQueuePosition : TargetCube {
     RegisterNextQueuePosition(vec3 p, Color face_color_in, Color base_color_in)
@@ -23,22 +24,42 @@ struct Register : public Furniture {
 
     std::deque<AIPerson*> ppl_in_line;
 
-    int next_line_position = 1;
+    int max_queue_size = 3;
 
-    bool is_in_line(std::shared_ptr<AIPerson> entity) {
-        if (entity == nullptr) return false;
-        for (auto e : ppl_in_line) {
-            if (entity->id == e->id) return true;
+    int next_line_position = 0;
+    int position_in_line(AIPerson* entity) {
+        for (int i = 0; i < ppl_in_line.size(); i++) {
+            if (entity->id == ppl_in_line[i]->id) return i;
         }
-        return false;
+        std::cout << fmt::format("cant find entity {}", entity->id)
+                  << std::endl;
+        return -1;
+    }
+    bool can_move_up(AIPerson* entity) {
+        return entity->id == ppl_in_line.front()->id;
     }
 
-    vec2 get_next_queue_position(AIPerson* entity) {
-        if (entity == nullptr) {
-            return vec2{-1, -1};
+    void leave_line(AIPerson* entity) {
+        // std::cout << fmt::format("removing entity {}", entity->id) << std::endl;
+        int pos = this->position_in_line(entity);
+        if (pos == -1) return;
+        if (pos == 0) {
+            ppl_in_line.pop_front();
+            return;
         }
+        // std::cout << fmt::format("used line position") << std::endl;
+        ppl_in_line.erase(ppl_in_line.begin() + pos);
+    }
+
+    bool is_in_line(AIPerson* entity) { return position_in_line(entity) != -1; }
+    bool has_space_in_queue() { return next_line_position < max_queue_size; }
+
+    vec2 get_next_queue_position(AIPerson* entity) {
+        M_ASSERT(entity, "entity passed to register queue should not be null");
         ppl_in_line.push_back(entity);
-        auto front = this->tile_infront(next_line_position++);
+        // the place the customers stand is 1 tile infront of the register
+        auto front = this->tile_infront((next_line_position + 1) * 2);
+        next_line_position++;
         return front;
     }
 

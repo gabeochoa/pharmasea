@@ -12,6 +12,7 @@
 #include "ui_color.h"
 
 struct AIPerson : public Person {
+    std::stack<std::shared_ptr<Job>> personal_queue;
     std::shared_ptr<Job> job;
 
     std::optional<vec2> local_target;
@@ -104,10 +105,7 @@ struct AIPerson : public Person {
                         .end = target});
     }
 
-    virtual void get_starting_job() { job.reset(get_wandering_job()); }
-    virtual void get_idle_job() { job.reset(get_wandering_job()); }
-
-    virtual void wandering() {
+    virtual void get_to_job() {
         auto ensure_has_path = [&]() {
             // already there
             if (job->reached_end) return;
@@ -172,13 +170,13 @@ struct AIPerson : public Person {
             }
         };
 
-        auto get_to_job = [&]() {
-            ensure_has_path();
-            ensure_local_target();
-            reset_local_target();
-            reset_to_find_new_target();
-        };
+        ensure_has_path();
+        ensure_local_target();
+        reset_local_target();
+        reset_to_find_new_target();
+    }
 
+    virtual void wandering() {
         auto work_at_start = [&]() {
             if (!job->reached_start) return;
             if (job->start_completed) return;
@@ -204,12 +202,19 @@ struct AIPerson : public Person {
         work_at_job();
     }
 
+    virtual void get_starting_job() { job.reset(get_wandering_job()); }
+    virtual void get_idle_job() { job.reset(get_wandering_job()); }
+
     virtual void find_new_job() {
-        // AIPerson just walks around randomly
-        get_idle_job();
+        if (personal_queue.empty()) {
+            get_idle_job();
+            return;
+        }
+        job = personal_queue.top();
+        personal_queue.pop();
     }
 
-    virtual void process_job() {
+    virtual void process_job(float) {
         switch (job->type) {
             case Wandering:
                 wandering();
@@ -221,11 +226,21 @@ struct AIPerson : public Person {
 
     virtual void update(float dt) override {
         Person::update(dt);
-        if (!job || job->is_complete) {
+        if (!job) {
+            get_starting_job();
+            return;
+        }
+        if (job->is_complete) {
+            if (job->on_cleanup) job->on_cleanup(this, job.get());
+            job.reset();
             find_new_job();
             return;
         }
-        process_job();
+        process_job(dt);
+    }
+
+    virtual void announce(std::string text) {
+        std::cout << this->id << ": " << text << std::endl;
     }
 
     virtual bool is_snappable() override { return true; }
