@@ -32,8 +32,8 @@ struct Person : public Entity {
         auto new_pos_x = this->update_xaxis_position(dt);
         auto new_pos_z = this->update_zaxis_position(dt);
 
-        FrontFaceDirection facedir_x = static_cast<FrontFaceDirection>(-1);
-        FrontFaceDirection facedir_z = static_cast<FrontFaceDirection>(-1);
+        int facedir_x = -1;
+        int facedir_z = -1;
 
         vec3 delta_distance_x = new_pos_x - this->raw_position;
         if (delta_distance_x.x > 0) {
@@ -51,15 +51,13 @@ struct Person : public Entity {
 
         if (facedir_x == -1 && facedir_z == -1) {
             // do nothing
-        }
-        else if (facedir_x == -1) {
-            this->face_direction = facedir_z;
-        }
-        else if (facedir_z == -1) {
-            this->face_direction = facedir_x;
-        }
-        else {
-            this->face_direction = facedir_x | facedir_z;
+        } else if (facedir_x == -1) {
+            this->face_direction = static_cast<FrontFaceDirection>(facedir_z);
+        } else if (facedir_z == -1) {
+            this->face_direction = static_cast<FrontFaceDirection>(facedir_x);
+        } else {
+            this->face_direction =
+                static_cast<FrontFaceDirection>(facedir_x | facedir_z);
         }
 
         new_pos_x.x += this->pushed_force.x;
@@ -68,7 +66,8 @@ struct Person : public Entity {
         new_pos_z.z += this->pushed_force.z;
         this->pushed_force.z = 0.0f;
 
-        //this->face_direction = FrontFaceDirection::BACK & FrontFaceDirection::LEFT;
+        // this->face_direction = FrontFaceDirection::BACK &
+        // FrontFaceDirection::LEFT;
 
         auto new_bounds_x =
             get_bounds(new_pos_x, this->size());  // horizontal check
@@ -110,20 +109,24 @@ struct Person : public Entity {
             this->raw_position.z = new_pos_z.z;
         }
 
-        // This value determines how "far" to impart a push force on the collided entity
+        // This value determines how "far" to impart a push force on the
+        // collided entity
         const float directional_push_modifier = 1.0f;
 
-        // Figure out if there's a more graceful way to "jitter" things around each other
+        // Figure out if there's a more graceful way to "jitter" things around
+        // each other
         if (would_collide_x || would_collide_z) {
             if (auto entity_x = collided_entity_x.lock()) {
                 if (auto person_ptr_x = dynamic_cast<Person*>(entity_x.get())) {
                     const float random_jitter = randSign() * TILESIZE / 2.0f;
                     if (facedir_x & FrontFaceDirection::LEFT) {
-                        entity_x->pushed_force.x += TILESIZE / directional_push_modifier;
+                        entity_x->pushed_force.x +=
+                            TILESIZE / directional_push_modifier;
                         entity_x->pushed_force.z += random_jitter;
                     }
                     if (facedir_x & FrontFaceDirection::RIGHT) {
-                        entity_x->pushed_force.x -= TILESIZE / directional_push_modifier;
+                        entity_x->pushed_force.x -=
+                            TILESIZE / directional_push_modifier;
                         entity_x->pushed_force.z += random_jitter;
                     }
                 }
@@ -133,16 +136,18 @@ struct Person : public Entity {
                     const float random_jitter = randSign() * TILESIZE / 2.0f;
                     if (facedir_z & FrontFaceDirection::FORWARD) {
                         person_ptr_z->pushed_force.x += random_jitter;
-                        person_ptr_z->pushed_force.z += TILESIZE / directional_push_modifier;
+                        person_ptr_z->pushed_force.z +=
+                            TILESIZE / directional_push_modifier;
                     }
                     if (facedir_z & FrontFaceDirection::BACK) {
                         person_ptr_z->pushed_force.x += random_jitter;
-                        person_ptr_z->pushed_force.z -= TILESIZE / directional_push_modifier;
+                        person_ptr_z->pushed_force.z -=
+                            TILESIZE / directional_push_modifier;
                     }
                 }
             }
         }
-        
+
         Entity::update(dt);
     }
 };

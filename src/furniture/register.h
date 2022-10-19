@@ -28,7 +28,7 @@ struct Register : public Furniture {
 
     int next_line_position = 0;
     int position_in_line(AIPerson* entity) {
-        for (int i = 0; i < ppl_in_line.size(); i++) {
+        for (int i = 0; i < (int) ppl_in_line.size(); i++) {
             if (entity->id == ppl_in_line[i]->id) return i;
         }
         std::cout << fmt::format("cant find entity {}", entity->id)
@@ -67,9 +67,9 @@ struct Register : public Furniture {
     Model model() const { return ModelLibrary::get().get("register"); }
 
     virtual void render() const override {
-        Color face = this->is_highlighted
-                         ? ui::color::getHighlighted(this->face_color)
-                         : this->face_color;
+        // Color face = this->is_highlighted
+        // ? ui::color::getHighlighted(this->face_color)
+        // : this->face_color;
         Color base = this->is_highlighted
                          ? ui::color::getHighlighted(this->base_color)
                          : this->base_color;

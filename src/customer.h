@@ -50,7 +50,7 @@ struct Customer : public AIPerson {
 
     virtual float base_speed() override { return 3.5f; }
 
-    void wait_in_queue(float dt) {
+    void wait_in_queue(float) {
         auto init_job = [&]() {
             if (job->initialized) return;
 

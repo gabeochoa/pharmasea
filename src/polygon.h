@@ -35,7 +35,8 @@ struct Polygon {
     // checks whether the point crosses the convex hull
     // or not
     int orientation(vec2 a, vec2 b, vec2 c) const {
-        int res = (b.y - a.y) * (c.x - b.x) - (c.y - b.y) * (b.x - a.x);
+        float res_f = (b.y - a.y) * (c.x - b.x) - (c.y - b.y) * (b.x - a.x);
+        int res = (int) floor(res_f);
         if (res == 0) return 0;
         if (res > 0) return 1;
         return -1;
@@ -184,7 +185,7 @@ struct Polygon {
 
         // point having minimum distance from the point p
         int ind = 0;
-        size_t n = hull.size();
+        int n = (int) hull.size();
         for (int i = 1; i < n; i++)
             if (sqDist(p, hull[i]) < sqDist(p, hull[ind])) ind = i;
 
@@ -194,7 +195,7 @@ struct Polygon {
             up = (up + 1) % n;
 
         // Find the lower tangent
-        size_t low = ind;
+        int low = ind;
         while (orientation(p, hull[low], hull[(n + low - 1) % n]) <= 0)
             low = (n + low - 1) % n;
 

@@ -204,6 +204,8 @@ struct Entity {
         float theta_rad = acosf(dot_product);
         float theta_deg = util::rad2deg(theta_rad);
         int turn_degrees = (180 - (int) theta_deg) % 360;
+        // TODO fix this 
+        (void) turn_degrees;
         /*
         if (turn_degrees > 0 && turn_degrees <= 45) {
             this->face_direction = static_cast<FrontFaceDirection>(0);

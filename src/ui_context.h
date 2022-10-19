@@ -243,7 +243,7 @@ struct UIContext {
 
     // is held down
     bool is_held_down(std::string name) {
-        return KeyMap::is_event(STATE, name);
+        return (bool) KeyMap::is_event(STATE, name);
     }
 
     bool inited = false;

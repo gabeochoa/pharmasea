@@ -15,27 +15,27 @@ namespace ui {
 // thx
 
 struct uuid {
-    int ownerLayer;
+    std::size_t ownerLayer;
     std::size_t hash;
 
     uuid() : uuid(-99, 0, "__MAGIC__STRING__", -1) {}
-    uuid(const std::string& s1, int i1) : uuid(-1, 0, s1, i1) {}
+    uuid(const std::string& s1, std::size_t i1) : uuid(-1, 0, s1, i1) {}
 
-    uuid(int layer, std::size_t ownerHash, const std::string& s1, int i1) {
+    uuid(std::size_t layer, std::size_t ownerHash, const std::string& s1, std::size_t i1) {
         ownerLayer = layer;
-        auto h0 = std::hash<int>{}(static_cast<int>(ownerHash));
+        auto h0 = std::hash<std::size_t>{}(static_cast<std::size_t>(ownerHash));
         auto h1 = std::hash<std::string>{}(s1);
-        auto h2 = std::hash<int>{}(i1);
+        auto h2 = std::hash<std::size_t>{}(i1);
         hash = h0 ^ (h1 << 1) ^ (h2 << 2);
     }
 
-    uuid(int o, std::size_t ownerHash, const std::string& s1, int i1,
-         int index) {
+    uuid(std::size_t o, std::size_t ownerHash, const std::string& s1, std::size_t i1,
+         std::size_t index) {
         ownerLayer = o;
-        auto h0 = std::hash<int>{}(static_cast<int>(ownerHash));
+        auto h0 = std::hash<std::size_t>{}(static_cast<std::size_t>(ownerHash));
         auto h1 = std::hash<std::string>{}(s1);
-        auto h2 = std::hash<int>{}(i1);
-        auto h3 = std::hash<int>{}(index);
+        auto h2 = std::hash<std::size_t>{}(i1);
+        auto h3 = std::hash<std::size_t>{}(index);
         hash = h0 ^ (h1 << 1) ^ (h2 << 2) ^ (h3 << 3);
     }
 

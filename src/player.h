@@ -158,7 +158,7 @@ struct Player : public Person {
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
                         vec::to2(this->position), player_reach,
-                        this->face_direction, [](std::shared_ptr<Furniture> f) {
+                        this->face_direction, [](std::shared_ptr<Furniture>) {
                             return true;
                         });
                 if (closest_furniture && closest_furniture->held_item != nullptr) {
