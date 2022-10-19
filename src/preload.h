@@ -7,6 +7,7 @@
 //
 #include "modellibrary.h"
 #include "resources/fonts/Karmina_Regular_256.h"
+#include "sound_library.h"
 #include "texture_library.h"
 
 SINGLETON_FWD(Preload)
@@ -19,6 +20,7 @@ struct Preload {
         load_fonts();
         load_textures();
         load_models();
+        load_sounds();
     }
 
     void load_fonts() {
@@ -50,5 +52,14 @@ struct Preload {
         ModelLibrary::get().load(
             Files::get().fetch_resource_path("models", "register.obj").c_str(),
             "register");
+    }
+
+    void load_sounds() {
+        InitAudioDevice();
+        SoundLibrary::get().load(
+            Files::get()
+                .fetch_resource_path("sounds", "roblox_oof.ogg")
+                .c_str(),
+            "roblox");
     }
 };
