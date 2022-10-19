@@ -109,7 +109,7 @@ struct GameLayer : public Layer {
                 return EntityHelper::ForEachFlow::None;
             });
 
-            DrawGrid(40, TILESIZE);
+            // DrawGrid(40, TILESIZE);
 
             DrawBillboard(cam.camera, TextureLibrary::get().get("face"),
                           {

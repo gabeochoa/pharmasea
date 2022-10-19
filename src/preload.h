@@ -46,5 +46,9 @@ struct Preload {
         ModelLibrary::get().load(
             Files::get().fetch_resource_path("models", "bag.obj").c_str(),
             "bag");
+
+        ModelLibrary::get().load(
+            Files::get().fetch_resource_path("models", "register.obj").c_str(),
+            "register");
     }
 };

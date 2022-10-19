@@ -15,7 +15,7 @@ struct Furniture : public Entity {
     virtual void update_held_item_position() override {
         if (held_item != nullptr) {
             auto new_pos = this->position;
-            new_pos.y += TILESIZE / 2;
+            new_pos.y += TILESIZE / 4;
             held_item->update_position(new_pos);
         }
     }
