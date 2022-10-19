@@ -146,18 +146,28 @@ struct Customer : public AIPerson {
             if (!job->reached_end) return;
             // ------ END -----
 
-            job->timeToComplete = 0.25f;
-            job->timePassedInCurrentState += dt;
-            if (job->timePassedInCurrentState < job->timeToComplete) {
-                return;
-            }
-
-            announce("job complete");
 
             Register* reg = (Register*) job->data["register"];
             Customer* me = this;
-            reg->leave_line(me);
 
+            if(reg->held_item == nullptr){
+                announce("my rx isnt ready yet");
+
+                // Add the current job to the queue,
+                // and then add the waiting job
+                personal_queue.push(job);
+                this->job.reset(new Job({
+                    .type = Wait,
+                    .timeToComplete = 1.f,
+                }));
+                return;
+            }
+
+            this->held_item = reg->held_item;
+            reg->held_item = nullptr;
+
+            announce("got it");
+            reg->leave_line(me);
             job->is_complete = true;
         };
 

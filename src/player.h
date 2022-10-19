@@ -45,8 +45,7 @@ struct Player : public Person {
 
     void highlight_facing_furniture() {
         auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
-            vec::to2(this->position), player_reach,
-            this->face_direction,
+            vec::to2(this->position), player_reach, this->face_direction,
             [](std::shared_ptr<Furniture>) { return true; });
         if (match) {
             match->is_highlighted = true;
@@ -113,6 +112,7 @@ struct Player : public Person {
                 if (closest_furniture) {
                     this->held_item->update_position(
                         vec::snap(closest_furniture->position));
+                    closest_furniture->held_item = this->held_item;
                     this->held_item = nullptr;
                 }
             };
