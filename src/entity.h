@@ -3,6 +3,8 @@
 
 #include "external_include.h"
 //
+#include <map>
+
 #include "astar.h"
 #include "globals.h"
 #include "item.h"
@@ -10,7 +12,6 @@
 #include "raylib.h"
 #include "util.h"
 #include "vec_util.h"
-#include <map>
 
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
@@ -21,32 +22,21 @@ struct Entity {
         LEFT = 0x8
     };
 
-    const std::map<FrontFaceDirection, float> FrontFaceDirectionMap
-    {
-        {FORWARD, 0.0f},
-        {FORWARD | RIGHT, 45.0f},
-        {RIGHT, 90.0f},
-        {BACK | RIGHT, 135.0f},
-        {BACK, 180.0f},
-        {BACK | LEFT, 225.0f},
-        {LEFT, 270.0f},
-        {FORWARD | LEFT, 315.0f}
-    };
+    const std::map<FrontFaceDirection, float> FrontFaceDirectionMap{
+        {FORWARD, 0.0f},        {FORWARD | RIGHT, 45.0f}, {RIGHT, 90.0f},
+        {BACK | RIGHT, 135.0f}, {BACK, 180.0f},           {BACK | LEFT, 225.0f},
+        {LEFT, 270.0f},         {FORWARD | LEFT, 315.0f}};
 
-    const std::map<int, FrontFaceDirection> DirectionToFrontFaceMap
-    {
-        {0, FORWARD},
-        {45, FORWARD | RIGHT},
-        {90, RIGHT},
-        {135, BACK | RIGHT},
-        {180, BACK},
-        {225, BACK | LEFT},
-        {270, LEFT},
-        {315, FORWARD | LEFT}
-    };
+    const std::map<int, FrontFaceDirection> DirectionToFrontFaceMap{
+        {0, FORWARD},        {45, FORWARD | RIGHT}, {90, RIGHT},
+        {135, BACK | RIGHT}, {180, BACK},           {225, BACK | LEFT},
+        {270, LEFT},         {315, FORWARD | LEFT}};
 
-    FrontFaceDirection offsetFaceDirection (FrontFaceDirection startingDirection, float offset) const {
-        const auto degreesOffset = static_cast<int>(FrontFaceDirectionMap.at(startingDirection) + static_cast<int>(offset));
+    FrontFaceDirection offsetFaceDirection(FrontFaceDirection startingDirection,
+                                           float offset) const {
+        const auto degreesOffset =
+            static_cast<int>(FrontFaceDirectionMap.at(startingDirection) +
+                             static_cast<int>(offset));
         return DirectionToFrontFaceMap.at(degreesOffset % 360);
     }
 
@@ -117,11 +107,12 @@ struct Entity {
             Color f = ui::color::getHighlighted(this->face_color);
             Color b = ui::color::getHighlighted(this->base_color);
             DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                           this->size().z, FrontFaceDirectionMap.at(face_direction),
-                           f, b);
+                           this->size().z,
+                           FrontFaceDirectionMap.at(face_direction), f, b);
         } else {
             DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                           this->size().z, FrontFaceDirectionMap.at(face_direction),
+                           this->size().z,
+                           FrontFaceDirectionMap.at(face_direction),
                            this->face_color, this->base_color);
         }
         DrawBoundingBox(this->bounds(), MAROON);
@@ -133,14 +124,7 @@ struct Entity {
         this->face_direction = offsetFaceDirection(this->face_direction, 90);
     }
 
-    virtual void update(float) {
-        is_highlighted = false;
-        if (this->is_snappable()) {
-            this->position = this->snap_position();
-        } else {
-            this->position = this->raw_position;
-        }
-
+    virtual void update_held_item_position() {
         if (held_item != nullptr) {
             auto new_pos = this->position;
             if (this->face_direction & FrontFaceDirection::FORWARD) {
@@ -160,8 +144,19 @@ struct Entity {
         }
     }
 
+    virtual void update(float) {
+        is_highlighted = false;
+        if (this->is_snappable()) {
+            this->position = this->snap_position();
+        } else {
+            this->position = this->raw_position;
+        }
+        update_held_item_position();
+    }
+
     virtual vec2 get_heading() {
-        const float target_facing_ang = util::deg2rad(FrontFaceDirectionMap.at(this->face_direction));
+        const float target_facing_ang =
+            util::deg2rad(FrontFaceDirectionMap.at(this->face_direction));
         return vec2{
             cosf(target_facing_ang),
             sinf(target_facing_ang),

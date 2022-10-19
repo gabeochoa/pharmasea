@@ -40,7 +40,8 @@ struct Register : public Furniture {
     }
 
     void leave_line(AIPerson* entity) {
-        // std::cout << fmt::format("removing entity {}", entity->id) << std::endl;
+        // std::cout << fmt::format("removing entity {}", entity->id) <<
+        // std::endl;
         int pos = this->position_in_line(entity);
         if (pos == -1) return;
         if (pos == 0) {
@@ -77,5 +78,7 @@ struct Register : public Furniture {
 
     virtual bool can_be_picked_up() override { return true; }
 
-    virtual bool can_place_item_into() override { return true; }
+    virtual bool can_place_item_into() override {
+        return this->held_item == nullptr;
+    }
 };

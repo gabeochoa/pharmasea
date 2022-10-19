@@ -12,6 +12,14 @@ struct Furniture : public Entity {
     Furniture(vec2 pos, Color face_color_in, Color base_color_in)
         : Entity(pos, face_color_in, base_color_in) {}
 
+    virtual void update_held_item_position() override {
+        if (held_item != nullptr) {
+            auto new_pos = this->position;
+            new_pos.y += TILESIZE / 2;
+            held_item->update_position(new_pos);
+        }
+    }
+
     virtual bool can_rotate() { return false; }
 
     virtual bool add_to_navmesh() override { return true; }
