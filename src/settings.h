@@ -43,7 +43,9 @@ struct Settings {
 
     void update_master_volume(float nv) {
         data.masterVolume = nv;
-        // TODO sent out audio volume change event
+        // std::cout << "master volume changed to " << data.masterVolume << std::endl;
+        SetMasterVolume(data.masterVolume);
+        // TODO support sound vs music volume 
     }
 
     bool load_save_file() {
