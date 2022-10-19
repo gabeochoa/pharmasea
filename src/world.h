@@ -21,7 +21,7 @@ const std::string TINY = R"(
 
 const std::string EXAMPLE_MAP = R"(
 ####################################################
-#..................................................#
+#......TTTTTTTTTTTT................................#
 #..I...............................................#
 #..I.....@R........................................#
 #..I...............................................#
@@ -159,18 +159,10 @@ struct World {
                         break;
                     }
                     case 'T': {
-                        if (GLOBALS.contains("targetcube")) {
-                            std::cout << "WorldGen: "
-                                      << "cant have two targetcubes (yet) "
-                                      << std::endl;
-                            break;
-                        }
-                        std::shared_ptr<TargetCube> targetcube;
-                        targetcube.reset(
-                            new TargetCube(location, (Color){255, 16, 240, 255},
-                                           (Color){16, 255, 240, 255}));
-                        EntityHelper::addEntity(targetcube);
-                        GLOBALS.set("targetcube", targetcube.get());
+                        std::shared_ptr<Table> table;
+                        table.reset(
+                            new Table(location));
+                        EntityHelper::addEntity(table);
                         break;
                     }
                     case 'I': {

@@ -11,7 +11,7 @@ enum JobType {
     Wandering,
     EnterStore,
     WaitInQueue,
-    AtRegister,
+    WaitInQueueForPickup,
     Paying,
     Leaving,
 

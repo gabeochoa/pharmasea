@@ -96,7 +96,7 @@ struct Customer : public AIPerson {
             Customer* me = this;
             int cur_spot_in_line = reg->position_in_line(me);
 
-            if (cur_spot_in_line == job->spot_in_line) {
+            if (cur_spot_in_line == job->spot_in_line || !reg->can_move_up(me) ) {
                 // We didnt move so just wait a bit before trying again
                 announce(fmt::format("im just going to wait a bit longer"));
 
@@ -107,21 +107,6 @@ struct Customer : public AIPerson {
                 this->job.reset(new Job({
                     .type = Wait,
                     .timeToComplete = 1.f,
-                }));
-                return;
-            }
-
-            if (!reg->can_move_up(me)) {
-                // We didnt move so just wait a bit before trying again
-                announce(fmt::format("guy in front didnt move :( "));
-
-                // Add the current job to the queue,
-                // and then add the waiting job
-                personal_queue.push(job);
-
-                this->job.reset(new Job({
-                    .type = Wait,
-                    .timeToComplete = 0.5f,
                 }));
                 return;
             }
@@ -145,7 +130,6 @@ struct Customer : public AIPerson {
             // cant work unless we got there
             if (!job->reached_end) return;
             // ------ END -----
-
 
             Register* reg = (Register*) job->data["register"];
             Customer* me = this;
