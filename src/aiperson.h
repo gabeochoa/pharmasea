@@ -10,6 +10,7 @@
 #include "person.h"
 #include "targetcube.h"
 #include "ui_color.h"
+#include "sound_library.h"
 
 struct AIPerson : public Person {
     std::stack<std::shared_ptr<Job>> personal_queue;
@@ -225,9 +226,11 @@ struct AIPerson : public Person {
     }
 
     virtual void update(float dt) override {
-        if (this->pushed_force.x != 0.0f || this->pushed_force.z != 0.0f && job != nullptr) {
+        if (this->pushed_force.x != 0.0f ||
+            this->pushed_force.z != 0.0f && job != nullptr) {
             this->job->path.clear();
             this->job->local = {};
+            PlaySound(SoundLibrary::get().get("roblox"));
         }
         Person::update(dt);
         if (!job) {

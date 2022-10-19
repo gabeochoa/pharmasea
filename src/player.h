@@ -5,7 +5,6 @@
 #include "keymap.h"
 #include "person.h"
 #include "raylib.h"
-#include "sound_library.h"
 //
 #include "furniture.h"
 
@@ -129,7 +128,6 @@ struct Player : public Person {
                     vec::snap(this->held_furniture->position));
                 EntityHelper::addEntity(this->held_furniture);
                 this->held_furniture = nullptr;
-                PlaySound(SoundLibrary::get().get("roblox"));
             };
             _drop_furniture();
             return;
