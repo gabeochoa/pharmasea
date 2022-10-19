@@ -410,7 +410,7 @@ struct World {
         }
 
         // Not setup yet
-        create_wall(loc, BLUE);
+        create_wall(loc, d_color);
 
         /*
            ...

@@ -14,8 +14,9 @@
 #include "ui_color.h"
 #include "world.h"
 // temporary for face cube test
-#include "texture_library.h"
 #include "modellibrary.h"
+#include "music_library.h"
+#include "texture_library.h"
 
 struct GameLayer : public Layer {
     World world;
@@ -44,17 +45,15 @@ struct GameLayer : public Layer {
             &GameLayer::onGamepadAxisMoved, this, std::placeholders::_1));
     }
 
-    bool onGamepadAxisMoved(GamepadAxisMovedEvent&) {
-        return false;
-    }
+    bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         if (KeyMap::get_button(Menu::State::Game, "Pause") == event.button) {
             Menu::get().state = Menu::State::Root;
             return true;
         }
-        if (KeyMap::get_button(Menu::State::Game,
-                                 "Toggle Planning [Debug]") == event.button) {
+        if (KeyMap::get_button(Menu::State::Game, "Toggle Planning [Debug]") ==
+            event.button) {
             in_planning_mode = !in_planning_mode;
             return true;
         }
@@ -78,6 +77,12 @@ struct GameLayer : public Layer {
     virtual void onUpdate(float dt) override {
         if (Menu::get().state != Menu::State::Game) return;
         if (minimized) return;
+
+        auto m = MusicLibrary::get().get("wah");
+        if (!IsMusicStreamPlaying(m)) {
+            PlayMusicStream(m);
+        }
+        UpdateMusicStream(m);
         // Dont quit window on escape
         SetExitKey(KEY_NULL);
 
@@ -129,13 +134,12 @@ struct GameLayer : public Layer {
                     DrawLineStrip2Din3D(kv.hull, PINK);
                 }
             }
-
         }
         EndMode3D();
 
         if (in_planning_mode) {
-            DrawTextEx(Preload::get().font, "IN PLANNING MODE", vec2{100, 100}, 20,
-                       0, RED);
+            DrawTextEx(Preload::get().font, "IN PLANNING MODE", vec2{100, 100},
+                       20, 0, RED);
         }
     }
 };
