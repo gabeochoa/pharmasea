@@ -74,15 +74,20 @@ struct GameLayer : public Layer {
         return false;
     }
 
-    virtual void onUpdate(float dt) override {
-        if (Menu::get().state != Menu::State::Game) return;
-        if (minimized) return;
-
+    void play_music() {
         auto m = MusicLibrary::get().get("wah");
         if (!IsMusicStreamPlaying(m)) {
             PlayMusicStream(m);
         }
         UpdateMusicStream(m);
+    }
+
+    virtual void onUpdate(float dt) override {
+        if (Menu::get().state != Menu::State::Game) return;
+        if (minimized) return;
+
+        play_music();
+
         // Dont quit window on escape
         SetExitKey(KEY_NULL);
 
