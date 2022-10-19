@@ -62,6 +62,12 @@ struct Person : public Entity {
             this->face_direction = facedir_x | facedir_z;
         }
 
+        new_pos_x.x += this->pushed_force.x;
+        this->pushed_force.x = 0.0f;
+
+        new_pos_z.z += this->pushed_force.z;
+        this->pushed_force.z = 0.0f;
+
         //this->face_direction = FrontFaceDirection::BACK & FrontFaceDirection::LEFT;
 
         auto new_bounds_x =
@@ -70,7 +76,9 @@ struct Person : public Entity {
             get_bounds(new_pos_z, this->size());  // vertical check
 
         bool would_collide_x = false;
-        bool would_collide_y = false;
+        bool would_collide_z = false;
+        std::weak_ptr<Entity> collided_entity_x;
+        std::weak_ptr<Entity> collided_entity_z;
         EntityHelper::forEachEntity([&](auto entity) {
             if (this->id == entity->id) {
                 return EntityHelper::ForEachFlow::Continue;
@@ -83,11 +91,13 @@ struct Person : public Entity {
             }
             if (CheckCollisionBoxes(new_bounds_x, entity->bounds())) {
                 would_collide_x = true;
+                collided_entity_x = entity;
             }
             if (CheckCollisionBoxes(new_bounds_y, entity->bounds())) {
-                would_collide_y = true;
+                would_collide_z = true;
+                collided_entity_z = entity;
             }
-            if (would_collide_x && would_collide_y) {
+            if (would_collide_x && would_collide_z) {
                 return EntityHelper::ForEachFlow::Break;
             }
             return EntityHelper::ForEachFlow::None;
@@ -96,10 +106,43 @@ struct Person : public Entity {
         if (!would_collide_x) {
             this->raw_position.x = new_pos_x.x;
         }
-        if (!would_collide_y) {
+        if (!would_collide_z) {
             this->raw_position.z = new_pos_z.z;
         }
 
+        // This value determines how "far" to impart a push force on the collided entity
+        const float directional_push_modifier = 1.0f;
+
+        // Figure out if there's a more graceful way to "jitter" things around each other
+        if (would_collide_x || would_collide_z) {
+            if (auto entity_x = collided_entity_x.lock()) {
+                if (auto person_ptr_x = dynamic_cast<Person*>(entity_x.get())) {
+                    const float random_jitter = randSign() * TILESIZE / 2.0f;
+                    if (facedir_x & FrontFaceDirection::LEFT) {
+                        entity_x->pushed_force.x += TILESIZE / directional_push_modifier;
+                        entity_x->pushed_force.z += random_jitter;
+                    }
+                    if (facedir_x & FrontFaceDirection::RIGHT) {
+                        entity_x->pushed_force.x -= TILESIZE / directional_push_modifier;
+                        entity_x->pushed_force.z += random_jitter;
+                    }
+                }
+            }
+            if (auto entity_z = collided_entity_z.lock()) {
+                if (auto person_ptr_z = dynamic_cast<Person*>(entity_z.get())) {
+                    const float random_jitter = randSign() * TILESIZE / 2.0f;
+                    if (facedir_z & FrontFaceDirection::FORWARD) {
+                        person_ptr_z->pushed_force.x += random_jitter;
+                        person_ptr_z->pushed_force.z += TILESIZE / directional_push_modifier;
+                    }
+                    if (facedir_z & FrontFaceDirection::BACK) {
+                        person_ptr_z->pushed_force.x += random_jitter;
+                        person_ptr_z->pushed_force.z -= TILESIZE / directional_push_modifier;
+                    }
+                }
+            }
+        }
+        
         Entity::update(dt);
     }
 };

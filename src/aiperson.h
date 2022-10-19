@@ -225,6 +225,10 @@ struct AIPerson : public Person {
     }
 
     virtual void update(float dt) override {
+        if (this->pushed_force.x != 0.0f || this->pushed_force.z != 0.0f && job != nullptr) {
+            this->job->path.clear();
+            this->job->local = {};
+        }
         Person::update(dt);
         if (!job) {
             get_starting_job();

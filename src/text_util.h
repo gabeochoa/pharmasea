@@ -121,7 +121,7 @@ static void DrawText3D(Font font, const char* text, Vector3 position,
 
     float scale = fontSize / (float) font.baseSize;
 
-    for (int i = 0; i < length;) {
+    for (unsigned int i = 0; i < length;) {
         // Get next codepoint from byte string and glyph index in font
         int codepointByteCount = 0;
         int codepoint = GetCodepoint(&text[i], &codepointByteCount);

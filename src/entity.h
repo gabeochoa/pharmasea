@@ -44,6 +44,7 @@ struct Entity {
     vec3 raw_position;
     vec3 prev_position;
     vec3 position;
+    vec3 pushed_force{0.0, 0.0, 0.0};
     Color face_color;
     Color base_color;
     bool cleanup = false;
