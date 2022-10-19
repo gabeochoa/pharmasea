@@ -27,11 +27,15 @@ struct EntityHelper {
 
         // nav->addShape(getPolyForEntity(e));
         nav->addEntity(e->id, getPolyForEntity(e));
+        cache_is_walkable.clear();
     }
 
     static void removeEntity(std::shared_ptr<Entity> e) {
-        auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-        nav->removeEntity(e->id);
+        if (e->add_to_navmesh()) {
+            auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
+            nav->removeEntity(e->id);
+            cache_is_walkable.clear();
+        }
 
         auto it = entities_DO_NOT_USE.begin();
         while (it != entities_DO_NOT_USE.end()) {
