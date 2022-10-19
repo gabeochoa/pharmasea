@@ -3,11 +3,13 @@
 
 #include "external_include.h"
 //
+#include "raylib.h"
 #include "singleton.h"
 //
 #include "modellibrary.h"
 #include "resources/fonts/Karmina_Regular_256.h"
 #include "sound_library.h"
+#include "music_library.h"
 #include "texture_library.h"
 
 SINGLETON_FWD(Preload)
@@ -20,7 +22,14 @@ struct Preload {
         load_fonts();
         load_textures();
         load_models();
+        //
+        InitAudioDevice();
         load_sounds();
+        load_music();
+    }
+
+    ~Preload(){
+        CloseAudioDevice();
     }
 
     void load_fonts() {
@@ -55,11 +64,19 @@ struct Preload {
     }
 
     void load_sounds() {
-        InitAudioDevice();
         SoundLibrary::get().load(
             Files::get()
                 .fetch_resource_path("sounds", "roblox_oof.ogg")
                 .c_str(),
             "roblox");
+    }
+
+    void load_music(){
+        MusicLibrary::get().load(
+            Files::get()
+                .fetch_resource_path("music", "wah.ogg")
+                .c_str(),
+            "wah");
+
     }
 };
