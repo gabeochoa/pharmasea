@@ -111,6 +111,7 @@ Game Ideas
         - Poor customers (cant pay but need lifesaving medicine)
         - Undercover cop (only if you take the double income, if you sell to them you lose immediately) 
         - Thieves (easily identifiable and have to grab them before they leave) 
+    - Allow players to exchange held items?
 
 Changelog
 

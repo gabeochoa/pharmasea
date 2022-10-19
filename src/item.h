@@ -11,12 +11,21 @@
 
 static std::atomic_int ITEM_ID_GEN = 0;
 struct Item {
+
+    enum HeldBy {
+        NONE,
+        PLAYER,
+        FURNITURE,
+        CUSTOMER
+    };
+
     int id;
     float item_size = TILESIZE / 2;
     Color color;
     vec3 raw_position;
     vec3 position;
     bool unpacked = false;
+    HeldBy held_by = NONE;
 
     Item(vec3 p, Color c) : id(ITEM_ID_GEN++), color(c), raw_position(p) {
         this->position = this->snap_position();
