@@ -66,7 +66,6 @@ void startup() {
     App::get().pushLayer(versionlayer);
 
     Settings::get().load_save_file();
-
 }
 
 void teardown() {
