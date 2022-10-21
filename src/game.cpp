@@ -21,6 +21,7 @@
 #include "gamelayer.h"
 #include "menulayer.h"
 #include "menustatelayer.h"
+#include "networklayer.h"
 #include "settingslayer.h"
 #include "versionlayer.h"
 //
@@ -64,6 +65,9 @@ void startup() {
 
     VersionLayer* versionlayer = new VersionLayer();
     App::get().pushLayer(versionlayer);
+
+    NetworkLayer* networklayer = new NetworkLayer();
+    App::get().pushLayer(networklayer);
 
     Settings::get().load_save_file();
 }

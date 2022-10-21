@@ -12,11 +12,15 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 
+
 #include "raylib.h"
 
 #ifdef WRITE_FILES
 #include "../vendor/sago/platform_folders.h"
 #endif
+
+#define ENET_IMPLEMENTATION
+#include "../vendor/enet.h"
 
 #ifdef __APPLE__
 #pragma clang diagnostic pop

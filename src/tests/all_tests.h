@@ -10,14 +10,12 @@
    Please dont print during tests as these run on startup
 */
 
-#include "test_entity_fetching.h"
 #include "test_ui_widget.h"
 
 namespace tests {
 
 void run_all() {
     test_ui_widget();
-    test_entity_fetching();
 }
 
 }  // namespace tests

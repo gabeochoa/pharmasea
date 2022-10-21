@@ -1,20 +1,18 @@
+
 #pragma once
 
+#include "app.h"
 #include "external_include.h"
+#include "globals.h"
 #include "layer.h"
-#include "menu.h"
-#include "raylib.h"
-#include "settings.h"
-#include "ui.h"
-#include "ui_theme.h"
-#include "ui_widget.h"
-#include "uuid.h"
 #include "network.h"
+#include "ui.h"
 
-struct MenuLayer : public Layer {
+struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
+    std::shared_ptr<network::Info> network_info;
 
-    MenuLayer() : Layer("Menu") {
+    NetworkLayer() : Layer("Network") {
         minimized = false;
 
         ui_context.reset(new ui::UIContext());
@@ -25,38 +23,53 @@ struct MenuLayer : public Layer {
         // and push_theme separately, if you end() with any stack not empty...
         // thats a flag
         ui_context->push_theme(ui::DEFAULT_THEME);
+
+        network_info.reset(new network::Info());
     }
-    virtual ~MenuLayer() {}
+
+    virtual ~NetworkLayer() {}
     virtual void onAttach() override {}
     virtual void onDetach() override {}
-
     virtual void onEvent(Event& event) override {
         EventDispatcher dispatcher(event);
-        dispatcher.dispatch<KeyPressedEvent>(
-            std::bind(&MenuLayer::onKeyPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(
-            &MenuLayer::onGamepadButtonPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<KeyPressedEvent>(std::bind(
+            &NetworkLayer::onKeyPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<GamepadButtonPressedEvent>(
+            std::bind(&NetworkLayer::onGamepadButtonPressed, this,
+                      std::placeholders::_1));
         dispatcher.dispatch<GamepadAxisMovedEvent>(std::bind(
-            &MenuLayer::onGamepadAxisMoved, this, std::placeholders::_1));
+            &NetworkLayer::onGamepadAxisMoved, this, std::placeholders::_1));
     }
 
     bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) {
-        if (Menu::get().state != Menu::State::Root) return false;
+        if (Menu::get().state != Menu::State::Network) return false;
         return ui_context.get()->process_gamepad_axis_event(event);
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (Menu::get().state != Menu::State::Root) return false;
+        if (Menu::get().state != Menu::State::Network) return false;
         return ui_context.get()->process_keyevent(event);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (Menu::get().state != Menu::State::Root) return false;
-        if (KeyMap::get_button(Menu::State::UI, "Pause") == event.button) {
-            Menu::get().state = Menu::State::Game;
-            return true;
-        }
+        if (Menu::get().state != Menu::State::Network) return false;
         return ui_context.get()->process_gamepad_button_event(event);
+    }
+
+    void process_network_stuff(float dt) {
+        if (network_info->is_host()) {
+            network_info->server_tick(dt, 10);
+        } else {
+            network_info->client_tick(dt, 10);
+        }
+    }
+
+    virtual void onUpdate(float dt) override {
+        // NOTE: this has to go above the checks since it always has to run
+        process_network_stuff(dt);
+
+        if (Menu::get().state != Menu::State::Network) return;
+        // if we get here, then user clicked "join"
     }
 
     void draw_ui() {
@@ -88,35 +101,22 @@ struct MenuLayer : public Layer {
         Widget top_padding({.mode = Pixels, .value = 100.f, .strictness = 1.f},
                            {.mode = Percent, .value = 1.f, .strictness = 0.f});
 
-        const SizeExpectation button_x = {.mode = Pixels, .value = 130.f};
+        const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
         const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
-
-        Widget play_button(MK_UUID(id, ROOT_ID), button_x, button_y);
-        Widget button_padding(padd_x, padd_y);
-        Widget about_button(MK_UUID(id, ROOT_ID), button_x, button_y);
-        Widget settings_button(MK_UUID(id, ROOT_ID), button_x, button_y);
-        Widget exit_button(MK_UUID(id, ROOT_ID), button_x, button_y);
+        Widget host_button(MK_UUID(id, ROOT_ID), button_x, button_y);
         Widget join_button(MK_UUID(id, ROOT_ID), button_x, button_y);
+        Widget back_button(MK_UUID(id, ROOT_ID), button_x, button_y);
+        Widget ping_button(MK_UUID(id, ROOT_ID), button_x, button_y);
+        Widget cancel_button(MK_UUID(id, ROOT_ID), button_x, button_y);
+        Widget button_padding(padd_x, padd_y);
 
         Widget bottom_padding(
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
             {.mode = Percent, .value = 1.f, .strictness = 0.f});
 
-        Widget title_left_padding(
-            {.mode = Pixels, .value = 200.f, .strictness = 1.f},
-            {.mode = Pixels, .value = WIN_H, .strictness = 1.f});
-
-        ui::Widget title_card(
-            {.mode = Percent, .value = 1.f, .strictness = 0.f},
-            {.mode = Pixels, .value = WIN_H, .strictness = 1.f},
-            GrowFlags::Column);
-
-        Widget title_padding(
-            {.mode = Percent, .value = 1.f, .strictness = 0.f},
+        Widget connecting_text(
+            {.mode = Pixels, .value = 120.f, .strictness = 0.5f},
             {.mode = Pixels, .value = 100.f, .strictness = 1.f});
-
-        Widget title_text({.mode = Percent, .value = 1.f, .strictness = 0.5f},
-                          {.mode = Pixels, .value = 100.f, .strictness = 1.f});
 
         ui_context->push_parent(&root);
         {
@@ -126,36 +126,33 @@ struct MenuLayer : public Layer {
             ui_context->push_parent(&content);
             {
                 padding(top_padding);
-                if (button(play_button, "Play")) {
-                    Menu::get().state = Menu::State::Game;
-                }
-                padding(button_padding);
-                if (button(join_button, "Multiplayer (alpha) ")) {
-                    Menu::get().state = Menu::State::Network;
-                }
-                padding(button_padding);
-                if (button(about_button, "About")) {
-                    Menu::get().state = Menu::State::About;
-                }
-                padding(button_padding);
-                if (button(settings_button, "Settings")) {
-                    Menu::get().state = Menu::State::Settings;
-                }
-                padding(button_padding);
-                if (button(exit_button, "Exit")) {
-                    exit(0);
+                text(connecting_text, network_info->status());
+                if (network_info->is_host() || network_info->is_client()) {
+                    if(network_info->is_client()){
+                    if (button(ping_button, "Ping")) {
+                        network::client::send(network_info->client_info);
+                    }
+
+                    }
+                    if (button(cancel_button, "Cancel")) {
+                        network_info->set_role_to_none();
+                    }
+                } else {
+                    padding(button_padding);
+                    if (button(host_button, "Host")) {
+                        network_info->set_role_to_host();
+                    }
+                    padding(button_padding);
+                    if (button(join_button, "Join")) {
+                        network_info->set_role_to_client();
+                    }
+                    padding(button_padding);
+                    if (button(back_button, "Back")) {
+                        network_info->set_role_to_none();
+                        Menu::get().state = Menu::State::Root;
+                    }
                 }
                 padding(bottom_padding);
-            }
-            ui_context->pop_parent();
-
-            padding(title_left_padding);
-
-            div(title_card);
-            ui_context->push_parent(&title_card);
-            {
-                padding(title_padding);
-                text(title_text, "Pharmasea");
             }
             ui_context->pop_parent();
         }
@@ -163,17 +160,17 @@ struct MenuLayer : public Layer {
         ui_context->end(&root);
     }
 
-    virtual void onUpdate(float) override {
-        if (Menu::get().state != Menu::State::Root) return;
-        SetExitKey(KEY_ESCAPE);
-    }
-
     virtual void onDraw(float) override {
-        if (Menu::get().state != Menu::State::Root) return;
+        if (Menu::get().state != Menu::State::Network) return;
+
         if (minimized) {
             return;
         }
         ClearBackground(ui_context->active_theme().background);
+
         draw_ui();
+
+        DrawTextEx(Preload::get().font, network_info->status().c_str(), {5, 50},
+                   20, 0, LIGHTGRAY);
     }
 };
