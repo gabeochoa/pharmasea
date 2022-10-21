@@ -23,7 +23,6 @@
 #include "menustatelayer.h"
 #include "settingslayer.h"
 #include "versionlayer.h"
-#include "Timer.h"
 //
 // This one should be last
 #include "./tests/all_tests.h"
