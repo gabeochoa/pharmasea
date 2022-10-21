@@ -120,8 +120,9 @@ struct UIContext {
         // this frame
         auto it = last_frame.begin();
         while (it != last_frame.end()) {
-            if (!(*it).second.was_written_this_frame) {
-                last_frame.erase(it);
+            if (!(it->second.was_written_this_frame)) {
+                // note: this must be post increment
+                last_frame.erase(it++);
                 continue;
             }
             it++;
@@ -209,18 +210,16 @@ struct UIContext {
             return b;
         }
 
-        std::optional<GamepadAxisWithDir> current_axis=
+        std::optional<GamepadAxisWithDir> current_axis =
             KeyMap::get_axis(STATE, name);
         bool c = _readAxisWithoutEat(current_axis);
-        if(c){
+        if (c) {
             eatAxis();
         }
         return c;
     }
 
-    void eatAxis(){
-        axis_info = {};
-    }
+    void eatAxis() { axis_info = {}; }
 
     bool _readAxisWithoutEat(std::optional<GamepadAxisWithDir> axis_opt) {
         if (!axis_opt.has_value()) return false;
@@ -370,7 +369,7 @@ struct UIContext {
             last_size = font_size;
             // the smaller the number we multiply by (>1) the better fitting the
             // text will be
-            font_size = ceilf(font_size * 1.25f);
+            font_size = ceilf(font_size * 1.15f);
             // std::cout << "measuring for " << font_size << std::endl;
             size = MeasureTextEx(font, content.c_str(), font_size, spacing);
             // std::cout << "got " << size.x << ", " << size.y << " for "
@@ -426,6 +425,7 @@ struct UIContext {
 
     void draw_text(Widget* widget, const std::string& content,
                    theme::Usage color_usage) {
+        if (!widget) return;
         _draw_text(widget->rect, content, color_usage);
     }
 
