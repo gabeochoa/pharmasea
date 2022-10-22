@@ -1,12 +1,14 @@
 
 #pragma once
 
-#include "app.h"
-#include "external_include.h"
-#include "globals.h"
-#include "layer.h"
+#include "../external_include.h"
+#include "../globals.h"
+//
+#include "../app.h"
+#include "../layer.h"
+#include "../ui.h"
+//
 #include "network.h"
-#include "ui.h"
 
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -72,7 +74,7 @@ struct NetworkLayer : public Layer {
         // if we get here, then user clicked "join"
     }
 
-    void draw_ui() {
+    void draw_ui(float dt) {
         using namespace ui;
 
         // TODO move to input
@@ -128,11 +130,10 @@ struct NetworkLayer : public Layer {
                 padding(top_padding);
                 text(connecting_text, network_info->status());
                 if (network_info->is_host() || network_info->is_client()) {
-                    if(network_info->is_client()){
-                    if (button(ping_button, "Ping")) {
-                        network::client::send(network_info->client_info);
-                    }
-
+                    if (network_info->is_client()) {
+                        if (button(ping_button, "Ping")) {
+                            network_info->client_send_ping(dt);
+                        }
                     }
                     if (button(cancel_button, "Cancel")) {
                         network_info->set_role_to_none();
@@ -160,7 +161,7 @@ struct NetworkLayer : public Layer {
         ui_context->end(&root);
     }
 
-    virtual void onDraw(float) override {
+    virtual void onDraw(float dt) override {
         if (Menu::get().state != Menu::State::Network) return;
 
         if (minimized) {
@@ -168,7 +169,7 @@ struct NetworkLayer : public Layer {
         }
         ClearBackground(ui_context->active_theme().background);
 
-        draw_ui();
+        draw_ui(dt);
 
         DrawTextEx(Preload::get().font, network_info->status().c_str(), {5, 50},
                    20, 0, LIGHTGRAY);

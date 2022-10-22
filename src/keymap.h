@@ -106,7 +106,8 @@ struct KeyMap {
                                     delete event;
                                 }
                             },
-                            [](auto) {}},
+                            [](auto) {}
+                        },
                         input);
                 }
             }

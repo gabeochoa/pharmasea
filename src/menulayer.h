@@ -9,7 +9,7 @@
 #include "ui_theme.h"
 #include "ui_widget.h"
 #include "uuid.h"
-#include "network.h"
+#include "network/network.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;

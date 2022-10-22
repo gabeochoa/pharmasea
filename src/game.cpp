@@ -21,7 +21,7 @@
 #include "gamelayer.h"
 #include "menulayer.h"
 #include "menustatelayer.h"
-#include "networklayer.h"
+#include "network/networklayer.h"
 #include "settingslayer.h"
 #include "versionlayer.h"
 //
