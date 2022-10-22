@@ -1,7 +1,7 @@
-
 #pragma once
 
 #include "../external_include.h"
+//
 #include "../globals.h"
 //
 #include "../app.h"
@@ -13,7 +13,6 @@
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     std::shared_ptr<network::Info> network_info;
-    std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
 
     NetworkLayer() : Layer("Network") {
         minimized = false;
@@ -59,23 +58,9 @@ struct NetworkLayer : public Layer {
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
-    void process_network_stuff(float dt) {
-        if (!(network_info->is_host() || network_info->is_client())) {
-            return;
-        }
-
-        network_info->update_players(dt, &remote_players);
-
-        if (network_info->is_host()) {
-            network_info->server_tick(dt, 10);
-        } else {
-            network_info->client_tick(dt, 10);
-        }
-    }
-
     virtual void onUpdate(float dt) override {
         // NOTE: this has to go above the checks since it always has to run
-        process_network_stuff(dt);
+        network_info->network_tick(dt);
 
         if (Menu::get().state != Menu::State::Network) return;
         // if we get here, then user clicked "join"
@@ -146,20 +131,16 @@ struct NetworkLayer : public Layer {
             ui_context->push_parent(&content);
             {
                 padding(top_padding);
-                text(connecting_text, network_info->status());
-                if (network_info->is_host() || network_info->is_client()) {
-                    text(player_texts[0], fmt::format("You"));
-                    int i = 1;
-                    for (auto kv : remote_players) {
-                        text(player_texts[i++],
-                             fmt::format("Player {}", kv.second->id));
-                    }
-
-                    if (network_info->is_client()) {
-                        if (button(ping_button, "Ping")) {
-                            network_info->client_send_ping(dt);
+                if (network_info->has_role()) {
+                    if (network_info->is_host()) {
+                        int i = 0;
+                        for (auto c :
+                             network_info->server.get_connected_clients()) {
+                            text(player_texts[i++],
+                                 fmt::format("id: {}", c->get_id()));
                         }
                     }
+
                     if (button(cancel_button, "Cancel")) {
                         network_info->set_role_to_none();
                     }
@@ -167,14 +148,15 @@ struct NetworkLayer : public Layer {
                     padding(button_padding);
                     if (button(host_button, "Host")) {
                         network_info->set_role_to_host();
+                        network_info->start_server();
                     }
                     padding(button_padding);
                     if (button(join_button, "Join")) {
                         network_info->set_role_to_client();
+                        network_info->start_client();
                     }
                     padding(button_padding);
                     if (button(back_button, "Back")) {
-                        network_info->set_role_to_none();
                         Menu::get().state = Menu::State::Root;
                     }
                 }
@@ -196,7 +178,7 @@ struct NetworkLayer : public Layer {
 
         draw_ui(dt);
 
-        DrawTextEx(Preload::get().font, network_info->status().c_str(), {5, 50},
-                   20, 0, LIGHTGRAY);
+        // DrawTextEx(Preload::get().font, network_info->status().c_str(), {5,
+        // 50}, 20, 0, LIGHTGRAY);
     }
 };

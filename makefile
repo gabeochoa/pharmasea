@@ -6,11 +6,11 @@ INCLUDES = -Ivendor/
 
 
 all:
-	clang++ $(FLAGS) $(NOFLAGS) src/game.cpp `pkg-config --libs --cflags raylib` $(INCLUDES) -o pharmasea >> log && ./pharmasea >> log
+	clang++ $(FLAGS) $(NOFLAGS) src/game.cpp `pkg-config --libs --cflags raylib` $(INCLUDES) -o pharmasea && ./pharmasea 
 
 
 compile:
-	clang++ $(FLAGS) $(NOFLAGS) src/game.cpp `pkg-config --libs --cflags raylib` $(INCLUDES) -o pharmasea >> log 
+	clang++ $(FLAGS) $(NOFLAGS) src/game.cpp `pkg-config --libs --cflags raylib` $(INCLUDES) -o pharmasea 
 
 count: 
 	git ls-files | grep "src" | grep -v "ui_color.h" | grep -v "vendor"| grep -v "resources" | xargs wc -l | sort -rn
