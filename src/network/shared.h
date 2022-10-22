@@ -47,6 +47,10 @@ struct ClientPacket {
     std::variant<PingInfo, WorldInfo, PlayerInfo> msg;
 };
 
+struct BaseInternal {
+    std::map<int, ClientPacket::PlayerInfo> clients_to_process;
+};
+
 typedef std::variant<ClientPacket::PingInfo, ClientPacket::WorldInfo,
                      ClientPacket::PlayerInfo>
     Msg;
@@ -102,6 +106,15 @@ void serialize(S& s, ClientPacket& packet) {
                               s.value4b(info.facing_direction);
                           },
                       });
+}
+
+static void process_packet(std::shared_ptr<BaseInternal> internal,
+                           ClientPacket packet) {
+    // std::cout << packet << std::endl;
+    if (packet.msg_type == ClientPacket::MsgType::PlayerLocation) {
+        internal->clients_to_process[packet.client_id] =
+            (std::get<ClientPacket::PlayerInfo>(packet.msg));
+    }
 }
 
 }  // namespace network

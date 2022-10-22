@@ -6,8 +6,6 @@
 #include "globals.h"
 #include "keymap.h"
 #include "raylib.h"
-//
-#include "furniture.h"
 
 struct RemotePlayer : public BasePlayer {
     RemotePlayer(vec3 p, Color face_color_in, Color base_color_in)
@@ -23,4 +21,12 @@ struct RemotePlayer : public BasePlayer {
     virtual vec3 update_xaxis_position(float) override {}
 
     virtual vec3 update_zaxis_position(float) override {}
+
+    virtual void update_remotely(float* location, int facing_direction) {
+        this->position = vec3{location[0], location[1], location[2]};
+        this->face_direction =
+            static_cast<FrontFaceDirection>(facing_direction);
+    }
+
+    virtual bool is_collidable() override { return false; }
 };

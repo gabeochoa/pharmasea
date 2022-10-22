@@ -84,6 +84,22 @@ struct Info {
         }
     }
 
+    void update_players(
+        float, std::map<int, std::shared_ptr<RemotePlayer>>* remote_players) {
+        for (auto kv : this->server_info->clients_to_process) {
+            // Check to see if we already have this player?
+            if (!remote_players->contains(kv.first)) {
+                std::cout << " Adding a new player " << std::endl;
+                (*remote_players)[kv.first] = std::make_shared<RemotePlayer>();
+                EntityHelper::addEntity((*remote_players)[kv.first]);
+            }
+            (*remote_players)[kv.first]->update_remotely(
+                kv.second.location, kv.second.facing_direction);
+        }
+
+        this->server_info->clients_to_process.clear();
+    }
+
     void server_tick(float, int time_ms) {
         if (this->server_info->state != server::Internal::State::s_Hosted)
             return;
@@ -116,7 +132,7 @@ struct Info {
         network::client::send(this->client_info, buffer.data(), size);
     }
 
-    private: 
+   private:
     void client_send_player() {
         Player me = GLOBALS.get<Player>("player");
 

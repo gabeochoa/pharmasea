@@ -9,7 +9,7 @@
 namespace network {
 namespace client {
 
-struct Internal {
+struct Internal : public BaseInternal {
     ENetHost* client = nullptr;
     ENetPeer* peer = nullptr;
 
@@ -98,22 +98,33 @@ static bool recieve_event(std::shared_ptr<Internal> internal, int time_ms) {
         return false;
     }
 
-    std::cout << "recieved event" << std::endl;
+    std::cout << "client recieved event" << std::endl;
 
     switch (internal->event.type) {
-        case ENET_EVENT_TYPE_RECEIVE:
-            std::cout << fmt::format(
-                             "A packet of length %lu containing %s was "
-                             "received from %s on "
-                             "channel %u.\n",
-                             internal->event.packet->dataLength,
-                             internal->event.packet->data,
-                             (char*) internal->event.peer->data,
-                             internal->event.channelID)
-                      << std::endl;
+        case ENET_EVENT_TYPE_RECEIVE: {
+            // std::cout << fmt::format(
+            // "A packet of length %lu containing %s was "
+            // "received from %s on "
+            // "channel %u.\n",
+            // internal->event.packet->dataLength,
+            // internal->event.packet->data,
+            // (char*) internal->event.peer->data,
+            // internal->event.channelID)
+            // << std::endl;
+            unsigned char* data = internal->event.packet->data;
+            std::size_t length = internal->event.packet->dataLength;
+
+            Buffer buffer;
+            for (std::size_t i = 0; i < length; i++) {
+                buffer.push_back(data[i]);
+            }
+            ClientPacket packet;
+            bitsery::quickDeserialization<InputAdapter>(
+                {buffer.begin(), length}, packet);
+            process_packet(internal, packet);
             /* Clean up the packet now that we're done using it. */
             enet_packet_destroy(internal->event.packet);
-            break;
+        } break;
 
         case ENET_EVENT_TYPE_DISCONNECT:
             std::cout << fmt::format("%s disconnected.\n",
@@ -177,8 +188,8 @@ static void send(std::shared_ptr<Internal> internal,
                  const unsigned char* buffer, std::size_t buffer_size) {
     ENetPacket* packet =
         enet_packet_create(buffer, buffer_size, ENET_PACKET_FLAG_RELIABLE);
-    /* enet_host_broadcast (host, 0, packet);         */
-    enet_peer_send(internal->peer, 0, packet);
+    enet_host_broadcast(internal->client, 0, packet);
+    // enet_peer_send(internal->peer, 0, packet);
 }
 
 }  // namespace client

@@ -9,7 +9,7 @@
 namespace network {
 namespace server {
 
-struct Internal {
+struct Internal : public BaseInternal {
     enum State {
         s_None,
         s_Init,
@@ -20,8 +20,6 @@ struct Internal {
     ENetAddress address;
     ENetEvent event;
     ENetHost* server = nullptr;
-
-    std::vector<ClientPacket::PlayerInfo> clients_to_process;
 };
 
 static bool ready(std::shared_ptr<Internal> internal) {
@@ -76,11 +74,6 @@ static bool host(std::shared_ptr<Internal> internal) {
     return true;
 }
 
-static void process_packet(std::shared_ptr<Internal> internal,
-                           ClientPacket packet) {
-    std::cout << packet << std::endl;
-}
-
 static void poll(std::shared_ptr<Internal> internal, int time_ms) {
     /* Wait up to time milliseconds for an event. (WARNING: blocking) */
     while (enet_host_service(internal->server, &(internal->event), time_ms) >
@@ -95,14 +88,14 @@ static void poll(std::shared_ptr<Internal> internal, int time_ms) {
                 break;
 
             case ENET_EVENT_TYPE_RECEIVE: {
-                printf(
-                    "A packet of length %lu containing %s was received "
-                    "from %s "
-                    "on channel %u.\n",
-                    internal->event.packet->dataLength,
-                    internal->event.packet->data,
-                    (const char*) internal->event.peer->data,
-                    internal->event.channelID);
+                // printf(
+                // "A packet of length %lu containing %s was received "
+                // "from %s "
+                // "on channel %u.\n",
+                // internal->event.packet->dataLength,
+                // internal->event.packet->data,
+                // (const char*) internal->event.peer->data,
+                // internal->event.channelID);
                 unsigned char* data = internal->event.packet->data;
                 std::size_t length = internal->event.packet->dataLength;
 

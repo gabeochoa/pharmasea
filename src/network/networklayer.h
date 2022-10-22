@@ -13,6 +13,7 @@
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     std::shared_ptr<network::Info> network_info;
+    std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
 
     NetworkLayer() : Layer("Network") {
         minimized = false;
@@ -59,6 +60,12 @@ struct NetworkLayer : public Layer {
     }
 
     void process_network_stuff(float dt) {
+        if (!(network_info->is_host() || network_info->is_client())) {
+            return;
+        }
+
+        network_info->update_players(dt, &remote_players);
+
         if (network_info->is_host()) {
             network_info->server_tick(dt, 10);
         } else {
@@ -120,6 +127,17 @@ struct NetworkLayer : public Layer {
             {.mode = Pixels, .value = 120.f, .strictness = 0.5f},
             {.mode = Pixels, .value = 100.f, .strictness = 1.f});
 
+        std::array<Widget, 4> player_texts = {
+            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
+                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}),
+            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
+                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}),
+            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
+                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}),
+            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
+                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}),
+        };
+
         ui_context->push_parent(&root);
         {
             padding(left_padding);
@@ -130,6 +148,13 @@ struct NetworkLayer : public Layer {
                 padding(top_padding);
                 text(connecting_text, network_info->status());
                 if (network_info->is_host() || network_info->is_client()) {
+                    text(player_texts[0], fmt::format("You"));
+                    int i = 1;
+                    for (auto kv : remote_players) {
+                        text(player_texts[i++],
+                             fmt::format("Player {}", kv.second->id));
+                    }
+
                     if (network_info->is_client()) {
                         if (button(ping_button, "Ping")) {
                             network_info->client_send_ping(dt);
