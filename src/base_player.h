@@ -77,6 +77,7 @@ struct BasePlayer : public Person {
         }
     }
 
+    // TODO how to handle when they are holding something? 
     virtual void grab_or_drop() {
         bool pickup = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game,
                                                        "Player Pickup");

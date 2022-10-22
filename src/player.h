@@ -9,8 +9,6 @@
 #include "furniture.h"
 
 struct Player : public BasePlayer {
-    float player_reach = 1.25f;
-    std::shared_ptr<Furniture> held_furniture;
 
     Player(vec3 p, Color face_color_in, Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}
