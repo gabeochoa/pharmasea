@@ -29,19 +29,6 @@ struct SharedNetworkInfo {
     std::queue<QueuedPacket> packets_to_process;
     std::queue<ENetEvent> events_to_process;
 
-    std::map<std::string, std::function<void()>> connected_actions;
-    std::map<std::string, std::function<void()>> disconnected_actions;
-    std::map<std::string,
-             std::function<void(const unsigned char*, std::size_t)>>
-        process_data_actions;
-
-    void queue_packet(int channel_id, const unsigned char* buffer,
-                      std::size_t buffer_size) {
-        auto packet =
-            enet_packet_create(buffer, buffer_size, ENET_PACKET_FLAG_RELIABLE);
-        packets_to_process.push({channel_id, packet});
-    }
-
     void disconnect() {
         while (!packets_to_process.empty()) {
             enet_packet_destroy(packets_to_process.front().packet);
