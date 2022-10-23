@@ -10,13 +10,15 @@
 #include "../layer.h"
 #include "../ui.h"
 //
-#include "network.h"
+#include "shared.h"
+#include "../remote_player.h"
 
 using namespace ui;
 
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     std::shared_ptr<network::Info> network_info;
+    std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
 
     const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
     const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
@@ -36,6 +38,56 @@ struct NetworkLayer : public Layer {
         ui_context->push_theme(ui::DEFAULT_THEME);
 
         network_info.reset(new network::Info());
+        network_info->register_new_player_cb([&](int client_id, int packet_id) {
+            if (remote_players.contains(packet_id)) return;
+            if (network_info->is_host()) packet_id = client_id;
+
+            remote_players[packet_id] = std::make_shared<RemotePlayer>();
+            auto rp = remote_players[packet_id];
+            rp->client_id = packet_id;
+            EntityHelper::addEntity(remote_players[packet_id]);
+            std::cout << fmt::format(" Adding a player {}, {}", client_id,
+                                     packet_id)
+                      << std::endl;
+        });
+
+        network_info->register_remove_player_cb([&](int client_id) {
+            auto rp = remote_players[client_id];
+            if (!rp)
+                std::cout << fmt::format("doesnt exist but should {}",
+                                         client_id)
+                          << std::endl;
+            rp->cleanup = true;
+            remote_players.erase(client_id);
+        });
+        network_info->register_update_player_cb(
+            [&](int client_id, std::string name, float* location, int facing) {
+                auto rp = remote_players[client_id];
+                if (!rp)
+                    std::cout
+                        << fmt::format("doesnt exist but should {}", client_id)
+                        << std::endl;
+                rp->update_remotely(name, location, facing);
+            });
+
+        network_info->register_player_packet_cb([&](int my_id) {
+            Player me = GLOBALS.get<Player>("player");
+            network::ClientPacket player({
+                .client_id = my_id,
+                .msg_type = network::ClientPacket::MsgType::PlayerLocation,
+                .msg = network::ClientPacket::PlayerInfo({
+                    .name = network_info->username,
+                    .location =
+                        {
+                            me.position.x,
+                            me.position.y,
+                            me.position.z,
+                        },
+                    .facing_direction = static_cast<int>(me.face_direction),
+                }),
+            });
+            return player;
+        });
     }
 
     virtual ~NetworkLayer() {}
@@ -129,7 +181,7 @@ struct NetworkLayer : public Layer {
         {
             padding(*top_padding);
             text(*connecting_text,
-                     fmt::format("Username: {}", network_info->username));
+                 fmt::format("Username: {}", network_info->username));
             padding(*button_padding);
             if (button(*host_button, "Host")) {
                 network_info->set_role_to_host();
@@ -185,15 +237,14 @@ struct NetworkLayer : public Layer {
         ui_context->push_parent(content);
         {
             padding(*top_padding);
-            // TODO add button to edit as long as you arent currently hosting
-            // people?
+            // TODO add button to edit as long as you arent currently
+            // hosting people?
             // TODO add support for wstring
             text(*connecting_text,
-                     fmt::format("Username: {}", network_info->username));
-            for (auto kv : network_info->remote_players) {
+                 fmt::format("Username: {}", network_info->username));
+            for (auto kv : remote_players) {
                 text(*player_text,
-                     fmt::format("{}({})", kv.second->name,
-                                 kv.first));
+                     fmt::format("{}({})", kv.second->name, kv.first));
             }
 
             if (network_info->is_host()) {

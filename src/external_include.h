@@ -18,14 +18,6 @@
 #include "../vendor/sago/platform_folders.h"
 #endif
 
-#ifdef ENABLE_MULTIPLAYER
-#define ENET_IMPLEMENTATION
-#include "../vendor/enet.h"
-//
-#include "../vendor/bitsery/serializer.h"
-#include "../vendor/enetpp.h"
-#endif
-
 #ifdef __APPLE__
 #pragma clang diagnostic pop
 #else

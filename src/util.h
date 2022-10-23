@@ -22,11 +22,11 @@ int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
 
-float deg2rad(float deg) { return deg * static_cast<float>(M_PI) / 180.0f; }
+static float deg2rad(float deg) { return deg * static_cast<float>(M_PI) / 180.0f; }
 
-float rad2deg(float rad) { return rad * (180.f / static_cast<float>(M_PI)); }
+static float rad2deg(float rad) { return rad * (180.f / static_cast<float>(M_PI)); }
 
-std::vector<std::string> split_string(const std::string& str,
+static std::vector<std::string> split_string(const std::string& str,
                                       const std::string& delimiter) {
     std::vector<std::string> strings;
 
@@ -46,14 +46,14 @@ std::vector<std::string> split_string(const std::string& str,
 static constexpr int x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
 static constexpr int y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
-void forEachNeighbor(int i, int j, std::function<void(const vec2&)> cb,
+static void forEachNeighbor(int i, int j, std::function<void(const vec2&)> cb,
                      int step = 1) {
     for (int a = 0; a < 8; a++) {
         cb(vec2{(float) i + (x[a] * step), (float) j + (y[a] * step)});
     }
 }
 
-std::vector<vec2> get_neighbors(int i, int j, int step = 1) {
+static std::vector<vec2> get_neighbors(int i, int j, int step = 1) {
     std::vector<vec2> ns;
     forEachNeighbor(
         i, j, [&](const vec2& v) { ns.push_back(v); }, step);
