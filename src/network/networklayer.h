@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef ENABLE_MULTIPLAYER
+
 #include "../external_include.h"
 //
 #include "../globals.h"
@@ -297,3 +299,4 @@ struct NetworkLayer : public Layer {
         ui_context->end(root.get());
     }
 };
+#endif

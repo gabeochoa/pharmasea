@@ -1,17 +1,16 @@
 
 #pragma once
 
+#ifdef ENABLE_MULTIPLAYER
+
 #include <cstring>
 
-#include "../../vendor/bitsery/serializer.h"
-#include "../../vendor/enetpp.h"
 //
 #include "../external_include.h"
 // //
 #include "../player.h"
 #include "../random.h"
 #include "../remote_player.h"
-#include "enet.h"
 #include "shared.h"
 
 namespace network {
@@ -393,3 +392,4 @@ struct Info {
 };
 
 }  // namespace network
+#endif

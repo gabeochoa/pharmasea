@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #ifdef __APPLE__
 #pragma clang diagnostic push
@@ -12,15 +12,19 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 
-
 #include "raylib.h"
 
 #ifdef WRITE_FILES
 #include "../vendor/sago/platform_folders.h"
 #endif
 
+#ifdef ENABLE_MULTIPLAYER
 #define ENET_IMPLEMENTATION
 #include "../vendor/enet.h"
+//
+#include "../vendor/bitsery/serializer.h"
+#include "../vendor/enetpp.h"
+#endif
 
 #ifdef __APPLE__
 #pragma clang diagnostic pop
@@ -46,55 +50,66 @@ typedef Vector4 vec4;
 // this is needed for wstring printing
 #include "../vendor/fmt/xchar.h"
 
-
-#include <atomic>
-#include <optional>
-#include <vector>
-#include <memory>
+//
 #include <stdio.h>
-#include <iostream>
-#include <functional>
-#include <map>
-#include <set>
-#include <limits>
-#include <numeric>
-#include <ostream>
+
+#include <algorithm>
+#include <array>
+#include <atomic>
+#include <cassert>
 #include <deque>
-#include <sstream>
 #include <filesystem>
 #include <fstream>
+#include <functional>
+#include <iostream>
+#include <limits>
+#include <map>
+#include <memory>
+#include <numeric>
+#include <optional>
+#include <ostream>
+#include <set>
+#include <sstream>
 #include <stack>
 #include <unordered_map>
-#include <array>
-#include <cassert>
-#include <algorithm>
 #include <variant>
+#include <vector>
 
 // For bitwise operations
-template< typename T >
-typename std::enable_if< std::is_enum< T >::value, T >::type
-operator~ (T a) { return static_cast<T>(~static_cast<int>(a)); }
+template<typename T>
+typename std::enable_if<std::is_enum<T>::value, T>::type operator~(T a) {
+    return static_cast<T>(~static_cast<int>(a));
+}
 
-template< typename T >
-typename std::enable_if< std::is_enum< T >::value, T >::type
-operator| (T a, T b) { return static_cast<T>((static_cast<int>(a) | static_cast<int>(b))); }
+template<typename T>
+typename std::enable_if<std::is_enum<T>::value, T>::type operator|(T a, T b) {
+    return static_cast<T>((static_cast<int>(a) | static_cast<int>(b)));
+}
 
-template< typename T >
-typename std::enable_if< std::is_enum< T >::value, T >::type
-operator& (T a, T b) { return static_cast<T>((static_cast<int> (a) & static_cast<int>(b))); }
+template<typename T>
+typename std::enable_if<std::is_enum<T>::value, T>::type operator&(T a, T b) {
+    return static_cast<T>((static_cast<int>(a) & static_cast<int>(b)));
+}
 
-template< typename T >
-typename std::enable_if< std::is_enum< T >::value, T >::type
-operator^ (T a, T b) { return static_cast<T>((static_cast<int> (a) ^ static_cast<int>(b))); }
+template<typename T>
+typename std::enable_if<std::is_enum<T>::value, T>::type operator^(T a, T b) {
+    return static_cast<T>((static_cast<int>(a) ^ static_cast<int>(b)));
+}
 
-template< typename T >
-typename std::enable_if< std::is_enum< T >::value, T >::type
-operator|= (T& a, T b) { return reinterpret_cast<T&>((reinterpret_cast<int&>(a) |= static_cast<int>(b))); }
+template<typename T>
+typename std::enable_if<std::is_enum<T>::value, T>::type operator|=(T& a, T b) {
+    return reinterpret_cast<T&>(
+        (reinterpret_cast<int&>(a) |= static_cast<int>(b)));
+}
 
-template< typename T >
-typename std::enable_if< std::is_enum< T >::value, T >::type
-operator&= (T& a, T b) { return reinterpret_cast<T&>((reinterpret_cast<int&>(a) &= static_cast<int>(b))); }
+template<typename T>
+typename std::enable_if<std::is_enum<T>::value, T>::type operator&=(T& a, T b) {
+    return reinterpret_cast<T&>(
+        (reinterpret_cast<int&>(a) &= static_cast<int>(b)));
+}
 
-template< typename T >
-typename std::enable_if< std::is_enum< T >::value, T >::type
-operator^= (T& a, T b) { return reinterpret_cast<T&>((reinterpret_cast<int&>(a) ^= static_cast<int>(b))); }
+template<typename T>
+typename std::enable_if<std::is_enum<T>::value, T>::type operator^=(T& a, T b) {
+    return reinterpret_cast<T&>(
+        (reinterpret_cast<int&>(a) ^= static_cast<int>(b)));
+}
