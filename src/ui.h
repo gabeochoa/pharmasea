@@ -75,6 +75,10 @@ bool slider(
     // max value
     float mxf);
 
+bool textfield(
+    // returns true if text changed
+    const Widget& widget, std::wstring& content);
+
 ///////// ////// ////// ////// ////// ////// ////// //////
 ///////// ////// ////// ////// ////// ////// ////// //////
 ///////// ////// ////// ////// ////// ////// ////// //////
@@ -584,6 +588,93 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
         std::bind(_slider_render, widget.me, vertical, state->value.asT()));
     get().schedule_render_call(std::bind(_slider_value_management, widget.me,
                                          vertical, value, mnf, mxf));
+    return changed_previous_frame;
+}
+
+bool textfield(const Widget& widget, std::wstring& content) {
+    init_widget(widget, __FUNCTION__);
+    UIContext::LastFrame lf = get().get_last_frame(widget.id);
+    auto state = get().widget_init<TextfieldState>(widget.id);
+    bool changed_previous_frame = state->buffer.changed_since;
+    state->buffer.changed_since = false;
+
+    auto _textfield_render = [](Widget* widget_ptr) {
+        auto state = get().get_widget_state<TextfieldState>(widget_ptr->id);
+        Widget& widget = *widget_ptr;
+
+        //
+        auto lf = UIContext::LastFrame({.rect = widget.rect});
+        get().write_last_frame(widget.id, lf);
+        //
+
+        active_if_mouse_inside(widget.id, widget.rect);
+        _draw_focus_ring(widget);
+
+        const auto pos = vec2{
+            widget.rect.x,
+            widget.rect.y,
+        };
+
+        const auto cs = vec2{
+            widget.rect.width,
+            widget.rect.height,
+        };
+
+        // background
+        UITheme theme = get().active_theme();
+        Color color = is_active_and_hot(widget.id)
+                          ? theme.from_usage(theme::Usage::Secondary)
+                          : theme.from_usage(theme::Usage::Primary);
+
+        // Background
+        get().draw_widget_old(pos, cs, 0.f, color, "TEXTURE");
+
+        bool shouldWriteCursor = has_kb_focus(widget.id) && state->showCursor;
+        std::wstring focusStr = shouldWriteCursor ? L"_" : L"";
+        std::wstring focused_content =
+            fmt::format(L"{}{}", state->buffer.asT(), focusStr);
+
+        // TODO add support for wstring
+        get()._draw_text(widget.rect, util::to_string(focused_content),
+                         theme::Usage::Font);
+    };
+
+    const auto _textfield_value_management = [](const Widget* widget) {
+        auto state = get().get_widget_state<TextfieldState>(widget->id);
+
+        state->cursorBlinkTime = state->cursorBlinkTime + 1;
+        if (state->cursorBlinkTime > 60) {
+            state->cursorBlinkTime = 0;
+            state->showCursor = !state->showCursor;
+        }
+        bool changed = false;
+
+        if (has_kb_focus(widget->id)) {
+            if (get().keychar != int()) {
+                state->buffer.asT().append(std::wstring(1, get().keychar));
+                changed = true;
+            }
+            if (get().pressed("Widget Backspace")) {
+                if (state->buffer.asT().size() > 0) {
+                    state->buffer.asT().pop_back();
+                }
+                changed = true;
+            }
+        }
+
+        state->buffer.changed_since = changed;
+    };
+
+    if (lf.rect.has_value()) {
+        widget.me->rect = lf.rect.value();
+        try_to_grab_kb(widget.id);
+        _textfield_render(widget.me);
+        _textfield_value_management(widget.me);
+        handle_tabbing(widget.id);
+    }
+
+    get().schedule_render_call(std::bind(_textfield_render, widget.me));
+    content = state->buffer;
     return changed_previous_frame;
 }
 

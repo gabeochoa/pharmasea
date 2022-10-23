@@ -71,6 +71,16 @@ struct KeyMap {
         return 0.f;
     }
 
+    void forEachCharTyped(std::function<void(Event&)> cb) {
+        int character = GetCharPressed();
+        while (character) {
+            CharPressedEvent* event = new CharPressedEvent(character, 0);
+            cb(*event);
+            delete event;
+            character = GetCharPressed();
+        }
+    }
+
     void forEachInputInMap(std::function<void(Event&)> cb) {
         for (auto& fm_kv : mapping) {
             for (auto& lm_kv : fm_kv.second) {
@@ -106,8 +116,7 @@ struct KeyMap {
                                     delete event;
                                 }
                             },
-                            [](auto) {}
-                        },
+                            [](auto) {}},
                         input);
                 }
             }
@@ -187,6 +196,7 @@ struct KeyMap {
             GAMEPAD_BUTTON_LEFT_FACE_UP,
         };
         ui_map["Widget Mod"] = {KEY_LEFT_SHIFT};
+        ui_map["Widget Backspace"] = {KEY_BACKSPACE};
 
         ui_map["Widget Press"] = {KEY_ENTER, GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
 

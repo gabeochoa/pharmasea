@@ -7,9 +7,9 @@
 #include "globals.h"
 #include "keymap.h"
 #include "layer.h"
+#include "preload.h"
 #include "raylib.h"
 #include "singleton.h"
-#include "preload.h"
 
 SINGLETON_FWD(App)
 struct App {
@@ -70,6 +70,9 @@ struct App {
 
     void check_input() {
         KeyMap::get().forEachInputInMap(
+            std::bind(&App::processEvent, this, std::placeholders::_1));
+
+        KeyMap::get().forEachCharTyped(
             std::bind(&App::processEvent, this, std::placeholders::_1));
     }
 

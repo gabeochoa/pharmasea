@@ -4,7 +4,6 @@
 #include "external_include.h"
 #include "gamepad_axis_with_dir.h"
 
-
 enum class EventType {
     None = 0,
     WindowClose,
@@ -93,6 +92,14 @@ struct KeyPressedEvent : public KeyEvent {
     int getRepeatCount() const { return repeatCount; }
 };
 
+struct CharPressedEvent : public KeyEvent {
+    MACRO_EVENT_TYPE(CharPressed)
+
+    CharPressedEvent(int k, int r) : KeyEvent(k), repeatCount(r) {}
+    int repeatCount;
+    int getRepeatCount() const { return repeatCount; }
+};
+
 struct WindowResizeEvent : public Event {
     unsigned int width, height;
     WindowResizeEvent(unsigned int w, unsigned int h) : width(w), height(h) {}
@@ -106,7 +113,6 @@ struct WindowResizeEvent : public Event {
 };
 
 struct GamepadButtonPressedEvent : public Event {
-
     GamepadButton button;
 
     GamepadButtonPressedEvent(GamepadButton butt) : button(butt) {}

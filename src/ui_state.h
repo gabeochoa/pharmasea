@@ -51,6 +51,11 @@ struct SliderState : public UIState {
 };
 
 
+struct TextfieldState : public UIState {
+    State<std::wstring> buffer;
+    State<int> cursorBlinkTime;
+    State<bool> showCursor;
+};
 
 
 ////////////////

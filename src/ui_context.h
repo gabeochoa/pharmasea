@@ -151,10 +151,17 @@ struct UIContext {
     int mod = -1;
     GamepadButton button;
     GamepadAxisWithDir axis_info;
+    int keychar = -1;
+    int modchar = -1;
 
     bool is_mouse_inside(const Rectangle& rect) {
         return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
                mouse.y >= rect.y && mouse.y <= rect.y + rect.height;
+    }
+
+    bool process_char_press_event(CharPressedEvent event) {
+        keychar = event.keycode;
+        return true;
     }
 
     bool process_keyevent(KeyPressedEvent event) {
@@ -167,6 +174,10 @@ struct UIContext {
             mod = code;
             return true;
         }
+
+        // TODO same as above, but a separate map
+        modchar = code;
+
         key = code;
         return true;
     }
@@ -300,8 +311,10 @@ struct UIContext {
         //
         key = int();
         mod = int();
-        // keychar = int();
-        // modchar = int();
+
+        keychar = int();
+        modchar = int();
+
         globalContext = nullptr;
         temp_widgets.clear();
         owned_widgets.clear();

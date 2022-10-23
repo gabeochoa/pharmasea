@@ -6,6 +6,9 @@
 #include <cmath>
 #include <math.h>
 
+#include <codecvt>
+#include <locale>
+
 namespace util {
 
 template<class... Ts>
@@ -57,6 +60,25 @@ std::vector<vec2> get_neighbors(int i, int j, int step = 1) {
     forEachNeighbor(
         i, j, [&](const vec2& v) { ns.push_back(v); }, step);
     return ns;
+}
+
+using convert_t = std::codecvt_utf8<wchar_t>;
+static std::wstring_convert<convert_t, wchar_t> strconverter;
+
+inline std::string to_string(std::wstring wstr) {
+    try {
+        return strconverter.to_bytes(wstr);
+    } catch (...) {
+        return std::string();
+    }
+}
+
+inline std::wstring to_wstring(std::string str) {
+    try {
+        return strconverter.from_bytes(str);
+    } catch (...) {
+        return std::wstring();
+    }
 }
 
 }  // namespace util
