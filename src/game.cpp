@@ -6,7 +6,6 @@
 // settings file
 // save file
 // #define WRITE_FILES
-#define ENABLE_MULTIPLAYER
 
 #include "external_include.h"
 
@@ -69,10 +68,8 @@ void startup() {
     VersionLayer* versionlayer = new VersionLayer();
     App::get().pushLayer(versionlayer);
 
-#ifdef ENABLE_MULTIPLAYER
     NetworkLayer* networklayer = new NetworkLayer();
     App::get().pushLayer(networklayer);
-#endif
 
     Settings::get().load_save_file();
 }

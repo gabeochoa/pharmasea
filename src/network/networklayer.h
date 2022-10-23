@@ -1,6 +1,5 @@
 #pragma once
 
-#ifdef ENABLE_MULTIPLAYER
 
 #include "../external_include.h"
 //
@@ -12,6 +11,7 @@
 //
 #include "shared.h"
 #include "../remote_player.h"
+#include "../player.h"
 
 using namespace ui;
 
@@ -348,4 +348,3 @@ struct NetworkLayer : public Layer {
         ui_context->end(root.get());
     }
 };
-#endif

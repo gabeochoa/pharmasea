@@ -5,6 +5,8 @@
 
 namespace network {
 
+struct Info;
+
 const int DEFAULT_PORT = 770;
 const int MAX_CLIENTS = 3;
 // TODO add some note somewhere about only
