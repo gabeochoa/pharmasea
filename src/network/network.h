@@ -205,7 +205,7 @@ struct Info {
         auto init_client_func = [](ThinClient& thin_client, const char* ip) {
             auto h1 =
                 std::hash<std::string>{}(std::string(ip)) + randIn(0, 1000);
-            thin_client._uid = h1;
+            thin_client._uid = (int) h1;
             std::cout << "last client id was: " << h1 << std::endl;
         };
         my_client_id = -2;

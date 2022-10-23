@@ -122,7 +122,7 @@ class client_statistics {
     client_statistics()
         : _round_trip_time_in_ms(0), _round_trip_time_variance_in_ms(0) {}
 };
-inline void set_current_thread_name(const char* name) {
+inline void set_current_thread_name(const char*) {
 #ifdef _WIN32
 
     // https://msdn.microsoft.com/en-us/library/xcb2z8hs.aspx
@@ -363,7 +363,6 @@ class client {
 
         bool is_disconnecting = false;
         enet_uint32 disconnect_start_time = 0;
-
 
         while (peer != nullptr) {
             _statistics._round_trip_time_in_ms = peer->roundTripTime;
@@ -714,7 +713,7 @@ class server {
                 }
                 _event_queue_copy.pop();
             }
-        } 
+        }
     }
 
     const client_ptr_vector& get_connected_clients() const {

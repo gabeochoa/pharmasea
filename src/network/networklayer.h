@@ -264,7 +264,7 @@ struct NetworkLayer : public Layer {
         ui_context->pop_parent();
     }
 
-    virtual void onDraw(float dt) override {
+    virtual void onDraw(float) override {
         draw_network_overlay();
 
         if (Menu::get().state != Menu::State::Network) return;

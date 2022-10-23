@@ -142,6 +142,7 @@ struct Widget {
         this->growflags = other.growflags;
         this->children = other.children;
         this->parent = other.parent;
+        return *this;
     }
 
     void set_expectation(SizeExpectation x, SizeExpectation y) {
