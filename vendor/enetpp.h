@@ -1,3 +1,6 @@
+
+#pragma once
+
 #include <assert.h>
 
 #include <atomic>
@@ -47,6 +50,7 @@ class global_state {
 class client_connect_params {
    public:
     size_t _channel_count;
+    enet_uint32 _peer_count;
     enet_uint32 _incoming_bandwidth;
     enet_uint32 _outgoing_bandwidth;
     std::string _server_host_name;
@@ -56,6 +60,7 @@ class client_connect_params {
    public:
     client_connect_params()
         : _channel_count(0),
+          _peer_count(3),
           _incoming_bandwidth(0),
           _outgoing_bandwidth(0),
           _server_host_name(),
@@ -335,9 +340,9 @@ class client {
     void run_in_thread(const client_connect_params& params) {
         set_current_thread_name("enetpp::client");
 
-        ENetHost* host = enet_host_create(nullptr, 1, params._channel_count,
-                                          params._incoming_bandwidth,
-                                          params._outgoing_bandwidth);
+        ENetHost* host = enet_host_create(
+            nullptr, params._peer_count, params._channel_count,
+            params._incoming_bandwidth, params._outgoing_bandwidth);
         if (host == nullptr) {
             trace("enet_host_create failed");
             return;
@@ -359,7 +364,6 @@ class client {
         bool is_disconnecting = false;
         enet_uint32 disconnect_start_time = 0;
 
-        trace("run_in_thread got to loop");
 
         while (peer != nullptr) {
             _statistics._round_trip_time_in_ms = peer->roundTripTime;
@@ -675,10 +679,8 @@ class server {
 
             while (!_event_queue_copy.empty()) {
                 auto& e = _event_queue_copy.front();
-                trace("EVENT");
                 switch (e._event_type) {
                     case ENET_EVENT_TYPE_CONNECT: {
-                        trace("CONNECT");
                         _connected_clients.push_back(e._client);
                         for (auto kv : on_connected_cbs) kv.second(*e._client);
                         break;
@@ -712,7 +714,7 @@ class server {
                 }
                 _event_queue_copy.pop();
             }
-        }
+        } 
     }
 
     const client_ptr_vector& get_connected_clients() const {

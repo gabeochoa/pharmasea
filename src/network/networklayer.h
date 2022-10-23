@@ -122,12 +122,10 @@ struct NetworkLayer : public Layer {
             Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
                    {.mode = Pixels, .value = 100.f, .strictness = 1.f}),
         };
-
         ui_context->push_parent(&root);
         {
             padding(left_padding);
             div(content);
-
             ui_context->push_parent(&content);
             {
                 padding(top_padding);
