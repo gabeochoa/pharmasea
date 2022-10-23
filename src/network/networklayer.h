@@ -113,16 +113,9 @@ struct NetworkLayer : public Layer {
             {.mode = Pixels, .value = 120.f, .strictness = 0.5f},
             {.mode = Pixels, .value = 100.f, .strictness = 1.f});
 
-        std::array<Widget, 4> player_texts = {
-            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}),
-            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}),
-            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}),
-            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}),
-        };
+        Widget player_text({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
+                           {.mode = Pixels, .value = 100.f, .strictness = 1.f});
+
         ui_context->push_parent(&root);
         {
             padding(left_padding);
@@ -134,7 +127,7 @@ struct NetworkLayer : public Layer {
                     if (network_info->is_host()) {
                         int i = 0;
                         for (auto kv : network_info->remote_players) {
-                            text(player_texts[i++],
+                            text(player_text,
                                  fmt::format("{}({})", kv.second->name,
                                              kv.first));
                         }

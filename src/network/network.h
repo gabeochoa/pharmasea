@@ -119,7 +119,7 @@ struct Info {
             ClientPacket::PlayerInfo player_info =
                 std::get<ClientPacket::PlayerInfo>(packet.msg);
             int id = packet.client_id;
-            if(is_host()) id = client_id;
+            if (is_host()) id = client_id;
 
             // Check to see if we already have this player?
             if (!remote_players.contains(id)) {
