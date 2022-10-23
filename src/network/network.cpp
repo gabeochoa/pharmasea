@@ -2,7 +2,6 @@
 
 #include "network.h"
 
-
 #ifdef __APPLE__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
@@ -16,17 +15,18 @@
 #endif
 
 #define ENET_IMPLEMENTATION
-#include "../vendor/enet.h"
+#include <enet.h>
 //
-#include "../vendor/bitsery/serializer.h"
-#include "../vendor/enetpp.h"
+#include <enetpp.h>
 //
 #include <bitsery/adapter/buffer.h>
 #include <bitsery/bitsery.h>
 #include <bitsery/ext/std_tuple.h>
 #include <bitsery/ext/std_variant.h>
+#include <bitsery/serializer.h>
 #include <bitsery/traits/string.h>
 #include <bitsery/traits/vector.h>
+
 #include <cstdint>
 #include <cstring>
 #include <variant>
@@ -40,8 +40,8 @@
 #pragma GCC diagnostic pop
 #endif
 //
-#include "../util.h"
 #include "../random.h"
+#include "../util.h"
 
 namespace network {
 

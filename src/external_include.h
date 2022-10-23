@@ -15,7 +15,7 @@
 #include "raylib.h"
 
 #ifdef WRITE_FILES
-#include "../vendor/sago/platform_folders.h"
+#include <sago/platform_folders.h>
 #endif
 
 #ifdef __APPLE__
@@ -37,10 +37,10 @@ typedef Vector3 vec3;
 typedef Vector4 vec4;
 
 #define FMT_HEADER_ONLY
-#include "../vendor/fmt/format.h"
-#include "../vendor/fmt/ostream.h"
+#include <fmt/format.h>
+#include <fmt/ostream.h>
 // this is needed for wstring printing
-#include "../vendor/fmt/xchar.h"
+#include <fmt/xchar.h>
 
 //
 #include <stdio.h>
