@@ -8,6 +8,9 @@
 #include "raylib.h"
 
 struct RemotePlayer : public BasePlayer {
+    int client_id;
+    std::string name;
+
     RemotePlayer(vec3 p, Color face_color_in, Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}
     RemotePlayer(vec2 p, Color face_color_in, Color base_color_in)

@@ -10,6 +10,7 @@
 #include <bitsery/traits/string.h>
 #include <bitsery/traits/vector.h>
 
+#include <cstdint>
 #include <cstring>
 #include <variant>
 //
@@ -30,6 +31,7 @@ struct ClientPacket {
 
     enum MsgType {
         Ping,
+        PlayerJoin,
         GameState,
         World,
         PlayerLocation,
@@ -37,6 +39,15 @@ struct ClientPacket {
 
     // Ping
     struct PingInfo {};
+
+    // PlayerJoin
+    struct PlayerJoinInfo {
+        bool is_you = false;
+        int client_id = -1;
+        // TODO add some note somewhere about only
+        // supporting 100 character names
+        std::string name{};
+    };
 
     // Game
     struct GameStateInfo {
@@ -52,21 +63,28 @@ struct ClientPacket {
         int facing_direction;
     };
 
-    std::variant<PingInfo, GameStateInfo, WorldInfo, PlayerInfo> msg;
+    std::variant<PingInfo, PlayerJoinInfo, GameStateInfo, WorldInfo, PlayerInfo>
+        msg;
 };
 
 struct BaseInternal {
     std::map<int, ClientPacket::PlayerInfo> clients_to_process;
 };
 
-typedef std::variant<ClientPacket::PingInfo, ClientPacket::GameStateInfo,
-                     ClientPacket::WorldInfo, ClientPacket::PlayerInfo>
+typedef std::variant<ClientPacket::PingInfo, ClientPacket::PlayerJoinInfo,
+                     ClientPacket::GameStateInfo, ClientPacket::WorldInfo,
+                     ClientPacket::PlayerInfo>
     Msg;
 
 std::ostream& operator<<(std::ostream& os, const Msg& msgtype) {
     os << std::visit(
         util::overloaded{
             [&](ClientPacket::PingInfo) { return std::string("ping"); },
+            [&](ClientPacket::PlayerJoinInfo info) {
+                return fmt::format(
+                    "PlayerJoinInfo( is_you: {}, id: {} , name: {})",
+                    info.is_you, info.client_id, info.name);
+            },
             [&](ClientPacket::GameStateInfo info) {
                 return fmt::format("GameStateInfo( state: {} )",
                                    info.host_menu_state);
@@ -97,6 +115,9 @@ std::ostream& operator<<(std::ostream& os,
         case ClientPacket::PlayerLocation:
             os << "PlayerLocation";
             break;
+        case ClientPacket::PlayerJoin:
+            os << "PlayerJoinInfo";
+            break;
     }
     return os;
 }
@@ -113,6 +134,11 @@ void serialize(S& s, ClientPacket& packet) {
     s.value4b(packet.msg_type);
     s.ext(packet.msg, bitsery::ext::StdVariant{
                           [](S&, ClientPacket::PingInfo&) {},
+                          [](S& s, ClientPacket::PlayerJoinInfo& info) {
+                              s.value1b(info.is_you);
+                              s.value4b(info.client_id);
+                              s.text1b(info.name, 20);
+                          },
                           [](S& s, ClientPacket::GameStateInfo& info) {
                               s.value4b(info.host_menu_state);
                           },
@@ -124,15 +150,6 @@ void serialize(S& s, ClientPacket& packet) {
                               s.value4b(info.facing_direction);
                           },
                       });
-}
-
-static void process_packet(std::shared_ptr<BaseInternal> internal,
-                           ClientPacket packet) {
-    // std::cout << packet << std::endl;
-    if (packet.msg_type == ClientPacket::MsgType::PlayerLocation) {
-        internal->clients_to_process[packet.client_id] =
-            (std::get<ClientPacket::PlayerInfo>(packet.msg));
-    }
 }
 
 }  // namespace network

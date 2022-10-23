@@ -30,6 +30,7 @@ struct Info {
 
     enetpp::server<ThinClient> server;
     enetpp::client client;
+    int my_client_id = -1;
     std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
 
     Info() { enetpp::global_state::get().initialize(); }
@@ -64,8 +65,54 @@ struct Info {
     bool is_client() { return this->desired_role & Info::State::s_Client; }
     bool has_role() { return is_host() || is_client(); }
 
+    void fwd_packet_to_other_clients(int source_id, ClientPacket packet) {
+        Buffer buffer;
+        bitsery::quickSerialization(OutputAdapter{buffer}, packet);
+        server.send_packet_to_all_if(
+            0, buffer.data(), buffer.size(), ENET_PACKET_FLAG_RELIABLE,
+            [&](const ThinClient& destination) {
+                return destination.get_id() != source_id;
+            });
+    }
+
+    void fwd_packet_to_source(int source_id, ClientPacket packet) {
+        Buffer buffer;
+        bitsery::quickSerialization(OutputAdapter{buffer}, packet);
+        server.send_packet_to_all_if(
+            0, buffer.data(), buffer.size(), ENET_PACKET_FLAG_RELIABLE,
+            [&](const ThinClient& destination) {
+                return destination.get_id() == source_id;
+            });
+    }
+
     void process_client_packet_msg(int client_id, ClientPacket packet) {
-        if (packet.msg_type == ClientPacket::MsgType::PlayerLocation) {
+        auto player_join = [&]() {
+            // NOTE: for this message type, the packet.client_id,
+            // isnt yet filled in correctly and is likely -1
+            // so we use the client_id in the message instead
+            ClientPacket::PlayerJoinInfo player_join_info =
+                std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
+            if (player_join_info.is_you) {
+                // im the player
+                my_client_id = player_join_info.client_id;
+                return;
+            }
+
+            // Check to see if we already have this player?
+            if (!remote_players.contains(packet.client_id)) {
+                std::cout << " Adding a new player " << std::endl;
+                remote_players[client_id] = std::make_shared<RemotePlayer>();
+
+                auto rp = remote_players[client_id];
+                rp->client_id = player_join_info.client_id;
+                rp->name = player_join_info.name;
+
+                EntityHelper::addEntity(remote_players[client_id]);
+            }
+            return;
+        };
+
+        auto player_location = [&]() {
             ClientPacket::PlayerInfo player_info =
                 std::get<ClientPacket::PlayerInfo>(packet.msg);
 
@@ -78,14 +125,64 @@ struct Info {
             }
             remote_players[packet.client_id]->update_remotely(
                 player_info.location, player_info.facing_direction);
-        }
+        };
+
+        auto game_state = [&]() {
+            ClientPacket::GameStateInfo game_state =
+                std::get<ClientPacket::GameStateInfo>(packet.msg);
+            Menu::get().state = game_state.host_menu_state;
+        };
 
         if (is_client()) {
-            if (packet.msg_type == ClientPacket::MsgType::GameState) {
-                ClientPacket::GameStateInfo game_state =
-                    std::get<ClientPacket::GameStateInfo>(packet.msg);
-                Menu::get().state = game_state.host_menu_state;
+            switch (packet.msg_type) {
+                case ClientPacket::MsgType::PlayerJoin:
+                    player_join();
+                    break;
+                case ClientPacket::MsgType::PlayerLocation:
+                    player_location();
+                    break;
+                case ClientPacket::MsgType::GameState:
+                    game_state();
+                    break;
+                default:
+                    break;
             }
+            return;
+        } else if (is_host()) {
+            switch (packet.msg_type) {
+                case ClientPacket::MsgType::PlayerJoin: {
+                    player_join();
+
+                    ClientPacket::PlayerJoinInfo join_info =
+                        std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
+                    // since we are the host we always get the player join from
+                    // the source. So we can edit the original packet to inject
+                    // the client's id
+                    join_info.client_id = client_id;
+
+                    // Send the source player information about their client id
+                    ClientPacket::PlayerJoinInfo for_source(join_info);
+                    for_source.is_you = true;
+                    fwd_packet_to_source(
+                        client_id,
+                        ClientPacket(
+                            {.client_id = my_client_id,
+                             .msg_type = ClientPacket::MsgType::PlayerJoin,
+                             .msg = for_source}));
+                } break;
+                case ClientPacket::MsgType::PlayerLocation:
+                    player_location();
+                    break;
+                case ClientPacket::MsgType::GameState:
+                // We do nothing for gamestate, since we are the source of
+                // truth
+                default:
+                    break;
+            }
+
+            // default forwarding;
+            fwd_packet_to_other_clients(client_id, packet);
+            return;
         }
     }
 
@@ -112,19 +209,19 @@ struct Info {
         auto on_client_connected = [&](ThinClient&) {
             std::cout << "server::connected" << std::endl;
         };
-        auto on_client_disconnected = [&](unsigned int) {
+        auto on_client_disconnected = [&](unsigned int client_id) {
             std::cout << "server::disconnected" << std::endl;
+            if (!remote_players.contains(client_id)) {
+                return;
+            }
+
+            std::shared_ptr<RemotePlayer> r = remote_players[client_id];
+            r->cleanup = true;
+            remote_players.erase(client_id);
         };
-        auto on_client_data_received = [&](ThinClient& packet_client,
+        auto on_client_data_received = [&](ThinClient& source_client,
                                            const enet_uint8* data,
                                            size_t data_size) {
-            // std::cout << "forwarding packet to all other clients..."
-            // << std::endl;
-            server.send_packet_to_all_if(
-                0, data, data_size, ENET_PACKET_FLAG_RELIABLE,
-                [&](const ThinClient& destination) {
-                    return destination.get_id() != packet_client.get_id();
-                });
             // local processing
             Buffer buffer;
             for (std::size_t i = 0; i < data_size; i++)
@@ -132,7 +229,7 @@ struct Info {
             ClientPacket packet;
             bitsery::quickDeserialization<InputAdapter>(
                 {buffer.begin(), data_size}, packet);
-            process_client_packet_msg(0, packet);
+            process_client_packet_msg(source_client.get_id(), packet);
         };
 
         server.register_callbacks("server", on_client_connected,
@@ -152,12 +249,28 @@ struct Info {
         // consume events raised by worker thread
         auto on_connected = [&]() {
             std::cout << "client::connected" << std::endl;
+            ClientPacket connected_packet({
+                // We dont yet know what it is but will soon
+                .client_id = -1,
+                .msg_type = ClientPacket::MsgType::PlayerJoin,
+                .msg = ClientPacket::PlayerJoinInfo({
+                    .is_you = false,
+                    .client_id = -1,
+                    .name = "default name",
+                }),
+            });
+            Buffer buffer;
+            bitsery::quickSerialization(OutputAdapter{buffer},
+                                        connected_packet);
+            client.send_packet(0, buffer.data(), buffer.size(),
+                               ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT);
         };
+
         auto on_disconnected = [&]() {
             std::cout << "client::disconnected" << std::endl;
         };
         auto on_data_received = [&](const enet_uint8* data, size_t data_size) {
-            std::cout << "client::data" << std::endl;
+            // std::cout << "client::data" << std::endl;
             // std::cout << ("received packet from server : '" +
             // std::string(reinterpret_cast<const char*>(data),
             // data_size) +
@@ -180,7 +293,7 @@ struct Info {
         Player me = GLOBALS.get<Player>("player");
         ClientPacket player({
             // TODO figure out which client id this is
-            .client_id = 1,
+            .client_id = my_client_id,
             .msg_type = ClientPacket::MsgType::PlayerLocation,
             .msg = ClientPacket::PlayerInfo({
                 .location =
@@ -248,7 +361,7 @@ struct Info {
 
     void send_updated_state() {
         ClientPacket player({
-            .client_id = 0,
+            .client_id = my_client_id,
             .msg_type = ClientPacket::MsgType::GameState,
             .msg = ClientPacket::GameStateInfo(
                 {.host_menu_state = Menu::get().state}),
