@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <variant>
 #include "../menu.h"
 
 namespace network {

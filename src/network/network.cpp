@@ -27,6 +27,12 @@
 #include <bitsery/traits/string.h>
 #include <bitsery/traits/vector.h>
 
+#define FMT_HEADER_ONLY
+#include <fmt/format.h>
+#include <fmt/ostream.h>
+// this is needed for wstring printing
+#include <fmt/xchar.h>
+
 #include <cstdint>
 #include <cstring>
 #include <variant>
