@@ -4,13 +4,14 @@
 
 #include "external_include.h"
 #include "raylib.h"
+#include "util.h"
 //
 #include "base_player.h"
 #include "preload.h"
 
 struct RemotePlayer : public BasePlayer {
     int client_id;
-    std::string name = "Remote Player";
+    std::wstring name = L"Remote Player";
 
     RemotePlayer(vec3 p, Color face_color_in, Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}
@@ -30,7 +31,7 @@ struct RemotePlayer : public BasePlayer {
         return this->position;
     }
 
-    virtual void update_remotely(std::string my_name, float* location,
+    virtual void update_remotely(std::wstring my_name, float* location,
                                  int facing_direction) {
         this->name = my_name;
         this->position = vec3{location[0], location[1], location[2]};
@@ -58,12 +59,13 @@ struct RemotePlayer : public BasePlayer {
 
             DrawText3D(               //
                 Preload::get().font,  //
-                name.c_str(),         //
-                {0.f},                //
-                96,                   // font size
-                4,                    // font spacing
-                4,                    // line spacing
-                true,                 // backface
+                // TODO right now cant do wstring //
+                util::to_string(name).c_str(),  //
+                {0.f},                          //
+                96,                             // font size
+                4,                              // font spacing
+                4,                              // line spacing
+                true,                           // backface
                 BLACK);
 
             rlPopMatrix();

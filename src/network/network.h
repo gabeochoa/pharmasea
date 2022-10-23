@@ -31,7 +31,9 @@ struct Info {
     enetpp::server<ThinClient> server;
     enetpp::client client;
     int my_client_id = -1;
-    std::string username = "default";
+    std::wstring username = L"";
+    bool username_set = false;
+
     std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
 
     Info() { enetpp::global_state::get().initialize(); }

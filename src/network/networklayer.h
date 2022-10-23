@@ -48,6 +48,13 @@ struct NetworkLayer : public Layer {
                       std::placeholders::_1));
         dispatcher.dispatch<GamepadAxisMovedEvent>(std::bind(
             &NetworkLayer::onGamepadAxisMoved, this, std::placeholders::_1));
+        dispatcher.dispatch<CharPressedEvent>(std::bind(
+            &NetworkLayer::onCharPressedEvent, this, std::placeholders::_1));
+    }
+
+    bool onCharPressedEvent(CharPressedEvent& event) {
+        if (Menu::get().state != Menu::State::Network) return false;
+        return ui_context.get()->process_char_press_event(event);
     }
 
     bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) {
@@ -119,6 +126,9 @@ struct NetworkLayer : public Layer {
         ui_context->push_parent(content);
         {
             padding(*top_padding);
+            text(*connecting_text,
+                 util::to_string(
+                     fmt::format(L"Username: {}", network_info->username)));
             padding(*button_padding);
             if (button(*host_button, "Host")) {
                 network_info->set_role_to_host();
@@ -174,9 +184,16 @@ struct NetworkLayer : public Layer {
         ui_context->push_parent(content);
         {
             padding(*top_padding);
+            // TODO add button to edit as long as you arent currently hosting
+            // people?
+            // TODO add support for wstring
+            text(*connecting_text,
+                 util::to_string(
+                     fmt::format(L"Username: {}", network_info->username)));
             for (auto kv : network_info->remote_players) {
                 text(*player_text,
-                     fmt::format("{}({})", kv.second->name, kv.first));
+                     fmt::format("{}({})", util::to_string(kv.second->name),
+                                 kv.first));
             }
 
             if (network_info->is_host()) {
@@ -189,6 +206,58 @@ struct NetworkLayer : public Layer {
 
             if (button(*cancel_button, "Disconnect")) {
                 network_info->set_role_to_none();
+            }
+            padding(*bottom_padding);
+        }
+        ui_context->pop_parent();
+    }
+
+    void draw_username_picker() {
+        auto left_padding = ui_context->own(
+            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                   {.mode = Pixels, .value = WIN_H, .strictness = 1.f}));
+
+        auto content = ui_context->own(Widget(
+            {.mode = Children, .strictness = 1.f},
+            {.mode = Percent, .value = 1.f, .strictness = 1.0f}, Column));
+
+        auto top_padding = ui_context->own(
+            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                   {.mode = Percent, .value = 1.f, .strictness = 0.f}));
+
+        auto submit_button =
+            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
+        auto cancel_button =
+            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
+        auto button_padding = ui_context->own(Widget(padd_x, padd_y));
+
+        auto bottom_padding = ui_context->own(
+            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                   {.mode = Percent, .value = 1.f, .strictness = 0.f}));
+
+        auto username_input = ui_context->own(
+            Widget(MK_UUID(id, ROOT_ID),
+                   {.mode = Pixels, .value = 400.f, .strictness = 1.f},
+                   {.mode = Pixels, .value = 25.f, .strictness = 0.5f}));
+
+        auto player_text = ui_context->own(
+            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
+                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
+
+        padding(*left_padding);
+        div(*content);
+        ui_context->push_parent(content);
+        {
+            padding(*top_padding);
+            text(*player_text, "Username: ");
+            textfield(*username_input, network_info->username);
+            padding(*button_padding);
+            if (button(*submit_button, "Lock in")) {
+                network_info->username_set = true;
+            }
+            padding(*button_padding);
+            if (button(*cancel_button, "Back")) {
+                Menu::get().state = Menu::State::Root;
             }
             padding(*bottom_padding);
         }
@@ -217,7 +286,9 @@ struct NetworkLayer : public Layer {
                    GrowFlags::Row));
 
         ui_context->push_parent(root);
-        if (network_info->has_role()) {
+        if (!network_info->username_set) {
+            draw_username_picker();
+        } else if (network_info->has_role()) {
             draw_connected_screen();
         } else {
             draw_base_screen();
