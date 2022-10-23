@@ -662,6 +662,9 @@ bool textfield(const Widget& widget, std::wstring& content) {
             }
         }
 
+        if (get().lmouse_down && is_active_and_hot(widget->id)) {
+            get().kb_focus_id = widget->id;
+        }
         state->buffer.changed_since = changed;
     };
 
