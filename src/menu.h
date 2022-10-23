@@ -2,6 +2,7 @@
 #pragma once
 
 #include <iostream>
+
 #include "singleton.h"
 
 SINGLETON_FWD(Menu)

@@ -12,7 +12,14 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 
+namespace raylib {
+
 #include "raylib.h"
+typedef Vector2 vec2;
+typedef Vector3 vec3;
+typedef Vector4 vec4;
+
+}  // namespace raylib
 
 #ifdef WRITE_FILES
 #include <sago/platform_folders.h>
@@ -31,10 +38,6 @@
 #ifdef _MSC_VER
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #endif
-
-typedef Vector2 vec2;
-typedef Vector3 vec3;
-typedef Vector4 vec4;
 
 #define FMT_HEADER_ONLY
 #include <fmt/format.h>

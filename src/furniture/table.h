@@ -11,7 +11,7 @@
 #include "../furniture.h"
 
 struct Table : public Furniture {
-    Table(vec2 pos) : Furniture(pos, ui::color::brown, ui::color::brown) {}
+    Table(raylib::vec2 pos) : Furniture(pos, ui::color::brown, ui::color::brown) {}
 
     virtual bool can_rotate() override { return true; }
 

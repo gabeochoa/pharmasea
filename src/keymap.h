@@ -9,7 +9,7 @@
 #include "singleton.h"
 #include "util.h"
 
-typedef std::variant<int, GamepadAxisWithDir, GamepadButton> AnyInput;
+typedef std::variant<int, GamepadAxisWithDir, raylib::GamepadButton> AnyInput;
 typedef std::vector<AnyInput> AnyInputs;
 typedef std::map<std::string, AnyInputs> LayerMapping;
 typedef std::map<Menu::State, LayerMapping> FullMap;
@@ -24,7 +24,7 @@ struct KeyMap {
         std::ifstream ifs(fs::path("./resources/gamecontrollerdb.txt"));
         std::stringstream buffer;
         buffer << ifs.rdbuf();
-        SetGamepadMappings(buffer.str().c_str());
+        raylib::SetGamepadMappings(buffer.str().c_str());
         load_default_keys();
     }
 
@@ -36,48 +36,48 @@ struct KeyMap {
     }
 
     static float visit_key(int keycode) {
-        if (IsKeyPressed(keycode)) {
+        if (raylib::IsKeyPressed(keycode)) {
             return 1.f;
         }
         return 0.f;
     }
 
     static float visit_key_down(int keycode) {
-        if (IsKeyDown(keycode)) {
+        if (raylib::IsKeyDown(keycode)) {
             return 1.f;
         }
         return 0.f;
     }
 
     static float visit_axis(GamepadAxisWithDir axis_with_dir) {
-        float mvt = GetGamepadAxisMovement(0, axis_with_dir.axis);
+        float mvt = raylib::GetGamepadAxisMovement(0, axis_with_dir.axis);
         if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > 0.25f) {
             return abs(mvt);
         }
         return 0.f;
     }
 
-    static float visit_button(GamepadButton button) {
-        if (IsGamepadButtonPressed(0, button)) {
+    static float visit_button(raylib::GamepadButton button) {
+        if (raylib::IsGamepadButtonPressed(0, button)) {
             return 1.f;
         }
         return 0.f;
     }
 
-    static float visit_button_down(GamepadButton button) {
-        if (IsGamepadButtonDown(0, button)) {
+    static float visit_button_down(raylib::GamepadButton button) {
+        if (raylib::IsGamepadButtonDown(0, button)) {
             return 1.f;
         }
         return 0.f;
     }
 
     void forEachCharTyped(std::function<void(Event&)> cb) {
-        int character = GetCharPressed();
+        int character = raylib::GetCharPressed();
         while (character) {
             CharPressedEvent* event = new CharPressedEvent(character, 0);
             cb(*event);
             delete event;
-            character = GetCharPressed();
+            character = raylib::GetCharPressed();
         }
     }
 
@@ -108,7 +108,7 @@ struct KeyMap {
                                     delete event;
                                 }
                             },
-                            [&](GamepadButton button) {
+                            [&](raylib::GamepadButton button) {
                                 if (visit_button(button) > 0.f) {
                                     GamepadButtonPressedEvent* event =
                                         new GamepadButtonPressedEvent(button);
@@ -127,107 +127,108 @@ struct KeyMap {
         LayerMapping& game_map =
             this->get_or_create_layer_map(Menu::State::Game);
         game_map["Player Forward"] = {
-            KEY_W,
-            GAMEPAD_BUTTON_LEFT_FACE_UP,
+            raylib::KEY_W,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_UP,
             GamepadAxisWithDir{
-                .axis = GAMEPAD_AXIS_LEFT_Y,
+                .axis = raylib::GAMEPAD_AXIS_LEFT_Y,
                 .dir = -1,
             },
         };
         game_map["Player Back"] = {
-            KEY_S,
-            GAMEPAD_BUTTON_LEFT_FACE_DOWN,
+            raylib::KEY_S,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN,
             GamepadAxisWithDir{
-                .axis = GAMEPAD_AXIS_LEFT_Y,
+                .axis = raylib::GAMEPAD_AXIS_LEFT_Y,
                 .dir = 1,
             },
         };
         game_map["Player Left"] = {
-            KEY_A,
-            GAMEPAD_BUTTON_LEFT_FACE_LEFT,
+            raylib::KEY_A,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_LEFT,
             GamepadAxisWithDir{
-                .axis = GAMEPAD_AXIS_LEFT_X,
+                .axis = raylib::GAMEPAD_AXIS_LEFT_X,
                 .dir = -1,
             },
         };
         game_map["Player Right"] = {
-            KEY_D,
-            GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
+            raylib::KEY_D,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
             GamepadAxisWithDir{
-                .axis = GAMEPAD_AXIS_LEFT_X,
+                .axis = raylib::GAMEPAD_AXIS_LEFT_X,
                 .dir = 1,
             },
         };
 
         game_map["Player Pickup"] = {
-            KEY_SPACE,
-            GAMEPAD_BUTTON_RIGHT_FACE_DOWN,
+            raylib::KEY_SPACE,
+            raylib::GAMEPAD_BUTTON_RIGHT_FACE_DOWN,
         };
 
         game_map["Player Rotate Furniture"] = {
-            KEY_R,
-            GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
+            raylib::KEY_R,
+            raylib::GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
         };
 
         game_map["Pause"] = {
-            KEY_ESCAPE,
-            GAMEPAD_BUTTON_MIDDLE_RIGHT,
+            raylib::KEY_ESCAPE,
+            raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT,
         };
 
-        game_map["Target Forward"] = {KEY_UP};
-        game_map["Target Back"] = {KEY_DOWN};
-        game_map["Target Left"] = {KEY_LEFT};
-        game_map["Target Right"] = {KEY_RIGHT};
+        game_map["Target Forward"] = {raylib::KEY_UP};
+        game_map["Target Back"] = {raylib::KEY_DOWN};
+        game_map["Target Left"] = {raylib::KEY_LEFT};
+        game_map["Target Right"] = {raylib::KEY_RIGHT};
 
         game_map["Toggle Planning [Debug]"] = {
-            KEY_P,
-            GAMEPAD_BUTTON_MIDDLE_LEFT,
+            raylib::KEY_P,
+            raylib::GAMEPAD_BUTTON_MIDDLE_LEFT,
         };
     }
 
     void load_ui_keys() {
         LayerMapping& ui_map = this->get_or_create_layer_map(Menu::State::UI);
         ui_map["Widget Next"] = {
-            KEY_TAB,
-            GAMEPAD_BUTTON_LEFT_FACE_DOWN,
+            raylib::KEY_TAB,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN,
         };
 
         ui_map["Widget Back"] = {
-            GAMEPAD_BUTTON_LEFT_FACE_UP,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_UP,
         };
-        ui_map["Widget Mod"] = {KEY_LEFT_SHIFT};
-        ui_map["Widget Backspace"] = {KEY_BACKSPACE};
+        ui_map["Widget Mod"] = {raylib::KEY_LEFT_SHIFT};
+        ui_map["Widget Backspace"] = {raylib::KEY_BACKSPACE};
 
-        ui_map["Widget Press"] = {KEY_ENTER, GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
+        ui_map["Widget Press"] = {raylib::KEY_ENTER,
+                                  raylib::GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
 
         ui_map["Value Up"] = {
-            KEY_UP,
-            GAMEPAD_BUTTON_LEFT_FACE_UP,
+            raylib::KEY_UP,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_UP,
         };
 
         ui_map["Value Down"] = {
-            KEY_DOWN,
-            GAMEPAD_BUTTON_LEFT_FACE_DOWN,
+            raylib::KEY_DOWN,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN,
         };
 
         ui_map["Value Left"] = {
-            KEY_LEFT,
-            GAMEPAD_BUTTON_LEFT_FACE_LEFT,
+            raylib::KEY_LEFT,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_LEFT,
             GamepadAxisWithDir{
-                .axis = GAMEPAD_AXIS_LEFT_X,
+                .axis = raylib::GAMEPAD_AXIS_LEFT_X,
                 .dir = -1,
             },
         };
         ui_map["Value Right"] = {
-            KEY_RIGHT,
-            GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
+            raylib::KEY_RIGHT,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
             GamepadAxisWithDir{
-                .axis = GAMEPAD_AXIS_LEFT_X,
+                .axis = raylib::GAMEPAD_AXIS_LEFT_X,
                 .dir = 1,
             },
         };
 
-        ui_map["Pause"] = {GAMEPAD_BUTTON_MIDDLE_RIGHT};
+        ui_map["Pause"] = {raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT};
 
         LayerMapping& root_map =
             this->get_or_create_layer_map(Menu::State::Root);
@@ -249,7 +250,7 @@ struct KeyMap {
                                input);
             if (r) return r;
         }
-        return KEY_NULL;
+        return raylib::KEY_NULL;
     }
 
     static std::optional<GamepadAxisWithDir> get_axis(Menu::State state,
@@ -268,18 +269,19 @@ struct KeyMap {
         return {};
     }
 
-    static GamepadButton get_button(Menu::State state,
-                                    const std::string& name) {
+    static raylib::GamepadButton get_button(Menu::State state,
+                                            const std::string& name) {
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
             auto r = std::visit(
-                util::overloaded{[](GamepadButton button) { return button; },
-                                 [](auto&&) { return GAMEPAD_BUTTON_UNKNOWN; }},
+                util::overloaded{
+                    [](raylib::GamepadButton button) { return button; },
+                    [](auto&&) { return raylib::GAMEPAD_BUTTON_UNKNOWN; }},
                 input);
-            if (r != GAMEPAD_BUTTON_UNKNOWN) return r;
+            if (r != raylib::GAMEPAD_BUTTON_UNKNOWN) return r;
         }
         // std::cout << "couldnt find any button for " << name << std::endl;
-        return GAMEPAD_BUTTON_UNKNOWN;
+        return raylib::GAMEPAD_BUTTON_UNKNOWN;
     }
 
     static AnyInputs get_valid_inputs(Menu::State state,
@@ -300,7 +302,7 @@ struct KeyMap {
                                         [](GamepadAxisWithDir axis_with_dir) {
                                             return visit_axis(axis_with_dir);
                                         },
-                                        [](GamepadButton button) {
+                                        [](raylib::GamepadButton button) {
                                             return visit_button_down(button);
                                         },
                                         [](auto) {}},
@@ -321,7 +323,7 @@ struct KeyMap {
                     [](GamepadAxisWithDir axis_with_dir) {
                         return visit_axis(axis_with_dir) > 0.f;
                     },
-                    [](GamepadButton button) {
+                    [](raylib::GamepadButton button) {
                         return visit_button(button) > 0.f;
                     },
                     [](auto) {}},
@@ -353,7 +355,7 @@ struct KeyMap {
     }
 
     static bool does_layer_map_contain_button(Menu::State state,
-                                              GamepadButton button) {
+                                              raylib::GamepadButton button) {
         // We dont even have this Layer Map
         if (!KeyMap::get().mapping.contains(state)) return false;
         LayerMapping layermap = KeyMap::get().mapping[state];
@@ -361,14 +363,13 @@ struct KeyMap {
         for (auto pair : layermap) {
             const auto valid_inputs = pair.second;
             for (auto input : valid_inputs) {
-                contains =
-                    std::visit(util::overloaded{[&](GamepadButton butt) {
-                                                    if (butt == button)
-                                                        return true;
-                                                    return false;
-                                                },
-                                                [](auto&&) { return false; }},
-                               input);
+                contains = std::visit(
+                    util::overloaded{[&](raylib::GamepadButton butt) {
+                                         if (butt == button) return true;
+                                         return false;
+                                     },
+                                     [](auto&&) { return false; }},
+                    input);
                 if (contains) return true;
             }
         }
@@ -376,7 +377,7 @@ struct KeyMap {
     }
 
     static bool does_layer_map_contain_axis(Menu::State state,
-                                            GamepadAxis axis) {
+                                            raylib::GamepadAxis axis) {
         // We dont even have this Layer Map
         if (!KeyMap::get().mapping.contains(state)) return false;
         LayerMapping layermap = KeyMap::get().mapping[state];

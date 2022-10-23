@@ -102,7 +102,7 @@ inline bool is_active_and_hot(const uuid& id) {
     return is_hot(id) && is_active(id);
 }
 
-inline void active_if_mouse_inside(const uuid id, const Rectangle& rect) {
+inline void active_if_mouse_inside(const uuid id, const raylib::Rectangle& rect) {
     bool inside = get().is_mouse_inside(rect);
     if (inside) {
         get().hot_id = id;
@@ -150,14 +150,14 @@ inline void handle_tabbing(const uuid id) {
 
 void _draw_focus_ring(const Widget& widget) {
     draw_if_kb_focus(widget.id, [&]() {
-        const auto position = vec2{
+        const auto position = raylib::vec2{
             widget.rect.x,
             widget.rect.y,
         };
-        const auto cs = vec2{widget.rect.width, widget.rect.height};
+        const auto cs = raylib::vec2{widget.rect.width, widget.rect.height};
         const auto border_width = 0.05f;
         const auto offset =
-            vec2{cs.x * (border_width / 2), cs.y * (border_width / 2)};
+            raylib::vec2{cs.x * (border_width / 2), cs.y * (border_width / 2)};
         get().draw_widget_old(
             position - offset,                                      //
             cs * (1.f + border_width),                              //
@@ -238,11 +238,11 @@ bool button(const Widget& widget, const std::string& content) {
 
         _draw_focus_ring(widget);
 
-        vec2 position = {
+        raylib::vec2 position = {
             widget.rect.x,
             widget.rect.y,
         };
-        vec2 size = {
+        raylib::vec2 size = {
             widget.rect.width,
             widget.rect.height,
         };
@@ -259,7 +259,7 @@ bool button(const Widget& widget, const std::string& content) {
         // }
 
         UITheme theme = get().active_theme();
-        Color color = is_active_and_hot(widget.id)
+        raylib::Color color = is_active_and_hot(widget.id)
                           ? theme.from_usage(theme::Usage::Secondary)
                           : theme.from_usage(theme::Usage::Primary);
 
@@ -428,7 +428,7 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
 
         );
 
-        // Draw the main body of the dropdown
+        // raylib::Draw the main body of the dropdown
         pressed = button(*selected_widget, selected_option);
 
         // TODO right now you can change values through tab or through
@@ -502,7 +502,7 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
 
         active_if_mouse_inside(widget.id, widget.rect);
 
-        const auto cs = vec2{
+        const auto cs = raylib::vec2{
             widget.rect.width,
             widget.rect.height,
         };
@@ -510,19 +510,19 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
 
         const float pos_offset =
             value * (vertical ? cs.y * maxScale : cs.x * maxScale);
-        const auto pos = vec2{
+        const auto pos = raylib::vec2{
             widget.rect.x,
             widget.rect.y,
         };
 
         _draw_focus_ring(widget);
         // slider rail
-        Color rail = get().active_theme().primary;
+        raylib::Color rail = get().active_theme().primary;
         get().draw_widget_old(pos, cs, 0.f, rail, "TEXTURE");
 
         // slide
-        vec2 offset = vertical ? vec2{0.f, pos_offset} : vec2{pos_offset, 0.f};
-        vec2 size = vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
+        raylib::vec2 offset = vertical ? raylib::vec2{0.f, pos_offset} : raylib::vec2{pos_offset, 0.f};
+        raylib::vec2 size = vertical ? raylib::vec2{cs.x, cs.y / 5.f} : raylib::vec2{cs.x / 5.f, cs.y};
 
         const auto col = get().active_theme().accent;
         get().draw_widget_old(pos + offset, size, 0.f, col, "TEXTURE");
@@ -610,19 +610,19 @@ bool textfield(const Widget& widget, std::string& content) {
         active_if_mouse_inside(widget.id, widget.rect);
         _draw_focus_ring(widget);
 
-        const auto pos = vec2{
+        const auto pos = raylib::vec2{
             widget.rect.x,
             widget.rect.y,
         };
 
-        const auto cs = vec2{
+        const auto cs = raylib::vec2{
             widget.rect.width,
             widget.rect.height,
         };
 
         // background
         UITheme theme = get().active_theme();
-        Color color = is_active_and_hot(widget.id)
+        raylib::Color color = is_active_and_hot(widget.id)
                           ? theme.from_usage(theme::Usage::Secondary)
                           : theme.from_usage(theme::Usage::Primary);
 

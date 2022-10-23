@@ -16,28 +16,30 @@ struct AIPerson : public Person {
     std::stack<std::shared_ptr<Job>> personal_queue;
     std::shared_ptr<Job> job;
 
-    std::optional<vec2> local_target;
+    std::optional<raylib::vec2> local_target;
 
-    AIPerson(vec3 p, Color face_color_in, Color base_color_in)
+    AIPerson(raylib::vec3 p, raylib::Color face_color_in,
+             raylib::Color base_color_in)
         : Person(p, face_color_in, base_color_in) {}
-    AIPerson(vec2 p, Color face_color_in, Color base_color_in)
+    AIPerson(raylib::vec2 p, raylib::Color face_color_in,
+             raylib::Color base_color_in)
         : Person(p, face_color_in, base_color_in) {}
-    AIPerson(vec3 p, Color c) : Person(p, c) {}
-    AIPerson(vec2 p, Color c) : Person(p, c) {}
+    AIPerson(raylib::vec3 p, raylib::Color c) : Person(p, c) {}
+    AIPerson(raylib::vec2 p, raylib::Color c) : Person(p, c) {}
 
     virtual float base_speed() override { return 10.f; }
-    //virtual float stagger_mod() override {
-   //     return 0
-            //pull from ailment
-   // }
+    // virtual float stagger_mod() override {
+    //     return 0
+    // pull from ailment
+    // }
     virtual void render() const override {
         Person::render();
 
         const float box_size = TILESIZE / 10.f;
         if (job && !job->path.empty()) {
             for (auto location : job->path) {
-                DrawCube(vec::to3(location), box_size, box_size, box_size,
-                         BLUE);
+                raylib::DrawCube(vec::to3(location), box_size, box_size,
+                                 box_size, ui::color::blue);
             }
         }
     }
@@ -56,41 +58,41 @@ struct AIPerson : public Person {
     // }
     // }
 
-    virtual vec3 update_xaxis_position(float dt) override {
+    virtual raylib::vec3 update_xaxis_position(float dt) override {
         if (!job) {
             return this->raw_position;
         }
         if (!job->local.has_value()) {
             return this->raw_position;
         }
-        vec2 tar = job->local.value();
+        raylib::vec2 tar = job->local.value();
         float speed = this->base_speed() * dt;
-       // float stagger = this->stagger_mod() * dt; 
+        // float stagger = this->stagger_mod() * dt;
 
         auto new_pos_x = this->raw_position;
         if (tar.x > this->raw_position.x) new_pos_x.x += speed;
-            //-= stagger;
+        //-= stagger;
         if (tar.x < this->raw_position.x) new_pos_x.x -= speed;
-           // += stagger;
+        // += stagger;
         return new_pos_x;
     }
 
-    virtual vec3 update_zaxis_position(float dt) override {
+    virtual raylib::vec3 update_zaxis_position(float dt) override {
         if (!job) {
             return this->raw_position;
         }
         if (!job->local.has_value()) {
             return this->raw_position;
         }
-        vec2 tar = job->local.value();
+        raylib::vec2 tar = job->local.value();
         float speed = this->base_speed() * dt;
-        //float stagger = this->stagger_mod() * dt; 
+        // float stagger = this->stagger_mod() * dt;
 
         auto new_pos_z = this->raw_position;
-        if (tar.y > this->raw_position.z) new_pos_z.z += speed; 
-            //-= stagger;
+        if (tar.y > this->raw_position.z) new_pos_z.z += speed;
+        //-= stagger;
         if (tar.y < this->raw_position.z) new_pos_z.z -= speed;
-            //+= stagger;
+        //+= stagger;
         return new_pos_z;
     }
 
@@ -100,10 +102,10 @@ struct AIPerson : public Person {
         int range = 20;
         bool walkable = false;
         int i = 0;
-        vec2 target;
+        raylib::vec2 target;
         while (!walkable) {
-            target = (vec2){1.f * randIn(-range, range),
-                            1.f * randIn(-range, range)};
+            target = (raylib::vec2){1.f * randIn(-range, range),
+                                    1.f * randIn(-range, range)};
             walkable = EntityHelper::isWalkable(target);
             i++;
             if (i > max_tries) {
@@ -122,7 +124,7 @@ struct AIPerson : public Person {
             // already have a path
             if (!job->path.empty()) return;
 
-            vec2 start = vec::to2(this->position);
+            raylib::vec2 start = vec::to2(this->position);
             if (!job->reached_start && start == job->start) {
                 job->reached_start = true;
                 return;
@@ -133,7 +135,7 @@ struct AIPerson : public Person {
                 return;
             }
 
-            vec2 end = job->reached_start ? job->end : job->start;
+            raylib::vec2 end = job->reached_start ? job->end : job->start;
             job->path = astar::find_path(
                 start, end,
                 std::bind(EntityHelper::isWalkable, std::placeholders::_1));

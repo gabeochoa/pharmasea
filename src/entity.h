@@ -6,6 +6,7 @@
 #include <map>
 
 #include "astar.h"
+#include "drawing_util.h"
 #include "globals.h"
 #include "item.h"
 #include "random.h"
@@ -41,18 +42,19 @@ struct Entity {
     }
 
     int id;
-    vec3 raw_position;
-    vec3 prev_position;
-    vec3 position;
-    vec3 pushed_force{0.0, 0.0, 0.0};
-    Color face_color;
-    Color base_color;
+    raylib::vec3 raw_position;
+    raylib::vec3 prev_position;
+    raylib::vec3 position;
+    raylib::vec3 pushed_force{0.0, 0.0, 0.0};
+    raylib::Color face_color;
+    raylib::Color base_color;
     bool cleanup = false;
     bool is_highlighted = false;
     FrontFaceDirection face_direction = FrontFaceDirection::FORWARD;
     std::shared_ptr<Item> held_item = nullptr;
 
-    Entity(vec3 p, Color face_color_in, Color base_color_in)
+    Entity(raylib::vec3 p, raylib::Color face_color_in,
+           raylib::Color base_color_in)
         : id(ENTITY_ID_GEN++),
           raw_position(p),
           face_color(face_color_in),
@@ -60,7 +62,8 @@ struct Entity {
         this->position = this->snap_position();
     }
 
-    Entity(vec2 p, Color face_color_in, Color base_color_in)
+    Entity(raylib::vec2 p, raylib::Color face_color_in,
+           raylib::Color base_color_in)
         : id(ENTITY_ID_GEN++),
           raw_position({p.x, 0, p.y}),
           face_color(face_color_in),
@@ -68,12 +71,12 @@ struct Entity {
         this->position = this->snap_position();
     }
 
-    Entity(vec3 p, Color c)
+    Entity(raylib::vec3 p, raylib::Color c)
         : id(ENTITY_ID_GEN++), raw_position(p), face_color(c), base_color(c) {
         this->position = this->snap_position();
     }
 
-    Entity(vec2 p, Color c)
+    Entity(raylib::vec2 p, raylib::Color c)
         : id(ENTITY_ID_GEN++),
           raw_position({p.x, 0, p.y}),
           face_color(c),
@@ -83,43 +86,47 @@ struct Entity {
 
     virtual ~Entity() {}
 
-    virtual BoundingBox bounds() const {
+    virtual raylib::BoundingBox bounds() const {
         return get_bounds(this->position, this->size() / 2.0f);
     }
 
-    virtual void update_position(const vec3& p) { this->raw_position = p; }
+    virtual void update_position(const raylib::vec3& p) {
+        this->raw_position = p;
+    }
 
-    virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
+    virtual raylib::vec3 size() const {
+        return (raylib::vec3){TILESIZE, TILESIZE, TILESIZE};
+    }
 
-    virtual BoundingBox raw_bounds() const {
+    virtual raylib::BoundingBox raw_bounds() const {
         return get_bounds(this->raw_position, this->size());
     }
 
-    virtual bool collides(BoundingBox b) const {
+    virtual bool collides(raylib::BoundingBox b) const {
         return CheckCollisionBoxes(this->bounds(), b);
     }
 
     virtual void render() const {
-        // DrawCube(this->position, this->size().x, this->size().y,
+        // raylib::DrawCube(this->position, this->size().x, this->size().y,
         // this->size().z,
         //          this->color);
 
         if (this->is_highlighted) {
-            Color f = ui::color::getHighlighted(this->face_color);
-            Color b = ui::color::getHighlighted(this->base_color);
-            DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                           this->size().z,
-                           FrontFaceDirectionMap.at(face_direction), f, b);
+            raylib::Color f = ui::color::getHighlighted(this->face_color);
+            raylib::Color b = ui::color::getHighlighted(this->base_color);
+            raylib::DrawCubeCustom(
+                this->raw_position, this->size().x, this->size().y,
+                this->size().z, FrontFaceDirectionMap.at(face_direction), f, b);
         } else {
-            DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                           this->size().z,
-                           FrontFaceDirectionMap.at(face_direction),
-                           this->face_color, this->base_color);
+            raylib::DrawCubeCustom(this->raw_position, this->size().x,
+                                   this->size().y, this->size().z,
+                                   FrontFaceDirectionMap.at(face_direction),
+                                   this->face_color, this->base_color);
         }
-        DrawBoundingBox(this->bounds(), MAROON);
+        raylib::DrawBoundingBox(this->bounds(), raylib::MAROON);
     }
 
-    vec3 snap_position() const { return vec::snap(this->raw_position); }
+    raylib::vec3 snap_position() const { return vec::snap(this->raw_position); }
 
     void rotate_facing_clockwise() {
         this->face_direction = offsetFaceDirection(this->face_direction, 90);
@@ -155,17 +162,17 @@ struct Entity {
         update_held_item_position();
     }
 
-    virtual vec2 get_heading() {
+    virtual raylib::vec2 get_heading() {
         const float target_facing_ang =
             util::deg2rad(FrontFaceDirectionMap.at(this->face_direction));
-        return vec2{
+        return raylib::vec2{
             cosf(target_facing_ang),
             sinf(target_facing_ang),
         };
     }
 
-    static vec2 tile_infront_given_pos(vec2 tile, int distance,
-                                       FrontFaceDirection direction) {
+    static raylib::vec2 tile_infront_given_pos(raylib::vec2 tile, int distance,
+                                               FrontFaceDirection direction) {
         if (direction & FORWARD) {
             tile.y += distance * TILESIZE;
         }
@@ -182,8 +189,8 @@ struct Entity {
         return tile;
     }
 
-    virtual vec2 tile_infront(int distance) {
-        vec2 tile = vec::to2(this->snap_position());
+    virtual raylib::vec2 tile_infront(int distance) {
+        raylib::vec2 tile = vec::to2(this->snap_position());
         return tile_infront_given_pos(tile, distance, this->face_direction);
     }
 
@@ -196,15 +203,15 @@ struct Entity {
         // @ = arccos(  (a dot b) / ( |a| * |b| ) )
 
         // first get the headings and normalise so |x| = 1
-        const vec2 my_heading = vec::norm(this->get_heading());
-        const vec2 tar_heading = vec::norm(target->get_heading());
+        const raylib::vec2 my_heading = vec::norm(this->get_heading());
+        const raylib::vec2 tar_heading = vec::norm(target->get_heading());
         // dp = ( (a dot b )/ 1)
         float dot_product = vec::dot2(my_heading, tar_heading);
         // arccos(dp)
         float theta_rad = acosf(dot_product);
         float theta_deg = util::rad2deg(theta_rad);
         int turn_degrees = (180 - (int) theta_deg) % 360;
-        // TODO fix this 
+        // TODO fix this
         (void) turn_degrees;
         /*
         if (turn_degrees > 0 && turn_degrees <= 45) {

@@ -13,19 +13,19 @@
 // https://www.nayuki.io/page/convex-hull-algorithm
 
 struct Polygon {
-    std::vector<vec2> points;
-    std::vector<vec2> hull;
+    std::vector<raylib::vec2> points;
+    std::vector<raylib::vec2> hull;
 
     Polygon() {}
 
-    Polygon(Rectangle rect) {
-        this->add(vec2{rect.x, rect.y});
-        this->add(vec2{rect.x + rect.width, rect.y});
-        this->add(vec2{rect.x, rect.y + rect.height});
+    Polygon(raylib::Rectangle rect) {
+        this->add(raylib::vec2{rect.x, rect.y});
+        this->add(raylib::vec2{rect.x + rect.width, rect.y});
+        this->add(raylib::vec2{rect.x, rect.y + rect.height});
     }
 
-    std::vector<vec3> as_3d() {
-        std::vector<vec3> three_d;
+    std::vector<raylib::vec3> as_3d() {
+        std::vector<raylib::vec3> three_d;
         for (auto p : hull) {
             three_d.push_back(vec::to3(p));
         }
@@ -34,7 +34,7 @@ struct Polygon {
 
     // checks whether the point crosses the convex hull
     // or not
-    int orientation(vec2 a, vec2 b, vec2 c) const {
+    int orientation(raylib::vec2 a, raylib::vec2 b, raylib::vec2 c) const {
         float res_f = (b.y - a.y) * (c.x - b.x) - (c.y - b.y) * (b.x - a.x);
         int res = (int) floor(res_f);
         if (res == 0) return 0;
@@ -43,12 +43,12 @@ struct Polygon {
     }
 
     // Returns the square of distance between two input points
-    float sqDist(vec2 p1, vec2 p2) const {
+    float sqDist(raylib::vec2 p1, raylib::vec2 p2) const {
         return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
     }
 
-    vec2 centroid() const {
-        vec2 mid = {0, 0};
+    raylib::vec2 centroid() const {
+        raylib::vec2 mid = {0, 0};
         for (size_t i = 0; i < hull.size(); i++) {
             mid.x += hull[i].x;
             mid.y += hull[i].y;
@@ -57,7 +57,7 @@ struct Polygon {
     }
 
     float maxradius() const {
-        vec2 mid = centroid();
+        raylib::vec2 mid = centroid();
         float maxdst = 0.f;
 
         for (size_t i = 0; i < hull.size(); i++) {
@@ -69,13 +69,13 @@ struct Polygon {
     }
 
     // Checks whether the point is inside the convex hull or not
-    bool inside(vec2 p) const {
+    bool inside(raylib::vec2 p) const {
         // Initialize the centroid of the convex hull
-        vec2 mid = {0, 0};
+        raylib::vec2 mid = {0, 0};
 
         if (hull.size() < 3) return false;
 
-        std::vector<vec2> hullcopy(hull);
+        std::vector<raylib::vec2> hullcopy(hull);
 
         int n = static_cast<int>(hullcopy.size());
 
@@ -113,7 +113,7 @@ struct Polygon {
     // so that we can add 4 points at a time (at least)
 
     // Adds a point p to given convex hull a[]
-    void add(vec2 p) {
+    void add(raylib::vec2 p) {
         points.push_back(p);
         if (hull.size() <= 3) {
             hull.push_back(p);
@@ -125,17 +125,17 @@ struct Polygon {
         return;
     }
 
-    float cross(vec2 o, vec2 a, vec2 b) const {
+    float cross(raylib::vec2 o, raylib::vec2 a, raylib::vec2 b) const {
         return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
     }
 
     struct CompareVec {
-        bool operator()(const vec2& a, const vec2& b) const {
+        bool operator()(const raylib::vec2& a, const raylib::vec2& b) const {
             return a.x < b.x || (a.x == b.x && a.y < b.y);
         }
     };
 
-    void remove(vec2 p) {
+    void remove(raylib::vec2 p) {
         auto hasp = std::find(points.begin(), points.end(), p);
         if (hasp == points.end()) {
             if (inside(p)) {
@@ -162,7 +162,7 @@ struct Polygon {
         }
         int k = 0;
 
-        std::vector<vec2> h(2 * n);
+        std::vector<raylib::vec2> h(2 * n);
         std::sort(points.begin(), points.end(), CompareVec());
 
         for (int i = 0; i < n; i++) {
@@ -179,7 +179,7 @@ struct Polygon {
         hull = h;
     }
 
-    void grahamScan(vec2 p) {
+    void grahamScan(raylib::vec2 p) {
         // If point is inside p
         if (inside(p)) return;
 
@@ -200,7 +200,7 @@ struct Polygon {
             low = (n + low - 1) % n;
 
         // Initialize result
-        std::vector<vec2> ret;
+        std::vector<raylib::vec2> ret;
 
         // making the final hull by traversing points
         // from up to low of given convex hull.

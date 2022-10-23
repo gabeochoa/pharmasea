@@ -87,14 +87,14 @@ struct World {
     }
 
    private:
-    vec2 find_origin() {
-        vec2 origin{0.0, 0.0};
+    raylib::vec2 find_origin() {
+        raylib::vec2 origin{0.0, 0.0};
         for (int i = 0; i < (int) lines.size(); i++) {
             auto line = lines[i];
             for (int j = 0; j < (int) line.size(); j++) {
                 auto ch = line[j];
                 if (ch == '0') {
-                    origin = vec2{j * TILESIZE, i * TILESIZE};
+                    origin = raylib::vec2{j * TILESIZE, i * TILESIZE};
                     break;
                 }
             }
@@ -117,7 +117,7 @@ struct World {
             5 6 7
         */
         std::vector<char> output;
-        forEachNeighbor(i, j, [&](const vec2& v){
+        forEachNeighbor(i, j, [&](const raylib::vec2& v){
             char neighbor = get_char(static_cast<int>(v.x), static_cast<int>(v.y));
             output.push_back(neighbor);
         });
@@ -125,12 +125,12 @@ struct World {
     }
 
     void init_map() {
-        vec2 origin = find_origin();
+        raylib::vec2 origin = find_origin();
         for (int i = 0; i < (int) this->lines.size(); i++) {
             auto line = this->lines[i];
             for (int j = 0; j < (int) line.size(); j++) {
-                vec2 raw_location = vec2{i * TILESIZE, j * TILESIZE};
-                vec2 location = raw_location - origin;
+                raylib::vec2 raw_location = raylib::vec2{i * TILESIZE, j * TILESIZE};
+                raylib::vec2 location = raw_location - origin;
                 auto ch = get_char(i, j);
                 switch (ch) {
                     case '#': {
@@ -153,7 +153,7 @@ struct World {
                     case 'A': {
                         std::shared_ptr<AIPerson> aiperson;
                         aiperson.reset(new AIPerson(location,
-                                                    (Color){255, 0, 0, 255},
+                                                    (raylib::Color){255, 0, 0, 255},
                                                     {0, 255, 0, 255}));
                         EntityHelper::addEntity(aiperson);
                         break;
@@ -168,13 +168,13 @@ struct World {
                     case 'I': {
                         std::shared_ptr<Item> item;
                         item.reset(
-                            new Bag(location, (Color){255, 16, 240, 255}));
+                            new Bag(location, (raylib::Color){255, 16, 240, 255}));
                         EntityHelper::addItem(item);
                         break;
                     }
                     case 'C': {
                         std::shared_ptr<Customer> customer;
-                        customer.reset(new Customer(location, RED));
+                        customer.reset(new Customer(location, raylib::RED));
                         EntityHelper::addEntity(customer);
                         break;
                     }
@@ -192,9 +192,9 @@ struct World {
         }
     }
 
-    void init_wall(int i, int j, vec2 loc) {
-        auto d_color = (Color){155, 75, 0, 255};
-        const auto create_wall = [](const vec2& loc, Color c,
+    void init_wall(int i, int j, raylib::vec2 loc) {
+        auto d_color = (raylib::Color){155, 75, 0, 255};
+        const auto create_wall = [](const raylib::vec2& loc, raylib::Color c,
                                     const Wall::Type& type = Wall::Type::FULL,
                                     const Entity::FrontFaceDirection direction =
                                         Entity::FrontFaceDirection::FORWARD) {

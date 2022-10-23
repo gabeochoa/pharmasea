@@ -10,7 +10,7 @@ SINGLETON_FWD(ModelLibrary)
 struct ModelLibrary {
     SINGLETON(ModelLibrary)
 
-    std::map<std::string, Model> textures;
+    std::map<std::string, raylib::Model> textures;
 
     auto size() { return textures.size(); }
     auto begin() { return textures.begin(); }
@@ -31,10 +31,10 @@ struct ModelLibrary {
         // TODO add debug mode
         std::cout << "loading texture: " << name << " from " << filename
                   << std::endl;
-        this->add(name, LoadModel(filename));
+        this->add(name, raylib::LoadModel(filename));
     }
 
-    const std::string add(const char* name, const Model& texture) {
+    const std::string add(const char* name, const raylib::Model& texture) {
         if (textures.find(name) != textures.end()) {
             // log_warn(
             // "Failed to add texture to library, texture with name {} "
@@ -42,12 +42,12 @@ struct ModelLibrary {
             // name);
             return "";
         }
-        // log_trace("Adding Model \"{}\" to our library", name);
+        // log_trace("Adding raylib::Model \"{}\" to our library", name);
         textures[name] = texture;
         return name;
     }
 
-    Model& get(const std::string& name) {
+    raylib::Model& get(const std::string& name) {
         if (!this->contains(name)) {
             std::cout << "asking for texture: " << name
                       << " but nothing has been loaded with that name yet"

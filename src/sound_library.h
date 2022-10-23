@@ -11,7 +11,7 @@ SINGLETON_FWD(SoundLibrary)
 struct SoundLibrary {
     SINGLETON(SoundLibrary)
 
-    std::map<std::string, Sound> sounds;
+    std::map<std::string, raylib::Sound> sounds;
 
     auto size() { return sounds.size(); }
     auto begin() { return sounds.begin(); }
@@ -32,10 +32,10 @@ struct SoundLibrary {
         // TODO add debug mode
         std::cout << "loading sound: " << name << " from " << filename
                   << std::endl;
-        this->add(name, LoadSound(filename));
+        this->add(name, raylib::LoadSound(filename));
     }
 
-    const std::string add(const char* name, const Sound& sound) {
+    const std::string add(const char* name, const raylib::Sound& sound) {
         if (sounds.find(name) != sounds.end()) {
             // log_warn(
             // "Failed to add sound to library, sound with name {} "
@@ -48,7 +48,7 @@ struct SoundLibrary {
         return name;
     }
 
-    Sound& get(const std::string& name) {
+    raylib::Sound& get(const std::string& name) {
         if (!this->contains(name)) {
             std::cout << "asking for sound: " << name
                       << " but nothing has been loaded with that name yet"

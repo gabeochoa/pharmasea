@@ -11,7 +11,7 @@
 #include "item.h"
 
 static std::vector<std::shared_ptr<Entity>> entities_DO_NOT_USE;
-static std::map<vec2, bool> cache_is_walkable;
+static std::map<raylib::vec2, bool> cache_is_walkable;
 
 struct EntityHelper {
 #pragma clang diagnostic push
@@ -48,8 +48,8 @@ struct EntityHelper {
     }
 
     static Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
-        vec2 pos = vec::to2(e->snap_position());
-        Rectangle rect = {
+        raylib::vec2 pos = vec::to2(e->snap_position());
+        raylib::Rectangle rect = {
             pos.x,
             pos.y,
             TILESIZE,
@@ -101,7 +101,7 @@ struct EntityHelper {
 
     template<typename T>
     static constexpr std::vector<std::shared_ptr<T>> getEntitiesInRange(
-        vec2 pos, float range) {
+        raylib::vec2 pos, float range) {
         std::vector<std::shared_ptr<T>> matching;
         for (auto& e : entities_DO_NOT_USE) {
             auto s = dynamic_pointer_cast<T>(e);
@@ -115,9 +115,9 @@ struct EntityHelper {
 
     template<typename T>
     static std::shared_ptr<T> getMatchingEntityInFront(
-        vec2 pos, float range, Entity::FrontFaceDirection direction,
+        raylib::vec2 pos, float range, Entity::FrontFaceDirection direction,
         std::function<bool(std::shared_ptr<T>)> filter) {
-        std::vector<vec2> steps;
+        std::vector<raylib::vec2> steps;
         // TODO fix this iterator up
         for (int i = 0; i < static_cast<int>(range); i++) {
             steps.push_back(
@@ -141,7 +141,8 @@ struct EntityHelper {
 
     template<typename T>
     static constexpr std::shared_ptr<T> getClosestMatchingEntity(
-        vec2 pos, float range, std::function<bool(std::shared_ptr<T>)> filter) {
+        raylib::vec2 pos, float range,
+        std::function<bool(std::shared_ptr<T>)> filter) {
         float best_distance = range;
         std::shared_ptr<T> best_so_far;
         for (auto& e : entities_DO_NOT_USE) {
@@ -158,7 +159,8 @@ struct EntityHelper {
         return best_so_far;
     }
 
-    static std::shared_ptr<Item> getClosestMatchingItem(vec2 pos, float range) {
+    static std::shared_ptr<Item> getClosestMatchingItem(raylib::vec2 pos,
+                                                        float range) {
         float best_distance = range;
         std::shared_ptr<Item> best_so_far;
         for (auto& i : items_DO_NOT_USE) {
@@ -176,7 +178,7 @@ struct EntityHelper {
     // outside we should probably have just make some tiles for inside the map
     // ('.' on map for example) and use those to mark where people can walk and
     // where they cant
-    static bool isWalkable_impl(const vec2& pos) {
+    static bool isWalkable_impl(const raylib::vec2& pos) {
         auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
         if (!nav) {
             return true;
@@ -189,7 +191,7 @@ struct EntityHelper {
         return true;
     }
 
-    static bool isWalkable(const vec2& pos) {
+    static bool isWalkable(const raylib::vec2& pos) {
         if (!cache_is_walkable.contains(pos)) {
             cache_is_walkable[pos] = isWalkableRawEntities(pos);
         }
@@ -198,7 +200,7 @@ struct EntityHelper {
 
     // each target get and path find runs through all entities
     // so this will just get slower and slower over time
-    static bool isWalkableRawEntities(const vec2& pos) {
+    static bool isWalkableRawEntities(const raylib::vec2& pos) {
         auto bounds = get_bounds({pos.x, 0.f, pos.y}, {TILESIZE});
         bool hit_impassible_entity = false;
         forEachEntity([&](auto entity) {

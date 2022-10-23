@@ -11,16 +11,21 @@
 #include "../furniture.h"
 
 struct RegisterNextQueuePosition : TargetCube {
-    RegisterNextQueuePosition(vec3 p, Color face_color_in, Color base_color_in)
+    RegisterNextQueuePosition(raylib::vec3 p, raylib::Color face_color_in,
+                              raylib::Color base_color_in)
         : TargetCube(p, face_color_in, base_color_in) {}
-    RegisterNextQueuePosition(vec2 p, Color face_color_in, Color base_color_in)
+    RegisterNextQueuePosition(raylib::vec2 p, raylib::Color face_color_in,
+                              raylib::Color base_color_in)
         : TargetCube(p, face_color_in, base_color_in) {}
-    RegisterNextQueuePosition(vec3 p, Color c) : TargetCube(p, c) {}
-    RegisterNextQueuePosition(vec2 p, Color c) : TargetCube(p, c) {}
+    RegisterNextQueuePosition(raylib::vec3 p, raylib::Color c)
+        : TargetCube(p, c) {}
+    RegisterNextQueuePosition(raylib::vec2 p, raylib::Color c)
+        : TargetCube(p, c) {}
 };
 
 struct Register : public Furniture {
-    Register(vec2 pos) : Furniture(pos, BLACK, DARKGRAY) {}
+    Register(raylib::vec2 pos)
+        : Furniture(pos, ui::color::black, ui::color::dark_grey) {}
 
     std::deque<AIPerson*> ppl_in_line;
 
@@ -55,7 +60,7 @@ struct Register : public Furniture {
     bool is_in_line(AIPerson* entity) { return position_in_line(entity) != -1; }
     bool has_space_in_queue() { return next_line_position < max_queue_size; }
 
-    vec2 get_next_queue_position(AIPerson* entity) {
+    raylib::vec2 get_next_queue_position(AIPerson* entity) {
         M_ASSERT(entity, "entity passed to register queue should not be null");
         ppl_in_line.push_back(entity);
         // the place the customers stand is 1 tile infront of the register
@@ -64,28 +69,29 @@ struct Register : public Furniture {
         return front;
     }
 
-    Model model() const { return ModelLibrary::get().get("register"); }
+    raylib::Model model() const { return ModelLibrary::get().get("register"); }
 
     virtual void render() const override {
-        // Color face = this->is_highlighted
+        // raylib::Color face = this->is_highlighted
         // ? ui::color::getHighlighted(this->face_color)
         // : this->face_color;
-        Color base = this->is_highlighted
-                         ? ui::color::getHighlighted(this->base_color)
-                         : this->base_color;
+        raylib::Color base = this->is_highlighted
+                                 ? ui::color::getHighlighted(this->base_color)
+                                 : this->base_color;
 
-        DrawModelEx(model(),
-                    {
-                        this->position.x,
-                        this->position.y - TILESIZE / 2,
-                        this->position.z,
-                    },
-                    vec3{0.f, 1.f, 0.f}, 180.f, this->size() * 10.f, base);
+        raylib::DrawModelEx(model(),
+                            {
+                                this->position.x,
+                                this->position.y - TILESIZE / 2,
+                                this->position.z,
+                            },
+                            raylib::vec3{0.f, 1.f, 0.f}, 180.f,
+                            this->size() * 10.f, base);
 
         const float box_size = TILESIZE / 10.f;
         for (auto entity : this->ppl_in_line) {
-            DrawCube(entity->snap_position(), box_size, box_size, box_size,
-                     PINK);
+            raylib::DrawCube(entity->snap_position(), box_size, box_size,
+                             box_size, ui::color::pink);
         }
     }
 

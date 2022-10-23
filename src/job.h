@@ -31,10 +31,10 @@ struct Job {
     float timePassedInCurrentState = 0.f;
     float timeToComplete = 1.f;
 
-    vec2 start;
-    vec2 end;
-    std::deque<vec2> path;
-    std::optional<vec2> local;
+    raylib::vec2 start;
+    raylib::vec2 end;
+    std::deque<raylib::vec2> path;
+    std::optional<raylib::vec2> local;
 
     std::function<void(AIPerson*, Job*)> on_cleanup = nullptr;
 

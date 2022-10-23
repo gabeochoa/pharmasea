@@ -39,13 +39,14 @@ struct SettingsLayer : public Layer {
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(std::bind(
             &SettingsLayer::onKeyPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(
-            &SettingsLayer::onGamepadButtonPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<GamepadButtonPressedEvent>(
+            std::bind(&SettingsLayer::onGamepadButtonPressed, this,
+                      std::placeholders::_1));
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
         if (Menu::get().state != Menu::State::Settings) return false;
-        if (event.keycode == KEY_ESCAPE) {
+        if (event.keycode == raylib::KEY_ESCAPE) {
             Menu::get().state = Menu::State::Root;
             return true;
         }
@@ -63,8 +64,8 @@ struct SettingsLayer : public Layer {
         // auto& settings = Settings::get();
 
         // TODO move to input
-        bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
-        vec2 mousepos = GetMousePosition();
+        bool mouseDown = raylib::IsMouseButtonDown(raylib::MOUSE_BUTTON_LEFT);
+        raylib::vec2 mousepos = raylib::GetMousePosition();
 
         ui_context->begin(mouseDown, mousepos);
 
@@ -167,7 +168,7 @@ struct SettingsLayer : public Layer {
                 }
                 ui_context->pop_parent();  // end dropdown
 
-                if(button(back_button, "Back")){
+                if (button(back_button, "Back")) {
                     Menu::get().state = Menu::State::Root;
                 }
             }
@@ -179,7 +180,7 @@ struct SettingsLayer : public Layer {
 
     virtual void onUpdate(float) override {
         if (Menu::get().state != Menu::State::Settings) return;
-        SetExitKey(KEY_NULL);
+        SetExitKey(raylib::KEY_NULL);
 
         // TODO with gamelayer, support events
         if (minimized) {
@@ -194,7 +195,7 @@ struct SettingsLayer : public Layer {
             return;
         }
 
-        ClearBackground(ui_context->active_theme().background);
+        raylib::ClearBackground(ui_context->active_theme().background);
         draw_ui();
     }
 };

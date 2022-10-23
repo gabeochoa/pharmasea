@@ -1,11 +1,12 @@
 #pragma once
 
-#include "external_include.h"
-#include "layer.h"
-#include "globals.h"
 #include "app.h"
+#include "external_include.h"
+#include "globals.h"
+#include "layer.h"
+#include "ui_color.h"
 
-struct VersionLayer: public Layer {
+struct VersionLayer : public Layer {
     VersionLayer() : Layer("Version") { minimized = false; }
     virtual ~VersionLayer() {}
     virtual void onAttach() override {}
@@ -17,11 +18,7 @@ struct VersionLayer: public Layer {
         if (minimized) {
             return;
         }
-        DrawTextEx(
-                Preload::get().font, 
-                VERSION.c_str(),
-                {5, 30},
-                20, 0,
-                LIGHTGRAY);
+        raylib::DrawTextEx(Preload::get().font, VERSION.c_str(), {5, 30}, 20, 0,
+                           ui::color::light_grey);
     }
 };

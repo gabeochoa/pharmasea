@@ -10,16 +10,16 @@
 
 struct Player : public BasePlayer {
 
-    Player(vec3 p, Color face_color_in, Color base_color_in)
+    Player(raylib::vec3 p, raylib::Color face_color_in, raylib::Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}
-    Player(vec2 p, Color face_color_in, Color base_color_in)
+    Player(raylib::vec2 p, raylib::Color face_color_in, raylib::Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}
     Player() : BasePlayer({0, 0, 0}, {0, 255, 0, 255}, {255, 0, 0, 255}) {}
-    Player(vec2 location)
+    Player(raylib::vec2 location)
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
                      {255, 0, 0, 255}) {}
 
-    virtual vec3 update_xaxis_position(float dt) override {
+    virtual raylib::vec3 update_xaxis_position(float dt) override {
         float speed = this->base_speed() * dt;
         auto new_pos_x = this->raw_position;
         float left = KeyMap::is_event(Menu::State::Game, "Player Left");
@@ -29,7 +29,7 @@ struct Player : public BasePlayer {
         return new_pos_x;
     }
 
-    virtual vec3 update_zaxis_position(float dt) override {
+    virtual raylib::vec3 update_zaxis_position(float dt) override {
         float speed = this->base_speed() * dt;
         auto new_pos_z = this->raw_position;
         float up = KeyMap::is_event(Menu::State::Game, "Player Forward");

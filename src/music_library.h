@@ -9,7 +9,7 @@ SINGLETON_FWD(MusicLibrary)
 struct MusicLibrary {
     SINGLETON(MusicLibrary)
 
-    std::map<std::string, Music> musics;
+    std::map<std::string, raylib::Music> musics;
 
     auto size() { return musics.size(); }
     auto begin() { return musics.begin(); }
@@ -30,10 +30,10 @@ struct MusicLibrary {
         // TODO add debug mode
         std::cout << "loading music: " << name << " from " << filename
                   << std::endl;
-        this->add(name, LoadMusicStream(filename));
+        this->add(name, raylib::LoadMusicStream(filename));
     }
 
-    const std::string add(const char* name, const Music& music) {
+    const std::string add(const char* name, const raylib::Music& music) {
         if (musics.find(name) != musics.end()) {
             // log_warn(
             // "Failed to add music to library, music with name {} "
@@ -46,7 +46,7 @@ struct MusicLibrary {
         return name;
     }
 
-    Music& get(const std::string& name) {
+    raylib::Music& get(const std::string& name) {
         if (!this->contains(name)) {
             std::cout << "asking for music: " << name
                       << " but nothing has been loaded with that name yet"
@@ -58,5 +58,4 @@ struct MusicLibrary {
     bool contains(const std::string& name) {
         return (musics.find(name) != musics.end());
     }
-
 };

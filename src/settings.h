@@ -23,7 +23,7 @@ struct Settings {
     // https://developernote.com/2020/02/basic-ideas-of-version-tolerant-serialization-in-cpp/
     struct Data {
         int version = 0;
-        vec2 window_size = {WIN_W, WIN_H};
+        raylib::vec2 window_size = {WIN_W, WIN_H};
         // Volume percent [0, 1] for everything
         float masterVolume = 0.5f;
     } data;
@@ -32,7 +32,7 @@ struct Settings {
 
     ~Settings() {}
 
-    void update_window_size(vec2 size) {
+    void update_window_size(raylib::vec2 size) {
         data.window_size = size;
         //
         WindowResizeEvent* event = new WindowResizeEvent(
@@ -43,9 +43,10 @@ struct Settings {
 
     void update_master_volume(float nv) {
         data.masterVolume = nv;
-        // std::cout << "master volume changed to " << data.masterVolume << std::endl;
-        SetMasterVolume(data.masterVolume);
-        // TODO support sound vs music volume 
+        // std::cout << "master volume changed to " << data.masterVolume <<
+        // std::endl;
+        raylib::SetMasterVolume(data.masterVolume);
+        // TODO support sound vs music volume
     }
 
     bool load_save_file() {
@@ -68,7 +69,8 @@ struct Settings {
                 float y = static_cast<float>(atof(tokens[2].c_str()));
                 update_window_size({x, y});
             } else if (tokens[0] == "master_volume") {
-                update_master_volume(static_cast<float>(atof(tokens[1].c_str())));
+                update_master_volume(
+                    static_cast<float>(atof(tokens[1].c_str())));
             } else {
                 // TODO handle unknown data
             }

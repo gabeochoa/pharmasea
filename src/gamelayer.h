@@ -21,7 +21,7 @@
 struct GameLayer : public Layer {
     World world;
     GameCam cam;
-    Model bag_model;
+    raylib::Model bag_model;
     // TODO move to pharmacy.h
     bool in_planning_mode = false;
 
@@ -76,7 +76,7 @@ struct GameLayer : public Layer {
 
     void play_music() {
         auto m = MusicLibrary::get().get("wah");
-        if (!IsMusicStreamPlaying(m)) {
+        if (!raylib::IsMusicStreamPlaying(m)) {
             PlayMusicStream(m);
         }
         UpdateMusicStream(m);
@@ -89,7 +89,7 @@ struct GameLayer : public Layer {
         play_music();
 
         // Dont quit window on escape
-        SetExitKey(KEY_NULL);
+        raylib::SetExitKey(raylib::KEY_NULL);
 
         // TODO replace passing Player with passing Player*
         // update
@@ -106,7 +106,7 @@ struct GameLayer : public Layer {
         if (Menu::get().state != Menu::State::Game) return;
         if (minimized) return;
 
-        ClearBackground(Color{200, 200, 200, 255});
+        ClearBackground(raylib::Color{200, 200, 200, 255});
         BeginMode3D(cam.get());
         {
             EntityHelper::forEachEntity([&](auto entity) {
@@ -119,32 +119,32 @@ struct GameLayer : public Layer {
                 return EntityHelper::ForEachFlow::None;
             });
 
-            // DrawGrid(40, TILESIZE);
+            // raylib::DrawGrid(40, TILESIZE);
 
-            DrawBillboard(cam.camera, TextureLibrary::get().get("face"),
-                          {
-                              1.f,
-                              0.f,
-                              1.f,
-                          },
-                          TILESIZE, WHITE);
+            raylib::DrawBillboard(cam.camera, TextureLibrary::get().get("face"),
+                                  {
+                                      1.f,
+                                      0.f,
+                                      1.f,
+                                  },
+                                  TILESIZE, raylib::WHITE);
 
             auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
             if (nav) {
                 for (auto kv : nav->entityShapes) {
-                    DrawLineStrip2Din3D(kv.second.hull, PINK);
+                    raylib::DrawLineStrip2Din3D(kv.second.hull, raylib::PINK);
                 }
 
                 for (auto kv : nav->shapes) {
-                    DrawLineStrip2Din3D(kv.hull, PINK);
+                    raylib::DrawLineStrip2Din3D(kv.hull, raylib::PINK);
                 }
             }
         }
-        EndMode3D();
+        raylib::EndMode3D();
 
         if (in_planning_mode) {
-            DrawTextEx(Preload::get().font, "IN PLANNING MODE", vec2{100, 100},
-                       20, 0, RED);
+            raylib::DrawTextEx(Preload::get().font, "IN PLANNING MODE",
+                               raylib::vec2{100, 100}, 20, 0, raylib::RED);
         }
     }
 };

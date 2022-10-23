@@ -17,22 +17,23 @@
 #include "texture_library.h"
 
 struct SpeechBubble {
-    vec3 position;
+    raylib::vec3 position;
     std::string icon_tex_name;
 
     SpeechBubble() { icon_tex_name = "jug"; }
 
-    void update(float, vec3 pos) { this->position = pos; }
+    void update(float, raylib::vec3 pos) { this->position = pos; }
     void render() const {
         GameCam cam = GLOBALS.get<GameCam>("game_cam");
         {
-            Texture texture = TextureLibrary::get().get("bubble");
-            DrawBillboard(cam.camera, texture,
-                          vec3{position.x,                      //
-                               position.y + (TILESIZE * 1.5f),  //
-                               position.z},                     //
-                          TILESIZE,                             //
-                          WHITE);
+            raylib::Texture texture = TextureLibrary::get().get("bubble");
+            raylib::DrawBillboard(
+                cam.camera, texture,
+                raylib::vec3{position.x,                      //
+                             position.y + (TILESIZE * 1.5f),  //
+                             position.z},                     //
+                TILESIZE,                                     //
+                raylib::WHITE);
         }
     }
 };
@@ -42,16 +43,18 @@ struct Customer : public AIPerson {
 
     std::string name = "Customer";
 
-    Customer(vec3 p, Color face_color_in, Color base_color_in)
+    Customer(raylib::vec3 p, raylib::Color face_color_in,
+             raylib::Color base_color_in)
         : AIPerson(p, face_color_in, base_color_in) {
         init();
     }
-    Customer(vec2 p, Color face_color_in, Color base_color_in)
+    Customer(raylib::vec2 p, raylib::Color face_color_in,
+             raylib::Color base_color_in)
         : AIPerson(p, face_color_in, base_color_in) {
         init();
     }
-    Customer(vec3 p, Color c) : AIPerson(p, c) { init(); }
-    Customer(vec2 p, Color c) : AIPerson(p, c) { init(); }
+    Customer(raylib::vec3 p, raylib::Color c) : AIPerson(p, c) { init(); }
+    Customer(raylib::vec2 p, raylib::Color c) : AIPerson(p, c) { init(); }
 
     void init() { name = get_random_name(); }
 
@@ -226,6 +229,7 @@ struct Customer : public AIPerson {
         };
 
         auto render_name = [&]() {
+            using namespace raylib;
             rlPushMatrix();
             rlTranslatef(              //
                 this->raw_position.x,  //
@@ -240,7 +244,7 @@ struct Customer : public AIPerson {
                 -1.05f * TILESIZE  // this is Y
             );
 
-            DrawText3D(               //
+            raylib::DrawText3D(       //
                 Preload::get().font,  //
                 name.c_str(),         //
                 {0.f},                //

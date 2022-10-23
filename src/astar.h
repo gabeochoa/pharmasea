@@ -17,20 +17,20 @@ struct ScoreValue {
     operator float() const { return value; }
 };
 
-float path_estimate(const vec2& a, const vec2& b) {
+float path_estimate(const raylib::vec2& a, const raylib::vec2& b) {
     return vec::distance(a, b);
 }
 
-float distance_between(const vec2& a, const vec2& b) {
+float distance_between(const raylib::vec2& a, const raylib::vec2& b) {
     return vec::distance(a, b);
 }
 
-vec2 get_lowest_f(const std::set<vec2>& set,
-                  std::map<vec2, ScoreValue>& fscore) {
+raylib::vec2 get_lowest_f(const std::set<raylib::vec2>& set,
+                  std::map<raylib::vec2, ScoreValue>& fscore) {
     // TODO
     float bestscore = std::numeric_limits<float>::max();
-    vec2 loc = *(set.begin());
-    for (const vec2 location : set) {
+    raylib::vec2 loc = *(set.begin());
+    for (const raylib::vec2 location : set) {
         float score = fscore[location];
         if (score < bestscore) {
             bestscore = score;
@@ -40,13 +40,13 @@ vec2 get_lowest_f(const std::set<vec2>& set,
     return loc;
 }
 
-std::vector<vec2> get_neighbors(vec2 start,
-                                std::function<bool(vec2 pos)> is_walkable) {
-    std::vector<vec2> output;
+std::vector<raylib::vec2> get_neighbors(raylib::vec2 start,
+                                std::function<bool(raylib::vec2 pos)> is_walkable) {
+    std::vector<raylib::vec2> output;
     int step = static_cast<int>(floor(TILESIZE));
     forEachNeighbor(
         static_cast<int>(start.x), static_cast<int>(start.y),
-        [&](const vec2& v) {
+        [&](const raylib::vec2& v) {
             auto neighbor = vec::snap(v);
             if (is_walkable(neighbor)) {
                 output.push_back(neighbor);
@@ -56,9 +56,9 @@ std::vector<vec2> get_neighbors(vec2 start,
     return output;
 }
 
-std::deque<vec2> reconstruct_path(std::deque<vec2> path,
-                                  std::map<vec2, vec2>& parent_map,
-                                  vec2 current) {
+std::deque<raylib::vec2> reconstruct_path(std::deque<raylib::vec2> path,
+                                  std::map<raylib::vec2, raylib::vec2>& parent_map,
+                                  raylib::vec2 current) {
     if (!parent_map.contains(current)) {
         return path;
     }
@@ -67,19 +67,19 @@ std::deque<vec2> reconstruct_path(std::deque<vec2> path,
     return reconstruct_path(path, parent_map, parent);
 }
 
-std::deque<vec2> find_path_impl(vec2 start, vec2 end,
-                                std::function<bool(vec2 pos)> is_walkable) {
+std::deque<raylib::vec2> find_path_impl(raylib::vec2 start, raylib::vec2 end,
+                                std::function<bool(raylib::vec2 pos)> is_walkable) {
     if (!is_walkable(end)) {
-        return std::deque<vec2>{};
+        return std::deque<raylib::vec2>{};
     }
 
-    std::set<vec2> openset;
+    std::set<raylib::vec2> openset;
     openset.insert(start);
 
-    std::map<vec2, vec2> parent_map;
+    std::map<raylib::vec2, raylib::vec2> parent_map;
 
-    std::map<vec2, ScoreValue> gscore;
-    std::map<vec2, ScoreValue> fscore;
+    std::map<raylib::vec2, ScoreValue> gscore;
+    std::map<raylib::vec2, ScoreValue> fscore;
 
     gscore[start] = 0;
     fscore[start] = 0 + path_estimate(start, end);
@@ -92,7 +92,7 @@ std::deque<vec2> find_path_impl(vec2 start, vec2 end,
             // std::cout << "astar: hit interation limit" << std::endl;
             break;
         }
-        vec2 cur = get_lowest_f(openset, fscore);
+        raylib::vec2 cur = get_lowest_f(openset, fscore);
 
         for (auto it = openset.begin(); it != openset.end();) {
             if (it->x == cur.x && it->y == cur.y)
@@ -109,7 +109,7 @@ std::deque<vec2> find_path_impl(vec2 start, vec2 end,
             return path;
         }
 
-        std::vector<vec2> neighbors = get_neighbors(cur, is_walkable);
+        std::vector<raylib::vec2> neighbors = get_neighbors(cur, is_walkable);
         for (const auto& neighbor : neighbors) {
             auto new_gscore = gscore[cur] + distance_between(cur, neighbor);
             auto neighbor_gscore = gscore[neighbor];
@@ -125,11 +125,11 @@ std::deque<vec2> find_path_impl(vec2 start, vec2 end,
         }
     }
 
-    return std::deque<vec2>{};
+    return std::deque<raylib::vec2>{};
 }
 
-std::deque<vec2> find_path(vec2 start, vec2 end,
-                           std::function<bool(vec2 pos)> is_walkable) {
+std::deque<raylib::vec2> find_path(raylib::vec2 start, raylib::vec2 end,
+                           std::function<bool(raylib::vec2 pos)> is_walkable) {
     return astar::find_path_impl(start, end, is_walkable);
 }
 

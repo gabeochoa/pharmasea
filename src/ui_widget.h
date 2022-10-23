@@ -61,7 +61,7 @@ struct Widget {
     SizeExpectation size_expected[2];
     float computed_relative_pos[2] = {0.f, 0.f};
     float computed_size[2] = {-1.f, -1.f};
-    Rectangle rect;
+    raylib::Rectangle rect;
     int growflags = GrowFlags::None;
     // Parent child stuffs
     std::vector<Widget*> children;
@@ -160,7 +160,8 @@ struct Widget {
 
         std::string tabs(t, '\t');
 
-        const auto a = (this->parent ? this->parent->rect : Rectangle());
+        const auto a =
+            (this->parent ? this->parent->rect : raylib::Rectangle());
         ss << tabs << "Widget(" << this->element << " ";
         ss << "x(" << this->size_expected[0] << " ; y("
            << this->size_expected[1] << "\n";

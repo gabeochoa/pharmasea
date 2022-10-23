@@ -7,14 +7,14 @@
 #include "person.h"
 
 struct TargetCube : public Person {
-    TargetCube(vec3 p, Color face_color_in, Color base_color_in)
+    TargetCube(raylib::vec3 p, raylib::Color face_color_in, raylib::Color base_color_in)
         : Person(p, face_color_in, base_color_in) {}
-    TargetCube(vec2 p, Color face_color_in, Color base_color_in)
+    TargetCube(raylib::vec2 p, raylib::Color face_color_in, raylib::Color base_color_in)
         : Person(p, face_color_in, base_color_in) {}
-    TargetCube(vec3 p, Color c) : Person(p, c) {}
-    TargetCube(vec2 p, Color c) : Person(p, c) {}
+    TargetCube(raylib::vec3 p, raylib::Color c) : Person(p, c) {}
+    TargetCube(raylib::vec2 p, raylib::Color c) : Person(p, c) {}
 
-    virtual vec3 update_xaxis_position(float dt) override {
+    virtual raylib::vec3 update_xaxis_position(float dt) override {
         float speed = 10.0f * dt;
         auto new_pos_x = this->raw_position;
         bool left = (bool) KeyMap::is_event(Menu::State::Game, "Target Left");
@@ -24,7 +24,7 @@ struct TargetCube : public Person {
         return new_pos_x;
     }
 
-    virtual vec3 update_zaxis_position(float dt) override {
+    virtual raylib::vec3 update_zaxis_position(float dt) override {
         float speed = 10.0f * dt;
         auto new_pos_z = this->raw_position;
         bool up = (bool) KeyMap::is_event(Menu::State::Game, "Target Forward");
