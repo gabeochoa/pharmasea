@@ -63,6 +63,10 @@ struct Widget {
     float computed_size[2] = {-1.f, -1.f};
     Rectangle rect;
     int growflags = GrowFlags::None;
+    // Parent child stuffs
+    std::vector<Widget*> children;
+    Widget* parent = nullptr;
+
     bool cant_render() const {
         return computed_size[0] == -1.f || computed_size[1] == -1.f;
     }
@@ -76,9 +80,20 @@ struct Widget {
     }
 
     Widget(const Widget& other) {
-        this->id = default_id();
         this->me = this;
+        this->id = other.id;
+        this->element = other.element;
+        this->ignore_size = other.ignore_size;
+        this->size_expected[0] = other.size_expected[0];
+        this->size_expected[1] = other.size_expected[1];
+        this->computed_relative_pos[0] = other.computed_relative_pos[0];
+        this->computed_relative_pos[1] = other.computed_relative_pos[1];
+        this->computed_size[0] = other.computed_size[0];
+        this->computed_size[1] = other.computed_size[1];
         this->rect = other.rect;
+        this->growflags = other.growflags;
+        this->children = other.children;
+        this->parent = other.parent;
     }
 
     Widget(SizeExpectation x, SizeExpectation y) {
@@ -112,14 +127,27 @@ struct Widget {
         this->growflags = flags;
     }
 
+    Widget& operator=(const Widget& other) {
+        this->me = this;
+        this->id = other.id;
+        this->element = other.element;
+        this->ignore_size = other.ignore_size;
+        this->size_expected[0] = other.size_expected[0];
+        this->size_expected[1] = other.size_expected[1];
+        this->computed_relative_pos[0] = other.computed_relative_pos[0];
+        this->computed_relative_pos[1] = other.computed_relative_pos[1];
+        this->computed_size[0] = other.computed_size[0];
+        this->computed_size[1] = other.computed_size[1];
+        this->rect = other.rect;
+        this->growflags = other.growflags;
+        this->children = other.children;
+        this->parent = other.parent;
+    }
+
     void set_expectation(SizeExpectation x, SizeExpectation y) {
         this->size_expected[0] = x;
         this->size_expected[1] = y;
     }
-
-    // Parent child stuffs
-    std::vector<Widget*> children;
-    Widget* parent = nullptr;
 
     void add_child(Widget* child) {
         children.push_back(child);

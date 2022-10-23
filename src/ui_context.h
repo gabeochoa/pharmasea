@@ -98,6 +98,12 @@ struct UIContext {
     Font font;
     Widget* root;
     std::stack<Widget*> parentstack;
+    std::vector<std::shared_ptr<Widget>> owned_widgets;
+
+    std::shared_ptr<Widget> own(const Widget& widget) {
+        owned_widgets.push_back(std::make_shared<Widget>(widget));
+        return *owned_widgets.rbegin();
+    }
 
     struct LastFrame {
         bool was_written_this_frame = false;
@@ -298,6 +304,7 @@ struct UIContext {
         // modchar = int();
         globalContext = nullptr;
         temp_widgets.clear();
+        owned_widgets.clear();
         reset_last_frame();
     }
 
@@ -333,6 +340,9 @@ struct UIContext {
         return themestack.top();
     }
 
+    void push_parent(std::shared_ptr<Widget> widget) {
+        push_parent(widget.get());
+    }
     void push_parent(Widget* widget) { parentstack.push(widget); }
     void pop_parent() { parentstack.pop(); }
 
