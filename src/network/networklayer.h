@@ -133,10 +133,10 @@ struct NetworkLayer : public Layer {
                 if (network_info->has_role()) {
                     if (network_info->is_host()) {
                         int i = 0;
-                        for (auto c :
-                             network_info->server.get_connected_clients()) {
+                        for (auto kv : network_info->remote_players) {
                             text(player_texts[i++],
-                                 fmt::format("id: {}", c->get_id()));
+                                 fmt::format("{}({})", kv.second->name,
+                                             kv.first));
                         }
                         if (button(play_button, "Play")) {
                             Menu::get().state = Menu::State::Game;

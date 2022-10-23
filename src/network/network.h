@@ -31,6 +31,7 @@ struct Info {
     enetpp::server<ThinClient> server;
     enetpp::client client;
     int my_client_id = -1;
+    std::string username = "default";
     std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
 
     Info() { enetpp::global_state::get().initialize(); }
@@ -86,12 +87,21 @@ struct Info {
     }
 
     void process_client_packet_msg(int client_id, ClientPacket packet) {
-        auto player_join = [&]() {
+        auto add_remote_player = [&](int id) {
+            if (is_host()) id = client_id;
+
+            remote_players[id] = std::make_shared<RemotePlayer>();
+            auto rp = remote_players[id];
+            rp->client_id = id;
+            EntityHelper::addEntity(remote_players[id]);
+            std::cout << fmt::format(" Adding a player {}, {}", client_id, id)
+                      << std::endl;
+        };
+
+        auto player_join = [&](ClientPacket::PlayerJoinInfo& player_join_info) {
             // NOTE: for this message type, the packet.client_id,
             // isnt yet filled in correctly and is likely -1
             // so we use the client_id in the message instead
-            ClientPacket::PlayerJoinInfo player_join_info =
-                std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
             if (player_join_info.is_you) {
                 // im the player
                 my_client_id = player_join_info.client_id;
@@ -100,14 +110,7 @@ struct Info {
 
             // Check to see if we already have this player?
             if (!remote_players.contains(packet.client_id)) {
-                std::cout << " Adding a new player " << std::endl;
-                remote_players[client_id] = std::make_shared<RemotePlayer>();
-
-                auto rp = remote_players[client_id];
-                rp->client_id = player_join_info.client_id;
-                rp->name = player_join_info.name;
-
-                EntityHelper::addEntity(remote_players[client_id]);
+                add_remote_player(packet.client_id);
             }
             return;
         };
@@ -115,16 +118,20 @@ struct Info {
         auto player_location = [&]() {
             ClientPacket::PlayerInfo player_info =
                 std::get<ClientPacket::PlayerInfo>(packet.msg);
+            int id = packet.client_id;
+            if(is_host()) id = client_id;
 
             // Check to see if we already have this player?
-            if (!remote_players.contains(packet.client_id)) {
-                std::cout << " Adding a new player " << std::endl;
-                remote_players[packet.client_id] =
-                    std::make_shared<RemotePlayer>();
-                EntityHelper::addEntity(remote_players[packet.client_id]);
+            if (!remote_players.contains(id)) {
+                add_remote_player(id);
             }
-            remote_players[packet.client_id]->update_remotely(
-                player_info.location, player_info.facing_direction);
+
+            auto rp = remote_players[id];
+            if (!rp)
+                std::cout << fmt::format("doesnt exist but should {}", id)
+                          << std::endl;
+            rp->update_remotely(player_info.name, player_info.location,
+                                player_info.facing_direction);
         };
 
         auto game_state = [&]() {
@@ -135,9 +142,11 @@ struct Info {
 
         if (is_client()) {
             switch (packet.msg_type) {
-                case ClientPacket::MsgType::PlayerJoin:
-                    player_join();
-                    break;
+                case ClientPacket::MsgType::PlayerJoin: {
+                    ClientPacket::PlayerJoinInfo player_join_info =
+                        std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
+                    player_join(player_join_info);
+                } break;
                 case ClientPacket::MsgType::PlayerLocation:
                     player_location();
                     break;
@@ -151,14 +160,17 @@ struct Info {
         } else if (is_host()) {
             switch (packet.msg_type) {
                 case ClientPacket::MsgType::PlayerJoin: {
-                    player_join();
-
                     ClientPacket::PlayerJoinInfo join_info =
                         std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
                     // since we are the host we always get the player join from
                     // the source. So we can edit the original packet to inject
                     // the client's id
+                    packet.client_id = client_id;
                     join_info.client_id = client_id;
+                    packet.msg = join_info;
+
+                    // we process it now
+                    player_join(join_info);
 
                     // Send the source player information about their client id
                     ClientPacket::PlayerJoinInfo for_source(join_info);
@@ -193,6 +205,7 @@ struct Info {
             thin_client._uid = h1;
             std::cout << "last client id was: " << h1 << std::endl;
         };
+        my_client_id = -2;
 
         server.set_trace_handler([](const std::string& line) {
             std::cout << "server: " << line << std::endl;
@@ -256,7 +269,6 @@ struct Info {
                 .msg = ClientPacket::PlayerJoinInfo({
                     .is_you = false,
                     .client_id = -1,
-                    .name = "default name",
                 }),
             });
             Buffer buffer;
@@ -292,10 +304,10 @@ struct Info {
     Buffer get_player_packet() {
         Player me = GLOBALS.get<Player>("player");
         ClientPacket player({
-            // TODO figure out which client id this is
             .client_id = my_client_id,
             .msg_type = ClientPacket::MsgType::PlayerLocation,
             .msg = ClientPacket::PlayerInfo({
+                .name = username,
                 .location =
                     {
                         me.position.x,
