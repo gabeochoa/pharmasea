@@ -31,7 +31,7 @@ struct RemotePlayer : public BasePlayer {
         return this->position;
     }
 
-    virtual void update_remotely(std::wstring my_name, float* location,
+    virtual void update_remotely(std::string my_name, float* location,
                                  int facing_direction) {
         this->name = my_name;
         this->position = vec3{location[0], location[1], location[2]};

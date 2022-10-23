@@ -60,7 +60,7 @@ struct ClientPacket {
 
     // Player Location
     struct PlayerInfo : public PlayerJoinInfo {
-        std::wstring name{};
+        std::string name{};
         float location[3];
         int facing_direction;
     };
@@ -94,7 +94,7 @@ std::ostream& operator<<(std::ostream& os, const Msg& msgtype) {
             [&](ClientPacket::PlayerInfo info) {
                 return fmt::format(
                     "PlayerInfo( id{} name{} pos({}, {}, {}), facing {})",
-                    info.client_id, util::to_string(info.name), info.location[0],
+                    info.client_id, info.name, info.location[0],
                     info.location[1], info.location[2], info.facing_direction);
             },
             [&](auto) { return std::string(" -- invalid operator<< --"); }},
@@ -149,7 +149,7 @@ void serialize(S& s, ClientPacket& packet) {
                               s.value1b(info.is_you);
                               s.value4b(info.client_id);
                               // end
-                              s.text4b(info.name, MAX_NAME_LENGTH);
+                              s.text1b(info.name, MAX_NAME_LENGTH);
                               s.value4b(info.location[0]);
                               s.value4b(info.location[1]);
                               s.value4b(info.location[2]);

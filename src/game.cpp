@@ -6,7 +6,7 @@
 // settings file
 // save file
 // #define WRITE_FILES
-// #define ENABLE_MULTIPLAYER
+#define ENABLE_MULTIPLAYER
 
 #include "external_include.h"
 

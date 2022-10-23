@@ -129,8 +129,7 @@ struct NetworkLayer : public Layer {
         {
             padding(*top_padding);
             text(*connecting_text,
-                 util::to_string(
-                     fmt::format("Username: {}", network_info->username)));
+                     fmt::format("Username: {}", network_info->username));
             padding(*button_padding);
             if (button(*host_button, "Host")) {
                 network_info->set_role_to_host();
@@ -190,11 +189,10 @@ struct NetworkLayer : public Layer {
             // people?
             // TODO add support for wstring
             text(*connecting_text,
-                 util::to_string(
-                     fmt::format("Username: {}", network_info->username)));
+                     fmt::format("Username: {}", network_info->username));
             for (auto kv : network_info->remote_players) {
                 text(*player_text,
-                     fmt::format("{}({})", util::to_string(kv.second->name),
+                     fmt::format("{}({})", kv.second->name,
                                  kv.first));
             }
 
