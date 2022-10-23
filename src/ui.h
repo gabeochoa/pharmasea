@@ -77,7 +77,7 @@ bool slider(
 
 bool textfield(
     // returns true if text changed
-    const Widget& widget, std::wstring& content);
+    const Widget& widget, std::string& content);
 
 ///////// ////// ////// ////// ////// ////// ////// //////
 ///////// ////// ////// ////// ////// ////// ////// //////
@@ -591,7 +591,7 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
     return changed_previous_frame;
 }
 
-bool textfield(const Widget& widget, std::wstring& content) {
+bool textfield(const Widget& widget, std::string& content) {
     init_widget(widget, __FUNCTION__);
     UIContext::LastFrame lf = get().get_last_frame(widget.id);
     auto state = get().widget_init<TextfieldState>(widget.id);
@@ -630,12 +630,12 @@ bool textfield(const Widget& widget, std::wstring& content) {
         get().draw_widget_old(pos, cs, 0.f, color, "TEXTURE");
 
         bool shouldWriteCursor = has_kb_focus(widget.id) && state->showCursor;
-        std::wstring focusStr = shouldWriteCursor ? L"_" : L"";
-        std::wstring focused_content =
-            fmt::format(L"{}{}", state->buffer.asT(), focusStr);
+        std::string focusStr = shouldWriteCursor ? "_" : "";
+        std::string focused_content =
+            fmt::format("{}{}", state->buffer.asT(), focusStr);
 
-        // TODO add support for wstring
-        get()._draw_text(widget.rect, util::to_string(focused_content),
+        // TODO add support for string
+        get()._draw_text(widget.rect, focused_content,
                          theme::Usage::Font);
     };
 
@@ -651,7 +651,7 @@ bool textfield(const Widget& widget, std::wstring& content) {
 
         if (has_kb_focus(widget->id)) {
             if (get().keychar != int()) {
-                state->buffer.asT().append(std::wstring(1, get().keychar));
+                state->buffer.asT().append(std::string(1, get().keychar));
                 changed = true;
             }
             if (get().pressed("Widget Backspace")) {

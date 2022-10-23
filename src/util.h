@@ -6,8 +6,6 @@
 #include <math.h>
 
 #include <cmath>
-#include <codecvt>
-#include <locale>
 
 namespace util {
 
@@ -60,47 +58,6 @@ std::vector<vec2> get_neighbors(int i, int j, int step = 1) {
     forEachNeighbor(
         i, j, [&](const vec2& v) { ns.push_back(v); }, step);
     return ns;
-}
-
-using convert_t = std::codecvt_utf8<wchar_t>;
-static std::wstring_convert<convert_t, wchar_t> strconverter;
-
-inline std::string to_string(std::wstring wstr) {
-    try {
-        return strconverter.to_bytes(wstr);
-    } catch (...) {
-        return std::string();
-    }
-}
-
-inline std::wstring to_wstring(std::string str) {
-    try {
-        return strconverter.from_bytes(str);
-    } catch (...) {
-        return std::wstring();
-    }
-}
-
-inline std::string escaped_wstring(const std::wstring& content) {
-    std::string sstr;
-    // Reserve memory in 1 hit to avoid lots of copying for long strings.
-    static size_t const nchars_per_code = 6;
-    sstr.reserve(content.size() * nchars_per_code);
-    char code[nchars_per_code];
-    code[0] = '\\';
-    code[1] = 'u';
-    static char const* const hexlut = "0123456789abcdef";
-    std::wstring::const_iterator i = content.begin();
-    std::wstring::const_iterator e = content.end();
-    for (; i != e; ++i) {
-        unsigned wc = *i;
-        code[2] = (hexlut[(wc >> 12) & 0xF]);
-        code[3] = (hexlut[(wc >> 8) & 0xF]);
-        code[4] = (hexlut[(wc >> 4) & 0xF]);
-        code[5] = (hexlut[(wc) &0xF]);
-        sstr.append(code, code + nchars_per_code);
-    }
-    return sstr;
 }
 
 }  // namespace util

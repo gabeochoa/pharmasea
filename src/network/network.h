@@ -31,7 +31,7 @@ struct Info {
     enetpp::client client;
     int my_client_id = -1;
     // std::wstring username = L"葛城 ミサト";
-    std::wstring username = L"";
+    std::string username = "";
     bool username_set = false;
 
     std::map<int, std::shared_ptr<RemotePlayer>> remote_players;

@@ -11,7 +11,7 @@
 
 struct RemotePlayer : public BasePlayer {
     int client_id;
-    std::wstring name = L"Remote Player";
+    std::string name = "Remote Player";
 
     RemotePlayer(vec3 p, Color face_color_in, Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}
@@ -60,7 +60,7 @@ struct RemotePlayer : public BasePlayer {
             DrawText3D(               //
                 Preload::get().font,  //
                 // TODO right now cant do wstring //
-                util::to_string(name).c_str(),  //
+                name.c_str(),  //
                 {0.f},                          //
                 96,                             // font size
                 4,                              // font spacing
