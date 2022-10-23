@@ -18,9 +18,13 @@ struct RemotePlayer : public BasePlayer {
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
                      {255, 0, 0, 255}) {}
 
-    virtual vec3 update_xaxis_position(float) override {}
+    virtual vec3 update_xaxis_position(float) override {
+        return this->position;
+    }
 
-    virtual vec3 update_zaxis_position(float) override {}
+    virtual vec3 update_zaxis_position(float) override {
+        return this->position;
+    }
 
     virtual void update_remotely(float* location, int facing_direction) {
         this->position = vec3{location[0], location[1], location[2]};

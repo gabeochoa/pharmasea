@@ -101,6 +101,7 @@ struct NetworkLayer : public Layer {
         Widget join_button(MK_UUID(id, ROOT_ID), button_x, button_y);
         Widget back_button(MK_UUID(id, ROOT_ID), button_x, button_y);
         Widget ping_button(MK_UUID(id, ROOT_ID), button_x, button_y);
+        Widget play_button(MK_UUID(id, ROOT_ID), button_x, button_y);
         Widget cancel_button(MK_UUID(id, ROOT_ID), button_x, button_y);
         Widget button_padding(padd_x, padd_y);
 
@@ -137,9 +138,14 @@ struct NetworkLayer : public Layer {
                             text(player_texts[i++],
                                  fmt::format("id: {}", c->get_id()));
                         }
+                        if (button(play_button, "Play")) {
+                            Menu::get().state = Menu::State::Game;
+                            // TODO add a way to subscribe to state changes
+                            network_info->send_updated_state();
+                        }
                     }
 
-                    if (button(cancel_button, "Cancel")) {
+                    if (button(cancel_button, "Disconnect")) {
                         network_info->set_role_to_none();
                     }
                 } else {
