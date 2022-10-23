@@ -216,9 +216,9 @@ struct Info {
 
         server.start_listening(
             enetpp::server_listen_params<ThinClient>()
-                .set_max_client_count(3)
+                .set_max_client_count(MAX_CLIENTS)
                 .set_channel_count(1)
-                .set_listen_port(770)
+                .set_listen_port(DEFAULT_PORT)
                 .set_initialize_client_function(init_client_func));
 
         // consume events raised by worker thread
@@ -258,9 +258,10 @@ struct Info {
             std::cout << "client: " << line << std::endl;
         });
 
-        client.connect(enetpp::client_connect_params()
-                           .set_channel_count(1)
-                           .set_server_host_name_and_port("localhost", 770));
+        client.connect(
+            enetpp::client_connect_params()
+                .set_channel_count(1)
+                .set_server_host_name_and_port("localhost", DEFAULT_PORT));
 
         // consume events raised by worker thread
         auto on_connected = [&]() {

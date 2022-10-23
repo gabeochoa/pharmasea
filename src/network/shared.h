@@ -23,8 +23,8 @@ using Buffer = std::vector<unsigned char>;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 
-const int DEFAULT_PORT = 7777;
-const int MAX_CLIENTS = 32;
+const int DEFAULT_PORT = 770;
+const int MAX_CLIENTS = 3;
 // TODO add some note somewhere about only
 // supporting 50 character names
 const int MAX_NAME_LENGTH = 25;

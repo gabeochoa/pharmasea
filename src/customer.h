@@ -12,6 +12,7 @@
 #include "furniture/register.h"
 #include "globals.h"
 #include "job.h"
+#include "names.h"
 #include "text_util.h"
 #include "texture_library.h"
 
@@ -42,11 +43,17 @@ struct Customer : public AIPerson {
     std::string name = "Customer";
 
     Customer(vec3 p, Color face_color_in, Color base_color_in)
-        : AIPerson(p, face_color_in, base_color_in) {}
+        : AIPerson(p, face_color_in, base_color_in) {
+        init();
+    }
     Customer(vec2 p, Color face_color_in, Color base_color_in)
-        : AIPerson(p, face_color_in, base_color_in) {}
-    Customer(vec3 p, Color c) : AIPerson(p, c) {}
-    Customer(vec2 p, Color c) : AIPerson(p, c) {}
+        : AIPerson(p, face_color_in, base_color_in) {
+        init();
+    }
+    Customer(vec3 p, Color c) : AIPerson(p, c) { init(); }
+    Customer(vec2 p, Color c) : AIPerson(p, c) { init(); }
+
+    void init() { name = get_random_name(); }
 
     virtual float base_speed() override { return 3.5f; }
 
@@ -96,7 +103,8 @@ struct Customer : public AIPerson {
             Customer* me = this;
             int cur_spot_in_line = reg->position_in_line(me);
 
-            if (cur_spot_in_line == job->spot_in_line || !reg->can_move_up(me) ) {
+            if (cur_spot_in_line == job->spot_in_line ||
+                !reg->can_move_up(me)) {
                 // We didnt move so just wait a bit before trying again
                 announce(fmt::format("im just going to wait a bit longer"));
 
@@ -134,7 +142,7 @@ struct Customer : public AIPerson {
             Register* reg = (Register*) job->data["register"];
             Customer* me = this;
 
-            if(reg->held_item == nullptr){
+            if (reg->held_item == nullptr) {
                 announce("my rx isnt ready yet");
 
                 // Add the current job to the queue,
