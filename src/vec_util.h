@@ -7,6 +7,23 @@
 #define EPSILON 0.000001f
 #endif
 
+static constexpr int x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+static constexpr int y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+static void forEachNeighbor(int i, int j, std::function<void(const vec2&)> cb,
+                     int step = 1) {
+    for (int a = 0; a < 8; a++) {
+        cb(vec2{(float) i + (x[a] * step), (float) j + (y[a] * step)});
+    }
+}
+
+static std::vector<vec2> get_neighbors(int i, int j, int step = 1) {
+    std::vector<vec2> ns;
+    forEachNeighbor(
+        i, j, [&](const vec2& v) { ns.push_back(v); }, step);
+    return ns;
+}
+
 inline float comp_max(const vec2& a){
     return fmax(a.x, a.y);
 }

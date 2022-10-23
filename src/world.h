@@ -117,7 +117,7 @@ struct World {
             5 6 7
         */
         std::vector<char> output;
-        util::forEachNeighbor(i, j, [&](const vec2& v){
+        forEachNeighbor(i, j, [&](const vec2& v){
             char neighbor = get_char(static_cast<int>(v.x), static_cast<int>(v.y));
             output.push_back(neighbor);
         });
