@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "external_include.h"
+#include <iostream>
 #include "singleton.h"
 
 SINGLETON_FWD(Menu)
