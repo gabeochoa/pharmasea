@@ -26,8 +26,8 @@ using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 const int DEFAULT_PORT = 7777;
 const int MAX_CLIENTS = 32;
 // TODO add some note somewhere about only
-// supporting 100 character names
-const int MAX_NAME_LENGTH = 100;
+// supporting 50 character names
+const int MAX_NAME_LENGTH = 25;
 
 struct ClientPacket {
     int client_id;
@@ -149,7 +149,7 @@ void serialize(S& s, ClientPacket& packet) {
                               s.value1b(info.is_you);
                               s.value4b(info.client_id);
                               // end
-                              s.text4b(info.name, 20);
+                              s.text4b(info.name, MAX_NAME_LENGTH);
                               s.value4b(info.location[0]);
                               s.value4b(info.location[1]);
                               s.value4b(info.location[2]);
