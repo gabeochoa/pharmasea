@@ -31,6 +31,7 @@ struct Info {
     enetpp::server<ThinClient> server;
     enetpp::client client;
     int my_client_id = -1;
+    // std::wstring username = L"葛城 ミサト";
     std::wstring username = L"";
     bool username_set = false;
 

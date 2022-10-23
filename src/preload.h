@@ -7,9 +7,9 @@
 #include "singleton.h"
 //
 #include "modellibrary.h"
+#include "music_library.h"
 #include "resources/fonts/Karmina_Regular_256.h"
 #include "sound_library.h"
-#include "music_library.h"
 #include "texture_library.h"
 
 SINGLETON_FWD(Preload)
@@ -28,9 +28,7 @@ struct Preload {
         load_music();
     }
 
-    ~Preload(){
-        CloseAudioDevice();
-    }
+    ~Preload() { CloseAudioDevice(); }
 
     void load_fonts() {
         // TODO - load fonts from install folder, instead of local path
@@ -71,12 +69,9 @@ struct Preload {
             "roblox");
     }
 
-    void load_music(){
+    void load_music() {
         MusicLibrary::get().load(
-            Files::get()
-                .fetch_resource_path("music", "wah.ogg")
-                .c_str(),
+            Files::get().fetch_resource_path("music", "wah.ogg").c_str(),
             "wah");
-
     }
 };
