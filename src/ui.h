@@ -651,7 +651,7 @@ bool textfield(const Widget& widget, std::string& content) {
 
         if (has_kb_focus(widget->id)) {
             if (get().keychar != int()) {
-                state->buffer.asT().append(std::string(1, get().keychar));
+                state->buffer.asT().append(std::string(1, (char) get().keychar));
                 changed = true;
             }
             if (get().pressed("Widget Backspace")) {

@@ -7,13 +7,13 @@
 #define EPSILON 0.000001f
 #endif
 
-static constexpr int x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
-static constexpr int y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
+static constexpr int neighbor_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+static constexpr int neighbor_y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
 static void forEachNeighbor(int i, int j, std::function<void(const vec2&)> cb,
                      int step = 1) {
     for (int a = 0; a < 8; a++) {
-        cb(vec2{(float) i + (x[a] * step), (float) j + (y[a] * step)});
+        cb(vec2{(float) i + (neighbor_x[a] * step), (float) j + (neighbor_y[a] * step)});
     }
 }
 

@@ -50,16 +50,16 @@ static void DrawTextCodepoint3D(Font font, int codepoint, Vector3 position,
         (float) font.baseSize * scale;
 
     if (font.texture.id > 0) {
-        const float x = 0.0f;
-        const float y = 0.0f;
-        const float z = 0.0f;
+        float x = 0.0f;
+        float y = 0.0f;
+        float z = 0.0f;
 
         // normalized texture coordinates of the glyph inside the font texture
         // (0.0f -> 1.0f)
-        const float tx = srcRec.x / font.texture.width;
-        const float ty = srcRec.y / font.texture.height;
-        const float tw = (srcRec.x + srcRec.width) / font.texture.width;
-        const float th = (srcRec.y + srcRec.height) / font.texture.height;
+        float tx = srcRec.x / font.texture.width;
+        float ty = srcRec.y / font.texture.height;
+        float tw = (srcRec.x + srcRec.width) / font.texture.width;
+        float th = (srcRec.y + srcRec.height) / font.texture.height;
 
         if (SHOW_LETTER_BOUNDRY)
             DrawCubeWiresV((Vector3){position.x + width / 2, position.y,
