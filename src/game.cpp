@@ -1,14 +1,12 @@
 
 // Global Defines
 
-
 // uncomment to enable writing / reading files :
 // settings file
 // save file
 // #define WRITE_FILES
 
 #include "external_include.h"
-
 
 ///
 #include "globals.h"
@@ -31,9 +29,9 @@
 #include "./tests/all_tests.h"
 
 void startup() {
-    SetTargetFPS(120);
+    raylib::SetTargetFPS(120);
     // Disable all that startup logging
-    SetTraceLogLevel(LOG_WARNING);
+    raylib::SetTraceLogLevel(raylib::LOG_WARNING);
     // Force the app to be created.
     // This unlocks GPU access so we can load textures
     App::get();

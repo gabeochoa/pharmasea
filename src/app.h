@@ -18,7 +18,7 @@ struct App {
     LayerStack layerstack;
 
     App() {
-        InitWindow(WIN_W, WIN_H, "pharmasea");
+        raylib::InitWindow(WIN_W, WIN_H, "pharmasea");
         // Has to happen after init window due to font requirements
         Preload::get();
         KeyMap::get();
@@ -38,7 +38,7 @@ struct App {
     bool onWindowResize(WindowResizeEvent event) {
         std::cout << "Got Window Resize Event: " << event.width << ", "
                   << event.height << std::endl;
-        SetWindowSize(event.width, event.height);
+        raylib::SetWindowSize(event.width, event.height);
         return true;
     }
 
@@ -61,11 +61,11 @@ struct App {
     }
 
     void run() {
-        while (!WindowShouldClose()) {
-            float dt = GetFrameTime();
+        while (!raylib::WindowShouldClose()) {
+            float dt = raylib::GetFrameTime();
             this->loop(dt);
         }
-        CloseWindow();
+        raylib::CloseWindow();
     }
 
     void check_input() {
@@ -80,11 +80,11 @@ struct App {
         for (Layer* layer : layerstack) {
             layer->onUpdate(dt);
         }
-        BeginDrawing();
+        raylib::BeginDrawing();
         for (Layer* layer : layerstack) {
             layer->onDraw(dt);
         }
-        EndDrawing();
+        raylib::EndDrawing();
 
         check_input();
     }

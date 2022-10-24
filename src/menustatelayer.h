@@ -1,10 +1,11 @@
 
 #pragma once
 
+#include "app.h"
 #include "external_include.h"
 #include "layer.h"
 #include "menu.h"
-#include "app.h"
+#include "ui_color.h"
 
 struct MenuStateLayer : public Layer {
     MenuStateLayer() : Layer("MenuState") { minimized = false; }
@@ -19,11 +20,7 @@ struct MenuStateLayer : public Layer {
         if (minimized) {
             return;
         }
-        DrawTextEx(
-                Preload::get().font, 
-                Menu::get().tostring(), 
-                {5, 20},
-                20, 0,
-                LIGHTGRAY);
+        raylib::DrawTextEx(Preload::get().font, Menu::get().tostring(), {5, 20},
+                           20, 0, ui::color::light_grey);
     }
 };

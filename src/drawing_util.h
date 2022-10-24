@@ -1,14 +1,18 @@
 #pragma once
 
 #include "globals.h"
-#include "raylib.h"
-#include "rlgl.h"
 //
 #include "external_include.h"
 #include "vec_util.h"
 
-static void DrawLineStrip2Din3D(const std::vector<vec2>& points, Color color) {
-    std::optional<vec3> point;
+namespace raylib {
+
+#include "raylib.h"
+#include "rlgl.h"
+
+static void DrawLineStrip2Din3D(const std::vector<raylib::vec2>& points,
+                                Color color) {
+    std::optional<raylib::vec3> point;
     for (auto p : points) {
         auto p3 = vec::to3(p);
         p3.x -= TILESIZE / 2;
@@ -95,3 +99,4 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlEnd();
     rlPopMatrix();
 }
+}  // namespace raylib

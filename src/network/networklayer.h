@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "../external_include.h"
 //
 #include "../globals.h"
@@ -9,9 +8,9 @@
 #include "../layer.h"
 #include "../ui.h"
 //
-#include "shared.h"
-#include "../remote_player.h"
 #include "../player.h"
+#include "../remote_player.h"
+#include "shared.h"
 
 using namespace ui;
 
@@ -326,8 +325,8 @@ struct NetworkLayer : public Layer {
         ClearBackground(ui_context->active_theme().background);
 
         // TODO move to input
-        bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
-        vec2 mousepos = GetMousePosition();
+        bool mouseDown = IsMouseButtonDown(raylib::MOUSE_BUTTON_LEFT);
+        raylib::vec2 mousepos = raylib::GetMousePosition();
 
         ui_context->begin(mouseDown, mousepos);
 

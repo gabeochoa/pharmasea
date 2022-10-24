@@ -16,27 +16,27 @@ SINGLETON_FWD(Preload)
 struct Preload {
     SINGLETON(Preload)
 
-    Font font;
+    raylib::Font font;
 
     Preload() {
         load_fonts();
         load_textures();
         load_models();
         //
-        InitAudioDevice();
+        raylib::InitAudioDevice();
         load_sounds();
         load_music();
     }
 
-    ~Preload() { CloseAudioDevice(); }
+    ~Preload() { raylib::CloseAudioDevice(); }
 
     void load_fonts() {
         // TODO - load fonts from install folder, instead of local path
         // Font loading must happen after InitWindow
-        font = LoadFont_KarminaRegular256();
+        font = raylib::LoadFont_KarminaRegular256();
         // font = LoadFontEx("./resources/fonts/constan.ttf", 96, 0, 0);
         GenTextureMipmaps(&font.texture);
-        SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);
+        raylib::SetTextureFilter(font.texture, raylib::TEXTURE_FILTER_POINT);
     }
     void load_textures() {
         TextureLibrary::get().load(

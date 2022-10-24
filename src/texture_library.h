@@ -10,7 +10,7 @@ SINGLETON_FWD(TextureLibrary)
 struct TextureLibrary {
     SINGLETON(TextureLibrary)
 
-    std::map<std::string, Texture2D> textures;
+    std::map<std::string, raylib::Texture2D> textures;
 
     auto size() { return textures.size(); }
     auto begin() { return textures.begin(); }
@@ -31,10 +31,10 @@ struct TextureLibrary {
         // TODO add debug mode
         std::cout << "loading texture: " << name << " from " << filename
                   << std::endl;
-        this->add(name, LoadTexture(filename));
+        this->add(name, raylib::LoadTexture(filename));
     }
 
-    const std::string add(const char* name, const Texture& texture) {
+    const std::string add(const char* name, const raylib::Texture& texture) {
         if (textures.find(name) != textures.end()) {
             // log_warn(
             // "Failed to add texture to library, texture with name {} "
@@ -47,7 +47,7 @@ struct TextureLibrary {
         return name;
     }
 
-    Texture& get(const std::string& name) {
+    raylib::Texture& get(const std::string& name) {
         if (!this->contains(name)) {
             std::cout << "asking for texture: " << name
                       << " but nothing has been loaded with that name yet"

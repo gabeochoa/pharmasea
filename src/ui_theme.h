@@ -19,13 +19,13 @@ enum Usage {
 }
 
 struct UITheme {
-    Color font;
-    Color darkfont;
-    Color background;
+    raylib::Color font;
+    raylib::Color darkfont;
+    raylib::Color background;
 
-    Color primary;
-    Color secondary;
-    Color accent;
+    raylib::Color primary;
+    raylib::Color secondary;
+    raylib::Color accent;
 
     UITheme()
         : font(color::isabelline),
@@ -35,7 +35,7 @@ struct UITheme {
           secondary(color::tea_green),
           accent(color::orange_soda) {}
 
-    UITheme(Color f, Color df, Color bg, Color p, Color s, Color a)
+    UITheme(raylib::Color f, raylib::Color df, raylib::Color bg, raylib::Color p, raylib::Color s, raylib::Color a)
         : font(f),
           darkfont(df),
           background(bg),
@@ -43,7 +43,7 @@ struct UITheme {
           secondary(s),
           accent(a) {}
 
-    Color from_usage(theme::Usage cu) {
+    raylib::Color from_usage(theme::Usage cu) {
         switch (cu) {
             case theme::Usage::Font:
                 return font;

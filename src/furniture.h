@@ -5,11 +5,11 @@
 #include "external_include.h"
 
 struct Furniture : public Entity {
-    Furniture(vec2 pos, Color face_color_in)
+    Furniture(raylib::vec2 pos, raylib::Color face_color_in)
         : Entity(pos, face_color_in, face_color_in) {}
-    Furniture(vec3 pos, Color face_color_in)
+    Furniture(raylib::vec3 pos, raylib::Color face_color_in)
         : Entity(pos, face_color_in, face_color_in) {}
-    Furniture(vec2 pos, Color face_color_in, Color base_color_in)
+    Furniture(raylib::vec2 pos, raylib::Color face_color_in, raylib::Color base_color_in)
         : Entity(pos, face_color_in, base_color_in) {}
 
     virtual void update_held_item_position() override {

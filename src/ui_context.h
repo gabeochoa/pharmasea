@@ -95,7 +95,7 @@ struct UIContext {
    public:
     StateManager statemanager;
     std::stack<UITheme> themestack;
-    Font font;
+    raylib::Font font;
     Widget* root;
     std::stack<Widget*> parentstack;
     std::vector<std::shared_ptr<Widget>> owned_widgets;
@@ -107,7 +107,7 @@ struct UIContext {
 
     struct LastFrame {
         bool was_written_this_frame = false;
-        std::optional<Rectangle> rect;
+        std::optional<raylib::Rectangle> rect;
     };
     std::map<uuid, LastFrame> last_frame;
     LastFrame get_last_frame(uuid id) {
@@ -145,16 +145,16 @@ struct UIContext {
     uuid last_processed;
 
     bool lmouse_down = false;
-    vec2 mouse = vec2{0.0, 0.0};
+    raylib::vec2 mouse = raylib::vec2{0.0, 0.0};
 
     int key = -1;
     int mod = -1;
-    GamepadButton button;
+    raylib::GamepadButton button;
     GamepadAxisWithDir axis_info;
     int keychar = -1;
     int modchar = -1;
 
-    bool is_mouse_inside(const Rectangle& rect) {
+    bool is_mouse_inside(const raylib::Rectangle& rect) {
         return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
                mouse.y >= rect.y && mouse.y <= rect.y + rect.height;
     }
@@ -183,7 +183,7 @@ struct UIContext {
     }
 
     bool process_gamepad_button_event(GamepadButtonPressedEvent event) {
-        GamepadButton code = event.button;
+        raylib::GamepadButton code = event.button;
         if (!KeyMap::does_layer_map_contain_button(STATE, code)) {
             return false;
         }
@@ -200,17 +200,17 @@ struct UIContext {
         return true;
     }
 
-    bool _pressedButtonWithoutEat(GamepadButton butt) const {
-        if (butt == GAMEPAD_BUTTON_UNKNOWN) return false;
+    bool _pressedButtonWithoutEat(raylib::GamepadButton butt) const {
+        if (butt == raylib::GAMEPAD_BUTTON_UNKNOWN) return false;
         return button == butt;
     }
 
     bool pressedButtonWithoutEat(std::string name) const {
-        GamepadButton code = KeyMap::get_button(STATE, name);
+        raylib::GamepadButton code = KeyMap::get_button(STATE, name);
         return _pressedWithoutEat(code);
     }
 
-    void eatButton() { button = GAMEPAD_BUTTON_UNKNOWN; }
+    void eatButton() { button = raylib::GAMEPAD_BUTTON_UNKNOWN; }
 
     bool pressed(std::string name) {
         int code = KeyMap::get_key_code(STATE, name);
@@ -220,7 +220,7 @@ struct UIContext {
             return a;
         }
 
-        GamepadButton butt = KeyMap::get_button(STATE, name);
+        raylib::GamepadButton butt = KeyMap::get_button(STATE, name);
         bool b = _pressedButtonWithoutEat(butt);
         if (b) {
             eatButton();
@@ -246,7 +246,7 @@ struct UIContext {
     }
 
     bool _pressedWithoutEat(int code) const {
-        if (code == KEY_NULL) return false;
+        if (code == raylib::KEY_NULL) return false;
         return key == code || mod == code;
     }
     // TODO is there a better way to do eat(string)?
@@ -274,10 +274,10 @@ struct UIContext {
         kb_focus_id = ROOT_ID;
 
         lmouse_down = false;
-        mouse = vec2{};
+        mouse = raylib::vec2{};
     }
 
-    void begin(bool mouseDown, const vec2& mousePos) {
+    void begin(bool mouseDown, const raylib::vec2& mousePos) {
         M_ASSERT(inited, "UIContext must be inited before you begin()");
         M_ASSERT(!began_and_not_ended,
                  "You should call end every frame before calling begin() "
@@ -342,7 +342,7 @@ struct UIContext {
         return statemanager.get_as<T>(id);
     }
 
-    void set_font(Font f) { font = f; }
+    void set_font(raylib::Font f) { font = f; }
 
     void push_theme(UITheme theme) { themestack.push(theme); }
 
@@ -369,8 +369,8 @@ struct UIContext {
     void add_child(Widget* child) { active_parent()->add_child(child); }
 
     void draw_widget(Widget widget, theme::Usage usage) {
-        DrawRectangleRounded(widget.rect, 0.15f, 4,
-                             active_theme().from_usage(usage));
+        raylib::DrawRectangleRounded(widget.rect, 0.15f, 4,
+                                     active_theme().from_usage(usage));
     }
 
     std::unordered_map<FZInfo, float> _font_size_memo;
@@ -379,7 +379,7 @@ struct UIContext {
                              float height, float spacing) {
         float font_size = 1.0f;
         float last_size = 1.0f;
-        vec2 size;
+        raylib::vec2 size;
 
         // NOTE: if you are looking at a way to speed this up switch to using
         // powers of two and theres no need to ceil or cast to int. also
@@ -430,7 +430,7 @@ struct UIContext {
         queued_render_calls.push_back(cb);
     }
 
-    void _draw_text(Rectangle rect, const std::string& content,
+    void _draw_text(raylib::Rectangle rect, const std::string& content,
                     theme::Usage color_usage) {
         float spacing = 0.f;
         float font_size =
@@ -438,11 +438,11 @@ struct UIContext {
         // std::cout << "selected font size: " << font_size << " for " << rect.x
         // << ", " << rect.y << ", " << rect.width << ", " << rect.height
         // << std::endl;
-        DrawTextEx(font,                                   //
-                   content.c_str(),                        //
-                   {rect.x, rect.y},                       //
-                   font_size, spacing,                     //
-                   active_theme().from_usage(color_usage)  //
+        raylib::DrawTextEx(font,                                   //
+                           content.c_str(),                        //
+                           {rect.x, rect.y},                       //
+                           font_size, spacing,                     //
+                           active_theme().from_usage(color_usage)  //
         );
     }
 
@@ -458,12 +458,14 @@ struct UIContext {
                                              widget, content, color_usage));
     }
 
-    void draw_widget_old(vec2 pos, vec2 size, float, Color color, std::string) {
-        Rectangle rect = {pos.x, pos.y, size.x, size.y};
-        DrawRectangleRounded(rect, 0.15f, 4, color);
+    void draw_widget_old(raylib::vec2 pos, raylib::vec2 size, float,
+                         raylib::Color color, std::string) {
+        raylib::Rectangle rect = {pos.x, pos.y, size.x, size.y};
+        raylib::DrawRectangleRounded(rect, 0.15f, 4, color);
     }
 
-    inline vec2 widget_center(vec2 position, vec2 size) {
+    inline raylib::vec2 widget_center(raylib::vec2 position,
+                                      raylib::vec2 size) {
         return position + (size / 2.f);
     }
 

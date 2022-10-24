@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "external_include.h"
 #include "event.h"
+#include "external_include.h"
 
 static std::atomic_int s_layer_id;
 struct Layer {
@@ -42,8 +42,7 @@ struct LayerStack {
         if (layers.empty()) {
             layers.push_back(layer);
             insert = layers.begin();
-        }
-        else {
+        } else {
             insert = layers.emplace(insert, layer);
         }
     }

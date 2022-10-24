@@ -3,7 +3,7 @@
 #include "external_include.h"
 #include "layer.h"
 
-struct FPSLayer: public Layer {
+struct FPSLayer : public Layer {
     FPSLayer() : Layer("FPS") { minimized = false; }
     virtual ~FPSLayer() {}
     virtual void onAttach() override {}
@@ -16,6 +16,6 @@ struct FPSLayer: public Layer {
         if (minimized) {
             return;
         }
-        DrawFPS(0, 0);
+        raylib::DrawFPS(0, 0);
     }
 };

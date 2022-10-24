@@ -271,7 +271,8 @@ void tax_refund(Widget* widget, int exp_index, float error) {
         SizeExpectation exp = child->size_expected[exp_index];
         if (exp.strictness == 0.f) {
             child->computed_size[exp_index] += abs(indiv_refund);
-            // std::cout << "just gave back, time for trickle down" << std::endl;
+            // std::cout << "just gave back, time for trickle down" <<
+            // std::endl;
             tax_refund(child, exp_index, indiv_refund);
         }
         // TODO idk if we should do this for all non 1.f children?
@@ -302,7 +303,8 @@ void solve_violations(Widget* widget) {
         all_children_x = _get_total_child_size_for_violations(widget, 0);
         error_x = all_children_x - my_size_x;
         if (i_x > 100) {
-            // M_ASSERT(false, "hit x iteration limit trying to solve violations");
+            // M_ASSERT(false, "hit x iteration limit trying to solve
+            // violations");
             break;
         }
     }
@@ -324,7 +326,8 @@ void solve_violations(Widget* widget) {
         error_y = all_children_y - my_size_y;
         if (i_y > 100) {
             // widget->print_tree();
-            // M_ASSERT(false, "hit y iteration limit trying to solve violations");
+            // M_ASSERT(false, "hit y iteration limit trying to solve
+            // violations");
             break;
         }
     }
@@ -402,7 +405,7 @@ void compute_relative_positions(Widget* widget) {
         child->computed_relative_pos[0] = offx;
         child->computed_relative_pos[1] = offy;
 
-        // Setup for next child placement
+        // raylib::Setup for next child placement
         if (widget->growflags & GrowFlags::Column) {
             offy += cy;
         }
@@ -417,14 +420,14 @@ void compute_relative_positions(Widget* widget) {
 
 void compute_rect_bounds(Widget* widget) {
     // std::cout << "computing rect bounds for " << widget << std::endl;
-    vec2 offset = vec2{0.f, 0.f};
+    raylib::vec2 offset = raylib::vec2{0.f, 0.f};
     Widget* parent = widget->parent;
     if (parent) {
-        offset = offset + vec2{parent->rect.x, parent->rect.y};
+        offset = offset + raylib::vec2{parent->rect.x, parent->rect.y};
         // parent = parent->parent;
     }
 
-    Rectangle rect;
+    raylib::Rectangle rect;
     rect.x = offset.x + widget->computed_relative_pos[0];
     rect.y = offset.y + widget->computed_relative_pos[1];
     rect.width = widget->computed_size[0];

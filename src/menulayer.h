@@ -3,13 +3,13 @@
 #include "external_include.h"
 #include "layer.h"
 #include "menu.h"
+#include "network/network.h"
 #include "raylib.h"
 #include "settings.h"
 #include "ui.h"
 #include "ui_theme.h"
 #include "ui_widget.h"
 #include "uuid.h"
-#include "network/network.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -63,8 +63,8 @@ struct MenuLayer : public Layer {
         using namespace ui;
 
         // TODO move to input
-        bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
-        vec2 mousepos = GetMousePosition();
+        bool mouseDown = raylib::IsMouseButtonDown(raylib::MOUSE_BUTTON_LEFT);
+        raylib::vec2 mousepos = raylib::GetMousePosition();
 
         const SizeExpectation padd_x = {
             .mode = Pixels, .value = 120.f, .strictness = 0.9f};
@@ -138,7 +138,7 @@ struct MenuLayer : public Layer {
                     Menu::get().state = Menu::State::About;
                 }
                 padding(button_padding);
-                if (button(settings_button, "Settings")) {
+                if (button(settings_button, "raylib::Settings")) {
                     Menu::get().state = Menu::State::Settings;
                 }
                 padding(button_padding);
@@ -165,7 +165,7 @@ struct MenuLayer : public Layer {
 
     virtual void onUpdate(float) override {
         if (Menu::get().state != Menu::State::Root) return;
-        SetExitKey(KEY_ESCAPE);
+        raylib::SetExitKey(raylib::KEY_ESCAPE);
     }
 
     virtual void onDraw(float) override {

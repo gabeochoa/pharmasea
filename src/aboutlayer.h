@@ -39,7 +39,7 @@ struct AboutLayer : public Layer {
 
     bool onKeyPressed(KeyPressedEvent& event) {
         if (Menu::get().state != Menu::State::About) return false;
-        if (event.keycode == KEY_ESCAPE) {
+        if (event.keycode == raylib::KEY_ESCAPE) {
             Menu::get().state = Menu::State::Root;
             return true;
         }
@@ -47,12 +47,12 @@ struct AboutLayer : public Layer {
     }
 
     void draw_ui() {
-        SetExitKey(KEY_ESCAPE);
+        raylib::SetExitKey(raylib::KEY_ESCAPE);
         using namespace ui;
 
         // TODO move to input
-        bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
-        vec2 mousepos = GetMousePosition();
+        bool mouseDown = raylib::IsMouseButtonDown(raylib::MOUSE_BUTTON_LEFT);
+        raylib::vec2 mousepos = raylib::GetMousePosition();
 
         ui_context->begin(mouseDown, mousepos);
         ui_context->push_theme(DEFAULT_THEME);
@@ -116,7 +116,7 @@ A game by:
 
     virtual void onUpdate(float) override {
         if (Menu::get().state != Menu::State::About) return;
-        SetExitKey(KEY_NULL);
+        raylib::SetExitKey(raylib::KEY_NULL);
 
         // TODO with gamelayer, support events
         if (minimized) {
@@ -131,7 +131,7 @@ A game by:
             return;
         }
 
-        ClearBackground(ui_context->active_theme().background);
+        raylib::ClearBackground(ui_context->active_theme().background);
         draw_ui();
     }
 };
