@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\aboutlayer.h" />
+    <ClInclude Include="..\src\ailment.h" />
+    <ClInclude Include="..\src\aiperson.h" />
+    <ClInclude Include="..\src\app.h" />
+    <ClInclude Include="..\src\assert.h" />
+    <ClInclude Include="..\src\astar.h" />
+    <ClInclude Include="..\src\camera.h" />
+    <ClInclude Include="..\src\customer.h" />
+    <ClInclude Include="..\src\drawing_util.h" />
+    <ClInclude Include="..\src\entities.h" />
+    <ClInclude Include="..\src\entity.h" />
+    <ClInclude Include="..\src\entityhelper.h" />
+    <ClInclude Include="..\src\event.h" />
+    <ClInclude Include="..\src\external_include.h" />
+    <ClInclude Include="..\src\files.h" />
+    <ClInclude Include="..\src\fpslayer.h" />
+    <ClInclude Include="..\src\furniture.h" />
+    <ClInclude Include="..\src\furnitures.h" />
+    <ClInclude Include="..\src\furniture\register.h" />
+    <ClInclude Include="..\src\furniture\table.h" />
+    <ClInclude Include="..\src\furniture\wall.h" />
+    <ClInclude Include="..\src\gamelayer.h" />
+    <ClInclude Include="..\src\gamepad_axis_with_dir.h" />
+    <ClInclude Include="..\src\globals.h" />
+    <ClInclude Include="..\src\item.h" />
+    <ClInclude Include="..\src\job.h" />
+    <ClInclude Include="..\src\keymap.h" />
+    <ClInclude Include="..\src\layer.h" />
+    <ClInclude Include="..\src\medicine.h" />
+    <ClInclude Include="..\src\menu.h" />
+    <ClInclude Include="..\src\menulayer.h" />
+    <ClInclude Include="..\src\menustatelayer.h" />
+    <ClInclude Include="..\src\modellibrary.h" />
+    <ClInclude Include="..\src\names.h" />
+    <ClInclude Include="..\src\navmesh.h" />
+    <ClInclude Include="..\src\network\network.h" />
+    <ClInclude Include="..\src\network\networklayer.h" />
+    <ClInclude Include="..\src\network\shared.h" />
+    <ClInclude Include="..\src\person.h" />
+    <ClInclude Include="..\src\player.h" />
+    <ClInclude Include="..\src\polygon.h" />
+    <ClInclude Include="..\src\preload.h" />
+    <ClInclude Include="..\src\random.h" />
+    <ClInclude Include="..\src\resources\fonts\Karmina_Regular_256.h" />
+    <ClInclude Include="..\src\settings.h" />
+    <ClInclude Include="..\src\settingslayer.h" />
+    <ClInclude Include="..\src\singleton.h" />
+    <ClInclude Include="..\src\targetcube.h" />
+    <ClInclude Include="..\src\tests\all_tests.h" />
+    <ClInclude Include="..\src\tests\test_entity_fetching.h" />
+    <ClInclude Include="..\src\tests\test_ui_widget.h" />
+    <ClInclude Include="..\src\texture_library.h" />
+    <ClInclude Include="..\src\text_util.h" />
+    <ClInclude Include="..\src\timer.h" />
+    <ClInclude Include="..\src\ui.h" />
+    <ClInclude Include="..\src\ui_autolayout.h" />
+    <ClInclude Include="..\src\ui_color.h" />
+    <ClInclude Include="..\src\ui_context.h" />
+    <ClInclude Include="..\src\ui_state.h" />
+    <ClInclude Include="..\src\ui_theme.h" />
+    <ClInclude Include="..\src\ui_widget.h" />
+    <ClInclude Include="..\src\util.h" />
+    <ClInclude Include="..\src\uuid.h" />
+    <ClInclude Include="..\src\vec_util.h" />
+    <ClInclude Include="..\src\versionlayer.h" />
+    <ClInclude Include="..\src\world.h" />
+    <ClInclude Include="..\vendor\bitsery\adapter\buffer.h" />
+    <ClInclude Include="..\vendor\bitsery\adapter\measure_size.h" />
+    <ClInclude Include="..\vendor\bitsery\adapter\stream.h" />
+    <ClInclude Include="..\vendor\bitsery\bitsery.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\array.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\atomic.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\chrono.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\deque.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\forward_list.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\list.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\map.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\memory.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\queue.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\set.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\stack.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\string.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\tuple.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\unordered_map.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\unordered_set.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\variant.h" />
+    <ClInclude Include="..\vendor\bitsery\brief_syntax\vector.h" />
+    <ClInclude Include="..\vendor\bitsery\common.h" />
+    <ClInclude Include="..\vendor\bitsery\deserializer.h" />
+    <ClInclude Include="..\vendor\bitsery\details\adapter_common.h" />
+    <ClInclude Include="..\vendor\bitsery\details\brief_syntax_common.h" />
+    <ClInclude Include="..\vendor\bitsery\details\not_defined_type.h" />
+    <ClInclude Include="..\vendor\bitsery\details\serialization_common.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\compact_value.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\entropy.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\growable.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\inheritance.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\pointer.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\std_atomic.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\std_bitset.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\std_chrono.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\std_map.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\std_optional.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\std_queue.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\std_set.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\std_smart_ptr.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\std_stack.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\std_tuple.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\std_variant.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\utils\composite_type_overloads.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\utils\memory_resource.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\utils\pointer_utils.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\utils\polymorphism_utils.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\utils\rtti_utils.h" />
+    <ClInclude Include="..\vendor\bitsery\ext\value_range.h" />
+    <ClInclude Include="..\vendor\bitsery\serializer.h" />
+    <ClInclude Include="..\vendor\bitsery\traits\array.h" />
+    <ClInclude Include="..\vendor\bitsery\traits\core\std_defaults.h" />
+    <ClInclude Include="..\vendor\bitsery\traits\core\traits.h" />
+    <ClInclude Include="..\vendor\bitsery\traits\deque.h" />
+    <ClInclude Include="..\vendor\bitsery\traits\forward_list.h" />
+    <ClInclude Include="..\vendor\bitsery\traits\list.h" />
+    <ClInclude Include="..\vendor\bitsery\traits\string.h" />
+    <ClInclude Include="..\vendor\bitsery\traits\vector.h" />
+    <ClInclude Include="..\vendor\enet.h" />
+    <ClInclude Include="..\vendor\enetpp.h" />
+    <ClInclude Include="..\vendor\fmt\args.h" />
+    <ClInclude Include="..\vendor\fmt\chrono.h" />
+    <ClInclude Include="..\vendor\fmt\color.h" />
+    <ClInclude Include="..\vendor\fmt\compile.h" />
+    <ClInclude Include="..\vendor\fmt\core.h" />
+    <ClInclude Include="..\vendor\fmt\format-inl.h" />
+    <ClInclude Include="..\vendor\fmt\format.h" />
+    <ClInclude Include="..\vendor\fmt\locale.h" />
+    <ClInclude Include="..\vendor\fmt\os.h" />
+    <ClInclude Include="..\vendor\fmt\ostream.h" />
+    <ClInclude Include="..\vendor\fmt\printf.h" />
+    <ClInclude Include="..\vendor\fmt\ranges.h" />
+    <ClInclude Include="..\vendor\fmt\xchar.h" />
+    <ClInclude Include="..\vendor\sago\platform_folders.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\game.cpp" />
+    <ClCompile Include="..\src\network\network.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{77a32b35-73f2-47ff-9aab-7eebd46f822a}</ProjectGuid>
+    <RootNamespace>PharmaSea</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>F:\RayLib\include;F:\pharmasea\vendor;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>F:\RayLib\include;F:\pharmasea\vendor;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <DisableSpecificWarnings>4576;4996</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>F:\RayLib\lib\raylib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <DisableSpecificWarnings>4576;4996</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>F:\RayLib\lib\raylib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
