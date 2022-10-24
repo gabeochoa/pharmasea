@@ -8,7 +8,6 @@ libraries used:
 - enetpp (i modified it a bit) https://github.com/jseward/enetpp
 - bitsery https://github.com/fraillt/bitsery
 
-
 Core engine TODOs:
 1. ~~Allow an Entity to pick up / drop an Item~~
 2. ~~Fix A* algorithm~~
