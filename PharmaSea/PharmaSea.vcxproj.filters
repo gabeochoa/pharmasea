@@ -452,6 +452,9 @@
     <ClInclude Include="..\vendor\sago\platform_folders.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\yotest\shared.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\game.cpp">
@@ -459,6 +462,9 @@
     </ClCompile>
     <ClCompile Include="..\src\network\network.cpp">
       <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yotest\client_server.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

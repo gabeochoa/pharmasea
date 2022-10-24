@@ -163,10 +163,12 @@
     <ClInclude Include="..\vendor\fmt\ranges.h" />
     <ClInclude Include="..\vendor\fmt\xchar.h" />
     <ClInclude Include="..\vendor\sago\platform_folders.h" />
+    <ClInclude Include="..\yotest\shared.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\network\network.cpp" />
+    <ClCompile Include="..\yotest\client_server.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -278,7 +280,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\vendor\lib\raylib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\vendor\yojimbo.lib;..\vendor\raylib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

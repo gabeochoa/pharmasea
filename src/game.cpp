@@ -80,9 +80,9 @@ void teardown() {
 #endif
 }
 
-int main(void) {
-    startup();
-    App::get().run();
-    teardown();
-    return 0;
-}
+//int main(void) {
+//    startup();
+//    App::get().run();
+//    teardown();
+//    return 0;
+//}
