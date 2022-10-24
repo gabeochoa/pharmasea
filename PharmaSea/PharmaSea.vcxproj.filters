@@ -19,6 +19,9 @@
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{d0b711da-bc40-466d-93ab-8e17e8dca5a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{1c2ca0c3-2f65-4d3f-913c-100507933faa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md">
