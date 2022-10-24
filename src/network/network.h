@@ -9,10 +9,10 @@
 #include "shared.h"
 
 namespace enetpp {
-struct client;
+class client;
 
 template<typename T>
-struct server;
+class server;
 }  // namespace enetpp
 
 namespace network {

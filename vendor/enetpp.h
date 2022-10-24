@@ -122,7 +122,7 @@ class client_statistics {
     client_statistics()
         : _round_trip_time_in_ms(0), _round_trip_time_variance_in_ms(0) {}
 };
-inline void set_current_thread_name(const char*) {
+inline void set_current_thread_name(const char* name) {
 #ifdef _WIN32
 
     // https://msdn.microsoft.com/en-us/library/xcb2z8hs.aspx
