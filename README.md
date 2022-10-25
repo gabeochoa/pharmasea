@@ -4,9 +4,8 @@
 libraries used: 
 - raylib
 - AppData stuff https://github.com/sago007/PlatformFolders
-- enet https://github.com/zpl-c/enet
-- enetpp (i modified it a bit) https://github.com/jseward/enetpp
-- bitsery https://github.com/fraillt/bitsery
+- yojimbo https://github.com/networkprotocol/yojimbo
+- HTTPRequest https://github.com/elnormous/HTTPRequest
 
 Core engine TODOs:
 1. ~~Allow an Entity to pick up / drop an Item~~
@@ -117,6 +116,38 @@ Game Ideas
     - Allow players to exchange held items?
 
 Changelog
+
+alpha_0.22.10.25
+impact 
+- Spent most of the week doing network programming with enet. 
+    - Got multiplayer movement working (check screenshots folder)
+    - Had too many issues on windows, need to migrate over to a new library
+- Character names generator (Thanks Alice for the lists)
+- Textfield ui component 
+- Timer object that can be treated as continuous or as n-shot timer
+- Music and Sounds!
+    - Customer order sound effect 
+    - Gameplay placeholder music WAHWAH
+    - Placeholder roblox oof sound when running into customers
+    - Volume slider now actually controls master volume
+- Table that you can use to place items down
+- Prevent Person types from getting stuck in each other. (might need some more work) 
+- Model for Cash Register (though its a bit dark cause no textures)
+- Job System for customers !
+    - They will now come in and line up for their RX, 
+    - once they get one at the register they'll take it and go
+better engineering 
+- Gabe got a windows machine setup to help create builds long term 
+- Include libs directly in vendor folder for easier first time setup
+- Added better UI memory management so we can use composable functions for design / branching
+- Added working headers for ailments/medicines/names (functionality coming soon?) 
+- Cached all isWalkable checks 
+soon 
+- switching to yojimbo
+- System for highlighting selected items / furniture (working sometimes but definitely not done)
+- autolayout (launched but still missing dropdown ui element)
+- Had windows issues with Sago library, blocked until we can figure out windows.h
+- Working on a stagger walk 
 
 alpha_0.22.10.17
 impact
