@@ -1,57 +1,39 @@
 
+
 #pragma once
 
-#include <variant>
-#include "../menu.h"
+#include <yojimbo/yojimbo.h>
 
 namespace network {
 
-struct Info;
+static const uint8_t DEFAULT_PRIVATE_KEY[yojimbo::KeyBytes] = {0};
+static const int MAX_PLAYERS = 4;
 
-const int DEFAULT_PORT = 770;
-const int MAX_CLIENTS = 3;
-// TODO add some note somewhere about only
-// supporting 50 character names
-const int MAX_NAME_LENGTH = 25;
+// a simple test message
+enum class PharmaSeaMessageType { TEST, COUNT };
 
-struct ClientPacket {
-    int client_id;
+// two channels, one for each type that Yojimbo supports
+enum class PharmaSeaChannel { RELIABLE, UNRELIABLE, COUNT };
 
-    enum MsgType {
-        Ping,
-        PlayerJoin,
-        GameState,
-        World,
-        PlayerLocation,
-    } msg_type;
+class TestMessage : public yojimbo::Message {
+   public:
+    int data;
 
-    // Ping
-    struct PingInfo {};
+    TestMessage() : data(0) {}
 
-    // PlayerJoin
-    // NOTE:  Anything added here also gets added to playerinfo
-    struct PlayerJoinInfo {
-        bool is_you = false;
-        int client_id = -1;
-    };
+    template<typename Stream>
+    bool Serialize(Stream& stream) {
+        serialize_int(stream, data, 0, 512);
+        return true;
+    }
 
-    // Game
-    struct GameStateInfo {
-        Menu::State host_menu_state;
-    };
-
-    // World Info
-    struct WorldInfo {};
-
-    // Player Location
-    struct PlayerInfo : public PlayerJoinInfo {
-        std::string name{};
-        float location[3];
-        int facing_direction;
-    };
-
-    std::variant<PingInfo, PlayerJoinInfo, GameStateInfo, WorldInfo, PlayerInfo>
-        msg;
+    YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS()
 };
+
+// the message factory
+YOJIMBO_MESSAGE_FACTORY_START(PharmaSeaMessageFactory,
+                              (int) PharmaSeaMessageType::COUNT)
+YOJIMBO_DECLARE_MESSAGE_TYPE((int) PharmaSeaMessageType::TEST, TestMessage)
+YOJIMBO_MESSAGE_FACTORY_FINISH()
 
 }  // namespace network

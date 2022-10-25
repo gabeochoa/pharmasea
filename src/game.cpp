@@ -1,14 +1,12 @@
 
 // Global Defines
 
-
 // uncomment to enable writing / reading files :
 // settings file
 // save file
 // #define WRITE_FILES
 
 #include "external_include.h"
-
 
 ///
 #include "globals.h"
@@ -80,9 +78,32 @@ void teardown() {
 #endif
 }
 
+#include <chrono>
+#include <thread>
+
+#include "network/client.h"
+#include "network/server.h"
+
 int main(void) {
-   startup();
-   App::get().run();
-   teardown();
-   return 0;
+    auto localhost = yojimbo::Address("127.0.0.1", 4000);
+
+    bool success = InitializeYojimbo();
+    if (!success) {
+        std::cout << "failed to initialize yojimbo" << std::endl;
+        return -1;
+    }
+    network::PharmaSeaServer server(localhost);
+    network::PharmaSeaClient client(localhost);
+
+    while (true) {
+        server.update(100);
+        client.update(100);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    ShutdownYojimbo();
+
+    // startup();
+    // App::get().run();
+    // teardown();
+    return 0;
 }

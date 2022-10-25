@@ -12,7 +12,7 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 
-#include "raylib.h"
+#include <raylib.h>
 
 #ifdef WRITE_FILES
 #include <sago/platform_folders.h>
