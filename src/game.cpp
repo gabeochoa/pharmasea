@@ -6,6 +6,11 @@
 // save file
 // #define WRITE_FILES
 
+// Team networking uses an "app id" that we dont have
+// also the code isnt written yet :)
+// TODO: add support for steam connections
+#define BUILD_WITHOUT_STEAM
+
 #include "external_include.h"
 
 ///
@@ -21,7 +26,7 @@
 #include "gamelayer.h"
 #include "menulayer.h"
 #include "menustatelayer.h"
-#include "network/networklayer.h"
+// #include "network/networklayer.h"
 #include "settingslayer.h"
 #include "versionlayer.h"
 //
@@ -66,8 +71,8 @@ void startup() {
     VersionLayer* versionlayer = new VersionLayer();
     App::get().pushLayer(versionlayer);
 
-    NetworkLayer* networklayer = new NetworkLayer();
-    App::get().pushLayer(networklayer);
+    // NetworkLayer* networklayer = new NetworkLayer();
+    // App::get().pushLayer(networklayer);
 
     Settings::get().load_save_file();
 }
@@ -78,30 +83,10 @@ void teardown() {
 #endif
 }
 
-#include <chrono>
-#include <thread>
-
-#include "network/client.h"
-#include "network/server.h"
+#include "network/network.h"
 
 int main(void) {
-    auto localhost = yojimbo::Address("127.0.0.1", 4000);
-
-    bool success = InitializeYojimbo();
-    if (!success) {
-        std::cout << "failed to initialize yojimbo" << std::endl;
-        return -1;
-    }
-    network::PharmaSeaServer server(localhost);
-    network::PharmaSeaClient client(localhost);
-
-    while (true) {
-        server.update(100);
-        client.update(100);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-    ShutdownYojimbo();
-
+    network::run();
     // startup();
     // App::get().run();
     // teardown();

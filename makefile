@@ -4,11 +4,9 @@ FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
 		-Wmost -Wconversion -g -fsanitize=address
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion
-INCLUDES = -Ivendor/ -Lvendor/ \
-		   -L/Users/gabeochoa//homebrew/Cellar/libsodium/1.0.18_1/lib/ \
-		   -L/Users/gabeochoa//homebrew/Cellar/mbedtls/3.2.1/lib/
-LIBS = -lyojimbo -lmbedtls -lsodium -lmbedx509 -lmbedcrypto
-CPPS = src/game.cpp src/network/server.cpp
+INCLUDES = -Ivendor/ -Lvendor/ 
+LIBS = -lGameNetworkingSockets 
+CPPS = src/game.cpp 
 
 
 all:
