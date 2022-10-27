@@ -144,6 +144,7 @@ struct Server {
     struct Client_t {
         std::string username;
     };
+    std::map<HSteamNetConnection, Client_t> clients;
 
     Server(int port) {
         M_ASSERT(port > 0 && port < 65535, "invalid port");
@@ -151,15 +152,16 @@ struct Server {
         address.m_port = (unsigned short) port;
     }
 
-    void connection_changed_callback();
+    void connection_changed_callback(
+        SteamNetConnectionStatusChangedCallback_t *info);
 
     void startup() {
         interface = SteamNetworkingSockets();
 
         SteamNetworkingConfigValue_t opt;
-        opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged,
-                   (void *) connection_changed_callback);
-
+        // opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged,
+        // (void *) connection_changed_callback);
+        //
         listen_sock = interface->CreateListenSocketIP(address, 1, &opt);
         if (listen_sock == k_HSteamListenSocket_Invalid) {
             log(fmt::format("Failed to listen on port {}", address.m_port));
@@ -174,15 +176,17 @@ struct Server {
     }
 
     void tick() {
-        poll_incoming_messages();
-        poll_connection_state_changes();
-        poll_local_user_input();
+        // poll_incoming_messages();
+        // poll_connection_state_changes();
+        // poll_local_user_input();
     }
+
+    void send_string_to_client(HSteamNetConnection, std::string);
 
     void teardown() {
         for (auto it : clients) {
             send_string_to_client(it.first, "Server is shutting down.");
-            interface->CloseConnection(it.first, 0, "server shutdown", true;
+            interface->CloseConnection(it.first, 0, "server shutdown", true);
         }
         clients.clear();
         interface->CloseListenSocket(listen_sock);
@@ -241,7 +245,9 @@ int run() {
 
     if (desired_role & s_Host) {
         Server server(770);
-        server.run();
+        server.startup();
+        server.tick();
+        server.teardown();
     }
 
     if (desired_role & s_Client) {
