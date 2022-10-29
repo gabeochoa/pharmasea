@@ -231,7 +231,8 @@ struct Server {
     }
 
     void send_client_packet_to_all(
-        ClientPacket packet, std::function<bool(Client_t &)> exclude = {}) {
+        ClientPacket packet,
+        std::function<bool(Client_t &)> exclude = nullptr) {
         Buffer buffer;
         bitsery::quickSerialization(OutputAdapter{buffer}, packet);
         send_packet_string_to_all(buffer, exclude);
@@ -245,9 +246,9 @@ struct Server {
     }
 
     void send_packet_string_to_all(
-        std::string str, std::function<bool(Client_t &)> exclude = {}) {
+        std::string str, std::function<bool(Client_t &)> exclude = nullptr) {
         for (auto &c : clients) {
-            if (exclude(c.second)) continue;
+            if (exclude && exclude(c.second)) continue;
             send_packet_string_to_client(c.first, str);
         }
     }
@@ -262,9 +263,9 @@ struct Server {
     }
 
     void send_announcement_to_all(
-        std::string msg, std::function<bool(Client_t &)> exclude = {}) {
+        std::string msg, std::function<bool(Client_t &)> exclude = nullptr) {
         for (auto &c : clients) {
-            if (exclude(c.second)) continue;
+            if (exclude && exclude(c.second)) continue;
             send_announcement_to_client(c.first, msg);
         }
     }

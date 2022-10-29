@@ -298,20 +298,16 @@ struct NetworkLayer : public Layer {
             text(*connecting_text,
                  fmt::format("Username: {}", network_info->username));
 
+            for (auto kv : remote_players) {
+                text(*player_text,
+                     fmt::format("{}({})", kv.second->name, kv.first));
+            }
+
             if (network_info->is_host()) {
-                for (auto kv : network_info->server_p->clients) {
-                    text(*player_text,
-                         fmt::format("{}({})", kv.second.client_id, kv.first));
-                }
                 if (button(*play_button, "Play")) {
                     Menu::get().state = Menu::State::Game;
                     // TODO add a way to subscribe to state changes
                     network_info->send_updated_state();
-                }
-            } else {
-                for (auto kv : remote_players) {
-                    text(*player_text,
-                         fmt::format("{}({})", kv.second->name, kv.first));
                 }
             }
 
