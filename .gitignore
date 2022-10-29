@@ -1,8 +1,10 @@
-pharmasea
-WinPharmaSea/*
+**/x64/Debug/*
+**/x64/.vs/*
 *.dSYM
 .cache/
 .DS_Store
-/.vs
+**/.vs
 .vscode/
 log
+game.obj
+pharmasea/WinPharmaSea/**/
