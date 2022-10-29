@@ -141,12 +141,11 @@ struct Info {
         player_packet_info_cb = cb;
     }
 
-    void send_updated_state() {
+    void send_updated_state(Menu::State state) {
         ClientPacket player({
             .client_id = my_client_id,
             .msg_type = ClientPacket::MsgType::GameState,
-            .msg = ClientPacket::GameStateInfo(
-                {.host_menu_state = Menu::get().state}),
+            .msg = ClientPacket::GameStateInfo({.host_menu_state = state}),
         });
         server_p->send_client_packet_to_all(player);
     }
@@ -175,6 +174,11 @@ struct Info {
                 // otherwise someone just joined and we have to deal with them
                 add_new_player_cb(info.client_id);
 
+            } break;
+            case ClientPacket::MsgType::GameState: {
+                ClientPacket::GameStateInfo info =
+                    std::get<ClientPacket::GameStateInfo>(packet.msg);
+                Menu::get().state = info.host_menu_state;
             } break;
             default:
                 log(fmt::format("Client: {} not handled yet: {} ",

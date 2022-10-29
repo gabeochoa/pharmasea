@@ -305,9 +305,8 @@ struct NetworkLayer : public Layer {
 
             if (network_info->is_host()) {
                 if (button(*play_button, "Play")) {
-                    Menu::get().state = Menu::State::Game;
                     // TODO add a way to subscribe to state changes
-                    network_info->send_updated_state();
+                    network_info->send_updated_state(Menu::State::Game);
                 }
             }
 
