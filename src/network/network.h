@@ -29,7 +29,9 @@ static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
 struct Info {
     int my_client_id;
     std::string username = "default username";
-    bool username_set = false;
+    bool username_set = true;
+    std::string host_ip_address;
+    bool ip_set = false;
 
     enum State {
         s_None = 1 << 0,
@@ -49,6 +51,12 @@ struct Info {
     bool is_host() { return desired_role & s_Host; }
     bool is_client() { return desired_role & s_Client; }
     bool has_role() { return is_host() || is_client(); }
+    bool has_set_ip() { return is_host() || (is_client() && ip_set); }
+    void lock_in_ip() {
+        ip_set = true;
+        client->set_address(host_ip_address);
+        client->startup();
+    }
 
     void init_connections() {
 #ifdef BUILD_WITHOUT_STEAM
@@ -72,6 +80,7 @@ struct Info {
         desired_role = s_Host;
         init_connections();
         server.reset(new Server(DEFAULT_PORT));
+        server->startup();
     }
 
     void set_role_to_client() {
@@ -82,6 +91,7 @@ struct Info {
 
     void set_role_to_none() {
         desired_role = s_None;
+        ip_set = false;
         server->teardown();
         server.reset();
         client.reset();
