@@ -168,16 +168,20 @@ struct Entity {
                                        FrontFaceDirection direction) {
         if (direction & FORWARD) {
             tile.y += distance * TILESIZE;
+            tile.y = ceil(tile.y);
         }
         if (direction & BACK) {
             tile.y -= distance * TILESIZE;
+            tile.y = floor(tile.y);
         }
 
         if (direction & RIGHT) {
-            tile.x -= distance * TILESIZE;
+            tile.x += distance * TILESIZE;
+            tile.x = ceil(tile.x);
         }
         if (direction & LEFT) {
-            tile.x += distance * TILESIZE;
+            tile.x -= distance * TILESIZE;
+            tile.x = floor(tile.x);
         }
         return tile;
     }

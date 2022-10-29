@@ -120,11 +120,11 @@ struct EntityHelper {
         std::vector<vec2> steps;
         // TODO fix this iterator up
         for (int i = 0; i < static_cast<int>(range); i++) {
-            steps.push_back(
-                vec::snap(Entity::tile_infront_given_pos(pos, i, direction)));
+            steps.push_back(Entity::tile_infront_given_pos(pos, i, direction));
         }
 
         for (auto& e : entities_DO_NOT_USE) {
+            bool found_match{ false };
             auto s = dynamic_pointer_cast<T>(e);
             if (!s) continue;
             if (!filter(s)) continue;
@@ -132,9 +132,14 @@ struct EntityHelper {
             if (d > range) continue;
             for (auto step : steps) {
                 d = vec::distance(step, vec::snap(vec::to2(s->position)));
-                if (abs(d) <= 1.f) return s;
+                if (abs(d) <= 1.f) {
+                    found_match = true;
+                    break;
+                } 
             }
-            return s;
+            if (found_match) {
+                return s;
+            }
         }
         return {};
     }
