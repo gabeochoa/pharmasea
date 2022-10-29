@@ -32,7 +32,14 @@ struct Client {
     // k_nSteamNetworkingSend_Reliable, nullptr);
     // }
 
-    Client(SteamNetworkingIPAddr addy) : address(addy) {}
+    Client() {}
+
+    void set_address(SteamNetworkingIPAddr addy) { address = addy; }
+
+    void set_address(std::string ip) {
+        address.ParseString(ip.c_str());
+        address.m_port = DEFAULT_PORT;
+    }
 
     void startup() {
         interface = SteamNetworkingSockets();

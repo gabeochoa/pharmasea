@@ -61,11 +61,11 @@ struct RemotePlayer : public BasePlayer {
                 Preload::get().font,  //
                 // TODO right now cant do wstring //
                 name.c_str(),  //
-                {0.f},                          //
-                96,                             // font size
-                4,                              // font spacing
-                4,                              // line spacing
-                true,                           // backface
+                {0.f},         //
+                96,            // font size
+                4,             // font spacing
+                4,             // line spacing
+                true,          // backface
                 BLACK);
 
             rlPopMatrix();

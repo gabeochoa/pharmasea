@@ -26,7 +26,7 @@
 #include "gamelayer.h"
 #include "menulayer.h"
 #include "menustatelayer.h"
-// #include "network/networklayer.h"
+#include "network/networklayer.h"
 #include "settingslayer.h"
 #include "versionlayer.h"
 //
@@ -71,8 +71,8 @@ void startup() {
     VersionLayer* versionlayer = new VersionLayer();
     App::get().pushLayer(versionlayer);
 
-    // NetworkLayer* networklayer = new NetworkLayer();
-    // App::get().pushLayer(networklayer);
+    NetworkLayer* networklayer = new NetworkLayer();
+    App::get().pushLayer(networklayer);
 
     Settings::get().load_save_file();
 }
@@ -83,12 +83,9 @@ void teardown() {
 #endif
 }
 
-#include "network/network.h"
-
 int main(void) {
-    network::run();
-    // startup();
-    // App::get().run();
-    // teardown();
+    startup();
+    App::get().run();
+    teardown();
     return 0;
 }

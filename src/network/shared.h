@@ -12,16 +12,19 @@
 #include <cstring>
 #include <variant>
 //
+#include "../menu.h"
 #include "../util.h"
 
 namespace network {
 
-using Buffer = std::vector<unsigned char>;
+using Buffer = std::string;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 
-const int DEFAULT_PORT = 7777;
+const int DEFAULT_PORT = 770;
 const int MAX_CLIENTS = 32;
+// TODO add note for max name length in ui
+const int MAX_NAME_LENGTH = 25;
 
 struct ClientPacket {
     int client_id;
@@ -29,6 +32,8 @@ struct ClientPacket {
     enum MsgType {
         Ping,
         World,
+        GameState,
+        PlayerJoin,
         PlayerLocation,
     } msg_type;
 
@@ -38,32 +43,51 @@ struct ClientPacket {
     // World Info
     struct WorldInfo {};
 
+    // Game Info
+    struct GameStateInfo {
+        Menu::State host_menu_state;
+    };
+
+    // Player Join
+    // NOTE: anything added here is also added to player info
+    struct PlayerJoinInfo {
+        bool is_you = false;
+        int client_id = -1;
+    };
+
     // Player Location
-    struct PlayerInfo {
+    struct PlayerInfo : public PlayerJoinInfo {
+        std::string name{};
         float location[3];
         int facing_direction;
     };
 
-    std::variant<PingInfo, WorldInfo, PlayerInfo> msg;
+    typedef std::variant<ClientPacket::PingInfo, ClientPacket::PlayerJoinInfo,
+                         ClientPacket::GameStateInfo, ClientPacket::WorldInfo,
+                         ClientPacket::PlayerInfo>
+        Msg;
+
+    Msg msg;
 };
 
-struct BaseInternal {
-    std::map<int, ClientPacket::PlayerInfo> clients_to_process;
-};
-
-typedef std::variant<ClientPacket::PingInfo, ClientPacket::WorldInfo,
-                     ClientPacket::PlayerInfo>
-    Msg;
-
-std::ostream& operator<<(std::ostream& os, const Msg& msgtype) {
+std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
     os << std::visit(
         util::overloaded{
             [&](ClientPacket::PingInfo) { return std::string("ping"); },
+            [&](ClientPacket::PlayerJoinInfo info) {
+                return fmt::format("PlayerJoinInfo( is_you: {}, id: {})",
+                                   info.is_you, info.client_id);
+            },
+            [&](ClientPacket::GameStateInfo info) {
+                return fmt::format("GameStateInfo( state: {} )",
+                                   info.host_menu_state);
+            },
             [&](ClientPacket::WorldInfo) { return std::string("worldinfo"); },
             [&](ClientPacket::PlayerInfo info) {
-                return fmt::format("PlayerInfo( pos({}, {}, {}), facing {})",
-                                   info.location[0], info.location[1],
-                                   info.location[2], info.facing_direction);
+                return fmt::format(
+                    "PlayerInfo( id{} name{} pos({}, {}, {}), facing {})",
+                    info.client_id, info.name, info.location[0],
+                    info.location[1], info.location[2], info.facing_direction);
             },
             [&](auto) { return std::string(" -- invalid operator<< --"); }},
         msgtype);
@@ -76,11 +100,17 @@ std::ostream& operator<<(std::ostream& os,
         case ClientPacket::Ping:
             os << "Ping";
             break;
+        case ClientPacket::GameState:
+            os << "GameState";
+            break;
         case ClientPacket::World:
             os << "WorldInfo";
             break;
         case ClientPacket::PlayerLocation:
             os << "PlayerLocation";
+            break;
+        case ClientPacket::PlayerJoin:
+            os << "PlayerJoinInfo";
             break;
     }
     return os;
@@ -98,23 +128,26 @@ void serialize(S& s, ClientPacket& packet) {
     s.value4b(packet.msg_type);
     s.ext(packet.msg, bitsery::ext::StdVariant{
                           [](S&, ClientPacket::PingInfo&) {},
+                          [](S& s, ClientPacket::PlayerJoinInfo& info) {
+                              s.value1b(info.is_you);
+                              s.value4b(info.client_id);
+                          },
+                          [](S& s, ClientPacket::GameStateInfo& info) {
+                              s.value4b(info.host_menu_state);
+                          },
                           [](S&, ClientPacket::WorldInfo&) {},
                           [](S& s, ClientPacket::PlayerInfo& info) {
+                              // From Join Info
+                              s.value1b(info.is_you);
+                              s.value4b(info.client_id);
+                              // end
+                              s.text1b(info.name, MAX_NAME_LENGTH);
                               s.value4b(info.location[0]);
                               s.value4b(info.location[1]);
                               s.value4b(info.location[2]);
                               s.value4b(info.facing_direction);
                           },
                       });
-}
-
-static void process_packet(std::shared_ptr<BaseInternal> internal,
-                           ClientPacket packet) {
-    // std::cout << packet << std::endl;
-    if (packet.msg_type == ClientPacket::MsgType::PlayerLocation) {
-        internal->clients_to_process[packet.client_id] =
-            (std::get<ClientPacket::PlayerInfo>(packet.msg));
-    }
 }
 
 }  // namespace network
