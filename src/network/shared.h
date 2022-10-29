@@ -58,15 +58,15 @@ struct ClientPacket {
     // Player Join
     // NOTE: anything added here is also added to player info
     struct PlayerJoinInfo {
-        bool is_you = false;
         int client_id = -1;
+        bool is_you = false;
     };
 
     // Player Location
     struct PlayerInfo : public PlayerJoinInfo {
-        std::string name{};
-        float location[3];
         int facing_direction;
+        float location[3];
+        std::string name{};
     };
 
     typedef std::variant<ClientPacket::AnnouncementInfo,
