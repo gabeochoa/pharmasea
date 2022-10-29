@@ -31,8 +31,9 @@ struct Info {
     int my_client_id;
     std::string username = "default username";
     bool username_set = true;
+    // TODO eventually support copy/paste
     std::string host_ip_address = "127.0.0.1";
-    bool ip_set = false;
+    bool ip_set = true;
 
     enum State {
         s_None = 1 << 0,

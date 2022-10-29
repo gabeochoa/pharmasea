@@ -18,20 +18,6 @@
 #include <sago/platform_folders.h>
 #endif
 
-#ifdef __APPLE__
-#pragma clang diagnostic pop
-#else
-#pragma enable_warn
-#endif
-
-#ifdef WIN32
-#pragma GCC diagnostic pop
-#endif
-
-#ifdef _MSC_VER
-#define __PRETTY_FUNCTION__ __FUNCSIG__
-#endif
-
 typedef Vector2 vec2;
 typedef Vector3 vec3;
 typedef Vector4 vec4;
@@ -49,6 +35,20 @@ typedef Vector4 vec4;
 #include <bitsery/ext/std_variant.h>
 #include <bitsery/traits/string.h>
 #include <bitsery/traits/vector.h>
+
+#ifdef __APPLE__
+#pragma clang diagnostic pop
+#else
+#pragma enable_warn
+#endif
+
+#ifdef WIN32
+#pragma GCC diagnostic pop
+#endif
+
+#ifdef _MSC_VER
+#define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif
 
 //
 #include <stdio.h>
