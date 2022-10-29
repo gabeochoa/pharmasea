@@ -38,16 +38,14 @@ struct NetworkLayer : public Layer {
         ui_context->push_theme(ui::DEFAULT_THEME);
 
         network_info.reset(new network::Info());
-        network_info->register_new_player_cb([&](int client_id, int packet_id) {
-            if (remote_players.contains(packet_id)) return;
-            if (network_info->is_host()) packet_id = client_id;
+        network_info->register_new_player_cb([&](int client_id) {
+            if (remote_players.contains(client_id)) return;
 
-            remote_players[packet_id] = std::make_shared<RemotePlayer>();
-            auto rp = remote_players[packet_id];
-            rp->client_id = packet_id;
-            EntityHelper::addEntity(remote_players[packet_id]);
-            std::cout << fmt::format(" Adding a player {}, {}", client_id,
-                                     packet_id)
+            remote_players[client_id] = std::make_shared<RemotePlayer>();
+            auto rp = remote_players[client_id];
+            rp->client_id = client_id;
+            EntityHelper::addEntity(remote_players[client_id]);
+            std::cout << fmt::format("Adding a player {}", client_id)
                       << std::endl;
         });
 
@@ -301,7 +299,7 @@ struct NetworkLayer : public Layer {
                  fmt::format("Username: {}", network_info->username));
 
             if (network_info->is_host()) {
-                for (auto kv : network_info->server->clients) {
+                for (auto kv : network_info->server_p->clients) {
                     text(*player_text,
                          fmt::format("{}({})", kv.second.client_id, kv.first));
                 }

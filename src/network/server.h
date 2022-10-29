@@ -24,10 +24,13 @@ struct Server {
     HSteamNetPollGroup poll_group;
     inline static Server *callback_instance;
     bool running = false;
+    std::function<void(Client_t &client, std::string)> process_message_cb;
 
-    struct Client_t {
-        int client_id;
-    };
+    void set_process_message(
+        std::function<void(Client_t &client, std::string)> cb) {
+        process_message_cb = cb;
+    }
+
     std::map<HSteamNetConnection, Client_t> clients;
 
     Server(int port) {
@@ -265,23 +268,6 @@ struct Server {
         }
     }
 
-    void process_message_string(std::string msg) {
-        ClientPacket packet;
-        bitsery::quickDeserialization<InputAdapter>({msg.begin(), msg.size()},
-                                                    packet);
-        switch (packet.msg_type) {
-            case ClientPacket::MsgType::Announcement: {
-                ClientPacket::AnnouncementInfo info =
-                    std::get<ClientPacket::AnnouncementInfo>(packet.msg);
-                log(fmt::format("Announcement: {}", info.message));
-            } break;
-            default:
-                log(fmt::format("Server: {} not handled yet: {} ",
-                                packet.msg_type, msg));
-                break;
-        }
-    }
-
     bool run() {
         if (!running) return false;
 
@@ -298,8 +284,11 @@ struct Server {
             std::string cmd;
             cmd.assign((const char *) incoming_msg->m_pData,
                        incoming_msg->m_cbSize);
+            Client_t client = clients[incoming_msg->m_conn];
             incoming_msg->Release();
-            this->process_message_string(cmd);
+
+            //
+            this->process_message_cb(client, cmd);
         };
         auto poll_connection_state_changes = [&]() {
             Server::callback_instance = this;
