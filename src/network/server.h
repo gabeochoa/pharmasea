@@ -261,12 +261,25 @@ struct Server {
         std::string msg, std::function<bool(Client_t &)> exclude = {}) {
         for (auto &c : clients) {
             if (exclude(c.second)) continue;
-            send_packet_string_to_client(c.first, msg);
+            send_announcement_to_client(c.first, msg);
         }
     }
 
     void process_message_string(std::string msg) {
-        log(fmt::format("Server: {}", msg));
+        ClientPacket packet;
+        bitsery::quickDeserialization<InputAdapter>({msg.begin(), msg.size()},
+                                                    packet);
+        switch (packet.msg_type) {
+            case ClientPacket::MsgType::Announcement: {
+                ClientPacket::AnnouncementInfo info =
+                    std::get<ClientPacket::AnnouncementInfo>(packet.msg);
+                log(fmt::format("Announcement: {}", info.message));
+            } break;
+            default:
+                log(fmt::format("Server: {} not handled yet: {} ",
+                                packet.msg_type, msg));
+                break;
+        }
     }
 
     bool run() {

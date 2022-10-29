@@ -308,7 +308,7 @@ struct NetworkLayer : public Layer {
                 if (button(*play_button, "Play")) {
                     Menu::get().state = Menu::State::Game;
                     // TODO add a way to subscribe to state changes
-                    // network_info->send_updated_state();
+                    network_info->send_updated_state();
                 }
             } else {
                 for (auto kv : remote_players) {

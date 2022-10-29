@@ -58,7 +58,21 @@ struct Client {
     }
 
     void process_message_string(std::string msg) {
-        log(fmt::format("Client: {}", msg));
+        ClientPacket packet;
+        bitsery::quickDeserialization<InputAdapter>({msg.begin(), msg.size()},
+                                                    packet);
+
+        switch (packet.msg_type) {
+            case ClientPacket::MsgType::Announcement: {
+                ClientPacket::AnnouncementInfo info =
+                    std::get<ClientPacket::AnnouncementInfo>(packet.msg);
+                log(fmt::format("Announcement: {}", info.message));
+            } break;
+            default:
+                log(fmt::format("Client: {} not handled yet: {} ",
+                                packet.msg_type, msg));
+                break;
+        }
     }
 
     bool run() {
