@@ -43,12 +43,21 @@ typedef Vector4 vec4;
 #include <fmt/xchar.h>
 
 //
+#include <bitsery/adapter/buffer.h>
+#include <bitsery/bitsery.h>
+#include <bitsery/ext/std_tuple.h>
+#include <bitsery/ext/std_variant.h>
+#include <bitsery/traits/string.h>
+#include <bitsery/traits/vector.h>
+
+//
 #include <stdio.h>
 
 #include <algorithm>
 #include <array>
 #include <atomic>
 #include <cassert>
+#include <cstring>
 #include <deque>
 #include <filesystem>
 #include <fstream>

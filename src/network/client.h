@@ -1,9 +1,31 @@
 
 #pragma once
 
+#ifdef __APPLE__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
+#pragma clang diagnostic ignored "-Wdeprecated-volatile"
+#pragma clang diagnostic ignored "-Wmissing-field-initializers"
+#endif
+
+#ifdef WIN32
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+
 #include <steam/isteamnetworkingutils.h>
 #include <steam/steamnetworkingsockets.h>
 #include <steam/steamnetworkingtypes.h>
+
+#ifdef __APPLE__
+#pragma clang diagnostic pop
+#else
+#pragma enable_warn
+#endif
+
+#ifdef WIN32
+#pragma GCC diagnostic pop
+#endif
 
 #include <chrono>
 #include <thread>

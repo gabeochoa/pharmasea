@@ -2,16 +2,6 @@
 
 #include "../external_include.h"
 //
-#include <bitsery/adapter/buffer.h>
-#include <bitsery/bitsery.h>
-#include <bitsery/ext/std_tuple.h>
-#include <bitsery/ext/std_variant.h>
-#include <bitsery/traits/string.h>
-#include <bitsery/traits/vector.h>
-
-#include <cstring>
-#include <variant>
-//
 #include "../menu.h"
 #include "../util.h"
 
