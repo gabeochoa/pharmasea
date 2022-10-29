@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
+    <None Include="..\src\makefile" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\aboutlayer.h" />
@@ -28,6 +29,7 @@
     <ClInclude Include="..\src\app.h" />
     <ClInclude Include="..\src\assert.h" />
     <ClInclude Include="..\src\astar.h" />
+    <ClInclude Include="..\src\base_player.h" />
     <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\customer.h" />
     <ClInclude Include="..\src\drawing_util.h" />
@@ -55,6 +57,7 @@
     <ClInclude Include="..\src\menulayer.h" />
     <ClInclude Include="..\src\menustatelayer.h" />
     <ClInclude Include="..\src\modellibrary.h" />
+    <ClInclude Include="..\src\music_library.h" />
     <ClInclude Include="..\src\names.h" />
     <ClInclude Include="..\src\navmesh.h" />
     <ClInclude Include="..\src\network\network.h" />
@@ -65,10 +68,12 @@
     <ClInclude Include="..\src\polygon.h" />
     <ClInclude Include="..\src\preload.h" />
     <ClInclude Include="..\src\random.h" />
+    <ClInclude Include="..\src\remote_player.h" />
     <ClInclude Include="..\src\resources\fonts\Karmina_Regular_256.h" />
     <ClInclude Include="..\src\settings.h" />
     <ClInclude Include="..\src\settingslayer.h" />
     <ClInclude Include="..\src\singleton.h" />
+    <ClInclude Include="..\src\sound_library.h" />
     <ClInclude Include="..\src\targetcube.h" />
     <ClInclude Include="..\src\tests\all_tests.h" />
     <ClInclude Include="..\src\tests\test_entity_fetching.h" />
@@ -167,8 +172,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\game.cpp" />
-    <ClCompile Include="..\src\network\network.cpp" />
-    <ClCompile Include="..\yotest\client_server.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -230,7 +233,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\vendor\yojimbo\;..\vendor\raylib\;../;E:\VSCode\pharmasea\vendor;$(IncludePath)</IncludePath>
+    <IncludePath>..\vendor\;..\vendor\raylib\;../;E:\VSCode\pharmasea\vendor;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -280,7 +283,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\vendor\yojimbo.lib;..\vendor\raylib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>E:\VSCode\pharmasea\vendor\GameNetworkingSockets.lib;E:\VSCode\pharmasea\vendor\raylib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
