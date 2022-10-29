@@ -303,12 +303,12 @@ struct NetworkLayer : public Layer {
             if (network_info->is_host()) {
                 for (auto kv : network_info->server->clients) {
                     text(*player_text,
-                         fmt::format("{}({})", kv.second.username, kv.first));
+                         fmt::format("{}({})", kv.second.client_id, kv.first));
                 }
                 if (button(*play_button, "Play")) {
                     Menu::get().state = Menu::State::Game;
                     // TODO add a way to subscribe to state changes
-                    network_info->send_updated_state();
+                    // network_info->send_updated_state();
                 }
             } else {
                 for (auto kv : remote_players) {

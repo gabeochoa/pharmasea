@@ -23,6 +23,7 @@ struct Client {
     HSteamNetConnection connection;
     inline static Client *callback_instance;
     bool running = false;
+    bool is_host = false;
 
     // Send to
     // {
@@ -32,7 +33,7 @@ struct Client {
     // k_nSteamNetworkingSend_Reliable, nullptr);
     // }
 
-    Client() {}
+    Client(bool host = false) : is_host(host) {}
 
     void set_address(SteamNetworkingIPAddr addy) { address = addy; }
 

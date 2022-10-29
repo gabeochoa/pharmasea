@@ -25,20 +25,23 @@ const int DEFAULT_PORT = 770;
 const int MAX_CLIENTS = 32;
 // TODO add note for max name length in ui
 const int MAX_NAME_LENGTH = 25;
+const int MAX_ANNOUNCEMENT_LENGTH = 200;
+const int SERVER_CLIENT_ID = 0;
 
 struct ClientPacket {
     int client_id;
 
     enum MsgType {
-        Ping,
+        Announcement,
         World,
         GameState,
         PlayerJoin,
         PlayerLocation,
     } msg_type;
 
-    // Ping
-    struct PingInfo {};
+    struct AnnouncementInfo {
+        std::string message;
+    };
 
     // World Info
     struct WorldInfo {};
@@ -62,7 +65,8 @@ struct ClientPacket {
         int facing_direction;
     };
 
-    typedef std::variant<ClientPacket::PingInfo, ClientPacket::PlayerJoinInfo,
+    typedef std::variant<ClientPacket::AnnouncementInfo,
+                         ClientPacket::PlayerJoinInfo,
                          ClientPacket::GameStateInfo, ClientPacket::WorldInfo,
                          ClientPacket::PlayerInfo>
         Msg;
@@ -73,7 +77,9 @@ struct ClientPacket {
 std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
     os << std::visit(
         util::overloaded{
-            [&](ClientPacket::PingInfo) { return std::string("ping"); },
+            [&](ClientPacket::AnnouncementInfo info) {
+                return fmt::format("Announcement: {}", info.message);
+            },
             [&](ClientPacket::PlayerJoinInfo info) {
                 return fmt::format("PlayerJoinInfo( is_you: {}, id: {})",
                                    info.is_you, info.client_id);
@@ -97,8 +103,8 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
 std::ostream& operator<<(std::ostream& os,
                          const ClientPacket::MsgType& msgtype) {
     switch (msgtype) {
-        case ClientPacket::Ping:
-            os << "Ping";
+        case ClientPacket::Announcement:
+            os << "Announcement";
             break;
         case ClientPacket::GameState:
             os << "GameState";
@@ -127,7 +133,9 @@ void serialize(S& s, ClientPacket& packet) {
     s.value4b(packet.client_id);
     s.value4b(packet.msg_type);
     s.ext(packet.msg, bitsery::ext::StdVariant{
-                          [](S&, ClientPacket::PingInfo&) {},
+                          [](S& s, ClientPacket::AnnouncementInfo& info) {
+                              s.text1b(info.message, MAX_ANNOUNCEMENT_LENGTH);
+                          },
                           [](S& s, ClientPacket::PlayerJoinInfo& info) {
                               s.value1b(info.is_you);
                               s.value4b(info.client_id);

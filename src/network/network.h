@@ -84,7 +84,7 @@ struct Info {
         server->startup();
 
         //
-        client.reset(new Client());
+        client.reset(new Client(true));
         host_ip_address = "127.0.0.1";
         lock_in_ip();
     }
@@ -133,18 +133,15 @@ struct Info {
         player_packet_info_cb = cb;
     }
 
-    void send_updated_state() {
-        ClientPacket player({
-            .client_id = my_client_id,
-            .msg_type = ClientPacket::MsgType::GameState,
-            .msg = ClientPacket::GameStateInfo(
-                {.host_menu_state = Menu::get().state}),
-        });
-
-        Buffer buffer;
-        bitsery::quickSerialization(OutputAdapter{buffer}, player);
-        server->send_string_to_all(buffer);
-    }
+    // void send_updated_state() {
+    // ClientPacket player({
+    // .client_id = my_client_id,
+    // .msg_type = ClientPacket::MsgType::GameState,
+    // .msg = ClientPacket::GameStateInfo(
+    // {.host_menu_state = Menu::get().state}),
+    // });
+    // server->send_client_packet_to_all(player);
+    // }
 };
 
 }  // namespace network

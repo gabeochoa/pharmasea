@@ -26,7 +26,7 @@ struct Server {
     bool running = false;
 
     struct Client_t {
-        std::string username;
+        int client_id;
     };
     std::map<HSteamNetConnection, Client_t> clients;
 
@@ -39,7 +39,7 @@ struct Server {
     void connection_changed_callback(
         SteamNetConnectionStatusChangedCallback_t *info) {
         log("connection_changed_callback");
-        char temp[1024];
+        std::string temp;
 
         // What's the state of the connection?
         switch (info->m_info.m_eState) {
@@ -65,15 +65,16 @@ struct Server {
                     if (info->m_info.m_eState ==
                         k_ESteamNetworkingConnectionState_ProblemDetectedLocally) {
                         pszDebugLogAction = "problem detected locally";
-                        sprintf(temp, "Alas, %s hath fallen into shadow.  (%s)",
-                                itClient->second.username.c_str(),
-                                info->m_info.m_szEndDebug);
+                        temp = fmt::format(
+                            "Alas, {} hath fallen into shadow.  ({})",
+                            itClient->second.client_id,
+                            info->m_info.m_szEndDebug);
                     } else {
                         // Note that here we could check the reason code to see
                         // if it was a "usual" connection or an "unusual" one.
                         pszDebugLogAction = "closed by peer";
-                        sprintf(temp, "%s hath departed",
-                                itClient->second.username.c_str());
+                        temp = fmt::format("{}; {} hath departed", temp,
+                                           itClient->second.client_id);
                     }
 
                     // Spew something to our own log.  Note that because we put
@@ -89,7 +90,7 @@ struct Server {
                     clients.erase(itClient);
 
                     // Send a message so everybody else knows what happened
-                    send_string_to_all(temp);
+                    send_announcement_to_all(temp);
                 } else {
                     M_ASSERT(
                         info->m_eOldState ==
@@ -143,39 +144,43 @@ struct Server {
                 // message, and you would keep their client in a state of limbo
                 // (connected, but not logged on) until them.  I'm trying to
                 // keep this example code really simple.
-                char nick[64];
-                sprintf(nick, "BraveWarrior%d", 10000 + (rand() % 100000));
+                int nick_id = 10000 + (rand() % 100000);
 
                 // Send them a welcome message
-                sprintf(
-                    temp,
-                    "Welcome, stranger.  Thou art known to us for now as '%s'; "
+                temp = fmt::format(
+                    "Welcome, stranger.  Thou art known to us for now as '{}'; "
                     "upon thine command '/nick' we shall know thee otherwise.",
-                    nick);
-                send_string_to_client(info->m_hConn, temp);
+                    nick_id);
+                send_announcement_to_client(info->m_hConn, temp);
 
                 // Also send them a list of everybody who is already connected
                 if (clients.empty()) {
-                    send_string_to_client(info->m_hConn,
-                                          "Thou art utterly alone.");
+                    send_announcement_to_client(info->m_hConn,
+                                                "Thou art utterly alone.");
                 } else {
-                    sprintf(temp,
-                            "%d companions greet you:", (int) clients.size());
+                    temp = fmt::format("{} companions greet you:",
+                                       (int) clients.size());
                     for (auto &c : clients)
-                        send_string_to_client(info->m_hConn,
-                                              c.second.username.c_str());
+                        send_announcement_to_client(
+                            info->m_hConn,
+                            fmt::format("{}", c.second.client_id));
                 }
-
-                // Let everybody else know who they are for now
-                sprintf(temp,
-                        "Hark!  A stranger hath joined this merry host.  For "
-                        "now we shall call them '%s'",
-                        nick);
-                send_string_to_all(temp);
 
                 // Add them to the client list, using std::map wacky syntax
                 clients[info->m_hConn];
-                // SetClientNick(pInfo->m_hConn, nick);
+
+                clients[info->m_hConn].client_id = nick_id;
+                interface->SetConnectionName(
+                    info->m_hConn, fmt::format("{}", nick_id).c_str());
+
+                // Let everybody else know who they are for now
+                temp = fmt::format(
+                    "Hark!  A stranger hath joined this merry host.  For "
+                    "now we shall call them '{}'",
+                    nick_id);
+                send_announcement_to_all(temp, [&](Client_t &client) {
+                    return client.client_id == nick_id;
+                });
                 break;
             }
 
@@ -214,15 +219,49 @@ struct Server {
         running = true;
     }
 
-    void send_string_to_client(HSteamNetConnection conn, std::string str) {
+    void send_client_packet_to_client(HSteamNetConnection conn,
+                                      ClientPacket packet) {
+        Buffer buffer;
+        bitsery::quickSerialization(OutputAdapter{buffer}, packet);
+        send_packet_string_to_client(conn, buffer);
+    }
+
+    void send_client_packet_to_all(
+        ClientPacket packet, std::function<bool(Client_t &)> exclude = {}) {
+        Buffer buffer;
+        bitsery::quickSerialization(OutputAdapter{buffer}, packet);
+        send_packet_string_to_all(buffer, exclude);
+    }
+
+    void send_packet_string_to_client(HSteamNetConnection conn,
+                                      std::string str) {
         interface->SendMessageToConnection(
             conn, str.c_str(), (uint32) str.size(),
             k_nSteamNetworkingSend_Reliable, nullptr);
     }
 
-    void send_string_to_all(std::string str) {
+    void send_packet_string_to_all(
+        std::string str, std::function<bool(Client_t &)> exclude = {}) {
         for (auto &c : clients) {
-            send_string_to_client(c.first, str);
+            if (exclude(c.second)) continue;
+            send_packet_string_to_client(c.first, str);
+        }
+    }
+
+    void send_announcement_to_client(HSteamNetConnection conn,
+                                     std::string msg) {
+        ClientPacket announce_packet(
+            {.client_id = SERVER_CLIENT_ID,
+             .msg_type = ClientPacket::MsgType::Announcement,
+             .msg = ClientPacket::AnnouncementInfo({.message = msg})});
+        send_client_packet_to_client(conn, announce_packet);
+    }
+
+    void send_announcement_to_all(
+        std::string msg, std::function<bool(Client_t &)> exclude = {}) {
+        for (auto &c : clients) {
+            if (exclude(c.second)) continue;
+            send_packet_string_to_client(c.first, msg);
         }
     }
 
@@ -265,7 +304,7 @@ struct Server {
 
     void teardown() {
         for (auto it : clients) {
-            send_string_to_client(it.first, "Server is shutting down.");
+            send_announcement_to_client(it.first, "server shutdown");
             interface->CloseConnection(it.first, 0, "server shutdown", true);
         }
         clients.clear();
