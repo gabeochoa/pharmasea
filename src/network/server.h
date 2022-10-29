@@ -231,10 +231,7 @@ struct Server {
     }
 
     bool run() {
-        if (!running) {
-            teardown();
-            return false;
-        }
+        if (!running) return false;
 
         auto poll_incoming_messages = [&]() {
             ISteamNetworkingMessage *incoming_msg = nullptr;

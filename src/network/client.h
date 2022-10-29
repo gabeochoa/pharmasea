@@ -61,9 +61,7 @@ struct Client {
     }
 
     bool run() {
-        if (!running) {
-            return false;
-        }
+        if (!running) return false;
 
         auto poll_incoming_messages = [&]() {
             ISteamNetworkingMessage *incoming_msg = nullptr;
