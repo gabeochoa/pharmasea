@@ -166,7 +166,8 @@ struct Server {
                     for (auto &c : clients)
                         send_announcement_to_client(
                             info->m_hConn,
-                            fmt::format("{}", c.second.client_id));
+                            fmt::format("{}, your id is: {}", temp,
+                                        c.second.client_id));
                 }
 
                 // Add them to the client list, using std::map wacky syntax

@@ -168,12 +168,12 @@ struct Info {
                 if (info.is_you) {
                     // We are the person that joined,
                     my_client_id = info.client_id;
+                    log(fmt::format("my id is {}", my_client_id));
                     return;
                 }
                 // otherwise someone just joined and we have to deal with them
-
                 add_new_player_cb(info.client_id);
-                log(fmt::format("added new player {}", info.client_id));
+
             } break;
             default:
                 log(fmt::format("Client: {} not handled yet: {} ",
@@ -192,7 +192,6 @@ struct Info {
                 // TODO send announcements to all clients
                 ClientPacket::AnnouncementInfo info =
                     std::get<ClientPacket::AnnouncementInfo>(packet.msg);
-                log(fmt::format("Announcement: {}", info.message));
             } break;
 
             case ClientPacket::MsgType::PlayerJoin: {
