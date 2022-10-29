@@ -123,25 +123,26 @@ struct EntityHelper {
             steps.push_back(Entity::tile_infront_given_pos(pos, i, direction));
         }
 
+        auto best_entity_match = std::shared_ptr<T>();
+        float best_distance = std::numeric_limits<float>::max();
         for (auto& e : entities_DO_NOT_USE) {
-            bool found_match{ false };
-            auto s = dynamic_pointer_cast<T>(e);
-            if (!s) continue;
-            if (!filter(s)) continue;
-            float d = vec::distance(pos, vec::to2(s->position));
-            if (d > range) continue;
+            auto current_entity = dynamic_pointer_cast<T>(e);
+            if (!current_entity) continue;
+            if (!filter(current_entity)) continue;
+            
+            float current_distance = vec::distance(pos, vec::to2(current_entity->position));
+            if (current_distance > range) continue;
             for (auto step : steps) {
-                d = vec::distance(step, vec::snap(vec::to2(s->position)));
-                if (abs(d) <= 1.f) {
-                    found_match = true;
-                    break;
+                current_distance = vec::distance(step, vec::snap(vec::to2(current_entity->position)));
+                if (abs(current_distance) <= 1.f) {
+                    if (current_distance < best_distance) {
+                        best_distance = current_distance;
+                        best_entity_match = current_entity;
+                    }
                 } 
             }
-            if (found_match) {
-                return s;
-            }
         }
-        return {};
+        return best_entity_match;
     }
 
     template<typename T>
