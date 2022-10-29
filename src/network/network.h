@@ -9,9 +9,10 @@
 
 namespace network {
 
-void log(std::string msg) { std::cout << msg << std::endl; }
+static void log(std::string msg) { std::cout << msg << std::endl; }
+// std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-SteamNetworkingMicroseconds START_TIME;
+static SteamNetworkingMicroseconds START_TIME;
 
 static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
                       const char* pszMsg) {
@@ -81,6 +82,11 @@ struct Info {
         init_connections();
         server.reset(new Server(DEFAULT_PORT));
         server->startup();
+
+        //
+        client.reset(new Client());
+        host_ip_address = "127.0.0.1";
+        lock_in_ip();
     }
 
     void set_role_to_client() {
@@ -101,12 +107,11 @@ struct Info {
     void tick(float) {
         if (desired_role & s_Host) {
             server->run();
-            return;
+            client->run();
         }
 
         if (desired_role & s_Client) {
             client->run();
-            return;
         }
     }
 
@@ -126,35 +131,6 @@ struct Info {
     void register_player_packet_cb(
         std::function<network::ClientPacket(int)> cb) {
         player_packet_info_cb = cb;
-    }
-
-    int run() {
-        desired_role = s_Host;
-        // desired_role = s_Client;
-
-        // if (desired_role & s_Host) {
-        // log("I'm the host");
-        // Server server(770);
-        // server.startup();
-        // while (server.run()) {
-        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        // };
-        // }
-        //
-        // if (desired_role & s_Client) {
-        // log("im the client");
-        // SteamNetworkingIPAddr address;
-        // address.ParseString("127.0.0.1");
-        // address.m_port = 770;
-        // Client client(address);
-        // client.startup();
-        // while (client.run()) {
-        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        // }
-        // }
-
-        shutdown_connections();
-        return 0;
     }
 
     void send_updated_state() {

@@ -80,7 +80,7 @@ struct Server {
                     // their nick as the connection description, it will show
                     // up, along with their transport-specific data (e.g. their
                     // IP address)
-                    log(fmt::format("Connection %s %s, reason %d: %s\n",
+                    log(fmt::format("Connection {} {}, reason {}: {}\n",
                                     info->m_info.m_szConnectionDescription,
                                     pszDebugLogAction,
                                     info->m_info.m_eEndReason,
@@ -112,7 +112,7 @@ struct Server {
                 M_ASSERT(clients.find(info->m_hConn) == clients.end(),
                          "Client already connected but shouldnt be");
 
-                log(fmt::format("Connection request from %s",
+                log(fmt::format("Connection request from {}",
                                 info->m_info.m_szConnectionDescription));
 
                 // A client is attempting to connect

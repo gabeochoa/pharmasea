@@ -16,7 +16,7 @@ namespace network {
 
 struct Client {
     // TODO eventually add logging
-    void log(std::string msg) { std::cout << msg << std::endl; }
+    static void log(std::string msg) { std::cout << msg << std::endl; }
 
     SteamNetworkingIPAddr address;
     ISteamNetworkingSockets *interface;
@@ -92,10 +92,10 @@ struct Client {
 
     void on_steam_network_connection_status_changed(
         SteamNetConnectionStatusChangedCallback_t *info) {
+        log("client on stream network connection status changed");
         M_ASSERT(info->m_hConn == connection ||
                      connection == k_HSteamNetConnection_Invalid,
                  "Connection Status Error");
-        log("client on stream network connection status changed");
 
         switch (info->m_info.m_eState) {
             case k_ESteamNetworkingConnectionState_None:
@@ -157,6 +157,11 @@ struct Client {
 
     static void SteamNetConnectionStatusChangedCallback(
         SteamNetConnectionStatusChangedCallback_t *pInfo) {
+        if (!callback_instance) {
+            log("client callback instance saw a change but wasnt initialized "
+                "still");
+            return;
+        }
         callback_instance->on_steam_network_connection_status_changed(pInfo);
     }
 };
