@@ -28,6 +28,10 @@ const int MAX_NAME_LENGTH = 25;
 const int MAX_ANNOUNCEMENT_LENGTH = 200;
 const int SERVER_CLIENT_ID = 0;
 
+struct Client_t {
+    int client_id;
+};
+
 struct ClientPacket {
     int client_id;
 

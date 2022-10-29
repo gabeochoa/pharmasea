@@ -40,11 +40,11 @@ struct Info {
         s_Client = 1 << 2,
     } desired_role = s_None;
 
-    std::shared_ptr<Server> server;
-    std::shared_ptr<Client> client;
+    std::shared_ptr<Server> server_p;
+    std::shared_ptr<Client> client_p;
 
     std::function<network::ClientPacket(int)> player_packet_info_cb;
-    std::function<void(int, int)> add_new_player_cb;
+    std::function<void(int)> add_new_player_cb;
     std::function<void(int)> remove_player_cb;
     std::function<void(int, std::string, float[3], int)>
         update_remote_player_cb;
@@ -55,8 +55,8 @@ struct Info {
     bool has_set_ip() { return is_host() || (is_client() && ip_set); }
     void lock_in_ip() {
         ip_set = true;
-        client->set_address(host_ip_address);
-        client->startup();
+        client_p->set_address(host_ip_address);
+        client_p->startup();
     }
 
     void init_connections() {
@@ -80,11 +80,16 @@ struct Info {
     void set_role_to_host() {
         desired_role = s_Host;
         init_connections();
-        server.reset(new Server(DEFAULT_PORT));
-        server->startup();
+        server_p.reset(new Server(DEFAULT_PORT));
+        server_p->set_process_message(
+            std::bind(&Info::server_process_message_string, this,
+                      std::placeholders::_1, std::placeholders::_2));
+        server_p->startup();
 
         //
-        client.reset(new Client(true));
+        client_p.reset(new Client(true));
+        client_p->set_process_message(std::bind(
+            &Info::client_process_message_string, this, std::placeholders::_1));
         host_ip_address = "127.0.0.1";
         lock_in_ip();
     }
@@ -92,30 +97,32 @@ struct Info {
     void set_role_to_client() {
         desired_role = s_Client;
         init_connections();
-        client.reset(new Client());
+        client_p.reset(new Client());
+        client_p->set_process_message(std::bind(
+            &Info::client_process_message_string, this, std::placeholders::_1));
     }
 
     void set_role_to_none() {
         desired_role = s_None;
         ip_set = false;
-        server->teardown();
-        server.reset();
-        client.reset();
+        server_p->teardown();
+        server_p.reset();
+        client_p.reset();
         shutdown_connections();
     }
 
     void tick(float) {
         if (desired_role & s_Host) {
-            server->run();
-            client->run();
+            server_p->run();
+            client_p->run();
         }
 
         if (desired_role & s_Client) {
-            client->run();
+            client_p->run();
         }
     }
 
-    void register_new_player_cb(std::function<void(int, int)> cb) {
+    void register_new_player_cb(std::function<void(int)> cb) {
         add_new_player_cb = cb;
     }
 
@@ -140,7 +147,94 @@ struct Info {
             .msg = ClientPacket::GameStateInfo(
                 {.host_menu_state = Menu::get().state}),
         });
-        server->send_client_packet_to_all(player);
+        server_p->send_client_packet_to_all(player);
+    }
+
+    void client_process_message_string(std::string msg) {
+        ClientPacket packet;
+        bitsery::quickDeserialization<InputAdapter>({msg.begin(), msg.size()},
+                                                    packet);
+
+        switch (packet.msg_type) {
+            case ClientPacket::MsgType::Announcement: {
+                ClientPacket::AnnouncementInfo info =
+                    std::get<ClientPacket::AnnouncementInfo>(packet.msg);
+                log(fmt::format("Announcement: {}", info.message));
+            } break;
+            case ClientPacket::MsgType::PlayerJoin: {
+                ClientPacket::PlayerJoinInfo info =
+                    std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
+
+                if (info.is_you) {
+                    // We are the person that joined,
+                    my_client_id = info.client_id;
+                    return;
+                }
+                // otherwise someone just joined and we have to deal with them
+
+                add_new_player_cb(info.client_id);
+                log(fmt::format("added new player {}", info.client_id));
+            } break;
+            default:
+                log(fmt::format("Client: {} not handled yet: {} ",
+                                packet.msg_type, msg));
+                break;
+        }
+    }
+
+    void server_process_message_string(const Client_t& incoming_client,
+                                       std::string msg) {
+        ClientPacket packet;
+        bitsery::quickDeserialization<InputAdapter>({msg.begin(), msg.size()},
+                                                    packet);
+        switch (packet.msg_type) {
+            case ClientPacket::MsgType::Announcement: {
+                // TODO send announcements to all clients
+                ClientPacket::AnnouncementInfo info =
+                    std::get<ClientPacket::AnnouncementInfo>(packet.msg);
+                log(fmt::format("Announcement: {}", info.message));
+            } break;
+
+            case ClientPacket::MsgType::PlayerJoin: {
+                // We dont need this
+                // ClientPacket::PlayerJoinInfo info =
+                // std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
+
+                // Since we are the host, we can use the Client_t to figure out
+                // the id / name
+                server_p->send_client_packet_to_all(
+                    ClientPacket(
+                        {.client_id = SERVER_CLIENT_ID,
+                         .msg_type = ClientPacket::MsgType::PlayerJoin,
+                         .msg = ClientPacket::PlayerJoinInfo({
+                             // override the client's id with their real one
+                             .client_id = incoming_client.client_id,
+                             .is_you = false,
+                         })}),
+                    // ignore the person who sent it to us
+                    [&](Client_t& client) {
+                        return client.client_id == incoming_client.client_id;
+                    });
+
+                server_p->send_client_packet_to_all(
+                    ClientPacket(
+                        {.client_id = SERVER_CLIENT_ID,
+                         .msg_type = ClientPacket::MsgType::PlayerJoin,
+                         .msg = ClientPacket::PlayerJoinInfo({
+                             // override the client's id with their real one
+                             .client_id = incoming_client.client_id,
+                             .is_you = true,
+                         })}),
+                    // ignore everyone except the one that sent to us
+                    [&](Client_t& client) {
+                        return client.client_id != incoming_client.client_id;
+                    });
+            } break;
+            default:
+                log(fmt::format("Server: {} not handled yet: {} ",
+                                packet.msg_type, msg));
+                break;
+        }
     }
 };
 

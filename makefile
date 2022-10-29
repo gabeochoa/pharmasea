@@ -10,7 +10,7 @@ CPPS = src/game.cpp
 
 
 all:
-	clang++ $(FLAGS) $(NOFLAGS) $(CPPS) `pkg-config --libs --cflags raylib` $(INCLUDES) $(LIBS) -o pharmasea && ./pharmasea 
+	clang++ $(FLAGS) $(NOFLAGS) $(CPPS) `pkg-config --libs --cflags raylib` $(INCLUDES) $(LIBS) -o pharmasea.exe && ./pharmasea.exe 
 
 count: 
 	git ls-files | grep "src" | grep -v "ui_color.h" | grep -v "vendor"| grep -v "resources" | xargs wc -l | sort -rn

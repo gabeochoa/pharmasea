@@ -9,6 +9,7 @@
 #include <thread>
 
 #include "../assert.h"
+#include "bitsery/serializer.h"
 #include "shared.h"
 #include "steam/isteamnetworkingsockets.h"
 
@@ -24,6 +25,7 @@ struct Client {
     inline static Client *callback_instance;
     bool running = false;
     bool is_host = false;
+    std::function<void(std::string)> process_message_cb;
 
     // Send to
     // {
@@ -34,6 +36,10 @@ struct Client {
     // }
 
     Client(bool host = false) : is_host(host) {}
+
+    void set_process_message(std::function<void(std::string)> cb) {
+        process_message_cb = cb;
+    }
 
     void set_address(SteamNetworkingIPAddr addy) { address = addy; }
 
@@ -57,24 +63,6 @@ struct Client {
         running = true;
     }
 
-    void process_message_string(std::string msg) {
-        ClientPacket packet;
-        bitsery::quickDeserialization<InputAdapter>({msg.begin(), msg.size()},
-                                                    packet);
-
-        switch (packet.msg_type) {
-            case ClientPacket::MsgType::Announcement: {
-                ClientPacket::AnnouncementInfo info =
-                    std::get<ClientPacket::AnnouncementInfo>(packet.msg);
-                log(fmt::format("Announcement: {}", info.message));
-            } break;
-            default:
-                log(fmt::format("Client: {} not handled yet: {} ",
-                                packet.msg_type, msg));
-                break;
-        }
-    }
-
     bool run() {
         if (!running) return false;
 
@@ -92,7 +80,7 @@ struct Client {
             cmd.assign((const char *) incoming_msg->m_pData,
                        incoming_msg->m_cbSize);
             incoming_msg->Release();
-            this->process_message_string(cmd);
+            this->process_message_cb(cmd);
         };
         auto poll_connection_state_changes = [&]() {
             callback_instance = this;
@@ -103,6 +91,29 @@ struct Client {
         poll_connection_state_changes();
 
         return true;
+    }
+
+    void send_string_to_server(std::string msg) {
+        interface->SendMessageToConnection(
+            connection, msg.c_str(), (uint32) msg.length(),
+            k_nSteamNetworkingSend_Reliable, nullptr);
+    }
+
+    void send_packet_to_server(ClientPacket packet) {
+        Buffer buffer;
+        bitsery::quickSerialization(OutputAdapter{buffer}, packet);
+        send_string_to_server(buffer);
+    }
+
+    void send_join_info_request() {
+        log("client sending join info request");
+        ClientPacket packet({.client_id = -1,  // we dont know yet what it is
+                             .msg_type = ClientPacket::MsgType::PlayerJoin,
+                             .msg = ClientPacket::PlayerJoinInfo({
+                                 .client_id = -1,  // again
+                                 .is_you = false,
+                             })});
+        send_packet_to_server(packet);
     }
 
     void on_steam_network_connection_status_changed(
@@ -162,6 +173,7 @@ struct Client {
 
             case k_ESteamNetworkingConnectionState_Connected:
                 log("Connected to server OK");
+                send_join_info_request();
                 break;
 
             default:
