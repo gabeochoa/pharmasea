@@ -134,213 +134,82 @@ struct NetworkLayer : public Layer {
 
     void draw_network_overlay() {}
 
+    std::shared_ptr<Widget> mk_button(uuid id) {
+        return ui_context->own(Widget(id, button_x, button_y));
+    }
+
+    std::shared_ptr<Widget> mk_but_pad() {
+        return ui_context->own(Widget(padd_x, padd_y));
+    }
+
+    std::shared_ptr<Widget> mk_text() {
+        return ui_context->own(
+            Widget({.mode = Pixels, .value = 300.f, .strictness = 0.5f},
+                   {.mode = Pixels, .value = 50.f, .strictness = 1.f}));
+    }
+
     void draw_base_screen() {
-        auto left_padding = ui_context->own(
-            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                   {.mode = Pixels, .value = WIN_H, .strictness = 1.f}));
-
-        auto content = ui_context->own(Widget(
-            {.mode = Children, .strictness = 1.f},
-            {.mode = Percent, .value = 1.f, .strictness = 1.0f}, Column));
-
-        auto top_padding = ui_context->own(
-            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                   {.mode = Percent, .value = 1.f, .strictness = 0.f}));
-
-        auto host_button =
-            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
-        auto join_button =
-            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
-        auto back_button =
-            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
-        auto ping_button =
-            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
-        auto play_button =
-            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
-        auto cancel_button =
-            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
-        auto button_padding = ui_context->own(Widget(padd_x, padd_y));
-
-        auto bottom_padding = ui_context->own(
-            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                   {.mode = Percent, .value = 1.f, .strictness = 0.f}));
-
-        auto connecting_text = ui_context->own(
-            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
-
-        auto player_text = ui_context->own(
-            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
-
-        padding(*left_padding);
-        div(*content);
-        ui_context->push_parent(content);
-        {
-            padding(*top_padding);
-            text(*connecting_text,
-                 fmt::format("Username: {}", network_info->username));
-            padding(*button_padding);
-            if (button(*host_button, "Host")) {
-                network_info->set_role_to_host();
-            }
-            padding(*button_padding);
-            if (button(*join_button, "Join")) {
-                network_info->set_role_to_client();
-            }
-            padding(*button_padding);
-            if (button(*back_button, "Back")) {
-                Menu::get().state = Menu::State::Root;
-            }
-            padding(*bottom_padding);
+        text(*mk_text(), fmt::format("Username: {}", network_info->username));
+        padding(*mk_but_pad());
+        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Host")) {
+            network_info->set_role_to_host();
         }
-        ui_context->pop_parent();
+        padding(*mk_but_pad());
+        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Join")) {
+            network_info->set_role_to_client();
+        }
+        padding(*mk_but_pad());
+        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
+            Menu::get().state = Menu::State::Root;
+        }
     }
 
     void draw_ip_input_screen() {
-        auto left_padding = ui_context->own(
-            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                   {.mode = Pixels, .value = WIN_H, .strictness = 1.f}));
-
-        auto content = ui_context->own(Widget(
-            {.mode = Children, .strictness = 1.f},
-            {.mode = Percent, .value = 1.f, .strictness = 1.0f}, Column));
-
-        auto top_padding = ui_context->own(
-            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                   {.mode = Percent, .value = 1.f, .strictness = 0.f}));
-
-        auto submit_button =
-            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
-        auto cancel_button =
-            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
-        auto button_padding = ui_context->own(Widget(padd_x, padd_y));
-
-        auto bottom_padding = ui_context->own(
-            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                   {.mode = Percent, .value = 1.f, .strictness = 0.f}));
-
         // TODO support validation
         auto ip_address_input = ui_context->own(
             Widget(MK_UUID(id, ROOT_ID),
                    {.mode = Pixels, .value = 400.f, .strictness = 1.f},
                    {.mode = Pixels, .value = 25.f, .strictness = 0.5f}));
-        auto ip_info_text = ui_context->own(
-            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
-
-        auto player_text = ui_context->own(
-            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
-
-        padding(*left_padding);
-        div(*content);
-        ui_context->push_parent(content);
-        {
-            padding(*top_padding);
-            text(*player_text,
-                 fmt::format("Username: {}", network_info->username));
-
-            text(*ip_info_text, "Enter IP Address");
-            textfield(*ip_address_input, network_info->host_ip_address);
-            padding(*button_padding);
-            if (button(*submit_button, "Connect")) {
-                network_info->lock_in_ip();
-            }
-            padding(*button_padding);
-            if (button(*cancel_button, "Back")) {
-                network_info->username_set = false;
-            }
-            padding(*bottom_padding);
+        text(*mk_text(), fmt::format("You: {}", network_info->username));
+        text(*mk_text(), "Enter IP Address");
+        textfield(*ip_address_input, network_info->host_ip_address);
+        padding(*mk_but_pad());
+        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Connect")) {
+            network_info->lock_in_ip();
         }
-        ui_context->pop_parent();
+        padding(*mk_but_pad());
+        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
+            network_info->username_set = false;
+        }
     }
 
     void draw_connected_screen() {
-        auto left_padding = ui_context->own(
-            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                   {.mode = Pixels, .value = WIN_H, .strictness = 1.f}));
+        text(*mk_text(), fmt::format("You are {}({})", network_info->username,
+                                     network_info->my_client_id));
 
-        auto content = ui_context->own(Widget(
-            {.mode = Children, .strictness = 1.f},
-            {.mode = Percent, .value = 1.f, .strictness = 1.0f}, Column));
-
-        auto top_padding = ui_context->own(
-            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                   {.mode = Percent, .value = 1.f, .strictness = 0.f}));
-
-        auto play_button =
-            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
-        auto cancel_button =
-            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
-        auto button_padding = ui_context->own(Widget(padd_x, padd_y));
-
-        auto bottom_padding = ui_context->own(
-            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                   {.mode = Percent, .value = 1.f, .strictness = 0.f}));
-
-        auto connecting_text = ui_context->own(
-            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
-
-        auto player_text = ui_context->own(
-            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
-
-        padding(*left_padding);
-        div(*content);
-        ui_context->push_parent(content);
-        {
-            padding(*top_padding);
-            // TODO add button to edit as long as you arent currently
-            // hosting people?
-            // TODO add support for wstring
-            text(*connecting_text,
-                 fmt::format("Username: {}", network_info->username));
-
-            for (auto kv : remote_players) {
-                text(*player_text,
-                     fmt::format("{}({})", kv.second->name, kv.first));
-            }
-
-            if (network_info->is_host()) {
-                if (button(*play_button, "Play")) {
-                    // TODO add a way to subscribe to state changes
-                    network_info->send_updated_state(Menu::State::Game);
-                }
-            }
-
-            if (button(*cancel_button, "Disconnect")) {
-                network_info->set_role_to_none();
-            }
-            padding(*bottom_padding);
+        // TODO add button to edit as long as you arent currently
+        // hosting people?
+        for (auto kv : remote_players) {
+            auto player_text = ui_context->own(
+                Widget(MK_UUID_LOOP(id, ROOT_ID, kv.first),
+                       {.mode = Pixels, .value = 120.f, .strictness = 0.5f},
+                       {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
+            text(*player_text,
+                 fmt::format("{}({})", kv.second->name, kv.first));
         }
-        ui_context->pop_parent();
+
+        if (network_info->is_host()) {
+            if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Play")) {
+                network_info->send_updated_state(Menu::State::Game);
+            }
+        }
+
+        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Disconnect")) {
+            network_info->set_role_to_none();
+        }
     }
 
     void draw_username_picker() {
-        auto left_padding = ui_context->own(
-            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                   {.mode = Pixels, .value = WIN_H, .strictness = 1.f}));
-
-        auto content = ui_context->own(Widget(
-            {.mode = Children, .strictness = 1.f},
-            {.mode = Percent, .value = 1.f, .strictness = 1.0f}, Column));
-
-        auto top_padding = ui_context->own(
-            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                   {.mode = Percent, .value = 1.f, .strictness = 0.f}));
-
-        auto submit_button =
-            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
-        auto cancel_button =
-            ui_context->own(Widget(MK_UUID(id, ROOT_ID), button_x, button_y));
-        auto button_padding = ui_context->own(Widget(padd_x, padd_y));
-
-        auto bottom_padding = ui_context->own(
-            Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                   {.mode = Percent, .value = 1.f, .strictness = 0.f}));
-
         auto username_input = ui_context->own(
             Widget(MK_UUID(id, ROOT_ID),
                    {.mode = Pixels, .value = 400.f, .strictness = 1.f},
@@ -350,24 +219,30 @@ struct NetworkLayer : public Layer {
             Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
                    {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
 
-        padding(*left_padding);
-        div(*content);
-        ui_context->push_parent(content);
-        {
-            padding(*top_padding);
-            text(*player_text, "Username: ");
-            textfield(*username_input, network_info->username);
-            padding(*button_padding);
-            if (button(*submit_button, "Lock in")) {
-                network_info->username_set = true;
-            }
-            padding(*button_padding);
-            if (button(*cancel_button, "Back")) {
-                Menu::get().state = Menu::State::Root;
-            }
-            padding(*bottom_padding);
+        text(*player_text, "Username: ");
+        textfield(*username_input, network_info->username);
+        padding(*mk_but_pad());
+        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Lock in")) {
+            network_info->username_set = true;
         }
-        ui_context->pop_parent();
+        padding(*mk_but_pad());
+        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
+            Menu::get().state = Menu::State::Root;
+        }
+    }
+
+    void draw_screen_selector_logic() {
+        if (!network_info->username_set) {
+            draw_username_picker();
+        } else if (network_info->has_role()) {
+            if (!(network_info->has_set_ip())) {
+                draw_ip_input_screen();
+            } else {
+                draw_connected_screen();
+            }
+        } else {
+            draw_base_screen();
+        }
     }
 
     virtual void onDraw(float) override {
@@ -392,16 +267,31 @@ struct NetworkLayer : public Layer {
                    GrowFlags::Row));
 
         ui_context->push_parent(root);
-        if (!network_info->username_set) {
-            draw_username_picker();
-        } else if (network_info->has_role()) {
-            if (!(network_info->has_set_ip())) {
-                draw_ip_input_screen();
-            } else {
-                draw_connected_screen();
+        {
+            auto left_padding = ui_context->own(
+                Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                       {.mode = Pixels, .value = WIN_H, .strictness = 1.f}));
+
+            auto content = ui_context->own(Widget(
+                {.mode = Children, .strictness = 1.f},
+                {.mode = Percent, .value = 1.f, .strictness = 1.0f}, Column));
+
+            padding(*left_padding);
+            div(*content);
+            ui_context->push_parent(content);
+            {
+                auto top_padding = ui_context->own(
+                    Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                           {.mode = Percent, .value = 1.f, .strictness = 0.f}));
+                padding(*top_padding);
+                {  //
+                    draw_screen_selector_logic();
+                }
+                padding(*ui_context->own(Widget(
+                    {.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                    {.mode = Percent, .value = 1.f, .strictness = 0.f})));
             }
-        } else {
-            draw_base_screen();
+            ui_context->pop_parent();
         }
         ui_context->pop_parent();
         ui_context->end(root.get());

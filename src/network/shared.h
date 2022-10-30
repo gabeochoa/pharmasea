@@ -12,7 +12,7 @@ using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 
 const int DEFAULT_PORT = 770;
-const int MAX_CLIENTS = 32;
+const int MAX_CLIENTS = 4;
 // TODO add note for max name length in ui
 const int MAX_NAME_LENGTH = 25;
 const int MAX_ANNOUNCEMENT_LENGTH = 200;
@@ -48,12 +48,13 @@ struct ClientPacket {
     // Player Join
     // NOTE: anything added here is also added to player info
     struct PlayerJoinInfo {
+        std::vector<int> all_clients;
         int client_id = -1;
         bool is_you = false;
     };
 
     // Player Location
-    struct PlayerInfo : public PlayerJoinInfo {
+    struct PlayerInfo {
         int facing_direction;
         float location[3];
         std::string name{};
@@ -86,8 +87,8 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
             [&](ClientPacket::PlayerInfo info) {
                 return fmt::format(
                     "PlayerInfo( id{} name{} pos({}, {}, {}), facing {})",
-                    info.client_id, info.name, info.location[0],
-                    info.location[1], info.location[2], info.facing_direction);
+                    info.name, info.location[0], info.location[1],
+                    info.location[2], info.facing_direction);
             },
             [&](auto) { return std::string(" -- invalid operator<< --"); }},
         msgtype);
@@ -131,6 +132,7 @@ void serialize(S& s, ClientPacket& packet) {
                               s.text1b(info.message, MAX_ANNOUNCEMENT_LENGTH);
                           },
                           [](S& s, ClientPacket::PlayerJoinInfo& info) {
+                              s.container4b(info.all_clients, MAX_CLIENTS);
                               s.value1b(info.is_you);
                               s.value4b(info.client_id);
                           },
@@ -139,9 +141,6 @@ void serialize(S& s, ClientPacket& packet) {
                           },
                           [](S&, ClientPacket::WorldInfo&) {},
                           [](S& s, ClientPacket::PlayerInfo& info) {
-                              // From Join Info
-                              s.value1b(info.is_you);
-                              s.value4b(info.client_id);
                               // end
                               s.text1b(info.name, MAX_NAME_LENGTH);
                               s.value4b(info.location[0]);

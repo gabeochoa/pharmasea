@@ -169,11 +169,14 @@ struct Info {
                     // We are the person that joined,
                     my_client_id = info.client_id;
                     log(fmt::format("my id is {}", my_client_id));
-                    return;
                 }
-                // otherwise someone just joined and we have to deal with them
-                add_new_player_cb(info.client_id);
 
+                for (auto id : info.all_clients) {
+                    if (info.is_you && id == info.client_id) continue;
+                    // otherwise someone just joined and we have to deal with
+                    // them
+                    add_new_player_cb(id);
+                }
             } break;
             case ClientPacket::MsgType::GameState: {
                 ClientPacket::GameStateInfo info =
@@ -204,6 +207,10 @@ struct Info {
                 // ClientPacket::PlayerJoinInfo info =
                 // std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
 
+                std::vector<int> ids;
+                for (auto& c : server_p->clients) {
+                    ids.push_back(c.second.client_id);
+                }
                 // Since we are the host, we can use the Client_t to figure out
                 // the id / name
                 server_p->send_client_packet_to_all(
@@ -211,6 +218,7 @@ struct Info {
                         {.client_id = SERVER_CLIENT_ID,
                          .msg_type = ClientPacket::MsgType::PlayerJoin,
                          .msg = ClientPacket::PlayerJoinInfo({
+                             .all_clients = ids,
                              // override the client's id with their real one
                              .client_id = incoming_client.client_id,
                              .is_you = false,
@@ -225,6 +233,7 @@ struct Info {
                         {.client_id = SERVER_CLIENT_ID,
                          .msg_type = ClientPacket::MsgType::PlayerJoin,
                          .msg = ClientPacket::PlayerJoinInfo({
+                             .all_clients = ids,
                              // override the client's id with their real one
                              .client_id = incoming_client.client_id,
                              .is_you = true,
