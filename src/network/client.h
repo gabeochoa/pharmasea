@@ -115,16 +115,15 @@ struct Client {
         return true;
     }
 
-    void send_string_to_server(std::string msg) {
+    void send_string_to_server(std::string msg, Channel channel) {
         interface->SendMessageToConnection(
-            connection, msg.c_str(), (uint32) msg.length(),
-            k_nSteamNetworkingSend_Reliable, nullptr);
+            connection, msg.c_str(), (uint32) msg.length(), channel, nullptr);
     }
 
     void send_packet_to_server(ClientPacket packet) {
         Buffer buffer;
         bitsery::quickSerialization(OutputAdapter{buffer}, packet);
-        send_string_to_server(buffer);
+        send_string_to_server(buffer, packet.channel);
     }
 
     void send_join_info_request() {

@@ -18,7 +18,6 @@ using namespace ui;
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     std::shared_ptr<network::Info> network_info;
-    std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
 
     const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
     const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
@@ -38,54 +37,6 @@ struct NetworkLayer : public Layer {
         ui_context->push_theme(ui::DEFAULT_THEME);
 
         network_info.reset(new network::Info());
-        network_info->register_new_player_cb([&](int client_id) {
-            if (remote_players.contains(client_id)) return;
-
-            remote_players[client_id] = std::make_shared<RemotePlayer>();
-            auto rp = remote_players[client_id];
-            rp->client_id = client_id;
-            EntityHelper::addEntity(remote_players[client_id]);
-            std::cout << fmt::format("Adding a player {}", client_id)
-                      << std::endl;
-        });
-
-        network_info->register_remove_player_cb([&](int client_id) {
-            auto rp = remote_players[client_id];
-            if (!rp)
-                std::cout << fmt::format("doesnt exist but should {}",
-                                         client_id)
-                          << std::endl;
-            rp->cleanup = true;
-            remote_players.erase(client_id);
-        });
-        network_info->register_update_player_cb(
-            [&](int client_id, std::string name, float* location, int facing) {
-                auto rp = remote_players[client_id];
-                if (!rp)
-                    std::cout
-                        << fmt::format("doesnt exist but should {}", client_id)
-                        << std::endl;
-                rp->update_remotely(name, location, facing);
-            });
-
-        network_info->register_player_packet_cb([&](int my_id) {
-            Player me = GLOBALS.get<Player>("player");
-            network::ClientPacket player({
-                .client_id = my_id,
-                .msg_type = network::ClientPacket::MsgType::PlayerLocation,
-                .msg = network::ClientPacket::PlayerInfo({
-                    .name = network_info->username,
-                    .location =
-                        {
-                            me.position.x,
-                            me.position.y,
-                            me.position.z,
-                        },
-                    .facing_direction = static_cast<int>(me.face_direction),
-                }),
-            });
-            return player;
-        });
     }
 
     virtual ~NetworkLayer() {}
@@ -175,8 +126,11 @@ struct NetworkLayer : public Layer {
         textfield(*ip_address_input, network_info->host_ip_address);
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Connect")) {
-            network_info->lock_in_ip();
         }
+        // TODO put back inside the button
+        network_info->host_ip_address = "127.0.0.1";
+        network_info->lock_in_ip();
+
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
             network_info->username_set = false;
@@ -189,7 +143,9 @@ struct NetworkLayer : public Layer {
 
         // TODO add button to edit as long as you arent currently
         // hosting people?
-        for (auto kv : remote_players) {
+        for (auto kv : network_info->remote_players) {
+            // TODO figure out why there are null rps
+            if (!kv.second) continue;
             auto player_text = ui_context->own(
                 Widget(MK_UUID_LOOP(id, ROOT_ID, kv.first),
                        {.mode = Pixels, .value = 120.f, .strictness = 0.5f},

@@ -4,6 +4,7 @@
 //
 #include "../menu.h"
 #include "../util.h"
+#include "steam/steamnetworkingtypes.h"
 
 namespace network {
 
@@ -18,11 +19,18 @@ const int MAX_NAME_LENGTH = 25;
 const int MAX_ANNOUNCEMENT_LENGTH = 200;
 const int SERVER_CLIENT_ID = 0;
 
+enum Channel {
+    RELIABLE = k_nSteamNetworkingSend_Reliable,
+    UNRELIABLE = k_nSteamNetworkingSend_Unreliable,
+    UNRELIABLE_NO_DELAY = k_nSteamNetworkingSend_UnreliableNoDelay,
+};
+
 struct Client_t {
     int client_id;
 };
 
 struct ClientPacket {
+    Channel channel = Channel::RELIABLE;
     int client_id;
 
     enum MsgType {
@@ -125,6 +133,7 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket& packet) {
 
 template<typename S>
 void serialize(S& s, ClientPacket& packet) {
+    s.value4b(packet.channel);
     s.value4b(packet.client_id);
     s.value4b(packet.msg_type);
     s.ext(packet.msg, bitsery::ext::StdVariant{

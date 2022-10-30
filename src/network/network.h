@@ -2,6 +2,12 @@
 
 #pragma once
 
+#include "../globals.h"
+//
+#include "../entities.h"
+#include "../player.h"
+#include "../remote_player.h"
+//
 #include "shared.h"
 //
 #include "client.h"
@@ -28,12 +34,15 @@ static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
 }
 
 struct Info {
-    int my_client_id;
+    int my_client_id = 0;
     std::string username = "default username";
     bool username_set = true;
     // TODO eventually support copy/paste
     std::string host_ip_address = "127.0.0.1";
     bool ip_set = false;
+    float client_next_tick_reset = 0.02f;
+    float client_next_tick = 0.0f;
+    std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
 
     enum State {
         s_None = 1 << 0,
@@ -43,12 +52,6 @@ struct Info {
 
     std::shared_ptr<Server> server_p;
     std::shared_ptr<Client> client_p;
-
-    std::function<network::ClientPacket(int)> player_packet_info_cb;
-    std::function<void(int)> add_new_player_cb;
-    std::function<void(int)> remove_player_cb;
-    std::function<void(int, std::string, float[3], int)>
-        update_remote_player_cb;
 
     bool is_host() { return desired_role & s_Host; }
     bool is_client() { return desired_role & s_Client; }
@@ -112,33 +115,29 @@ struct Info {
         shutdown_connections();
     }
 
-    void tick(float) {
+    void tick(float dt) {
+        this->client_next_tick = this->client_next_tick - dt;
+
+        auto _tick_client = [&](float) {
+            client_p->run();
+            if (this->client_next_tick > 0) {
+                return;
+            }
+            this->client_next_tick = client_next_tick_reset;
+            if (my_client_id > 0) {
+                auto player = get_player_packet(my_client_id);
+                client_p->send_packet_to_server(player);
+            }
+        };
+
         if (desired_role & s_Host) {
             server_p->run();
-            client_p->run();
+            _tick_client(dt);
         }
 
         if (desired_role & s_Client) {
-            client_p->run();
+            _tick_client(dt);
         }
-    }
-
-    void register_new_player_cb(std::function<void(int)> cb) {
-        add_new_player_cb = cb;
-    }
-
-    void register_remove_player_cb(std::function<void(int)> cb) {
-        remove_player_cb = cb;
-    }
-
-    void register_update_player_cb(
-        std::function<void(int, std::string, float[3], int)> cb) {
-        update_remote_player_cb = cb;
-    }
-
-    void register_player_packet_cb(
-        std::function<network::ClientPacket(int)> cb) {
-        player_packet_info_cb = cb;
     }
 
     void send_updated_state(Menu::State state) {
@@ -150,7 +149,65 @@ struct Info {
         server_p->send_client_packet_to_all(player);
     }
 
+    ClientPacket get_player_packet(int my_id) {
+        Player me = GLOBALS.get<Player>("player");
+        ClientPacket player({
+            .channel = Channel::UNRELIABLE_NO_DELAY,
+            .client_id = my_id,
+            .msg_type = network::ClientPacket::MsgType::PlayerLocation,
+            .msg = network::ClientPacket::PlayerInfo({
+                .facing_direction = static_cast<int>(me.face_direction),
+                .location =
+                    {
+                        me.position.x,
+                        me.position.y,
+                        me.position.z,
+                    },
+                .name = username,
+            }),
+        });
+        return player;
+    }
+
     void client_process_message_string(std::string msg) {
+        auto add_new_player = [&](int client_id) {
+            if (remote_players.contains(client_id)) {
+                std::cout << fmt::format("Why are we trying to add {}",
+                                         client_id)
+                          << std::endl;
+            };
+
+            remote_players[client_id] = std::make_shared<RemotePlayer>();
+            auto rp = remote_players[client_id];
+            rp->client_id = client_id;
+            EntityHelper::addEntity(remote_players[client_id]);
+            std::cout << fmt::format("Adding a player {}", client_id)
+                      << std::endl;
+        };
+
+        auto remove_player = [&](int client_id) {
+            auto rp = remote_players[client_id];
+            if (!rp)
+                std::cout << fmt::format("doesnt exist but should {}",
+                                         client_id)
+                          << std::endl;
+            rp->cleanup = true;
+            remote_players.erase(client_id);
+        };
+
+        auto update_remote_player =
+            [&](int client_id, std::string name, float* location, int facing) {
+                if (!remote_players.contains(client_id)) {
+                    std::cout
+                        << fmt::format("doesnt exist but should {}", client_id)
+                        << std::endl;
+                    add_new_player(client_id);
+                }
+                auto rp = remote_players[client_id];
+                if (!rp) return;
+                rp->update_remotely(name, location, facing);
+            };
+
         ClientPacket packet;
         bitsery::quickDeserialization<InputAdapter>({msg.begin(), msg.size()},
                                                     packet);
@@ -175,14 +232,22 @@ struct Info {
                     if (info.is_you && id == info.client_id) continue;
                     // otherwise someone just joined and we have to deal with
                     // them
-                    add_new_player_cb(id);
+                    add_new_player(id);
                 }
+
             } break;
             case ClientPacket::MsgType::GameState: {
                 ClientPacket::GameStateInfo info =
                     std::get<ClientPacket::GameStateInfo>(packet.msg);
                 Menu::get().state = info.host_menu_state;
             } break;
+            case ClientPacket::MsgType::PlayerLocation: {
+                ClientPacket::PlayerInfo info =
+                    std::get<ClientPacket::PlayerInfo>(packet.msg);
+                update_remote_player(packet.client_id, info.name, info.location,
+                                     info.facing_direction);
+            } break;
+
             default:
                 log(fmt::format("Client: {} not handled yet: {} ",
                                 packet.msg_type, msg));
@@ -244,8 +309,12 @@ struct Info {
                     });
             } break;
             default:
-                log(fmt::format("Server: {} not handled yet: {} ",
-                                packet.msg_type, msg));
+                server_p->send_client_packet_to_all(
+                    packet, [&](Client_t& client) {
+                        return client.client_id == incoming_client.client_id;
+                    });
+                // log(fmt::format("Server: {} not handled yet ",
+                // packet.msg_type));
                 break;
         }
     }

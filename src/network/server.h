@@ -92,6 +92,7 @@ struct Server {
 
                     clients.erase(itClient);
 
+                    // TODO send a player remove message
                     // Send a message so everybody else knows what happened
                     send_announcement_to_all(temp);
                 } else {
