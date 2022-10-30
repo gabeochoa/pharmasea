@@ -250,10 +250,12 @@ bool button(const Widget& widget, const std::string& content) {
 
         // if (is_hot(widget.id)) {
         // if (is_active(widget.id)) {
-        // get().draw_widget_old(position, size, 0.f, color::red, "TEXTURE");
+        // get().draw_widget_old(position, size, 0.f, color::red,
+        // "TEXTURE");
         // } else {
         // // Hovered
-        // get().draw_widget_old(position, size, 0.f, color::green, "TEXTURE");
+        // get().draw_widget_old(position, size, 0.f, color::green,
+        // "TEXTURE");
         // }
         // } else {
         // get().draw_widget_old(position, size, 0.f, color::black, "TEXTURE");
@@ -269,10 +271,8 @@ bool button(const Widget& widget, const std::string& content) {
 
     const auto _button_pressed = [](const uuid id) {
         // check click
-        if (has_kb_focus(id)) {
-            if (get().pressed("Widget Press")) {
-                return true;
-            }
+        if (has_kb_focus(id) && get().pressed("Widget Press")) {
+            return true;
         }
         if (get().lmouse_down && is_active_and_hot(id)) {
             get().kb_focus_id = id;
@@ -292,6 +292,8 @@ bool button(const Widget& widget, const std::string& content) {
         get()._draw_text(widget.rect, content, theme::Usage::Font);
         handle_tabbing(widget.id);
         pressed = _button_pressed(widget.id);
+    } else {
+        get().schedule_render_call(std::bind(_button_render, widget.me));
     }
     get().schedule_render_call(std::bind(_write_lf, widget.me));
     return pressed;

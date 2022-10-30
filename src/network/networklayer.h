@@ -20,6 +20,7 @@ struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     std::shared_ptr<network::Info> network_info;
     std::optional<std::string> my_ip_address;
+    bool should_show_host_ip = false;
 
     const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
     const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
@@ -141,8 +142,14 @@ struct NetworkLayer : public Layer {
 
     void draw_connected_screen() {
         if (network_info->is_host() && my_ip_address.has_value()) {
-            text(*mk_text(),
-                 fmt::format("Your IP is: {}", my_ip_address.value()));
+            auto ip =
+                should_show_host_ip ? my_ip_address.value() : "***.***.***.***";
+            text(*mk_text(), fmt::format("Your IP is: {}", ip));
+            auto show_hide_host_ip_text = should_show_host_ip ? "Hide" : "Show";
+            if (button(*mk_button(MK_UUID(id, ROOT_ID)),
+                       show_hide_host_ip_text)) {
+                should_show_host_ip = !should_show_host_ip;
+            }
         }
         text(*mk_text(), fmt::format("You are {}({})", network_info->username,
                                      network_info->my_client_id));
