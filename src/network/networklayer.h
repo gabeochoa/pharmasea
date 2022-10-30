@@ -99,7 +99,7 @@ struct NetworkLayer : public Layer {
 
     std::shared_ptr<Widget> mk_text() {
         return ui_context->own(
-            Widget({.mode = Pixels, .value = 300.f, .strictness = 0.5f},
+            Widget({.mode = Pixels, .value = 275.f, .strictness = 0.5f},
                    {.mode = Pixels, .value = 50.f, .strictness = 1.f}));
     }
 
@@ -142,14 +142,27 @@ struct NetworkLayer : public Layer {
 
     void draw_connected_screen() {
         if (network_info->is_host() && my_ip_address.has_value()) {
-            auto ip =
-                should_show_host_ip ? my_ip_address.value() : "***.***.***.***";
-            text(*mk_text(), fmt::format("Your IP is: {}", ip));
-            auto show_hide_host_ip_text = should_show_host_ip ? "Hide" : "Show";
-            if (button(*mk_button(MK_UUID(id, ROOT_ID)),
-                       show_hide_host_ip_text)) {
-                should_show_host_ip = !should_show_host_ip;
+            auto content = ui_context->own(
+                Widget({.mode = Children, .strictness = 1.f},
+                       {.mode = Children, .strictness = 1.f}, Row));
+            div(*content);
+            ui_context->push_parent(content);
+            {
+                auto ip = should_show_host_ip ? my_ip_address.value()
+                                              : "***.***.***.***";
+                text(*mk_text(), fmt::format("Your IP is: {}", ip));
+                auto checkbox_widget = ui_context->own(
+                    Widget(MK_UUID(id, ROOT_ID),
+                           {.mode = Pixels, .value = 75.f, .strictness = 0.5f},
+                           {.mode = Pixels, .value = 25.f, .strictness = 1.f}));
+                std::string show_hide_host_ip_text =
+                    should_show_host_ip ? "Hide" : "Show";
+                if (checkbox(*checkbox_widget, &should_show_host_ip,
+                             &show_hide_host_ip_text)) {
+                    std::cout << "hi" << std::endl;
+                }
             }
+            ui_context->pop_parent();
         }
         text(*mk_text(), fmt::format("You are {}({})", network_info->username,
                                      network_info->my_client_id));

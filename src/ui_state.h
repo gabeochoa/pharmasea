@@ -40,6 +40,7 @@ struct ToggleState : public UIState {
 };
 
 struct DropdownState : public ToggleState {};
+struct CheckboxState : public ToggleState {};
 
 struct ButtonListState : public UIState {
     State<int> selected;
@@ -50,13 +51,11 @@ struct SliderState : public UIState {
     State<float> value;
 };
 
-
 struct TextfieldState : public UIState {
     State<std::string> buffer;
     State<int> cursorBlinkTime;
     State<bool> showCursor;
 };
-
 
 ////////////////
 ////////////////
@@ -89,7 +88,6 @@ struct StateManager {
         }
     }
 };
-
 
 ////////////////
 ////////////////

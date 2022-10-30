@@ -80,6 +80,14 @@ bool textfield(
     // returns true if text changed
     const Widget& widget, std::string& content);
 
+bool checkbox(
+    // Returns true if the checkbox changed
+    const Widget& widget,
+    // whether or not the checkbox is X'd
+    bool* cbState = nullptr,
+    // optional label to replace X and ``
+    std::string* label = nullptr);
+
 ///////// ////// ////// ////// ////// ////// ////// //////
 ///////// ////// ////// ////// ////// ////// ////// //////
 ///////// ////// ////// ////// ////// ////// ////// //////
@@ -274,7 +282,7 @@ bool button(const Widget& widget, const std::string& content) {
         if (has_kb_focus(id) && get().pressed("Widget Press")) {
             return true;
         }
-        if (get().lmouse_down && is_active_and_hot(id)) {
+        if (!get().lmouse_down && is_active_and_hot(id)) {
             get().kb_focus_id = id;
             return true;
         }
@@ -687,6 +695,27 @@ bool textfield(const Widget& widget, std::string& content) {
 
     get().schedule_render_call(std::bind(_textfield_render, widget.me));
     content = state->buffer;
+    return changed_previous_frame;
+}
+
+bool checkbox(const Widget& widget, bool* cbState, std::string* label) {
+    init_widget(widget, __FUNCTION__);
+    auto state = get().widget_init<CheckboxState>(widget.id);
+    bool changed_previous_frame = state->on.changed_since;
+    state->on.changed_since = false;
+
+    std::string checkbox_text;
+    if (label) {
+        checkbox_text = *label;
+    } else {
+        checkbox_text = state->on ? "X" : "";
+    }
+
+    if (button(widget, checkbox_text)) {
+        state->on = !state->on;
+    }
+
+    if (cbState) *cbState = state->on;
     return changed_previous_frame;
 }
 
