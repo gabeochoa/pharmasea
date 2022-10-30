@@ -10,13 +10,12 @@
 #include "files.h"
 #include "layer.h"
 #include "menu.h"
+#include "model_library.h"
+#include "music_library.h"
 #include "raylib.h"
+#include "texture_library.h"
 #include "ui_color.h"
 #include "world.h"
-// temporary for face cube test
-#include "modellibrary.h"
-#include "music_library.h"
-#include "texture_library.h"
 
 struct GameLayer : public Layer {
     World world;

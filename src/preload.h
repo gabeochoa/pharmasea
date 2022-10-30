@@ -6,7 +6,7 @@
 #include "raylib.h"
 #include "singleton.h"
 //
-#include "modellibrary.h"
+#include "model_library.h"
 #include "music_library.h"
 #include "resources/fonts/Karmina_Regular_256.h"
 #include "sound_library.h"

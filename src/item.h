@@ -3,7 +3,7 @@
 #include "external_include.h"
 //
 #include "globals.h"
-#include "modellibrary.h"
+#include "model_library.h"
 #include "random.h"
 #include "raylib.h"
 #include "ui_color.h"
@@ -11,13 +11,7 @@
 
 static std::atomic_int ITEM_ID_GEN = 0;
 struct Item {
-
-    enum HeldBy {
-        NONE,
-        PLAYER,
-        FURNITURE,
-        CUSTOMER
-    };
+    enum HeldBy { NONE, PLAYER, FURNITURE, CUSTOMER };
 
     int id;
     float item_size = TILESIZE / 2;
@@ -75,8 +69,8 @@ struct Item {
 static std::vector<std::shared_ptr<Item>> items_DO_NOT_USE;
 
 struct Bag : public Item {
-    Bag(vec3 p, Color c) : Item(p, c) {} 
-    Bag(vec2 p, Color c) : Item(p, c) {} 
+    Bag(vec3 p, Color c) : Item(p, c) {}
+    Bag(vec2 p, Color c) : Item(p, c) {}
 
     virtual std::optional<Model> model() const override {
         return ModelLibrary::get().get("bag");
