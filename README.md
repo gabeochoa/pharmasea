@@ -4,7 +4,7 @@
 libraries used: 
 - raylib
 - AppData stuff https://github.com/sago007/PlatformFolders
-- yojimbo https://github.com/networkprotocol/yojimbo
+- GameNetworkingSockets https://github.com/ValveSoftware/GameNetworkingSockets
 - HTTPRequest https://github.com/elnormous/HTTPRequest
 
 Core engine TODOs:
@@ -116,6 +116,22 @@ Game Ideas
     - Allow players to exchange held items?
 
 ## Changelog
+
+### alpha_0.22.10.31
+
+impact 
+- Added the ability to paste into textfields
+- Multiplayer on both platforms ! (though you need to port forward :770)
+- Multiplayer movement is now sync'd across the network
+
+better eng
+- We made the decision to switch from yojimbo to GameNetworkSockets.
+- create Library<T> base class for easier library management later
+- Add UI context ownership for widgets for better UI code 
+- Made `EntityHelper::getMatchingEntityInFront` feel much better.
+
+soon
+- Sync more info across network
 
 ### alpha_0.22.10.25
 impact 
