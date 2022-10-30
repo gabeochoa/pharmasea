@@ -174,6 +174,10 @@ struct UIContext {
             mod = code;
             return true;
         }
+        if (code == KeyMap::get_key_code(STATE, "Widget Ctrl")) {
+            mod = code;
+            return true;
+        }
 
         // TODO same as above, but a separate map
         modchar = code;

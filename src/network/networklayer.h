@@ -126,10 +126,9 @@ struct NetworkLayer : public Layer {
         textfield(*ip_address_input, network_info->host_ip_address);
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Connect")) {
+            // network_info->host_ip_address = "127.0.0.1";
+            network_info->lock_in_ip();
         }
-        // TODO put back inside the button
-        network_info->host_ip_address = "127.0.0.1";
-        network_info->lock_in_ip();
 
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Back")) {

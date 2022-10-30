@@ -3,6 +3,7 @@
 
 #include "external_include.h"
 //
+#include "raylib.h"
 #include "ui_color.h"
 #include "ui_context.h"
 #include "ui_state.h"
@@ -635,8 +636,7 @@ bool textfield(const Widget& widget, std::string& content) {
             fmt::format("{}{}", state->buffer.asT(), focusStr);
 
         // TODO add support for string
-        get()._draw_text(widget.rect, focused_content,
-                         theme::Usage::Font);
+        get()._draw_text(widget.rect, focused_content, theme::Usage::Font);
     };
 
     const auto _textfield_value_management = [](const Widget* widget) {
@@ -657,6 +657,13 @@ bool textfield(const Widget& widget, std::string& content) {
             if (get().pressed("Widget Backspace")) {
                 if (state->buffer.asT().size() > 0) {
                     state->buffer.asT().pop_back();
+                }
+                changed = true;
+            }
+            if (get().is_held_down("Widget Ctrl")) {
+                if (get().pressed("Widget Paste")) {
+                    auto clipboard = GetClipboardText();
+                    state->buffer.asT().append(clipboard);
                 }
                 changed = true;
             }

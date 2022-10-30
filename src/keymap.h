@@ -198,6 +198,16 @@ struct KeyMap {
         ui_map["Widget Mod"] = {KEY_LEFT_SHIFT};
         ui_map["Widget Backspace"] = {KEY_BACKSPACE};
 
+#ifdef WIN32
+        // for windows ctrl+v
+        ui_map["Widget Ctrl"] = {KEY_LEFT_CONTROL};
+#else
+        // For mac, paste is ⌘+v
+        ui_map["Widget Ctrl"] = {KEY_LEFT_SUPER};
+#endif
+
+        ui_map["Widget Paste"] = {KEY_V};
+
         ui_map["Widget Press"] = {KEY_ENTER, GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
 
         ui_map["Value Up"] = {
