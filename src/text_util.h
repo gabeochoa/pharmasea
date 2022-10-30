@@ -3,16 +3,14 @@
 
 #include "external_include.h"
 //
-
 // This code comes from Raylib examples (https://www.raylib.com/examples.html)
 
-#define LETTER_BOUNDRY_SIZE     0.25f
-#define TEXT_MAX_LAYERS         32
-#define LETTER_BOUNDRY_COLOR    VIOLET
+#define LETTER_BOUNDRY_SIZE 0.25f
+#define TEXT_MAX_LAYERS 32
+#define LETTER_BOUNDRY_COLOR VIOLET
 
 const bool SHOW_LETTER_BOUNDRY = false;
 const bool SHOW_TEXT_BOUNDRY = false;
-
 
 typedef struct WaveTextConfig {
     Vector3 waveRange;
@@ -113,8 +111,9 @@ static void DrawTextCodepoint3D(Font font, int codepoint, Vector3 position,
 static void DrawText3D(Font font, const char* text, Vector3 position,
                        float fontSize, float fontSpacing, float lineSpacing,
                        bool backface, Color tint) {
-    unsigned int length = TextLength(text);  // Total length in bytes of the text,
-                                    // scanned by codepoints in loop
+    unsigned int length =
+        TextLength(text);  // Total length in bytes of the text,
+                           // scanned by codepoints in loop
 
     float textOffsetY = 0.0f;  // Offset between lines (on line break '\n')
     float textOffsetX = 0.0f;  // Offset X to next character to draw

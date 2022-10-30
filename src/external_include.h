@@ -13,6 +13,7 @@
 #endif
 
 #include <raylib.h>
+#include <rlgl.h>
 
 #ifdef WRITE_FILES
 #include <sago/platform_folders.h>
