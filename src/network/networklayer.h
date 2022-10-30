@@ -12,12 +12,14 @@
 #include "../player.h"
 #include "../remote_player.h"
 #include "network.h"
+#include "webrequest.h"
 
 using namespace ui;
 
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     std::shared_ptr<network::Info> network_info;
+    std::optional<std::string> my_ip_address;
 
     const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
     const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
@@ -37,6 +39,7 @@ struct NetworkLayer : public Layer {
         ui_context->push_theme(ui::DEFAULT_THEME);
 
         network_info.reset(new network::Info());
+        my_ip_address = network::get_remote_ip_address();
     }
 
     virtual ~NetworkLayer() {}
@@ -137,6 +140,10 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_connected_screen() {
+        if (network_info->is_host() && my_ip_address.has_value()) {
+            text(*mk_text(),
+                 fmt::format("Your IP is: {}", my_ip_address.value()));
+        }
         text(*mk_text(), fmt::format("You are {}({})", network_info->username,
                                      network_info->my_client_id));
 
