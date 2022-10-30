@@ -115,9 +115,9 @@ Game Ideas
         - Thieves (easily identifiable and have to grab them before they leave) 
     - Allow players to exchange held items?
 
-Changelog
+## Changelog
 
-alpha_0.22.10.25
+### alpha_0.22.10.25
 impact 
 - Spent most of the week doing network programming with enet. 
     - Got multiplayer movement working (check screenshots folder)
@@ -136,12 +136,14 @@ impact
 - Job System for customers !
     - They will now come in and line up for their RX, 
     - once they get one at the register they'll take it and go
+
 better engineering 
 - Gabe got a windows machine setup to help create builds long term 
 - Include libs directly in vendor folder for easier first time setup
 - Added better UI memory management so we can use composable functions for design / branching
 - Added working headers for ailments/medicines/names (functionality coming soon?) 
 - Cached all isWalkable checks 
+
 soon 
 - switching to yojimbo
 - System for highlighting selected items / furniture (working sometimes but definitely not done)
@@ -149,7 +151,8 @@ soon
 - Had windows issues with Sago library, blocked until we can figure out windows.h
 - Working on a stagger walk 
 
-alpha_0.22.10.17
+### alpha_0.22.10.17
+
 impact
 - added Controller movement for camera / menus
 - New ailment icons and bag model 
@@ -157,6 +160,7 @@ impact
 - Added Register furniture and customers now wait in line 
 - Remove all non theme'd ui color usages
 - Can now pick up and rotate furniture 
+
 better engineering
 - All loading happens in preloader now 
 - Rotational facing logic rehaul + diagonal walking 
@@ -164,13 +168,15 @@ better engineering
 - Reduced lots of warnings
 - Better testing infrastructure
 - Slowed down the customer and made picking up items easier
+
 soon
 - Tests for entity fetching 
 - System for highlighting selected items / furniture
 - Migration to autolayout 99% complete (missing dropdown ui element) 
 - Had windows issues with Sago library, blocked until we can figure out windows.h
 
-alpha_0.22.10.10
+### alpha_0.22.10.10
+
 - nicer buttons and colors across all UI (unified theme :) )
 - new font!!
 - added texture loading with an image file 
