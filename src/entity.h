@@ -116,7 +116,10 @@ struct Entity {
                            FrontFaceDirectionMap.at(face_direction),
                            this->face_color, this->base_color);
         }
-        DrawBoundingBox(this->bounds(), MAROON);
+
+        if (GLOBALS.get<bool>("debug_ui_enabled")) {
+            DrawBoundingBox(this->bounds(), MAROON);
+        }
     }
 
     vec3 snap_position() const { return vec::snap(this->raw_position); }
@@ -208,7 +211,7 @@ struct Entity {
         float theta_rad = acosf(dot_product);
         float theta_deg = util::rad2deg(theta_rad);
         int turn_degrees = (180 - (int) theta_deg) % 360;
-        // TODO fix this 
+        // TODO fix this
         (void) turn_degrees;
         /*
         if (turn_degrees > 0 && turn_degrees <= 45) {

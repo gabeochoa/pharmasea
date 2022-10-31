@@ -23,6 +23,7 @@
 //
 #include "aboutlayer.h"
 #include "fpslayer.h"
+#include "gamedebuglayer.h"
 #include "gamelayer.h"
 #include "menulayer.h"
 #include "menustatelayer.h"
@@ -52,6 +53,9 @@ void startup() {
 
     GameLayer* gamelayer = new GameLayer();
     App::get().pushLayer(gamelayer);
+
+    GameDebugLayer* gamedebuglayer = new GameDebugLayer();
+    App::get().pushLayer(gamedebuglayer);
 
     AboutLayer* aboutlayer = new AboutLayer();
     App::get().pushLayer(aboutlayer);

@@ -6,6 +6,7 @@
 #include "furnitures.h"
 #include "globals.h"
 #include "navmesh.h"
+#include "spawner.h"
 #include "util.h"
 #include "vec_util.h"
 
@@ -35,9 +36,9 @@ const std::string EXAMPLE_MAP = R"(
 #.............#....................................#
 #.............#....................................#
 #.............#....................................#
-#.............#..........................C.........#
 #.............#....................................#
-#.............#...............................C..C.#
+#.............#..................................C.#
+#.............#..................................S.#
 ####################################################)";
 
 const std::string WALL_TEST = R"(
@@ -175,6 +176,12 @@ struct World {
                         item.reset(
                             new Bag(location, (Color){255, 16, 240, 255}));
                         EntityHelper::addItem(item);
+                        break;
+                    }
+                    case 'S': {
+                        std::shared_ptr<CustomerSpawner> spawner;
+                        spawner.reset(new CustomerSpawner(location));
+                        EntityHelper::addEntity(spawner);
                         break;
                     }
                     case 'C': {

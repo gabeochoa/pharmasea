@@ -26,18 +26,20 @@ struct AIPerson : public Person {
     AIPerson(vec2 p, Color c) : Person(p, c) {}
 
     virtual float base_speed() override { return 10.f; }
-    //virtual float stagger_mod() override {
-   //     return 0
-            //pull from ailment
-   // }
+    // virtual float stagger_mod() override {
+    //     return 0
+    // pull from ailment
+    // }
     virtual void render() const override {
         Person::render();
 
-        const float box_size = TILESIZE / 10.f;
-        if (job && !job->path.empty()) {
-            for (auto location : job->path) {
-                DrawCube(vec::to3(location), box_size, box_size, box_size,
-                         BLUE);
+        if (GLOBALS.get<bool>("debug_ui_enabled")) {
+            const float box_size = TILESIZE / 10.f;
+            if (job && !job->path.empty()) {
+                for (auto location : job->path) {
+                    DrawCube(vec::to3(location), box_size, box_size, box_size,
+                             BLUE);
+                }
             }
         }
     }
@@ -65,13 +67,13 @@ struct AIPerson : public Person {
         }
         vec2 tar = job->local.value();
         float speed = this->base_speed() * dt;
-       // float stagger = this->stagger_mod() * dt; 
+        // float stagger = this->stagger_mod() * dt;
 
         auto new_pos_x = this->raw_position;
         if (tar.x > this->raw_position.x) new_pos_x.x += speed;
-            //-= stagger;
+        //-= stagger;
         if (tar.x < this->raw_position.x) new_pos_x.x -= speed;
-           // += stagger;
+        // += stagger;
         return new_pos_x;
     }
 
@@ -84,13 +86,13 @@ struct AIPerson : public Person {
         }
         vec2 tar = job->local.value();
         float speed = this->base_speed() * dt;
-        //float stagger = this->stagger_mod() * dt; 
+        // float stagger = this->stagger_mod() * dt;
 
         auto new_pos_z = this->raw_position;
-        if (tar.y > this->raw_position.z) new_pos_z.z += speed; 
-            //-= stagger;
+        if (tar.y > this->raw_position.z) new_pos_z.z += speed;
+        //-= stagger;
         if (tar.y < this->raw_position.z) new_pos_z.z -= speed;
-            //+= stagger;
+        //+= stagger;
         return new_pos_z;
     }
 

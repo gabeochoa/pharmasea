@@ -21,13 +21,10 @@ struct GameLayer : public Layer {
     World world;
     GameCam cam;
     Model bag_model;
-    // TODO move to pharmacy.h
-    bool in_planning_mode = false;
 
     GameLayer() : Layer("Game") {
         minimized = false;
         GLOBALS.set("game_cam", &cam);
-        GLOBALS.set("in_planning", &in_planning_mode);
     }
     virtual ~GameLayer() {}
     virtual void onAttach() override {}
@@ -51,23 +48,12 @@ struct GameLayer : public Layer {
             Menu::get().state = Menu::State::Root;
             return true;
         }
-        if (KeyMap::get_button(Menu::State::Game, "Toggle Planning [Debug]") ==
-            event.button) {
-            in_planning_mode = !in_planning_mode;
-            return true;
-        }
         return false;
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(Menu::State::Game, "Pause") == event.keycode) {
             Menu::get().state = Menu::State::Root;
-            return true;
-        }
-        // TODO remove once we have gameplay loop
-        if (KeyMap::get_key_code(Menu::State::Game,
-                                 "Toggle Planning [Debug]") == event.keycode) {
-            in_planning_mode = !in_planning_mode;
             return true;
         }
         return false;
@@ -128,22 +114,19 @@ struct GameLayer : public Layer {
                           },
                           TILESIZE, WHITE);
 
-            auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-            if (nav) {
-                for (auto kv : nav->entityShapes) {
-                    DrawLineStrip2Din3D(kv.second.hull, PINK);
-                }
+            if (GLOBALS.get<bool>("debug_ui_enabled")) {
+                auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
+                if (nav) {
+                    for (auto kv : nav->entityShapes) {
+                        DrawLineStrip2Din3D(kv.second.hull, PINK);
+                    }
 
-                for (auto kv : nav->shapes) {
-                    DrawLineStrip2Din3D(kv.hull, PINK);
+                    for (auto kv : nav->shapes) {
+                        DrawLineStrip2Din3D(kv.hull, PINK);
+                    }
                 }
             }
         }
         EndMode3D();
-
-        if (in_planning_mode) {
-            DrawTextEx(Preload::get().font, "IN PLANNING MODE", vec2{100, 100},
-                       20, 0, RED);
-        }
     }
 };

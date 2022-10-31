@@ -183,6 +183,10 @@ struct KeyMap {
             KEY_P,
             GAMEPAD_BUTTON_MIDDLE_LEFT,
         };
+
+        game_map["Toggle Debug [Debug]"] = {
+            KEY_BACKSLASH,
+        };
     }
 
     void load_ui_keys() {
