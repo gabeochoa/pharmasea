@@ -12,6 +12,7 @@
 #include "../player.h"
 #include "../remote_player.h"
 #include "network.h"
+#include "raylib.h"
 #include "webrequest.h"
 
 using namespace ui;
@@ -22,6 +23,8 @@ struct NetworkLayer : public Layer {
     std::optional<std::string> my_ip_address;
     bool should_show_host_ip = false;
 
+    const SizeExpectation icon_button_x = {.mode = Pixels, .value = 75.f};
+    const SizeExpectation icon_button_y = {.mode = Pixels, .value = 25.f};
     const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
     const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
     const SizeExpectation padd_x = {.mode = Pixels, .value = 120.f};
@@ -93,6 +96,10 @@ struct NetworkLayer : public Layer {
         return ui_context->own(Widget(id, button_x, button_y));
     }
 
+    std::shared_ptr<Widget> mk_icon_button(uuid id) {
+        return ui_context->own(Widget(id, icon_button_x, icon_button_y));
+    }
+
     std::shared_ptr<Widget> mk_but_pad() {
         return ui_context->own(Widget(padd_x, padd_y));
     }
@@ -160,6 +167,9 @@ struct NetworkLayer : public Layer {
                 if (checkbox(*checkbox_widget, &should_show_host_ip,
                              &show_hide_host_ip_text)) {
                     std::cout << "hi" << std::endl;
+                }
+                if (button(*mk_icon_button(MK_UUID(id, ROOT_ID)), "Copy")) {
+                    SetClipboardText(my_ip_address.value().c_str());
                 }
             }
             ui_context->pop_parent();
