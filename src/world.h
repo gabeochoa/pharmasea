@@ -9,7 +9,6 @@
 #include "util.h"
 #include "vec_util.h"
 
-
 const std::string TINY = R"(
 .........
 .........
@@ -18,14 +17,13 @@ const std::string TINY = R"(
 ..@......
 ........#)";
 
-
 const std::string EXAMPLE_MAP = R"(
 ####################################################
 #......TTTTTTTTTTTT................................#
-#..I...............................................#
-#..I.....@R........................................#
-#..I...............................................#
-#..I..........0....................................#
+#..................................................#
+#........@R........................................#
+#..................................................#
+#.............0....................................#
 #..................................................#
 #..................................................#
 #..................................................#
@@ -117,8 +115,9 @@ struct World {
             5 6 7
         */
         std::vector<char> output;
-        forEachNeighbor(i, j, [&](const vec2& v){
-            char neighbor = get_char(static_cast<int>(v.x), static_cast<int>(v.y));
+        forEachNeighbor(i, j, [&](const vec2& v) {
+            char neighbor =
+                get_char(static_cast<int>(v.x), static_cast<int>(v.y));
             output.push_back(neighbor);
         });
         return output;
@@ -160,9 +159,15 @@ struct World {
                     }
                     case 'T': {
                         std::shared_ptr<Table> table;
-                        table.reset(
-                            new Table(location));
+                        table.reset(new Table(location));
                         EntityHelper::addEntity(table);
+
+                        std::shared_ptr<Item> item;
+                        item.reset(
+                            new Bag(location, (Color){255, 16, 240, 255}));
+                        EntityHelper::addItem(item);
+
+                        table->held_item = item;
                         break;
                     }
                     case 'I': {
