@@ -94,7 +94,7 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
             [&](ClientPacket::WorldInfo) { return std::string("worldinfo"); },
             [&](ClientPacket::PlayerInfo info) {
                 return fmt::format(
-                    "PlayerInfo( id{} name{} pos({}, {}, {}), facing {})",
+                    "PlayerInfo( name{} pos({}, {}, {}), facing {})",
                     info.name, info.location[0], info.location[1],
                     info.location[2], info.facing_direction);
             },

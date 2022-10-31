@@ -5,6 +5,6 @@
 
 namespace network {
 
-std::optional<std::string> get_remote_ip_address();
+extern std::optional<std::string> get_remote_ip_address();
 
 }  // namespace network

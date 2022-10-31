@@ -60,9 +60,12 @@
     <ClInclude Include="..\src\music_library.h" />
     <ClInclude Include="..\src\names.h" />
     <ClInclude Include="..\src\navmesh.h" />
+    <ClInclude Include="..\src\network\client.h" />
     <ClInclude Include="..\src\network\network.h" />
     <ClInclude Include="..\src\network\networklayer.h" />
+    <ClInclude Include="..\src\network\server.h" />
     <ClInclude Include="..\src\network\shared.h" />
+    <ClInclude Include="..\src\network\webrequest.h" />
     <ClInclude Include="..\src\person.h" />
     <ClInclude Include="..\src\player.h" />
     <ClInclude Include="..\src\polygon.h" />
@@ -167,11 +170,13 @@
     <ClInclude Include="..\vendor\fmt\printf.h" />
     <ClInclude Include="..\vendor\fmt\ranges.h" />
     <ClInclude Include="..\vendor\fmt\xchar.h" />
+    <ClInclude Include="..\vendor\HTTPRequest.hpp" />
     <ClInclude Include="..\vendor\sago\platform_folders.h" />
     <ClInclude Include="..\yotest\shared.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\game.cpp" />
+    <ClCompile Include="..\src\network\webrequest.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -273,17 +278,18 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <DisableSpecificWarnings>4576;4996</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\vendor\GameNetworkingSockets.lib;..\vendor\raylib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\vendor\GameNetworkingSockets.lib;..\vendor\raylib.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
