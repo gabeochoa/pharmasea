@@ -1,11 +1,6 @@
 
 // Global Defines
 
-// uncomment to enable writing / reading files :
-// settings file
-// save file
-// #define WRITE_FILES
-
 // Team networking uses an "app id" that we dont have
 // also the code isnt written yet :)
 // TODO: add support for steam connections
@@ -18,6 +13,7 @@
 ///
 
 #include "app.h"
+#include "defer.h"
 #include "menu.h"
 #include "settings.h"
 //
@@ -61,15 +57,9 @@ void startup() {
     Settings::get().load_save_file();
 }
 
-void teardown() {
-#ifdef WRITE_FILES
-    Settings::get().write_save_file();
-#endif
-}
-
 int main(void) {
     startup();
+    defer(Settings::get().write_save_file());
     App::get().run();
-    teardown();
     return 0;
 }

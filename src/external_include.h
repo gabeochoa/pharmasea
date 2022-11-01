@@ -15,10 +15,6 @@
 #include <raylib.h>
 #include <rlgl.h>
 
-#ifdef WRITE_FILES
-#include <sago/platform_folders.h>
-#endif
-
 typedef Vector2 vec2;
 typedef Vector3 vec3;
 typedef Vector4 vec4;
