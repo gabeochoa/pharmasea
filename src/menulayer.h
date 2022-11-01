@@ -4,6 +4,7 @@
 #include "layer.h"
 #include "menu.h"
 #include "network/network.h"
+#include "profile.h"
 #include "raylib.h"
 #include "settings.h"
 #include "ui.h"
@@ -165,6 +166,7 @@ struct MenuLayer : public Layer {
 
     virtual void onUpdate(float) override {
         if (Menu::get().state != Menu::State::Root) return;
+        PROFILE();
         SetExitKey(KEY_ESCAPE);
     }
 
@@ -173,6 +175,7 @@ struct MenuLayer : public Layer {
         if (minimized) {
             return;
         }
+        PROFILE();
         ClearBackground(ui_context->active_theme().background);
         draw_ui(dt);
     }

@@ -48,9 +48,9 @@ void startup() {
     // Menu::get().state = Menu::State::Game;
 
     Layer* layers[] = {
-        new GameLayer(),     new GameDebugLayer(), new AboutLayer(),
-        new SettingsLayer(), new MenuLayer(),      new MenuStateLayer(),
-        new FPSLayer(),      new VersionLayer(),   new NetworkLayer(),
+        new FPSLayer(),       new GameLayer(),     new GameDebugLayer(),
+        new AboutLayer(),     new SettingsLayer(), new MenuLayer(),
+        new MenuStateLayer(), new VersionLayer(),  new NetworkLayer(),
     };
     for (auto layer : layers) App::get().pushLayer(layer);
 

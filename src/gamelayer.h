@@ -70,6 +70,7 @@ struct GameLayer : public Layer {
     virtual void onUpdate(float dt) override {
         if (Menu::get().state != Menu::State::Game) return;
         if (minimized) return;
+        PROFILE();
 
         play_music();
 
@@ -87,17 +88,23 @@ struct GameLayer : public Layer {
         });
     }
 
+    void render_entities() {
+        PROFILE();
+        EntityHelper::forEachEntity([&](auto entity) {
+            entity->render();
+            return EntityHelper::ForEachFlow::None;
+        });
+    }
+
     virtual void onDraw(float) override {
         if (Menu::get().state != Menu::State::Game) return;
         if (minimized) return;
+        PROFILE();
 
         ClearBackground(Color{200, 200, 200, 255});
         BeginMode3D(cam.get());
         {
-            EntityHelper::forEachEntity([&](auto entity) {
-                entity->render();
-                return EntityHelper::ForEachFlow::None;
-            });
+            render_entities();
 
             EntityHelper::forEachItem([&](auto item) {
                 item->render();

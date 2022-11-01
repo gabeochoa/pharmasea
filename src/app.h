@@ -8,6 +8,7 @@
 #include "keymap.h"
 #include "layer.h"
 #include "preload.h"
+#include "profile.h"
 #include "raylib.h"
 #include "singleton.h"
 
@@ -77,6 +78,8 @@ struct App {
     }
 
     void loop(float dt) {
+        PROFILE();
+
         for (Layer* layer : layerstack) {
             layer->onUpdate(dt);
         }
