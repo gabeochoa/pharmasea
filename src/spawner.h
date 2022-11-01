@@ -14,6 +14,7 @@ struct Spawner : public Entity {
 struct CustomerSpawner : public Spawner {
     CustomerSpawner(vec2 location) : Spawner(location) {}
     virtual bool is_collidable() override { return false; }
+    virtual bool draw_outside_debug_mode() const override { return false; }
 
     void spawn() {
         std::shared_ptr<Customer> customer;

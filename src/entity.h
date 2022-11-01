@@ -100,9 +100,10 @@ struct Entity {
     }
 
     virtual void render() const {
-        // DrawCube(this->position, this->size().x, this->size().y,
-        // this->size().z,
-        //          this->color);
+        const auto debug_mode_on = GLOBALS.get<bool>("debug_ui_enabled");
+        if (!this->draw_outside_debug_mode() && !debug_mode_on) {
+            return;
+        }
 
         if (this->is_highlighted) {
             Color f = ui::color::getHighlighted(this->face_color);
@@ -117,7 +118,7 @@ struct Entity {
                            this->face_color, this->base_color);
         }
 
-        if (GLOBALS.get<bool>("debug_ui_enabled")) {
+        if (debug_mode_on) {
             DrawBoundingBox(this->bounds(), MAROON);
         }
     }
@@ -230,6 +231,8 @@ struct Entity {
     virtual bool is_snappable() { return false; }
     virtual bool add_to_navmesh() { return false; }
     virtual bool can_place_item_into() { return false; }
+    // Should this entity still continue to render outside debug mode?
+    virtual bool draw_outside_debug_mode() const { return true; }
 };
 
 typedef Entity::FrontFaceDirection EntityDir;
