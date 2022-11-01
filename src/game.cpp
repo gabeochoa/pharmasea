@@ -51,32 +51,12 @@ void startup() {
     // Menu::get().state = Menu::State::About;
     // Menu::get().state = Menu::State::Game;
 
-    GameLayer* gamelayer = new GameLayer();
-    App::get().pushLayer(gamelayer);
-
-    GameDebugLayer* gamedebuglayer = new GameDebugLayer();
-    App::get().pushLayer(gamedebuglayer);
-
-    AboutLayer* aboutlayer = new AboutLayer();
-    App::get().pushLayer(aboutlayer);
-
-    SettingsLayer* settingslayer = new SettingsLayer();
-    App::get().pushLayer(settingslayer);
-
-    MenuLayer* menulayer = new MenuLayer();
-    App::get().pushLayer(menulayer);
-
-    MenuStateLayer* menustatelayer = new MenuStateLayer();
-    App::get().pushLayer(menustatelayer);
-
-    FPSLayer* fpslayer = new FPSLayer();
-    App::get().pushLayer(fpslayer);
-
-    VersionLayer* versionlayer = new VersionLayer();
-    App::get().pushLayer(versionlayer);
-
-    NetworkLayer* networklayer = new NetworkLayer();
-    App::get().pushLayer(networklayer);
+    Layer* layers[] = {
+        new GameLayer(),     new GameDebugLayer(), new AboutLayer(),
+        new SettingsLayer(), new MenuLayer(),      new MenuStateLayer(),
+        new FPSLayer(),      new VersionLayer(),   new NetworkLayer(),
+    };
+    for (auto layer : layers) App::get().pushLayer(layer);
 
     Settings::get().load_save_file();
 }
