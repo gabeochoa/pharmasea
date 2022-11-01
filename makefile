@@ -12,6 +12,8 @@ CPPS = src/game.cpp src/network/webrequest.cpp src/files.cpp
 all:
 	clang++ $(FLAGS) $(NOFLAGS) $(CPPS) `pkg-config --libs --cflags raylib` $(INCLUDES) $(LIBS) -o pharmasea && ./pharmasea
 
+profile: 
+	xctrace record --output . --template "Time Profiler" --time-limit 10s --attach `ps -ef | grep "\./pharmasea" | grep -v "grep"  | cut -d' ' -f4`
 count: 
 	git ls-files | grep "src" | grep -v "ui_color.h" | grep -v "vendor"| grep -v "resources" | xargs wc -l | sort -rn
 

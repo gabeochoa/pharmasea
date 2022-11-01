@@ -12,21 +12,59 @@
 #include "singleton.h"
 #include "util.h"
 
+namespace bitsery {
+template<typename S>
+void serialize(S& s, vec2& data) {
+    s.value4b(data.x);
+    s.value4b(data.y);
+}
+}  // namespace bitsery
+
+namespace settings {
+using Buffer = std::string;
+using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
+using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
+
+// TODO How do we support multiple versions
+// we dont want to add a new field and break
+// all past save games
+// we need some way to only parse based on the version in the save file
+// https://developernote.com/2020/02/basic-ideas-of-version-tolerant-serialization-in-cpp/
+struct Data {
+    int version = 0;
+    vec2 window_size = {WIN_W, WIN_H};
+    // Volume percent [0, 1] for everything
+    float masterVolume = 0.5f;
+    bool show_streamer_safe_box = false;
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.value4b(version);
+        s.object(window_size);
+        s.value4b(masterVolume);
+        s.value1b(show_streamer_safe_box);
+    }
+};
+
+std::ostream& operator<<(std::ostream& os, const Data& data) {
+    os << "Settings(" << std::endl;
+    os << "version: " << data.version << std::endl;
+    os << "resolution: " << data.window_size.x << ", " << data.window_size.y
+       << std::endl;
+    os << "master vol: " << data.masterVolume << std::endl;
+    os << "Safe box: " << data.show_streamer_safe_box << std::endl;
+    return os;
+}
+
+}  // namespace settings
+
 SINGLETON_FWD(Settings)
 struct Settings {
     SINGLETON(Settings)
 
-    // TODO How do we support multiple versions
-    // we dont want to add a new field and break
-    // all past save games
-    // we need some way to only parse based on the version in the save file
-    // https://developernote.com/2020/02/basic-ideas-of-version-tolerant-serialization-in-cpp/
-    struct Data {
-        int version = 0;
-        vec2 window_size = {WIN_W, WIN_H};
-        // Volume percent [0, 1] for everything
-        float masterVolume = 0.5f;
-    } data;
+    settings::Data data;
 
     Settings() {}
 
@@ -43,9 +81,10 @@ struct Settings {
 
     void update_master_volume(float nv) {
         data.masterVolume = nv;
-        // std::cout << "master volume changed to " << data.masterVolume << std::endl;
+        // std::cout << "master volume changed to " << data.masterVolume <<
+        // std::endl;
         SetMasterVolume(data.masterVolume);
-        // TODO support sound vs music volume 
+        // TODO support sound vs music volume
     }
 
     bool load_save_file() {
@@ -57,41 +96,34 @@ struct Settings {
         }
 
         std::cout << "reading settings file" << std::endl;
-        std::string line;
-        while (getline(ifs, line)) {
-            std::cout << line << std::endl;
-            auto tokens = util::split_string(line, ",");
-            if (tokens[0] == "version") {
-                data.version = atoi(tokens[1].c_str());
-            } else if (tokens[0] == "window_size") {
-                float x = static_cast<float>(atof(tokens[1].c_str()));
-                float y = static_cast<float>(atof(tokens[2].c_str()));
-                update_window_size({x, y});
-            } else if (tokens[0] == "master_volume") {
-                update_master_volume(static_cast<float>(atof(tokens[1].c_str())));
-            } else {
-                // TODO handle unknown data
-            }
-        }
+        std::stringstream buffer;
+        buffer << ifs.rdbuf();
+        auto buf_str = buffer.str();
+
+        bitsery::quickDeserialization<settings::InputAdapter>(
+            {buf_str.begin(), buf_str.size()}, data);
+
+        std::cout << data << std::endl;
         std::cout << "end settings file" << std::endl;
         ifs.close();
         return true;
     }
 
+    // TODO instead of writing to a string and then file
+    // theres a way to write directly to the file
+    // https://github.com/fraillt/bitsery/blob/master/examples/file_stream.cpp
     bool write_save_file() {
         std::ofstream ofs(Files::get().settings_filepath());
         if (!ofs.is_open()) {
             std::cout << ("failed to find settings file (write)") << std::endl;
             return false;
         }
-
+        settings::Buffer buffer;
+        bitsery::quickSerialization(settings::OutputAdapter{buffer}, data);
         std::string line;
-        ofs << "version," << data.version << std::endl;
-        ofs << "window_size," << data.window_size.x << "," << data.window_size.y
-            << std::endl;
-        ofs << "master_volume," << data.masterVolume << std::endl;
-
+        ofs << buffer << std::endl;
         ofs.close();
+
         std::cout << "wrote settings file to "
                   << Files::get().settings_filepath() << std::endl;
         return true;
