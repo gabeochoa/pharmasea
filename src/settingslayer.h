@@ -39,8 +39,9 @@ struct SettingsLayer : public Layer {
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(std::bind(
             &SettingsLayer::onKeyPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(
-            &SettingsLayer::onGamepadButtonPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<GamepadButtonPressedEvent>(
+            std::bind(&SettingsLayer::onGamepadButtonPressed, this,
+                      std::placeholders::_1));
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
@@ -57,7 +58,7 @@ struct SettingsLayer : public Layer {
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
-    void draw_ui() {
+    void draw_ui(float dt) {
         using namespace ui;
         // TODO select the acurate options based on current settings
         // auto& settings = Settings::get();
@@ -66,7 +67,7 @@ struct SettingsLayer : public Layer {
         bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
         vec2 mousepos = GetMousePosition();
 
-        ui_context->begin(mouseDown, mousepos);
+        ui_context->begin(mouseDown, mousepos, dt);
 
         ui::Widget root(
             {.mode = ui::SizeMode::Pixels, .value = WIN_W, .strictness = 1.f},
@@ -167,7 +168,7 @@ struct SettingsLayer : public Layer {
                 }
                 ui_context->pop_parent();  // end dropdown
 
-                if(button(back_button, "Back")){
+                if (button(back_button, "Back")) {
                     Menu::get().state = Menu::State::Root;
                 }
             }
@@ -187,7 +188,7 @@ struct SettingsLayer : public Layer {
         }
     }
 
-    virtual void onDraw(float) override {
+    virtual void onDraw(float dt) override {
         if (Menu::get().state != Menu::State::Settings) return;
         // TODO with gamelayer, support events
         if (minimized) {
@@ -195,6 +196,6 @@ struct SettingsLayer : public Layer {
         }
 
         ClearBackground(ui_context->active_theme().background);
-        draw_ui();
+        draw_ui(dt);
     }
 };

@@ -3,13 +3,13 @@
 #include "external_include.h"
 #include "layer.h"
 #include "menu.h"
+#include "network/network.h"
 #include "raylib.h"
 #include "settings.h"
 #include "ui.h"
 #include "ui_theme.h"
 #include "ui_widget.h"
 #include "uuid.h"
-#include "network/network.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -59,7 +59,7 @@ struct MenuLayer : public Layer {
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
-    void draw_ui() {
+    void draw_ui(float dt) {
         using namespace ui;
 
         // TODO move to input
@@ -71,7 +71,7 @@ struct MenuLayer : public Layer {
         const SizeExpectation padd_y = {
             .mode = Pixels, .value = 25.f, .strictness = 0.5f};
 
-        ui_context->begin(mouseDown, mousepos);
+        ui_context->begin(mouseDown, mousepos, dt);
 
         ui::Widget root({.mode = Pixels, .value = WIN_W, .strictness = 1.f},
                         {.mode = Pixels, .value = WIN_H, .strictness = 1.f},
@@ -168,12 +168,12 @@ struct MenuLayer : public Layer {
         SetExitKey(KEY_ESCAPE);
     }
 
-    virtual void onDraw(float) override {
+    virtual void onDraw(float dt) override {
         if (Menu::get().state != Menu::State::Root) return;
         if (minimized) {
             return;
         }
         ClearBackground(ui_context->active_theme().background);
-        draw_ui();
+        draw_ui(dt);
     }
 };

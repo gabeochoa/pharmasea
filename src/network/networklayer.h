@@ -237,7 +237,7 @@ struct NetworkLayer : public Layer {
         }
     }
 
-    virtual void onDraw(float) override {
+    virtual void onDraw(float dt) override {
         draw_network_overlay();
 
         if (Menu::get().state != Menu::State::Network) return;
@@ -251,7 +251,7 @@ struct NetworkLayer : public Layer {
         bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
         vec2 mousepos = GetMousePosition();
 
-        ui_context->begin(mouseDown, mousepos);
+        ui_context->begin(mouseDown, mousepos, dt);
 
         auto root = ui_context->own(
             Widget({.mode = Pixels, .value = WIN_W, .strictness = 1.f},

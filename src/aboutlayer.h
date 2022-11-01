@@ -46,7 +46,7 @@ struct AboutLayer : public Layer {
         return ui_context.get()->process_keyevent(event);
     }
 
-    void draw_ui() {
+    void draw_ui(float dt) {
         SetExitKey(KEY_ESCAPE);
         using namespace ui;
 
@@ -54,7 +54,7 @@ struct AboutLayer : public Layer {
         bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
         vec2 mousepos = GetMousePosition();
 
-        ui_context->begin(mouseDown, mousepos);
+        ui_context->begin(mouseDown, mousepos, dt);
         ui_context->push_theme(DEFAULT_THEME);
 
         ui::Widget root;
@@ -124,7 +124,7 @@ A game by:
         }
     }
 
-    virtual void onDraw(float) override {
+    virtual void onDraw(float dt) override {
         if (Menu::get().state != Menu::State::About) return;
         // TODO with gamelayer, support events
         if (minimized) {
@@ -132,6 +132,6 @@ A game by:
         }
 
         ClearBackground(ui_context->active_theme().background);
-        draw_ui();
+        draw_ui(dt);
     }
 };

@@ -83,7 +83,7 @@ struct GameDebugLayer : public Layer {
         if (minimized) return;
     }
 
-    virtual void onDraw(float) override {
+    virtual void onDraw(float dt) override {
         if (Menu::get().state != Menu::State::Game) return;
         if (minimized) return;
 
@@ -97,20 +97,20 @@ struct GameDebugLayer : public Layer {
                        vec2{100, 150}, 20, 0, RED);
         }
 
-        debug_ui();
+        debug_ui(dt);
     }
 
    private:
     void draw_all_debug_ui() {}
 
-    void debug_ui() {
+    void debug_ui(float dt) {
         if (!debug_ui_enabled) return;
         using namespace ui;
 
         bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
         vec2 mousepos = GetMousePosition();
 
-        ui_context->begin(mouseDown, mousepos);
+        ui_context->begin(mouseDown, mousepos, dt);
 
         auto root = ui_context->own(
             Widget({.mode = Pixels, .value = WIN_W, .strictness = 1.f},

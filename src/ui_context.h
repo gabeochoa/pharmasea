@@ -268,6 +268,7 @@ struct UIContext {
 
     bool inited = false;
     bool began_and_not_ended = false;
+    float last_frame_time = 0.f;
 
     void init() {
         inited = true;
@@ -281,7 +282,7 @@ struct UIContext {
         mouse = vec2{};
     }
 
-    void begin(bool mouseDown, const vec2& mousePos) {
+    void begin(bool mouseDown, const vec2& mousePos, float dt) {
         M_ASSERT(inited, "UIContext must be inited before you begin()");
         M_ASSERT(!began_and_not_ended,
                  "You should call end every frame before calling begin() "
@@ -292,6 +293,7 @@ struct UIContext {
         hot_id = ROOT_ID;
         lmouse_down = mouseDown;
         mouse = mousePos;
+        last_frame_time = dt;
     }
 
     void end(Widget* tree_root) {
