@@ -92,6 +92,8 @@ struct Settings {
         ofs << "master_volume," << data.masterVolume << std::endl;
 
         ofs.close();
+        std::cout << "wrote settings file to "
+                  << Files::get().settings_filepath() << std::endl;
         return true;
     }
 };

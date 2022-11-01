@@ -32,6 +32,7 @@
     <ClInclude Include="..\src\base_player.h" />
     <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\customer.h" />
+    <ClInclude Include="..\src\defer.h" />
     <ClInclude Include="..\src\drawing_util.h" />
     <ClInclude Include="..\src\entities.h" />
     <ClInclude Include="..\src\entity.h" />
@@ -45,6 +46,7 @@
     <ClInclude Include="..\src\furniture\register.h" />
     <ClInclude Include="..\src\furniture\table.h" />
     <ClInclude Include="..\src\furniture\wall.h" />
+    <ClInclude Include="..\src\gamedebuglayer.h" />
     <ClInclude Include="..\src\gamelayer.h" />
     <ClInclude Include="..\src\gamepad_axis_with_dir.h" />
     <ClInclude Include="..\src\globals.h" />
@@ -52,11 +54,13 @@
     <ClInclude Include="..\src\job.h" />
     <ClInclude Include="..\src\keymap.h" />
     <ClInclude Include="..\src\layer.h" />
+    <ClInclude Include="..\src\library.h" />
     <ClInclude Include="..\src\medicine.h" />
     <ClInclude Include="..\src\menu.h" />
     <ClInclude Include="..\src\menulayer.h" />
     <ClInclude Include="..\src\menustatelayer.h" />
     <ClInclude Include="..\src\modellibrary.h" />
+    <ClInclude Include="..\src\model_library.h" />
     <ClInclude Include="..\src\music_library.h" />
     <ClInclude Include="..\src\names.h" />
     <ClInclude Include="..\src\navmesh.h" />
@@ -77,6 +81,7 @@
     <ClInclude Include="..\src\settingslayer.h" />
     <ClInclude Include="..\src\singleton.h" />
     <ClInclude Include="..\src\sound_library.h" />
+    <ClInclude Include="..\src\spawner.h" />
     <ClInclude Include="..\src\targetcube.h" />
     <ClInclude Include="..\src\tests\all_tests.h" />
     <ClInclude Include="..\src\tests\test_entity_fetching.h" />
@@ -175,6 +180,7 @@
     <ClInclude Include="..\yotest\shared.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\files.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\network\webrequest.cpp" />
   </ItemGroup>

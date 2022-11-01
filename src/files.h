@@ -1,8 +1,9 @@
 
 #pragma once
 
-#include "external_include.h"
 #include "singleton.h"
+
+#include <filesystem>
 
 namespace fs = std::filesystem;
 
