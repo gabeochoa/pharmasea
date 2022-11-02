@@ -36,7 +36,7 @@ struct FPSLayer : public Layer {
                      return a.second.average() > b.second.average();
                  });
 
-            int ypos = 150;
+            int ypos = 0;
             int spacing = 20;
             for (const auto& kv : pairs) {
                 auto stats = kv.second;
