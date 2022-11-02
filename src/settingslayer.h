@@ -15,8 +15,6 @@ struct SettingsLayer : public Layer {
     bool windowSizeDropdownState = false;
     int windowSizeDropdownIndex = 0;
 
-    float masterVolumeSliderValue = 0.5f;
-
     SettingsLayer() : Layer("Settings") {
         minimized = false;
 
@@ -28,8 +26,6 @@ struct SettingsLayer : public Layer {
         // and push_theme separately, if you end() with any stack not empty...
         // thats a flag
         ui_context->push_theme(ui::DEFAULT_THEME);
-
-        masterVolumeSliderValue = Settings::get().data.masterVolume;
     }
     virtual ~SettingsLayer() {}
     virtual void onAttach() override {}
@@ -134,10 +130,9 @@ struct SettingsLayer : public Layer {
                 {
                     text(volume_widget, "Master Volume");
 
-                    if (slider(slider_widget, false, &masterVolumeSliderValue,
-                               0.f, 1.f)) {
-                        Settings::get().update_master_volume(
-                            masterVolumeSliderValue);
+                    float* mv = &(Settings::get().data.master_volume);
+                    if (slider(slider_widget, false, mv, 0.f, 1.f)) {
+                        Settings::get().update_master_volume(*mv);
                     }
                 }
                 ui_context->pop_parent();

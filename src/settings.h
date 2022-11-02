@@ -34,7 +34,7 @@ struct Data {
     int version = 0;
     vec2 window_size = {WIN_W, WIN_H};
     // Volume percent [0, 1] for everything
-    float masterVolume = 0.5f;
+    float master_volume = 0.5f;
     bool show_streamer_safe_box = false;
 
    private:
@@ -43,7 +43,7 @@ struct Data {
     void serialize(S& s) {
         s.value4b(version);
         s.object(window_size);
-        s.value4b(masterVolume);
+        s.value4b(master_volume);
         s.value1b(show_streamer_safe_box);
     }
 };
@@ -53,7 +53,7 @@ std::ostream& operator<<(std::ostream& os, const Data& data) {
     os << "version: " << data.version << std::endl;
     os << "resolution: " << data.window_size.x << ", " << data.window_size.y
        << std::endl;
-    os << "master vol: " << data.masterVolume << std::endl;
+    os << "master vol: " << data.master_volume << std::endl;
     os << "Safe box: " << data.show_streamer_safe_box << std::endl;
     return os;
 }
@@ -70,6 +70,19 @@ struct Settings {
 
     ~Settings() {}
 
+    // Basically once we load the file,
+    // we run into an issue where our settings is correct,
+    // but the underlying data isnt being used
+    //
+    // This function is used by the load to kick raylib into
+    // the right config
+    void update_all_settings() {
+        // version doesnt need update
+        update_window_size(data.window_size);
+        update_master_volume(data.master_volume);
+        // streamer box doesnt need update
+    }
+
     void update_window_size(vec2 size) {
         data.window_size = size;
         //
@@ -80,10 +93,10 @@ struct Settings {
     }
 
     void update_master_volume(float nv) {
-        data.masterVolume = nv;
-        // std::cout << "master volume changed to " << data.masterVolume <<
-        // std::endl;
-        SetMasterVolume(data.masterVolume);
+        data.master_volume = nv;
+        std::cout << "master volume changed to " << data.master_volume
+                  << std::endl;
+        SetMasterVolume(data.master_volume);
         // TODO support sound vs music volume
     }
 
@@ -103,6 +116,7 @@ struct Settings {
         bitsery::quickDeserialization<settings::InputAdapter>(
             {buf_str.begin(), buf_str.size()}, data);
 
+        std::cout << "Finished loading: " << std::endl;
         std::cout << data << std::endl;
         std::cout << "end settings file" << std::endl;
         ifs.close();
