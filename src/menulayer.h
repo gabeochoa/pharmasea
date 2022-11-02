@@ -144,7 +144,7 @@ struct MenuLayer : public Layer {
                 }
                 padding(button_padding);
                 if (button(exit_button, "Exit")) {
-                    exit(0);
+                    App::get().close();
                 }
                 padding(bottom_padding);
             }

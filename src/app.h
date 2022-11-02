@@ -16,6 +16,7 @@ SINGLETON_FWD(App)
 struct App {
     SINGLETON(App)
 
+    bool running = false;
     LayerStack layerstack;
 
     App() {
@@ -61,8 +62,11 @@ struct App {
         }
     }
 
+    void close() { running = false; }
+
     void run() {
-        while (!WindowShouldClose()) {
+        running = true;
+        while (running && !WindowShouldClose()) {
             float dt = GetFrameTime();
             this->loop(dt);
         }
