@@ -38,27 +38,36 @@ struct Preload {
         GenTextureMipmaps(&font.texture);
         SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);
     }
+
     void load_textures() {
-        TextureLibrary::get().load(
-            Files::get().fetch_resource_path("images", "face.png").c_str(),
-            "face");
+        std::tuple<const char*, const char*, const char*> textures[] = {
+            {"images", "face.png", "face"},
+            {"images", "jug.png", "jug"},
+            {"images", "sleepyico.png", "bubble"},
+        };
 
-        TextureLibrary::get().load(
-            Files::get().fetch_resource_path("images", "jug.png").c_str(),
-            "jug");
-
-        TextureLibrary::get().load(
-            Files::get().fetch_resource_path("images", "sleepyico.png").c_str(),
-            "bubble");
+        for (auto& t : textures) {
+            TextureLibrary::get().load(
+                Files::get()
+                    .fetch_resource_path(std::get<0>(t), std::get<1>(t))
+                    .c_str(),
+                std::get<2>(t));
+        }
     }
-    void load_models() {
-        ModelLibrary::get().load(
-            Files::get().fetch_resource_path("models", "bag.obj").c_str(),
-            "bag");
 
-        ModelLibrary::get().load(
-            Files::get().fetch_resource_path("models", "register.obj").c_str(),
-            "register");
+    void load_models() {
+        std::tuple<const char*, const char*, const char*> models[] = {
+            {"models", "bag.obj", "bag"},
+            {"models", "register.obj", "register"},
+        };
+
+        for (auto& m : models) {
+            ModelLibrary::get().load(
+                Files::get()
+                    .fetch_resource_path(std::get<0>(m), std::get<1>(m))
+                    .c_str(),
+                std::get<2>(m));
+        }
     }
 
     void load_sounds() {
