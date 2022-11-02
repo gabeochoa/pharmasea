@@ -202,12 +202,12 @@ struct KeyMap {
         ui_map["Widget Mod"] = {KEY_LEFT_SHIFT};
         ui_map["Widget Backspace"] = {KEY_BACKSPACE};
 
-#ifdef WIN32
-        // for windows ctrl+v
-        ui_map["Widget Ctrl"] = {KEY_LEFT_CONTROL};
-#else
+#ifdef __APPLE__
         // For mac, paste is ⌘+v
         ui_map["Widget Ctrl"] = {KEY_LEFT_SUPER};
+#else
+        // for windows ctrl+v
+        ui_map["Widget Ctrl"] = {KEY_LEFT_CONTROL};
 #endif
 
         ui_map["Widget Paste"] = {KEY_V};

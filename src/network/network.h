@@ -35,8 +35,8 @@ static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
 
 struct Info {
     int my_client_id = 0;
-    std::string username = "default username";
-    bool username_set = true;
+    std::string username = "frank's red hot";
+    bool username_set = false;
     // TODO eventually support copy/paste
     std::string host_ip_address = "127.0.0.1";
     bool ip_set = false;
