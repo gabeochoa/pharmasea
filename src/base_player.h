@@ -77,7 +77,7 @@ struct BasePlayer : public Person {
         }
     }
 
-    // TODO how to handle when they are holding something? 
+    // TODO how to handle when they are holding something?
     virtual void grab_or_drop() {
         bool pickup = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game,
                                                        "Player Pickup");
@@ -98,7 +98,8 @@ struct BasePlayer : public Person {
                     this->held_item->update_position(
                         vec::snap(closest_furniture->position));
                     closest_furniture->held_item = this->held_item;
-                    closest_furniture->held_item->held_by = Item::HeldBy::FURNITURE;
+                    closest_furniture->held_item->held_by =
+                        Item::HeldBy::FURNITURE;
                     this->held_item = nullptr;
                 }
             };
@@ -143,10 +144,10 @@ struct BasePlayer : public Person {
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
                         vec::to2(this->position), player_reach,
-                        this->face_direction, [](std::shared_ptr<Furniture>) {
-                            return true;
-                        });
-                if (closest_furniture && closest_furniture->held_item != nullptr) {
+                        this->face_direction,
+                        [](std::shared_ptr<Furniture>) { return true; });
+                if (closest_furniture &&
+                    closest_furniture->held_item != nullptr) {
                     this->held_item = closest_furniture->held_item;
                     this->held_item->held_by = Item::HeldBy::PLAYER;
                     closest_furniture->held_item = nullptr;
@@ -154,11 +155,10 @@ struct BasePlayer : public Person {
             };
             _pickup_item_from_furniture();
             if (this->held_item) return;
-            
+
             // Handles the non-furniture grabbing case
-            closest_item =
-                EntityHelper::getClosestMatchingItem(vec::to2(this->position),
-                                                     TILESIZE * player_reach);
+            closest_item = EntityHelper::getClosestMatchingItem(
+                vec::to2(this->position), TILESIZE * player_reach);
             this->held_item = closest_item;
             if (this->held_item != nullptr) {
                 this->held_item->held_by = Item::HeldBy::PLAYER;
