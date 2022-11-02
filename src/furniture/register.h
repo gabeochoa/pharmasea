@@ -64,29 +64,8 @@ struct Register : public Furniture {
         return front;
     }
 
-    Model model() const { return ModelLibrary::get().get("register"); }
-
-    virtual void render() const override {
-        // Color face = this->is_highlighted
-        // ? ui::color::getHighlighted(this->face_color)
-        // : this->face_color;
-        Color base = this->is_highlighted
-                         ? ui::color::getHighlighted(this->base_color)
-                         : this->base_color;
-
-        DrawModelEx(model(),
-                    {
-                        this->position.x,
-                        this->position.y - TILESIZE / 2,
-                        this->position.z,
-                    },
-                    vec3{0.f, 1.f, 0.f}, 180.f, this->size() * 10.f, base);
-
-        const float box_size = TILESIZE / 10.f;
-        for (auto entity : this->ppl_in_line) {
-            DrawCube(entity->snap_position(), box_size, box_size, box_size,
-                     PINK);
-        }
+    virtual std::optional<Model> model() const override {
+        return ModelLibrary::get().get("register");
     }
 
     virtual bool can_rotate() override { return true; }

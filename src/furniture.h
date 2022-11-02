@@ -1,8 +1,10 @@
 
 #pragma once
 
-#include "entity.h"
 #include "external_include.h"
+//
+#include "entity.h"
+#include "globals.h"
 
 struct Furniture : public Entity {
     Furniture(vec2 pos, Color face_color_in)
@@ -17,6 +19,27 @@ struct Furniture : public Entity {
             auto new_pos = this->position;
             new_pos.y += TILESIZE / 4;
             held_item->update_position(new_pos);
+        }
+    }
+
+    virtual std::optional<Model> model() const { return {}; }
+
+    virtual void render() const override {
+        if (model().has_value()) {
+            Color base = this->is_highlighted
+                             ? ui::color::getHighlighted(this->base_color)
+                             : this->base_color;
+
+            DrawModelEx(model().value(),
+                        {
+                            this->position.x,
+                            this->position.y - TILESIZE / 2,
+                            this->position.z,
+                        },
+                        vec3{0.f, 1.f, 0.f}, 180.f, this->size() * 10.f, base);
+
+        } else {
+            Entity::render();
         }
     }
 
