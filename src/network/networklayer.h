@@ -36,12 +36,6 @@ struct NetworkLayer : public Layer {
 
         ui_context.reset(new ui::UIContext());
         ui_context->init();
-        ui_context->set_font(Preload::get().font);
-        // TODO we should probably enforce that you cant do this
-        // and we should have ->set_base_theme()
-        // and push_theme separately, if you end() with any stack not empty...
-        // thats a flag
-        ui_context->push_theme(ui::DEFAULT_THEME);
 
         network::Info::init_connections();
         network_info.reset(new network::Info());
@@ -148,12 +142,12 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_ip_input_screen() {
+        draw_username();
         // TODO support validation
         auto ip_address_input = ui_context->own(
             Widget(MK_UUID(id, ROOT_ID),
                    {.mode = Pixels, .value = 400.f, .strictness = 1.f},
                    {.mode = Pixels, .value = 25.f, .strictness = 0.5f}));
-        draw_username();
         text(*mk_text(), "Enter IP Address");
         textfield(*ip_address_input, network_info->host_ip_address);
         padding(*mk_but_pad());
@@ -161,7 +155,6 @@ struct NetworkLayer : public Layer {
             // network_info->host_ip_address = "127.0.0.1";
             network_info->lock_in_ip();
         }
-
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
             network_info->username_set = false;

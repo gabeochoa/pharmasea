@@ -58,6 +58,7 @@ std::ostream& operator<<(std::ostream& os, const Data& data) {
     os << "master vol: " << data.master_volume << std::endl;
     os << "Safe box: " << data.show_streamer_safe_box << std::endl;
     os << "username: " << data.username << std::endl;
+    os << ")" << std::endl;
     return os;
 }
 

@@ -8,6 +8,7 @@
 #include "gamepad_axis_with_dir.h"
 #include "keymap.h"
 #include "menu.h"
+#include "preload.h"
 #include "raylib.h"
 #include "vec_util.h"
 //
@@ -280,6 +281,8 @@ struct UIContext {
 
         lmouse_down = false;
         mouse = vec2{};
+        this->set_font(Preload::get().font);
+        this->push_theme(ui::DEFAULT_THEME);
     }
 
     void begin(bool mouseDown, const vec2& mousePos, float dt) {
