@@ -94,6 +94,8 @@ struct UIContext {
     std::vector<std::shared_ptr<Widget>> temp_widgets;
 
    public:
+    UIContext() { this->init(); }
+
     StateManager statemanager;
     std::stack<UITheme> themestack;
     Font font;

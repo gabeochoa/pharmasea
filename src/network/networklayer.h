@@ -33,9 +33,7 @@ struct NetworkLayer : public Layer {
 
     NetworkLayer() : Layer("Network") {
         minimized = false;
-
         ui_context.reset(new ui::UIContext());
-        ui_context->init();
 
         network::Info::init_connections();
         network_info.reset(new network::Info());

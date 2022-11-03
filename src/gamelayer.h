@@ -45,7 +45,7 @@ struct GameLayer : public Layer {
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         if (KeyMap::get_button(Menu::State::Game, "Pause") == event.button) {
-            Menu::get().state = Menu::State::Root;
+            Menu::get().state = Menu::State::Paused;
             return true;
         }
         return false;
@@ -53,7 +53,7 @@ struct GameLayer : public Layer {
 
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(Menu::State::Game, "Pause") == event.keycode) {
-            Menu::get().state = Menu::State::Root;
+            Menu::get().state = Menu::State::Paused;
             return true;
         }
         return false;

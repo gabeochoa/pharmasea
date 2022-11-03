@@ -24,6 +24,7 @@
 #include "menulayer.h"
 #include "menustatelayer.h"
 #include "network/networklayer.h"
+#include "pauselayer.h"
 #include "settingslayer.h"
 #include "versionlayer.h"
 //
@@ -51,6 +52,7 @@ void startup() {
         new FPSLayer(),       new GameLayer(),     new GameDebugLayer(),
         new AboutLayer(),     new SettingsLayer(), new MenuLayer(),
         new MenuStateLayer(), new VersionLayer(),  new NetworkLayer(),
+        new PauseLayer(),
     };
     for (auto layer : layers) App::get().pushLayer(layer);
 
