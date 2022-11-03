@@ -2,6 +2,7 @@
 
 #include "../external_include.h"
 //
+#include "../globals.h"
 #include "../menu.h"
 #include "../util.h"
 #include "steam/steamnetworkingtypes.h"
@@ -11,13 +12,6 @@ namespace network {
 using Buffer = std::string;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
-
-const int DEFAULT_PORT = 770;
-const int MAX_CLIENTS = 4;
-// TODO add note for max name length in ui
-const int MAX_NAME_LENGTH = 25;
-const int MAX_ANNOUNCEMENT_LENGTH = 200;
-const int SERVER_CLIENT_ID = 0;
 
 enum Channel {
     RELIABLE = k_nSteamNetworkingSend_Reliable,
@@ -94,9 +88,9 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
             [&](ClientPacket::WorldInfo) { return std::string("worldinfo"); },
             [&](ClientPacket::PlayerInfo info) {
                 return fmt::format(
-                    "PlayerInfo( name{} pos({}, {}, {}), facing {})",
-                    info.name, info.location[0], info.location[1],
-                    info.location[2], info.facing_direction);
+                    "PlayerInfo( name{} pos({}, {}, {}), facing {})", info.name,
+                    info.location[0], info.location[1], info.location[2],
+                    info.facing_direction);
             },
             [&](auto) { return std::string(" -- invalid operator<< --"); }},
         msgtype);

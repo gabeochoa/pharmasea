@@ -7,6 +7,7 @@
 //
 #include "../app.h"
 #include "../layer.h"
+#include "../settings.h"
 #include "../ui.h"
 //
 #include "../player.h"
@@ -112,7 +113,8 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_base_screen() {
-        text(*mk_text(), fmt::format("Username: {}", network_info->username));
+        text(*mk_text(),
+             fmt::format("Username: {}", Settings::get().data.username));
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Host")) {
             network_info->set_role_to_host();
@@ -133,7 +135,7 @@ struct NetworkLayer : public Layer {
             Widget(MK_UUID(id, ROOT_ID),
                    {.mode = Pixels, .value = 400.f, .strictness = 1.f},
                    {.mode = Pixels, .value = 25.f, .strictness = 0.5f}));
-        text(*mk_text(), fmt::format("You: {}", network_info->username));
+        text(*mk_text(), fmt::format("You: {}", Settings::get().data.username));
         text(*mk_text(), "Enter IP Address");
         textfield(*ip_address_input, network_info->host_ip_address);
         padding(*mk_but_pad());
@@ -175,8 +177,9 @@ struct NetworkLayer : public Layer {
             }
             ui_context->pop_parent();
         }
-        text(*mk_text(), fmt::format("You are {}({})", network_info->username,
-                                     network_info->my_client_id));
+        text(*mk_text(),
+             fmt::format("You are {}({})", Settings::get().data.username,
+                         network_info->my_client_id));
 
         // TODO add button to edit as long as you arent currently
         // hosting people?
@@ -199,7 +202,6 @@ struct NetworkLayer : public Layer {
 
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Disconnect")) {
             network_info.reset(new network::Info());
-            my_ip_address = network::get_remote_ip_address();
         }
     }
 
@@ -214,7 +216,7 @@ struct NetworkLayer : public Layer {
                    {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
 
         text(*player_text, "Username: ");
-        textfield(*username_input, network_info->username);
+        textfield(*username_input, Settings::get().data.username);
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Lock in")) {
             network_info->username_set = true;

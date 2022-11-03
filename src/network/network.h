@@ -7,6 +7,7 @@
 #include "../entities.h"
 #include "../player.h"
 #include "../remote_player.h"
+#include "../settings.h"
 //
 #include "shared.h"
 //
@@ -33,11 +34,8 @@ static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
     }
 }
 
-static bool info_gamenetworksockets_init_ever_called = false;
-
 struct Info {
     int my_client_id = 0;
-    std::string username = "frank's red hot";
     bool username_set = false;
     // TODO eventually support copy/paste
     std::string host_ip_address = "127.0.0.1";
@@ -164,7 +162,7 @@ struct Info {
                         me.position.y,
                         me.position.z,
                     },
-                .name = username,
+                .name = Settings::get().data.username,
             }),
         });
         return player;

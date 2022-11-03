@@ -607,6 +607,7 @@ bool textfield(const Widget& widget, std::string& content) {
     UIContext::LastFrame lf = get().get_last_frame(widget.id);
     auto state = get().widget_init<TextfieldState>(widget.id);
     bool changed_previous_frame = state->buffer.changed_since;
+    if (!content.empty()) state->buffer = content;
     state->buffer.changed_since = false;
 
     auto _textfield_render = [](Widget* widget_ptr) {

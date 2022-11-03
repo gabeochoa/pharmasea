@@ -1,7 +1,7 @@
 #pragma once
 
 #include "external_include.h"
-#include "globals.h"
+#include "globals_register.h"
 #include "layer.h"
 #include "preload.h"
 #include "profile.h"

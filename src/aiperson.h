@@ -5,7 +5,7 @@
 #include "entityhelper.h"
 #include "external_include.h"
 //
-#include "globals.h"
+#include "globals_register.h"
 #include "job.h"
 #include "person.h"
 #include "sound_library.h"

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "globals.h"
+#include "globals_register.h"
 #include "keymap.h"
 #include "person.h"
 #include "raylib.h"

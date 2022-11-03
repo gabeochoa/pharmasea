@@ -36,6 +36,7 @@ struct Data {
     // Volume percent [0, 1] for everything
     float master_volume = 0.5f;
     bool show_streamer_safe_box = false;
+    std::string username = "";
 
    private:
     friend bitsery::Access;
@@ -45,6 +46,7 @@ struct Data {
         s.object(window_size);
         s.value4b(master_volume);
         s.value1b(show_streamer_safe_box);
+        s.text1b(username, network::MAX_NAME_LENGTH);
     }
 };
 
@@ -55,6 +57,7 @@ std::ostream& operator<<(std::ostream& os, const Data& data) {
        << std::endl;
     os << "master vol: " << data.master_volume << std::endl;
     os << "Safe box: " << data.show_streamer_safe_box << std::endl;
+    os << "username: " << data.username << std::endl;
     return os;
 }
 
