@@ -78,7 +78,11 @@ bool slider(
 
 bool textfield(
     // returns true if text changed
-    const Widget& widget, std::string& content);
+    const Widget& widget,
+    // the string value being edited
+    std::string& content,
+    // max length of content, -1 for infinite
+    int max_length = -1);
 
 bool checkbox(
     // Returns true if the checkbox changed
@@ -602,7 +606,7 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
     return changed_previous_frame;
 }
 
-bool textfield(const Widget& widget, std::string& content) {
+bool textfield(const Widget& widget, std::string& content, int max_length) {
     init_widget(widget, __FUNCTION__);
     UIContext::LastFrame lf = get().get_last_frame(widget.id);
     auto state = get().widget_init<TextfieldState>(widget.id);
@@ -650,7 +654,8 @@ bool textfield(const Widget& widget, std::string& content) {
         get()._draw_text(widget.rect, focused_content, theme::Usage::Font);
     };
 
-    const auto _textfield_value_management = [](const Widget* widget) {
+    const auto _textfield_value_management = [](const Widget* widget,
+                                                int max_length) {
         auto state = get().get_widget_state<TextfieldState>(widget->id);
 
         state->cursorBlinkTime = state->cursorBlinkTime + 1;
@@ -662,8 +667,16 @@ bool textfield(const Widget& widget, std::string& content) {
 
         if (has_kb_focus(widget->id)) {
             if (get().keychar != int()) {
-                state->buffer.asT().append(std::string(1, get().keychar));
-                changed = true;
+                if (
+                    // no max length specified
+                    max_length == -1 ||
+                    // or its specified but we are within limits
+                    (max_length != 0 &&
+                     ((int) state->buffer.asT().size()) < max_length)) {
+                    state->buffer.asT().append(
+                        std::string(1, (char) get().keychar));
+                    changed = true;
+                }
             }
             if (get().pressed("Widget Backspace")) {
                 if (state->buffer.asT().size() > 0) {
@@ -690,7 +703,7 @@ bool textfield(const Widget& widget, std::string& content) {
         widget.me->rect = lf.rect.value();
         try_to_grab_kb(widget.id);
         _textfield_render(widget.me);
-        _textfield_value_management(widget.me);
+        _textfield_value_management(widget.me, max_length);
         handle_tabbing(widget.id);
     }
 

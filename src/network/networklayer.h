@@ -46,6 +46,9 @@ struct NetworkLayer : public Layer {
         network::Info::init_connections();
         network_info.reset(new network::Info());
         my_ip_address = network::get_remote_ip_address();
+        if (!Settings::get().data.username.empty()) {
+            network_info->username_set = true;
+        }
     }
 
     virtual ~NetworkLayer() { network::Info::shutdown_connections(); }
@@ -112,9 +115,24 @@ struct NetworkLayer : public Layer {
                    {.mode = Pixels, .value = 50.f, .strictness = 1.f}));
     }
 
+    void draw_username() {
+        auto content =
+            ui_context->own(Widget({.mode = Children, .strictness = 1.f},
+                                   {.mode = Children, .strictness = 1.f}, Row));
+        div(*content);
+        ui_context->push_parent(content);
+        {
+            text(*mk_text(),
+                 fmt::format("Username: {}", Settings::get().data.username));
+            if (button(*mk_icon_button(MK_UUID(id, ROOT_ID)), "Edit")) {
+                network_info->username_set = false;
+            }
+        }
+        ui_context->pop_parent();
+    }
+
     void draw_base_screen() {
-        text(*mk_text(),
-             fmt::format("Username: {}", Settings::get().data.username));
+        draw_username();
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Host")) {
             network_info->set_role_to_host();
@@ -135,7 +153,7 @@ struct NetworkLayer : public Layer {
             Widget(MK_UUID(id, ROOT_ID),
                    {.mode = Pixels, .value = 400.f, .strictness = 1.f},
                    {.mode = Pixels, .value = 25.f, .strictness = 0.5f}));
-        text(*mk_text(), fmt::format("You: {}", Settings::get().data.username));
+        draw_username();
         text(*mk_text(), "Enter IP Address");
         textfield(*ip_address_input, network_info->host_ip_address);
         padding(*mk_but_pad());
@@ -169,7 +187,6 @@ struct NetworkLayer : public Layer {
                     should_show_host_ip ? "Hide" : "Show";
                 if (checkbox(*checkbox_widget, &should_show_host_ip,
                              &show_hide_host_ip_text)) {
-                    std::cout << "hi" << std::endl;
                 }
                 if (button(*mk_icon_button(MK_UUID(id, ROOT_ID)), "Copy")) {
                     SetClipboardText(my_ip_address.value().c_str());
@@ -177,9 +194,7 @@ struct NetworkLayer : public Layer {
             }
             ui_context->pop_parent();
         }
-        text(*mk_text(),
-             fmt::format("You are {}({})", Settings::get().data.username,
-                         network_info->my_client_id));
+        draw_username();
 
         // TODO add button to edit as long as you arent currently
         // hosting people?
@@ -216,7 +231,8 @@ struct NetworkLayer : public Layer {
                    {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
 
         text(*player_text, "Username: ");
-        textfield(*username_input, Settings::get().data.username);
+        textfield(*username_input, Settings::get().data.username,
+                  network::MAX_NAME_LENGTH);
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Lock in")) {
             network_info->username_set = true;
