@@ -42,11 +42,12 @@ struct NetworkLayer : public Layer {
         // thats a flag
         ui_context->push_theme(ui::DEFAULT_THEME);
 
+        network::Info::init_connections();
         network_info.reset(new network::Info());
         my_ip_address = network::get_remote_ip_address();
     }
 
-    virtual ~NetworkLayer() {}
+    virtual ~NetworkLayer() { network::Info::shutdown_connections(); }
     virtual void onAttach() override {}
     virtual void onDetach() override {}
     virtual void onEvent(Event& event) override {
@@ -197,7 +198,8 @@ struct NetworkLayer : public Layer {
         }
 
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Disconnect")) {
-            network_info->set_role_to_none();
+            network_info.reset(new network::Info());
+            my_ip_address = network::get_remote_ip_address();
         }
     }
 

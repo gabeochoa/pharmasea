@@ -39,6 +39,18 @@ struct Server {
         address.m_port = (unsigned short) port;
     }
 
+    ~Server() {
+        for (auto it : clients) {
+            send_announcement_to_client(it.first, "server shutdown");
+            interface->CloseConnection(it.first, 0, "server shutdown", true);
+        }
+        clients.clear();
+        interface->CloseListenSocket(listen_sock);
+        listen_sock = k_HSteamListenSocket_Invalid;
+        interface->DestroyPollGroup(poll_group);
+        poll_group = k_HSteamNetPollGroup_Invalid;
+    }
+
     void connection_changed_callback(
         SteamNetConnectionStatusChangedCallback_t *info) {
         log("connection_changed_callback");
@@ -305,18 +317,6 @@ struct Server {
         poll_connection_state_changes();
         poll_local_user_input();
         return true;
-    }
-
-    void teardown() {
-        for (auto it : clients) {
-            send_announcement_to_client(it.first, "server shutdown");
-            interface->CloseConnection(it.first, 0, "server shutdown", true);
-        }
-        clients.clear();
-        interface->CloseListenSocket(listen_sock);
-        listen_sock = k_HSteamListenSocket_Invalid;
-        interface->DestroyPollGroup(poll_group);
-        poll_group = k_HSteamNetPollGroup_Invalid;
     }
 
     static void SteamNetConnectionStatusChangedCallback(

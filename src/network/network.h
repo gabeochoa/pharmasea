@@ -33,6 +33,8 @@ static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
     }
 }
 
+static bool info_gamenetworksockets_init_ever_called = false;
+
 struct Info {
     int my_client_id = 0;
     std::string username = "frank's red hot";
@@ -63,7 +65,17 @@ struct Info {
         client_p->startup();
     }
 
-    void init_connections() {
+    Info() {}
+
+    ~Info() {
+        server_p.reset();
+        client_p.reset();
+        //
+        desired_role = s_None;
+        ip_set = false;
+    }
+
+    static void init_connections() {
 #ifdef BUILD_WITHOUT_STEAM
         SteamDatagramErrMsg errMsg;
         if (!GameNetworkingSockets_Init(nullptr, errMsg)) {
@@ -75,7 +87,7 @@ struct Info {
             k_ESteamNetworkingSocketsDebugOutputType_Msg, log_debug);
     }
 
-    void shutdown_connections() {
+    static void shutdown_connections() {
 #ifdef BUILD_WITHOUT_STEAM
         GameNetworkingSockets_Kill();
 #endif
@@ -83,7 +95,6 @@ struct Info {
 
     void set_role_to_host() {
         desired_role = s_Host;
-        init_connections();
         server_p.reset(new Server(DEFAULT_PORT));
         server_p->set_process_message(
             std::bind(&Info::server_process_message_string, this,
@@ -100,19 +111,9 @@ struct Info {
 
     void set_role_to_client() {
         desired_role = s_Client;
-        init_connections();
         client_p.reset(new Client());
         client_p->set_process_message(std::bind(
             &Info::client_process_message_string, this, std::placeholders::_1));
-    }
-
-    void set_role_to_none() {
-        desired_role = s_None;
-        ip_set = false;
-        server_p->teardown();
-        server_p.reset();
-        client_p.reset();
-        shutdown_connections();
     }
 
     void tick(float dt) {
