@@ -38,8 +38,10 @@ struct NetworkLayer : public Layer {
         network::Info::init_connections();
         network_info.reset(new network::Info());
         my_ip_address = network::get_remote_ip_address();
+        std::cout << "starting up network" << std::endl;
         if (!Settings::get().data.username.empty()) {
             network_info->username_set = true;
+            std::cout << "already have username set" << std::endl;
         }
     }
 

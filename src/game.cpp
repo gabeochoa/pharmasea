@@ -44,19 +44,21 @@ void startup() {
     tests::run_all();
     std::cout << "All tests ran successfully" << std::endl;
 
+    // Load save file so username is ready for when network starts
+    Settings::get().load_save_file();
+
     Menu::get().state = Menu::State::Root;
     // Menu::get().state = Menu::State::About;
     // Menu::get().state = Menu::State::Game;
 
     Layer* layers[] = {
+        //
         new FPSLayer(),       new GameLayer(),     new GameDebugLayer(),
         new AboutLayer(),     new SettingsLayer(), new MenuLayer(),
         new MenuStateLayer(), new VersionLayer(),  new NetworkLayer(),
         new PauseLayer(),
     };
     for (auto layer : layers) App::get().pushLayer(layer);
-
-    Settings::get().load_save_file();
 }
 
 int main(void) {
