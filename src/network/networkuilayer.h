@@ -45,6 +45,8 @@ struct NetworkUILayer : public Layer {
         std::shared_ptr<network::Info> shared_network_info =
             *ptr_to_shared_network_info;
         shared_network_info.reset(new network::Info());
+        (*ptr_to_shared_network_info) = shared_network_info;
+        network_info = ptr_to_shared_network_info->get();
     }
 
     virtual ~NetworkUILayer() {}
@@ -193,7 +195,7 @@ struct NetworkUILayer : public Layer {
 
         if (network_info->is_host()) {
             if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Play")) {
-                network_info->send_updated_state(Menu::State::Game);
+                network_info->send_updated_state(network::LobbyState::Game);
             }
         }
 

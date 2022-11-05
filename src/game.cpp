@@ -21,7 +21,6 @@
 #include "gamedebuglayer.h"
 #include "gamelayer.h"
 #include "menulayer.h"
-#include "menustatelayer.h"
 #include "network/networklayer.h"
 #include "pauselayer.h"
 #include "versionlayer.h"
@@ -58,7 +57,6 @@ void startup() {
     Layer* always_on_layers[] = {
         new FPSLayer(),
         new GameDebugLayer(),
-        new MenuStateLayer(),
         new NetworkLayer(),
         new VersionLayer(),
         //

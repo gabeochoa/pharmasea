@@ -42,8 +42,7 @@ struct MenuLayer : public Layer {
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (KeyMap::get_button(Menu::State::UI, "Pause") == event.button) {
-            Menu::get().state = Menu::State::Game;
+        if (KeyMap::get_button(KeyMap::State::UI, "Pause") == event.button) {
             App::get().pushLayer(new GameLayer());
             return true;
         }

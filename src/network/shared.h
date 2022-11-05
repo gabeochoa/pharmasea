@@ -3,11 +3,16 @@
 #include "../external_include.h"
 //
 #include "../globals.h"
-#include "../menu.h"
 #include "../util.h"
 #include "steam/steamnetworkingtypes.h"
 
 namespace network {
+
+enum LobbyState {
+    Lobby = 0,
+    Game = 1,
+    Paused = 2,
+};
 
 using Buffer = std::string;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
@@ -44,7 +49,7 @@ struct ClientPacket {
 
     // Game Info
     struct GameStateInfo {
-        Menu::State host_menu_state;
+        LobbyState host_menu_state;
     };
 
     // Player Join

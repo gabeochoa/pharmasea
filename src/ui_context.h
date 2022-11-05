@@ -7,7 +7,6 @@
 #include "event.h"
 #include "gamepad_axis_with_dir.h"
 #include "keymap.h"
-#include "menu.h"
 #include "preload.h"
 #include "raylib.h"
 #include "vec_util.h"
@@ -75,7 +74,7 @@ bool operator==(const FZInfo& info, const FZInfo& other) {
 // ****************************************************** end kludge
 
 namespace ui {
-const Menu::State STATE = Menu::State::UI;
+const KeyMap::State STATE = KeyMap::State::UI;
 
 struct UIContext;
 static std::shared_ptr<UIContext> _uicontext;

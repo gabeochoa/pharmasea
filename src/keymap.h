@@ -9,15 +9,28 @@
 #include "singleton.h"
 #include "util.h"
 
+struct KeyMap;
+
 typedef std::variant<int, GamepadAxisWithDir, GamepadButton> AnyInput;
 typedef std::vector<AnyInput> AnyInputs;
 typedef std::map<std::string, AnyInputs> LayerMapping;
-typedef std::map<Menu::State, LayerMapping> FullMap;
 
 SINGLETON_FWD(KeyMap)
 struct KeyMap {
     SINGLETON(KeyMap)
 
+    enum State {
+        Root = 0,
+        Game = 1,
+        UI = 98,
+        // Settings = 3,
+        // About = 4,
+        // Network = 5,
+        //
+        // Any = 99,
+    };
+
+    typedef std::map<KeyMap::State, LayerMapping> FullMap;
     FullMap mapping;
 
     KeyMap() {
@@ -28,7 +41,7 @@ struct KeyMap {
         load_default_keys();
     }
 
-    LayerMapping& get_or_create_layer_map(Menu::State state) {
+    LayerMapping& get_or_create_layer_map(State state) {
         if (!this->mapping.contains(state)) {
             mapping[state] = LayerMapping();
         }
@@ -124,8 +137,7 @@ struct KeyMap {
     }
 
     void load_game_keys() {
-        LayerMapping& game_map =
-            this->get_or_create_layer_map(Menu::State::Game);
+        LayerMapping& game_map = this->get_or_create_layer_map(State::Game);
         game_map["Player Forward"] = {
             KEY_W,
             GAMEPAD_BUTTON_LEFT_FACE_UP,
@@ -190,7 +202,7 @@ struct KeyMap {
     }
 
     void load_ui_keys() {
-        LayerMapping& ui_map = this->get_or_create_layer_map(Menu::State::UI);
+        LayerMapping& ui_map = this->get_or_create_layer_map(State::UI);
         ui_map["Widget Next"] = {
             KEY_TAB,
             GAMEPAD_BUTTON_LEFT_FACE_DOWN,
@@ -243,8 +255,7 @@ struct KeyMap {
 
         ui_map["Pause"] = {GAMEPAD_BUTTON_MIDDLE_RIGHT};
 
-        LayerMapping& root_map =
-            this->get_or_create_layer_map(Menu::State::Root);
+        LayerMapping& root_map = this->get_or_create_layer_map(State::Root);
         for (auto kv : ui_map) {
             root_map[kv.first] = kv.second;
         }
@@ -255,7 +266,7 @@ struct KeyMap {
         load_ui_keys();
     }
 
-    static int get_key_code(Menu::State state, const std::string& name) {
+    static int get_key_code(State state, const std::string& name) {
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
             int r = std::visit(util::overloaded{[](int k) { return k; },
@@ -266,7 +277,7 @@ struct KeyMap {
         return KEY_NULL;
     }
 
-    static std::optional<GamepadAxisWithDir> get_axis(Menu::State state,
+    static std::optional<GamepadAxisWithDir> get_axis(State state,
                                                       const std::string& name) {
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
@@ -282,8 +293,7 @@ struct KeyMap {
         return {};
     }
 
-    static GamepadButton get_button(Menu::State state,
-                                    const std::string& name) {
+    static GamepadButton get_button(State state, const std::string& name) {
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
             auto r = std::visit(
@@ -296,12 +306,11 @@ struct KeyMap {
         return GAMEPAD_BUTTON_UNKNOWN;
     }
 
-    static AnyInputs get_valid_inputs(Menu::State state,
-                                      const std::string& name) {
+    static AnyInputs get_valid_inputs(State state, const std::string& name) {
         return KeyMap::get().mapping[state][name];
     }
 
-    static float is_event(Menu::State state, const std::string& name) {
+    static float is_event(State state, const std::string& name) {
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
 
         float value = 0.f;
@@ -323,8 +332,7 @@ struct KeyMap {
         return value;
     }
 
-    static bool is_event_once_DO_NOT_USE(Menu::State state,
-                                         const std::string& name) {
+    static bool is_event_once_DO_NOT_USE(State state, const std::string& name) {
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
 
         bool matches_named_event = false;
@@ -344,7 +352,7 @@ struct KeyMap {
         return matches_named_event;
     }
 
-    static bool does_layer_map_contain_key(Menu::State state, int keycode) {
+    static bool does_layer_map_contain_key(State state, int keycode) {
         // We dont even have this Layer Map
         if (!KeyMap::get().mapping.contains(state)) return false;
         LayerMapping layermap = KeyMap::get().mapping[state];
@@ -366,7 +374,7 @@ struct KeyMap {
         return false;
     }
 
-    static bool does_layer_map_contain_button(Menu::State state,
+    static bool does_layer_map_contain_button(State state,
                                               GamepadButton button) {
         // We dont even have this Layer Map
         if (!KeyMap::get().mapping.contains(state)) return false;
@@ -389,8 +397,7 @@ struct KeyMap {
         return false;
     }
 
-    static bool does_layer_map_contain_axis(Menu::State state,
-                                            GamepadAxis axis) {
+    static bool does_layer_map_contain_axis(State state, GamepadAxis axis) {
         // We dont even have this Layer Map
         if (!KeyMap::get().mapping.contains(state)) return false;
         LayerMapping layermap = KeyMap::get().mapping[state];

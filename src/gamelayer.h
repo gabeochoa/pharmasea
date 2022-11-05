@@ -40,7 +40,7 @@ struct GameLayer : public Layer {
     bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (KeyMap::get_button(Menu::State::Game, "Pause") == event.button) {
+        if (KeyMap::get_button(KeyMap::State::Game, "Pause") == event.button) {
             App::get().pushLayer(new PauseLayer());
             return true;
         }
@@ -48,7 +48,8 @@ struct GameLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (KeyMap::get_key_code(Menu::State::Game, "Pause") == event.keycode) {
+        if (KeyMap::get_key_code(KeyMap::State::Game, "Pause") ==
+            event.keycode) {
             App::get().pushLayer(new PauseLayer());
             return true;
         }

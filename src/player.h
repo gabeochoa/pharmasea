@@ -21,8 +21,8 @@ struct Player : public BasePlayer {
     virtual vec3 update_xaxis_position(float dt) override {
         float speed = this->base_speed() * dt;
         auto new_pos_x = this->raw_position;
-        float left = KeyMap::is_event(Menu::State::Game, "Player Left");
-        float right = KeyMap::is_event(Menu::State::Game, "Player Right");
+        float left = KeyMap::is_event(KeyMap::State::Game, "Player Left");
+        float right = KeyMap::is_event(KeyMap::State::Game, "Player Right");
         new_pos_x.x -= left * speed;
         new_pos_x.x += right * speed;
         return new_pos_x;
@@ -31,8 +31,8 @@ struct Player : public BasePlayer {
     virtual vec3 update_zaxis_position(float dt) override {
         float speed = this->base_speed() * dt;
         auto new_pos_z = this->raw_position;
-        float up = KeyMap::is_event(Menu::State::Game, "Player Forward");
-        float down = KeyMap::is_event(Menu::State::Game, "Player Back");
+        float up = KeyMap::is_event(KeyMap::State::Game, "Player Forward");
+        float down = KeyMap::is_event(KeyMap::State::Game, "Player Back");
         new_pos_z.z -= up * speed;
         new_pos_z.z += down * speed;
         return new_pos_z;

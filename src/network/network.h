@@ -35,6 +35,7 @@ static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
 }
 
 struct Info {
+    network::LobbyState network_lobby_state;
     int my_client_id = 0;
     bool username_set = false;
     // TODO eventually support copy/paste
@@ -44,7 +45,7 @@ struct Info {
     float client_next_tick = 0.0f;
     std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
 
-    enum State {
+    enum Role {
         s_None = 1 << 0,
         s_Host = 1 << 1,
         s_Client = 1 << 2,
@@ -139,7 +140,7 @@ struct Info {
         }
     }
 
-    void send_updated_state(Menu::State state) {
+    void send_updated_state(network::LobbyState state) {
         ClientPacket player({
             .client_id = my_client_id,
             .msg_type = ClientPacket::MsgType::GameState,
@@ -238,7 +239,7 @@ struct Info {
             case ClientPacket::MsgType::GameState: {
                 ClientPacket::GameStateInfo info =
                     std::get<ClientPacket::GameStateInfo>(packet.msg);
-                Menu::get().state = info.host_menu_state;
+                network_lobby_state = info.host_menu_state;
             } break;
             case ClientPacket::MsgType::PlayerLocation: {
                 ClientPacket::PlayerInfo info =

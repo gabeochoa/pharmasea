@@ -71,7 +71,7 @@ struct BasePlayer : public Person {
                     [](auto&&) { return true; });
             if (match && match->can_rotate()) {
                 float rotate = KeyMap::is_event_once_DO_NOT_USE(
-                    Menu::State::Game, "Player Rotate Furniture");
+                    KeyMap::State::Game, "Player Rotate Furniture");
                 if (rotate > 0.5f) match->rotate_facing_clockwise();
             }
         }
@@ -79,7 +79,7 @@ struct BasePlayer : public Person {
 
     // TODO how to handle when they are holding something?
     virtual void grab_or_drop() {
-        bool pickup = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game,
+        bool pickup = KeyMap::is_event_once_DO_NOT_USE(KeyMap::State::Game,
                                                        "Player Pickup");
         if (!pickup) {
             return;
