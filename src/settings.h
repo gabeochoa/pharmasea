@@ -88,6 +88,10 @@ struct Settings {
     }
 
     void update_window_size(vec2 size) {
+        if (size.x == 0 || size.y == 0) {
+            size = {800, 600};
+        }
+
         data.window_size = size;
         //
         WindowResizeEvent* event = new WindowResizeEvent(
@@ -98,8 +102,8 @@ struct Settings {
 
     void update_master_volume(float nv) {
         data.master_volume = nv;
-        std::cout << "master volume changed to " << data.master_volume
-                  << std::endl;
+        // std::cout << "master volume changed to " << data.master_volume
+        // << std::endl;
         SetMasterVolume(data.master_volume);
         // TODO support sound vs music volume
     }
@@ -119,6 +123,8 @@ struct Settings {
 
         bitsery::quickDeserialization<settings::InputAdapter>(
             {buf_str.begin(), buf_str.size()}, data);
+
+        update_all_settings();
 
         std::cout << "Finished loading: " << std::endl;
         std::cout << data << std::endl;

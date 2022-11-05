@@ -44,7 +44,7 @@ struct Info {
     float client_next_tick = 0.0f;
     std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
 
-    enum State {
+    enum Role {
         s_None = 1 << 0,
         s_Host = 1 << 1,
         s_Client = 1 << 2,
