@@ -9,7 +9,6 @@
 #include "furniture.h"
 
 struct Player : public BasePlayer {
-
     Player(vec3 p, Color face_color_in, Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}
     Player(vec2 p, Color face_color_in, Color base_color_in)

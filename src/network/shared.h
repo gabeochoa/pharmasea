@@ -3,9 +3,19 @@
 #include "../external_include.h"
 //
 #include "../globals.h"
+#include "../keymap.h"
 #include "../menu.h"
 #include "../util.h"
 #include "steam/steamnetworkingtypes.h"
+
+namespace bitsery {
+template<typename S>
+void serialize(S& s, GamepadAxisWithDir& input) {
+    s.value4b(input.axis);
+    s.value4b(input.dir);
+}
+
+}  // namespace bitsery
 
 namespace network {
 
@@ -31,6 +41,7 @@ struct ClientPacket {
         Announcement,
         World,
         GameState,
+        PlayerControl,
         PlayerJoin,
         PlayerLocation,
     } msg_type;
@@ -45,6 +56,11 @@ struct ClientPacket {
     // Game Info
     struct GameStateInfo {
         Menu::State host_menu_state;
+    };
+
+    // Packet containing a recent keypress
+    struct PlayerControlInfo {
+        AnyInputs inputs;
     };
 
     // Player Join
@@ -62,10 +78,10 @@ struct ClientPacket {
         std::string name{};
     };
 
-    typedef std::variant<ClientPacket::AnnouncementInfo,
-                         ClientPacket::PlayerJoinInfo,
-                         ClientPacket::GameStateInfo, ClientPacket::WorldInfo,
-                         ClientPacket::PlayerInfo>
+    typedef std::variant<
+        ClientPacket::AnnouncementInfo, ClientPacket::PlayerControlInfo,
+        ClientPacket::PlayerJoinInfo, ClientPacket::GameStateInfo,
+        ClientPacket::WorldInfo, ClientPacket::PlayerInfo>
         Msg;
 
     Msg msg;
@@ -80,6 +96,10 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
             [&](ClientPacket::PlayerJoinInfo info) {
                 return fmt::format("PlayerJoinInfo( is_you: {}, id: {})",
                                    info.is_you, info.client_id);
+            },
+            [&](ClientPacket::PlayerControlInfo info) {
+                return fmt::format("PlayerControlInfo( num_inputs: {})",
+                                   info.inputs.size());
             },
             [&](ClientPacket::GameStateInfo info) {
                 return fmt::format("GameStateInfo( state: {} )",
@@ -113,7 +133,10 @@ std::ostream& operator<<(std::ostream& os,
             os << "PlayerLocation";
             break;
         case ClientPacket::PlayerJoin:
-            os << "PlayerJoinInfo";
+            os << "PlayerJoin";
+            break;
+        case ClientPacket::PlayerControl:
+            os << "PlayerControl";
             break;
     }
     return os;
@@ -130,28 +153,44 @@ void serialize(S& s, ClientPacket& packet) {
     s.value4b(packet.channel);
     s.value4b(packet.client_id);
     s.value4b(packet.msg_type);
-    s.ext(packet.msg, bitsery::ext::StdVariant{
-                          [](S& s, ClientPacket::AnnouncementInfo& info) {
-                              s.text1b(info.message, MAX_ANNOUNCEMENT_LENGTH);
-                          },
-                          [](S& s, ClientPacket::PlayerJoinInfo& info) {
-                              s.container4b(info.all_clients, MAX_CLIENTS);
-                              s.value1b(info.is_you);
-                              s.value4b(info.client_id);
-                          },
-                          [](S& s, ClientPacket::GameStateInfo& info) {
-                              s.value4b(info.host_menu_state);
-                          },
-                          [](S&, ClientPacket::WorldInfo&) {},
-                          [](S& s, ClientPacket::PlayerInfo& info) {
-                              // end
-                              s.text1b(info.name, MAX_NAME_LENGTH);
-                              s.value4b(info.location[0]);
-                              s.value4b(info.location[1]);
-                              s.value4b(info.location[2]);
-                              s.value4b(info.facing_direction);
-                          },
+    s.ext(packet.msg,
+          bitsery::ext::StdVariant{
+              [](S& s, ClientPacket::AnnouncementInfo& info) {
+                  s.text1b(info.message, MAX_ANNOUNCEMENT_LENGTH);
+              },
+              [](S& s, ClientPacket::PlayerJoinInfo& info) {
+                  s.container4b(info.all_clients, MAX_CLIENTS);
+                  s.value1b(info.is_you);
+                  s.value4b(info.client_id);
+              },
+              [](S& s, ClientPacket::PlayerControlInfo& info) {
+                  s.container(
+                      info.inputs, MAX_INPUTS, [](S& sv, AnyInput& input) {
+                          sv.ext(input,
+                                 bitsery::ext::StdVariant{
+                                     [](S& sv, int& key) { sv.value4b(key); },
+                                     [](S& sv, GamepadAxisWithDir& axisDir) {
+                                         sv.object(axisDir);
+                                     },
+                                     [](S& sv, GamepadButton& button) {
+                                         sv.value4b(button);
+                                     },
+                                 });
                       });
+              },
+              [](S& s, ClientPacket::GameStateInfo& info) {
+                  s.value4b(info.host_menu_state);
+              },
+              [](S&, ClientPacket::WorldInfo&) {},
+              [](S& s, ClientPacket::PlayerInfo& info) {
+                  // end
+                  s.text1b(info.name, MAX_NAME_LENGTH);
+                  s.value4b(info.location[0]);
+                  s.value4b(info.location[1]);
+                  s.value4b(info.location[2]);
+                  s.value4b(info.facing_direction);
+              },
+          });
 }
 
 }  // namespace network

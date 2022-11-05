@@ -25,5 +25,6 @@ const int MAX_CLIENTS = 4;
 const int MAX_NAME_LENGTH = 25;
 const int MAX_ANNOUNCEMENT_LENGTH = 200;
 const int SERVER_CLIENT_ID = 0;
+const int MAX_INPUTS = 10;
 
 }  // namespace network
