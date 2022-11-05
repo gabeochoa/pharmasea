@@ -487,4 +487,45 @@ struct UIContext {
 
 UIContext& get() { return UIContext::get(); }
 
+namespace components {
+
+// DEFAULT COMPONENTS
+const SizeExpectation icon_button_x = {.mode = Pixels, .value = 75.f};
+const SizeExpectation icon_button_y = {.mode = Pixels, .value = 25.f};
+const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
+const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
+const SizeExpectation padd_x = {.mode = Pixels, .value = 120.f};
+const SizeExpectation padd_y = {.mode = Pixels, .value = 25.f};
+
+inline std::shared_ptr<Widget> mk_button(uuid id) {
+    return get().own(Widget(id, button_x, button_y));
+}
+
+inline std::shared_ptr<Widget> mk_icon_button(uuid id) {
+    return get().own(Widget(id, icon_button_x, icon_button_y));
+}
+
+inline std::shared_ptr<Widget> mk_but_pad() {
+    return get().own(Widget(padd_x, padd_y));
+}
+
+inline std::shared_ptr<Widget> mk_root() {
+    return get().own(Widget({.mode = Pixels, .value = WIN_W, .strictness = 1.f},
+                            {.mode = Pixels, .value = WIN_H, .strictness = 1.f},
+                            GrowFlags::Row));
+}
+
+inline std::shared_ptr<Widget> mk_row() {
+    return get().own(Widget({.mode = Children, .strictness = 1.f},
+                            {.mode = Children, .strictness = 1.f}, Row));
+}
+
+inline std::shared_ptr<Widget> mk_text() {
+    return get().own(
+        Widget({.mode = Pixels, .value = 275.f, .strictness = 0.5f},
+               {.mode = Pixels, .value = 50.f, .strictness = 1.f}));
+}
+
+}  // namespace components
+
 }  // namespace ui

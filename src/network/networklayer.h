@@ -24,13 +24,6 @@ struct NetworkLayer : public Layer {
     std::optional<std::string> my_ip_address;
     bool should_show_host_ip = false;
 
-    const SizeExpectation icon_button_x = {.mode = Pixels, .value = 75.f};
-    const SizeExpectation icon_button_y = {.mode = Pixels, .value = 25.f};
-    const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
-    const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
-    const SizeExpectation padd_x = {.mode = Pixels, .value = 120.f};
-    const SizeExpectation padd_y = {.mode = Pixels, .value = 25.f};
-
     NetworkLayer() : Layer("Network") {
         minimized = false;
         ui_context.reset(new ui::UIContext());
@@ -88,34 +81,15 @@ struct NetworkLayer : public Layer {
 
     void draw_network_overlay() {}
 
-    std::shared_ptr<Widget> mk_button(uuid id) {
-        return ui_context->own(Widget(id, button_x, button_y));
-    }
-
-    std::shared_ptr<Widget> mk_icon_button(uuid id) {
-        return ui_context->own(Widget(id, icon_button_x, icon_button_y));
-    }
-
-    std::shared_ptr<Widget> mk_but_pad() {
-        return ui_context->own(Widget(padd_x, padd_y));
-    }
-
-    std::shared_ptr<Widget> mk_text() {
-        return ui_context->own(
-            Widget({.mode = Pixels, .value = 275.f, .strictness = 0.5f},
-                   {.mode = Pixels, .value = 50.f, .strictness = 1.f}));
-    }
-
     void draw_username() {
-        auto content =
-            ui_context->own(Widget({.mode = Children, .strictness = 1.f},
-                                   {.mode = Children, .strictness = 1.f}, Row));
+        auto content = ui::components::mk_row();
         div(*content);
         ui_context->push_parent(content);
         {
-            text(*mk_text(),
+            text(*ui::components::mk_text(),
                  fmt::format("Username: {}", Settings::get().data.username));
-            if (button(*mk_icon_button(MK_UUID(id, ROOT_ID)), "Edit")) {
+            if (button(*ui::components::mk_icon_button(MK_UUID(id, ROOT_ID)),
+                       "Edit")) {
                 network_info->username_set = false;
             }
         }
@@ -124,16 +98,16 @@ struct NetworkLayer : public Layer {
 
     void draw_base_screen() {
         draw_username();
-        padding(*mk_but_pad());
-        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Host")) {
+        padding(*ui::components::mk_but_pad());
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Host")) {
             network_info->set_role_to_host();
         }
-        padding(*mk_but_pad());
-        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Join")) {
+        padding(*ui::components::mk_but_pad());
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Join")) {
             network_info->set_role_to_client();
         }
-        padding(*mk_but_pad());
-        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
+        padding(*ui::components::mk_but_pad());
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
             Menu::get().state = Menu::State::Root;
         }
     }
@@ -145,14 +119,15 @@ struct NetworkLayer : public Layer {
             Widget(MK_UUID(id, ROOT_ID),
                    {.mode = Pixels, .value = 400.f, .strictness = 1.f},
                    {.mode = Pixels, .value = 25.f, .strictness = 0.5f}));
-        text(*mk_text(), "Enter IP Address");
+        text(*ui::components::mk_text(), "Enter IP Address");
         textfield(*ip_address_input, network_info->host_ip_address);
-        padding(*mk_but_pad());
-        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Connect")) {
+        padding(*ui::components::mk_but_pad());
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                   "Connect")) {
             network_info->lock_in_ip();
         }
-        padding(*mk_but_pad());
-        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
+        padding(*ui::components::mk_but_pad());
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
             network_info->username_set = false;
         }
     }
@@ -167,7 +142,8 @@ struct NetworkLayer : public Layer {
             {
                 auto ip = should_show_host_ip ? my_ip_address.value()
                                               : "***.***.***.***";
-                text(*mk_text(), fmt::format("Your IP is: {}", ip));
+                text(*ui::components::mk_text(),
+                     fmt::format("Your IP is: {}", ip));
                 auto checkbox_widget = ui_context->own(
                     Widget(MK_UUID(id, ROOT_ID),
                            {.mode = Pixels, .value = 75.f, .strictness = 0.5f},
@@ -177,7 +153,9 @@ struct NetworkLayer : public Layer {
                 if (checkbox(*checkbox_widget, &should_show_host_ip,
                              &show_hide_host_ip_text)) {
                 }
-                if (button(*mk_icon_button(MK_UUID(id, ROOT_ID)), "Copy")) {
+                if (button(
+                        *ui::components::mk_icon_button(MK_UUID(id, ROOT_ID)),
+                        "Copy")) {
                     SetClipboardText(my_ip_address.value().c_str());
                 }
             }
@@ -199,13 +177,15 @@ struct NetworkLayer : public Layer {
         }
 
         if (network_info->is_host()) {
-            if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Start")) {
+            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                       "Start")) {
                 network_info->send_updated_state(Menu::State::Game);
             }
-            padding(*mk_but_pad());
+            padding(*ui::components::mk_but_pad());
         }
 
-        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Disconnect")) {
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                   "Disconnect")) {
             network_info.reset(new network::Info());
         }
     }
@@ -223,12 +203,13 @@ struct NetworkLayer : public Layer {
         text(*player_text, "Username: ");
         textfield(*username_input, Settings::get().data.username,
                   network::MAX_NAME_LENGTH);
-        padding(*mk_but_pad());
-        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Lock in")) {
+        padding(*ui::components::mk_but_pad());
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                   "Lock in")) {
             network_info->username_set = true;
         }
-        padding(*mk_but_pad());
-        if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
+        padding(*ui::components::mk_but_pad());
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
             Menu::get().state = Menu::State::Root;
         }
     }
@@ -263,10 +244,7 @@ struct NetworkLayer : public Layer {
 
         ui_context->begin(mouseDown, mousepos, dt);
 
-        auto root = ui_context->own(
-            Widget({.mode = Pixels, .value = WIN_W, .strictness = 1.f},
-                   {.mode = Pixels, .value = WIN_H, .strictness = 1.f},
-                   GrowFlags::Row));
+        auto root = ui::components::mk_root();
 
         ui_context->push_parent(root);
         {
