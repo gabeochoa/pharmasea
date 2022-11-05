@@ -19,8 +19,6 @@
 using namespace ui;
 
 struct NetworkUILayer : public Layer {
-    network::Info* network_info;
-    std::shared_ptr<network::Info>* ptr_to_shared_network_info;
     std::shared_ptr<ui::UIContext> ui_context;
     std::optional<std::string> my_ip_address;
     bool should_show_host_ip = false;
@@ -33,20 +31,7 @@ struct NetworkUILayer : public Layer {
     const SizeExpectation padd_y = {.mode = Pixels, .value = 25.f};
 
     NetworkUILayer() : Layer("Network") {
-        minimized = false;
         ui_context.reset(new ui::UIContext());
-        ptr_to_shared_network_info =
-            GLOBALS.get_ptr<std::shared_ptr<network::Info>>(
-                "network_info_shared_ptr");
-        network_info = ptr_to_shared_network_info->get();
-    }
-
-    void reset_network_info() {
-        std::shared_ptr<network::Info> shared_network_info =
-            *ptr_to_shared_network_info;
-        shared_network_info.reset(new network::Info());
-        (*ptr_to_shared_network_info) = shared_network_info;
-        network_info = ptr_to_shared_network_info->get();
     }
 
     virtual ~NetworkUILayer() {}
@@ -110,7 +95,7 @@ struct NetworkUILayer : public Layer {
             text(*mk_text(),
                  fmt::format("Username: {}", Settings::get().data.username));
             if (button(*mk_icon_button(MK_UUID(id, ROOT_ID)), "Edit")) {
-                network_info->username_set = false;
+                network::Info::get().username_set = false;
             }
         }
         ui_context->pop_parent();
@@ -120,11 +105,11 @@ struct NetworkUILayer : public Layer {
         draw_username();
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Host")) {
-            network_info->set_role_to_host();
+            network::Info::get().set_role_to_host();
         }
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Join")) {
-            network_info->set_role_to_client();
+            network::Info::get().set_role_to_client();
         }
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
@@ -140,20 +125,20 @@ struct NetworkUILayer : public Layer {
                    {.mode = Pixels, .value = 400.f, .strictness = 1.f},
                    {.mode = Pixels, .value = 25.f, .strictness = 0.5f}));
         text(*mk_text(), "Enter IP Address");
-        textfield(*ip_address_input, network_info->host_ip_address);
+        textfield(*ip_address_input, network::Info::get().host_ip_address);
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Connect")) {
-            // network_info->host_ip_address = "127.0.0.1";
-            network_info->lock_in_ip();
+            // network::Info::get().host_ip_address = "127.0.0.1";
+            network::Info::get().lock_in_ip();
         }
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
-            network_info->username_set = false;
+            network::Info::get().username_set = false;
         }
     }
 
     void draw_connected_screen() {
-        if (network_info->is_host() && my_ip_address.has_value()) {
+        if (network::Info::get().is_host() && my_ip_address.has_value()) {
             auto content = ui_context->own(
                 Widget({.mode = Children, .strictness = 1.f},
                        {.mode = Children, .strictness = 1.f}, Row));
@@ -182,7 +167,7 @@ struct NetworkUILayer : public Layer {
 
         // TODO add button to edit as long as you arent currently
         // hosting people?
-        for (auto kv : network_info->remote_players) {
+        for (auto kv : network::Info::get().remote_players) {
             // TODO figure out why there are null rps
             if (!kv.second) continue;
             auto player_text = ui_context->own(
@@ -193,14 +178,15 @@ struct NetworkUILayer : public Layer {
                  fmt::format("{}({})", kv.second->name, kv.first));
         }
 
-        if (network_info->is_host()) {
+        if (network::Info::get().is_host()) {
             if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Play")) {
-                network_info->send_updated_state(network::LobbyState::Game);
+                network::Info::get().send_updated_state(
+                    network::LobbyState::Game);
             }
         }
 
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Disconnect")) {
-            reset_network_info();
+            network::Info::reset();
         }
     }
 
@@ -219,7 +205,7 @@ struct NetworkUILayer : public Layer {
                   network::MAX_NAME_LENGTH);
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Lock in")) {
-            network_info->username_set = true;
+            network::Info::get().username_set = true;
         }
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
@@ -228,10 +214,10 @@ struct NetworkUILayer : public Layer {
     }
 
     void draw_screen_selector_logic() {
-        if (!network_info->username_set) {
+        if (!network::Info::get().username_set) {
             draw_username_picker();
-        } else if (network_info->has_role()) {
-            if (!(network_info->has_set_ip())) {
+        } else if (network::Info::get().has_role()) {
+            if (!(network::Info::get().has_set_ip())) {
                 draw_ip_input_screen();
             } else {
                 draw_connected_screen();

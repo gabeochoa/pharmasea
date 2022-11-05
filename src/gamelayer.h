@@ -12,6 +12,7 @@
 #include "menu.h"
 #include "model_library.h"
 #include "music_library.h"
+#include "network/network.h"
 #include "pauselayer.h"
 #include "raylib.h"
 #include "texture_library.h"
@@ -41,7 +42,8 @@ struct GameLayer : public Layer {
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         if (KeyMap::get_button(KeyMap::State::Game, "Pause") == event.button) {
-            App::get().pushLayer(new PauseLayer());
+            network::Info::get().send_updated_state(
+                network::LobbyState::Paused);
             return true;
         }
         return false;
@@ -50,7 +52,8 @@ struct GameLayer : public Layer {
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(KeyMap::State::Game, "Pause") ==
             event.keycode) {
-            App::get().pushLayer(new PauseLayer());
+            network::Info::get().send_updated_state(
+                network::LobbyState::Paused);
             return true;
         }
         return false;
@@ -64,7 +67,10 @@ struct GameLayer : public Layer {
         UpdateMusicStream(m);
     }
 
-    bool is_paused() { return GLOBALS.get_or_default<bool>("paused", false); }
+    bool is_paused() {
+        return network::Info::get().network_lobby_state ==
+               network::LobbyState::Paused;
+    }
 
     virtual void onUpdate(float dt) override {
         PROFILE();

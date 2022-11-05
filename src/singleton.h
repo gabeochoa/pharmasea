@@ -10,4 +10,5 @@
     inline static type& get() {                                  \
         if (!type##_single) type##_single.reset(type::create()); \
         return *type##_single;                                   \
-    }
+    }                                                            \
+    inline static void reset() { type##_single.reset(type::create()); }\

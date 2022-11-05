@@ -8,6 +8,7 @@
 #include "../player.h"
 #include "../remote_player.h"
 #include "../settings.h"
+#include "../singleton.h"
 //
 #include "shared.h"
 //
@@ -34,11 +35,15 @@ static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
     }
 }
 
+SINGLETON_FWD(Info)
 struct Info {
+    SINGLETON(Info)
+
     network::LobbyState network_lobby_state;
+    bool processed_updated_lobby_state = true;
+
     int my_client_id = 0;
     bool username_set = false;
-    // TODO eventually support copy/paste
     std::string host_ip_address = "127.0.0.1";
     bool ip_set = false;
     float client_next_tick_reset = 0.02f;
@@ -170,6 +175,7 @@ struct Info {
     }
 
     void client_process_message_string(std::string msg) {
+        // std::cout << "client process message string " << std::endl;
         auto add_new_player = [&](int client_id) {
             if (remote_players.contains(client_id)) {
                 std::cout << fmt::format("Why are we trying to add {}",
@@ -240,6 +246,7 @@ struct Info {
                 ClientPacket::GameStateInfo info =
                     std::get<ClientPacket::GameStateInfo>(packet.msg);
                 network_lobby_state = info.host_menu_state;
+                processed_updated_lobby_state = false;
             } break;
             case ClientPacket::MsgType::PlayerLocation: {
                 ClientPacket::PlayerInfo info =

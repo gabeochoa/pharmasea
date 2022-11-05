@@ -7,22 +7,21 @@
 #include "keymap.h"
 #include "layer.h"
 #include "menu.h"
+#include "network/network.h"
 #include "ui.h"
 
 using namespace ui;
 
 struct PauseLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
-    bool paused = true;
 
-    PauseLayer() : Layer("Pause") {
-        ui_context.reset(new ui::UIContext());
-        GLOBALS.set("paused", &paused);
-    }
+    PauseLayer() : Layer("Pause") { ui_context.reset(new ui::UIContext()); }
     virtual ~PauseLayer() {}
 
-    virtual void onAttach() override { paused = true; }
-    virtual void onDetach() override { paused = false; }
+    void continue_game() {
+        App::get().popLayer(this);
+        network::Info::get().send_updated_state(network::LobbyState::Game);
+    }
 
     virtual void onEvent(Event& event) override {
         EventDispatcher dispatcher(event);
@@ -34,7 +33,7 @@ struct PauseLayer : public Layer {
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         if (KeyMap::get_button(KeyMap::State::Game, "Pause") == event.button) {
-            App::get().popLayer(this);
+            continue_game();
             return true;
         }
         return ui_context.get()->process_gamepad_button_event(event);
@@ -43,7 +42,7 @@ struct PauseLayer : public Layer {
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(KeyMap::State::Game, "Pause") ==
             event.keycode) {
-            App::get().popLayer(this);
+            continue_game();
             return true;
         }
         return ui_context.get()->process_keyevent(event);
@@ -96,11 +95,14 @@ struct PauseLayer : public Layer {
                 padding(*top_padding);
                 {
                     if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Continue")) {
-                        App::get().popLayer(this);
+                        continue_game();
                     }
                     if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Quit")) {
+                        // TODO handle this
                         App::get().popLayer(this);
                         App::get().popLast();
+                        network::Info::get().send_updated_state(
+                            network::LobbyState::Lobby);
                     }
                 }
                 padding(*ui_context->own(Widget(
