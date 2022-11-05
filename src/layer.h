@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "external_include.h"
 #include "event.h"
+#include "external_include.h"
 
 static std::atomic_int s_layer_id;
 struct Layer {
@@ -30,6 +30,8 @@ struct LayerStack {
 
     std::vector<Layer*>::iterator begin() { return layers.begin(); }
     std::vector<Layer*>::iterator end() { return layers.end(); }
+    std::vector<Layer*>::reverse_iterator rbegin() { return layers.rbegin(); }
+    std::vector<Layer*>::reverse_iterator rend() { return layers.rend(); }
 
     LayerStack() { insert = layers.begin(); }
     ~LayerStack() {
@@ -42,8 +44,7 @@ struct LayerStack {
         if (layers.empty()) {
             layers.push_back(layer);
             insert = layers.begin();
-        }
-        else {
+        } else {
             insert = layers.emplace(insert, layer);
         }
     }
@@ -51,7 +52,7 @@ struct LayerStack {
         auto it = std::find(layers.begin(), layers.end(), layer);
         if (it != layers.end()) {
             layers.erase(it);
-            insert--;
+            --insert;
         }
     }
 
