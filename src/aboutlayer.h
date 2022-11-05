@@ -14,22 +14,9 @@
 struct AboutLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
 
-    AboutLayer() : Layer("About") {
-        minimized = false;
+    AboutLayer() : Layer("About") { ui_context.reset(new ui::UIContext()); }
 
-        ui_context.reset(new ui::UIContext());
-
-        ui_context.get()->init();
-        ui_context.get()->set_font(Preload::get().font);
-        // TODO we should probably enforce that you cant do this
-        // and we should have ->set_base_theme()
-        // and push_theme separately, if you end() with any stack not empty...
-        // thats a flag
-        ui_context->push_theme(ui::DEFAULT_THEME);
-    }
     virtual ~AboutLayer() {}
-    virtual void onAttach() override {}
-    virtual void onDetach() override {}
 
     virtual void onEvent(Event& event) override {
         EventDispatcher dispatcher(event);
@@ -38,9 +25,8 @@ struct AboutLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (Menu::get().state != Menu::State::About) return false;
         if (event.keycode == KEY_ESCAPE) {
-            Menu::get().state = Menu::State::Root;
+            App::get().popLayer(this);
             return true;
         }
         return ui_context.get()->process_keyevent(event);
@@ -102,7 +88,7 @@ A game by:
                 padding(top_padding);
                 text(about_text, about_info);
                 if (button(back_button, "Back")) {
-                    Menu::get().state = Menu::State::Root;
+                    App::get().popLayer(this);
                 }
                 padding(bottom_padding);
             }
@@ -115,9 +101,7 @@ A game by:
     }
 
     virtual void onUpdate(float) override {
-        if (Menu::get().state != Menu::State::About) return;
         SetExitKey(KEY_NULL);
-
         // TODO with gamelayer, support events
         if (minimized) {
             return;
@@ -125,12 +109,6 @@ A game by:
     }
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().state != Menu::State::About) return;
-        // TODO with gamelayer, support events
-        if (minimized) {
-            return;
-        }
-
         ClearBackground(ui_context->active_theme().background);
         draw_ui(dt);
     }

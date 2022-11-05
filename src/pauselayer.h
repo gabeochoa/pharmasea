@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "app.h"
 #include "external_include.h"
 #include "globals_register.h"
 #include "keymap.h"
@@ -12,17 +13,18 @@ using namespace ui;
 
 struct PauseLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
+    bool paused = true;
 
     PauseLayer() : Layer("Pause") {
-        minimized = false;
         ui_context.reset(new ui::UIContext());
+        GLOBALS.set("paused", &paused);
     }
     virtual ~PauseLayer() {}
-    virtual void onAttach() override {}
-    virtual void onDetach() override {}
+
+    virtual void onAttach() override { paused = true; }
+    virtual void onDetach() override { paused = false; }
 
     virtual void onEvent(Event& event) override {
-        if (Menu::get().state != Menu::State::Paused) return;
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(
             std::bind(&PauseLayer::onKeyPressed, this, std::placeholders::_1));
@@ -32,7 +34,7 @@ struct PauseLayer : public Layer {
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         if (KeyMap::get_button(Menu::State::Game, "Pause") == event.button) {
-            Menu::get().state = Menu::State::Game;
+            App::get().popLayer(this);
             return true;
         }
         return ui_context.get()->process_gamepad_button_event(event);
@@ -40,7 +42,7 @@ struct PauseLayer : public Layer {
 
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(Menu::State::Game, "Pause") == event.keycode) {
-            Menu::get().state = Menu::State::Game;
+            App::get().popLayer(this);
             return true;
         }
         return ui_context.get()->process_keyevent(event);
@@ -57,15 +59,11 @@ struct PauseLayer : public Layer {
         return ui_context->own(Widget(id, button_x, button_y));
     }
 
-    virtual void onDraw(float dt) override {
-        if (Menu::get().state != Menu::State::Paused) return;
-        // TODO with gamelayer, support events
-        if (minimized) {
-            return;
-        }
-        // NOTE: We specifically dont clear background
-        // because people are used to pause menu being an overlay
+    // NOTE: We specifically dont clear background
+    // because people are used to pause menu being an overlay
+    virtual bool shouldDrawLayersBehind() const override { return true; }
 
+    virtual void onDraw(float dt) override {
         // TODO move to input
         bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
         vec2 mousepos = GetMousePosition();
@@ -97,10 +95,11 @@ struct PauseLayer : public Layer {
                 padding(*top_padding);
                 {
                     if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Continue")) {
-                        Menu::get().state = Menu::State::Game;
+                        App::get().popLayer(this);
                     }
                     if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Quit")) {
-                        Menu::get().state = Menu::State::Root;
+                        App::get().popLayer(this);
+                        App::get().popLast();
                     }
                 }
                 padding(*ui_context->own(Widget(

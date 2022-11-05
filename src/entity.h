@@ -7,6 +7,7 @@
 
 #include "astar.h"
 #include "globals.h"
+#include "globals_register.h"
 #include "item.h"
 #include "random.h"
 #include "raylib.h"

@@ -11,25 +11,17 @@
 #include "ui_theme.h"
 #include "ui_widget.h"
 #include "uuid.h"
+//
+#include "aboutlayer.h"
+#include "gamelayer.h"
+#include "network/networkuilayer.h"
+#include "settingslayer.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
 
-    MenuLayer() : Layer("Menu") {
-        minimized = false;
-
-        ui_context.reset(new ui::UIContext());
-        ui_context->init();
-        ui_context->set_font(Preload::get().font);
-        // TODO we should probably enforce that you cant do this
-        // and we should have ->set_base_theme()
-        // and push_theme separately, if you end() with any stack not empty...
-        // thats a flag
-        ui_context->push_theme(ui::DEFAULT_THEME);
-    }
+    MenuLayer() : Layer("Menu") { ui_context.reset(new ui::UIContext()); }
     virtual ~MenuLayer() {}
-    virtual void onAttach() override {}
-    virtual void onDetach() override {}
 
     virtual void onEvent(Event& event) override {
         EventDispatcher dispatcher(event);
@@ -42,19 +34,17 @@ struct MenuLayer : public Layer {
     }
 
     bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) {
-        if (Menu::get().state != Menu::State::Root) return false;
         return ui_context.get()->process_gamepad_axis_event(event);
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (Menu::get().state != Menu::State::Root) return false;
         return ui_context.get()->process_keyevent(event);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (Menu::get().state != Menu::State::Root) return false;
         if (KeyMap::get_button(Menu::State::UI, "Pause") == event.button) {
             Menu::get().state = Menu::State::Game;
+            App::get().pushLayer(new GameLayer());
             return true;
         }
         return ui_context.get()->process_gamepad_button_event(event);
@@ -128,19 +118,19 @@ struct MenuLayer : public Layer {
             {
                 padding(top_padding);
                 if (button(play_button, "Play")) {
-                    Menu::get().state = Menu::State::Game;
+                    App::get().pushLayer(new GameLayer());
                 }
                 padding(button_padding);
                 if (button(join_button, "Multiplayer (alpha) ")) {
-                    Menu::get().state = Menu::State::Network;
+                    App::get().pushLayer(new NetworkUILayer());
                 }
                 padding(button_padding);
                 if (button(about_button, "About")) {
-                    Menu::get().state = Menu::State::About;
+                    App::get().pushLayer(new AboutLayer());
                 }
                 padding(button_padding);
                 if (button(settings_button, "Settings")) {
-                    Menu::get().state = Menu::State::Settings;
+                    App::get().pushLayer(new SettingsLayer());
                 }
                 padding(button_padding);
                 if (button(exit_button, "Exit")) {
@@ -165,16 +155,11 @@ struct MenuLayer : public Layer {
     }
 
     virtual void onUpdate(float) override {
-        if (Menu::get().state != Menu::State::Root) return;
         PROFILE();
         SetExitKey(KEY_ESCAPE);
     }
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().state != Menu::State::Root) return;
-        if (minimized) {
-            return;
-        }
         PROFILE();
         ClearBackground(ui_context->active_theme().background);
         draw_ui(dt);

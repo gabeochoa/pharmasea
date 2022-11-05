@@ -98,6 +98,7 @@ struct GameDebugLayer : public Layer {
         }
 
         debug_ui(dt);
+        return;
     }
 
    private:

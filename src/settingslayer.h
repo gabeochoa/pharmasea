@@ -16,20 +16,9 @@ struct SettingsLayer : public Layer {
     int windowSizeDropdownIndex = 0;
 
     SettingsLayer() : Layer("Settings") {
-        minimized = false;
-
         ui_context.reset(new ui::UIContext());
-        ui_context.get()->init();
-        ui_context->set_font(Preload::get().font);
-        // TODO we should probably enforce that you cant do this
-        // and we should have ->set_base_theme()
-        // and push_theme separately, if you end() with any stack not empty...
-        // thats a flag
-        ui_context->push_theme(ui::DEFAULT_THEME);
     }
     virtual ~SettingsLayer() {}
-    virtual void onAttach() override {}
-    virtual void onDetach() override {}
 
     virtual void onEvent(Event& event) override {
         EventDispatcher dispatcher(event);
@@ -41,16 +30,14 @@ struct SettingsLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (Menu::get().state != Menu::State::Settings) return false;
         if (event.keycode == KEY_ESCAPE) {
-            Menu::get().state = Menu::State::Root;
+            App::get().popLayer(this);
             return true;
         }
         return ui_context.get()->process_keyevent(event);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (Menu::get().state != Menu::State::Settings) return false;
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
@@ -164,7 +151,7 @@ struct SettingsLayer : public Layer {
                 ui_context->pop_parent();  // end dropdown
 
                 if (button(back_button, "Back")) {
-                    Menu::get().state = Menu::State::Root;
+                    App::get().popLayer(this);
                 }
             }
             ui_context->pop_parent();  // end content
@@ -173,23 +160,9 @@ struct SettingsLayer : public Layer {
         ui_context->end(&root);
     }
 
-    virtual void onUpdate(float) override {
-        if (Menu::get().state != Menu::State::Settings) return;
-        SetExitKey(KEY_NULL);
-
-        // TODO with gamelayer, support events
-        if (minimized) {
-            return;
-        }
-    }
+    virtual void onUpdate(float) override { SetExitKey(KEY_NULL); }
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().state != Menu::State::Settings) return;
-        // TODO with gamelayer, support events
-        if (minimized) {
-            return;
-        }
-
         ClearBackground(ui_context->active_theme().background);
         draw_ui(dt);
     }

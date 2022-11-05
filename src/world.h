@@ -138,16 +138,8 @@ struct World {
                         break;
                     }
                     case '@': {
-                        if (GLOBALS.contains("player")) {
-                            std::cout << "WorldGen: "
-                                      << "cant have two players (yet) "
-                                      << std::endl;
-                            break;
-                        }
-                        std::shared_ptr<Player> player;
-                        player.reset(new Player(location));
-                        GLOBALS.set("player", player.get());
-                        EntityHelper::addEntity(player);
+                        GLOBALS.get_ptr<Player>("player")->raw_position =
+                            vec::to3(location);
                         break;
                     }
                     case 'A': {

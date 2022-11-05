@@ -12,6 +12,7 @@
 #include "menu.h"
 #include "model_library.h"
 #include "music_library.h"
+#include "pauselayer.h"
 #include "raylib.h"
 #include "texture_library.h"
 #include "ui_color.h"
@@ -22,17 +23,12 @@ struct GameLayer : public Layer {
     GameCam cam;
     Model bag_model;
 
-    GameLayer() : Layer("Game") {
-        minimized = false;
-        GLOBALS.set("game_cam", &cam);
-    }
+    GameLayer() : Layer("Game") { GLOBALS.set("game_cam", &cam); }
     virtual ~GameLayer() {}
-    virtual void onAttach() override {}
-    virtual void onDetach() override {}
 
     virtual void onEvent(Event& event) override {
-        if (Menu::get().state != Menu::State::Game) return;
         EventDispatcher dispatcher(event);
+        if (is_paused()) return;
         dispatcher.dispatch<KeyPressedEvent>(
             std::bind(&GameLayer::onKeyPressed, this, std::placeholders::_1));
         dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(
@@ -45,7 +41,7 @@ struct GameLayer : public Layer {
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         if (KeyMap::get_button(Menu::State::Game, "Pause") == event.button) {
-            Menu::get().state = Menu::State::Paused;
+            App::get().pushLayer(new PauseLayer());
             return true;
         }
         return false;
@@ -53,7 +49,7 @@ struct GameLayer : public Layer {
 
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(Menu::State::Game, "Pause") == event.keycode) {
-            Menu::get().state = Menu::State::Paused;
+            App::get().pushLayer(new PauseLayer());
             return true;
         }
         return false;
@@ -67,10 +63,11 @@ struct GameLayer : public Layer {
         UpdateMusicStream(m);
     }
 
+    bool is_paused() { return GLOBALS.get_or_default<bool>("paused", false); }
+
     virtual void onUpdate(float dt) override {
-        if (Menu::get().state != Menu::State::Game) return;
-        if (minimized) return;
         PROFILE();
+        if (is_paused()) return;
 
         play_music();
 
@@ -97,8 +94,6 @@ struct GameLayer : public Layer {
     }
 
     virtual void onDraw(float) override {
-        if (Menu::get().state != Menu::State::Game) return;
-        if (minimized) return;
         PROFILE();
 
         ClearBackground(Color{200, 200, 200, 255});
@@ -135,5 +130,6 @@ struct GameLayer : public Layer {
             }
         }
         EndMode3D();
+        return;
     }
 };

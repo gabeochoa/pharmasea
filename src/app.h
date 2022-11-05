@@ -28,8 +28,23 @@ struct App {
 
     ~App() {}
 
-    void pushLayer(Layer* layer) { layerstack.push(layer); }
-    void pushOverlay(Layer* layer) { layerstack.pushOverlay(layer); }
+    void pushLayer(Layer* layer) {
+        layerstack.push(layer);
+        layer->onAttach();
+    }
+
+    void popLast() {
+        auto layer_it =
+            std::find_if(layerstack.rbegin(), layerstack.rend(),
+                         [](Layer* layer) { return !layer->cleanup; });
+        if (layer_it == layerstack.rend()) return;
+        popLayer(*layer_it);
+    }
+
+    void popLayer(Layer* layer) {
+        layer->onDetach();
+        layer->cleanup = true;
+    }
 
     void onEvent(Event& event) {
         EventDispatcher dispatcher(event);
@@ -87,12 +102,19 @@ struct App {
         for (Layer* layer : layerstack) {
             layer->onUpdate(dt);
         }
+
         BeginDrawing();
-        for (Layer* layer : layerstack) {
-            layer->onDraw(dt);
+        {
+            for (auto it = layerstack.end(); it != layerstack.begin();) {
+                auto layer = (*--it);
+                layer->onDraw(dt);
+                if (!layer->shouldDrawLayersBehind()) break;
+            }
         }
         EndDrawing();
 
         check_input();
+
+        layerstack.cleanup_layers();
     }
 };

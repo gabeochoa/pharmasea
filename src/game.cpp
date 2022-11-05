@@ -17,7 +17,6 @@
 #include "menu.h"
 #include "settings.h"
 //
-#include "aboutlayer.h"
 #include "fpslayer.h"
 #include "gamedebuglayer.h"
 #include "gamelayer.h"
@@ -25,7 +24,6 @@
 #include "menustatelayer.h"
 #include "network/networklayer.h"
 #include "pauselayer.h"
-#include "settingslayer.h"
 #include "versionlayer.h"
 //
 // This one should be last
@@ -44,17 +42,29 @@ void startup() {
     tests::run_all();
     std::cout << "All tests ran successfully" << std::endl;
 
-    Menu::get().state = Menu::State::Root;
-    // Menu::get().state = Menu::State::About;
-    // Menu::get().state = Menu::State::Game;
+    // make player
+    std::shared_ptr<Player> player;
+    player.reset(new Player());
+    GLOBALS.set("player", player.get());
+    EntityHelper::addEntity(player);
 
-    Layer* layers[] = {
-        new FPSLayer(),       new GameLayer(),     new GameDebugLayer(),
-        new AboutLayer(),     new SettingsLayer(), new MenuLayer(),
-        new MenuStateLayer(), new VersionLayer(),  new NetworkLayer(),
-        new PauseLayer(),
+    // We need to be able to distinguish between
+    // - Layer that is always running (fpslayer)
+    // - layer that is just an overlay and can be immediately alloc/dealloc
+    // (pause menu)
+    //
+    // // not supported use a global
+    // - Layer that is not always running but needs to keep memory around
+    Layer* always_on_layers[] = {
+        new FPSLayer(),
+        new GameDebugLayer(),
+        new MenuStateLayer(),
+        new NetworkLayer(),
+        new VersionLayer(),
+        //
+        new MenuLayer(),
     };
-    for (auto layer : layers) App::get().pushLayer(layer);
+    for (auto layer : always_on_layers) App::get().pushLayer(layer);
 
     Settings::get().load_save_file();
 }
