@@ -44,8 +44,7 @@ struct NetworkLayer : public Layer {
     }
 
     virtual ~NetworkLayer() { network::Info::shutdown_connections(); }
-    virtual void onAttach() override {}
-    virtual void onDetach() override {}
+
     virtual void onEvent(Event& event) override {
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(std::bind(
@@ -150,7 +149,6 @@ struct NetworkLayer : public Layer {
         textfield(*ip_address_input, network_info->host_ip_address);
         padding(*mk_but_pad());
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Connect")) {
-            // network_info->host_ip_address = "127.0.0.1";
             network_info->lock_in_ip();
         }
         padding(*mk_but_pad());
@@ -201,9 +199,10 @@ struct NetworkLayer : public Layer {
         }
 
         if (network_info->is_host()) {
-            if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Play")) {
+            if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Start")) {
                 network_info->send_updated_state(Menu::State::Game);
             }
+            padding(*mk_but_pad());
         }
 
         if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Disconnect")) {

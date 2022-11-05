@@ -127,11 +127,7 @@ struct MenuLayer : public Layer {
             ui_context->push_parent(&content);
             {
                 padding(top_padding);
-                if (button(play_button, "Play")) {
-                    Menu::get().state = Menu::State::Game;
-                }
-                padding(button_padding);
-                if (button(join_button, "Multiplayer (alpha) ")) {
+                if (button(join_button, "Play")) {
                     Menu::get().state = Menu::State::Network;
                 }
                 padding(button_padding);
