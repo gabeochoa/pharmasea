@@ -1,7 +1,11 @@
 
 #pragma once
-#include "event.h"
+
+#include <tuple>
+
 #include "external_include.h"
+//
+#include "event.h"
 #include "files.h"
 #include "gamepad_axis_with_dir.h"
 #include "menu.h"
@@ -9,6 +13,9 @@
 #include "singleton.h"
 #include "util.h"
 
+typedef std::tuple<Menu::State, std::string, float, float> UserInput;
+typedef std::vector<UserInput> UserInputs;
+//
 typedef std::variant<int, GamepadAxisWithDir, GamepadButton> AnyInput;
 typedef std::vector<AnyInput> AnyInputs;
 typedef std::map<std::string, AnyInputs> LayerMapping;

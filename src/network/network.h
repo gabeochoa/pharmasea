@@ -124,8 +124,11 @@ struct Info {
             }
             this->client_next_tick = client_next_tick_reset;
             if (my_client_id > 0) {
-                auto player = get_player_packet(my_client_id);
-                client_p->send_packet_to_server(player);
+                // auto player = get_player_packet(my_client_id);
+                // client_p->send_packet_to_server(player);
+
+                auto playerinput = get_player_input_packet(my_client_id);
+                client_p->send_packet_to_server(playerinput);
             }
         };
 
@@ -165,6 +168,20 @@ struct Info {
                 .name = Settings::get().data.username,
             }),
         });
+        return player;
+    }
+
+    ClientPacket get_player_input_packet(int my_id) {
+        Player* me = GLOBALS.get_ptr<Player>("player");
+        ClientPacket player({
+            .channel = Channel::UNRELIABLE_NO_DELAY,
+            .client_id = my_id,
+            .msg_type = network::ClientPacket::MsgType::PlayerControl,
+            .msg = network::ClientPacket::PlayerControlInfo({
+                .inputs = me->inputs,
+            }),
+        });
+        me->inputs.clear();
         return player;
     }
 
@@ -266,6 +283,35 @@ struct Info {
                     std::get<ClientPacket::AnnouncementInfo>(packet.msg);
             } break;
 
+            case ClientPacket::MsgType::PlayerControl: {
+                ClientPacket::PlayerControlInfo info =
+                    std::get<ClientPacket::PlayerControlInfo>(packet.msg);
+
+                auto remote_player = remote_players[incoming_client.client_id];
+                if (!remote_player) return;
+                auto updated_position =
+                    remote_player->get_position_after_input(info.inputs);
+
+                ClientPacket player_updated({
+                    .channel = Channel::UNRELIABLE_NO_DELAY,
+                    .client_id = incoming_client.client_id,
+                    .msg_type = network::ClientPacket::MsgType::PlayerLocation,
+                    .msg = network::ClientPacket::PlayerInfo({
+                        .facing_direction =
+                            static_cast<int>(remote_player->face_direction),
+                        .location =
+                            {
+                                updated_position.x,
+                                updated_position.y,
+                                updated_position.z,
+                            },
+                        .name = remote_player->name,
+                    }),
+                });
+
+                server_p->send_client_packet_to_all(player_updated);
+
+            } break;
             case ClientPacket::MsgType::PlayerJoin: {
                 // We dont need this
                 // ClientPacket::PlayerJoinInfo info =

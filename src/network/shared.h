@@ -60,7 +60,7 @@ struct ClientPacket {
 
     // Packet containing a recent keypress
     struct PlayerControlInfo {
-        AnyInputs inputs;
+        UserInputs inputs;
     };
 
     // Player Join
@@ -165,17 +165,15 @@ void serialize(S& s, ClientPacket& packet) {
               },
               [](S& s, ClientPacket::PlayerControlInfo& info) {
                   s.container(
-                      info.inputs, MAX_INPUTS, [](S& sv, AnyInput& input) {
-                          sv.ext(input,
-                                 bitsery::ext::StdVariant{
-                                     [](S& sv, int& key) { sv.value4b(key); },
-                                     [](S& sv, GamepadAxisWithDir& axisDir) {
-                                         sv.object(axisDir);
-                                     },
-                                     [](S& sv, GamepadButton& button) {
-                                         sv.value4b(button);
-                                     },
-                                 });
+                      info.inputs, MAX_INPUTS, [](S& sv, UserInput& input) {
+                          sv.ext(
+                              input,
+                              bitsery::ext::StdTuple{
+                                  [](auto& s, Menu::State& o) { s.value4b(o); },
+                                  [](auto& s, std::string& o) {
+                                      s.text1b(o, 100);
+                                  },
+                                  [](auto& s, float& o) { s.value4b(o); }});
                       });
               },
               [](S& s, ClientPacket::GameStateInfo& info) {

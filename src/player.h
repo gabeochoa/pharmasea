@@ -9,6 +9,8 @@
 #include "furniture.h"
 
 struct Player : public BasePlayer {
+    std::vector<UserInput> inputs;
+
     Player(vec3 p, Color face_color_in, Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}
     Player(vec2 p, Color face_color_in, Color base_color_in)
@@ -19,13 +21,18 @@ struct Player : public BasePlayer {
                      {255, 0, 0, 255}) {}
 
     virtual vec3 update_xaxis_position(float dt) override {
-        float speed = this->base_speed() * dt;
-        auto new_pos_x = this->raw_position;
         float left = KeyMap::is_event(Menu::State::Game, "Player Left");
         float right = KeyMap::is_event(Menu::State::Game, "Player Right");
-        new_pos_x.x -= left * speed;
-        new_pos_x.x += right * speed;
-        return new_pos_x;
+        inputs.push_back({Menu::State::Game, "Player Left", left, dt});
+        inputs.push_back({Menu::State::Game, "Player Right", right, dt});
+        return this->raw_position;
+        // float speed = this->base_speed() * dt;
+        // auto new_pos_x = this->raw_position;
+        // float left = KeyMap::is_event(Menu::State::Game, "Player Left");
+        // float right = KeyMap::is_event(Menu::State::Game, "Player Right");
+        // new_pos_x.x -= left * speed;
+        // new_pos_x.x += right * speed;
+        // return new_pos_x;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
