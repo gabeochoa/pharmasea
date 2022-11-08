@@ -22,8 +22,10 @@ struct Player : public BasePlayer {
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
                      {255, 0, 0, 255}) {}
 
-    virtual bool draw_outside_debug_mode() const { return !is_ghost_player; }
-    virtual bool is_collidable() { return !is_ghost_player; }
+    virtual bool draw_outside_debug_mode() const override {
+        return !is_ghost_player;
+    }
+    virtual bool is_collidable() override { return !is_ghost_player; }
 
     virtual vec3 update_xaxis_position(float dt) override {
         float left = KeyMap::is_event(Menu::State::Game, "Player Left");
