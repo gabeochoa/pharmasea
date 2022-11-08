@@ -26,22 +26,38 @@ struct Player : public BasePlayer {
         inputs.push_back({Menu::State::Game, "Player Left", left, dt});
         inputs.push_back({Menu::State::Game, "Player Right", right, dt});
         return this->raw_position;
-        // float speed = this->base_speed() * dt;
-        // auto new_pos_x = this->raw_position;
-        // float left = KeyMap::is_event(Menu::State::Game, "Player Left");
-        // float right = KeyMap::is_event(Menu::State::Game, "Player Right");
-        // new_pos_x.x -= left * speed;
-        // new_pos_x.x += right * speed;
-        // return new_pos_x;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
-        float speed = this->base_speed() * dt;
-        auto new_pos_z = this->raw_position;
         float up = KeyMap::is_event(Menu::State::Game, "Player Forward");
         float down = KeyMap::is_event(Menu::State::Game, "Player Back");
-        new_pos_z.z -= up * speed;
-        new_pos_z.z += down * speed;
-        return new_pos_z;
+        inputs.push_back({Menu::State::Game, "Player Forward", up, dt});
+        inputs.push_back({Menu::State::Game, "Player Back", down, dt});
+        return this->raw_position;
+    }
+
+    virtual vec3 get_position_after_input(UserInputs inputs) {
+        for (UserInput& ui : inputs) {
+            auto menu_state = std::get<0>(ui);
+            if (menu_state != Menu::State::Game) continue;
+
+            std::cout << "userintpu" << std::endl;
+
+            std::string input_key_name = std::get<1>(ui);
+            float input_amount = std::get<2>(ui);
+            float frame_dt = std::get<3>(ui);
+            float speed = this->base_speed() * frame_dt;
+
+            if (input_key_name == "Player Left") {
+                this->position.x -= input_amount * speed;
+            } else if (input_key_name == "Player Right") {
+                this->position.x += input_amount * speed;
+            } else if (input_key_name == "Player Forward") {
+                this->position.z -= input_amount * speed;
+            } else if (input_key_name == "Player Back") {
+                this->position.z += input_amount * speed;
+            }
+        }
+        return this->position;
     }
 };

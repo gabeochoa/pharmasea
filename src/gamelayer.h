@@ -15,17 +15,23 @@
 #include "raylib.h"
 #include "texture_library.h"
 #include "ui_color.h"
-#include "world.h"
 
 struct GameLayer : public Layer {
-    World world;
-    GameCam cam;
+    std::shared_ptr<Player> player;
+    std::shared_ptr<GameCam> cam;
     Model bag_model;
 
     GameLayer() : Layer("Game") {
         minimized = false;
-        GLOBALS.set("game_cam", &cam);
+
+        player.reset(new Player(vec2{-3, -3}));
+        GLOBALS.set("player", player.get());
+        EntityHelper::addEntity(player);
+
+        cam.reset(new GameCam());
+        GLOBALS.set("game_cam", cam.get());
     }
+
     virtual ~GameLayer() {}
     virtual void onAttach() override {}
     virtual void onDetach() override {}
@@ -79,8 +85,8 @@ struct GameLayer : public Layer {
 
         // TODO replace passing Player with passing Player*
         // update
-        cam.updateToTarget(GLOBALS.get<Player>("player"));
-        cam.updateCamera();
+        cam->updateToTarget(GLOBALS.get<Player>("player"));
+        cam->updateCamera();
 
         EntityHelper::forEachEntity([&](auto entity) {
             entity->update(dt);
@@ -102,7 +108,7 @@ struct GameLayer : public Layer {
         PROFILE();
 
         ClearBackground(Color{200, 200, 200, 255});
-        BeginMode3D(cam.get());
+        BeginMode3D((*cam).get());
         {
             render_entities();
 
@@ -113,7 +119,7 @@ struct GameLayer : public Layer {
 
             // DrawGrid(40, TILESIZE);
 
-            DrawBillboard(cam.camera, TextureLibrary::get().get("face"),
+            DrawBillboard(cam->camera, TextureLibrary::get().get("face"),
                           {
                               1.f,
                               0.f,

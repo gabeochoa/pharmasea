@@ -31,31 +31,6 @@ struct RemotePlayer : public BasePlayer {
         return this->position;
     }
 
-    virtual vec3 get_position_after_input(UserInputs inputs) {
-        for (UserInput& ui : inputs) {
-            auto menu_state = std::get<0>(ui);
-            if (menu_state != Menu::State::Game) continue;
-
-            std::cout << "userintpu" << std::endl;
-
-            std::string input_key_name = std::get<1>(ui);
-            float input_amount = std::get<2>(ui);
-            float frame_dt = std::get<3>(ui);
-            float speed = this->base_speed() * frame_dt;
-
-            if (input_key_name == "Player Left") {
-                this->position.x -= input_amount * speed;
-            } else if (input_key_name == "Player Right") {
-                this->position.x += input_amount * speed;
-            } else if (input_key_name == "Player Forward") {
-                this->position.z -= input_amount * speed;
-            } else if (input_key_name == "Player Back") {
-                this->position.z += input_amount * speed;
-            }
-        }
-        return this->position;
-    }
-
     virtual void update_remotely(std::string my_name, float* location,
                                  int facing_direction) {
         this->name = my_name;

@@ -12,7 +12,7 @@ namespace network {
 
 struct Server {
     std::shared_ptr<internal::Server> server_p;
-    std::map<int, Player> players;
+    std::map<int, std::shared_ptr<Player> > players;
 
     explicit Server(int port) {
         server_p.reset(new internal::Server(port));
@@ -45,40 +45,47 @@ struct Server {
                     std::get<ClientPacket::AnnouncementInfo>(packet.msg);
             } break;
 
-                // case ClientPacket::MsgType::PlayerControl: {
-                // ClientPacket::PlayerControlInfo info =
-                // std::get<ClientPacket::PlayerControlInfo>(packet.msg);
-                //
-                // auto remote_player =
-                // client_data.remote_players[incoming_client.client_id];
-                // if (!remote_player) return;
-                // auto updated_position =
-                // remote_player->get_position_after_input(info.inputs);
-                //
-                // ClientPacket player_updated({
-                // .channel = Channel::UNRELIABLE_NO_DELAY,
-                // .client_id = incoming_client.client_id,
-                // .msg_type = network::ClientPacket::MsgType::PlayerLocation,
-                // .msg = network::ClientPacket::PlayerInfo({
-                // .facing_direction =
-                // static_cast<int>(remote_player->face_direction),
-                // .location =
-                // {
-                // updated_position.x,
-                // updated_position.y,
-                // updated_position.z,
-                // },
-                // .name = remote_player->name,
-                // }),
-                // });
-                //
-                // server_p->send_client_packet_to_all(player_updated);
-                //
-                // } break;
+            case ClientPacket::MsgType::PlayerControl: {
+                ClientPacket::PlayerControlInfo info =
+                    std::get<ClientPacket::PlayerControlInfo>(packet.msg);
+
+                auto player = players[packet.client_id];
+
+                if (!player) return;
+
+                auto updated_position =
+                    player->get_position_after_input(info.inputs);
+
+                ClientPacket player_updated({
+                    .channel = Channel::UNRELIABLE_NO_DELAY,
+                    .client_id = incoming_client.client_id,
+                    .msg_type = network::ClientPacket::MsgType::PlayerLocation,
+                    .msg = network::ClientPacket::PlayerInfo({
+                        .facing_direction =
+                            static_cast<int>(player->face_direction),
+                        .location =
+                            {
+                                updated_position.x,
+                                updated_position.y,
+                                updated_position.z,
+                            },
+                        .name = "TODO get name",
+                    }),
+                });
+
+                server_p->send_client_packet_to_all(player_updated);
+
+            } break;
             case ClientPacket::MsgType::PlayerJoin: {
                 // We dont need this
                 // ClientPacket::PlayerJoinInfo info =
                 // std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
+                //
+
+                packet.client_id = incoming_client.client_id;
+
+                if (!players.contains(packet.client_id))
+                    players[packet.client_id] = std::make_shared<Player>();
 
                 std::vector<int> ids;
                 for (auto& c : server_p->clients) {
