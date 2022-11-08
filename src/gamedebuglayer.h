@@ -15,7 +15,7 @@
 
 struct GameDebugLayer : public Layer {
     bool in_planning_mode = false;
-    bool debug_ui_enabled = true;
+    bool debug_ui_enabled = false;
     std::shared_ptr<ui::UIContext> ui_context;
 
     GameDebugLayer() : Layer("Game") {

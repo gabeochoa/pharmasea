@@ -11,6 +11,7 @@
 struct Player : public BasePlayer {
     std::string username;
     std::vector<UserInput> inputs;
+    bool is_ghost_player = false;
 
     Player(vec3 p, Color face_color_in, Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}
@@ -20,6 +21,9 @@ struct Player : public BasePlayer {
     Player(vec2 location)
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
                      {255, 0, 0, 255}) {}
+
+    virtual bool draw_outside_debug_mode() const { return !is_ghost_player; }
+    virtual bool is_collidable() { return !is_ghost_player; }
 
     virtual vec3 update_xaxis_position(float dt) override {
         float left = KeyMap::is_event(Menu::State::Game, "Player Left");

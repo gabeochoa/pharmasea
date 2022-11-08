@@ -12,12 +12,14 @@
 #include "menu.h"
 #include "model_library.h"
 #include "music_library.h"
+#include "player.h"
 #include "raylib.h"
 #include "texture_library.h"
 #include "ui_color.h"
 
 struct GameLayer : public Layer {
     std::shared_ptr<Player> player;
+    std::shared_ptr<BasePlayer> active_player;
     std::shared_ptr<GameCam> cam;
     Model bag_model;
 
@@ -26,6 +28,7 @@ struct GameLayer : public Layer {
 
         player.reset(new Player(vec2{-3, -3}));
         GLOBALS.set("player", player.get());
+        player->is_ghost_player = true;
         EntityHelper::addEntity(player);
 
         cam.reset(new GameCam());
@@ -83,9 +86,8 @@ struct GameLayer : public Layer {
         // Dont quit window on escape
         SetExitKey(KEY_NULL);
 
-        // TODO replace passing Player with passing Player*
-        // update
-        cam->updateToTarget(GLOBALS.get<Player>("player"));
+        cam->updateToTarget(
+            GLOBALS.get_or_default<Entity>("active_camera_target", *player));
         cam->updateCamera();
 
         EntityHelper::forEachEntity([&](auto entity) {

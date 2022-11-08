@@ -4,6 +4,7 @@
 
 #include "internal/client.h"
 //
+#include "../globals_register.h"
 #include "../player.h"
 #include "../remote_player.h"
 
@@ -150,6 +151,9 @@ struct Client {
                     // We are the person that joined,
                     id = info.client_id;
                     log(fmt::format("my id is {}", id));
+                    add_new_player(id, client_p->username);
+                    GLOBALS.set("active_camera_target",
+                                remote_players[id].get());
                 }
 
                 for (auto client_id : info.all_clients) {

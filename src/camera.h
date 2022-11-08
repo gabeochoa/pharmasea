@@ -2,8 +2,8 @@
 
 #include "external_include.h"
 //
+#include "entity.h"
 #include "globals.h"
-#include "player.h"
 #include "raylib.h"
 
 struct GameCam {
@@ -50,11 +50,9 @@ struct GameCam {
     }
 
     GameCam() {
-        auto player = GLOBALS.get<Player>("player");
-
         this->camera = {};
         this->camera.position = (vec3){0.0f, 10.0f, 10.0f};
-        this->camera.target = (vec3){player.position};
+        this->camera.target = (vec3){0, 0, 0};
         this->camera.up = (vec3){0.0f, 1.0f, 0.0f};
         this->camera.fovy = 45.0f;
         this->camera.projection = CAMERA_PERSPECTIVE;
@@ -65,8 +63,8 @@ struct GameCam {
         SetCameraMode(this->camera, CAMERA_CUSTOM);
     }
 
-    void updateToTarget(Player player) {
-        camera.target = (vec3){player.position};
+    void updateToTarget(Entity entity) {
+        camera.target = (vec3){entity.position};
     }
 
     void updateCamera() {
@@ -103,7 +101,7 @@ struct GameCam {
 
         float right_x_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X);
         float right_y_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y);
-        if(abs(right_x_axis) > EPSILON || abs(right_y_axis) > EPSILON){
+        if (abs(right_x_axis) > EPSILON || abs(right_y_axis) > EPSILON) {
             angle.x -= right_x_axis / 50.f;
             angle.y -= right_y_axis / 50.f;
             angleMinMaxClamp();
@@ -134,7 +132,6 @@ struct MenuCam {
     Camera3D camera;
 
     MenuCam() {
-
         this->camera = {};
         this->camera.position = (vec3){0.0f, 10.0f, 10.0f};
         this->camera.target = (vec3){0.f};
@@ -145,8 +142,7 @@ struct MenuCam {
         SetCameraMode(this->camera, CAMERA_FREE);
     }
 
-    void updateCamera() {
-    }
+    void updateCamera() {}
 
     Camera3D get() { return this->camera; }
     Camera3D* get_ptr() { return &(this->camera); }
