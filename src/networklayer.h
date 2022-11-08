@@ -89,7 +89,7 @@ struct NetworkLayer : public Layer {
                  fmt::format("Username: {}", Settings::get().data.username));
             if (button(*ui::components::mk_icon_button(MK_UUID(id, ROOT_ID)),
                        "Edit")) {
-                network_info->lock_in_username();
+                network_info->unlock_username();
             }
         }
         ui_context->pop_parent();

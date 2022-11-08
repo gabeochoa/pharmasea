@@ -152,11 +152,11 @@ struct Client {
                     log(fmt::format("my id is {}", id));
                 }
 
-                for (auto id : info.all_clients) {
-                    if (info.is_you && id == info.client_id) continue;
+                for (auto client_id : info.all_clients) {
+                    if (info.is_you && client_id == info.client_id) continue;
                     // otherwise someone just joined and we have to deal
                     // with them
-                    add_new_player(id, info.username);
+                    add_new_player(client_id, info.username);
                 }
 
             } break;

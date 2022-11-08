@@ -50,14 +50,14 @@ struct Info {
                 server.reset(new Server(DEFAULT_PORT));
                 //
                 client.reset(new Client());
-                client->update_username(username);
+                client->update_username(Settings::get().data.username);
                 client->lock_in_ip();
 
             } break;
             case Role::s_Client: {
                 desired_role = Role::s_Client;
                 client.reset(new Client());
-                client->update_username(username);
+                client->update_username(Settings::get().data.username);
             } break;
             default:
                 break;
@@ -66,7 +66,6 @@ struct Info {
 
     std::shared_ptr<Server> server;
     std::shared_ptr<Client> client;
-    std::string username = "default username";
     bool username_set = false;
 
     void lock_in_username() { username_set = true; }
