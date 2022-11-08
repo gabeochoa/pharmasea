@@ -1,216 +1,177 @@
 
+
 #pragma once
 
-#ifdef __APPLE__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
-#pragma clang diagnostic ignored "-Wdeprecated-volatile"
-#pragma clang diagnostic ignored "-Wmissing-field-initializers"
-#endif
-
-#ifdef WIN32
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#endif
-
-#include <steam/isteamnetworkingutils.h>
-#include <steam/steamnetworkingsockets.h>
-#include <steam/steamnetworkingtypes.h>
-
-#ifdef __APPLE__
-#pragma clang diagnostic pop
-#else
-#pragma enable_warn
-#endif
-
-#ifdef WIN32
-#pragma GCC diagnostic pop
-#endif
-
-#include <chrono>
-#include <thread>
-
-#include "../assert.h"
-#include "bitsery/serializer.h"
-#include "shared.h"
-#include "steam/isteamnetworkingsockets.h"
+#include "internal/client.h"
+//
+#include "../player.h"
+#include "../remote_player.h"
 
 namespace network {
 
 struct Client {
-    // TODO eventually add logging
     static void log(std::string msg) { std::cout << msg << std::endl; }
 
-    SteamNetworkingIPAddr address;
-    ISteamNetworkingSockets *interface;
-    HSteamNetConnection connection;
-    inline static Client *callback_instance;
-    bool running = false;
-    bool is_host = false;
-    std::function<void(std::string)> process_message_cb;
+    struct ConnectionInfo {
+        std::string host_ip_address = "127.0.0.1";
+        bool ip_set = false;
+    } conn_info;
 
-    // Send to
+    int id = 0;
+    std::shared_ptr<internal::Client> client_p;
+    std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
+
+    float next_tick_reset = 0.02f;
+    float next_tick = 0.0f;
+
+    Client() {
+        client_p.reset(new internal::Client());
+        client_p->set_process_message(
+            std::bind(&Client::client_process_message_string, this,
+                      std::placeholders::_1));
+    }
+
+    void lock_in_ip() {
+        conn_info.ip_set = true;
+        client_p->set_address(conn_info.host_ip_address);
+        client_p->startup();
+    }
+
+    void tick(float dt) {
+        next_tick = next_tick - dt;
+
+        client_p->run();
+        if (next_tick > 0) {
+            return;
+        }
+        next_tick = next_tick_reset;
+        if (id > 0) {
+            // auto player = get_player_packet(my_client_id);
+            // client_p->send_packet_to_server(player);
+
+            auto playerinput = get_player_input_packet(id);
+            client_p->send_packet_to_server(playerinput);
+        }
+    }
+
+    // ClientPacket get_player_packet(int my_id) {
+    // Player me = GLOBALS.get<Player>("player");
+    // ClientPacket player({
+    // .channel = Channel::UNRELIABLE_NO_DELAY,
+    // .client_id = my_id,
+    // .msg_type = network::ClientPacket::MsgType::PlayerLocation,
+    // .msg = network::ClientPacket::PlayerInfo({
+    // .facing_direction = static_cast<int>(me.face_direction),
+    // .location =
     // {
-    // // Anything else, just send it to the server and let them parse it
-    // m_pInterface->SendMessageToConnection(
-    // m_hConnection, cmd.c_str(), (uint32) cmd.length(),
-    // k_nSteamNetworkingSend_Reliable, nullptr);
+    // me.position.x,
+    // me.position.y,
+    // me.position.z,
+    // },
+    // .name = Settings::get().data.username,
+    // }),
+    // });
+    // return player;
     // }
 
-    Client(bool host = false) : is_host(host) {}
-
-    void set_process_message(std::function<void(std::string)> cb) {
-        process_message_cb = cb;
+    ClientPacket get_player_input_packet(int my_id) {
+        Player* me = GLOBALS.get_ptr<Player>("player");
+        ClientPacket player({
+            .channel = Channel::UNRELIABLE_NO_DELAY,
+            .client_id = my_id,
+            .msg_type = network::ClientPacket::MsgType::PlayerControl,
+            .msg = network::ClientPacket::PlayerControlInfo({
+                .inputs = me->inputs,
+            }),
+        });
+        me->inputs.clear();
+        return player;
     }
 
-    void set_address(SteamNetworkingIPAddr addy) { address = addy; }
+    void client_process_message_string(std::string msg) {
+        auto add_new_player = [&](int client_id) {
+            if (remote_players.contains(client_id)) {
+                std::cout << fmt::format("Why are we trying to add {}",
+                                         client_id)
+                          << std::endl;
+            };
 
-    void set_address(std::string ip) {
-        address.ParseString(ip.c_str());
-        address.m_port = DEFAULT_PORT;
-    }
-
-    void startup() {
-        interface = SteamNetworkingSockets();
-
-        SteamNetworkingConfigValue_t opt;
-        opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged,
-                   (void *) Client::SteamNetConnectionStatusChangedCallback);
-        connection = interface->ConnectByIPAddress(address, 1, &opt);
-        if (connection == k_HSteamNetConnection_Invalid) {
-            log(fmt::format("Failed to create connection"));
-            return;
-        }
-        log("success connecting");
-        running = true;
-    }
-
-    bool run() {
-        if (!running) return false;
-
-        auto poll_incoming_messages = [&]() {
-            ISteamNetworkingMessage *incoming_msg = nullptr;
-            int num_msgs = interface->ReceiveMessagesOnConnection(
-                connection, &incoming_msg, 1);
-            if (num_msgs == 0) return;
-            if (num_msgs == -1) {
-                M_ASSERT(false, "Failed checking for messages");
-                return;
-            }
-
-            std::string cmd;
-            cmd.assign((const char *) incoming_msg->m_pData,
-                       incoming_msg->m_cbSize);
-            incoming_msg->Release();
-            this->process_message_cb(cmd);
-        };
-        auto poll_connection_state_changes = [&]() {
-            callback_instance = this;
-            interface->RunCallbacks();
+            remote_players[client_id] = std::make_shared<RemotePlayer>();
+            auto rp = remote_players[client_id];
+            rp->client_id = client_id;
+            EntityHelper::addEntity(remote_players[client_id]);
+            std::cout << fmt::format("Adding a player {}", client_id)
+                      << std::endl;
         };
 
-        poll_incoming_messages();
-        poll_connection_state_changes();
+        auto remove_player = [&](int client_id) {
+            auto rp = remote_players[client_id];
+            if (!rp)
+                std::cout << fmt::format("doesnt exist but should {}",
+                                         client_id)
+                          << std::endl;
+            rp->cleanup = true;
+            remote_players.erase(client_id);
+        };
 
-        return true;
-    }
+        auto update_remote_player =
+            [&](int client_id, std::string name, float* location, int facing) {
+                if (!remote_players.contains(client_id)) {
+                    std::cout
+                        << fmt::format("doesnt exist but should {}", client_id)
+                        << std::endl;
+                    add_new_player(client_id);
+                }
+                auto rp = remote_players[client_id];
+                if (!rp) return;
+                rp->update_remotely(name, location, facing);
+            };
 
-    void send_string_to_server(std::string msg, Channel channel) {
-        interface->SendMessageToConnection(
-            connection, msg.c_str(), (uint32) msg.length(), channel, nullptr);
-    }
+        ClientPacket packet;
+        bitsery::quickDeserialization<InputAdapter>({msg.begin(), msg.size()},
+                                                    packet);
 
-    void send_packet_to_server(ClientPacket packet) {
-        Buffer buffer;
-        bitsery::quickSerialization(OutputAdapter{buffer}, packet);
-        send_string_to_server(buffer, packet.channel);
-    }
+        switch (packet.msg_type) {
+            case ClientPacket::MsgType::Announcement: {
+                ClientPacket::AnnouncementInfo info =
+                    std::get<ClientPacket::AnnouncementInfo>(packet.msg);
+                log(fmt::format("Announcement: {}", info.message));
+            } break;
+            case ClientPacket::MsgType::PlayerJoin: {
+                ClientPacket::PlayerJoinInfo info =
+                    std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
 
-    void send_join_info_request() {
-        log("client sending join info request");
-        ClientPacket packet({.client_id = -1,  // we dont know yet what it is
-                             .msg_type = ClientPacket::MsgType::PlayerJoin,
-                             .msg = ClientPacket::PlayerJoinInfo({
-                                 .client_id = -1,  // again
-                                 .is_you = false,
-                             })});
-        send_packet_to_server(packet);
-    }
-
-    void on_steam_network_connection_status_changed(
-        SteamNetConnectionStatusChangedCallback_t *info) {
-        log("client on stream network connection status changed");
-        M_ASSERT(info->m_hConn == connection ||
-                     connection == k_HSteamNetConnection_Invalid,
-                 "Connection Status Error");
-
-        switch (info->m_info.m_eState) {
-            case k_ESteamNetworkingConnectionState_None:
-                // NOTE: We will get callbacks here when we destroy connections.
-                // You can ignore these.
-                break;
-
-            case k_ESteamNetworkingConnectionState_ClosedByPeer:
-            case k_ESteamNetworkingConnectionState_ProblemDetectedLocally: {
-                running = false;
-                // Print an appropriate message
-                if (info->m_eOldState ==
-                    k_ESteamNetworkingConnectionState_Connecting) {
-                    // Note: we could distinguish between a timeout, a rejected
-                    // connection, or some other transport problem.
-                    log(
-                        fmt::format("We sought the remote host, yet our "
-                                    "efforts were met with defeat.  ({})",
-                                    info->m_info.m_szEndDebug));
-                } else if (
-                    info->m_info.m_eState ==
-                    k_ESteamNetworkingConnectionState_ProblemDetectedLocally) {
-                    log(fmt::format(
-                        "Alas, troubles beset us; we have lost contact with "
-                        "the host.  ({})",
-                        info->m_info.m_szEndDebug));
-                } else {
-                    // NOTE: We could check the reason code for a normal
-                    // disconnection
-                    log(fmt::format("The host hath bidden us farewell.  ({})",
-                                    info->m_info.m_szEndDebug));
+                if (info.is_you) {
+                    // We are the person that joined,
+                    id = info.client_id;
+                    log(fmt::format("my id is {}", id));
                 }
 
-                // Clean up the connection.  This is important!
-                // The connection is "closed" in the network sense, but
-                // it has not been destroyed.  We must close it on our end, too
-                // to finish up.  The reason information do not matter in this
-                // case, and we cannot linger because it's already closed on the
-                // other end, so we just pass 0's.
-                interface->CloseConnection(info->m_hConn, 0, nullptr, false);
-                connection = k_HSteamNetConnection_Invalid;
-                break;
-            }
+                for (auto id : info.all_clients) {
+                    if (info.is_you && id == info.client_id) continue;
+                    // otherwise someone just joined and we have to deal
+                    // with them
+                    add_new_player(id);
+                }
 
-            case k_ESteamNetworkingConnectionState_Connecting:
-                // We will get this callback when we start connecting.
-                // We can ignore this.
-                break;
-
-            case k_ESteamNetworkingConnectionState_Connected:
-                log("Connected to server OK");
-                send_join_info_request();
-                break;
+            } break;
+            case ClientPacket::MsgType::GameState: {
+                ClientPacket::GameStateInfo info =
+                    std::get<ClientPacket::GameStateInfo>(packet.msg);
+                Menu::get().state = info.host_menu_state;
+            } break;
+            case ClientPacket::MsgType::PlayerLocation: {
+                ClientPacket::PlayerInfo info =
+                    std::get<ClientPacket::PlayerInfo>(packet.msg);
+                update_remote_player(packet.client_id, info.name, info.location,
+                                     info.facing_direction);
+            } break;
 
             default:
-                // Silences -Wswitch
+                log(fmt::format("Client: {} not handled yet: {} ",
+                                packet.msg_type, msg));
                 break;
         }
-    }
-
-    static void SteamNetConnectionStatusChangedCallback(
-        SteamNetConnectionStatusChangedCallback_t *pInfo) {
-        if (!callback_instance) {
-            log("client callback instance saw a change but wasnt initialized "
-                "still");
-            return;
-        }
-        callback_instance->on_steam_network_connection_status_changed(pInfo);
     }
 };
 

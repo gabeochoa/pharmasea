@@ -99,11 +99,11 @@ struct NetworkLayer : public Layer {
         draw_username();
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Host")) {
-            network_info->set_role_to_host();
+            network_info->set_role(network::Info::Role::s_Host);
         }
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Join")) {
-            network_info->set_role_to_client();
+            network_info->set_role(network::Info::Role::s_Client);
         }
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
@@ -164,7 +164,7 @@ struct NetworkLayer : public Layer {
 
         // TODO add button to edit as long as you arent currently
         // hosting people?
-        for (auto kv : network_info->client_data.remote_players) {
+        for (auto kv : network_info->client->remote_players) {
             // TODO figure out why there are null rps
             if (!kv.second) continue;
             auto player_text = ui_context->own(
@@ -178,7 +178,7 @@ struct NetworkLayer : public Layer {
         if (network_info->is_host()) {
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                        "Start")) {
-                network_info->send_updated_state(Menu::State::Game);
+                // network_info->send_updated_state(Menu::State::Game);
             }
             padding(*ui::components::mk_but_pad());
         }
@@ -214,7 +214,7 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_screen_selector_logic() {
-        if (!network_info->username_set()) {
+        if (!network_info->username_set) {
             draw_username_picker();
         } else if (network_info->has_role()) {
             if (!(network_info->has_set_ip())) {
