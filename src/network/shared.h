@@ -4,6 +4,7 @@
 //
 #include "../globals.h"
 #include "../keymap.h"
+#include "../map.h"
 #include "../menu.h"
 #include "../util.h"
 #include "steam/steamnetworkingtypes.h"
@@ -22,6 +23,11 @@ namespace network {
 using Buffer = std::string;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
+using TContext =
+    std::tuple<bitsery::ext::PointerLinkingContext,
+               bitsery::ext::PolymorphicContext<bitsery::ext::StandardRTTI>>;
+using BitserySerializer = bitsery::Serializer<OutputAdapter, TContext>;
+using BitseryDeserializer = bitsery::Deserializer<InputAdapter, TContext>;
 
 enum Channel {
     RELIABLE = k_nSteamNetworkingSend_Reliable,
@@ -39,7 +45,7 @@ struct ClientPacket {
 
     enum MsgType {
         Announcement,
-        World,
+        Map,
         GameState,
         PlayerControl,
         PlayerJoin,
@@ -50,8 +56,10 @@ struct ClientPacket {
         std::string message;
     };
 
-    // World Info
-    struct WorldInfo {};
+    // Map Info
+    struct MapInfo {
+        struct Map map;
+    };
 
     // Game Info
     struct GameStateInfo {
@@ -82,7 +90,7 @@ struct ClientPacket {
     typedef std::variant<
         ClientPacket::AnnouncementInfo, ClientPacket::PlayerControlInfo,
         ClientPacket::PlayerJoinInfo, ClientPacket::GameStateInfo,
-        ClientPacket::WorldInfo, ClientPacket::PlayerInfo>
+        ClientPacket::MapInfo, ClientPacket::PlayerInfo>
         Msg;
 
     Msg msg;
@@ -106,7 +114,7 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
                 return fmt::format("GameStateInfo( state: {} )",
                                    info.host_menu_state);
             },
-            [&](ClientPacket::WorldInfo) { return std::string("worldinfo"); },
+            [&](ClientPacket::MapInfo) { return std::string("map info"); },
             [&](ClientPacket::PlayerInfo info) {
                 return fmt::format("PlayerInfo( pos({}, {}, {}), facing {})",
                                    info.location[0], info.location[1],
@@ -126,8 +134,8 @@ std::ostream& operator<<(std::ostream& os,
         case ClientPacket::GameState:
             os << "GameState";
             break;
-        case ClientPacket::World:
-            os << "WorldInfo";
+        case ClientPacket::Map:
+            os << "MapInfo";
             break;
         case ClientPacket::PlayerLocation:
             os << "PlayerLocation";
@@ -180,7 +188,7 @@ void serialize(S& s, ClientPacket& packet) {
               [](S& s, ClientPacket::GameStateInfo& info) {
                   s.value4b(info.host_menu_state);
               },
-              [](S&, ClientPacket::WorldInfo&) {},
+              [](S& s, ClientPacket::MapInfo& info) { s.object(info.map); },
               [](S& s, ClientPacket::PlayerInfo& info) {
                   s.text1b(info.username, MAX_NAME_LENGTH);
                   s.value4b(info.location[0]);

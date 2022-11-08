@@ -52,6 +52,26 @@ struct Entity {
     FrontFaceDirection face_direction = FrontFaceDirection::FORWARD;
     std::shared_ptr<Item> held_item = nullptr;
 
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.value4b(id);
+        s.object(raw_position);
+        s.object(prev_position);
+        s.object(position);
+        s.object(pushed_force);
+        s.object(face_color);
+        s.object(base_color);
+        s.value1b(cleanup);
+        s.value1b(is_highlighted);
+        s.value4b(face_direction);
+    }
+
+   public:
+    // TODO is there a way for us to make this private except for bitsery?
+    Entity() {}
+
     Entity(vec3 p, Color face_color_in, Color base_color_in)
         : id(ENTITY_ID_GEN++),
           raw_position(p),

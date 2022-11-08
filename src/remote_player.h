@@ -4,6 +4,8 @@
 
 #include "external_include.h"
 #include "raylib.h"
+//
+#include "text_util.h"
 #include "util.h"
 //
 #include "base_player.h"

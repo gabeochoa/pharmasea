@@ -21,6 +21,7 @@ struct Client {
     int id = 0;
     std::shared_ptr<internal::Client> client_p;
     std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
+    std::shared_ptr<Map> map;
 
     float next_tick_reset = 0.02f;
     float next_tick = 0.0f;
@@ -30,6 +31,9 @@ struct Client {
         client_p->set_process_message(
             std::bind(&Client::client_process_message_string, this,
                       std::placeholders::_1));
+
+        map.reset(new Map());
+        GLOBALS.set("map", map.get());
     }
 
     void update_username(std::string new_name) {
@@ -54,8 +58,7 @@ struct Client {
             // auto player = get_player_packet(my_client_id);
             // client_p->send_packet_to_server(player);
 
-            auto playerinput = get_player_input_packet(id);
-            client_p->send_packet_to_server(playerinput);
+            send_player_input_packet(id);
         }
     }
 
@@ -79,9 +82,12 @@ struct Client {
     // return player;
     // }
 
-    ClientPacket get_player_input_packet(int my_id) {
+    void send_player_input_packet(int my_id) {
         Player* me = GLOBALS.get_ptr<Player>("player");
-        ClientPacket player({
+
+        if (me->inputs.empty()) return;
+
+        ClientPacket packet({
             .channel = Channel::UNRELIABLE_NO_DELAY,
             .client_id = my_id,
             .msg_type = network::ClientPacket::MsgType::PlayerControl,
@@ -90,7 +96,7 @@ struct Client {
             }),
         });
         me->inputs.clear();
-        return player;
+        client_p->send_packet_to_server(packet);
     }
 
     void client_process_message_string(std::string msg) {
@@ -106,7 +112,10 @@ struct Client {
             auto rp = remote_players[client_id];
             rp->client_id = client_id;
             rp->update_name(username);
-            EntityHelper::addEntity(remote_players[client_id]);
+            // TODO eventually add entityhelper support
+            map->remote_players_NOT_SERIALIZED.push_back(
+                remote_players[client_id]);
+            // EntityHelper::addEntity(remote_players[client_id]);
             std::cout << fmt::format("Adding a player {}", client_id)
                       << std::endl;
         };
@@ -134,9 +143,7 @@ struct Client {
             rp->update_remotely(location, username, facing);
         };
 
-        ClientPacket packet;
-        bitsery::quickDeserialization<InputAdapter>({msg.begin(), msg.size()},
-                                                    packet);
+        ClientPacket packet = client_p->deserialize_to_packet(msg);
 
         switch (packet.msg_type) {
             case ClientPacket::MsgType::Announcement: {
@@ -175,6 +182,12 @@ struct Client {
                     std::get<ClientPacket::PlayerInfo>(packet.msg);
                 update_remote_player(packet.client_id, info.username,
                                      info.location, info.facing_direction);
+            } break;
+            case ClientPacket::MsgType::Map: {
+                ClientPacket::MapInfo info =
+                    std::get<ClientPacket::MapInfo>(packet.msg);
+                // TODO do we need to do operator=?
+                map->merge(info.map);
             } break;
 
             default:

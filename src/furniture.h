@@ -7,6 +7,15 @@
 #include "globals.h"
 
 struct Furniture : public Entity {
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Entity>{});
+    }
+
+   public:
+    Furniture() : Entity() {}
     Furniture(vec2 pos, Color face_color_in)
         : Entity(pos, face_color_in, face_color_in) {}
     Furniture(vec3 pos, Color face_color_in)

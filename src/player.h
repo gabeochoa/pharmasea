@@ -30,16 +30,23 @@ struct Player : public BasePlayer {
     virtual vec3 update_xaxis_position(float dt) override {
         float left = KeyMap::is_event(Menu::State::Game, "Player Left");
         float right = KeyMap::is_event(Menu::State::Game, "Player Right");
-        inputs.push_back({Menu::State::Game, "Player Left", left, dt});
-        inputs.push_back({Menu::State::Game, "Player Right", right, dt});
+        // TODO do we have to worry about having branches?
+        // I feel like sending 4 floats over network probably worse than 4
+        // branches on checking float positive but idk
+        if (left > 0)
+            inputs.push_back({Menu::State::Game, "Player Left", left, dt});
+        if (right > 0)
+            inputs.push_back({Menu::State::Game, "Player Right", right, dt});
         return this->raw_position;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
         float up = KeyMap::is_event(Menu::State::Game, "Player Forward");
         float down = KeyMap::is_event(Menu::State::Game, "Player Back");
-        inputs.push_back({Menu::State::Game, "Player Forward", up, dt});
-        inputs.push_back({Menu::State::Game, "Player Back", down, dt});
+        if (up > 0)
+            inputs.push_back({Menu::State::Game, "Player Forward", up, dt});
+        if (down > 0)
+            inputs.push_back({Menu::State::Game, "Player Back", down, dt});
         return this->raw_position;
     }
 

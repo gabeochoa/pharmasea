@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "files.h"
 #include "layer.h"
+#include "map.h"
 #include "menu.h"
 #include "model_library.h"
 #include "music_library.h"
@@ -29,7 +30,6 @@ struct GameLayer : public Layer {
         player.reset(new Player(vec2{-3, -3}));
         GLOBALS.set("player", player.get());
         player->is_ghost_player = true;
-        EntityHelper::addEntity(player);
 
         cam.reset(new GameCam());
         GLOBALS.set("game_cam", cam.get());
@@ -78,7 +78,6 @@ struct GameLayer : public Layer {
 
     virtual void onUpdate(float dt) override {
         if (Menu::get().state != Menu::State::Game) return;
-        if (minimized) return;
         PROFILE();
 
         play_music();
@@ -90,21 +89,14 @@ struct GameLayer : public Layer {
             GLOBALS.get_or_default<Entity>("active_camera_target", *player));
         cam->updateCamera();
 
-        EntityHelper::forEachEntity([&](auto entity) {
-            entity->update(dt);
-            return EntityHelper::ForEachFlow::None;
-        });
+        player->update(dt);
+        auto map_ptr = GLOBALS.get_ptr<Map>("map");
+        if (map_ptr) {
+            map_ptr->onUpdate(dt);
+        }
     }
 
-    void render_entities() {
-        PROFILE();
-        EntityHelper::forEachEntity([&](auto entity) {
-            entity->render();
-            return EntityHelper::ForEachFlow::None;
-        });
-    }
-
-    virtual void onDraw(float) override {
+    virtual void onDraw(float dt) override {
         if (Menu::get().state != Menu::State::Game) return;
         if (minimized) return;
         PROFILE();
@@ -112,8 +104,12 @@ struct GameLayer : public Layer {
         ClearBackground(Color{200, 200, 200, 255});
         BeginMode3D((*cam).get());
         {
-            render_entities();
+            auto map_ptr = GLOBALS.get_ptr<Map>("map");
+            if (map_ptr) {
+                map_ptr->onDraw(dt);
+            }
 
+            // TODO migrate
             EntityHelper::forEachItem([&](auto item) {
                 item->render();
                 return EntityHelper::ForEachFlow::None;

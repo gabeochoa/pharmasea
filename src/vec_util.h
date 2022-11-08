@@ -38,6 +38,15 @@ bool operator==(const vec2& p, const vec2& q) {
             (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.y), fabsf(q.y)))));
 }
 
+bool operator==(const vec3& p, const vec3& q) {
+    return ((fabsf(p.x - q.x)) <=
+            (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.x), fabsf(q.x))))) &&
+           ((fabsf(p.y - q.y)) <=
+            (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.y), fabsf(q.y))))) &&
+           ((fabsf(p.z - q.z)) <=
+            (EPSILON * fmaxf(1.0f, fmaxf(fabsf(p.z), fabsf(q.z)))));
+}
+
 std::ostream& operator<<(std::ostream& os, const vec2& v) {
     os << "vec2(" << v.x << ", " << v.y << ")";
     return os;

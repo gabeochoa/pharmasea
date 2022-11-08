@@ -6,6 +6,7 @@
 //
 #include "internal/server.h"
 //
+#include "../map.h"
 #include "../player.h"
 
 namespace network {
@@ -13,6 +14,10 @@ namespace network {
 struct Server {
     std::shared_ptr<internal::Server> server_p;
     std::map<int, std::shared_ptr<Player> > players;
+    std::shared_ptr<Map> pharmacy_map;
+
+    float next_map_tick_reset = 0.04f;
+    float next_map_tick = 0.0f;
 
     explicit Server(int port) {
         server_p.reset(new internal::Server(port));
@@ -20,9 +25,35 @@ struct Server {
             std::bind(&Server::server_process_message_string, this,
                       std::placeholders::_1, std::placeholders::_2));
         server_p->startup();
+
+        // TODO add some kind of seed selection screen
+
+        pharmacy_map.reset(new Map());
     }
 
-    void tick(float) { server_p->run(); }
+    void tick(float) {
+        server_p->run();
+
+        {
+            if (next_map_tick > 0) {
+                return;
+            }
+            next_map_tick = next_map_tick_reset;
+            send_map_state();
+        }
+    }
+
+    void send_map_state() {
+        ClientPacket map_packet({
+            .channel = Channel::RELIABLE,
+            .client_id = SERVER_CLIENT_ID,
+            .msg_type = network::ClientPacket::MsgType::Map,
+            .msg = network::ClientPacket::MapInfo({
+                .map = *pharmacy_map,
+            }),
+        });
+        server_p->send_client_packet_to_all(map_packet);
+    }
 
     void send_menu_state(Menu::State state) {
         ClientPacket player({
@@ -35,9 +66,8 @@ struct Server {
 
     void server_process_message_string(const Client_t& incoming_client,
                                        std::string msg) {
-        ClientPacket packet;
-        bitsery::quickDeserialization<InputAdapter>({msg.begin(), msg.size()},
-                                                    packet);
+        ClientPacket packet = server_p->deserialize_to_packet(msg);
+
         switch (packet.msg_type) {
             case ClientPacket::MsgType::Announcement: {
                 // TODO send announcements to all clients
@@ -55,6 +85,13 @@ struct Server {
 
                 auto updated_position =
                     player->get_position_after_input(info.inputs);
+
+                // TODO if the position and face direction didnt change
+                //      then we can early return
+                //
+                // NOTE: i saw issues where == between vec3 was returning
+                //      on every call because (mvt * dt) < epsilon
+                //
 
                 ClientPacket player_updated({
                     .channel = Channel::UNRELIABLE_NO_DELAY,

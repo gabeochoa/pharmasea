@@ -28,6 +28,7 @@ typedef Vector4 vec4;
 //
 #include <bitsery/adapter/buffer.h>
 #include <bitsery/bitsery.h>
+#include <bitsery/ext/inheritance.h>
 #include <bitsery/ext/std_tuple.h>
 #include <bitsery/ext/std_variant.h>
 #include <bitsery/traits/string.h>

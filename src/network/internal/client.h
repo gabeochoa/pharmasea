@@ -29,6 +29,7 @@
 
 #include <chrono>
 #include <thread>
+#include <tuple>
 
 #include "../../assert.h"
 #include "../../globals.h"
@@ -114,9 +115,34 @@ struct Client {
             connection, msg.c_str(), (uint32) msg.length(), channel, nullptr);
     }
 
+    ClientPacket deserialize_to_packet(std::string msg) {
+        TContext ctx{};
+        std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
+            PolymorphicEntityClasses{});
+
+        BitseryDeserializer des{ctx, msg.begin(), msg.size()};
+
+        ClientPacket packet;
+        des.object(packet);
+        // TODO obviously theres a ton of validation we can do here but idk
+        // https://github.com/fraillt/bitsery/blob/master/examples/smart_pointers_with_polymorphism.cpp
+        return packet;
+    }
+
     void send_packet_to_server(ClientPacket packet) {
         Buffer buffer;
-        bitsery::quickSerialization(OutputAdapter{buffer}, packet);
+        TContext ctx{};
+
+        std::get<1>(ctx).registerBasesList<BitserySerializer>(
+            PolymorphicEntityClasses{});
+        BitserySerializer ser{ctx, buffer};
+        ser.object(packet);
+        ser.adapter().flush();
+
+        // size = ser.adapter().writtenBytesCount();
+
+        // TODO do we need this anymore?
+        // bitsery::quickSerialization(OutputAdapter{buffer}, packet);
         send_string_to_server(buffer, packet.channel);
     }
 
