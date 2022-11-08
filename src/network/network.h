@@ -72,6 +72,7 @@ struct Info {
     std::string& host_ip_address() { return client->conn_info.host_ip_address; }
     void lock_in_ip() { client->lock_in_ip(); }
     bool has_set_ip() { return client->conn_info.ip_set; }
+    void start_game() { server->send_menu_state(Menu::State::Game); }
 
     Info() {}
 

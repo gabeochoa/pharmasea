@@ -24,7 +24,7 @@ const int MAX_CLIENTS = 4;
 // TODO add note for max name length in ui
 const int MAX_NAME_LENGTH = 25;
 const int MAX_ANNOUNCEMENT_LENGTH = 200;
-const int SERVER_CLIENT_ID = 0;
+const int SERVER_CLIENT_ID = -1;
 const int MAX_INPUTS = 100;
 
 }  // namespace network

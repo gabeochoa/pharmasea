@@ -24,6 +24,15 @@ struct Server {
 
     void tick(float) { server_p->run(); }
 
+    void send_menu_state(Menu::State state) {
+        ClientPacket player({
+            .client_id = SERVER_CLIENT_ID,
+            .msg_type = ClientPacket::MsgType::GameState,
+            .msg = ClientPacket::GameStateInfo({.host_menu_state = state}),
+        });
+        server_p->send_client_packet_to_all(player);
+    }
+
     void server_process_message_string(const Client_t& incoming_client,
                                        std::string msg) {
         ClientPacket packet;
