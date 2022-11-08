@@ -36,12 +36,10 @@ struct Player : public BasePlayer {
         return this->raw_position;
     }
 
-    virtual vec3 get_position_after_input(UserInputs inputs) {
-        for (UserInput& ui : inputs) {
+    virtual vec3 get_position_after_input(UserInputs inpts) {
+        for (UserInput& ui : inpts) {
             auto menu_state = std::get<0>(ui);
             if (menu_state != Menu::State::Game) continue;
-
-            std::cout << "userintpu" << std::endl;
 
             std::string input_key_name = std::get<1>(ui);
             float input_amount = std::get<2>(ui);

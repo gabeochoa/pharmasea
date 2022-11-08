@@ -77,11 +77,6 @@ struct Server {
 
             } break;
             case ClientPacket::MsgType::PlayerJoin: {
-                // We dont need this
-                // ClientPacket::PlayerJoinInfo info =
-                // std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
-                //
-
                 packet.client_id = incoming_client.client_id;
 
                 if (!players.contains(packet.client_id))
