@@ -36,6 +36,8 @@ struct RemotePlayer : public BasePlayer {
             auto menu_state = std::get<0>(ui);
             if (menu_state != Menu::State::Game) continue;
 
+            std::cout << "userintpu" << std::endl;
+
             std::string input_key_name = std::get<1>(ui);
             float input_amount = std::get<2>(ui);
             float frame_dt = std::get<3>(ui);

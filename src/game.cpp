@@ -23,7 +23,7 @@
 #include "gamelayer.h"
 #include "menulayer.h"
 #include "menustatelayer.h"
-#include "network/networklayer.h"
+#include "networklayer.h"
 #include "pauselayer.h"
 #include "settingslayer.h"
 #include "versionlayer.h"

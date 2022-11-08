@@ -35,33 +35,80 @@ static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
 }
 
 struct Info {
-    int my_client_id = 0;
-    bool username_set = false;
-    // TODO eventually support copy/paste
-    std::string host_ip_address = "127.0.0.1";
-    bool ip_set = false;
-    float client_next_tick_reset = 0.02f;
-    float client_next_tick = 0.0f;
-    std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
+    struct ConnectionInfo {
+        std::string host_ip_address = "127.0.0.1";
+        bool ip_set = false;
+    } conn_info;
 
-    enum Role {
-        s_None = 1 << 0,
-        s_Host = 1 << 1,
-        s_Client = 1 << 2,
-    } desired_role = s_None;
+    struct ClientData {
+        int id = 0;
+        bool username_set = false;
+        std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
+
+        float next_tick_reset = 0.02f;
+        float next_tick = 0.0f;
+    } client_data;
+
+    struct RoleInfo {
+        enum Role {
+            s_None = 1 << 0,
+            s_Host = 1 << 1,
+            s_Client = 1 << 2,
+        } desired_role = s_None;
+
+        bool is_host() { return desired_role & s_Host; }
+        bool is_client() { return desired_role & s_Client; }
+        bool has_role() { return is_host() || is_client(); }
+
+    } role_info;
+
+    bool is_host() { return role_info.is_host(); }
+    bool has_role() { return role_info.has_role(); }
+    bool username_set() { return client_data.username_set; }
+
+    bool has_set_ip() {
+        return role_info.is_host() ||
+               (role_info.is_client() && conn_info.ip_set);
+    }
+
+    void lock_in_ip() {
+        conn_info.ip_set = true;
+        client_p->set_address(conn_info.host_ip_address);
+        client_p->startup();
+    }
+
+    std::string& host_ip_address() { return conn_info.host_ip_address; }
+
+    void lock_in_username() { client_data.username_set = true; }
+    void unlock_username() { client_data.username_set = false; }
+
+    void set_role_to_host() {
+        role_info.desired_role = RoleInfo::Role::s_Host;
+        server_p.reset(new Server(DEFAULT_PORT));
+        server_p->set_process_message(
+            std::bind(&Info::server_process_message_string, this,
+                      std::placeholders::_1, std::placeholders::_2));
+        server_p->startup();
+
+        //
+        client_p.reset(new Client(true));
+        client_p->set_process_message(std::bind(
+            &Info::client_process_message_string, this, std::placeholders::_1));
+        conn_info.host_ip_address = "127.0.0.1";
+        lock_in_ip();
+    }
+
+    void set_role_to_client() {
+        role_info.desired_role = RoleInfo::Role::s_Client;
+        client_p.reset(new Client());
+        client_p->set_process_message(std::bind(
+            &Info::client_process_message_string, this, std::placeholders::_1));
+    }
+
+    //
 
     std::shared_ptr<Server> server_p;
     std::shared_ptr<Client> client_p;
-
-    bool is_host() { return desired_role & s_Host; }
-    bool is_client() { return desired_role & s_Client; }
-    bool has_role() { return is_host() || is_client(); }
-    bool has_set_ip() { return is_host() || (is_client() && ip_set); }
-    void lock_in_ip() {
-        ip_set = true;
-        client_p->set_address(host_ip_address);
-        client_p->startup();
-    }
 
     Info() {}
 
@@ -69,8 +116,8 @@ struct Info {
         server_p.reset();
         client_p.reset();
         //
-        desired_role = s_None;
-        ip_set = false;
+        role_info.desired_role = RoleInfo::Role::s_None;
+        conn_info.ip_set = false;
     }
 
     static void init_connections() {
@@ -91,60 +138,37 @@ struct Info {
 #endif
     }
 
-    void set_role_to_host() {
-        desired_role = s_Host;
-        server_p.reset(new Server(DEFAULT_PORT));
-        server_p->set_process_message(
-            std::bind(&Info::server_process_message_string, this,
-                      std::placeholders::_1, std::placeholders::_2));
-        server_p->startup();
-
-        //
-        client_p.reset(new Client(true));
-        client_p->set_process_message(std::bind(
-            &Info::client_process_message_string, this, std::placeholders::_1));
-        host_ip_address = "127.0.0.1";
-        lock_in_ip();
-    }
-
-    void set_role_to_client() {
-        desired_role = s_Client;
-        client_p.reset(new Client());
-        client_p->set_process_message(std::bind(
-            &Info::client_process_message_string, this, std::placeholders::_1));
-    }
-
     void tick(float dt) {
-        this->client_next_tick = this->client_next_tick - dt;
+        client_data.next_tick = client_data.next_tick - dt;
 
         auto _tick_client = [&](float) {
             client_p->run();
-            if (this->client_next_tick > 0) {
+            if (client_data.next_tick > 0) {
                 return;
             }
-            this->client_next_tick = client_next_tick_reset;
-            if (my_client_id > 0) {
+            client_data.next_tick = client_data.next_tick_reset;
+            if (client_data.id > 0) {
                 // auto player = get_player_packet(my_client_id);
                 // client_p->send_packet_to_server(player);
 
-                auto playerinput = get_player_input_packet(my_client_id);
-                client_p->send_packet_to_server(playerinput);
+                // auto playerinput = get_player_input_packet(client_data.id);
+                // client_p->send_packet_to_server(playerinput);
             }
         };
 
-        if (desired_role & s_Host) {
+        if (role_info.is_host()) {
             server_p->run();
             _tick_client(dt);
         }
 
-        if (desired_role & s_Client) {
+        if (role_info.is_client()) {
             _tick_client(dt);
         }
     }
 
     void send_updated_state(Menu::State state) {
         ClientPacket player({
-            .client_id = my_client_id,
+            .client_id = client_data.id,
             .msg_type = ClientPacket::MsgType::GameState,
             .msg = ClientPacket::GameStateInfo({.host_menu_state = state}),
         });
@@ -187,39 +211,40 @@ struct Info {
 
     void client_process_message_string(std::string msg) {
         auto add_new_player = [&](int client_id) {
-            if (remote_players.contains(client_id)) {
+            if (client_data.remote_players.contains(client_id)) {
                 std::cout << fmt::format("Why are we trying to add {}",
                                          client_id)
                           << std::endl;
             };
 
-            remote_players[client_id] = std::make_shared<RemotePlayer>();
-            auto rp = remote_players[client_id];
+            client_data.remote_players[client_id] =
+                std::make_shared<RemotePlayer>();
+            auto rp = client_data.remote_players[client_id];
             rp->client_id = client_id;
-            EntityHelper::addEntity(remote_players[client_id]);
+            EntityHelper::addEntity(client_data.remote_players[client_id]);
             std::cout << fmt::format("Adding a player {}", client_id)
                       << std::endl;
         };
 
         auto remove_player = [&](int client_id) {
-            auto rp = remote_players[client_id];
+            auto rp = client_data.remote_players[client_id];
             if (!rp)
                 std::cout << fmt::format("doesnt exist but should {}",
                                          client_id)
                           << std::endl;
             rp->cleanup = true;
-            remote_players.erase(client_id);
+            client_data.remote_players.erase(client_id);
         };
 
         auto update_remote_player =
             [&](int client_id, std::string name, float* location, int facing) {
-                if (!remote_players.contains(client_id)) {
+                if (!client_data.remote_players.contains(client_id)) {
                     std::cout
                         << fmt::format("doesnt exist but should {}", client_id)
                         << std::endl;
                     add_new_player(client_id);
                 }
-                auto rp = remote_players[client_id];
+                auto rp = client_data.remote_players[client_id];
                 if (!rp) return;
                 rp->update_remotely(name, location, facing);
             };
@@ -240,14 +265,14 @@ struct Info {
 
                 if (info.is_you) {
                     // We are the person that joined,
-                    my_client_id = info.client_id;
-                    log(fmt::format("my id is {}", my_client_id));
+                    client_data.id = info.client_id;
+                    log(fmt::format("my id is {}", client_data.id));
                 }
 
                 for (auto id : info.all_clients) {
                     if (info.is_you && id == info.client_id) continue;
-                    // otherwise someone just joined and we have to deal with
-                    // them
+                    // otherwise someone just joined and we have to deal
+                    // with them
                     add_new_player(id);
                 }
 
@@ -287,7 +312,8 @@ struct Info {
                 ClientPacket::PlayerControlInfo info =
                     std::get<ClientPacket::PlayerControlInfo>(packet.msg);
 
-                auto remote_player = remote_players[incoming_client.client_id];
+                auto remote_player =
+                    client_data.remote_players[incoming_client.client_id];
                 if (!remote_player) return;
                 auto updated_position =
                     remote_player->get_position_after_input(info.inputs);
@@ -321,8 +347,8 @@ struct Info {
                 for (auto& c : server_p->clients) {
                     ids.push_back(c.second.client_id);
                 }
-                // Since we are the host, we can use the Client_t to figure out
-                // the id / name
+                // Since we are the host, we can use the Client_t to figure
+                // out the id / name
                 server_p->send_client_packet_to_all(
                     ClientPacket(
                         {.client_id = SERVER_CLIENT_ID,

@@ -1,20 +1,20 @@
 
 #pragma once
 
-#include "../external_include.h"
+#include "external_include.h"
 //
-#include "../globals.h"
+#include "globals.h"
 //
-#include "../app.h"
-#include "../layer.h"
-#include "../settings.h"
-#include "../ui.h"
+#include "app.h"
+#include "layer.h"
+#include "settings.h"
+#include "ui.h"
 //
-#include "../player.h"
-#include "../remote_player.h"
-#include "network.h"
+#include "network/network.h"
+#include "network/webrequest.h"
+#include "player.h"
 #include "raylib.h"
-#include "webrequest.h"
+#include "remote_player.h"
 
 using namespace ui;
 
@@ -25,14 +25,13 @@ struct NetworkLayer : public Layer {
     bool should_show_host_ip = false;
 
     NetworkLayer() : Layer("Network") {
-        minimized = false;
         ui_context.reset(new ui::UIContext());
 
         network::Info::init_connections();
         network_info.reset(new network::Info());
         my_ip_address = network::get_remote_ip_address();
         if (!Settings::get().data.username.empty()) {
-            network_info->username_set = true;
+            network_info->lock_in_username();
         }
     }
 
@@ -90,7 +89,7 @@ struct NetworkLayer : public Layer {
                  fmt::format("Username: {}", Settings::get().data.username));
             if (button(*ui::components::mk_icon_button(MK_UUID(id, ROOT_ID)),
                        "Edit")) {
-                network_info->username_set = false;
+                network_info->lock_in_username();
             }
         }
         ui_context->pop_parent();
@@ -120,7 +119,7 @@ struct NetworkLayer : public Layer {
                    {.mode = Pixels, .value = 400.f, .strictness = 1.f},
                    {.mode = Pixels, .value = 25.f, .strictness = 0.5f}));
         text(*ui::components::mk_text(), "Enter IP Address");
-        textfield(*ip_address_input, network_info->host_ip_address);
+        textfield(*ip_address_input, network_info->host_ip_address());
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                    "Connect")) {
@@ -128,7 +127,7 @@ struct NetworkLayer : public Layer {
         }
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
-            network_info->username_set = false;
+            network_info->unlock_username();
         }
     }
 
@@ -165,7 +164,7 @@ struct NetworkLayer : public Layer {
 
         // TODO add button to edit as long as you arent currently
         // hosting people?
-        for (auto kv : network_info->remote_players) {
+        for (auto kv : network_info->client_data.remote_players) {
             // TODO figure out why there are null rps
             if (!kv.second) continue;
             auto player_text = ui_context->own(
@@ -206,7 +205,7 @@ struct NetworkLayer : public Layer {
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                    "Lock in")) {
-            network_info->username_set = true;
+            network_info->lock_in_username();
         }
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
@@ -215,7 +214,7 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_screen_selector_logic() {
-        if (!network_info->username_set) {
+        if (!network_info->username_set()) {
             draw_username_picker();
         } else if (network_info->has_role()) {
             if (!(network_info->has_set_ip())) {
