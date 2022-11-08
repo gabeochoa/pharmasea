@@ -118,6 +118,29 @@ Game Ideas
 
 ## Changelog
 
+### alpha_0.22.11.07
+
+impact 
+- Show IP address of host (hidden by default, has toggle button) 
+- Add copy button for ip 
+- Add ability to edit username from any screen showing it
+- Add settings.bin file for storing settings across sessions 
+- ^Skip username selector when already setup 
+- Add pause menu (continue / quit) 
+- Fix bug where "exit" button would just crash game to close instead of using close() functionality (so now saves work on exit button) 
+- Fix crash when switching from host to peer after hosting
+
+better eng
+- Slightly better focus ring selection, still need much more work on network screen 
+- Tables spawn with items on them since items cant be on the ground
+- Add debug ui layer and move most debug info to it (Turn it on / off with '\')
+- Add defer which you can use to force cleanup at end of scope (see defer.h for usage)
+- Add profiler to see avg ms spent in function
+
+soon
+- Conveyer
+- Add settings page to pause menu ? 
+
 ### alpha_0.22.10.31
 
 impact 
