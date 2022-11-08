@@ -99,6 +99,7 @@ struct Client {
                 std::cout << fmt::format("Why are we trying to add {}",
                                          client_id)
                           << std::endl;
+                return;
             };
 
             remote_players[client_id] = std::make_shared<RemotePlayer>();
@@ -130,7 +131,7 @@ struct Client {
             }
             auto rp = remote_players[client_id];
             if (!rp) return;
-            rp->update_remotely(location, facing);
+            rp->update_remotely(location, username, facing);
         };
 
         ClientPacket packet;
