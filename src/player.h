@@ -9,6 +9,7 @@
 #include "furniture.h"
 
 struct Player : public BasePlayer {
+    std::string username;
     std::vector<UserInput> inputs;
 
     Player(vec3 p, Color face_color_in, Color base_color_in)

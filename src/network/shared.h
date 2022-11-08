@@ -69,13 +69,14 @@ struct ClientPacket {
         std::vector<int> all_clients;
         int client_id = -1;
         bool is_you = false;
+        std::string username{};
     };
 
     // Player Location
     struct PlayerInfo {
         int facing_direction;
         float location[3];
-        std::string name{};
+        std::string username{};
     };
 
     typedef std::variant<
@@ -107,10 +108,9 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
             },
             [&](ClientPacket::WorldInfo) { return std::string("worldinfo"); },
             [&](ClientPacket::PlayerInfo info) {
-                return fmt::format(
-                    "PlayerInfo( name{} pos({}, {}, {}), facing {})", info.name,
-                    info.location[0], info.location[1], info.location[2],
-                    info.facing_direction);
+                return fmt::format("PlayerInfo( pos({}, {}, {}), facing {})",
+                                   info.location[0], info.location[1],
+                                   info.location[2], info.facing_direction);
             },
             [&](auto) { return std::string(" -- invalid operator<< --"); }},
         msgtype);
@@ -162,6 +162,7 @@ void serialize(S& s, ClientPacket& packet) {
                   s.container4b(info.all_clients, MAX_CLIENTS);
                   s.value1b(info.is_you);
                   s.value4b(info.client_id);
+                  s.text1b(info.username, MAX_NAME_LENGTH);
               },
               [](S& s, ClientPacket::PlayerControlInfo& info) {
                   s.container(
@@ -181,8 +182,7 @@ void serialize(S& s, ClientPacket& packet) {
               },
               [](S&, ClientPacket::WorldInfo&) {},
               [](S& s, ClientPacket::PlayerInfo& info) {
-                  // end
-                  s.text1b(info.name, MAX_NAME_LENGTH);
+                  s.text1b(info.username, MAX_NAME_LENGTH);
                   s.value4b(info.location[0]);
                   s.value4b(info.location[1]);
                   s.value4b(info.location[2]);

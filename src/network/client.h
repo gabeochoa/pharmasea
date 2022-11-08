@@ -31,6 +31,10 @@ struct Client {
                       std::placeholders::_1));
     }
 
+    void update_username(std::string new_name) {
+        client_p->username = new_name;
+    }
+
     void lock_in_ip() {
         conn_info.ip_set = true;
         client_p->set_address(conn_info.host_ip_address);
@@ -89,7 +93,7 @@ struct Client {
     }
 
     void client_process_message_string(std::string msg) {
-        auto add_new_player = [&](int client_id) {
+        auto add_new_player = [&](int client_id, std::string username) {
             if (remote_players.contains(client_id)) {
                 std::cout << fmt::format("Why are we trying to add {}",
                                          client_id)
@@ -99,6 +103,7 @@ struct Client {
             remote_players[client_id] = std::make_shared<RemotePlayer>();
             auto rp = remote_players[client_id];
             rp->client_id = client_id;
+            rp->update_name(username);
             EntityHelper::addEntity(remote_players[client_id]);
             std::cout << fmt::format("Adding a player {}", client_id)
                       << std::endl;
@@ -114,18 +119,18 @@ struct Client {
             remote_players.erase(client_id);
         };
 
-        auto update_remote_player =
-            [&](int client_id, std::string name, float* location, int facing) {
-                if (!remote_players.contains(client_id)) {
-                    std::cout
-                        << fmt::format("doesnt exist but should {}", client_id)
-                        << std::endl;
-                    add_new_player(client_id);
-                }
-                auto rp = remote_players[client_id];
-                if (!rp) return;
-                rp->update_remotely(name, location, facing);
-            };
+        auto update_remote_player = [&](int client_id, std::string username,
+                                        float* location, int facing) {
+            if (!remote_players.contains(client_id)) {
+                std::cout << fmt::format("doesnt exist but should {}",
+                                         client_id)
+                          << std::endl;
+                add_new_player(client_id, username);
+            }
+            auto rp = remote_players[client_id];
+            if (!rp) return;
+            rp->update_remotely(location, facing);
+        };
 
         ClientPacket packet;
         bitsery::quickDeserialization<InputAdapter>({msg.begin(), msg.size()},
@@ -151,7 +156,7 @@ struct Client {
                     if (info.is_you && id == info.client_id) continue;
                     // otherwise someone just joined and we have to deal
                     // with them
-                    add_new_player(id);
+                    add_new_player(id, info.username);
                 }
 
             } break;
@@ -163,8 +168,8 @@ struct Client {
             case ClientPacket::MsgType::PlayerLocation: {
                 ClientPacket::PlayerInfo info =
                     std::get<ClientPacket::PlayerInfo>(packet.msg);
-                update_remote_player(packet.client_id, info.name, info.location,
-                                     info.facing_direction);
+                update_remote_player(packet.client_id, info.username,
+                                     info.location, info.facing_direction);
             } break;
 
             default:

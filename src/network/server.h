@@ -69,7 +69,7 @@ struct Server {
                                 updated_position.y,
                                 updated_position.z,
                             },
-                        .name = "TODO get name",
+                        .username = player->username,
                     }),
                 });
 
@@ -77,10 +77,18 @@ struct Server {
 
             } break;
             case ClientPacket::MsgType::PlayerJoin: {
+                ClientPacket::PlayerJoinInfo info =
+                    std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
+
+                // overwrite it so its already there
                 packet.client_id = incoming_client.client_id;
 
+                // create the player if they dont already exist
                 if (!players.contains(packet.client_id))
                     players[packet.client_id] = std::make_shared<Player>();
+
+                // update the username
+                players[packet.client_id]->username = info.username;
 
                 std::vector<int> ids;
                 for (auto& c : server_p->clients) {

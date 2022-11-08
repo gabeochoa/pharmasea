@@ -48,6 +48,7 @@ struct Client {
     HSteamNetConnection connection;
     inline static Client *callback_instance;
     bool running = false;
+    std::string username;
     std::function<void(std::string)> process_message_cb;
 
     Client() {}
@@ -126,6 +127,7 @@ struct Client {
                              .msg = ClientPacket::PlayerJoinInfo({
                                  .client_id = -1,  // again
                                  .is_you = false,
+                                 .username = username,
                              })});
         send_packet_to_server(packet);
     }

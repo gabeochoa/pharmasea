@@ -50,12 +50,14 @@ struct Info {
                 server.reset(new Server(DEFAULT_PORT));
                 //
                 client.reset(new Client());
+                client->update_username(username);
                 client->lock_in_ip();
 
             } break;
             case Role::s_Client: {
                 desired_role = Role::s_Client;
                 client.reset(new Client());
+                client->update_username(username);
             } break;
             default:
                 break;
