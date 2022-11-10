@@ -147,11 +147,13 @@ struct Map {
         auto d_color = (Color){155, 75, 0, 255};
         for (int i = 1; i < MAX_MAP_WIDTH; i++) {
             for (int j = 1; j < MAX_MAP_HEIGHT; j++) {
-                if (i % 2 == 0 || j % 2 == 0) continue;
-                vec2 location = vec2{i * TILESIZE, j * TILESIZE};
-                std::shared_ptr<Wall> wall;
-                wall.reset(new Wall(location, d_color));
-                entities.push_back(wall);
+                if (i == 1 || j == 1 || i == MAX_MAP_WIDTH - 1 ||
+                    i == MAX_MAP_HEIGHT - 1) {
+                    vec2 location = vec2{i * TILESIZE, j * TILESIZE};
+                    std::shared_ptr<Wall> wall;
+                    wall.reset(new Wall(location, d_color));
+                    entities.push_back(wall);
+                }
             }
         }
     }
