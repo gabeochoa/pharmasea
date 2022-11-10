@@ -60,15 +60,24 @@ struct Player : public BasePlayer {
             float frame_dt = std::get<3>(ui);
             float speed = this->base_speed() * frame_dt;
 
+            auto new_position = this->position;
+
             if (input_key_name == "Player Left") {
-                this->position.x -= input_amount * speed;
+                new_position.x -= input_amount * speed;
             } else if (input_key_name == "Player Right") {
-                this->position.x += input_amount * speed;
+                new_position.x += input_amount * speed;
             } else if (input_key_name == "Player Forward") {
-                this->position.z -= input_amount * speed;
+                new_position.z -= input_amount * speed;
             } else if (input_key_name == "Player Back") {
-                this->position.z += input_amount * speed;
+                new_position.z += input_amount * speed;
             }
+
+            auto fd = get_face_direction(new_position, new_position);
+            int fd_x = std::get<0>(fd);
+            int fd_z = std::get<1>(fd);
+            update_facing_direction(fd_x, fd_z);
+            handle_collision(fd_x, new_position, fd_z, new_position);
+            this->position = this->raw_position;
         }
         return this->position;
     }
