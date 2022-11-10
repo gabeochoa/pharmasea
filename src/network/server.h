@@ -83,8 +83,8 @@ struct Server {
 
                 if (!player) return;
 
-                auto updated_position =
-                    player->get_position_after_input(info.inputs);
+                auto updated_position = player->get_position_after_input(
+                    pharmacy_map->entities, info.inputs);
 
                 // TODO if the position and face direction didnt change
                 //      then we can early return

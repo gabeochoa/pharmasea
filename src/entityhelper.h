@@ -79,6 +79,17 @@ struct EntityHelper {
         Break = 2,
     };
 
+    static void forEach(
+        std::vector<std::shared_ptr<Entity>> entities,
+        std::function<ForEachFlow(std::shared_ptr<Entity>)> cb) {
+        for (auto e : entities) {
+            if (!e) continue;
+            auto fef = cb(e);
+            if (fef == 1) continue;
+            if (fef == 2) break;
+        }
+    }
+
     static void forEachEntity(
         std::function<ForEachFlow(std::shared_ptr<Entity>)> cb) {
         for (auto e : entities_DO_NOT_USE) {
@@ -129,17 +140,19 @@ struct EntityHelper {
             auto current_entity = dynamic_pointer_cast<T>(e);
             if (!current_entity) continue;
             if (!filter(current_entity)) continue;
-            
-            float current_distance = vec::distance(pos, vec::to2(current_entity->position));
+
+            float current_distance =
+                vec::distance(pos, vec::to2(current_entity->position));
             if (current_distance > range) continue;
             for (auto step : steps) {
-                current_distance = vec::distance(step, vec::snap(vec::to2(current_entity->position)));
+                current_distance = vec::distance(
+                    step, vec::snap(vec::to2(current_entity->position)));
                 if (abs(current_distance) <= 1.f) {
                     if (current_distance < best_distance) {
                         best_distance = current_distance;
                         best_entity_match = current_entity;
                     }
-                } 
+                }
             }
         }
         return best_entity_match;

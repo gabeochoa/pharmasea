@@ -50,7 +50,8 @@ struct Player : public BasePlayer {
         return this->raw_position;
     }
 
-    virtual vec3 get_position_after_input(UserInputs inpts) {
+    virtual vec3 get_position_after_input(
+        std::vector<std::shared_ptr<Entity>> entities, UserInputs inpts) {
         for (UserInput& ui : inpts) {
             auto menu_state = std::get<0>(ui);
             if (menu_state != Menu::State::Game) continue;
@@ -76,7 +77,7 @@ struct Player : public BasePlayer {
             int fd_x = std::get<0>(fd);
             int fd_z = std::get<1>(fd);
             update_facing_direction(fd_x, fd_z);
-            handle_collision(fd_x, new_position, fd_z, new_position);
+            handle_collision(entities, fd_x, new_position, fd_z, new_position);
             this->position = this->raw_position;
         }
         return this->position;
