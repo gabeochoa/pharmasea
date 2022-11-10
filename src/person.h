@@ -25,50 +25,8 @@ struct Person : public Entity {
         return (vec3){TILESIZE * 0.8f, TILESIZE * 0.8f, TILESIZE * 0.8f};
     }
 
-    virtual void update(float dt) override {
-        // std::cout << this->raw_position << ";; " << this->position <<
-        // std::endl;
-
-        auto new_pos_x = this->update_xaxis_position(dt);
-        auto new_pos_z = this->update_zaxis_position(dt);
-
-        int facedir_x = -1;
-        int facedir_z = -1;
-
-        vec3 delta_distance_x = new_pos_x - this->raw_position;
-        if (delta_distance_x.x > 0) {
-            facedir_x = FrontFaceDirection::RIGHT;
-        } else if (delta_distance_x.x < 0) {
-            facedir_x = FrontFaceDirection::LEFT;
-        }
-
-        vec3 delta_distance_z = new_pos_z - this->raw_position;
-        if (delta_distance_z.z > 0) {
-            facedir_z = FrontFaceDirection::FORWARD;
-        } else if (delta_distance_z.z < 0) {
-            facedir_z = FrontFaceDirection::BACK;
-        }
-
-        if (facedir_x == -1 && facedir_z == -1) {
-            // do nothing
-        } else if (facedir_x == -1) {
-            this->face_direction = static_cast<FrontFaceDirection>(facedir_z);
-        } else if (facedir_z == -1) {
-            this->face_direction = static_cast<FrontFaceDirection>(facedir_x);
-        } else {
-            this->face_direction =
-                static_cast<FrontFaceDirection>(facedir_x | facedir_z);
-        }
-
-        new_pos_x.x += this->pushed_force.x;
-        this->pushed_force.x = 0.0f;
-
-        new_pos_z.z += this->pushed_force.z;
-        this->pushed_force.z = 0.0f;
-
-        // this->face_direction = FrontFaceDirection::BACK &
-        // FrontFaceDirection::LEFT;
-
+    void handle_collision(int facedir_x, vec3 new_pos_x, int facedir_z,
+                          vec3 new_pos_z) {
         auto new_bounds_x =
             get_bounds(new_pos_x, this->size());  // horizontal check
         auto new_bounds_y =
@@ -96,9 +54,14 @@ struct Person : public Entity {
                 would_collide_z = true;
                 collided_entity_z = entity;
             }
+
+            if (would_collide_x || would_collide_z) {
+                std::cout << "colliding" << std::endl;
+            }
             if (would_collide_x && would_collide_z) {
                 return EntityHelper::ForEachFlow::Break;
             }
+
             return EntityHelper::ForEachFlow::None;
         });
 
@@ -147,6 +110,64 @@ struct Person : public Entity {
                 }
             }
         }
+    }
+
+    std::tuple<int, int> get_face_direction(vec3 new_pos_x, vec3 new_pos_z) {
+        int facedir_x = -1;
+        int facedir_z = -1;
+
+        vec3 delta_distance_x = new_pos_x - this->raw_position;
+        if (delta_distance_x.x > 0) {
+            facedir_x = FrontFaceDirection::RIGHT;
+        } else if (delta_distance_x.x < 0) {
+            facedir_x = FrontFaceDirection::LEFT;
+        }
+
+        vec3 delta_distance_z = new_pos_z - this->raw_position;
+        if (delta_distance_z.z > 0) {
+            facedir_z = FrontFaceDirection::FORWARD;
+        } else if (delta_distance_z.z < 0) {
+            facedir_z = FrontFaceDirection::BACK;
+        }
+        return std::make_tuple(facedir_x, facedir_z);
+    }
+
+    void update_facing_direction(int facedir_x, int facedir_z) {
+        if (facedir_x == -1 && facedir_z == -1) {
+            // do nothing
+        } else if (facedir_x == -1) {
+            this->face_direction = static_cast<FrontFaceDirection>(facedir_z);
+        } else if (facedir_z == -1) {
+            this->face_direction = static_cast<FrontFaceDirection>(facedir_x);
+        } else {
+            this->face_direction =
+                static_cast<FrontFaceDirection>(facedir_x | facedir_z);
+        }
+    }
+
+    virtual void update(float dt) override {
+        // std::cout << this->raw_position << ";; " << this->position <<
+        // std::endl;
+
+        auto new_pos_x = this->update_xaxis_position(dt);
+        auto new_pos_z = this->update_zaxis_position(dt);
+
+        auto facedirs = get_face_direction(new_pos_x, new_pos_z);
+        int facedir_x = std::get<0>(facedirs);
+        int facedir_z = std::get<1>(facedirs);
+
+        update_facing_direction(facedir_x, facedir_z);
+
+        new_pos_x.x += this->pushed_force.x;
+        this->pushed_force.x = 0.0f;
+
+        new_pos_z.z += this->pushed_force.z;
+        this->pushed_force.z = 0.0f;
+
+        // this->face_direction = FrontFaceDirection::BACK &
+        // FrontFaceDirection::LEFT;
+
+        handle_collision(facedir_x, new_pos_x, facedir_z, new_pos_z);
 
         Entity::update(dt);
     }
