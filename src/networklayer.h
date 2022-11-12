@@ -15,6 +15,7 @@
 #include "player.h"
 #include "raylib.h"
 #include "remote_player.h"
+#include "ui_context.h"
 
 using namespace ui;
 
@@ -96,19 +97,44 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_base_screen() {
-        draw_username();
-        padding(*ui::components::mk_but_pad());
-        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Host")) {
-            network_info->set_role(network::Info::Role::s_Host);
+        auto content = ui::components::mk_row();
+        div(*content);
+        ui_context->push_parent(content);
+        {
+            auto col1 = ui::components::mk_column();
+            div(*col1);
+            ui_context->push_parent(col1);
+            {
+                padding(*ui::components::mk_but_pad());
+                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                           "Host")) {
+                    network_info->set_role(network::Info::Role::s_Host);
+                }
+                padding(*ui::components::mk_but_pad());
+                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                           "Join")) {
+                    network_info->set_role(network::Info::Role::s_Client);
+                }
+                padding(*ui::components::mk_but_pad());
+                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                           "Back")) {
+                    Menu::get().state = Menu::State::Root;
+                }
+            }
+            ui_context->pop_parent();
+
+            padding(*ui::components::mk_but_pad());
+
+            auto col2 = ui::components::mk_column();
+            div(*col2);
+            ui_context->push_parent(col2);
+            {
+                //
+                draw_username();
+            }
+            ui_context->pop_parent();
         }
-        padding(*ui::components::mk_but_pad());
-        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Join")) {
-            network_info->set_role(network::Info::Role::s_Client);
-        }
-        padding(*ui::components::mk_but_pad());
-        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
-            Menu::get().state = Menu::State::Root;
-        }
+        ui_context->pop_parent();
     }
 
     void draw_ip_input_screen() {
@@ -132,38 +158,40 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_connected_screen() {
-        if (network_info->is_host() && my_ip_address.has_value()) {
-            auto content = ui_context->own(
-                Widget({.mode = Children, .strictness = 1.f},
-                       {.mode = Children, .strictness = 1.f}, Row));
-            div(*content);
-            ui_context->push_parent(content);
-            {
-                auto ip = should_show_host_ip ? my_ip_address.value()
-                                              : "***.***.***.***";
-                text(*ui::components::mk_text(),
-                     fmt::format("Your IP is: {}", ip));
-                auto checkbox_widget = ui_context->own(
-                    Widget(MK_UUID(id, ROOT_ID),
-                           {.mode = Pixels, .value = 75.f, .strictness = 0.5f},
-                           {.mode = Pixels, .value = 25.f, .strictness = 1.f}));
-                std::string show_hide_host_ip_text =
-                    should_show_host_ip ? "Hide" : "Show";
-                if (checkbox(*checkbox_widget, &should_show_host_ip,
-                             &show_hide_host_ip_text)) {
+        auto draw_host_network_info = [&]() {
+            if (network_info->is_host() && my_ip_address.has_value()) {
+                auto content = ui_context->own(
+                    Widget({.mode = Children, .strictness = 1.f},
+                           {.mode = Children, .strictness = 1.f}, Row));
+                div(*content);
+                ui_context->push_parent(content);
+                {
+                    auto ip = should_show_host_ip ? my_ip_address.value()
+                                                  : "***.***.***.***";
+                    text(*ui::components::mk_text(),
+                         fmt::format("Your IP is: {}", ip));
+                    auto checkbox_widget = ui_context->own(Widget(
+                        MK_UUID(id, ROOT_ID),
+                        {.mode = Pixels, .value = 75.f, .strictness = 0.5f},
+                        {.mode = Pixels, .value = 25.f, .strictness = 1.f}));
+                    std::string show_hide_host_ip_text =
+                        should_show_host_ip ? "Hide" : "Show";
+                    if (checkbox(*checkbox_widget, &should_show_host_ip,
+                                 &show_hide_host_ip_text)) {
+                    }
+                    if (button(*ui::components::mk_icon_button(
+                                   MK_UUID(id, ROOT_ID)),
+                               "Copy")) {
+                        SetClipboardText(my_ip_address.value().c_str());
+                    }
                 }
-                if (button(
-                        *ui::components::mk_icon_button(MK_UUID(id, ROOT_ID)),
-                        "Copy")) {
-                    SetClipboardText(my_ip_address.value().c_str());
-                }
+                ui_context->pop_parent();
             }
-            ui_context->pop_parent();
-        }
-        draw_username();
+            // TODO add button to edit as long as you arent currently
+            // hosting people?
+            draw_username();
+        };
 
-        // TODO add button to edit as long as you arent currently
-        // hosting people?
         for (auto kv : network_info->client->remote_players) {
             // TODO figure out why there are null rps
             if (!kv.second) continue;
@@ -187,6 +215,10 @@ struct NetworkLayer : public Layer {
                    "Disconnect")) {
             network_info.reset(new network::Info());
         }
+
+        padding(*ui::components::mk_but_pad());
+
+        draw_host_network_info();
     }
 
     void draw_username_picker() {

@@ -306,7 +306,26 @@ struct UIContext {
         // tree_root->print_tree();
         // exit(0);
         render_all();
+        reset_tabbing_if_not_visible(tree_root);
+        //
         cleanup();
+    }
+
+    bool matching_id_in_tree(uuid& id, Widget* tree_root) {
+        if (tree_root == nullptr) return false;
+        if (tree_root->id == id) return true;
+
+        for (auto child : tree_root->children) {
+            bool matching = matching_id_in_tree(id, child);
+            if (matching) return true;
+        }
+        return false;
+    }
+
+    void reset_tabbing_if_not_visible(Widget* tree_root) {
+        if (kb_focus_id == ROOT_ID) return;
+        if (matching_id_in_tree(kb_focus_id, tree_root)) return;
+        kb_focus_id = ROOT_ID;
     }
 
     void cleanup() {
@@ -518,6 +537,11 @@ inline std::shared_ptr<Widget> mk_root() {
 inline std::shared_ptr<Widget> mk_row() {
     return get().own(Widget({.mode = Children, .strictness = 1.f},
                             {.mode = Children, .strictness = 1.f}, Row));
+}
+
+inline std::shared_ptr<Widget> mk_column() {
+    return get().own(Widget({.mode = Children, .strictness = 1.f},
+                            {.mode = Children, .strictness = 1.f}, Column));
 }
 
 inline std::shared_ptr<Widget> mk_text() {
