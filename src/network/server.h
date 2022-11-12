@@ -40,6 +40,7 @@ struct Server {
     std::shared_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
     std::thread::id thread_id;
+    Menu::State current_state;
 
     explicit Server(int port) {
         server_p.reset(new internal::Server(port));
@@ -170,8 +171,9 @@ struct Server {
                 packet.client_id = incoming_client.client_id;
 
                 // create the player if they dont already exist
-                if (!players.contains(packet.client_id))
+                if (!players.contains(packet.client_id)) {
                     players[packet.client_id] = std::make_shared<Player>();
+                }
 
                 // update the username
                 players[packet.client_id]->username = info.username;
