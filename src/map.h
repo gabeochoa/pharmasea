@@ -13,6 +13,7 @@
 #include "entity.h"
 #include "furniture/wall.h"
 #include "remote_player.h"
+#include "ui_color.h"
 
 const std::string TINY = R"(
 .........
@@ -143,12 +144,23 @@ struct Map {
     }
 
    private:
+    void generate_map() {
+        generate_walls();
+
+        {
+            std::shared_ptr<Wall> wall;
+            wall.reset(new Wall(vec2{10 * TILESIZE, 10 * TILESIZE},  //
+                                ui::color::baby_blue));
+            entities.push_back(wall);
+        }
+    }
     void generate_walls() {
         auto d_color = (Color){155, 75, 0, 255};
-        for (int i = 1; i < MAX_MAP_WIDTH; i++) {
-            for (int j = 1; j < MAX_MAP_HEIGHT; j++) {
-                if (i == 1 || j == 1 || i == MAX_MAP_WIDTH - 1 ||
-                    i == MAX_MAP_HEIGHT - 1) {
+        for (int i = 0; i < MAX_MAP_WIDTH; i++) {
+            for (int j = 0; j < MAX_MAP_HEIGHT; j++) {
+                if ((i == 0 && j == 0) || (i == 0 && j == 1)) continue;
+                if (i == 0 || j == 0 || i == MAX_MAP_WIDTH - 1 ||
+                    j == MAX_MAP_HEIGHT - 1) {
                     vec2 location = vec2{i * TILESIZE, j * TILESIZE};
                     std::shared_ptr<Wall> wall;
                     wall.reset(new Wall(location, d_color));
