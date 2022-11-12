@@ -98,8 +98,9 @@ struct GameLayer : public Layer {
     }
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().state != Menu::State::Game) return;
-        if (minimized) return;
+        if (Menu::get().state != Menu::State::Game &&
+            Menu::get().state != Menu::State::Paused)
+            return;
         PROFILE();
 
         ClearBackground(Color{200, 200, 200, 255});

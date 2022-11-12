@@ -59,10 +59,7 @@ struct PauseLayer : public Layer {
 
     virtual void onDraw(float dt) override {
         if (Menu::get().state != Menu::State::Paused) return;
-        // TODO with gamelayer, support events
-        if (minimized) {
-            return;
-        }
+
         // NOTE: We specifically dont clear background
         // because people are used to pause menu being an overlay
 
