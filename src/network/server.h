@@ -2,6 +2,9 @@
 
 #pragma once
 
+#include <thread>
+//
+#include "../atomic_queue.h"
 #include "shared.h"
 //
 #include "internal/server.h"
@@ -11,7 +14,32 @@
 
 namespace network {
 
+// no singleton.h here because we dont want this publically announced
+struct Server;
+static std::shared_ptr<Server> g_server;
+
 struct Server {
+    static std::thread start(int port) {
+        g_server.reset(new Server(port));
+        return std::thread([&] {
+            g_server->running = true;
+            g_server->run();
+        });
+    }
+
+    static void queue_packet(ClientPacket& p) {
+        g_server->packet_queue.push_back(p);
+    }
+
+    static void stop() { g_server->running = false; }
+
+   private:
+    AtomicQueue<ClientPacket> packet_queue;
+    std::shared_ptr<internal::Server> server_p;
+    std::map<int, std::shared_ptr<Player> > players;
+    std::shared_ptr<Map> pharmacy_map;
+    std::atomic<bool> running;
+
     explicit Server(int port) {
         server_p.reset(new internal::Server(port));
         server_p->set_process_message(
@@ -24,35 +52,6 @@ struct Server {
         pharmacy_map.reset(new Map());
     }
 
-    void tick(float) {
-        server_p->run();
-
-        {
-            if (next_map_tick > 0) {
-                return;
-            }
-            next_map_tick = next_map_tick_reset;
-            send_map_state();
-        }
-    }
-
-    void send_menu_state(Menu::State state) {
-        ClientPacket player({
-            .client_id = SERVER_CLIENT_ID,
-            .msg_type = ClientPacket::MsgType::GameState,
-            .msg = ClientPacket::GameStateInfo({.host_menu_state = state}),
-        });
-        server_p->send_client_packet_to_all(player);
-    }
-
-   private:
-    std::shared_ptr<internal::Server> server_p;
-    std::map<int, std::shared_ptr<Player> > players;
-    std::shared_ptr<Map> pharmacy_map;
-
-    float next_map_tick_reset = 0.04f;
-    float next_map_tick = 0.0f;
-
     void send_map_state() {
         ClientPacket map_packet({
             .channel = Channel::RELIABLE,
@@ -63,6 +62,29 @@ struct Server {
             }),
         });
         server_p->send_client_packet_to_all(map_packet);
+    }
+
+    void run() {
+        while (running) {
+            tick();
+            //
+            using namespace std::chrono_literals;
+            std::this_thread::sleep_for(8ms);
+        }
+    }
+
+    void tick() {
+        server_p->run();
+
+        // Check to see if we have any packets to send off
+
+        while (!packet_queue.empty()) {
+            ClientPacket& p = packet_queue.front();
+            server_p->send_client_packet_to_all(p);
+            packet_queue.pop_front();
+        }
+
+        send_map_state();
     }
 
     void server_process_message_string(const Client_t& incoming_client,

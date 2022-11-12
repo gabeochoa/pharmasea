@@ -47,7 +47,7 @@ struct Info {
         switch (role) {
             case Role::s_Host: {
                 desired_role = Role::s_Host;
-                server.reset(new Server(DEFAULT_PORT));
+                server_thread = Server::start(DEFAULT_PORT);
                 //
                 client.reset(new Client());
                 client->update_username(Settings::get().data.username);
@@ -64,8 +64,9 @@ struct Info {
         }
     }
 
-    std::shared_ptr<Server> server;
     std::shared_ptr<Client> client;
+    std::thread server_thread;
+
     bool username_set = false;
 
     void lock_in_username() { username_set = true; }
@@ -73,12 +74,21 @@ struct Info {
     std::string& host_ip_address() { return client->conn_info.host_ip_address; }
     void lock_in_ip() { client->lock_in_ip(); }
     bool has_set_ip() { return client->conn_info.ip_set; }
-    void start_game() { server->send_menu_state(Menu::State::Game); }
+    void start_game() {
+        ClientPacket packet({
+            .client_id = SERVER_CLIENT_ID,
+            .msg_type = ClientPacket::MsgType::GameState,
+            .msg = ClientPacket::GameStateInfo(
+                {.host_menu_state = Menu::State::Game}),
+        });
+        Server::queue_packet(packet);
+    }
 
     Info() {}
 
     ~Info() {
-        server.reset();
+        Server::stop();
+        server_thread.join();
         client.reset();
         //
         desired_role = Role::s_None;
@@ -103,14 +113,9 @@ struct Info {
     }
 
     void tick(float dt) {
-        if (is_host()) {
-            server->tick(dt);
-            client->tick(dt);
-        }
+        if (!has_role()) return;
 
-        if (is_client()) {
-            client->tick(dt);
-        }
+        client->tick(dt);
     }
 };
 
