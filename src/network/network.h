@@ -84,7 +84,7 @@ struct Info {
     bool has_set_ip() { return client->conn_info.ip_set; }
 
     float menu_state_tick = 0.f;
-    float menu_state_tick_reset = 10.0f;
+    float menu_state_tick_reset = 0.1f;
 
     void send_current_menu_state(float dt) {
         if (menu_state_tick > 0) {
