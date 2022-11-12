@@ -112,10 +112,10 @@ struct Client {
             auto rp = remote_players[client_id];
             rp->client_id = client_id;
             rp->update_name(username);
-            // TODO eventually add entityhelper support
+            // NOTE we add to the map directly because its colocated with
+            //      the other entity info
             map->remote_players_NOT_SERIALIZED.push_back(
                 remote_players[client_id]);
-            // EntityHelper::addEntity(remote_players[client_id]);
             std::cout << fmt::format("Adding a player {}", client_id)
                       << std::endl;
         };
@@ -186,8 +186,7 @@ struct Client {
             case ClientPacket::MsgType::Map: {
                 ClientPacket::MapInfo info =
                     std::get<ClientPacket::MapInfo>(packet.msg);
-                // TODO do we need to do operator=?
-                map->merge(info.map);
+                client_entities_DO_NOT_USE = info.map.entities;
             } break;
 
             default:

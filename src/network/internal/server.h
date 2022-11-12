@@ -268,6 +268,7 @@ struct Server {
                                       ClientPacket packet) {
         Buffer buffer = serialize_to_buffer(packet);
         send_packet_string_to_client(conn, buffer);
+        std::cout << std::endl;
     }
 
     void send_client_packet_to_all(

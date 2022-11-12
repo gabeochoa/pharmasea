@@ -111,22 +111,19 @@ const int MAX_SEED_LENGTH = 20;
 using PolymorphicEntityClasses = bitsery::ext::PolymorphicClassesList<Entity>;
 
 struct Map {
-    std::string seed;
-    std::vector<std::shared_ptr<Entity>> entities;
+    bool was_generated = false;
 
+    std::string seed;
+    Entities entities;
+    Entities::size_type num_entities;
     std::vector<std::shared_ptr<RemotePlayer>> remote_players_NOT_SERIALIZED;
 
-    Map(const std::string& _seed = "default") : seed(_seed) {
-        generate_walls();
-    }
+    Map(const std::string& _seed = "default") : seed(_seed) {}
 
-    void merge(const Map& other) {
-        seed = other.seed;
-        this->entities = other.entities;
-    }
+    void merge(const Map& other) { seed = other.seed; }
 
     void onUpdate(float dt) {
-        for (auto e : entities) {
+        for (auto e : EntityHelper::get_entities()) {
             e->update(dt);
         }
         for (auto rp : remote_players_NOT_SERIALIZED) {
@@ -143,6 +140,19 @@ struct Map {
         }
     }
 
+    void ensure_generated_map() {
+        if (was_generated) return;
+        was_generated = true;
+        generate_map();
+    }
+
+    void grab_entities() {
+        entities.clear();
+        auto es = EntityHelper::get_entities();
+        this->entities = es;
+        num_entities = this->entities.size();
+    }
+
    private:
     void generate_map() {
         generate_walls();
@@ -151,7 +161,7 @@ struct Map {
             std::shared_ptr<Wall> wall;
             wall.reset(new Wall(vec2{10 * TILESIZE, 10 * TILESIZE},  //
                                 ui::color::baby_blue));
-            entities.push_back(wall);
+            EntityHelper::addEntity(wall);
         }
     }
     void generate_walls() {
@@ -164,7 +174,7 @@ struct Map {
                     vec2 location = vec2{i * TILESIZE, j * TILESIZE};
                     std::shared_ptr<Wall> wall;
                     wall.reset(new Wall(location, d_color));
-                    entities.push_back(wall);
+                    EntityHelper::addEntity(wall);
                 }
             }
         }
@@ -174,7 +184,8 @@ struct Map {
     template<typename S>
     void serialize(S& s) {
         s.text1b(seed, MAX_SEED_LENGTH);
-        s.container(entities, entities.size(),
+        s.value8b(num_entities);
+        s.container(entities, num_entities,
                     [](S& s2, std::shared_ptr<Entity>& entity) {
                         s2.ext(entity, bitsery::ext::StdSmartPtr{});
                     });

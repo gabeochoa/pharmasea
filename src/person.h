@@ -25,8 +25,7 @@ struct Person : public Entity {
         return (vec3){TILESIZE * 0.8f, TILESIZE * 0.8f, TILESIZE * 0.8f};
     }
 
-    void handle_collision(std::vector<std::shared_ptr<Entity>> entities,
-                          int facedir_x, vec3 new_pos_x, int facedir_z,
+    void handle_collision(int facedir_x, vec3 new_pos_x, int facedir_z,
                           vec3 new_pos_z) {
         auto new_bounds_x =
             get_bounds(new_pos_x, this->size());  // horizontal check
@@ -37,7 +36,7 @@ struct Person : public Entity {
         bool would_collide_z = false;
         std::weak_ptr<Entity> collided_entity_x;
         std::weak_ptr<Entity> collided_entity_z;
-        EntityHelper::forEach(entities, [&](auto entity) {
+        EntityHelper::forEachEntity([&](auto entity) {
             if (this->id == entity->id) {
                 return EntityHelper::ForEachFlow::Continue;
             }
@@ -164,10 +163,7 @@ struct Person : public Entity {
         // this->face_direction = FrontFaceDirection::BACK &
         // FrontFaceDirection::LEFT;
 
-        // eventually replace
-        auto entities = entities_DO_NOT_USE;
-
-        handle_collision(entities, facedir_x, new_pos_x, facedir_z, new_pos_z);
+        handle_collision(facedir_x, new_pos_x, facedir_z, new_pos_z);
 
         Entity::update(dt);
     }

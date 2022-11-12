@@ -39,6 +39,7 @@ struct Server {
     std::map<int, std::shared_ptr<Player> > players;
     std::shared_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
+    std::thread::id thread_id;
 
     explicit Server(int port) {
         server_p.reset(new internal::Server(port));
@@ -53,6 +54,9 @@ struct Server {
     }
 
     void send_map_state() {
+        pharmacy_map->grab_entities();
+        pharmacy_map->ensure_generated_map();
+
         ClientPacket map_packet({
             .channel = Channel::RELIABLE,
             .client_id = SERVER_CLIENT_ID,
@@ -65,26 +69,48 @@ struct Server {
     }
 
     void run() {
+        thread_id = std::this_thread::get_id();
+        GLOBALS.set("server_thread_id", &thread_id);
+
+        using namespace std::chrono_literals;
+        auto start = std::chrono::high_resolution_clock::now();
+        auto end = start;
+        float duration = 0.f;
         while (running) {
-            tick();
-            //
-            using namespace std::chrono_literals;
-            std::this_thread::sleep_for(8ms);
+            tick(duration);
+
+            do {
+                end = std::chrono::high_resolution_clock::now();
+                duration =
+                    std::chrono::duration_cast<std::chrono::milliseconds>(end -
+                                                                          start)
+                        .count();
+                std::this_thread::sleep_for(1ms);
+            } while (duration < 4);
+
+            start = end;
         }
     }
 
-    void tick() {
+    // NOTE: server time things are in ms
+    float next_map_tick_reset = 10;
+    float next_map_tick = 0;
+
+    void tick(float dt) {
         server_p->run();
 
         // Check to see if we have any packets to send off
-
         while (!packet_queue.empty()) {
             ClientPacket& p = packet_queue.front();
             server_p->send_client_packet_to_all(p);
             packet_queue.pop_front();
         }
 
-        send_map_state();
+        next_map_tick -= dt;
+        if (next_map_tick <= 0) {
+            send_map_state();
+            next_map_tick = next_map_tick_reset;
+        }
     }
 
     void server_process_message_string(const Client_t& incoming_client,
@@ -106,8 +132,8 @@ struct Server {
 
                 if (!player) return;
 
-                auto updated_position = player->get_position_after_input(
-                    pharmacy_map->entities, info.inputs);
+                auto updated_position =
+                    player->get_position_after_input(info.inputs);
 
                 // TODO if the position and face direction didnt change
                 //      then we can early return

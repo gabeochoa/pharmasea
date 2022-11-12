@@ -131,10 +131,13 @@ struct BasePlayer : public Person {
                         return f->can_be_picked_up();
                     });
             this->held_furniture = closest_furniture;
-            if (this->held_furniture) {
-                auto nv = GLOBALS.get_ptr<NavMesh>("navmesh");
-                nv->removeEntity(this->held_furniture->id);
-            }
+            // NOTE: we want to remove the furniture ONLY from the nav mesh
+            //       when picked up because then AI can walk through,
+            //       this also means we have to add it back when we place it
+            // if (this->held_furniture) {
+            // auto nv = GLOBALS.get_ptr<NavMesh>("navmesh");
+            // nv->removeEntity(this->held_furniture->id);
+            // }
             return;
         } else {
             // TODO logic for the closest furniture holding an item within reach

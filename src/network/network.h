@@ -62,8 +62,16 @@ struct Info {
             default:
                 break;
         }
+
+        server_thread_id = server_thread.get_id();
+        GLOBALS.set("server_thread_id", &server_thread_id);
+
+        client_thread_id = std::this_thread::get_id();
+        GLOBALS.set("client_thread_id", &client_thread_id);
     }
 
+    std::thread::id client_thread_id;
+    std::thread::id server_thread_id;
     std::shared_ptr<Client> client;
     std::thread server_thread;
 

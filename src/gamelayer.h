@@ -92,6 +92,7 @@ struct GameLayer : public Layer {
         player->update(dt);
         auto map_ptr = GLOBALS.get_ptr<Map>("map");
         if (map_ptr) {
+            map_ptr->grab_entities();
             map_ptr->onUpdate(dt);
         }
     }
@@ -126,16 +127,16 @@ struct GameLayer : public Layer {
                           TILESIZE, WHITE);
 
             if (GLOBALS.get<bool>("debug_ui_enabled")) {
-                auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-                if (nav) {
-                    for (auto kv : nav->entityShapes) {
-                        DrawLineStrip2Din3D(kv.second.hull, PINK);
-                    }
-
-                    for (auto kv : nav->shapes) {
-                        DrawLineStrip2Din3D(kv.hull, PINK);
-                    }
-                }
+                // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
+                // if (nav) {
+                // for (auto kv : nav->entityShapes) {
+                // DrawLineStrip2Din3D(kv.second.hull, PINK);
+                // }
+                //
+                // for (auto kv : nav->shapes) {
+                // DrawLineStrip2Din3D(kv.hull, PINK);
+                // }
+                // }
             }
         }
         EndMode3D();
