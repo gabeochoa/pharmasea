@@ -8,6 +8,7 @@
 #include "astar.h"
 #include "globals.h"
 #include "item.h"
+#include "item_helper.h"
 #include "random.h"
 #include "raylib.h"
 #include "util.h"

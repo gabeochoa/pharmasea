@@ -85,9 +85,6 @@ struct EntityHelper {
     // return Polygon(rect);
     // }
 
-    static void addItem(std::shared_ptr<Item> item) {
-        items_DO_NOT_USE.push_back(item);
-    }
     static void cleanup() {
         // Cleanup entities marked cleanup
         auto entities = get_entities();
@@ -111,16 +108,6 @@ struct EntityHelper {
     static void forEachEntity(
         std::function<ForEachFlow(std::shared_ptr<Entity>)> cb) {
         for (auto e : get_entities()) {
-            if (!e) continue;
-            auto fef = cb(e);
-            if (fef == 1) continue;
-            if (fef == 2) break;
-        }
-    }
-
-    static void forEachItem(
-        std::function<ForEachFlow(std::shared_ptr<Item>)> cb) {
-        for (auto e : items_DO_NOT_USE) {
             if (!e) continue;
             auto fef = cb(e);
             if (fef == 1) continue;
@@ -189,20 +176,6 @@ struct EntityHelper {
             if (d > range) continue;
             if (d < best_distance) {
                 best_so_far = s;
-                best_distance = d;
-            }
-        }
-        return best_so_far;
-    }
-
-    static std::shared_ptr<Item> getClosestMatchingItem(vec2 pos, float range) {
-        float best_distance = range;
-        std::shared_ptr<Item> best_so_far;
-        for (auto& i : items_DO_NOT_USE) {
-            float d = vec::distance(pos, vec::to2(i->position));
-            if (d > range) continue;
-            if (d < best_distance) {
-                best_so_far = i;
                 best_distance = d;
             }
         }

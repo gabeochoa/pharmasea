@@ -92,7 +92,7 @@ struct GameLayer : public Layer {
         player->update(dt);
         auto map_ptr = GLOBALS.get_ptr<Map>("map");
         if (map_ptr) {
-            map_ptr->grab_entities();
+            map_ptr->grab_things();
             map_ptr->onUpdate(dt);
         }
     }
@@ -112,9 +112,9 @@ struct GameLayer : public Layer {
             }
 
             // TODO migrate
-            EntityHelper::forEachItem([&](auto item) {
+            ItemHelper::forEachItem([&](auto item) {
                 item->render();
-                return EntityHelper::ForEachFlow::None;
+                return ItemHelper::ForEachFlow::None;
             });
 
             // DrawGrid(40, TILESIZE);

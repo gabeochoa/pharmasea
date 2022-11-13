@@ -19,7 +19,25 @@ struct Item {
     vec3 raw_position;
     vec3 position;
     bool unpacked = false;
+    bool cleanup = false;
     HeldBy held_by = NONE;
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.value4b(id);
+        s.value4b(item_size);
+        s.object(color);
+        s.object(raw_position);
+        s.object(position);
+        s.value1b(unpacked);
+        s.value1b(cleanup);
+        s.value4b(held_by);
+    }
+
+   public:
+    Item() {}
 
     Item(vec3 p, Color c) : id(ITEM_ID_GEN++), color(c), raw_position(p) {
         this->position = this->snap_position();
@@ -66,7 +84,6 @@ struct Item {
 
     virtual std::optional<Model> model() const { return {}; }
 };
-static std::vector<std::shared_ptr<Item>> items_DO_NOT_USE;
 
 struct Bag : public Item {
     Bag(vec3 p, Color c) : Item(p, c) {}

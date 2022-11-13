@@ -160,7 +160,7 @@ struct BasePlayer : public Person {
             if (this->held_item) return;
 
             // Handles the non-furniture grabbing case
-            closest_item = EntityHelper::getClosestMatchingItem(
+            closest_item = ItemHelper::getClosestMatchingItem<Item>(
                 vec::to2(this->position), TILESIZE * player_reach);
             this->held_item = closest_item;
             if (this->held_item != nullptr) {

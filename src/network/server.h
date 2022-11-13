@@ -40,7 +40,6 @@ struct Server {
     std::shared_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
     std::thread::id thread_id;
-    Menu::State current_state;
 
     explicit Server(int port) {
         server_p.reset(new internal::Server(port));
@@ -55,7 +54,7 @@ struct Server {
     }
 
     void send_map_state() {
-        pharmacy_map->grab_entities();
+        pharmacy_map->grab_things();
         pharmacy_map->ensure_generated_map();
 
         ClientPacket map_packet({

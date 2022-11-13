@@ -116,6 +116,10 @@ struct Map {
     std::string seed;
     Entities entities;
     Entities::size_type num_entities;
+
+    Items items;
+    Items::size_type num_items;
+
     std::vector<std::shared_ptr<RemotePlayer>> remote_players_NOT_SERIALIZED;
 
     Map(const std::string& _seed = "default") : seed(_seed) {}
@@ -146,11 +150,20 @@ struct Map {
         generate_map();
     }
 
-    void grab_entities() {
-        entities.clear();
-        auto es = EntityHelper::get_entities();
-        this->entities = es;
-        num_entities = this->entities.size();
+    void grab_things() {
+        {
+            entities.clear();
+            auto es = EntityHelper::get_entities();
+            this->entities = es;
+            num_entities = this->entities.size();
+        }
+
+        {
+            items.clear();
+            auto is = ItemHelper::get_items();
+            this->items = is;
+            num_items = this->items.size();
+        }
     }
 
    private:
@@ -189,5 +202,10 @@ struct Map {
                     [](S& s2, std::shared_ptr<Entity>& entity) {
                         s2.ext(entity, bitsery::ext::StdSmartPtr{});
                     });
+
+        s.value8b(num_items);
+        s.container(items, num_items, [](S& s2, std::shared_ptr<Item>& item) {
+            s2.ext(item, bitsery::ext::StdSmartPtr{});
+        });
     }
 };
