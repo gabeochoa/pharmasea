@@ -118,7 +118,7 @@ struct Client {
     ClientPacket deserialize_to_packet(std::string msg) {
         TContext ctx{};
         std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
-            PolymorphicEntityClasses{});
+            MyPolymorphicClasses{});
 
         BitseryDeserializer des{ctx, msg.begin(), msg.size()};
 
@@ -134,15 +134,11 @@ struct Client {
         TContext ctx{};
 
         std::get<1>(ctx).registerBasesList<BitserySerializer>(
-            PolymorphicEntityClasses{});
+            MyPolymorphicClasses{});
         BitserySerializer ser{ctx, buffer};
         ser.object(packet);
         ser.adapter().flush();
-
         // size = ser.adapter().writtenBytesCount();
-
-        // TODO do we need this anymore?
-        // bitsery::quickSerialization(OutputAdapter{buffer}, packet);
         send_string_to_server(buffer, packet.channel);
     }
 

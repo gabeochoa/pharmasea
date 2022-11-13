@@ -240,7 +240,7 @@ struct Server {
     ClientPacket deserialize_to_packet(std::string msg) {
         TContext ctx{};
         std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
-            PolymorphicEntityClasses{});
+            MyPolymorphicClasses{});
 
         BitseryDeserializer des{ctx, msg.begin(), msg.size()};
 
@@ -256,7 +256,7 @@ struct Server {
         TContext ctx{};
 
         std::get<1>(ctx).registerBasesList<BitserySerializer>(
-            PolymorphicEntityClasses{});
+            MyPolymorphicClasses{});
         BitserySerializer ser{ctx, buffer};
         ser.object(packet);
         ser.adapter().flush();

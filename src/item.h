@@ -86,6 +86,15 @@ struct Item {
 };
 
 struct Bag : public Item {
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Item>{});
+    }
+
+   public:
+    Bag() {}
     Bag(vec3 p, Color c) : Item(p, c) {}
     Bag(vec2 p, Color c) : Item(p, c) {}
 

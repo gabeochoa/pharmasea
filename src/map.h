@@ -11,7 +11,7 @@
 #include "external_include.h"
 //
 #include "entity.h"
-#include "furniture/wall.h"
+#include "furnitures.h"
 #include "remote_player.h"
 #include "ui_color.h"
 
@@ -99,7 +99,11 @@ template<>
 struct PolymorphicBaseClass<Entity> : PolymorphicDerivedClasses<Furniture> {};
 
 template<>
-struct PolymorphicBaseClass<Furniture> : PolymorphicDerivedClasses<Wall> {};
+struct PolymorphicBaseClass<Furniture>
+    : PolymorphicDerivedClasses<Wall, Table> {};
+
+template<>
+struct PolymorphicBaseClass<Item> : PolymorphicDerivedClasses<Bag> {};
 
 }  // namespace ext
 }  // namespace bitsery
@@ -108,7 +112,7 @@ const int MAX_MAP_WIDTH = 20;
 const int MAX_MAP_HEIGHT = 20;
 const int MAX_SEED_LENGTH = 20;
 
-using PolymorphicEntityClasses = bitsery::ext::PolymorphicClassesList<Entity>;
+using MyPolymorphicClasses = bitsery::ext::PolymorphicClassesList<Entity, Item>;
 
 struct Map {
     bool was_generated = false;
@@ -138,6 +142,10 @@ struct Map {
     void onDraw(float) {
         for (auto e : entities) {
             e->render();
+        }
+
+        for (auto i : items) {
+            i->render();
         }
         for (auto rp : remote_players_NOT_SERIALIZED) {
             rp->render();
@@ -171,10 +179,16 @@ struct Map {
         generate_walls();
 
         {
-            std::shared_ptr<Wall> wall;
-            wall.reset(new Wall(vec2{10 * TILESIZE, 10 * TILESIZE},  //
-                                ui::color::baby_blue));
-            EntityHelper::addEntity(wall);
+            std::shared_ptr<Table> table;
+            auto location = vec2{10 * TILESIZE, 10 * TILESIZE};
+            table.reset(new Table(location));
+            EntityHelper::addEntity(table);
+
+            std::shared_ptr<Item> item;
+            item.reset(new Bag(location, (Color){255, 15, 240, 255}));
+            ItemHelper::addItem(item);
+
+            table->held_item = item;
         }
     }
     void generate_walls() {
