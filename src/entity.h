@@ -168,7 +168,6 @@ struct Entity {
             }
 
             held_item->update_position(new_pos);
-            std::cout << "updating items position " << new_pos << std::endl;
         }
     }
 

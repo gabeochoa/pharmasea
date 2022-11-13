@@ -86,7 +86,7 @@ struct Server {
                                                                           start)
                         .count();
                 std::this_thread::sleep_for(1ms);
-            } while (duration < 4);
+            } while (duration < 3);
 
             start = end;
         }
