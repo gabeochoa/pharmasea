@@ -128,8 +128,7 @@ struct PolymorphicBaseClass<Item> : PolymorphicDerivedClasses<Bag> {};
 }  // namespace ext
 }  // namespace bitsery
 
-constexpr int MAX_MAP_WIDTH = 20;
-constexpr int MAX_MAP_HEIGHT = 20;
+constexpr int MAX_MAP_SIZE = 20;
 constexpr int MAX_SEED_LENGTH = 20;
 
 using MyPolymorphicClasses = bitsery::ext::PolymorphicClassesList<Entity, Item>;
@@ -141,6 +140,7 @@ struct Map {
     std::string seed;
     size_t hashed_seed;
     std::mt19937 generator;
+    std::uniform_int_distribution<> dist;
     //
 
     Entities entities;
@@ -157,6 +157,8 @@ struct Map {
         seed = s;
         hashed_seed = hashString(seed);
         generator = make_engine(hashed_seed);
+        // TODO leaving at 1 because we dont have a door to block the entrance
+        dist = std::uniform_int_distribution<>(1, MAX_MAP_SIZE - 1);
     }
 
     void onUpdate(float dt) {
@@ -204,12 +206,19 @@ struct Map {
     }
 
    private:
-    void generate_map() {
-        generate_walls();
+    auto get_rand_walkable() {
+        vec2 location;
+        do {
+            location =
+                vec2{dist(generator) * TILESIZE, dist(generator) * TILESIZE};
+        } while (!EntityHelper::isWalkable(location));
+        return location;
+    }
 
-        {
+    void generate_map() {
+        auto generate_tables = [this]() {
             std::shared_ptr<Table> table;
-            auto location = vec2{10 * TILESIZE, 10 * TILESIZE};
+            auto location = get_rand_walkable();
             table.reset(new Table(location));
             EntityHelper::addEntity(table);
 
@@ -218,28 +227,36 @@ struct Map {
             ItemHelper::addItem(item);
 
             table->held_item = item;
-        }
-        {
+        };
+
+        auto generate_register = [this]() {
             std::shared_ptr<Register> reg;
-            auto location = vec2{get_rand(generator, 1, 10) * TILESIZE,
-                                 get_rand(generator, 1, 10) * TILESIZE};
+            auto location = get_rand_walkable();
             reg.reset(new Register(location));
             EntityHelper::addEntity(reg);
-        }
-        {
+        };
+
+        // TODO replace with a CustomerSpawner eventually
+        auto generate_customer = [this]() {
             auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
             std::shared_ptr<Customer> customer;
             customer.reset(new Customer(location, RED));
             EntityHelper::addEntity(customer);
-        }
+        };
+
+        generate_walls();
+        generate_tables();
+        generate_register();
+        generate_customer();
     }
+
     void generate_walls() {
         auto d_color = (Color){155, 75, 0, 255};
-        for (int i = 0; i < MAX_MAP_WIDTH; i++) {
-            for (int j = 0; j < MAX_MAP_HEIGHT; j++) {
+        for (int i = 0; i < MAX_MAP_SIZE; i++) {
+            for (int j = 0; j < MAX_MAP_SIZE; j++) {
                 if ((i == 0 && j == 0) || (i == 0 && j == 1)) continue;
-                if (i == 0 || j == 0 || i == MAX_MAP_WIDTH - 1 ||
-                    j == MAX_MAP_HEIGHT - 1) {
+                if (i == 0 || j == 0 || i == MAX_MAP_SIZE - 1 ||
+                    j == MAX_MAP_SIZE - 1) {
                     vec2 location = vec2{i * TILESIZE, j * TILESIZE};
                     std::shared_ptr<Wall> wall;
                     wall.reset(new Wall(location, d_color));
