@@ -106,6 +106,11 @@ struct Server {
             packet_queue.pop_front();
         }
 
+        for (auto p : players) {
+            p.second->update(dt);
+        }
+        pharmacy_map->onUpdate(dt);
+
         next_map_tick -= dt;
         if (next_map_tick <= 0) {
             send_map_state();

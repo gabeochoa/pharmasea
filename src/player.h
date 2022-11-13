@@ -125,6 +125,7 @@ struct Player : public BasePlayer {
 
         // TODO need to auto drop when "in_planning" changes
         if (this->held_furniture) {
+            std::cout << "holding furniture" << std::endl;
             const auto _drop_furniture = [&]() {
                 // TODO need to make sure it doesnt place ontop of another one
                 this->held_furniture->update_position(

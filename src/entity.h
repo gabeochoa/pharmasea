@@ -67,6 +67,7 @@ struct Entity {
         s.value1b(cleanup);
         s.value1b(is_highlighted);
         s.value4b(face_direction);
+        s.object(held_item);
     }
 
    public:
@@ -167,6 +168,7 @@ struct Entity {
             }
 
             held_item->update_position(new_pos);
+            std::cout << "updating items position " << new_pos << std::endl;
         }
     }
 

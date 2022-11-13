@@ -94,6 +94,16 @@ void serialize(S& s, Color& data) {
     s.value1b(data.b);
 }
 
+template<typename S>
+void serialize(S& s, std::shared_ptr<Item>& item) {
+    s.ext(item, bitsery::ext::StdSmartPtr{});
+}
+
+template<typename S>
+void serialize(S& s, std::shared_ptr<Entity>& entity) {
+    s.ext(entity, bitsery::ext::StdSmartPtr{});
+}
+
 namespace ext {
 template<>
 struct PolymorphicBaseClass<Entity> : PolymorphicDerivedClasses<Furniture> {};
