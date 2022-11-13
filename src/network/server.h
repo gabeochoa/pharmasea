@@ -178,6 +178,14 @@ struct Server {
                 ClientPacket::PlayerJoinInfo info =
                     std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
 
+                if (info.hashed_version != HASHED_VERSION) {
+                    // TODO send error message
+                    std::cout
+                        << "player tried to join but had incorrect version"
+                        << std::endl;
+                    return;
+                }
+
                 // overwrite it so its already there
                 packet.client_id = incoming_client.client_id;
 

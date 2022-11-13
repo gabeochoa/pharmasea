@@ -76,6 +76,7 @@ struct ClientPacket {
     struct PlayerJoinInfo {
         std::vector<int> all_clients;
         int client_id = -1;
+        size_t hashed_version;
         bool is_you = false;
         std::string username{};
     };
@@ -169,6 +170,7 @@ void serialize(S& s, ClientPacket& packet) {
               [](S& s, ClientPacket::PlayerJoinInfo& info) {
                   s.container4b(info.all_clients, MAX_CLIENTS);
                   s.value1b(info.is_you);
+                  s.value8b(info.hashed_version);
                   s.value4b(info.client_id);
                   s.text1b(info.username, MAX_NAME_LENGTH);
               },
