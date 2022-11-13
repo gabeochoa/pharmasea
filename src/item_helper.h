@@ -123,7 +123,7 @@ struct ItemHelper {
         for (auto& e : get_items()) {
             auto s = dynamic_pointer_cast<T>(e);
             if (!s) continue;
-            if (!filter(s)) continue;
+            if (filter && !filter(s)) continue;
             float d = vec::distance(pos, vec::to2(e->position));
             if (d > range) continue;
             if (d < best_distance) {
