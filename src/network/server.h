@@ -40,6 +40,7 @@ struct Server {
     std::shared_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
     std::thread::id thread_id;
+    Menu::State current_state;
 
     explicit Server(int port) {
         server_p.reset(new internal::Server(port));
@@ -105,17 +106,31 @@ struct Server {
         // Check to see if we have any packets to send off
         while (!packet_queue.empty()) {
             ClientPacket& p = packet_queue.front();
+
+            switch (p.msg_type) {
+                case ClientPacket::MsgType::GameState: {
+                    ClientPacket::GameStateInfo info =
+                        std::get<ClientPacket::GameStateInfo>(p.msg);
+                    current_state = info.host_menu_state;
+                } break;
+                default:
+                    break;
+            }
+
+            //
             server_p->send_client_packet_to_all(p);
             packet_queue.pop_front();
         }
 
-        next_update_tick += dt;
-        if (next_update_tick >= next_update_tick_reset) {
-            for (auto p : players) {
-                p.second->update(next_update_tick / 1000.f);
+        if (current_state == Menu::State::Game) {
+            next_update_tick += dt;
+            if (next_update_tick >= next_update_tick_reset) {
+                for (auto p : players) {
+                    p.second->update(next_update_tick / 1000.f);
+                }
+                pharmacy_map->onUpdate(next_update_tick / 1000.f);
+                next_update_tick = 0.f;
             }
-            pharmacy_map->onUpdate(next_update_tick / 1000.f);
-            next_update_tick = 0.f;
         }
 
         next_map_tick -= dt;
