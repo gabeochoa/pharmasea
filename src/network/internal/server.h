@@ -42,7 +42,9 @@ struct Server {
 
     ~Server() {
         for (auto it : clients) {
-            send_announcement_to_client(it.first, "server shutdown");
+            send_announcement_to_client(
+                it.first, "server shutdown",
+                ClientPacket::AnnouncementType::Warning);
             interface->CloseConnection(it.first, 0, "server shutdown", true);
         }
         clients.clear();
@@ -56,6 +58,7 @@ struct Server {
         SteamNetConnectionStatusChangedCallback_t *info) {
         log("connection_changed_callback");
         std::string temp;
+        ClientPacket::AnnouncementType annoucement_type;
 
         // What's the state of the connection?
         switch (info->m_info.m_eState) {
@@ -85,12 +88,16 @@ struct Server {
                             "Alas, {} hath fallen into shadow.  ({})",
                             itClient->second.client_id,
                             info->m_info.m_szEndDebug);
+                        annoucement_type =
+                            ClientPacket::AnnouncementType::Warning;
                     } else {
                         // Note that here we could check the reason code to see
                         // if it was a "usual" connection or an "unusual" one.
                         pszDebugLogAction = "closed by peer";
                         temp = fmt::format("{}; {} hath departed", temp,
                                            itClient->second.client_id);
+                        annoucement_type =
+                            ClientPacket::AnnouncementType::Warning;
                     }
 
                     // Spew something to our own log.  Note that because we put
@@ -107,7 +114,7 @@ struct Server {
 
                     // TODO send a player remove message
                     // Send a message so everybody else knows what happened
-                    send_announcement_to_all(temp);
+                    send_announcement_to_all(temp, annoucement_type);
                 } else {
                     M_ASSERT(
                         info->m_eOldState ==
@@ -168,12 +175,15 @@ struct Server {
                     "Welcome, stranger.  Thou art known to us for now as '{}'; "
                     "upon thine command '/nick' we shall know thee otherwise.",
                     nick_id);
-                send_announcement_to_client(info->m_hConn, temp);
+                send_announcement_to_client(
+                    info->m_hConn, temp,
+                    ClientPacket::AnnouncementType::Message);
 
                 // Also send them a list of everybody who is already connected
                 if (clients.empty()) {
-                    send_announcement_to_client(info->m_hConn,
-                                                "Thou art utterly alone.");
+                    send_announcement_to_client(
+                        info->m_hConn, "Thou art utterly alone.",
+                        ClientPacket::AnnouncementType::Message);
                 } else {
                     temp = fmt::format("{} companions greet you:",
                                        (int) clients.size());
@@ -181,7 +191,8 @@ struct Server {
                         send_announcement_to_client(
                             info->m_hConn,
                             fmt::format("{}, your id is: {}", temp,
-                                        c.second.client_id));
+                                        c.second.client_id),
+                            ClientPacket::AnnouncementType::Message);
                 }
 
                 // Add them to the client list, using std::map wacky syntax
@@ -196,9 +207,11 @@ struct Server {
                     "Hark!  A stranger hath joined this merry host.  For "
                     "now we shall call them '{}'",
                     nick_id);
-                send_announcement_to_all(temp, [&](Client_t &client) {
-                    return client.client_id == nick_id;
-                });
+                send_announcement_to_all(
+                    temp, ClientPacket::AnnouncementType::Message,
+                    [&](Client_t &client) {
+                        return client.client_id == nick_id;
+                    });
                 break;
             }
 
@@ -293,8 +306,8 @@ struct Server {
         }
     }
 
-    void send_announcement_to_client(HSteamNetConnection conn,
-                                     std::string msg) {
+    void send_announcement_to_client(HSteamNetConnection conn, std::string msg,
+                                     ClientPacket::AnnouncementType type) {
         ClientPacket announce_packet(
             {.client_id = SERVER_CLIENT_ID,
              .msg_type = ClientPacket::MsgType::Announcement,
@@ -303,10 +316,11 @@ struct Server {
     }
 
     void send_announcement_to_all(
-        std::string msg, std::function<bool(Client_t &)> exclude = nullptr) {
+        std::string msg, ClientPacket::AnnouncementType type,
+        std::function<bool(Client_t &)> exclude = nullptr) {
         for (auto &c : clients) {
             if (exclude && exclude(c.second)) continue;
-            send_announcement_to_client(c.first, msg);
+            send_announcement_to_client(c.first, msg, type);
         }
     }
 

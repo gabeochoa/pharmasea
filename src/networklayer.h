@@ -259,6 +259,18 @@ struct NetworkLayer : public Layer {
         }
     }
 
+    void handle_announcements() {
+        if (!network_info->client) return;
+
+        // TODO show a pop up for each
+
+        for (auto info : network_info->client->announcements) {
+            std::cout << fmt::format("Announcement: {}", info.message)
+                      << std::endl;
+        }
+        network_info->client->announcements.clear();
+    }
+
     virtual void onDraw(float dt) override {
         draw_network_overlay();
 
@@ -297,6 +309,7 @@ struct NetworkLayer : public Layer {
                 padding(*top_padding);
                 {  //
                     draw_screen_selector_logic();
+                    handle_announcements();
                 }
                 padding(*ui_context->own(Widget(
                     {.mode = Pixels, .value = 100.f, .strictness = 1.f},

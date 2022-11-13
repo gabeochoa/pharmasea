@@ -52,8 +52,11 @@ struct ClientPacket {
         PlayerLocation,
     } msg_type;
 
+    enum AnnouncementType { Message, Error, Warning };
+
     struct AnnouncementInfo {
         std::string message;
+        AnnouncementType type;
     };
 
     // Map Info
@@ -166,6 +169,7 @@ void serialize(S& s, ClientPacket& packet) {
           bitsery::ext::StdVariant{
               [](S& s, ClientPacket::AnnouncementInfo& info) {
                   s.text1b(info.message, MAX_ANNOUNCEMENT_LENGTH);
+                  s.value4b(info.type);
               },
               [](S& s, ClientPacket::PlayerJoinInfo& info) {
                   s.container4b(info.all_clients, MAX_CLIENTS);

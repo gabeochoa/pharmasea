@@ -22,6 +22,7 @@ struct Client {
     std::shared_ptr<internal::Client> client_p;
     std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
     std::shared_ptr<Map> map;
+    std::vector<ClientPacket::AnnouncementInfo> announcements;
 
     float next_tick_reset = 0.02f;
     float next_tick = 0.0f;
