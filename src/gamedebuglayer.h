@@ -14,13 +14,10 @@
 #include "ui_color.h"
 
 struct GameDebugLayer : public Layer {
-    bool in_planning_mode = false;
     bool debug_ui_enabled = false;
     std::shared_ptr<ui::UIContext> ui_context;
 
     GameDebugLayer() : Layer("Game") {
-        minimized = false;
-        GLOBALS.set("in_planning", &in_planning_mode);
         GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);
 
         ui_context.reset(new ui::UIContext());
@@ -33,11 +30,9 @@ struct GameDebugLayer : public Layer {
         ui_context->push_theme(ui::DEFAULT_THEME);
     }
     virtual ~GameDebugLayer() {}
-    virtual void onAttach() override {}
-    virtual void onDetach() override {}
 
     virtual void onEvent(Event& event) override {
-        if (Menu::get().state != Menu::State::Game) return;
+        if (!Menu::in_game()) return;
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(std::bind(
             &GameDebugLayer::onKeyPressed, this, std::placeholders::_1));
@@ -53,7 +48,7 @@ struct GameDebugLayer : public Layer {
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         if (KeyMap::get_button(Menu::State::Game, "Toggle Planning [Debug]") ==
             event.button) {
-            in_planning_mode = !in_planning_mode;
+            Menu::toggle_planning();
             return true;
         }
         if (KeyMap::get_button(Menu::State::Game, "Toggle Debug [Debug]") ==
@@ -67,7 +62,7 @@ struct GameDebugLayer : public Layer {
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(Menu::State::Game,
                                  "Toggle Planning [Debug]") == event.keycode) {
-            in_planning_mode = !in_planning_mode;
+            Menu::toggle_planning();
             return true;
         }
         if (KeyMap::get_key_code(Menu::State::Game, "Toggle Debug [Debug]") ==
@@ -79,15 +74,13 @@ struct GameDebugLayer : public Layer {
     }
 
     virtual void onUpdate(float dt) override {
-        if (Menu::get().state != Menu::State::Game) return;
-        if (minimized) return;
+        if (!Menu::in_game()) return;
     }
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().state != Menu::State::Game) return;
-        if (minimized) return;
+        if (!Menu::in_game()) return;
 
-        if (in_planning_mode) {
+        if (Menu::get().state == Menu::State::Planning) {
             DrawTextEx(Preload::get().font, "IN PLANNING MODE", vec2{100, 100},
                        20, 0, RED);
         }

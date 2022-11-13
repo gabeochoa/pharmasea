@@ -206,7 +206,7 @@ struct NetworkLayer : public Layer {
         if (network_info->is_host()) {
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                        "Start")) {
-                Menu::get().state = Menu::State::Game;
+                Menu::get().state = Menu::State::Planning;
             }
             padding(*ui::components::mk_but_pad());
         }

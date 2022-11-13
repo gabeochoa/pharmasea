@@ -122,13 +122,16 @@ struct Server {
             packet_queue.pop_front();
         }
 
-        if (current_state == Menu::State::Game) {
+        if (Menu::in_game(current_state)) {
             next_update_tick += dt;
             if (next_update_tick >= next_update_tick_reset) {
                 for (auto p : players) {
                     p.second->update(next_update_tick / 1000.f);
                 }
-                pharmacy_map->onUpdate(next_update_tick / 1000.f);
+
+                if (current_state == Menu::State::Game) {
+                    pharmacy_map->onUpdate(next_update_tick / 1000.f);
+                }
                 next_update_tick = 0.f;
             }
         }

@@ -40,7 +40,7 @@ struct GameLayer : public Layer {
     virtual void onDetach() override {}
 
     virtual void onEvent(Event& event) override {
-        if (Menu::get().state != Menu::State::Game) return;
+        if (!Menu::in_game()) return;
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(
             std::bind(&GameLayer::onKeyPressed, this, std::placeholders::_1));
@@ -53,8 +53,9 @@ struct GameLayer : public Layer {
     bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
+        // Note: You can only pause in game state, in planning no pause
         if (KeyMap::get_button(Menu::State::Game, "Pause") == event.button) {
-            Menu::get().state = Menu::State::Paused;
+            Menu::pause();
             return true;
         }
         return false;
@@ -62,7 +63,7 @@ struct GameLayer : public Layer {
 
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(Menu::State::Game, "Pause") == event.keycode) {
-            Menu::get().state = Menu::State::Paused;
+            Menu::pause();
             return true;
         }
         return false;
@@ -77,7 +78,7 @@ struct GameLayer : public Layer {
     }
 
     virtual void onUpdate(float dt) override {
-        if (Menu::get().state != Menu::State::Game) return;
+        if (!Menu::in_game()) return;
         PROFILE();
 
         play_music();
@@ -98,9 +99,7 @@ struct GameLayer : public Layer {
     }
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().state != Menu::State::Game &&
-            Menu::get().state != Menu::State::Paused)
-            return;
+        if (!Menu::in_game() && !Menu::is_paused()) return;
         PROFILE();
 
         ClearBackground(Color{200, 200, 200, 255});

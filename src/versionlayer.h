@@ -17,7 +17,6 @@ struct VersionLayer : public Layer {
         if (minimized) {
             return;
         }
-        DrawTextEx(Preload::get().font, VERSION.data(), {5, 30}, 20, 0,
-                   LIGHTGRAY);
+        DrawTextEx(Preload::get().font, VERSION.data(), {5, 30}, 20, 0, WHITE);
     }
 };

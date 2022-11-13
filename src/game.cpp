@@ -53,10 +53,10 @@ void startup() {
 
     Layer* layers[] = {
         //
-        new FPSLayer(),       new GameLayer(),     new GameDebugLayer(),
-        new AboutLayer(),     new SettingsLayer(), new MenuLayer(),
-        new MenuStateLayer(), new VersionLayer(),  new NetworkLayer(),
-        new PauseLayer(),
+        new FPSLayer(),     new MenuStateLayer(),     new VersionLayer(),
+        new NetworkLayer(), new GameLayer(),          new GameDebugLayer(),
+        new AboutLayer(),   new SettingsLayer(),      new MenuLayer(),
+        new PauseLayer(),   new PausePlanningLayer(),
     };
     for (auto layer : layers) App::get().pushLayer(layer);
 }

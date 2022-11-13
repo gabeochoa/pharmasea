@@ -59,11 +59,11 @@ struct Player : public BasePlayer {
             inputs.push_back({Menu::State::Game, "Player Pickup", 1.f, dt});
         }
 
-        float rotate =
-            KeyMap::is_event(Menu::State::Game, "Player Rotate Furniture");
-        if (rotate > 0.f) {
+        bool rotate = KeyMap::is_event_once_DO_NOT_USE(
+            Menu::State::Game, "Player Rotate Furniture");
+        if (rotate) {
             inputs.push_back(
-                {Menu::State::Game, "Player Rotate Furniture", rotate, dt});
+                {Menu::State::Game, "Player Rotate Furniture", 1.f, dt});
         }
     }
 
@@ -113,7 +113,7 @@ struct Player : public BasePlayer {
     }
 
     void rotate_furniture() {
-        if (GLOBALS.get_or_default("in_planning", false)) {
+        if (Menu::get().state == Menu::State::Planning) {
             std::shared_ptr<Furniture> match =
                 EntityHelper::getClosestMatchingEntity<Furniture>(
                     vec::to2(this->position), player_reach,
@@ -165,7 +165,7 @@ struct Player : public BasePlayer {
         // TODO support finding things in the direction the player is facing,
         // instead of in a box around him
 
-        if (GLOBALS.get_or_default("in_planning", false)) {
+        if (Menu::get().state == Menu::State::Planning) {
             std::shared_ptr<Furniture> closest_furniture =
                 EntityHelper::getMatchingEntityInFront<Furniture>(
                     vec::to2(this->position), player_reach,

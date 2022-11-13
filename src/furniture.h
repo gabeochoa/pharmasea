@@ -38,6 +38,9 @@ struct Furniture : public Entity {
             Color base = this->is_highlighted
                              ? ui::color::getHighlighted(this->base_color)
                              : this->base_color;
+            float rotation_angle =
+                180.f +
+                static_cast<int>(FrontFaceDirectionMap.at(face_direction));
 
             DrawModelEx(model().value(),
                         {
@@ -45,7 +48,8 @@ struct Furniture : public Entity {
                             this->position.y - TILESIZE / 2,
                             this->position.z,
                         },
-                        vec3{0.f, 1.f, 0.f}, 180.f, this->size() * 10.f, base);
+                        vec3{0.f, 1.f, 0.f}, rotation_angle,
+                        this->size() * 10.f, base);
 
         } else {
             Entity::render();
