@@ -50,6 +50,16 @@ struct Player : public BasePlayer {
         return this->raw_position;
     }
 
+    virtual void update(float dt) override {
+        BasePlayer::update(dt);
+
+        bool pickup = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game,
+                                                       "Player Pickup");
+        if (pickup) {
+            inputs.push_back({Menu::State::Game, "Player Pickup", 1.f, dt});
+        }
+    }
+
     virtual vec3 get_position_after_input(UserInputs inpts) {
         for (UserInput& ui : inpts) {
             auto menu_state = std::get<0>(ui);
@@ -58,8 +68,15 @@ struct Player : public BasePlayer {
             std::string input_key_name = std::get<1>(ui);
             float input_amount = std::get<2>(ui);
             float frame_dt = std::get<3>(ui);
-            float speed = this->base_speed() * frame_dt;
 
+            if (input_key_name == "Player Pickup" && input_amount > 0.f) {
+                grab_or_drop();
+                continue;
+            }
+
+            // Movement down here...
+
+            float speed = this->base_speed() * frame_dt;
             auto new_position = this->position;
 
             if (input_key_name == "Player Left") {
@@ -80,5 +97,92 @@ struct Player : public BasePlayer {
             this->position = this->raw_position;
         }
         return this->position;
+    }
+
+    // TODO how to handle when they are holding something?
+    virtual void grab_or_drop() {
+        // Do we already have something in our hands?
+        if (this->held_item) {
+            const auto _drop_item = [&]() {
+                std::shared_ptr<Furniture> closest_furniture =
+                    EntityHelper::getMatchingEntityInFront<Furniture>(
+                        vec::to2(this->position), player_reach,
+                        this->face_direction, [](std::shared_ptr<Furniture> f) {
+                            return f->can_place_item_into();
+                        });
+                if (closest_furniture) {
+                    this->held_item->update_position(
+                        vec::snap(closest_furniture->position));
+                    closest_furniture->held_item = this->held_item;
+                    closest_furniture->held_item->held_by =
+                        Item::HeldBy::FURNITURE;
+                    this->held_item = nullptr;
+                }
+            };
+            _drop_item();
+            return;
+        }
+
+        // TODO need to auto drop when "in_planning" changes
+        if (this->held_furniture) {
+            const auto _drop_furniture = [&]() {
+                // TODO need to make sure it doesnt place ontop of another one
+                this->held_furniture->update_position(
+                    vec::snap(this->held_furniture->position));
+                EntityHelper::addEntity(this->held_furniture);
+                this->held_furniture = nullptr;
+            };
+            _drop_furniture();
+            return;
+        }
+
+        // TODO support finding things in the direction the player is facing,
+        // instead of in a box around him
+
+        if (GLOBALS.get_or_default("in_planning", false)) {
+            std::shared_ptr<Furniture> closest_furniture =
+                EntityHelper::getMatchingEntityInFront<Furniture>(
+                    vec::to2(this->position), player_reach,
+                    this->face_direction, [](std::shared_ptr<Furniture> f) {
+                        return f->can_be_picked_up();
+                    });
+            this->held_furniture = closest_furniture;
+            // NOTE: we want to remove the furniture ONLY from the nav mesh
+            //       when picked up because then AI can walk through,
+            //       this also means we have to add it back when we place it
+            // if (this->held_furniture) {
+            // auto nv = GLOBALS.get_ptr<NavMesh>("navmesh");
+            // nv->removeEntity(this->held_furniture->id);
+            // }
+            return;
+        } else {
+            // TODO logic for the closest furniture holding an item within reach
+            // Return early if it is found
+            std::shared_ptr<Item> closest_item = nullptr;
+            const auto _pickup_item_from_furniture = [&]() {
+                std::shared_ptr<Furniture> closest_furniture =
+                    EntityHelper::getMatchingEntityInFront<Furniture>(
+                        vec::to2(this->position), player_reach,
+                        this->face_direction,
+                        [](std::shared_ptr<Furniture>) { return true; });
+                if (closest_furniture &&
+                    closest_furniture->held_item != nullptr) {
+                    this->held_item = closest_furniture->held_item;
+                    this->held_item->held_by = Item::HeldBy::PLAYER;
+                    closest_furniture->held_item = nullptr;
+                }
+            };
+            _pickup_item_from_furniture();
+            if (this->held_item) return;
+
+            // Handles the non-furniture grabbing case
+            closest_item = ItemHelper::getClosestMatchingItem<Item>(
+                vec::to2(this->position), TILESIZE * player_reach);
+            this->held_item = closest_item;
+            if (this->held_item != nullptr) {
+                this->held_item->held_by = Item::HeldBy::PLAYER;
+            }
+            return;
+        }
     }
 };
