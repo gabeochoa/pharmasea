@@ -92,6 +92,7 @@ void serialize(S& s, Color& data) {
     s.value1b(data.r);
     s.value1b(data.g);
     s.value1b(data.b);
+    s.value1b(data.a);
 }
 
 template<typename S>
