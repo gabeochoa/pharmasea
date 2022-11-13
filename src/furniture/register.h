@@ -20,13 +20,25 @@ struct RegisterNextQueuePosition : TargetCube {
 };
 
 struct Register : public Furniture {
+    std::deque<AIPerson*> ppl_in_line;
+    int max_queue_size = 3;
+    int next_line_position = 0;
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Furniture>{});
+        // Only need to serialize things that are needed for render
+        // s.value4b(max_queue_size);
+        // s.value4b(next_line_position);
+        // s.container(ppl_in_line, max_queue_size);
+    }
+
+   public:
+    Register() : Furniture() {}
     Register(vec2 pos) : Furniture(pos, BLACK, DARKGRAY) {}
 
-    std::deque<AIPerson*> ppl_in_line;
-
-    int max_queue_size = 3;
-
-    int next_line_position = 0;
     int position_in_line(AIPerson* entity) {
         for (int i = 0; i < (int) ppl_in_line.size(); i++) {
             if (entity->id == ppl_in_line[i]->id) return i;
@@ -35,6 +47,7 @@ struct Register : public Furniture {
                   << std::endl;
         return -1;
     }
+
     bool can_move_up(AIPerson* entity) {
         return entity->id == ppl_in_line.front()->id;
     }

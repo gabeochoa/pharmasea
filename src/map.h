@@ -111,7 +111,7 @@ struct PolymorphicBaseClass<Entity>
 
 template<>
 struct PolymorphicBaseClass<Furniture>
-    : PolymorphicDerivedClasses<Wall, Table> {};
+    : PolymorphicDerivedClasses<Wall, Table, Register> {};
 
 template<>
 struct PolymorphicBaseClass<Person> : PolymorphicDerivedClasses<AIPerson> {};
@@ -206,6 +206,12 @@ struct Map {
             ItemHelper::addItem(item);
 
             table->held_item = item;
+        }
+        {
+            std::shared_ptr<Register> reg;
+            auto location = vec2{11 * TILESIZE, 10 * TILESIZE};
+            reg.reset(new Register(location));
+            EntityHelper::addEntity(reg);
         }
         {
             auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
