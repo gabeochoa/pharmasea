@@ -311,7 +311,8 @@ struct Server {
         ClientPacket announce_packet(
             {.client_id = SERVER_CLIENT_ID,
              .msg_type = ClientPacket::MsgType::Announcement,
-             .msg = ClientPacket::AnnouncementInfo({.message = msg})});
+             .msg = ClientPacket::AnnouncementInfo(
+                 {.message = msg, .type = type})});
         send_client_packet_to_client(conn, announce_packet);
     }
 

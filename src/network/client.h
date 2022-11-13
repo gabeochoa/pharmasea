@@ -150,7 +150,7 @@ struct Client {
             case ClientPacket::MsgType::Announcement: {
                 ClientPacket::AnnouncementInfo info =
                     std::get<ClientPacket::AnnouncementInfo>(packet.msg);
-                log(fmt::format("Announcement: {}", info.message));
+                announcements.push_back(info);
             } break;
             case ClientPacket::MsgType::PlayerJoin: {
                 ClientPacket::PlayerJoinInfo info =

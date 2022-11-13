@@ -197,6 +197,8 @@ struct Server {
                     // TODO send error message
                     std::cout
                         << "player tried to join but had incorrect version"
+                        << " our version: " << HASHED_VERSION
+                        << " their version: " << info.hashed_version
                         << std::endl;
                     return;
                 }

@@ -149,6 +149,7 @@ struct Client {
                              .msg = ClientPacket::PlayerJoinInfo({
                                  .client_id = -1,  // again
                                  .is_you = false,
+                                 .hashed_version = HASHED_VERSION,
                                  .username = username,
                              })});
         send_packet_to_server(packet);
