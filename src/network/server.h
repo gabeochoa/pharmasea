@@ -86,15 +86,18 @@ struct Server {
                                                                           start)
                         .count();
                 std::this_thread::sleep_for(1ms);
-            } while (duration < 3);
+            } while (duration < 4);
 
             start = end;
         }
     }
 
-    // NOTE: server time things are in ms
-    float next_map_tick_reset = 10;
+    // NOTE: server time things are in s
+    float next_map_tick_reset = 100;  // 1.20fps
     float next_map_tick = 0;
+
+    float next_update_tick_reset = 4;  // 30fps
+    float next_update_tick = 0;
 
     void tick(float dt) {
         server_p->run();
@@ -106,10 +109,14 @@ struct Server {
             packet_queue.pop_front();
         }
 
-        for (auto p : players) {
-            p.second->update(dt);
+        next_update_tick += dt;
+        if (next_update_tick >= next_update_tick_reset) {
+            for (auto p : players) {
+                p.second->update(next_update_tick / 1000.f);
+            }
+            pharmacy_map->onUpdate(next_update_tick / 1000.f);
+            next_update_tick = 0.f;
         }
-        pharmacy_map->onUpdate(dt);
 
         next_map_tick -= dt;
         if (next_map_tick <= 0) {

@@ -40,8 +40,26 @@ struct SpeechBubble {
 struct Customer : public AIPerson {
     std::optional<SpeechBubble> bubble;
 
-    std::string name = "Customer";
+    void set_customer_name(std::string new_name) {
+        name = new_name;
+        customer_name_length = (int) new_name.size();
+    }
 
+   private:
+    std::string name = "Customer";
+    int customer_name_length;
+
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        // Only things that need to be rendered, need to be serialized :)
+        s.ext(*this, bitsery::ext::BaseClass<AIPerson>{});
+        s.value4b(customer_name_length);
+        s.text1b(name, customer_name_length);
+    }
+
+   public:
+    Customer() : AIPerson() {}
     Customer(vec3 p, Color face_color_in, Color base_color_in)
         : AIPerson(p, face_color_in, base_color_in) {
         init();
@@ -53,7 +71,7 @@ struct Customer : public AIPerson {
     Customer(vec3 p, Color c) : AIPerson(p, c) { init(); }
     Customer(vec2 p, Color c) : AIPerson(p, c) { init(); }
 
-    void init() { name = get_random_name(); }
+    void init() { set_customer_name(get_random_name()); }
 
     virtual float base_speed() override { return 3.5f; }
 
@@ -75,6 +93,12 @@ struct Customer : public AIPerson {
                 // i think just putting a Job* unfinished in Job is probably
                 // enough
                 announce("Could not find a valid register");
+                personal_queue.push(job);
+
+                this->job.reset(new Job({
+                    .type = Wait,
+                    .timeToComplete = 1.f,
+                }));
                 return;
             }
 

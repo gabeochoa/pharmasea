@@ -15,8 +15,18 @@
 struct AIPerson : public Person {
     std::stack<std::shared_ptr<Job>> personal_queue;
     std::shared_ptr<Job> job;
-
     std::optional<vec2> local_target;
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Person>{});
+        // Only things that need to be rendered, need to be serialized :)
+    }
+
+   public:
+    AIPerson() : Person() {}
 
     AIPerson(vec3 p, Color face_color_in, Color base_color_in)
         : Person(p, face_color_in, base_color_in) {}
@@ -259,7 +269,12 @@ struct AIPerson : public Person {
     }
 
     virtual void announce(std::string text) {
-        std::cout << this->id << ": " << text << std::endl;
+        auto my_thread_id = std::this_thread::get_id();
+        auto server_thread_id =
+            GLOBALS.get_or_default("server_thread_id", std::thread::id());
+        if (my_thread_id == server_thread_id) {
+            std::cout << this->id << ": " << text << std::endl;
+        }
     }
 
     virtual bool is_snappable() override { return true; }

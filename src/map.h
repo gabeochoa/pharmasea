@@ -106,11 +106,18 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 
 namespace ext {
 template<>
-struct PolymorphicBaseClass<Entity> : PolymorphicDerivedClasses<Furniture> {};
+struct PolymorphicBaseClass<Entity>
+    : PolymorphicDerivedClasses<Furniture, Person> {};
 
 template<>
 struct PolymorphicBaseClass<Furniture>
     : PolymorphicDerivedClasses<Wall, Table> {};
+
+template<>
+struct PolymorphicBaseClass<Person> : PolymorphicDerivedClasses<AIPerson> {};
+
+template<>
+struct PolymorphicBaseClass<AIPerson> : PolymorphicDerivedClasses<Customer> {};
 
 template<>
 struct PolymorphicBaseClass<Item> : PolymorphicDerivedClasses<Bag> {};
@@ -199,6 +206,12 @@ struct Map {
             ItemHelper::addItem(item);
 
             table->held_item = item;
+        }
+        {
+            auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
+            std::shared_ptr<Customer> customer;
+            customer.reset(new Customer(location, RED));
+            EntityHelper::addEntity(customer);
         }
     }
     void generate_walls() {
