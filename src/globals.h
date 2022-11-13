@@ -21,8 +21,8 @@ constexpr size_t hashString(const Str& toHash) {
 }
 
 // YY / MM / DD (Monday of week)
-const std::string VERSION = "alpha_0.22.11.07";
-const size_t HASHED_VERSION = hashString(VERSION);
+constexpr std::string_view VERSION = "alpha_0.22.11.07";
+constexpr size_t HASHED_VERSION = hashString(VERSION);
 
 constexpr int WIN_H = 720;
 constexpr int WIN_W = 1280;
@@ -37,12 +37,11 @@ constexpr float TILESIZE = 1.0f;
 
 namespace network {
 
-const int DEFAULT_PORT = 770;
-const int MAX_CLIENTS = 4;
+constexpr int DEFAULT_PORT = 770;
+constexpr int MAX_CLIENTS = 4;
 // TODO add note for max name length in ui
-const int MAX_NAME_LENGTH = 25;
-const int MAX_ANNOUNCEMENT_LENGTH = 200;
-const int SERVER_CLIENT_ID = -1;
-const int MAX_INPUTS = 100;
-
+constexpr int MAX_NAME_LENGTH = 25;
+constexpr int MAX_ANNOUNCEMENT_LENGTH = 200;
+constexpr int SERVER_CLIENT_ID = -1;
+constexpr int MAX_INPUTS = 100;
 }  // namespace network
