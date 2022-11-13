@@ -58,6 +58,13 @@ struct Player : public BasePlayer {
         if (pickup) {
             inputs.push_back({Menu::State::Game, "Player Pickup", 1.f, dt});
         }
+
+        float rotate =
+            KeyMap::is_event(Menu::State::Game, "Player Rotate Furniture");
+        if (rotate > 0.f) {
+            inputs.push_back(
+                {Menu::State::Game, "Player Rotate Furniture", rotate, dt});
+        }
     }
 
     virtual vec3 get_position_after_input(UserInputs inpts) {
@@ -69,8 +76,14 @@ struct Player : public BasePlayer {
             float input_amount = std::get<2>(ui);
             float frame_dt = std::get<3>(ui);
 
-            if (input_key_name == "Player Pickup" && input_amount > 0.f) {
+            if (input_key_name == "Player Pickup" && input_amount > 0.5f) {
                 grab_or_drop();
+                continue;
+            }
+
+            if (input_key_name == "Player Rotate Furniture" &&
+                input_amount > 0.5f) {
+                rotate_furniture();
                 continue;
             }
 
@@ -97,6 +110,18 @@ struct Player : public BasePlayer {
             this->position = this->raw_position;
         }
         return this->position;
+    }
+
+    void rotate_furniture() {
+        if (GLOBALS.get_or_default("in_planning", false)) {
+            std::shared_ptr<Furniture> match =
+                EntityHelper::getClosestMatchingEntity<Furniture>(
+                    vec::to2(this->position), player_reach,
+                    [](auto&&) { return true; });
+            if (match && match->can_rotate()) {
+                match->rotate_facing_clockwise();
+            }
+        }
     }
 
     // TODO how to handle when they are holding something?

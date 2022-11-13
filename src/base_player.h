@@ -39,7 +39,6 @@ struct BasePlayer : public Person {
     virtual void update(float dt) override {
         Person::update(dt);
         highlight_facing_furniture();
-        rotate_furniture();
 
         // TODO if cannot be placed in this spot
         // make it obvious to the user
@@ -59,20 +58,6 @@ struct BasePlayer : public Person {
             }
 
             held_furniture->update_position(new_pos);
-        }
-    }
-
-    virtual void rotate_furniture() {
-        if (GLOBALS.get_or_default("in_planning", false)) {
-            std::shared_ptr<Furniture> match =
-                EntityHelper::getClosestMatchingEntity<Furniture>(
-                    vec::to2(this->position), player_reach,
-                    [](auto&&) { return true; });
-            if (match && match->can_rotate()) {
-                float rotate = KeyMap::is_event_once_DO_NOT_USE(
-                    Menu::State::Game, "Player Rotate Furniture");
-                if (rotate > 0.5f) match->rotate_facing_clockwise();
-            }
         }
     }
 };
