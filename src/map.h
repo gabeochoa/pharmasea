@@ -7,11 +7,13 @@
 #include <bitsery/ext/std_smart_ptr.h>
 
 #include <memory>
+#include <random>
 
 #include "external_include.h"
 //
 #include "entity.h"
 #include "furnitures.h"
+#include "random.h"
 #include "remote_player.h"
 #include "ui_color.h"
 
@@ -126,16 +128,21 @@ struct PolymorphicBaseClass<Item> : PolymorphicDerivedClasses<Bag> {};
 }  // namespace ext
 }  // namespace bitsery
 
-const int MAX_MAP_WIDTH = 20;
-const int MAX_MAP_HEIGHT = 20;
-const int MAX_SEED_LENGTH = 20;
+constexpr int MAX_MAP_WIDTH = 20;
+constexpr int MAX_MAP_HEIGHT = 20;
+constexpr int MAX_SEED_LENGTH = 20;
 
 using MyPolymorphicClasses = bitsery::ext::PolymorphicClassesList<Entity, Item>;
 
 struct Map {
     bool was_generated = false;
 
+    //
     std::string seed;
+    size_t hashed_seed;
+    std::mt19937 generator;
+    //
+
     Entities entities;
     Entities::size_type num_entities;
 
@@ -144,9 +151,13 @@ struct Map {
 
     std::vector<std::shared_ptr<RemotePlayer>> remote_players_NOT_SERIALIZED;
 
-    Map(const std::string& _seed = "default") : seed(_seed) {}
+    Map(const std::string& _seed = "default") { update_seed(_seed); }
 
-    void merge(const Map& other) { seed = other.seed; }
+    void update_seed(const std::string& s) {
+        seed = s;
+        hashed_seed = hashString(seed);
+        generator = make_engine(hashed_seed);
+    }
 
     void onUpdate(float dt) {
         for (auto e : EntityHelper::get_entities()) {
@@ -210,7 +221,8 @@ struct Map {
         }
         {
             std::shared_ptr<Register> reg;
-            auto location = vec2{11 * TILESIZE, 10 * TILESIZE};
+            auto location = vec2{get_rand(generator, 1, 10) * TILESIZE,
+                                 get_rand(generator, 1, 10) * TILESIZE};
             reg.reset(new Register(location));
             EntityHelper::addEntity(reg);
         }
