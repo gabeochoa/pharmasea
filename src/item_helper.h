@@ -9,7 +9,6 @@
 #include "globals_register.h"
 
 //
-#include "entity.h"
 #include "item.h"
 
 typedef std::vector<std::shared_ptr<Item>> Items;

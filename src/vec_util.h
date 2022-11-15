@@ -143,7 +143,7 @@ vec2 operator+(const vec2& lhs, const vec2& rhs) {
 // return out;
 // }
 
-BoundingBox get_bounds(vec3 position, vec3 size) {
+constexpr BoundingBox get_bounds(vec3 position, vec3 size) {
     return {(vec3){
                 position.x - size.x / 2,
                 position.y - size.y / 2,
@@ -158,28 +158,29 @@ BoundingBox get_bounds(vec3 position, vec3 size) {
 
 namespace vec {
 
-float distance(vec2 a, vec2 b) {
+constexpr float distance(vec2 a, vec2 b) {
     return sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
-float dot2(const vec2& a, const vec2& b) {
+
+constexpr float dot2(const vec2& a, const vec2& b) {
     float result = (a.x * b.x + a.y * b.y);
     return result;
 }
 
-vec2 norm(const vec2& a) {
+constexpr vec2 norm(const vec2& a) {
     float mag = dot2(a, a);
     return (a / mag);
 }
 
-vec3 to3(vec2 position) { return {position.x, 0, position.y}; }
+constexpr vec3 to3(vec2 position) { return {position.x, 0, position.y}; }
 
-vec2 to2(vec3 position) { return {position.x, position.z}; }
+constexpr vec2 to2(vec3 position) { return {position.x, position.z}; }
 
-vec2 snap(vec2 position) {
+constexpr vec2 snap(vec2 position) {
     return {TILESIZE * round(position.x / TILESIZE),  //
             TILESIZE * round(position.y / TILESIZE)};
 }
-vec3 snap(vec3 position) {
+constexpr vec3 snap(vec3 position) {
     return {TILESIZE * round(position.x / TILESIZE),  //
             position.y,                               //
             TILESIZE * round(position.z / TILESIZE)};

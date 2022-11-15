@@ -237,7 +237,7 @@ struct Map {
         };
 
         // TODO replace with a CustomerSpawner eventually
-        auto generate_customer = [this]() {
+        auto generate_customer = []() {
             auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
             std::shared_ptr<Customer> customer;
             customer.reset(new Customer(location, RED));
