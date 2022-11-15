@@ -97,7 +97,7 @@ struct Info {
             .client_id = SERVER_CLIENT_ID,
             .msg_type = ClientPacket::MsgType::GameState,
             .msg = ClientPacket::GameStateInfo(
-                {.host_menu_state = Menu::get().state}),
+                {.host_menu_state = Menu::get().read()}),
         });
         Server::queue_packet(packet);
     }

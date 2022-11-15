@@ -73,14 +73,14 @@ struct GameDebugLayer : public Layer {
         return ui_context.get()->process_keyevent(event);
     }
 
-    virtual void onUpdate(float dt) override {
+    virtual void onUpdate(float) override {
         if (!Menu::in_game()) return;
     }
 
     virtual void onDraw(float dt) override {
         if (!Menu::in_game()) return;
 
-        if (Menu::get().state == Menu::State::Planning) {
+        if (Menu::get().is(Menu::State::Planning)) {
             DrawTextEx(Preload::get().font, "IN PLANNING MODE", vec2{100, 100},
                        20, 0, RED);
         }

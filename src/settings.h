@@ -114,11 +114,6 @@ struct Settings {
         MusicLibrary::get().update_volume(data.music_volume);
     }
 
-    void update_music_volume(float nv) {
-        data.music_volume = util::clamp(nv, 0.f, 1.f);
-        MusicLibrary::get().update_volume(data.music_volume);
-    }
-
     void update_streamer_safe_box(bool sssb) {
         data.show_streamer_safe_box = sssb;
     }

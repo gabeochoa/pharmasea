@@ -42,17 +42,17 @@ struct MenuLayer : public Layer {
     }
 
     bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) {
-        if (Menu::get().state != Menu::State::Root) return false;
+        if (Menu::get().is_not(Menu::State::Root)) return false;
         return ui_context.get()->process_gamepad_axis_event(event);
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (Menu::get().state != Menu::State::Root) return false;
+        if (Menu::get().is_not(Menu::State::Root)) return false;
         return ui_context.get()->process_keyevent(event);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (Menu::get().state != Menu::State::Root) return false;
+        if (Menu::get().is_not(Menu::State::Root)) return false;
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
@@ -124,15 +124,15 @@ struct MenuLayer : public Layer {
             {
                 padding(top_padding);
                 if (button(join_button, "Play")) {
-                    Menu::get().state = Menu::State::Network;
+                    Menu::get().set(Menu::State::Network);
                 }
                 padding(button_padding);
                 if (button(about_button, "About")) {
-                    Menu::get().state = Menu::State::About;
+                    Menu::get().set(Menu::State::About);
                 }
                 padding(button_padding);
                 if (button(settings_button, "Settings")) {
-                    Menu::get().state = Menu::State::Settings;
+                    Menu::get().set(Menu::State::Settings);
                 }
                 padding(button_padding);
                 if (button(exit_button, "Exit")) {
@@ -157,16 +157,13 @@ struct MenuLayer : public Layer {
     }
 
     virtual void onUpdate(float) override {
-        if (Menu::get().state != Menu::State::Root) return;
+        if (Menu::get().is_not(Menu::State::Root)) return;
         PROFILE();
         SetExitKey(KEY_ESCAPE);
     }
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().state != Menu::State::Root) return;
-        if (minimized) {
-            return;
-        }
+        if (Menu::get().is_not(Menu::State::Root)) return;
         PROFILE();
         ClearBackground(ui_context->active_theme().background);
         draw_ui(dt);

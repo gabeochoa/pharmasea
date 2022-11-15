@@ -48,9 +48,7 @@ void startup() {
     // Load save file so username is ready for when network starts
     Settings::get().load_save_file();
 
-    Menu::get().state = Menu::State::Root;
-    // Menu::get().state = Menu::State::About;
-    // Menu::get().state = Menu::State::Game;
+    Menu::get().set(Menu::State::Root);
 
     Layer* layers[] = {
         //

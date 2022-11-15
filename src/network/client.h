@@ -176,7 +176,8 @@ struct Client {
             case ClientPacket::MsgType::GameState: {
                 ClientPacket::GameStateInfo info =
                     std::get<ClientPacket::GameStateInfo>(packet.msg);
-                Menu::get().state = info.host_menu_state;
+                // Menu::get().clear_history();
+                Menu::get().set(info.host_menu_state);
             } break;
             case ClientPacket::MsgType::PlayerLocation: {
                 ClientPacket::PlayerInfo info =

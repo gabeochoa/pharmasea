@@ -38,9 +38,9 @@ struct AboutLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (Menu::get().state != Menu::State::About) return false;
+        if (Menu::get().is_not(Menu::State::About)) return false;
         if (event.keycode == KEY_ESCAPE) {
-            Menu::get().state = Menu::State::Root;
+            Menu::get().go_back();
             return true;
         }
         return ui_context.get()->process_keyevent(event);
@@ -102,7 +102,7 @@ A game by:
                 padding(top_padding);
                 text(about_text, about_info);
                 if (button(back_button, "Back")) {
-                    Menu::get().state = Menu::State::Root;
+                    Menu::get().go_back();
                 }
                 padding(bottom_padding);
             }
@@ -115,7 +115,7 @@ A game by:
     }
 
     virtual void onUpdate(float) override {
-        if (Menu::get().state != Menu::State::About) return;
+        if (Menu::get().is_not(Menu::State::About)) return;
         SetExitKey(KEY_NULL);
 
         // TODO with gamelayer, support events
@@ -125,7 +125,7 @@ A game by:
     }
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().state != Menu::State::About) return;
+        if (Menu::get().is_not(Menu::State::About)) return;
         // TODO with gamelayer, support events
         if (minimized) {
             return;

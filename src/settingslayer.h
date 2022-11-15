@@ -32,16 +32,16 @@ struct SettingsLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (Menu::get().state != Menu::State::Settings) return false;
+        if (Menu::get().is_not(Menu::State::Settings)) return false;
         if (event.keycode == KEY_ESCAPE) {
-            Menu::get().state = Menu::State::Root;
+            Menu::get().go_back();
             return true;
         }
         return ui_context.get()->process_keyevent(event);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (Menu::get().state != Menu::State::Settings) return false;
+        if (Menu::get().is_not(Menu::State::Settings)) return false;
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
@@ -115,7 +115,7 @@ struct SettingsLayer : public Layer {
 
     void back_button() {
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
-            Menu::get().state = Menu::State::Root;
+            Menu::get().go_back();
         }
         padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                             Size_Pct(1.f, 0.f)));
@@ -123,9 +123,6 @@ struct SettingsLayer : public Layer {
 
     void draw_ui(float dt) {
         using namespace ui;
-        // TODO select the acurate options based on current settings
-        // auto& settings = Settings::get();
-
         // TODO move to input
         bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
         vec2 mousepos = GetMousePosition();
@@ -157,12 +154,12 @@ struct SettingsLayer : public Layer {
     }
 
     virtual void onUpdate(float) override {
-        if (Menu::get().state != Menu::State::Settings) return;
+        if (Menu::get().is_not(Menu::State::Settings)) return;
         SetExitKey(KEY_NULL);
     }
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().state != Menu::State::Settings) return;
+        if (Menu::get().is_not(Menu::State::Settings)) return;
         ClearBackground(ui_context->active_theme().background);
         draw_ui(dt);
     }

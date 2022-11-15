@@ -117,7 +117,7 @@ struct Player : public BasePlayer {
     }
 
     void rotate_furniture() {
-        if (Menu::get().state == Menu::State::Planning) {
+        if (Menu::get().is(Menu::State::Planning)) {
             std::shared_ptr<Furniture> match =
                 EntityHelper::getClosestMatchingEntity<Furniture>(
                     vec::to2(this->position), player_reach,
@@ -222,9 +222,9 @@ struct Player : public BasePlayer {
     }
 
     virtual void grab_or_drop() {
-        if (Menu::get().state == Menu::State::Game) {
+        if (Menu::get().is(Menu::State::Game)) {
             handle_in_game_grab_or_drop();
-        } else if (Menu::get().state == Menu::State::Planning) {
+        } else if (Menu::get().is(Menu::State::Planning)) {
             handle_in_planning_grab_or_drop();
         }
     }

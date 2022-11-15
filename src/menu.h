@@ -2,6 +2,7 @@
 #pragma once
 
 #include <iostream>
+#include <stack>
 
 #include "singleton.h"
 
@@ -22,7 +23,36 @@ struct Menu {
         Any = 99,
     };
 
+   private:
+    std::stack<State> prev;
     State state;
+
+   public:
+    void set(State ns) {
+        if (state == ns) return;
+
+        prev.push(state);
+        state = ns;
+
+        // Note: this is just for dev to figure out if
+        //       we have any issues in our logic that allows circular visits
+        if (prev.size() >= 10) {
+            std::cout << "WARNING prev state getting large " << prev.size()
+                      << std::endl;
+        }
+    }
+
+    State read() const { return state; }
+    State go_back() {
+        state = prev.top();
+        prev.pop();
+        return state;
+    }
+    void clear_history() {
+        while (!prev.empty()) prev.pop();
+    }
+    bool is(State s) const { return state == s; }
+    bool is_not(State s) const { return state != s; }
 
     static bool in_game(Menu::State state) {
         return state == Menu::State::Game || state == Menu::State::Planning;
@@ -37,19 +67,20 @@ struct Menu {
 
     static void toggle_planning() {
         if (Menu::get().state == Menu::State::Game) {
-            Menu::get().state = Menu::State::Planning;
+            Menu::get().set(Menu::State::Planning);
         } else if (Menu::get().state == Menu::State::Planning) {
-            Menu::get().state = Menu::State::Game;
+            Menu::get().set(Menu::State::Game);
         }
     }
 
+    // TODO do we need paused planning anymore? if we use goback instead?
     static void pause() {
         switch (Menu::get().state) {
             case Menu::State::Game:
-                Menu::get().state = Menu::State::Paused;
+                Menu::get().set(Menu::State::Paused);
                 break;
             case Menu::State::Planning:
-                Menu::get().state = Menu::State::PausedPlanning;
+                Menu::get().set(Menu::State::PausedPlanning);
                 break;
             default:
                 break;

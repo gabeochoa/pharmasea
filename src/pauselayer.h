@@ -22,7 +22,7 @@ struct BasePauseLayer : public Layer {
     virtual ~BasePauseLayer() {}
 
     virtual void onEvent(Event& event) override {
-        if (Menu::get().state != enabled_state) return;
+        if (Menu::get().is_not(enabled_state)) return;
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(std::bind(
             &BasePauseLayer::onKeyPressed, this, std::placeholders::_1));
@@ -34,7 +34,7 @@ struct BasePauseLayer : public Layer {
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         if (KeyMap::get_button(Menu::State::Game, InputName::Pause) ==
             event.button) {
-            Menu::get().state = back_state;
+            Menu::get().go_back();
             return true;
         }
         return ui_context.get()->process_gamepad_button_event(event);
@@ -43,7 +43,7 @@ struct BasePauseLayer : public Layer {
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(Menu::State::Game, InputName::Pause) ==
             event.keycode) {
-            Menu::get().state = back_state;
+            Menu::get().go_back();
             return true;
         }
         return ui_context.get()->process_keyevent(event);
@@ -61,7 +61,7 @@ struct BasePauseLayer : public Layer {
     }
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().state != enabled_state) return;
+        if (Menu::get().is_not(enabled_state)) return;
 
         // NOTE: We specifically dont clear background
         // because people are used to pause menu being an overlay
@@ -93,10 +93,14 @@ struct BasePauseLayer : public Layer {
                 padding(*top_padding);
                 {
                     if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Continue")) {
-                        Menu::get().state = back_state;
+                        Menu::get().go_back();
+                    }
+                    if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Settings")) {
+                        Menu::get().set(Menu::State::Settings);
                     }
                     if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Quit")) {
-                        Menu::get().state = Menu::State::Root;
+                        Menu::get().clear_history();
+                        Menu::get().set(Menu::State::Root);
                     }
                 }
                 padding(*ui_context->own(
