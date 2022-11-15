@@ -159,20 +159,10 @@ struct SettingsLayer : public Layer {
     virtual void onUpdate(float) override {
         if (Menu::get().state != Menu::State::Settings) return;
         SetExitKey(KEY_NULL);
-
-        // TODO with gamelayer, support events
-        if (minimized) {
-            return;
-        }
     }
 
     virtual void onDraw(float dt) override {
         if (Menu::get().state != Menu::State::Settings) return;
-        // TODO with gamelayer, support events
-        if (minimized) {
-            return;
-        }
-
         ClearBackground(ui_context->active_theme().background);
         draw_ui(dt);
     }

@@ -92,10 +92,8 @@ struct Settings {
     }
 
     void update_window_size(vec2 size) {
-        if (size.x == 0 || size.y == 0) {
-            size = {800, 600};
-        }
-
+        size.x = std::fmaxf(size.x, 800);
+        size.y = std::fmaxf(size.y, 600);
         data.window_size = size;
         //
         WindowResizeEvent* event = new WindowResizeEvent(
@@ -109,7 +107,11 @@ struct Settings {
         // std::cout << "master volume changed to " << data.master_volume
         // << std::endl;
         SetMasterVolume(data.master_volume);
-        // TODO support sound vs music volume
+    }
+
+    void update_music_volume(float nv) {
+        data.music_volume = util::clamp(nv, 0.f, 1.f);
+        MusicLibrary::get().update_volume(data.music_volume);
     }
 
     void update_music_volume(float nv) {
@@ -124,8 +126,7 @@ struct Settings {
     bool load_save_file() {
         std::ifstream ifs(Files::get().settings_filepath());
         if (!ifs.is_open()) {
-            // std::cout << ("failed to find settings file (read)") <<
-            // std::endl;
+            std::cout << ("failed to find settings file (read)") << std::endl;
             return false;
         }
 
