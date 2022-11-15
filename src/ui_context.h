@@ -173,11 +173,11 @@ struct UIContext {
             return false;
         }
         // TODO make this a map if we have more
-        if (code == KeyMap::get_key_code(STATE, "Widget Mod")) {
+        if (code == KeyMap::get_key_code(STATE, InputName::WidgetMod)) {
             mod = code;
             return true;
         }
-        if (code == KeyMap::get_key_code(STATE, "Widget Ctrl")) {
+        if (code == KeyMap::get_key_code(STATE, InputName::WidgetCtrl)) {
             mod = code;
             return true;
         }
@@ -212,14 +212,14 @@ struct UIContext {
         return button == butt;
     }
 
-    bool pressedButtonWithoutEat(std::string name) const {
+    bool pressedButtonWithoutEat(const InputName& name) const {
         GamepadButton code = KeyMap::get_button(STATE, name);
         return _pressedWithoutEat(code);
     }
 
     void eatButton() { button = GAMEPAD_BUTTON_UNKNOWN; }
 
-    bool pressed(std::string name) {
+    bool pressed(const InputName& name) {
         int code = KeyMap::get_key_code(STATE, name);
         bool a = _pressedWithoutEat(code);
         if (a) {
@@ -257,7 +257,7 @@ struct UIContext {
         return key == code || mod == code;
     }
     // TODO is there a better way to do eat(string)?
-    bool pressedWithoutEat(std::string name) const {
+    bool pressedWithoutEat(const InputName& name) const {
         int code = KeyMap::get_key_code(STATE, name);
         return _pressedWithoutEat(code);
     }
@@ -265,7 +265,7 @@ struct UIContext {
     void eatKey() { key = int(); }
 
     // is held down
-    bool is_held_down(std::string name) {
+    bool is_held_down(const InputName& name) {
         return (bool) KeyMap::is_event(STATE, name);
     }
 

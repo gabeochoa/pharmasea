@@ -46,12 +46,12 @@ struct GameDebugLayer : public Layer {
     bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (KeyMap::get_button(Menu::State::Game, "Toggle Planning [Debug]") ==
+        if (KeyMap::get_button(Menu::State::Game, InputName::TogglePlanning) ==
             event.button) {
             Menu::toggle_planning();
             return true;
         }
-        if (KeyMap::get_button(Menu::State::Game, "Toggle Debug [Debug]") ==
+        if (KeyMap::get_button(Menu::State::Game, InputName::ToggleDebug) ==
             event.button) {
             debug_ui_enabled = !debug_ui_enabled;
             return true;
@@ -61,11 +61,11 @@ struct GameDebugLayer : public Layer {
 
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(Menu::State::Game,
-                                 "Toggle Planning [Debug]") == event.keycode) {
+                                 InputName::TogglePlanning) == event.keycode) {
             Menu::toggle_planning();
             return true;
         }
-        if (KeyMap::get_key_code(Menu::State::Game, "Toggle Debug [Debug]") ==
+        if (KeyMap::get_key_code(Menu::State::Game, InputName::ToggleDebug) ==
             event.keycode) {
             debug_ui_enabled = !debug_ui_enabled;
             return true;

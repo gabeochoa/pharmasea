@@ -8,6 +8,7 @@
 //
 #include "camera.h"
 #include "files.h"
+#include "keymap.h"
 #include "layer.h"
 #include "map.h"
 #include "menu.h"
@@ -54,7 +55,8 @@ struct GameLayer : public Layer {
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         // Note: You can only pause in game state, in planning no pause
-        if (KeyMap::get_button(Menu::State::Game, "Pause") == event.button) {
+        if (KeyMap::get_button(Menu::State::Game, InputName::Pause) ==
+            event.button) {
             Menu::pause();
             return true;
         }
@@ -62,7 +64,8 @@ struct GameLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (KeyMap::get_key_code(Menu::State::Game, "Pause") == event.keycode) {
+        if (KeyMap::get_key_code(Menu::State::Game, InputName::Pause) ==
+            event.keycode) {
             Menu::pause();
             return true;
         }

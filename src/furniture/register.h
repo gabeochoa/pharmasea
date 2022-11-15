@@ -9,6 +9,7 @@
 //
 #include "../aiperson.h"
 #include "../furniture.h"
+#include "../targetcube.h"
 
 struct RegisterNextQueuePosition : TargetCube {
     RegisterNextQueuePosition(vec3 p, Color face_color_in, Color base_color_in)

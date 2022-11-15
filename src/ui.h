@@ -144,16 +144,17 @@ inline void handle_tabbing(const uuid id) {
     // Do we mark the widget type with "nextable"? (tab will always work but
     // not very discoverable
     if (has_kb_focus(id)) {
-        if (get().pressed("Widget Next") || get().pressed("Value Down")) {
+        if (get().pressed(InputName::WidgetNext) ||
+            get().pressed(InputName::ValueDown)) {
             get().kb_focus_id = ROOT_ID;
-            if (get().is_held_down("Widget Mod")) {
+            if (get().is_held_down(InputName::WidgetMod)) {
                 get().kb_focus_id = get().last_processed;
             }
         }
-        if (get().pressed("Value Up")) {
+        if (get().pressed(InputName::ValueUp)) {
             get().kb_focus_id = get().last_processed;
         }
-        if (get().pressed("Widget Back")) {
+        if (get().pressed(InputName::WidgetBack)) {
             get().kb_focus_id = get().last_processed;
         }
     }
@@ -283,7 +284,7 @@ bool button(const Widget& widget, const std::string& content) {
 
     const auto _button_pressed = [](const uuid id) {
         // check click
-        if (has_kb_focus(id) && get().pressed("Widget Press")) {
+        if (has_kb_focus(id) && get().pressed(InputName::WidgetPress)) {
             return true;
         }
         if (!get().lmouse_down && is_active_and_hot(id)) {
@@ -370,13 +371,13 @@ bool button_list(const Widget& widget, const std::vector<std::string>& options,
     }
 
     if (somethingFocused) {
-        if (get().pressed("Value Up")) {
+        if (get().pressed(InputName::ValueUp)) {
             state->selected = state->selected - 1;
             if (state->selected < 0) state->selected = 0;
             get().kb_focus_id = children[state->selected]->id;
         }
 
-        if (get().pressed("Value Down")) {
+        if (get().pressed(InputName::ValueDown)) {
             state->selected = state->selected + 1;
             if (state->selected > (int) options.size() - 1)
                 state->selected = static_cast<int>(options.size() - 1);
@@ -459,8 +460,8 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
         // 3. we dont eat the input, so it doesnt break the button_list value
         // up/down
         if (has_kb_focus(widget.id)) {
-            if (get().pressedWithoutEat("Value Up") ||
-                get().pressedWithoutEat("Value Down")) {
+            if (get().pressedWithoutEat(InputName::ValueUp) ||
+                get().pressedWithoutEat(InputName::ValueDown)) {
                 state->on = true;
                 childrenHaveFocus = true;
             }
@@ -550,14 +551,14 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
 
         bool value_changed = false;
         if (has_kb_focus(widget->id)) {
-            if (get().is_held_down("Value Right")) {
+            if (get().is_held_down(InputName::ValueRight)) {
                 state->value = state->value + 0.005f;
                 if (state->value > mxf) state->value = mxf;
 
                 (*value) = state->value;
                 value_changed = true;
             }
-            if (get().is_held_down("Value Left")) {
+            if (get().is_held_down(InputName::ValueLeft)) {
                 state->value = state->value - 0.005f;
                 if (state->value < mnf) state->value = mnf;
                 (*value) = state->value;
@@ -678,14 +679,14 @@ bool textfield(const Widget& widget, std::string& content, int max_length) {
                     changed = true;
                 }
             }
-            if (get().pressed("Widget Backspace")) {
+            if (get().pressed(InputName::WidgetBackspace)) {
                 if (state->buffer.asT().size() > 0) {
                     state->buffer.asT().pop_back();
                 }
                 changed = true;
             }
-            if (get().is_held_down("Widget Ctrl")) {
-                if (get().pressed("Widget Paste")) {
+            if (get().is_held_down(InputName::WidgetCtrl)) {
+                if (get().pressed(InputName::WidgetPaste)) {
                     auto clipboard = GetClipboardText();
                     state->buffer.asT().append(clipboard);
                 }

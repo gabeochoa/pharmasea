@@ -32,7 +32,8 @@ struct BasePauseLayer : public Layer {
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (KeyMap::get_button(Menu::State::Game, "Pause") == event.button) {
+        if (KeyMap::get_button(Menu::State::Game, InputName::Pause) ==
+            event.button) {
             Menu::get().state = back_state;
             return true;
         }
@@ -40,7 +41,8 @@ struct BasePauseLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (KeyMap::get_key_code(Menu::State::Game, "Pause") == event.keycode) {
+        if (KeyMap::get_key_code(Menu::State::Game, InputName::Pause) ==
+            event.keycode) {
             Menu::get().state = back_state;
             return true;
         }
@@ -95,7 +97,7 @@ struct BasePauseLayer : public Layer {
                 padding(*top_padding);
                 {
                     if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Continue")) {
-                        Menu::get().state = Menu::State::Game;
+                        Menu::get().state = back_state;
                     }
                     if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Quit")) {
                         Menu::get().state = Menu::State::Root;

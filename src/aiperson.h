@@ -9,7 +9,6 @@
 #include "job.h"
 #include "person.h"
 #include "sound_library.h"
-#include "targetcube.h"
 #include "ui_color.h"
 
 struct AIPerson : public Person {
@@ -53,20 +52,6 @@ struct AIPerson : public Person {
             }
         }
     }
-
-    // void target_cube_target() {
-    // std::shared_ptr<TargetCube> closest_target =
-    // EntityHelper::getClosestMatchingEntity<TargetCube>(
-    // vec::to2(this->position), TILESIZE * 100.f,
-    // [](auto&&) { return true; });
-    //
-    // if (!closest_target) return;
-    //
-    // auto snap_near_cube = closest_target->tile_infront(0);
-    // if (EntityHelper::isWalkable(snap_near_cube)) {
-    // this->target = snap_near_cube;
-    // }
-    // }
 
     virtual vec3 update_xaxis_position(float dt) override {
         if (!job) {

@@ -185,9 +185,7 @@ void serialize(S& s, ClientPacket& packet) {
                               input,
                               bitsery::ext::StdTuple{
                                   [](auto& s, Menu::State& o) { s.value4b(o); },
-                                  [](auto& s, std::string& o) {
-                                      s.text1b(o, 100);
-                                  },
+                                  [](auto& s, InputName& o) { s.value4b(o); },
                                   [](auto& s, float& o) { s.value4b(o); }});
                       });
               },

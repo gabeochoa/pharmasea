@@ -13,12 +13,44 @@
 #include "singleton.h"
 #include "util.h"
 
-typedef std::tuple<Menu::State, std::string, float, float> UserInput;
+enum InputName {
+    // Shared
+    Pause,
+
+    // UI State
+    WidgetNext,
+    WidgetBack,
+    WidgetMod,
+    WidgetBackspace,
+    WidgetCtrl,
+    WidgetPaste,
+    WidgetPress,
+    ValueUp,
+    ValueDown,
+    ValueLeft,
+    ValueRight,
+
+    // Game State
+    PlayerForward,
+    PlayerBack,
+    PlayerLeft,
+    PlayerRight,
+    PlayerPickup,
+    PlayerRotateFurniture,
+    TargetForward,
+    TargetBack,
+    TargetLeft,
+    TargetRight,
+    TogglePlanning,  // DEBUG ONLY
+    ToggleDebug,     // DEBUG ONLY
+};
+
+typedef std::tuple<Menu::State, InputName, float, float> UserInput;
 typedef std::vector<UserInput> UserInputs;
 //
 typedef std::variant<int, GamepadAxisWithDir, GamepadButton> AnyInput;
 typedef std::vector<AnyInput> AnyInputs;
-typedef std::map<std::string, AnyInputs> LayerMapping;
+typedef std::map<InputName, AnyInputs> LayerMapping;
 typedef std::map<Menu::State, LayerMapping> FullMap;
 
 SINGLETON_FWD(KeyMap)
@@ -133,7 +165,7 @@ struct KeyMap {
     void load_game_keys() {
         LayerMapping& game_map =
             this->get_or_create_layer_map(Menu::State::Game);
-        game_map["Player Forward"] = {
+        game_map[InputName::PlayerForward] = {
             KEY_W,
             GAMEPAD_BUTTON_LEFT_FACE_UP,
             GamepadAxisWithDir{
@@ -141,7 +173,7 @@ struct KeyMap {
                 .dir = -1,
             },
         };
-        game_map["Player Back"] = {
+        game_map[InputName::PlayerBack] = {
             KEY_S,
             GAMEPAD_BUTTON_LEFT_FACE_DOWN,
             GamepadAxisWithDir{
@@ -149,7 +181,7 @@ struct KeyMap {
                 .dir = 1,
             },
         };
-        game_map["Player Left"] = {
+        game_map[InputName::PlayerLeft] = {
             KEY_A,
             GAMEPAD_BUTTON_LEFT_FACE_LEFT,
             GamepadAxisWithDir{
@@ -157,7 +189,7 @@ struct KeyMap {
                 .dir = -1,
             },
         };
-        game_map["Player Right"] = {
+        game_map[InputName::PlayerRight] = {
             KEY_D,
             GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
             GamepadAxisWithDir{
@@ -166,72 +198,73 @@ struct KeyMap {
             },
         };
 
-        game_map["Player Pickup"] = {
+        game_map[InputName::PlayerPickup] = {
             KEY_SPACE,
             GAMEPAD_BUTTON_RIGHT_FACE_DOWN,
         };
 
-        game_map["Player Rotate Furniture"] = {
+        game_map[InputName::PlayerRotateFurniture] = {
             KEY_R,
             GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
         };
 
-        game_map["Pause"] = {
+        game_map[InputName::Pause] = {
             KEY_ESCAPE,
             GAMEPAD_BUTTON_MIDDLE_RIGHT,
         };
 
-        game_map["Target Forward"] = {KEY_UP};
-        game_map["Target Back"] = {KEY_DOWN};
-        game_map["Target Left"] = {KEY_LEFT};
-        game_map["Target Right"] = {KEY_RIGHT};
+        game_map[InputName::TargetForward] = {KEY_UP};
+        game_map[InputName::TargetBack] = {KEY_DOWN};
+        game_map[InputName::TargetLeft] = {KEY_LEFT};
+        game_map[InputName::TargetRight] = {KEY_RIGHT};
 
-        game_map["Toggle Planning [Debug]"] = {
+        game_map[InputName::TogglePlanning] = {
             KEY_P,
             GAMEPAD_BUTTON_MIDDLE_LEFT,
         };
 
-        game_map["Toggle Debug [Debug]"] = {
+        game_map[InputName::ToggleDebug] = {
             KEY_BACKSLASH,
         };
     }
 
     void load_ui_keys() {
         LayerMapping& ui_map = this->get_or_create_layer_map(Menu::State::UI);
-        ui_map["Widget Next"] = {
+        ui_map[InputName::WidgetNext] = {
             KEY_TAB,
             GAMEPAD_BUTTON_LEFT_FACE_DOWN,
         };
 
-        ui_map["Widget Back"] = {
+        ui_map[InputName::WidgetBack] = {
             GAMEPAD_BUTTON_LEFT_FACE_UP,
         };
-        ui_map["Widget Mod"] = {KEY_LEFT_SHIFT};
-        ui_map["Widget Backspace"] = {KEY_BACKSPACE};
+        ui_map[InputName::WidgetMod] = {KEY_LEFT_SHIFT};
+        ui_map[InputName::WidgetBackspace] = {KEY_BACKSPACE};
 
 #ifdef __APPLE__
         // For mac, paste is ⌘+v
-        ui_map["Widget Ctrl"] = {KEY_LEFT_SUPER};
+        ui_map[InputName::WidgetCtrl] = {KEY_LEFT_SUPER};
 #else
         // for windows ctrl+v
-        ui_map["Widget Ctrl"] = {KEY_LEFT_CONTROL};
+        ui_map[InputName::WidgetCtrl] = {KEY_LEFT_CONTROL};
 #endif
 
-        ui_map["Widget Paste"] = {KEY_V};
+        ui_map[InputName::WidgetPaste] = {KEY_V};
 
-        ui_map["Widget Press"] = {KEY_ENTER, GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
+        ui_map[InputName::WidgetPress] = {KEY_ENTER,
+                                          GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
 
-        ui_map["Value Up"] = {
+        ui_map[InputName::ValueUp] = {
             KEY_UP,
             GAMEPAD_BUTTON_LEFT_FACE_UP,
         };
 
-        ui_map["Value Down"] = {
+        ui_map[InputName::ValueDown] = {
             KEY_DOWN,
             GAMEPAD_BUTTON_LEFT_FACE_DOWN,
         };
 
-        ui_map["Value Left"] = {
+        ui_map[InputName::ValueLeft] = {
             KEY_LEFT,
             GAMEPAD_BUTTON_LEFT_FACE_LEFT,
             GamepadAxisWithDir{
@@ -239,7 +272,7 @@ struct KeyMap {
                 .dir = -1,
             },
         };
-        ui_map["Value Right"] = {
+        ui_map[InputName::ValueRight] = {
             KEY_RIGHT,
             GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
             GamepadAxisWithDir{
@@ -248,7 +281,7 @@ struct KeyMap {
             },
         };
 
-        ui_map["Pause"] = {GAMEPAD_BUTTON_MIDDLE_RIGHT};
+        ui_map[InputName::Pause] = {GAMEPAD_BUTTON_MIDDLE_RIGHT};
 
         LayerMapping& root_map =
             this->get_or_create_layer_map(Menu::State::Root);
@@ -262,7 +295,7 @@ struct KeyMap {
         load_ui_keys();
     }
 
-    static int get_key_code(Menu::State state, const std::string& name) {
+    static int get_key_code(Menu::State state, const InputName& name) {
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
             int r = std::visit(util::overloaded{[](int k) { return k; },
@@ -274,7 +307,7 @@ struct KeyMap {
     }
 
     static std::optional<GamepadAxisWithDir> get_axis(Menu::State state,
-                                                      const std::string& name) {
+                                                      const InputName& name) {
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
             auto r = std::visit(
@@ -289,8 +322,7 @@ struct KeyMap {
         return {};
     }
 
-    static GamepadButton get_button(Menu::State state,
-                                    const std::string& name) {
+    static GamepadButton get_button(Menu::State state, const InputName& name) {
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
             auto r = std::visit(
@@ -304,11 +336,11 @@ struct KeyMap {
     }
 
     static AnyInputs get_valid_inputs(Menu::State state,
-                                      const std::string& name) {
+                                      const InputName& name) {
         return KeyMap::get().mapping[state][name];
     }
 
-    static float is_event(Menu::State state, const std::string& name) {
+    static float is_event(Menu::State state, const InputName& name) {
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
 
         float value = 0.f;
@@ -331,7 +363,7 @@ struct KeyMap {
     }
 
     static bool is_event_once_DO_NOT_USE(Menu::State state,
-                                         const std::string& name) {
+                                         const InputName& name) {
         AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
 
         bool matches_named_event = false;

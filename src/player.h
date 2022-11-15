@@ -28,25 +28,28 @@ struct Player : public BasePlayer {
     virtual bool is_collidable() override { return !is_ghost_player; }
 
     virtual vec3 update_xaxis_position(float dt) override {
-        float left = KeyMap::is_event(Menu::State::Game, "Player Left");
-        float right = KeyMap::is_event(Menu::State::Game, "Player Right");
-        // TODO do we have to worry about having branches?
-        // I feel like sending 4 floats over network probably worse than 4
-        // branches on checking float positive but idk
+        float left = KeyMap::is_event(Menu::State::Game, InputName::PlayerLeft);
+        float right =
+            KeyMap::is_event(Menu::State::Game, InputName::PlayerRight);
         if (left > 0)
-            inputs.push_back({Menu::State::Game, "Player Left", left, dt});
+            inputs.push_back(
+                {Menu::State::Game, InputName::PlayerLeft, left, dt});
         if (right > 0)
-            inputs.push_back({Menu::State::Game, "Player Right", right, dt});
+            inputs.push_back(
+                {Menu::State::Game, InputName::PlayerRight, right, dt});
         return this->raw_position;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
-        float up = KeyMap::is_event(Menu::State::Game, "Player Forward");
-        float down = KeyMap::is_event(Menu::State::Game, "Player Back");
+        float up =
+            KeyMap::is_event(Menu::State::Game, InputName::PlayerForward);
+        float down = KeyMap::is_event(Menu::State::Game, InputName::PlayerBack);
         if (up > 0)
-            inputs.push_back({Menu::State::Game, "Player Forward", up, dt});
+            inputs.push_back(
+                {Menu::State::Game, InputName::PlayerForward, up, dt});
         if (down > 0)
-            inputs.push_back({Menu::State::Game, "Player Back", down, dt});
+            inputs.push_back(
+                {Menu::State::Game, InputName::PlayerBack, down, dt});
         return this->raw_position;
     }
 
@@ -54,16 +57,17 @@ struct Player : public BasePlayer {
         BasePlayer::update(dt);
 
         bool pickup = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game,
-                                                       "Player Pickup");
+                                                       InputName::PlayerPickup);
         if (pickup) {
-            inputs.push_back({Menu::State::Game, "Player Pickup", 1.f, dt});
+            inputs.push_back(
+                {Menu::State::Game, InputName::PlayerPickup, 1.f, dt});
         }
 
         bool rotate = KeyMap::is_event_once_DO_NOT_USE(
-            Menu::State::Game, "Player Rotate Furniture");
+            Menu::State::Game, InputName::PlayerRotateFurniture);
         if (rotate) {
             inputs.push_back(
-                {Menu::State::Game, "Player Rotate Furniture", 1.f, dt});
+                {Menu::State::Game, InputName::PlayerRotateFurniture, 1.f, dt});
         }
     }
 
@@ -72,16 +76,16 @@ struct Player : public BasePlayer {
             auto menu_state = std::get<0>(ui);
             if (menu_state != Menu::State::Game) continue;
 
-            std::string input_key_name = std::get<1>(ui);
+            InputName input_name = std::get<1>(ui);
             float input_amount = std::get<2>(ui);
             float frame_dt = std::get<3>(ui);
 
-            if (input_key_name == "Player Pickup" && input_amount > 0.5f) {
+            if (input_name == InputName::PlayerPickup && input_amount > 0.5f) {
                 grab_or_drop();
                 continue;
             }
 
-            if (input_key_name == "Player Rotate Furniture" &&
+            if (input_name == InputName::PlayerRotateFurniture &&
                 input_amount > 0.5f) {
                 rotate_furniture();
                 continue;
@@ -92,13 +96,13 @@ struct Player : public BasePlayer {
             float speed = this->base_speed() * frame_dt;
             auto new_position = this->position;
 
-            if (input_key_name == "Player Left") {
+            if (input_name == InputName::PlayerLeft) {
                 new_position.x -= input_amount * speed;
-            } else if (input_key_name == "Player Right") {
+            } else if (input_name == InputName::PlayerRight) {
                 new_position.x += input_amount * speed;
-            } else if (input_key_name == "Player Forward") {
+            } else if (input_name == InputName::PlayerForward) {
                 new_position.z -= input_amount * speed;
-            } else if (input_key_name == "Player Back") {
+            } else if (input_name == InputName::PlayerBack) {
                 new_position.z += input_amount * speed;
             }
 
@@ -186,7 +190,6 @@ struct Player : public BasePlayer {
 
         // TODO need to auto drop when "in_planning" changes
         if (this->held_furniture) {
-            std::cout << "holding furniture" << std::endl;
             const auto _drop_furniture = [&]() {
                 // TODO need to make sure it doesnt place ontop of another
                 // one
