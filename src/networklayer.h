@@ -140,10 +140,8 @@ struct NetworkLayer : public Layer {
     void draw_ip_input_screen() {
         draw_username();
         // TODO support validation
-        auto ip_address_input = ui_context->own(
-            Widget(MK_UUID(id, ROOT_ID),
-                   {.mode = Pixels, .value = 400.f, .strictness = 1.f},
-                   {.mode = Pixels, .value = 25.f, .strictness = 0.5f}));
+        auto ip_address_input = ui_context->own(Widget(
+            MK_UUID(id, ROOT_ID), Size_Px(400.f, 1.f), Size_Px(25.f, 0.5f)));
         text(*ui::components::mk_text(), "Enter IP Address");
         textfield(*ip_address_input, network_info->host_ip_address());
         padding(*ui::components::mk_but_pad());
@@ -170,10 +168,9 @@ struct NetworkLayer : public Layer {
                                                   : "***.***.***.***";
                     text(*ui::components::mk_text(),
                          fmt::format("Your IP is: {}", ip));
-                    auto checkbox_widget = ui_context->own(Widget(
-                        MK_UUID(id, ROOT_ID),
-                        {.mode = Pixels, .value = 75.f, .strictness = 0.5f},
-                        {.mode = Pixels, .value = 25.f, .strictness = 1.f}));
+                    auto checkbox_widget = ui_context->own(
+                        Widget(MK_UUID(id, ROOT_ID), Size_Px(75.f, 0.5f),
+                               Size_Px(25.f, 1.f)));
                     std::string show_hide_host_ip_text =
                         should_show_host_ip ? "Hide" : "Show";
                     if (checkbox(*checkbox_widget, &should_show_host_ip,
@@ -198,7 +195,7 @@ struct NetworkLayer : public Layer {
             auto player_text = ui_context->own(
                 Widget(MK_UUID_LOOP(id, ROOT_ID, kv.first),
                        {.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                       {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
+                       Size_Px(100.f, 1.f)));
             text(*player_text,
                  fmt::format("{}({})", kv.second->name, kv.first));
         }
@@ -223,13 +220,12 @@ struct NetworkLayer : public Layer {
 
     void draw_username_picker() {
         auto username_input = ui_context->own(
-            Widget(MK_UUID(id, ROOT_ID),
-                   {.mode = Pixels, .value = 400.f, .strictness = 1.f},
+            Widget(MK_UUID(id, ROOT_ID), Size_Px(400.f, 1.f),
                    {.mode = Pixels, .value = 25.f, .strictness = 0.5f}));
 
         auto player_text = ui_context->own(
             Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                   {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
+                   Size_Px(100.f, 1.f)));
 
         text(*player_text, "Username: ");
         textfield(*username_input, Settings::get().data.username,
@@ -292,7 +288,7 @@ struct NetworkLayer : public Layer {
         ui_context->push_parent(root);
         {
             auto left_padding = ui_context->own(
-                Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                Widget(Size_Px(100.f, 1.f),
                        {.mode = Pixels, .value = WIN_H, .strictness = 1.f}));
 
             auto content = ui_context->own(Widget(
@@ -304,16 +300,14 @@ struct NetworkLayer : public Layer {
             ui_context->push_parent(content);
             {
                 auto top_padding = ui_context->own(
-                    Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                           {.mode = Percent, .value = 1.f, .strictness = 0.f}));
+                    Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f)));
                 padding(*top_padding);
                 {  //
                     draw_screen_selector_logic();
                     handle_announcements();
                 }
-                padding(*ui_context->own(Widget(
-                    {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                    {.mode = Percent, .value = 1.f, .strictness = 0.f})));
+                padding(*ui_context->own(
+                    Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f))));
             }
             ui_context->pop_parent();
         }
