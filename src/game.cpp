@@ -26,6 +26,7 @@
 #include "networklayer.h"
 #include "pauselayer.h"
 #include "settingslayer.h"
+#include "streamersafelayer.h"
 #include "versionlayer.h"
 //
 // This one should be last
@@ -53,10 +54,10 @@ void startup() {
 
     Layer* layers[] = {
         //
-        new FPSLayer(),     new MenuStateLayer(),     new VersionLayer(),
-        new NetworkLayer(), new GameLayer(),          new GameDebugLayer(),
-        new AboutLayer(),   new SettingsLayer(),      new MenuLayer(),
-        new PauseLayer(),   new PausePlanningLayer(),
+        new FPSLayer(),       new StreamerSafeLayer(), new MenuStateLayer(),
+        new VersionLayer(),   new NetworkLayer(),      new GameLayer(),
+        new GameDebugLayer(), new AboutLayer(),        new SettingsLayer(),
+        new MenuLayer(),      new PauseLayer(),        new PausePlanningLayer(),
     };
     for (auto layer : layers) App::get().pushLayer(layer);
 }

@@ -716,7 +716,7 @@ bool textfield(const Widget& widget, std::string& content, int max_length) {
 bool checkbox(const Widget& widget, bool* cbState, std::string* label) {
     init_widget(widget, __FUNCTION__);
     auto state = get().widget_init<CheckboxState>(widget.id);
-    bool changed_previous_frame = state->on.changed_since;
+    if (cbState) state->on = *cbState;
     state->on.changed_since = false;
 
     std::string checkbox_text;
@@ -731,7 +731,7 @@ bool checkbox(const Widget& widget, bool* cbState, std::string* label) {
     }
 
     if (cbState) *cbState = state->on;
-    return changed_previous_frame;
+    return state->on.changed_since;
 }
 
 }  // namespace ui

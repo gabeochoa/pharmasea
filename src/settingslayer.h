@@ -115,6 +115,17 @@ struct SettingsLayer : public Layer {
                     }
                 }
                 ui_context->pop_parent();
+
+                text(*ui::components::mk_text(), "Show Streamer Safe Box");
+                auto checkbox_widget = ui_context->own(
+                    Widget(MK_UUID(id, ROOT_ID), Size_Px(75.f, 0.5f),
+                           Size_Px(25.f, 1.f)));
+                bool sssb = Settings::get().data.show_streamer_safe_box;
+                if (checkbox(*checkbox_widget, &sssb)) {
+                    Settings::get().update_streamer_safe_box(sssb);
+                    std::cout << "checkbox changed" << std::endl;
+                }
+
                 if (button(back_button, "Back")) {
                     Menu::get().state = Menu::State::Root;
                 }

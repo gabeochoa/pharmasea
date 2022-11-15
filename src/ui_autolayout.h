@@ -38,6 +38,8 @@ float compute_size_for_standalone_expectation(Widget* widget, int exp_index) {
             return exp.value;
         case SizeMode::Text:
             // TODO figure this out
+            // So we can use MeasureTextEx but
+            // we need to know the font and spacing
             return 100.f;
         default:
             return widget->computed_size[exp_index];
@@ -271,7 +273,8 @@ void tax_refund(Widget* widget, int exp_index, float error) {
         SizeExpectation exp = child->size_expected[exp_index];
         if (exp.strictness == 0.f) {
             child->computed_size[exp_index] += abs(indiv_refund);
-            // std::cout << "just gave back, time for trickle down" << std::endl;
+            // std::cout << "just gave back, time for trickle down" <<
+            // std::endl;
             tax_refund(child, exp_index, indiv_refund);
         }
         // TODO idk if we should do this for all non 1.f children?
@@ -302,7 +305,8 @@ void solve_violations(Widget* widget) {
         all_children_x = _get_total_child_size_for_violations(widget, 0);
         error_x = all_children_x - my_size_x;
         if (i_x > 100) {
-            // M_ASSERT(false, "hit x iteration limit trying to solve violations");
+            // M_ASSERT(false, "hit x iteration limit trying to solve
+            // violations");
             break;
         }
     }
@@ -324,7 +328,8 @@ void solve_violations(Widget* widget) {
         error_y = all_children_y - my_size_y;
         if (i_y > 100) {
             // widget->print_tree();
-            // M_ASSERT(false, "hit y iteration limit trying to solve violations");
+            // M_ASSERT(false, "hit y iteration limit trying to solve
+            // violations");
             break;
         }
     }

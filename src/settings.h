@@ -108,6 +108,10 @@ struct Settings {
         // TODO support sound vs music volume
     }
 
+    void update_streamer_safe_box(bool sssb) {
+        data.show_streamer_safe_box = sssb;
+    }
+
     bool load_save_file() {
         std::ifstream ifs(Files::get().settings_filepath());
         if (!ifs.is_open()) {

@@ -18,12 +18,16 @@ struct State {
     State(const State<T>& s) : value(s.value) {}
     State<T>& operator=(const State<T>& other) {
         this->value = other.value;
+        changed_since = true;
         return *this;
     }
     operator T() { return value; }
     T& asT() { return value; }
     T& get() { return value; }
-    void set(const T& v) { value = v; }
+    void set(const T& v) {
+        value = v;
+        changed_since = true;
+    }
 
     // TODO how can we support += and -=?
     // is there a simple way to unfold the types,
