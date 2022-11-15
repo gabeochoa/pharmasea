@@ -524,6 +524,11 @@ inline std::shared_ptr<Widget> mk_icon_button(uuid id) {
     return get().own(Widget(id, icon_button_x, icon_button_y));
 }
 
+inline std::shared_ptr<Widget> mk_padding(SizeExpectation s1,
+                                          SizeExpectation s2) {
+    return get().own(Widget(s1, s2));
+}
+
 inline std::shared_ptr<Widget> mk_but_pad() {
     return get().own(Widget(padd_x, padd_y));
 }

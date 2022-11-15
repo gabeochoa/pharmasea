@@ -47,6 +47,58 @@ struct SettingsLayer : public Layer {
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
+    void streamer_safe_box() {
+        auto container = ui_context->own(
+            Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
+
+        padding(
+            *ui_context->own(Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f))));
+        div(*container);
+        ui_context->push_parent(container);
+        {
+            text(*ui::components::mk_text(), "Show Streamer Safe Box");
+            auto checkbox_widget = ui_context->own(Widget(
+                MK_UUID(id, ROOT_ID), Size_Px(75.f, 0.5f), Size_Px(25.f, 1.f)));
+            bool sssb = Settings::get().data.show_streamer_safe_box;
+            if (checkbox(*checkbox_widget, &sssb)) {
+                Settings::get().update_streamer_safe_box(sssb);
+            }
+        }
+        ui_context->pop_parent();
+    }
+
+    void master_volume() {
+        auto volume_slider_container = ui_context->own(
+            Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
+
+        padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                            Size_Pct(1.f, 0.f)));
+        div(*volume_slider_container);
+        ui_context->push_parent(volume_slider_container);
+        {
+            text(*ui::components::mk_text(), "Master Volume");
+            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                                Size_Px(100.f, 1.f)));
+
+            auto slider_widget = ui_context->own(Widget(
+                MK_UUID(id, ROOT_ID), Size_Px(100.f, 1.f), Size_Px(30.f, 1.f)));
+
+            float* mv = &(Settings::get().data.master_volume);
+            if (slider(*slider_widget, false, mv, 0.f, 1.f)) {
+                Settings::get().update_master_volume(*mv);
+            }
+        }
+        ui_context->pop_parent();
+    }
+
+    void back_button() {
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
+            Menu::get().state = Menu::State::Root;
+        }
+        padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                            Size_Pct(1.f, 0.f)));
+    }
+
     void draw_ui(float dt) {
         using namespace ui;
         // TODO select the acurate options based on current settings
@@ -60,78 +112,19 @@ struct SettingsLayer : public Layer {
 
         auto root = ui::components::mk_root();
 
-        //
-        Widget volume_slider_container({.mode = Children}, {.mode = Children},
-                                       GrowFlags::Row);
-
-        Widget volume_widget(
-            // TODO replace with text size
-            {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-            {.mode = Pixels, .value = 50.f, .strictness = 1.f});
-
-        Widget slider_widget(
-            MK_UUID(id, ROOT_ID),
-            {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-            {.mode = Pixels, .value = 30.f, .strictness = 1.f});
-
-        Widget back_button(MK_UUID(id, ROOT_ID),
-                           {.mode = Pixels, .value = 120.f},
-                           {.mode = Pixels, .value = 50.f});
-
-        Widget window_size_container({.mode = Children}, {.mode = Children},
-                                     GrowFlags::Row);
-        //
-
         ui_context->push_parent(root);
         {
-            auto left_padding = ui_context->own(
-                Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                       {.mode = Pixels, .value = WIN_H, .strictness = 1.f}));
-
-            auto content = ui_context->own(Widget(
-                {.mode = Children, .strictness = 1.f},
-                {.mode = Percent, .value = 1.f, .strictness = 1.0f}, Column));
-            padding(*left_padding);
+            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                                Size_Px(WIN_H, 1.f)));
+            auto content =
+                ui_context->own(Widget({.mode = Children, .strictness = 1.f},
+                                       Size_Pct(1.f, 1.f), Column));
             div(*content);
             ui_context->push_parent(content);
             {
-                auto top_padding = ui_context->own(
-                    Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                           {.mode = Percent, .value = 1.f, .strictness = 0.f}));
-                padding(*top_padding);
-                div(volume_slider_container);
-                ui_context->push_parent(&volume_slider_container);
-                {
-                    text(volume_widget, "Master Volume");
-
-                    auto left_padding2 = ui_context->own(Widget(
-                        {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                        {.mode = Pixels, .value = 100.f, .strictness = 1.f}));
-                    padding(*left_padding2);
-
-                    float* mv = &(Settings::get().data.master_volume);
-                    if (slider(slider_widget, false, mv, 0.f, 1.f)) {
-                        Settings::get().update_master_volume(*mv);
-                    }
-                }
-                ui_context->pop_parent();
-
-                text(*ui::components::mk_text(), "Show Streamer Safe Box");
-                auto checkbox_widget = ui_context->own(
-                    Widget(MK_UUID(id, ROOT_ID), Size_Px(75.f, 0.5f),
-                           Size_Px(25.f, 1.f)));
-                bool sssb = Settings::get().data.show_streamer_safe_box;
-                if (checkbox(*checkbox_widget, &sssb)) {
-                    Settings::get().update_streamer_safe_box(sssb);
-                    std::cout << "checkbox changed" << std::endl;
-                }
-
-                if (button(back_button, "Back")) {
-                    Menu::get().state = Menu::State::Root;
-                }
-                padding(*ui_context->own(Widget(
-                    {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                    {.mode = Percent, .value = 1.f, .strictness = 0.f})));
+                master_volume();
+                streamer_safe_box();
+                back_button();
             }
             ui_context->pop_parent();
         }
