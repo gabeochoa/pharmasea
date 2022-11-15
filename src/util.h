@@ -5,8 +5,13 @@
 #include <math.h>
 
 #include <cmath>
-#include <vector>
 #include <string>
+#include <vector>
+
+#define CONCAT_IMPL(s1, s2) s1##s2
+#define CONCAT(s1, s2) CONCAT_IMPL(s1, s2)
+#define ANONYMOUS(x) CONCAT(x, __COUNTER__)
+// usage: int ANONYMOUS(myvar); => int myvar_1;
 
 namespace util {
 
@@ -23,12 +28,16 @@ int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
 
-static float deg2rad(float deg) { return deg * static_cast<float>(M_PI) / 180.0f; }
+static float deg2rad(float deg) {
+    return deg * static_cast<float>(M_PI) / 180.0f;
+}
 
-static float rad2deg(float rad) { return rad * (180.f / static_cast<float>(M_PI)); }
+static float rad2deg(float rad) {
+    return rad * (180.f / static_cast<float>(M_PI));
+}
 
 static std::vector<std::string> split_string(const std::string& str,
-                                      const std::string& delimiter) {
+                                             const std::string& delimiter) {
     std::vector<std::string> strings;
 
     std::string::size_type pos = 0;
@@ -43,6 +52,5 @@ static std::vector<std::string> split_string(const std::string& str,
 
     return strings;
 }
-
 
 }  // namespace util
