@@ -51,10 +51,10 @@ struct BasePauseLayer : public Layer {
 
     virtual void onUpdate(float) override {}
 
-    const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
-    const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
-    const SizeExpectation padd_x = {.mode = Pixels, .value = 120.f};
-    const SizeExpectation padd_y = {.mode = Pixels, .value = 25.f};
+    const SizeExpectation button_x = Size_Px(120.f, 0.5f);
+    const SizeExpectation button_y = Size_Px(50.f, 0.5f);
+    const SizeExpectation padd_x = Size_Px(120.f, 0.5f);
+    const SizeExpectation padd_y = Size_Px(25.f, 0.5f);
 
     std::shared_ptr<Widget> mk_button(uuid id) {
         return ui_context->own(Widget(id, button_x, button_y));
@@ -73,27 +73,23 @@ struct BasePauseLayer : public Layer {
         ui_context->begin(mouseDown, mousepos, dt);
 
         auto root = ui_context->own(
-            Widget({.mode = Pixels, .value = WIN_W, .strictness = 1.f},
-                   {.mode = Pixels, .value = WIN_H, .strictness = 1.f},
-                   GrowFlags::Row));
+            Widget(Size_Px(WIN_W, 1.f), Size_Px(WIN_H, 1.f), GrowFlags::Row));
 
         ui_context->push_parent(root);
         {
             auto left_padding = ui_context->own(
-                Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                       {.mode = Pixels, .value = WIN_H, .strictness = 1.f}));
+                Widget(Size_Px(100.f, 1.f), Size_Px(WIN_H, 1.f)));
 
-            auto content = ui_context->own(Widget(
-                {.mode = Children, .strictness = 1.f},
-                {.mode = Percent, .value = 1.f, .strictness = 1.0f}, Column));
+            auto content =
+                ui_context->own(Widget({.mode = Children, .strictness = 1.f},
+                                       Size_Pct(1.f, 1.f), Column));
 
             padding(*left_padding);
             div(*content);
             ui_context->push_parent(content);
             {
                 auto top_padding = ui_context->own(
-                    Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                           {.mode = Percent, .value = 1.f, .strictness = 0.f}));
+                    Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f)));
                 padding(*top_padding);
                 {
                     if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Continue")) {
@@ -103,9 +99,8 @@ struct BasePauseLayer : public Layer {
                         Menu::get().state = Menu::State::Root;
                     }
                 }
-                padding(*ui_context->own(Widget(
-                    {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                    {.mode = Percent, .value = 1.f, .strictness = 0.f})));
+                padding(*ui_context->own(
+                    Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f))));
             }
             ui_context->pop_parent();
         }
