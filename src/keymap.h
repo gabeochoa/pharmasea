@@ -75,20 +75,16 @@ struct KeyMap {
     }
 
     static float visit_key(int keycode) {
-        if (IsKeyPressed(keycode)) {
-            return 1.f;
-        }
-        return 0.f;
+        return IsKeyPressed(keycode) ? 1.f : 0.f;
     }
 
     static float visit_key_down(int keycode) {
-        if (IsKeyDown(keycode)) {
-            return 1.f;
-        }
-        return 0.f;
+        return IsKeyDown(keycode) ? 1.f : 0.f;
     }
 
     static float visit_axis(GamepadAxisWithDir axis_with_dir) {
+        // Note: this one is a bit more complex because we have to check if you
+        // are pushing in the right direction while also checking the magnitude
         float mvt = GetGamepadAxisMovement(0, axis_with_dir.axis);
         if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > 0.25f) {
             return abs(mvt);
@@ -97,17 +93,11 @@ struct KeyMap {
     }
 
     static float visit_button(GamepadButton button) {
-        if (IsGamepadButtonPressed(0, button)) {
-            return 1.f;
-        }
-        return 0.f;
+        return IsGamepadButtonPressed(0, button) ? 1.f : 0.f;
     }
 
     static float visit_button_down(GamepadButton button) {
-        if (IsGamepadButtonDown(0, button)) {
-            return 1.f;
-        }
-        return 0.f;
+        return IsGamepadButtonDown(0, button) ? 1.f : 0.f;
     }
 
     void forEachCharTyped(std::function<void(Event&)> cb) {
@@ -391,14 +381,10 @@ struct KeyMap {
         for (auto pair : layermap) {
             const auto valid_inputs = pair.second;
             for (auto input : valid_inputs) {
-                contains =
-                    std::visit(util::overloaded{[&](int k) {
-                                                    if (k == keycode)
-                                                        return true;
-                                                    return false;
-                                                },
-                                                [](auto&&) { return false; }},
-                               input);
+                contains = std::visit(
+                    util::overloaded{[&](int k) { return k == keycode; },
+                                     [](auto&&) { return false; }},
+                    input);
                 if (contains) return true;
             }
         }
@@ -414,14 +400,11 @@ struct KeyMap {
         for (auto pair : layermap) {
             const auto valid_inputs = pair.second;
             for (auto input : valid_inputs) {
-                contains =
-                    std::visit(util::overloaded{[&](GamepadButton butt) {
-                                                    if (butt == button)
-                                                        return true;
-                                                    return false;
-                                                },
-                                                [](auto&&) { return false; }},
-                               input);
+                contains = std::visit(
+                    util::overloaded{
+                        [&](GamepadButton butt) { return butt == button; },
+                        [](auto&&) { return false; }},
+                    input);
                 if (contains) return true;
             }
         }
@@ -437,14 +420,11 @@ struct KeyMap {
         for (auto pair : layermap) {
             const auto valid_inputs = pair.second;
             for (auto input : valid_inputs) {
-                contains =
-                    std::visit(util::overloaded{[&](GamepadAxisWithDir ax) {
-                                                    if (ax.axis == axis)
-                                                        return true;
-                                                    return false;
-                                                },
-                                                [](auto&&) { return false; }},
-                               input);
+                contains = std::visit(
+                    util::overloaded{
+                        [&](GamepadAxisWithDir ax) { return ax.axis == axis; },
+                        [](auto&&) { return false; }},
+                    input);
                 if (contains) return true;
             }
         }
