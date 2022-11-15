@@ -12,9 +12,15 @@ struct MusicLibrary {
     struct MusicLibraryImpl : Library<Music> {
         virtual void load(const char* filename, const char* name) override {
             // TODO add debug mode
-            std::cout << "loading texture: " << name << " from " << filename
+            std::cout << "loading music: " << name << " from " << filename
                       << std::endl;
             this->add(name, LoadMusicStream(filename));
+        }
+
+        void update_volume(float new_v) {
+            for (auto kv : storage) {
+                SetMusicVolume(kv.second, new_v);
+            }
         }
     } impl;
 
@@ -22,4 +28,6 @@ struct MusicLibrary {
     void load(const char* filename, const char* name) {
         impl.load(filename, name);
     }
+
+    void update_volume(float new_v) { impl.update_volume(new_v); }
 };

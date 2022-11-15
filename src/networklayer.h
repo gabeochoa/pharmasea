@@ -194,8 +194,7 @@ struct NetworkLayer : public Layer {
             if (!kv.second) continue;
             auto player_text = ui_context->own(
                 Widget(MK_UUID_LOOP(id, ROOT_ID, kv.first),
-                       {.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                       Size_Px(100.f, 1.f)));
+                       Size_Px(120.f, 0.5f), Size_Px(100.f, 1.f)));
             text(*player_text,
                  fmt::format("{}({})", kv.second->name, kv.first));
         }
@@ -272,9 +271,6 @@ struct NetworkLayer : public Layer {
 
         if (Menu::get().state != Menu::State::Network) return;
 
-        if (minimized) {
-            return;
-        }
         ClearBackground(ui_context->active_theme().background);
 
         // TODO move to input

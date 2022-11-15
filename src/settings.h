@@ -35,6 +35,7 @@ struct Data {
     vec2 window_size = {WIN_W, WIN_H};
     // Volume percent [0, 1] for everything
     float master_volume = 0.5f;
+    float music_volume = 0.5f;
     bool show_streamer_safe_box = false;
     std::string username = "";
 
@@ -45,6 +46,7 @@ struct Data {
         s.value4b(version);
         s.object(window_size);
         s.value4b(master_volume);
+        s.value4b(music_volume);
         s.value1b(show_streamer_safe_box);
         s.text1b(username, network::MAX_NAME_LENGTH);
     }
@@ -56,6 +58,7 @@ std::ostream& operator<<(std::ostream& os, const Data& data) {
     os << "resolution: " << data.window_size.x << ", " << data.window_size.y
        << std::endl;
     os << "master vol: " << data.master_volume << std::endl;
+    os << "music vol: " << data.music_volume << std::endl;
     os << "Safe box: " << data.show_streamer_safe_box << std::endl;
     os << "username: " << data.username << std::endl;
     os << ")" << std::endl;
@@ -84,7 +87,8 @@ struct Settings {
         // version doesnt need update
         update_window_size(data.window_size);
         update_master_volume(data.master_volume);
-        // streamer box doesnt need update
+        update_music_volume(data.music_volume);
+        update_streamer_safe_box(data.show_streamer_safe_box);
     }
 
     void update_window_size(vec2 size) {
@@ -101,11 +105,16 @@ struct Settings {
     }
 
     void update_master_volume(float nv) {
-        data.master_volume = nv;
+        data.master_volume = util::clamp(nv, 0.f, 1.f);
         // std::cout << "master volume changed to " << data.master_volume
         // << std::endl;
         SetMasterVolume(data.master_volume);
         // TODO support sound vs music volume
+    }
+
+    void update_music_volume(float nv) {
+        data.music_volume = util::clamp(nv, 0.f, 1.f);
+        MusicLibrary::get().update_volume(data.music_volume);
     }
 
     void update_streamer_safe_box(bool sssb) {

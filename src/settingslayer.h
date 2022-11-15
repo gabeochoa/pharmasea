@@ -21,8 +21,6 @@ struct SettingsLayer : public Layer {
         ui_context.reset(new ui::UIContext());
     }
     virtual ~SettingsLayer() {}
-    virtual void onAttach() override {}
-    virtual void onDetach() override {}
 
     virtual void onEvent(Event& event) override {
         EventDispatcher dispatcher(event);
@@ -91,6 +89,30 @@ struct SettingsLayer : public Layer {
         ui_context->pop_parent();
     }
 
+    void music_volume() {
+        auto volume_slider_container = ui_context->own(
+            Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
+
+        padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                            Size_Pct(1.f, 0.f)));
+        div(*volume_slider_container);
+        ui_context->push_parent(volume_slider_container);
+        {
+            text(*ui::components::mk_text(), "Music Volume");
+            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                                Size_Px(100.f, 1.f)));
+
+            auto slider_widget = ui_context->own(Widget(
+                MK_UUID(id, ROOT_ID), Size_Px(100.f, 1.f), Size_Px(30.f, 1.f)));
+
+            float* mv = &(Settings::get().data.music_volume);
+            if (slider(*slider_widget, false, mv, 0.f, 1.f)) {
+                Settings::get().update_music_volume(*mv);
+            }
+        }
+        ui_context->pop_parent();
+    }
+
     void back_button() {
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
             Menu::get().state = Menu::State::Root;
@@ -123,6 +145,7 @@ struct SettingsLayer : public Layer {
             ui_context->push_parent(content);
             {
                 master_volume();
+                music_volume();
                 streamer_safe_box();
                 back_button();
             }

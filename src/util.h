@@ -53,4 +53,8 @@ static std::vector<std::string> split_string(const std::string& str,
     return strings;
 }
 
+static float clamp(float a, float mn, float mx) {
+    return std::min(std::max(a, mn), mx);
+}
+
 }  // namespace util
