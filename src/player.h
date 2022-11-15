@@ -124,8 +124,9 @@ struct Player : public BasePlayer {
         }
     }
 
-    // TODO how to handle when they are holding something?
-    virtual void grab_or_drop() {
+    void handle_in_game_grab_or_drop() {
+        // TODO Need to auto drop any held furniture
+
         // Do we already have something in our hands?
         if (this->held_item) {
             const auto _drop_item = [&]() {
@@ -146,42 +147,9 @@ struct Player : public BasePlayer {
             };
             _drop_item();
             return;
-        }
-
-        // TODO need to auto drop when "in_planning" changes
-        if (this->held_furniture) {
-            std::cout << "holding furniture" << std::endl;
-            const auto _drop_furniture = [&]() {
-                // TODO need to make sure it doesnt place ontop of another one
-                this->held_furniture->update_position(
-                    vec::snap(this->held_furniture->position));
-                EntityHelper::addEntity(this->held_furniture);
-                this->held_furniture = nullptr;
-            };
-            _drop_furniture();
-            return;
-        }
-
-        // TODO support finding things in the direction the player is facing,
-        // instead of in a box around him
-
-        if (Menu::get().state == Menu::State::Planning) {
-            std::shared_ptr<Furniture> closest_furniture =
-                EntityHelper::getMatchingEntityInFront<Furniture>(
-                    vec::to2(this->position), player_reach,
-                    this->face_direction, [](std::shared_ptr<Furniture> f) {
-                        return f->can_be_picked_up();
-                    });
-            this->held_furniture = closest_furniture;
-            // NOTE: we want to remove the furniture ONLY from the nav mesh
-            //       when picked up because then AI can walk through,
-            //       this also means we have to add it back when we place it
-            // if (this->held_furniture) {
-            // auto nv = GLOBALS.get_ptr<NavMesh>("navmesh");
-            // nv->removeEntity(this->held_furniture->id);
-            // }
-            return;
         } else {
+            // TODO support finding things in the direction the player is
+            // facing, instead of in a box around him
             // TODO logic for the closest furniture holding an item within reach
             // Return early if it is found
             std::shared_ptr<Item> closest_item = nullptr;
@@ -209,6 +177,52 @@ struct Player : public BasePlayer {
                 this->held_item->held_by = Item::HeldBy::PLAYER;
             }
             return;
+        }
+    }
+
+    void handle_in_planning_grab_or_drop() {
+        // TODO: Need to delete any held items when switching from game ->
+        // planning
+
+        // TODO need to auto drop when "in_planning" changes
+        if (this->held_furniture) {
+            std::cout << "holding furniture" << std::endl;
+            const auto _drop_furniture = [&]() {
+                // TODO need to make sure it doesnt place ontop of another
+                // one
+                this->held_furniture->update_position(
+                    vec::snap(this->held_furniture->position));
+                EntityHelper::addEntity(this->held_furniture);
+                this->held_furniture = nullptr;
+            };
+            _drop_furniture();
+            return;
+        } else {
+            // TODO support finding things in the direction the player is
+            // facing, instead of in a box around him
+            std::shared_ptr<Furniture> closest_furniture =
+                EntityHelper::getMatchingEntityInFront<Furniture>(
+                    vec::to2(this->position), player_reach,
+                    this->face_direction, [](std::shared_ptr<Furniture> f) {
+                        return f->can_be_picked_up();
+                    });
+            this->held_furniture = closest_furniture;
+            // NOTE: we want to remove the furniture ONLY from the nav mesh
+            //       when picked up because then AI can walk through,
+            //       this also means we have to add it back when we place it
+            // if (this->held_furniture) {
+            // auto nv = GLOBALS.get_ptr<NavMesh>("navmesh");
+            // nv->removeEntity(this->held_furniture->id);
+            // }
+            return;
+        }
+    }
+
+    virtual void grab_or_drop() {
+        if (Menu::get().state == Menu::State::Game) {
+            handle_in_game_grab_or_drop();
+        } else if (Menu::get().state == Menu::State::Planning) {
+            handle_in_planning_grab_or_drop();
         }
     }
 };

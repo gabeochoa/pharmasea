@@ -118,6 +118,27 @@ Game Ideas
 
 ## Changelog
 
+### alpha_0.22.11.14
+
+impact 
+- Map now send across network
+- Map now respects seed sent in 
+- Version checking for player join 
+- Friends can now pick up items and you can see! 
+
+better eng
+- Serialize entity, map, furniture, item (unblocks syncing across network) 
+- Add planning and game modes (and pausedplanning) 
+- more constexpr for globals
+- add announcement types to annoucements (eventually do popups?) 
+- better default tab location on Network screen
+- Fix issue where tabbed item could be invisible 
+- Move server into its own thread 
+
+soon
+- Conveyer
+- Add settings page to pause menu ? 
+
 ### alpha_0.22.11.07
 
 impact 

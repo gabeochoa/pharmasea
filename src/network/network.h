@@ -105,7 +105,7 @@ struct Info {
     Info() {}
 
     ~Info() {
-        cleanup_server();
+        // cleanup_server();
         client.reset();
         //
         desired_role = Role::s_None;
