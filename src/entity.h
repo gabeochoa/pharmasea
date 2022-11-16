@@ -147,10 +147,13 @@ struct Entity {
                        this->face_color, this->base_color);
     }
 
-    virtual void render() const {
-        const auto debug_mode_on = GLOBALS.get<bool>("debug_ui_enabled");
+    virtual void render() const final {
+        const auto debug_mode_on =
+            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
 
-        render_normal();
+        if (!debug_mode_on) {
+            render_normal();
+        }
 
         if (debug_mode_on) {
             render_debug_mode();

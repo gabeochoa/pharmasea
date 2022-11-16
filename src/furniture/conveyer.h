@@ -46,8 +46,6 @@ struct Conveyer : public Furniture {
     }
 
     virtual void update(float dt) override {
-        std::cout << this->id << " " << this->is_held << " "
-                  << this->is_collidable() << std::endl;
         this->is_highlighted = false;
         Furniture::update(dt);
         // we are not holding anything

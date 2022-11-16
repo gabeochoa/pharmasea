@@ -172,14 +172,17 @@ struct Map {
 
     void onDraw(float) {
         for (auto e : entities) {
-            e->render();
+            if (e) e->render();
+            if (!e) std::cout << "we have invalid entities" << std::endl;
         }
 
         for (auto i : items) {
-            i->render();
+            if (i) i->render();
+            if (!i) std::cout << "we have invalid items" << std::endl;
         }
         for (auto rp : remote_players_NOT_SERIALIZED) {
-            rp->render();
+            if (rp) rp->render();
+            if (!rp) std::cout << "we have invalid remote players" << std::endl;
         }
     }
 
@@ -192,6 +195,7 @@ struct Map {
     void grab_things() {
         {
             entities.clear();
+            EntityHelper::cleanup();
             auto es = EntityHelper::get_entities();
             this->entities = es;
             num_entities = this->entities.size();

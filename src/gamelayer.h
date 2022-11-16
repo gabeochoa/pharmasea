@@ -94,6 +94,8 @@ struct GameLayer : public Layer {
         cam->updateCamera();
 
         player->update(dt);
+        // NOTE: gabe: i dont think we need to do this
+        //         because the local map never should need to grab things
         auto map_ptr = GLOBALS.get_ptr<Map>("map");
         if (map_ptr) {
             map_ptr->grab_things();
@@ -109,9 +111,7 @@ struct GameLayer : public Layer {
         BeginMode3D((*cam).get());
         {
             auto map_ptr = GLOBALS.get_ptr<Map>("map");
-            if (map_ptr) {
-                map_ptr->onDraw(dt);
-            }
+            if (map_ptr) map_ptr->onDraw(dt);
 
             // TODO migrate
             ItemHelper::forEachItem([&](auto item) {
@@ -129,23 +129,23 @@ struct GameLayer : public Layer {
                           },
                           TILESIZE, WHITE);
 
-            if (GLOBALS.get<bool>("debug_ui_enabled")) {
-                auto host_map_ptr = GLOBALS.get_ptr<Map>("server_map");
-                if (host_map_ptr) {
-                    host_map_ptr->onDraw(dt);
-                }
+            // if (GLOBALS.get_or_default<bool>("network_debug_enabled", false))
+            // { auto host_map_ptr = GLOBALS.get_ptr<Map>("server_map"); if
+            // (host_map_ptr) {
+            // host_map_ptr->onDraw(dt);
+            // }
+            // }
 
-                // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-                // if (nav) {
-                // for (auto kv : nav->entityShapes) {
-                // DrawLineStrip2Din3D(kv.second.hull, PINK);
-                // }
-                //
-                // for (auto kv : nav->shapes) {
-                // DrawLineStrip2Din3D(kv.hull, PINK);
-                // }
-                // }
-            }
+            // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
+            // if (nav) {
+            // for (auto kv : nav->entityShapes) {
+            // DrawLineStrip2Din3D(kv.second.hull, PINK);
+            // }
+            //
+            // for (auto kv : nav->shapes) {
+            // DrawLineStrip2Din3D(kv.hull, PINK);
+            // }
+            // }
         }
         EndMode3D();
     }

@@ -45,7 +45,7 @@ struct RemotePlayer : public BasePlayer {
 
     virtual bool is_collidable() override { return false; }
 
-    virtual void render() const override {
+    virtual void render_normal() const override {
         auto render_name = [&]() {
             rlPushMatrix();
             rlTranslatef(              //
@@ -75,7 +75,7 @@ struct RemotePlayer : public BasePlayer {
             rlPopMatrix();
         };
 
-        BasePlayer::render();
+        BasePlayer::render_normal();
         render_name();
     }
 };

@@ -33,7 +33,7 @@ struct Furniture : public Entity {
 
     virtual std::optional<Model> model() const { return {}; }
 
-    virtual void render() const override {
+    virtual void render_normal() const override {
         if (model().has_value()) {
             Color base = this->is_highlighted
                              ? ui::color::getHighlighted(this->base_color)
@@ -52,7 +52,7 @@ struct Furniture : public Entity {
                         this->size() * 10.f, base);
 
         } else {
-            Entity::render();
+            Entity::render_normal();
         }
     }
 

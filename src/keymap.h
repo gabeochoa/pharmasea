@@ -41,6 +41,7 @@ enum InputName {
     TargetBack,
     TargetLeft,
     TargetRight,
+    //
     TogglePlanning,  // DEBUG ONLY
     ToggleDebug,     // DEBUG ONLY
 };

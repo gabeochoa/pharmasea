@@ -37,7 +37,7 @@ struct Wall : public Furniture {
         return {TILESIZE, TILESIZE, TILESIZE};
     }
 
-    virtual void render() const override {
+    virtual void render_normal() const override {
         switch (this->type) {
             case Type::DOUBLE_TEE: {
                 DrawCubeCustom(this->raw_position,                        //

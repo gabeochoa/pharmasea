@@ -243,7 +243,7 @@ struct Customer : public AIPerson {
         // }
     }
 
-    virtual void render() const override {
+    virtual void render_normal() const override {
         auto render_speech_bubble = [&]() {
             if (!this->bubble.has_value()) return;
             this->bubble.value().render();
@@ -277,7 +277,7 @@ struct Customer : public AIPerson {
             rlPopMatrix();
         };
 
-        AIPerson::render();
+        AIPerson::render_normal();
         render_speech_bubble();
         render_name();
     }

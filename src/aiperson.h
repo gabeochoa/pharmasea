@@ -35,20 +35,17 @@ struct AIPerson : public Person {
     AIPerson(vec2 p, Color c) : Person(p, c) {}
 
     virtual float base_speed() override { return 10.f; }
-    // virtual float stagger_mod() override {
-    //     return 0
-    // pull from ailment
-    // }
-    virtual void render() const override {
-        Person::render();
 
-        if (GLOBALS.get<bool>("debug_ui_enabled")) {
-            const float box_size = TILESIZE / 10.f;
-            if (job && !job->path.empty()) {
-                for (auto location : job->path) {
-                    DrawCube(vec::to3(location), box_size, box_size, box_size,
-                             BLUE);
-                }
+    // TODO add stagger based on ailment modifier
+    // virtual float stagger_mod() override { return 0 }
+
+    virtual void render_debug_mode() const override {
+        Person::render_debug_mode();
+        const float box_size = TILESIZE / 10.f;
+        if (job && !job->path.empty()) {
+            for (auto location : job->path) {
+                DrawCube(vec::to3(location), box_size, box_size, box_size,
+                         BLUE);
             }
         }
     }
