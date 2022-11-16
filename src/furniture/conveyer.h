@@ -11,6 +11,17 @@ struct Conveyer : public Furniture {
     float relative_item_pos = -0.5f;
     float SPEED = 0.5f;
 
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Furniture>{});
+        // Only need to serialize things that are needed for render
+        s.value4b(relative_item_pos);
+    }
+
+   public:
+    Conveyer() {}
     Conveyer(vec2 pos)
         : Furniture(pos, ui::color::blue, ui::color::blue_green) {}
 
@@ -35,6 +46,8 @@ struct Conveyer : public Furniture {
     }
 
     virtual void update(float dt) override {
+        std::cout << this->id << " " << this->is_held << " "
+                  << this->is_collidable() << std::endl;
         this->is_highlighted = false;
         Furniture::update(dt);
         // we are not holding anything
@@ -81,13 +94,5 @@ struct Conveyer : public Furniture {
         //
         //          ^
         //    -->-> |     in this we want to place at 0.f instead of -0.5
-    }
-
-    virtual bool can_rotate() override { return true; }
-
-    virtual bool can_be_picked_up() override { return true; }
-
-    virtual bool can_place_item_into() override {
-        return this->held_item == nullptr;
     }
 };

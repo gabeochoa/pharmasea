@@ -7,6 +7,7 @@
 
 #include "astar.h"
 #include "globals.h"
+#include "is_server.h"
 #include "item.h"
 #include "item_helper.h"
 #include "random.h"
@@ -50,6 +51,7 @@ struct Entity {
     Color base_color;
     bool cleanup = false;
     bool is_highlighted = false;
+    bool is_held = false;
     FrontFaceDirection face_direction = FrontFaceDirection::FORWARD;
     std::shared_ptr<Item> held_item = nullptr;
 
@@ -66,6 +68,7 @@ struct Entity {
         s.object(base_color);
         s.value1b(cleanup);
         s.value1b(is_highlighted);
+        s.value1b(is_held);
         s.value4b(face_direction);
         s.object(held_item);
     }
@@ -121,27 +124,36 @@ struct Entity {
         return CheckCollisionBoxes(this->bounds(), b);
     }
 
-    virtual void render() const {
-        const auto debug_mode_on = GLOBALS.get<bool>("debug_ui_enabled");
-        if (!this->draw_outside_debug_mode() && !debug_mode_on) {
+    virtual void render_debug_mode() const {
+        DrawBoundingBox(this->bounds(), MAROON);
+    }
+
+    virtual void render_highlighted() const {
+        Color f = ui::color::getHighlighted(this->face_color);
+        Color b = ui::color::getHighlighted(this->base_color);
+        DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
+                       this->size().z, FrontFaceDirectionMap.at(face_direction),
+                       f, b);
+    }
+
+    virtual void render_normal() const {
+        if (this->is_highlighted) {
+            render_highlighted();
             return;
         }
 
-        if (this->is_highlighted) {
-            Color f = ui::color::getHighlighted(this->face_color);
-            Color b = ui::color::getHighlighted(this->base_color);
-            DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                           this->size().z,
-                           FrontFaceDirectionMap.at(face_direction), f, b);
-        } else {
-            DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                           this->size().z,
-                           FrontFaceDirectionMap.at(face_direction),
-                           this->face_color, this->base_color);
-        }
+        DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
+                       this->size().z, FrontFaceDirectionMap.at(face_direction),
+                       this->face_color, this->base_color);
+    }
+
+    virtual void render() const {
+        const auto debug_mode_on = GLOBALS.get<bool>("debug_ui_enabled");
+
+        render_normal();
 
         if (debug_mode_on) {
-            DrawBoundingBox(this->bounds(), MAROON);
+            render_debug_mode();
         }
     }
 
@@ -249,12 +261,17 @@ struct Entity {
         */
     }
 
-    virtual bool is_collidable() { return true; }
+    virtual void on_pickup() { this->is_held = true; }
+
+    virtual void on_drop(vec3 location) {
+        this->is_held = false;
+        this->update_position(vec::snap(location));
+    }
+
+    virtual bool is_collidable() { return !is_held; }
     virtual bool is_snappable() { return false; }
     virtual bool add_to_navmesh() { return false; }
     virtual bool can_place_item_into() { return false; }
-    // Should this entity still continue to render outside debug mode?
-    virtual bool draw_outside_debug_mode() const { return true; }
 };
 
 typedef Entity::FrontFaceDirection EntityDir;

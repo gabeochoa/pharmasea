@@ -22,9 +22,18 @@ struct Player : public BasePlayer {
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
                      {255, 0, 0, 255}) {}
 
-    virtual bool draw_outside_debug_mode() const override {
-        return !is_ghost_player;
+    virtual void render_normal() const override {
+        if (!is_ghost_player) {
+            BasePlayer::render_normal();
+        }
     }
+
+    virtual void render_debug_mode() const override {
+        if (is_ghost_player) {
+            BasePlayer::render_normal();
+        }
+    }
+
     virtual bool is_collidable() override { return !is_ghost_player; }
 
     virtual vec3 update_xaxis_position(float dt) override {
@@ -193,9 +202,10 @@ struct Player : public BasePlayer {
             const auto _drop_furniture = [&]() {
                 // TODO need to make sure it doesnt place ontop of another
                 // one
-                this->held_furniture->update_position(
-                    vec::snap(this->held_furniture->position));
-                EntityHelper::addEntity(this->held_furniture);
+                std::cout << "dropping furniture @"
+                          << this->held_furniture->raw_position << std::endl;
+                auto hf = this->held_furniture;
+                hf->on_drop(this->position);
                 this->held_furniture = nullptr;
             };
             _drop_furniture();
@@ -210,6 +220,7 @@ struct Player : public BasePlayer {
                         return f->can_be_picked_up();
                     });
             this->held_furniture = closest_furniture;
+            if (this->held_furniture) this->held_furniture->on_pickup();
             // NOTE: we want to remove the furniture ONLY from the nav mesh
             //       when picked up because then AI can walk through,
             //       this also means we have to add it back when we place it

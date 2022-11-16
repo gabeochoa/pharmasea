@@ -7,6 +7,7 @@
 //
 #include "globals.h"
 #include "globals_register.h"
+#include "is_server.h"
 
 //
 #include "entity.h"
@@ -22,15 +23,7 @@ struct EntityHelper {
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
     static Entities& get_entities() {
-        auto my_thread_id = std::this_thread::get_id();
-        // std::cout << "get entities server: "
-        // << server_entities_DO_NOT_USE.size()
-        // << " client: " << client_entities_DO_NOT_USE.size()
-        // << std::endl;
-        auto server_thread_id =
-            GLOBALS.get_or_default("server_thread_id", std::thread::id());
-
-        if (my_thread_id == server_thread_id) {
+        if (is_server()) {
             return server_entities_DO_NOT_USE;
         }
         // Right now we only have server/client thread, but in the future if we

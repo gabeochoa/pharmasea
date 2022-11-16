@@ -63,10 +63,12 @@ struct Person : public Entity {
                 would_collide_z = true;
                 collided_entity_z = entity;
             }
+            // Note: if these are both true, then we definitely dont need to
+            // keep going and can break early, otherwise we should check the
+            // rest to make sure
             if (would_collide_x && would_collide_z) {
                 return EntityHelper::ForEachFlow::Break;
             }
-
             return EntityHelper::ForEachFlow::None;
         });
 

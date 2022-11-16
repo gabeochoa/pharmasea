@@ -56,10 +56,10 @@ struct Furniture : public Entity {
         }
     }
 
-    virtual bool can_rotate() { return false; }
-
     virtual bool add_to_navmesh() override { return true; }
-
-    virtual bool can_be_picked_up() { return false; }
-    virtual bool can_place_item_into() override { return false; }
+    virtual bool can_rotate() { return true; }
+    virtual bool can_be_picked_up() { return !this->is_held; }
+    virtual bool can_place_item_into() override {
+        return this->held_item == nullptr;
+    }
 };

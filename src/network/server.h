@@ -52,6 +52,7 @@ struct Server {
         // TODO add some kind of seed selection screen
 
         pharmacy_map.reset(new Map());
+        GLOBALS.set("server_map", pharmacy_map.get());
     }
 
     void send_map_state() {

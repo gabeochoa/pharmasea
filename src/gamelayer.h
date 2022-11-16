@@ -130,6 +130,11 @@ struct GameLayer : public Layer {
                           TILESIZE, WHITE);
 
             if (GLOBALS.get<bool>("debug_ui_enabled")) {
+                auto host_map_ptr = GLOBALS.get_ptr<Map>("server_map");
+                if (host_map_ptr) {
+                    host_map_ptr->onDraw(dt);
+                }
+
                 // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
                 // if (nav) {
                 // for (auto kv : nav->entityShapes) {

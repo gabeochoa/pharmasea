@@ -81,12 +81,4 @@ struct Register : public Furniture {
     virtual std::optional<Model> model() const override {
         return ModelLibrary::get().get("register");
     }
-
-    virtual bool can_rotate() override { return true; }
-
-    virtual bool can_be_picked_up() override { return true; }
-
-    virtual bool can_place_item_into() override {
-        return this->held_item == nullptr;
-    }
 };
