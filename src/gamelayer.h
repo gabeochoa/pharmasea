@@ -37,8 +37,6 @@ struct GameLayer : public Layer {
     }
 
     virtual ~GameLayer() {}
-    virtual void onAttach() override {}
-    virtual void onDetach() override {}
 
     virtual void onEvent(Event& event) override {
         if (!Menu::in_game()) return;

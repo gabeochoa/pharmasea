@@ -3,6 +3,7 @@
 
 #include <thread>
 
+#include "assert.h"
 #include "external_include.h"
 //
 #include "globals.h"
@@ -124,36 +125,39 @@ struct EntityHelper {
 
     template<typename T>
     static std::shared_ptr<T> getMatchingEntityInFront(
-        vec2 pos, float range, Entity::FrontFaceDirection direction,
-        std::function<bool(std::shared_ptr<T>)> filter) {
-        std::vector<vec2> steps;
-        // TODO fix this iterator up
-        for (int i = 0; i < static_cast<int>(range); i++) {
-            steps.push_back(Entity::tile_infront_given_pos(pos, i, direction));
-        }
+        vec2 pos,                                       //
+        float range,                                    //
+        Entity::FrontFaceDirection direction,           //
+        std::function<bool(std::shared_ptr<T>)> filter  //
+    ) {
+        M_ASSERT(range > 0,
+                 fmt::format("range has to be positive but was {}", range));
 
-        auto best_entity_match = std::shared_ptr<T>();
-        float best_distance = std::numeric_limits<float>::max();
-        for (auto& e : get_entities()) {
-            auto current_entity = dynamic_pointer_cast<T>(e);
-            if (!current_entity) continue;
-            if (!filter(current_entity)) continue;
+        int cur_step = 0;
+        while (cur_step <= range) {
+            auto tile =
+                Entity::tile_infront_given_pos(pos, cur_step, direction);
 
-            float current_distance =
-                vec::distance(pos, vec::to2(current_entity->position));
-            if (current_distance > range) continue;
-            for (auto step : steps) {
-                current_distance = vec::distance(
-                    step, vec::snap(vec::to2(current_entity->position)));
-                if (abs(current_distance) <= 1.f) {
-                    if (current_distance < best_distance) {
-                        best_distance = current_distance;
-                        best_entity_match = current_entity;
-                    }
+            for (auto& e : get_entities()) {
+                auto current_entity = dynamic_pointer_cast<T>(e);
+                if (!current_entity) continue;
+                if (!filter(current_entity)) continue;
+
+                float cur_dist =
+                    vec::distance(vec::to2(current_entity->position), tile);
+                // outside reach
+                if (abs(cur_dist) > 1) continue;
+                // this is behind us
+                if (cur_dist < 0) continue;
+
+                if (vec::to2(vec::snap(current_entity->position)) ==
+                    vec::snap(tile)) {
+                    return current_entity;
                 }
             }
+            cur_step++;
         }
-        return best_entity_match;
+        return {};
     }
 
     template<typename T>

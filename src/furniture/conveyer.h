@@ -54,15 +54,15 @@ struct Conveyer : public Furniture {
         }
 
         // if the item is less than halfway, just keep moving it along
-        if (relative_item_pos < 0.f) {
+        if (relative_item_pos <= 0.f) {
             relative_item_pos += SPEED * dt;
             return;
         }
 
         auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
             vec::to2(this->position), 1.f, this->face_direction,
-            [](std::shared_ptr<Furniture> furn) {
-                return furn->can_place_item_into();
+            [this](std::shared_ptr<Furniture> furn) {
+                return this->id != furn->id && furn->can_place_item_into();
             });
         // no match means we cant continue, stay in the middle
         if (!match) {
@@ -74,7 +74,7 @@ struct Conveyer : public Furniture {
         // but only once we get close enough
 
         // so keep moving forward
-        if (relative_item_pos < 0.5f) {
+        if (relative_item_pos <= 0.5f) {
             relative_item_pos += SPEED * dt;
             return;
         }

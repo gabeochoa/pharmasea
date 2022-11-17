@@ -249,7 +249,7 @@ struct Map {
         };
 
         auto generate_test = [this]() {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 5; i++) {
                 auto location = get_rand_walkable();
                 std::shared_ptr<Conveyer> conveyer;
                 conveyer.reset(new Conveyer(location));
@@ -260,7 +260,7 @@ struct Map {
         generate_walls();
         generate_tables();
         generate_register();
-        generate_customer();
+        // generate_customer();
         generate_test();
     }
 
