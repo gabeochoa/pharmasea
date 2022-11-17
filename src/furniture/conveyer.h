@@ -45,9 +45,9 @@ struct Conveyer : public Furniture {
         }
     }
 
-    virtual void update(float dt) override {
-        this->is_highlighted = false;
-        Furniture::update(dt);
+    virtual void game_update(float dt) override {
+        Furniture::game_update(dt);
+
         // we are not holding anything
         if (this->held_item == nullptr) {
             return;

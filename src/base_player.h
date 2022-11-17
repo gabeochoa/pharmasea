@@ -36,8 +36,8 @@ struct BasePlayer : public Person {
         }
     }
 
-    virtual void update(float dt) override {
-        Person::update(dt);
+    virtual void nongame_update(float dt) override {
+        Person::nongame_update(dt);
         highlight_facing_furniture();
 
         // TODO if cannot be placed in this spot

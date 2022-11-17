@@ -95,7 +95,7 @@ struct Server {
     }
 
     // NOTE: server time things are in s
-    float next_map_tick_reset = 100;  // 1.20fps
+    float next_map_tick_reset = 25;  // 5fps
     float next_map_tick = 0;
 
     float next_update_tick_reset = 4;  // 30fps
@@ -130,9 +130,7 @@ struct Server {
                     p.second->update(next_update_tick / 1000.f);
                 }
 
-                if (current_state == Menu::State::Game) {
-                    pharmacy_map->onUpdate(next_update_tick / 1000.f);
-                }
+                pharmacy_map->onUpdate(next_update_tick / 1000.f);
                 next_update_tick = 0.f;
             }
         }

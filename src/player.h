@@ -62,8 +62,8 @@ struct Player : public BasePlayer {
         return this->raw_position;
     }
 
-    virtual void update(float dt) override {
-        BasePlayer::update(dt);
+    virtual void always_update(float dt) override {
+        BasePlayer::always_update(dt);
 
         bool pickup = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game,
                                                        InputName::PlayerPickup);
@@ -202,10 +202,8 @@ struct Player : public BasePlayer {
             const auto _drop_furniture = [&]() {
                 // TODO need to make sure it doesnt place ontop of another
                 // one
-                std::cout << "dropping furniture @"
-                          << this->held_furniture->raw_position << std::endl;
                 auto hf = this->held_furniture;
-                hf->on_drop(this->position);
+                hf->on_drop(vec::to3(this->tile_infront(1)));
                 this->held_furniture = nullptr;
             };
             _drop_furniture();

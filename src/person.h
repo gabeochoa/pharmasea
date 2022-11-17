@@ -152,10 +152,7 @@ struct Person : public Entity {
         }
     }
 
-    virtual void update(float dt) override {
-        // std::cout << this->raw_position << ";; " << this->position <<
-        // std::endl;
-
+    virtual void always_update(float dt) override {
         auto new_pos_x = this->update_xaxis_position(dt);
         auto new_pos_z = this->update_zaxis_position(dt);
 
@@ -176,6 +173,6 @@ struct Person : public Entity {
 
         handle_collision(facedir_x, new_pos_x, facedir_z, new_pos_z);
 
-        Entity::update(dt);
+        Entity::always_update(dt);
     }
 };

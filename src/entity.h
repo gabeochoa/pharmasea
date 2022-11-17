@@ -10,6 +10,7 @@
 #include "is_server.h"
 #include "item.h"
 #include "item_helper.h"
+#include "menu.h"
 #include "random.h"
 #include "raylib.h"
 #include "util.h"
@@ -108,26 +109,23 @@ struct Entity {
 
     virtual ~Entity() {}
 
-    virtual BoundingBox bounds() const {
-        return get_bounds(this->position, this->size() / 2.0f);
-    }
-
-    virtual void update_position(const vec3& p) { this->raw_position = p; }
-
+   protected:
     virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
 
     virtual BoundingBox raw_bounds() const {
         return get_bounds(this->raw_position, this->size());
     }
 
-    virtual bool collides(BoundingBox b) const {
-        return CheckCollisionBoxes(this->bounds(), b);
-    }
-
+    /*
+     * Used for code that should only render when debug mode is on
+     * */
     virtual void render_debug_mode() const {
         DrawBoundingBox(this->bounds(), MAROON);
     }
 
+    /*
+     * Used for code for when the entity is highlighted
+     * */
     virtual void render_highlighted() const {
         Color f = ui::color::getHighlighted(this->face_color);
         Color b = ui::color::getHighlighted(this->base_color);
@@ -136,6 +134,9 @@ struct Entity {
                        f, b);
     }
 
+    /*
+     * Used for normal gameplay rendering
+     * */
     virtual void render_normal() const {
         if (this->is_highlighted) {
             render_highlighted();
@@ -147,24 +148,7 @@ struct Entity {
                        this->face_color, this->base_color);
     }
 
-    virtual void render() const final {
-        const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-
-        if (!debug_mode_on) {
-            render_normal();
-        }
-
-        if (debug_mode_on) {
-            render_debug_mode();
-        }
-    }
-
     vec3 snap_position() const { return vec::snap(this->raw_position); }
-
-    void rotate_facing_clockwise() {
-        this->face_direction = offsetFaceDirection(this->face_direction, 90);
-    }
 
     virtual void update_held_item_position() {
         if (held_item != nullptr) {
@@ -186,16 +170,6 @@ struct Entity {
         }
     }
 
-    virtual void update(float) {
-        is_highlighted = false;
-        if (this->is_snappable()) {
-            this->position = this->snap_position();
-        } else {
-            this->position = this->raw_position;
-        }
-        update_held_item_position();
-    }
-
     virtual vec2 get_heading() {
         const float target_facing_ang =
             util::deg2rad(FrontFaceDirectionMap.at(this->face_direction));
@@ -203,33 +177,6 @@ struct Entity {
             cosf(target_facing_ang),
             sinf(target_facing_ang),
         };
-    }
-
-    static vec2 tile_infront_given_pos(vec2 tile, int distance,
-                                       FrontFaceDirection direction) {
-        if (direction & FORWARD) {
-            tile.y += distance * TILESIZE;
-            tile.y = ceil(tile.y);
-        }
-        if (direction & BACK) {
-            tile.y -= distance * TILESIZE;
-            tile.y = floor(tile.y);
-        }
-
-        if (direction & RIGHT) {
-            tile.x += distance * TILESIZE;
-            tile.x = ceil(tile.x);
-        }
-        if (direction & LEFT) {
-            tile.x -= distance * TILESIZE;
-            tile.x = floor(tile.x);
-        }
-        return tile;
-    }
-
-    virtual vec2 tile_infront(int distance) {
-        vec2 tile = vec::to2(this->snap_position());
-        return tile_infront_given_pos(tile, distance, this->face_direction);
     }
 
     virtual void turn_to_face_entity(Entity* target) {
@@ -264,17 +211,140 @@ struct Entity {
         */
     }
 
+    virtual void always_update(float) {
+        is_highlighted = false;
+        if (this->is_snappable()) {
+            this->position = this->snap_position();
+        } else {
+            this->position = this->raw_position;
+        }
+        update_held_item_position();
+    }
+
+    virtual void nongame_update(float) {}
+    virtual void game_update(float) {}
+
+    // return true if the position should be snapped at every update
+    virtual bool is_snappable() { return false; }
+    // Whether or not this entity can hold items at the moment
+    // -- doesnt need to be static, can dynamically change values
+    virtual bool can_place_item_into() { return false; }
+
+   public:
+    /*
+     * Given another bounding box, check if it collides with this entity
+     *
+     * @param BoundingBox the box to test
+     * */
+    virtual bool collides(BoundingBox b) const {
+        return CheckCollisionBoxes(this->bounds(), b);
+    }
+
+    /*
+     * Get the bounding box for this entity
+     * @returns BoundingBox the box
+     * */
+    virtual BoundingBox bounds() const {
+        return get_bounds(this->position, this->size() / 2.0f);
+    }
+
+    /*
+     * Move the entity to the given position,
+     *
+     * @param vec3 the position to move to
+     * */
+    virtual void update_position(const vec3& p) { this->raw_position = p; }
+
+    /*
+     * Rotate the facing direction of this entity, clockwise 90 degrees
+     * */
+    void rotate_facing_clockwise() {
+        this->face_direction = offsetFaceDirection(this->face_direction, 90);
+    }
+
+    /*
+     * Returns the location of the tile `distance` distance in front of the
+     * entity
+     *
+     * @param int, how far in front to go
+     *
+     * @returns vec2 the location `distance` tiles ahead
+     * */
+    virtual vec2 tile_infront(int distance) {
+        vec2 tile = vec::to2(this->snap_position());
+        return tile_infront_given_pos(tile, distance, this->face_direction);
+    }
+
+    /*
+     * Given a tile, distance, and direction, returns the location of the tile
+     * `distance` distance in front of the tile
+     *
+     * @param vec2, the starting location
+     * @param int, how far in front to go
+     * @param FrontFaceDirection, which direction to go
+     *
+     * @returns vec2 the location `distance` tiles ahead
+     * */
+    static vec2 tile_infront_given_pos(vec2 tile, int distance,
+                                       FrontFaceDirection direction) {
+        if (direction & FORWARD) {
+            tile.y += distance * TILESIZE;
+            tile.y = ceil(tile.y);
+        }
+        if (direction & BACK) {
+            tile.y -= distance * TILESIZE;
+            tile.y = floor(tile.y);
+        }
+
+        if (direction & RIGHT) {
+            tile.x += distance * TILESIZE;
+            tile.x = ceil(tile.x);
+        }
+        if (direction & LEFT) {
+            tile.x -= distance * TILESIZE;
+            tile.x = floor(tile.x);
+        }
+        return tile;
+    }
+
+    // TODO not currently used as we disabled navmesh
+    virtual bool add_to_navmesh() { return false; }
+    // return true if the item has collision and is currently collidable
+    virtual bool is_collidable() {
+        // by default we disable collisions when you are holding something since
+        // its generally inside your bounding box
+        return !is_held;
+    }
+    // Used to tell an entity its been picked up
     virtual void on_pickup() { this->is_held = true; }
 
+    // Used to tell and entity its been dropped and where to go next
     virtual void on_drop(vec3 location) {
         this->is_held = false;
         this->update_position(vec::snap(location));
     }
 
-    virtual bool is_collidable() { return !is_held; }
-    virtual bool is_snappable() { return false; }
-    virtual bool add_to_navmesh() { return false; }
-    virtual bool can_place_item_into() { return false; }
+    virtual void render() const final {
+        const auto debug_mode_on =
+            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+
+        if (!debug_mode_on) {
+            render_normal();
+        }
+
+        if (debug_mode_on) {
+            render_debug_mode();
+        }
+    }
+
+    virtual void update(float dt) final {
+        if (Menu::get().is(Menu::State::Game)) {
+            game_update(dt);
+        } else {
+            nongame_update(dt);
+        }
+        always_update(dt);
+    }
 };
 
 typedef Entity::FrontFaceDirection EntityDir;

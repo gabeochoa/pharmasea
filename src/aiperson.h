@@ -228,7 +228,7 @@ struct AIPerson : public Person {
         }
     }
 
-    virtual void update(float dt) override {
+    virtual void game_update(float dt) override {
         if ((this->pushed_force.x != 0.0f      //
              || this->pushed_force.z != 0.0f)  //
             && job != nullptr) {
@@ -236,17 +236,21 @@ struct AIPerson : public Person {
             this->job->local = {};
             PlaySound(SoundLibrary::get().get("roblox"));
         }
-        Person::update(dt);
+
+        Person::game_update(dt);
+
         if (!job) {
             get_starting_job();
             return;
         }
+
         if (job->is_complete) {
             if (job->on_cleanup) job->on_cleanup(this, job.get());
             job.reset();
             find_new_job();
             return;
         }
+
         process_job(dt);
     }
 
