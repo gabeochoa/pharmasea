@@ -260,7 +260,7 @@ struct Map {
         generate_walls();
         generate_tables();
         generate_register();
-        // generate_customer();
+        generate_customer();
         generate_test();
     }
 
