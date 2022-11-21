@@ -52,10 +52,20 @@ void startup() {
 
     Layer* layers[] = {
         //
-        new FPSLayer(),       new StreamerSafeLayer(), new MenuStateLayer(),
-        new VersionLayer(),   new NetworkLayer(),      new GameLayer(),
-        new GameDebugLayer(), new AboutLayer(),        new SettingsLayer(),
-        new MenuLayer(),      new PauseLayer(),        new PausePlanningLayer(),
+        new FPSLayer(),
+        new StreamerSafeLayer(),
+        new MenuStateLayer(),
+        new VersionLayer(),
+        //
+        new PauseLayer(),
+        new PausePlanningLayer(),
+        //
+        new NetworkLayer(),
+        new GameLayer(),
+        new GameDebugLayer(),
+        new AboutLayer(),
+        new SettingsLayer(),
+        new MenuLayer(),
     };
     for (auto layer : layers) App::get().pushLayer(layer);
 }
