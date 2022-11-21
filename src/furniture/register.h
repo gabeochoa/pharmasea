@@ -78,7 +78,11 @@ struct Register : public Furniture {
         return front;
     }
 
-    virtual std::optional<Model> model() const override {
-        return ModelLibrary::get().get("register");
+    virtual std::optional<ModelInfo> model() const override {
+        return ModelInfo{
+            .model = ModelLibrary::get().get("register"),
+            .size_scale = 10.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        };
     }
 };

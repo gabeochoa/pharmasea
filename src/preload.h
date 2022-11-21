@@ -58,6 +58,7 @@ struct Preload {
     void load_models() {
         std::tuple<const char*, const char*, const char*> models[] = {
             {"models", "bag.obj", "bag"},
+            {"models", "conveyer.obj", "conveyer"},
             {"models", "register.obj", "register"},
         };
 

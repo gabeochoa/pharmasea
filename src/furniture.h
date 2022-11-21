@@ -7,6 +7,12 @@
 #include "globals.h"
 
 struct Furniture : public Entity {
+    struct ModelInfo {
+        Model model;
+        float size_scale;
+        vec3 position_offset;
+    };
+
    private:
     friend bitsery::Access;
     template<typename S>
@@ -31,7 +37,7 @@ struct Furniture : public Entity {
         }
     }
 
-    virtual std::optional<Model> model() const { return {}; }
+    virtual std::optional<ModelInfo> model() const { return {}; }
 
     virtual void render_normal() const override {
         if (model().has_value()) {
@@ -42,14 +48,16 @@ struct Furniture : public Entity {
                 180.f +
                 static_cast<int>(FrontFaceDirectionMap.at(face_direction));
 
-            DrawModelEx(model().value(),
+            ModelInfo model_info = model().value();
+
+            DrawModelEx(model_info.model,
                         {
-                            this->position.x,
-                            this->position.y - TILESIZE / 2,
-                            this->position.z,
+                            this->position.x + model_info.position_offset.x,
+                            this->position.y + model_info.position_offset.y,
+                            this->position.z + model_info.position_offset.z,
                         },
                         vec3{0.f, 1.f, 0.f}, rotation_angle,
-                        this->size() * 10.f, base);
+                        this->size() * model_info.size_scale, base);
 
         } else {
             Entity::render_normal();

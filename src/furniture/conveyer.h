@@ -13,6 +13,7 @@ struct Conveyer : public Furniture {
 
     float relative_item_pos = Conveyer::ITEM_START;
     float SPEED = 0.5f;
+    bool can_take_from = false;
 
    private:
     friend bitsery::Access;
@@ -25,12 +26,18 @@ struct Conveyer : public Furniture {
 
    public:
     Conveyer() {}
-    Conveyer(vec2 pos)
-        : Furniture(pos, ui::color::blue, ui::color::blue_green) {}
+    Conveyer(vec2 pos) : Furniture(pos, ui::color::white, ui::color::white) {}
+
+    virtual std::optional<ModelInfo> model() const override {
+        return ModelInfo{
+            .model = ModelLibrary::get().get("conveyer"),
+            .size_scale = 0.5f,
+            .position_offset = vec3{0, 0, 0},
+        };
+    }
 
     virtual bool can_take_item_from() const override {
-        return (this->held_item != nullptr &&
-                this->relative_item_pos >= Conveyer::ITEM_END);
+        return (this->held_item != nullptr && can_take_from);
     }
 
     virtual void update_held_item_position() override {
@@ -56,6 +63,8 @@ struct Conveyer : public Furniture {
     virtual void game_update(float dt) override {
         Furniture::game_update(dt);
 
+        can_take_from = false;
+
         // we are not holding anything
         if (this->held_item == nullptr) {
             return;
@@ -75,6 +84,7 @@ struct Conveyer : public Furniture {
         // no match means we cant continue, stay in the middle
         if (!match) {
             relative_item_pos = 0.f;
+            can_take_from = true;
             return;
         }
 
@@ -87,6 +97,7 @@ struct Conveyer : public Furniture {
             return;
         }
 
+        can_take_from = true;
         // we reached the end, pass ownership
         match->held_item = this->held_item;
         match->held_item->held_by = Item::HeldBy::FURNITURE;
