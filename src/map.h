@@ -114,7 +114,7 @@ struct PolymorphicBaseClass<Entity>
 
 template<>
 struct PolymorphicBaseClass<Furniture>
-    : PolymorphicDerivedClasses<Wall, Table, Register, Conveyer> {};
+    : PolymorphicDerivedClasses<Wall, Table, Register, Conveyer, Grabber> {};
 
 template<>
 struct PolymorphicBaseClass<Person> : PolymorphicDerivedClasses<AIPerson> {};
@@ -252,7 +252,7 @@ struct Map {
             for (int i = 0; i < 5; i++) {
                 auto location = get_rand_walkable();
                 std::shared_ptr<Conveyer> conveyer;
-                conveyer.reset(new Conveyer(location));
+                conveyer.reset(new Grabber(location));
                 EntityHelper::addEntity(conveyer);
             }
         };

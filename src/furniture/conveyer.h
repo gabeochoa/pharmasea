@@ -8,7 +8,10 @@
 #include "../furniture.h"
 
 struct Conveyer : public Furniture {
-    float relative_item_pos = -0.5f;
+    constexpr static float ITEM_START = -0.5f;
+    constexpr static float ITEM_END = 0.5f;
+
+    float relative_item_pos = Conveyer::ITEM_START;
     float SPEED = 0.5f;
 
    private:
@@ -24,6 +27,11 @@ struct Conveyer : public Furniture {
     Conveyer() {}
     Conveyer(vec2 pos)
         : Furniture(pos, ui::color::blue, ui::color::blue_green) {}
+
+    virtual bool can_take_item_from() const override {
+        return (this->held_item != nullptr &&
+                this->relative_item_pos >= Conveyer::ITEM_END);
+    }
 
     virtual void update_held_item_position() override {
         if (held_item != nullptr) {
@@ -74,7 +82,7 @@ struct Conveyer : public Furniture {
         // but only once we get close enough
 
         // so keep moving forward
-        if (relative_item_pos <= 0.5f) {
+        if (relative_item_pos <= Conveyer::ITEM_END) {
             relative_item_pos += SPEED * dt;
             return;
         }
@@ -83,7 +91,7 @@ struct Conveyer : public Furniture {
         match->held_item = this->held_item;
         match->held_item->held_by = Item::HeldBy::FURNITURE;
         this->held_item = nullptr;
-        this->relative_item_pos = -0.5f;
+        this->relative_item_pos = Conveyer::ITEM_START;
 
         // TODO if we are pushing onto a conveyer, we need to make sure
         // we are keeping track of the orientations

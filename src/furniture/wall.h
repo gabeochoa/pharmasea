@@ -102,7 +102,7 @@ struct Wall : public Furniture {
         }
     }
 
-    virtual bool can_rotate() override { return false; }
+    virtual bool can_rotate() const override { return false; }
     virtual bool can_be_picked_up() override { return false; }
     virtual bool can_place_item_into() override { return false; }
 };

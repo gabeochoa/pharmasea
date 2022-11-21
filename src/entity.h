@@ -263,6 +263,11 @@ struct Entity {
     virtual bool can_place_item_into() { return false; }
 
    public:
+    // Whether or not this entity has something we can take from them
+    virtual bool can_take_item_from() const {
+        return this->held_item != nullptr;
+    }
+
     /*
      * Given another bounding box, check if it collides with this entity
      *
