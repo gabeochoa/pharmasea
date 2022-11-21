@@ -118,6 +118,23 @@ Game Ideas
 
 ## Changelog
 
+### alpha_0.22.11.21
+
+impact 
+- Conveyer works and delivers to Register
+- Streamer Safe box visualization and settings 
+
+better eng
+- Inputs are enum'd so we can better track usage 
+- Add helper macros for UI Size expectations
+- Better menu system to allow easier go_back functionality
+- better getMatchingEntity
+- 
+
+soon
+- Conveyer Grabber 
+
+
 ### alpha_0.22.11.14
 
 impact 
