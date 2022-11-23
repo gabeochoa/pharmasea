@@ -252,7 +252,12 @@ struct Map {
             for (int i = 0; i < 5; i++) {
                 auto location = get_rand_walkable();
                 std::shared_ptr<Conveyer> conveyer;
-                conveyer.reset(new Grabber(location));
+
+                if (i % 2 == 0)
+                    conveyer.reset(new Conveyer(location));
+                else
+                    conveyer.reset(new Grabber(location));
+
                 EntityHelper::addEntity(conveyer);
             }
         };
