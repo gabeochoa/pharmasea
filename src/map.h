@@ -253,7 +253,7 @@ struct Map {
                 auto location = get_rand_walkable();
                 std::shared_ptr<Conveyer> conveyer;
 
-                if (i % 2 == 0)
+                if (i == 0)
                     conveyer.reset(new Conveyer(location));
                 else
                     conveyer.reset(new Grabber(location));
