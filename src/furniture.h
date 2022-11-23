@@ -39,11 +39,10 @@ struct Furniture : public Entity {
 
     virtual std::optional<ModelInfo> model() const { return {}; }
 
-    virtual void render_normal() const override {
+    virtual void render_highlighted() const override {
         if (model().has_value()) {
-            Color base = this->is_highlighted
-                             ? ui::color::getHighlighted(this->base_color)
-                             : this->base_color;
+            Color base = ui::color::getHighlighted(this->base_color);
+
             float rotation_angle =
                 180.f +
                 static_cast<int>(FrontFaceDirectionMap.at(face_direction));
@@ -58,6 +57,28 @@ struct Furniture : public Entity {
                         },
                         vec3{0.f, 1.f, 0.f}, rotation_angle,
                         this->size() * model_info.size_scale, base);
+
+        } else {
+            Entity::render_highlighted();
+        }
+    }
+
+    virtual void render_normal() const override {
+        if (model().has_value()) {
+            float rotation_angle =
+                180.f +
+                static_cast<int>(FrontFaceDirectionMap.at(face_direction));
+
+            ModelInfo model_info = model().value();
+
+            DrawModelEx(model_info.model,
+                        {
+                            this->position.x + model_info.position_offset.x,
+                            this->position.y + model_info.position_offset.y,
+                            this->position.z + model_info.position_offset.z,
+                        },
+                        vec3{0.f, 1.f, 0.f}, rotation_angle,
+                        this->size() * model_info.size_scale, this->base_color);
 
         } else {
             Entity::render_normal();

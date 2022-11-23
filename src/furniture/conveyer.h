@@ -26,7 +26,8 @@ struct Conveyer : public Furniture {
 
    public:
     Conveyer() {}
-    Conveyer(vec2 pos) : Furniture(pos, ui::color::white, ui::color::white) {}
+    Conveyer(vec2 pos)
+        : Furniture(pos, ui::color::light_grey, ui::color::light_grey) {}
 
     virtual std::optional<ModelInfo> model() const override {
         return ModelInfo{
