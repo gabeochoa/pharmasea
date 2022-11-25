@@ -90,7 +90,7 @@ struct Customer : public AIPerson {
         if (ailment) {
             return ailment->stagger();
         }
-        return 0.f;
+        return 1.f;
     }
 
     void wait_in_queue(float) {

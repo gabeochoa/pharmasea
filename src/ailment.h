@@ -14,10 +14,10 @@
 
 struct Ailment {
     struct Options {
-        // NOTE: 1.0 is "normal" even though for some it might not make sense
+        // NOTE: 1.0 is "full" even though for some it might not make sense
         float speed = 1.f;
-        float gross = 1.f;
         float stagger = 1.f;
+        // float gross = 1.f;
     } options;
 
     bool stagger_dir = false;
