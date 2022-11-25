@@ -36,8 +36,7 @@ struct AIPerson : public Person {
 
     virtual float base_speed() override { return 10.f; }
 
-    // TODO add stagger based on ailment modifier
-    // virtual float stagger_mod() override { return 0 }
+    virtual float stagger_mult() { return 0.f; }
 
     virtual void render_debug_mode() const override {
         Person::render_debug_mode();
@@ -58,14 +57,11 @@ struct AIPerson : public Person {
             return this->raw_position;
         }
         vec2 tar = job->local.value();
-        float speed = this->base_speed() * dt;
-        // float stagger = this->stagger_mod() * dt;
+        float speed = this->base_speed() * stagger_mult() * dt;
 
         auto new_pos_x = this->raw_position;
         if (tar.x > this->raw_position.x) new_pos_x.x += speed;
-        //-= stagger;
         if (tar.x < this->raw_position.x) new_pos_x.x -= speed;
-        // += stagger;
         return new_pos_x;
     }
 
@@ -77,14 +73,11 @@ struct AIPerson : public Person {
             return this->raw_position;
         }
         vec2 tar = job->local.value();
-        float speed = this->base_speed() * dt;
-        // float stagger = this->stagger_mod() * dt;
+        float speed = this->base_speed() * stagger_mult() * dt;
 
         auto new_pos_z = this->raw_position;
         if (tar.y > this->raw_position.z) new_pos_z.z += speed;
-        //-= stagger;
         if (tar.y < this->raw_position.z) new_pos_z.z -= speed;
-        //+= stagger;
         return new_pos_z;
     }
 

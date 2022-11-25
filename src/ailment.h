@@ -17,14 +17,22 @@ struct Ailment {
         // NOTE: 1.0 is "normal" even though for some it might not make sense
         float speed = 1.f;
         float gross = 1.f;
-        float shaky = 1.f;
+        float stagger = 1.f;
     } options;
+
+    bool stagger_dir = false;
 
     Ailment(Options opt) : options(opt) {}
 
     float speed_multiplier() { return clamp(overall() * options.speed); }
     // float grossness() { return 1 - clamp(overall() * options.gross); }
-    // float shakyness() { return 1 - clamp(overall() * options.shaky); }
+    float stagger() {
+        float clamped = clamp(overall() * options.stagger);
+        float mult = stagger_dir ? 1.5 : 0.5;
+
+        stagger_dir = !stagger_dir;
+        return mult * clamped;
+    }
 
     // ensures the overall multiplier isnt over 10x strength
     float overall() { return clamp(overall_mult(), 0.1f, 10.f); }
@@ -42,8 +50,8 @@ struct Ailment {
 struct TEST_MAX_AIL : public Ailment {
     TEST_MAX_AIL()
         : Ailment({
-              .speed = 0.f,
+              .speed = 1.f,
               // .gross = 0.f,
-              // .shaky = 0.f,
+              .stagger = 1.f,
           }) {}
 };

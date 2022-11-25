@@ -39,8 +39,8 @@ struct SpeechBubble {
 };
 
 struct Customer : public AIPerson {
-    std::shared_ptr<Ailment> ailment;
     std::optional<SpeechBubble> bubble;
+    std::shared_ptr<Ailment> ailment;
 
     void set_customer_name(std::string new_name) {
         name = new_name;
@@ -84,6 +84,13 @@ struct Customer : public AIPerson {
             base_speed *= ailment->speed_multiplier();
         }
         return base_speed;
+    }
+
+    virtual float stagger_mult() override {
+        if (ailment) {
+            return ailment->stagger();
+        }
+        return 0.f;
     }
 
     void wait_in_queue(float) {
@@ -155,7 +162,7 @@ struct Customer : public AIPerson {
             }
 
             // if our spot did change, then move forward
-            announce(fmt::format("pog im moving up to {}", cur_spot_in_line));
+            announce(fmt::format("im moving up to {}", cur_spot_in_line));
             // Someone moved forward
             job->spot_in_line = cur_spot_in_line;
             if (job->spot_in_line == 0) {
