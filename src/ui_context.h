@@ -516,8 +516,9 @@ const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
 const SizeExpectation padd_x = {.mode = Pixels, .value = 120.f};
 const SizeExpectation padd_y = {.mode = Pixels, .value = 25.f};
 
-inline std::shared_ptr<Widget> mk_button(uuid id) {
-    return get().own(Widget(id, button_x, button_y));
+inline std::shared_ptr<Widget> mk_button(uuid id, SizeExpectation bx = button_x,
+                                         SizeExpectation by = button_y) {
+    return get().own(Widget(id, bx, by));
 }
 
 inline std::shared_ptr<Widget> mk_icon_button(uuid id) {

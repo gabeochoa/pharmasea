@@ -49,8 +49,6 @@ struct SettingsLayer : public Layer {
         auto container = ui_context->own(
             Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
 
-        padding(
-            *ui_context->own(Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f))));
         div(*container);
         ui_context->push_parent(container);
         {
@@ -69,8 +67,6 @@ struct SettingsLayer : public Layer {
         auto volume_slider_container = ui_context->own(
             Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
 
-        padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
-                                            Size_Pct(1.f, 0.f)));
         div(*volume_slider_container);
         ui_context->push_parent(volume_slider_container);
         {
@@ -93,8 +89,6 @@ struct SettingsLayer : public Layer {
         auto volume_slider_container = ui_context->own(
             Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
 
-        padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
-                                            Size_Pct(1.f, 0.f)));
         div(*volume_slider_container);
         ui_context->push_parent(volume_slider_container);
         {
@@ -113,12 +107,30 @@ struct SettingsLayer : public Layer {
         ui_context->pop_parent();
     }
 
+    void resolution_switcher() {
+        auto resolution_switcher_container = ui_context->own(
+            Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
+
+        div(*resolution_switcher_container);
+        ui_context->push_parent(resolution_switcher_container);
+        {
+            text(*ui::components::mk_text(), "Resolution");
+            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                                Size_Px(100.f, 1.f)));
+            text(*ui::components::mk_text(), "Coming Soon");
+        }
+        ui_context->pop_parent();
+    }
+
     void back_button() {
-        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID),
+                                              Size_Px(120.f, 1.f),
+                                              Size_Px(50.f, 1.f)),
+                   "Back")) {
             Menu::get().go_back();
         }
         padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
-                                            Size_Pct(1.f, 0.f)));
+                                            Size_Pct(0.5f, 0.f)));
     }
 
     void draw_ui(float dt) {
@@ -141,8 +153,11 @@ struct SettingsLayer : public Layer {
             div(*content);
             ui_context->push_parent(content);
             {
+                padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                                    Size_Px(100.f, 0.5f)));
                 master_volume();
                 music_volume();
+                resolution_switcher();
                 streamer_safe_box();
                 back_button();
             }
