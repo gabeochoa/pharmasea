@@ -16,6 +16,8 @@ struct SettingsLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     bool windowSizeDropdownState = false;
     int windowSizeDropdownIndex = 0;
+    bool resolution_dropdown_open = false;
+    int resolution_selected_index = 0;
 
     SettingsLayer() : Layer("Settings") {
         ui_context.reset(new ui::UIContext());
@@ -118,8 +120,20 @@ struct SettingsLayer : public Layer {
             padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                                 Size_Px(100.f, 1.f)));
             text(*ui::components::mk_text(), "Coming Soon");
+
+            const std::vector<std::string> options = {"test", "test2", "test3",
+                                                      "test4"};
+            auto dropdown_widget =
+                ui_context->own(Widget({Size_Px(100.f, 1.f), Size_Px(50.f, 1.f),
+                                        GrowFlags::Row | GrowFlags::Column}));
+
+            if (dropdown(*dropdown_widget, options, &resolution_dropdown_open,
+                         &resolution_selected_index)) {
+                std::cout << "dropdown changed" << std::endl;
+            }
+
+            ui_context->pop_parent();
         }
-        ui_context->pop_parent();
     }
 
     void back_button() {

@@ -14,6 +14,8 @@
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
+    bool resolution_dropdown_open = false;
+    int resolution_selected_index = 0;
 
     MenuLayer() : Layer("Menu") {
         minimized = false;
@@ -122,23 +124,35 @@ struct MenuLayer : public Layer {
 
             ui_context->push_parent(&content);
             {
-                padding(top_padding);
-                if (button(join_button, "Play")) {
-                    Menu::get().set(Menu::State::Network);
+                // padding(top_padding);
+                // if (button(join_button, "Play")) {
+                // Menu::get().set(Menu::State::Network);
+                // }
+                // padding(button_padding);
+                // if (button(about_button, "About")) {
+                // Menu::get().set(Menu::State::About);
+                // }
+                // padding(button_padding);
+                // if (button(settings_button, "Settings")) {
+                // Menu::get().set(Menu::State::Settings);
+                // }
+                // padding(button_padding);
+                // if (button(exit_button, "Exit")) {
+                // App::get().close();
+                // }
+                // padding(bottom_padding);
+
+                const std::vector<std::string> options = {"test", "test2",
+                                                          "test3", "test4"};
+                auto dropdown_widget = ui_context->own(
+                    Widget({Size_Px(100.f, 1.f), Size_Px(50.f, 1.f),
+                            GrowFlags::Row | GrowFlags::Column}));
+
+                if (dropdown(*dropdown_widget, options,
+                             &resolution_dropdown_open,
+                             &resolution_selected_index)) {
+                    std::cout << "dropdown changed" << std::endl;
                 }
-                padding(button_padding);
-                if (button(about_button, "About")) {
-                    Menu::get().set(Menu::State::About);
-                }
-                padding(button_padding);
-                if (button(settings_button, "Settings")) {
-                    Menu::get().set(Menu::State::Settings);
-                }
-                padding(button_padding);
-                if (button(exit_button, "Exit")) {
-                    App::get().close();
-                }
-                padding(bottom_padding);
             }
             ui_context->pop_parent();
 

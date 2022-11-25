@@ -99,8 +99,8 @@ struct UIContext {
     StateManager statemanager;
     std::stack<UITheme> themestack;
     Font font;
-    Widget* root;
     std::stack<Widget*> parentstack;
+    std::vector<std::shared_ptr<Widget>> internal_roots;
     std::vector<std::shared_ptr<Widget>> owned_widgets;
 
     std::shared_ptr<Widget> own(const Widget& widget) {
@@ -303,8 +303,10 @@ struct UIContext {
 
     void end(Widget* tree_root) {
         autolayout::process_widget(tree_root);
+
         // tree_root->print_tree();
         // exit(0);
+
         render_all();
         reset_tabbing_if_not_visible(tree_root);
         //

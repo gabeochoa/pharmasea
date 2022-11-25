@@ -47,8 +47,14 @@ float compute_size_for_standalone_expectation(Widget* widget, int exp_index) {
 }
 
 float compute_size_for_parent_expectation(Widget* widget, int exp_index) {
+    if (widget->absolute &&
+        widget->size_expected[exp_index].mode == SizeMode::Percent) {
+        widget->print_tree();
+        M_ASSERT(false, "Absolute widgets should not use Percent");
+    }
+
     float no_change = widget->computed_size[exp_index];
-    if (!widget->parent) return no_change;
+    if (!widget->parent || widget->absolute) return no_change;
     float parent_size = widget->parent->computed_size[exp_index];
     SizeExpectation exp = widget->size_expected[exp_index];
     float new_size = exp.value * parent_size;
@@ -63,6 +69,9 @@ float compute_size_for_parent_expectation(Widget* widget, int exp_index) {
 float _sum_children_axis_for_child_exp(Widget* widget, int exp_index) {
     float total_child_size = 0.f;
     for (Widget* child : widget->children) {
+        // Dont worry about any children that are absolutely positioned
+        if (child->absolute) continue;
+
         float cs = child->computed_size[exp_index];
         if (cs == -1) {
             if (child->size_expected[exp_index].mode == SizeMode::Percent &&
@@ -71,6 +80,7 @@ float _sum_children_axis_for_child_exp(Widget* widget, int exp_index) {
                          "Parents sized with mode 'children' cannot have "
                          "children sized with mode 'percent'.");
             }
+            widget->print_tree();
             // Instead of silently ignoring this, check the cases above
             M_ASSERT(false, "expect that all children have been solved by now");
         }
@@ -82,6 +92,9 @@ float _sum_children_axis_for_child_exp(Widget* widget, int exp_index) {
 float _max_child_size(Widget* widget, int exp_index) {
     float max_child_size = 0.f;
     for (Widget* child : widget->children) {
+        // Dont worry about any children that are absolutely positioned
+        if (child->absolute) continue;
+
         float cs = child->computed_size[exp_index];
         if (cs == -1) {
             if (child->size_expected[exp_index].mode == SizeMode::Percent &&
@@ -132,6 +145,7 @@ void calculate_standalone(Widget* widget) {
     widget->computed_size[1] = size_y;
 
     for (Widget* child : widget->children) {
+        // NOTE: specifically not ignoring absolute
         calculate_standalone(child);
     }
 }
@@ -141,6 +155,7 @@ void calculate_those_with_parents(Widget* widget) {
 
     auto size_x = compute_size_for_parent_expectation(widget, 0);
     auto size_y = compute_size_for_parent_expectation(widget, 1);
+
     widget->computed_size[0] = size_x;
     widget->computed_size[1] = size_y;
 
@@ -158,6 +173,7 @@ void calculate_those_with_children(Widget* widget) {
 
     auto size_x = compute_size_for_child_expectation(widget, 0);
     auto size_y = compute_size_for_child_expectation(widget, 1);
+
     widget->computed_size[0] = size_x;
     widget->computed_size[1] = size_y;
 }
@@ -171,6 +187,9 @@ float _get_total_child_size_for_violations(Widget* widget, int exp_index) {
         return widget->computed_size[1];
     }
     for (Widget* child : widget->children) {
+        // Dont worry about any children that are absolutely positioned
+        if (child->absolute) continue;
+
         sum += child->computed_size[exp_index];
     }
     return sum;
@@ -179,6 +198,9 @@ float _get_total_child_size_for_violations(Widget* widget, int exp_index) {
 void _solve_error_with_optional(Widget* widget, int exp_index, float* error) {
     int num_optional_children = 0;
     for (Widget* child : widget->children) {
+        // Dont worry about absolute positioned children
+        if (child->absolute) continue;
+
         SizeExpectation exp = child->size_expected[exp_index];
         if (exp.strictness == 0.f) {
             num_optional_children++;
@@ -187,6 +209,9 @@ void _solve_error_with_optional(Widget* widget, int exp_index, float* error) {
     if (num_optional_children != 0) {
         float approx_epc = *error / num_optional_children;
         for (Widget* child : widget->children) {
+            // Dont worry about absolute positioned children
+            if (child->absolute) continue;
+
             SizeExpectation exp = child->size_expected[exp_index];
             if (exp.strictness == 0.f) {
                 float cur_size = child->computed_size[exp_index];
@@ -202,14 +227,14 @@ void fix_violating_children(Widget* widget, int exp_index, float error,
                             int num_children) {
     M_ASSERT(num_children != 0, "Should never have zero children");
 
-    int num_absolute_children = 0;
+    int num_strict_children = 0;
     int num_ignorable_children = 0;
     for (Widget* child : widget->children) {
         SizeExpectation exp = child->size_expected[exp_index];
         if (exp.strictness == 1.f) {
-            num_absolute_children++;
+            num_strict_children++;
         }
-        if (child->ignore_size) {
+        if (child->absolute) {
             num_ignorable_children++;
         }
     }
@@ -218,7 +243,7 @@ void fix_violating_children(Widget* widget, int exp_index, float error,
     // we have to take away from the allowed children;
 
     int num_resizeable_children =
-        num_children - num_absolute_children - num_ignorable_children;
+        num_children - num_strict_children - num_ignorable_children;
 
     // TODO we cannot enforce the assert below in the case of wrapping
     // because the positioning happens after error correction
@@ -239,7 +264,7 @@ void fix_violating_children(Widget* widget, int exp_index, float error,
     float approx_epc = error / (1.f * std::max(1, num_resizeable_children));
     for (Widget* child : widget->children) {
         SizeExpectation exp = child->size_expected[exp_index];
-        if (exp.strictness == 1.f || child->ignore_size) {
+        if (exp.strictness == 1.f || child->absolute) {
             continue;
         }
         float portion_of_error = (1.f - exp.strictness) * approx_epc;
@@ -255,6 +280,9 @@ void fix_violating_children(Widget* widget, int exp_index, float error,
 void tax_refund(Widget* widget, int exp_index, float error) {
     int num_eligible_children = 0;
     for (Widget* child : widget->children) {
+        // Dont worry about any children that are absolutely positioned
+        if (child->absolute) continue;
+
         SizeExpectation exp = child->size_expected[exp_index];
         if (exp.strictness == 0.f) {
             num_eligible_children++;
@@ -270,6 +298,9 @@ void tax_refund(Widget* widget, int exp_index, float error) {
 
     float indiv_refund = error / num_eligible_children;
     for (Widget* child : widget->children) {
+        // Dont worry about any children that are absolutely positioned
+        if (child->absolute) continue;
+
         SizeExpectation exp = child->size_expected[exp_index];
         if (exp.strictness == 0.f) {
             child->computed_size[exp_index] += abs(indiv_refund);
@@ -284,8 +315,21 @@ void tax_refund(Widget* widget, int exp_index, float error) {
     }
 }
 
+int _get_total_number_children(Widget* widget) {
+    if (widget == nullptr) return 0;
+
+    int i = 0;
+    for (Widget* child : widget->children) {
+        // Dont worry about any children that are absolutely positioned
+        if (child->absolute) continue;
+
+        i++;
+    }
+    return i;
+}
+
 void solve_violations(Widget* widget) {
-    int num_children = static_cast<int>(widget->children.size());
+    int num_children = _get_total_number_children(widget);
     if (num_children == 0) return;
 
     // me -> left -> right
@@ -371,6 +415,12 @@ void compute_relative_positions(Widget* widget) {
     };
 
     for (Widget* child : widget->children) {
+        // Dont worry about any children that are absolutely positioned
+        if (child->absolute) {
+            compute_relative_positions(child);
+            continue;
+        }
+
         float cx = child->computed_size[0];
         float cy = child->computed_size[1];
 
@@ -442,6 +492,7 @@ void compute_rect_bounds(Widget* widget) {
     }
 }
 
+// https://www.rfleury.com/p/ui-part-2-build-it-every-frame-immediate
 void process_widget(Widget* widget) {
     // - (any) compute solos (doesnt rely on parent/child / other widgets)
     calculate_standalone(widget);

@@ -318,6 +318,10 @@ bool button_list(const Widget& widget, const std::vector<std::string>& options,
     auto state = get().widget_init<ButtonListState>(widget.id);
     if (selectedIndex) state->selected.set(*selectedIndex);
 
+    // TODO this assert isn't working
+    // M_ASSERT(widget.growflags & GrowFlags::Column,
+    // "button lists must have growflags Column");
+
     // TODO :HASFOCUS do we ever want to read the value
     // or do we want to reset focus each frame
     // if (hasFocus) state->hasFocus.set(*hasFocus);
@@ -329,7 +333,7 @@ bool button_list(const Widget& widget, const std::vector<std::string>& options,
     for (int i = 0; i < (int) options.size(); i++) {
         auto option = options[i];
         std::shared_ptr<Widget> button_w = get().make_temp_widget(
-            new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
+            new Widget(MK_UUID_LOOP(widget.id.ownerLayer, widget.id, i),
                        {
                            .mode = Percent,
                            .value = 1.f,
@@ -337,8 +341,8 @@ bool button_list(const Widget& widget, const std::vector<std::string>& options,
                        },
                        {
                            .mode = Percent,
-                           .value = (1.f / options.size()),
-                           .strictness = 0.9f,
+                           .value = 1.f / options.size(),
+                           .strictness = 1.f,
                        }));
 
         if (button(*button_w, option)) {
@@ -414,8 +418,6 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
     auto state = get().widget_init<DropdownState>(widget.id);
     if (dropdownState) state->on.set(*dropdownState);
     auto selected_option = options[selectedIndex ? *selectedIndex : 0];
-    // Num options + 1 for the current selected
-    size_t num_all = options.size() + 2;
 
     // TODO when you tab to the dropdown
     // it would be nice if it opened
@@ -438,11 +440,10 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
                        },
                        {
                            .mode = Percent,
-                           .value = (1.f / num_all),
+                           .value = 1.f,
                            .strictness = 0.9f,
-                       })
-
-        );
+                       },
+                       GrowFlags::Column));
 
         // Draw the main body of the dropdown
         pressed = button(*selected_widget, selected_option);
@@ -468,18 +469,16 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
         }
 
         if (state->on) {
+            // TODO we're hoping this is Pixels but who knows
+            float full_width = widget.size_expected[0].value;
+            float item_size = widget.size_expected[1].value;
+
             std::shared_ptr<Widget> button_list_widget = get().make_temp_widget(
                 new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
-                           {
-                               .mode = Percent,
-                               .value = 1.f,
-                               .strictness = 1.f,
-                           },
-                           {
-                               .mode = Percent,
-                               .value = (1.f / num_all),
-                               .strictness = 0.9f,
-                           }));
+                           Size_Px(full_width, 1.f),
+                           Size_Px(item_size * options.size(), 1.f),
+                           GrowFlags::Column));
+            button_list_widget->absolute = true;
 
             if (button_list(*button_list_widget, options, selectedIndex,
                             &childrenHaveFocus)) {
@@ -488,15 +487,18 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
             }
         }
 
-        return_value =
-            *dropdownState != state->on.asT() || (pressed && state->on.asT());
+        if (dropdownState) return_value = *dropdownState != state->on.asT();
 
+        return_value = return_value || (pressed && state->on.asT());
+
+        // TODO why doesnt this work?
         // NOTE: this has to happen after ret
         // because its not a real selection, just
         // a tab out
-        if (!childrenHaveFocus && !has_kb_focus(widget.id)) {
-            state->on = false;
-        }
+        // if (!childrenHaveFocus && !has_kb_focus(widget.id)) {
+        // std::cout << "kbfocus false" << std::endl;
+        // state->on = false;
+        // }
     }
     get().pop_parent();
 

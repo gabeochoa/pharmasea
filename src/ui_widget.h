@@ -57,7 +57,7 @@ struct Widget {
     Widget* me;
     uuid id;
     std::string element = "";
-    bool ignore_size = false;
+    bool absolute = false;
 
     static void set_element(const Widget& widget, std::string e) {
         auto& w = const_cast<Widget&>(widget);
@@ -89,7 +89,7 @@ struct Widget {
         this->me = this;
         this->id = other.id;
         this->element = other.element;
-        this->ignore_size = other.ignore_size;
+        this->absolute = other.absolute;
         this->size_expected[0] = other.size_expected[0];
         this->size_expected[1] = other.size_expected[1];
         this->computed_relative_pos[0] = other.computed_relative_pos[0];
@@ -137,7 +137,7 @@ struct Widget {
         this->me = this;
         this->id = other.id;
         this->element = other.element;
-        this->ignore_size = other.ignore_size;
+        this->absolute = other.absolute;
         this->size_expected[0] = other.size_expected[0];
         this->size_expected[1] = other.size_expected[1];
         this->computed_relative_pos[0] = other.computed_relative_pos[0];
@@ -176,6 +176,7 @@ struct Widget {
            << this->computed_size[1] << ")\n";
         ss << tabs << "rect(" << this->rect << ")\n";
         ss << tabs << "Dir " << this->growflags << "\n";
+        ss << tabs << "Absolute " << this->absolute << "\n";
         ss << tabs << "Children:" << this->children.size()
            << " Parent:" << &(this->parent) << " " << a << "\n";
         return ss.str();
