@@ -7,6 +7,7 @@
 //
 #include "aiperson.h"
 //
+#include "ailment.h"
 #include "app.h"
 #include "camera.h"
 #include "furniture/register.h"
@@ -38,6 +39,7 @@ struct SpeechBubble {
 };
 
 struct Customer : public AIPerson {
+    std::shared_ptr<Ailment> ailment;
     std::optional<SpeechBubble> bubble;
 
     void set_customer_name(std::string new_name) {
@@ -59,7 +61,7 @@ struct Customer : public AIPerson {
     }
 
    public:
-    Customer() : AIPerson() {}
+    Customer() : AIPerson() { init(); }
     Customer(vec3 p, Color face_color_in, Color base_color_in)
         : AIPerson(p, face_color_in, base_color_in) {
         init();
@@ -71,9 +73,18 @@ struct Customer : public AIPerson {
     Customer(vec3 p, Color c) : AIPerson(p, c) { init(); }
     Customer(vec2 p, Color c) : AIPerson(p, c) { init(); }
 
-    void init() { set_customer_name(get_random_name()); }
+    void init() {
+        set_customer_name(get_random_name());
+        ailment.reset(new TEST_MAX_AIL());
+    }
 
-    virtual float base_speed() override { return 3.5f; }
+    virtual float base_speed() override {
+        float base_speed = 3.5f;
+        if (ailment) {
+            base_speed *= ailment->speed_multiplier();
+        }
+        return base_speed;
+    }
 
     void wait_in_queue(float) {
         auto init_job = [&]() {
