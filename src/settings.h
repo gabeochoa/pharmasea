@@ -4,6 +4,8 @@
 //
 #include <raylib/glfw3.h>
 
+#include <algorithm>
+
 #include "external_include.h"
 //
 
@@ -19,6 +21,15 @@ namespace settings {
 struct ResolutionInfo {
     int width;
     int height;
+
+    bool operator<(const ResolutionInfo& r) const {
+        return (this->width < r.width) ||
+               ((this->width == r.width) && (this->height == r.height));
+    }
+
+    bool operator==(const ResolutionInfo& r) const {
+        return (this->width == r.width) && (this->height == r.height);
+    }
 
    private:
     friend bitsery::Access;
@@ -110,10 +121,10 @@ struct Settings {
         data.resolution = rez;
 
         data.resolution.width = static_cast<int>(
-            fminf(3860.f, fmaxf(data.resolution.width, 800.f)));
+            fminf(3860.f, fmaxf(data.resolution.width, 1280.f)));
 
         data.resolution.height = static_cast<int>(
-            fminf(2160.f, fmaxf(data.resolution.height, 600.f)));
+            fminf(2160.f, fmaxf(data.resolution.height, 720.f)));
 
         //
         WindowResizeEvent* event = new WindowResizeEvent(
@@ -145,9 +156,23 @@ struct Settings {
 
         for (int i = 0; i < count; i++) {
             GLFWvidmode mode = modes[i];
+            // int width
+            // int height
+            // int redBits int greenBits int blueBits
+            // int refreshRate
+
+            // Just kinda easier to not support every possible resolution
+            if (mode.height < 720 || mode.height > 2160) continue;
+
             settings::RESOLUTION_OPTIONS.push_back(settings::ResolutionInfo{
                 .width = mode.width, .height = mode.height});
         }
+
+        // TODO SPEED this kinda slow but it only happens once
+        settings::RESOLUTION_OPTIONS.erase(
+            std::unique(settings::RESOLUTION_OPTIONS.begin(),
+                        settings::RESOLUTION_OPTIONS.end()),
+            settings::RESOLUTION_OPTIONS.end());
     }
 
     void convert_res_options_to_text() {
