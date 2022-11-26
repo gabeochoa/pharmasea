@@ -7,7 +7,6 @@ libraries used:
 - Steam's GameNetworkingSockets https://github.com/ValveSoftware/GameNetworkingSockets
 - HTTPRequest https://github.com/elnormous/HTTPRequest
 - fmt https://github.com/fmtlib/fmt
-- PlatformFolders https://github.com/sago007/PlatformFolders
 
 engine TODOs:
 4. Create Doors
