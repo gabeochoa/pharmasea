@@ -119,17 +119,16 @@ struct SettingsLayer : public Layer {
             text(*ui::components::mk_text(), "Resolution");
             padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                                 Size_Px(100.f, 1.f)));
-            text(*ui::components::mk_text(), "Coming Soon");
 
-            const std::vector<std::string> options = {"test", "test2", "test3",
-                                                      "test4"};
             auto dropdown_widget =
                 ui_context->own(Widget({Size_Px(100.f, 1.f), Size_Px(50.f, 1.f),
                                         GrowFlags::Row | GrowFlags::Column}));
 
-            if (dropdown(*dropdown_widget, options, &resolution_dropdown_open,
+            if (dropdown(*dropdown_widget, Settings::get().resolution_options(),
+                         &resolution_dropdown_open,
                          &resolution_selected_index)) {
-                std::cout << "dropdown changed" << std::endl;
+                Settings::get().update_resolution_from_index(
+                    resolution_selected_index);
             }
 
             ui_context->pop_parent();

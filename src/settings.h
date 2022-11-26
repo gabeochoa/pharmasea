@@ -2,25 +2,36 @@
 #pragma once
 
 //
+#include <raylib/glfw3.h>
+
 #include "external_include.h"
 //
 
 #include "app.h"
+#include "constexpr_containers.h"
 #include "event.h"
 #include "files.h"
 #include "globals.h"
 #include "singleton.h"
 #include "util.h"
 
-namespace bitsery {
-template<typename S>
-void serialize(S& s, vec2& data) {
-    s.value4b(data.x);
-    s.value4b(data.y);
-}
-}  // namespace bitsery
-
 namespace settings {
+struct ResolutionInfo {
+    int width;
+    int height;
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.value4b(this->width);
+        s.value4b(this->height);
+    }
+};
+
+static std::vector<ResolutionInfo> RESOLUTION_OPTIONS;
+static std::vector<std::string> STRING_RESOLUTION_OPTIONS;
+
 using Buffer = std::string;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
@@ -32,7 +43,7 @@ using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 // https://developernote.com/2020/02/basic-ideas-of-version-tolerant-serialization-in-cpp/
 struct Data {
     int version = 0;
-    vec2 window_size = {WIN_W, WIN_H};
+    ResolutionInfo resolution;
     // Volume percent [0, 1] for everything
     float master_volume = 0.5f;
     float music_volume = 0.5f;
@@ -44,7 +55,7 @@ struct Data {
     template<typename S>
     void serialize(S& s) {
         s.value4b(version);
-        s.object(window_size);
+        s.object(resolution);
         s.value4b(master_volume);
         s.value4b(music_volume);
         s.value1b(show_streamer_safe_box);
@@ -55,8 +66,8 @@ struct Data {
 std::ostream& operator<<(std::ostream& os, const Data& data) {
     os << "Settings(" << std::endl;
     os << "version: " << data.version << std::endl;
-    os << "resolution: " << data.window_size.x << ", " << data.window_size.y
-       << std::endl;
+    os << "resolution: " << data.resolution.width << ", "
+       << data.resolution.height << std::endl;
     os << "master vol: " << data.master_volume << std::endl;
     os << "music vol: " << data.music_volume << std::endl;
     os << "Safe box: " << data.show_streamer_safe_box << std::endl;
@@ -85,19 +96,28 @@ struct Settings {
     // the right config
     void update_all_settings() {
         // version doesnt need update
-        update_window_size(data.window_size);
+        update_window_size(data.resolution);
         update_master_volume(data.master_volume);
         update_music_volume(data.music_volume);
         update_streamer_safe_box(data.show_streamer_safe_box);
     }
 
-    void update_window_size(vec2 size) {
-        size.x = std::fmaxf(size.x, 800);
-        size.y = std::fmaxf(size.y, 600);
-        data.window_size = size;
+    void update_resolution_from_index(int index) {
+        update_window_size(settings::RESOLUTION_OPTIONS[index]);
+    }
+
+    void update_window_size(settings::ResolutionInfo rez) {
+        data.resolution = rez;
+
+        data.resolution.width = static_cast<int>(
+            fminf(3860.f, fmaxf(data.resolution.width, 800.f)));
+
+        data.resolution.height = static_cast<int>(
+            fminf(2160.f, fmaxf(data.resolution.height, 600.f)));
+
         //
         WindowResizeEvent* event = new WindowResizeEvent(
-            static_cast<int>(size.x), static_cast<int>(size.y));
+            data.resolution.width, data.resolution.height);
         App::get().processEvent(*event);
         delete event;
     }
@@ -116,6 +136,34 @@ struct Settings {
 
     void update_streamer_safe_box(bool sssb) {
         data.show_streamer_safe_box = sssb;
+    }
+
+    void load_resolution_options() {
+        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+        int count = 0;
+        const GLFWvidmode* modes = glfwGetVideoModes(monitor, &count);
+
+        for (int i = 0; i < count; i++) {
+            GLFWvidmode mode = modes[i];
+            settings::RESOLUTION_OPTIONS.push_back(settings::ResolutionInfo{
+                .width = mode.width, .height = mode.height});
+        }
+    }
+
+    void convert_res_options_to_text() {
+        std::transform(settings::RESOLUTION_OPTIONS.cbegin(),
+                       settings::RESOLUTION_OPTIONS.cend(),
+                       std::back_inserter(settings::STRING_RESOLUTION_OPTIONS),
+                       [](settings::ResolutionInfo info) {
+                           return fmt::format("{}x{}", info.width, info.height);
+                       });
+    }
+
+    std::vector<std::string> resolution_options() {
+        if (settings::RESOLUTION_OPTIONS.empty()) load_resolution_options();
+        if (settings::STRING_RESOLUTION_OPTIONS.empty())
+            convert_res_options_to_text();
+        return settings::STRING_RESOLUTION_OPTIONS;
     }
 
     bool load_save_file() {
