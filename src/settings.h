@@ -129,6 +129,10 @@ struct Settings {
         //
         WindowResizeEvent* event = new WindowResizeEvent(
             data.resolution.width, data.resolution.height);
+
+        __WIN_W = data.resolution.width;
+        __WIN_H = data.resolution.height;
+
         App::get().processEvent(*event);
         delete event;
     }

@@ -537,9 +537,10 @@ inline std::shared_ptr<Widget> mk_but_pad() {
 }
 
 inline std::shared_ptr<Widget> mk_root() {
-    return get().own(Widget({.mode = Pixels, .value = WIN_W, .strictness = 1.f},
-                            {.mode = Pixels, .value = WIN_H, .strictness = 1.f},
-                            GrowFlags::Row));
+    return get().own(
+        Widget({.mode = Pixels, .value = WIN_WF(), .strictness = 1.f},
+               {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f},
+               GrowFlags::Row));
 }
 
 inline std::shared_ptr<Widget> mk_row() {

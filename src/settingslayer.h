@@ -159,7 +159,7 @@ struct SettingsLayer : public Layer {
         ui_context->push_parent(root);
         {
             padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
-                                                Size_Px(WIN_H, 1.f)));
+                                                Size_Px(WIN_HF(), 1.f)));
             auto content =
                 ui_context->own(Widget({.mode = Children, .strictness = 1.f},
                                        Size_Pct(1.f, 1.f), Column));

@@ -70,13 +70,13 @@ struct MenuLayer : public Layer {
 
         ui_context->begin(mouseDown, mousepos, dt);
 
-        ui::Widget root({.mode = Pixels, .value = WIN_W, .strictness = 1.f},
-                        {.mode = Pixels, .value = WIN_H, .strictness = 1.f},
+        ui::Widget root({.mode = Pixels, .value = WIN_WF(), .strictness = 1.f},
+                        {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f},
                         GrowFlags::Row);
 
         Widget left_padding(
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-            {.mode = Pixels, .value = WIN_H, .strictness = 1.f});
+            {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f});
 
         Widget content({.mode = Children, .strictness = 1.f},
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f},
@@ -101,11 +101,11 @@ struct MenuLayer : public Layer {
 
         Widget title_left_padding(
             {.mode = Pixels, .value = 200.f, .strictness = 1.f},
-            {.mode = Pixels, .value = WIN_H, .strictness = 1.f});
+            {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f});
 
         ui::Widget title_card(
             {.mode = Percent, .value = 1.f, .strictness = 0.f},
-            {.mode = Pixels, .value = WIN_H, .strictness = 1.f},
+            {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f},
             GrowFlags::Column);
 
         Widget title_padding(

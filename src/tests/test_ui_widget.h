@@ -16,22 +16,22 @@ void test_just_root() {
     using namespace ui;
     Widget root;
     root.size_expected[0] = SizeExpectation{
-        .mode = SizeMode::Pixels, .value = WIN_W, .strictness = 1.f};
+        .mode = SizeMode::Pixels, .value = WIN_WF(), .strictness = 1.f};
     root.size_expected[1] = SizeExpectation{
-        .mode = SizeMode::Pixels, .value = WIN_H, .strictness = 1.f};
+        .mode = SizeMode::Pixels, .value = WIN_HF(), .strictness = 1.f};
     autolayout::process_widget(&root);
 
-    M_TEST_EQ(root.computed_size[0], WIN_W, "value should match exactly");
-    M_TEST_EQ(root.computed_size[1], WIN_H, "value should match exactly");
+    M_TEST_EQ(root.computed_size[0], WIN_W(), "value should match exactly");
+    M_TEST_EQ(root.computed_size[1], WIN_H(), "value should match exactly");
 }
 
 void test_single_child() {
     using namespace ui;
     Widget root;
     root.size_expected[0] = SizeExpectation{
-        .mode = SizeMode::Pixels, .value = WIN_W, .strictness = 1.f};
+        .mode = SizeMode::Pixels, .value = WIN_WF(), .strictness = 1.f};
     root.size_expected[1] = SizeExpectation{
-        .mode = SizeMode::Pixels, .value = WIN_H, .strictness = 1.f};
+        .mode = SizeMode::Pixels, .value = WIN_HF(), .strictness = 1.f};
 
     Widget child1;
     child1.size_expected[0] = SizeExpectation{
@@ -43,12 +43,12 @@ void test_single_child() {
 
     autolayout::process_widget(&root);
 
-    M_TEST_EQ(root.computed_size[0], WIN_W, "value should match exactly");
-    M_TEST_EQ(root.computed_size[1], WIN_H, "value should match exactly");
+    M_TEST_EQ(root.computed_size[0], WIN_W(), "value should match exactly");
+    M_TEST_EQ(root.computed_size[1], WIN_H(), "value should match exactly");
 
-    M_TEST_EQ(child1.computed_size[0], WIN_W * 0.5f,
+    M_TEST_EQ(child1.computed_size[0], WIN_W() * 0.5f,
               "value should match exactly");
-    M_TEST_EQ(child1.computed_size[1], WIN_H * 0.5f,
+    M_TEST_EQ(child1.computed_size[1], WIN_H() * 0.5f,
               "value should match exactly");
 }
 
@@ -57,9 +57,9 @@ void test_two_children() {
     Widget root;
 
     root.size_expected[0] = SizeExpectation{
-        .mode = SizeMode::Pixels, .value = WIN_W, .strictness = 1.f};
+        .mode = SizeMode::Pixels, .value = WIN_WF(), .strictness = 1.f};
     root.size_expected[1] = SizeExpectation{
-        .mode = SizeMode::Pixels, .value = WIN_H, .strictness = 1.f};
+        .mode = SizeMode::Pixels, .value = WIN_HF(), .strictness = 1.f};
 
     Widget child1;
     child1.size_expected[0] = SizeExpectation{
@@ -78,17 +78,17 @@ void test_two_children() {
 
     autolayout::process_widget(&root);
 
-    M_TEST_EQ(root.computed_size[0], WIN_W, "value should match exactly");
-    M_TEST_EQ(root.computed_size[1], WIN_H, "value should match exactly");
+    M_TEST_EQ(root.computed_size[0], WIN_W(), "value should match exactly");
+    M_TEST_EQ(root.computed_size[1], WIN_H(), "value should match exactly");
 
-    M_TEST_EQ(child1.computed_size[0], WIN_W * 0.5f,
+    M_TEST_EQ(child1.computed_size[0], WIN_W() * 0.5f,
               "value should match exactly");
-    M_TEST_EQ(child1.computed_size[1], WIN_H * 0.5f,
+    M_TEST_EQ(child1.computed_size[1], WIN_H() * 0.5f,
               "value should match exactly");
 
-    M_TEST_EQ(child2.computed_size[0], WIN_W * 0.5f,
+    M_TEST_EQ(child2.computed_size[0], WIN_W() * 0.5f,
               "value should match exactly");
-    M_TEST_EQ(child2.computed_size[1], WIN_H * 0.25f,
+    M_TEST_EQ(child2.computed_size[1], WIN_H() * 0.25f,
               "value should match exactly");
 }
 
@@ -97,9 +97,9 @@ void test_two_children_parent_size() {
     Widget root;
 
     root.size_expected[0] = SizeExpectation{
-        .mode = SizeMode::Children, .value = WIN_W, .strictness = 1.f};
+        .mode = SizeMode::Children, .value = WIN_WF(), .strictness = 1.f};
     root.size_expected[1] = SizeExpectation{
-        .mode = SizeMode::Pixels, .value = WIN_H, .strictness = 1.f};
+        .mode = SizeMode::Pixels, .value = WIN_HF(), .strictness = 1.f};
 
     Widget child1;
     child1.size_expected[0] = SizeExpectation{
@@ -121,7 +121,7 @@ void test_two_children_parent_size() {
     M_TEST_EQ(root.computed_size[0],
               child1.computed_size[0] + child2.computed_size[0],
               "value should match size of both children together");
-    M_TEST_EQ(root.computed_size[1], WIN_H,
+    M_TEST_EQ(root.computed_size[1], WIN_H(),
               "value should match size in pixels");
 
     M_TEST_EQ(child1.computed_size[0], 100.f, "value should match exactly");

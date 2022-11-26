@@ -106,13 +106,13 @@ struct GameDebugLayer : public Layer {
         ui_context->begin(mouseDown, mousepos, dt);
 
         auto root = ui_context->own(
-            Widget({.mode = Pixels, .value = WIN_W, .strictness = 1.f},
-                   {.mode = Pixels, .value = WIN_H, .strictness = 1.f},
+            Widget({.mode = Pixels, .value = WIN_WF(), .strictness = 1.f},
+                   {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f},
                    GrowFlags::Row));
         ui_context->push_parent(root);
         {
             auto left_padding = ui_context->own(
-                Widget(Size_Px(100.f, 1.f), Size_Px(WIN_H, 1.f)));
+                Widget(Size_Px(100.f, 1.f), Size_Px(WIN_HF(), 1.f)));
 
             auto content = ui_context->own(Widget(
                 {.mode = Children, .strictness = 1.f},

@@ -58,14 +58,17 @@ struct AboutLayer : public Layer {
         ui_context->push_theme(DEFAULT_THEME);
 
         ui::Widget root;
-        root.set_expectation(
-            {.mode = ui::SizeMode::Pixels, .value = WIN_W, .strictness = 1.f},
-            {.mode = ui::SizeMode::Pixels, .value = WIN_H, .strictness = 1.f});
+        root.set_expectation({.mode = ui::SizeMode::Pixels,
+                              .value = WIN_WF(),
+                              .strictness = 1.f},
+                             {.mode = ui::SizeMode::Pixels,
+                              .value = WIN_HF(),
+                              .strictness = 1.f});
         root.growflags = ui::GrowFlags::Row;
 
         Widget left_padding(
             {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-            {.mode = Pixels, .value = WIN_H, .strictness = 1.f});
+            {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f});
 
         Widget content({.mode = Children},
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f});

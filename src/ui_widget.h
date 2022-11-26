@@ -16,7 +16,7 @@ enum GrowFlags { None = (1 << 0), Row = (1 << 1), Column = (1 << 2) };
 struct SizeExpectation {
     SizeMode mode = Pixels;
     // TODO is there a better default?
-    float value = fminf(WIN_H, WIN_W);
+    float value = 100.f;
     float strictness = 0.5f;
 };
 

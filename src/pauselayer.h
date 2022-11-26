@@ -72,13 +72,13 @@ struct BasePauseLayer : public Layer {
 
         ui_context->begin(mouseDown, mousepos, dt);
 
-        auto root = ui_context->own(
-            Widget(Size_Px(WIN_W, 1.f), Size_Px(WIN_H, 1.f), GrowFlags::Row));
+        auto root = ui_context->own(Widget(
+            Size_Px(WIN_WF(), 1.f), Size_Px(WIN_HF(), 1.f), GrowFlags::Row));
 
         ui_context->push_parent(root);
         {
             auto left_padding = ui_context->own(
-                Widget(Size_Px(100.f, 1.f), Size_Px(WIN_H, 1.f)));
+                Widget(Size_Px(100.f, 1.f), Size_Px(WIN_HF(), 1.f)));
 
             auto content =
                 ui_context->own(Widget({.mode = Children, .strictness = 1.f},

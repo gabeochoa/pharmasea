@@ -20,7 +20,7 @@ struct App {
     LayerStack layerstack;
 
     App() {
-        InitWindow(WIN_W, WIN_H, "pharmasea");
+        InitWindow(WIN_W(), WIN_H(), "pharmasea");
         // Has to happen after init window due to font requirements
         Preload::get();
         KeyMap::get();
