@@ -6,45 +6,53 @@ kanban-plugin: basic
 
 ## backlog
 
-- [ ] Create Doors
 - [ ] Create Nav mesh for "walkability"
-- [ ] Disallow target cube from going outside of bounds
 - [ ] Add some way for entities to subscribe to certain keys so we can more easily keep track of what keys are being requested over lifetime
-- [ ] Add a pause menu with textual options
-- [ ] In pause menu, remap key bindings in layer for arrows keys to choose options
-- [ ] Add easy-to-use UI buttons
-- [ ] Add system for exporting resources to code for easier binary packaging ([see branch packager](https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html))
-- [ ] BUG: if customer runs into someone you both get stuck
-- [ ] highlight furniture under selection 
-- [ ] Better state management for AI 
-- [ ] Fix corner walls 
-- [ ] Better settings page 
-- [ ] Put all things that have to be loaded in a single place
-- [ ] Upgrade Astar to ThetaStar (worth doing?) 
-- [ ] Need a build system to output producuction build
-- [ ] Refactor Library to be more generic
+- [ ] Fix corner walls
+- [ ] Upgrade Astar to ThetaStar (worth doing?)
 - [ ] support for tile sheets
-- [ ] diagetic UI to lobby screen 
+- [ ] Ailments have OTC solution
+- [ ] Ailments have Rx solution
+- [ ] Customers who took OTC come back again
+- [ ] Different sizes of pill bottle? (S/M/L)
+
+
+## want for mvp
+
+- [ ] diagetic UI to lobby screen
+- [ ] Need a build system to output producuction build
+- [ ] Add system for exporting resources to code for easier binary packaging ([see branch packager](https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html))
+- [ ] Add a pause menu with textual options
+- [ ] Create Doors
+
+
+## needed to play once
+
+- [ ] Disallow target cube from going outside of bounds
+- [ ] In pause menu, remap key bindings in layer for arrows keys to choose options
+- [ ] BUG: if customer runs into someone you both get stuck
+- [ ] Add ailments for customers
+- [ ] Support for "windows" or "modals" in ui framework
 - [ ] dropdown needs scrollbar when subwindow goes offscreen
-- [ ] Add ailments for customers 
-- [ ] Support for "windows" or "modals" in ui framework 
 
 
 ## in progress
 
-- [ ] pill bottle barrel 
+- [ ] Put all things that have to be loaded in a single place
+- [ ] Better settings page
+- [ ] pill bottle barrel
 - [ ] placeholder bottle pill filler
-- [ ] bag box to get paper bags from 
+- [ ] bag box to get paper bags from
 
 
 ## blocked
 
+- [ ] highlight furniture under selection
 
 
 ## done
 
 **Complete**
-- [x] completed item
 - [x] Allow an Entity to pick up / drop an Item
 - [x] Fix A\* algorithm
 - [x] Allow for an Item to be walkable or not (influences Entity movement)
@@ -52,8 +60,11 @@ kanban-plugin: basic
 - [x] Paint front-facing indicator (another cube, different color face, some shape)
 - [x] When Entities change direction, change the front-facing indicator to face the direction they're moving
 - [x] When Entities change direction, change the location of any held item to face the direction they're moving
+- [x] Add easy-to-use UI buttons
+- [x] Refactor Library to be more generic
+- [x] Better state management for AI
 - [x] add diagonal facing direction
-- [x] resolution switcher to settings page 
+- [x] resolution switcher to settings page
 
 
 

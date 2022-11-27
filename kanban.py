@@ -12,9 +12,15 @@ class Col:
         # cutting '- [X] '
         value = line[6:]
         self.items.append(value)
-        # only keep the most recent ten for done
-        if self.name == "Done" and len(self.items) >= 10:
+
+        should_pop = (
+            # only keep the most recent ten for done
+            ( self.name == "Done" and len(self.items) >= 10)
+        )
+
+        if should_pop:
             self.items.pop()
+
 
 columns = [];
 active_column = None
@@ -29,6 +35,13 @@ for line in lines:
     if line.startswith("-") and active_column != None:
         active_column.add(line)
         continue
+
+## remove backlog
+
+
+skip_col = ["backlog", "want for mvp"]
+
+columns = filter(lambda x: x.name not in skip_col, columns)
 
 #### now we just output the table
 
