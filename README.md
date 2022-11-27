@@ -1,6 +1,5 @@
 # pharmasea
 
-
 libraries used: 
 - raylib
 - AppData stuff https://github.com/sago007/PlatformFolders
@@ -8,40 +7,64 @@ libraries used:
 - HTTPRequest https://github.com/elnormous/HTTPRequest
 - fmt https://github.com/fmtlib/fmt
 
-engine TODOs:
-1. ~~Allow an Entity to pick up / drop an Item~~
-2. ~~Fix A* algorithm~~
-3. ~~Allow for an Item to be walkable or not (influences Entity movement)~~
-4. Create Doors
-5. Create Nav mesh for "walkability"
-6. ~~Add new target entity that moves via arrows keys / alternative keys~~
-7. Disallow target cube from going outside of bounds
-8. Add some way for entities to subscribe to certain keys 
-    so we can more easily keep track of what keys are being requested over lifetime
-9. ~~Paint front-facing indicator (another cube, different color face, some shape)~~
-10. ~~When Entities change direction, change the front-facing indicator to face the direction they're moving~~
-11. ~~When Entities change direction, change the location of any held item to face the direction they're moving~~
-12. Add a pause menu with textual options
-13. In pause menu, remap key bindings in layer for arrows keys to choose options
-14. Add easy-to-use UI buttons
-15. Add system for exporting resources to code for easier binary packaging (see branch packager)
-    https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html
-16. BUG: if customer runs into someone you both get stuck
-17. highlight furniture under selection 
-18. ~~add diagonal facing direction~~
-19. Better state management for AI 
-20. Fix corner walls 
-21. Better settings page 
-22. Put all things that have to be loaded in a single place
-23. Upgrade Astar to ThetaStar (worth doing?) 
-24. Need a build system to output producuction build
-25. Refactor Library to be more generic
-26. support for tile sheets
-27. resolution switcher to settings page 
-28. diagetic UI to lobby screen 
-29. bag box to get paper bags from 
-30. pill bottle barrel 
-31. placeholder bottle pill filler
+
+(we only show the most recent 10 done items, but full raw data is in todo.md) 
+(to regerate this run python kanban.py)
+## TODOs 
+
+|Backlog|In Progress|Done|
+|-------|-----------|----|
+|Create Doors|Nothing|Allow an Entity to pick up / drop an Item|
+|Create Nav mesh for "walkability"| |Fix A|
+|Disallow target cube from going outside of bounds| |Allow for an Item to be walkable or not (influences Entity movement)|
+|Add some way for entities to subscribe to certain keys so we can more easily keep track of what keys are being requested over lifetime| |Add new target entity that moves via arrows keys / alternative keys|
+|Add a pause menu with textual options| |Paint front-facing indicator (another cube, different color face, some shape)|
+|In pause menu, remap key bindings in layer for arrows keys to choose options| |When Entities change direction, change the front-facing indicator to face the direction they're moving|
+|Add easy-to-use UI buttons| |When Entities change direction, change the location of any held item to face the direction they're moving|
+|Add system for exporting resources to code for easier binary packaging ([see branch packager](https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html))| |add diagonal facing direction|
+|BUG: if customer runs into someone you both get stuck| | |
+|highlight furniture under selection| | |
+|Better state management for AI| | |
+|Fix corner walls| | |
+|Better settings page| | |
+|Put all things that have to be loaded in a single place| | |
+|Upgrade Astar to ThetaStar (worth doing?)| | |
+|Need a build system to output producuction build| | |
+|Refactor Library to be more generic| | |
+|support for tile sheets| | |
+|resolution switcher to settings page| | |
+|diagetic UI to lobby screen| | |
+|bag box to get paper bags from| | |
+|pill bottle barrel| | |
+|placeholder bottle pill filler| | |
+
+
+|Backlog|In Progress|Done|
+|-------|-----------|----|
+|Create Doors|Nothing|Allow an Entity to pick up / drop an Item|
+|Create Nav mesh for "walkability"| |Fix A|
+|Disallow target cube from going outside of bounds| |Allow for an Item to be walkable or not (influences Entity movement)|
+|Add some way for entities to subscribe to certain keys so we can more easily keep track of what keys are being requested over lifetime| |Add new target entity that moves via arrows keys / alternative keys|
+|Add a pause menu with textual options| |Paint front-facing indicator (another cube, different color face, some shape)|
+|In pause menu, remap key bindings in layer for arrows keys to choose options| |When Entities change direction, change the front-facing indicator to face the direction they're moving|
+|Add easy-to-use UI buttons| |When Entities change direction, change the location of any held item to face the direction they're moving|
+|Add system for exporting resources to code for easier binary packaging ([see branch packager](https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html))| |add diagonal facing direction|
+|BUG: if customer runs into someone you both get stuck| | |
+|highlight furniture under selection| | |
+|Better state management for AI| | |
+|Fix corner walls| | |
+|Better settings page| | |
+|Put all things that have to be loaded in a single place| | |
+|Upgrade Astar to ThetaStar (worth doing?)| | |
+|Need a build system to output producuction build| | |
+|Refactor Library to be more generic| | |
+|support for tile sheets| | |
+|resolution switcher to settings page| | |
+|diagetic UI to lobby screen| | |
+|bag box to get paper bags from| | |
+|pill bottle barrel| | |
+|placeholder bottle pill filler| | |
+
 
 Game Ideas
 - Pharmacy
