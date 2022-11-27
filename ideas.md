@@ -75,3 +75,47 @@ Pharmacy
     - Thieves (easily identifiable and have to grab them before they leave) 
 - Allow players to exchange held items?
 
+
+Bar 
+- (is this too close to plate up?) 
+- AI players need items they want ("Orders")
+- Small / Medium / Large bottle
+- How do upgrades work?
+    - Options: Deterministic Skill Tree or RNG + money(Like Plateup)
+- Draughts station
+    - Auto-fill upgrade? 
+- POS System
+    - Automatically takes payment (Square ipad) 
+- Generic stocking
+    - Canned beers and sodas
+    - Able to load up a whole shelf at a time
+    - Grab box from pallet and drop on shelf to refil 
+    - Each pallet holds 10 refills
+    - How to get a new pallet
+- Cash Register
+    - multiple lines per register
+    - People at register dont lose patience
+        - Or maybe lose patience when not floating still and regenerate a little bit on snapping
+- Conveyer belts or tractor beam
+- Cleaning bar after use, otherwise risk losing order spot 
+- Rerolls have chance for really rare things (sloth in SAPs)
+- Difficulty modifiers 
+    - SpeedWalkers: Customers walk 1.5x as fast
+    - Social Drinkers: Customers always order multiple drinks
+    - Self Medicated: Customers order spirits only 
+    - Chatty Drinkers: Customers spend twice as long to explain their order
+    - Bad Insurance Rates: make half as much money 
+    - Curious customers: Customers ask questions while paying 
+        - Decrease patience of other customers in the same line (implicitly)
+    - Chatty Customers: Customers take twice as long to pay
+        - Need some fish jokes
+    - Mummblers: Customer orders are harder to read 
+    - Bad Fins: You swim slow? Get tired more easily? Have to rest? 
+- Different game modes
+    - 
+- Customers have attributes?
+    - Loud customers (giant speech bubble) 
+    - Rude customers () 
+    - Drunk customers ()
+- Allow players to exchange held items?
+
