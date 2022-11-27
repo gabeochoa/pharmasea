@@ -156,6 +156,7 @@ struct UIContext {
     GamepadAxisWithDir axis_info;
     int keychar = -1;
     int modchar = -1;
+    float yscrolled;
 
     bool is_mouse_inside(const Rectangle& rect) {
         return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
@@ -299,6 +300,17 @@ struct UIContext {
         lmouse_down = mouseDown;
         mouse = mousePos;
         last_frame_time = dt;
+
+        // TODO Should this be more like mousePos?
+        yscrolled += GetMouseWheelMove();
+
+        // Note: we have to do this here because we cant unload until the entire
+        // frame is written to the screen. We can guaranteed its definitely
+        // rendered by the time it reaches the begin for the next frame
+        for (auto target : render_textures) {
+            UnloadRenderTexture(target);
+        }
+        render_textures.clear();
     }
 
     void end(Widget* tree_root) {
