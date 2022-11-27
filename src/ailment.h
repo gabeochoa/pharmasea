@@ -172,7 +172,7 @@ struct Ailment {
 
     // Note: btw idk why i didnt use a vector
 
-    // These are other ailments that can be caused by this ailment
+    // These are other ailments that are caused by this ailment
     Ailment* comorbids = nullptr;
     int num_comorbids = 0;
 
