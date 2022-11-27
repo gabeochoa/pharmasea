@@ -151,8 +151,6 @@ struct MenuLayer : public Layer {
                         padding(*ui::components::mk_but_pad());
                         text(*ui::components::mk_text(), "Stop");
                         padding(*ui::components::mk_but_pad());
-                        text(*ui::components::mk_text(), "For");
-                        padding(*ui::components::mk_but_pad());
                         text(*ui::components::mk_text(), "The");
                         padding(*ui::components::mk_but_pad());
                         text(*ui::components::mk_text(), "School");

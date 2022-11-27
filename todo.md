@@ -36,6 +36,7 @@ kanban-plugin: basic
 - [ ] WARN: need a way to warn that UI elements are offscreen "purpling"
 - [ ] BUG: Hide pause buttons from non-host since they dont really do anything anyway
 - [ ] BUG: When host opens settings, probably dont bring everyone else too
+- [ ] button hover state color change
 
 
 ## in progress

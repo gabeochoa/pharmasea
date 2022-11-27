@@ -202,7 +202,7 @@ void _draw_focus_ring(const Widget& widget) {
 //////
 //////
 
-void init_widget(const Widget& widget, const char* func) {
+UIContext::LastFrame init_widget(const Widget& widget, const char* func) {
     // TODO today because of the layer check we cant use this
     // which means no good error reports on this issue
     // you will just segfault
@@ -223,6 +223,16 @@ void init_widget(const Widget& widget, const char* func) {
     // }
     Widget::set_element(widget, func);
     get().add_child(widget.me);
+
+    const auto _write_lf = [](Widget* widget_ptr) {
+        Widget& widget = *widget_ptr;
+        auto lf = UIContext::LastFrame({.rect = widget.rect});
+        get().write_last_frame(widget.id, lf);
+    };
+
+    UIContext::LastFrame lf = get().get_last_frame(widget.id);
+    get().schedule_render_call(std::bind(_write_lf, widget.me));
+    return lf;
 }
 
 bool padding(const Widget& widget) {
@@ -245,22 +255,6 @@ bool text(const Widget& widget, const std::string& content,
 }
 
 bool button(const Widget& widget, const std::string& content) {
-    const auto _write_lf = [](Widget* widget_ptr) {
-        Widget& widget = *widget_ptr;
-        auto lf = UIContext::LastFrame({.rect = widget.rect});
-        get().write_last_frame(widget.id, lf);
-    };
-
-    const auto _button_render = [](Widget* widget_ptr) {
-        Widget& widget = *widget_ptr;
-
-        _draw_focus_ring(widget);
-
-        get().draw_widget_rect(widget.rect, is_active_and_hot(widget.id)
-                                                ? (theme::Usage::Secondary)
-                                                : (theme::Usage::Primary));
-    };
-
     const auto _button_pressed = [](const uuid id) {
         // check click
         if (has_kb_focus(id) && get().pressed(InputName::WidgetPress)) {
@@ -273,22 +267,24 @@ bool button(const Widget& widget, const std::string& content) {
         return false;
     };
 
-    init_widget(widget, __FUNCTION__);
-    UIContext::LastFrame lf = get().get_last_frame(widget.id);
-    bool pressed = false;
-    if (lf.rect.has_value()) {
+    UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
+    if (!lf.rect.has_value()) return false;
+
+    {
         widget.me->rect = lf.rect.value();
+
         active_if_mouse_inside(widget.id, lf.rect.value());
         try_to_grab_kb(widget.id);
-        _button_render(widget.me);
+
+        _draw_focus_ring(widget);
+        get().draw_widget_rect(widget.rect, is_active_and_hot(widget.id)
+                                                ? (theme::Usage::Secondary)
+                                                : (theme::Usage::Primary));
         get()._draw_text(widget.rect, content, theme::Usage::Font);
+
         handle_tabbing(widget.id);
-        pressed = _button_pressed(widget.id);
-    } else {
-        get().schedule_render_call(std::bind(_button_render, widget.me));
     }
-    get().schedule_render_call(std::bind(_write_lf, widget.me));
-    return pressed;
+    return _button_pressed(widget.id);
 }
 
 bool button_list(const Widget& widget, const std::vector<std::string>& options,
