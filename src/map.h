@@ -230,13 +230,7 @@ struct Map {
             std::shared_ptr<Item> item;
             item.reset(new Bag(location, (Color){255, 15, 240, 255}));
             ItemHelper::addItem(item);
-
             table->held_item = item;
-
-            std::shared_ptr<BagBox> bagbox;
-            location = get_rand_walkable();
-            bagbox.reset(new BagBox(location));
-            EntityHelper::addEntity(bagbox);
         };
 
         auto generate_register = [this]() {
@@ -270,6 +264,13 @@ struct Map {
 
         generate_walls();
         generate_tables();
+        generate_tables();
+
+        std::shared_ptr<BagBox> bagbox;
+        auto location = get_rand_walkable();
+        bagbox.reset(new BagBox(location));
+        EntityHelper::addEntity(bagbox);
+
         generate_register();
         generate_customer();
         generate_test();

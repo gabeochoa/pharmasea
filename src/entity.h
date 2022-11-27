@@ -260,7 +260,9 @@ struct Entity {
     virtual bool is_snappable() { return false; }
     // Whether or not this entity can hold items at the moment
     // -- doesnt need to be static, can dynamically change values
-    virtual bool can_place_item_into() { return false; }
+    virtual bool can_place_item_into(std::shared_ptr<Item> = nullptr) {
+        return false;
+    }
 
    public:
     // Whether or not this entity has something we can take from them
