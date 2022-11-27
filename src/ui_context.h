@@ -400,11 +400,6 @@ struct UIContext {
 
     void add_child(Widget* child) { active_parent()->add_child(child); }
 
-    void draw_widget(Widget widget, theme::Usage usage) {
-        DrawRectangleRounded(widget.rect, 0.15f, 4,
-                             active_theme().from_usage(usage));
-    }
-
     std::unordered_map<FZInfo, float> _font_size_memo;
 
     float get_font_size_impl(const std::string& content, float width,
@@ -457,6 +452,15 @@ struct UIContext {
             render_call();
         }
         queued_render_calls.clear();
+
+        for (auto target : render_textures) {
+            DrawTextureRec(target.texture,
+                           (Rectangle){0, 0, (float) target.texture.width,
+                                       (float) -target.texture.height},
+                           (Vector2){0, 0}, WHITE);
+            UnloadRenderTexture(target);
+        }
+        render_textures.clear();
     }
     void schedule_render_call(std::function<void()> cb) {
         queued_render_calls.push_back(cb);
@@ -490,9 +494,12 @@ struct UIContext {
                                              widget, content, color_usage));
     }
 
-    void draw_widget_old(vec2 pos, vec2 size, float, Color color, std::string) {
-        Rectangle rect = {pos.x, pos.y, size.x, size.y};
-        DrawRectangleRounded(rect, 0.15f, 4, color);
+    void draw_widget_rect(Rectangle rect, theme::Usage usage) {
+        DrawRectangleRounded(rect, 0.15f, 4, active_theme().from_usage(usage));
+    }
+
+    void draw_widget(Widget widget, theme::Usage usage) {
+        draw_widget_rect(widget.rect, usage);
     }
 
     inline vec2 widget_center(vec2 position, vec2 size) {
@@ -504,6 +511,20 @@ struct UIContext {
         temp_widgets.push_back(temp);
         return temp;
     }
+
+    std::vector<RenderTexture2D> render_textures;
+
+    int get_new_render_texture() {
+        RenderTexture2D tex = LoadRenderTexture(WIN_W(), WIN_H());
+        render_textures.push_back(tex);
+        return (int) render_textures.size() - 1;
+    }
+
+    void turn_on_render_texture(int rt_index) {
+        BeginTextureMode(render_textures[rt_index]);
+    }
+
+    void turn_off_texture_mode() { EndTextureMode(); }
 };
 
 UIContext& get() { return UIContext::get(); }

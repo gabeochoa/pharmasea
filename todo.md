@@ -34,7 +34,6 @@ kanban-plugin: basic
 - [ ] BUG: if customer runs into someone you both get stuck
 - [ ] Support for "windows" or "modals" in ui framework
 - [ ] Better settings page
-- [ ] dropdown needs scrollbar when subwindow goes offscreen
 - [ ] WARN: need a way to warn that UI elements are offscreen "purpling"
 - [ ] BUG: Hide pause buttons from non-host since they dont really do anything anyway
 - [ ] BUG: When host opens settings, probably dont bring everyone else too
@@ -42,9 +41,10 @@ kanban-plugin: basic
 
 ## in progress
 
+- [ ] dropdown needs scrollbar when subwindow goes offscreen
 - [ ] pill bottle barrel
 - [ ] placeholder bottle pill filler
-- [ ] Add ailments for customers
+- [ ] change UI from in world to render-to-texture
 
 
 ## blocked
@@ -55,6 +55,7 @@ kanban-plugin: basic
 ## done
 
 **Complete**
+- [x] Add ailments for customers
 - [x] bag box to get paper bags from
 - [x] resolution switcher to settings page
 - [x] Refactor Library to be more generic

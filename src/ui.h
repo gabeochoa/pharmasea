@@ -172,12 +172,16 @@ void _draw_focus_ring(const Widget& widget) {
         const auto border_width = 0.05f;
         const auto offset =
             vec2{cs.x * (border_width / 2), cs.y * (border_width / 2)};
-        get().draw_widget_old(
-            position - offset,                                      //
-            cs * (1.f + border_width),                              //
-            0.f,                                                    //
-            get().active_theme().from_usage(theme::Usage::Accent),  //
-            "TEXTURE");
+        const auto new_pos = position - offset;
+        const auto new_cs = cs * (1.f + border_width);
+        get().draw_widget_rect(
+            {
+                new_pos.x,
+                new_pos.y,
+                new_cs.x,
+                new_cs.y,
+            },
+            theme::Usage::Accent);
     });
 }
 
@@ -274,12 +278,10 @@ bool button(const Widget& widget, const std::string& content) {
         // get().draw_widget_old(position, size, 0.f, color::black, "TEXTURE");
         // }
 
-        UITheme theme = get().active_theme();
-        Color color = is_active_and_hot(widget.id)
-                          ? theme.from_usage(theme::Usage::Secondary)
-                          : theme.from_usage(theme::Usage::Primary);
+        auto usage = is_active_and_hot(widget.id) ? (theme::Usage::Secondary)
+                                                  : (theme::Usage::Primary);
 
-        get().draw_widget_old(position, size, 0.f, color, "TEXTURE");
+        get().draw_widget_rect({position.x, position.y, size.x, size.y}, usage);
     };
 
     const auto _button_pressed = [](const uuid id) {
@@ -535,15 +537,16 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
 
         _draw_focus_ring(widget);
         // slider rail
-        Color rail = get().active_theme().primary;
-        get().draw_widget_old(pos, cs, 0.f, rail, "TEXTURE");
+        get().draw_widget_rect({pos.x, pos.y, cs.x, cs.y},
+                               theme::Usage::Primary);
 
         // slide
         vec2 offset = vertical ? vec2{0.f, pos_offset} : vec2{pos_offset, 0.f};
         vec2 size = vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
 
-        const auto col = get().active_theme().accent;
-        get().draw_widget_old(pos + offset, size, 0.f, col, "TEXTURE");
+        auto slideoffset = pos + offset;
+        get().draw_widget_rect({slideoffset.x, slideoffset.y, size.x, size.y},
+                               theme::Usage::Accent);
     };
 
     const auto _slider_value_management = [](const Widget* widget,
@@ -640,13 +643,11 @@ bool textfield(const Widget& widget, std::string& content, int max_length) {
         };
 
         // background
-        UITheme theme = get().active_theme();
-        Color color = is_active_and_hot(widget.id)
-                          ? theme.from_usage(theme::Usage::Secondary)
-                          : theme.from_usage(theme::Usage::Primary);
+        auto usage = is_active_and_hot(widget.id) ? theme::Usage::Secondary
+                                                  : theme::Usage::Primary;
 
         // Background
-        get().draw_widget_old(pos, cs, 0.f, color, "TEXTURE");
+        get().draw_widget_rect({pos.x, pos.y, cs.x, cs.y}, usage);
 
         bool shouldWriteCursor = has_kb_focus(widget.id) && state->showCursor;
         std::string focusStr = shouldWriteCursor ? "_" : "";

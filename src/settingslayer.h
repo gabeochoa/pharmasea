@@ -189,6 +189,7 @@ struct SettingsLayer : public Layer {
     virtual void onDraw(float dt) override {
         if (Menu::get().is_not(Menu::State::Settings)) return;
         ClearBackground(ui_context->active_theme().background);
+
         draw_ui(dt);
     }
 };
