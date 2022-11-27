@@ -32,7 +32,6 @@ kanban-plugin: basic
 - [ ] Disallow target cube from going outside of bounds
 - [ ] In pause menu, remap key bindings in layer for arrows keys to choose options
 - [ ] BUG: if customer runs into someone you both get stuck
-- [ ] Support for "windows" or "modals" in ui framework
 - [ ] Better settings page
 - [ ] WARN: need a way to warn that UI elements are offscreen "purpling"
 - [ ] BUG: Hide pause buttons from non-host since they dont really do anything anyway
@@ -41,6 +40,7 @@ kanban-plugin: basic
 
 ## in progress
 
+- [ ] Support for "windows" or "modals" in ui framework
 - [ ] dropdown needs scrollbar when subwindow goes offscreen
 - [ ] pill bottle barrel
 - [ ] placeholder bottle pill filler

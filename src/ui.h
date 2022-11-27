@@ -256,32 +256,9 @@ bool button(const Widget& widget, const std::string& content) {
 
         _draw_focus_ring(widget);
 
-        vec2 position = {
-            widget.rect.x,
-            widget.rect.y,
-        };
-        vec2 size = {
-            widget.rect.width,
-            widget.rect.height,
-        };
-
-        // if (is_hot(widget.id)) {
-        // if (is_active(widget.id)) {
-        // get().draw_widget_old(position, size, 0.f, color::red,
-        // "TEXTURE");
-        // } else {
-        // // Hovered
-        // get().draw_widget_old(position, size, 0.f, color::green,
-        // "TEXTURE");
-        // }
-        // } else {
-        // get().draw_widget_old(position, size, 0.f, color::black, "TEXTURE");
-        // }
-
-        auto usage = is_active_and_hot(widget.id) ? (theme::Usage::Secondary)
-                                                  : (theme::Usage::Primary);
-
-        get().draw_widget_rect({position.x, position.y, size.x, size.y}, usage);
+        get().draw_widget_rect(widget.rect, is_active_and_hot(widget.id)
+                                                ? (theme::Usage::Secondary)
+                                                : (theme::Usage::Primary));
     };
 
     const auto _button_pressed = [](const uuid id) {
@@ -298,20 +275,18 @@ bool button(const Widget& widget, const std::string& content) {
 
     init_widget(widget, __FUNCTION__);
     UIContext::LastFrame lf = get().get_last_frame(widget.id);
-    bool pressed = false;
-    if (lf.rect.has_value()) {
-        widget.me->rect = lf.rect.value();
-        active_if_mouse_inside(widget.id, lf.rect.value());
-        try_to_grab_kb(widget.id);
-        _button_render(widget.me);
-        get()._draw_text(widget.rect, content, theme::Usage::Font);
-        handle_tabbing(widget.id);
-        pressed = _button_pressed(widget.id);
-    } else {
+    if (!lf.rect.has_value()) {
         get().schedule_render_call(std::bind(_button_render, widget.me));
+        return false;
     }
-    get().schedule_render_call(std::bind(_write_lf, widget.me));
-    return pressed;
+
+    widget.me->rect = lf.rect.value();
+    active_if_mouse_inside(widget.id, lf.rect.value());
+    try_to_grab_kb(widget.id);
+    _button_render(widget.me);
+    get()._draw_text(widget.rect, content, theme::Usage::Font);
+    handle_tabbing(widget.id);
+    return _button_pressed(widget.id);
 }
 
 bool button_list(const Widget& widget, const std::vector<std::string>& options,
