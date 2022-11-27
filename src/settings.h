@@ -24,7 +24,7 @@ struct ResolutionInfo {
 
     bool operator<(const ResolutionInfo& r) const {
         return (this->width < r.width) ||
-               ((this->width == r.width) && (this->height == r.height));
+               ((this->width == r.width) && (this->height < r.height));
     }
 
     bool operator==(const ResolutionInfo& r) const {
