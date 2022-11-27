@@ -43,7 +43,7 @@ struct Preload {
         std::tuple<const char*, const char*, const char*> textures[] = {
             {"images", "face.png", "face"},
             {"images", "jug.png", "jug"},
-            {"images", "sleepyico.png", "bubble"},
+            {"images", "sleepyico.png", "sleepy"},
         };
 
         for (auto& t : textures) {

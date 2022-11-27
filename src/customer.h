@@ -21,13 +21,13 @@ struct SpeechBubble {
     vec3 position;
     std::string icon_tex_name;
 
-    SpeechBubble() { icon_tex_name = "jug"; }
+    SpeechBubble(std::string icon) : icon_tex_name(icon) {}
 
     void update(float, vec3 pos) { this->position = pos; }
     void render() const {
         GameCam cam = GLOBALS.get<GameCam>("game_cam");
         {
-            Texture texture = TextureLibrary::get().get("bubble");
+            Texture texture = TextureLibrary::get().get(icon_tex_name);
             DrawBillboard(cam.camera, texture,
                           vec3{position.x,                      //
                                position.y + (TILESIZE * 1.5f),  //
@@ -75,14 +75,16 @@ struct Customer : public AIPerson {
 
     void init() {
         set_customer_name(get_random_name());
-        ailment.reset(new TEST_MAX_AIL());
+        ailment.reset(new Insomnia());
+        bubble = SpeechBubble(ailment->icon_name());
     }
 
     virtual float base_speed() override {
-        float base_speed = 3.5f;
+        float base_speed = 4.f;
         if (ailment) {
             base_speed *= ailment->speed_multiplier();
         }
+        std::cout << "base speed " << base_speed << std::endl;
         return base_speed;
     }
 
@@ -90,7 +92,7 @@ struct Customer : public AIPerson {
         if (ailment) {
             return ailment->stagger();
         }
-        return 1.f;
+        return 0.f;
     }
 
     void wait_in_queue(float) {
@@ -253,12 +255,7 @@ struct Customer : public AIPerson {
         // this->turn_to_face_entity(reg);
         // }
         //
-        // // TODO just for debug purposes
-        // if (!bubble.has_value()) {
-        // bubble = SpeechBubble();
-        // } else {
-        // bubble.value().update(dt, this->raw_position);
-        // }
+        bubble.value().update(dt, this->raw_position);
     }
 
     virtual void render_normal() const override {

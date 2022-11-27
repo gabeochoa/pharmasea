@@ -36,14 +36,17 @@ struct Symptom {
 
         template<typename T>
         T inc_int(T t) {
-            return static_cast<T>((static_cast<int>(t) + 1) %
-                                  (static_cast<int>(T::Count)));
+            int val = static_cast<int>(t);
+            int max = static_cast<int>(T::Count);
+            if (val != max) val++;
+            return static_cast<T>(val);
         }
 
         template<typename T>
         T dec_int(T t) {
-            return static_cast<T>((static_cast<int>(t) + 1) %
-                                  (static_cast<int>(T::Count)));
+            int val = static_cast<int>(t);
+            if (val != 0) val--;
+            return static_cast<T>(val);
         }
 
         Config& operator++() {
@@ -66,6 +69,7 @@ struct Symptom {
     explicit Symptom(const Config& opt) : config(opt) {}
 
     void worsen() { ++config; }
+    void heal() { --config; }
 };
 
 struct Sneeze : public Symptom {};
@@ -83,9 +87,9 @@ struct Ailment {
         float value = [this]() {
             switch (config.speed) {
                 case Speed::Slow:
-                    return 0.1f;
+                    return 0.5f;
                 case Speed::Okay:
-                    return 0.8f;
+                    return 0.9f;
                 case Speed::Default:
                     return 1.f;
                 case Speed::Fast:
@@ -123,7 +127,7 @@ struct Ailment {
     }
 
     // ensures the overall multiplier isnt over 10x strength
-    float overall() { return clamp(overall_mult(), 0.1f, 10.f); }
+    float overall() { return clamp(overall_mult(), 0.25f, 10.f); }
 
    protected:
     // affects all others, bigger than 1.0 is stronger [0.1, 10]
@@ -174,6 +178,19 @@ struct Ailment {
 
     explicit Ailment(const Config& opt) : config(opt) {}
     virtual ~Ailment() {}
+
+    std::string icon_name() const {
+        switch (config.type) {
+            case Type::None:
+                return "jug";
+            case Type::Insomnia:
+                return "sleepy";
+            default:
+            case Type::Test:
+            case Type::Hooked:
+                return "face";
+        }
+    }
 };
 
 struct TEST_MAX_AIL : public Ailment {
@@ -189,9 +206,9 @@ struct TEST_MAX_AIL : public Ailment {
 struct Insomnia : public Ailment {
     Insomnia()
         : Ailment({
-              .name = "Insomnia!",
+              .name = "Insomnia",
               .type = Ailment::Type::Insomnia,
-              .speed = Ailment::Speed::Slow,
+              .speed = Ailment::Speed::Okay,
               .stagger = Ailment::Stagger::None,
           }) {
         symptoms.insert(Irritable());

@@ -57,7 +57,8 @@ struct AIPerson : public Person {
             return this->raw_position;
         }
         vec2 tar = job->local.value();
-        float speed = this->base_speed() * stagger_mult() * dt;
+        float speed = this->base_speed() * dt;
+        if (stagger_mult() != 0) speed *= stagger_mult();
 
         auto new_pos_x = this->raw_position;
         if (tar.x > this->raw_position.x) new_pos_x.x += speed;
@@ -73,7 +74,8 @@ struct AIPerson : public Person {
             return this->raw_position;
         }
         vec2 tar = job->local.value();
-        float speed = this->base_speed() * stagger_mult() * dt;
+        float speed = this->base_speed() * dt;
+        if (stagger_mult() != 0) speed *= stagger_mult();
 
         auto new_pos_z = this->raw_position;
         if (tar.y > this->raw_position.z) new_pos_z.z += speed;
