@@ -9,7 +9,9 @@ class Col:
         self.items = []
 
     def add(self, line):
-        self.items.append(line.split("*")[1].strip())
+        # cutting '- [X] '
+        value = line[6:]
+        self.items.append(value)
         # only keep the most recent ten for done
         if self.name == "Done" and len(self.items) >= 10:
             self.items.pop()
@@ -21,7 +23,10 @@ for line in lines:
         columns.append(Col(line))
         active_column = columns[-1]
         continue
-    if line.startswith("*") and active_column != None:
+    # skip the **Complete**
+    if line.startswith("**"):
+        continue
+    if line.startswith("-") and active_column != None:
         active_column.add(line)
         continue
 
@@ -56,6 +61,13 @@ while(row_idx < max_row_idx):
     row_idx+=1
 
 output_lines.append("\n")
+
+
+
+
+
+##### WRITE TO FILES
+
 
 
 index = 0
