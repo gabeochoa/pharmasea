@@ -114,7 +114,8 @@ struct PolymorphicBaseClass<Entity>
 
 template<>
 struct PolymorphicBaseClass<Furniture>
-    : PolymorphicDerivedClasses<Wall, Table, Register, Conveyer, Grabber> {};
+    : PolymorphicDerivedClasses<Wall, Table, Register, Conveyer, Grabber,
+                                BagBox> {};
 
 template<>
 struct PolymorphicBaseClass<Person> : PolymorphicDerivedClasses<AIPerson> {};
@@ -231,6 +232,11 @@ struct Map {
             ItemHelper::addItem(item);
 
             table->held_item = item;
+
+            std::shared_ptr<BagBox> bagbox;
+            location = get_rand_walkable();
+            bagbox.reset(new BagBox(location));
+            EntityHelper::addEntity(bagbox);
         };
 
         auto generate_register = [this]() {
