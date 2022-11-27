@@ -57,6 +57,7 @@ struct Conveyer : public Furniture {
             if (this->face_direction & FrontFaceDirection::LEFT) {
                 new_pos.x -= TILESIZE * relative_item_pos;
             }
+            new_pos.y += TILESIZE / 4;
 
             held_item->update_position(new_pos);
         }

@@ -227,10 +227,16 @@ struct Map {
             table.reset(new Table(location));
             EntityHelper::addEntity(table);
 
-            std::shared_ptr<Item> item;
+            std::shared_ptr<Bag> item;
             item.reset(new Bag(location, (Color){255, 15, 240, 255}));
             ItemHelper::addItem(item);
             table->held_item = item;
+
+            std::shared_ptr<Item> item2;
+            item2.reset(new Bag(location, (Color){255, 15, 240, 255}));
+            ItemHelper::addItem(item2);
+            item->held_item = item2;
+            item2->held_by = Item::HeldBy::ITEM;
         };
 
         auto generate_register = [this]() {

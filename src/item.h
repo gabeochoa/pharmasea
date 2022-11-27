@@ -11,14 +11,13 @@
 
 static std::atomic_int ITEM_ID_GEN = 0;
 struct Item {
-    enum HeldBy { NONE, PLAYER, FURNITURE, CUSTOMER };
+    enum HeldBy { NONE, ITEM, PLAYER, FURNITURE, CUSTOMER };
 
     int id;
     float item_size = TILESIZE / 2;
     Color color;
     vec3 raw_position;
     vec3 position;
-    bool unpacked = false;
     bool cleanup = false;
     HeldBy held_by = NONE;
 
@@ -31,7 +30,6 @@ struct Item {
         s.object(color);
         s.object(raw_position);
         s.object(position);
-        s.value1b(unpacked);
         s.value1b(cleanup);
         s.value4b(held_by);
     }
@@ -51,12 +49,12 @@ struct Item {
 
     vec3 snap_position() const { return vec::snap(this->raw_position); }
 
-    virtual bool is_collidable() { return unpacked; }
+    virtual bool is_collidable() { return false; }
 
     virtual void render() const {
         std::optional<Model> m = this->model();
         if (m.has_value()) {
-            DrawModel(m.value(), this->position, this->size().x * 0.25f,
+            DrawModel(m.value(), this->position, this->size().x * 0.5f,
                       ui::color::tan_brown);
         } else {
             DrawCube(position, this->size().x, this->size().y, this->size().z,
@@ -86,11 +84,14 @@ struct Item {
 };
 
 struct Bag : public Item {
+    std::shared_ptr<Item> held_item;
+
    private:
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<Item>{});
+        s.object(held_item);
     }
 
    public:
@@ -98,7 +99,12 @@ struct Bag : public Item {
     Bag(vec3 p, Color c) : Item(p, c) {}
     Bag(vec2 p, Color c) : Item(p, c) {}
 
+    bool empty() const { return held_item == nullptr; }
+
     virtual std::optional<Model> model() const override {
+        if (empty()) {
+            return ModelLibrary::get().get("empty_bag");
+        }
         return ModelLibrary::get().get("bag");
     }
 };
