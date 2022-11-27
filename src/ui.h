@@ -488,38 +488,23 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
                                    const float value) {
         Widget& widget = *widget_ptr;
 
-        //
-        auto lf = UIContext::LastFrame({.rect = widget.rect});
-        get().write_last_frame(widget.id, lf);
-        //
-
-        active_if_mouse_inside(widget.id, widget.rect);
-
-        const auto cs = vec2{
-            widget.rect.width,
-            widget.rect.height,
-        };
-        const float maxScale = 0.8f;
-
-        const float pos_offset =
-            value * (vertical ? cs.y * maxScale : cs.x * maxScale);
-        const auto pos = vec2{
-            widget.rect.x,
-            widget.rect.y,
-        };
-
         _draw_focus_ring(widget);
-        // slider rail
-        get().draw_widget_rect({pos.x, pos.y, cs.x, cs.y},
-                               theme::Usage::Primary);
+        get().draw_widget(widget, theme::Usage::Primary);  // slider rail
 
         // slide
-        vec2 offset = vertical ? vec2{0.f, pos_offset} : vec2{pos_offset, 0.f};
-        vec2 size = vertical ? vec2{cs.x, cs.y / 5.f} : vec2{cs.x / 5.f, cs.y};
+        Rectangle rect(widget.rect);
+        const float maxScale = 0.8f;
+        const float pos_offset =
+            value * (vertical ? rect.height * maxScale : rect.width * maxScale);
 
-        auto slideoffset = pos + offset;
-        get().draw_widget_rect({slideoffset.x, slideoffset.y, size.x, size.y},
-                               theme::Usage::Accent);
+        rect = {
+            vertical ? rect.x : rect.x + pos_offset,
+            vertical ? rect.y + pos_offset : rect.y,
+            vertical ? rect.width : rect.width / 5.f,
+            vertical ? rect.height / 5.f : rect.height,
+        };
+
+        get().draw_widget_rect(rect, theme::Usage::Accent);
     };
 
     const auto _slider_value_management = [](const Widget* widget,
@@ -563,25 +548,23 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
         state->value.changed_since = value_changed;
     };
 
-    init_widget(widget, __FUNCTION__);
-    UIContext::LastFrame lf = get().get_last_frame(widget.id);
+    UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
     // TODO be able to scroll this bar with the scroll wheel
     auto state = get().widget_init<SliderState>(widget.id);
     bool changed_previous_frame = state->value.changed_since;
     state->value.changed_since = false;
     if (value) state->value.set(*value);
 
-    if (lf.rect.has_value()) {
-        widget.me->rect = lf.rect.value();
-        try_to_grab_kb(widget.id);
-        _slider_render(widget.me, vertical, state->value.asT());
-        handle_tabbing(widget.id);
-    }
+    //
+    if (!lf.rect.has_value()) return changed_previous_frame;
 
-    get().schedule_render_call(
-        std::bind(_slider_render, widget.me, vertical, state->value.asT()));
-    get().schedule_render_call(std::bind(_slider_value_management, widget.me,
-                                         vertical, value, mnf, mxf));
+    widget.me->rect = lf.rect.value();
+    try_to_grab_kb(widget.id);
+    active_if_mouse_inside(widget.id, widget.rect);
+    _slider_render(widget.me, vertical, state->value.asT());
+    handle_tabbing(widget.id);
+    _slider_value_management(widget.me, vertical, value, mnf, mxf);
+
     return changed_previous_frame;
 }
 
