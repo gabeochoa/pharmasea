@@ -21,7 +21,6 @@
 * Need a build system to output producuction build
 * Refactor Library to be more generic
 * support for tile sheets
-* resolution switcher to settings page 
 * diagetic UI to lobby screen 
 * bag box to get paper bags from 
 * pill bottle barrel 
@@ -30,7 +29,7 @@
 
 ## In Progress
 
-* Nothing
+* resolution switcher to settings page 
 
 ## Done
 

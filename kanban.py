@@ -58,14 +58,19 @@ while(row_idx < max_row_idx):
 output_lines.append("\n")
 
 
+index = 0
 todo_index = 0
+end_todo_index = 0
 with open("README.md") as file:
     lines = [line for line in file]
     for line in lines:
-        if(line.startswith("## TODO")):
-            break
-        todo_index += 1
-lines = lines[0:todo_index+1] + output_lines + lines[todo_index+1:]
+        if(line.startswith("## TODOs")):
+            todo_index = index
+        if(line.startswith("## End TODO")):
+            end_todo_index = index
+        index += 1
+
+lines = lines[0:todo_index+1] + output_lines + lines[end_todo_index:]
 
 outF = open("README.md", "w")
 outF.writelines(lines)
