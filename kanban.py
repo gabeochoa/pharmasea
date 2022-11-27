@@ -9,18 +9,15 @@ class Col:
         self.items = []
 
     def add(self, line):
+        if (
+            # only keep the most recent ten for done
+            ( self.name == "Done" and len(self.items) >= 10)
+            ):
+            return;
+
         # cutting '- [X] '
         value = line[6:]
         self.items.append(value)
-
-        should_pop = (
-            # only keep the most recent ten for done
-            ( self.name == "Done" and len(self.items) >= 10)
-        )
-
-        if should_pop:
-            self.items.pop()
-
 
 columns = [];
 active_column = None

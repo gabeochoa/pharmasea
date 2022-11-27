@@ -42,7 +42,6 @@ kanban-plugin: basic
 
 - [ ] pill bottle barrel
 - [ ] placeholder bottle pill filler
-- [ ] bag box to get paper bags from
 - [ ] Add ailments for customers
 
 
@@ -54,6 +53,12 @@ kanban-plugin: basic
 ## done
 
 **Complete**
+- [x] bag box to get paper bags from
+- [x] resolution switcher to settings page
+- [x] Refactor Library to be more generic
+- [x] add diagonal facing direction
+- [x] Add easy-to-use UI buttons
+- [x] Better state management for AI
 - [x] Allow an Entity to pick up / drop an Item
 - [x] Fix A\* algorithm
 - [x] Allow for an Item to be walkable or not (influences Entity movement)
@@ -61,11 +66,6 @@ kanban-plugin: basic
 - [x] Paint front-facing indicator (another cube, different color face, some shape)
 - [x] When Entities change direction, change the front-facing indicator to face the direction they're moving
 - [x] When Entities change direction, change the location of any held item to face the direction they're moving
-- [x] Add easy-to-use UI buttons
-- [x] Refactor Library to be more generic
-- [x] Better state management for AI
-- [x] add diagonal facing direction
-- [x] resolution switcher to settings page
 
 
 

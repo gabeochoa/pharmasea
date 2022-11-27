@@ -19,18 +19,19 @@ Info about the todo chart
 
 |needed to play once|in progress|blocked|done|
 |-------------------|-----------|-------|----|
-|Disallow target cube from going outside of bounds|Put all things that have to be loaded in a single place|highlight furniture under selection|Allow an Entity to pick up / drop an Item|
-|In pause menu, remap key bindings in layer for arrows keys to choose options|Better settings page| |Fix A\* algorithm|
-|BUG: if customer runs into someone you both get stuck|pill bottle barrel| |Allow for an Item to be walkable or not (influences Entity movement)|
-|Add ailments for customers|placeholder bottle pill filler| |Add new target entity that moves via arrows keys / alternative keys|
-|Support for "windows" or "modals" in ui framework|bag box to get paper bags from| |Paint front-facing indicator (another cube, different color face, some shape)|
-|dropdown needs scrollbar when subwindow goes offscreen| | |When Entities change direction, change the front-facing indicator to face the direction they're moving|
+|Disallow target cube from going outside of bounds|pill bottle barrel|highlight furniture under selection|bag box to get paper bags from|
+|In pause menu, remap key bindings in layer for arrows keys to choose options|placeholder bottle pill filler| |resolution switcher to settings page|
+|BUG: if customer runs into someone you both get stuck|Add ailments for customers| |Refactor Library to be more generic|
+|Support for "windows" or "modals" in ui framework| | |add diagonal facing direction|
+|Better settings page| | |Add easy-to-use UI buttons|
+|dropdown needs scrollbar when subwindow goes offscreen| | |Better state management for AI|
+|WARN: need a way to warn that UI elements are offscreen "purpling"| | |Allow an Entity to pick up / drop an Item|
+| | | |Fix A\* algorithm|
+| | | |Allow for an Item to be walkable or not (influences Entity movement)|
+| | | |Add new target entity that moves via arrows keys / alternative keys|
+| | | |Paint front-facing indicator (another cube, different color face, some shape)|
+| | | |When Entities change direction, change the front-facing indicator to face the direction they're moving|
 | | | |When Entities change direction, change the location of any held item to face the direction they're moving|
-| | | |Add easy-to-use UI buttons|
-| | | |Refactor Library to be more generic|
-| | | |Better state management for AI|
-| | | |add diagonal facing direction|
-| | | |resolution switcher to settings page|
 
 ## End TODO 
 
