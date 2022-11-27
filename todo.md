@@ -24,6 +24,7 @@ kanban-plugin: basic
 - [ ] Add system for exporting resources to code for easier binary packaging ([see branch packager](https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html))
 - [ ] Add a pause menu with textual options
 - [ ] Create Doors
+- [ ] Put all things that have to be loaded in a single place
 
 
 ## needed to play once
@@ -31,18 +32,18 @@ kanban-plugin: basic
 - [ ] Disallow target cube from going outside of bounds
 - [ ] In pause menu, remap key bindings in layer for arrows keys to choose options
 - [ ] BUG: if customer runs into someone you both get stuck
-- [ ] Add ailments for customers
 - [ ] Support for "windows" or "modals" in ui framework
+- [ ] Better settings page
 - [ ] dropdown needs scrollbar when subwindow goes offscreen
+- [ ] WARN: need a way to warn that UI elements are offscreen "purpling"
 
 
 ## in progress
 
-- [ ] Put all things that have to be loaded in a single place
-- [ ] Better settings page
 - [ ] pill bottle barrel
 - [ ] placeholder bottle pill filler
 - [ ] bag box to get paper bags from
+- [ ] Add ailments for customers
 
 
 ## blocked
