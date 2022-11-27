@@ -118,6 +118,9 @@ Game Ideas
 
 ## Changelog
 
+if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
+and then just checkout that hash (sorry im not doing releases / tags atm) 
+
 ### alpha_0.22.11.21
 
 impact 
