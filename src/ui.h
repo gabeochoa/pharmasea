@@ -275,18 +275,20 @@ bool button(const Widget& widget, const std::string& content) {
 
     init_widget(widget, __FUNCTION__);
     UIContext::LastFrame lf = get().get_last_frame(widget.id);
-    if (!lf.rect.has_value()) {
+    bool pressed = false;
+    if (lf.rect.has_value()) {
+        widget.me->rect = lf.rect.value();
+        active_if_mouse_inside(widget.id, lf.rect.value());
+        try_to_grab_kb(widget.id);
+        _button_render(widget.me);
+        get()._draw_text(widget.rect, content, theme::Usage::Font);
+        handle_tabbing(widget.id);
+        pressed = _button_pressed(widget.id);
+    } else {
         get().schedule_render_call(std::bind(_button_render, widget.me));
-        return false;
     }
-
-    widget.me->rect = lf.rect.value();
-    active_if_mouse_inside(widget.id, lf.rect.value());
-    try_to_grab_kb(widget.id);
-    _button_render(widget.me);
-    get()._draw_text(widget.rect, content, theme::Usage::Font);
-    handle_tabbing(widget.id);
-    return _button_pressed(widget.id);
+    get().schedule_render_call(std::bind(_write_lf, widget.me));
+    return pressed;
 }
 
 bool button_list(const Widget& widget, const std::vector<std::string>& options,
