@@ -27,5 +27,63 @@
     "directory": "/Users/gabeochoa/Dropbox/P/pharmasea",
     "file": "/Users/gabeochoa/Dropbox/P/pharmasea/src/game.cpp",
     "output": "/Users/gabeochoa/Dropbox/P/pharmasea/pharmasea"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-c",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-fsanitize=address",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-I/Users/gabeochoa/homebrew/Cellar/raylib/4.2.0/include",
+      "-Ivendor/",
+      "-o",
+      "pharmasea",
+      "src/network/webrequest.cpp"
+    ],
+    "directory": "/Users/gabeochoa/Dropbox/P/pharmasea",
+    "file": "/Users/gabeochoa/Dropbox/P/pharmasea/src/network/webrequest.cpp",
+    "output": "/Users/gabeochoa/Dropbox/P/pharmasea/pharmasea"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-c",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-fsanitize=address",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-I/Users/gabeochoa/homebrew/Cellar/raylib/4.2.0/include",
+      "-Ivendor/",
+      "-o",
+      "pharmasea",
+      "src/files.cpp"
+    ],
+    "directory": "/Users/gabeochoa/Dropbox/P/pharmasea",
+    "file": "/Users/gabeochoa/Dropbox/P/pharmasea/src/files.cpp",
+    "output": "/Users/gabeochoa/Dropbox/P/pharmasea/pharmasea"
   }
 ]
