@@ -569,48 +569,21 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
 }
 
 bool textfield(const Widget& widget, std::string& content, int max_length) {
-    init_widget(widget, __FUNCTION__);
-    UIContext::LastFrame lf = get().get_last_frame(widget.id);
-    auto state = get().widget_init<TextfieldState>(widget.id);
-    bool changed_previous_frame = state->buffer.changed_since;
-    if (!content.empty()) state->buffer = content;
-    state->buffer.changed_since = false;
-
     auto _textfield_render = [](Widget* widget_ptr) {
         auto state = get().get_widget_state<TextfieldState>(widget_ptr->id);
         Widget& widget = *widget_ptr;
 
-        //
-        auto lf = UIContext::LastFrame({.rect = widget.rect});
-        get().write_last_frame(widget.id, lf);
-        //
-
-        active_if_mouse_inside(widget.id, widget.rect);
         _draw_focus_ring(widget);
-
-        const auto pos = vec2{
-            widget.rect.x,
-            widget.rect.y,
-        };
-
-        const auto cs = vec2{
-            widget.rect.width,
-            widget.rect.height,
-        };
-
-        // background
-        auto usage = is_active_and_hot(widget.id) ? theme::Usage::Secondary
-                                                  : theme::Usage::Primary;
-
         // Background
-        get().draw_widget_rect({pos.x, pos.y, cs.x, cs.y}, usage);
+        get().draw_widget(widget, is_active_and_hot(widget.id)
+                                      ? theme::Usage::Secondary
+                                      : theme::Usage::Primary);
 
         bool shouldWriteCursor = has_kb_focus(widget.id) && state->showCursor;
         std::string focusStr = shouldWriteCursor ? "_" : "";
         std::string focused_content =
             fmt::format("{}{}", state->buffer.asT(), focusStr);
 
-        // TODO add support for string
         get()._draw_text(widget.rect, focused_content, theme::Usage::Font);
     };
 
@@ -623,6 +596,7 @@ bool textfield(const Widget& widget, std::string& content, int max_length) {
             state->cursorBlinkTime = 0;
             state->showCursor = !state->showCursor;
         }
+
         bool changed = false;
 
         if (has_kb_focus(widget->id)) {
@@ -644,6 +618,8 @@ bool textfield(const Widget& widget, std::string& content, int max_length) {
                 }
                 changed = true;
             }
+
+            // TODO enforce max length on paste
             if (get().is_held_down(InputName::WidgetCtrl)) {
                 if (get().pressed(InputName::WidgetPaste)) {
                     auto clipboard = GetClipboardText();
@@ -659,15 +635,22 @@ bool textfield(const Widget& widget, std::string& content, int max_length) {
         state->buffer.changed_since = changed;
     };
 
-    if (lf.rect.has_value()) {
-        widget.me->rect = lf.rect.value();
-        try_to_grab_kb(widget.id);
-        _textfield_render(widget.me);
-        _textfield_value_management(widget.me, max_length);
-        handle_tabbing(widget.id);
-    }
+    UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
+    auto state = get().widget_init<TextfieldState>(widget.id);
+    bool changed_previous_frame = state->buffer.changed_since;
 
-    get().schedule_render_call(std::bind(_textfield_render, widget.me));
+    if (!content.empty()) state->buffer = content;
+    state->buffer.changed_since = false;
+
+    if (!lf.rect.has_value()) return changed_previous_frame;
+
+    widget.me->rect = lf.rect.value();
+    try_to_grab_kb(widget.id);
+    active_if_mouse_inside(widget.id, widget.rect);
+    _textfield_render(widget.me);
+    _textfield_value_management(widget.me, max_length);
+    handle_tabbing(widget.id);
+
     content = state->buffer;
     return changed_previous_frame;
 }
@@ -678,14 +661,9 @@ bool checkbox(const Widget& widget, bool* cbState, std::string* label) {
     if (cbState) state->on = *cbState;
     state->on.changed_since = false;
 
-    std::string checkbox_text;
-    if (label) {
-        checkbox_text = *label;
-    } else {
-        checkbox_text = state->on ? "X" : "";
-    }
-
-    if (button(widget, checkbox_text)) {
+    if (button(widget, (label ? *label : (state->on ? "X" : ""))
+               //
+               )) {
         state->on = !state->on;
     }
 
@@ -695,22 +673,11 @@ bool checkbox(const Widget& widget, bool* cbState, std::string* label) {
 
 bool scroll_view(const Widget& widget, std::function<void()> children,
                  float* startingLocation = nullptr) {
-    const auto _write_lf = [](Widget* widget_ptr) {
-        Widget& widget = *widget_ptr;
-        auto lf = UIContext::LastFrame({.rect = widget.rect});
-        get().write_last_frame(widget.id, lf);
-    };
-
-    init_widget(widget, __FUNCTION__);
+    UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
 
     // TODO can this move into init_widget?
     auto state = get().widget_init<ScrollViewState>(widget.id);
     if (startingLocation) state->yoffset = (*startingLocation);
-
-    // TODO can we just move this into state?
-    UIContext::LastFrame lf = get().get_last_frame(widget.id);
-
-    get().schedule_render_call(std::bind(_write_lf, widget.me));
 
     if (!lf.rect.has_value()) {
         return false;
