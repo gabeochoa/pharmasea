@@ -712,4 +712,47 @@ bool checkbox(const Widget& widget, bool* cbState, std::string* label) {
     return state->on.changed_since;
 }
 
+bool scroll_view(const Widget& widget, std::function<void()> children,
+                 float* startingLocation = nullptr) {
+    const auto _write_lf = [](Widget* widget_ptr) {
+        Widget& widget = *widget_ptr;
+        auto lf = UIContext::LastFrame({.rect = widget.rect});
+        get().write_last_frame(widget.id, lf);
+    };
+
+    init_widget(widget, __FUNCTION__);
+
+    // TODO can this move into init_widget?
+    auto state = get().widget_init<ScrollViewState>(widget.id);
+    if (startingLocation) state->yoffset = (*startingLocation);
+
+    // TODO can we just move this into state?
+    UIContext::LastFrame lf = get().get_last_frame(widget.id);
+
+    get().schedule_render_call(std::bind(_write_lf, widget.me));
+
+    if (!lf.rect.has_value()) {
+        return false;
+    }
+
+    active_if_mouse_inside(widget.id, lf.rect.value());
+
+    int rt_id = get().get_new_render_texture();
+    get().turn_on_render_texture(rt_id);
+    children();
+    get().turn_off_texture_mode();
+
+    get().draw_texture(rt_id, (Rectangle){0, 0, 1000.f, -1000.f},
+                       {widget.rect.x, widget.rect.y});
+
+    if (is_hot(widget.id)) {
+        state->yoffset = state->yoffset + get().yscrolled;
+        get().yscrolled = 0;
+    }
+
+    // TODO support opaque scroll views
+
+    return state->yoffset.changed_since;
+}
+
 }  // namespace ui

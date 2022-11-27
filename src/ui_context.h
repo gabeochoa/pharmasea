@@ -464,16 +464,8 @@ struct UIContext {
             render_call();
         }
         queued_render_calls.clear();
-
-        for (auto target : render_textures) {
-            DrawTextureRec(target.texture,
-                           (Rectangle){0, 0, (float) target.texture.width,
-                                       (float) -target.texture.height},
-                           (Vector2){0, 0}, WHITE);
-            UnloadRenderTexture(target);
-        }
-        render_textures.clear();
     }
+
     void schedule_render_call(std::function<void()> cb) {
         queued_render_calls.push_back(cb);
     }
@@ -537,6 +529,20 @@ struct UIContext {
     }
 
     void turn_off_texture_mode() { EndTextureMode(); }
+
+    void draw_texture(int rt_id, Rectangle source, Vector2 position) {
+        auto target = render_textures[rt_id];
+        DrawTextureRec(target.texture, source, position, WHITE);
+        // (Rectangle){0, 0, (float) target.texture.width,
+        // (float) -target.texture.height},
+        // (Vector2){0, 0}, WHITE);
+    }
+
+    void schedule_render_texture(int rt_id, Rectangle source,
+                                 Vector2 position) {
+        get().schedule_render_call(
+            std::bind(&UIContext::draw_texture, this, rt_id, source, position));
+    }
 };
 
 UIContext& get() { return UIContext::get(); }
