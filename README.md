@@ -29,9 +29,6 @@ Info about the todo chart
 | | | |Fix A\* algorithm|
 | | | |Allow for an Item to be walkable or not (influences Entity movement)|
 | | | |Add new target entity that moves via arrows keys / alternative keys|
-| | | |Paint front-facing indicator (another cube, different color face, some shape)|
-| | | |When Entities change direction, change the front-facing indicator to face the direction they're moving|
-| | | |When Entities change direction, change the location of any held item to face the direction they're moving|
 
 ## End TODO 
 

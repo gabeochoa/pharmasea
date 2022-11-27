@@ -9,11 +9,8 @@ class Col:
         self.items = []
 
     def add(self, line):
-        if (
-            # only keep the most recent ten for done
-            ( self.name == "Done" and len(self.items) >= 10)
-            ):
-            return;
+        if (self.name == "done" and len(self.items) >= 10):
+            return
 
         # cutting '- [X] '
         value = line[6:]
