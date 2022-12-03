@@ -5,6 +5,7 @@
 //
 #include "event.h"
 #include "globals.h"
+#include "globals_register.h"
 #include "keymap.h"
 #include "layer.h"
 #include "preload.h"
@@ -19,14 +20,20 @@ struct App {
     bool running = false;
     LayerStack layerstack;
 
+    // TODO create a render texture library?
+    RenderTexture2D mainRT;
+
     App() {
         InitWindow(WIN_W(), WIN_H(), "pharmasea");
         // Has to happen after init window due to font requirements
         Preload::get();
         KeyMap::get();
+
+        mainRT = LoadRenderTexture(WIN_W(), WIN_H());
+        GLOBALS.set("mainRT", &mainRT);
     }
 
-    ~App() {}
+    ~App() { UnloadRenderTexture(mainRT); }
 
     void pushLayer(Layer* layer) { layerstack.push(layer); }
     void pushOverlay(Layer* layer) { layerstack.pushOverlay(layer); }
@@ -87,12 +94,28 @@ struct App {
         for (Layer* layer : layerstack) {
             layer->onUpdate(dt);
         }
-        BeginDrawing();
+
+        draw_all_to_texture(dt);
+        render_to_screen();
+
+        check_input();
+    }
+
+   private:
+    void draw_all_to_texture(float dt) {
+        BeginTextureMode(mainRT);
         for (Layer* layer : layerstack) {
             layer->onDraw(dt);
         }
-        EndDrawing();
+        EndTextureMode();
+    }
 
-        check_input();
+    void render_to_screen() {
+        BeginDrawing();
+        {
+            DrawTextureRec(mainRT.texture, {0, 0, WIN_WF(), -WIN_HF()}, {0, 0},
+                           WHITE);
+        }
+        EndDrawing();
     }
 };
