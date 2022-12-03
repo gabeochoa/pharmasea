@@ -157,6 +157,7 @@ struct UIContext {
     int keychar = -1;
     int modchar = -1;
     float yscrolled;
+    float xscrolled;
 
     bool is_mouse_inside(const Rectangle& rect) {
         return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
@@ -302,7 +303,9 @@ struct UIContext {
         last_frame_time = dt;
 
         // TODO Should this be more like mousePos?
-        yscrolled += GetMouseWheelMove();
+        auto mvt = GetMouseWheelMoveV();
+        xscrolled += mvt.x;
+        yscrolled += mvt.y;
 
         // Note: we have to do this here because we cant unload until the entire
         // frame is written to the screen. We can guaranteed its definitely

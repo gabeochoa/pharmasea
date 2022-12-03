@@ -140,23 +140,33 @@ struct MenuLayer : public Layer {
                 }
 
                 auto sv = ui_context->own(Widget({
-                    Size_Px(10.f, 1.f),
-                    Size_Px(10.f, 1.f),
+                    Size_Px(100.f, 1.f),
+                    Size_Px(100.f, 1.f),
                 }));
-                sv->absolute = true;
                 scroll_view(
                     *sv,
                     []() {
-                        text(*ui::components::mk_text(), "Please");
-                        padding(*ui::components::mk_but_pad());
-                        text(*ui::components::mk_text(), "Stop");
-                        padding(*ui::components::mk_but_pad());
-                        text(*ui::components::mk_text(), "The");
-                        padding(*ui::components::mk_but_pad());
-                        text(*ui::components::mk_text(), "School");
-                        padding(*ui::components::mk_but_pad());
-                        text(*ui::components::mk_text(), "Bus");
-                        padding(*ui::components::mk_but_pad());
+                        auto container = ui::components::mk_column();
+                        div(*container);
+                        get().push_parent(container);
+                        {
+                            text(*ui::components::mk_text(), "Please");
+                            padding(*ui::components::mk_but_pad());
+                            text(*ui::components::mk_text(), "Stop");
+                            padding(*ui::components::mk_but_pad());
+                            text(*ui::components::mk_text(), "The");
+                            padding(*ui::components::mk_but_pad());
+                            text(*ui::components::mk_text(), "School");
+                            padding(*ui::components::mk_but_pad());
+                            text(*ui::components::mk_text(), "Bus");
+                            padding(*ui::components::mk_but_pad());
+                            DrawRectangleRounded({0, 0, 50, 50}, 0.15f, 4, RED);
+                            DrawRectangleRounded({50, 50, 100, 100}, 0.15f, 4,
+                                                 BLACK);
+                            DrawRectangleRounded({100, 100, 150, 150}, 0.15f, 4,
+                                                 BLUE);
+                        }
+                        get().pop_parent();
                     },
                     nullptr);
 

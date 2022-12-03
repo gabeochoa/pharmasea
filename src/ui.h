@@ -3,6 +3,7 @@
 
 #include "external_include.h"
 //
+#include "globals_register.h"
 #include "raylib.h"
 #include "ui_color.h"
 #include "ui_context.h"
@@ -91,6 +92,12 @@ bool checkbox(
     bool* cbState = nullptr,
     // optional label to replace X and ``
     std::string* label = nullptr);
+
+bool window(
+    // Returns true always
+    const Widget& widget,
+    // The background color for this window
+    theme::Usage color_usage);
 
 ///////// ////// ////// ////// ////// ////// ////// //////
 ///////// ////// ////// ////// ////// ////// ////// //////
@@ -245,12 +252,23 @@ bool div(const Widget& widget) {
     return true;
 }
 
+bool window(const Widget& widget, theme::Usage color_usage) {
+    UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
+    if (!lf.rect.has_value()) return false;
+    widget.me->rect = lf.rect.value();
+    get().draw_widget_rect(widget.rect, color_usage);
+    return true;
+}
+
 bool text(const Widget& widget, const std::string& content,
           theme::Usage color_usage) {
-    init_widget(widget, __FUNCTION__);
-    // No need to render if text is empty
     if (content.empty()) return false;
-    get().schedule_draw_text(widget.me, content, color_usage);
+
+    UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
+    if (!lf.rect.has_value()) return false;
+    widget.me->rect = lf.rect.value();
+
+    get().draw_text(widget.me, content, color_usage);
     return true;
 }
 
@@ -671,6 +689,24 @@ bool checkbox(const Widget& widget, bool* cbState, std::string* label) {
     return state->on.changed_since;
 }
 
+bool _scroll_view_inside(const Widget& widget, std::function<void()> children,
+                         int rt_id) {
+    UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
+    if (!lf.rect.has_value()) return false;
+    widget.me->rect = lf.rect.value();
+
+    // TODO assert we are absolute
+
+    get().push_parent(widget.me);
+    {
+        get().turn_on_render_texture(rt_id);
+        children();
+        get().turn_off_texture_mode();
+    }
+    get().pop_parent();
+    return true;
+}
+
 bool scroll_view(const Widget& widget, std::function<void()> children,
                  float* startingLocation = nullptr) {
     UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
@@ -679,24 +715,58 @@ bool scroll_view(const Widget& widget, std::function<void()> children,
     auto state = get().widget_init<ScrollViewState>(widget.id);
     if (startingLocation) state->yoffset = (*startingLocation);
 
-    if (!lf.rect.has_value()) {
-        return false;
-    }
+    if (!lf.rect.has_value()) return false;
 
     active_if_mouse_inside(widget.id, lf.rect.value());
 
     int rt_id = get().get_new_render_texture();
-    get().turn_on_render_texture(rt_id);
-    children();
-    get().turn_off_texture_mode();
+    float max_scroll_height = 1000.f;
 
-    get().draw_texture(rt_id, (Rectangle){0, 0, 1000.f, -1000.f},
-                       {widget.rect.x, widget.rect.y});
+    get().push_parent(widget.me);
+    {
+        auto container = ui::components::mk_column();
+        container->absolute = true;
+        // End main texture
+        EndTextureMode();
+        {
+            _scroll_view_inside(*container, children, rt_id);
 
-    if (is_hot(widget.id)) {
-        state->yoffset = state->yoffset + get().yscrolled;
-        get().yscrolled = 0;
+            // std::cout << "container rect " << container->rect << " max child
+            // "
+            // << max_scroll_height << std::endl;
+        }
+        BeginTextureMode(GLOBALS.get<RenderTexture2D>("mainRT"));
+        // Turn back on main texture
+
+        window(*container, theme::Usage::Accent);
+        float x_window = fmaxf(0, widget.rect.width - state->xoffset);
+        float y_window = fmaxf(0, max_scroll_height - state->yoffset);
+        get().draw_texture(
+            rt_id,
+            (Rectangle){widget.rect.x, widget.rect.y, x_window, -y_window},
+            {widget.rect.x, widget.rect.y});
+
+        // auto slider_widget = get().own(
+        // Widget(MK_UUID(widget.id.ownerLayer, ROOT_ID), Size_Px(100.f, 1.f),
+        // Size_Px(100.f, 1.f), GrowFlags::Column));
+
+        // float slider_value = -state->yoffset;
+        // if (slider(*slider_widget, true, &slider_value, 0,
+        // max_scroll_height)) { state->yoffset = slider_value;
+        // }
     }
+    get().pop_parent();
+
+    std::cout << state->xoffset << " " << state->yoffset << std::endl;
+
+    // if (is_hot(widget.id)) {
+    state->yoffset = state->yoffset + get().yscrolled;
+    get().yscrolled = 0;
+
+    // TODO have to handle a bunch more cases if we really want to support this
+    state->xoffset = state->xoffset + get().xscrolled;
+    get().xscrolled = 0;
+    // }
 
     // TODO support opaque scroll views
 
