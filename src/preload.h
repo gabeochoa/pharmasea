@@ -9,6 +9,7 @@
 #include "model_library.h"
 #include "music_library.h"
 #include "resources/fonts/Karmina_Regular_256.h"
+#include "shader_library.h"
 #include "sound_library.h"
 #include "texture_library.h"
 
@@ -19,6 +20,8 @@ struct Preload {
     Font font;
 
     Preload() {
+        load_shaders();
+
         load_fonts();
         load_textures();
         load_models();
@@ -84,5 +87,19 @@ struct Preload {
         MusicLibrary::get().load(
             Files::get().fetch_resource_path("music", "wah.ogg").c_str(),
             "wah");
+    }
+
+    void load_shaders() {
+        std::tuple<const char*, const char*, const char*> models[] = {
+            {"shaders", "pixelated.fs", "pixelated"},
+        };
+
+        for (auto& m : models) {
+            ShaderLibrary::get().load(
+                Files::get()
+                    .fetch_resource_path(std::get<0>(m), std::get<1>(m))
+                    .c_str(),
+                std::get<2>(m));
+        }
     }
 };
