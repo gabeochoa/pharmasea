@@ -139,27 +139,6 @@ struct MenuLayer : public Layer {
                     App::get().close();
                 }
 
-                auto sv = ui_context->own(Widget({
-                    Size_Px(10.f, 1.f),
-                    Size_Px(10.f, 1.f),
-                }));
-                sv->absolute = true;
-                scroll_view(
-                    *sv,
-                    []() {
-                        text(*ui::components::mk_text(), "Please");
-                        padding(*ui::components::mk_but_pad());
-                        text(*ui::components::mk_text(), "Stop");
-                        padding(*ui::components::mk_but_pad());
-                        text(*ui::components::mk_text(), "The");
-                        padding(*ui::components::mk_but_pad());
-                        text(*ui::components::mk_text(), "School");
-                        padding(*ui::components::mk_but_pad());
-                        text(*ui::components::mk_text(), "Bus");
-                        padding(*ui::components::mk_but_pad());
-                    },
-                    nullptr);
-
                 padding(bottom_padding);
             }
             ui_context->pop_parent();
