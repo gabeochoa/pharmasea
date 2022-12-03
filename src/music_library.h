@@ -22,6 +22,8 @@ struct MusicLibrary {
                 SetMusicVolume(kv.second, new_v);
             }
         }
+
+        virtual void unload(Music music) override { UnloadMusicStream(music); }
     } impl;
 
     Music& get(const std::string& name) { return impl.get(name); }

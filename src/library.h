@@ -7,6 +7,7 @@
 template<typename T>
 struct Library {
     std::map<std::string, T> storage;
+
     auto size() { return storage.size(); }
     auto begin() { return storage.begin(); }
     auto end() { return storage.end(); }
@@ -17,6 +18,7 @@ struct Library {
     auto rbegin() { return storage.rbegin(); }
     auto rend() { return storage.rend(); }
     auto empty() const { return storage.empty(); }
+
     const std::string add(const char* name, const T& item) {
         if (storage.find(name) != storage.end()) {
             return "";
@@ -33,9 +35,18 @@ struct Library {
         }
         return storage[name];
     }
+
     bool contains(const std::string& name) {
         return (storage.find(name) != storage.end());
     }
 
     virtual void load(const char* filename, const char* name) = 0;
+
+    void unload_all() {
+        for (auto kv : storage) {
+            unload(kv.second);
+        }
+    }
+
+    virtual void unload(T) = 0;
 };

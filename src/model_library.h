@@ -18,6 +18,7 @@ struct ModelLibrary {
                       << std::endl;
             this->add(name, LoadModel(filename));
         }
+        virtual void unload(Model model) override { UnloadModel(model); }
     } impl;
 
     Model& get(const std::string& name) { return impl.get(name); }

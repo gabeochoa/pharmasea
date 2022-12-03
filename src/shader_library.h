@@ -18,6 +18,8 @@ struct ShaderLibrary {
             // this?
             this->add(name, LoadShader(0, filename));
         }
+
+        virtual void unload(Shader shader) override { UnloadShader(shader); }
     } impl;
 
     Shader& get(const std::string& name) { return impl.get(name); }

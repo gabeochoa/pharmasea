@@ -31,7 +31,15 @@ struct Preload {
         load_music();
     }
 
-    ~Preload() { CloseAudioDevice(); }
+    ~Preload() {
+        CloseAudioDevice();
+
+        TextureLibrary::get().impl.unload_all();
+        ModelLibrary::get().impl.unload_all();
+        SoundLibrary::get().impl.unload_all();
+        MusicLibrary::get().impl.unload_all();
+        ShaderLibrary::get().impl.unload_all();
+    }
 
     void load_fonts() {
         // TODO - load fonts from install folder, instead of local path
@@ -90,16 +98,16 @@ struct Preload {
     }
 
     void load_shaders() {
-        std::tuple<const char*, const char*, const char*> models[] = {
+        std::tuple<const char*, const char*, const char*> shaders[] = {
             {"shaders", "pixelated.fs", "pixelated"},
         };
 
-        for (auto& m : models) {
+        for (auto& s : shaders) {
             ShaderLibrary::get().load(
                 Files::get()
-                    .fetch_resource_path(std::get<0>(m), std::get<1>(m))
+                    .fetch_resource_path(std::get<0>(s), std::get<1>(s))
                     .c_str(),
-                std::get<2>(m));
+                std::get<2>(s));
         }
     }
 };

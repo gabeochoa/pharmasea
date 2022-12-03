@@ -18,6 +18,7 @@ struct SoundLibrary {
                       << std::endl;
             this->add(name, LoadSound(filename));
         }
+        virtual void unload(Sound sound) override { UnloadSound(sound); }
     } impl;
 
     Sound& get(const std::string& name) { return impl.get(name); }

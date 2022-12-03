@@ -18,6 +18,10 @@ struct TextureLibrary {
                       << std::endl;
             this->add(name, LoadTexture(filename));
         }
+
+        virtual void unload(Texture2D texture) override {
+            UnloadTexture(texture);
+        }
     } impl;
 
     Texture2D& get(const std::string& name) { return impl.get(name); }
