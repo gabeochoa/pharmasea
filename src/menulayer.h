@@ -56,94 +56,80 @@ struct MenuLayer : public Layer {
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
+    void draw_menu_buttons() {
+        using namespace ui;
+        padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                            Size_Px(WIN_HF(), 1.f)));
+
+        auto content =
+            ui_context->own(Widget({.mode = Children, .strictness = 1.f},
+                                   Size_Pct(1.f, 1.0f), Column));
+        div(*content);
+
+        ui_context->push_parent(content);
+        {
+            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                                Size_Pct(1.f, 0.f)));
+            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                       "Play")) {
+                Menu::get().set(Menu::State::Network);
+            }
+            padding(*ui::components::mk_but_pad());
+            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                       "About")) {
+                Menu::get().set(Menu::State::About);
+            }
+            padding(*ui::components::mk_but_pad());
+            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                       "Settings")) {
+                Menu::get().set(Menu::State::Settings);
+            }
+            padding(*ui::components::mk_but_pad());
+            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                       "Exit")) {
+                App::get().close();
+            }
+
+            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                                Size_Pct(1.f, 0.f)));
+        }
+        ui_context->pop_parent();
+    }
+
+    void draw_title_section() {
+        using namespace ui;
+
+        padding(*ui::components::mk_padding(Size_Px(200.f, 1.f),
+                                            Size_Px(WIN_HF(), 1.f)));
+
+        auto title_card = ui_context->own(Widget(
+            Size_Pct(1.f, 0.f), Size_Px(WIN_HF(), 1.f), GrowFlags::Column));
+        div(*title_card);
+        ui_context->push_parent(title_card);
+        {
+            padding(*ui::components::mk_padding(Size_Pct(1.f, 0.f),
+                                                Size_Px(100.f, 1.f)));
+            auto title_text = ui_context->own(
+                Widget(Size_Pct(1.f, 0.5f), Size_Px(100.f, 1.f)));
+            text(*title_text, "Pharmasea");
+        }
+        ui_context->pop_parent();
+    }
+
     void draw_ui(float dt) {
         using namespace ui;
 
-        const SizeExpectation padd_x = {
-            .mode = Pixels, .value = 120.f, .strictness = 0.9f};
-        const SizeExpectation padd_y = {
-            .mode = Pixels, .value = 25.f, .strictness = 0.5f};
-
         ui_context->begin(dt);
 
-        ui::Widget root(Size_Px(WIN_WF(), 1.f), Size_Px(WIN_HF(), 1.f),
-                        GrowFlags::Row);
+        auto root = ui::components::mk_root();
 
-        Widget left_padding(Size_Px(100.f, 1.f), Size_Px(WIN_HF(), 1.f));
-
-        Widget content({.mode = Children, .strictness = 1.f},
-                       {.mode = Percent, .value = 1.f, .strictness = 1.0f},
-                       Column);
-
-        Widget top_padding(Size_Px(100.f, 1.f),
-                           {.mode = Percent, .value = 1.f, .strictness = 0.f});
-
-        const SizeExpectation button_x = {.mode = Pixels, .value = 130.f};
-        const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
-
-        Widget play_button(MK_UUID(id, ROOT_ID), button_x, button_y);
-        Widget button_padding(padd_x, padd_y);
-        Widget about_button(MK_UUID(id, ROOT_ID), button_x, button_y);
-        Widget settings_button(MK_UUID(id, ROOT_ID), button_x, button_y);
-        Widget exit_button(MK_UUID(id, ROOT_ID), button_x, button_y);
-        Widget join_button(MK_UUID(id, ROOT_ID), button_x, button_y);
-
-        Widget bottom_padding(
-            Size_Px(100.f, 1.f),
-            {.mode = Percent, .value = 1.f, .strictness = 0.f});
-
-        Widget title_left_padding(Size_Px(200.f, 1.f), Size_Px(WIN_HF(), 1.f));
-
-        ui::Widget title_card(
-            {.mode = Percent, .value = 1.f, .strictness = 0.f},
-            Size_Px(WIN_HF(), 1.f), GrowFlags::Column);
-
-        Widget title_padding({.mode = Percent, .value = 1.f, .strictness = 0.f},
-                             Size_Px(100.f, 1.f));
-
-        Widget title_text({.mode = Percent, .value = 1.f, .strictness = 0.5f},
-                          Size_Px(100.f, 1.f));
-
-        ui_context->push_parent(&root);
+        ui_context->push_parent(root);
         {
-            padding(left_padding);
-            div(content);
-
-            ui_context->push_parent(&content);
-            {
-                padding(top_padding);
-                if (button(join_button, "Play")) {
-                    Menu::get().set(Menu::State::Network);
-                }
-                padding(button_padding);
-                if (button(about_button, "About")) {
-                    Menu::get().set(Menu::State::About);
-                }
-                padding(button_padding);
-                if (button(settings_button, "Settings")) {
-                    Menu::get().set(Menu::State::Settings);
-                }
-                padding(button_padding);
-                if (button(exit_button, "Exit")) {
-                    App::get().close();
-                }
-
-                padding(bottom_padding);
-            }
-            ui_context->pop_parent();
-
-            padding(title_left_padding);
-
-            div(title_card);
-            ui_context->push_parent(&title_card);
-            {
-                padding(title_padding);
-                text(title_text, "Pharmasea");
-            }
-            ui_context->pop_parent();
+            draw_menu_buttons();
+            draw_title_section();
         }
         ui_context->pop_parent();
-        ui_context->end(&root);
+        ui_context->end(root.get());
     }
 
     virtual void onUpdate(float) override {

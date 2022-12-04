@@ -551,7 +551,7 @@ namespace components {
 // DEFAULT COMPONENTS
 const SizeExpectation icon_button_x = {.mode = Pixels, .value = 75.f};
 const SizeExpectation icon_button_y = {.mode = Pixels, .value = 25.f};
-const SizeExpectation button_x = {.mode = Pixels, .value = 120.f};
+const SizeExpectation button_x = {.mode = Pixels, .value = 130.f};
 const SizeExpectation button_y = {.mode = Pixels, .value = 50.f};
 const SizeExpectation padd_x = {.mode = Pixels, .value = 120.f};
 const SizeExpectation padd_y = {.mode = Pixels, .value = 25.f};
@@ -576,9 +576,7 @@ inline std::shared_ptr<Widget> mk_but_pad() {
 
 inline std::shared_ptr<Widget> mk_root() {
     return get().own(
-        Widget({.mode = Pixels, .value = WIN_WF(), .strictness = 1.f},
-               {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f},
-               GrowFlags::Row));
+        Widget(Size_Px(WIN_WF(), 1.f), Size_Px(WIN_HF(), 1.f), GrowFlags::Row));
 }
 
 inline std::shared_ptr<Widget> mk_row() {
@@ -592,9 +590,7 @@ inline std::shared_ptr<Widget> mk_column() {
 }
 
 inline std::shared_ptr<Widget> mk_text() {
-    return get().own(
-        Widget({.mode = Pixels, .value = 275.f, .strictness = 0.5f},
-               {.mode = Pixels, .value = 50.f, .strictness = 1.f}));
+    return get().own(Widget(Size_Px(275.f, 0.5f), Size_Px(50.f, 1.f)));
 }
 
 }  // namespace components

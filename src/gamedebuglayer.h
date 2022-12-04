@@ -109,24 +109,22 @@ struct GameDebugLayer : public Layer {
             auto left_padding = ui_context->own(
                 Widget(Size_Px(100.f, 1.f), Size_Px(WIN_HF(), 1.f)));
 
-            auto content = ui_context->own(Widget(
-                {.mode = Children, .strictness = 1.f},
-                {.mode = Percent, .value = 1.f, .strictness = 1.0f}, Column));
+            auto content =
+                ui_context->own(Widget({.mode = Children, .strictness = 1.f},
+                                       Size_Pct(1.f, 1.0f), Column));
 
             padding(*left_padding);
             div(*content);
             ui_context->push_parent(content);
             {
                 auto top_padding = ui_context->own(
-                    Widget(Size_Px(100.f, 1.f),
-                           {.mode = Percent, .value = 1.f, .strictness = 0.f}));
+                    Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f)));
                 padding(*top_padding);
                 {  //
                     draw_all_debug_ui();
                 }
-                padding(*ui_context->own(Widget(
-                    Size_Px(100.f, 1.f),
-                    {.mode = Percent, .value = 1.f, .strictness = 0.f})));
+                padding(*ui_context->own(
+                    Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f))));
             }
             ui_context->pop_parent();
         }
