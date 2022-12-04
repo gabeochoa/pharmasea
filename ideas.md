@@ -119,3 +119,33 @@ Bar
     - Drunk customers ()
 - Allow players to exchange held items?
 
+
+
+
+## About: 
+
+Pharmasea is a simulation game where players manage a pharmacy that caters to fish. As the owner of the pharmacy, 
+players must keep their fish customers healthy by correctly diagnosing their ailments and providing the appropriate medications.
+
+Once their pharmacy is open for business, fish customers will visit with various health problems. 
+Players must carefully listen to the fish's symptoms and use their knowledge of fish diseases and treatments to diagnose and prescribe the correct medication.
+
+Players must manage their inventory to ensure they always have the right medicines on hand, and they must carefully balance their resources to keep the pharmacy running smoothly. 
+This may involve hiring and training staff, advertising to attract more customers, and upgrading the pharmacy's equipment. 
+
+Throughout the game, players will encounter challenges and special events that test their skills as a pharmacist. They may need to deal with outbreaks of contagious diseases, difficult customers, or natural disasters that disrupt their supply chain. Successfully navigating these challenges will earn players rewards and help them grow their pharmacy.
+
+
+Features:
+
+A variety of fish species to treat, each with their own unique symptoms and diseases
+- Popeye diseases -> cuases fish eyes to portrude out of the sockets 
+- Fin Rot -> an infection that causes the fishs fins to look ragged / red / swell and eventually rot away 
+A wide range of medications and remedies to stock in the pharmacy
+Special events and challenges that add variety and difficulty to the gameplay
+The ability to hire and train staff to assist with running the pharmacy
+Options to upgrade and expand the pharmacy, including new equipment and locations
+Rewards and achievements to unlock as players progress through the game.
+
+
+
