@@ -1,7 +1,7 @@
 
 // Global Defines
 
-// Team networking uses an "app id" that we dont have
+// steam networking uses an "app id" that we dont have
 // also the code isnt written yet :)
 // TODO: add support for steam connections
 #define BUILD_WITHOUT_STEAM
