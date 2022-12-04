@@ -22,16 +22,16 @@ Info about the todo chart
 
 |needed to play once|in progress|blocked|done|
 |-------------------|-----------|-------|----|
-|Disallow target cube from going outside of bounds|pill bottle barrel|highlight furniture under selection|bag box to get paper bags from|
-|In pause menu, remap key bindings in layer for arrows keys to choose options|placeholder bottle pill filler| |resolution switcher to settings page|
-|BUG: if customer runs into someone you both get stuck|Add ailments for customers| |Refactor Library to be more generic|
-|Support for "windows" or "modals" in ui framework| | |add diagonal facing direction|
-|Better settings page| | |Add easy-to-use UI buttons|
-|dropdown needs scrollbar when subwindow goes offscreen| | |Better state management for AI|
-|WARN: need a way to warn that UI elements are offscreen "purpling"| | |Allow an Entity to pick up / drop an Item|
+|Disallow target cube from going outside of bounds|Support for "windows" or "modals" in ui framework|highlight furniture under selection|Add ailments for customers|
+|In pause menu, remap key bindings in layer for arrows keys to choose options|dropdown needs scrollbar when subwindow goes offscreen| |bag box to get paper bags from|
+|BUG: if customer runs into someone you both get stuck|pill bottle barrel| |resolution switcher to settings page|
+|Better settings page|placeholder bottle pill filler| |Refactor Library to be more generic|
+|WARN: need a way to warn that UI elements are offscreen "purpling"|change UI from in world to render-to-texture| |add diagonal facing direction|
+|BUG: Hide pause buttons from non-host since they dont really do anything anyway| | |Add easy-to-use UI buttons|
+|BUG: When host opens settings, probably dont bring everyone else too| | |Better state management for AI|
+|button hover state color change| | |Allow an Entity to pick up / drop an Item|
 | | | |Fix A\* algorithm|
 | | | |Allow for an Item to be walkable or not (influences Entity movement)|
-| | | |Add new target entity that moves via arrows keys / alternative keys|
 
 ## End TODO 
 

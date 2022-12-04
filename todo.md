@@ -15,6 +15,10 @@ kanban-plugin: basic
 - [ ] Ailments have Rx solution
 - [ ] Customers who took OTC come back again
 - [ ] Different sizes of pill bottle? (S/M/L)
+- [ ] Consider using https://github.com/raysan5/rres for resources
+- [ ] Particle system?
+- [ ] Spritesheet animator
+- [ ] unrelated: proggy clean font: https://www.dafont.com/proggy-clean.font
 
 
 ## want for mvp
