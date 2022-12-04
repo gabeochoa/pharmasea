@@ -22,16 +22,16 @@ Info about the todo chart
 
 |needed to play once|in progress|blocked|done|
 |-------------------|-----------|-------|----|
-|Disallow target cube from going outside of bounds|Support for "windows" or "modals" in ui framework|highlight furniture under selection|Add ailments for customers|
-|In pause menu, remap key bindings in layer for arrows keys to choose options|dropdown needs scrollbar when subwindow goes offscreen| |bag box to get paper bags from|
-|BUG: if customer runs into someone you both get stuck|pill bottle barrel| |resolution switcher to settings page|
-|Better settings page|placeholder bottle pill filler| |Refactor Library to be more generic|
-|WARN: need a way to warn that UI elements are offscreen "purpling"|change UI from in world to render-to-texture| |add diagonal facing direction|
-|BUG: Hide pause buttons from non-host since they dont really do anything anyway| | |Add easy-to-use UI buttons|
-|BUG: When host opens settings, probably dont bring everyone else too| | |Better state management for AI|
-|button hover state color change| | |Allow an Entity to pick up / drop an Item|
-| | | |Fix A\* algorithm|
-| | | |Allow for an Item to be walkable or not (influences Entity movement)|
+|Disallow target cube from going outside of bounds|Support for "windows" or "modals" in ui framework|highlight furniture under selection|change UI from in world to render-to-texture|
+|In pause menu, remap key bindings in layer for arrows keys to choose options|dropdown needs scrollbar when subwindow goes offscreen| |Add ailments for customers|
+|BUG: if customer runs into someone you both get stuck|pill bottle barrel| |bag box to get paper bags from|
+|Better settings page|placeholder bottle pill filler| |Put all things that have to be loaded in a single place|
+|WARN: need a way to warn that UI elements are offscreen "purpling"| | |resolution switcher to settings page|
+|BUG: Hide pause buttons from non-host since they dont really do anything anyway| | |Refactor Library to be more generic|
+|BUG: When host opens settings, probably dont bring everyone else too| | |add diagonal facing direction|
+|button hover state color change| | |Add easy-to-use UI buttons|
+| | | |Better state management for AI|
+| | | |Allow an Entity to pick up / drop an Item|
 
 ## End TODO 
 

@@ -28,7 +28,7 @@ kanban-plugin: basic
 - [ ] Add system for exporting resources to code for easier binary packaging ([see branch packager](https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html))
 - [ ] Add a pause menu with textual options
 - [ ] Create Doors
-- [ ] Put all things that have to be loaded in a single place
+- [ ] Add "powered by raylib" intro card (and other intro cards) like cat v roomba: https://github.com/raysan5/raylib-games/tree/master/cat_vs_roomba/src
 
 
 ## needed to play once
@@ -49,7 +49,6 @@ kanban-plugin: basic
 - [ ] dropdown needs scrollbar when subwindow goes offscreen
 - [ ] pill bottle barrel
 - [ ] placeholder bottle pill filler
-- [ ] change UI from in world to render-to-texture
 
 
 ## blocked
@@ -60,8 +59,10 @@ kanban-plugin: basic
 ## done
 
 **Complete**
+- [x] change UI from in world to render-to-texture
 - [x] Add ailments for customers
 - [x] bag box to get paper bags from
+- [x] Put all things that have to be loaded in a single place
 - [x] resolution switcher to settings page
 - [x] Refactor Library to be more generic
 - [x] add diagonal facing direction
