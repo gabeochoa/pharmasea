@@ -11,3 +11,5 @@ WinPharmaSea/**/
 pharmasea/WinPharmaSea/**/
 pharmasea
 .obsidian/
+*.o
+*.d

@@ -91,7 +91,7 @@ struct AboutLayer : public Layer {
         // NOTE: this is not aligned on purpose
         std::string about_info = R"(
 A game by: 
-    Gabe 
+    Gabe
     Brett
     Alice)";
 
