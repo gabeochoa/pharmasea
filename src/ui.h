@@ -119,7 +119,7 @@ inline void active_if_mouse_inside(const uuid id, const Rectangle& rect) {
     bool inside = get().is_mouse_inside(rect);
     if (inside) {
         get().hot_id = id;
-        if (is_active(ROOT_ID) && get().lmouse_down) {
+        if (is_active(ROOT_ID) && get().mouse_info.leftDown) {
             get().active_id = id;
         }
     }
@@ -260,7 +260,7 @@ bool button(const Widget& widget, const std::string& content) {
         if (has_kb_focus(id) && get().pressed(InputName::WidgetPress)) {
             return true;
         }
-        if (!get().lmouse_down && is_active_and_hot(id)) {
+        if (!get().mouse_info.leftDown && is_active_and_hot(id)) {
             get().kb_focus_id = id;
             return true;
         }
@@ -533,9 +533,11 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
             get().kb_focus_id = widget->id;
             float v;
             if (vertical) {
-                v = (get().mouse.y - widget->rect.y) / widget->rect.height;
+                v = (get().mouse_info.pos.y - widget->rect.y) /
+                    widget->rect.height;
             } else {
-                v = (get().mouse.x - widget->rect.x) / widget->rect.width;
+                v = (get().mouse_info.pos.x - widget->rect.x) /
+                    widget->rect.width;
             }
             if (v < mnf) v = mnf;
             if (v > mxf) v = mxf;
@@ -629,7 +631,7 @@ bool textfield(const Widget& widget, std::string& content, int max_length) {
             }
         }
 
-        if (get().lmouse_down && is_active_and_hot(widget->id)) {
+        if (get().mouse_info.leftDown && is_active_and_hot(widget->id)) {
             get().kb_focus_id = widget->id;
         }
         state->buffer.changed_since = changed;

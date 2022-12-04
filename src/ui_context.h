@@ -147,8 +147,7 @@ struct UIContext {
     uuid kb_focus_id;
     uuid last_processed;
 
-    bool lmouse_down = false;
-    vec2 mouse = vec2{0.0, 0.0};
+    MouseInfo mouse_info;
 
     int key = -1;
     int mod = -1;
@@ -159,6 +158,7 @@ struct UIContext {
     float yscrolled;
 
     bool is_mouse_inside(const Rectangle& rect) {
+        auto mouse = mouse_info.pos;
         return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
                mouse.y >= rect.y && mouse.y <= rect.y + rect.height;
     }
@@ -282,13 +282,13 @@ struct UIContext {
         active_id = ROOT_ID;
         kb_focus_id = ROOT_ID;
 
-        lmouse_down = false;
-        mouse = vec2{};
+        mouse_info = MouseInfo();
+
         this->set_font(Preload::get().font);
         this->push_theme(ui::DEFAULT_THEME);
     }
 
-    void begin(bool mouseDown, const vec2& mousePos, float dt) {
+    void begin(float dt) {
         M_ASSERT(inited, "UIContext must be inited before you begin()");
         M_ASSERT(!began_and_not_ended,
                  "You should call end every frame before calling begin() "
@@ -297,8 +297,7 @@ struct UIContext {
 
         globalContext = this;
         hot_id = ROOT_ID;
-        lmouse_down = mouseDown;
-        mouse = mousePos;
+        mouse_info = get_mouse_info();
         last_frame_time = dt;
 
         // TODO Should this be more like mousePos?
@@ -344,7 +343,7 @@ struct UIContext {
 
     void cleanup() {
         began_and_not_ended = false;
-        if (lmouse_down) {
+        if (mouse_info.leftDown) {
             if (active_id == ROOT_ID) {
                 active_id = FAKE_ID;
             }

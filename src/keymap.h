@@ -54,6 +54,18 @@ typedef std::vector<AnyInput> AnyInputs;
 typedef std::map<InputName, AnyInputs> LayerMapping;
 typedef std::map<Menu::State, LayerMapping> FullMap;
 
+struct MouseInfo {
+    vec2 pos;
+    bool leftDown;
+};
+
+static MouseInfo get_mouse_info() {
+    return MouseInfo{
+        .pos = GetMousePosition(),
+        .leftDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT),
+    };
+}
+
 SINGLETON_FWD(KeyMap)
 struct KeyMap {
     SINGLETON(KeyMap)

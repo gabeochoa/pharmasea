@@ -44,11 +44,7 @@ A game by:
         SetExitKey(KEY_ESCAPE);
         using namespace ui;
 
-        // TODO move to input
-        bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
-        vec2 mousepos = GetMousePosition();
-
-        ui_context->begin(mouseDown, mousepos, dt);
+        ui_context->begin(dt);
         auto root = ui::components::mk_root();
 
         ui_context.get()->push_parent(root);

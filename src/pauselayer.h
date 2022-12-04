@@ -66,11 +66,7 @@ struct BasePauseLayer : public Layer {
         // NOTE: We specifically dont clear background
         // because people are used to pause menu being an overlay
 
-        // TODO move to input
-        bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
-        vec2 mousepos = GetMousePosition();
-
-        ui_context->begin(mouseDown, mousepos, dt);
+        ui_context->begin(dt);
 
         auto root = ui_context->own(Widget(
             Size_Px(WIN_WF(), 1.f), Size_Px(WIN_HF(), 1.f), GrowFlags::Row));

@@ -272,16 +272,11 @@ struct NetworkLayer : public Layer {
 
         if (Menu::get().is_not(Menu::State::Network)) return;
 
+        ui_context->begin(dt);
+
         ClearBackground(ui_context->active_theme().background);
 
-        // TODO move to input
-        bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
-        vec2 mousepos = GetMousePosition();
-
-        ui_context->begin(mouseDown, mousepos, dt);
-
         auto root = ui::components::mk_root();
-
         ui_context->push_parent(root);
         {
             auto left_padding = ui_context->own(

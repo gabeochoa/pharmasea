@@ -59,16 +59,12 @@ struct MenuLayer : public Layer {
     void draw_ui(float dt) {
         using namespace ui;
 
-        // TODO move to input
-        bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
-        vec2 mousepos = GetMousePosition();
-
         const SizeExpectation padd_x = {
             .mode = Pixels, .value = 120.f, .strictness = 0.9f};
         const SizeExpectation padd_y = {
             .mode = Pixels, .value = 25.f, .strictness = 0.5f};
 
-        ui_context->begin(mouseDown, mousepos, dt);
+        ui_context->begin(dt);
 
         ui::Widget root({.mode = Pixels, .value = WIN_WF(), .strictness = 1.f},
                         {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f},

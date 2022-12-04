@@ -100,10 +100,7 @@ struct GameDebugLayer : public Layer {
         if (!debug_ui_enabled) return;
         using namespace ui;
 
-        bool mouseDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
-        vec2 mousepos = GetMousePosition();
-
-        ui_context->begin(mouseDown, mousepos, dt);
+        ui_context->begin(dt);
 
         auto root = ui_context->own(
             Widget({.mode = Pixels, .value = WIN_WF(), .strictness = 1.f},
