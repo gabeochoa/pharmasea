@@ -102,10 +102,8 @@ struct GameDebugLayer : public Layer {
 
         ui_context->begin(dt);
 
-        auto root = ui_context->own(
-            Widget({.mode = Pixels, .value = WIN_WF(), .strictness = 1.f},
-                   {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f},
-                   GrowFlags::Row));
+        auto root = ui_context->own(Widget(
+            Size_Px(WIN_WF(), 1.f), Size_Px(WIN_HF(), 1.f), GrowFlags::Row));
         ui_context->push_parent(root);
         {
             auto left_padding = ui_context->own(
@@ -120,14 +118,14 @@ struct GameDebugLayer : public Layer {
             ui_context->push_parent(content);
             {
                 auto top_padding = ui_context->own(
-                    Widget({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                    Widget(Size_Px(100.f, 1.f),
                            {.mode = Percent, .value = 1.f, .strictness = 0.f}));
                 padding(*top_padding);
                 {  //
                     draw_all_debug_ui();
                 }
                 padding(*ui_context->own(Widget(
-                    {.mode = Pixels, .value = 100.f, .strictness = 1.f},
+                    Size_Px(100.f, 1.f),
                     {.mode = Percent, .value = 1.f, .strictness = 0.f})));
             }
             ui_context->pop_parent();

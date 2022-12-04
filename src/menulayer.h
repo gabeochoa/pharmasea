@@ -66,19 +66,16 @@ struct MenuLayer : public Layer {
 
         ui_context->begin(dt);
 
-        ui::Widget root({.mode = Pixels, .value = WIN_WF(), .strictness = 1.f},
-                        {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f},
+        ui::Widget root(Size_Px(WIN_WF(), 1.f), Size_Px(WIN_HF(), 1.f),
                         GrowFlags::Row);
 
-        Widget left_padding(
-            {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-            {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f});
+        Widget left_padding(Size_Px(100.f, 1.f), Size_Px(WIN_HF(), 1.f));
 
         Widget content({.mode = Children, .strictness = 1.f},
                        {.mode = Percent, .value = 1.f, .strictness = 1.0f},
                        Column);
 
-        Widget top_padding({.mode = Pixels, .value = 100.f, .strictness = 1.f},
+        Widget top_padding(Size_Px(100.f, 1.f),
                            {.mode = Percent, .value = 1.f, .strictness = 0.f});
 
         const SizeExpectation button_x = {.mode = Pixels, .value = 130.f};
@@ -92,24 +89,20 @@ struct MenuLayer : public Layer {
         Widget join_button(MK_UUID(id, ROOT_ID), button_x, button_y);
 
         Widget bottom_padding(
-            {.mode = Pixels, .value = 100.f, .strictness = 1.f},
+            Size_Px(100.f, 1.f),
             {.mode = Percent, .value = 1.f, .strictness = 0.f});
 
-        Widget title_left_padding(
-            {.mode = Pixels, .value = 200.f, .strictness = 1.f},
-            {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f});
+        Widget title_left_padding(Size_Px(200.f, 1.f), Size_Px(WIN_HF(), 1.f));
 
         ui::Widget title_card(
             {.mode = Percent, .value = 1.f, .strictness = 0.f},
-            {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f},
-            GrowFlags::Column);
+            Size_Px(WIN_HF(), 1.f), GrowFlags::Column);
 
-        Widget title_padding(
-            {.mode = Percent, .value = 1.f, .strictness = 0.f},
-            {.mode = Pixels, .value = 100.f, .strictness = 1.f});
+        Widget title_padding({.mode = Percent, .value = 1.f, .strictness = 0.f},
+                             Size_Px(100.f, 1.f));
 
         Widget title_text({.mode = Percent, .value = 1.f, .strictness = 0.5f},
-                          {.mode = Pixels, .value = 100.f, .strictness = 1.f});
+                          Size_Px(100.f, 1.f));
 
         ui_context->push_parent(&root);
         {
