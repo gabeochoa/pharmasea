@@ -19,6 +19,14 @@ typedef Vector2 vec2;
 typedef Vector3 vec3;
 typedef Vector4 vec4;
 
+#undef RAYLIB_OP_OVERLOADS_RAYGUI
+#include <RaylibOpOverloads.h>
+
+// NOTE: why doesnt RaylibOpOverloads do this?
+inline bool operator<(const vec2& l, const vec2& r) {
+    return (l.x < r.x) || ((l.x == r.x) && (l.y < r.y));
+}
+
 #define FMT_HEADER_ONLY
 #include <fmt/format.h>
 #include <fmt/ostream.h>

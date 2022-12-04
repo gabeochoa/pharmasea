@@ -2,6 +2,9 @@
 
 libraries used:
 - raylib
+- Raylib Operator Overloads https://github.com/ProfJski/RaylibOpOverloads
+    - Added a #define that removes all the raygui stuff 
+    - Made every function inline since i globally include and the linker not happy with so many definitions (odr?)
 - AppData stuff https://github.com/sago007/PlatformFolders
 - Steam's GameNetworkingSockets https://github.com/ValveSoftware/GameNetworkingSockets
 - HTTPRequest https://github.com/elnormous/HTTPRequest
