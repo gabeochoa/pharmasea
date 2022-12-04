@@ -26,6 +26,10 @@ struct SizeExpectation {
 #define Size_Pct(v, s) \
     { .mode = Percent, .value = v, .strictness = s }
 
+#define Size_FullW(s) Size_Px(WIN_WF(), s)
+
+#define Size_FullH(s) Size_Px(WIN_HF(), s)
+
 std::ostream& operator<<(std::ostream& os, const SizeExpectation& exp) {
     switch (exp.mode) {
         case Null:

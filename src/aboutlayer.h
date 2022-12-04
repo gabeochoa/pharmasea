@@ -9,6 +9,7 @@
 #include "ui.h"
 #include "ui_autolayout.h"
 #include "ui_theme.h"
+#include "ui_widget.h"
 #include "uuid.h"
 
 struct AboutLayer : public Layer {
@@ -57,36 +58,12 @@ struct AboutLayer : public Layer {
         ui_context->begin(mouseDown, mousepos, dt);
         ui_context->push_theme(DEFAULT_THEME);
 
-        ui::Widget root;
-        root.set_expectation({.mode = ui::SizeMode::Pixels,
-                              .value = WIN_WF(),
-                              .strictness = 1.f},
-                             {.mode = ui::SizeMode::Pixels,
-                              .value = WIN_HF(),
-                              .strictness = 1.f});
-        root.growflags = ui::GrowFlags::Row;
+        auto root = ui::components::mk_root();
 
-        Widget left_padding(
-            {.mode = Pixels, .value = 100.f, .strictness = 1.f},
-            {.mode = Pixels, .value = WIN_HF(), .strictness = 1.f});
+        Widget content({.mode = Children}, Size_Pct(1.f, 1.f),
+                       GrowFlags::Column);
 
-        Widget content({.mode = Children},
-                       {.mode = Percent, .value = 1.f, .strictness = 1.0f});
-        content.growflags = ui::GrowFlags::Column;
-
-        Widget top_padding({.mode = Pixels, .value = 100.f, .strictness = 1.f},
-                           {.mode = Percent, .value = 0.5f, .strictness = 0.f});
-
-        Widget bottom_padding(
-            {.mode = Pixels, .value = 50.f, .strictness = 1.f},
-            {.mode = Percent, .value = 0.5f, .strictness = 0.f});
-
-        Widget about_text({.mode = Pixels, .value = 200.f},
-                          {.mode = Pixels, .value = 400.f});
-
-        Widget back_button(MK_UUID(id, ROOT_ID),
-                           {.mode = Pixels, .value = 120.f},
-                           {.mode = Pixels, .value = 50.f});
+        Widget about_text(Size_Px(200.f, 0.5f), Size_Px(400.f, 0.5f));
 
         // NOTE: this is not aligned on purpose
         std::string about_info = R"(
@@ -95,45 +72,37 @@ A game by:
     Brett
     Alice)";
 
-        ui_context.get()->push_parent(&root);
+        ui_context.get()->push_parent(root);
         {
-            padding(left_padding);
+            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                                Size_FullH(0.f)));
             div(content);
 
             ui_context.get()->push_parent(&content);
             {
-                padding(top_padding);
+                padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                                    Size_Pct(0.5, 0.f)));
                 text(about_text, about_info);
-                if (button(back_button, "Back")) {
+                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                           "Back")) {
                     Menu::get().go_back();
                 }
-                padding(bottom_padding);
+                padding(*ui::components::mk_padding(Size_Px(50.f, 1.f),
+                                                    Size_Pct(0.5, 0.f)));
             }
             ui_context.get()->pop_parent();
         }
         ui_context.get()->pop_parent();
-        ui_context->end(&root);
-        // std::cout << "********************** END FRAME **************** " <<
-        // std::endl;
+        ui_context->end(root.get());
     }
 
     virtual void onUpdate(float) override {
         if (Menu::get().is_not(Menu::State::About)) return;
         SetExitKey(KEY_NULL);
-
-        // TODO with gamelayer, support events
-        if (minimized) {
-            return;
-        }
     }
 
     virtual void onDraw(float dt) override {
         if (Menu::get().is_not(Menu::State::About)) return;
-        // TODO with gamelayer, support events
-        if (minimized) {
-            return;
-        }
-
         ClearBackground(ui_context->active_theme().background);
         draw_ui(dt);
     }
