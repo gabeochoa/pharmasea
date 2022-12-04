@@ -60,6 +60,7 @@ struct Data {
     float music_volume = 0.5f;
     bool show_streamer_safe_box = false;
     std::string username = "";
+    bool enable_postprocessing = true;
 
    private:
     friend bitsery::Access;
@@ -71,21 +72,22 @@ struct Data {
         s.value4b(music_volume);
         s.value1b(show_streamer_safe_box);
         s.text1b(username, network::MAX_NAME_LENGTH);
+        s.value1b(enable_postprocessing);
+    }
+    friend std::ostream& operator<<(std::ostream& os, const Data& data) {
+        os << "Settings(" << std::endl;
+        os << "version: " << data.version << std::endl;
+        os << "resolution: " << data.resolution.width << ", "
+           << data.resolution.height << std::endl;
+        os << "master vol: " << data.master_volume << std::endl;
+        os << "music vol: " << data.music_volume << std::endl;
+        os << "Safe box: " << data.show_streamer_safe_box << std::endl;
+        os << "username: " << data.username << std::endl;
+        os << "post_processing: " << data.enable_postprocessing << std::endl;
+        os << ")" << std::endl;
+        return os;
     }
 };
-
-std::ostream& operator<<(std::ostream& os, const Data& data) {
-    os << "Settings(" << std::endl;
-    os << "version: " << data.version << std::endl;
-    os << "resolution: " << data.resolution.width << ", "
-       << data.resolution.height << std::endl;
-    os << "master vol: " << data.master_volume << std::endl;
-    os << "music vol: " << data.music_volume << std::endl;
-    os << "Safe box: " << data.show_streamer_safe_box << std::endl;
-    os << "username: " << data.username << std::endl;
-    os << ")" << std::endl;
-    return os;
-}
 
 }  // namespace settings
 
@@ -151,6 +153,10 @@ struct Settings {
 
     void update_streamer_safe_box(bool sssb) {
         data.show_streamer_safe_box = sssb;
+    }
+
+    void update_post_processing_enabled(bool pp_enabled) {
+        data.enable_postprocessing = pp_enabled;
     }
 
     void load_resolution_options() {

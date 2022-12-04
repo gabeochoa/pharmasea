@@ -65,6 +65,24 @@ struct SettingsLayer : public Layer {
         ui_context->pop_parent();
     }
 
+    void enable_post_processing() {
+        auto container = ui_context->own(
+            Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
+
+        div(*container);
+        ui_context->push_parent(container);
+        {
+            text(*ui::components::mk_text(), "Enable Post-Processing Shaders");
+            auto checkbox_widget = ui_context->own(Widget(
+                MK_UUID(id, ROOT_ID), Size_Px(75.f, 0.5f), Size_Px(25.f, 1.f)));
+            bool sssb = Settings::get().data.enable_postprocessing;
+            if (checkbox(*checkbox_widget, &sssb)) {
+                Settings::get().update_post_processing_enabled(sssb);
+            }
+        }
+        ui_context->pop_parent();
+    }
+
     void master_volume() {
         auto volume_slider_container = ui_context->own(
             Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
@@ -172,6 +190,7 @@ struct SettingsLayer : public Layer {
                 music_volume();
                 resolution_switcher();
                 streamer_safe_box();
+                enable_post_processing();
                 back_button();
             }
             ui_context->pop_parent();

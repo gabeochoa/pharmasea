@@ -110,11 +110,21 @@ struct App {
         EndTextureMode();
     }
 
+    void start_post_processing();
+    void end_post_processing();
+
     void render_to_screen() {
+        const float width = WIN_WF();
+        const float height = WIN_HF();
+
         BeginDrawing();
         {
-            DrawTextureRec(mainRT.texture, {0, 0, WIN_WF(), -WIN_HF()}, {0, 0},
-                           WHITE);
+            start_post_processing();
+            {
+                DrawTextureRec(mainRT.texture, {0, 0, width, -height}, {0, 0},
+                               WHITE);
+            }
+            end_post_processing();
         }
         EndDrawing();
     }

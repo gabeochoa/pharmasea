@@ -99,7 +99,7 @@ struct Preload {
 
     void load_shaders() {
         std::tuple<const char*, const char*, const char*> shaders[] = {
-            {"shaders", "pixelated.fs", "pixelated"},
+            {"shaders", "post_processing.fs", "post_processing"},
         };
 
         for (auto& s : shaders) {

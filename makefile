@@ -6,7 +6,7 @@ NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion
 INCLUDES = -Ivendor/ -Lvendor/ 
 LIBS = -lGameNetworkingSockets 
-CPPS = src/game.cpp src/network/webrequest.cpp src/files.cpp
+CPPS = src/game.cpp src/network/webrequest.cpp src/files.cpp src/app.cpp
 
 
 all:
