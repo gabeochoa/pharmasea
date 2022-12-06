@@ -45,3 +45,7 @@ count:
 countall: 
 	git ls-files | xargs wc -l | sort -rn
 
+todo: 
+	git grep -niE '(FIXME|TODO)' src/
+
+
