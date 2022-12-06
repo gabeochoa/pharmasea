@@ -49,6 +49,7 @@ kanban-plugin: basic
 - [ ] dropdown needs scrollbar when subwindow goes offscreen
 - [ ] pill bottle barrel
 - [ ] placeholder bottle pill filler
+- [ ] Ability to do different shaders between gaming and menu
 
 
 ## blocked

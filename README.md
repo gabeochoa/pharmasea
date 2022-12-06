@@ -26,7 +26,7 @@ Info about the todo chart
 |In pause menu, remap key bindings in layer for arrows keys to choose options|dropdown needs scrollbar when subwindow goes offscreen| |Add ailments for customers|
 |BUG: if customer runs into someone you both get stuck|pill bottle barrel| |bag box to get paper bags from|
 |Better settings page|placeholder bottle pill filler| |Put all things that have to be loaded in a single place|
-|WARN: need a way to warn that UI elements are offscreen "purpling"| | |resolution switcher to settings page|
+|WARN: need a way to warn that UI elements are offscreen "purpling"|Ability to do different shaders between gaming and menu| |resolution switcher to settings page|
 |BUG: Hide pause buttons from non-host since they dont really do anything anyway| | |Refactor Library to be more generic|
 |BUG: When host opens settings, probably dont bring everyone else too| | |add diagonal facing direction|
 |button hover state color change| | |Add easy-to-use UI buttons|
@@ -40,6 +40,35 @@ Info about the todo chart
 
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
+
+### alpha_0.22.12.05
+
+impact 
+- Conveyer! and Grabber Conveyer!
+    - You can now grab items and transport them to customers without touching items
+- Fix issue with layer order so Pause Menu is ontop of all game items
+- Resolution Switcher in settings page! (But hard to use :$)
+- Basic Symptoms and Ailments with speed and stagger modifiers
+- Bag-Box furniture, to get empty bags from (new model for empty bags)
+- Pill Bottle model, but not in game yet
+- Post-Processing shaders written by AI (+ can disable in settings)
+
+better eng 
+- Added dropdowns (but you cant scroll yet) 
+- Switched to tracking todos in Obsidian with a kanban.py script to populate readme
+- Add Ideas about "Bar"s to ideas.md cause idk anything about pharmacies
+- Lots of updates to UI rendering code to remove deprecated rendering
+- Unloading support for Library destroy-cleanup
+- Switched from our own operator overloads to using a library (though i had to mess with it a bit)
+- Faster compiling on mac through .o separation (though still lots causing recompilation at the moment since game.cpp includes everything) 
+- Menu UI modernization updates (though many more to do) 
+- Remove need to pass mouse information into UI context
+
+soon 
+- Scrolling UI elements
+- Able to have different post processing shaders for game / menu
+
+
 
 ### alpha_0.22.11.21
 

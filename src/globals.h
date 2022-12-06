@@ -21,7 +21,7 @@ constexpr size_t hashString(const Str& toHash) {
 }
 
 // YY / MM / DD (Monday of week)
-constexpr std::string_view VERSION = "alpha_0.22.11.20";
+constexpr std::string_view VERSION = "alpha_0.22.12.05";
 constexpr size_t HASHED_VERSION = hashString(VERSION);
 
 static int __WIN_H = 720;
