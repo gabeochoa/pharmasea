@@ -51,15 +51,6 @@ struct BasePauseLayer : public Layer {
 
     virtual void onUpdate(float) override {}
 
-    const SizeExpectation button_x = Size_Px(120.f, 0.5f);
-    const SizeExpectation button_y = Size_Px(50.f, 0.5f);
-    const SizeExpectation padd_x = Size_Px(120.f, 0.5f);
-    const SizeExpectation padd_y = Size_Px(25.f, 0.5f);
-
-    std::shared_ptr<Widget> mk_button(uuid id) {
-        return ui_context->own(Widget(id, button_x, button_y));
-    }
-
     virtual void onDraw(float dt) override {
         if (Menu::get().is_not(enabled_state)) return;
 
@@ -88,13 +79,16 @@ struct BasePauseLayer : public Layer {
                     Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f)));
                 padding(*top_padding);
                 {
-                    if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Continue")) {
+                    if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                               "Continue")) {
                         Menu::get().go_back();
                     }
-                    if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Settings")) {
+                    if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                               "Settings")) {
                         Menu::get().set(Menu::State::Settings);
                     }
-                    if (button(*mk_button(MK_UUID(id, ROOT_ID)), "Quit")) {
+                    if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                               "Quit")) {
                         Menu::get().clear_history();
                         Menu::get().set(Menu::State::Root);
                     }

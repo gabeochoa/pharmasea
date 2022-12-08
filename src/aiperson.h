@@ -49,13 +49,14 @@ struct AIPerson : public Person {
         }
     }
 
+    // TODO we are seeing issues where customers are getting stuck on corners
+    // when turning. Before I feel like they were able to slide but it seems
+    // like not anymore?
     virtual vec3 update_xaxis_position(float dt) override {
-        if (!job) {
+        if (!job || !job->local.has_value()) {
             return this->raw_position;
         }
-        if (!job->local.has_value()) {
-            return this->raw_position;
-        }
+
         vec2 tar = job->local.value();
         float speed = this->base_speed() * dt;
         if (stagger_mult() != 0) speed *= stagger_mult();
@@ -67,12 +68,10 @@ struct AIPerson : public Person {
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
-        if (!job) {
+        if (!job || !job->local.has_value()) {
             return this->raw_position;
         }
-        if (!job->local.has_value()) {
-            return this->raw_position;
-        }
+
         vec2 tar = job->local.value();
         float speed = this->base_speed() * dt;
         if (stagger_mult() != 0) speed *= stagger_mult();
@@ -144,7 +143,6 @@ struct AIPerson : public Person {
         auto reset_local_target = [&]() {
             if (!job->local.has_value()) return;  // no local target yet
 
-            // TODO make sure this == works reasonably
             // // TODO snap? vs normal? vs raw?
             if (vec::to2(this->snap_position()) == job->local.value()) {
                 job->local.reset();
@@ -161,7 +159,6 @@ struct AIPerson : public Person {
             }
             // we reached the start and now our path is empty again
             // as long as we completed start we should be at the end
-            // TODO
             if (job->start_completed &&
                 vec::to2(this->snap_position()) == job->end) {
                 job->reached_end = true;
@@ -229,6 +226,8 @@ struct AIPerson : public Person {
             && job != nullptr) {
             this->job->path.clear();
             this->job->local = {};
+            // TODO should there be a more abstracted way to play sounds that
+            // doesnt require knowing the raylib api?
             PlaySound(SoundLibrary::get().get("roblox"));
         }
 
@@ -253,6 +252,8 @@ struct AIPerson : public Person {
         auto my_thread_id = std::this_thread::get_id();
         auto server_thread_id =
             GLOBALS.get_or_default("server_thread_id", std::thread::id());
+        // TODO have some way of distinguishing between server logs and regular
+        // client logs
         if (my_thread_id == server_thread_id) {
             std::cout << this->id << ": " << text << std::endl;
         }

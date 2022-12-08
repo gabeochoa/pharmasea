@@ -13,11 +13,14 @@ struct Player : public BasePlayer {
     std::vector<UserInput> inputs;
     bool is_ghost_player = false;
 
+    // NOTE: this is kept public because we use it in the network when prepping
+    // server players
+    Player() : BasePlayer({0, 0, 0}, {0, 255, 0, 255}, {255, 0, 0, 255}) {}
+
     Player(vec3 p, Color face_color_in, Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}
     Player(vec2 p, Color face_color_in, Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}
-    Player() : BasePlayer({0, 0, 0}, {0, 255, 0, 255}, {255, 0, 0, 255}) {}
     Player(vec2 location)
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
                      {255, 0, 0, 255}) {}
@@ -81,13 +84,13 @@ struct Player : public BasePlayer {
     }
 
     virtual vec3 get_position_after_input(UserInputs inpts) {
-        for (UserInput& ui : inpts) {
-            auto menu_state = std::get<0>(ui);
+        for (const UserInput& ui : inpts) {
+            const auto menu_state = std::get<0>(ui);
             if (menu_state != Menu::State::Game) continue;
 
-            InputName input_name = std::get<1>(ui);
-            float input_amount = std::get<2>(ui);
-            float frame_dt = std::get<3>(ui);
+            const InputName input_name = std::get<1>(ui);
+            const float input_amount = std::get<2>(ui);
+            const float frame_dt = std::get<3>(ui);
 
             if (input_name == InputName::PlayerPickup && input_amount > 0.5f) {
                 grab_or_drop();
@@ -102,7 +105,7 @@ struct Player : public BasePlayer {
 
             // Movement down here...
 
-            float speed = this->base_speed() * frame_dt;
+            const float speed = this->base_speed() * frame_dt;
             auto new_position = this->position;
 
             if (input_name == InputName::PlayerLeft) {
@@ -115,7 +118,7 @@ struct Player : public BasePlayer {
                 new_position.z += input_amount * speed;
             }
 
-            auto fd = get_face_direction(new_position, new_position);
+            const auto fd = get_face_direction(new_position, new_position);
             int fd_x = std::get<0>(fd);
             int fd_z = std::get<1>(fd);
             update_facing_direction(fd_x, fd_z);
@@ -126,15 +129,16 @@ struct Player : public BasePlayer {
     }
 
     void rotate_furniture() {
-        if (Menu::get().is(Menu::State::Planning)) {
-            std::shared_ptr<Furniture> match =
-                EntityHelper::getClosestMatchingEntity<Furniture>(
-                    vec::to2(this->position), player_reach,
-                    [](auto&&) { return true; });
-            if (match && match->can_rotate()) {
-                match->rotate_facing_clockwise();
-            }
-        }
+        if (Menu::get().is_not(Menu::State::Planning)) return;
+
+        std::shared_ptr<Furniture> match =
+            EntityHelper::getClosestMatchingEntity<Furniture>(
+                vec::to2(this->position), player_reach,
+                [](auto&& furniture) { return furniture->can_rotate(); });
+
+        if (!match) return;
+
+        match->rotate_facing_clockwise();
     }
 
     void handle_in_game_grab_or_drop() {

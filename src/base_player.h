@@ -28,20 +28,20 @@ struct BasePlayer : public Person {
     virtual vec3 update_zaxis_position(float dt) override = 0;
 
     void highlight_facing_furniture() {
+        // TODO this is impossible to read, what can we do to fix this while
+        // keeping it configurable
         auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
             vec::to2(this->position), player_reach, this->face_direction,
             [](std::shared_ptr<Furniture>) { return true; });
-        if (match) {
-            match->is_highlighted = true;
-        }
+        if (!match) return;
+        match->is_highlighted = true;
     }
 
     virtual void nongame_update(float dt) override {
         Person::nongame_update(dt);
         highlight_facing_furniture();
 
-        // TODO if cannot be placed in this spot
-        // make it obvious to the user
+        // TODO if cannot be placed in this spot make it obvious to the user
         if (held_furniture != nullptr) {
             auto new_pos = this->position;
             if (this->face_direction & FrontFaceDirection::FORWARD) {

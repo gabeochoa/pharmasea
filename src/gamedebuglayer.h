@@ -19,15 +19,7 @@ struct GameDebugLayer : public Layer {
 
     GameDebugLayer() : Layer("Game") {
         GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);
-
         ui_context.reset(new ui::UIContext());
-        ui_context->init();
-        ui_context->set_font(Preload::get().font);
-        // TODO we should probably enforce that you cant do this
-        // and we should have ->set_base_theme()
-        // and push_theme separately, if you end() with any stack not empty...
-        // thats a flag
-        ui_context->push_theme(ui::DEFAULT_THEME);
     }
     virtual ~GameDebugLayer() {}
 
@@ -94,6 +86,7 @@ struct GameDebugLayer : public Layer {
     }
 
    private:
+    // TODO implement or remove
     void draw_all_debug_ui() {}
 
     void debug_ui(float dt) {

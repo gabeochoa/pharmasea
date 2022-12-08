@@ -51,13 +51,13 @@ struct Preload {
     }
 
     void load_textures() {
-        std::tuple<const char*, const char*, const char*> textures[] = {
+        const std::tuple<const char*, const char*, const char*> textures[] = {
             {"images", "face.png", "face"},
             {"images", "jug.png", "jug"},
             {"images", "sleepyico.png", "sleepy"},
         };
 
-        for (auto& t : textures) {
+        for (const auto& t : textures) {
             TextureLibrary::get().load(
                 Files::get()
                     .fetch_resource_path(std::get<0>(t), std::get<1>(t))
@@ -67,14 +67,14 @@ struct Preload {
     }
 
     void load_models() {
-        std::tuple<const char*, const char*, const char*> models[] = {
+        const std::tuple<const char*, const char*, const char*> models[] = {
             {"models", "bag.obj", "bag"},
             {"models", "empty_bag.obj", "empty_bag"},
             {"models", "conveyer.obj", "conveyer"},
             {"models", "register.obj", "register"},
         };
 
-        for (auto& m : models) {
+        for (const auto& m : models) {
             ModelLibrary::get().load(
                 Files::get()
                     .fetch_resource_path(std::get<0>(m), std::get<1>(m))
@@ -102,7 +102,7 @@ struct Preload {
             {"shaders", "post_processing.fs", "post_processing"},
         };
 
-        for (auto& s : shaders) {
+        for (const auto& s : shaders) {
             ShaderLibrary::get().load(
                 Files::get()
                     .fetch_resource_path(std::get<0>(s), std::get<1>(s))

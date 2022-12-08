@@ -19,6 +19,8 @@
 
 struct SpeechBubble {
     vec3 position;
+    // TODO we arent using any string functionality can we swap to const char*?
+    // perhaps in a typedef?
     std::string icon_tex_name;
 
     SpeechBubble(std::string icon) : icon_tex_name(icon) {}
@@ -26,15 +28,13 @@ struct SpeechBubble {
     void update(float, vec3 pos) { this->position = pos; }
     void render() const {
         GameCam cam = GLOBALS.get<GameCam>("game_cam");
-        {
-            Texture texture = TextureLibrary::get().get(icon_tex_name);
-            DrawBillboard(cam.camera, texture,
-                          vec3{position.x,                      //
-                               position.y + (TILESIZE * 1.5f),  //
-                               position.z},                     //
-                          TILESIZE,                             //
-                          WHITE);
-        }
+        Texture texture = TextureLibrary::get().get(icon_tex_name);
+        DrawBillboard(cam.camera, texture,
+                      vec3{position.x,                      //
+                           position.y + (TILESIZE * 1.5f),  //
+                           position.z},                     //
+                      TILESIZE,                             //
+                      WHITE);
     }
 };
 
@@ -56,6 +56,7 @@ struct Customer : public AIPerson {
     void serialize(S& s) {
         // Only things that need to be rendered, need to be serialized :)
         s.ext(*this, bitsery::ext::BaseClass<AIPerson>{});
+        //
         s.value4b(customer_name_length);
         s.text1b(name, customer_name_length);
     }
@@ -75,27 +76,25 @@ struct Customer : public AIPerson {
 
     void init() {
         set_customer_name(get_random_name());
-        ailment.reset(new Insomnia());
-        bubble = SpeechBubble(ailment->icon_name());
+
+        // TODO turn back on ailments
+        // ailment.reset(new Insomnia());
+        // bubble = SpeechBubble(ailment->icon_name());
     }
 
     virtual float base_speed() override {
         float base_speed = 4.f;
-        if (ailment) {
-            base_speed *= ailment->speed_multiplier();
-        }
-        std::cout << "base speed " << base_speed << std::endl;
+        if (ailment) base_speed *= ailment->speed_multiplier();
         return base_speed;
     }
 
     virtual float stagger_mult() override {
-        if (ailment) {
-            return ailment->stagger();
-        }
-        return 0.f;
+        return ailment ? ailment->stagger() : 0.f;
     }
 
     void wait_in_queue(float) {
+        // TODO the job api is kinda finicky, is there a way we can strengthen
+        // the config and running to make it more fool proof?
         auto init_job = [&]() {
             if (job->initialized) return;
 
@@ -255,7 +254,7 @@ struct Customer : public AIPerson {
         // this->turn_to_face_entity(reg);
         // }
         //
-        bubble.value().update(dt, this->raw_position);
+        if (bubble.has_value()) bubble.value().update(dt, this->raw_position);
     }
 
     virtual void render_normal() const override {

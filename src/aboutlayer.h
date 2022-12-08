@@ -77,6 +77,10 @@ A game by:
     }
 
     virtual void onUpdate(float) override {
+        // TODO can we just pass the "active menu state" to the layer
+        // constructor and have app / layer handle this for us?
+        //
+        // Does pause not support this ^^ solution?
         if (Menu::get().is_not(Menu::State::About)) return;
         SetExitKey(KEY_NULL);
     }

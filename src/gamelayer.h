@@ -26,10 +26,10 @@ struct GameLayer : public Layer {
     Model bag_model;
 
     GameLayer() : Layer("Game") {
-        minimized = false;
-
         player.reset(new Player(vec2{-3, -3}));
         GLOBALS.set("player", player.get());
+
+        // TODO do we need this still?
         player->is_ghost_player = true;
 
         cam.reset(new GameCam());
@@ -62,6 +62,7 @@ struct GameLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
+        // Note: You can only pause in game state, in planning no pause
         if (KeyMap::get_key_code(Menu::State::Game, InputName::Pause) ==
             event.keycode) {
             Menu::pause();
@@ -87,6 +88,7 @@ struct GameLayer : public Layer {
         // Dont quit window on escape
         SetExitKey(KEY_NULL);
 
+        // TODO Why does updateCamera not just take an optional target?
         cam->updateToTarget(
             GLOBALS.get_or_default<Entity>("active_camera_target", *player));
         cam->updateCamera();

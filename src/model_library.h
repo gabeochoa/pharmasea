@@ -13,8 +13,7 @@ struct ModelLibrary {
 
     struct ModelLibraryImpl : Library<Model> {
         virtual void load(const char* filename, const char* name) override {
-            // TODO add debug mode
-            std::cout << "loading texture: " << name << " from " << filename
+            std::cout << "loading model: " << name << " from " << filename
                       << std::endl;
             this->add(name, LoadModel(filename));
         }

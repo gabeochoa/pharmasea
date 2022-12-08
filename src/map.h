@@ -134,6 +134,23 @@ constexpr int MAX_SEED_LENGTH = 20;
 
 using MyPolymorphicClasses = bitsery::ext::PolymorphicClassesList<Entity, Item>;
 
+static void generate_and_insert_walls(std::string /* seed */) {
+    // TODO generate walls based on seed
+    const auto d_color = (Color){155, 75, 0, 255};
+    for (int i = 0; i < MAX_MAP_SIZE; i++) {
+        for (int j = 0; j < MAX_MAP_SIZE; j++) {
+            if ((i == 0 && j == 0) || (i == 0 && j == 1)) continue;
+            if (i == 0 || j == 0 || i == MAX_MAP_SIZE - 1 ||
+                j == MAX_MAP_SIZE - 1) {
+                vec2 location = vec2{i * TILESIZE, j * TILESIZE};
+                std::shared_ptr<Wall> wall;
+                wall.reset(new Wall(location, d_color));
+                EntityHelper::addEntity(wall);
+            }
+        }
+    }
+}
+
 struct Map {
     bool was_generated = false;
 
@@ -152,7 +169,7 @@ struct Map {
 
     std::vector<std::shared_ptr<RemotePlayer>> remote_players_NOT_SERIALIZED;
 
-    Map(const std::string& _seed = "default") { update_seed(_seed); }
+    explicit Map(const std::string& _seed = "default") { update_seed(_seed); }
 
     void update_seed(const std::string& s) {
         seed = s;
@@ -160,6 +177,8 @@ struct Map {
         generator = make_engine(hashed_seed);
         // TODO leaving at 1 because we dont have a door to block the entrance
         dist = std::uniform_int_distribution<>(1, MAX_MAP_SIZE - 1);
+
+        // TODO need to regenerate the map and clean up entitiyhelper
     }
 
     void onUpdate(float dt) {
@@ -171,7 +190,7 @@ struct Map {
         }
     }
 
-    void onDraw(float) {
+    void onDraw(float) const {
         for (auto e : entities) {
             if (e) e->render();
             if (!e) std::cout << "we have invalid entities" << std::endl;
@@ -187,12 +206,16 @@ struct Map {
         }
     }
 
+    // Called before every "send_map_state" when server
+    // sends everything over to clients
     void ensure_generated_map() {
         if (was_generated) return;
         was_generated = true;
         generate_map();
     }
 
+    // Called before every "send_map_state" when server
+    // sends everything over to clients
     void grab_things() {
         {
             entities.clear();
@@ -221,9 +244,9 @@ struct Map {
     }
 
     void generate_map() {
-        auto generate_tables = [this]() {
+        const auto generate_tables = [this]() {
             std::shared_ptr<Table> table;
-            auto location = get_rand_walkable();
+            const auto location = get_rand_walkable();
             table.reset(new Table(location));
             EntityHelper::addEntity(table);
 
@@ -239,16 +262,16 @@ struct Map {
             item2->held_by = Item::HeldBy::ITEM;
         };
 
-        auto generate_register = [this]() {
+        const auto generate_register = [this]() {
             std::shared_ptr<Register> reg;
-            auto location = get_rand_walkable();
+            const auto location = get_rand_walkable();
             reg.reset(new Register(location));
             EntityHelper::addEntity(reg);
         };
 
         // TODO replace with a CustomerSpawner eventually
-        auto generate_customer = []() {
-            auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
+        const auto generate_customer = []() {
+            const auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
             std::shared_ptr<Customer> customer;
             customer.reset(new Customer(location, RED));
             EntityHelper::addEntity(customer);
@@ -256,7 +279,7 @@ struct Map {
 
         auto generate_test = [this]() {
             for (int i = 0; i < 5; i++) {
-                auto location = get_rand_walkable();
+                const auto location = get_rand_walkable();
                 std::shared_ptr<Conveyer> conveyer;
 
                 if (i == 0)
@@ -268,34 +291,18 @@ struct Map {
             }
         };
 
-        generate_walls();
+        generate_and_insert_walls(this->seed);
         generate_tables();
         generate_tables();
 
         std::shared_ptr<BagBox> bagbox;
-        auto location = get_rand_walkable();
+        const auto location = get_rand_walkable();
         bagbox.reset(new BagBox(location));
         EntityHelper::addEntity(bagbox);
 
         generate_register();
         generate_customer();
         generate_test();
-    }
-
-    void generate_walls() {
-        auto d_color = (Color){155, 75, 0, 255};
-        for (int i = 0; i < MAX_MAP_SIZE; i++) {
-            for (int j = 0; j < MAX_MAP_SIZE; j++) {
-                if ((i == 0 && j == 0) || (i == 0 && j == 1)) continue;
-                if (i == 0 || j == 0 || i == MAX_MAP_SIZE - 1 ||
-                    j == MAX_MAP_SIZE - 1) {
-                    vec2 location = vec2{i * TILESIZE, j * TILESIZE};
-                    std::shared_ptr<Wall> wall;
-                    wall.reset(new Wall(location, d_color));
-                    EntityHelper::addEntity(wall);
-                }
-            }
-        }
     }
 
     friend bitsery::Access;

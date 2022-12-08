@@ -17,17 +17,16 @@ struct ScoreValue {
     operator float() const { return value; }
 };
 
-float path_estimate(const vec2& a, const vec2& b) {
+inline float path_estimate(const vec2& a, const vec2& b) {
     return vec::distance(a, b);
 }
 
-float distance_between(const vec2& a, const vec2& b) {
+inline float distance_between(const vec2& a, const vec2& b) {
     return vec::distance(a, b);
 }
 
 vec2 get_lowest_f(const std::set<vec2>& set,
                   std::map<vec2, ScoreValue>& fscore) {
-    // TODO
     float bestscore = std::numeric_limits<float>::max();
     vec2 loc = *(set.begin());
     for (const vec2 location : set) {
@@ -128,8 +127,9 @@ std::deque<vec2> find_path_impl(vec2 start, vec2 end,
     return std::deque<vec2>{};
 }
 
-std::deque<vec2> find_path(vec2 start, vec2 end,
-                           std::function<bool(vec2 pos)> is_walkable) {
+// TODO should we add a cache here?
+inline std::deque<vec2> find_path(vec2 start, vec2 end,
+                                  std::function<bool(vec2 pos)> is_walkable) {
     return astar::find_path_impl(start, end, is_walkable);
 }
 

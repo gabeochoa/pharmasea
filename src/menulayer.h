@@ -15,21 +15,9 @@
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
 
-    MenuLayer() : Layer("Menu") {
-        minimized = false;
+    MenuLayer() : Layer("Menu") { ui_context.reset(new ui::UIContext()); }
 
-        ui_context.reset(new ui::UIContext());
-        ui_context->init();
-        ui_context->set_font(Preload::get().font);
-        // TODO we should probably enforce that you cant do this
-        // and we should have ->set_base_theme()
-        // and push_theme separately, if you end() with any stack not empty...
-        // thats a flag
-        ui_context->push_theme(ui::DEFAULT_THEME);
-    }
     virtual ~MenuLayer() {}
-    virtual void onAttach() override {}
-    virtual void onDetach() override {}
 
     virtual void onEvent(Event& event) override {
         EventDispatcher dispatcher(event);
@@ -111,25 +99,10 @@ struct MenuLayer : public Layer {
                                                 Size_Px(100.f, 1.f)));
             auto title_text = ui_context->own(
                 Widget(Size_Pct(1.f, 0.5f), Size_Px(100.f, 1.f)));
+            // TODO this somewhere should match the one in app.h
             text(*title_text, "Pharmasea");
         }
         ui_context->pop_parent();
-    }
-
-    void draw_ui(float dt) {
-        using namespace ui;
-
-        ui_context->begin(dt);
-
-        auto root = ui::components::mk_root();
-
-        ui_context->push_parent(root);
-        {
-            draw_menu_buttons();
-            draw_title_section();
-        }
-        ui_context->pop_parent();
-        ui_context->end(root.get());
     }
 
     virtual void onUpdate(float) override {
@@ -142,6 +115,17 @@ struct MenuLayer : public Layer {
         if (Menu::get().is_not(Menu::State::Root)) return;
         PROFILE();
         ClearBackground(ui_context->active_theme().background);
-        draw_ui(dt);
+
+        ui_context->begin(dt);
+
+        auto root = ui::components::mk_root();
+
+        ui_context->push_parent(root);
+        {
+            draw_menu_buttons();
+            draw_title_section();
+        }
+        ui_context->pop_parent();
+        ui_context->end(root.get());
     }
 };

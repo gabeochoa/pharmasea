@@ -59,7 +59,7 @@ struct MouseInfo {
     bool leftDown;
 };
 
-static MouseInfo get_mouse_info() {
+static const MouseInfo get_mouse_info() {
     return MouseInfo{
         .pos = GetMousePosition(),
         .leftDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT),
@@ -69,49 +69,6 @@ static MouseInfo get_mouse_info() {
 SINGLETON_FWD(KeyMap)
 struct KeyMap {
     SINGLETON(KeyMap)
-
-    FullMap mapping;
-
-    KeyMap() {
-        std::ifstream ifs(fs::path("./resources/gamecontrollerdb.txt"));
-        std::stringstream buffer;
-        buffer << ifs.rdbuf();
-        SetGamepadMappings(buffer.str().c_str());
-        load_default_keys();
-    }
-
-    LayerMapping& get_or_create_layer_map(Menu::State state) {
-        if (!this->mapping.contains(state)) {
-            mapping[state] = LayerMapping();
-        }
-        return mapping[state];
-    }
-
-    static float visit_key(int keycode) {
-        return IsKeyPressed(keycode) ? 1.f : 0.f;
-    }
-
-    static float visit_key_down(int keycode) {
-        return IsKeyDown(keycode) ? 1.f : 0.f;
-    }
-
-    static float visit_axis(GamepadAxisWithDir axis_with_dir) {
-        // Note: this one is a bit more complex because we have to check if you
-        // are pushing in the right direction while also checking the magnitude
-        float mvt = GetGamepadAxisMovement(0, axis_with_dir.axis);
-        if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > 0.25f) {
-            return abs(mvt);
-        }
-        return 0.f;
-    }
-
-    static float visit_button(GamepadButton button) {
-        return IsGamepadButtonPressed(0, button) ? 1.f : 0.f;
-    }
-
-    static float visit_button_down(GamepadButton button) {
-        return IsGamepadButtonDown(0, button) ? 1.f : 0.f;
-    }
 
     void forEachCharTyped(std::function<void(Event&)> cb) {
         int character = GetCharPressed();
@@ -124,9 +81,9 @@ struct KeyMap {
     }
 
     void forEachInputInMap(std::function<void(Event&)> cb) {
-        for (auto& fm_kv : mapping) {
-            for (auto& lm_kv : fm_kv.second) {
-                for (auto& input : lm_kv.second) {
+        for (const auto& fm_kv : mapping) {
+            for (const auto& lm_kv : fm_kv.second) {
+                for (const auto& input : lm_kv.second) {
                     std::visit(
                         util::overloaded{
                             [&](int keycode) {
@@ -163,6 +120,196 @@ struct KeyMap {
                 }
             }
         }
+    }
+
+    static float is_event(const Menu::State& state, const InputName& name) {
+        const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
+
+        float value = 0.f;
+        for (auto& input : valid_inputs) {
+            value = fmax(value,
+                         std::visit(util::overloaded{
+                                        [](int keycode) {
+                                            return visit_key_down(keycode);
+                                        },
+                                        [](GamepadAxisWithDir axis_with_dir) {
+                                            return visit_axis(axis_with_dir);
+                                        },
+                                        [](GamepadButton button) {
+                                            return visit_button_down(button);
+                                        },
+                                        [](auto) {}},
+                                    input));
+        }
+        return value;
+    }
+
+    static bool is_event_once_DO_NOT_USE(const Menu::State& state,
+                                         const InputName& name) {
+        const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
+
+        bool matches_named_event = false;
+        for (auto& input : valid_inputs) {
+            matches_named_event |= std::visit(
+                util::overloaded{
+                    [](int keycode) { return visit_key(keycode) > 0.f; },
+                    [](GamepadAxisWithDir axis_with_dir) {
+                        return visit_axis(axis_with_dir) > 0.f;
+                    },
+                    [](GamepadButton button) {
+                        return visit_button(button) > 0.f;
+                    },
+                    [](auto) {}},
+                input);
+        }
+        return matches_named_event;
+    }
+
+    static int get_key_code(const Menu::State& state, const InputName& name) {
+        const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
+        for (auto input : valid_inputs) {
+            int r = std::visit(util::overloaded{[](int k) { return k; },
+                                                [](auto&&) { return 0; }},
+                               input);
+            if (r) return r;
+        }
+        return KEY_NULL;
+    }
+
+    static const std::optional<GamepadAxisWithDir> get_axis(
+        const Menu::State& state, const InputName& name) {
+        const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
+        for (auto input : valid_inputs) {
+            auto r = std::visit(
+                util::overloaded{
+                    [](GamepadAxisWithDir ax) {
+                        return std::optional<GamepadAxisWithDir>(ax);
+                    },
+                    [](auto&&) { return std::optional<GamepadAxisWithDir>(); }},
+                input);
+            if (r.has_value()) return r;
+        }
+        return {};
+    }
+
+    static GamepadButton get_button(const Menu::State& state,
+                                    const InputName& name) {
+        const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
+        for (auto input : valid_inputs) {
+            auto r = std::visit(
+                util::overloaded{[](GamepadButton button) { return button; },
+                                 [](auto&&) { return GAMEPAD_BUTTON_UNKNOWN; }},
+                input);
+            if (r != GAMEPAD_BUTTON_UNKNOWN) return r;
+        }
+        // std::cout << "couldnt find any button for " << name << std::endl;
+        return GAMEPAD_BUTTON_UNKNOWN;
+    }
+
+    static bool does_layer_map_contain_key(const Menu::State& state,
+                                           int keycode) {
+        // We dont even have this Layer Map
+        if (!KeyMap::get().mapping.contains(state)) return false;
+        const LayerMapping layermap = KeyMap::get().mapping[state];
+        bool contains = false;
+        for (const auto& pair : layermap) {
+            const auto valid_inputs = pair.second;
+            for (auto input : valid_inputs) {
+                contains = std::visit(
+                    util::overloaded{[&](int k) { return k == keycode; },
+                                     [](auto&&) { return false; }},
+                    input);
+                if (contains) return true;
+            }
+        }
+        return false;
+    }
+
+    static bool does_layer_map_contain_button(const Menu::State& state,
+                                              GamepadButton button) {
+        // We dont even have this Layer Map
+        if (!KeyMap::get().mapping.contains(state)) return false;
+        const LayerMapping layermap = KeyMap::get().mapping[state];
+        bool contains = false;
+        for (const auto& pair : layermap) {
+            const auto valid_inputs = pair.second;
+            for (auto input : valid_inputs) {
+                contains = std::visit(
+                    util::overloaded{
+                        [&](GamepadButton butt) { return butt == button; },
+                        [](auto&&) { return false; }},
+                    input);
+                if (contains) return true;
+            }
+        }
+        return false;
+    }
+
+    static bool does_layer_map_contain_axis(const Menu::State state,
+                                            GamepadAxis axis) {
+        // We dont even have this Layer Map
+        if (!KeyMap::get().mapping.contains(state)) return false;
+        const LayerMapping layermap = KeyMap::get().mapping[state];
+        bool contains = false;
+        for (const auto& pair : layermap) {
+            const auto valid_inputs = pair.second;
+            for (const auto& input : valid_inputs) {
+                contains = std::visit(
+                    util::overloaded{
+                        [&](GamepadAxisWithDir ax) { return ax.axis == axis; },
+                        [](auto&&) { return false; }},
+                    input);
+                if (contains) return true;
+            }
+        }
+        return false;
+    }
+
+   private:
+    FullMap mapping;
+
+    KeyMap() {
+        // TODO migrate to using file-api to avoid this hardcoded path
+        std::ifstream ifs(fs::path("./resources/gamecontrollerdb.txt"));
+        std::stringstream buffer;
+        buffer << ifs.rdbuf();
+        SetGamepadMappings(buffer.str().c_str());
+        load_default_keys();
+    }
+
+    LayerMapping& get_or_create_layer_map(const Menu::State& state) {
+        if (!this->mapping.contains(state)) {
+            mapping[state] = LayerMapping();
+        }
+        return mapping[state];
+    }
+
+    static float visit_key(int keycode) {
+        return IsKeyPressed(keycode) ? 1.f : 0.f;
+    }
+
+    static float visit_key_down(int keycode) {
+        return IsKeyDown(keycode) ? 1.f : 0.f;
+    }
+
+    static float visit_axis(GamepadAxisWithDir axis_with_dir) {
+        // Note: this one is a bit more complex because we have to check if you
+        // are pushing in the right direction while also checking the magnitude
+        float mvt = GetGamepadAxisMovement(0, axis_with_dir.axis);
+        // Note: The 0.25 is how big the deadzone is
+        // TODO consider making the deadzone configurable?
+        if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > 0.25f) {
+            return abs(mvt);
+        }
+        return 0.f;
+    }
+
+    static float visit_button(GamepadButton button) {
+        return IsGamepadButtonPressed(0, button) ? 1.f : 0.f;
+    }
+
+    static float visit_button_down(GamepadButton button) {
+        return IsGamepadButtonDown(0, button) ? 1.f : 0.f;
     }
 
     void load_game_keys() {
@@ -298,149 +445,8 @@ struct KeyMap {
         load_ui_keys();
     }
 
-    static int get_key_code(Menu::State state, const InputName& name) {
-        AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
-        for (auto input : valid_inputs) {
-            int r = std::visit(util::overloaded{[](int k) { return k; },
-                                                [](auto&&) { return 0; }},
-                               input);
-            if (r) return r;
-        }
-        return KEY_NULL;
-    }
-
-    static std::optional<GamepadAxisWithDir> get_axis(Menu::State state,
-                                                      const InputName& name) {
-        AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
-        for (auto input : valid_inputs) {
-            auto r = std::visit(
-                util::overloaded{
-                    [](GamepadAxisWithDir ax) {
-                        return std::optional<GamepadAxisWithDir>(ax);
-                    },
-                    [](auto&&) { return std::optional<GamepadAxisWithDir>(); }},
-                input);
-            if (r.has_value()) return r;
-        }
-        return {};
-    }
-
-    static GamepadButton get_button(Menu::State state, const InputName& name) {
-        AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
-        for (auto input : valid_inputs) {
-            auto r = std::visit(
-                util::overloaded{[](GamepadButton button) { return button; },
-                                 [](auto&&) { return GAMEPAD_BUTTON_UNKNOWN; }},
-                input);
-            if (r != GAMEPAD_BUTTON_UNKNOWN) return r;
-        }
-        // std::cout << "couldnt find any button for " << name << std::endl;
-        return GAMEPAD_BUTTON_UNKNOWN;
-    }
-
-    static AnyInputs get_valid_inputs(Menu::State state,
-                                      const InputName& name) {
+    static const AnyInputs get_valid_inputs(const Menu::State& state,
+                                            const InputName& name) {
         return KeyMap::get().mapping[state][name];
-    }
-
-    static float is_event(Menu::State state, const InputName& name) {
-        AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
-
-        float value = 0.f;
-        for (auto& input : valid_inputs) {
-            value = fmax(value,
-                         std::visit(util::overloaded{
-                                        [](int keycode) {
-                                            return visit_key_down(keycode);
-                                        },
-                                        [](GamepadAxisWithDir axis_with_dir) {
-                                            return visit_axis(axis_with_dir);
-                                        },
-                                        [](GamepadButton button) {
-                                            return visit_button_down(button);
-                                        },
-                                        [](auto) {}},
-                                    input));
-        }
-        return value;
-    }
-
-    static bool is_event_once_DO_NOT_USE(Menu::State state,
-                                         const InputName& name) {
-        AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
-
-        bool matches_named_event = false;
-        for (auto& input : valid_inputs) {
-            matches_named_event |= std::visit(
-                util::overloaded{
-                    [](int keycode) { return visit_key(keycode) > 0.f; },
-                    [](GamepadAxisWithDir axis_with_dir) {
-                        return visit_axis(axis_with_dir) > 0.f;
-                    },
-                    [](GamepadButton button) {
-                        return visit_button(button) > 0.f;
-                    },
-                    [](auto) {}},
-                input);
-        }
-        return matches_named_event;
-    }
-
-    static bool does_layer_map_contain_key(Menu::State state, int keycode) {
-        // We dont even have this Layer Map
-        if (!KeyMap::get().mapping.contains(state)) return false;
-        LayerMapping layermap = KeyMap::get().mapping[state];
-        bool contains = false;
-        for (auto pair : layermap) {
-            const auto valid_inputs = pair.second;
-            for (auto input : valid_inputs) {
-                contains = std::visit(
-                    util::overloaded{[&](int k) { return k == keycode; },
-                                     [](auto&&) { return false; }},
-                    input);
-                if (contains) return true;
-            }
-        }
-        return false;
-    }
-
-    static bool does_layer_map_contain_button(Menu::State state,
-                                              GamepadButton button) {
-        // We dont even have this Layer Map
-        if (!KeyMap::get().mapping.contains(state)) return false;
-        LayerMapping layermap = KeyMap::get().mapping[state];
-        bool contains = false;
-        for (auto pair : layermap) {
-            const auto valid_inputs = pair.second;
-            for (auto input : valid_inputs) {
-                contains = std::visit(
-                    util::overloaded{
-                        [&](GamepadButton butt) { return butt == button; },
-                        [](auto&&) { return false; }},
-                    input);
-                if (contains) return true;
-            }
-        }
-        return false;
-    }
-
-    static bool does_layer_map_contain_axis(Menu::State state,
-                                            GamepadAxis axis) {
-        // We dont even have this Layer Map
-        if (!KeyMap::get().mapping.contains(state)) return false;
-        LayerMapping layermap = KeyMap::get().mapping[state];
-        bool contains = false;
-        for (auto pair : layermap) {
-            const auto valid_inputs = pair.second;
-            for (auto input : valid_inputs) {
-                contains = std::visit(
-                    util::overloaded{
-                        [&](GamepadAxisWithDir ax) { return ax.axis == axis; },
-                        [](auto&&) { return false; }},
-                    input);
-                if (contains) return true;
-            }
-        }
-        return false;
     }
 };

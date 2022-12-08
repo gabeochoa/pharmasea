@@ -60,9 +60,10 @@ struct function_raii {
     std::chrono::high_resolution_clock::time_point start;
 
     function_raii(const std::string& fileloc, const std::string& n)
-        : filename(fileloc), name(n) {
-        start = std::chrono::high_resolution_clock::now();
-    }
+        : filename(fileloc),
+          name(n),
+          start(std::chrono::high_resolution_clock::now()) {}
+
     ~function_raii() {
         auto end = std::chrono::high_resolution_clock::now();
         float duration =

@@ -33,7 +33,10 @@ struct App {
         GLOBALS.set("mainRT", &mainRT);
     }
 
-    ~App() { UnloadRenderTexture(mainRT); }
+    ~App() {
+        UnloadRenderTexture(mainRT);
+        // TODO do we need to / can we remove mainRT from globals
+    }
 
     void pushLayer(Layer* layer) { layerstack.push(layer); }
     void pushOverlay(Layer* layer) { layerstack.pushOverlay(layer); }
@@ -45,8 +48,8 @@ struct App {
     }
 
     bool onWindowResize(WindowResizeEvent event) {
-        std::cout << "Got Window Resize Event: " << event.width << ", "
-                  << event.height << std::endl;
+        // std::cout << "Got Window Resize Event: " << event.width << ", "
+        // << event.height << std::endl;
         SetWindowSize(event.width, event.height);
         return true;
     }
@@ -80,14 +83,6 @@ struct App {
         CloseWindow();
     }
 
-    void check_input() {
-        KeyMap::get().forEachInputInMap(
-            std::bind(&App::processEvent, this, std::placeholders::_1));
-
-        KeyMap::get().forEachCharTyped(
-            std::bind(&App::processEvent, this, std::placeholders::_1));
-    }
-
     void loop(float dt) {
         PROFILE();
 
@@ -98,7 +93,14 @@ struct App {
         draw_all_to_texture(dt);
         render_to_screen();
 
-        check_input();
+        // Check Input
+        {
+            KeyMap::get().forEachInputInMap(
+                std::bind(&App::processEvent, this, std::placeholders::_1));
+
+            KeyMap::get().forEachCharTyped(
+                std::bind(&App::processEvent, this, std::placeholders::_1));
+        }
     }
 
    private:

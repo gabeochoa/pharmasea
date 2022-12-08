@@ -7,7 +7,7 @@
 #include "menu.h"
 
 struct MenuStateLayer : public Layer {
-    MenuStateLayer() : Layer("MenuState") { minimized = false; }
+    MenuStateLayer() : Layer("MenuState") {}
     virtual ~MenuStateLayer() {}
     virtual void onEvent(Event&) override {}
     virtual void onUpdate(float) override {}

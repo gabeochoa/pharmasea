@@ -9,21 +9,12 @@
 
 using namespace profile;
 struct FPSLayer : public Layer {
-    FPSLayer() : Layer("FPS") {
-        minimized = false;
-        Profiler::clear();
-    }
-    virtual ~FPSLayer() {}
-    virtual void onAttach() override {}
-    virtual void onDetach() override {}
+    FPSLayer() : Layer("FPS") { Profiler::clear(); }
+
     virtual void onEvent(Event&) override {}
     virtual void onUpdate(float) override {}
 
     virtual void onDraw(float) override {
-        // TODO with gamelayer, support events
-        if (minimized) {
-            return;
-        }
         DrawFPS(0, 0);
 
         if (GLOBALS.get<bool>("debug_ui_enabled")) {

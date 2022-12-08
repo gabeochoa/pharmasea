@@ -34,9 +34,10 @@ struct Item {
         s.value4b(held_by);
     }
 
-   public:
+   protected:
     Item() {}
 
+   public:
     Item(vec3 p, Color c) : id(ITEM_ID_GEN++), color(c), raw_position(p) {
         this->position = this->snap_position();
     }
@@ -52,10 +53,9 @@ struct Item {
     virtual bool is_collidable() { return false; }
 
     virtual void render() const {
-        std::optional<Model> m = this->model();
-        if (m.has_value()) {
-            DrawModel(m.value(), this->position, this->size().x * 0.5f,
-                      ui::color::tan_brown);
+        if (this->model().has_value()) {
+            DrawModel(this->model().value(), this->position,
+                      this->size().x * 0.5f, ui::color::tan_brown);
         } else {
             DrawCube(position, this->size().x, this->size().y, this->size().z,
                      this->color);
@@ -84,7 +84,11 @@ struct Item {
 };
 
 struct Bag : public Item {
+    // TODO Are there likely to be other items that can hold items?
     std::shared_ptr<Item> held_item;
+
+    // TODO we will eventually need a way to validate the kinds of items this
+    // ItemContainer can hold
 
    private:
     friend bitsery::Access;

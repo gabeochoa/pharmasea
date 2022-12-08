@@ -6,7 +6,7 @@
 // https://stackoverflow.com/a/48896410
 template<typename Str>
 constexpr size_t hashString(const Str& toHash) {
-    // For this example, I'm requiring size_t to be 64-bit, but you could
+    // NOTE: For this example, I'm requiring size_t to be 64-bit, but you could
     // easily change the offset and prime used to the appropriate ones
     // based on sizeof(size_t).
     static_assert(sizeof(size_t) == 8);
@@ -23,6 +23,9 @@ constexpr size_t hashString(const Str& toHash) {
 // YY / MM / DD (Monday of week)
 constexpr std::string_view VERSION = "alpha_0.22.12.05";
 constexpr size_t HASHED_VERSION = hashString(VERSION);
+
+constexpr std::string_view GAME_FOLDER = "pharmasea";
+constexpr std::string_view SETTINGS_FILE_NAME = "settings.bin";
 
 static int __WIN_H = 720;
 static int __WIN_W = 1280;

@@ -77,9 +77,6 @@ struct Entity {
     }
 
    public:
-    // TODO is there a way for us to make this private except for bitsery?
-    Entity() {}
-
     Entity(vec3 p, Color face_color_in, Color base_color_in)
         : id(ENTITY_ID_GEN++),
           raw_position(p),
@@ -112,6 +109,8 @@ struct Entity {
     virtual ~Entity() {}
 
    protected:
+    Entity() {}
+
     virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
 
     virtual BoundingBox raw_bounds() const {
@@ -124,6 +123,7 @@ struct Entity {
     virtual void render_debug_mode() const {
         DrawBoundingBox(this->bounds(), MAROON);
 
+        // TODO extract all these hover name lambdas into a function
         auto render_id = [&]() {
             rlPushMatrix();
             rlTranslatef(              //

@@ -65,6 +65,8 @@ struct Symptom {
 
     bool operator<(const Symptom& sym) const { return config < sym.config; }
 
+    // TODO we only really need this today because below we dont want to specify
+    // things as itll take time to balance correctly
     Symptom() {}
     explicit Symptom(const Config& opt) : config(opt) {}
 

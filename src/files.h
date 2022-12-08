@@ -1,14 +1,11 @@
 
 #pragma once
 
-#include "singleton.h"
-
 #include <filesystem>
 
-namespace fs = std::filesystem;
+#include "singleton.h"
 
-const std::string GAME_FOLDER = "pharmasea";
-const std::string SETTINGS_FILE_NAME = "settings.bin";
+namespace fs = std::filesystem;
 
 SINGLETON_FWD(Files)
 struct Files {

@@ -79,8 +79,6 @@ struct NetworkLayer : public Layer {
         // if we get here, then user clicked "join"
     }
 
-    void draw_network_overlay() {}
-
     void draw_username() {
         auto content = ui::components::mk_row();
         div(*content);
@@ -268,7 +266,8 @@ struct NetworkLayer : public Layer {
     }
 
     virtual void onDraw(float dt) override {
-        draw_network_overlay();
+        // TODO add an overlay that shows who's currently available
+        // draw_network_overlay();
 
         if (Menu::get().is_not(Menu::State::Network)) return;
 

@@ -589,6 +589,10 @@ inline std::shared_ptr<Widget> mk_column() {
                             {.mode = Children, .strictness = 1.f}, Column));
 }
 
+inline std::shared_ptr<Widget> mk_text_id(uuid id) {
+    return get().own(Widget(id, Size_Px(275.f, 0.5f), Size_Px(50.f, 1.f)));
+}
+
 inline std::shared_ptr<Widget> mk_text() {
     return get().own(Widget(Size_Px(275.f, 0.5f), Size_Px(50.f, 1.f)));
 }

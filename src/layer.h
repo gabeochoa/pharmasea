@@ -8,12 +8,8 @@ static std::atomic_int s_layer_id;
 struct Layer {
     int id;
     std::string name;
-    bool minimized;
 
-    bool is_minimized() { return this->minimized; }
-
-    Layer(const std::string& n = "layer")
-        : id(s_layer_id++), name(n), minimized(false) {}
+    Layer(const std::string& n = "layer") : id(s_layer_id++), name(n) {}
     virtual ~Layer() {}
     virtual void onAttach() {}
     virtual void onDetach() {}

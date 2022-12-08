@@ -21,6 +21,8 @@ struct Library {
 
     const std::string add(const char* name, const T& item) {
         if (storage.find(name) != storage.end()) {
+            // TODO can we throw or something? should we return Optional? are we
+            // ever using the returned string?
             return "";
         }
         storage[name] = item;
@@ -36,7 +38,7 @@ struct Library {
         return storage[name];
     }
 
-    bool contains(const std::string& name) {
+    bool contains(const std::string& name) const {
         return (storage.find(name) != storage.end());
     }
 

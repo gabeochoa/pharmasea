@@ -1,5 +1,7 @@
 #include "files.h"
 
+#include "globals.h"
+
 #ifdef __APPLE__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"

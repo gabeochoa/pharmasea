@@ -37,6 +37,12 @@ struct GlobalValueRegister {
         return value;
     }
 
+    // TODO need an api to remove a global for example when we unload some
+    // loaded info
+
+    // TODO what we can we do to make this api more valuable to callers
+    // it seems like today that no one uses this but people seem to like
+    // get_or_default
     bool contains(const std::string& name) {
         return globals.find(name) != globals.end();
     }
