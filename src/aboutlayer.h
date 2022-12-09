@@ -41,6 +41,7 @@ A game by:
     }
 
     void draw_ui(float dt) {
+        // TODO escape should go back, not quit the game at this point
         SetExitKey(KEY_ESCAPE);
         using namespace ui;
 
