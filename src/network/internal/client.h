@@ -148,8 +148,8 @@ struct Client {
                              .msg_type = ClientPacket::MsgType::PlayerJoin,
                              .msg = ClientPacket::PlayerJoinInfo({
                                  .client_id = -1,  // again
-                                 .is_you = false,
                                  .hashed_version = HASHED_VERSION,
+                                 .is_you = false,
                                  .username = username,
                              })});
         send_packet_to_server(packet);
