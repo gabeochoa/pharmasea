@@ -448,6 +448,9 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
             float full_width = widget.size_expected[0].value;
             float item_size = widget.size_expected[1].value;
 
+            // TODO maybe we could do a hack where we only show enough items
+            // to fit in  the rest of the screen
+
             std::shared_ptr<Widget> button_list_widget = get().make_temp_widget(
                 new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
                            Size_Px(full_width, 1.f),
