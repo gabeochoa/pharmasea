@@ -687,6 +687,8 @@ bool scroll_view(const Widget& widget, std::function<void()> children,
     if (!lf.rect.has_value()) {
         return false;
     }
+    // TODO none of this works, look through the PRs I've put with my previous
+    // tries
 
     active_if_mouse_inside(widget.id, lf.rect.value());
 
