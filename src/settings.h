@@ -190,8 +190,12 @@ struct Settings {
         }
         
         if (settings::RESOLUTION_OPTIONS.empty()) {
-            settings::RESOLUTION_OPTIONS.push_back(settings::ResolutionInfo{
-                .width = 1280, .height = 720}); 
+            settings::RESOLUTION_OPTIONS.push_back(
+                settings::ResolutionInfo{.width = 1280, .height = 720});
+            settings::RESOLUTION_OPTIONS.push_back(
+                settings::ResolutionInfo{.width = 1920, .height = 1080});
+            settings::RESOLUTION_OPTIONS.push_back(
+                settings::ResolutionInfo{.width = 3860, .height = 2160}); 
         }
 
         // TODO SPEED this kinda slow but it only happens once

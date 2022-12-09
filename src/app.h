@@ -25,7 +25,6 @@ struct App {
 
     App() {
         InitWindow(WIN_W(), WIN_H(), "pharmasea");
-        std::cout << WIN_W() << " " << WIN_H() << std::endl;
 
         // Has to happen after init window due to font requirements
         Preload::get();
