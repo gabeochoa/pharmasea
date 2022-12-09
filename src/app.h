@@ -25,6 +25,8 @@ struct App {
 
     App() {
         InitWindow(WIN_W(), WIN_H(), "pharmasea");
+        std::cout << WIN_W() << " " << WIN_H() << std::endl;
+
         // Has to happen after init window due to font requirements
         Preload::get();
         KeyMap::get();
@@ -51,6 +53,10 @@ struct App {
         // std::cout << "Got Window Resize Event: " << event.width << ", "
         // << event.height << std::endl;
         SetWindowSize(event.width, event.height);
+
+        UnloadRenderTexture(mainRT);
+        mainRT = LoadRenderTexture(WIN_W(), WIN_H());
+        GLOBALS.set("mainRT", &mainRT);
         return true;
     }
 
@@ -86,6 +92,7 @@ struct App {
     void loop(float dt) {
         PROFILE();
 
+        std::cout << WIN_W() << " " << WIN_H() << std::endl;
         for (Layer* layer : layerstack) {
             layer->onUpdate(dt);
         }
