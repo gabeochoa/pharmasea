@@ -91,7 +91,6 @@ struct App {
     void loop(float dt) {
         PROFILE();
 
-        std::cout << WIN_W() << " " << WIN_H() << std::endl;
         for (Layer* layer : layerstack) {
             layer->onUpdate(dt);
         }
