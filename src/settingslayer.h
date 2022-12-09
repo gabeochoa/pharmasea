@@ -145,8 +145,8 @@ struct SettingsLayer : public Layer {
             if (dropdown(*dropdown_widget, Settings::get().resolution_options(),
                          &resolution_dropdown_open,
                          &resolution_selected_index)) {
-                Settings::get().update_resolution_from_index(
-                    resolution_selected_index);
+                // Settings::get().update_resolution_from_index(
+                // resolution_selected_index);
             }
 
             ui_context->pop_parent();
@@ -185,9 +185,9 @@ struct SettingsLayer : public Layer {
                                                     Size_Px(100.f, 0.5f)));
                 master_volume();
                 music_volume();
-                resolution_switcher();
                 streamer_safe_box();
                 enable_post_processing();
+                resolution_switcher();
                 back_button();
             }
             ui_context->pop_parent();
