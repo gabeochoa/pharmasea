@@ -160,6 +160,17 @@ struct Settings {
     }
 
     void load_resolution_options() {
+#ifdef __APPLE__
+        // Nothing this one works :) 
+ #else
+        // TODO either implement these for windows or get them in the dll 
+        const auto glfwGetPrimaryMonitor = []() -> GLFWmonitor* {
+            return nullptr;
+        };
+        const auto glfwGetVideoModes = [](GLFWmonitor*, int*) -> GLFWvidmode* {
+            return nullptr;
+        };
+#endif 
         GLFWmonitor* monitor = glfwGetPrimaryMonitor();
         int count = 0;
         const GLFWvidmode* modes = glfwGetVideoModes(monitor, &count);
@@ -176,6 +187,11 @@ struct Settings {
 
             settings::RESOLUTION_OPTIONS.push_back(settings::ResolutionInfo{
                 .width = mode.width, .height = mode.height});
+        }
+        
+        if (settings::RESOLUTION_OPTIONS.empty()) {
+            settings::RESOLUTION_OPTIONS.push_back(settings::ResolutionInfo{
+                .width = 1280, .height = 720}); 
         }
 
         // TODO SPEED this kinda slow but it only happens once

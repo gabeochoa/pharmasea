@@ -42,16 +42,25 @@ constexpr BoundingBox get_bounds(vec3 position, vec3 size) {
 
 namespace vec {
 
+float constexpr newton_raphson(float x, float cur, float prev) {
+    return cur == prev ? cur : newton_raphson(x, 0.5 * (cur + x / cur), cur);
+}
+
+float constexpr ce_sqrtf(float x) {
+    return x >= 0 && x < std::numeric_limits<float>::infinity()
+                ? newton_raphson(x, x, 0)
+                : std::numeric_limits<float>::quiet_NaN();
+}
+
 constexpr float distance(vec2 a, vec2 b) {
-    return sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+    return ce_sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
 
-constexpr float dot2(const vec2& a, const vec2& b) {
-    float result = (a.x * b.x + a.y * b.y);
-    return result;
+float dot2(const vec2& a, const vec2& b) {
+    return (a.x * b.x + a.y * b.y);
 }
 
-constexpr vec2 norm(const vec2& a) {
+vec2 norm(const vec2& a) {
     float mag = dot2(a, a);
     return (a / mag);
 }
@@ -60,11 +69,11 @@ constexpr vec3 to3(vec2 position) { return {position.x, 0, position.y}; }
 
 constexpr vec2 to2(vec3 position) { return {position.x, position.z}; }
 
-constexpr vec2 snap(vec2 position) {
+vec2 snap(vec2 position) {
     return {TILESIZE * round(position.x / TILESIZE),  //
             TILESIZE * round(position.y / TILESIZE)};
 }
-constexpr vec3 snap(vec3 position) {
+ vec3 snap(vec3 position) {
     return {TILESIZE * round(position.x / TILESIZE),  //
             position.y,                               //
             TILESIZE * round(position.z / TILESIZE)};

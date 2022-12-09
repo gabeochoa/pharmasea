@@ -29,8 +29,10 @@
     <ClInclude Include="..\src\app.h" />
     <ClInclude Include="..\src\assert.h" />
     <ClInclude Include="..\src\astar.h" />
+    <ClInclude Include="..\src\atomic_queue.h" />
     <ClInclude Include="..\src\base_player.h" />
     <ClInclude Include="..\src\camera.h" />
+    <ClInclude Include="..\src\constexpr_containers.h" />
     <ClInclude Include="..\src\customer.h" />
     <ClInclude Include="..\src\defer.h" />
     <ClInclude Include="..\src\drawing_util.h" />
@@ -50,11 +52,15 @@
     <ClInclude Include="..\src\gamelayer.h" />
     <ClInclude Include="..\src\gamepad_axis_with_dir.h" />
     <ClInclude Include="..\src\globals.h" />
+    <ClInclude Include="..\src\globals_register.h" />
+    <ClInclude Include="..\src\is_server.h" />
     <ClInclude Include="..\src\item.h" />
+    <ClInclude Include="..\src\item_helper.h" />
     <ClInclude Include="..\src\job.h" />
     <ClInclude Include="..\src\keymap.h" />
     <ClInclude Include="..\src\layer.h" />
     <ClInclude Include="..\src\library.h" />
+    <ClInclude Include="..\src\map.h" />
     <ClInclude Include="..\src\medicine.h" />
     <ClInclude Include="..\src\menu.h" />
     <ClInclude Include="..\src\menulayer.h" />
@@ -64,24 +70,29 @@
     <ClInclude Include="..\src\music_library.h" />
     <ClInclude Include="..\src\names.h" />
     <ClInclude Include="..\src\navmesh.h" />
+    <ClInclude Include="..\src\networklayer.h" />
     <ClInclude Include="..\src\network\client.h" />
     <ClInclude Include="..\src\network\network.h" />
     <ClInclude Include="..\src\network\networklayer.h" />
     <ClInclude Include="..\src\network\server.h" />
     <ClInclude Include="..\src\network\shared.h" />
     <ClInclude Include="..\src\network\webrequest.h" />
+    <ClInclude Include="..\src\pauselayer.h" />
     <ClInclude Include="..\src\person.h" />
     <ClInclude Include="..\src\player.h" />
     <ClInclude Include="..\src\polygon.h" />
     <ClInclude Include="..\src\preload.h" />
+    <ClInclude Include="..\src\profile.h" />
     <ClInclude Include="..\src\random.h" />
     <ClInclude Include="..\src\remote_player.h" />
     <ClInclude Include="..\src\resources\fonts\Karmina_Regular_256.h" />
     <ClInclude Include="..\src\settings.h" />
     <ClInclude Include="..\src\settingslayer.h" />
+    <ClInclude Include="..\src\shader_library.h" />
     <ClInclude Include="..\src\singleton.h" />
     <ClInclude Include="..\src\sound_library.h" />
     <ClInclude Include="..\src\spawner.h" />
+    <ClInclude Include="..\src\streamersafelayer.h" />
     <ClInclude Include="..\src\targetcube.h" />
     <ClInclude Include="..\src\tests\all_tests.h" />
     <ClInclude Include="..\src\tests\test_entity_fetching.h" />
@@ -180,6 +191,7 @@
     <ClInclude Include="..\yotest\shared.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\app.cpp" />
     <ClCompile Include="..\src\files.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\network\webrequest.cpp" />
@@ -289,7 +301,7 @@
       <DisableSpecificWarnings>4576;4996</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
-      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zc:__cplusplus /bigobj %(AdditionalOptions)</AdditionalOptions>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
     </ClCompile>
     <Link>
