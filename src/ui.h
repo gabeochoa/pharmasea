@@ -3,6 +3,7 @@
 
 #include "external_include.h"
 //
+#include "globals_register.h"
 #include "raylib.h"
 #include "ui_color.h"
 #include "ui_context.h"
@@ -91,6 +92,9 @@ bool checkbox(
     bool* cbState = nullptr,
     // optional label to replace X and ``
     std::string* label = nullptr);
+
+bool scroll_view(const Widget& widget, std::function<void()> children,
+                 float* startingLocation = nullptr);
 
 ///////// ////// ////// ////// ////// ////// ////// //////
 ///////// ////// ////// ////// ////// ////// ////// //////
@@ -406,22 +410,11 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
 
     get().push_parent(widget.me);
     {
-        std::shared_ptr<Widget> selected_widget = get().make_temp_widget(
-            new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
-                       {
-                           .mode = Percent,
-                           .value = 1.f,
-                           .strictness = 1.f,
-                       },
-                       {
-                           .mode = Percent,
-                           .value = 1.f,
-                           .strictness = 0.9f,
-                       },
-                       GrowFlags::Column));
-
         // Draw the main body of the dropdown
-        pressed = button(*selected_widget, selected_option);
+        pressed = button(
+            *ui::components::mk_button(MK_UUID(widget.id.ownerLayer, widget.id),
+                                       Size_Pct(1.f, 1.f), Size_Pct(1.f, 0.9f)),
+            selected_option);
 
         // TODO right now you can change values through tab or through
         // arrow keys, maybe we should only allow arrows
@@ -448,17 +441,35 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
             float full_width = widget.size_expected[0].value;
             float item_size = widget.size_expected[1].value;
 
-            std::shared_ptr<Widget> button_list_widget = get().make_temp_widget(
-                new Widget(MK_UUID(widget.id.ownerLayer, widget.id),
-                           Size_Px(full_width, 1.f),
-                           Size_Px(item_size * options.size(), 1.f),
-                           GrowFlags::Column));
-            button_list_widget->absolute = true;
+            const auto unbound_children =
+                [](const Widget& widget, std::vector<std::string> options,
+                   int* selectedIndex, bool* childrenHaveFocus,
+                   float full_width, float item_size, bool* shouldClose) {
+                    std::shared_ptr<Widget> button_list_widget = get().own(
+                        Widget(MK_UUID(widget.id.ownerLayer, widget.id),
+                               Size_Px(full_width, 1.f),
+                               Size_Px(item_size * options.size(), 1.f),
+                               GrowFlags::Column));
+                    button_list_widget->absolute = true;
 
-            if (button_list(*button_list_widget, options, selectedIndex,
-                            &childrenHaveFocus)) {
+                    if (button_list(*button_list_widget, options, selectedIndex,
+                                    childrenHaveFocus)) {
+                        *shouldClose = true;
+                        get().kb_focus_id = widget.id;
+                    }
+                };
+            bool shouldClose = false;
+            const auto children = std::bind(
+                unbound_children, widget, options, selectedIndex,
+                &childrenHaveFocus, full_width, item_size, &shouldClose);
+
+            auto sv_widget =
+                get().own(Widget(MK_UUID(widget.id.ownerLayer, widget.id),
+                                 Size_Px(full_width, 1.f), Size_Px(20, 1.f)));
+            scroll_view(*sv_widget, children);
+
+            if (shouldClose) {
                 state->on = false;
-                get().kb_focus_id = widget.id;
             }
         }
 
@@ -674,7 +685,7 @@ bool checkbox(const Widget& widget, bool* cbState, std::string* label) {
 }
 
 bool scroll_view(const Widget& widget, std::function<void()> children,
-                 float* startingLocation = nullptr) {
+                 float* startingLocation) {
     UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
 
     // TODO can this move into init_widget?
@@ -685,24 +696,33 @@ bool scroll_view(const Widget& widget, std::function<void()> children,
         return false;
     }
 
-    active_if_mouse_inside(widget.id, lf.rect.value());
+    // TODO do we need this for scroll?
+    // active_if_mouse_inside(widget.id, lf.rect.value());
+
+    // Turn off main texture so we can draw
+    EndTextureMode();
 
     int rt_id = get().get_new_render_texture();
     get().turn_on_render_texture(rt_id);
     children();
     get().turn_off_texture_mode();
 
-    get().draw_texture(rt_id, (Rectangle){0, 0, 1000.f, -1000.f},
+    // turn back on the main texture to continue drawing
+    auto mainRT = GLOBALS.get<RenderTexture2D>("mainRT");
+    BeginTextureMode(mainRT);
+
+    get().draw_texture(rt_id, (Rectangle){0, 0, 10.f, -10.f},
                        {widget.rect.x, widget.rect.y});
-
-    if (is_hot(widget.id)) {
-        state->yoffset = state->yoffset + get().yscrolled;
-        get().yscrolled = 0;
-    }
-
-    // TODO support opaque scroll views
-
-    return state->yoffset.changed_since;
+    //
+    // if (is_hot(widget.id)) {
+    // state->yoffset = state->yoffset + get().yscrolled;
+    // get().yscrolled = 0;
+    // }
+    //
+    // // TODO support opaque scroll views
+    //
+    // return state->yoffset.changed_since;
+    return true;
 }
 
 }  // namespace ui
