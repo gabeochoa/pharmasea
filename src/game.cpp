@@ -44,16 +44,16 @@ void startup() {
         //
         "PharmaSea",
         //
-        []() {
-            // Has to happen after init window due
-            // to font requirements
-            Preload::get();
-        },
+        []() {},
         //
         LOG_WARNING,
     });
 
     // -------- Its unlikely anything should go above this line ----- //
+
+    // Has to happen after init window due
+    // to font requirements
+    Preload::get();
 
     tests::run_all();
     std::cout << "All tests ran successfully" << std::endl;
