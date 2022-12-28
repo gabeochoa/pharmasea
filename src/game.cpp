@@ -33,22 +33,25 @@
 #include "./tests/all_tests.h"
 
 void startup() {
-    SetTargetFPS(120);
-    // Disable all that startup logging
-    SetTraceLogLevel(LOG_WARNING);
-    auto as = AppSettings{//
-                          WIN_W(), WIN_H(),
-                          //
-                          "PharmaSea",
-                          //
-                          []() {
-                              // Has to happen after init window due
-                              // to font requirements
-                              Preload::get();
-                          }};
     // Force the app to be created.
     // This unlocks GPU access so we can load textures
-    App::get_and_create(as);
+    App::get_and_create(AppSettings{
+        //
+        120,
+        //
+        WIN_W(),
+        WIN_H(),
+        //
+        "PharmaSea",
+        //
+        []() {
+            // Has to happen after init window due
+            // to font requirements
+            Preload::get();
+        },
+        //
+        LOG_WARNING,
+    });
 
     // -------- Its unlikely anything should go above this line ----- //
 

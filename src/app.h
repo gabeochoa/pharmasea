@@ -12,10 +12,12 @@
 #include "singleton.h"
 
 struct AppSettings {
+    int fps;
     int width;
     int height;
     const char* title;
     std::function<void(void)> onCreate = {};
+    TraceLogLevel logLevel = LOG_ERROR;
 };
 
 SINGLETON_FWD(App)
@@ -35,6 +37,9 @@ struct App {
         height = settings.height;
 
         InitWindow(width, height, settings.title);
+
+        SetTargetFPS(settings.fps);
+        SetTraceLogLevel(settings.logLevel);
 
         if (settings.onCreate) settings.onCreate();
 
