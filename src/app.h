@@ -4,33 +4,43 @@
 #include "external_include.h"
 //
 #include "event.h"
-#include "globals.h"
 #include "globals_register.h"
 #include "keymap.h"
 #include "layer.h"
-#include "preload.h"
 #include "profile.h"
 #include "raylib.h"
 #include "singleton.h"
 
+struct AppSettings {
+    int width;
+    int height;
+    const char* title;
+    std::function<void(void)> onCreate = {};
+};
+
 SINGLETON_FWD(App)
 struct App {
-    SINGLETON(App)
+    SINGLETON_PARAM(App, AppSettings)
 
     bool running = false;
     LayerStack layerstack;
+    int width;
+    int height;
 
     // TODO create a render texture library?
     RenderTexture2D mainRT;
 
-    App() {
-        InitWindow(WIN_W(), WIN_H(), "pharmasea");
+    explicit App(const AppSettings& settings) {
+        width = settings.width;
+        height = settings.height;
 
-        // Has to happen after init window due to font requirements
-        Preload::get();
+        InitWindow(width, height, settings.title);
+
+        if (settings.onCreate) settings.onCreate();
+
         KeyMap::get();
 
-        mainRT = LoadRenderTexture(WIN_W(), WIN_H());
+        mainRT = LoadRenderTexture(width, height);
         GLOBALS.set("mainRT", &mainRT);
     }
 
@@ -51,10 +61,14 @@ struct App {
     bool onWindowResize(WindowResizeEvent event) {
         // std::cout << "Got Window Resize Event: " << event.width << ", "
         // << event.height << std::endl;
-        SetWindowSize(event.width, event.height);
+
+        width = event.width;
+        height = event.height;
+
+        SetWindowSize(width, height);
 
         UnloadRenderTexture(mainRT);
-        mainRT = LoadRenderTexture(WIN_W(), WIN_H());
+        mainRT = LoadRenderTexture(width, height);
         GLOBALS.set("mainRT", &mainRT);
         return true;
     }
@@ -121,14 +135,12 @@ struct App {
     void end_post_processing();
 
     void render_to_screen() {
-        const float width = WIN_WF();
-        const float height = WIN_HF();
-
         BeginDrawing();
         {
             start_post_processing();
             {
-                DrawTextureRec(mainRT.texture, {0, 0, width, -height}, {0, 0},
+                DrawTextureRec(mainRT.texture,
+                               {0, 0, width * 1.f, -height * 1.f}, {0, 0},
                                WHITE);
             }
             end_post_processing();
