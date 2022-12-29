@@ -17,8 +17,8 @@ SINGLETON_FWD(Files)
 struct Files {
     SINGLETON_PARAM(Files, FilesConfig)
 
-    std::string_view root;
-    std::string_view settings_file;
+    std::string root;
+    std::string settings_file;
 
     explicit Files(FilesConfig config);
     fs::path game_folder();

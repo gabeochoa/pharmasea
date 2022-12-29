@@ -97,12 +97,7 @@ struct Settings {
 
     settings::Data data;
 
-    Settings() {
-        Files::get_and_create(FilesConfig{
-            GAME_FOLDER,
-            SETTINGS_FILE_NAME,
-        });
-    }
+    Settings() {}
 
     ~Settings() {}
 

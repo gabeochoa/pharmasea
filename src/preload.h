@@ -6,6 +6,7 @@
 #include "engine/singleton.h"
 #include "raylib.h"
 //
+#include "engine/files.h"
 #include "engine/model_library.h"
 #include "engine/music_library.h"
 #include "engine/shader_library.h"

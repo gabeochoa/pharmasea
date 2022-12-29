@@ -51,15 +51,22 @@ void startup() {
 
     // -------- Its unlikely anything should go above this line ----- //
 
+    // Doesnt strictly need to be before preload but just to be safe
+    Files::get_and_create(FilesConfig{
+        GAME_FOLDER,
+        SETTINGS_FILE_NAME,
+    });
+
+    // Load save file so username is ready for when network starts
+    // Load before preload incase we need to read file names or fonts from files
+    Settings::get().load_save_file();
+
     // Has to happen after init window due
     // to font requirements
     Preload::get();
 
     tests::run_all();
     std::cout << "All tests ran successfully" << std::endl;
-
-    // Load save file so username is ready for when network starts
-    Settings::get().load_save_file();
 
     Menu::get().set(Menu::State::Root);
 
