@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include "external_include.h"
-//
 #include "ui_color.h"
 
 namespace ui {

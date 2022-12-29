@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine.h"
 #include "external_include.h"
 #include "layer.h"
 #include "menu.h"
@@ -7,10 +8,6 @@
 #include "profile.h"
 #include "raylib.h"
 #include "settings.h"
-#include "ui.h"
-#include "ui_theme.h"
-#include "ui_widget.h"
-#include "uuid.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;

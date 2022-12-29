@@ -2,10 +2,11 @@
 
 #pragma once
 
+#include "raylib.h"
+//
 #include "globals_register.h"
 #include "keymap.h"
 #include "person.h"
-#include "raylib.h"
 //
 #include "furniture.h"
 

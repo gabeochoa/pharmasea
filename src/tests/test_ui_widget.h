@@ -1,8 +1,7 @@
 
 #include "../assert.h"
 #include "../globals.h"
-#include "../ui_autolayout.h"
-#include "../ui_widget.h"
+#include "../engine.h"
 
 namespace tests {
 

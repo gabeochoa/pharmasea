@@ -1,7 +1,9 @@
 
 #pragma once
 
-#include "external_include.h"
+#include <ostream>
+#include <sstream>
+#include <string>
 
 namespace ui {
 
@@ -21,7 +23,8 @@ struct uuid {
     uuid() : uuid(-99, 0, "__MAGIC__STRING__", -1) {}
     uuid(const std::string& s1, std::size_t i1) : uuid(-1, 0, s1, i1) {}
 
-    uuid(std::size_t layer, std::size_t ownerHash, const std::string& s1, std::size_t i1) {
+    uuid(std::size_t layer, std::size_t ownerHash, const std::string& s1,
+         std::size_t i1) {
         ownerLayer = layer;
         auto h0 = std::hash<std::size_t>{}(static_cast<std::size_t>(ownerHash));
         auto h1 = std::hash<std::string>{}(s1);
@@ -29,8 +32,8 @@ struct uuid {
         hash = h0 ^ (h1 << 1) ^ (h2 << 2);
     }
 
-    uuid(std::size_t o, std::size_t ownerHash, const std::string& s1, std::size_t i1,
-         std::size_t index) {
+    uuid(std::size_t o, std::size_t ownerHash, const std::string& s1,
+         std::size_t i1, std::size_t index) {
         ownerLayer = o;
         auto h0 = std::hash<std::size_t>{}(static_cast<std::size_t>(ownerHash));
         auto h1 = std::hash<std::string>{}(s1);

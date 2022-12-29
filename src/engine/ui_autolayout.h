@@ -1,10 +1,9 @@
 
 #pragma once
 
-#include "assert.h"
-#include "external_include.h"
+#include "../assert.h"
+#include "../vec_util.h"
 #include "ui_widget.h"
-#include "vec_util.h"
 
 namespace ui {
 namespace autolayout {

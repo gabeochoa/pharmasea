@@ -1,8 +1,7 @@
 
 #pragma once
 
-#include "external_include.h"
-#include "vec_util.h"
+#include "../vec_util.h"
 
 namespace ui {
 namespace color {

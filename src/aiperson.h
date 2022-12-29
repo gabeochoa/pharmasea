@@ -1,15 +1,16 @@
 
 #pragma once
 
-#include "astar.h"
-#include "entityhelper.h"
 #include "external_include.h"
 //
+#include "astar.h"
+#include "entityhelper.h"
+//
+#include "engine.h"
 #include "globals_register.h"
 #include "job.h"
 #include "person.h"
 #include "sound_library.h"
-#include "ui_color.h"
 
 struct AIPerson : public Person {
     std::stack<std::shared_ptr<Job>> personal_queue;

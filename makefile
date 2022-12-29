@@ -21,14 +21,14 @@ CXX := clang++
 .PHONY: all clean
 
 
-all: $(OBJ_FILES) $(H_FILES)
+all: $(H_FILES) $(OBJ_FILES)
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea && ./pharmasea
 
 
 $(OBJ_DIR)/%.o: %.cpp makefile
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -c $< -o $@ -MMD -MF $(@:.o=.d)
 
-include $(OBJ_FILES:.o=.d)
+# include $(OBJ_FILES:.o=.d)
 %.d: %.cpp
 	$(MAKEDEPEND)
 

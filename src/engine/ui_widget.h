@@ -1,12 +1,10 @@
 
 #pragma once
 
-#include "external_include.h"
-#include "globals.h"
+#include "../std_include.h"
+#include "../vec_util.h"
 #include "raylib.h"
-#include "ui_color.h"
 #include "uuid.h"
-#include "vec_util.h"
 
 namespace ui {
 

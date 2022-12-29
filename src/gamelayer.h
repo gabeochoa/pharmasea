@@ -7,6 +7,7 @@
 #include "globals.h"
 //
 #include "camera.h"
+#include "engine.h"
 #include "files.h"
 #include "keymap.h"
 #include "layer.h"
@@ -17,7 +18,6 @@
 #include "player.h"
 #include "raylib.h"
 #include "texture_library.h"
-#include "ui_color.h"
 
 struct GameLayer : public Layer {
     std::shared_ptr<Player> player;

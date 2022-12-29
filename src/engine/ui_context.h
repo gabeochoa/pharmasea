@@ -1,16 +1,14 @@
 
 #pragma once
 
-#include "external_include.h"
-//
-#include "assert.h"
-#include "event.h"
-#include "gamepad_axis_with_dir.h"
-#include "keymap.h"
-#include "menu.h"
-#include "preload.h"
+#include "../assert.h"
+#include "../event.h"
+#include "../gamepad_axis_with_dir.h"
+#include "../keymap.h"
+#include "../menu.h"
+#include "../preload.h"
+#include "../vec_util.h"
 #include "raylib.h"
-#include "vec_util.h"
 //
 #include "ui_autolayout.h"
 #include "ui_state.h"

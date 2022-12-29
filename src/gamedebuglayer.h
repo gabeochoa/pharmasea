@@ -4,14 +4,13 @@
 #include "event.h"
 #include "external_include.h"
 //
+#include "engine.h"
 #include "globals.h"
 #include "preload.h"
-#include "ui.h"
 //
 #include "camera.h"
 #include "layer.h"
 #include "menu.h"
-#include "ui_color.h"
 
 struct GameDebugLayer : public Layer {
     bool debug_ui_enabled = false;
