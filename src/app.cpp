@@ -2,12 +2,12 @@
 #include "app.h"
 
 //
+#include "engine/globals_register.h"
 #include "engine/keymap.h"
 #include "external_include.h"
 #include "raylib.h"
 //
 
-#include "globals_register.h"
 #include "profile.h"
 #include "settings.h"
 #include "shader_library.h"

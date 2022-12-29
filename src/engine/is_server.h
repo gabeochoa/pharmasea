@@ -3,8 +3,7 @@
 
 #include <thread>
 //
-// TODO move register into
-#include "../globals_register.h"
+#include "globals_register.h"
 
 static bool is_server() {
     auto my_thread_id = std::this_thread::get_id();

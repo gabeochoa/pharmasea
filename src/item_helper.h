@@ -5,9 +5,9 @@
 
 #include "external_include.h"
 //
+#include "engine/globals_register.h"
 #include "engine/is_server.h"
 #include "globals.h"
-#include "globals_register.h"
 
 //
 #include "item.h"

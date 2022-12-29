@@ -7,7 +7,7 @@
 #include "entityhelper.h"
 //
 #include "engine.h"
-#include "globals_register.h"
+#include "engine/globals_register.h"
 #include "job.h"
 #include "person.h"
 #include "sound_library.h"

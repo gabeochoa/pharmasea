@@ -4,7 +4,7 @@
 
 #include "internal/client.h"
 //
-#include "../globals_register.h"
+#include "../engine/globals_register.h"
 #include "../player.h"
 #include "../remote_player.h"
 

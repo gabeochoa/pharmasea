@@ -2,8 +2,8 @@
 #pragma once
 
 #include "engine.h"
+#include "engine/globals_register.h"
 #include "external_include.h"
-#include "globals_register.h"
 #include "layer.h"
 #include "menu.h"
 

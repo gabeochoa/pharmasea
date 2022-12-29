@@ -4,8 +4,8 @@
 
 #include "raylib.h"
 //
+#include "engine/globals_register.h"
 #include "engine/keymap.h"
-#include "globals_register.h"
 #include "person.h"
 //
 #include "furniture.h"
