@@ -31,7 +31,7 @@
 #include <thread>
 #include <tuple>
 
-#include "../../assert.h"
+#include "../../engine/assert.h"
 #include "../../globals.h"
 #include "../shared.h"
 #include "bitsery/serializer.h"

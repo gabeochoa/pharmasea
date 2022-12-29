@@ -8,7 +8,7 @@
 #include <chrono>
 #include <thread>
 
-#include "../../assert.h"
+#include "../../engine/assert.h"
 #include "../shared.h"
 #include "steam/isteamnetworkingsockets.h"
 
