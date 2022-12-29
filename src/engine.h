@@ -8,5 +8,6 @@
 #include "engine/globals_register.h"
 #include "engine/is_server.h"
 #include "engine/keymap.h"
+#include "engine/layer.h"
 #include "engine/timer.h"
 #include "engine/ui.h"

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../layer.h"
+#include "layer.h"
 #include "singleton.h"
 
 struct AppSettings {

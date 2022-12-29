@@ -6,7 +6,6 @@
 //
 #include "engine.h"
 //
-#include "layer.h"
 #include "menu.h"
 
 struct AboutLayer : public Layer {
