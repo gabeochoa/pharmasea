@@ -5,7 +5,6 @@
 //
 #include "globals.h"
 //
-#include "app.h"
 #include "engine.h"
 #include "layer.h"
 #include "settings.h"

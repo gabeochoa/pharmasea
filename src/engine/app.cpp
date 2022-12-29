@@ -2,15 +2,15 @@
 #include "app.h"
 
 //
-#include "engine/globals_register.h"
-#include "engine/keymap.h"
-#include "external_include.h"
+#include "../external_include.h"
+#include "globals_register.h"
+#include "keymap.h"
 #include "raylib.h"
 //
 
-#include "profile.h"
-#include "settings.h"
-#include "shader_library.h"
+#include "../profile.h"
+#include "../settings.h"
+#include "../shader_library.h"
 
 void App::start_post_processing() {
     if (!Settings::get().data.enable_postprocessing) return;

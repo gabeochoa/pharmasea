@@ -10,8 +10,7 @@ NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 INCLUDES = -Ivendor/ 
 LIBS = -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
-# if we need a more generic solution, could probably do src/**/*.cpp (untested) 
-SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp) 
+SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp)
 H_FILES := $(wildcard src/**/*.h) 
 OBJ_DIR := ./output
 OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
@@ -35,6 +34,7 @@ $(OBJ_DIR)/%.o: %.cpp makefile
 clean:
 	rm -r $(OBJ_DIR)
 	mkdir -p $(OBJ_DIR)/src/network/
+	mkdir -p $(OBJ_DIR)/src/engine/
 
 profile: 
 	xctrace record --output . --template "Time Profiler" --time-limit 10s --attach `ps -ef | grep "\./pharmasea" | grep -v "grep"  | cut -d' ' -f4`

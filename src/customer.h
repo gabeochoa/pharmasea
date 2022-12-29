@@ -8,7 +8,6 @@
 #include "aiperson.h"
 //
 #include "ailment.h"
-#include "app.h"
 #include "camera.h"
 #include "furniture/register.h"
 #include "globals.h"
