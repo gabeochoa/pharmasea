@@ -2,10 +2,8 @@
 
 #pragma once
 
-#include "external_include.h"
-//
-#include "engine/library.h"
-#include "engine/singleton.h"
+#include "library.h"
+#include "singleton.h"
 
 SINGLETON_FWD(SoundLibrary)
 struct SoundLibrary {

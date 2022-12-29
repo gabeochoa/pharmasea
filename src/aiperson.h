@@ -8,9 +8,9 @@
 //
 #include "engine.h"
 #include "engine/globals_register.h"
+#include "engine/sound_library.h"
 #include "job.h"
 #include "person.h"
-#include "sound_library.h"
 
 struct AIPerson : public Person {
     std::stack<std::shared_ptr<Job>> personal_queue;

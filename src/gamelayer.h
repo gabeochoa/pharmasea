@@ -8,14 +8,14 @@
 #include "camera.h"
 #include "engine.h"
 #include "engine/layer.h"
+#include "engine/model_library.h"
+#include "engine/music_library.h"
+#include "engine/texture_library.h"
 #include "files.h"
 #include "map.h"
 #include "menu.h"
-#include "model_library.h"
-#include "music_library.h"
 #include "player.h"
 #include "raylib.h"
-#include "texture_library.h"
 
 struct GameLayer : public Layer {
     std::shared_ptr<Player> player;

@@ -6,12 +6,12 @@
 #include "engine/singleton.h"
 #include "raylib.h"
 //
-#include "model_library.h"
-#include "music_library.h"
+#include "engine/model_library.h"
+#include "engine/music_library.h"
+#include "engine/shader_library.h"
+#include "engine/sound_library.h"
+#include "engine/texture_library.h"
 #include "resources/fonts/Karmina_Regular_256.h"
-#include "shader_library.h"
-#include "sound_library.h"
-#include "texture_library.h"
 
 SINGLETON_FWD(Preload)
 struct Preload {

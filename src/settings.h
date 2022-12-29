@@ -11,10 +11,10 @@
 
 #include "engine/app.h"
 #include "engine/event.h"
+#include "engine/music_library.h"
 #include "engine/singleton.h"
 #include "files.h"
 #include "globals.h"
-#include "music_library.h"
 #include "util.h"
 
 namespace settings {

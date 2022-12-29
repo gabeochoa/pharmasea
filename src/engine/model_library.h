@@ -1,11 +1,9 @@
 
 #pragma once
 
-#include "external_include.h"
-//
-#include "engine/library.h"
-#include "engine/singleton.h"
-#include "files.h"
+#include "../files.h"
+#include "library.h"
+#include "singleton.h"
 
 SINGLETON_FWD(ModelLibrary)
 struct ModelLibrary {
