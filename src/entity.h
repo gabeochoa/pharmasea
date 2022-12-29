@@ -12,7 +12,7 @@
 #include "item_helper.h"
 #include "menu.h"
 #include "preload.h"
-#include "random.h"
+// #include "random.h"
 #include "raylib.h"
 #include "text_util.h"
 #include "util.h"

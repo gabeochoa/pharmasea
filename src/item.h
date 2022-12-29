@@ -4,8 +4,8 @@
 //
 #include "engine.h"
 #include "engine/model_library.h"
+#include "engine/random.h"
 #include "globals.h"
-#include "random.h"
 #include "raylib.h"
 #include "vec_util.h"
 

@@ -12,9 +12,9 @@
 #include "engine.h"
 #include "external_include.h"
 //
+#include "engine/random.h"
 #include "entity.h"
 #include "furnitures.h"
-#include "random.h"
 #include "remote_player.h"
 
 const std::string TINY = R"(
