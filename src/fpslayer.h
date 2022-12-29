@@ -2,9 +2,9 @@
 
 #include "engine/globals_register.h"
 #include "engine/layer.h"
+#include "engine/profile.h"
 #include "external_include.h"
 #include "preload.h"
-#include "profile.h"
 #include "raylib.h"
 
 using namespace profile;
