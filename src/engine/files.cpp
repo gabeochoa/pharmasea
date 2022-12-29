@@ -1,7 +1,5 @@
 #include "files.h"
 
-#include "globals.h"
-
 #ifdef __APPLE__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
@@ -26,11 +24,14 @@
 #pragma GCC diagnostic pop
 #endif
 
-Files::Files() { ensure_game_folder_exists(); }
+Files::Files(FilesConfig config)
+    : root(config.root_folder), settings_file(config.settings_file_name) {
+    ensure_game_folder_exists();
+}
 
 fs::path Files::game_folder() {
     const fs::path master_folder(sago::getSaveGamesFolder1());
-    return master_folder / fs::path(GAME_FOLDER);
+    return master_folder / fs::path(root);
 }
 
 bool Files::ensure_game_folder_exists() {
@@ -47,7 +48,7 @@ bool Files::ensure_game_folder_exists() {
 }
 
 fs::path Files::settings_filepath() {
-    fs::path file(SETTINGS_FILE_NAME);
+    fs::path file(settings_file);
     fs::path full_path = game_folder() / file;
     return full_path;
 }

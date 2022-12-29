@@ -11,9 +11,9 @@
 
 #include "engine/app.h"
 #include "engine/event.h"
+#include "engine/files.h"
 #include "engine/music_library.h"
 #include "engine/singleton.h"
-#include "files.h"
 #include "globals.h"
 #include "util.h"
 
@@ -97,7 +97,12 @@ struct Settings {
 
     settings::Data data;
 
-    Settings() {}
+    Settings() {
+        Files::get_and_create(FilesConfig{
+            GAME_FOLDER,
+            SETTINGS_FILE_NAME,
+        });
+    }
 
     ~Settings() {}
 

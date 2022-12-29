@@ -11,7 +11,6 @@
 #include "engine/model_library.h"
 #include "engine/music_library.h"
 #include "engine/texture_library.h"
-#include "files.h"
 #include "map.h"
 #include "menu.h"
 #include "player.h"

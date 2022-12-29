@@ -5,9 +5,9 @@
 
 #include "raylib.h"
 //
-#include "../files.h"
 #include "../menu.h"
 #include "../util.h"
+#include "files.h"
 //
 #include "event.h"
 #include "gamepad_axis_with_dir.h"

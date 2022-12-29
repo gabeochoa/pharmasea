@@ -2,15 +2,25 @@
 #pragma once
 
 #include <filesystem>
+#include <string>
 
-#include "engine/singleton.h"
+#include "singleton.h"
 
 namespace fs = std::filesystem;
 
+struct FilesConfig {
+    std::string_view root_folder;
+    std::string_view settings_file_name;
+};
+
 SINGLETON_FWD(Files)
 struct Files {
-    SINGLETON(Files)
-    Files();
+    SINGLETON_PARAM(Files, FilesConfig)
+
+    std::string_view root;
+    std::string_view settings_file;
+
+    explicit Files(FilesConfig config);
     fs::path game_folder();
     bool ensure_game_folder_exists();
     fs::path settings_filepath();
