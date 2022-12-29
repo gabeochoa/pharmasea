@@ -10,12 +10,11 @@
 //
 
 #include "app.h"
-#include "constexpr_containers.h"
-#include "event.h"
+#include "engine/event.h"
+#include "engine/singleton.h"
 #include "files.h"
 #include "globals.h"
 #include "music_library.h"
-#include "singleton.h"
 #include "util.h"
 
 namespace settings {

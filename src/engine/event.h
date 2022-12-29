@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "external_include.h"
+#include "../external_include.h"
 #include "gamepad_axis_with_dir.h"
 
 enum class EventType {

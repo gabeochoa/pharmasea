@@ -6,8 +6,8 @@
 #include <map>
 
 #include "astar.h"
+#include "engine/is_server.h"
 #include "globals.h"
-#include "is_server.h"
 #include "item.h"
 #include "item_helper.h"
 #include "menu.h"

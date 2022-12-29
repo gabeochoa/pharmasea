@@ -2,8 +2,8 @@
 
 #include "external_include.h"
 //
+#include "engine/singleton.h"
 #include "library.h"
-#include "singleton.h"
 
 SINGLETON_FWD(MusicLibrary)
 struct MusicLibrary {

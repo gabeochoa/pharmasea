@@ -6,7 +6,7 @@
 #include "entity.h"
 #include "entityhelper.h"
 //
-#include "keymap.h"
+#include "engine/keymap.h"
 
 struct Person : public Entity {
    private:

@@ -1,9 +1,8 @@
 
 #pragma once
 
-#include "event.h"
+#include "engine/singleton.h"
 #include "layer.h"
-#include "singleton.h"
 
 struct AppSettings {
     int fps;

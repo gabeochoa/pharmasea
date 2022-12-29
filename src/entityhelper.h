@@ -6,9 +6,9 @@
 #include "assert.h"
 #include "external_include.h"
 //
+#include "engine/is_server.h"
 #include "globals.h"
 #include "globals_register.h"
-#include "is_server.h"
 
 //
 #include "entity.h"

@@ -2,12 +2,12 @@
 #pragma once
 
 #include "../assert.h"
-#include "../event.h"
-#include "../gamepad_axis_with_dir.h"
-#include "../keymap.h"
 #include "../menu.h"
 #include "../preload.h"
 #include "../vec_util.h"
+#include "event.h"
+#include "gamepad_axis_with_dir.h"
+#include "keymap.h"
 #include "raylib.h"
 //
 #include "ui_autolayout.h"

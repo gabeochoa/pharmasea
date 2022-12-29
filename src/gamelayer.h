@@ -1,7 +1,6 @@
 #pragma once
 
 #include "drawing_util.h"
-#include "event.h"
 #include "external_include.h"
 //
 #include "globals.h"
@@ -9,7 +8,6 @@
 #include "camera.h"
 #include "engine.h"
 #include "files.h"
-#include "keymap.h"
 #include "layer.h"
 #include "map.h"
 #include "menu.h"

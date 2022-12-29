@@ -3,15 +3,15 @@
 
 #include <tuple>
 
-#include "external_include.h"
+#include "raylib.h"
+//
+#include "../files.h"
+#include "../menu.h"
+#include "../util.h"
 //
 #include "event.h"
-#include "files.h"
 #include "gamepad_axis_with_dir.h"
-#include "menu.h"
-#include "raylib.h"
 #include "singleton.h"
-#include "util.h"
 
 enum InputName {
     // Shared
