@@ -1,7 +1,7 @@
 
-#include "../assert.h"
+#include "../engine/assert.h"
+#include "../engine/ui.h"
 #include "../globals.h"
-#include "../engine.h"
 
 namespace tests {
 

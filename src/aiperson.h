@@ -3,12 +3,11 @@
 
 #include "external_include.h"
 //
-#include "astar.h"
-#include "entityhelper.h"
-//
-#include "engine.h"
+#include "engine/astar.h"
 #include "engine/globals_register.h"
 #include "engine/sound_library.h"
+//
+#include "entityhelper.h"
 #include "job.h"
 #include "person.h"
 

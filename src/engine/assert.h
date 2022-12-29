@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "std_include.h"
+#include <cassert>
 
 #define M_ASSERT(x, ...)                       \
     {                                          \

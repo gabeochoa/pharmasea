@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "../assert.h"
 #include "../vec_util.h"
+#include "assert.h"
 #include "ui_widget.h"
 
 namespace ui {

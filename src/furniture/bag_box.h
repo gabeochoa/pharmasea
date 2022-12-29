@@ -3,7 +3,6 @@
 
 #include "../external_include.h"
 //
-#include "../assert.h"
 #include "../entity.h"
 #include "../globals.h"
 //

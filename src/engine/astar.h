@@ -3,10 +3,10 @@
 
 #include <limits>
 
-#include "external_include.h"
-#include "globals.h"
-#include "util.h"
-#include "vec_util.h"
+#include "../external_include.h"
+#include "../globals.h"
+#include "../util.h"
+#include "../vec_util.h"
 
 namespace astar {
 
