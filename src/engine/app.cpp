@@ -2,7 +2,6 @@
 #include "app.h"
 
 //
-#include "../external_include.h"
 #include "globals_register.h"
 #include "keymap.h"
 #include "raylib.h"
