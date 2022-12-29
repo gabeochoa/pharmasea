@@ -2,8 +2,8 @@
 
 #include "external_include.h"
 //
+#include "engine/library.h"
 #include "engine/singleton.h"
-#include "library.h"
 
 SINGLETON_FWD(ShaderLibrary)
 struct ShaderLibrary {

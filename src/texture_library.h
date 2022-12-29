@@ -3,9 +3,9 @@
 
 #include "external_include.h"
 //
+#include "engine/library.h"
 #include "engine/singleton.h"
 #include "files.h"
-#include "library.h"
 
 SINGLETON_FWD(TextureLibrary)
 struct TextureLibrary {
