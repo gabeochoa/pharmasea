@@ -3,6 +3,7 @@
 
 #include "../vec_util.h"
 #include "assert.h"
+#include "log.h"
 #include "ui_widget.h"
 
 namespace ui {
@@ -30,7 +31,7 @@ namespace autolayout {
 const float ACCEPTABLE_ERROR = 0.5f;
 
 float compute_size_for_standalone_expectation(Widget* widget, int exp_index) {
-    // std::cout << "csfse" << widget << " " << exp_index << std::endl;
+    log_trace("csfse {} {}", *widget, exp_index);
     SizeExpectation exp = widget->size_expected[exp_index];
     switch (exp.mode) {
         case SizeMode::Pixels:
@@ -111,7 +112,7 @@ float _max_child_size(Widget* widget, int exp_index) {
 }
 
 float compute_size_for_child_expectation(Widget* widget, int exp_index) {
-    // std::cout << "csfce" << *widget << " " << exp_index << std::endl;
+    log_trace("csfce {} {}", *widget, exp_index);
     float no_change = widget->computed_size[exp_index];
     if (widget->children.empty()) return no_change;
 
@@ -253,7 +254,7 @@ void fix_violating_children(Widget* widget, int exp_index, float error,
         //
     ) {
         widget->print_tree();
-        std::cout << "Error was " << error << std::endl;
+        log_warn("Error was {}", error);
         M_ASSERT(
             num_resizeable_children > 0,
             "Cannot fit all children inside parent and unable to resize any of "
@@ -289,9 +290,7 @@ void tax_refund(Widget* widget, int exp_index, float error) {
     }
 
     if (num_eligible_children == 0) {
-        // std::cout << " I have all this money to return, but no one wants it
-        // :( "
-        // << std::endl;
+        log_trace("I have all this money to return, but no one wants it :(");
         return;
     }
 
@@ -303,8 +302,7 @@ void tax_refund(Widget* widget, int exp_index, float error) {
         SizeExpectation exp = child->size_expected[exp_index];
         if (exp.strictness == 0.f) {
             child->computed_size[exp_index] += abs(indiv_refund);
-            // std::cout << "just gave back, time for trickle down" <<
-            // std::endl;
+            log_trace("Just gave back, time for trickle down");
             tax_refund(child, exp_index, indiv_refund);
         }
         // TODO idk if we should do this for all non 1.f children?
@@ -339,15 +337,16 @@ void solve_violations(Widget* widget) {
     float all_children_x = _get_total_child_size_for_violations(widget, 0);
     float error_x = all_children_x - my_size_x;
     int i_x = 0;
-    // std::cout << "preopt errorx" << error_x << std::endl;
+    log_trace("preopt errorx {} ", error_x);
     while (error_x > ACCEPTABLE_ERROR) {
         _solve_error_with_optional(widget, 0, &error_x);
         i_x++;
-        // std::cout << "errorx" << error_x << std::endl;
+        log_trace("error x {}", error_x);
         fix_violating_children(widget, 0, error_x, num_children);
         all_children_x = _get_total_child_size_for_violations(widget, 0);
         error_x = all_children_x - my_size_x;
         if (i_x > 100) {
+            log_warn("Hit X-axis iteration limit trying to solve violations");
             // M_ASSERT(false, "hit x iteration limit trying to solve
             // violations");
             break;
@@ -361,16 +360,16 @@ void solve_violations(Widget* widget) {
     float all_children_y = _get_total_child_size_for_violations(widget, 1);
     float error_y = all_children_y - my_size_y;
     int i_y = 0;
-    // std::cout << "pre ope errory" << error_y << std::endl;
+    log_trace("preopt errory {} ", error_y);
     while (error_y > ACCEPTABLE_ERROR) {
         _solve_error_with_optional(widget, 1, &error_y);
         i_y++;
-        // std::cout << "errory" << error_y << std::endl;
+        log_trace("error y {}", error_y);
         fix_violating_children(widget, 1, error_y, num_children);
         all_children_y = _get_total_child_size_for_violations(widget, 1);
         error_y = all_children_y - my_size_y;
         if (i_y > 100) {
-            // widget->print_tree();
+            log_warn("Hit Y-axis iteration limit trying to solve violations");
             // M_ASSERT(false, "hit y iteration limit trying to solve
             // violations");
             break;
@@ -470,7 +469,7 @@ void compute_relative_positions(Widget* widget) {
 }
 
 void compute_rect_bounds(Widget* widget) {
-    // std::cout << "computing rect bounds for " << widget << std::endl;
+    log_trace("computing rect bounds for {}", *widget);
     vec2 offset = vec2{0.f, 0.f};
     Widget* parent = widget->parent;
     if (parent) {

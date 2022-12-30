@@ -8,7 +8,9 @@
 #include "event.h"
 #include "gamepad_axis_with_dir.h"
 #include "keymap.h"
+#include "log.h"
 #include "raylib.h"
+#include "type_name.h"
 //
 #include "ui_autolayout.h"
 #include "ui_state.h"
@@ -366,14 +368,10 @@ struct UIContext {
     std::shared_ptr<T> widget_init(const uuid id) {
         std::shared_ptr<T> state = statemanager.getAndCreateIfNone<T>(id);
         if (state == nullptr) {
-            // TODO add log support
-            std::cout << "State for your id is of wrong type. Check to make "
-                         "sure your ids are globally unique"
-                      << std::endl;
-            // log_error(
-            // "State for id ({}) of wrong type, expected {}. Check to "
-            // "make sure your id's are globally unique",
-            // std::string(id), type_name<T>());
+            log_error(
+                "State for id ({}) of wrong type, expected {}. Check to "
+                "make sure your id's are globally unique",
+                std::string(id), type_name<T>());
         }
         return state;
     }
@@ -429,11 +427,10 @@ struct UIContext {
             // the smaller the number we multiply by (>1) the better fitting the
             // text will be
             font_size = ceilf(font_size * 1.15f);
-            // std::cout << "measuring for " << font_size << std::endl;
+            log_trace("measuring for {}", font_size);
             size = MeasureTextEx(font, content.c_str(), font_size, spacing);
-            // std::cout << "got " << size.x << ", " << size.y << " for "
-            // << font_size << " and " << width << ", " << height
-            // << " and last was: " << last_size << std::endl;
+            log_trace("got {},{} for {} and {},{} and last was: {}", size.x,
+                      size.y, font_size, width, height, last_size);
         } while (size.x <= width && size.y <= height);
 
         // return the last one that passed
@@ -448,10 +445,10 @@ struct UIContext {
             _font_size_memo[fzinfo] =
                 get_font_size_impl(content, width, height, spacing);
         } else {
-            // std::cout << "found value in cache" << std::endl;
+            log_trace("found value in cache");
         }
         float result = _font_size_memo[fzinfo];
-        // std::cout << "cache value " << result << std::endl;
+        log_trace("cache value was {}", result);
         return result;
     }
 
@@ -472,9 +469,7 @@ struct UIContext {
         float spacing = 0.f;
         float font_size =
             get_font_size(content, rect.width, rect.height, spacing);
-        // std::cout << "selected font size: " << font_size << " for " << rect.x
-        // << ", " << rect.y << ", " << rect.width << ", " << rect.height
-        // << std::endl;
+        log_trace("selected font size: {} for {}", font_size, rect);
         DrawTextEx(font,                                   //
                    content.c_str(),                        //
                    {rect.x, rect.y},                       //

@@ -218,10 +218,9 @@ UIContext::LastFrame init_widget(const Widget& widget, const char* func) {
     // either the layer id or an example widget
 
     // if (uses_state && widget.id ==
-    // get().default_state_id) { std::cout << "You need to initialize the id on
+    // get().default_state_id) { log_warn("You need to initialize the id on
     // this widget, because it " "uses global state." " In your widget
-    // contructor pass 'MK_UUID(id, ROOT_ID)' " "as the first parameter."
-    // << std::endl;
+    // contructor pass 'MK_UUID(id, ROOT_ID)' " "as the first parameter.");
     // }
     Widget::set_element(widget, func);
     get().add_child(widget.me);
@@ -476,7 +475,7 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
         // because its not a real selection, just
         // a tab out
         // if (!childrenHaveFocus && !has_kb_focus(widget.id)) {
-        // std::cout << "kbfocus false" << std::endl;
+        // log_info("kbfocus false");
         // state->on = false;
         // }
     }

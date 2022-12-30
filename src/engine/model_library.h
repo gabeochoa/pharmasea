@@ -10,8 +10,7 @@ struct ModelLibrary {
 
     struct ModelLibraryImpl : Library<Model> {
         virtual void load(const char* filename, const char* name) override {
-            std::cout << "loading model: " << name << " from " << filename
-                      << std::endl;
+            log_info("Loading model: {} from {}", name, filename);
             this->add(name, LoadModel(filename));
         }
         virtual void unload(Model model) override { UnloadModel(model); }

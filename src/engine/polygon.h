@@ -2,9 +2,12 @@
 
 #pragma once
 
-#include "external_include.h"
+#include <vector>
+
+#include "../external_include.h"
 //
-#include "vec_util.h"
+#include "../vec_util.h"
+#include "log.h"
 
 // grahamScan
 // https://www.geeksforgeeks.org/dynamic-convex-hull-adding-points-existing-convex-hull/?ref=rp
@@ -139,13 +142,12 @@ struct Polygon {
         auto hasp = std::find(points.begin(), points.end(), p);
         if (hasp == points.end()) {
             if (inside(p)) {
-                std::cout
-                    << "Trying to remove a point that is inside the nav mesh"
-                    << std::endl;
+                log_trace(
+                    "Trying to remove a point that is inside the nav mesh");
             } else {
-                // log_warn(
-                // "Trying to remove a point that isnt in the original nav "
-                // "set mesh");
+                log_warn(
+                    "Trying to remove a point that isnt in the original nav "
+                    "set mesh");
             }
             return;
         }

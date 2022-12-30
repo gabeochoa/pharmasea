@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stack>
 
+#include "engine/log.h"
 #include "engine/singleton.h"
 
 SINGLETON_FWD(Menu)
@@ -37,8 +38,7 @@ struct Menu {
         // Note: this is just for dev to figure out if
         //       we have any issues in our logic that allows circular visits
         if (prev.size() >= 10) {
-            std::cout << "WARNING prev state getting large " << prev.size()
-                      << std::endl;
+            log_warn("prev state getting large: {}", prev.size());
         }
     }
 
@@ -108,7 +108,7 @@ struct Menu {
             case Menu::State::Network:
                 return "Network";
             default:
-                std::cout << "Invalid state" << std::endl;
+                log_warn("no stateToString, Invalid state: {}", state);
                 return "MenuState no stateToString";
         }
     }

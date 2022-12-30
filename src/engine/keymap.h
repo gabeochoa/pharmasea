@@ -11,6 +11,7 @@
 //
 #include "event.h"
 #include "gamepad_axis_with_dir.h"
+#include "log.h"
 #include "singleton.h"
 
 enum InputName {
@@ -202,7 +203,7 @@ struct KeyMap {
                 input);
             if (r != GAMEPAD_BUTTON_UNKNOWN) return r;
         }
-        // std::cout << "couldnt find any button for " << name << std::endl;
+        log_warn("Couldn't find any button for {}", name);
         return GAMEPAD_BUTTON_UNKNOWN;
     }
 

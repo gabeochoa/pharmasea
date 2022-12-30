@@ -12,6 +12,7 @@
 #include "engine.h"
 #include "external_include.h"
 //
+#include "engine/log.h"
 #include "engine/random.h"
 #include "entity.h"
 #include "furnitures.h"
@@ -193,16 +194,16 @@ struct Map {
     void onDraw(float) const {
         for (auto e : entities) {
             if (e) e->render();
-            if (!e) std::cout << "we have invalid entities" << std::endl;
+            if (!e) log_warn("We have invalid entities");
         }
 
         for (auto i : items) {
             if (i) i->render();
-            if (!i) std::cout << "we have invalid items" << std::endl;
+            if (!i) log_warn("we have invalid items");
         }
         for (auto rp : remote_players_NOT_SERIALIZED) {
             if (rp) rp->render();
-            if (!rp) std::cout << "we have invalid remote players" << std::endl;
+            if (!rp) log_warn("we have invalid remote players");
         }
     }
 

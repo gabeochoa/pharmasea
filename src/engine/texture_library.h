@@ -10,9 +10,7 @@ struct TextureLibrary {
 
     struct TextureLibraryImpl : Library<Texture2D> {
         virtual void load(const char* filename, const char* name) override {
-            // TODO add debug mode
-            std::cout << "loading texture: " << name << " from " << filename
-                      << std::endl;
+            log_info("Loading texture: {} from {}", name, filename);
             this->add(name, LoadTexture(filename));
         }
 

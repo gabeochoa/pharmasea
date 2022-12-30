@@ -14,9 +14,6 @@
 
 namespace network {
 
-static void log(std::string msg) { std::cout << msg << std::endl; }
-// std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
 static SteamNetworkingMicroseconds START_TIME;
 
 static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
@@ -121,7 +118,7 @@ struct Info {
 #ifdef BUILD_WITHOUT_STEAM
         SteamDatagramErrMsg errMsg;
         if (!GameNetworkingSockets_Init(nullptr, errMsg)) {
-            log(fmt::format("GameNetworkingSockets init failed {}", errMsg));
+            log_warn("GameNetworkingSockets init failed {}", errMsg);
         }
 #endif
         START_TIME = SteamNetworkingUtils()->GetLocalTimestamp();

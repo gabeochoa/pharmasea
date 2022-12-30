@@ -9,9 +9,7 @@ struct MusicLibrary {
 
     struct MusicLibraryImpl : Library<Music> {
         virtual void load(const char* filename, const char* name) override {
-            // TODO add debug logging mode
-            std::cout << "loading music: " << name << " from " << filename
-                      << std::endl;
+            log_info("Loading music: {} from {}", name, filename);
             this->add(name, LoadMusicStream(filename));
         }
 

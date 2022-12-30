@@ -3,6 +3,7 @@
 #pragma once
 
 #include "../external_include.h"
+#include "log.h"
 //
 template<typename T>
 struct Library {
@@ -31,9 +32,10 @@ struct Library {
 
     T& get(const std::string& name) {
         if (!this->contains(name)) {
-            std::cout << "asking for item: " << name
-                      << " but nothing has been loaded with that name yet"
-                      << std::endl;
+            log_warn(
+                "asking for item: {} but nothing has been loaded with that "
+                "name yet",
+                name);
         }
         return storage[name];
     }

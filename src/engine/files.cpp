@@ -1,5 +1,7 @@
 #include "files.h"
 
+#include "log.h"
+
 #ifdef __APPLE__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
@@ -41,7 +43,7 @@ bool Files::ensure_game_folder_exists() {
     }
     bool created = fs::create_directory(fld);
     if (created) {
-        std::cout << "Created Game Folder: " << fld << std::endl;
+        log_info("Created Game Folder: {}", fld);
         return true;
     }
     return false;
@@ -64,22 +66,22 @@ std::string Files::fetch_resource_path(std::string group, std::string name) {
 void Files::folder_locations() {
     using namespace std;
     using namespace sago;
-    cout << "Config: " << getConfigHome() << "\n";
-    cout << "Data: " << getDataHome() << "\n";
-    cout << "State: " << getStateDir() << "\n";
-    cout << "Cache: " << getCacheDir() << "\n";
-    cout << "Documents: " << getDocumentsFolder() << "\n";
-    cout << "Desktop: " << getDesktopFolder() << "\n";
-    cout << "Pictures: " << getPicturesFolder() << "\n";
-    cout << "Public: " << getPublicFolder() << "\n";
-    cout << "Music: " << getMusicFolder() << "\n";
-    cout << "Video: " << getVideoFolder() << "\n";
-    cout << "Download: " << getDownloadFolder() << "\n";
-    cout << "Save Games 1: " << getSaveGamesFolder1() << "\n";
-    cout << "Save Games 2: " << getSaveGamesFolder2() << "\n";
+    log_info("Config: ", getConfigHome());
+    log_info("Data: ", getDataHome());
+    log_info("State: ", getStateDir());
+    log_info("Cache: ", getCacheDir());
+    log_info("Documents: ", getDocumentsFolder());
+    log_info("Desktop: ", getDesktopFolder());
+    log_info("Pictures: ", getPicturesFolder());
+    log_info("Public: ", getPublicFolder());
+    log_info("Music: ", getMusicFolder());
+    log_info("Video: ", getVideoFolder());
+    log_info("Download: ", getDownloadFolder());
+    log_info("Save Games 1: ", getSaveGamesFolder1());
+    log_info("Save Games 2: ", getSaveGamesFolder2());
     vector<string> extraData;
     appendAdditionalDataDirectories(extraData);
     for (size_t i = 0; i < extraData.size(); ++i) {
-        cout << "Additional data " << i << ": " << extraData.at(i) << "\n";
+        log_info("Additional data {}: {}", i, extraData.at(i));
     }
 }

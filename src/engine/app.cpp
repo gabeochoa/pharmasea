@@ -7,6 +7,7 @@
 #include "raylib.h"
 //
 
+#include "log.h"
 #include "profile.h"
 #include "settings.h"
 #include "shader_library.h"
@@ -53,8 +54,7 @@ void App::onEvent(Event& event) {
 }
 
 bool App::onWindowResize(WindowResizeEvent event) {
-    std::cout << "Got Window Resize Event: " << event.width << ", "
-              << event.height << std::endl;
+    log_info("Got Window Resize Event: {}, {}", event.width, event.height);
 
     width = event.width;
     height = event.height;

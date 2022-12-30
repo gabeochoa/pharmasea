@@ -24,6 +24,10 @@ constexpr size_t hashString(const Str& toHash) {
 static int __WIN_H = 720;
 static int __WIN_W = 1280;
 
+// TODO lets move this to an env var or something
+// we shouldnt have to recompile to change the level
+static int LOG_LEVEL = 2;  // LogLevel::INFO;
+
 inline int WIN_W() { return __WIN_W; }
 inline float WIN_WF() { return static_cast<float>(__WIN_W); }
 

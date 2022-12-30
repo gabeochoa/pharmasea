@@ -44,8 +44,7 @@ struct Register : public Furniture {
         for (int i = 0; i < (int) ppl_in_line.size(); i++) {
             if (entity->id == ppl_in_line[i]->id) return i;
         }
-        std::cout << fmt::format("cant find entity {}", entity->id)
-                  << std::endl;
+        log_warn("Cannot find entity {}", entity->id);
         return -1;
     }
 
@@ -54,15 +53,12 @@ struct Register : public Furniture {
     }
 
     void leave_line(AIPerson* entity) {
-        // std::cout << fmt::format("removing entity {}", entity->id) <<
-        // std::endl;
         int pos = this->position_in_line(entity);
         if (pos == -1) return;
         if (pos == 0) {
             ppl_in_line.pop_front();
             return;
         }
-        // std::cout << fmt::format("used line position") << std::endl;
         ppl_in_line.erase(ppl_in_line.begin() + pos);
     }
 

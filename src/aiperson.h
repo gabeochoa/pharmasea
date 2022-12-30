@@ -5,6 +5,7 @@
 //
 #include "engine/astar.h"
 #include "engine/globals_register.h"
+#include "engine/log.h"
 #include "engine/sound_library.h"
 //
 #include "entityhelper.h"
@@ -255,7 +256,7 @@ struct AIPerson : public Person {
         // TODO have some way of distinguishing between server logs and regular
         // client logs
         if (my_thread_id == server_thread_id) {
-            std::cout << this->id << ": " << text << std::endl;
+            log_info("{}: {}", this->id, text);
         }
     }
 

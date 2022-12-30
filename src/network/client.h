@@ -5,14 +5,13 @@
 #include "internal/client.h"
 //
 #include "../engine/globals_register.h"
+#include "../engine/log.h"
 #include "../player.h"
 #include "../remote_player.h"
 
 namespace network {
 
 struct Client {
-    static void log(std::string msg) { std::cout << msg << std::endl; }
-
     struct ConnectionInfo {
         std::string host_ip_address = "127.0.0.1";
         bool ip_set = false;
@@ -103,9 +102,7 @@ struct Client {
     void client_process_message_string(std::string msg) {
         auto add_new_player = [&](int client_id, std::string username) {
             if (remote_players.contains(client_id)) {
-                std::cout << fmt::format("Why are we trying to add {}",
-                                         client_id)
-                          << std::endl;
+                log_warn("Why are we trying to add {}", client_id);
                 return;
             };
 
@@ -117,16 +114,14 @@ struct Client {
             //      the other entity info
             map->remote_players_NOT_SERIALIZED.push_back(
                 remote_players[client_id]);
-            std::cout << fmt::format("Adding a player {}", client_id)
-                      << std::endl;
+            log_info("Adding a player {}", client_id);
         };
 
         auto remove_player = [&](int client_id) {
             auto rp = remote_players[client_id];
             if (!rp)
-                std::cout << fmt::format("doesnt exist but should {}",
-                                         client_id)
-                          << std::endl;
+                log_warn("Remote player doesnt exist but should: {}",
+                         client_id);
             rp->cleanup = true;
             remote_players.erase(client_id);
         };
@@ -134,9 +129,8 @@ struct Client {
         auto update_remote_player = [&](int client_id, std::string username,
                                         float* location, int facing) {
             if (!remote_players.contains(client_id)) {
-                std::cout << fmt::format("doesnt exist but should {}",
-                                         client_id)
-                          << std::endl;
+                log_warn("Remote player doesnt exist but should: {}",
+                         client_id);
                 add_new_player(client_id, username);
             }
             auto rp = remote_players[client_id];
@@ -159,7 +153,7 @@ struct Client {
                 if (info.is_you) {
                     // We are the person that joined,
                     id = info.client_id;
-                    log(fmt::format("my id is {}", id));
+                    log_info("my id is {}", id);
                     add_new_player(id, client_p->username);
                     GLOBALS.set("active_camera_target",
                                 remote_players[id].get());
@@ -193,8 +187,8 @@ struct Client {
             } break;
 
             default:
-                log(fmt::format("Client: {} not handled yet: {} ",
-                                packet.msg_type, msg));
+                log_warn("Client: {} not handled yet: {} ", packet.msg_type,
+                         msg);
                 break;
         }
     }

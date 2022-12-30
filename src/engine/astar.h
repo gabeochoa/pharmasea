@@ -7,6 +7,7 @@
 #include "../globals.h"
 #include "../util.h"
 #include "../vec_util.h"
+#include "log.h"
 
 namespace astar {
 
@@ -88,7 +89,7 @@ std::deque<vec2> find_path_impl(vec2 start, vec2 end,
     while (!openset.empty()) {
         i++;
         if (i > 1000) {
-            // std::cout << "astar: hit interation limit" << std::endl;
+            log_error("astar: hit interation limit");
             break;
         }
         vec2 cur = get_lowest_f(openset, fscore);

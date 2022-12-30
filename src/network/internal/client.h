@@ -41,9 +41,6 @@ namespace network {
 namespace internal {
 
 struct Client {
-    // TODO eventually add logging
-    static void log(std::string msg) { std::cout << msg << std::endl; }
-
     SteamNetworkingIPAddr address;
     ISteamNetworkingSockets *interface;
     HSteamNetConnection connection;
@@ -73,10 +70,10 @@ struct Client {
                    (void *) Client::SteamNetConnectionStatusChangedCallback);
         connection = interface->ConnectByIPAddress(address, 1, &opt);
         if (connection == k_HSteamNetConnection_Invalid) {
-            log(fmt::format("Failed to create connection"));
+            log_warn("Failed to create connection");
             return;
         }
-        log("success connecting");
+        log_info("success connecting");
         running = true;
     }
 
@@ -143,7 +140,7 @@ struct Client {
     }
 
     void send_join_info_request() {
-        log("client sending join info request");
+        log_info("client sending join info request");
         ClientPacket packet({.client_id = -1,  // we dont know yet what it is
                              .msg_type = ClientPacket::MsgType::PlayerJoin,
                              .msg = ClientPacket::PlayerJoinInfo({
@@ -157,7 +154,7 @@ struct Client {
 
     void on_steam_network_connection_status_changed(
         SteamNetConnectionStatusChangedCallback_t *info) {
-        log("client on stream network connection status changed");
+        log_info("client on stream network connection status changed");
         M_ASSERT(info->m_hConn == connection ||
                      connection == k_HSteamNetConnection_Invalid,
                  "Connection Status Error");
@@ -176,22 +173,22 @@ struct Client {
                     k_ESteamNetworkingConnectionState_Connecting) {
                     // Note: we could distinguish between a timeout, a rejected
                     // connection, or some other transport problem.
-                    log(
-                        fmt::format("We sought the remote host, yet our "
-                                    "efforts were met with defeat.  ({})",
-                                    info->m_info.m_szEndDebug));
+                    log_warn(
+                        "We sought the remote host, yet our "
+                        "efforts were met with defeat.  ({})",
+                        info->m_info.m_szEndDebug);
                 } else if (
                     info->m_info.m_eState ==
                     k_ESteamNetworkingConnectionState_ProblemDetectedLocally) {
-                    log(fmt::format(
+                    log_warn(
                         "Alas, troubles beset us; we have lost contact with "
                         "the host.  ({})",
-                        info->m_info.m_szEndDebug));
+                        info->m_info.m_szEndDebug);
                 } else {
                     // NOTE: We could check the reason code for a normal
                     // disconnection
-                    log(fmt::format("The host hath bidden us farewell.  ({})",
-                                    info->m_info.m_szEndDebug));
+                    log_info("The host hath bidden us farewell.  ({})",
+                             info->m_info.m_szEndDebug);
                 }
 
                 // Clean up the connection.  This is important!
@@ -211,7 +208,7 @@ struct Client {
                 break;
 
             case k_ESteamNetworkingConnectionState_Connected:
-                log("Connected to server OK");
+                log_info("Connected to server OK");
                 send_join_info_request();
                 break;
 
@@ -224,7 +221,8 @@ struct Client {
     static void SteamNetConnectionStatusChangedCallback(
         SteamNetConnectionStatusChangedCallback_t *pInfo) {
         if (!callback_instance) {
-            log("client callback instance saw a change but wasnt initialized "
+            log_warn(
+                "client callback instance saw a change but wasnt initialized "
                 "still");
             return;
         }

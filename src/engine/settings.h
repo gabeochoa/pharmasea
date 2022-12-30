@@ -15,6 +15,7 @@
 #include "event.h"
 #include "files.h"
 #include "globals.h"
+#include "log.h"
 #include "music_library.h"
 #include "resolution.h"
 #include "singleton.h"
@@ -126,8 +127,7 @@ struct Settings {
 
     void update_master_volume(float nv) {
         data.master_volume = util::clamp(nv, 0.f, 1.f);
-        // std::cout << "master volume changed to " << data.master_volume
-        // << std::endl;
+        log_trace("master volume changed to {}", data.master_volume);
         SetMasterVolume(data.master_volume);
     }
 
@@ -155,11 +155,12 @@ struct Settings {
     bool load_save_file() {
         std::ifstream ifs(Files::get().settings_filepath());
         if (!ifs.is_open()) {
-            std::cout << ("failed to find settings file (read)") << std::endl;
+            log_warn("Failed to find settings file (Read) {}",
+                     Files::get().settings_filepath());
             return false;
         }
 
-        std::cout << "reading settings file" << std::endl;
+        log_trace("Reading settings file");
         std::stringstream buffer;
         buffer << ifs.rdbuf();
         auto buf_str = buffer.str();
@@ -169,9 +170,8 @@ struct Settings {
 
         update_all_settings();
 
-        std::cout << "Finished loading: " << std::endl;
-        std::cout << data << std::endl;
-        std::cout << "end settings file" << std::endl;
+        log_info("Settings Loaded: {}", data);
+        log_trace("End loading settings file");
         ifs.close();
         return true;
     }
@@ -182,7 +182,8 @@ struct Settings {
     bool write_save_file() {
         std::ofstream ofs(Files::get().settings_filepath());
         if (!ofs.is_open()) {
-            std::cout << ("failed to find settings file (write)") << std::endl;
+            log_warn("Failed to find settings file (Write) {}",
+                     Files::get().settings_filepath());
             return false;
         }
         settings::Buffer buffer;
@@ -191,8 +192,7 @@ struct Settings {
         ofs << buffer << std::endl;
         ofs.close();
 
-        std::cout << "wrote settings file to "
-                  << Files::get().settings_filepath() << std::endl;
+        log_info("Wrote Settings File to {}", Files::get().settings_filepath());
         return true;
     }
 };

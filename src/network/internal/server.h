@@ -16,9 +16,6 @@ namespace network {
 namespace internal {
 
 struct Server {
-    // TODO replace with actual logging
-    void log(std::string msg) { std::cout << msg << std::endl; }
-
     SteamNetworkingIPAddr address;
     ISteamNetworkingSockets *interface;
     HSteamListenSocket listen_sock;
@@ -56,7 +53,7 @@ struct Server {
 
     void connection_changed_callback(
         SteamNetConnectionStatusChangedCallback_t *info) {
-        log("connection_changed_callback");
+        log_info("connection_changed_callback");
         std::string temp;
         ClientPacket::AnnouncementType annoucement_type;
 
@@ -104,11 +101,10 @@ struct Server {
                     // their nick as the connection description, it will show
                     // up, along with their transport-specific data (e.g. their
                     // IP address)
-                    log(fmt::format("Connection {} {}, reason {}: {}\n",
-                                    info->m_info.m_szConnectionDescription,
-                                    pszDebugLogAction,
-                                    info->m_info.m_eEndReason,
-                                    info->m_info.m_szEndDebug));
+                    log_warn("Connection {} {}, reason {}: {}\n",
+                             info->m_info.m_szConnectionDescription,
+                             pszDebugLogAction, info->m_info.m_eEndReason,
+                             info->m_info.m_szEndDebug);
 
                     clients.erase(itClient);
 
@@ -137,8 +133,8 @@ struct Server {
                 M_ASSERT(clients.find(info->m_hConn) == clients.end(),
                          "Client already connected but shouldnt be");
 
-                log(fmt::format("Connection request from {}",
-                                info->m_info.m_szConnectionDescription));
+                log_info("Connection request from {}",
+                         info->m_info.m_szConnectionDescription);
 
                 // A client is attempting to connect
                 // Try to accept the connection.
@@ -148,8 +144,8 @@ struct Server {
                     // closed.  Just destroy whatever we have on our side.
                     interface->CloseConnection(info->m_hConn, 0, nullptr,
                                                false);
-                    log(fmt::format(
-                        "Can't accept connection. (It was already closed?)"));
+                    log_info(
+                        "Can't accept connection. (It was already closed?)");
                     break;
                 }
 
@@ -158,7 +154,7 @@ struct Server {
                                                        poll_group)) {
                     interface->CloseConnection(info->m_hConn, 0, nullptr,
                                                false);
-                    log("Failed to set poll group?");
+                    log_info("Failed to set poll group?");
                     break;
                 }
 
@@ -236,16 +232,16 @@ struct Server {
 
         listen_sock = interface->CreateListenSocketIP(address, 1, &opt);
         if (listen_sock == k_HSteamListenSocket_Invalid) {
-            log(fmt::format("Failed to listen on port {}", address.m_port));
+            log_warn("Failed to listen on port {}", address.m_port);
             return;
         }
         poll_group = interface->CreatePollGroup();
         if (poll_group == k_HSteamNetPollGroup_Invalid) {
-            log(fmt::format("(poll group) Failed to listen on port {}",
-                            address.m_port));
+            log_warn("(poll group) Failed to listen on port {}",
+                     address.m_port);
             return;
         }
-        log(fmt::format("Server listening on port"));
+        log_info("Server listening on port");
 
         running = true;
     }
@@ -281,7 +277,6 @@ struct Server {
                                       ClientPacket packet) {
         Buffer buffer = serialize_to_buffer(packet);
         send_packet_string_to_client(conn, buffer);
-        std::cout << std::endl;
     }
 
     void send_client_packet_to_all(

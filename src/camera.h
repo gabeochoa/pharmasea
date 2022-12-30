@@ -2,6 +2,7 @@
 
 #include "external_include.h"
 //
+#include "engine/log.h"
 #include "entity.h"
 #include "globals.h"
 #include "raylib.h"
@@ -108,25 +109,26 @@ struct GameCam {
         }
     }
 
-    void debugCamera() {
-        std::cout << "Cam(" << this << "):" << std::endl;
-        std::cout << "\tGetMouseWheelMove:" << GetMouseWheelMove() << std::endl;
-        std::cout << "\tposition:(" << camera.position.x << ", "
-                  << camera.position.y << ", " << camera.position.z << ")"
-                  << std::endl;
-        std::cout << "\target:(" << camera.target.x << ", " << camera.target.y
-                  << ", " << camera.target.z << ")" << std::endl;
-        std::cout << "\tup:(" << camera.up.x << ", " << camera.up.y << ", "
-                  << camera.up.z << ")" << std::endl;
-        std::cout << "\tfovy:" << camera.fovy << std::endl;
-        std::cout << "\tprojection:" << camera.projection << std::endl;
-        std::cout << "\ttarget_distance:" << target_distance << std::endl
-                  << std::endl;
-    }
+    void debugCamera() { log_trace("{}", *this); }
 
     Camera3D get() { return this->camera; }
     Camera3D* get_ptr() { return &(this->camera); }
 };
+
+inline std::ostream& operator<<(std::ostream& os, const GameCam& gc) {
+    os << "Cam(" << &gc << "):" << std::endl;
+    os << "\tGetMouseWheelMove:" << GetMouseWheelMove() << std::endl;
+    os << "\tposition:(" << gc.camera.position.x << ", " << gc.camera.position.y
+       << ", " << gc.camera.position.z << ")" << std::endl;
+    os << "\target:(" << gc.camera.target.x << ", " << gc.camera.target.y
+       << ", " << gc.camera.target.z << ")" << std::endl;
+    os << "\tup:(" << gc.camera.up.x << ", " << gc.camera.up.y << ", "
+       << gc.camera.up.z << ")" << std::endl;
+    os << "\tfovy:" << gc.camera.fovy << std::endl;
+    os << "\tprojection:" << gc.camera.projection << std::endl;
+    os << "\ttarget_distance:" << gc.target_distance << std::endl << std::endl;
+    return os;
+}
 
 struct MenuCam {
     Camera3D camera;

@@ -9,14 +9,14 @@
 /*
     auto continuous_timer = new auto(
         make_interval_timer([] {
-            std::cout << "tick" <<std::endl;
+            log_info("tick");
         },
         std::chrono::milliseconds{ 500 }, start_now)
     );
 
     auto single_shot_timer = new auto(
         make_interval_timer([] {
-            std::cout << "tick" <<std::endl;
+            log_info("tick");
         },
         std::chrono::milliseconds{ 500 }, start_now, 1)
     );
@@ -24,7 +24,7 @@
     int n = 15; // whatever count you want
     auto n_shot_timer = new auto(
         make_interval_timer([] {
-            std::cout << "tick" <<std::endl;
+            log_info("tick");
         },
         std::chrono::milliseconds{ 500 }, start_now, n)
     );

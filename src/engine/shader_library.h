@@ -9,9 +9,7 @@ struct ShaderLibrary {
 
     struct ShaderLibraryImpl : Library<Shader> {
         virtual void load(const char* filename, const char* name) override {
-            // TODO add debug mode
-            std::cout << "loading Shader : " << name << " from " << filename
-                      << std::endl;
+            log_info("Loading shader: {} from {}", name, filename);
             // TODO null first param sets default vertex shader, do we want
             // this?
             this->add(name, LoadShader(0, filename));

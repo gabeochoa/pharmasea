@@ -3,6 +3,7 @@
 
 #include "../std_include.h"
 #include "../vec_util.h"
+#include "log.h"
 #include "raylib.h"
 #include "uuid.h"
 
@@ -186,7 +187,7 @@ struct Widget {
     }
 
     void print_tree(int t = 0) const {
-        std::cout << me->print(t) << "\n";
+        log_info("{}", me->print(t));
         for (const Widget* child : children) {
             if (child) child->print_tree(t + 2);
         }

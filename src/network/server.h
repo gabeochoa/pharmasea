@@ -197,11 +197,10 @@ struct Server {
 
                 if (info.hashed_version != HASHED_VERSION) {
                     // TODO send error message
-                    std::cout
-                        << "player tried to join but had incorrect version"
-                        << " our version: " << HASHED_VERSION
-                        << " their version: " << info.hashed_version
-                        << std::endl;
+                    log_warn(
+                        "player tried to join but had incorrect version our "
+                        "version : {}, their version : {} ",
+                        HASHED_VERSION, info.hashed_version);
                     return;
                 }
 

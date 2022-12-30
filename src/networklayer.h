@@ -256,10 +256,8 @@ struct NetworkLayer : public Layer {
         if (!network_info->client) return;
 
         // TODO show a pop up for each
-
         for (auto info : network_info->client->announcements) {
-            std::cout << fmt::format("Announcement: {}", info.message)
-                      << std::endl;
+            log_info("Announcement: {}", info.message);
         }
         network_info->client->announcements.clear();
     }

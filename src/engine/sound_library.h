@@ -11,9 +11,7 @@ struct SoundLibrary {
 
     struct SoundLibraryImpl : Library<Sound> {
         virtual void load(const char* filename, const char* name) override {
-            // TODO add debug mode
-            std::cout << "loading texture: " << name << " from " << filename
-                      << std::endl;
+            log_info("Loading sound: {} from {}", name, filename);
             this->add(name, LoadSound(filename));
         }
         virtual void unload(Sound sound) override { UnloadSound(sound); }
