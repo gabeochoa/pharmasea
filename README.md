@@ -41,6 +41,24 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+### alpha_0.22.12.26
+
+Last update of the year
+
+impact
+- none cause its code freeze time, see ya in january 
+
+better eng 
+- start engine extraction so we can use this for other games in the future :) 
+- fix bug where settings screen would show the wrong resolution on startup
+- add more default resolutions 
+- fixed undefined behavior in network/client.h
+- fixed bug with map serialization 
+- deleted world.h you will be missed. 
+
+soon
+- scrolling? 
+
 ### alpha_0.22.12.05
 
 impact 
