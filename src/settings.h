@@ -13,35 +13,12 @@
 #include "engine/event.h"
 #include "engine/files.h"
 #include "engine/music_library.h"
+#include "engine/resolution.h"
 #include "engine/singleton.h"
 #include "globals.h"
 #include "util.h"
 
 namespace settings {
-struct ResolutionInfo {
-    int width;
-    int height;
-
-    bool operator<(const ResolutionInfo& r) const {
-        return (this->width < r.width) ||
-               ((this->width == r.width) && (this->height < r.height));
-    }
-
-    bool operator==(const ResolutionInfo& r) const {
-        return (this->width == r.width) && (this->height == r.height);
-    }
-
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(this->width);
-        s.value4b(this->height);
-    }
-};
-
-static std::vector<ResolutionInfo> RESOLUTION_OPTIONS;
-static std::vector<std::string> STRING_RESOLUTION_OPTIONS;
 
 using Buffer = std::string;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
@@ -53,8 +30,8 @@ using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 // we need some way to only parse based on the version in the save file
 // https://developernote.com/2020/02/basic-ideas-of-version-tolerant-serialization-in-cpp/
 struct Data {
-    int version = 0;
-    ResolutionInfo resolution;
+    int engineVersion = 0;
+    rez::ResolutionInfo resolution;
     // Volume percent [0, 1] for everything
     float master_volume = 0.5f;
     float music_volume = 0.5f;
@@ -66,7 +43,7 @@ struct Data {
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
-        s.value4b(version);
+        s.value4b(engineVersion);
         s.object(resolution);
         s.value4b(master_volume);
         s.value4b(music_volume);
@@ -76,7 +53,7 @@ struct Data {
     }
     friend std::ostream& operator<<(std::ostream& os, const Data& data) {
         os << "Settings(" << std::endl;
-        os << "version: " << data.version << std::endl;
+        os << "version: " << data.engineVersion << std::endl;
         os << "resolution: " << data.resolution.width << ", "
            << data.resolution.height << std::endl;
         os << "master vol: " << data.master_volume << std::endl;
@@ -116,10 +93,10 @@ struct Settings {
     }
 
     void update_resolution_from_index(int index) {
-        update_window_size(settings::RESOLUTION_OPTIONS[index]);
+        update_window_size(rez::RESOLUTION_OPTIONS[index]);
     }
 
-    void update_window_size(settings::ResolutionInfo rez) {
+    void update_window_size(rez::ResolutionInfo rez) {
         data.resolution = rez;
 
         data.resolution.width = static_cast<int>(
@@ -159,66 +136,8 @@ struct Settings {
         data.enable_postprocessing = pp_enabled;
     }
 
-    void load_resolution_options() {
-#ifdef __APPLE__
-        // Nothing this one works :)
-#else
-        // TODO either implement these for windows or get them in the dll
-        const auto glfwGetPrimaryMonitor = []() -> GLFWmonitor* {
-            return nullptr;
-        };
-        const auto glfwGetVideoModes = [](GLFWmonitor*, int*) -> GLFWvidmode* {
-            return nullptr;
-        };
-#endif
-        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-        int count = 0;
-        const GLFWvidmode* modes = glfwGetVideoModes(monitor, &count);
-
-        for (int i = 0; i < count; i++) {
-            GLFWvidmode mode = modes[i];
-            // int width
-            // int height
-            // int redBits int greenBits int blueBits
-            // int refreshRate
-
-            // Just kinda easier to not support every possible resolution
-            if (mode.height < 720 || mode.height > 2160) continue;
-
-            settings::RESOLUTION_OPTIONS.push_back(settings::ResolutionInfo{
-                .width = mode.width, .height = mode.height});
-        }
-
-        if (settings::RESOLUTION_OPTIONS.empty()) {
-            settings::RESOLUTION_OPTIONS.push_back(
-                settings::ResolutionInfo{.width = 1280, .height = 720});
-            settings::RESOLUTION_OPTIONS.push_back(
-                settings::ResolutionInfo{.width = 1920, .height = 1080});
-            settings::RESOLUTION_OPTIONS.push_back(
-                settings::ResolutionInfo{.width = 3860, .height = 2160});
-        }
-
-        // TODO SPEED this kinda slow but it only happens once
-        settings::RESOLUTION_OPTIONS.erase(
-            std::unique(settings::RESOLUTION_OPTIONS.begin(),
-                        settings::RESOLUTION_OPTIONS.end()),
-            settings::RESOLUTION_OPTIONS.end());
-    }
-
-    void convert_res_options_to_text() {
-        std::transform(settings::RESOLUTION_OPTIONS.cbegin(),
-                       settings::RESOLUTION_OPTIONS.cend(),
-                       std::back_inserter(settings::STRING_RESOLUTION_OPTIONS),
-                       [](settings::ResolutionInfo info) {
-                           return fmt::format("{}x{}", info.width, info.height);
-                       });
-    }
-
     std::vector<std::string> resolution_options() {
-        if (settings::RESOLUTION_OPTIONS.empty()) load_resolution_options();
-        if (settings::STRING_RESOLUTION_OPTIONS.empty())
-            convert_res_options_to_text();
-        return settings::STRING_RESOLUTION_OPTIONS;
+        return rez::resolution_options();
     }
 
     bool load_save_file() {
