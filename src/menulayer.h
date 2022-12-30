@@ -2,12 +2,10 @@
 
 #include "engine.h"
 #include "engine/layer.h"
+#include "engine/profile.h"
 #include "external_include.h"
 #include "menu.h"
-#include "network/network.h"
-#include "engine/profile.h"
 #include "raylib.h"
-#include "settings.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;

@@ -1,4 +1,5 @@
 
+
 #pragma once
 
 //
@@ -6,23 +7,26 @@
 
 #include <algorithm>
 
-#include "external_include.h"
+#include "../external_include.h"
 //
 
-#include "engine/app.h"
-#include "engine/event.h"
-#include "engine/files.h"
-#include "engine/globals.h"
-#include "engine/music_library.h"
-#include "engine/resolution.h"
-#include "engine/singleton.h"
-#include "util.h"
+#include "../util.h"
+#include "app.h"
+#include "event.h"
+#include "files.h"
+#include "globals.h"
+#include "music_library.h"
+#include "resolution.h"
+#include "singleton.h"
 
 namespace settings {
 
 using Buffer = std::string;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
+
+// TODO how do we support different games having different save file data
+// requirements?
 
 // TODO How do we support multiple versions
 // we dont want to add a new field and break

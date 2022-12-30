@@ -4,8 +4,8 @@
 //
 #include "engine.h"
 #include "engine/layer.h"
+#include "engine/settings.h"
 #include "menu.h"
-#include "settings.h"
 
 using namespace ui;
 

@@ -14,8 +14,8 @@
 
 #include "engine/app.h"
 #include "engine/defer.h"
+#include "engine/settings.h"
 #include "menu.h"
-#include "settings.h"
 //
 #include "aboutlayer.h"
 #include "fpslayer.h"

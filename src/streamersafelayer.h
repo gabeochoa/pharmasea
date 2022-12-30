@@ -2,7 +2,8 @@
 #pragma once
 
 #include "engine/layer.h"
-#include "settings.h"
+#include "engine/settings.h"
+#include "preload.h"
 
 struct StreamerSafeLayer : public Layer {
     int streamer_box_size;

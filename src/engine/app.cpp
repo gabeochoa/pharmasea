@@ -7,8 +7,8 @@
 #include "raylib.h"
 //
 
-#include "../settings.h"
 #include "profile.h"
+#include "settings.h"
 #include "shader_library.h"
 
 void App::start_post_processing() {

@@ -7,7 +7,7 @@
 //
 #include "engine.h"
 #include "engine/layer.h"
-#include "settings.h"
+#include "engine/settings.h"  // Used for username
 //
 #include "engine.h"
 #include "network/network.h"
