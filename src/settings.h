@@ -12,10 +12,10 @@
 #include "engine/app.h"
 #include "engine/event.h"
 #include "engine/files.h"
+#include "engine/globals.h"
 #include "engine/music_library.h"
 #include "engine/resolution.h"
 #include "engine/singleton.h"
-#include "globals.h"
 #include "util.h"
 
 namespace settings {
@@ -85,6 +85,10 @@ struct Settings {
     // This function is used by the load to kick raylib into
     // the right config
     void update_all_settings() {
+        // Force a resolution fetch so that after the settings loads we have
+        // them ready
+        rez::ResolutionExplorer::get().load_resolution_options();
+
         // version doesnt need update
         update_window_size(data.resolution);
         update_master_volume(data.master_volume);
@@ -93,7 +97,7 @@ struct Settings {
     }
 
     void update_resolution_from_index(int index) {
-        update_window_size(rez::RESOLUTION_OPTIONS[index]);
+        update_window_size(rez::ResolutionExplorer::get().fetch(index));
     }
 
     void update_window_size(rez::ResolutionInfo rez) {
@@ -137,7 +141,11 @@ struct Settings {
     }
 
     std::vector<std::string> resolution_options() {
-        return rez::resolution_options();
+        return rez::ResolutionExplorer::get().fetch_options();
+    }
+
+    int get_current_resolution_index() {
+        return rez::ResolutionExplorer::get().index(data.resolution);
     }
 
     bool load_save_file() {

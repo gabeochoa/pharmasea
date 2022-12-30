@@ -27,7 +27,6 @@ all: $(H_FILES) $(OBJ_FILES)
 $(OBJ_DIR)/%.o: %.cpp makefile
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -c $< -o $@ -MMD -MF $(@:.o=.d)
 
-# include $(OBJ_FILES:.o=.d)
 %.d: %.cpp
 	$(MAKEDEPEND)
 
@@ -48,4 +47,4 @@ countall:
 todo: 
 	git grep -niE '(FIXME|TODO)' src/
 
-
+-include $(OBJ_FILES:.o=.d)

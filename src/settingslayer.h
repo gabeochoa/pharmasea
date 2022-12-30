@@ -18,6 +18,10 @@ struct SettingsLayer : public Layer {
 
     SettingsLayer() : Layer("Settings") {
         ui_context.reset(new ui::UIContext());
+
+        resolution_selected_index =
+            Settings::get().get_current_resolution_index();
+        if (resolution_selected_index < 0) resolution_selected_index = 0;
     }
     virtual ~SettingsLayer() {}
 

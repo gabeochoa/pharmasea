@@ -53,8 +53,8 @@ void App::onEvent(Event& event) {
 }
 
 bool App::onWindowResize(WindowResizeEvent event) {
-    // std::cout << "Got Window Resize Event: " << event.width << ", "
-    // << event.height << std::endl;
+    std::cout << "Got Window Resize Event: " << event.width << ", "
+              << event.height << std::endl;
 
     width = event.width;
     height = event.height;
