@@ -44,8 +44,6 @@ void startup() {
         //
         "PharmaSea",
         //
-        []() {},
-        //
         LOG_WARNING,
     });
 

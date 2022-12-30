@@ -32,8 +32,6 @@ App::App(const AppSettings& settings) {
 
     InitWindow(width, height, settings.title);
 
-    if (settings.onCreate) settings.onCreate();
-
     KeyMap::get();
 
     mainRT = LoadRenderTexture(width, height);

@@ -10,7 +10,6 @@ struct AppSettings {
     int width;
     int height;
     const char* title;
-    std::function<void(void)> onCreate = {};
     TraceLogLevel logLevel = LOG_ERROR;
 };
 
