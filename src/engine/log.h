@@ -34,6 +34,8 @@ inline const char* level_to_string(int level) {
     }
 }
 
+// TODO log to file
+
 inline void vlog(int level, const char* file, int line, fmt::string_view format,
                  fmt::format_args args) {
     if (level < LOG_LEVEL) return;
