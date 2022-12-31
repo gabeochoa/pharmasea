@@ -19,6 +19,7 @@ kanban-plugin: basic
 - [ ] Particle system?
 - [ ] Spritesheet animator
 - [ ] unrelated: proggy clean font: https://www.dafont.com/proggy-clean.font
+- [ ] Magic Enum? https://github.com/Neargye/magic_enum
 
 
 ## want for mvp
