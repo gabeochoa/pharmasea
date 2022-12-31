@@ -22,7 +22,11 @@ struct MusicLibrary {
         virtual void unload(Music music) override { UnloadMusicStream(music); }
     } impl;
 
-    Music& get(const std::string& name) { return impl.get(name); }
+    [[nodiscard]] const Music& get(const std::string& name) const {
+        return impl.get(name);
+    }
+
+    [[nodiscard]] Music& get(const std::string& name) { return impl.get(name); }
     void load(const char* filename, const char* name) {
         impl.load(filename, name);
     }

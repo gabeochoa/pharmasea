@@ -17,7 +17,7 @@ struct Layer {
     virtual void onDraw(float elapsed) = 0;
     virtual void onEvent(Event&) = 0;
 
-    const std::string& getname() const { return name; }
+    [[nodiscard]] const std::string& getname() const { return name; }
 };
 
 struct LayerStack {

@@ -83,6 +83,8 @@ struct Settings {
 
     ~Settings() {}
 
+    // TODO public private movement to clean up api
+
     // Basically once we load the file,
     // we run into an issue where our settings is correct,
     // but the underlying data isnt being used
@@ -144,7 +146,7 @@ struct Settings {
         data.enable_postprocessing = pp_enabled;
     }
 
-    std::vector<std::string> resolution_options() {
+    [[nodiscard]] std::vector<std::string> resolution_options() {
         return rez::ResolutionExplorer::get().fetch_options();
     }
 

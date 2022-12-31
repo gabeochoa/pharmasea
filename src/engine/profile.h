@@ -31,7 +31,9 @@ struct Samples {
         }
     }
 
-    float average() const { return sum / std::min(num_items, SAMPLE_SIZE); }
+    [[nodiscard]] float average() const {
+        return sum / std::min(num_items, SAMPLE_SIZE);
+    }
 };
 
 typedef std::pair<std::string, Samples> Sample;
@@ -73,14 +75,15 @@ struct function_raii {
     }
 };
 
-inline const std::string fmt_filename(const std::string& file, int lineNum) {
+[[nodiscard]] inline const std::string fmt_filename(const std::string& file,
+                                                    int lineNum) {
     return fmt::format("{}:{} ", file, lineNum);
 }
 
 // https://stackoverflow.com/a/29856690
-inline const std::string computeMethodName(const std::string& function,
-                                           const std::string& prettyFunction,
-                                           const char* extra) {
+[[nodiscard]] inline const std::string computeMethodName(
+    const std::string& function, const std::string& prettyFunction,
+    const char* extra) {
     // If the input is a constructor, it gets the beginning of
     // the class name, not of the method. That's why later on we
     // have to search for the first parenthesys

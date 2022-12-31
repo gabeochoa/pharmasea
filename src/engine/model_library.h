@@ -16,7 +16,11 @@ struct ModelLibrary {
         virtual void unload(Model model) override { UnloadModel(model); }
     } impl;
 
-    Model& get(const std::string& name) { return impl.get(name); }
+    [[nodiscard]] const Model& get(const std::string& name) const {
+        return impl.get(name);
+    }
+
+    [[nodiscard]] Model& get(const std::string& name) { return impl.get(name); }
     void load(const char* filename, const char* name) {
         impl.load(filename, name);
     }

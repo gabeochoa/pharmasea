@@ -9,16 +9,16 @@ template<typename T>
 struct Library {
     std::map<std::string, T> storage;
 
-    auto size() { return storage.size(); }
-    auto begin() { return storage.begin(); }
-    auto end() { return storage.end(); }
-    auto begin() const { return storage.begin(); }
-    auto end() const { return storage.end(); }
-    auto rbegin() const { return storage.rbegin(); }
-    auto rend() const { return storage.rend(); }
-    auto rbegin() { return storage.rbegin(); }
-    auto rend() { return storage.rend(); }
-    auto empty() const { return storage.empty(); }
+    [[nodiscard]] auto size() { return storage.size(); }
+    [[nodiscard]] auto begin() { return storage.begin(); }
+    [[nodiscard]] auto end() { return storage.end(); }
+    [[nodiscard]] auto begin() const { return storage.begin(); }
+    [[nodiscard]] auto end() const { return storage.end(); }
+    [[nodiscard]] auto rbegin() const { return storage.rbegin(); }
+    [[nodiscard]] auto rend() const { return storage.rend(); }
+    [[nodiscard]] auto rbegin() { return storage.rbegin(); }
+    [[nodiscard]] auto rend() { return storage.rend(); }
+    [[nodiscard]] auto empty() const { return storage.empty(); }
 
     const std::string add(const char* name, const T& item) {
         if (storage.find(name) != storage.end()) {
@@ -30,17 +30,27 @@ struct Library {
         return name;
     }
 
-    T& get(const std::string& name) {
+    [[nodiscard]] T& get(const std::string& name) {
         if (!this->contains(name)) {
             log_warn(
                 "asking for item: {} but nothing has been loaded with that "
                 "name yet",
                 name);
         }
-        return storage[name];
+        return storage.at(name);
     }
 
-    bool contains(const std::string& name) const {
+    [[nodiscard]] const T& get(const std::string& name) const {
+        if (!this->contains(name)) {
+            log_warn(
+                "asking for item: {} but nothing has been loaded with that "
+                "name yet",
+                name);
+        }
+        return storage.at(name);
+    }
+
+    [[nodiscard]] bool contains(const std::string& name) const {
         return (storage.find(name) != storage.end());
     }
 

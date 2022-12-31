@@ -46,7 +46,9 @@ struct ResolutionExplorer {
     std::vector<ResolutionInfo> options;
     std::vector<std::string> options_str;
 
-    const ResolutionInfo& fetch(int index) const { return options[index]; }
+    [[nodiscard]] const ResolutionInfo& fetch(int index) const {
+        return options[index];
+    }
 
     void load_resolution_options() {
 #ifdef __APPLE__
@@ -100,13 +102,13 @@ struct ResolutionExplorer {
     // Saving them is just an optimization so we dont have to fetch them all the
     // time it also means that the index is relatively stable at least once per
     // launch
-    std::vector<std::string> fetch_options() {
+    [[nodiscard]] std::vector<std::string> fetch_options() {
         if (options.empty()) load_resolution_options();
         if (options_str.empty()) convert_res_options_to_text();
         return options_str;
     }
 
-    int index(ResolutionInfo info) {
+    [[nodiscard]] int index(ResolutionInfo info) {
         int i = 0;
         for (const auto res : options) {
             if (res == info) return i;

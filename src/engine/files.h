@@ -21,12 +21,13 @@ struct Files {
     std::string settings_file;
 
     explicit Files(FilesConfig config);
-    fs::path game_folder();
+    [[nodiscard]] fs::path game_folder() const;
     bool ensure_game_folder_exists();
-    fs::path settings_filepath();
-    fs::path resource_folder();
-    std::string fetch_resource_path(std::string group, std::string name);
+    [[nodiscard]] fs::path settings_filepath() const;
+    [[nodiscard]] fs::path resource_folder() const;
+    [[nodiscard]] std::string fetch_resource_path(std::string_view group,
+                                                  std::string_view name) const;
     // TODO add a full cleanup to write folders in case we need to reset
 
-    void folder_locations();
+    void folder_locations() const;
 };

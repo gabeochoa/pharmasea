@@ -17,7 +17,10 @@ struct SoundLibrary {
         virtual void unload(Sound sound) override { UnloadSound(sound); }
     } impl;
 
-    Sound& get(const std::string& name) { return impl.get(name); }
+    [[nodiscard]] Sound& get(const std::string& name) { return impl.get(name); }
+    [[nodiscard]] const Sound& get(const std::string& name) const {
+        return impl.get(name);
+    }
     void load(const char* filename, const char* name) {
         impl.load(filename, name);
     }

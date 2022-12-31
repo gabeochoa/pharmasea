@@ -35,7 +35,7 @@
 void startup() {
     // Force the app to be created.
     // This unlocks GPU access so we can load textures
-    App::get_and_create(AppSettings{
+    App::create(AppSettings{
         //
         120,
         //
@@ -50,7 +50,7 @@ void startup() {
     // -------- Its unlikely anything should go above this line ----- //
 
     // Doesnt strictly need to be before preload but just to be safe
-    Files::get_and_create(FilesConfig{
+    Files::create(FilesConfig{
         GAME_FOLDER,
         SETTINGS_FILE_NAME,
     });
@@ -61,7 +61,7 @@ void startup() {
 
     // Has to happen after init window due
     // to font requirements
-    Preload::get();
+    Preload::create();
 
     tests::run_all();
     std::cout << "All tests ran successfully" << std::endl;

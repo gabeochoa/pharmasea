@@ -58,7 +58,7 @@ struct Event {
     virtual const char* getName() const = 0;
     virtual int getCategoryFlags() const = 0;
     virtual std::string toString() const { return getName(); }
-    bool isInCategory(EventCategory cat) const {
+    [[nodiscard]] bool isInCategory(EventCategory cat) const {
         return getCategoryFlags() & cat;
     }
 };
@@ -79,7 +79,7 @@ struct EventDispatcher {
 struct KeyEvent : public Event {
     KeyEvent(int k) : keycode(k) {}
     int keycode;
-    int getKeyCode() const { return keycode; }
+    [[nodiscard]] int getKeyCode() const { return keycode; }
 
     MACRO_EVENT_CATEGORY(EventCategoryKeyboard | EventCategoryInput);
 };
@@ -89,7 +89,7 @@ struct KeyPressedEvent : public KeyEvent {
 
     KeyPressedEvent(int k, int r) : KeyEvent(k), repeatCount(r) {}
     int repeatCount;
-    int getRepeatCount() const { return repeatCount; }
+    [[nodiscard]] int getRepeatCount() const { return repeatCount; }
 };
 
 struct CharPressedEvent : public KeyEvent {
@@ -97,7 +97,7 @@ struct CharPressedEvent : public KeyEvent {
 
     CharPressedEvent(int k, int r) : KeyEvent(k), repeatCount(r) {}
     int repeatCount;
-    int getRepeatCount() const { return repeatCount; }
+    [[nodiscard]] int getRepeatCount() const { return repeatCount; }
 };
 
 struct WindowResizeEvent : public Event {

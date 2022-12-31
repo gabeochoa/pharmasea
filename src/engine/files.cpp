@@ -31,7 +31,7 @@ Files::Files(FilesConfig config)
     ensure_game_folder_exists();
 }
 
-fs::path Files::game_folder() {
+fs::path Files::game_folder() const {
     const fs::path master_folder(sago::getSaveGamesFolder1());
     return master_folder / fs::path(root);
 }
@@ -49,21 +49,22 @@ bool Files::ensure_game_folder_exists() {
     return false;
 }
 
-fs::path Files::settings_filepath() {
+fs::path Files::settings_filepath() const {
     fs::path file(settings_file);
     fs::path full_path = game_folder() / file;
     return full_path;
 }
 
-fs::path Files::resource_folder() { return fs::path("./resources"); }
+fs::path Files::resource_folder() const { return fs::path("./resources"); }
 
-std::string Files::fetch_resource_path(std::string group, std::string name) {
+std::string Files::fetch_resource_path(std::string_view group,
+                                       std::string_view name) const {
     return (resource_folder() / fs::path(group) / fs::path(name)).string();
 }
 
 // TODO add a full cleanup to write folders in case we need to reset
 
-void Files::folder_locations() {
+void Files::folder_locations() const {
     using namespace std;
     using namespace sago;
     log_info("Config: ", getConfigHome());

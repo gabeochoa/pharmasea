@@ -5,8 +5,7 @@
 #include <thread>
 
 template<typename T>
-class AtomicQueue {
-   public:
+struct AtomicQueue {
     void push_back(const T& value) {
         std::lock_guard<std::mutex> lock(m_mutex);
         q.push_back(value);
@@ -22,12 +21,12 @@ class AtomicQueue {
         q.pop_front();
     }
 
-    T& front() {
+    [[nodiscard]] T& front() {
         std::lock_guard<std::mutex> lock(m_mutex);
         return q.front();
     }
 
-    bool empty() {
+    [[nodiscard]] bool empty() const {
         std::lock_guard<std::mutex> lock(m_mutex);
         return q.empty();
     }

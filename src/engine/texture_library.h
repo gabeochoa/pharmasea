@@ -19,7 +19,12 @@ struct TextureLibrary {
         }
     } impl;
 
-    Texture2D& get(const std::string& name) { return impl.get(name); }
+    [[nodiscard]] Texture2D& get(const std::string& name) {
+        return impl.get(name);
+    }
+    [[nodiscard]] const Texture2D& get(const std::string& name) const {
+        return impl.get(name);
+    }
     void load(const char* filename, const char* name) {
         impl.load(filename, name);
     }
