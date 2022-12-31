@@ -83,26 +83,6 @@ struct Settings {
 
     ~Settings() {}
 
-    // TODO public private movement to clean up api
-
-    // Basically once we load the file,
-    // we run into an issue where our settings is correct,
-    // but the underlying data isnt being used
-    //
-    // This function is used by the load to kick raylib into
-    // the right config
-    void update_all_settings() {
-        // Force a resolution fetch so that after the settings loads we have
-        // them ready
-        rez::ResolutionExplorer::get().load_resolution_options();
-
-        // version doesnt need update
-        update_window_size(data.resolution);
-        update_master_volume(data.master_volume);
-        update_music_volume(data.music_volume);
-        update_streamer_safe_box(data.show_streamer_safe_box);
-    }
-
     void update_resolution_from_index(int index) {
         update_window_size(rez::ResolutionExplorer::get().fetch(index));
     }
@@ -146,13 +126,16 @@ struct Settings {
         data.enable_postprocessing = pp_enabled;
     }
 
-    [[nodiscard]] std::vector<std::string> resolution_options() {
+    [[nodiscard]] int get_current_resolution_index() const {
+        return rez::ResolutionExplorer::get().index(data.resolution);
+    }
+
+    [[nodiscard]] std::vector<std::string> resolution_options() const {
         return rez::ResolutionExplorer::get().fetch_options();
     }
 
-    int get_current_resolution_index() {
-        return rez::ResolutionExplorer::get().index(data.resolution);
-    }
+    // TODO these could be private and inside the ctor/dtor with RAII if we are
+    // okay with running on get() and ignoring the result
 
     bool load_save_file() {
         std::ifstream ifs(Files::get().settings_filepath());
@@ -190,11 +173,29 @@ struct Settings {
         }
         settings::Buffer buffer;
         bitsery::quickSerialization(settings::OutputAdapter{buffer}, data);
-        std::string line;
         ofs << buffer << std::endl;
         ofs.close();
 
         log_info("Wrote Settings File to {}", Files::get().settings_filepath());
         return true;
+    }
+
+   private:
+    // Basically once we load the file,
+    // we run into an issue where our settings is correct,
+    // but the underlying data isnt being used
+    //
+    // This function is used by the load to kick raylib into
+    // the right config
+    void update_all_settings() {
+        // Force a resolution fetch so that after the settings loads we have
+        // them ready
+        rez::ResolutionExplorer::get().load_resolution_options();
+
+        // version doesnt need update
+        update_window_size(data.resolution);
+        update_master_volume(data.master_volume);
+        update_music_volume(data.music_volume);
+        update_streamer_safe_box(data.show_streamer_safe_box);
     }
 };
