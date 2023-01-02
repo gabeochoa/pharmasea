@@ -148,9 +148,9 @@ struct Server {
 
         switch (packet.msg_type) {
             case ClientPacket::MsgType::Announcement: {
-                // TODO send announcements to all clients
                 ClientPacket::AnnouncementInfo info =
                     std::get<ClientPacket::AnnouncementInfo>(packet.msg);
+                server_p->send_client_packet_to_all(packet);
             } break;
 
             case ClientPacket::MsgType::PlayerControl: {
