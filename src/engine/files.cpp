@@ -66,6 +66,16 @@ std::string Files::fetch_resource_path(std::string_view group,
     return (resource_folder() / fs::path(group) / fs::path(name)).string();
 }
 
+void Files::for_resources_in_folder(
+    std::string_view group, std::string_view folder,
+    std::function<void(std::string, std::string)> cb) const {
+    auto folder_path = (resource_folder() / fs::path(group) / fs::path(folder));
+    for (auto const& dir_entry :
+         std::filesystem::directory_iterator{folder_path}) {
+        cb(dir_entry.path().stem(), dir_entry.path().string());
+    }
+}
+
 void Files::folder_locations() const {
     using namespace std;
     using namespace sago;
