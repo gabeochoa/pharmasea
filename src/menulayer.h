@@ -2,6 +2,7 @@
 
 #include "engine.h"
 #include "engine/layer.h"
+#include "engine/music_library.h"
 #include "engine/profile.h"
 #include "external_include.h"
 #include "menu.h"
@@ -37,6 +38,14 @@ struct MenuLayer : public Layer {
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         if (Menu::get().is_not(Menu::State::Root)) return false;
         return ui_context.get()->process_gamepad_button_event(event);
+    }
+
+    void play_music() {
+        auto m = MusicLibrary::get().get("theme");
+        if (!IsMusicStreamPlaying(m)) {
+            PlayMusicStream(m);
+        }
+        UpdateMusicStream(m);
     }
 
     void draw_menu_buttons() {
@@ -101,6 +110,8 @@ struct MenuLayer : public Layer {
     }
 
     virtual void onUpdate(float) override {
+        if (Menu::get().is_in_menu()) play_music();
+
         if (Menu::get().is_not(Menu::State::Root)) return;
         PROFILE();
         SetExitKey(KEY_ESCAPE);

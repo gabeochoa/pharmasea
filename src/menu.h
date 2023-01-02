@@ -57,6 +57,10 @@ struct Menu {
     bool is(State s) const { return state == s; }
     bool is_not(State s) const { return state != s; }
 
+    bool is_in_menu() const {
+        return !Menu::in_game(state) && !Menu::is_paused(state);
+    }
+
     static bool in_game(Menu::State state) {
         return state == Menu::State::Game || state == Menu::State::Planning;
     }

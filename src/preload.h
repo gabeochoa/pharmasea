@@ -106,6 +106,10 @@ struct Preload {
         MusicLibrary::get().load(
             Files::get().fetch_resource_path("music", "wah.ogg").c_str(),
             "wah");
+
+        MusicLibrary::get().load(
+            Files::get().fetch_resource_path("music", "theme.ogg").c_str(),
+            "theme");
     }
 
     void load_shaders() {
