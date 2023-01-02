@@ -75,14 +75,170 @@ bool operator==(const FZInfo& info, const FZInfo& other) {
 // ****************************************************** end kludge
 
 namespace ui {
+
 const Menu::State STATE = Menu::State::UI;
+
+struct IUIContextInputManager {
+    virtual ~IUIContextInputManager() {}
+
+    virtual void init() {
+        mouse_info = MouseInfo();
+        yscrolled = 0.f;
+    }
+
+    virtual void begin(float) {
+        mouse_info = get_mouse_info();
+        // TODO Should this be more like mousePos?
+        yscrolled += GetMouseWheelMove();
+    }
+
+    virtual void cleanup() {
+        // button = GAMEPAD_BUTTON_UNKNOWN;
+        //
+        key = int();
+        mod = int();
+
+        keychar = int();
+        modchar = int();
+    }
+
+    MouseInfo mouse_info;
+
+    int key = -1;
+    int mod = -1;
+    GamepadButton button;
+    GamepadAxisWithDir axis_info;
+    int keychar = -1;
+    int modchar = -1;
+    float yscrolled;
+
+    [[nodiscard]] bool is_mouse_inside(const Rectangle& rect) const {
+        auto mouse = mouse_info.pos;
+        return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
+               mouse.y >= rect.y && mouse.y <= rect.y + rect.height;
+    }
+
+    [[nodiscard]] bool process_char_press_event(CharPressedEvent event) {
+        keychar = event.keycode;
+        return true;
+    }
+
+    [[nodiscard]] bool process_keyevent(KeyPressedEvent event) {
+        int code = event.keycode;
+        if (!KeyMap::does_layer_map_contain_key(STATE, code)) {
+            return false;
+        }
+        // TODO make this a map if we have more
+        if (code == KeyMap::get_key_code(STATE, InputName::WidgetMod)) {
+            mod = code;
+            return true;
+        }
+        if (code == KeyMap::get_key_code(STATE, InputName::WidgetCtrl)) {
+            mod = code;
+            return true;
+        }
+
+        // TODO same as above, but a separate map
+        modchar = code;
+
+        key = code;
+        return true;
+    }
+
+    [[nodiscard]] bool process_gamepad_button_event(
+        GamepadButtonPressedEvent event) {
+        GamepadButton code = event.button;
+        if (!KeyMap::does_layer_map_contain_button(STATE, code)) {
+            return false;
+        }
+        button = code;
+        return true;
+    }
+
+    [[nodiscard]] bool process_gamepad_axis_event(GamepadAxisMovedEvent event) {
+        GamepadAxisWithDir info = event.data;
+        if (!KeyMap::does_layer_map_contain_axis(STATE, info.axis)) {
+            return false;
+        }
+        axis_info = info;
+        return true;
+    }
+
+    [[nodiscard]] bool _pressedButtonWithoutEat(GamepadButton butt) const {
+        if (butt == GAMEPAD_BUTTON_UNKNOWN) return false;
+        return button == butt;
+    }
+
+    [[nodiscard]] bool pressedButtonWithoutEat(const InputName& name) const {
+        GamepadButton code = KeyMap::get_button(STATE, name);
+        return _pressedWithoutEat(code);
+    }
+
+    void eatButton() { button = GAMEPAD_BUTTON_UNKNOWN; }
+
+    [[nodiscard]] bool pressed(const InputName& name) {
+        int code = KeyMap::get_key_code(STATE, name);
+        bool a = _pressedWithoutEat(code);
+        if (a) {
+            eatKey();
+            return a;
+        }
+
+        GamepadButton butt = KeyMap::get_button(STATE, name);
+        bool b = _pressedButtonWithoutEat(butt);
+        if (b) {
+            eatButton();
+            return b;
+        }
+
+        bool c = KeyMap::get_axis(STATE, name)
+                     .map([&](GamepadAxisWithDir axis) -> bool {
+                         return axis_info.axis == axis.axis &&
+                                ((axis.dir - axis_info.dir) >= EPSILON);
+                     })
+                     .map_error([&](auto exp) {
+                         this->handleBadGamepadAxis(exp, STATE, name);
+                     })
+                     .value_or(false);
+        if (c) {
+            eatAxis();
+        }
+        return c;
+    }
+
+    void handleBadGamepadAxis(const KeyMapInputRequestError&, Menu::State,
+                              const InputName) {
+        // TODO theres currently no valid inputs for axis on UI items so this is
+        // all just firing constantly. log_warn("{}: No gamepad axis in {} for
+        // {}", err, state, magic_enum::enum_name(name));
+    }
+
+    void eatAxis() { axis_info = {}; }
+
+    [[nodiscard]] bool _pressedWithoutEat(int code) const {
+        if (code == KEY_NULL) return false;
+        return key == code || mod == code;
+    }
+    // TODO is there a better way to do eat(string)?
+    [[nodiscard]] bool pressedWithoutEat(const InputName& name) const {
+        int code = KeyMap::get_key_code(STATE, name);
+        return _pressedWithoutEat(code);
+    }
+
+    void eatKey() { key = int(); }
+
+    // is held down
+    [[nodiscard]] bool is_held_down(const InputName& name) {
+        return (bool) KeyMap::is_event(STATE, name);
+    }
+};
 
 struct UIContext;
 static std::shared_ptr<UIContext> _uicontext;
 // TODO do we need both _uicontext and globalContext?
 // if not we can switch to using the SINGLETON macro
 UIContext* globalContext;
-struct UIContext {
+struct UIContext : public IUIContextInputManager {
     inline static UIContext* create() { return new UIContext(); }
     inline static UIContext& get() {
         if (globalContext) return *globalContext;
@@ -147,140 +303,11 @@ struct UIContext {
     uuid kb_focus_id;
     uuid last_processed;
 
-    MouseInfo mouse_info;
-
-    int key = -1;
-    int mod = -1;
-    GamepadButton button;
-    GamepadAxisWithDir axis_info;
-    int keychar = -1;
-    int modchar = -1;
-    float yscrolled;
-
-    bool is_mouse_inside(const Rectangle& rect) {
-        auto mouse = mouse_info.pos;
-        return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
-               mouse.y >= rect.y && mouse.y <= rect.y + rect.height;
-    }
-
-    bool process_char_press_event(CharPressedEvent event) {
-        keychar = event.keycode;
-        return true;
-    }
-
-    bool process_keyevent(KeyPressedEvent event) {
-        int code = event.keycode;
-        if (!KeyMap::does_layer_map_contain_key(STATE, code)) {
-            return false;
-        }
-        // TODO make this a map if we have more
-        if (code == KeyMap::get_key_code(STATE, InputName::WidgetMod)) {
-            mod = code;
-            return true;
-        }
-        if (code == KeyMap::get_key_code(STATE, InputName::WidgetCtrl)) {
-            mod = code;
-            return true;
-        }
-
-        // TODO same as above, but a separate map
-        modchar = code;
-
-        key = code;
-        return true;
-    }
-
-    bool process_gamepad_button_event(GamepadButtonPressedEvent event) {
-        GamepadButton code = event.button;
-        if (!KeyMap::does_layer_map_contain_button(STATE, code)) {
-            return false;
-        }
-        button = code;
-        return true;
-    }
-
-    bool process_gamepad_axis_event(GamepadAxisMovedEvent event) {
-        GamepadAxisWithDir info = event.data;
-        if (!KeyMap::does_layer_map_contain_axis(STATE, info.axis)) {
-            return false;
-        }
-        axis_info = info;
-        return true;
-    }
-
-    bool _pressedButtonWithoutEat(GamepadButton butt) const {
-        if (butt == GAMEPAD_BUTTON_UNKNOWN) return false;
-        return button == butt;
-    }
-
-    bool pressedButtonWithoutEat(const InputName& name) const {
-        GamepadButton code = KeyMap::get_button(STATE, name);
-        return _pressedWithoutEat(code);
-    }
-
-    void eatButton() { button = GAMEPAD_BUTTON_UNKNOWN; }
-
-    bool pressed(const InputName& name) {
-        int code = KeyMap::get_key_code(STATE, name);
-        bool a = _pressedWithoutEat(code);
-        if (a) {
-            eatKey();
-            return a;
-        }
-
-        GamepadButton butt = KeyMap::get_button(STATE, name);
-        bool b = _pressedButtonWithoutEat(butt);
-        if (b) {
-            eatButton();
-            return b;
-        }
-
-        bool c = KeyMap::get_axis(STATE, name)
-                     .map([&](GamepadAxisWithDir axis) -> bool {
-                         return axis_info.axis == axis.axis &&
-                                ((axis.dir - axis_info.dir) >= EPSILON);
-                     })
-                     .map_error([&](auto exp) {
-                         this->handleBadGamepadAxis(exp, STATE, name);
-                     })
-                     .value_or(false);
-        if (c) {
-            eatAxis();
-        }
-        return c;
-    }
-
-    void handleBadGamepadAxis(const KeyMapInputRequestError&, Menu::State,
-                              const InputName) {
-        // TODO theres currently no valid inputs for axis on UI items so this is
-        // all just firing constantly. log_warn("{}: No gamepad axis in {} for
-        // {}", err, state, magic_enum::enum_name(name));
-    }
-
-    void eatAxis() { axis_info = {}; }
-
-    bool _pressedWithoutEat(int code) const {
-        if (code == KEY_NULL) return false;
-        return key == code || mod == code;
-    }
-    // TODO is there a better way to do eat(string)?
-    bool pressedWithoutEat(const InputName& name) const {
-        int code = KeyMap::get_key_code(STATE, name);
-        return _pressedWithoutEat(code);
-    }
-
-    void eatKey() { key = int(); }
-
-    // is held down
-    bool is_held_down(const InputName& name) {
-        return (bool) KeyMap::is_event(STATE, name);
-    }
-
     bool inited = false;
     bool began_and_not_ended = false;
     float last_frame_time = 0.f;
 
-    void init() {
+    virtual void init() override {
         inited = true;
         began_and_not_ended = false;
 
@@ -288,28 +315,24 @@ struct UIContext {
         active_id = ROOT_ID;
         kb_focus_id = ROOT_ID;
 
-        mouse_info = MouseInfo();
-
         this->set_font(Preload::get().font);
         this->push_theme(ui::DEFAULT_THEME);
 
-        yscrolled = 0.f;
+        IUIContextInputManager::init();
     }
 
-    void begin(float dt) {
+    virtual void begin(float dt) override {
         M_ASSERT(inited, "UIContext must be inited before you begin()");
         M_ASSERT(!began_and_not_ended,
                  "You should call end every frame before calling begin() "
                  "again ");
         began_and_not_ended = true;
 
+        IUIContextInputManager::begin(dt);
+
         globalContext = this;
         hot_id = ROOT_ID;
-        mouse_info = get_mouse_info();
         last_frame_time = dt;
-
-        // TODO Should this be more like mousePos?
-        yscrolled += GetMouseWheelMove();
 
         // Note: we have to do this here because we cant unload until the entire
         // frame is written to the screen. We can guaranteed its definitely
@@ -349,8 +372,16 @@ struct UIContext {
         kb_focus_id = ROOT_ID;
     }
 
-    void cleanup() {
+    void cleanup() override {
         began_and_not_ended = false;
+
+        IUIContextInputManager::cleanup();
+
+        globalContext = nullptr;
+        temp_widgets.clear();
+        owned_widgets.clear();
+        reset_last_frame();
+
         if (mouse_info.leftDown) {
             if (active_id == ROOT_ID) {
                 active_id = FAKE_ID;
@@ -358,18 +389,6 @@ struct UIContext {
         } else {
             active_id = ROOT_ID;
         }
-        // button = GAMEPAD_BUTTON_UNKNOWN;
-        //
-        key = int();
-        mod = int();
-
-        keychar = int();
-        modchar = int();
-
-        globalContext = nullptr;
-        temp_widgets.clear();
-        owned_widgets.clear();
-        reset_last_frame();
     }
 
     template<typename T>
