@@ -78,13 +78,32 @@ bool slider(
     // max value
     float mxf);
 
+enum struct TextfieldValidationDecisionFlag {
+    // Nothing
+    None = 0,
+    // Stop any new forward input (ie max length)
+    StopNewInput = 1 << 0,
+    // Show checkmark / green text
+    Valid = 1 << 1,
+    // Show x / red text
+    Invalid = 1 << 2,
+};  // namespace ui
+
+bool operator!(TextfieldValidationDecisionFlag f) {
+    return f == TextfieldValidationDecisionFlag::None;
+}
+
+typedef std::function<TextfieldValidationDecisionFlag(const std::string&)>
+    TextFieldValidationFn;
+
 bool textfield(
     // returns true if text changed
     const Widget& widget,
     // the string value being edited
     std::string& content,
-    // max length of content, -1 for infinite
-    int max_length = -1);
+    // validation function that returns a flag describing what the text
+    // input should do
+    TextFieldValidationFn validation = {});
 
 bool checkbox(
     // Returns true if the checkbox changed
@@ -575,7 +594,12 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
     return changed_previous_frame;
 }
 
-bool textfield(const Widget& widget, std::string& content, int max_length) {
+bool textfield(const Widget& widget, std::string& content,
+               TextFieldValidationFn validation) {
+    TextfieldValidationDecisionFlag validationFlag =
+        validation ? validation(content)
+                   : TextfieldValidationDecisionFlag::None;
+
     auto _textfield_render = [](Widget* widget_ptr) {
         auto state = get().get_widget_state<TextfieldState>(widget_ptr->id);
         Widget& widget = *widget_ptr;
@@ -594,53 +618,51 @@ bool textfield(const Widget& widget, std::string& content, int max_length) {
         get()._draw_text(widget.rect, focused_content, theme::Usage::Font);
     };
 
-    const auto _textfield_value_management = [](const Widget* widget,
-                                                int max_length) {
-        auto state = get().get_widget_state<TextfieldState>(widget->id);
+    const auto _textfield_value_management =
+        [](const Widget* widget,
+           TextfieldValidationDecisionFlag validationFlag) {
+            auto state = get().get_widget_state<TextfieldState>(widget->id);
 
-        state->cursorBlinkTime = state->cursorBlinkTime + 1;
-        if (state->cursorBlinkTime > 60) {
-            state->cursorBlinkTime = 0;
-            state->showCursor = !state->showCursor;
-        }
+            state->cursorBlinkTime = state->cursorBlinkTime + 1;
+            if (state->cursorBlinkTime > 60) {
+                state->cursorBlinkTime = 0;
+                state->showCursor = !state->showCursor;
+            }
 
-        bool changed = false;
+            bool changed = false;
 
-        if (has_kb_focus(widget->id)) {
-            if (get().keychar != int()) {
-                if (
-                    // no max length specified
-                    max_length == -1 ||
-                    // or its specified but we are within limits
-                    (max_length != 0 &&
-                     ((int) state->buffer.asT().size()) < max_length)) {
-                    state->buffer.asT().append(
-                        std::string(1, (char) get().keychar));
+            if (has_kb_focus(widget->id)) {
+                if (get().keychar != int()) {
+                    if (!!(validationFlag &
+                           TextfieldValidationDecisionFlag::StopNewInput)) {
+                    } else {
+                        state->buffer.asT().append(
+                            std::string(1, (char) get().keychar));
+                        changed = true;
+                    }
+                }
+                if (get().pressed(InputName::WidgetBackspace)) {
+                    if (state->buffer.asT().size() > 0) {
+                        state->buffer.asT().pop_back();
+                    }
+                    changed = true;
+                }
+
+                // TODO enforce max length on paste
+                if (get().is_held_down(InputName::WidgetCtrl)) {
+                    if (get().pressed(InputName::WidgetPaste)) {
+                        auto clipboard = GetClipboardText();
+                        state->buffer.asT().append(clipboard);
+                    }
                     changed = true;
                 }
             }
-            if (get().pressed(InputName::WidgetBackspace)) {
-                if (state->buffer.asT().size() > 0) {
-                    state->buffer.asT().pop_back();
-                }
-                changed = true;
-            }
 
-            // TODO enforce max length on paste
-            if (get().is_held_down(InputName::WidgetCtrl)) {
-                if (get().pressed(InputName::WidgetPaste)) {
-                    auto clipboard = GetClipboardText();
-                    state->buffer.asT().append(clipboard);
-                }
-                changed = true;
+            if (get().mouse_info.leftDown && is_active_and_hot(widget->id)) {
+                get().kb_focus_id = widget->id;
             }
-        }
-
-        if (get().mouse_info.leftDown && is_active_and_hot(widget->id)) {
-            get().kb_focus_id = widget->id;
-        }
-        state->buffer.changed_since = changed;
-    };
+            state->buffer.changed_since = changed;
+        };
 
     UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
     auto state = get().widget_init<TextfieldState>(widget.id);
@@ -655,7 +677,7 @@ bool textfield(const Widget& widget, std::string& content, int max_length) {
     try_to_grab_kb(widget.id);
     active_if_mouse_inside(widget.id, widget.rect);
     _textfield_render(widget.me);
-    _textfield_value_management(widget.me, max_length);
+    _textfield_value_management(widget.me, validationFlag);
     handle_tabbing(widget.id);
 
     content = state->buffer;

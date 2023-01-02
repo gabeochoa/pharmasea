@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "engine/ui.h"
 #include "external_include.h"
 //
 #include "globals.h"
@@ -226,7 +227,13 @@ struct NetworkLayer : public Layer {
 
         text(*player_text, "Username: ");
         textfield(*username_input, Settings::get().data.username,
-                  network::MAX_NAME_LENGTH);
+                  // TODO probably make a "username validation" function
+                  [](const std::string& content) {
+                      if (content.size() >= network::MAX_NAME_LENGTH) {
+                          return TextfieldValidationDecisionFlag::StopNewInput;
+                      }
+                      return TextfieldValidationDecisionFlag::Valid;
+                  });
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                    "Lock in")) {

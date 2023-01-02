@@ -24,6 +24,7 @@ struct UITheme {
     Color primary;
     Color secondary;
     Color accent;
+    Color error;
 
     UITheme()
         : font(color::isabelline),
@@ -31,15 +32,18 @@ struct UITheme {
           background(color::oxford_blue),
           primary(color::pacific_blue),
           secondary(color::tea_green),
-          accent(color::orange_soda) {}
+          accent(color::orange_soda),
+          // TODO find a better error color
+          error(color::red) {}
 
-    UITheme(Color f, Color df, Color bg, Color p, Color s, Color a)
+    UITheme(Color f, Color df, Color bg, Color p, Color s, Color a, Color e)
         : font(f),
           darkfont(df),
           background(bg),
           primary(p),
           secondary(s),
-          accent(a) {}
+          accent(a),
+          error(e) {}
 
     Color from_usage(theme::Usage cu) {
         switch (cu) {
@@ -63,6 +67,8 @@ struct UITheme {
 static const UITheme DEFAULT_THEME = UITheme();
 static const UITheme GRAYSCALE =
     UITheme(color::white, color::grey, color::grey, color::black,
-            color::cool_grey, color::off_white);
+            color::cool_grey, color::off_white,
+            // TODO is there a better error color?
+            color::off_white);
 
 }  // namespace ui
