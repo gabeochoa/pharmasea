@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine.h"
+#include "engine/app.h"
 #include "engine/layer.h"
 #include "engine/music_library.h"
 #include "engine/profile.h"
