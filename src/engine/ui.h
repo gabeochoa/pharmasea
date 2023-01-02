@@ -229,13 +229,13 @@ UIContext::LastFrame init_widget(const Widget& widget, const char* func) {
     // which means no good error reports on this issue
     // you will just segfault
     //
-    // Basically the issue is that because the MK_UUID is in widget constructor
-    // the hash is the same for two ui elements.
+    // Basically the issue is that because the MK_UUID is in widget
+    // constructor the hash is the same for two ui elements.
     //
-    // This will only happen if you have two Widgets that you construct on the
-    // same layer. This is because we use layer id (static atomic inc) as a hash
-    // key In order for us to get the "default" state id for a layer, we need
-    // either the layer id or an example widget
+    // This will only happen if you have two Widgets that you construct on
+    // the same layer. This is because we use layer id (static atomic inc)
+    // as a hash key In order for us to get the "default" state id for a
+    // layer, we need either the layer id or an example widget
 
     // if (uses_state && widget.id ==
     // get().default_state_id) { log_warn("You need to initialize the id on
@@ -454,8 +454,8 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
         // open but we should be safe to always do this
         // 1. doesnt toggle on, sets on directly
         // 2. open should have children focused anyway
-        // 3. we dont eat the input, so it doesnt break the button_list value
-        // up/down
+        // 3. we dont eat the input, so it doesnt break the button_list
+        // value up/down
         if (has_kb_focus(widget.id)) {
             if (get().pressedWithoutEat(InputName::ValueUp) ||
                 get().pressedWithoutEat(InputName::ValueDown)) {
@@ -711,8 +711,8 @@ bool scroll_view(const Widget& widget, std::function<void()> children,
     if (!lf.rect.has_value()) {
         return false;
     }
-    // TODO none of this works, look through the PRs I've put with my previous
-    // tries
+    // TODO none of this works, look through the PRs I've put with my
+    // previous tries
 
     active_if_mouse_inside(widget.id, lf.rect.value());
 
