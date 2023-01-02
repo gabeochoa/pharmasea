@@ -45,9 +45,12 @@ struct Preload {
     }
 
     void load_fonts() {
-        // TODO - load fonts from install folder, instead of local path
         // Font loading must happen after InitWindow
         font = LoadFont_KarminaRegular256();
+
+        // NOTE if you go back to files, load fonts from install folder, instead
+        // of local path
+        //
         // font = LoadFontEx("./resources/fonts/constan.ttf", 96, 0, 0);
         GenTextureMipmaps(&font.texture);
         SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);
