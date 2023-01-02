@@ -4,7 +4,6 @@
 
 #include <cassert>
 
-
 enum class LogLevel {
     ALL = 0,
     TRACE = 1,
@@ -15,78 +14,52 @@ enum class LogLevel {
 
 // TODO log to file
 
-
-// TODO right now having some issues with MSVC and not getting any decent error message 
-#ifdef __APPLE__ 
+// TODO right now having some issues with MSVC and not getting any decent error
+// message
+#ifdef __APPLE__
 #include <functional>
 #include <iostream>
 #include <string>
 
 #include "../external_include.h"
+#include "globals.h"
 
-inline const char* level_to_string(int level) {
-    switch (level) {
-        default:
-        case LogLevel::ALL:
-            return "";
-        case LogLevel::TRACE:
-            return "Trace";
-        case LogLevel::INFO:
-            return "Info";
-        case LogLevel::WARN:
-            return "Warn";
-        case LogLevel::ERROR:
-            return "Error";
-    }
+inline const std::string_view level_to_string(LogLevel level) {
+    return magic_enum::enum_name(level);
 }
 
-inline void vlog(int level, const char* file, int line, fmt::string_view format,
-                 fmt::format_args args) {
-    if (level < LOG_LEVEL) return;
-    fmt::print("{}: {}: {}: ", file, line, level_to_string(level));
-    fmt::vprint(format, args);
-    fmt::print("\n");
-}
-
-inline void vlog(int level, const char* file, int line,
-                 fmt::wstring_view format, fmt::wformat_args args) {
-    if (level < LOG_LEVEL) return;
+inline void vlog(LogLevel level, const char* file, int line,
+                 fmt::string_view format, fmt::format_args args) {
+    if ((int) level < LOG_LEVEL) return;
     fmt::print("{}: {}: {}: ", file, line, level_to_string(level));
     fmt::vprint(format, args);
     fmt::print("\n");
 }
 
 template<typename... Args>
-inline void log_me(int level, const char* file, int line, const char* format,
-                   Args&&... args) {
+inline void log_me(LogLevel level, const char* file, int line,
+                   const char* format, Args&&... args) {
     vlog(level, file, line, format,
          fmt::make_args_checked<Args...>(format, args...));
 }
 
 template<typename... Args>
-inline void log_me(int level, const char* file, int line, const wchar_t* format,
-                   Args&&... args) {
+inline void log_me(LogLevel level, const char* file, int line,
+                   const wchar_t* format, Args&&... args) {
     vlog(level, file, line, format,
          fmt::make_args_checked<Args...>(format, args...));
 }
 
 template<>
-inline void log_me(int level, const char* file, int line, const char* format,
-                   const char*&& args) {
+inline void log_me(LogLevel level, const char* file, int line,
+                   const char* format, const char*&& args) {
     vlog(level, file, line, format,
          fmt::make_args_checked<const char*>(format, args));
 }
 
-template<>
-inline void log_me(int level, const char* file, int line, const wchar_t* format,
-                   const wchar_t*&& args) {
-    vlog(level, file, line, format,
-         fmt::make_args_checked<const wchar_t*>(format, args));
-}
-
-#else 
- static void log_me(...) {}
-#endif 
+#else
+static void log_me(...) {}
+#endif
 
 #define log_trace(...) log_me(LogLevel::TRACE, __FILE__, __LINE__, __VA_ARGS__)
 
