@@ -296,6 +296,9 @@
     <ClInclude Include="..\src\engine\uuid.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\engine\network\webrequest.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\game.cpp">
@@ -307,8 +310,8 @@
     <ClCompile Include="..\src\engine\files.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\network\webrequest.cpp">
-      <Filter>Source Files\Network</Filter>
+    <ClCompile Include="..\src\engine\network\webrequest.cpp">
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

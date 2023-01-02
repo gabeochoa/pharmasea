@@ -72,7 +72,7 @@ void Files::for_resources_in_folder(
     auto folder_path = (resource_folder() / fs::path(group) / fs::path(folder));
     for (auto const& dir_entry :
          std::filesystem::directory_iterator{folder_path}) {
-        cb(dir_entry.path().stem(), dir_entry.path().string());
+        cb(dir_entry.path().stem().string(), dir_entry.path().string());
     }
 }
 
