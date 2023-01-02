@@ -233,48 +233,21 @@ struct IUIContextInputManager {
     }
 };
 
-struct UIContext;
-static std::shared_ptr<UIContext> _uicontext;
-// TODO do we need both _uicontext and globalContext?
-// if not we can switch to using the SINGLETON macro
-UIContext* globalContext;
-struct UIContext : public IUIContextInputManager {
-    inline static UIContext* create() { return new UIContext(); }
-    inline static UIContext& get() {
-        if (globalContext) return *globalContext;
-        if (!_uicontext) _uicontext.reset(UIContext::create());
-        return *_uicontext;
-    }
-
-   private:
-    std::vector<std::shared_ptr<Widget>> temp_widgets;
-
-   public:
-    UIContext() { this->init(); }
-
-    StateManager statemanager;
-    std::stack<UITheme> themestack;
-    Font font;
-    std::stack<Widget*> parentstack;
-    std::vector<std::shared_ptr<Widget>> internal_roots;
-    std::vector<std::shared_ptr<Widget>> owned_widgets;
-
-    std::shared_ptr<Widget> own(const Widget& widget) {
-        owned_widgets.push_back(std::make_shared<Widget>(widget));
-        return *owned_widgets.rbegin();
-    }
-
+struct IUIContextLastFrame {
     struct LastFrame {
         bool was_written_this_frame = false;
         std::optional<Rectangle> rect;
     };
+
     std::map<uuid, LastFrame> last_frame;
-    LastFrame get_last_frame(uuid id) {
+
+    [[nodiscard]] LastFrame get_last_frame(uuid id) const {
         if (!last_frame.contains(id)) {
             return LastFrame();
         }
-        return last_frame[id];
+        return last_frame.at(id);
     }
+
     void write_last_frame(const uuid& id, LastFrame f) {
         f.was_written_this_frame = true;
         last_frame[id] = f;
@@ -297,147 +270,19 @@ struct UIContext : public IUIContextInputManager {
             kv.second.was_written_this_frame = false;
         }
     }
+};
 
-    uuid hot_id;
-    uuid active_id;
-    uuid kb_focus_id;
-    uuid last_processed;
+struct IUIContextFont {
+    Font font;
+    std::unordered_map<FZInfo, float> _font_size_memo;
 
-    bool inited = false;
-    bool began_and_not_ended = false;
-    float last_frame_time = 0.f;
-
-    virtual void init() override {
-        inited = true;
-        began_and_not_ended = false;
-
-        hot_id = ROOT_ID;
-        active_id = ROOT_ID;
-        kb_focus_id = ROOT_ID;
-
-        this->set_font(Preload::get().font);
-        this->push_theme(ui::DEFAULT_THEME);
-
-        IUIContextInputManager::init();
-    }
-
-    virtual void begin(float dt) override {
-        M_ASSERT(inited, "UIContext must be inited before you begin()");
-        M_ASSERT(!began_and_not_ended,
-                 "You should call end every frame before calling begin() "
-                 "again ");
-        began_and_not_ended = true;
-
-        IUIContextInputManager::begin(dt);
-
-        globalContext = this;
-        hot_id = ROOT_ID;
-        last_frame_time = dt;
-
-        // Note: we have to do this here because we cant unload until the entire
-        // frame is written to the screen. We can guaranteed its definitely
-        // rendered by the time it reaches the begin for the next frame
-        for (auto target : render_textures) {
-            UnloadRenderTexture(target);
-        }
-        render_textures.clear();
-    }
-
-    void end(Widget* tree_root) {
-        autolayout::process_widget(tree_root);
-
-        // tree_root->print_tree();
-        // exit(0);
-
-        render_all();
-        reset_tabbing_if_not_visible(tree_root);
-        //
-        cleanup();
-    }
-
-    bool matching_id_in_tree(uuid& id, Widget* tree_root) {
-        if (tree_root == nullptr) return false;
-        if (tree_root->id == id) return true;
-
-        for (auto child : tree_root->children) {
-            bool matching = matching_id_in_tree(id, child);
-            if (matching) return true;
-        }
-        return false;
-    }
-
-    void reset_tabbing_if_not_visible(Widget* tree_root) {
-        if (kb_focus_id == ROOT_ID) return;
-        if (matching_id_in_tree(kb_focus_id, tree_root)) return;
-        kb_focus_id = ROOT_ID;
-    }
-
-    void cleanup() override {
-        began_and_not_ended = false;
-
-        IUIContextInputManager::cleanup();
-
-        globalContext = nullptr;
-        temp_widgets.clear();
-        owned_widgets.clear();
-        reset_last_frame();
-
-        if (mouse_info.leftDown) {
-            if (active_id == ROOT_ID) {
-                active_id = FAKE_ID;
-            }
-        } else {
-            active_id = ROOT_ID;
-        }
-    }
-
-    template<typename T>
-    std::shared_ptr<T> widget_init(const uuid id) {
-        std::shared_ptr<T> state = statemanager.getAndCreateIfNone<T>(id);
-        if (state == nullptr) {
-            log_error(
-                "State for id ({}) of wrong type, expected {}. Check to "
-                "make sure your id's are globally unique",
-                std::string(id), type_name<T>());
-        }
-        return state;
-    }
-
-    template<typename T>
-    std::shared_ptr<T> get_widget_state(const uuid id) {
-        return statemanager.get_as<T>(id);
-    }
+    virtual void init() { this->set_font(Preload::get().font); }
 
     void set_font(Font f) { font = f; }
 
-    void push_theme(UITheme theme) { themestack.push(theme); }
-
-    void pop_theme() { themestack.pop(); }
-
-    UITheme active_theme() {
-        if (themestack.empty()) return DEFAULT_THEME;
-        return themestack.top();
-    }
-
-    void push_parent(std::shared_ptr<Widget> widget) {
-        push_parent(widget.get());
-    }
-    void push_parent(Widget* widget) { parentstack.push(widget); }
-    void pop_parent() { parentstack.pop(); }
-
-    Widget* active_parent() {
-        if (parentstack.empty()) {
-            return nullptr;
-        }
-        return parentstack.top();
-    }
-
-    void add_child(Widget* child) { active_parent()->add_child(child); }
-
-    std::unordered_map<FZInfo, float> _font_size_memo;
-
-    float get_font_size_impl(const std::string& content, float width,
-                             float height, float spacing) {
+    [[nodiscard]] float get_font_size_impl(const std::string& content,
+                                           float width, float height,
+                                           float spacing) const {
         float font_size = 1.0f;
         float last_size = 1.0f;
         vec2 size;
@@ -464,8 +309,8 @@ struct UIContext : public IUIContextInputManager {
         return last_size;
     }
 
-    float get_font_size(const std::string& content, float width, float height,
-                        float spacing) {
+    [[nodiscard]] float get_font_size(const std::string& content, float width,
+                                      float height, float spacing) {
         FZInfo fzinfo =
             FZInfo{.content = content, .width = width, .height = height};
         if (!_font_size_memo.contains(fzinfo)) {
@@ -477,6 +322,206 @@ struct UIContext : public IUIContextInputManager {
         float result = _font_size_memo[fzinfo];
         log_trace("cache value was {}", result);
         return result;
+    }
+};
+
+struct IUIContextRenderTextures {
+    std::vector<RenderTexture2D> render_textures;
+
+    [[nodiscard]] int get_new_render_texture() {
+        RenderTexture2D tex = LoadRenderTexture(WIN_W(), WIN_H());
+        render_textures.push_back(tex);
+        return (int) render_textures.size() - 1;
+    }
+
+    void turn_on_render_texture(int rt_index) {
+        BeginTextureMode(render_textures[rt_index]);
+    }
+
+    void turn_off_texture_mode() { EndTextureMode(); }
+
+    void draw_texture(int rt_id, Rectangle source, Vector2 position) {
+        auto target = render_textures[rt_id];
+        DrawTextureRec(target.texture, source, position, WHITE);
+        // (Rectangle){0, 0, (float) target.texture.width,
+        // (float) -target.texture.height},
+        // (Vector2){0, 0}, WHITE);
+    }
+
+    void unload_all_render_textures() {
+        // Note: we have to do this here because we cant unload until the entire
+        // frame is written to the screen. We can guaranteed its definitely
+        // rendered by the time it reaches the begin for the next frame
+        for (auto target : render_textures) {
+            UnloadRenderTexture(target);
+        }
+        render_textures.clear();
+    }
+};
+
+struct IUIContextTheming {
+    std::stack<UITheme> themestack;
+
+    virtual void init() { this->push_theme(ui::DEFAULT_THEME); }
+
+    void push_theme(UITheme theme) { themestack.push(theme); }
+
+    void pop_theme() { themestack.pop(); }
+
+    [[nodiscard]] UITheme active_theme() const {
+        if (themestack.empty()) return DEFAULT_THEME;
+        return themestack.top();
+    }
+};
+
+struct IUIContextParentStacking {
+    std::stack<Widget*> parentstack;
+
+    void push_parent(Widget* widget) { parentstack.push(widget); }
+    void pop_parent() { parentstack.pop(); }
+
+    [[nodiscard]] Widget* active_parent() {
+        if (parentstack.empty()) {
+            return nullptr;
+        }
+        return parentstack.top();
+    }
+
+    void push_parent(std::shared_ptr<Widget> widget) {
+        push_parent(widget.get());
+    }
+    void add_child(Widget* child) { active_parent()->add_child(child); }
+};
+
+struct UIContext;
+static std::shared_ptr<UIContext> _uicontext;
+// TODO do we need both _uicontext and globalContext?
+// if not we can switch to using the SINGLETON macro
+UIContext* globalContext;
+struct UIContext : public IUIContextInputManager,
+                   public IUIContextLastFrame,
+                   public IUIContextFont,
+                   public IUIContextRenderTextures,
+                   public IUIContextTheming,
+                   public IUIContextParentStacking {
+    inline static UIContext* create() { return new UIContext(); }
+    inline static UIContext& get() {
+        if (globalContext) return *globalContext;
+        if (!_uicontext) _uicontext.reset(UIContext::create());
+        return *_uicontext;
+    }
+
+   private:
+    std::vector<std::shared_ptr<Widget>> temp_widgets;
+
+   public:
+    UIContext() { this->init(); }
+
+    StateManager statemanager;
+    std::vector<std::shared_ptr<Widget>> internal_roots;
+    std::vector<std::shared_ptr<Widget>> owned_widgets;
+
+    std::shared_ptr<Widget> own(const Widget& widget) {
+        owned_widgets.push_back(std::make_shared<Widget>(widget));
+        return *owned_widgets.rbegin();
+    }
+
+    uuid hot_id;
+    uuid active_id;
+    uuid kb_focus_id;
+    uuid last_processed;
+
+    bool began_and_not_ended = false;
+
+    virtual void init() override {
+        began_and_not_ended = false;
+
+        hot_id = ROOT_ID;
+        active_id = ROOT_ID;
+        kb_focus_id = ROOT_ID;
+
+        IUIContextInputManager::init();
+        IUIContextTheming::init();
+        IUIContextFont::init();
+    }
+
+    virtual void begin(float dt) override {
+        M_ASSERT(!began_and_not_ended,
+                 "You should call end() every frame before calling begin() "
+                 "again ");
+        began_and_not_ended = true;
+
+        IUIContextInputManager::begin(dt);
+
+        globalContext = this;
+        hot_id = ROOT_ID;
+
+        unload_all_render_textures();
+    }
+
+    void end(Widget* tree_root) {
+        autolayout::process_widget(tree_root);
+
+        // tree_root->print_tree();
+        // exit(0);
+
+        render_all();
+        reset_tabbing_if_not_visible(tree_root);
+        //
+        cleanup();
+    }
+
+    [[nodiscard]] bool matching_id_in_tree(uuid& id, Widget* tree_root) {
+        if (tree_root == nullptr) return false;
+        if (tree_root->id == id) return true;
+
+        for (auto child : tree_root->children) {
+            bool matching = matching_id_in_tree(id, child);
+            if (matching) return true;
+        }
+        return false;
+    }
+
+    void reset_tabbing_if_not_visible(Widget* tree_root) {
+        if (kb_focus_id == ROOT_ID) return;
+        if (matching_id_in_tree(kb_focus_id, tree_root)) return;
+        kb_focus_id = ROOT_ID;
+    }
+
+    void cleanup() override {
+        began_and_not_ended = false;
+
+        globalContext = nullptr;
+        temp_widgets.clear();
+        owned_widgets.clear();
+        reset_last_frame();
+
+        IUIContextInputManager::cleanup();
+        // TODO is there some way to move this t input manager?
+        if (mouse_info.leftDown) {
+            if (active_id == ROOT_ID) {
+                active_id = FAKE_ID;
+            }
+        } else {
+            active_id = ROOT_ID;
+        }
+    }
+
+    template<typename T>
+    std::shared_ptr<T> widget_init(const uuid id) {
+        std::shared_ptr<T> state = statemanager.getAndCreateIfNone<T>(id);
+        if (state == nullptr) {
+            log_error(
+                "State for id ({}) of wrong type, expected {}. Check to "
+                "make sure your id's are globally unique",
+                std::string(id), type_name<T>());
+        }
+        return state;
+    }
+
+    template<typename T>
+    std::shared_ptr<T> get_widget_state(const uuid id) {
+        return statemanager.get_as<T>(id);
     }
 
     std::vector<std::function<void()>> queued_render_calls;
@@ -525,7 +570,7 @@ struct UIContext : public IUIContextInputManager {
         draw_widget_rect(widget.rect, usage);
     }
 
-    inline vec2 widget_center(vec2 position, vec2 size) {
+    inline vec2 widget_center(vec2 position, vec2 size) const {
         return position + (size / 2.f);
     }
 
@@ -533,28 +578,6 @@ struct UIContext : public IUIContextInputManager {
         std::shared_ptr<Widget> temp(widget);
         temp_widgets.push_back(temp);
         return temp;
-    }
-
-    std::vector<RenderTexture2D> render_textures;
-
-    int get_new_render_texture() {
-        RenderTexture2D tex = LoadRenderTexture(WIN_W(), WIN_H());
-        render_textures.push_back(tex);
-        return (int) render_textures.size() - 1;
-    }
-
-    void turn_on_render_texture(int rt_index) {
-        BeginTextureMode(render_textures[rt_index]);
-    }
-
-    void turn_off_texture_mode() { EndTextureMode(); }
-
-    void draw_texture(int rt_id, Rectangle source, Vector2 position) {
-        auto target = render_textures[rt_id];
-        DrawTextureRec(target.texture, source, position, WHITE);
-        // (Rectangle){0, 0, (float) target.texture.width,
-        // (float) -target.texture.height},
-        // (Vector2){0, 0}, WHITE);
     }
 
     void schedule_render_texture(int rt_id, Rectangle source,
