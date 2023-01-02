@@ -21,7 +21,7 @@ using namespace ui;
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     std::shared_ptr<network::Info> network_info;
-    std::optional<std::string> my_ip_address;
+    std::string my_ip_address;
     bool should_show_host_ip = false;
 
     NetworkLayer() : Layer("Network") {
@@ -29,7 +29,7 @@ struct NetworkLayer : public Layer {
 
         network::Info::init_connections();
         network_info.reset(new network::Info());
-        my_ip_address = network::get_remote_ip_address();
+        my_ip_address = network::get_remote_ip_address().value_or("");
         if (!Settings::get().data.username.empty()) {
             network_info->lock_in_username();
         }
@@ -155,15 +155,15 @@ struct NetworkLayer : public Layer {
 
     void draw_connected_screen() {
         auto draw_host_network_info = [&]() {
-            if (network_info->is_host() && my_ip_address.has_value()) {
+            if (network_info->is_host()) {
                 auto content = ui_context->own(
                     Widget({.mode = Children, .strictness = 1.f},
                            {.mode = Children, .strictness = 1.f}, Row));
                 div(*content);
                 ui_context->push_parent(content);
                 {
-                    auto ip = should_show_host_ip ? my_ip_address.value()
-                                                  : "***.***.***.***";
+                    auto ip =
+                        should_show_host_ip ? my_ip_address : "***.***.***.***";
                     text(*ui::components::mk_text(),
                          fmt::format("Your IP is: {}", ip));
                     auto checkbox_widget = ui_context->own(
@@ -177,7 +177,7 @@ struct NetworkLayer : public Layer {
                     if (button(*ui::components::mk_icon_button(
                                    MK_UUID(id, ROOT_ID)),
                                "Copy")) {
-                        SetClipboardText(my_ip_address.value().c_str());
+                        SetClipboardText(my_ip_address.c_str());
                     }
                 }
                 ui_context->pop_parent();

@@ -1,10 +1,14 @@
 
 #pragma once
-#include <iostream>
-#include <optional>
+#include <expected.hpp>
+#include <string>
 
 namespace network {
 
-extern std::optional<std::string> get_remote_ip_address();
+enum struct NetworkRequestError {
+    UNKNOWN_ERROR = 0,
+};
+
+extern tl::expected<std::string, NetworkRequestError> get_remote_ip_address();
 
 }  // namespace network
