@@ -235,23 +235,29 @@ struct UIContext {
             return b;
         }
 
-        std::optional<GamepadAxisWithDir> current_axis =
-            KeyMap::get_axis(STATE, name);
-        bool c = _readAxisWithoutEat(current_axis);
+        bool c = KeyMap::get_axis(STATE, name)
+                     .map([&](GamepadAxisWithDir axis) -> bool {
+                         return axis_info.axis == axis.axis &&
+                                ((axis.dir - axis_info.dir) >= EPSILON);
+                     })
+                     .map_error([&](auto exp) {
+                         this->handleBadGamepadAxis(exp, STATE, name);
+                     })
+                     .value_or(false);
         if (c) {
             eatAxis();
         }
         return c;
     }
 
-    void eatAxis() { axis_info = {}; }
-
-    bool _readAxisWithoutEat(std::optional<GamepadAxisWithDir> axis_opt) {
-        if (!axis_opt.has_value()) return false;
-        GamepadAxisWithDir axis = axis_opt.value();
-        return axis_info.axis == axis.axis &&
-               ((axis.dir - axis_info.dir) >= EPSILON);
+    void handleBadGamepadAxis(const KeyMapInputRequestError&, Menu::State,
+                              const InputName) {
+        // TODO theres currently no valid inputs for axis on UI items so this is
+        // all just firing constantly. log_warn("{}: No gamepad axis in {} for
+        // {}", err, state, magic_enum::enum_name(name));
     }
+
+    void eatAxis() { axis_info = {}; }
 
     bool _pressedWithoutEat(int code) const {
         if (code == KEY_NULL) return false;

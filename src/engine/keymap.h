@@ -67,6 +67,16 @@ static const MouseInfo get_mouse_info() {
     };
 }
 
+enum class KeyMapInputRequestError {
+    NO_VALID_INPUT = 0,
+};
+
+inline std::ostream& operator<<(std::ostream& os,
+                                const KeyMapInputRequestError& info) {
+    os << "KeyMapInputRequestError : " << magic_enum::enum_name(info);
+    return os;
+}
+
 SINGLETON_FWD(KeyMap)
 struct KeyMap {
     SINGLETON(KeyMap)
@@ -179,8 +189,9 @@ struct KeyMap {
         return KEY_NULL;
     }
 
-    [[nodiscard]] static const std::optional<GamepadAxisWithDir> get_axis(
-        const Menu::State& state, const InputName& name) {
+    [[nodiscard]] static const tl::expected<GamepadAxisWithDir,
+                                            KeyMapInputRequestError>
+    get_axis(const Menu::State& state, const InputName& name) {
         const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
             auto r = std::visit(
@@ -190,9 +201,9 @@ struct KeyMap {
                     },
                     [](auto&&) { return std::optional<GamepadAxisWithDir>(); }},
                 input);
-            if (r.has_value()) return r;
+            if (r.has_value()) return r.value();
         }
-        return {};
+        return tl::unexpected(KeyMapInputRequestError::NO_VALID_INPUT);
     }
 
     [[nodiscard]] static GamepadButton get_button(const Menu::State& state,
