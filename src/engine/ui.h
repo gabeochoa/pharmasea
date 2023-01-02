@@ -164,7 +164,8 @@ inline void handle_tabbing(const uuid id) {
     get().last_processed = id;
 }
 
-void _draw_focus_ring(const Widget& widget) {
+void _draw_focus_ring(const Widget& widget,
+                      theme::Usage usage = theme::Usage::Accent) {
     draw_if_kb_focus(widget.id, [&]() {
         const auto position = vec2{
             widget.rect.x,
@@ -183,7 +184,7 @@ void _draw_focus_ring(const Widget& widget) {
                 new_cs.x,
                 new_cs.y,
             },
-            theme::Usage::Accent);
+            usage);
     });
 }
 
