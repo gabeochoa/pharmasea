@@ -32,6 +32,13 @@ inline bool operator<(const vec2& l, const vec2& r) {
 #include <fmt/ostream.h>
 // this is needed for wstring printing
 #include <fmt/xchar.h>
+//
+#include <expected.hpp>
+//
+#include <magic_enum/magic_enum.hpp>
+// TODO cant use format yet due to no std::format yet (though not even sure what
+// its needed for) #include <magic_enum/magic_enum_format.hpp>
+#include <magic_enum/magic_enum_fuse.hpp>
 
 //
 #include <bitsery/adapter/buffer.h>

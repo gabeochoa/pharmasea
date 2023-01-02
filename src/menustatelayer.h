@@ -13,7 +13,8 @@ struct MenuStateLayer : public Layer {
     virtual void onUpdate(float) override {}
 
     virtual void onDraw(float) override {
-        DrawTextEx(Preload::get().font, Menu::get().tostring(), {5, 20}, 20, 0,
+        DrawTextEx(Preload::get().font,
+                   std::string(Menu::get().tostring()).c_str(), {5, 20}, 20, 0,
                    WHITE);
     }
 };

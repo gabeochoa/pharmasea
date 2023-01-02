@@ -87,29 +87,12 @@ struct Menu {
         }
     }
 
-    inline const char* tostring() {
-        switch (state) {
-            case Menu::State::About:
-                return "About";
-            case Menu::State::Root:
-                return "Root";
-            case Menu::State::Game:
-                return "Game";
-            case Menu::State::Planning:
-                return "Planning";
-            case Menu::State::Paused:
-                return "Paused";
-            case Menu::State::PausedPlanning:
-                return "PausedPlanning";
-            case Menu::State::UI:
-                return "UI";
-            case Menu::State::Settings:
-                return "Settings";
-            case Menu::State::Network:
-                return "Network";
-            default:
-                log_warn("no stateToString, Invalid state: {}", state);
-                return "MenuState no stateToString";
-        }
+    [[nodiscard]] inline const std::string_view tostring() const {
+        return magic_enum::enum_name(state);
     }
 };
+
+inline std::ostream& operator<<(std::ostream& os, const Menu::State& state) {
+    os << "Menu::State " << magic_enum::enum_name(state);
+    return os;
+}
