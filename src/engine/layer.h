@@ -6,6 +6,9 @@
 
 static std::atomic_int s_layer_id;
 struct Layer {
+    // TODO it would be great to do this here instead of in every sub layer but
+    // theres some problem with including ui.h in here due to app.cpp
+    // std::shared_ptr<ui::UIContext> ui_context;
     int id;
     std::string name;
 
