@@ -24,6 +24,9 @@ struct Menu {
         Any = 99,
     };
 
+    Menu() : state(State::Root) {}
+    ~Menu() {}
+
    private:
     std::stack<State> prev;
     State state;

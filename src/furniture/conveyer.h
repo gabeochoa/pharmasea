@@ -26,7 +26,8 @@ struct Conveyer : public Furniture {
 
    public:
     Conveyer() {}
-    Conveyer(vec2 pos) : Furniture(pos, ui::color::blue, ui::color::blue) {}
+    explicit Conveyer(vec2 pos)
+        : Furniture(pos, ui::color::blue, ui::color::blue) {}
     Conveyer(vec2 pos, Color face_color, Color base_color)
         : Furniture(pos, face_color, base_color) {}
 

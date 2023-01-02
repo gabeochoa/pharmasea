@@ -13,3 +13,4 @@ pharmasea
 .obsidian/
 *.o
 *.d
+cppcheck_err

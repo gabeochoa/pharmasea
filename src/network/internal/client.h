@@ -42,7 +42,8 @@ namespace internal {
 
 struct Client {
     SteamNetworkingIPAddr address;
-    ISteamNetworkingSockets *interface;
+    // NOTE: will be set in `startup`
+    ISteamNetworkingSockets *interface = nullptr;
     HSteamNetConnection connection;
     inline static Client *callback_instance;
     bool running = false;

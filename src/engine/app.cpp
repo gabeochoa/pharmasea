@@ -127,12 +127,12 @@ void App::draw_all_to_texture(float dt) {
 void App::render_to_screen() {
     BeginDrawing();
     {
-        start_post_processing();
+        App::start_post_processing();
         {
             DrawTextureRec(mainRT.texture, {0, 0, width * 1.f, -height * 1.f},
                            {0, 0}, WHITE);
         }
-        end_post_processing();
+        App::end_post_processing();
     }
     EndDrawing();
 }

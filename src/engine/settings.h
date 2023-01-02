@@ -79,7 +79,7 @@ struct Settings {
 
     settings::Data data;
 
-    Settings() {}
+    Settings() : data(settings::Data()) {}
 
     ~Settings() {}
 
@@ -181,7 +181,7 @@ struct Settings {
     }
 
    private:
-    // Basically once we load the file,
+    // Note: Basically once we load the file,
     // we run into an issue where our settings is correct,
     // but the underlying data isnt being used
     //

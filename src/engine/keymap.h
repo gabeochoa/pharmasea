@@ -81,7 +81,7 @@ SINGLETON_FWD(KeyMap)
 struct KeyMap {
     SINGLETON(KeyMap)
 
-    void forEachCharTyped(std::function<void(Event&)> cb) const {
+    static void forEachCharTyped(std::function<void(Event&)> cb) {
         int character = GetCharPressed();
         while (character) {
             CharPressedEvent* event = new CharPressedEvent(character, 0);
@@ -288,7 +288,7 @@ struct KeyMap {
         load_default_keys();
     }
 
-    void load_controller_db() {
+    static void load_controller_db() {
         auto controller_db_fn = Files::get().game_controller_db();
         std::ifstream ifs(controller_db_fn);
         if (!ifs.is_open()) {

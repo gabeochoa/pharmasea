@@ -39,7 +39,8 @@ struct App {
 
    private:
     void draw_all_to_texture(float dt);
-    void start_post_processing();
-    void end_post_processing();
     void render_to_screen();
+
+    static void start_post_processing();
+    static void end_post_processing();
 };

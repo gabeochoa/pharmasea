@@ -13,7 +13,7 @@
     [[nodiscard]] inline static type& get() { return create(); }
 
 #define SINGLETON_PARAM(type, param_type)                      \
-    inline static type* create(param_type pt) {                \
+    inline static type* create(const param_type& pt) {         \
         if (!type##_single) type##_single.reset(new type(pt)); \
         return type##_single.get();                            \
     }                                                          \

@@ -14,7 +14,7 @@ namespace astar {
 struct ScoreValue {
     float value;
     ScoreValue() { value = std::numeric_limits<float>::max(); }
-    ScoreValue(float v) : value(v) {}
+    explicit ScoreValue(float v) : value(v) {}
     operator float() const { return value; }
 };
 
@@ -81,8 +81,8 @@ std::deque<vec2> find_path_impl(vec2 start, vec2 end,
     std::map<vec2, ScoreValue> gscore;
     std::map<vec2, ScoreValue> fscore;
 
-    gscore[start] = 0;
-    fscore[start] = 0 + path_estimate(start, end);
+    gscore[start] = ScoreValue(0);
+    fscore[start] = ScoreValue(0 + path_estimate(start, end));
 
     int i = 0;
 

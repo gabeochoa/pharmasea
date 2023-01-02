@@ -19,5 +19,6 @@ struct Table : public Furniture {
 
    public:
     Table() {}
-    Table(vec2 pos) : Furniture(pos, ui::color::brown, ui::color::brown) {}
+    explicit Table(vec2 pos)
+        : Furniture(pos, ui::color::brown, ui::color::brown) {}
 };

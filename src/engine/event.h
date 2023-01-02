@@ -63,7 +63,7 @@ struct Event {
     }
 };
 struct EventDispatcher {
-    EventDispatcher(Event& e) : event(e) {}
+    explicit EventDispatcher(Event& e) : event(e) {}
     Event& event;
 
     template<typename T>
@@ -77,7 +77,7 @@ struct EventDispatcher {
 };
 
 struct KeyEvent : public Event {
-    KeyEvent(int k) : keycode(k) {}
+    explicit KeyEvent(int k) : keycode(k) {}
     int keycode;
     [[nodiscard]] int getKeyCode() const { return keycode; }
 
@@ -115,7 +115,7 @@ struct WindowResizeEvent : public Event {
 struct GamepadButtonPressedEvent : public Event {
     GamepadButton button;
 
-    GamepadButtonPressedEvent(GamepadButton butt) : button(butt) {}
+    explicit GamepadButtonPressedEvent(GamepadButton butt) : button(butt) {}
 
     MACRO_EVENT_TYPE(GamepadButtonPressed)
     MACRO_EVENT_CATEGORY(EventCategoryGamepad | EventCategoryInput)
@@ -124,7 +124,7 @@ struct GamepadButtonPressedEvent : public Event {
 struct GamepadAxisMovedEvent : public Event {
     GamepadAxisWithDir data;
 
-    GamepadAxisMovedEvent(GamepadAxisWithDir info) : data(info) {}
+    explicit GamepadAxisMovedEvent(GamepadAxisWithDir info) : data(info) {}
 
     MACRO_EVENT_TYPE(GamepadAxisMoved)
     MACRO_EVENT_CATEGORY(EventCategoryGamepad | EventCategoryInput)

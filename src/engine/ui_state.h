@@ -14,6 +14,7 @@ struct State {
     bool changed_since = false;
 
     State() {}
+    // Note: these should not be explicit
     State(T val) : value(val) {}
     State(const State<T>& s) : value(s.value) {}
     State<T>& operator=(const State<T>& other) {

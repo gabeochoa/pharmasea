@@ -14,7 +14,8 @@ struct Grabber : public Conveyer {
 
    public:
     Grabber() {}
-    Grabber(vec2 pos) : Conveyer(pos, ui::color::yellow, ui::color::yellow) {}
+    explicit Grabber(vec2 pos)
+        : Conveyer(pos, ui::color::yellow, ui::color::yellow) {}
 
     virtual void game_update(float dt) override {
         // Handle the normal item movement code

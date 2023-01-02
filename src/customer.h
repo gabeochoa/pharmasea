@@ -22,7 +22,7 @@ struct SpeechBubble {
     // perhaps in a typedef?
     std::string icon_tex_name;
 
-    SpeechBubble(std::string icon) : icon_tex_name(icon) {}
+    explicit SpeechBubble(std::string icon) : icon_tex_name(icon) {}
 
     void update(float, vec3 pos) { this->position = pos; }
     void render() const {
@@ -141,7 +141,7 @@ struct Customer : public AIPerson {
             }
 
             // Check the spot in front of us
-            Register* reg = (Register*) job->data["register"];
+            Register* reg = static_cast<Register*>(job->data["register"]);
             Customer* me = this;
             int cur_spot_in_line = reg->position_in_line(me);
 

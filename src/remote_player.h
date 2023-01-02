@@ -12,7 +12,9 @@
 #include "preload.h"
 
 struct RemotePlayer : public BasePlayer {
-    int client_id;
+    // TODO what is a reasonable default value here?
+    // TODO who sets this value?
+    int client_id = -1;
     std::string name = "Remote Player";
 
     RemotePlayer(vec3 p, Color face_color_in, Color base_color_in)

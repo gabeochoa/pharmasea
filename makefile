@@ -48,4 +48,7 @@ countall:
 todo: 
 	git grep -niE '(FIXME|TODO)' src/
 
+cppcheck: 
+	cppcheck --enable=all --std=c++20 --language=c++ --output-file=cppcheck_err src/
+
 -include $(OBJ_FILES:.o=.d)

@@ -292,6 +292,8 @@ struct UIContext {
 
         this->set_font(Preload::get().font);
         this->push_theme(ui::DEFAULT_THEME);
+
+        yscrolled = 0.f;
     }
 
     void begin(float dt) {
