@@ -25,6 +25,7 @@ struct Files {
     bool ensure_game_folder_exists();
     [[nodiscard]] fs::path settings_filepath() const;
     [[nodiscard]] fs::path resource_folder() const;
+    [[nodiscard]] fs::path game_controller_db() const;
     [[nodiscard]] std::string fetch_resource_path(std::string_view group,
                                                   std::string_view name) const;
     // TODO add a full cleanup to write folders in case we need to reset

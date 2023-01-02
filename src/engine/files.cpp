@@ -57,12 +57,14 @@ fs::path Files::settings_filepath() const {
 
 fs::path Files::resource_folder() const { return fs::path("./resources"); }
 
+fs::path Files::game_controller_db() const {
+    return (resource_folder() / fs::path("gamecontrollerdb.txt")).string();
+}
+
 std::string Files::fetch_resource_path(std::string_view group,
                                        std::string_view name) const {
     return (resource_folder() / fs::path(group) / fs::path(name)).string();
 }
-
-// TODO add a full cleanup to write folders in case we need to reset
 
 void Files::folder_locations() const {
     using namespace std;

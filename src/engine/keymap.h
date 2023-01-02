@@ -283,12 +283,21 @@ struct KeyMap {
     FullMap mapping;
 
     KeyMap() {
-        // TODO migrate to using file-api to avoid this hardcoded path
-        std::ifstream ifs(fs::path("./resources/gamecontrollerdb.txt"));
+        load_controller_db();
+        load_default_keys();
+    }
+
+    void load_controller_db() {
+        auto controller_db_fn = Files::get().game_controller_db();
+        std::ifstream ifs(controller_db_fn);
+        if (!ifs.is_open()) {
+            log_warn("Failed to load game controller file {}",
+                     controller_db_fn);
+            return;
+        }
         std::stringstream buffer;
         buffer << ifs.rdbuf();
         SetGamepadMappings(buffer.str().c_str());
-        load_default_keys();
     }
 
     [[nodiscard]] LayerMapping& get_or_create_layer_map(
