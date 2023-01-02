@@ -92,6 +92,14 @@ struct Preload {
                 .fetch_resource_path("sounds", "roblox_oof.ogg")
                 .c_str(),
             "roblox");
+
+        Files::get().for_resources_in_folder(
+            "sounds", "pa_announcements",
+            [](const std::string& name, const std::string& filename) {
+                SoundLibrary::get().load(
+                    filename.c_str(),
+                    fmt::format("pa_announcements_{}", name).c_str());
+            });
     }
 
     void load_music() {
