@@ -29,4 +29,8 @@ struct SoundLibrary {
     }
 
     void play(const char* name) { PlaySound(get(name)); }
+
+    void play_random_match(const std::string& prefix) {
+        impl.get_random_match(prefix).map(PlaySound);
+    }
 };

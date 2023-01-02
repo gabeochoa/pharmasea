@@ -63,6 +63,7 @@ struct GameLayer : public Layer {
         if (KeyMap::get_key_code(Menu::State::Game, InputName::Pause) ==
             event.keycode) {
             Menu::pause();
+            SoundLibrary::get().play_random_match("pa_announcements_");
             return true;
         }
         return false;
