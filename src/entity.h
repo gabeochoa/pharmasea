@@ -5,6 +5,7 @@
 //
 #include <map>
 
+#include "drawing_util.h"
 #include "engine/astar.h"
 #include "engine/is_server.h"
 #include "globals.h"
@@ -121,37 +122,8 @@ struct Entity {
      * */
     virtual void render_debug_mode() const {
         DrawBoundingBox(this->bounds(), MAROON);
-
-        // TODO extract all these hover name lambdas into a function
-        auto render_id = [&]() {
-            rlPushMatrix();
-            rlTranslatef(              //
-                this->raw_position.x,  //
-                0.f,                   //
-                this->raw_position.z   //
-            );
-            rlRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-
-            rlTranslatef(          //
-                -0.5f * TILESIZE,  //
-                0.f,               //
-                -1.05f * TILESIZE  // this is Y
-            );
-
-            DrawText3D(                               //
-                Preload::get().font,                  //
-                fmt::format("{}", this->id).c_str(),  //
-                {0.f},                                //
-                96,                                   // font size
-                4,                                    // font spacing
-                4,                                    // line spacing
-                true,                                 // backface
-                BLACK);
-
-            rlPopMatrix();
-        };
-
-        render_id();
+        DrawFloatingText(this->raw_position, Preload::get().font,
+                         fmt::format("{}", this->id).c_str());
     }
 
     /*

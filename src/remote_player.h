@@ -48,36 +48,8 @@ struct RemotePlayer : public BasePlayer {
     virtual bool is_collidable() override { return false; }
 
     virtual void render_normal() const override {
-        auto render_name = [&]() {
-            rlPushMatrix();
-            rlTranslatef(              //
-                this->raw_position.x,  //
-                0.f,                   //
-                this->raw_position.z   //
-            );
-            rlRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-
-            rlTranslatef(          //
-                -0.5f * TILESIZE,  //
-                0.f,               //
-                -1.05f * TILESIZE  // this is Y
-            );
-
-            DrawText3D(               //
-                Preload::get().font,  //
-                // TODO right now cant do wstring //
-                name.c_str(),  //
-                {0.f},         //
-                96,            // font size
-                4,             // font spacing
-                4,             // line spacing
-                true,          // backface
-                BLACK);
-
-            rlPopMatrix();
-        };
-
         BasePlayer::render_normal();
-        render_name();
+        // TODO right now cant do wstring //
+        DrawFloatingText(this->raw_position, Preload::get().font, name.c_str());
     }
 };

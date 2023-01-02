@@ -5,6 +5,7 @@
 #include "rlgl.h"
 //
 #include "external_include.h"
+#include "text_util.h"
 #include "vec_util.h"
 
 static void DrawLineStrip2Din3D(const std::vector<vec2>& points, Color color) {
@@ -93,5 +94,32 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
     rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Bottom Right
     rlEnd();
+    rlPopMatrix();
+}
+
+static void DrawFloatingText(const vec3& position, Font font,
+                             const char* text) {
+    rlPushMatrix();
+    rlTranslatef(    //
+        position.x,  //
+        0.f,         //
+        position.z   //
+    );
+    rlRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+
+    rlTranslatef(          //
+        -0.5f * TILESIZE,  //
+        0.f,               //
+        -1.05f * TILESIZE  // this is Y
+    );
+
+    DrawText3D(             //
+        font, text, {0.f},  //
+        96,                 // font size
+        4,                  // font spacing
+        4,                  // line spacing
+        true,               // backface
+        BLACK);
+
     rlPopMatrix();
 }
