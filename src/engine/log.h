@@ -3,20 +3,26 @@
 #pragma once
 
 #include <cassert>
-#include <functional>
-#include <iostream>
-#include <string>
 
-#include "../external_include.h"
-#include "globals.h"
 
-enum LogLevel : int {
+enum class LogLevel {
     ALL = 0,
     TRACE = 1,
     INFO = 2,
     WARN = 3,
     ERROR = 4,
 };
+
+// TODO log to file
+
+
+// TODO right now having some issues with MSVC and not getting any decent error message 
+#ifdef __APPLE__ 
+#include <functional>
+#include <iostream>
+#include <string>
+
+#include "../external_include.h"
 
 inline const char* level_to_string(int level) {
     switch (level) {
@@ -33,8 +39,6 @@ inline const char* level_to_string(int level) {
             return "Error";
     }
 }
-
-// TODO log to file
 
 inline void vlog(int level, const char* file, int line, fmt::string_view format,
                  fmt::format_args args) {
@@ -79,6 +83,10 @@ inline void log_me(int level, const char* file, int line, const wchar_t* format,
     vlog(level, file, line, format,
          fmt::make_args_checked<const wchar_t*>(format, args));
 }
+
+#else 
+ static void log_me(...) {}
+#endif 
 
 #define log_trace(...) log_me(LogLevel::TRACE, __FILE__, __LINE__, __VA_ARGS__)
 
