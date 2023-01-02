@@ -397,6 +397,8 @@ struct UIContext;
 static std::shared_ptr<UIContext> _uicontext;
 // TODO do we need both _uicontext and globalContext?
 // if not we can switch to using the SINGLETON macro
+// NOTE: Jan2-23, I tried but it seems to immediately crash on startup, what is
+// using this?
 UIContext* globalContext;
 struct UIContext : public IUIContextInputManager,
                    public IUIContextLastFrame,
