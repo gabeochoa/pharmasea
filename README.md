@@ -9,6 +9,8 @@ libraries used:
 - Steam's GameNetworkingSockets https://github.com/ValveSoftware/GameNetworkingSockets
 - HTTPRequest https://github.com/elnormous/HTTPRequest
 - fmt https://github.com/fmtlib/fmt
+- tl::expected https://github.com/TartanLlama/expected
+- magic enum https://github.com/Neargye/magic_enum.git
 
 
 
