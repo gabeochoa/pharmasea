@@ -13,8 +13,8 @@
 #include "engine/settings.h"  // Used for username
 //
 #include "engine.h"
+#include "engine/network/webrequest.h"
 #include "network/network.h"
-#include "network/webrequest.h"
 #include "player.h"
 #include "raylib.h"
 #include "remote_player.h"

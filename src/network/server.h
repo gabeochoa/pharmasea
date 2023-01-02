@@ -212,6 +212,8 @@ struct Server {
         // update the username
         players[packet.client_id]->username = info.username;
 
+        // TODO i looked into std::transform but kept getting std::out of range
+        // errors
         std::vector<int> ids;
         for (auto& c : server_p->clients) {
             ids.push_back(c.second.client_id);
