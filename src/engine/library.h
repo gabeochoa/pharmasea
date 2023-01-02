@@ -7,6 +7,10 @@
 //
 template<typename T>
 struct Library {
+    enum struct Error {
+        DUPLICATE_NAME,
+    };
+
     std::map<std::string, T> storage;
 
     [[nodiscard]] auto size() { return storage.size(); }
@@ -20,11 +24,10 @@ struct Library {
     [[nodiscard]] auto rend() { return storage.rend(); }
     [[nodiscard]] auto empty() const { return storage.empty(); }
 
-    const std::string add(const char* name, const T& item) {
+    const tl::expected<std::string, Error> add(const char* name,
+                                               const T& item) {
         if (storage.find(name) != storage.end()) {
-            // TODO can we throw or something? should we return Optional? are we
-            // ever using the returned string?
-            return "";
+            return tl::unexpected(Error::DUPLICATE_NAME);
         }
         storage[name] = item;
         return name;
