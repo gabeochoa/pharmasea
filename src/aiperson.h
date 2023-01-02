@@ -15,7 +15,6 @@
 struct AIPerson : public Person {
     std::stack<std::shared_ptr<Job>> personal_queue;
     std::shared_ptr<Job> job;
-    std::optional<vec2> local_target;
 
    private:
     friend bitsery::Access;
