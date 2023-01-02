@@ -67,11 +67,12 @@ struct Library {
     virtual void load(const char* filename, const char* name) = 0;
 
     void unload_all() {
+        log_info("Library<{}> loaded {} items", typeid(T).name(),
+                 storage.size());
         for (auto kv : storage) {
             unload(kv.second);
         }
     }
-
     virtual void unload(T) = 0;
 
     [[nodiscard]] tl::expected<T, Error> get_random_match(
@@ -82,8 +83,6 @@ struct Library {
             log_warn("got no matches for your prefix search: {}", key);
             return tl::unexpected(Error::NO_MATCH);
         }
-
-        log_info("number of matches: {}", num_matches);
 
         int idx = randIn(0, static_cast<int>(num_matches) - 1);
         const_iterator begin(matches.first);
