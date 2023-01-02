@@ -35,10 +35,12 @@ struct Preload {
     ~Preload() {
         CloseAudioDevice();
 
+        // TODO instead of leaving the impl public fix these to do what music
+        // library does
         TextureLibrary::get().impl.unload_all();
         ModelLibrary::get().impl.unload_all();
         SoundLibrary::get().impl.unload_all();
-        MusicLibrary::get().impl.unload_all();
+        MusicLibrary::get().unload_all();
         ShaderLibrary::get().impl.unload_all();
     }
 

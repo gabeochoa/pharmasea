@@ -7,6 +7,33 @@ SINGLETON_FWD(MusicLibrary)
 struct MusicLibrary {
     SINGLETON(MusicLibrary)
 
+    [[nodiscard]] const Music& get(const std::string& name) const {
+        return impl.get(name);
+    }
+
+    [[nodiscard]] Music& get(const std::string& name) { return impl.get(name); }
+    void load(const char* filename, const char* name) {
+        impl.load(filename, name);
+
+        // TODO SPEED: right now we loop over every sound again
+        // could just look up the newly added one
+        update_volume(current_volume);
+    }
+
+    void update_volume(float new_v) {
+        impl.update_volume(new_v);
+        current_volume = new_v;
+    }
+
+    void unload_all() { impl.unload_all(); }
+
+   private:
+    // Note: this is set from settings
+    // we store this because when a new music is added it uses the default
+    // volume instead of the one in settings because we are reactive. this
+    // allows us to locally cache the most recent volume and handle it here
+    float current_volume = 1.f;
+
     struct MusicLibraryImpl : Library<Music> {
         virtual void load(const char* filename, const char* name) override {
             log_info("Loading music: {} from {}", name, filename);
@@ -15,21 +42,11 @@ struct MusicLibrary {
 
         void update_volume(float new_v) {
             for (auto kv : storage) {
+                log_info("updating music volume for {} to {}", kv.first, new_v);
                 SetMusicVolume(kv.second, new_v);
             }
         }
 
         virtual void unload(Music music) override { UnloadMusicStream(music); }
     } impl;
-
-    [[nodiscard]] const Music& get(const std::string& name) const {
-        return impl.get(name);
-    }
-
-    [[nodiscard]] Music& get(const std::string& name) { return impl.get(name); }
-    void load(const char* filename, const char* name) {
-        impl.load(filename, name);
-    }
-
-    void update_volume(float new_v) { impl.update_volume(new_v); }
 };
