@@ -5,6 +5,7 @@
 //
 #include "ui_autolayout.h"
 #include "ui_color.h"
+#include "ui_components.h"
 #include "ui_context.h"
 #include "ui_state.h"
 #include "ui_theme.h"
