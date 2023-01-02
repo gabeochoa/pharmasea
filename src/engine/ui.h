@@ -89,8 +89,13 @@ enum struct TextfieldValidationDecisionFlag {
     Invalid = 1 << 2,
 };  // namespace ui
 
-bool operator!(TextfieldValidationDecisionFlag f) {
+inline bool operator!(TextfieldValidationDecisionFlag f) {
     return f == TextfieldValidationDecisionFlag::None;
+}
+
+inline bool validation_test(TextfieldValidationDecisionFlag flag,
+                            TextfieldValidationDecisionFlag mask) {
+    return !!(flag & mask);
 }
 
 typedef std::function<TextfieldValidationDecisionFlag(const std::string&)>
@@ -596,40 +601,41 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
 
 bool textfield(const Widget& widget, std::string& content,
                TextFieldValidationFn validation) {
-    TextfieldValidationDecisionFlag validationFlag =
-        validation ? validation(content)
-                   : TextfieldValidationDecisionFlag::None;
+    auto _textfield_render = [](Widget* widget_ptr,
+                                TextFieldValidationFn validation) {
+        auto state = get().get_widget_state<TextfieldState>(widget_ptr->id);
+        Widget& widget = *widget_ptr;
 
-    auto _textfield_render =
-        [](Widget* widget_ptr, TextfieldValidationDecisionFlag validationFlag) {
-            auto state = get().get_widget_state<TextfieldState>(widget_ptr->id);
-            Widget& widget = *widget_ptr;
+        TextfieldValidationDecisionFlag validationFlag =
+            validation ? validation(state->buffer.asT())
+                       : TextfieldValidationDecisionFlag::None;
 
-            bool is_invalid =
-                !!(validationFlag & TextfieldValidationDecisionFlag::Invalid);
-            auto focus_color =
-                is_invalid ? theme::Usage::Error : theme::Usage::Accent;
-            _draw_focus_ring(widget, focus_color);
-            // Background
-            get().draw_widget(widget, is_active_and_hot(widget.id)
-                                          ? theme::Usage::Secondary
-                                          : theme::Usage::Primary);
+        bool is_invalid = validation_test(
+            validationFlag, TextfieldValidationDecisionFlag::Invalid);
+        auto focus_color =
+            is_invalid ? theme::Usage::Error : theme::Usage::Accent;
+        _draw_focus_ring(widget, focus_color);
+        // Background
+        get().draw_widget(widget, is_active_and_hot(widget.id)
+                                      ? theme::Usage::Secondary
+                                      : theme::Usage::Primary);
 
-            bool shouldWriteCursor =
-                has_kb_focus(widget.id) && state->showCursor;
-            std::string focusStr = shouldWriteCursor ? "_" : "";
-            std::string focused_content =
-                fmt::format("{}{}", state->buffer.asT(), focusStr);
+        bool shouldWriteCursor = has_kb_focus(widget.id) && state->showCursor;
+        std::string focusStr = shouldWriteCursor ? "_" : "";
+        std::string focused_content =
+            fmt::format("{}{}", state->buffer.asT(), focusStr);
 
-            auto text_color =
-                is_invalid ? theme::Usage::Error : theme::Usage::Font;
-            get()._draw_text(widget.rect, focused_content, text_color);
-        };
+        auto text_color = is_invalid ? theme::Usage::Error : theme::Usage::Font;
+        get()._draw_text(widget.rect, focused_content, text_color);
+    };
 
     const auto _textfield_value_management =
-        [](const Widget* widget,
-           TextfieldValidationDecisionFlag validationFlag) {
+        [](const Widget* widget, TextFieldValidationFn validation) {
             auto state = get().get_widget_state<TextfieldState>(widget->id);
+
+            auto validationFlag = validation
+                                      ? validation(state->buffer.asT())
+                                      : TextfieldValidationDecisionFlag::None;
 
             state->cursorBlinkTime = state->cursorBlinkTime + 1;
             if (state->cursorBlinkTime > 60) {
@@ -641,8 +647,9 @@ bool textfield(const Widget& widget, std::string& content,
 
             if (has_kb_focus(widget->id)) {
                 if (get().keychar != int()) {
-                    if (!!(validationFlag &
-                           TextfieldValidationDecisionFlag::StopNewInput)) {
+                    if (validation_test(
+                            validationFlag,
+                            TextfieldValidationDecisionFlag::StopNewInput)) {
                     } else {
                         state->buffer.asT().append(
                             std::string(1, (char) get().keychar));
@@ -656,11 +663,30 @@ bool textfield(const Widget& widget, std::string& content,
                     changed = true;
                 }
 
-                // TODO enforce max length on paste
                 if (get().is_held_down(InputName::WidgetCtrl)) {
                     if (get().pressed(InputName::WidgetPaste)) {
                         auto clipboard = GetClipboardText();
-                        state->buffer.asT().append(clipboard);
+
+                        // make a copy so we can text validation
+                        std::string post_paste(state->buffer.asT());
+                        post_paste.append(clipboard);
+
+                        auto vflag =
+                            validation ? validation(post_paste)
+                                       : TextfieldValidationDecisionFlag::None;
+                        // TODO we should paste the amount that fits. but we
+                        // dont know what the max length actually is, so we
+                        // would need to remove one letter at a time until we
+                        // hit something valid.
+
+                        // TODO we probably should give some kind of visual
+                        // error to the user that you cant paste right now
+                        bool should_append = !validation_test(
+                            vflag,
+                            TextfieldValidationDecisionFlag::StopNewInput);
+
+                        // commit the copy-paste
+                        if (should_append) state->buffer.asT() = post_paste;
                     }
                     changed = true;
                 }
@@ -684,8 +710,8 @@ bool textfield(const Widget& widget, std::string& content,
     widget.me->rect = lf.rect.value();
     try_to_grab_kb(widget.id);
     active_if_mouse_inside(widget.id, widget.rect);
-    _textfield_render(widget.me, validationFlag);
-    _textfield_value_management(widget.me, validationFlag);
+    _textfield_render(widget.me, validation);
+    _textfield_value_management(widget.me, validation);
     handle_tabbing(widget.id);
 
     content = state->buffer;

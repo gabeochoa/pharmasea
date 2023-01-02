@@ -152,7 +152,7 @@ struct NetworkLayer : public Layer {
         textfield(*ip_address_input, network_info->host_ip_address(),
                   [](const std::string& content) {
                       // xxx.xxx.xxx.xxx
-                      if (content.size() >= 15) {
+                      if (content.size() > 15) {
                           return TextfieldValidationDecisionFlag::StopNewInput;
                       }
                       if (validate_ip(content)) {
