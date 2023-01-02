@@ -142,122 +142,133 @@ struct Server {
         }
     }
 
+    void process_announcement_packet(const Client_t&,
+                                     const ClientPacket& packet) {
+        const ClientPacket::AnnouncementInfo info =
+            std::get<ClientPacket::AnnouncementInfo>(packet.msg);
+        server_p->send_client_packet_to_all(packet);
+    }
+
+    void process_player_control_packet(const Client_t& incoming_client,
+                                       const ClientPacket& packet) {
+        const ClientPacket::PlayerControlInfo info =
+            std::get<ClientPacket::PlayerControlInfo>(packet.msg);
+
+        auto player = players[packet.client_id];
+
+        if (!player) return;
+
+        auto updated_position = player->get_position_after_input(info.inputs);
+
+        // TODO if the position and face direction didnt change
+        //      then we can early return
+        //
+        // NOTE: i saw issues where == between vec3 was returning
+        //      on every call because (mvt * dt) < epsilon
+        //
+
+        ClientPacket player_updated({
+            .channel = Channel::UNRELIABLE_NO_DELAY,
+            .client_id = incoming_client.client_id,
+            .msg_type = network::ClientPacket::MsgType::PlayerLocation,
+            .msg = network::ClientPacket::PlayerInfo({
+                .facing_direction = static_cast<int>(player->face_direction),
+                .location =
+                    {
+                        updated_position.x,
+                        updated_position.y,
+                        updated_position.z,
+                    },
+                .username = player->username,
+            }),
+        });
+
+        server_p->send_client_packet_to_all(player_updated);
+    }
+
+    void process_player_join_packet(const Client_t& incoming_client,
+                                    const ClientPacket& orig_packet) {
+        ClientPacket::PlayerJoinInfo info =
+            std::get<ClientPacket::PlayerJoinInfo>(orig_packet.msg);
+
+        if (info.hashed_version != HASHED_VERSION) {
+            // TODO send error message
+            log_warn(
+                "player tried to join but had incorrect version our "
+                "version : {}, their version : {} ",
+                HASHED_VERSION, info.hashed_version);
+            return;
+        }
+
+        ClientPacket packet(orig_packet);
+        // overwrite it so its already there
+        packet.client_id = incoming_client.client_id;
+
+        // create the player if they dont already exist
+        if (!players.contains(packet.client_id)) {
+            players[packet.client_id] = std::make_shared<Player>();
+        }
+
+        // update the username
+        players[packet.client_id]->username = info.username;
+
+        std::vector<int> ids;
+        for (auto& c : server_p->clients) {
+            ids.push_back(c.second.client_id);
+        }
+        // Since we are the host, we can use the Client_t to figure
+        // out the id / name
+        server_p->send_client_packet_to_all(
+            ClientPacket({.client_id = SERVER_CLIENT_ID,
+                          .msg_type = ClientPacket::MsgType::PlayerJoin,
+                          .msg = ClientPacket::PlayerJoinInfo({
+                              .all_clients = ids,
+                              // override the client's id with their real one
+                              .client_id = incoming_client.client_id,
+                              .is_you = false,
+                          })}),
+            // ignore the person who sent it to us
+            [&](Client_t& client) {
+                return client.client_id == incoming_client.client_id;
+            });
+
+        server_p->send_client_packet_to_all(
+            ClientPacket({.client_id = SERVER_CLIENT_ID,
+                          .msg_type = ClientPacket::MsgType::PlayerJoin,
+                          .msg = ClientPacket::PlayerJoinInfo({
+                              .all_clients = ids,
+                              // override the client's id with their real one
+                              .client_id = incoming_client.client_id,
+                              .is_you = true,
+                          })}),
+            // ignore everyone except the one that sent to us
+            [&](Client_t& client) {
+                return client.client_id != incoming_client.client_id;
+            });
+    }
+
     void server_process_message_string(const Client_t& incoming_client,
                                        std::string msg) {
-        ClientPacket packet = server_p->deserialize_to_packet(msg);
+        const ClientPacket packet = server_p->deserialize_to_packet(msg);
 
         switch (packet.msg_type) {
             case ClientPacket::MsgType::Announcement: {
-                ClientPacket::AnnouncementInfo info =
-                    std::get<ClientPacket::AnnouncementInfo>(packet.msg);
-                server_p->send_client_packet_to_all(packet);
+                return process_announcement_packet(incoming_client, packet);
             } break;
-
             case ClientPacket::MsgType::PlayerControl: {
-                ClientPacket::PlayerControlInfo info =
-                    std::get<ClientPacket::PlayerControlInfo>(packet.msg);
-
-                auto player = players[packet.client_id];
-
-                if (!player) return;
-
-                auto updated_position =
-                    player->get_position_after_input(info.inputs);
-
-                // TODO if the position and face direction didnt change
-                //      then we can early return
-                //
-                // NOTE: i saw issues where == between vec3 was returning
-                //      on every call because (mvt * dt) < epsilon
-                //
-
-                ClientPacket player_updated({
-                    .channel = Channel::UNRELIABLE_NO_DELAY,
-                    .client_id = incoming_client.client_id,
-                    .msg_type = network::ClientPacket::MsgType::PlayerLocation,
-                    .msg = network::ClientPacket::PlayerInfo({
-                        .facing_direction =
-                            static_cast<int>(player->face_direction),
-                        .location =
-                            {
-                                updated_position.x,
-                                updated_position.y,
-                                updated_position.z,
-                            },
-                        .username = player->username,
-                    }),
-                });
-
-                server_p->send_client_packet_to_all(player_updated);
-
+                return process_player_control_packet(incoming_client, packet);
             } break;
             case ClientPacket::MsgType::PlayerJoin: {
-                ClientPacket::PlayerJoinInfo info =
-                    std::get<ClientPacket::PlayerJoinInfo>(packet.msg);
-
-                if (info.hashed_version != HASHED_VERSION) {
-                    // TODO send error message
-                    log_warn(
-                        "player tried to join but had incorrect version our "
-                        "version : {}, their version : {} ",
-                        HASHED_VERSION, info.hashed_version);
-                    return;
-                }
-
-                // overwrite it so its already there
-                packet.client_id = incoming_client.client_id;
-
-                // create the player if they dont already exist
-                if (!players.contains(packet.client_id)) {
-                    players[packet.client_id] = std::make_shared<Player>();
-                }
-
-                // update the username
-                players[packet.client_id]->username = info.username;
-
-                std::vector<int> ids;
-                for (auto& c : server_p->clients) {
-                    ids.push_back(c.second.client_id);
-                }
-                // Since we are the host, we can use the Client_t to figure
-                // out the id / name
-                server_p->send_client_packet_to_all(
-                    ClientPacket(
-                        {.client_id = SERVER_CLIENT_ID,
-                         .msg_type = ClientPacket::MsgType::PlayerJoin,
-                         .msg = ClientPacket::PlayerJoinInfo({
-                             .all_clients = ids,
-                             // override the client's id with their real one
-                             .client_id = incoming_client.client_id,
-                             .is_you = false,
-                         })}),
-                    // ignore the person who sent it to us
-                    [&](Client_t& client) {
-                        return client.client_id == incoming_client.client_id;
-                    });
-
-                server_p->send_client_packet_to_all(
-                    ClientPacket(
-                        {.client_id = SERVER_CLIENT_ID,
-                         .msg_type = ClientPacket::MsgType::PlayerJoin,
-                         .msg = ClientPacket::PlayerJoinInfo({
-                             .all_clients = ids,
-                             // override the client's id with their real one
-                             .client_id = incoming_client.client_id,
-                             .is_you = true,
-                         })}),
-                    // ignore everyone except the one that sent to us
-                    [&](Client_t& client) {
-                        return client.client_id != incoming_client.client_id;
-                    });
+                return process_player_join_packet(incoming_client, packet);
             } break;
             default:
+                // No clue so lets just send it to everyone except the guy that
+                // sent it to us
                 server_p->send_client_packet_to_all(
                     packet, [&](Client_t& client) {
                         return client.client_id == incoming_client.client_id;
                     });
-                // log(fmt::format("Server: {} not handled yet ",
-                // packet.msg_type));
+                log_warn("Server: {} not handled yet ", packet.msg_type);
                 break;
         }
     }
