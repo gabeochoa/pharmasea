@@ -15,6 +15,36 @@
 namespace network {
 namespace internal {
 
+// TODO does this code need to live in here?
+// ClientPacket is in shared.h which is specific to the game,
+// how can we support both abstractil while also configuration
+static ClientPacket deserialize_to_packet(std::string msg) {
+    TContext ctx{};
+    std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
+        MyPolymorphicClasses{});
+
+    BitseryDeserializer des{ctx, msg.begin(), msg.size()};
+
+    ClientPacket packet;
+    des.object(packet);
+    // TODO obviously theres a ton of validation we can do here but idk
+    // https://github.com/fraillt/bitsery/blob/master/examples/smart_pointers_with_polymorphism.cpp
+    return packet;
+}
+
+static Buffer serialize_to_buffer(ClientPacket packet) {
+    Buffer buffer;
+    TContext ctx{};
+
+    std::get<1>(ctx).registerBasesList<BitserySerializer>(
+        MyPolymorphicClasses{});
+    BitserySerializer ser{ctx, buffer};
+    ser.object(packet);
+    ser.adapter().flush();
+
+    return buffer;
+}
+
 struct Server {
     SteamNetworkingIPAddr address;
     // Note: initialized in `startup()`
@@ -52,6 +82,103 @@ struct Server {
         poll_group = k_HSteamNetPollGroup_Invalid;
     }
 
+    void send_client_packet_to_all(
+        ClientPacket packet,
+        std::function<bool(Client_t &)> exclude = nullptr) {
+        for (auto &c : clients) {
+            if (exclude && exclude(c.second)) continue;
+            send_client_packet_to_client(c.first, packet);
+        }
+    }
+
+    void send_announcement_to_client(HSteamNetConnection conn, std::string msg,
+                                     ClientPacket::AnnouncementType type) {
+        ClientPacket announce_packet(
+            {.client_id = SERVER_CLIENT_ID,
+             .msg_type = ClientPacket::MsgType::Announcement,
+             .msg = ClientPacket::AnnouncementInfo(
+                 {.message = msg, .type = type})});
+        send_client_packet_to_client(conn, announce_packet);
+    }
+
+    void send_announcement_to_all(
+        const std::string &msg, ClientPacket::AnnouncementType type,
+        std::function<bool(Client_t &)> exclude = nullptr) {
+        for (auto &c : clients) {
+            if (exclude && exclude(c.second)) continue;
+            send_announcement_to_client(c.first, msg, type);
+        }
+    }
+
+    bool run() {
+        if (!running) return false;
+
+        auto poll_incoming_messages = [&]() {
+            ISteamNetworkingMessage *incoming_msg = nullptr;
+            int num_msgs = interface->ReceiveMessagesOnPollGroup(
+                poll_group, &incoming_msg, 1);
+            if (num_msgs == 0) return;
+            if (num_msgs == -1) {
+                M_ASSERT(false, "Failed checking for messages");
+                return;
+            }
+
+            std::string cmd;
+            cmd.assign((const char *) incoming_msg->m_pData,
+                       incoming_msg->m_cbSize);
+            Client_t client = clients[incoming_msg->m_conn];
+            incoming_msg->Release();
+
+            //
+            this->process_message_cb(client, cmd);
+        };
+        auto poll_connection_state_changes = [&]() {
+            Server::callback_instance = this;
+            interface->RunCallbacks();
+        };
+        auto poll_local_user_input = []() {
+            // used to handle '/quit'
+        };
+
+        poll_incoming_messages();
+        poll_connection_state_changes();
+        poll_local_user_input();
+        return true;
+    }
+
+    // TODO replace with tl::expected
+    void startup() {
+        interface = SteamNetworkingSockets();
+
+        SteamNetworkingConfigValue_t opt;
+        opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged,
+                   (void *) Server::SteamNetConnectionStatusChangedCallback);
+
+        listen_sock = interface->CreateListenSocketIP(address, 1, &opt);
+        if (listen_sock == k_HSteamListenSocket_Invalid) {
+            log_warn("Failed to listen on port {}", address.m_port);
+            return;
+        }
+        poll_group = interface->CreatePollGroup();
+        if (poll_group == k_HSteamNetPollGroup_Invalid) {
+            log_warn("(poll group) Failed to listen on port {}",
+                     address.m_port);
+            return;
+        }
+        log_info("Server listening on port");
+
+        running = true;
+    }
+
+   private:
+    void send_client_packet_to_client(HSteamNetConnection conn,
+                                      ClientPacket packet) {
+        Buffer buffer = serialize_to_buffer(packet);
+        interface->SendMessageToConnection(
+            conn, buffer.c_str(), (uint32) buffer.size(),
+            k_nSteamNetworkingSend_Reliable, nullptr);
+    }
+
     void connection_changed_callback(
         SteamNetConnectionStatusChangedCallback_t *info) {
         log_info("connection_changed_callback");
@@ -60,10 +187,6 @@ struct Server {
 
         // What's the state of the connection?
         switch (info->m_info.m_eState) {
-            case k_ESteamNetworkingConnectionState_None:
-                // NOTE: We will get callbacks here when we destroy connections.
-                // You can ignore these.
-                break;
             case k_ESteamNetworkingConnectionState_ClosedByPeer:
             case k_ESteamNetworkingConnectionState_ProblemDetectedLocally: {
                 // Ignore if they were not previously connected.  (If they
@@ -206,7 +329,7 @@ struct Server {
                     nick_id);
                 send_announcement_to_all(
                     temp, ClientPacket::AnnouncementType::Message,
-                    [&](Client_t &client) {
+                    [&](const Client_t &client) {
                         return client.client_id == nick_id;
                     });
                 break;
@@ -218,146 +341,15 @@ struct Server {
                 // not news to us.
                 break;
 
+            case k_ESteamNetworkingConnectionState_None:
+                // NOTE: We will get callbacks here when we destroy connections.
+                // You can ignore these.
+                break;
+
             default:
                 // Silences -Wswitch
                 break;
         }
-    }
-
-    void startup() {
-        interface = SteamNetworkingSockets();
-
-        SteamNetworkingConfigValue_t opt;
-        opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged,
-                   (void *) Server::SteamNetConnectionStatusChangedCallback);
-
-        listen_sock = interface->CreateListenSocketIP(address, 1, &opt);
-        if (listen_sock == k_HSteamListenSocket_Invalid) {
-            log_warn("Failed to listen on port {}", address.m_port);
-            return;
-        }
-        poll_group = interface->CreatePollGroup();
-        if (poll_group == k_HSteamNetPollGroup_Invalid) {
-            log_warn("(poll group) Failed to listen on port {}",
-                     address.m_port);
-            return;
-        }
-        log_info("Server listening on port");
-
-        running = true;
-    }
-
-    // TODO does this code need to live in here?
-    // ClientPacket is in shared.h which is specific to the game,
-    // how can we support both abstractil while also configuration
-    ClientPacket deserialize_to_packet(std::string msg) {
-        TContext ctx{};
-        std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
-            MyPolymorphicClasses{});
-
-        BitseryDeserializer des{ctx, msg.begin(), msg.size()};
-
-        ClientPacket packet;
-        des.object(packet);
-        // TODO obviously theres a ton of validation we can do here but idk
-        // https://github.com/fraillt/bitsery/blob/master/examples/smart_pointers_with_polymorphism.cpp
-        return packet;
-    }
-
-    Buffer serialize_to_buffer(ClientPacket packet) {
-        Buffer buffer;
-        TContext ctx{};
-
-        std::get<1>(ctx).registerBasesList<BitserySerializer>(
-            MyPolymorphicClasses{});
-        BitserySerializer ser{ctx, buffer};
-        ser.object(packet);
-        ser.adapter().flush();
-
-        return buffer;
-    }
-
-    void send_client_packet_to_client(HSteamNetConnection conn,
-                                      ClientPacket packet) {
-        Buffer buffer = serialize_to_buffer(packet);
-        send_packet_string_to_client(conn, buffer);
-    }
-
-    void send_client_packet_to_all(
-        ClientPacket packet,
-        std::function<bool(Client_t &)> exclude = nullptr) {
-        Buffer buffer = serialize_to_buffer(packet);
-        send_packet_string_to_all(buffer, exclude);
-    }
-
-    void send_packet_string_to_client(HSteamNetConnection conn,
-                                      std::string str) {
-        interface->SendMessageToConnection(
-            conn, str.c_str(), (uint32) str.size(),
-            k_nSteamNetworkingSend_Reliable, nullptr);
-    }
-
-    void send_packet_string_to_all(
-        std::string str, std::function<bool(Client_t &)> exclude = nullptr) {
-        for (auto &c : clients) {
-            if (exclude && exclude(c.second)) continue;
-            send_packet_string_to_client(c.first, str);
-        }
-    }
-
-    void send_announcement_to_client(HSteamNetConnection conn, std::string msg,
-                                     ClientPacket::AnnouncementType type) {
-        ClientPacket announce_packet(
-            {.client_id = SERVER_CLIENT_ID,
-             .msg_type = ClientPacket::MsgType::Announcement,
-             .msg = ClientPacket::AnnouncementInfo(
-                 {.message = msg, .type = type})});
-        send_client_packet_to_client(conn, announce_packet);
-    }
-
-    void send_announcement_to_all(
-        std::string msg, ClientPacket::AnnouncementType type,
-        std::function<bool(Client_t &)> exclude = nullptr) {
-        for (auto &c : clients) {
-            if (exclude && exclude(c.second)) continue;
-            send_announcement_to_client(c.first, msg, type);
-        }
-    }
-
-    bool run() {
-        if (!running) return false;
-
-        auto poll_incoming_messages = [&]() {
-            ISteamNetworkingMessage *incoming_msg = nullptr;
-            int num_msgs = interface->ReceiveMessagesOnPollGroup(
-                poll_group, &incoming_msg, 1);
-            if (num_msgs == 0) return;
-            if (num_msgs == -1) {
-                M_ASSERT(false, "Failed checking for messages");
-                return;
-            }
-
-            std::string cmd;
-            cmd.assign((const char *) incoming_msg->m_pData,
-                       incoming_msg->m_cbSize);
-            Client_t client = clients[incoming_msg->m_conn];
-            incoming_msg->Release();
-
-            //
-            this->process_message_cb(client, cmd);
-        };
-        auto poll_connection_state_changes = [&]() {
-            Server::callback_instance = this;
-            interface->RunCallbacks();
-        };
-        auto poll_local_user_input = []() {
-            // used to handle '/quit'
-        };
-
-        poll_incoming_messages();
-        poll_connection_state_changes();
-        poll_local_user_input();
-        return true;
     }
 
     static void SteamNetConnectionStatusChangedCallback(
