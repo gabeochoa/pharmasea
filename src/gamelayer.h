@@ -70,7 +70,7 @@ struct GameLayer : public Layer {
     }
 
     void play_music() {
-        auto m = MusicLibrary::get().get("wah");
+        auto m = MusicLibrary::get().get("supermarket");
         if (!IsMusicStreamPlaying(m)) {
             PlayMusicStream(m);
         }
@@ -78,10 +78,9 @@ struct GameLayer : public Layer {
     }
 
     virtual void onUpdate(float dt) override {
+        if (Menu::is_paused() || Menu::in_game()) play_music();
         if (!Menu::in_game()) return;
         PROFILE();
-
-        play_music();
 
         // Dont quit window on escape
         SetExitKey(KEY_NULL);

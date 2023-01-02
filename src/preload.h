@@ -104,8 +104,10 @@ struct Preload {
 
     void load_music() {
         MusicLibrary::get().load(
-            Files::get().fetch_resource_path("music", "wah.ogg").c_str(),
-            "wah");
+            Files::get()
+                .fetch_resource_path("music", "supermarket.ogg")
+                .c_str(),
+            "supermarket");
 
         MusicLibrary::get().load(
             Files::get().fetch_resource_path("music", "theme.ogg").c_str(),
