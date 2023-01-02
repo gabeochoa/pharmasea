@@ -27,4 +27,6 @@ struct SoundLibrary {
     void load(const char* filename, const char* name) {
         impl.load(filename, name);
     }
+
+    void play(const char* name) { PlaySound(get(name)); }
 };

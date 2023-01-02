@@ -226,9 +226,7 @@ struct AIPerson : public Person {
             && job != nullptr) {
             this->job->path.clear();
             this->job->local = {};
-            // TODO should there be a more abstracted way to play sounds that
-            // doesnt require knowing the raylib api?
-            PlaySound(SoundLibrary::get().get("roblox"));
+            SoundLibrary::get().play("roblox");
         }
 
         Person::game_update(dt);
