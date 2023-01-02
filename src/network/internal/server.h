@@ -246,6 +246,9 @@ struct Server {
         running = true;
     }
 
+    // TODO does this code need to live in here? 
+    // ClientPacket is in shared.h which is specific to the game, 
+    // how can we support both abstractil while also configuration 
     ClientPacket deserialize_to_packet(std::string msg) {
         TContext ctx{};
         std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
