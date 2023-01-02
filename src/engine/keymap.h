@@ -216,7 +216,8 @@ struct KeyMap {
                 input);
             if (r != GAMEPAD_BUTTON_UNKNOWN) return r;
         }
-        log_warn("Couldn't find any button for {}", name);
+        // TODO this is way too noisy to be valuable right now
+        // log_warn("Couldn't find any button for {}", name);
         return GAMEPAD_BUTTON_UNKNOWN;
     }
 
