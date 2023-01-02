@@ -600,23 +600,31 @@ bool textfield(const Widget& widget, std::string& content,
         validation ? validation(content)
                    : TextfieldValidationDecisionFlag::None;
 
-    auto _textfield_render = [](Widget* widget_ptr) {
-        auto state = get().get_widget_state<TextfieldState>(widget_ptr->id);
-        Widget& widget = *widget_ptr;
+    auto _textfield_render =
+        [](Widget* widget_ptr, TextfieldValidationDecisionFlag validationFlag) {
+            auto state = get().get_widget_state<TextfieldState>(widget_ptr->id);
+            Widget& widget = *widget_ptr;
 
-        _draw_focus_ring(widget);
-        // Background
-        get().draw_widget(widget, is_active_and_hot(widget.id)
-                                      ? theme::Usage::Secondary
-                                      : theme::Usage::Primary);
+            bool is_invalid =
+                !!(validationFlag & TextfieldValidationDecisionFlag::Invalid);
+            auto focus_color =
+                is_invalid ? theme::Usage::Error : theme::Usage::Accent;
+            _draw_focus_ring(widget, focus_color);
+            // Background
+            get().draw_widget(widget, is_active_and_hot(widget.id)
+                                          ? theme::Usage::Secondary
+                                          : theme::Usage::Primary);
 
-        bool shouldWriteCursor = has_kb_focus(widget.id) && state->showCursor;
-        std::string focusStr = shouldWriteCursor ? "_" : "";
-        std::string focused_content =
-            fmt::format("{}{}", state->buffer.asT(), focusStr);
+            bool shouldWriteCursor =
+                has_kb_focus(widget.id) && state->showCursor;
+            std::string focusStr = shouldWriteCursor ? "_" : "";
+            std::string focused_content =
+                fmt::format("{}{}", state->buffer.asT(), focusStr);
 
-        get()._draw_text(widget.rect, focused_content, theme::Usage::Font);
-    };
+            auto text_color =
+                is_invalid ? theme::Usage::Error : theme::Usage::Font;
+            get()._draw_text(widget.rect, focused_content, text_color);
+        };
 
     const auto _textfield_value_management =
         [](const Widget* widget,
@@ -676,7 +684,7 @@ bool textfield(const Widget& widget, std::string& content,
     widget.me->rect = lf.rect.value();
     try_to_grab_kb(widget.id);
     active_if_mouse_inside(widget.id, widget.rect);
-    _textfield_render(widget.me);
+    _textfield_render(widget.me, validationFlag);
     _textfield_value_management(widget.me, validationFlag);
     handle_tabbing(widget.id);
 

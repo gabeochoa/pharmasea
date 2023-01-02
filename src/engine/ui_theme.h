@@ -13,6 +13,7 @@ enum Usage {
     Primary,
     Secondary,
     Accent,
+    Error,
 };
 }
 
@@ -59,6 +60,8 @@ struct UITheme {
                 return secondary;
             case theme::Usage::Accent:
                 return accent;
+            case theme::Usage::Error:
+                return error;
         }
         return background;
     }

@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <regex>
+
 #include "engine/ui.h"
 #include "external_include.h"
 //
@@ -18,6 +20,12 @@
 #include "remote_player.h"
 
 using namespace ui;
+
+inline bool validate_ip(const std::string& ip) {
+    std::regex ip_regex(
+        R"(^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$)");
+    return std::regex_match(ip, ip_regex);
+}
 
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -142,7 +150,17 @@ struct NetworkLayer : public Layer {
         auto ip_address_input = ui_context->own(Widget(
             MK_UUID(id, ROOT_ID), Size_Px(400.f, 1.f), Size_Px(25.f, 0.5f)));
         text(*ui::components::mk_text(), "Enter IP Address");
-        textfield(*ip_address_input, network_info->host_ip_address());
+        textfield(*ip_address_input, network_info->host_ip_address(),
+                  [](const std::string& content) {
+                      // xxx.xxx.xxx.xxx
+                      if (content.size() >= 15) {
+                          return TextfieldValidationDecisionFlag::StopNewInput;
+                      }
+                      if (validate_ip(content)) {
+                          return TextfieldValidationDecisionFlag::Valid;
+                      }
+                      return TextfieldValidationDecisionFlag::Invalid;
+                  });
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                    "Connect")) {
@@ -226,6 +244,8 @@ struct NetworkLayer : public Layer {
                    Size_Px(100.f, 1.f)));
 
         text(*player_text, "Username: ");
+        // TODO theres a problem where it is constantly saving as you type which
+        // might not be expected
         textfield(*username_input, Settings::get().data.username,
                   // TODO probably make a "username validation" function
                   [](const std::string& content) {
