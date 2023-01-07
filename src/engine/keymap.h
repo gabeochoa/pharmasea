@@ -14,6 +14,7 @@
 #include "log.h"
 #include "singleton.h"
 
+// TODO this needs to not be in engine...
 enum InputName {
     // Shared
     Pause,
@@ -38,6 +39,7 @@ enum InputName {
     PlayerRight,
     PlayerPickup,
     PlayerRotateFurniture,
+    PlayerDoWork,
     TargetForward,
     TargetBack,
     TargetLeft,
@@ -337,6 +339,7 @@ struct KeyMap {
         return IsGamepadButtonDown(0, button) ? 1.f : 0.f;
     }
 
+    // TODO this needs to not be in engine...
     void load_game_keys() {
         LayerMapping& game_map =
             this->get_or_create_layer_map(Menu::State::Game);
@@ -383,6 +386,11 @@ struct KeyMap {
             GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
         };
 
+        game_map[InputName::PlayerDoWork] = {
+            KEY_R,
+            GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
+        };
+
         game_map[InputName::Pause] = {
             KEY_ESCAPE,
             GAMEPAD_BUTTON_MIDDLE_RIGHT,
@@ -403,6 +411,7 @@ struct KeyMap {
         };
     }
 
+    // TODO this could probably stay
     void load_ui_keys() {
         LayerMapping& ui_map = this->get_or_create_layer_map(Menu::State::UI);
         ui_map[InputName::WidgetNext] = {

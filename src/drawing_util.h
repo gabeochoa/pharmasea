@@ -1,10 +1,11 @@
 #pragma once
 
+#include "external_include.h"
+//
 #include "globals.h"
 #include "raylib.h"
 #include "rlgl.h"
 //
-#include "external_include.h"
 #include "text_util.h"
 #include "vec_util.h"
 
@@ -20,6 +21,49 @@ static void DrawLineStrip2Din3D(const std::vector<vec2>& points, Color color) {
         }
         point = p3;
     }
+}
+
+static void DrawRect2Din3D(Vector3 position, float width, float height,
+                           Color color = RED) {
+    // TODO this code doesnt work yet,
+    // TODO likely want to add Z rotation so it follows camera (but we cannot
+    // include "cam.h" in here
+    float x = 0.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+
+    rlPushMatrix();
+
+    // NOTE: Be careful! Function order matters (rotate -> scale -> translate)
+    rlTranslatef(position.x, position.y + TILESIZE, position.z);
+    // rlRotatef(front_facing_angle, 0, 1, 0);
+    // rlScalef(2.0f, 2.0f, 2.0f);
+
+    float length = width;
+
+    rlBegin(RL_TRIANGLES);
+    rlColor4ub(color.r, color.g, color.b, color.a);
+
+    // Front Face -----------------------------------------------------
+    rlVertex3f(x - width / 2, y - height / 2, z + length / 2);  // Bottom Left
+    rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Right
+    rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
+
+    rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Top Right
+    rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
+    rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Right
+
+    // Back Face ------------------------------------------------------
+    rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Bottom Left
+    rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
+    rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Bottom Right
+
+    rlVertex3f(x + width / 2, y + height / 2, z - length / 2);  // Top Right
+    rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Bottom Right
+    rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
+
+    rlEnd();
+    rlPopMatrix();
 }
 
 static void DrawCubeCustom(Vector3 position, float width, float height,
@@ -97,8 +141,8 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlPopMatrix();
 }
 
-static void DrawFloatingText(const vec3& position, Font font,
-                             const char* text) {
+static void DrawFloatingText(const vec3& position, Font font, const char* text,
+                             Color color = BLACK) {
     rlPushMatrix();
     rlTranslatef(    //
         position.x,  //
@@ -113,13 +157,14 @@ static void DrawFloatingText(const vec3& position, Font font,
         -1.05f * TILESIZE  // this is Y
     );
 
-    DrawText3D(             //
-        font, text, {0.f},  //
-        96,                 // font size
-        4,                  // font spacing
-        4,                  // line spacing
-        true,               // backface
-        BLACK);
+    DrawText3D(      //
+        font, text,  //
+        {0.f},       //
+        96,          // font size
+        4,           // font spacing
+        4,           // line spacing
+        true,        // backface
+        color);
 
     rlPopMatrix();
 }

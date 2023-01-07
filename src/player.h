@@ -81,6 +81,13 @@ struct Player : public BasePlayer {
             inputs.push_back(
                 {Menu::State::Game, InputName::PlayerRotateFurniture, 1.f, dt});
         }
+
+        float do_work =
+            KeyMap::is_event(Menu::State::Game, InputName::PlayerDoWork);
+        if (do_work > 0) {
+            inputs.push_back(
+                {Menu::State::Game, InputName::PlayerDoWork, 1.f, dt});
+        }
     }
 
     virtual vec3 get_position_after_input(UserInputs inpts) {
@@ -100,6 +107,12 @@ struct Player : public BasePlayer {
             if (input_name == InputName::PlayerRotateFurniture &&
                 input_amount > 0.5f) {
                 rotate_furniture();
+                continue;
+            }
+
+            // TODO replace with correctly named input
+            if (input_name == InputName::PlayerDoWork && input_amount > 0.5f) {
+                work_furniture(frame_dt);
                 continue;
             }
 
@@ -129,6 +142,7 @@ struct Player : public BasePlayer {
     }
 
     void rotate_furniture() {
+        // Cant rotate outside planning mode
         if (Menu::get().is_not(Menu::State::Planning)) return;
 
         std::shared_ptr<Furniture> match =
@@ -139,6 +153,20 @@ struct Player : public BasePlayer {
         if (!match) return;
 
         match->rotate_facing_clockwise();
+    }
+
+    void work_furniture(float frame_dt) {
+        // Cant do work during planning
+        if (Menu::get().is(Menu::State::Planning)) return;
+
+        std::shared_ptr<Furniture> match =
+            EntityHelper::getClosestMatchingEntity<Furniture>(
+                vec::to2(this->position), player_reach,
+                [](auto&& furniture) { return furniture->has_work(); });
+
+        if (!match) return;
+
+        match->do_work(frame_dt);
     }
 
     void handle_in_game_grab_or_drop() {

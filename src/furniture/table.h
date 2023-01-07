@@ -21,4 +21,13 @@ struct Table : public Furniture {
     Table() {}
     explicit Table(vec2 pos)
         : Furniture(pos, ui::color::brown, ui::color::brown) {}
+
+    virtual void do_work(float dt) override {
+        const float amt = 0.5f;
+        pct_work_complete += amt * dt;
+        if (pct_work_complete >= 1.f) pct_work_complete = 0.f;
+    }
+
+    // Does this piece of furniture have work to be done?
+    virtual bool has_work() const override { return true; }
 };
