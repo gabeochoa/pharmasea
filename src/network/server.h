@@ -96,8 +96,10 @@ struct Server {
         }
     }
 
+    // TODO verify that these numbers make sense, i have a feeling
+    // its not 2fps but 1/50 seconds which woudl be 0.5fps
     // NOTE: server time things are in s
-    float next_map_tick_reset = 25;  // 5fps
+    float next_map_tick_reset = 50;  // 2fps
     float next_map_tick = 0;
 
     float next_update_tick_reset = 4;  // 30fps
@@ -178,7 +180,7 @@ struct Server {
         //
 
         ClientPacket player_updated({
-            .channel = Channel::UNRELIABLE_NO_DELAY,
+            .channel = Channel::UNRELIABLE,
             .client_id = incoming_client.client_id,
             .msg_type = network::ClientPacket::MsgType::PlayerLocation,
             .msg = network::ClientPacket::PlayerInfo({
