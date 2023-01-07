@@ -115,6 +115,11 @@ struct Server {
             incoming_message_queue.pop_front();
         }
 
+        // TODO move one of these while loops, probably the one belowVVV to a
+        // different thread
+        // This will allow us to empty the steam queue faster, and give us more
+        // control over which messages to drop
+
         // Check to see if we have any packets to send off
         while (!packet_queue.empty()) {
             log_trace("Packets to FWD {}", packet_queue.size());
