@@ -34,6 +34,8 @@ struct Server {
     static void stop() { g_server->running = false; }
 
    private:
+    typedef std::pair<Client_t, std::string> ClientMessage;
+    AtomicQueue<ClientMessage> incoming_message_queue;
     AtomicQueue<ClientPacket> packet_queue;
     std::shared_ptr<internal::Server> server_p;
     std::map<int, std::shared_ptr<Player> > players;
@@ -45,7 +47,7 @@ struct Server {
     explicit Server(int port) {
         server_p.reset(new internal::Server(port));
         server_p->set_process_message(
-            std::bind(&Server::server_process_message_string, this,
+            std::bind(&Server::server_enqueue_message_string, this,
                       std::placeholders::_1, std::placeholders::_2));
         server_p->startup();
 
@@ -104,8 +106,16 @@ struct Server {
     void tick(float dt) {
         server_p->run();
 
+        // Check to see if we have any new packets to process
+        while (!incoming_message_queue.empty()) {
+            log_trace("Incoming Messages {}", incoming_message_queue.size());
+            server_process_message_string(incoming_message_queue.front());
+            incoming_message_queue.pop_front();
+        }
+
         // Check to see if we have any packets to send off
         while (!packet_queue.empty()) {
+            log_trace("Packets to FWD {}", packet_queue.size());
             ClientPacket& p = packet_queue.front();
 
             switch (p.msg_type) {
@@ -249,8 +259,17 @@ struct Server {
             });
     }
 
-    void server_process_message_string(const Client_t& incoming_client,
-                                       std::string msg) {
+    void server_enqueue_message_string(const Client_t& incoming_client,
+                                       const std::string& msg) {
+        incoming_message_queue.push_back(std::make_pair(incoming_client, msg));
+    }
+
+    void server_process_message_string(const ClientMessage& client_message) {
+        // Note: not using structured binding since they cannot be captured by
+        // lambda expr yet
+        const Client_t& incoming_client = client_message.first;
+        const std::string& msg = client_message.second;
+
         const ClientPacket packet =
             network::internal::deserialize_to_packet(msg);
 
