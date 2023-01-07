@@ -17,8 +17,8 @@ namespace internal {
 
 // TODO does this code need to live in here?
 // ClientPacket is in shared.h which is specific to the game,
-// how can we support both abstractil while also configuration
-static ClientPacket deserialize_to_packet(std::string msg) {
+// how can we support both abstract while also configuration
+static ClientPacket deserialize_to_packet(const std::string &msg) {
     TContext ctx{};
     std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
         MyPolymorphicClasses{});
@@ -150,6 +150,12 @@ struct Server {
     // TODO replace with tl::expected
     void startup() {
         interface = SteamNetworkingSockets();
+
+        /// [connection int32] Upper limit of buffered pending bytes to be sent,
+        /// if this is reached SendMessage will return k_EResultLimitExceeded
+        /// Default is 512k (524288 bytes)
+        SteamNetworkingUtils()->SetGlobalConfigValueInt32(
+            k_ESteamNetworkingConfig_SendBufferSize, 1024 * 1024);
 
         SteamNetworkingConfigValue_t opt;
         opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged,
