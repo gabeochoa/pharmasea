@@ -58,6 +58,7 @@ inline void log_me(LogLevel level, const char* file, int line,
 }
 
 #else
+// TODO implement for windows
 static void log_me(...) {}
 #endif
 

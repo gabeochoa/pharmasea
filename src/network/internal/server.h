@@ -115,8 +115,9 @@ struct Server {
 
         auto poll_incoming_messages = [&]() {
             ISteamNetworkingMessage *incoming_msg = nullptr;
+            // TODO Should we run this for more messages?
             int num_msgs = interface->ReceiveMessagesOnPollGroup(
-                poll_group, &incoming_msg, 1);
+                poll_group, &incoming_msg, 1 /* num max messages*/);
             if (num_msgs == 0) return;
             if (num_msgs == -1) {
                 M_ASSERT(false, "Failed checking for messages");

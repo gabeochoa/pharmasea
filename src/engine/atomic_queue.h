@@ -31,6 +31,11 @@ struct AtomicQueue {
         return q.empty();
     }
 
+    [[nodiscard]] size_t size() const {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        return q.size();
+    }
+
    private:
     std::deque<T> q;
     mutable std::mutex m_mutex;

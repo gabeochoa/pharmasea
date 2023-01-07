@@ -22,7 +22,11 @@
 using namespace ui;
 
 inline bool validate_ip(const std::string& ip) {
-    std::regex ip_regex(
+    // TODO this should fail for 00000.00000.0000 but shouldnt
+    //      this too 000000000000
+    //
+    // NOTE: this is const static cause its faster :)
+    const static std::regex ip_regex(
         R"(^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$)");
     return std::regex_match(ip, ip_regex);
 }
@@ -149,6 +153,7 @@ struct NetworkLayer : public Layer {
         auto ip_address_input = ui_context->own(Widget(
             MK_UUID(id, ROOT_ID), Size_Px(400.f, 1.f), Size_Px(25.f, 0.5f)));
         text(*ui::components::mk_text(), "Enter IP Address");
+        // TODO add trimming of whitespace or validate whitespace
         textfield(*ip_address_input, network_info->host_ip_address(),
                   [](const std::string& content) {
                       // xxx.xxx.xxx.xxx

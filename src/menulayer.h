@@ -42,6 +42,7 @@ struct MenuLayer : public Layer {
     }
 
     void play_music() {
+        // TODO music stops playing when you grab title bar
         auto m = MusicLibrary::get().get("theme");
         if (!IsMusicStreamPlaying(m)) {
             PlayMusicStream(m);

@@ -600,6 +600,7 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
     return changed_previous_frame;
 }
 
+// TODO add a way to hold down the key
 bool textfield(const Widget& widget, std::string& content,
                TextFieldValidationFn validation) {
     auto _textfield_render = [](Widget* widget_ptr,
