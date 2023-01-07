@@ -14,7 +14,8 @@ struct FilesConfig {
     std::string_view settings_file_name;
 };
 
-// TODO figure out why this has to be extern in order for Files.settings_file to work 
+// TODO figure out why this has to be extern in order for Files.settings_file to
+// work
 struct Files;
 extern std::shared_ptr<Files> Files_single;
 

@@ -1,7 +1,7 @@
 #include "files.h"
 
-#include "log.h"
 #include "globals.h"
+#include "log.h"
 
 #ifdef __APPLE__
 #pragma clang diagnostic push
@@ -75,15 +75,14 @@ void Files::for_resources_in_folder(
     auto folder_path = (resource_folder() / fs::path(group) / fs::path(folder));
 
     try {
-         auto dir_iter = std::filesystem::directory_iterator{folder_path};
-    for (auto const& dir_entry : dir_iter ) {
-        cb(dir_entry.path().stem().string(), dir_entry.path().string());
-    }
+        auto dir_iter = std::filesystem::directory_iterator{folder_path};
+        for (auto const& dir_entry : dir_iter) {
+            cb(dir_entry.path().stem().string(), dir_entry.path().string());
+        }
     } catch (std::exception e) {
         std::cout << e.what() << std::endl;
         return;
     }
-
 }
 
 void Files::folder_locations() const {
