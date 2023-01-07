@@ -1,6 +1,7 @@
 #include "files.h"
 
 #include "log.h"
+#include "globals.h"
 
 #ifdef __APPLE__
 #pragma clang diagnostic push
@@ -25,6 +26,8 @@
 #ifdef WIN32
 #pragma GCC diagnostic pop
 #endif
+
+std::shared_ptr<Files> Files_single;
 
 Files::Files(FilesConfig config)
     : root(config.root_folder), settings_file(config.settings_file_name) {
@@ -70,10 +73,17 @@ void Files::for_resources_in_folder(
     std::string_view group, std::string_view folder,
     std::function<void(std::string, std::string)> cb) const {
     auto folder_path = (resource_folder() / fs::path(group) / fs::path(folder));
-    for (auto const& dir_entry :
-         std::filesystem::directory_iterator{folder_path}) {
+
+    try {
+         auto dir_iter = std::filesystem::directory_iterator{folder_path};
+    for (auto const& dir_entry : dir_iter ) {
         cb(dir_entry.path().stem().string(), dir_entry.path().string());
     }
+    } catch (std::exception e) {
+        std::cout << e.what() << std::endl;
+        return;
+    }
+
 }
 
 void Files::folder_locations() const {

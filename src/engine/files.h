@@ -14,12 +14,15 @@ struct FilesConfig {
     std::string_view settings_file_name;
 };
 
-SINGLETON_FWD(Files)
+// TODO figure out why this has to be extern in order for Files.settings_file to work 
+struct Files;
+extern std::shared_ptr<Files> Files_single;
+
 struct Files {
     SINGLETON_PARAM(Files, FilesConfig)
 
-    std::string root;
-    std::string settings_file;
+    std::string root = "example_game";
+    std::string settings_file = "settings.bin";
 
     explicit Files(FilesConfig config);
     [[nodiscard]] fs::path game_folder() const;
