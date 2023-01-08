@@ -24,16 +24,16 @@ Info about the todo chart
 
 |needed to play once|in progress|blocked|done|
 |-------------------|-----------|-------|----|
-|Disallow target cube from going outside of bounds|Support for "windows" or "modals" in ui framework|highlight furniture under selection|change UI from in world to render-to-texture|
-|In pause menu, remap key bindings in layer for arrows keys to choose options|dropdown needs scrollbar when subwindow goes offscreen| |Add ailments for customers|
-|BUG: if customer runs into someone you both get stuck|pill bottle barrel| |bag box to get paper bags from|
-|Better settings page|placeholder bottle pill filler| |Put all things that have to be loaded in a single place|
-|WARN: need a way to warn that UI elements are offscreen "purpling"|Ability to do different shaders between gaming and menu| |resolution switcher to settings page|
-|BUG: Hide pause buttons from non-host since they dont really do anything anyway| | |Refactor Library to be more generic|
-|BUG: When host opens settings, probably dont bring everyone else too| | |add diagonal facing direction|
-|button hover state color change| | |Add easy-to-use UI buttons|
-| | | |Better state management for AI|
-| | | |Allow an Entity to pick up / drop an Item|
+|In pause menu, remap key bindings in layer for arrows keys to choose options|Support for "windows" or "modals" in ui framework|highlight furniture under selection|Magic Enum? https://github.com/Neargye/magic_enum|
+|BUG: if customer runs into someone you both get stuck|dropdown needs scrollbar when subwindow goes offscreen| |change UI from in world to render-to-texture|
+|WARN: need a way to warn that UI elements are offscreen "purpling"|pill bottle barrel| |Add ailments for customers|
+|BUG: Hide pause buttons from non-host since they dont really do anything anyway|placeholder bottle pill filler| |bag box to get paper bags from|
+|BUG: When host opens settings, probably dont bring everyone else too|Ability to do different shaders between gaming and menu| |Put all things that have to be loaded in a single place|
+|button hover state color change| | |resolution switcher to settings page|
+| | | |Disallow target cube from going outside of bounds|
+| | | |Refactor Library to be more generic|
+| | | |add diagonal facing direction|
+| | | |Add easy-to-use UI buttons|
 
 ## End TODO 
 
