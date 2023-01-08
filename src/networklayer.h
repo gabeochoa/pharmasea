@@ -167,7 +167,13 @@ struct NetworkLayer : public Layer {
                   });
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                   "Load Last Used IP")) {
+            network_info->host_ip_address() = Settings::get().last_used_ip();
+        }
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                    "Connect")) {
+            Settings::get().update_last_used_ip_address(
+                network_info->host_ip_address());
             network_info->lock_in_ip();
         }
         padding(*ui::components::mk_but_pad());

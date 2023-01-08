@@ -11,10 +11,10 @@
 using namespace ui;
 
 // TODO add support for customizing keymap
-// TODO add support for saving last used ip address
 
 // TODO is there a way to automatically build this UI based on the
 // settings::data format?
+// (though some settings probably dont need to show)
 
 struct SettingsLayer : public Layer {
     // TODO add way to get into keybindings mode
