@@ -43,6 +43,7 @@ struct Data {
     bool show_streamer_safe_box = false;
     std::string username = "";
     bool enable_postprocessing = true;
+    std::string last_ip_joined;
 
    private:
     friend bitsery::Access;
@@ -55,6 +56,7 @@ struct Data {
         s.value1b(show_streamer_safe_box);
         s.text1b(username, network::MAX_NAME_LENGTH);
         s.value1b(enable_postprocessing);
+        s.text1b(last_ip_joined, 25);
     }
     friend std::ostream& operator<<(std::ostream& os, const Data& data) {
         os << "Settings(" << std::endl;
@@ -66,6 +68,7 @@ struct Data {
         os << "Safe box: " << data.show_streamer_safe_box << std::endl;
         os << "username: " << data.username << std::endl;
         os << "post_processing: " << data.enable_postprocessing << std::endl;
+        os << "last ip joined: " << data.last_ip_joined << std::endl;
         os << ")" << std::endl;
         return os;
     }
@@ -107,6 +110,10 @@ struct Settings {
         delete event;
     }
 
+    void update_last_used_ip_address(const std::string& ip) {
+        data.last_ip_joined = ip;
+    }
+
     void update_master_volume(float nv) {
         data.master_volume = util::clamp(nv, 0.f, 1.f);
         log_trace("master volume changed to {}", data.master_volume);
@@ -132,6 +139,10 @@ struct Settings {
 
     [[nodiscard]] std::vector<std::string> resolution_options() const {
         return rez::ResolutionExplorer::get().fetch_options();
+    }
+
+    [[nodiscard]] std::string last_used_ip() const {
+        return data.last_ip_joined;
     }
 
     // TODO these could be private and inside the ctor/dtor with RAII if we are
