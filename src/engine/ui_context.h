@@ -86,10 +86,12 @@ struct IUIContextInputManager {
         yscrolled = 0.f;
     }
 
-    virtual void begin(float) {
+    virtual void begin(float dt) {
         mouse_info = get_mouse_info();
         // TODO Should this be more like mousePos?
         yscrolled += GetMouseWheelMove();
+
+        lastDt = dt;
     }
 
     virtual void cleanup() {
@@ -111,6 +113,9 @@ struct IUIContextInputManager {
     int keychar = -1;
     int modchar = -1;
     float yscrolled;
+    float keyHeldDownTimer = 0.f;
+    float keyHeldDownTimerReset = 0.2f;
+    float lastDt;
 
     [[nodiscard]] bool is_mouse_inside(const Rectangle& rect) const {
         auto mouse = mouse_info.pos;
@@ -227,7 +232,16 @@ struct IUIContextInputManager {
 
     void eatKey() { key = int(); }
 
-    // is held down
+    [[nodiscard]] bool is_held_down_debounced(const InputName& name) {
+        const bool is_held = is_held_down(name);
+        if (keyHeldDownTimer < keyHeldDownTimerReset) {
+            keyHeldDownTimer += lastDt;
+            return false;
+        }
+        keyHeldDownTimer = 0.f;
+        return is_held;
+    }
+
     [[nodiscard]] bool is_held_down(const InputName& name) {
         return (bool) KeyMap::is_event(STATE, name);
     }

@@ -174,7 +174,7 @@ inline void handle_tabbing(const uuid id) {
         if (get().pressed(InputName::WidgetNext) ||
             get().pressed(InputName::ValueDown)) {
             get().kb_focus_id = ROOT_ID;
-            if (get().is_held_down(InputName::WidgetMod)) {
+            if (get().is_held_down_debounced(InputName::WidgetMod)) {
                 get().kb_focus_id = get().last_processed;
             }
         }
@@ -189,8 +189,8 @@ inline void handle_tabbing(const uuid id) {
     get().last_processed = id;
 }
 
-void _draw_focus_ring(const Widget& widget,
-                      theme::Usage usage = theme::Usage::Accent) {
+inline void _draw_focus_ring(const Widget& widget,
+                             theme::Usage usage = theme::Usage::Accent) {
     draw_if_kb_focus(widget.id, [&]() {
         const auto position = vec2{
             widget.rect.x,
@@ -600,7 +600,6 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
     return changed_previous_frame;
 }
 
-// TODO add a way to hold down the key
 bool textfield(const Widget& widget, std::string& content,
                TextFieldValidationFn validation) {
     auto _textfield_render = [](Widget* widget_ptr,
@@ -658,7 +657,7 @@ bool textfield(const Widget& widget, std::string& content,
                         changed = true;
                     }
                 }
-                if (get().pressed(InputName::WidgetBackspace)) {
+                if (get().is_held_down_debounced(InputName::WidgetBackspace)) {
                     if (state->buffer.asT().size() > 0) {
                         state->buffer.asT().pop_back();
                     }
