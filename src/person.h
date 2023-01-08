@@ -33,7 +33,8 @@ struct Person : public Entity {
     virtual float base_speed() { return 10.f; }
 
     virtual vec3 size() const override {
-        return (vec3){TILESIZE * 0.8f, TILESIZE * 0.8f, TILESIZE * 0.8f};
+        const float sz = TILESIZE * 0.75f;
+        return (vec3){sz, sz, sz};
     }
 
     void handle_collision(int facedir_x, vec3 new_pos_x, int facedir_z,
@@ -87,18 +88,18 @@ struct Person : public Entity {
 
         // Figure out if there's a more graceful way to "jitter" things around
         // each other
+        const float tile_div_push_mod = TILESIZE / directional_push_modifier;
+
         if (would_collide_x || would_collide_z) {
             if (auto entity_x = collided_entity_x.lock()) {
                 if (auto person_ptr_x = dynamic_cast<Person*>(entity_x.get())) {
                     const float random_jitter = randSign() * TILESIZE / 2.0f;
                     if (facedir_x & FrontFaceDirection::LEFT) {
-                        entity_x->pushed_force.x +=
-                            TILESIZE / directional_push_modifier;
+                        entity_x->pushed_force.x += tile_div_push_mod;
                         entity_x->pushed_force.z += random_jitter;
                     }
                     if (facedir_x & FrontFaceDirection::RIGHT) {
-                        entity_x->pushed_force.x -=
-                            TILESIZE / directional_push_modifier;
+                        entity_x->pushed_force.x -= tile_div_push_mod;
                         entity_x->pushed_force.z += random_jitter;
                     }
                 }
@@ -108,13 +109,11 @@ struct Person : public Entity {
                     const float random_jitter = randSign() * TILESIZE / 2.0f;
                     if (facedir_z & FrontFaceDirection::FORWARD) {
                         person_ptr_z->pushed_force.x += random_jitter;
-                        person_ptr_z->pushed_force.z +=
-                            TILESIZE / directional_push_modifier;
+                        person_ptr_z->pushed_force.z += tile_div_push_mod;
                     }
                     if (facedir_z & FrontFaceDirection::BACK) {
                         person_ptr_z->pushed_force.x += random_jitter;
-                        person_ptr_z->pushed_force.z -=
-                            TILESIZE / directional_push_modifier;
+                        person_ptr_z->pushed_force.z -= tile_div_push_mod;
                     }
                 }
             }
