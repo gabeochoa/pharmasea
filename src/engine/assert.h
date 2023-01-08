@@ -10,7 +10,7 @@
         if (!(x)) {                            \
             std::cout << "Assertion failed: "; \
             std::cout << __VA_ARGS__;          \
-            std::cout << std::endl;            \
+            std::cout << "\n";                 \
             assert(x);                         \
         }                                      \
     }
@@ -23,7 +23,7 @@
             std::cout << " (" << __FILE__ << ":" << __LINE__ << ")\n"; \
             std::cout << __VA_ARGS__ << "\n";                          \
             std::cout << x << op_string << y << "\n";                  \
-            std::cout << "------ \n " << std::endl;                    \
+            std::cout << "------ \n ";                                 \
         }                                                              \
     }
 
