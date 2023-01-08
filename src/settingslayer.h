@@ -13,6 +13,9 @@ using namespace ui;
 // TODO add support for customizing keymap
 // TODO add support for saving last used ip address
 
+// TODO is there a way to automatically build this UI based on the
+// settings::data format?
+
 struct SettingsLayer : public Layer {
     // TODO add way to get into keybindings mode
     enum ActiveWindow {
@@ -20,7 +23,8 @@ struct SettingsLayer : public Layer {
         KeyBindings = 1,
     } activeWindow = ActiveWindow::Root;
     Trie keyBindingTrie;
-    std::array<std::pair<InputName, std::string_view>, InputName::Last + 1>
+    std::array<std::pair<InputName, std::string_view>,
+               magic_enum::enum_count<InputName>()>
         keyInputNames;
     std::vector<std::pair<InputName, AnyInputs>> keyInputValues;
 
