@@ -282,6 +282,28 @@ struct KeyMap {
         return false;
     }
 
+    [[nodiscard]] static const AnyInputs get_valid_inputs(
+        const Menu::State& state, const InputName& name) {
+        return KeyMap::get().mapping[state][name];
+    }
+
+    [[nodiscard]] static const std::vector<int> get_valid_keys(
+        const Menu::State& state, const InputName& name) {
+        const AnyInputs allInputs = get_valid_inputs(state, name);
+        std::vector<int> keys;
+        for (const auto& input : allInputs) {
+            std::visit(util::overloaded{
+                           //
+                           [&](int keycode) { keys.push_back(keycode); },  //
+                           [](GamepadAxisWithDir) {},                      //
+                           [](GamepadButton) {},                           //
+                           [](auto) {},                                    //
+                       },
+                       input);
+        }
+        return keys;
+    }
+
    private:
     FullMap mapping;
 
@@ -477,10 +499,5 @@ struct KeyMap {
     void load_default_keys() {
         load_game_keys();
         load_ui_keys();
-    }
-
-    [[nodiscard]] static const AnyInputs get_valid_inputs(
-        const Menu::State& state, const InputName& name) {
-        return KeyMap::get().mapping[state][name];
     }
 };
