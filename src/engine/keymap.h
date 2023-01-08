@@ -51,7 +51,9 @@ enum InputName {
 
 typedef std::tuple<Menu::State, InputName, float, float> UserInput;
 typedef std::vector<UserInput> UserInputs;
-//
+
+// TODO: had a bit of trouble trying to serialize "full map" which
+// we need to do if we want to allow remapping of keys
 typedef std::variant<int, GamepadAxisWithDir, GamepadButton> AnyInput;
 typedef std::vector<AnyInput> AnyInputs;
 typedef std::map<InputName, AnyInputs> LayerMapping;
