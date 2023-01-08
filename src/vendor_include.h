@@ -44,6 +44,7 @@ inline bool operator<(const vec2& l, const vec2& r) {
 #include <bitsery/adapter/buffer.h>
 #include <bitsery/bitsery.h>
 #include <bitsery/ext/inheritance.h>
+#include <bitsery/ext/std_map.h>
 #include <bitsery/ext/std_tuple.h>
 #include <bitsery/ext/std_variant.h>
 #include <bitsery/traits/string.h>
