@@ -19,7 +19,6 @@ kanban-plugin: basic
 - [ ] Particle system?
 - [ ] Spritesheet animator
 - [ ] unrelated: proggy clean font: https://www.dafont.com/proggy-clean.font
-- [ ] Magic Enum? https://github.com/Neargye/magic_enum
 
 
 ## want for mvp
@@ -30,14 +29,13 @@ kanban-plugin: basic
 - [ ] Add a pause menu with textual options
 - [ ] Create Doors
 - [ ] Add "powered by raylib" intro card (and other intro cards) like cat v roomba: https://github.com/raysan5/raylib-games/tree/master/cat_vs_roomba/src
+- [ ] Better settings page
 
 
 ## needed to play once
 
-- [ ] Disallow target cube from going outside of bounds
 - [ ] In pause menu, remap key bindings in layer for arrows keys to choose options
 - [ ] BUG: if customer runs into someone you both get stuck
-- [ ] Better settings page
 - [ ] WARN: need a way to warn that UI elements are offscreen "purpling"
 - [ ] BUG: Hide pause buttons from non-host since they dont really do anything anyway
 - [ ] BUG: When host opens settings, probably dont bring everyone else too
@@ -61,11 +59,13 @@ kanban-plugin: basic
 ## done
 
 **Complete**
+- [x] Magic Enum? https://github.com/Neargye/magic_enum
 - [x] change UI from in world to render-to-texture
 - [x] Add ailments for customers
 - [x] bag box to get paper bags from
 - [x] Put all things that have to be loaded in a single place
 - [x] resolution switcher to settings page
+- [x] Disallow target cube from going outside of bounds
 - [x] Refactor Library to be more generic
 - [x] add diagonal facing direction
 - [x] Add easy-to-use UI buttons

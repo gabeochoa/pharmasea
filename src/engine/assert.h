@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <stdio.h>
+
 #include <cassert>
 
 #define M_ASSERT(x, ...)                       \

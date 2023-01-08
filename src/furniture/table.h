@@ -22,6 +22,8 @@ struct Table : public Furniture {
     explicit Table(vec2 pos)
         : Furniture(pos, ui::color::brown, ui::color::brown) {}
 
+    // TODO eventually we need it to decide whether it has work based on the
+    // current held item
     virtual void do_work(float dt) override {
         const float amt = 0.5f;
         pct_work_complete += amt * dt;
