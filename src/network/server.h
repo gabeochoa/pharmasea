@@ -19,12 +19,12 @@ struct Server;
 static std::shared_ptr<Server> g_server;
 
 struct Server {
+    // TODO once clang supports jthread replace with jthread and remove "running
+    // = true" to use stop_token
     static std::thread start(int port) {
         g_server.reset(new Server(port));
-        return std::thread([&] {
-            g_server->running = true;
-            g_server->run();
-        });
+        g_server->running = true;
+        return std::thread(std::bind(&Server::run, g_server.get()));
     }
 
     static void queue_packet(ClientPacket& p) {
