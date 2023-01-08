@@ -36,9 +36,9 @@ struct Info {
         s_Client = 1 << 2,
     } desired_role = s_None;
 
-    bool is_host() { return desired_role & s_Host; }
-    bool is_client() { return desired_role & s_Client; }
-    bool has_role() { return is_host() || is_client(); }
+    [[nodiscard]] bool is_host() { return desired_role & s_Host; }
+    [[nodiscard]] bool is_client() { return desired_role & s_Client; }
+    [[nodiscard]] bool has_role() { return is_host() || is_client(); }
 
     void set_role(Role role) {
         switch (role) {
@@ -78,7 +78,7 @@ struct Info {
     void unlock_username() { username_set = false; }
     std::string& host_ip_address() { return client->conn_info.host_ip_address; }
     void lock_in_ip() { client->lock_in_ip(); }
-    bool has_set_ip() { return client->conn_info.ip_set; }
+    [[nodiscard]] bool has_set_ip() { return client->conn_info.ip_set; }
 
     float menu_state_tick = 0.f;
     float menu_state_tick_reset = 0.1f;
