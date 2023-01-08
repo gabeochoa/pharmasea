@@ -124,7 +124,7 @@ struct IUIContextInputManager {
     // the codebase
     float keyHeldDownTimer = 0.f;
     float prevKeyHeldDownTimer = 0.f;
-    float keyHeldDownTimerReset = 0.2f;
+    float keyHeldDownTimerReset = 0.15f;
     float lastDt;
 
     [[nodiscard]] bool is_mouse_inside(const Rectangle& rect) const {

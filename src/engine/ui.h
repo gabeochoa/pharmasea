@@ -171,10 +171,16 @@ inline void handle_tabbing(const uuid id) {
     // Do we mark the widget type with "nextable"? (tab will always work but
     // not very discoverable
     if (has_kb_focus(id)) {
-        if (get().pressed(InputName::WidgetNext) ||
-            get().pressed(InputName::ValueDown)) {
+        if (
+            //
+            get().pressed(InputName::WidgetNext) ||
+            get().pressed(InputName::ValueDown)
+            // TODO add support for holding down tab
+            // get().is_held_down_debounced(InputName::WidgetNext) ||
+            // get().is_held_down_debounced(InputName::ValueDown)
+        ) {
             get().kb_focus_id = ROOT_ID;
-            if (get().is_held_down_debounced(InputName::WidgetMod)) {
+            if (get().is_held_down(InputName::WidgetMod)) {
                 get().kb_focus_id = get().last_processed;
             }
         }
@@ -659,7 +665,8 @@ bool textfield(const Widget& widget, std::string& content,
                         changed = true;
                     }
                 }
-                if (get().is_held_down_debounced(InputName::WidgetBackspace)) {
+                if (get().pressed(InputName::WidgetBackspace) ||
+                    get().is_held_down_debounced(InputName::WidgetBackspace)) {
                     if (state->buffer.asT().size() > 0) {
                         state->buffer.asT().pop_back();
                     }
