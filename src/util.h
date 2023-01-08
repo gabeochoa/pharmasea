@@ -5,6 +5,7 @@
 #include <math.h>
 
 #include <cmath>
+#include <regex>
 #include <string>
 #include <vector>
 
@@ -53,8 +54,26 @@ static std::vector<std::string> split_string(const std::string& str,
     return strings;
 }
 
+inline std::vector<std::string> split_re(const std::string& input,
+                                         const std::string& regex) {
+    // passing -1 as the submatch index parameter performs splitting
+    const static std::regex re(regex);
+    std::sregex_token_iterator first{input.begin(), input.end(), re, -1};
+    std::sregex_token_iterator last;
+    return std::vector<std::string>{first, last};
+}
+
 static float clamp(float a, float mn, float mx) {
     return std::min(std::max(a, mn), mx);
+}
+
+template<template<typename...> class Container, typename K, typename V,
+         typename... Ts>
+inline V map_get_or_default(Container<K, V, Ts...> map, K key, V def_value) {
+    if (map.contains(key)) {
+        return map.at(key);
+    }
+    return def_value;
 }
 
 }  // namespace util

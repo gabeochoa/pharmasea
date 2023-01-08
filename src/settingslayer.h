@@ -9,6 +9,9 @@
 
 using namespace ui;
 
+// TODO add support for customizing keymap
+// TODO add support for saving last used ip address
+
 struct SettingsLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     bool windowSizeDropdownState = false;
