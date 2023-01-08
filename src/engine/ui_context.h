@@ -103,8 +103,8 @@ struct IUIContextInputManager {
         keychar = int();
         modchar = int();
 
-        // Note: if you stop doing any keyhelds for a bit, then we reset you
-        // so the next key press is faster
+        // Note: if you stop doing any keyhelds for a bit, then we
+        // reset you so the next key press is faster
         if (keyHeldDownTimer == prevKeyHeldDownTimer) {
             keyHeldDownTimer = 0.f;
         }
@@ -120,6 +120,8 @@ struct IUIContextInputManager {
     int keychar = -1;
     int modchar = -1;
     float yscrolled;
+    // TODO can we use timer stuff for this? we have tons of these around
+    // the codebase
     float keyHeldDownTimer = 0.f;
     float prevKeyHeldDownTimer = 0.f;
     float keyHeldDownTimerReset = 0.2f;
