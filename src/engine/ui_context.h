@@ -430,8 +430,8 @@ struct UIContext : public IUIContextInputManager,
                    public IUIContextRenderTextures,
                    public IUIContextTheming,
                    public IUIContextParentStacking {
-    inline static UIContext* create() { return new UIContext(); }
-    inline static UIContext& get() {
+    [[nodiscard]] inline static UIContext* create() { return new UIContext(); }
+    [[nodiscard]] inline static UIContext& get() {
         if (globalContext) return *globalContext;
         if (!_uicontext) _uicontext.reset(UIContext::create());
         return *_uicontext;
@@ -447,7 +447,7 @@ struct UIContext : public IUIContextInputManager,
     std::vector<std::shared_ptr<Widget>> internal_roots;
     std::vector<std::shared_ptr<Widget>> owned_widgets;
 
-    std::shared_ptr<Widget> own(const Widget& widget) {
+    [[nodiscard]] std::shared_ptr<Widget> own(const Widget& widget) {
         owned_widgets.push_back(std::make_shared<Widget>(widget));
         return *owned_widgets.rbegin();
     }
@@ -534,7 +534,7 @@ struct UIContext : public IUIContextInputManager,
     }
 
     template<typename T>
-    std::shared_ptr<T> widget_init(const uuid id) {
+    [[nodiscard]] std::shared_ptr<T> widget_init(const uuid id) {
         std::shared_ptr<T> state = statemanager.getAndCreateIfNone<T>(id);
         if (state == nullptr) {
             log_error(
@@ -546,7 +546,7 @@ struct UIContext : public IUIContextInputManager,
     }
 
     template<typename T>
-    std::shared_ptr<T> get_widget_state(const uuid id) {
+    [[nodiscard]] std::shared_ptr<T> get_widget_state(const uuid id) {
         return statemanager.get_as<T>(id);
     }
 
@@ -613,6 +613,6 @@ struct UIContext : public IUIContextInputManager,
     }
 };
 
-UIContext& get() { return UIContext::get(); }
+[[nodiscard]] inline UIContext& get() { return UIContext::get(); }
 
 }  // namespace ui
