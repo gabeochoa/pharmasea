@@ -102,6 +102,13 @@ struct IUIContextInputManager {
 
         keychar = int();
         modchar = int();
+
+        // Note: if you stop doing any keyhelds for a bit, then we reset you
+        // so the next key press is faster
+        if (keyHeldDownTimer == prevKeyHeldDownTimer) {
+            keyHeldDownTimer = 0.f;
+        }
+        prevKeyHeldDownTimer = keyHeldDownTimer;
     }
 
     MouseInfo mouse_info;
@@ -114,6 +121,7 @@ struct IUIContextInputManager {
     int modchar = -1;
     float yscrolled;
     float keyHeldDownTimer = 0.f;
+    float prevKeyHeldDownTimer = 0.f;
     float keyHeldDownTimerReset = 0.2f;
     float lastDt;
 

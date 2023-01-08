@@ -600,6 +600,8 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
     return changed_previous_frame;
 }
 
+// TODO add support for validating the actual input so you could pass a regex to
+// not allow text or no numbers or something
 bool textfield(const Widget& widget, std::string& content,
                TextFieldValidationFn validation) {
     auto _textfield_render = [](Widget* widget_ptr,
