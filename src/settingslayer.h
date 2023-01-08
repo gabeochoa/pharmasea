@@ -5,6 +5,7 @@
 #include "engine.h"
 #include "engine/layer.h"
 #include "engine/settings.h"
+#include "engine/trie.h"
 #include "menu.h"
 
 using namespace ui;
@@ -13,6 +14,16 @@ using namespace ui;
 // TODO add support for saving last used ip address
 
 struct SettingsLayer : public Layer {
+    // TODO add way to get into keybindings mode
+    enum ActiveWindow {
+        Root = 0,
+        KeyBindings = 1,
+    } activeWindow = ActiveWindow::Root;
+    Trie keyBindingTrie;
+    std::array<std::pair<InputName, std::string_view>, InputName::Last + 1>
+        keyInputNames;
+    std::vector<std::pair<InputName, AnyInputs>> keyInputValues;
+
     std::shared_ptr<ui::UIContext> ui_context;
     bool windowSizeDropdownState = false;
     int windowSizeDropdownIndex = 0;
@@ -25,6 +36,14 @@ struct SettingsLayer : public Layer {
         resolution_selected_index =
             Settings::get().get_current_resolution_index();
         if (resolution_selected_index < 0) resolution_selected_index = 0;
+
+        keyInputNames = magic_enum::enum_entries<InputName>();
+        for (const auto& kv : keyInputNames) {
+            keyBindingTrie.add(std::string(kv.second));
+            keyInputValues.push_back(std::make_pair(
+                kv.first,
+                KeyMap::get_valid_inputs(Menu::State::Game, kv.first)));
+        }
     }
     virtual ~SettingsLayer() {}
 
@@ -39,6 +58,13 @@ struct SettingsLayer : public Layer {
 
     bool onKeyPressed(KeyPressedEvent& event) {
         if (Menu::get().is_not(Menu::State::Settings)) return false;
+
+        //
+        if (event.keycode == KEY_ESCAPE && activeWindow != ActiveWindow::Root) {
+            activeWindow = ActiveWindow::Root;
+            return true;
+        }
+
         if (event.keycode == KEY_ESCAPE) {
             Menu::get().go_back();
             return true;
@@ -168,6 +194,40 @@ struct SettingsLayer : public Layer {
                                             Size_Pct(0.5f, 0.f)));
     }
 
+    void draw_root_settings(float dt) {
+        padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                            Size_Px(100.f, 0.5f)));
+        master_volume();
+        music_volume();
+        resolution_switcher();
+        streamer_safe_box();
+        enable_post_processing();
+        back_button();
+    }
+
+    void draw_keybindings(float dt) {
+        // TODO tons more work to do here but for the most part this shows its
+        // possible to load all of them
+
+        // TODO save all the changed inputs
+        for (const auto& kv : keyInputNames) {
+            const auto keys =
+                KeyMap::get_valid_keys(Menu::State::Game, kv.first);
+            // TODO handle multiple keys
+            if (keys.empty()) continue;
+            auto opt_key = magic_enum::enum_cast<KeyboardKey>(keys[0]);
+            if (!opt_key.has_value()) continue;
+            KeyboardKey kbKey = opt_key.value();
+
+            if (button(*ui::components::mk_button(
+                           MK_UUID_LOOP(id, ROOT_ID, kv.first)),
+                       fmt::format("{}({})", kv.second,
+                                   magic_enum::enum_name(kbKey)))) {
+                std::cout << "HI " << kv.second << std::endl;
+            }
+        }
+    }
+
     void draw_ui(float dt) {
         using namespace ui;
 
@@ -185,14 +245,15 @@ struct SettingsLayer : public Layer {
             div(*content);
             ui_context->push_parent(content);
             {
-                padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
-                                                    Size_Px(100.f, 0.5f)));
-                master_volume();
-                music_volume();
-                resolution_switcher();
-                streamer_safe_box();
-                enable_post_processing();
-                back_button();
+                switch (activeWindow) {
+                    default:
+                    case ActiveWindow::Root:
+                        draw_root_settings(dt);
+                        break;
+                    case ActiveWindow::KeyBindings:
+                        draw_keybindings(dt);
+                        break;
+                }
             }
             ui_context->pop_parent();
         }
