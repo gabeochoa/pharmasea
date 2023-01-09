@@ -254,6 +254,9 @@ struct Server {
 
                     clients.erase(itClient);
 
+                    // Send a message so everybody else knows what happened
+                    send_announcement_to_all(temp, annoucement_type);
+
                 } else {
                     M_ASSERT(
                         info->m_eOldState ==
