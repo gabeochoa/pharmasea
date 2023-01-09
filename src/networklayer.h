@@ -18,6 +18,7 @@
 #include "network/network.h"
 #include "player.h"
 #include "remote_player.h"
+#include "toastmanager.h"
 
 using namespace ui;
 
@@ -295,6 +296,8 @@ struct NetworkLayer : public Layer {
         // TODO show a pop up for each
         for (auto info : network_info->client->announcements) {
             log_info("Announcement: {}", info.message);
+            // TODO add support for other annoucement types
+            TOASTS.push_back({.msg = info.message, .timeToShow = 10});
         }
         network_info->client->announcements.clear();
     }

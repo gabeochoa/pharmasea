@@ -38,8 +38,8 @@ struct ToastLayer : public Layer, public FontSizeCache {
             // out)
 
             vec2 pos = {
-                WIN_WF() * 0.72f,          //
-                (WIN_HF() * 0.1f) + offY,  //
+                WIN_WF() * 0.72f,           //
+                (WIN_HF() * 0.05f) + offY,  //
             };
 
             DrawRectangleRounded(
@@ -62,6 +62,9 @@ struct ToastLayer : public Layer, public FontSizeCache {
 
             float font_size = get_font_size(std::string(toast.msg), toastWidth,
                                             toastHeight, spacing);
+
+            // TODO at some point we want to split the text onto different
+            // lines...
             DrawTextEx(font, std::string(toast.msg).c_str(), pos, font_size,
                        spacing, font_color);
 

@@ -32,8 +32,6 @@ A game by:
         if (Menu::get().is_not(Menu::State::About)) return false;
         if (event.keycode == raylib::KEY_ESCAPE) {
             Menu::get().go_back();
-            TOASTS.push_back(
-                {.msg = "Hi i am an annoucement", .timeToShow = 5});
             return true;
         }
         return ui_context.get()->process_keyevent(event);

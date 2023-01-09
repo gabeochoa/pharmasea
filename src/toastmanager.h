@@ -7,8 +7,10 @@
 
 #include "engine/log.h"
 
+// TODO maybe this should live in the engine
+//
 struct ToastMsg {
-    std::string_view msg;
+    std::string msg;
     float timeToShow = 1.f;
     float timeHasShown = 0.f;
 
