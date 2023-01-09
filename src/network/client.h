@@ -119,9 +119,11 @@ struct Client {
 
         auto remove_player = [&](int client_id) {
             auto rp = remote_players[client_id];
-            if (!rp)
+            if (!rp) {
                 log_warn("Remote player doesnt exist but should: {}",
                          client_id);
+                return;
+            }
             rp->cleanup = true;
             remote_players.erase(client_id);
         };
