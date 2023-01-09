@@ -7,6 +7,7 @@
 #include "engine.h"
 //
 #include "menu.h"
+#include "toastmanager.h"
 
 struct AboutLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -31,14 +32,15 @@ A game by:
         if (Menu::get().is_not(Menu::State::About)) return false;
         if (event.keycode == raylib::KEY_ESCAPE) {
             Menu::get().go_back();
+            TOASTS.push_back(
+                {.msg = "Hi i am an annoucement", .timeToShow = 5});
             return true;
         }
         return ui_context.get()->process_keyevent(event);
     }
 
     void draw_ui(float dt) {
-        // TODO escape should go back, not quit the game at this point
-        raylib::SetExitKey(raylib::KEY_ESCAPE);
+        raylib::SetExitKey(raylib::KEY_NULL);
         using namespace ui;
 
         ui_context->begin(dt);

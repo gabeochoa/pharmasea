@@ -4,6 +4,7 @@
 // steam networking uses an "app id" that we dont have
 // also the code isnt written yet :)
 // TODO: add support for steam connections
+#include "toastmanager.h"
 #define BUILD_WITHOUT_STEAM
 
 #include "external_include.h"
@@ -27,6 +28,7 @@
 #include "pauselayer.h"
 #include "settingslayer.h"
 #include "streamersafelayer.h"
+#include "toastlayer.h"
 #include "versionlayer.h"
 //
 // This one should be last
@@ -74,6 +76,7 @@ void startup() {
         new StreamerSafeLayer(),
         new MenuStateLayer(),
         new VersionLayer(),
+        new ToastLayer(),
         //
         new PauseLayer(),
         new PausePlanningLayer(),

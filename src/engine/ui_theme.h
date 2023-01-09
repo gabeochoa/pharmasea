@@ -46,7 +46,7 @@ struct UITheme {
           accent(a),
           error(e) {}
 
-    Color from_usage(theme::Usage cu) {
+    Color from_usage(theme::Usage cu) const {
         switch (cu) {
             case theme::Usage::Font:
                 return font;
