@@ -49,6 +49,7 @@ struct ClientPacket {
         GameState,
         PlayerControl,
         PlayerJoin,
+        PlayerLeave,
         PlayerLocation,
     } msg_type;
 
@@ -84,6 +85,11 @@ struct ClientPacket {
         std::string username{};
     };
 
+    struct PlayerLeaveInfo {
+        std::vector<int> all_clients;
+        int client_id = -1;
+    };
+
     // Player Location
     struct PlayerInfo {
         int facing_direction;
@@ -94,7 +100,8 @@ struct ClientPacket {
     typedef std::variant<
         ClientPacket::AnnouncementInfo, ClientPacket::PlayerControlInfo,
         ClientPacket::PlayerJoinInfo, ClientPacket::GameStateInfo,
-        ClientPacket::MapInfo, ClientPacket::PlayerInfo>
+        ClientPacket::MapInfo, ClientPacket::PlayerInfo,
+        ClientPacket::PlayerLeaveInfo>
         Msg;
 
     Msg msg;
@@ -124,6 +131,9 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
                                    info.location[0], info.location[1],
                                    info.location[2], info.facing_direction);
             },
+            [&](ClientPacket::PlayerLeaveInfo info) {
+                return fmt::format("PlayerLeave({})", info.client_id);
+            },
             [&](auto) { return std::string(" -- invalid operator<< --"); }},
         msgtype);
     return os;
@@ -131,26 +141,7 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
 
 std::ostream& operator<<(std::ostream& os,
                          const ClientPacket::MsgType& msgtype) {
-    switch (msgtype) {
-        case ClientPacket::Announcement:
-            os << "Announcement";
-            break;
-        case ClientPacket::GameState:
-            os << "GameState";
-            break;
-        case ClientPacket::Map:
-            os << "MapInfo";
-            break;
-        case ClientPacket::PlayerLocation:
-            os << "PlayerLocation";
-            break;
-        case ClientPacket::PlayerJoin:
-            os << "PlayerJoin";
-            break;
-        case ClientPacket::PlayerControl:
-            os << "PlayerControl";
-            break;
-    }
+    os << magic_enum::enum_name(msgtype);
     return os;
 }
 
@@ -177,6 +168,10 @@ void serialize(S& s, ClientPacket& packet) {
                   s.value8b(info.hashed_version);
                   s.value4b(info.client_id);
                   s.text1b(info.username, MAX_NAME_LENGTH);
+              },
+              [](S& s, ClientPacket::PlayerLeaveInfo& info) {
+                  s.container4b(info.all_clients, MAX_CLIENTS);
+                  s.value4b(info.client_id);
               },
               [](S& s, ClientPacket::PlayerControlInfo& info) {
                   s.container(
