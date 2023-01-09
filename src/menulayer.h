@@ -42,12 +42,14 @@ struct MenuLayer : public Layer {
     }
 
     void play_music() {
+        // TODO better music playing wrapper so we can not duplicate this
+        // everwhere
         // TODO music stops playing when you grab title bar
         auto m = MusicLibrary::get().get("theme");
-        if (!IsMusicStreamPlaying(m)) {
-            PlayMusicStream(m);
+        if (!raylib::IsMusicStreamPlaying(m)) {
+            raylib::PlayMusicStream(m);
         }
-        UpdateMusicStream(m);
+        raylib::UpdateMusicStream(m);
     }
 
     void draw_menu_buttons() {
@@ -116,7 +118,7 @@ struct MenuLayer : public Layer {
 
         if (Menu::get().is_not(Menu::State::Root)) return;
         PROFILE();
-        SetExitKey(KEY_ESCAPE);
+        raylib::SetExitKey(raylib::KEY_ESCAPE);
     }
 
     virtual void onDraw(float dt) override {

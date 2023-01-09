@@ -7,11 +7,13 @@ SINGLETON_FWD(MusicLibrary)
 struct MusicLibrary {
     SINGLETON(MusicLibrary)
 
-    [[nodiscard]] const Music& get(const std::string& name) const {
+    [[nodiscard]] const raylib::Music& get(const std::string& name) const {
         return impl.get(name);
     }
 
-    [[nodiscard]] Music& get(const std::string& name) { return impl.get(name); }
+    [[nodiscard]] raylib::Music& get(const std::string& name) {
+        return impl.get(name);
+    }
     void load(const char* filename, const char* name) {
         impl.load(filename, name);
 
@@ -34,20 +36,22 @@ struct MusicLibrary {
     // allows us to locally cache the most recent volume and handle it here
     float current_volume = 1.f;
 
-    struct MusicLibraryImpl : Library<Music> {
+    struct MusicLibraryImpl : Library<raylib::Music> {
         virtual void load(const char* filename, const char* name) override {
             log_info("Loading music: {} from {}", name, filename);
-            this->add(name, LoadMusicStream(filename));
+            this->add(name, raylib::LoadMusicStream(filename));
         }
 
         void update_volume(float new_v) {
             for (auto kv : storage) {
                 log_trace("updating music volume for {} to {}", kv.first,
                           new_v);
-                SetMusicVolume(kv.second, new_v);
+                raylib::SetMusicVolume(kv.second, new_v);
             }
         }
 
-        virtual void unload(Music music) override { UnloadMusicStream(music); }
+        virtual void unload(raylib::Music music) override {
+            raylib::UnloadMusicStream(music);
+        }
     } impl;
 };

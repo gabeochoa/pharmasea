@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "engine/graphics.h"
 #include "external_include.h"
 //
 #include "engine/singleton.h"
@@ -18,7 +19,7 @@ SINGLETON_FWD(Preload)
 struct Preload {
     SINGLETON(Preload)
 
-    Font font;
+    raylib::Font font;
 
     Preload() {
         load_shaders();
@@ -27,13 +28,13 @@ struct Preload {
         load_textures();
         load_models();
         //
-        InitAudioDevice();
+        ext::init_audio_device();
         load_sounds();
         load_music();
     }
 
     ~Preload() {
-        CloseAudioDevice();
+        ext::close_audio_device();
 
         // TODO instead of leaving the impl public fix these to do what music
         // library does
@@ -46,14 +47,14 @@ struct Preload {
 
     void load_fonts() {
         // Font loading must happen after InitWindow
-        font = LoadFont_KarminaRegular256();
+        font = font::LoadFont_KarminaRegular256();
 
         // NOTE if you go back to files, load fonts from install folder, instead
         // of local path
         //
         // font = LoadFontEx("./resources/fonts/constan.ttf", 96, 0, 0);
-        GenTextureMipmaps(&font.texture);
-        SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);
+        raylib::GenTextureMipmaps(&font.texture);
+        raylib::SetTextureFilter(font.texture, raylib::TEXTURE_FILTER_POINT);
     }
 
     void load_textures() {

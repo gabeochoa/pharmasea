@@ -10,7 +10,7 @@ struct AppSettings {
     int width;
     int height;
     const char* title;
-    TraceLogLevel logLevel = LOG_ERROR;
+    raylib::TraceLogLevel logLevel = raylib::LOG_ERROR;
 };
 
 SINGLETON_FWD(App)
@@ -23,7 +23,7 @@ struct App {
     int height;
 
     // TODO create a render texture library?
-    RenderTexture2D mainRT;
+    raylib::RenderTexture2D mainRT;
 
     explicit App(const AppSettings&);
     ~App();

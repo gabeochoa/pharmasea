@@ -1,5 +1,7 @@
 #pragma once
 
+#include "engine/graphics.h"
+
 #ifdef __APPLE__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
@@ -11,21 +13,6 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
-
-#include <raylib.h>
-#include <rlgl.h>
-
-typedef Vector2 vec2;
-typedef Vector3 vec3;
-typedef Vector4 vec4;
-
-#undef RAYLIB_OP_OVERLOADS_RAYGUI
-#include <RaylibOpOverloads.h>
-
-// NOTE: why doesnt RaylibOpOverloads do this?
-inline bool operator<(const vec2& l, const vec2& r) {
-    return (l.x < r.x) || ((l.x == r.x) && (l.y < r.y));
-}
 
 #define FMT_HEADER_ONLY
 #include <fmt/format.h>

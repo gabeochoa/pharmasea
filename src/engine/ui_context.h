@@ -89,7 +89,7 @@ struct IUIContextInputManager {
     virtual void begin(float dt) {
         mouse_info = get_mouse_info();
         // TODO Should this be more like mousePos?
-        yscrolled += GetMouseWheelMove();
+        yscrolled += ext::get_mouse_wheel_move();
 
         lastDt = dt;
     }
@@ -180,7 +180,7 @@ struct IUIContextInputManager {
     }
 
     [[nodiscard]] bool _pressedButtonWithoutEat(GamepadButton butt) const {
-        if (butt == GAMEPAD_BUTTON_UNKNOWN) return false;
+        if (butt == raylib::GAMEPAD_BUTTON_UNKNOWN) return false;
         return button == butt;
     }
 
@@ -189,7 +189,7 @@ struct IUIContextInputManager {
         return _pressedWithoutEat(code);
     }
 
-    void eatButton() { button = GAMEPAD_BUTTON_UNKNOWN; }
+    void eatButton() { button = raylib::GAMEPAD_BUTTON_UNKNOWN; }
 
     [[nodiscard]] bool pressed(const InputName& name) {
         int code = KeyMap::get_key_code(STATE, name);
@@ -231,7 +231,7 @@ struct IUIContextInputManager {
     void eatAxis() { axis_info = {}; }
 
     [[nodiscard]] bool _pressedWithoutEat(int code) const {
-        if (code == KEY_NULL) return false;
+        if (code == raylib::KEY_NULL) return false;
         return key == code || mod == code;
     }
     // TODO is there a better way to do eat(string)?
@@ -297,12 +297,12 @@ struct IUIContextLastFrame {
 };
 
 struct IUIContextFont {
-    Font font;
+    raylib::Font font;
     std::unordered_map<FZInfo, float> _font_size_memo;
 
     virtual void init() { this->set_font(Preload::get().font); }
 
-    void set_font(Font f) { font = f; }
+    void set_font(raylib::Font f) { font = f; }
 
     [[nodiscard]] float get_font_size_impl(const std::string& content,
                                            float width, float height,
@@ -350,10 +350,11 @@ struct IUIContextFont {
 };
 
 struct IUIContextRenderTextures {
-    std::vector<RenderTexture2D> render_textures;
+    std::vector<raylib::RenderTexture2D> render_textures;
 
     [[nodiscard]] int get_new_render_texture() {
-        RenderTexture2D tex = LoadRenderTexture(WIN_W(), WIN_H());
+        raylib::RenderTexture2D tex =
+            raylib::LoadRenderTexture(WIN_W(), WIN_H());
         render_textures.push_back(tex);
         return (int) render_textures.size() - 1;
     }
@@ -362,9 +363,9 @@ struct IUIContextRenderTextures {
         BeginTextureMode(render_textures[rt_index]);
     }
 
-    void turn_off_texture_mode() { EndTextureMode(); }
+    void turn_off_texture_mode() { raylib::EndTextureMode(); }
 
-    void draw_texture(int rt_id, Rectangle source, Vector2 position) {
+    void draw_texture(int rt_id, Rectangle source, vec2 position) {
         auto target = render_textures[rt_id];
         DrawTextureRec(target.texture, source, position, WHITE);
         // (Rectangle){0, 0, (float) target.texture.width,
@@ -377,7 +378,7 @@ struct IUIContextRenderTextures {
         // frame is written to the screen. We can guaranteed its definitely
         // rendered by the time it reaches the begin for the next frame
         for (auto target : render_textures) {
-            UnloadRenderTexture(target);
+            raylib::UnloadRenderTexture(target);
         }
         render_textures.clear();
     }
@@ -606,8 +607,7 @@ struct UIContext : public IUIContextInputManager,
         return temp;
     }
 
-    void schedule_render_texture(int rt_id, Rectangle source,
-                                 Vector2 position) {
+    void schedule_render_texture(int rt_id, Rectangle source, vec2 position) {
         get().schedule_render_call(
             std::bind(&UIContext::draw_texture, this, rt_id, source, position));
     }

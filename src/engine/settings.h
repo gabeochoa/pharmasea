@@ -117,7 +117,7 @@ struct Settings {
     void update_master_volume(float nv) {
         data.master_volume = util::clamp(nv, 0.f, 1.f);
         log_trace("master volume changed to {}", data.master_volume);
-        SetMasterVolume(data.master_volume);
+        raylib::SetMasterVolume(data.master_volume);
     }
 
     void update_music_volume(float nv) {

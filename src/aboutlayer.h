@@ -29,7 +29,7 @@ A game by:
 
     bool onKeyPressed(KeyPressedEvent& event) {
         if (Menu::get().is_not(Menu::State::About)) return false;
-        if (event.keycode == KEY_ESCAPE) {
+        if (event.keycode == raylib::KEY_ESCAPE) {
             Menu::get().go_back();
             return true;
         }
@@ -38,7 +38,7 @@ A game by:
 
     void draw_ui(float dt) {
         // TODO escape should go back, not quit the game at this point
-        SetExitKey(KEY_ESCAPE);
+        raylib::SetExitKey(raylib::KEY_ESCAPE);
         using namespace ui;
 
         ui_context->begin(dt);
@@ -79,12 +79,12 @@ A game by:
         //
         // Does pause not support this ^^ solution?
         if (Menu::get().is_not(Menu::State::About)) return;
-        SetExitKey(KEY_NULL);
+        raylib::SetExitKey(raylib::KEY_NULL);
     }
 
     virtual void onDraw(float dt) override {
         if (Menu::get().is_not(Menu::State::About)) return;
-        ClearBackground(ui_context->active_theme().background);
+        ext::clear_background(ui_context->active_theme().background);
         draw_ui(dt);
     }
 };

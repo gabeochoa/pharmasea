@@ -675,7 +675,7 @@ bool textfield(const Widget& widget, std::string& content,
 
                 if (get().is_held_down(InputName::WidgetCtrl)) {
                     if (get().pressed(InputName::WidgetPaste)) {
-                        auto clipboard = GetClipboardText();
+                        auto clipboard = ext::get_clipboard_text();
 
                         // make a copy so we can text validation
                         std::string post_paste(state->buffer.asT());

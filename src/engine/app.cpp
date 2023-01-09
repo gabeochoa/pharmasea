@@ -15,27 +15,27 @@
 void App::start_post_processing() {
     if (!Settings::get().data.enable_postprocessing) return;
     auto post_processing_shader = ShaderLibrary::get().get("post_processing");
-    BeginShaderMode(post_processing_shader);
+    raylib::BeginShaderMode(post_processing_shader);
 }
 
 void App::end_post_processing() {
     if (!Settings::get().data.enable_postprocessing) return;
-    EndShaderMode();
+    raylib::EndShaderMode();
 }
 
 App::App(const AppSettings& settings) {
     // This goes above Init since that loves to spew errors
-    SetTraceLogLevel(settings.logLevel);
-    SetTargetFPS(settings.fps);
+    raylib::SetTraceLogLevel(settings.logLevel);
+    raylib::SetTargetFPS(settings.fps);
     //
     width = settings.width;
     height = settings.height;
 
-    InitWindow(width, height, settings.title);
+    raylib::InitWindow(width, height, settings.title);
 
     KeyMap::create();
 
-    mainRT = LoadRenderTexture(width, height);
+    mainRT = raylib::LoadRenderTexture(width, height);
     GLOBALS.set("mainRT", &mainRT);
 }
 
@@ -59,10 +59,10 @@ bool App::onWindowResize(WindowResizeEvent event) {
     width = event.width;
     height = event.height;
 
-    SetWindowSize(width, height);
+    raylib::SetWindowSize(width, height);
 
     UnloadRenderTexture(mainRT);
-    mainRT = LoadRenderTexture(width, height);
+    mainRT = raylib::LoadRenderTexture(width, height);
     GLOBALS.set("mainRT", &mainRT);
     return true;
 }
@@ -89,11 +89,11 @@ void App::close() { running = false; }
 
 void App::run() {
     running = true;
-    while (running && !WindowShouldClose()) {
-        float dt = GetFrameTime();
+    while (running && !raylib::WindowShouldClose()) {
+        float dt = raylib::GetFrameTime();
         this->loop(dt);
     }
-    CloseWindow();
+    raylib::CloseWindow();
 }
 
 void App::loop(float dt) {
@@ -117,15 +117,15 @@ void App::loop(float dt) {
 }
 
 void App::draw_all_to_texture(float dt) {
-    BeginTextureMode(mainRT);
+    raylib::BeginTextureMode(mainRT);
     for (Layer* layer : layerstack) {
         layer->onDraw(dt);
     }
-    EndTextureMode();
+    raylib::EndTextureMode();
 }
 
 void App::render_to_screen() {
-    BeginDrawing();
+    raylib::BeginDrawing();
     {
         App::start_post_processing();
         {
@@ -134,5 +134,5 @@ void App::render_to_screen() {
         }
         App::end_post_processing();
     }
-    EndDrawing();
+    raylib::EndDrawing();
 }

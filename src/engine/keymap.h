@@ -14,6 +14,9 @@
 #include "log.h"
 #include "singleton.h"
 
+using raylib::GamepadAxis;
+using raylib::GamepadButton;
+
 // TODO this needs to not be in engine...
 enum InputName {
     // Shared
@@ -66,8 +69,8 @@ struct MouseInfo {
 
 static const MouseInfo get_mouse_info() {
     return MouseInfo{
-        .pos = GetMousePosition(),
-        .leftDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT),
+        .pos = ext::get_mouse_position(),
+        .leftDown = raylib::IsMouseButtonDown(raylib::MOUSE_BUTTON_LEFT),
     };
 }
 
@@ -86,12 +89,12 @@ struct KeyMap {
     SINGLETON(KeyMap)
 
     static void forEachCharTyped(std::function<void(Event&)> cb) {
-        int character = GetCharPressed();
+        int character = raylib::GetCharPressed();
         while (character) {
             CharPressedEvent* event = new CharPressedEvent(character, 0);
             cb(*event);
             delete event;
-            character = GetCharPressed();
+            character = raylib::GetCharPressed();
         }
     }
 
@@ -190,7 +193,7 @@ struct KeyMap {
                                input);
             if (r) return r;
         }
-        return KEY_NULL;
+        return raylib::KEY_NULL;
     }
 
     [[nodiscard]] static const tl::expected<GamepadAxisWithDir,
@@ -215,14 +218,15 @@ struct KeyMap {
         const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
             auto r = std::visit(
-                util::overloaded{[](GamepadButton button) { return button; },
-                                 [](auto&&) { return GAMEPAD_BUTTON_UNKNOWN; }},
+                util::overloaded{
+                    [](GamepadButton button) { return button; },
+                    [](auto&&) { return raylib::GAMEPAD_BUTTON_UNKNOWN; }},
                 input);
-            if (r != GAMEPAD_BUTTON_UNKNOWN) return r;
+            if (r != raylib::GAMEPAD_BUTTON_UNKNOWN) return r;
         }
         // TODO this is way too noisy to be valuable right now
         // log_warn("Couldn't find any button for {}", name);
-        return GAMEPAD_BUTTON_UNKNOWN;
+        return raylib::GAMEPAD_BUTTON_UNKNOWN;
     }
 
     static bool does_layer_map_contain_key(const Menu::State& state,
@@ -324,7 +328,7 @@ struct KeyMap {
         }
         std::stringstream buffer;
         buffer << ifs.rdbuf();
-        SetGamepadMappings(buffer.str().c_str());
+        ext::set_gamepad_mappings(buffer.str().c_str());
     }
 
     [[nodiscard]] LayerMapping& get_or_create_layer_map(
@@ -336,17 +340,17 @@ struct KeyMap {
     }
 
     [[nodiscard]] static float visit_key(int keycode) {
-        return IsKeyPressed(keycode) ? 1.f : 0.f;
+        return ext::is_key_pressed(keycode) ? 1.f : 0.f;
     }
 
     [[nodiscard]] static float visit_key_down(int keycode) {
-        return IsKeyDown(keycode) ? 1.f : 0.f;
+        return ext::is_key_down(keycode) ? 1.f : 0.f;
     }
 
     [[nodiscard]] static float visit_axis(GamepadAxisWithDir axis_with_dir) {
         // Note: this one is a bit more complex because we have to check if you
         // are pushing in the right direction while also checking the magnitude
-        float mvt = GetGamepadAxisMovement(0, axis_with_dir.axis);
+        float mvt = ext::get_gamepad_axis_movement(0, axis_with_dir.axis);
         // Note: The 0.25 is how big the deadzone is
         // TODO consider making the deadzone configurable?
         if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > 0.25f) {
@@ -368,70 +372,70 @@ struct KeyMap {
         LayerMapping& game_map =
             this->get_or_create_layer_map(Menu::State::Game);
         game_map[InputName::PlayerForward] = {
-            KEY_W,
-            GAMEPAD_BUTTON_LEFT_FACE_UP,
+            raylib::KEY_W,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_UP,
             GamepadAxisWithDir{
-                .axis = GAMEPAD_AXIS_LEFT_Y,
+                .axis = raylib::GAMEPAD_AXIS_LEFT_Y,
                 .dir = -1,
             },
         };
         game_map[InputName::PlayerBack] = {
-            KEY_S,
-            GAMEPAD_BUTTON_LEFT_FACE_DOWN,
+            raylib::KEY_S,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN,
             GamepadAxisWithDir{
-                .axis = GAMEPAD_AXIS_LEFT_Y,
+                .axis = raylib::GAMEPAD_AXIS_LEFT_Y,
                 .dir = 1,
             },
         };
         game_map[InputName::PlayerLeft] = {
-            KEY_A,
-            GAMEPAD_BUTTON_LEFT_FACE_LEFT,
+            raylib::KEY_A,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_LEFT,
             GamepadAxisWithDir{
-                .axis = GAMEPAD_AXIS_LEFT_X,
+                .axis = raylib::GAMEPAD_AXIS_LEFT_X,
                 .dir = -1,
             },
         };
         game_map[InputName::PlayerRight] = {
-            KEY_D,
-            GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
+            raylib::KEY_D,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
             GamepadAxisWithDir{
-                .axis = GAMEPAD_AXIS_LEFT_X,
+                .axis = raylib::GAMEPAD_AXIS_LEFT_X,
                 .dir = 1,
             },
         };
 
         game_map[InputName::PlayerPickup] = {
-            KEY_SPACE,
-            GAMEPAD_BUTTON_RIGHT_FACE_DOWN,
+            raylib::KEY_SPACE,
+            raylib::GAMEPAD_BUTTON_RIGHT_FACE_DOWN,
         };
 
         game_map[InputName::PlayerRotateFurniture] = {
-            KEY_R,
-            GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
+            raylib::KEY_R,
+            raylib::GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
         };
 
         game_map[InputName::PlayerDoWork] = {
-            KEY_R,
-            GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
+            raylib::KEY_R,
+            raylib::GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
         };
 
         game_map[InputName::Pause] = {
-            KEY_ESCAPE,
-            GAMEPAD_BUTTON_MIDDLE_RIGHT,
+            raylib::KEY_ESCAPE,
+            raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT,
         };
 
-        game_map[InputName::TargetForward] = {KEY_UP};
-        game_map[InputName::TargetBack] = {KEY_DOWN};
-        game_map[InputName::TargetLeft] = {KEY_LEFT};
-        game_map[InputName::TargetRight] = {KEY_RIGHT};
+        game_map[InputName::TargetForward] = {raylib::KEY_UP};
+        game_map[InputName::TargetBack] = {raylib::KEY_DOWN};
+        game_map[InputName::TargetLeft] = {raylib::KEY_LEFT};
+        game_map[InputName::TargetRight] = {raylib::KEY_RIGHT};
 
         game_map[InputName::TogglePlanning] = {
-            KEY_P,
-            GAMEPAD_BUTTON_MIDDLE_LEFT,
+            raylib::KEY_P,
+            raylib::GAMEPAD_BUTTON_MIDDLE_LEFT,
         };
 
         game_map[InputName::ToggleDebug] = {
-            KEY_BACKSLASH,
+            raylib::KEY_BACKSLASH,
         };
     }
 
@@ -439,57 +443,57 @@ struct KeyMap {
     void load_ui_keys() {
         LayerMapping& ui_map = this->get_or_create_layer_map(Menu::State::UI);
         ui_map[InputName::WidgetNext] = {
-            KEY_TAB,
-            GAMEPAD_BUTTON_LEFT_FACE_DOWN,
+            raylib::KEY_TAB,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN,
         };
 
         ui_map[InputName::WidgetBack] = {
-            GAMEPAD_BUTTON_LEFT_FACE_UP,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_UP,
         };
-        ui_map[InputName::WidgetMod] = {KEY_LEFT_SHIFT};
-        ui_map[InputName::WidgetBackspace] = {KEY_BACKSPACE};
+        ui_map[InputName::WidgetMod] = {raylib::KEY_LEFT_SHIFT};
+        ui_map[InputName::WidgetBackspace] = {raylib::KEY_BACKSPACE};
 
 #ifdef __APPLE__
         // For mac, paste is ⌘+v
-        ui_map[InputName::WidgetCtrl] = {KEY_LEFT_SUPER};
+        ui_map[InputName::WidgetCtrl] = {raylib::KEY_LEFT_SUPER};
 #else
         // for windows ctrl+v
-        ui_map[InputName::WidgetCtrl] = {KEY_LEFT_CONTROL};
+        ui_map[InputName::WidgetCtrl] = {raylib::KEY_LEFT_CONTROL};
 #endif
 
-        ui_map[InputName::WidgetPaste] = {KEY_V};
+        ui_map[InputName::WidgetPaste] = {raylib::KEY_V};
 
-        ui_map[InputName::WidgetPress] = {KEY_ENTER,
-                                          GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
+        ui_map[InputName::WidgetPress] = {
+            raylib::KEY_ENTER, raylib::GAMEPAD_BUTTON_RIGHT_FACE_DOWN};
 
         ui_map[InputName::ValueUp] = {
-            KEY_UP,
-            GAMEPAD_BUTTON_LEFT_FACE_UP,
+            raylib::KEY_UP,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_UP,
         };
 
         ui_map[InputName::ValueDown] = {
-            KEY_DOWN,
-            GAMEPAD_BUTTON_LEFT_FACE_DOWN,
+            raylib::KEY_DOWN,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN,
         };
 
         ui_map[InputName::ValueLeft] = {
-            KEY_LEFT,
-            GAMEPAD_BUTTON_LEFT_FACE_LEFT,
+            raylib::KEY_LEFT,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_LEFT,
             GamepadAxisWithDir{
-                .axis = GAMEPAD_AXIS_LEFT_X,
+                .axis = raylib::GAMEPAD_AXIS_LEFT_X,
                 .dir = -1,
             },
         };
         ui_map[InputName::ValueRight] = {
-            KEY_RIGHT,
-            GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
+            raylib::KEY_RIGHT,
+            raylib::GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
             GamepadAxisWithDir{
-                .axis = GAMEPAD_AXIS_LEFT_X,
+                .axis = raylib::GAMEPAD_AXIS_LEFT_X,
                 .dir = 1,
             },
         };
 
-        ui_map[InputName::Pause] = {GAMEPAD_BUTTON_MIDDLE_RIGHT};
+        ui_map[InputName::Pause] = {raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT};
 
         LayerMapping& root_map =
             this->get_or_create_layer_map(Menu::State::Root);

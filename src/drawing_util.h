@@ -9,6 +9,8 @@
 #include "text_util.h"
 #include "vec_util.h"
 
+namespace raylib {
+
 static void DrawLineStrip2Din3D(const std::vector<vec2>& points, Color color) {
     std::optional<vec3> point;
     for (auto p : points) {
@@ -168,3 +170,5 @@ static void DrawFloatingText(const vec3& position, Font font, const char* text,
 
     rlPopMatrix();
 }
+
+}  // namespace raylib

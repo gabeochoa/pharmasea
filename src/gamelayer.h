@@ -14,13 +14,12 @@
 #include "map.h"
 #include "menu.h"
 #include "player.h"
-#include "raylib.h"
 
 struct GameLayer : public Layer {
     std::shared_ptr<Player> player;
     std::shared_ptr<BasePlayer> active_player;
     std::shared_ptr<GameCam> cam;
-    Model bag_model;
+    raylib::Model bag_model;
 
     GameLayer() : Layer("Game") {
         player.reset(new Player(vec2{-3, -3}));
@@ -83,7 +82,7 @@ struct GameLayer : public Layer {
         PROFILE();
 
         // Dont quit window on escape
-        SetExitKey(KEY_NULL);
+        raylib::SetExitKey(raylib::KEY_NULL);
 
         // TODO Why does updateCamera not just take an optional target?
         cam->updateToTarget(
@@ -104,8 +103,8 @@ struct GameLayer : public Layer {
         if (!Menu::in_game() && !Menu::is_paused()) return;
         PROFILE();
 
-        ClearBackground(Color{200, 200, 200, 255});
-        BeginMode3D((*cam).get());
+        ext::clear_background(Color{200, 200, 200, 255});
+        raylib::BeginMode3D((*cam).get());
         {
             auto map_ptr = GLOBALS.get_ptr<Map>("map");
             if (map_ptr) map_ptr->onDraw(dt);
@@ -118,13 +117,14 @@ struct GameLayer : public Layer {
 
             // DrawGrid(40, TILESIZE);
 
-            DrawBillboard(cam->camera, TextureLibrary::get().get("face"),
-                          {
-                              1.f,
-                              0.f,
-                              1.f,
-                          },
-                          TILESIZE, WHITE);
+            raylib::DrawBillboard(cam->camera,
+                                  TextureLibrary::get().get("face"),
+                                  {
+                                      1.f,
+                                      0.f,
+                                      1.f,
+                                  },
+                                  TILESIZE, WHITE);
 
             // if (GLOBALS.get_or_default<bool>("network_debug_enabled", false))
             // { auto host_map_ptr = GLOBALS.get_ptr<Map>("server_map"); if
@@ -144,6 +144,6 @@ struct GameLayer : public Layer {
             // }
             // }
         }
-        EndMode3D();
+        raylib::EndMode3D();
     }
 };

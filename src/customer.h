@@ -28,13 +28,13 @@ struct SpeechBubble {
     void update(float, vec3 pos) { this->position = pos; }
     void render() const {
         GameCam cam = GLOBALS.get<GameCam>("game_cam");
-        Texture texture = TextureLibrary::get().get(icon_tex_name);
-        DrawBillboard(cam.camera, texture,
-                      vec3{position.x,                      //
-                           position.y + (TILESIZE * 1.5f),  //
-                           position.z},                     //
-                      TILESIZE,                             //
-                      WHITE);
+        raylib::Texture texture = TextureLibrary::get().get(icon_tex_name);
+        raylib::DrawBillboard(cam.camera, texture,
+                              vec3{position.x,                      //
+                                   position.y + (TILESIZE * 1.5f),  //
+                                   position.z},                     //
+                              TILESIZE,                             //
+                              raylib::WHITE);
     }
 };
 
@@ -264,6 +264,7 @@ struct Customer : public AIPerson {
         };
         AIPerson::render_normal();
         render_speech_bubble();
-        DrawFloatingText(this->raw_position, Preload::get().font, name.c_str());
+        raylib::DrawFloatingText(this->raw_position, Preload::get().font,
+                                 name.c_str());
     }
 };

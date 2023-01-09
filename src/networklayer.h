@@ -206,7 +206,7 @@ struct NetworkLayer : public Layer {
                     if (button(*ui::components::mk_icon_button(
                                    MK_UUID(id, ROOT_ID)),
                                "Copy")) {
-                        SetClipboardText(my_ip_address.c_str());
+                        raylib::SetClipboardText(my_ip_address.c_str());
                     }
                 }
                 ui_context->pop_parent();

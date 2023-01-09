@@ -15,7 +15,7 @@ struct FPSLayer : public Layer {
     virtual void onUpdate(float) override {}
 
     virtual void onDraw(float) override {
-        DrawFPS(0, 0);
+        ext::draw_fps(0, 0);
 
         if (GLOBALS.get<bool>("debug_ui_enabled")) {
             std::vector<Sample> pairs;
@@ -34,7 +34,7 @@ struct FPSLayer : public Layer {
                 std::string stat_str =
                     fmt::format("{}{}: avg {:.0f}ns", stats.filename, kv.first,
                                 stats.average());
-                int string_width = MeasureText(stat_str.c_str(), 15);
+                int string_width = raylib::MeasureText(stat_str.c_str(), 15);
                 DrawRectangle(100, ypos, string_width, 20, BLACK);
                 DrawTextEx(Preload::get().font, stat_str.c_str(),
                            vec2{100, (float) ypos}, 20, 0, WHITE);

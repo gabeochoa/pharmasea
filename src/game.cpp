@@ -44,7 +44,7 @@ void startup() {
         //
         "PharmaSea",
         //
-        LOG_WARNING,
+        raylib::LOG_WARNING,
     });
 
     // -------- Its unlikely anything should go above this line ----- //

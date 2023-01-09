@@ -9,7 +9,7 @@
 
 struct Furniture : public Entity {
     struct ModelInfo {
-        Model model;
+        raylib::Model model;
         float size_scale;
         vec3 position_offset;
     };
@@ -79,14 +79,15 @@ struct Furniture : public Entity {
         float rotation_angle =
             180.f + static_cast<int>(FrontFaceDirectionMap.at(face_direction));
 
-        DrawModelEx(model_info.model,
-                    {
-                        this->position.x + model_info.position_offset.x,
-                        this->position.y + model_info.position_offset.y,
-                        this->position.z + model_info.position_offset.z,
-                    },
-                    vec3{0.f, 1.f, 0.f}, rotation_angle,
-                    this->size() * model_info.size_scale, this->base_color);
+        raylib::DrawModelEx(model_info.model,
+                            {
+                                this->position.x + model_info.position_offset.x,
+                                this->position.y + model_info.position_offset.y,
+                                this->position.z + model_info.position_offset.z,
+                            },
+                            vec3{0.f, 1.f, 0.f}, rotation_angle,
+                            this->size() * model_info.size_scale,
+                            this->base_color);
 
         render_progress_bar();
     }

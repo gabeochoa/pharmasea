@@ -8,7 +8,7 @@
 #include "raylib.h"
 
 struct GameCam {
-    Camera3D camera;
+    raylib::Camera3D camera;
     float target_distance = 0.0f;
     float free_distance_min_clamp = 10.0f;
     float free_distance_max_clamp = 20.0f;
@@ -56,12 +56,12 @@ struct GameCam {
         this->camera.target = (vec3){0, 0, 0};
         this->camera.up = (vec3){0.0f, 1.0f, 0.0f};
         this->camera.fovy = 45.0f;
-        this->camera.projection = CAMERA_PERSPECTIVE;
+        this->camera.projection = raylib::CAMERA_PERSPECTIVE;
 
         updateTargetDistanceAndAngle();
         angle.y = default_angle_y;
 
-        SetCameraMode(this->camera, CAMERA_CUSTOM);
+        raylib::SetCameraMode(this->camera, raylib::CAMERA_CUSTOM);
     }
 
     void updateToTarget(Entity entity) {
@@ -69,7 +69,7 @@ struct GameCam {
     }
 
     void updateCamera() {
-        auto mouseWheelMove = GetMouseWheelMove();
+        auto mouseWheelMove = ext::get_mouse_wheel_move();
 
         // Camera zoom
         if (mouseWheelMove < 0) {
@@ -91,8 +91,8 @@ struct GameCam {
             -cosf(angle.x) * target_distance * cosf(angle.y) + camera.target.z;
 
         // Update angle is there is a mouse delta
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-            auto mouseDelta = GetMouseDelta();
+        if (IsMouseButtonDown(raylib::MOUSE_BUTTON_LEFT)) {
+            auto mouseDelta = raylib::GetMouseDelta();
 
             angle.x -= mouseDelta.x / 100.0f;
             angle.y -= mouseDelta.y / 100.0f;
@@ -100,8 +100,10 @@ struct GameCam {
             angleMinMaxClamp();
         }
 
-        float right_x_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X);
-        float right_y_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y);
+        float right_x_axis =
+            GetGamepadAxisMovement(0, raylib::GAMEPAD_AXIS_RIGHT_X);
+        float right_y_axis =
+            GetGamepadAxisMovement(0, raylib::GAMEPAD_AXIS_RIGHT_Y);
         if (abs(right_x_axis) > EPSILON || abs(right_y_axis) > EPSILON) {
             angle.x -= right_x_axis / 50.f;
             angle.y -= right_y_axis / 50.f;
@@ -111,13 +113,13 @@ struct GameCam {
 
     void debugCamera() { log_trace("{}", *this); }
 
-    Camera3D get() { return this->camera; }
-    Camera3D* get_ptr() { return &(this->camera); }
+    raylib::Camera3D get() { return this->camera; }
+    raylib::Camera3D* get_ptr() { return &(this->camera); }
 };
 
 inline std::ostream& operator<<(std::ostream& os, const GameCam& gc) {
     os << "Cam(" << &gc << "):" << std::endl;
-    os << "\tGetMouseWheelMove:" << GetMouseWheelMove() << std::endl;
+    os << "\tGetMouseWheelMove:" << ext::get_mouse_wheel_move() << std::endl;
     os << "\tposition:(" << gc.camera.position.x << ", " << gc.camera.position.y
        << ", " << gc.camera.position.z << ")" << std::endl;
     os << "\target:(" << gc.camera.target.x << ", " << gc.camera.target.y
@@ -131,7 +133,7 @@ inline std::ostream& operator<<(std::ostream& os, const GameCam& gc) {
 }
 
 struct MenuCam {
-    Camera3D camera;
+    raylib::Camera3D camera;
 
     MenuCam() {
         this->camera = {};
@@ -139,13 +141,13 @@ struct MenuCam {
         this->camera.target = (vec3){0.f};
         this->camera.up = (vec3){0.0f, 1.0f, 0.0f};
         this->camera.fovy = 45.0f;
-        this->camera.projection = CAMERA_PERSPECTIVE;
+        this->camera.projection = raylib::CAMERA_PERSPECTIVE;
 
-        SetCameraMode(this->camera, CAMERA_FREE);
+        SetCameraMode(this->camera, raylib::CAMERA_FREE);
     }
 
     void updateCamera() {}
 
-    Camera3D get() { return this->camera; }
-    Camera3D* get_ptr() { return &(this->camera); }
+    raylib::Camera3D get() { return this->camera; }
+    raylib::Camera3D* get_ptr() { return &(this->camera); }
 };

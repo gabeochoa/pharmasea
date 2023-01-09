@@ -113,9 +113,10 @@ struct WindowResizeEvent : public Event {
 };
 
 struct GamepadButtonPressedEvent : public Event {
-    GamepadButton button;
+    raylib::GamepadButton button;
 
-    explicit GamepadButtonPressedEvent(GamepadButton butt) : button(butt) {}
+    explicit GamepadButtonPressedEvent(raylib::GamepadButton butt)
+        : button(butt) {}
 
     MACRO_EVENT_TYPE(GamepadButtonPressed)
     MACRO_EVENT_CATEGORY(EventCategoryGamepad | EventCategoryInput)

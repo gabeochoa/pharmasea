@@ -2,10 +2,9 @@
 #pragma once
 
 #include "../vendor_include.h"
-#include "raylib.h"
 
 struct GamepadAxisWithDir {
-    GamepadAxis axis;
+    raylib::GamepadAxis axis;
     float dir = -1;
 
    private:

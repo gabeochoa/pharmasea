@@ -8,21 +8,21 @@ SINGLETON_FWD(TextureLibrary)
 struct TextureLibrary {
     SINGLETON(TextureLibrary)
 
-    struct TextureLibraryImpl : Library<Texture2D> {
+    struct TextureLibraryImpl : Library<raylib::Texture2D> {
         virtual void load(const char* filename, const char* name) override {
             log_info("Loading texture: {} from {}", name, filename);
-            this->add(name, LoadTexture(filename));
+            this->add(name, raylib::LoadTexture(filename));
         }
 
-        virtual void unload(Texture2D texture) override {
-            UnloadTexture(texture);
+        virtual void unload(raylib::Texture2D texture) override {
+            raylib::UnloadTexture(texture);
         }
     } impl;
 
-    [[nodiscard]] Texture2D& get(const std::string& name) {
+    [[nodiscard]] raylib::Texture2D& get(const std::string& name) {
         return impl.get(name);
     }
-    [[nodiscard]] const Texture2D& get(const std::string& name) const {
+    [[nodiscard]] const raylib::Texture2D& get(const std::string& name) const {
         return impl.get(name);
     }
     void load(const char* filename, const char* name) {

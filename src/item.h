@@ -54,11 +54,11 @@ struct Item {
 
     virtual void render() const {
         if (this->model().has_value()) {
-            DrawModel(this->model().value(), this->position,
-                      this->size().x * 0.5f, ui::color::tan_brown);
+            raylib::DrawModel(this->model().value(), this->position,
+                              this->size().x * 0.5f, ui::color::tan_brown);
         } else {
-            DrawCube(position, this->size().x, this->size().y, this->size().z,
-                     this->color);
+            raylib::DrawCube(position, this->size().x, this->size().y,
+                             this->size().z, this->color);
         }
     }
 
@@ -77,10 +77,10 @@ struct Item {
     }
 
     virtual bool collides(BoundingBox b) const {
-        return CheckCollisionBoxes(this->bounds(), b);
+        return raylib::CheckCollisionBoxes(this->bounds(), b);
     }
 
-    virtual std::optional<Model> model() const { return {}; }
+    virtual std::optional<raylib::Model> model() const { return {}; }
 };
 
 struct Bag : public Item {
@@ -105,7 +105,7 @@ struct Bag : public Item {
 
     bool empty() const { return held_item == nullptr; }
 
-    virtual std::optional<Model> model() const override {
+    virtual std::optional<raylib::Model> model() const override {
         if (empty()) {
             return ModelLibrary::get().get("empty_bag");
         }

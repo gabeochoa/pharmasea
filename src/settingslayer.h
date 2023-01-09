@@ -64,12 +64,13 @@ struct SettingsLayer : public Layer {
         if (Menu::get().is_not(Menu::State::Settings)) return false;
 
         //
-        if (event.keycode == KEY_ESCAPE && activeWindow != ActiveWindow::Root) {
+        if (event.keycode == raylib::KEY_ESCAPE &&
+            activeWindow != ActiveWindow::Root) {
             activeWindow = ActiveWindow::Root;
             return true;
         }
 
-        if (event.keycode == KEY_ESCAPE) {
+        if (event.keycode == raylib::KEY_ESCAPE) {
             Menu::get().go_back();
             return true;
         }
@@ -219,9 +220,9 @@ struct SettingsLayer : public Layer {
                 KeyMap::get_valid_keys(Menu::State::Game, kv.first);
             // TODO handle multiple keys
             if (keys.empty()) continue;
-            auto opt_key = magic_enum::enum_cast<KeyboardKey>(keys[0]);
+            auto opt_key = magic_enum::enum_cast<raylib::KeyboardKey>(keys[0]);
             if (!opt_key.has_value()) continue;
-            KeyboardKey kbKey = opt_key.value();
+            raylib::KeyboardKey kbKey = opt_key.value();
 
             if (button(*ui::components::mk_button(
                            MK_UUID_LOOP(id, ROOT_ID, kv.first)),
@@ -268,13 +269,12 @@ struct SettingsLayer : public Layer {
 
     virtual void onUpdate(float) override {
         if (Menu::get().is_not(Menu::State::Settings)) return;
-        SetExitKey(KEY_NULL);
+        raylib::SetExitKey(raylib::KEY_NULL);
     }
 
     virtual void onDraw(float dt) override {
         if (Menu::get().is_not(Menu::State::Settings)) return;
-        ClearBackground(ui_context->active_theme().background);
-
+        ext::clear_background(ui_context->active_theme().background);
         draw_ui(dt);
     }
 };
