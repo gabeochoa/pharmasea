@@ -51,6 +51,7 @@ struct Client {
     std::function<void(std::string)> process_message_cb;
 
     Client() {}
+    ~Client() { send_leave_info_request(); }
 
     void set_process_message(std::function<void(std::string)> cb) {
         process_message_cb = cb;
@@ -153,6 +154,17 @@ struct Client {
         send_packet_to_server(packet);
     }
 
+    void send_leave_info_request() {
+        log_info("internal client sending leave info request");
+        ClientPacket packet(
+            {.client_id = -1,  // TODO we know this, idk where it is tho
+             .msg_type = ClientPacket::MsgType::PlayerLeave,
+             .msg = ClientPacket::PlayerLeaveInfo({
+                 .client_id = -1,  // Server will fill this out for us
+             })});
+        send_packet_to_server(packet);
+    }
+
     void on_steam_network_connection_status_changed(
         SteamNetConnectionStatusChangedCallback_t *info) {
         log_info("client on stream network connection status changed");
@@ -168,6 +180,7 @@ struct Client {
 
             case k_ESteamNetworkingConnectionState_ClosedByPeer:
             case k_ESteamNetworkingConnectionState_ProblemDetectedLocally: {
+                send_leave_info_request();
                 running = false;
                 // Print an appropriate message
                 if (info->m_eOldState ==

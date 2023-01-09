@@ -54,6 +54,7 @@ struct Server {
     inline static Server *callback_instance;
     bool running = false;
     std::function<void(Client_t &client, std::string)> process_message_cb;
+    std::function<void(int)> onClientDisconnect;
 
     void set_process_message(
         std::function<void(Client_t &client, std::string)> cb) {
@@ -237,11 +238,20 @@ struct Server {
                              pszDebugLogAction, info->m_info.m_eEndReason,
                              info->m_info.m_szEndDebug);
 
+                    int client_id = (int) itClient->second.client_id;
+
+                    if (onClientDisconnect) onClientDisconnect(client_id);
+
+                    ClientPacket packet(
+                        {.client_id = client_id,
+                         .msg_type = ClientPacket::MsgType::PlayerLeave,
+                         .msg = ClientPacket::PlayerLeaveInfo({
+                             .client_id = client_id,
+                         })});
+                    send_client_packet_to_all(packet);
+
                     clients.erase(itClient);
 
-                    // TODO send a player remove message
-                    // Send a message so everybody else knows what happened
-                    send_announcement_to_all(temp, annoucement_type);
                 } else {
                     M_ASSERT(
                         info->m_eOldState ==

@@ -118,13 +118,32 @@ struct Client {
         };
 
         auto remove_player = [&](int client_id) {
-            auto rp = remote_players[client_id];
-            if (!rp) {
-                log_warn("Remote player doesnt exist but should: {}",
-                         client_id);
+            for (auto it = map->remote_players_NOT_SERIALIZED.begin();
+                 it != map->remote_players_NOT_SERIALIZED.end(); it++) {
+                if ((*it)->client_id == client_id) {
+                    map->remote_players_NOT_SERIALIZED.erase(it);
+                    break;
+                }
+            }
+
+            auto rp_it = remote_players.find(client_id);
+            if (rp_it == remote_players.end()) {
+                log_warn(
+                    "RemovePlayer:: Remote player doesnt exist but should: {}",
+                    client_id);
                 return;
             }
-            rp->cleanup = true;
+
+            auto rp = rp_it->second;
+            if (!rp) {
+                log_warn(
+                    "RemovePlayer:: Remote player exists but has null "
+                    "shared_ptr",
+                    client_id);
+            } else {
+                rp->cleanup = true;
+            }
+
             remote_players.erase(client_id);
         };
 
@@ -147,6 +166,11 @@ struct Client {
                 ClientPacket::AnnouncementInfo info =
                     std::get<ClientPacket::AnnouncementInfo>(packet.msg);
                 announcements.push_back(info);
+            } break;
+            case ClientPacket::MsgType::PlayerLeave: {
+                ClientPacket::PlayerLeaveInfo info =
+                    std::get<ClientPacket::PlayerLeaveInfo>(packet.msg);
+                remove_player(info.client_id);
             } break;
             case ClientPacket::MsgType::PlayerJoin: {
                 ClientPacket::PlayerJoinInfo info =

@@ -49,6 +49,8 @@ struct Server {
         server_p->set_process_message(
             std::bind(&Server::server_enqueue_message_string, this,
                       std::placeholders::_1, std::placeholders::_2));
+        server_p->onClientDisconnect = std::bind(&Server::process_player_leave,
+                                                 this, std::placeholders::_1);
         server_p->startup();
 
         // TODO add some kind of seed selection screen
@@ -203,6 +205,43 @@ struct Server {
         server_p->send_client_packet_to_all(player_updated);
     }
 
+    void process_player_leave(int client_id) {
+        log_info("processing player leave for {}", client_id);
+        auto player_match = players.find(client_id);
+        if (player_match == players.end()) {
+            log_warn("We dont have a matching player for {}", client_id);
+            return;
+        }
+        // TODO We might have to force them to drop everything or something?
+        players.erase(player_match);
+
+        std::vector<int> ids;
+        for (auto& c : server_p->clients) {
+            ids.push_back(c.second.client_id);
+        }
+        // Since we are the host, we can use the Client_t to figure
+        // out the id / name
+        server_p->send_client_packet_to_all(
+            ClientPacket({.client_id = SERVER_CLIENT_ID,
+                          .msg_type = ClientPacket::MsgType::PlayerLeave,
+                          .msg = ClientPacket::PlayerLeaveInfo({
+                              .all_clients = ids,
+                              // override the client's id with their real one
+                              .client_id = client_id,
+                          })}),
+            // ignore the person who sent it to us since they disconn
+            [&](Client_t& client) { return client.client_id == client_id; });
+    }
+
+    void process_player_leave_packet(const Client_t& incoming_client,
+                                     const ClientPacket&) {
+        log_info("processing player leave packet for {}",
+                 incoming_client.client_id);
+        // ClientPacket::PlayerLeaveInfo info =
+        // std::get<ClientPacket::PlayerLeaveInfo>(orig_packet.msg);
+        process_player_leave(incoming_client.client_id);
+    }
+
     void process_player_join_packet(const Client_t& incoming_client,
                                     const ClientPacket& orig_packet) {
         ClientPacket::PlayerJoinInfo info =
@@ -289,6 +328,9 @@ struct Server {
             } break;
             case ClientPacket::MsgType::PlayerJoin: {
                 return process_player_join_packet(incoming_client, packet);
+            } break;
+            case ClientPacket::MsgType::PlayerLeave: {
+                return process_player_leave_packet(incoming_client, packet);
             } break;
             default:
                 // No clue so lets just send it to everyone except the guy that
