@@ -62,6 +62,8 @@ struct GameLayer : public Layer {
         if (KeyMap::get_key_code(Menu::State::Game, InputName::Pause) ==
             event.keycode) {
             Menu::pause();
+            //  TODO obv need to have this fun on a timer or something instead
+            //  of on esc
             SoundLibrary::get().play_random_match("pa_announcements_");
             return true;
         }
