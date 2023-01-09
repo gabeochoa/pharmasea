@@ -199,7 +199,7 @@ struct SettingsLayer : public Layer {
                                             Size_Pct(0.5f, 0.f)));
     }
 
-    void draw_root_settings(float dt) {
+    void draw_root_settings(float) {
         padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                             Size_Px(100.f, 0.5f)));
         master_volume();
@@ -210,7 +210,7 @@ struct SettingsLayer : public Layer {
         back_button();
     }
 
-    void draw_keybindings(float dt) {
+    void draw_keybindings(float) {
         // TODO tons more work to do here but for the most part this shows its
         // possible to load all of them
 
