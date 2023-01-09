@@ -238,6 +238,8 @@ struct Server {
                              pszDebugLogAction, info->m_info.m_eEndReason,
                              info->m_info.m_szEndDebug);
 
+                    // TODO change keepalive timeout to be lower?
+
                     int client_id = (int) itClient->second.client_id;
 
                     if (onClientDisconnect) onClientDisconnect(client_id);
