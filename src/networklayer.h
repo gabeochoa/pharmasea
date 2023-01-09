@@ -3,6 +3,7 @@
 
 #include <regex>
 
+#include "engine/graphics.h"
 #include "engine/ui.h"
 #include "external_include.h"
 //
@@ -16,7 +17,6 @@
 #include "engine/network/webrequest.h"
 #include "network/network.h"
 #include "player.h"
-#include "raylib.h"
 #include "remote_player.h"
 
 using namespace ui;
@@ -206,7 +206,7 @@ struct NetworkLayer : public Layer {
                     if (button(*ui::components::mk_icon_button(
                                    MK_UUID(id, ROOT_ID)),
                                "Copy")) {
-                        raylib::SetClipboardText(my_ip_address.c_str());
+                        ext::set_clipboard_text(my_ip_address.c_str());
                     }
                 }
                 ui_context->pop_parent();

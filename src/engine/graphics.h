@@ -67,6 +67,10 @@ inline void close_audio_device() { raylib::CloseAudioDevice(); }
 
 // Input Related Functions
 
+inline void set_clipboard_text(const char* text) {
+    return raylib::SetClipboardText(text);
+}
+
 [[nodiscard]] inline auto get_clipboard_text() {
     return raylib::GetClipboardText();
 }
