@@ -15,6 +15,13 @@
 #include "engine/texture_library.h"
 #include "resources/fonts/Karmina_Regular_256.h"
 
+inline raylib::Font load_karmina_regular() {
+    auto font = font::LoadFont_KarminaRegular256();
+    raylib::GenTextureMipmaps(&font.texture);
+    raylib::SetTextureFilter(font.texture, raylib::TEXTURE_FILTER_POINT);
+    return font;
+}
+
 SINGLETON_FWD(Preload)
 struct Preload {
     SINGLETON(Preload)
@@ -47,14 +54,12 @@ struct Preload {
 
     void load_fonts() {
         // Font loading must happen after InitWindow
-        font = font::LoadFont_KarminaRegular256();
+        font = load_karmina_regular();
 
         // NOTE if you go back to files, load fonts from install folder, instead
         // of local path
         //
         // font = LoadFontEx("./resources/fonts/constan.ttf", 96, 0, 0);
-        raylib::GenTextureMipmaps(&font.texture);
-        raylib::SetTextureFilter(font.texture, raylib::TEXTURE_FILTER_POINT);
     }
 
     void load_textures() {
