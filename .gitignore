@@ -14,3 +14,5 @@ pharmasea
 *.o
 *.d
 cppcheck_err
+# until they are used in the project, hiding the kennynl folder
+kennynl/*

@@ -62,6 +62,9 @@ struct ToastLayer : public Layer, public FontSizeCache {
 
             float font_size = get_font_size(std::string(toast.msg), toastWidth,
                                             toastHeight, spacing);
+            // TODO we really would prefer to wrap the text, but its kinda hard
+            // to do
+            font_size = fmaxf(20.f, font_size);
 
             // TODO at some point we want to split the text onto different
             // lines...

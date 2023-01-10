@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "../preload.h"
+#include "../util.h"
 
 // TODO is there a better way to do this?
 //
@@ -60,7 +61,7 @@ bool operator==(const FZInfo& info, const FZInfo& other) {
 
 struct FontSizeCache {
     raylib::Font font;
-    std::unordered_map<FZInfo, float> _font_size_memo;
+    std::unordered_map<size_t, float> _font_size_memo;
 
     virtual void init() { this->set_font(Preload::get().font); }
 
@@ -69,8 +70,8 @@ struct FontSizeCache {
     [[nodiscard]] float get_font_size_impl(const std::string& content,
                                            float width, float height,
                                            float spacing) const {
-        float font_size = 1.0f;
-        float last_size = 1.0f;
+        float font_size = 10.0f;
+        float last_size = 10.0f;
         vec2 size;
 
         // NOTE: if you are looking at a way to speed this up switch to using
@@ -84,7 +85,7 @@ struct FontSizeCache {
             last_size = font_size;
             // the smaller the number we multiply by (>1) the better fitting the
             // text will be
-            font_size = ceilf(font_size * 1.15f);
+            font_size = ceilf(font_size * 1.05f);
             log_trace("measuring for {}", font_size);
             size = MeasureTextEx(font, content.c_str(), font_size, spacing);
             log_trace("got {},{} for {} and {},{} and last was: {}", size.x,
@@ -99,14 +100,15 @@ struct FontSizeCache {
                                       float height, float spacing) {
         FZInfo fzinfo =
             FZInfo{.content = content, .width = width, .height = height};
-        if (!_font_size_memo.contains(fzinfo)) {
-            _font_size_memo[fzinfo] =
+        auto hash = std::hash<FZInfo>()(fzinfo);
+        if (!_font_size_memo.contains(hash)) {
+            _font_size_memo[hash] =
                 get_font_size_impl(content, width, height, spacing);
         } else {
             log_trace("found value in cache");
         }
-        float result = _font_size_memo[fzinfo];
-        log_trace("cache value was {}", result);
+        float result = _font_size_memo[hash];
+        log_trace("cache value for '{}' was {}", content, result);
         return result;
     }
 };
