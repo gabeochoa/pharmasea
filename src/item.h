@@ -100,7 +100,10 @@ struct Item {
             log_info("cant eat because we cant hold things");
             return false;
         }
-        if (typeid(*item) == typeid(*this)) {
+        // Note; this is done here to avoid -Wpotentially-evaluated-expression
+        // warning
+        auto& underlying = *item.get();
+        if (typeid(underlying) == typeid(*this)) {
             log_info("cant put an item into an item of the same type");
             return false;
         }
