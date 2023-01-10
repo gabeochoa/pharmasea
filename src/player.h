@@ -192,13 +192,9 @@ struct Player : public BasePlayer {
                 }
 
                 auto item_to_merge = closest_furniture->held_item;
-                // TODO figure out how to validate that this item can go into
-                // the one we are holding ...
-
-                this->held_item->held_item = item_to_merge;
-                item_to_merge->held_by = Item::HeldBy::ITEM;
-
-                closest_furniture->held_item = nullptr;
+                bool eat_was_successful = this->held_item->eat(item_to_merge);
+                if (eat_was_successful) closest_furniture->held_item = nullptr;
+                return eat_was_successful;
 
                 return true;
             };

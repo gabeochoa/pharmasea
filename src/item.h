@@ -94,14 +94,38 @@ struct Item {
 
     virtual std::optional<raylib::Model> model() const { return {}; }
 
-    virtual bool can_hold() const { return false; }
-    virtual bool empty() const { return can_hold() && held_item == nullptr; }
+    // TODO maybe use tl::expected for this?
+    virtual bool eat(std::shared_ptr<Item> item) {
+        if (!has_holding_ability()) {
+            log_info("cant eat because we cant hold things");
+            return false;
+        }
+        if (typeid(*item) == typeid(*this)) {
+            log_info("cant put an item into an item of the same type");
+            return false;
+        }
+        if (!empty()) {
+            log_info("cant put an item into because we are full");
+            return false;
+        }
+
+        // TODO we will eventually need a way to validate the kinds of items
+        // this ItemContainer can hold
+
+        this->held_item = item;
+        item->held_by = Item::HeldBy::ITEM;
+
+        return true;
+    }
+
+    virtual bool has_holding_ability() const { return false; }
+
+    virtual bool empty() const {
+        return has_holding_ability() && held_item == nullptr;
+    }
 };
 
 struct PillBottle : public Item {
-    // TODO we will eventually need a way to validate the kinds of items this
-    // ItemContainer can hold
-
    private:
     friend bitsery::Access;
     template<typename S>
@@ -123,9 +147,6 @@ struct PillBottle : public Item {
 };
 
 struct Bag : public Item {
-    // TODO we will eventually need a way to validate the kinds of items this
-    // ItemContainer can hold
-
    private:
     friend bitsery::Access;
     template<typename S>
@@ -138,7 +159,7 @@ struct Bag : public Item {
     Bag(vec3 p, Color c) : Item(p, c) {}
     Bag(vec2 p, Color c) : Item(p, c) {}
 
-    virtual bool can_hold() const override { return true; }
+    virtual bool has_holding_ability() const override { return true; }
 
     virtual std::optional<raylib::Model> model() const override {
         if (empty()) {
