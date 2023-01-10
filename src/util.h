@@ -4,8 +4,10 @@
 #define _USE_MATH_DEFINES  // for C++
 #include <math.h>
 
+#include <algorithm>
 #include <cmath>
 #include <regex>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -74,6 +76,28 @@ inline V map_get_or_default(Container<K, V, Ts...> map, K key, V def_value) {
         return map.at(key);
     }
     return def_value;
+}
+
+// note: delimiter cannot contain NUL characters
+template<typename Range, typename Value = typename Range::value_type>
+[[nodiscard]] inline std::string join(Range const& elements,
+                                      const char* const delimiter) {
+    std::ostringstream os;
+    auto b = begin(elements), e = end(elements);
+    if (b != e) {
+        std::copy(b, prev(e), std::ostream_iterator<Value>(os, delimiter));
+        b = prev(e);
+    }
+    if (b != e) {
+        os << *b;
+    }
+    return os.str();
+}
+
+[[nodiscard]] inline int words_in_string(const std::string& str) {
+    const int count = (int) std::count_if(str.begin(), str.end(),
+                                          [](char i) { return i == ' '; });
+    return count;
 }
 
 }  // namespace util
