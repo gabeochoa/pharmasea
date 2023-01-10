@@ -175,24 +175,63 @@ struct Player : public BasePlayer {
         // Do we already have something in our hands?
         // We must be trying to drop it
         if (this->held_item) {
-            std::shared_ptr<Furniture> closest_furniture =
-                EntityHelper::getMatchingEntityInFront<Furniture>(
-                    vec::to2(this->position), player_reach,
-                    this->face_direction, [this](std::shared_ptr<Furniture> f) {
-                        return f->can_place_item_into(this->held_item);
-                    });
-            if (!closest_furniture) {
-                return;
-            }
+            const auto _merge_item_from_furniture_into_hand = [&]() {
+                // our item cant hold anything or is already full
+                if (!this->held_item->empty()) {
+                    return false;
+                }
 
-            auto item = this->held_item;
-            item->update_position(vec::snap(closest_furniture->position));
+                std::shared_ptr<Furniture> closest_furniture =
+                    EntityHelper::getMatchingEntityInFront<Furniture>(
+                        vec::to2(this->position), player_reach,
+                        this->face_direction, [](std::shared_ptr<Furniture> f) {
+                            return f->has_held_item();
+                        });
+                if (!closest_furniture) {
+                    return false;
+                }
 
-            closest_furniture->held_item = item;
-            closest_furniture->held_item->held_by = Item::HeldBy::FURNITURE;
+                auto item_to_merge = closest_furniture->held_item;
+                // TODO figure out how to validate that this item can go into
+                // the one we are holding ...
 
-            this->held_item = nullptr;
+                this->held_item->held_item = item_to_merge;
+                item_to_merge->held_by = Item::HeldBy::ITEM;
+
+                closest_furniture->held_item = nullptr;
+
+                return true;
+            };
+
+            const auto _place_item_onto_furniture = [&]() {
+                std::shared_ptr<Furniture> closest_furniture =
+                    EntityHelper::getMatchingEntityInFront<Furniture>(
+                        vec::to2(this->position), player_reach,
+                        this->face_direction,
+                        [this](std::shared_ptr<Furniture> f) {
+                            return f->can_place_item_into(this->held_item);
+                        });
+                if (!closest_furniture) {
+                    return false;
+                }
+
+                auto item = this->held_item;
+                item->update_position(vec::snap(closest_furniture->position));
+
+                closest_furniture->held_item = item;
+                closest_furniture->held_item->held_by = Item::HeldBy::FURNITURE;
+
+                this->held_item = nullptr;
+                return true;
+            };
+
+            bool item_merged = _merge_item_from_furniture_into_hand();
+            if (item_merged) return;
+
+            [[maybe_unused]] bool item_placed = _place_item_onto_furniture();
+
             return;
+
         } else {
             const auto _pickup_item_from_furniture = [&]() {
                 std::shared_ptr<Furniture> closest_furniture =

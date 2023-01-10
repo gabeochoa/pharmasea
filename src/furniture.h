@@ -124,4 +124,6 @@ struct Furniture : public Entity {
     virtual bool can_place_item_into(std::shared_ptr<Item> = nullptr) override {
         return this->held_item == nullptr;
     }
+
+    virtual bool has_held_item() const { return this->held_item != nullptr; }
 };

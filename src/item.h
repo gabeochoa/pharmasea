@@ -21,6 +21,9 @@ struct Item {
     bool cleanup = false;
     HeldBy held_by = NONE;
 
+    // TODO Are there likely to be other items that can hold items?
+    std::shared_ptr<Item> held_item;
+
    private:
     friend bitsery::Access;
     template<typename S>
@@ -32,6 +35,7 @@ struct Item {
         s.object(position);
         s.value1b(cleanup);
         s.value4b(held_by);
+        s.object(held_item);
     }
 
    protected:
@@ -55,6 +59,11 @@ struct Item {
     virtual float model_scale() const { return 0.5f; }
 
     virtual void render() const {
+        // Dont render when held by another item
+        if (held_by == HeldBy::ITEM) {
+            return;
+        }
+
         if (this->model().has_value()) {
             raylib::DrawModel(this->model().value(), this->position,
                               this->size().x * this->model_scale(),
@@ -84,12 +93,12 @@ struct Item {
     }
 
     virtual std::optional<raylib::Model> model() const { return {}; }
+
+    virtual bool can_hold() const { return false; }
+    virtual bool empty() const { return can_hold() && held_item == nullptr; }
 };
 
 struct PillBottle : public Item {
-    // TODO Are there likely to be other items that can hold items?
-    std::shared_ptr<Item> held_item;
-
     // TODO we will eventually need a way to validate the kinds of items this
     // ItemContainer can hold
 
@@ -98,15 +107,12 @@ struct PillBottle : public Item {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<Item>{});
-        s.object(held_item);
     }
 
    public:
     PillBottle() {}
     PillBottle(vec3 p, Color c) : Item(p, c) {}
     PillBottle(vec2 p, Color c) : Item(p, c) {}
-
-    bool empty() const { return held_item == nullptr; }
 
     virtual float model_scale() const override { return 3.0f; }
 
@@ -117,9 +123,6 @@ struct PillBottle : public Item {
 };
 
 struct Bag : public Item {
-    // TODO Are there likely to be other items that can hold items?
-    std::shared_ptr<Item> held_item;
-
     // TODO we will eventually need a way to validate the kinds of items this
     // ItemContainer can hold
 
@@ -128,7 +131,6 @@ struct Bag : public Item {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<Item>{});
-        s.object(held_item);
     }
 
    public:
@@ -136,7 +138,7 @@ struct Bag : public Item {
     Bag(vec3 p, Color c) : Item(p, c) {}
     Bag(vec2 p, Color c) : Item(p, c) {}
 
-    bool empty() const { return held_item == nullptr; }
+    virtual bool can_hold() const override { return true; }
 
     virtual std::optional<raylib::Model> model() const override {
         if (empty()) {
