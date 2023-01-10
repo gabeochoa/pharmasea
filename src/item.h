@@ -52,10 +52,13 @@ struct Item {
 
     virtual bool is_collidable() { return false; }
 
+    virtual float model_scale() const { return 0.5f; }
+
     virtual void render() const {
         if (this->model().has_value()) {
             raylib::DrawModel(this->model().value(), this->position,
-                              this->size().x * 0.5f, ui::color::tan_brown);
+                              this->size().x * this->model_scale(),
+                              ui::color::tan_brown);
         } else {
             raylib::DrawCube(position, this->size().x, this->size().y,
                              this->size().z, this->color);
@@ -81,6 +84,36 @@ struct Item {
     }
 
     virtual std::optional<raylib::Model> model() const { return {}; }
+};
+
+struct PillBottle : public Item {
+    // TODO Are there likely to be other items that can hold items?
+    std::shared_ptr<Item> held_item;
+
+    // TODO we will eventually need a way to validate the kinds of items this
+    // ItemContainer can hold
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Item>{});
+        s.object(held_item);
+    }
+
+   public:
+    PillBottle() {}
+    PillBottle(vec3 p, Color c) : Item(p, c) {}
+    PillBottle(vec2 p, Color c) : Item(p, c) {}
+
+    bool empty() const { return held_item == nullptr; }
+
+    virtual float model_scale() const override { return 3.0f; }
+
+    virtual std::optional<raylib::Model> model() const override {
+        // TODO handle empty vs full
+        return ModelLibrary::get().get("pill_bottle");
+    }
 };
 
 struct Bag : public Item {

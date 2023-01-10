@@ -125,7 +125,8 @@ template<>
 struct PolymorphicBaseClass<AIPerson> : PolymorphicDerivedClasses<Customer> {};
 
 template<>
-struct PolymorphicBaseClass<Item> : PolymorphicDerivedClasses<Bag> {};
+struct PolymorphicBaseClass<Item> : PolymorphicDerivedClasses<Bag, PillBottle> {
+};
 
 }  // namespace ext
 }  // namespace bitsery
@@ -246,21 +247,29 @@ struct Map {
 
     void generate_map() {
         auto generate_tables = [this]() {
-            std::shared_ptr<Table> table;
-            const auto location = get_rand_walkable();
-            table.reset(new Table(location));
-            EntityHelper::addEntity(table);
+            {
+                std::shared_ptr<Table> table;
+                const auto location = get_rand_walkable();
+                table.reset(new Table(location));
+                EntityHelper::addEntity(table);
 
-            std::shared_ptr<Bag> item;
-            item.reset(new Bag(location, Color{255, 15, 240, 255}));
-            ItemHelper::addItem(item);
-            table->held_item = item;
+                std::shared_ptr<Bag> item;
+                item.reset(new Bag(location, Color{255, 15, 240, 255}));
+                ItemHelper::addItem(item);
+                table->held_item = item;
+            }
 
-            std::shared_ptr<Item> item2;
-            item2.reset(new Bag(location, Color{255, 15, 240, 255}));
-            ItemHelper::addItem(item2);
-            item->held_item = item2;
-            item2->held_by = Item::HeldBy::ITEM;
+            {
+                std::shared_ptr<Table> table;
+                const auto location = get_rand_walkable();
+                table.reset(new Table(location));
+                EntityHelper::addEntity(table);
+
+                std::shared_ptr<PillBottle> item;
+                item.reset(new PillBottle(location, RED));
+                ItemHelper::addItem(item);
+                table->held_item = item;
+            }
         };
 
         const auto generate_register = [this]() {
