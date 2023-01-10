@@ -252,8 +252,6 @@ struct AIPerson : public Person {
         // client logs
         if (is_server()) {
             log_info("server: {}: {}", this->id, text);
-        } else {
-            log_info("client: {}: {}", this->id, text);
         }
     }
 
