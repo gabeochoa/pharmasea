@@ -8,6 +8,7 @@
 //
 #include "../aiperson.h"
 #include "../furniture.h"
+#include "../menu.h"
 
 struct BagBox : public Furniture {
    private:
@@ -40,8 +41,11 @@ struct BagBox : public Furniture {
     }
 
     virtual std::optional<ModelInfo> model() const override {
+        const bool in_planning = Menu::get().is(Menu::State::Planning);
+
         return ModelInfo{
-            .model = ModelLibrary::get().get("open_box"),
+            .model = in_planning ? ModelLibrary::get().get("box")
+                                 : ModelLibrary::get().get("open_box"),
             .size_scale = 4.f,
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
         };
