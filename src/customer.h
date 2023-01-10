@@ -127,8 +127,10 @@ struct Customer : public AIPerson {
             job->start = closest_target->get_next_queue_position(me);
             job->end = closest_target->tile_infront(1);
             job->spot_in_line = closest_target->position_in_line(me);
-            announce(fmt::format("initialized job, our spot is {}",
-                                 job->spot_in_line));
+
+            // TODO why is this running every tick?
+            // announce(fmt::format("initialized job, our spot is {}",
+            // job->spot_in_line));
         };
 
         auto work_at_start = [&]() {
@@ -175,6 +177,17 @@ struct Customer : public AIPerson {
             job->start = reg->tile_infront(job->spot_in_line);
         };
 
+        auto wait_and_return = [&]() {
+            // Add the current job to the queue,
+            // and then add the waiting job
+            personal_queue.push(job);
+            this->job.reset(new Job({
+                .type = Wait,
+                .timeToComplete = 1.f,
+            }));
+            return;
+        };
+
         auto work_at_end = [&]() {
             // cant work if complete
             if (job->is_complete) return;
@@ -187,14 +200,27 @@ struct Customer : public AIPerson {
 
             if (reg->held_item == nullptr) {
                 announce("my rx isnt ready yet");
+                wait_and_return();
+                return;
+            }
 
-                // Add the current job to the queue,
-                // and then add the waiting job
-                personal_queue.push(job);
-                this->job.reset(new Job({
-                    .type = Wait,
-                    .timeToComplete = 1.f,
-                }));
+            auto bag = dynamic_pointer_cast<Bag>(reg->held_item);
+            if (!bag) {
+                announce("this isnt my rx (not a bag)");
+                wait_and_return();
+                return;
+            }
+
+            if (bag->empty()) {
+                announce("this bag is empty...");
+                wait_and_return();
+                return;
+            }
+
+            auto pill_bottle = dynamic_pointer_cast<PillBottle>(bag->held_item);
+            if (!pill_bottle) {
+                announce("this bag doesnt have my pills");
+                wait_and_return();
                 return;
             }
 

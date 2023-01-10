@@ -196,9 +196,12 @@ struct EntityHelper {
     // return true;
     // }
 
-    static bool isWalkable(const vec2& pos) {
+    static bool isWalkable(vec2 pos) {
         if (!cache_is_walkable.contains(pos)) {
-            cache_is_walkable[pos] = isWalkableRawEntities(pos);
+            // TODO this keeps crashing on operator< vec2 for segv on zero page
+            // going to try fixing by taking vec2 pos as a copy
+            bool walkable = isWalkableRawEntities(pos);
+            cache_is_walkable[pos] = walkable;
         }
         return cache_is_walkable[pos];
     }

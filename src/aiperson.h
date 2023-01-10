@@ -5,6 +5,7 @@
 //
 #include "engine/astar.h"
 #include "engine/globals_register.h"
+#include "engine/is_server.h"
 #include "engine/log.h"
 #include "engine/sound_library.h"
 //
@@ -247,13 +248,12 @@ struct AIPerson : public Person {
     }
 
     virtual void announce(std::string text) {
-        auto my_thread_id = std::this_thread::get_id();
-        auto server_thread_id =
-            GLOBALS.get_or_default("server_thread_id", std::thread::id());
         // TODO have some way of distinguishing between server logs and regular
         // client logs
-        if (my_thread_id == server_thread_id) {
-            log_info("{}: {}", this->id, text);
+        if (is_server()) {
+            log_info("server: {}: {}", this->id, text);
+        } else {
+            log_info("client: {}: {}", this->id, text);
         }
     }
 
