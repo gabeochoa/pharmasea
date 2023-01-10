@@ -19,8 +19,7 @@ struct BagBox : public Furniture {
 
    public:
     BagBox() {}
-    explicit BagBox(vec2 pos)
-        : Furniture(pos, ui::color::tan_brown, ui::color::light_brown) {}
+    explicit BagBox(vec2 pos) : Furniture(pos, WHITE, WHITE) {}
 
     // TODO im thinkin we can do something like ItemBox<Bag> and just support
     // them dynamically
@@ -38,5 +37,13 @@ struct BagBox : public Furniture {
                 new Bag(this->position, (Color){255, 15, 240, 255}));
             ItemHelper::addItem(this->held_item);
         }
+    }
+
+    virtual std::optional<ModelInfo> model() const override {
+        return ModelInfo{
+            .model = ModelLibrary::get().get("open_box"),
+            .size_scale = 4.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        };
     }
 };
