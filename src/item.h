@@ -102,7 +102,7 @@ struct Item {
         }
         // Note; this is done here to avoid -Wpotentially-evaluated-expression
         // warning
-        auto& underlying = *item.get();
+        auto& underlying = *item;
         if (typeid(underlying) == typeid(*this)) {
             log_info("cant put an item into an item of the same type");
             return false;
