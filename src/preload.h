@@ -84,7 +84,7 @@ struct Preload {
             {"models", "empty_bag.obj", "empty_bag"},
             {"models", "conveyer.obj", "conveyer"},
             {"models", "register.obj", "register"},
-            {"models/kennynl", "snow_detail_crystal.obj", "pill_bottle"},
+            {"models/kennynl", "can.obj", "pill_bottle"},
             {"models/kennynl", "boxOpen.obj", "open_box"},
             {"models/kennynl", "box.obj", "box"},
         };
