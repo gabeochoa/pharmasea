@@ -20,6 +20,8 @@ struct GlobalValueRegister {
     template<typename T>
     [[nodiscard]] T get_or_default(const std::string& name,
                                    T default_value) const {
+        if (!contains(name)) return default_value;
+
         T* t = get_ptr<T>(name);
         if (t) {
             return *t;
