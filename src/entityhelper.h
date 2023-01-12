@@ -196,21 +196,26 @@ struct EntityHelper {
     // return true;
     // }
 
-    static bool isWalkable(vec2 pos) {
-        // TODO this keeps crashing on operator< vec2 for segv on zero page
-        // so turning off the cache for now
-        return isWalkableRawEntities(pos);
+    // TODO need to invalidate any current valid paths
+    static inline void invalidatePathCacheLocation(vec2 pos) {
+        cache_is_walkable.erase(pos);
+    }
 
-        // if (!cache_is_walkable.contains(pos)) {
-        // bool walkable = isWalkableRawEntities(pos);
-        // cache_is_walkable[pos] = walkable;
-        // }
-        // return cache_is_walkable[pos];
+    static inline void invalidatePathCache() { cache_is_walkable.clear(); }
+
+    static inline bool isWalkable(vec2 pos) {
+        // TODO this keeps crashing on operator< vec2 for segv on zero page
+
+        if (!cache_is_walkable.contains(pos)) {
+            bool walkable = isWalkableRawEntities(pos);
+            cache_is_walkable[pos] = walkable;
+        }
+        return cache_is_walkable[pos];
     }
 
     // each target get and path find runs through all entities
     // so this will just get slower and slower over time
-    static bool isWalkableRawEntities(const vec2& pos) {
+    static inline bool isWalkableRawEntities(const vec2& pos) {
         auto bounds = get_bounds({pos.x, 0.f, pos.y}, {TILESIZE});
         bool hit_impassible_entity = false;
         forEachEntity([&](auto entity) {

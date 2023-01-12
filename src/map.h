@@ -325,6 +325,8 @@ struct Map {
         generate_register();
         generate_customer();
         generate_test();
+
+        EntityHelper::invalidatePathCache();
     }
 
     friend bitsery::Access;

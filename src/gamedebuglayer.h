@@ -10,6 +10,7 @@
 //
 #include "camera.h"
 #include "engine/layer.h"
+#include "entityhelper.h"
 #include "menu.h"
 
 struct GameDebugLayer : public Layer {
@@ -54,6 +55,7 @@ struct GameDebugLayer : public Layer {
         if (KeyMap::get_key_code(Menu::State::Game,
                                  InputName::TogglePlanning) == event.keycode) {
             Menu::toggle_planning();
+            EntityHelper::invalidatePathCache();
             return true;
         }
         if (KeyMap::get_key_code(Menu::State::Game, InputName::ToggleDebug) ==
