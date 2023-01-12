@@ -22,11 +22,15 @@ struct AIPerson;
 
 struct Job {
     JobType type;
-    // TODO replace these with just an enum?
-    bool reached_start = false;
-    bool start_completed = false;
-    bool reached_end = false;
-    bool is_complete = false;
+
+    enum struct State {
+        Initialize,
+        HeadingToStart,
+        HeadingToEnd,
+        WorkingAtStart,
+        WorkingAtEnd,
+        Completed
+    } state;
 
     float timePassedInCurrentState = 0.f;
     float timeToComplete = 1.f;

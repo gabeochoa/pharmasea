@@ -93,90 +93,6 @@ struct Customer : public AIPerson {
     }
 
     void wait_in_queue(float) {
-        // TODO the job api is kinda finicky, is there a way we can strengthen
-        // the config and running to make it more fool proof?
-        auto init_job = [&]() {
-            if (job->initialized) return;
-
-            // Figure out what register to go to
-
-            // TODO replace with finding the one with the least people in it
-            std::shared_ptr<Register> closest_target =
-                EntityHelper::getClosestMatchingEntity<Register>(
-                    vec::to2(this->position), TILESIZE * 100.f,
-                    [](auto&&) { return true; });
-
-            if (!closest_target) {
-                // TODO we need some kinda way to save this job,
-                // and come back to it later
-                // i think just putting a Job* unfinished in Job is probably
-                // enough
-                announce("Could not find a valid register");
-                personal_queue.push(job);
-
-                this->job.reset(new Job({
-                    .type = Wait,
-                    .timeToComplete = 1.f,
-                }));
-                return;
-            }
-
-            job->initialized = true;
-            job->data["register"] = closest_target.get();
-            Customer* me = this;
-            job->start = closest_target->get_next_queue_position(me);
-            job->end = closest_target->tile_infront(1);
-            job->spot_in_line = closest_target->position_in_line(me);
-
-            // TODO why is this running every tick?
-            // announce(fmt::format("initialized job, our spot is {}",
-            // job->spot_in_line));
-        };
-
-        auto work_at_start = [&]() {
-            if (!job->reached_start) return;
-            if (job->start_completed) return;
-            // ------ END -----
-
-            if (job->spot_in_line == 0) {
-                job->start_completed = true;
-                return;
-            }
-
-            // Check the spot in front of us
-            Register* reg = static_cast<Register*>(job->data["register"]);
-            Customer* me = this;
-            int cur_spot_in_line = reg->position_in_line(me);
-
-            if (cur_spot_in_line == job->spot_in_line ||
-                !reg->can_move_up(me)) {
-                // We didnt move so just wait a bit before trying again
-                announce(fmt::format("im just going to wait a bit longer"));
-
-                // Add the current job to the queue,
-                // and then add the waiting job
-                personal_queue.push(job);
-
-                this->job.reset(new Job({
-                    .type = Wait,
-                    .timeToComplete = 1.f,
-                }));
-                return;
-            }
-
-            // if our spot did change, then move forward
-            announce(fmt::format("im moving up to {}", cur_spot_in_line));
-            // Someone moved forward
-            job->spot_in_line = cur_spot_in_line;
-            if (job->spot_in_line == 0) {
-                job->start_completed = true;
-                return;
-            }
-            // otherwise walk up one spot
-            job->reached_start = false;
-            job->start = reg->tile_infront(job->spot_in_line);
-        };
-
         auto wait_and_return = [&]() {
             // Add the current job to the queue,
             // and then add the waiting job
@@ -184,69 +100,176 @@ struct Customer : public AIPerson {
             this->job.reset(new Job({
                 .type = Wait,
                 .timeToComplete = 1.f,
+                .start = job->start,
+                .end = job->start,
             }));
             return;
         };
 
-        auto work_at_end = [&]() {
-            // cant work if complete
-            if (job->is_complete) return;
-            // cant work unless we got there
-            if (!job->reached_end) return;
-            // ------ END -----
+        switch (job->state) {
+            case Job::State::Initialize: {
+                announce("starting a new wait in queue job");
 
-            Register* reg = (Register*) job->data["register"];
-            Customer* me = this;
+                // Figure out which register to go to...
 
-            if (reg->held_item == nullptr) {
-                announce("my rx isnt ready yet");
-                wait_and_return();
+                // TODO replace with finding the one with the least people in it
+                std::shared_ptr<Register> closest_target =
+                    EntityHelper::getClosestMatchingEntity<Register>(
+                        vec::to2(this->position), TILESIZE * 100.f,
+                        [](auto&&) { return true; });
+
+                if (!closest_target) {
+                    // TODO we need some kinda way to save this job,
+                    // and come back to it later
+                    // i think just putting a Job* unfinished in Job is probably
+                    // enough
+                    announce("Could not find a valid register");
+                    job->state = Job::State::Initialize;
+                    wait_and_return();
+                    return;
+                }
+
+                job->data["register"] = closest_target.get();
+                Customer* me = this;
+                job->start = closest_target->get_next_queue_position(me);
+                job->end = closest_target->tile_infront(1);
+                job->spot_in_line = closest_target->position_in_line(me);
+                job->state = Job::State::HeadingToStart;
                 return;
             }
-
-            auto bag = dynamic_pointer_cast<Bag>(reg->held_item);
-            if (!bag) {
-                announce("this isnt my rx (not a bag)");
-                wait_and_return();
+            case Job::State::HeadingToStart: {
+                bool arrived = navigate_to(job->start);
+                job->state = arrived ? Job::State::WorkingAtStart
+                                     : Job::State::HeadingToStart;
                 return;
             }
+            case Job::State::WorkingAtStart: {
+                if (job->spot_in_line == 0) {
+                    job->state = Job::State::HeadingToEnd;
+                    return;
+                }
 
-            if (bag->empty()) {
-                announce("this bag is empty...");
-                wait_and_return();
+                // Check the spot in front of us
+                Register* reg = static_cast<Register*>(job->data["register"]);
+                Customer* me = this;
+                int cur_spot_in_line = reg->position_in_line(me);
+
+                if (cur_spot_in_line == job->spot_in_line ||
+                    !reg->can_move_up(me)) {
+                    // We didnt move so just wait a bit before trying again
+                    announce(fmt::format("im just going to wait a bit longer"));
+
+                    // Add the current job to the queue,
+                    // and then add the waiting job
+                    job->state = Job::State::WorkingAtStart;
+                    wait_and_return();
+                    return;
+                }
+
+                // if our spot did change, then move forward
+                announce(fmt::format("im moving up to {}", cur_spot_in_line));
+
+                job->spot_in_line = cur_spot_in_line;
+
+                if (job->spot_in_line == 0) {
+                    job->state = Job::State::HeadingToEnd;
+                    return;
+                }
+
+                // otherwise walk up one spot
+                job->start = reg->tile_infront(job->spot_in_line);
+                job->state = Job::State::WorkingAtStart;
                 return;
             }
-
-            auto pill_bottle = dynamic_pointer_cast<PillBottle>(bag->held_item);
-            if (!pill_bottle) {
-                announce("this bag doesnt have my pills");
-                wait_and_return();
+            case Job::State::HeadingToEnd: {
+                bool arrived = navigate_to(job->end);
+                job->state = arrived ? Job::State::WorkingAtEnd
+                                     : Job::State::HeadingToEnd;
                 return;
             }
+            case Job::State::WorkingAtEnd: {
+                Register* reg = (Register*) job->data["register"];
 
-            this->held_item = reg->held_item;
-            reg->held_item = nullptr;
+                if (reg->held_item == nullptr) {
+                    announce("my rx isnt ready yet");
+                    wait_and_return();
+                    return;
+                }
 
-            announce("got it");
-            reg->leave_line(me);
-            job->is_complete = true;
-        };
+                auto bag = dynamic_pointer_cast<Bag>(reg->held_item);
+                if (!bag) {
+                    announce("this isnt my rx (not a bag)");
+                    wait_and_return();
+                    return;
+                }
 
-        auto work_at_job = [&]() {
-            work_at_start();
-            work_at_end();
-        };
+                if (bag->empty()) {
+                    announce("this bag is empty...");
+                    wait_and_return();
+                    return;
+                }
 
-        init_job();
-        get_to_job();
-        work_at_job();
+                auto pill_bottle =
+                    dynamic_pointer_cast<PillBottle>(bag->held_item);
+                if (!pill_bottle) {
+                    announce("this bag doesnt have my pills");
+                    wait_and_return();
+                    return;
+                }
+
+                this->held_item = reg->held_item;
+                reg->held_item = nullptr;
+
+                announce("got it");
+                Customer* me = this;
+                reg->leave_line(me);
+                job->state = Job::State::Completed;
+                return;
+            }
+            case Job::State::Completed: {
+                job->state = Job::State::Completed;
+                return;
+            }
+        }
     }
 
     void wait(float dt) {
-        job->timePassedInCurrentState += dt;
-        if (job->timePassedInCurrentState >= job->timeToComplete) {
-            job->is_complete = true;
-            return;
+        switch (job->state) {
+            case Job::State::Initialize: {
+                announce("starting a new wait job");
+                job->state = Job::State::HeadingToStart;
+                return;
+            }
+            case Job::State::HeadingToStart: {
+                job->state = Job::State::WorkingAtStart;
+                return;
+            }
+            case Job::State::WorkingAtStart: {
+                job->state = Job::State::HeadingToEnd;
+                return;
+            }
+            case Job::State::HeadingToEnd: {
+                bool arrived = navigate_to(job->end);
+                job->state = arrived ? Job::State::WorkingAtEnd
+                                     : Job::State::HeadingToEnd;
+                return;
+            }
+            case Job::State::WorkingAtEnd: {
+                job->timePassedInCurrentState += dt;
+                if (job->timePassedInCurrentState >= job->timeToComplete) {
+                    job->state = Job::State::Completed;
+                    return;
+                }
+                // announce(fmt::format("waiting a little longer: {} => {} ",
+                // job->timePassedInCurrentState,
+                // job->timeToComplete));
+                job->state = Job::State::WorkingAtEnd;
+                return;
+            }
+            case Job::State::Completed: {
+                job->state = Job::State::Completed;
+                return;
+            }
         }
     }
 

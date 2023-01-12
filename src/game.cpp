@@ -35,6 +35,9 @@
 #include "./tests/all_tests.h"
 
 void startup() {
+    // TODO need to test on lower framerates, there seems to be issues with
+    // network initlization
+
     // Force the app to be created.
     // This unlocks GPU access so we can load textures
     App::create(AppSettings{

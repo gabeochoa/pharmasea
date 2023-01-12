@@ -41,6 +41,7 @@ struct AIPerson : public Person {
 
     virtual void render_debug_mode() const override {
         Person::render_debug_mode();
+        // TODO this doesnt work yet because job->path is not serialized
         const float box_size = TILESIZE / 10.f;
         if (job && !job->path.empty()) {
             for (auto location : job->path) {
@@ -104,99 +105,84 @@ struct AIPerson : public Person {
                         .end = target});
     }
 
-    virtual void get_to_job() {
-        auto ensure_has_path = [&]() {
-            // already there
-            if (job->reached_end) return;
-            // already have a path
-            if (!job->path.empty()) return;
-
-            vec2 start = vec::to2(this->position);
-            if (!job->reached_start && start == job->start) {
-                job->reached_start = true;
-                return;
-            }
-            if (job->start_completed && !job->reached_end &&
-                start == job->end) {
-                job->reached_end = true;
-                return;
-            }
-
-            vec2 end = job->reached_start ? job->end : job->start;
-            job->path = astar::find_path(
-                start, end,
-                std::bind(EntityHelper::isWalkable, std::placeholders::_1));
-            // If path isnt solveable just mark it true and
-            // make a new target
-            if (job->path.size() == 0) {
-                job->is_complete = true;
-            }
-        };
-
-        auto ensure_local_target = [&]() {
-            if (job->path.empty()) return;       // no path yet
-            if (job->local.has_value()) return;  // already have local target
-            // grab next local
+    void travel_on_path(vec2 me) {
+        // did not arrive
+        if (job->path.empty()) return;
+        // Grab next local point to go to
+        if (!job->local.has_value()) {
             job->local = job->path.front();
             job->path.pop_front();
-        };
+        }
+        // Go to local point
+        if (job->local.value() == me) {
+            job->local.reset();
+            // announce(fmt::format("reached local point {} : {} ", me,
+            // job->path.size()));
+        }
+        return;
+    }
 
-        auto reset_local_target = [&]() {
-            if (!job->local.has_value()) return;  // no local target yet
-
-            // // TODO snap? vs normal? vs raw?
-            if (vec::to2(this->snap_position()) == job->local.value()) {
-                job->local.reset();
-            }
-        };
-
-        auto reset_to_find_new_target = [&]() {
-            if (!job->path.empty()) return;
-            // path empty means we got to our current global target
-            if (!job->reached_start &&
-                vec::to2(this->snap_position()) == job->start) {
-                job->reached_start = true;
-                return;
-            }
-            // we reached the start and now our path is empty again
-            // as long as we completed start we should be at the end
-            if (job->start_completed &&
-                vec::to2(this->snap_position()) == job->end) {
-                job->reached_end = true;
-                return;
-            }
-        };
-
-        ensure_has_path();
-        ensure_local_target();
-        reset_local_target();
-        reset_to_find_new_target();
+    bool navigate_to(vec2 goal) {
+        vec2 me = vec::to2(this->position);
+        if (me == goal) {
+            // announce("reached goal");
+            return true;
+        }
+        if (job->path.empty()) {
+            job->path = astar::find_path(
+                me, goal,
+                std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+            // announce(fmt::format("generated path from {} to {} with {}
+            // steps", me, goal, job->path.size()));
+        }
+        travel_on_path(me);
+        return false;
     }
 
     virtual void wandering() {
-        auto work_at_start = [&]() {
-            if (!job->reached_start) return;
-            if (job->start_completed) return;
-            // For wandering type, this is enough
-            job->start_completed = true;
-        };
-
-        auto work_at_end = [&]() {
-            // cant work if complete
-            if (job->is_complete) return;
-            // cant work unless we got there
-            if (!job->reached_end) return;
-            // For wandering type, reaching the end is complete
-            job->is_complete = true;
-        };
-
-        auto work_at_job = [&]() {
-            work_at_start();
-            work_at_end();
-        };
-
-        get_to_job();
-        work_at_job();
+        switch (job->state) {
+            case Job::State::Initialize: {
+                announce("starting a new wandering job");
+                job->state = Job::State::HeadingToStart;
+                return;
+            }
+            case Job::State::HeadingToStart: {
+                bool arrived = navigate_to(job->start);
+                // TODO we cannot mutate this->job inside navigate because the
+                // `job->state` below will change the new job and not the old
+                // one this foot-gun might be solvable by passing in the global
+                // job to the job processing function, then it wont change until
+                // the next call
+                if (job->path.size() == 0) {
+                    personal_queue.push(job);
+                    this->job.reset(new Job({
+                        .type = Wandering,
+                    }));
+                    return;
+                }
+                job->state = arrived ? Job::State::WorkingAtStart
+                                     : Job::State::HeadingToStart;
+                return;
+            }
+            case Job::State::WorkingAtStart: {
+                job->state = Job::State::HeadingToEnd;
+                return;
+            }
+            case Job::State::HeadingToEnd: {
+                bool arrived = navigate_to(job->end);
+                job->state = arrived ? Job::State::WorkingAtEnd
+                                     : Job::State::HeadingToEnd;
+                return;
+            }
+            case Job::State::WorkingAtEnd: {
+                job->state = Job::State::Completed;
+                return;
+            }
+            case Job::State::Completed: {
+                job->state = Job::State::Completed;
+                return;
+            }
+        }
     }
 
     virtual void get_starting_job() { job.reset(get_wandering_job()); }
@@ -237,7 +223,7 @@ struct AIPerson : public Person {
             return;
         }
 
-        if (job->is_complete) {
+        if (job->state == Job::State::Completed) {
             if (job->on_cleanup) job->on_cleanup(this, job.get());
             job.reset();
             find_new_job();

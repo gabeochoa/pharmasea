@@ -172,7 +172,7 @@ struct Map {
 
     std::vector<std::shared_ptr<RemotePlayer>> remote_players_NOT_SERIALIZED;
 
-    Map(const std::string& _seed = "default") { update_seed(_seed); }
+    Map(const std::string& _seed = "default_seed") { update_seed(_seed); }
 
     void update_seed(const std::string& s) {
         seed = s;
