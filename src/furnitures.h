@@ -5,6 +5,7 @@
 #include "furniture/bag_box.h"
 #include "furniture/conveyer.h"
 #include "furniture/grabber.h"
+#include "furniture/medicine_cabinet.h"
 #include "furniture/register.h"
 #include "furniture/table.h"
 #include "furniture/wall.h"

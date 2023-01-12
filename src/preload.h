@@ -87,6 +87,7 @@ struct Preload {
             {"models/kennynl", "can.obj", "pill_bottle"},
             {"models/kennynl", "boxOpen.obj", "open_box"},
             {"models/kennynl", "box.obj", "box"},
+            {"models/kennynl", "barrel.obj", "medicine_cabinet"},
         };
 
         for (const auto& m : models) {

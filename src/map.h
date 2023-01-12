@@ -15,6 +15,7 @@
 #include "engine/log.h"
 #include "engine/random.h"
 #include "entity.h"
+#include "furniture/medicine_cabinet.h"
 #include "furnitures.h"
 #include "remote_player.h"
 
@@ -116,7 +117,7 @@ struct PolymorphicBaseClass<Entity>
 template<>
 struct PolymorphicBaseClass<Furniture>
     : PolymorphicDerivedClasses<Wall, Table, Register, Conveyer, Grabber,
-                                BagBox> {};
+                                BagBox, MedicineCabinet> {};
 
 template<>
 struct PolymorphicBaseClass<Person> : PolymorphicDerivedClasses<AIPerson> {};
@@ -272,6 +273,20 @@ struct Map {
             }
         };
 
+        const auto generate_medicine_cabinet = [this]() {
+            std::shared_ptr<MedicineCabinet> medicineCab;
+            const auto location = get_rand_walkable();
+            medicineCab.reset(new MedicineCabinet(location));
+            EntityHelper::addEntity(medicineCab);
+        };
+
+        const auto generate_bag_box = [this]() {
+            std::shared_ptr<BagBox> bagbox;
+            const auto location = get_rand_walkable();
+            bagbox.reset(new BagBox(location));
+            EntityHelper::addEntity(bagbox);
+        };
+
         const auto generate_register = [this]() {
             std::shared_ptr<Register> reg;
             const auto location = get_rand_walkable();
@@ -304,11 +319,8 @@ struct Map {
         generate_and_insert_walls(this->seed);
         generate_tables();
         generate_tables();
-
-        std::shared_ptr<BagBox> bagbox;
-        const auto location = get_rand_walkable();
-        bagbox.reset(new BagBox(location));
-        EntityHelper::addEntity(bagbox);
+        generate_medicine_cabinet();
+        generate_bag_box();
 
         generate_register();
         generate_customer();
