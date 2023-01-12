@@ -96,6 +96,15 @@ struct Item {
 
     // TODO maybe use tl::expected for this?
     virtual bool eat(std::shared_ptr<Item> item) {
+        if (!can_eat(item)) return false;
+
+        this->held_item = item;
+        item->held_by = Item::HeldBy::ITEM;
+
+        return true;
+    }
+
+    virtual bool can_eat(std::shared_ptr<Item> item) {
         if (!has_holding_ability()) {
             log_info("cant eat because we cant hold things");
             return false;
@@ -111,13 +120,8 @@ struct Item {
             log_info("cant put an item into because we are full");
             return false;
         }
-
         // TODO we will eventually need a way to validate the kinds of items
         // this ItemContainer can hold
-
-        this->held_item = item;
-        item->held_by = Item::HeldBy::ITEM;
-
         return true;
     }
 

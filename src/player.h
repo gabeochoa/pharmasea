@@ -199,6 +199,30 @@ struct Player : public BasePlayer {
                 return true;
             };
 
+            const auto _merge_item_in_hand_into_furniture_item = [&]() {
+                std::shared_ptr<Furniture> closest_furniture =
+                    EntityHelper::getMatchingEntityInFront<Furniture>(
+                        vec::to2(this->position), player_reach,
+                        this->face_direction,
+                        [&](std::shared_ptr<Furniture> f) {
+                            return f->has_held_item() &&
+                                   f->held_item->can_eat(this->held_item);
+                        });
+                if (!closest_furniture) {
+                    return false;
+                }
+
+                bool eat_was_successful =
+                    closest_furniture->held_item->eat(this->held_item);
+                if (!eat_was_successful) return false;
+                // TODO we need a let_go_of_item() to handle this kind of
+                // transfer because it might get complicated and we might end up
+                // with two things owning this could maybe be solved by
+                // enforcing uniqueptr
+                this->held_item = nullptr;
+                return true;
+            };
+
             const auto _place_item_onto_furniture = [&]() {
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
@@ -221,7 +245,11 @@ struct Player : public BasePlayer {
                 return true;
             };
 
+            // TODO could be solved with tl::expected i think
             bool item_merged = _merge_item_from_furniture_into_hand();
+            if (item_merged) return;
+
+            item_merged = _merge_item_in_hand_into_furniture_item();
             if (item_merged) return;
 
             [[maybe_unused]] bool item_placed = _place_item_onto_furniture();
