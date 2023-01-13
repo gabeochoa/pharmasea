@@ -132,6 +132,52 @@ struct Item {
     }
 };
 
+struct Pill : public Item {
+    enum struct PillType {
+        Red,
+        RedLong,
+        Blue,
+        BlueLong,
+    } type;
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Item>{});
+        s.value4b(type);
+    }
+
+   public:
+    Pill() { init(); }
+    Pill(vec3 p, Color c) : Item(p, c) { init(); }
+    Pill(vec2 p, Color c) : Item(p, c) { init(); }
+
+    void init() {
+        constexpr std::size_t num_pills = magic_enum::enum_count<PillType>();
+        int index = randIn(0, num_pills - 1);
+        type = magic_enum::enum_value<PillType>(index);
+    }
+
+    virtual float model_scale() const override { return 3.0f; }
+
+    virtual std::optional<raylib::Model> model() const override {
+        switch (type) {
+            case PillType::Red:
+                return ModelLibrary::get().get("pill_red");
+            case PillType::RedLong:
+                return ModelLibrary::get().get("pill_redlong");
+            case PillType::Blue:
+                return ModelLibrary::get().get("pill_blue");
+            case PillType::BlueLong:
+                return ModelLibrary::get().get("pill_bluelong");
+        }
+        log_warn("Failed to get matching model for pill type: {}",
+                 magic_enum::enum_name(type));
+        return {};
+    }
+};
+
 struct PillBottle : public Item {
    private:
     friend bitsery::Access;

@@ -126,8 +126,8 @@ template<>
 struct PolymorphicBaseClass<AIPerson> : PolymorphicDerivedClasses<Customer> {};
 
 template<>
-struct PolymorphicBaseClass<Item> : PolymorphicDerivedClasses<Bag, PillBottle> {
-};
+struct PolymorphicBaseClass<Item>
+    : PolymorphicDerivedClasses<Bag, PillBottle, Pill> {};
 
 }  // namespace ext
 }  // namespace bitsery
@@ -254,8 +254,8 @@ struct Map {
                 table.reset(new Table(location));
                 EntityHelper::addEntity(table);
 
-                std::shared_ptr<Bag> item;
-                item.reset(new Bag(location, Color{255, 15, 240, 255}));
+                std::shared_ptr<Pill> item;
+                item.reset(new Pill(location, Color{255, 15, 240, 255}));
                 ItemHelper::addItem(item);
                 table->held_item = item;
             }
