@@ -6,40 +6,19 @@
 #include "../entity.h"
 #include "../globals.h"
 //
-#include "../aiperson.h"
-#include "../furniture.h"
-#include "../menu.h"
+#include "item_container.h"
 
-struct MedicineCabinet : public Furniture {
+struct MedicineCabinet : public ItemContainer<PillBottle> {
    private:
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<Furniture>{});
+        s.ext(*this, bitsery::ext::BaseClass<ItemContainer>{});
     }
 
    public:
     MedicineCabinet() {}
-    explicit MedicineCabinet(vec2 pos) : Furniture(pos, WHITE, WHITE) {}
-
-    // TODO im thinkin we can do something like ItemBox<Bag> and just support
-    // them dynamically
-    virtual bool can_place_item_into(
-        std::shared_ptr<Item> item = nullptr) override {
-        auto pill_bottle = dynamic_pointer_cast<PillBottle>(item);
-        if (!pill_bottle) return false;
-        if (!pill_bottle->empty()) return false;
-        return true;
-    }
-
-    virtual void game_update(float dt) override {
-        Furniture::game_update(dt);
-        if (this->held_item == nullptr) {
-            this->held_item.reset(
-                new PillBottle(this->position, (Color){255, 15, 240, 255}));
-            ItemHelper::addItem(this->held_item);
-        }
-    }
+    explicit MedicineCabinet(vec2 pos) : ItemContainer<PillBottle>(pos) {}
 
     virtual std::optional<ModelInfo> model() const override {
         return ModelInfo{
