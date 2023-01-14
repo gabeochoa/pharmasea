@@ -58,9 +58,10 @@ struct Item {
 
     virtual vec3 model_scale() const { return {0.5f, 0.5f, 0.5f}; }
 
-    virtual void render() const {
+    virtual void render(bool render_held_item = true) const {
         // Dont render when held by another item
-        if (held_by == HeldBy::ITEM) {
+        // but do render if we are being rendered by our parent
+        if (held_by == HeldBy::ITEM && !render_held_item) {
             return;
         }
 
@@ -79,9 +80,18 @@ struct Item {
             raylib::DrawCube(position, this->size().x, this->size().y,
                              this->size().z, this->color);
         }
+
+        if (this->held_item != nullptr && render_held_item) {
+            this->held_item->render(false);
+        }
     }
 
-    virtual void update_position(const vec3& p) { this->position = p; }
+    virtual void update_position(const vec3& p) {
+        this->position = p;
+        if (this->held_item != nullptr) {
+            this->held_item->update_position(p);
+        }
+    }
 
     virtual BoundingBox bounds() const {
         return get_bounds(this->position, this->size() / 2.0f);
