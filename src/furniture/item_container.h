@@ -10,6 +10,7 @@
 #include "../furniture.h"
 #include "../menu.h"
 
+// TODO we can use concepts here to force this to be an Item
 template<typename I>
 struct ItemContainer : public Furniture {
    private:

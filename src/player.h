@@ -205,12 +205,24 @@ struct Player : public BasePlayer {
                         vec::to2(this->position), player_reach,
                         this->face_direction,
                         [&](std::shared_ptr<Furniture> f) {
-                            return f->has_held_item() &&
-                                   f->held_item->can_eat(this->held_item);
+                            return
+                                // is there something there to merge into?
+                                f->has_held_item() &&
+                                // can that thing hold the item we are holding?
+                                f->held_item->can_eat(this->held_item);
                         });
                 if (!closest_furniture) {
                     return false;
                 }
+
+                // TODO need to handle the case where the merged item is not a
+                // valid thing the furniture can hold.
+                //
+                // This happens for example when you merge into a supply cache.
+                // Because the supply can only hold the container and not a
+                // filled one... In this case we should either:
+                // - block the merge
+                // - place the merged item into the player's hand
 
                 bool eat_was_successful =
                     closest_furniture->held_item->eat(this->held_item);
