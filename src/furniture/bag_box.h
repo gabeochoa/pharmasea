@@ -27,8 +27,9 @@ struct BagBox : public Furniture {
     virtual bool can_place_item_into(
         std::shared_ptr<Item> item = nullptr) override {
         auto bag = dynamic_pointer_cast<Bag>(item);
-        if (bag) return true;
-        return false;
+        if (!bag) return false;
+        if (!bag->empty()) return false;
+        return true;
     }
 
     virtual void game_update(float dt) override {

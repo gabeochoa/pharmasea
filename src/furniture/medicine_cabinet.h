@@ -26,9 +26,10 @@ struct MedicineCabinet : public Furniture {
     // them dynamically
     virtual bool can_place_item_into(
         std::shared_ptr<Item> item = nullptr) override {
-        auto pill = dynamic_pointer_cast<PillBottle>(item);
-        if (pill) return true;
-        return false;
+        auto pill_bottle = dynamic_pointer_cast<PillBottle>(item);
+        if (!pill_bottle) return false;
+        if (!pill_bottle->empty()) return false;
+        return true;
     }
 
     virtual void game_update(float dt) override {
