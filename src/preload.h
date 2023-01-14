@@ -79,6 +79,7 @@ struct Preload {
     }
 
     void load_models() {
+        // TODO add support for model groups
         const std::tuple<const char*, const char*, const char*> models[] = {
             {"models", "bag.obj", "bag"},
             {"models", "empty_bag.obj", "empty_bag"},

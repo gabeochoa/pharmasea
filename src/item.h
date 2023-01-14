@@ -56,7 +56,7 @@ struct Item {
 
     virtual bool is_collidable() { return false; }
 
-    virtual float model_scale() const { return 0.5f; }
+    virtual vec3 model_scale() const { return {0.5f, 0.5f, 0.5f}; }
 
     virtual void render() const {
         // Dont render when held by another item
@@ -65,9 +65,16 @@ struct Item {
         }
 
         if (this->model().has_value()) {
-            raylib::DrawModel(this->model().value(), this->position,
-                              this->size().x * this->model_scale(),
-                              ui::color::tan_brown);
+            const auto sz = this->size();
+            const auto m_sc = this->model_scale();
+            const vec3 scale = {
+                sz.x * m_sc.x,
+                sz.y * m_sc.y,
+                sz.z * m_sc.z,
+            };
+            raylib::DrawModelEx(this->model().value(), this->position,
+                                {0, 1.f, 0}, 0 /* rotation angle */, scale,
+                                ui::color::tan_brown);
         } else {
             raylib::DrawCube(position, this->size().x, this->size().y,
                              this->size().z, this->color);
@@ -159,7 +166,7 @@ struct Pill : public Item {
         type = magic_enum::enum_value<PillType>(index);
     }
 
-    virtual float model_scale() const override { return 3.0f; }
+    virtual vec3 model_scale() const override { return {3.f, 3.0f, 12.f}; }
 
     virtual std::optional<raylib::Model> model() const override {
         switch (type) {
@@ -191,7 +198,7 @@ struct PillBottle : public Item {
     PillBottle(vec3 p, Color c) : Item(p, c) {}
     PillBottle(vec2 p, Color c) : Item(p, c) {}
 
-    virtual float model_scale() const override { return 3.0f; }
+    virtual vec3 model_scale() const override { return {3.f, 3.0f, 3.f}; }
 
     virtual std::optional<raylib::Model> model() const override {
         // TODO handle empty vs full
