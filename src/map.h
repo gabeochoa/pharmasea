@@ -189,6 +189,7 @@ struct Map {
     }
 
     void onUpdate(float dt) {
+        TRACY_ZONE_SCOPED;
         for (auto e : EntityHelper::get_entities()) {
             e->update(dt);
         }
@@ -201,6 +202,7 @@ struct Map {
     }
 
     void onDraw(float) const {
+        TRACY_ZONE_SCOPED;
         for (auto e : entities) {
             if (e) e->render();
             if (!e) log_warn("We have invalid entities");

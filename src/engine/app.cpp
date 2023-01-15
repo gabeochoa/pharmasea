@@ -1,6 +1,8 @@
 
 #include "app.h"
 
+#define ENABLE_TRACING
+#include "tracy.h"
 //
 #include "globals_register.h"
 #include "keymap.h"
@@ -68,6 +70,8 @@ bool App::onWindowResize(WindowResizeEvent event) {
 }
 
 void App::processEvent(Event& e) {
+    TRACY_ZONE_SCOPED;
+
     this->onEvent(e);
     if (e.handled) {
         return;
@@ -88,6 +92,11 @@ void App::processEvent(Event& e) {
 void App::close() { running = false; }
 
 void App::run() {
+#ifdef ENABLE_TRACING
+    log_info("Tracing is enabled");
+#else
+    log_info("Tracing is not enabled");
+#endif
     running = true;
     while (running && !raylib::WindowShouldClose()) {
         float dt = raylib::GetFrameTime();
@@ -97,7 +106,7 @@ void App::run() {
 }
 
 void App::loop(float dt) {
-    PROFILE();
+    TRACY_ZONE_SCOPED;
 
     for (Layer* layer : layerstack) {
         layer->onUpdate(dt);
@@ -114,9 +123,12 @@ void App::loop(float dt) {
         KeyMap::get().forEachCharTyped(
             std::bind(&App::processEvent, this, std::placeholders::_1));
     }
+    TRACY_FRAME_MARK("app::loop");
 }
 
 void App::draw_all_to_texture(float dt) {
+    TRACY_ZONE_SCOPED;
+
     raylib::BeginTextureMode(mainRT);
     for (Layer* layer : layerstack) {
         layer->onDraw(dt);
@@ -125,6 +137,8 @@ void App::draw_all_to_texture(float dt) {
 }
 
 void App::render_to_screen() {
+    TRACY_ZONE_SCOPED;
+
     raylib::BeginDrawing();
     {
         App::start_post_processing();

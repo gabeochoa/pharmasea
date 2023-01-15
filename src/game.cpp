@@ -4,8 +4,16 @@
 // steam networking uses an "app id" that we dont have
 // also the code isnt written yet :)
 // TODO: add support for steam connections
-#include "toastmanager.h"
 #define BUILD_WITHOUT_STEAM
+
+// Enable tracing
+// its also defined in:
+// - vendor/tracy/TracyClient.cpp
+// - app.cpp
+// TODO find a way to enable this in the compiler so we dont have to do this
+#define ENABLE_TRACING
+#include "engine/tracy.h"
+//
 
 #include "external_include.h"
 
@@ -29,6 +37,7 @@
 #include "settingslayer.h"
 #include "streamersafelayer.h"
 #include "toastlayer.h"
+#include "toastmanager.h"
 #include "versionlayer.h"
 //
 // This one should be last

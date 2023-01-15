@@ -38,6 +38,8 @@
 #include <bitsery/traits/string.h>
 #include <bitsery/traits/vector.h>
 
+#include "engine/tracy.h"
+
 #ifdef __APPLE__
 #pragma clang diagnostic pop
 #else

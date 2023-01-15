@@ -114,6 +114,7 @@ struct MenuLayer : public Layer {
     }
 
     virtual void onUpdate(float) override {
+        ZoneScoped;
         if (Menu::get().is_in_menu()) play_music();
 
         if (Menu::get().is_not(Menu::State::Root)) return;
@@ -122,6 +123,7 @@ struct MenuLayer : public Layer {
     }
 
     virtual void onDraw(float dt) override {
+        ZoneScoped;
         if (Menu::get().is_not(Menu::State::Root)) return;
         PROFILE();
         ClearBackground(ui_context->active_theme().background);

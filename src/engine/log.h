@@ -23,6 +23,7 @@ enum class LogLevel {
 
 #include "../external_include.h"
 #include "globals.h"
+#include "tracy.h"
 
 inline const std::string_view level_to_string(LogLevel level) {
     return magic_enum::enum_name(level);
@@ -31,9 +32,13 @@ inline const std::string_view level_to_string(LogLevel level) {
 inline void vlog(LogLevel level, const char* file, int line,
                  fmt::string_view format, fmt::format_args args) {
     if ((int) level < LOG_LEVEL) return;
-    fmt::print("{}: {}: {}: ", file, line, level_to_string(level));
-    fmt::vprint(format, args);
+    const auto file_info =
+        fmt::format("{}: {}: {}: ", file, line, level_to_string(level));
+    const auto message = fmt::vformat(format, args);
+    const auto full_output = fmt::format("{}{}", file_info, message);
+    fmt::print("{}", full_output);
     fmt::print("\n");
+    TRACY_LOG(full_output.c_str(), full_output.size());
 }
 
 template<typename... Args>

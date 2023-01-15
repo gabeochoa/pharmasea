@@ -5,6 +5,7 @@
 #include <thread>
 //
 #include "../engine/atomic_queue.h"
+#include "../engine/tracy.h"
 #include "shared.h"
 //
 #include "internal/server.h"
@@ -75,6 +76,7 @@ struct Server {
     }
 
     void run() {
+        TRACY_ZONE_SCOPED;
         thread_id = std::this_thread::get_id();
         GLOBALS.set("server_thread_id", &thread_id);
 
@@ -108,10 +110,12 @@ struct Server {
     float next_update_tick = 0;
 
     void tick(float dt) {
+        TRACY_ZONE_SCOPED;
         server_p->run();
 
         // Check to see if we have any new packets to process
         while (!incoming_message_queue.empty()) {
+            TRACY_ZONE_NAMED(tracy_server_process, "packets to process", true);
             log_trace("Incoming Messages {}", incoming_message_queue.size());
             server_process_message_string(incoming_message_queue.front());
             incoming_message_queue.pop_front();
@@ -124,6 +128,7 @@ struct Server {
 
         // Check to see if we have any packets to send off
         while (!packet_queue.empty()) {
+            TRACY_ZONE_NAMED(tracy_server_fwd, "packets to fwd", true);
             log_trace("Packets to FWD {}", packet_queue.size());
             ClientPacket& p = packet_queue.front();
 
@@ -143,6 +148,7 @@ struct Server {
         }
 
         if (Menu::in_game(current_state)) {
+            TRACY_ZONE_NAMED(tracy_server_gametick, "process game tick", true);
             next_update_tick += dt;
             if (next_update_tick >= next_update_tick_reset) {
                 for (auto p : players) {
@@ -159,6 +165,7 @@ struct Server {
             send_map_state();
             next_map_tick = next_map_tick_reset;
         }
+        TRACY_FRAME_MARK("server::tick");
     }
 
     void process_announcement_packet(const Client_t&,
@@ -311,6 +318,7 @@ struct Server {
     }
 
     void server_process_message_string(const ClientMessage& client_message) {
+        TRACY_ZONE_SCOPED;
         // Note: not using structured binding since they cannot be captured by
         // lambda expr yet
         const Client_t& incoming_client = client_message.first;

@@ -101,6 +101,7 @@ struct EntityHelper {
 
     static void forEachEntity(
         std::function<ForEachFlow(std::shared_ptr<Entity>)> cb) {
+        TRACY_ZONE_SCOPED;
         for (auto e : get_entities()) {
             if (!e) continue;
             auto fef = cb(e);
@@ -130,6 +131,7 @@ struct EntityHelper {
         Entity::FrontFaceDirection direction,           //
         std::function<bool(std::shared_ptr<T>)> filter  //
     ) {
+        TRACY_ZONE_SCOPED;
         M_ASSERT(range > 0,
                  fmt::format("range has to be positive but was {}", range));
 
@@ -204,6 +206,7 @@ struct EntityHelper {
     static inline void invalidatePathCache() { cache_is_walkable.clear(); }
 
     static inline bool isWalkable(vec2 pos) {
+        TRACY_ZONE_SCOPED;
         // TODO this keeps crashing on operator< vec2 for segv on zero page
 
         if (!cache_is_walkable.contains(pos)) {
@@ -216,6 +219,7 @@ struct EntityHelper {
     // each target get and path find runs through all entities
     // so this will just get slower and slower over time
     static inline bool isWalkableRawEntities(const vec2& pos) {
+        TRACY_ZONE_SCOPED;
         auto bounds = get_bounds({pos.x, 0.f, pos.y}, {TILESIZE});
         bool hit_impassible_entity = false;
         forEachEntity([&](auto entity) {

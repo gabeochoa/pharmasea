@@ -112,6 +112,7 @@ struct Server {
     }
 
     bool run() {
+        TRACY_ZONE_SCOPED;
         if (!running) return false;
 
         auto poll_incoming_messages = [&]() {

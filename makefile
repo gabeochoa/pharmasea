@@ -10,18 +10,19 @@ NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 INCLUDES = -Ivendor/ 
 LIBS = -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
-SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp)
+SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/tracy/TracyClient.cpp )
 H_FILES := $(wildcard src/**/*.h src/engine/**/*.h) 
 OBJ_DIR := ./output
 OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
+
 
 CXX := clang++
 
 .PHONY: all clean
 
 
-all: $(H_FILES) $(OBJ_FILES)
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea && ./pharmasea
+all: $(H_FILES) $(OBJ_FILES) 
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -DTRACY_ENABLE -o pharmasea && ./pharmasea
 
 
 $(OBJ_DIR)/%.o: %.cpp makefile
@@ -35,6 +36,7 @@ clean:
 	mkdir -p $(OBJ_DIR)/src/network/
 	mkdir -p $(OBJ_DIR)/src/engine/
 	mkdir -p $(OBJ_DIR)/src/engine/network/
+	mkdir -p $(OBJ_DIR)/vendor/tracy/
 
 profile: 
 	xctrace record --output . --template "Time Profiler" --time-limit 10s --attach `ps -ef | grep "\./pharmasea" | grep -v "grep"  | cut -d' ' -f4`

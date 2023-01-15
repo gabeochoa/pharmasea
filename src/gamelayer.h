@@ -79,6 +79,7 @@ struct GameLayer : public Layer {
     }
 
     virtual void onUpdate(float dt) override {
+        TRACY_ZONE_SCOPED;
         if (Menu::is_paused() || Menu::in_game()) play_music();
         if (!Menu::in_game()) return;
         PROFILE();
@@ -102,6 +103,7 @@ struct GameLayer : public Layer {
     }
 
     virtual void onDraw(float dt) override {
+        TRACY_ZONE_SCOPED;
         if (!Menu::in_game() && !Menu::is_paused()) return;
         PROFILE();
 
