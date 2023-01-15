@@ -80,27 +80,96 @@ struct Preload {
 
     void load_models() {
         // TODO add support for model groups
-        const std::tuple<const char*, const char*, const char*> models[] = {
-            {"models", "bag.obj", "bag"},
-            {"models", "empty_bag.obj", "empty_bag"},
-            {"models", "conveyer.obj", "conveyer"},
-            {"models", "register.obj", "register"},
-            {"models/kennynl", "can.obj", "pill_bottle"},
-            {"models/kennynl", "boxOpen.obj", "open_box"},
-            {"models/kennynl", "box.obj", "box"},
-            {"models/kennynl", "barrel.obj", "medicine_cabinet"},
-            {"models/kennynl", "pillow.obj", "pill_red"},
-            {"models/kennynl", "pillowBlue.obj", "pill_blue"},
-            {"models/kennynl", "pillowBlueLong.obj", "pill_bluelong"},
-            {"models/kennynl", "pillowLong.obj", "pill_redlong"},
+        // const std::tuple<const char*, const char*, const char*> models[] = {
+        // {"models", "empty_bag.obj", "empty_bag"},
+        // {"models", "conveyer.obj", "conveyer"},
+        // {"models", "register.obj", "register"},
+        // // TODO figure out how this slash will work on other platforms
+        // {"models/kennynl", "can.obj", "pill_bottle"},
+        // {"models/kennynl", "boxOpen.obj", "open_box"},
+        // {"models/kennynl", "box.obj", "box"},
+        // {"models/kennynl", "barrel.obj", "medicine_cabinet"},
+        // {"models/kennynl", "pillow.obj", "pill_red"},
+        // {"models/kennynl", "pillowBlue.obj", "pill_blue"},
+        // {"models/kennynl", "pillowBlueLong.obj", "pill_bluelong"},
+        // {"models/kennynl", "pillowLong.obj", "pill_redlong"},
+        // };
+
+        constexpr ModelLibrary::ModelLoadingInfo models[] = {
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models",
+                .filename = "bag.obj",
+                .libraryname = "bag",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models",
+                .filename = "conveyer.obj",
+                .libraryname = "conveyer",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models",
+                .filename = "register.obj",
+                .libraryname = "register",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "can.obj",
+                .libraryname = "pill_bottle",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "boxOpen.obj",
+                .libraryname = "open_box",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "box.obj",
+                .libraryname = "box",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "barrel.obj",
+                .libraryname = "medicine_cabinet",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "pillow.obj",
+                .libraryname = "pill_red",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "pillowBlue.obj",
+                .libraryname = "pill_blue",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "pillowLong.obj",
+                .libraryname = "pill_redlong",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "pillowBlueLong.obj",
+                .libraryname = "pill_bluelong",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kaykit",
+                .filename = "character_bear.gltf",
+                .libraryname = "character_bear",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kaykit",
+                .filename = "character_dog.gltf",
+                .libraryname = "character_dog",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kaykit",
+                .filename = "character_duck.gltf",
+                .libraryname = "character_duck",
+            },
         };
 
         for (const auto& m : models) {
-            ModelLibrary::get().load(
-                Files::get()
-                    .fetch_resource_path(std::get<0>(m), std::get<1>(m))
-                    .c_str(),
-                std::get<2>(m));
+            ModelLibrary::get().load(m);
         }
     }
 

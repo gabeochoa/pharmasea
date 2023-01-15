@@ -15,7 +15,7 @@ struct Player : public BasePlayer {
 
     // NOTE: this is kept public because we use it in the network when prepping
     // server players
-    Player() : BasePlayer({0, 0, 0}, {0, 255, 0, 255}, {255, 0, 0, 255}) {}
+    Player() : BasePlayer({0, 0, 0}, WHITE, WHITE) {}
 
     Player(vec3 p, Color face_color_in, Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}

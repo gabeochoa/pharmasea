@@ -8,6 +8,7 @@
 #include "drawing_util.h"
 #include "engine/astar.h"
 #include "engine/is_server.h"
+#include "engine/model_library.h"
 #include "globals.h"
 #include "item.h"
 #include "item_helper.h"
@@ -58,6 +59,10 @@ struct Entity {
     FrontFaceDirection face_direction = FrontFaceDirection::FORWARD;
     std::shared_ptr<Item> held_item = nullptr;
 
+    //
+    int name_length = 1;
+    std::string name = "";
+
    private:
     friend bitsery::Access;
     template<typename S>
@@ -74,6 +79,8 @@ struct Entity {
         s.value1b(is_held);
         s.value4b(face_direction);
         s.object(held_item);
+        s.value4b(name_length);
+        s.text1b(name, name_length);
     }
 
    public:
@@ -108,6 +115,11 @@ struct Entity {
 
     virtual ~Entity() {}
 
+    void update_name(const std::string& new_name) {
+        name = new_name;
+        name_length = (int) name.size();
+    }
+
    protected:
     Entity() {}
 
@@ -130,6 +142,26 @@ struct Entity {
      * Used for code for when the entity is highlighted
      * */
     virtual void render_highlighted() const {
+        if (model().has_value()) {
+            ModelInfo model_info = model().value();
+
+            Color base = ui::color::getHighlighted(this->base_color);
+
+            float rotation_angle =
+                180.f +
+                static_cast<int>(FrontFaceDirectionMap.at(face_direction));
+
+            DrawModelEx(model_info.model,
+                        {
+                            this->position.x + model_info.position_offset.x,
+                            this->position.y + model_info.position_offset.y,
+                            this->position.z + model_info.position_offset.z,
+                        },
+                        vec3{0.f, 1.f, 0.f}, rotation_angle,
+                        this->size() * model_info.size_scale, base);
+            return;
+        }
+
         Color f = ui::color::getHighlighted(this->face_color);
         Color b = ui::color::getHighlighted(this->base_color);
         DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
@@ -146,10 +178,39 @@ struct Entity {
             return;
         }
 
-        DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                       this->size().z, FrontFaceDirectionMap.at(face_direction),
-                       this->face_color, this->base_color);
+        if (model().has_value()) {
+            ModelInfo model_info = model().value();
+
+            float rotation_angle =
+                180.f +
+                static_cast<int>(FrontFaceDirectionMap.at(face_direction));
+
+            raylib::DrawModelEx(
+                model_info.model,
+                {
+                    this->position.x + model_info.position_offset.x,
+                    this->position.y + model_info.position_offset.y,
+                    this->position.z + model_info.position_offset.z,
+                },
+                vec3{0, 1, 0}, model_info.rotation_angle + rotation_angle,
+                this->size() * model_info.size_scale, this->base_color);
+        } else {
+            DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
+                           this->size().z,
+                           FrontFaceDirectionMap.at(face_direction),
+                           this->face_color, this->base_color);
+        }
+
+        render_floating_name();
     }
+
+    virtual void render_floating_name() const {
+        // TODO raise the text more so its easier to see
+        raylib::DrawFloatingText(this->raw_position, Preload::get().font,
+                                 name.c_str());
+    }
+
+    virtual std::optional<ModelInfo> model() const { return {}; }
 
     vec3 snap_position() const { return vec::snap(this->raw_position); }
 

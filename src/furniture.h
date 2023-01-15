@@ -8,12 +8,6 @@
 #include "globals.h"
 
 struct Furniture : public Entity {
-    struct ModelInfo {
-        raylib::Model model;
-        float size_scale;
-        vec3 position_offset;
-    };
-
    private:
     friend bitsery::Access;
     template<typename S>
@@ -43,52 +37,8 @@ struct Furniture : public Entity {
         held_item->update_position(new_pos);
     }
 
-    virtual std::optional<ModelInfo> model() const { return {}; }
-
-    virtual void render_highlighted() const override {
-        if (!model().has_value()) {
-            Entity::render_highlighted();
-            return;
-        }
-
-        ModelInfo model_info = model().value();
-
-        Color base = ui::color::getHighlighted(this->base_color);
-
-        float rotation_angle =
-            180.f + static_cast<int>(FrontFaceDirectionMap.at(face_direction));
-
-        DrawModelEx(model_info.model,
-                    {
-                        this->position.x + model_info.position_offset.x,
-                        this->position.y + model_info.position_offset.y,
-                        this->position.z + model_info.position_offset.z,
-                    },
-                    vec3{0.f, 1.f, 0.f}, rotation_angle,
-                    this->size() * model_info.size_scale, base);
-    }
-
     virtual void render_normal() const override {
-        if (!model().has_value()) {
-            Entity::render_normal();
-            render_progress_bar();
-            return;
-        }
-        ModelInfo model_info = model().value();
-
-        float rotation_angle =
-            180.f + static_cast<int>(FrontFaceDirectionMap.at(face_direction));
-
-        raylib::DrawModelEx(model_info.model,
-                            {
-                                this->position.x + model_info.position_offset.x,
-                                this->position.y + model_info.position_offset.y,
-                                this->position.z + model_info.position_offset.z,
-                            },
-                            vec3{0.f, 1.f, 0.f}, rotation_angle,
-                            this->size() * model_info.size_scale,
-                            this->base_color);
-
+        Entity::render_normal();
         render_progress_bar();
     }
 

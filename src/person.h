@@ -37,6 +37,15 @@ struct Person : public Entity {
         return (vec3){sz, sz, sz};
     }
 
+    virtual std::optional<ModelInfo> model() const override {
+        return ModelInfo{
+            .model = ModelLibrary::get().get("character_bear"),
+            .size_scale = 1.5f,
+            .position_offset = vec3{0, 0, 0},
+            .rotation_angle = 180,
+        };
+    }
+
     void handle_collision(int facedir_x, vec3 new_pos_x, int facedir_z,
                           vec3 new_pos_z) {
         auto new_bounds_x =

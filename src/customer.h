@@ -42,23 +42,12 @@ struct Customer : public AIPerson {
     std::optional<SpeechBubble> bubble;
     std::shared_ptr<Ailment> ailment;
 
-    void set_customer_name(std::string new_name) {
-        name = new_name;
-        customer_name_length = (int) new_name.size();
-    }
-
    private:
-    std::string name = "Customer";
-    int customer_name_length;
-
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         // Only things that need to be rendered, need to be serialized :)
         s.ext(*this, bitsery::ext::BaseClass<AIPerson>{});
-        //
-        s.value4b(customer_name_length);
-        s.text1b(name, customer_name_length);
     }
 
    public:
@@ -75,7 +64,7 @@ struct Customer : public AIPerson {
     Customer(vec2 p, Color c) : AIPerson(p, c) { init(); }
 
     void init() {
-        set_customer_name(get_random_name());
+        update_name(get_random_name());
 
         // TODO turn back on ailments
         // ailment.reset(new Insomnia());
@@ -313,7 +302,5 @@ struct Customer : public AIPerson {
         };
         AIPerson::render_normal();
         render_speech_bubble();
-        raylib::DrawFloatingText(this->raw_position, Preload::get().font,
-                                 name.c_str());
     }
 };
