@@ -118,37 +118,37 @@ struct Preload {
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
-                .filename = "boxOpen.obj",
+                .filename = "boxOpen.glb",
                 .libraryname = "open_box",
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
-                .filename = "box.obj",
+                .filename = "box.glb",
                 .libraryname = "box",
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
-                .filename = "barrel.obj",
+                .filename = "barrel.glb",
                 .libraryname = "medicine_cabinet",
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
-                .filename = "pillow.obj",
+                .filename = "pillow.glb",
                 .libraryname = "pill_red",
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
-                .filename = "pillowBlue.obj",
+                .filename = "pillowBlue.glb",
                 .libraryname = "pill_blue",
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
-                .filename = "pillowLong.obj",
+                .filename = "pillowLong.glb",
                 .libraryname = "pill_redlong",
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
-                .filename = "pillowBlueLong.obj",
+                .filename = "pillowBlueLong.glb",
                 .libraryname = "pill_bluelong",
             },
             ModelLibrary::ModelLoadingInfo{
