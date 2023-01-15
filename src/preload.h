@@ -43,13 +43,11 @@ struct Preload {
     ~Preload() {
         ext::close_audio_device();
 
-        // TODO instead of leaving the impl public fix these to do what music
-        // library does
-        TextureLibrary::get().impl.unload_all();
-        ModelLibrary::get().impl.unload_all();
-        SoundLibrary::get().impl.unload_all();
+        TextureLibrary::get().unload_all();
         MusicLibrary::get().unload_all();
-        ShaderLibrary::get().impl.unload_all();
+        ModelLibrary::get().unload_all();
+        SoundLibrary::get().unload_all();
+        ShaderLibrary::get().unload_all();
     }
 
     void load_fonts() {

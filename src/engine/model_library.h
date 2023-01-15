@@ -28,16 +28,6 @@ struct ModelLibrary {
         const char* texture;
     };
 
-    struct ModelLibraryImpl : Library<raylib::Model> {
-        virtual void load(const char* filename, const char* name) override {
-            log_info("Loading model: {} from {}", name, filename);
-            this->add(name, raylib::LoadModel(filename));
-        }
-        virtual void unload(raylib::Model model) override {
-            raylib::UnloadModel(model);
-        }
-    } impl;
-
     [[nodiscard]] const raylib::Model& get(const std::string& name) const {
         return impl.get(name);
     }
@@ -51,4 +41,17 @@ struct ModelLibrary {
             Files::get().fetch_resource_path(mli.folder, mli.filename);
         impl.load(full_filename.c_str(), mli.libraryname);
     }
+
+    void unload_all() { impl.unload_all(); }
+
+   private:
+    struct ModelLibraryImpl : Library<raylib::Model> {
+        virtual void load(const char* filename, const char* name) override {
+            log_info("Loading model: {} from {}", name, filename);
+            this->add(name, raylib::LoadModel(filename));
+        }
+        virtual void unload(raylib::Model model) override {
+            raylib::UnloadModel(model);
+        }
+    } impl;
 };

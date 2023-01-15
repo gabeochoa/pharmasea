@@ -88,6 +88,8 @@ struct Server {
             tick(duration);
 
             do {
+                TRACY_ZONE_NAMED(server_run_wait_loop,
+                                 "waiting for run loop continue", true);
                 end = std::chrono::high_resolution_clock::now();
                 duration =
                     std::chrono::duration_cast<std::chrono::milliseconds>(end -
