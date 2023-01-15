@@ -32,6 +32,7 @@
 #include <bitsery/bitsery.h>
 #include <bitsery/ext/inheritance.h>
 #include <bitsery/ext/std_map.h>
+#include <bitsery/ext/std_optional.h>
 #include <bitsery/ext/std_tuple.h>
 #include <bitsery/ext/std_variant.h>
 #include <bitsery/traits/string.h>

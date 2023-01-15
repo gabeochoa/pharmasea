@@ -105,10 +105,11 @@ struct GameLayer : public Layer {
         if (!Menu::in_game() && !Menu::is_paused()) return;
         PROFILE();
 
+        const auto map_ptr = GLOBALS.get_ptr<Map>("map");
+
         ext::clear_background(Color{200, 200, 200, 255});
         raylib::BeginMode3D((*cam).get());
         {
-            auto map_ptr = GLOBALS.get_ptr<Map>("map");
             if (map_ptr) map_ptr->onDraw(dt);
 
             // TODO migrate
@@ -147,5 +148,11 @@ struct GameLayer : public Layer {
             // }
         }
         raylib::EndMode3D();
+
+        // note: for ui stuff
+        if (map_ptr) {
+            const auto round = map_ptr->active_round;
+            if (round.has_value()) round->onDraw();
+        }
     }
 };

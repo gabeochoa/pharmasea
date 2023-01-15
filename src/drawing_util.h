@@ -11,6 +11,18 @@
 
 namespace raylib {
 
+static void DrawPctFilledCircle(const vec2 position, float radius,
+                                Color backgroundColor, Color foregroundColor,
+                                float pct_filled, float startAngle = 180) {
+    const float endAngle = startAngle + (360 * pct_filled);
+    const int segments = 40;
+
+    raylib::DrawCircle((int) position.x, (int) position.y, radius,
+                       backgroundColor);
+    raylib::DrawCircleSector(position, radius, startAngle, endAngle, segments,
+                             foregroundColor);  // Draw a piece of a circle
+}
+
 static void DrawLineStrip2Din3D(const std::vector<vec2>& points, Color color) {
     std::optional<vec3> point;
     for (auto p : points) {

@@ -74,13 +74,13 @@ struct GameDebugLayer : public Layer {
         if (!Menu::in_game()) return;
 
         if (Menu::get().is(Menu::State::Planning)) {
-            DrawTextEx(Preload::get().font, "IN PLANNING MODE", vec2{100, 100},
+            DrawTextEx(Preload::get().font, "IN PLANNING MODE", vec2{200, 100},
                        20, 0, RED);
         }
 
         if (!debug_ui_enabled) {
             DrawTextEx(Preload::get().font, "Press \\ to toggle debug UI",
-                       vec2{100, 70}, 20, 0, RED);
+                       vec2{200, 70}, 20, 0, RED);
         }
 
         debug_ui(dt);

@@ -18,6 +18,7 @@
 #include "furniture/medicine_cabinet.h"
 #include "furnitures.h"
 #include "remote_player.h"
+#include "round.h"
 
 const std::string TINY = R"(
 .........
@@ -166,6 +167,7 @@ struct Map {
 
     Entities entities;
     Entities::size_type num_entities;
+    std::optional<Round> active_round;
 
     Items items;
     Items::size_type num_items;
@@ -181,6 +183,8 @@ struct Map {
         // TODO leaving at 1 because we dont have a door to block the entrance
         dist = std::uniform_int_distribution<>(1, MAX_MAP_SIZE - 1);
 
+        active_round = Round(120.f);
+
         // TODO need to regenerate the map and clean up entitiyhelper
     }
 
@@ -190,6 +194,9 @@ struct Map {
         }
         for (auto rp : remote_players_NOT_SERIALIZED) {
             rp->update(dt);
+        }
+        if (active_round.has_value()) {
+            active_round->onUpdate(dt);
         }
     }
 
@@ -343,5 +350,6 @@ struct Map {
         s.container(items, num_items, [](S& s2, std::shared_ptr<Item>& item) {
             s2.ext(item, bitsery::ext::StdSmartPtr{});
         });
+        s.ext(active_round, bitsery::ext::StdOptional{});
     }
 };
