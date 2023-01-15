@@ -80,21 +80,7 @@ struct Preload {
 
     void load_models() {
         // TODO add support for model groups
-        // const std::tuple<const char*, const char*, const char*> models[] = {
-        // {"models", "empty_bag.obj", "empty_bag"},
-        // {"models", "conveyer.obj", "conveyer"},
-        // {"models", "register.obj", "register"},
-        // // TODO figure out how this slash will work on other platforms
-        // {"models/kennynl", "can.obj", "pill_bottle"},
-        // {"models/kennynl", "boxOpen.obj", "open_box"},
-        // {"models/kennynl", "box.obj", "box"},
-        // {"models/kennynl", "barrel.obj", "medicine_cabinet"},
-        // {"models/kennynl", "pillow.obj", "pill_red"},
-        // {"models/kennynl", "pillowBlue.obj", "pill_blue"},
-        // {"models/kennynl", "pillowBlueLong.obj", "pill_bluelong"},
-        // {"models/kennynl", "pillowLong.obj", "pill_redlong"},
-        // };
-
+        //
         constexpr ModelLibrary::ModelLoadingInfo models[] = {
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models",
