@@ -19,6 +19,8 @@ kanban-plugin: basic
 - [ ] Particle system?
 - [ ] Spritesheet animator
 - [ ] unrelated: proggy clean font: https://www.dafont.com/proggy-clean.font
+- [ ] consider switching to https://github.com/graphitemaster/0xABAD1DEA for all of our static globals
+- [ ] Look into if its worth using fmod for sound: https://www.fmod.com/
 
 
 ## want for mvp
