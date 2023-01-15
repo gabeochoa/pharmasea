@@ -89,6 +89,11 @@ struct Preload {
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models",
+                .filename = "empty_bag.obj",
+                .libraryname = "empty_bag",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models",
                 .filename = "conveyer.obj",
                 .libraryname = "conveyer",
             },

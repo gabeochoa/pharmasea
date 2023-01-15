@@ -39,7 +39,7 @@ struct Person : public Entity {
 
     virtual std::optional<ModelInfo> model() const override {
         return ModelInfo{
-            .model = ModelLibrary::get().get("character_bear"),
+            .model = ModelLibrary::get().get("character_duck"),
             .size_scale = 1.5f,
             .position_offset = vec3{0, 0, 0},
             .rotation_angle = 180,

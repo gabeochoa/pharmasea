@@ -1,6 +1,7 @@
 #pragma once
 
 #include "drawing_util.h"
+#include "engine/ui_color.h"
 #include "external_include.h"
 //
 #include "globals.h"
@@ -112,6 +113,8 @@ struct GameLayer : public Layer {
         ext::clear_background(Color{200, 200, 200, 255});
         raylib::BeginMode3D((*cam).get());
         {
+            DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){256.0f, 256.0f},
+                      ui::color::dark_grey);
             if (map_ptr) map_ptr->onDraw(dt);
 
             // TODO migrate
