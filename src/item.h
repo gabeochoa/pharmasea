@@ -75,7 +75,7 @@ struct Item {
             };
             raylib::DrawModelEx(this->model().value(), this->position,
                                 {0, 1.f, 0}, 0 /* rotation angle */, scale,
-                                ui::color::tan_brown);
+                                ui::color::white);
         } else {
             raylib::DrawCube(position, this->size().x, this->size().y,
                              this->size().z, this->color);

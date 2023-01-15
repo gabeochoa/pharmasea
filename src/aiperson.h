@@ -27,7 +27,6 @@ struct AIPerson : public Person {
 
    public:
     AIPerson() : Person() {}
-
     AIPerson(vec3 p, Color face_color_in, Color base_color_in)
         : Person(p, face_color_in, base_color_in) {}
     AIPerson(vec2 p, Color face_color_in, Color base_color_in)

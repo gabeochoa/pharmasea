@@ -20,7 +20,7 @@ struct BasePlayer : public Person {
         : Person(p, face_color_in, base_color_in) {}
     BasePlayer(vec2 p, Color face_color_in, Color base_color_in)
         : Person(p, face_color_in, base_color_in) {}
-    BasePlayer() : Person({0, 0, 0}, {0, 255, 0, 255}, {255, 0, 0, 255}) {}
+    BasePlayer() : Person({0, 0, 0}, ui::color::white, ui::color::white) {}
     BasePlayer(vec2 location)
         : Person({location.x, 0, location.y}, {0, 255, 0, 255},
                  {255, 0, 0, 255}) {}

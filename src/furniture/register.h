@@ -38,7 +38,8 @@ struct Register : public Furniture {
 
    public:
     Register() : Furniture() {}
-    explicit Register(vec2 pos) : Furniture(pos, BLACK, DARKGRAY) {}
+    explicit Register(vec2 pos)
+        : Furniture(pos, ui::color::dark_grey, ui::color::dark_grey) {}
 
     int position_in_line(AIPerson* entity) {
         for (int i = 0; i < (int) ppl_in_line.size(); i++) {
