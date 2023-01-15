@@ -11,6 +11,12 @@ libraries used:
 - fmt https://github.com/fmtlib/fmt
 - tl::expected https://github.com/TartanLlama/expected
 - magic enum https://github.com/Neargye/magic_enum.git
+- tracy https://github.com/wolfpld/tracy
+
+
+Models from 
+- https://www.kenney.nl/assets?q=3d 
+- https://kaylousberg.itch.io/kay-kit-mini-game-variety-pack 
 
 
 
@@ -42,6 +48,59 @@ Info about the todo chart
 
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
+
+### alpha_0.23.01.16
+
+bug fixes
+- Change item position for table so empty bag is easier to see 
+- dont allow bags to go into bags 
+- fix bug where sounds loaded after settings load would use wrong volume setting (though might still be happening)
+- fix a todo for stopping paste when itll go over max length 
+
+impact 
+- Add new player models (no more red square)
+- Add Round timer UI 
+- Render items held inside other items (kinda janky tho) 
+- Add pills and pill bottles (with Supply as barrel) 
+- Make it so you can drop merge items (holding pill bottle drop onto bag)
+- Box model now responds to planning vs game (it opens :D )
+- Add logic so customers only want to pick up a bag containing a pill bottle 
+- Add toast system to show all the network annoucements that we've had logs for 
+- Remove player from game when they disconnect
+- Add "last used ip" button for quality of life
+- new Music for menu and in game
+- Add a bunch of PA announcment sounds
+- add validation for ip address input (2 weeks ago) <Gabe Ochoa>
+- Added "hold to backspace" for textfiends and should feel decent
+
+better eng
+- Better Model Library api
+- Can now "do work" on some furniture
+- add ability for sound library to play a random sound given a prefix 
+- add expected and magic_enum libraries 
+- add basic tracing support through Tracy (much better than PROFILE())
+- base class for an item container 
+- new job system that is hopefully more readable and more resilient 
+- smaller font cache 
+- add util::join and util::words_in_string for later wrap use 
+- extract font sizer to its own file 
+- add toast framework 
+- move raylib into a namespace, and expose through graphics.h 
+- add basic trie datastructure
+- introduce delay for small packets to remove overhead and reduce map update speed by 2x 
+- add message queue so we can separate process and deserialize later on 
+- increase packet buffer size to 1mb 
+- UIContext cleanup its not better but it is more readable 
+- add print statement on close to show how many things are in the library 
+- add for-each in folder to files api 
+- better sound play api 
+- move controller loading to File::get() api 
+
+soon
+- Add ability to save and load chosen player model 
+- disable pathfinding cache for now due to too many segfaults... 
+- add menu system in settingslayer which loads and prepares us for keybinding settings 
+- internal server cleanup though more to do here 
 
 ### alpha_0.22.12.26
 
