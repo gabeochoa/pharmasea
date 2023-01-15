@@ -116,7 +116,7 @@ struct Settings {
 
     void update_master_volume(float nv) {
         data.master_volume = util::clamp(nv, 0.f, 1.f);
-        log_trace("master volume changed to {}", data.master_volume);
+        log_info("master volume changed to {}", data.master_volume);
         raylib::SetMasterVolume(data.master_volume);
     }
 
@@ -148,6 +148,7 @@ struct Settings {
     // TODO these could be private and inside the ctor/dtor with RAII if we are
     // okay with running on get() and ignoring the result
 
+    // TODO music volumes only see to take effect once you open SettingsLayer
     bool load_save_file() {
         std::ifstream ifs(Files::get().settings_filepath());
         if (!ifs.is_open()) {

@@ -49,6 +49,7 @@ struct SettingsLayer : public Layer {
                 KeyMap::get_valid_inputs(Menu::State::Game, kv.first)));
         }
     }
+
     virtual ~SettingsLayer() {}
 
     virtual void onEvent(Event& event) override {
