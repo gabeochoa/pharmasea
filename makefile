@@ -20,6 +20,7 @@ CXX := clang++
 
 .PHONY: all clean
 
+# For tracing you have to run the game, and then connect from Tracy-release
 
 all: $(H_FILES) $(OBJ_FILES) 
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -DTRACY_ENABLE -o pharmasea && ./pharmasea

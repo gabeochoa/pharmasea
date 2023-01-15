@@ -66,6 +66,7 @@ struct Player : public BasePlayer {
     }
 
     virtual void always_update(float dt) override {
+        TRACY_ZONE_SCOPED;
         BasePlayer::always_update(dt);
 
         bool pickup = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game,
@@ -91,6 +92,7 @@ struct Player : public BasePlayer {
     }
 
     virtual vec3 get_position_after_input(UserInputs inpts) {
+        TRACY_ZONE_SCOPED;
         for (const UserInput& ui : inpts) {
             const auto menu_state = std::get<0>(ui);
             if (menu_state != Menu::State::Game) continue;
@@ -142,6 +144,7 @@ struct Player : public BasePlayer {
     }
 
     void rotate_furniture() {
+        TRACY_ZONE_SCOPED;
         // Cant rotate outside planning mode
         if (Menu::get().is_not(Menu::State::Planning)) return;
 
@@ -156,6 +159,7 @@ struct Player : public BasePlayer {
     }
 
     void work_furniture(float frame_dt) {
+        TRACY_ZONE_SCOPED;
         // Cant do work during planning
         if (Menu::get().is(Menu::State::Planning)) return;
 
@@ -170,6 +174,7 @@ struct Player : public BasePlayer {
     }
 
     void handle_in_game_grab_or_drop() {
+        TRACY_ZONE_SCOPED;
         // TODO Need to auto drop any held furniture
 
         // Do we already have something in our hands?
@@ -305,6 +310,7 @@ struct Player : public BasePlayer {
     }
 
     void handle_in_planning_grab_or_drop() {
+        TRACY_ZONE_SCOPED;
         // TODO: Need to delete any held items when switching from game ->
         // planning
 
