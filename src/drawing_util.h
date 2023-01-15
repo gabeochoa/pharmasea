@@ -160,7 +160,7 @@ static void DrawFloatingText(const vec3& position, Font font, const char* text,
     rlPushMatrix();
     rlTranslatef(    //
         position.x,  //
-        0.f,         //
+        position.y,  //
         position.z   //
     );
     rlRotatef(90.0f, 1.0f, 0.0f, 0.0f);

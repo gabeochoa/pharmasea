@@ -205,9 +205,9 @@ struct Entity {
     }
 
     virtual void render_floating_name() const {
-        // TODO raise the text more so its easier to see
-        raylib::DrawFloatingText(this->raw_position, Preload::get().font,
-                                 name.c_str());
+        raylib::DrawFloatingText(
+            this->raw_position + vec3{0, 0.5f * TILESIZE, 0},
+            Preload::get().font, name.c_str());
     }
 
     virtual std::optional<ModelInfo> model() const { return {}; }
