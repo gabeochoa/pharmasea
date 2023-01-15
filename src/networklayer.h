@@ -293,7 +293,6 @@ struct NetworkLayer : public Layer {
     void handle_announcements() {
         if (!network_info->client) return;
 
-        // TODO show a pop up for each
         for (auto info : network_info->client->announcements) {
             log_info("Announcement: {}", info.message);
             // TODO add support for other annoucement types

@@ -7,10 +7,13 @@
 
 #include "engine/log.h"
 
+enum AnnouncementType { Message, Error, Warning };
+
 // TODO maybe this should live in the engine
 //
 struct ToastMsg {
     std::string msg;
+    AnnouncementType type;
     float timeToShow = 1.f;
     float timeHasShown = 0.f;
 

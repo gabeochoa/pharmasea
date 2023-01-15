@@ -9,6 +9,7 @@
 #include <thread>
 
 #include "../../engine/assert.h"
+#include "../../toastmanager.h"
 #include "../shared.h"
 #include "steam/isteamnetworkingsockets.h"
 
@@ -71,9 +72,8 @@ struct Server {
 
     ~Server() {
         for (auto it : clients) {
-            send_announcement_to_client(
-                it.first, "server shutdown",
-                ClientPacket::AnnouncementType::Warning);
+            send_announcement_to_client(it.first, "server shutdown",
+                                        AnnouncementType::Warning);
             interface->CloseConnection(it.first, 0, "server shutdown", true);
         }
         clients.clear();
@@ -93,7 +93,7 @@ struct Server {
     }
 
     void send_announcement_to_client(HSteamNetConnection conn, std::string msg,
-                                     ClientPacket::AnnouncementType type) {
+                                     AnnouncementType type) {
         ClientPacket announce_packet(
             {.client_id = SERVER_CLIENT_ID,
              .msg_type = ClientPacket::MsgType::Announcement,
@@ -103,7 +103,7 @@ struct Server {
     }
 
     void send_announcement_to_all(
-        const std::string &msg, ClientPacket::AnnouncementType type,
+        const std::string &msg, AnnouncementType type,
         std::function<bool(Client_t &)> exclude = nullptr) {
         for (auto &c : clients) {
             if (exclude && exclude(c.second)) continue;
@@ -192,7 +192,7 @@ struct Server {
         SteamNetConnectionStatusChangedCallback_t *info) {
         log_info("connection_changed_callback");
         std::string temp;
-        ClientPacket::AnnouncementType annoucement_type;
+        AnnouncementType annoucement_type;
 
         // What's the state of the connection?
         switch (info->m_info.m_eState) {
@@ -218,16 +218,14 @@ struct Server {
                             "Alas, {} hath fallen into shadow.  ({})",
                             itClient->second.client_id,
                             info->m_info.m_szEndDebug);
-                        annoucement_type =
-                            ClientPacket::AnnouncementType::Warning;
+                        annoucement_type = AnnouncementType::Warning;
                     } else {
                         // Note that here we could check the reason code to see
                         // if it was a "usual" connection or an "unusual" one.
                         pszDebugLogAction = "closed by peer";
                         temp = fmt::format("{}; {} hath departed", temp,
                                            itClient->second.client_id);
-                        annoucement_type =
-                            ClientPacket::AnnouncementType::Warning;
+                        annoucement_type = AnnouncementType::Warning;
                     }
 
                     // Spew something to our own log.  Note that because we put
@@ -318,15 +316,14 @@ struct Server {
                     "Welcome, stranger.  Thou art known to us for now as '{}'; "
                     "upon thine command '/nick' we shall know thee otherwise.",
                     nick_id);
-                send_announcement_to_client(
-                    info->m_hConn, temp,
-                    ClientPacket::AnnouncementType::Message);
+                send_announcement_to_client(info->m_hConn, temp,
+                                            AnnouncementType::Message);
 
                 // Also send them a list of everybody who is already connected
                 if (clients.empty()) {
-                    send_announcement_to_client(
-                        info->m_hConn, "Thou art utterly alone.",
-                        ClientPacket::AnnouncementType::Message);
+                    send_announcement_to_client(info->m_hConn,
+                                                "Thou art utterly alone.",
+                                                AnnouncementType::Message);
                 } else {
                     temp = fmt::format("{} companions greet you:",
                                        (int) clients.size());
@@ -335,7 +332,7 @@ struct Server {
                             info->m_hConn,
                             fmt::format("{}, your id is: {}", temp,
                                         c.second.client_id),
-                            ClientPacket::AnnouncementType::Message);
+                            AnnouncementType::Message);
                 }
 
                 // Add them to the client list, using std::map wacky syntax
@@ -350,11 +347,10 @@ struct Server {
                     "Hark!  A stranger hath joined this merry host.  For "
                     "now we shall call them '{}'",
                     nick_id);
-                send_announcement_to_all(
-                    temp, ClientPacket::AnnouncementType::Message,
-                    [&](const Client_t &client) {
-                        return client.client_id == nick_id;
-                    });
+                send_announcement_to_all(temp, AnnouncementType::Message,
+                                         [&](const Client_t &client) {
+                                             return client.client_id == nick_id;
+                                         });
                 break;
             }
 

@@ -6,6 +6,7 @@
 #include "../globals.h"
 #include "../map.h"
 #include "../menu.h"
+#include "../toastmanager.h"
 #include "../util.h"
 #include "steam/steamnetworkingtypes.h"
 
@@ -52,8 +53,6 @@ struct ClientPacket {
         PlayerLeave,
         PlayerLocation,
     } msg_type;
-
-    enum AnnouncementType { Message, Error, Warning };
 
     struct AnnouncementInfo {
         std::string message;

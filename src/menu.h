@@ -7,6 +7,8 @@
 #include "engine/log.h"
 #include "engine/singleton.h"
 
+// TODO we should split this into Menu vs GameState
+
 SINGLETON_FWD(Menu)
 struct Menu {
     SINGLETON(Menu)

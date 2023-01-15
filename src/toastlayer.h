@@ -30,12 +30,26 @@ struct ToastLayer : public Layer, public FontSizeCache {
         float offY = 0.f;
         float spacing = 0.f;
 
+        Color accent = ui::DEFAULT_THEME.from_usage(ui::theme::Accent);
+        Color font_color = ui::DEFAULT_THEME.from_usage(ui::theme::Font);
+
+        const auto background_color = [](AnnouncementType type) {
+            switch (type) {
+                case AnnouncementType::Warning:
+                    return ui::theme::Secondary;
+                case AnnouncementType::Error:
+                    return ui::theme::Error;
+                default:
+                case AnnouncementType::Message:
+                    return ui::theme::Primary;
+            }
+        };
+
         for (auto& toast : TOASTS) {
-            Color primary = ui::DEFAULT_THEME.from_usage(ui::theme::Primary);
-            Color accent = ui::DEFAULT_THEME.from_usage(ui::theme::Accent);
-            Color font_color = ui::DEFAULT_THEME.from_usage(ui::theme::Font);
-            // TODO interpolate the alpha on these to look nicer, (pop in / pop
-            // out)
+            Color primary =
+                ui::DEFAULT_THEME.from_usage(background_color(toast.type));
+            // TODO interpolate the alpha on these to look nicer, (pop in /
+            // pop out)
 
             vec2 pos = {
                 WIN_WF() * 0.72f,           //
@@ -62,8 +76,8 @@ struct ToastLayer : public Layer, public FontSizeCache {
 
             float font_size = get_font_size(std::string(toast.msg), toastWidth,
                                             toastHeight, spacing);
-            // TODO we really would prefer to wrap the text, but its kinda hard
-            // to do
+            // TODO we really would prefer to wrap the text, but its kinda
+            // hard to do
             font_size = fmaxf(20.f, font_size);
 
             // TODO at some point we want to split the text onto different

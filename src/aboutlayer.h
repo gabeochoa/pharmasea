@@ -7,7 +7,6 @@
 #include "engine.h"
 //
 #include "menu.h"
-#include "toastmanager.h"
 
 struct AboutLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
