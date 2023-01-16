@@ -95,6 +95,7 @@ struct GameLayer : public Layer {
         player->update(dt);
         // NOTE: gabe: i dont think we need to do this
         //         because the local map never should need to grab things
+        //         TODO do we?
         auto map_ptr = GLOBALS.get_ptr<Map>("map");
         if (map_ptr) {
             map_ptr->grab_things();
@@ -111,34 +112,7 @@ struct GameLayer : public Layer {
         ext::clear_background(Color{200, 200, 200, 255});
         raylib::BeginMode3D((*cam).get());
         {
-            DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){256.0f, 256.0f},
-                      ui::color::dark_grey);
             if (map_ptr) map_ptr->onDraw(dt);
-
-            // TODO migrate
-            ItemHelper::forEachItem([&](auto item) {
-                item->render();
-                return ItemHelper::ForEachFlow::None;
-            });
-
-            // DrawGrid(40, TILESIZE);
-
-            raylib::DrawBillboard(cam->camera,
-                                  TextureLibrary::get().get("face"),
-                                  {
-                                      1.f,
-                                      0.f,
-                                      1.f,
-                                  },
-                                  TILESIZE, WHITE);
-
-            // if (GLOBALS.get_or_default<bool>("network_debug_enabled", false))
-            // { auto host_map_ptr = GLOBALS.get_ptr<Map>("server_map"); if
-            // (host_map_ptr) {
-            // host_map_ptr->onDraw(dt);
-            // }
-            // }
-
             // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
             // if (nav) {
             // for (auto kv : nav->entityShapes) {

@@ -5,6 +5,8 @@
 #include <bitsery/ext/pointer.h>
 #include <bitsery/ext/std_smart_ptr.h>
 
+#include "engine/globals_register.h"
+#include "engine/ui_color.h"
 #include "entity.h"
 #include "entityhelper.h"
 #include "furnitures.h"
@@ -96,6 +98,26 @@ struct LevelInfo {
 };
 
 struct LobbyMapInfo : public LevelInfo {
+    virtual void onDraw(float dt) const override {
+        raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){256.0f, 256.0f},
+                          DARKGRAY);
+        raylib::DrawGrid(40, TILESIZE);
+
+        auto cam = GLOBALS.get_ptr<GameCam>("game_cam");
+        if (cam) {
+            raylib::DrawBillboard(cam->camera,
+                                  TextureLibrary::get().get("face"),
+                                  {
+                                      1.f,
+                                      0.f,
+                                      1.f,
+                                  },
+                                  TILESIZE, WHITE);
+        }
+
+        LevelInfo::onDraw(dt);
+    }
+
    private:
     friend bitsery::Access;
     template<typename S>
@@ -129,10 +151,17 @@ struct GameMapInfo : public LevelInfo {
     }
 
     virtual void onUpdate(float dt) override {
+        // log_info("update game map info");
         LevelInfo::onUpdate(dt);
         if (active_round.has_value()) {
             active_round->onUpdate(dt);
         }
+    }
+
+    virtual void onDraw(float dt) const override {
+        raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){256.0f, 256.0f},
+                          DARKGRAY);
+        LevelInfo::onDraw(dt);
     }
 
     virtual void onDrawUI(float) override {

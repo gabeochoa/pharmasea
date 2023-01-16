@@ -15,6 +15,8 @@
 typedef std::vector<std::shared_ptr<Item>> Items;
 static Items client_items_DO_NOT_USE;
 static Items server_items_DO_NOT_USE;
+static Items client_lobby_items_DO_NOT_USE;
+static Items server_lobby_items_DO_NOT_USE;
 
 // TODO do we really need two of these ( EntityHelper)
 // they basically both just act on vector<shared_ptr>
@@ -23,15 +25,18 @@ struct ItemHelper {
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
     static Items& get_items() {
+        const auto in_lobby = GameState::get().is(game::State::Lobby);
         if (is_server()) {
-            return server_items_DO_NOT_USE;
+            return in_lobby ? server_lobby_items_DO_NOT_USE
+                            : server_items_DO_NOT_USE;
         }
         // Right now we only have server/client thread, but in the future if we
         // have more then we should check these
 
         // auto client_thread_id =
         // GLOBALS.get_or_default("client_thread_id", std::thread::id());
-        return client_items_DO_NOT_USE;
+        return in_lobby ? client_lobby_items_DO_NOT_USE
+                        : client_items_DO_NOT_USE;
     }
 
     static void addItem(std::shared_ptr<Item> e) {

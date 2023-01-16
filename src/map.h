@@ -19,6 +19,7 @@
 #include "furnitures.h"
 #include "level_info.h"
 #include "remote_player.h"
+#include "statemanager.h"
 
 const std::string TINY = R"(
 .........
@@ -192,7 +193,8 @@ struct Map {
     }
 
     [[nodiscard]] bool in_lobby_state() const {
-        return GameState::get().is(game::State::Lobby);
+        return GameState::get().is(game::State::Lobby) ||
+               GameState::get().is_paused_in(game::State::Lobby);
     }
 
     // These are called before every "send_map_state" when server

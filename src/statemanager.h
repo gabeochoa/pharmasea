@@ -12,9 +12,10 @@
 template<typename T>
 struct StateManager {
     [[nodiscard]] T read() const { return state; }
+    [[nodiscard]] T previous() const { return prev.top(); }
 
     T go_back() {
-        log_trace("going from {} to {}", state, prev.top());
+        log_info("going from {} to {}", state, prev.top());
         state = prev.top();
         prev.pop();
         return state;
@@ -32,7 +33,7 @@ struct StateManager {
 
     void set(T ns) {
         if (state == ns) return;
-        log_trace("trying to set state to {} (was {})", ns, state);
+        log_info("trying to set state to {} (was {})", ns, state);
 
         prev.push(state);
         state = ns;
@@ -137,12 +138,32 @@ struct GameState : public StateManager<game::State> {
         return GameState::get().is_paused();
     }
 
-    [[nodiscard]] static bool s_should_update() {
-        const auto s = GameState::get().read();
+    [[nodiscard]] bool is_paused_in(game::State s) const {
+        return is(game::State::Paused) && previous() == s;
+    }
+
+    [[nodiscard]] static bool is_update_state(game::State s) {
         return s == game::State::Lobby || s == game::State::InRound ||
                s == game::State::Planning;
     }
-    [[nodiscard]] static bool s_should_draw() { return s_should_update(); }
+
+    [[nodiscard]] static bool s_should_update() {
+        const auto s = GameState::get().read();
+        return is_update_state(s);
+    }
+
+    // Basically we want to know if the prev state was an updatable state
+    // this is so that if we are paused we can still render whats underneath
+    [[nodiscard]] static bool s_should_prev_update() {
+        const auto s = GameState::get().read();
+        if (s != game::State::Paused) return false;
+        const auto prev = GameState::get().previous();
+        return is_update_state(prev);
+    }
+
+    [[nodiscard]] static bool s_should_draw() {
+        return s_should_update() || s_should_prev_update();
+    }
 
     game::State toggle_planning() {
         // TODO need logic here to stop loops
