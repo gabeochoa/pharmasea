@@ -2,12 +2,12 @@
 
 #include "engine.h"
 #include "engine/app.h"
+#include "engine/graphics.h"
 #include "engine/layer.h"
 #include "engine/music_library.h"
 #include "engine/profile.h"
 #include "external_include.h"
 #include "menu.h"
-#include "raylib.h"
 #include "statemanager.h"
 
 struct MenuLayer : public Layer {
@@ -126,7 +126,7 @@ struct MenuLayer : public Layer {
         ZoneScoped;
         if (MenuState::get().is_not(menu::State::Root)) return;
         PROFILE();
-        ClearBackground(ui_context->active_theme().background);
+        ext::clear_background(ui_context->active_theme().background);
 
         ui_context->begin(dt);
 

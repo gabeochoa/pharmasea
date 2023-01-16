@@ -99,10 +99,6 @@ struct LevelInfo {
 
 struct LobbyMapInfo : public LevelInfo {
     virtual void onDraw(float dt) const override {
-        raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){256.0f, 256.0f},
-                          DARKGRAY);
-        raylib::DrawGrid(40, TILESIZE);
-
         auto cam = GLOBALS.get_ptr<GameCam>("game_cam");
         if (cam) {
             raylib::DrawBillboard(cam->camera,
@@ -156,12 +152,6 @@ struct GameMapInfo : public LevelInfo {
         if (active_round.has_value()) {
             active_round->onUpdate(dt);
         }
-    }
-
-    virtual void onDraw(float dt) const override {
-        raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){256.0f, 256.0f},
-                          DARKGRAY);
-        LevelInfo::onDraw(dt);
     }
 
     virtual void onDrawUI(float) override {
