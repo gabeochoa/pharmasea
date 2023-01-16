@@ -27,7 +27,7 @@ struct EntityHelper {
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
     static Entities& get_entities() {
-        const auto in_lobby = GameState::get().is(game::State::Lobby);
+        const auto in_lobby = GameState::get().use_lobby_entities();
         if (is_server()) {
             return in_lobby ? server_lobby_entities_DO_NOT_USE
                             : server_entities_DO_NOT_USE;

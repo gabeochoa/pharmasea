@@ -146,7 +146,13 @@ struct Map {
 
     std::vector<std::shared_ptr<RemotePlayer>> remote_players_NOT_SERIALIZED;
 
-    Map(const std::string& _seed = "default_seed") { update_seed(_seed); }
+    Map() {}
+
+    Map(const std::string& _seed) {
+        update_seed(_seed);
+        // We do this here because its only needed to generate once
+        lobby_info.ensure_generated_map();
+    }
 
     void update_seed(const std::string& s) { game_info.update_seed(s); }
 

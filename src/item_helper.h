@@ -25,7 +25,7 @@ struct ItemHelper {
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
     static Items& get_items() {
-        const auto in_lobby = GameState::get().is(game::State::Lobby);
+        const auto in_lobby = GameState::get().use_lobby_entities();
         if (is_server()) {
             return in_lobby ? server_lobby_items_DO_NOT_USE
                             : server_items_DO_NOT_USE;

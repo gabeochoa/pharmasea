@@ -56,8 +56,7 @@ struct Server {
         server_p->startup();
 
         // TODO add some kind of seed selection screen
-
-        pharmacy_map.reset(new Map());
+        pharmacy_map.reset(new Map("default_seed"));
         GLOBALS.set("server_map", pharmacy_map.get());
     }
 
