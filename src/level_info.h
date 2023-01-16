@@ -9,6 +9,7 @@
 #include "engine/ui_color.h"
 #include "entity.h"
 #include "entityhelper.h"
+#include "furniture/character_switcher.h"
 #include "furnitures.h"
 #include "item.h"
 #include "item_helper.h"
@@ -139,6 +140,15 @@ struct LobbyMapInfo : public LevelInfo {
                 }
             }
         }
+
+        const auto generate_character_switcher = []() {
+            std::shared_ptr<CharacterSwitcher> charSwitcher;
+            const auto location = vec2{5, 5};
+            charSwitcher.reset(new CharacterSwitcher(location));
+            EntityHelper::addEntity(charSwitcher);
+        };
+
+        generate_character_switcher();
     }
 
    private:

@@ -10,10 +10,18 @@
 
 struct Person : public Entity {
    private:
+    std::array<std::string, 3> character_models = {
+        "character_duck",
+        "character_dog",
+        "character_bear",
+    };
+    int model_index = 0;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<Entity>{});
+        s.value4b(model_index);
     }
 
    protected:
@@ -37,10 +45,13 @@ struct Person : public Entity {
         return (vec3){sz, sz, sz};
     }
 
+    void select_next_character_model() {
+        model_index = (model_index + 1) % character_models.size();
+    }
+
     virtual std::optional<ModelInfo> model() const override {
-        // TODO add character selector in lobby
         return ModelInfo{
-            .model = ModelLibrary::get().get("character_duck"),
+            .model = ModelLibrary::get().get(character_models[model_index]),
             .size_scale = 1.5f,
             .position_offset = vec3{0, 0, 0},
             .rotation_angle = 180,
