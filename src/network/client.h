@@ -68,7 +68,8 @@ struct Client {
                 .message = "Lost connection to Host",
                 .type = AnnouncementType::Error,
             });
-            Menu::get().set(Menu::Root);
+            MenuState::get().reset();
+            GameState::get().reset();
         }
     }
 
@@ -207,8 +208,10 @@ struct Client {
             case ClientPacket::MsgType::GameState: {
                 ClientPacket::GameStateInfo info =
                     std::get<ClientPacket::GameStateInfo>(packet.msg);
+                // TODO do we need to clear?
                 // Menu::get().clear_history();
-                Menu::get().set(info.host_menu_state);
+                MenuState::get().set(info.host_menu_state);
+                GameState::get().set(info.host_game_state);
             } break;
             case ClientPacket::MsgType::PlayerLocation: {
                 ClientPacket::PlayerInfo info =

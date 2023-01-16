@@ -5,6 +5,7 @@
 //
 #include "../entity.h"
 #include "../globals.h"
+#include "../statemanager.h"
 //
 #include "item_container.h"
 
@@ -21,7 +22,7 @@ struct BagBox : public ItemContainer<Bag> {
     explicit BagBox(vec2 pos) : ItemContainer<Bag>(pos) {}
 
     virtual std::optional<ModelInfo> model() const override {
-        const bool in_planning = Menu::get().is(Menu::State::Planning);
+        const bool in_planning = GameState::get().is(game::State::Planning);
 
         return ModelInfo{
             .model = in_planning ? ModelLibrary::get().get("box")

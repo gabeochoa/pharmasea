@@ -5,10 +5,14 @@
 #include "engine/keymap.h"
 #include "globals.h"
 #include "raylib.h"
+#include "statemanager.h"
 //
 #include "furniture.h"
 
 struct Player : public BasePlayer {
+    // Theres no players not in game menu state,
+    const menu::State state = menu::State::Game;
+
     std::string username;
     std::vector<UserInput> inputs;
     bool is_ghost_player = false;
@@ -40,28 +44,21 @@ struct Player : public BasePlayer {
     virtual bool is_collidable() override { return !is_ghost_player; }
 
     virtual vec3 update_xaxis_position(float dt) override {
-        float left = KeyMap::is_event(Menu::State::Game, InputName::PlayerLeft);
-        float right =
-            KeyMap::is_event(Menu::State::Game, InputName::PlayerRight);
+        float left = KeyMap::is_event(state, InputName::PlayerLeft);
+        float right = KeyMap::is_event(state, InputName::PlayerRight);
         if (left > 0)
-            inputs.push_back(
-                {Menu::State::Game, InputName::PlayerLeft, left, dt});
+            inputs.push_back({state, InputName::PlayerLeft, left, dt});
         if (right > 0)
-            inputs.push_back(
-                {Menu::State::Game, InputName::PlayerRight, right, dt});
+            inputs.push_back({state, InputName::PlayerRight, right, dt});
         return this->raw_position;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
-        float up =
-            KeyMap::is_event(Menu::State::Game, InputName::PlayerForward);
-        float down = KeyMap::is_event(Menu::State::Game, InputName::PlayerBack);
-        if (up > 0)
-            inputs.push_back(
-                {Menu::State::Game, InputName::PlayerForward, up, dt});
+        float up = KeyMap::is_event(state, InputName::PlayerForward);
+        float down = KeyMap::is_event(state, InputName::PlayerBack);
+        if (up > 0) inputs.push_back({state, InputName::PlayerForward, up, dt});
         if (down > 0)
-            inputs.push_back(
-                {Menu::State::Game, InputName::PlayerBack, down, dt});
+            inputs.push_back({state, InputName::PlayerBack, down, dt});
         return this->raw_position;
     }
 
@@ -69,25 +66,22 @@ struct Player : public BasePlayer {
         TRACY_ZONE_SCOPED;
         BasePlayer::always_update(dt);
 
-        bool pickup = KeyMap::is_event_once_DO_NOT_USE(Menu::State::Game,
-                                                       InputName::PlayerPickup);
+        bool pickup =
+            KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
         if (pickup) {
-            inputs.push_back(
-                {Menu::State::Game, InputName::PlayerPickup, 1.f, dt});
+            inputs.push_back({state, InputName::PlayerPickup, 1.f, dt});
         }
 
         bool rotate = KeyMap::is_event_once_DO_NOT_USE(
-            Menu::State::Game, InputName::PlayerRotateFurniture);
+            state, InputName::PlayerRotateFurniture);
         if (rotate) {
             inputs.push_back(
-                {Menu::State::Game, InputName::PlayerRotateFurniture, 1.f, dt});
+                {state, InputName::PlayerRotateFurniture, 1.f, dt});
         }
 
-        float do_work =
-            KeyMap::is_event(Menu::State::Game, InputName::PlayerDoWork);
+        float do_work = KeyMap::is_event(state, InputName::PlayerDoWork);
         if (do_work > 0) {
-            inputs.push_back(
-                {Menu::State::Game, InputName::PlayerDoWork, 1.f, dt});
+            inputs.push_back({state, InputName::PlayerDoWork, 1.f, dt});
         }
     }
 
@@ -97,7 +91,7 @@ struct Player : public BasePlayer {
         // log_trace("get_position_after_input {}", inpts.size());
         for (const UserInput& ui : inpts) {
             const auto menu_state = std::get<0>(ui);
-            if (menu_state != Menu::State::Game) continue;
+            if (menu_state != state) continue;
 
             const InputName input_name = std::get<1>(ui);
             const float input_amount = std::get<2>(ui);
@@ -148,7 +142,7 @@ struct Player : public BasePlayer {
     void rotate_furniture() {
         TRACY_ZONE_SCOPED;
         // Cant rotate outside planning mode
-        if (Menu::get().is_not(Menu::State::Planning)) return;
+        if (GameState::get().is_not(game::State::Planning)) return;
 
         std::shared_ptr<Furniture> match =
             EntityHelper::getClosestMatchingEntity<Furniture>(
@@ -163,7 +157,7 @@ struct Player : public BasePlayer {
     void work_furniture(float frame_dt) {
         TRACY_ZONE_SCOPED;
         // Cant do work during planning
-        if (Menu::get().is(Menu::State::Planning)) return;
+        if (GameState::get().is(game::State::Planning)) return;
 
         std::shared_ptr<Furniture> match =
             EntityHelper::getClosestMatchingEntity<Furniture>(
@@ -352,10 +346,12 @@ struct Player : public BasePlayer {
     }
 
     virtual void grab_or_drop() {
-        if (Menu::get().is(Menu::State::Game)) {
+        if (GameState::s_in_round()) {
             handle_in_game_grab_or_drop();
-        } else if (Menu::get().is(Menu::State::Planning)) {
+        } else if (GameState::get().is(game::State::Planning)) {
             handle_in_planning_grab_or_drop();
+        } else {
+            // TODO we probably want to handle messing around in the lobby
         }
     }
 };

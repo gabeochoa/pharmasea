@@ -4,6 +4,7 @@
 #include "external_include.h"
 //
 #include "drawing_util.h"
+#include "statemanager.h"
 
 struct Round {
     float currentRoundTime;
@@ -15,6 +16,8 @@ struct Round {
     }
 
     void onUpdate(float dt) {
+        if (!GameState::s_in_round()) return;
+
         if (currentRoundTime >= 0) currentRoundTime -= dt;
     }
 

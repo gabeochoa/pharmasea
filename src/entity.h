@@ -413,7 +413,9 @@ struct Entity {
 
     virtual void update(float dt) final {
         TRACY_ZONE_SCOPED;
-        if (Menu::get().is(Menu::State::Game)) {
+        // TODO do we run game updates during paused?
+        // TODO rename game/nongame to in_round inplanning
+        if (GameState::get().is(game::State::InRound)) {
             game_update(dt);
         } else {
             nongame_update(dt);

@@ -7,6 +7,7 @@
 #include "../engine/settings.h"
 #include "../entities.h"
 //
+#include "../statemanager.h"
 #include "shared.h"
 //
 #include "client.h"
@@ -93,8 +94,10 @@ struct Info {
         ClientPacket packet({
             .client_id = SERVER_CLIENT_ID,
             .msg_type = ClientPacket::MsgType::GameState,
-            .msg = ClientPacket::GameStateInfo(
-                {.host_menu_state = Menu::get().read()}),
+            .msg = ClientPacket::GameStateInfo({
+                .host_menu_state = MenuState::get().read(),
+                .host_game_state = GameState::get().read(),
+            }),
         });
         Server::queue_packet(packet);
     }

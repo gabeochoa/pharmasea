@@ -43,7 +43,8 @@ struct Server {
     std::shared_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
     std::thread::id thread_id;
-    Menu::State current_state;
+    menu::State current_menu_state;
+    game::State current_game_state;
 
     explicit Server(int port) {
         server_p.reset(new internal::Server(port));
@@ -138,7 +139,9 @@ struct Server {
                 case ClientPacket::MsgType::GameState: {
                     ClientPacket::GameStateInfo info =
                         std::get<ClientPacket::GameStateInfo>(p.msg);
-                    current_state = info.host_menu_state;
+                    // TODO probably dont need this
+                    current_menu_state = info.host_menu_state;
+                    current_game_state = info.host_game_state;
                 } break;
                 default:
                     break;
@@ -149,8 +152,8 @@ struct Server {
             packet_queue.pop_front();
         }
 
-        if (Menu::in_game(current_state)) {
-            TRACY_ZONE_NAMED(tracy_server_gametick, "process game tick", true);
+        if (MenuState::s_is_game(current_menu_state)) {
+            TRACY_ZONE(tracy_server_gametick);
             next_update_tick += dt;
             if (next_update_tick >= next_update_tick_reset) {
                 for (auto p : players) {

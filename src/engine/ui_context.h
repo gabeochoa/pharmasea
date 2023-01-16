@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "../menu.h"
 #include "../preload.h"
+#include "../statemanager.h"
 #include "../vec_util.h"
 #include "assert.h"
 #include "event.h"
@@ -21,7 +21,7 @@
 
 namespace ui {
 
-const Menu::State STATE = Menu::State::UI;
+const menu::State STATE = menu::State::UI;
 
 struct IUIContextInputManager {
     virtual ~IUIContextInputManager() {}
@@ -166,7 +166,7 @@ struct IUIContextInputManager {
         return c;
     }
 
-    void handleBadGamepadAxis(const KeyMapInputRequestError&, Menu::State,
+    void handleBadGamepadAxis(const KeyMapInputRequestError&, menu::State,
                               const InputName) {
         // TODO theres currently no valid inputs for axis on UI items so this is
         // all just firing constantly. log_warn("{}: No gamepad axis in {} for

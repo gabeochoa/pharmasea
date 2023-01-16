@@ -11,7 +11,7 @@
 #include "camera.h"
 #include "engine/layer.h"
 #include "entityhelper.h"
-#include "menu.h"
+#include "statemanager.h"
 
 struct GameDebugLayer : public Layer {
     bool debug_ui_enabled = false;
@@ -24,7 +24,7 @@ struct GameDebugLayer : public Layer {
     virtual ~GameDebugLayer() {}
 
     virtual void onEvent(Event& event) override {
-        if (!Menu::in_game()) return;
+        if (!MenuState::s_in_game()) return;
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(std::bind(
             &GameDebugLayer::onKeyPressed, this, std::placeholders::_1));
@@ -38,12 +38,12 @@ struct GameDebugLayer : public Layer {
     bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (KeyMap::get_button(Menu::State::Game, InputName::TogglePlanning) ==
+        if (KeyMap::get_button(menu::State::Game, InputName::TogglePlanning) ==
             event.button) {
-            Menu::toggle_planning();
+            GameState::s_toggle_planning();
             return true;
         }
-        if (KeyMap::get_button(Menu::State::Game, InputName::ToggleDebug) ==
+        if (KeyMap::get_button(menu::State::Game, InputName::ToggleDebug) ==
             event.button) {
             debug_ui_enabled = !debug_ui_enabled;
             return true;
@@ -52,13 +52,13 @@ struct GameDebugLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (KeyMap::get_key_code(Menu::State::Game,
+        if (KeyMap::get_key_code(menu::State::Game,
                                  InputName::TogglePlanning) == event.keycode) {
-            Menu::toggle_planning();
+            GameState::s_toggle_planning();
             EntityHelper::invalidatePathCache();
             return true;
         }
-        if (KeyMap::get_key_code(Menu::State::Game, InputName::ToggleDebug) ==
+        if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleDebug) ==
             event.keycode) {
             debug_ui_enabled = !debug_ui_enabled;
             return true;
@@ -67,13 +67,13 @@ struct GameDebugLayer : public Layer {
     }
 
     virtual void onUpdate(float) override {
-        if (!Menu::in_game()) return;
+        if (!MenuState::s_in_game()) return;
     }
 
     virtual void onDraw(float dt) override {
-        if (!Menu::in_game()) return;
+        if (!MenuState::s_in_game()) return;
 
-        if (Menu::get().is(Menu::State::Planning)) {
+        if (GameState::get().is(game::State::Planning)) {
             DrawTextEx(Preload::get().font, "IN PLANNING MODE", vec2{200, 100},
                        20, 0, RED);
         }

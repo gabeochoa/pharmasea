@@ -25,6 +25,7 @@
 
 #else
 
+// TODO add a note for whether we need these voids
 #define TRACY_FRAME_MARK(x) void
 #define TRACY_ZONE_SCOPED void
 #define TRACY_ZONE_NAMED(x, y, z) void

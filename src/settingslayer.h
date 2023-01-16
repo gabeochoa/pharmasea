@@ -7,6 +7,7 @@
 #include "engine/settings.h"
 #include "engine/trie.h"
 #include "menu.h"
+#include "statemanager.h"
 
 using namespace ui;
 
@@ -46,7 +47,7 @@ struct SettingsLayer : public Layer {
             keyBindingTrie.add(std::string(kv.second));
             keyInputValues.push_back(std::make_pair(
                 kv.first,
-                KeyMap::get_valid_inputs(Menu::State::Game, kv.first)));
+                KeyMap::get_valid_inputs(menu::State::Game, kv.first)));
         }
     }
 
@@ -62,7 +63,7 @@ struct SettingsLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (Menu::get().is_not(Menu::State::Settings)) return false;
+        if (MenuState::get().is_not(menu::State::Settings)) return false;
 
         //
         if (event.keycode == raylib::KEY_ESCAPE &&
@@ -72,14 +73,14 @@ struct SettingsLayer : public Layer {
         }
 
         if (event.keycode == raylib::KEY_ESCAPE) {
-            Menu::get().go_back();
+            MenuState::get().go_back();
             return true;
         }
         return ui_context.get()->process_keyevent(event);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (Menu::get().is_not(Menu::State::Settings)) return false;
+        if (MenuState::get().is_not(menu::State::Settings)) return false;
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
@@ -194,7 +195,7 @@ struct SettingsLayer : public Layer {
                                               Size_Px(120.f, 1.f),
                                               Size_Px(50.f, 1.f)),
                    "Back")) {
-            Menu::get().go_back();
+            MenuState::get().go_back();
         }
         padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                             Size_Pct(0.5f, 0.f)));
@@ -218,7 +219,7 @@ struct SettingsLayer : public Layer {
         // TODO save all the changed inputs
         for (const auto& kv : keyInputNames) {
             const auto keys =
-                KeyMap::get_valid_keys(Menu::State::Game, kv.first);
+                KeyMap::get_valid_keys(menu::State::Game, kv.first);
             // TODO handle multiple keys
             if (keys.empty()) continue;
             auto opt_key = magic_enum::enum_cast<raylib::KeyboardKey>(keys[0]);
@@ -269,12 +270,12 @@ struct SettingsLayer : public Layer {
     }
 
     virtual void onUpdate(float) override {
-        if (Menu::get().is_not(Menu::State::Settings)) return;
+        if (MenuState::get().is_not(menu::State::Settings)) return;
         raylib::SetExitKey(raylib::KEY_NULL);
     }
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().is_not(Menu::State::Settings)) return;
+        if (MenuState::get().is_not(menu::State::Settings)) return;
         ext::clear_background(ui_context->active_theme().background);
         draw_ui(dt);
     }

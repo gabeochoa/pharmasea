@@ -1,7 +1,7 @@
 
 #include "app.h"
 
-#define ENABLE_TRACING
+#define ENABLE_TRACING 1
 #include "tracy.h"
 //
 #include "globals_register.h"

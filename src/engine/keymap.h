@@ -5,7 +5,7 @@
 
 #include "raylib.h"
 //
-#include "../menu.h"
+#include "../statemanager.h"
 #include "../util.h"
 #include "files.h"
 //
@@ -52,7 +52,7 @@ enum InputName {
     ToggleDebug,     // DEBUG ONLY
 };
 
-typedef std::tuple<Menu::State, InputName, float, float> UserInput;
+typedef std::tuple<menu::State, InputName, float, float> UserInput;
 typedef std::vector<UserInput> UserInputs;
 
 // TODO: had a bit of trouble trying to serialize "full map" which
@@ -60,7 +60,7 @@ typedef std::vector<UserInput> UserInputs;
 typedef std::variant<int, GamepadAxisWithDir, GamepadButton> AnyInput;
 typedef std::vector<AnyInput> AnyInputs;
 typedef std::map<InputName, AnyInputs> LayerMapping;
-typedef std::map<Menu::State, LayerMapping> FullMap;
+typedef std::map<menu::State, LayerMapping> FullMap;
 
 struct MouseInfo {
     vec2 pos;
@@ -140,7 +140,7 @@ struct KeyMap {
         }
     }
 
-    [[nodiscard]] static float is_event(const Menu::State& state,
+    [[nodiscard]] static float is_event(const menu::State& state,
                                         const InputName& name) {
         const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
 
@@ -163,7 +163,7 @@ struct KeyMap {
         return value;
     }
 
-    [[nodiscard]] static bool is_event_once_DO_NOT_USE(const Menu::State& state,
+    [[nodiscard]] static bool is_event_once_DO_NOT_USE(const menu::State& state,
                                                        const InputName& name) {
         const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
 
@@ -184,7 +184,7 @@ struct KeyMap {
         return matches_named_event;
     }
 
-    [[nodiscard]] static int get_key_code(const Menu::State& state,
+    [[nodiscard]] static int get_key_code(const menu::State& state,
                                           const InputName& name) {
         const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
@@ -198,7 +198,7 @@ struct KeyMap {
 
     [[nodiscard]] static const tl::expected<GamepadAxisWithDir,
                                             KeyMapInputRequestError>
-    get_axis(const Menu::State& state, const InputName& name) {
+    get_axis(const menu::State& state, const InputName& name) {
         const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
             auto r = std::visit(
@@ -213,7 +213,7 @@ struct KeyMap {
         return tl::unexpected(KeyMapInputRequestError::NO_VALID_INPUT);
     }
 
-    [[nodiscard]] static GamepadButton get_button(const Menu::State& state,
+    [[nodiscard]] static GamepadButton get_button(const menu::State& state,
                                                   const InputName& name) {
         const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
         for (auto input : valid_inputs) {
@@ -229,7 +229,7 @@ struct KeyMap {
         return raylib::GAMEPAD_BUTTON_UNKNOWN;
     }
 
-    static bool does_layer_map_contain_key(const Menu::State& state,
+    static bool does_layer_map_contain_key(const menu::State& state,
                                            int keycode) {
         // We dont even have this Layer Map
         if (!KeyMap::get().mapping.contains(state)) return false;
@@ -249,7 +249,7 @@ struct KeyMap {
     }
 
     [[nodiscard]] static bool does_layer_map_contain_button(
-        const Menu::State& state, GamepadButton button) {
+        const menu::State& state, GamepadButton button) {
         // We dont even have this Layer Map
         if (!KeyMap::get().mapping.contains(state)) return false;
         const LayerMapping layermap = KeyMap::get().mapping[state];
@@ -269,7 +269,7 @@ struct KeyMap {
     }
 
     [[nodiscard]] static bool does_layer_map_contain_axis(
-        const Menu::State state, GamepadAxis axis) {
+        const menu::State state, GamepadAxis axis) {
         // We dont even have this Layer Map
         if (!KeyMap::get().mapping.contains(state)) return false;
         const LayerMapping layermap = KeyMap::get().mapping[state];
@@ -289,12 +289,12 @@ struct KeyMap {
     }
 
     [[nodiscard]] static const AnyInputs get_valid_inputs(
-        const Menu::State& state, const InputName& name) {
+        const menu::State& state, const InputName& name) {
         return KeyMap::get().mapping[state][name];
     }
 
     [[nodiscard]] static const std::vector<int> get_valid_keys(
-        const Menu::State& state, const InputName& name) {
+        const menu::State& state, const InputName& name) {
         const AnyInputs allInputs = get_valid_inputs(state, name);
         std::vector<int> keys;
         for (const auto& input : allInputs) {
@@ -332,7 +332,7 @@ struct KeyMap {
     }
 
     [[nodiscard]] LayerMapping& get_or_create_layer_map(
-        const Menu::State& state) {
+        const menu::State& state) {
         if (!this->mapping.contains(state)) {
             mapping[state] = LayerMapping();
         }
@@ -370,7 +370,7 @@ struct KeyMap {
     // TODO this needs to not be in engine...
     void load_game_keys() {
         LayerMapping& game_map =
-            this->get_or_create_layer_map(Menu::State::Game);
+            this->get_or_create_layer_map(menu::State::Game);
         game_map[InputName::PlayerForward] = {
             raylib::KEY_W,
             raylib::GAMEPAD_BUTTON_LEFT_FACE_UP,
@@ -441,7 +441,7 @@ struct KeyMap {
 
     // TODO this could probably stay
     void load_ui_keys() {
-        LayerMapping& ui_map = this->get_or_create_layer_map(Menu::State::UI);
+        LayerMapping& ui_map = this->get_or_create_layer_map(menu::State::UI);
         ui_map[InputName::WidgetNext] = {
             raylib::KEY_TAB,
             raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN,
@@ -496,7 +496,7 @@ struct KeyMap {
         ui_map[InputName::Pause] = {raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT};
 
         LayerMapping& root_map =
-            this->get_or_create_layer_map(Menu::State::Root);
+            this->get_or_create_layer_map(menu::State::Root);
         for (auto kv : ui_map) {
             root_map[kv.first] = kv.second;
         }

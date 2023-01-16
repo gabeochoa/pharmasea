@@ -13,8 +13,8 @@
 #include "engine/music_library.h"
 #include "engine/texture_library.h"
 #include "map.h"
-#include "menu.h"
 #include "player.h"
+#include "statemanager.h"
 
 struct GameLayer : public Layer {
     std::shared_ptr<Player> player;
@@ -36,7 +36,7 @@ struct GameLayer : public Layer {
     virtual ~GameLayer() {}
 
     virtual void onEvent(Event& event) override {
-        if (!Menu::in_game()) return;
+        if (!MenuState::s_in_game()) return;
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(
             std::bind(&GameLayer::onKeyPressed, this, std::placeholders::_1));
@@ -49,10 +49,9 @@ struct GameLayer : public Layer {
     bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        // Note: You can only pause in game state, in planning no pause
-        if (KeyMap::get_button(Menu::State::Game, InputName::Pause) ==
+        if (KeyMap::get_button(menu::State::Game, InputName::Pause) ==
             event.button) {
-            Menu::pause();
+            GameState::s_pause();
             return true;
         }
         return false;
@@ -60,9 +59,9 @@ struct GameLayer : public Layer {
 
     bool onKeyPressed(KeyPressedEvent& event) {
         // Note: You can only pause in game state, in planning no pause
-        if (KeyMap::get_key_code(Menu::State::Game, InputName::Pause) ==
+        if (KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
             event.keycode) {
-            Menu::pause();
+            GameState::s_pause();
             //  TODO obv need to have this fun on a timer or something instead
             //  of on esc
             SoundLibrary::get().play_random_match("pa_announcements_");
@@ -81,9 +80,9 @@ struct GameLayer : public Layer {
 
     virtual void onUpdate(float dt) override {
         TRACY_ZONE_SCOPED;
-        if (Menu::is_paused() || Menu::in_game()) play_music();
-        if (!Menu::in_game()) return;
-        PROFILE();
+        if (MenuState::s_in_game()) play_music();
+
+        if (!GameState::s_should_update()) return;
 
         // Dont quit window on escape
         raylib::SetExitKey(raylib::KEY_NULL);
@@ -105,8 +104,7 @@ struct GameLayer : public Layer {
 
     virtual void onDraw(float dt) override {
         TRACY_ZONE_SCOPED;
-        if (!Menu::in_game() && !Menu::is_paused()) return;
-        PROFILE();
+        if (!MenuState::s_in_game()) return;
 
         const auto map_ptr = GLOBALS.get_ptr<Map>("map");
 

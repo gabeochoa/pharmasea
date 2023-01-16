@@ -5,7 +5,6 @@
 #include "../engine/keymap.h"
 #include "../globals.h"
 #include "../map.h"
-#include "../menu.h"
 #include "../toastmanager.h"
 #include "../util.h"
 #include "steam/steamnetworkingtypes.h"
@@ -66,7 +65,9 @@ struct ClientPacket {
 
     // Game Info
     struct GameStateInfo {
-        Menu::State host_menu_state;
+        // TODO we likely dont need to send menu state anymore
+        menu::State host_menu_state;
+        game::State host_game_state;
     };
 
     // Packet containing a recent keypress
@@ -121,8 +122,8 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
                                    info.inputs.size());
             },
             [&](ClientPacket::GameStateInfo info) {
-                return fmt::format("GameStateInfo( state: {} )",
-                                   info.host_menu_state);
+                return fmt::format("GameStateInfo( menu: {} game: {})",
+                                   info.host_menu_state, info.host_game_state);
             },
             [&](ClientPacket::MapInfo) { return std::string("map info"); },
             [&](ClientPacket::PlayerInfo info) {
@@ -178,13 +179,15 @@ void serialize(S& s, ClientPacket& packet) {
                           sv.ext(
                               input,
                               bitsery::ext::StdTuple{
-                                  [](auto& s, Menu::State& o) { s.value4b(o); },
+                                  [](auto& s, menu::State& o) { s.value4b(o); },
+                                  [](auto& s, game::State& o) { s.value4b(o); },
                                   [](auto& s, InputName& o) { s.value4b(o); },
                                   [](auto& s, float& o) { s.value4b(o); }});
                       });
               },
               [](S& s, ClientPacket::GameStateInfo& info) {
                   s.value4b(info.host_menu_state);
+                  s.value4b(info.host_game_state);
               },
               [](S& s, ClientPacket::MapInfo& info) { s.object(info.map); },
               [](S& s, ClientPacket::PlayerInfo& info) {

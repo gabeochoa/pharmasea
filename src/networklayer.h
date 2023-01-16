@@ -18,6 +18,7 @@
 #include "network/network.h"
 #include "player.h"
 #include "remote_player.h"
+#include "statemanager.h"
 #include "toastmanager.h"
 
 using namespace ui;
@@ -65,22 +66,22 @@ struct NetworkLayer : public Layer {
     }
 
     bool onCharPressedEvent(CharPressedEvent& event) {
-        if (Menu::get().is_not(Menu::State::Network)) return false;
+        if (MenuState::get().is_not(menu::State::Network)) return false;
         return ui_context.get()->process_char_press_event(event);
     }
 
     bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) {
-        if (Menu::get().is_not(Menu::State::Network)) return false;
+        if (MenuState::get().is_not(menu::State::Network)) return false;
         return ui_context.get()->process_gamepad_axis_event(event);
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (Menu::get().is_not(Menu::State::Network)) return false;
+        if (MenuState::get().is_not(menu::State::Network)) return false;
         return ui_context.get()->process_keyevent(event);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (Menu::get().is_not(Menu::State::Network)) return false;
+        if (MenuState::get().is_not(menu::State::Network)) return false;
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
@@ -88,7 +89,7 @@ struct NetworkLayer : public Layer {
         // NOTE: this has to go above the checks since it always has to run
         network_info->tick(dt);
 
-        if (Menu::get().is_not(Menu::State::Network)) return;
+        if (MenuState::get().is_not(menu::State::Network)) return;
         // if we get here, then user clicked "join"
     }
 
@@ -129,8 +130,8 @@ struct NetworkLayer : public Layer {
                 padding(*ui::components::mk_but_pad());
                 if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                            "Back")) {
-                    Menu::get().clear_history();
-                    Menu::get().set(Menu::State::Root);
+                    MenuState::get().clear_history();
+                    MenuState::get().set(menu::State::Root);
                 }
             }
             ui_context->pop_parent();
@@ -230,7 +231,10 @@ struct NetworkLayer : public Layer {
         if (network_info->is_host()) {
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                        "Start")) {
-                Menu::get().set(Menu::State::Planning);
+                MenuState::get().set(menu::State::Game);
+                // TODO eventually replace with lobby
+                // GameState::get().set(game::State::Lobby);
+                GameState::get().set(game::State::Planning);
             }
             padding(*ui::components::mk_but_pad());
         }
@@ -272,7 +276,7 @@ struct NetworkLayer : public Layer {
         }
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
-            Menu::get().go_back();
+            MenuState::get().go_back();
         }
     }
 
@@ -305,7 +309,7 @@ struct NetworkLayer : public Layer {
         // TODO add an overlay that shows who's currently available
         // draw_network_overlay();
 
-        if (Menu::get().is_not(Menu::State::Network)) return;
+        if (MenuState::get().is_not(menu::State::Network)) return;
 
         ui_context->begin(dt);
 

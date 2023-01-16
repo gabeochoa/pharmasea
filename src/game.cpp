@@ -11,7 +11,7 @@
 // - vendor/tracy/TracyClient.cpp
 // - app.cpp
 // TODO find a way to enable this in the compiler so we dont have to do this
-#define ENABLE_TRACING
+#define ENABLE_TRACING 1
 #include "engine/tracy.h"
 //
 
@@ -24,7 +24,7 @@
 #include "engine/app.h"
 #include "engine/defer.h"
 #include "engine/settings.h"
-#include "menu.h"
+#include "statemanager.h"
 //
 #include "aboutlayer.h"
 #include "fpslayer.h"
@@ -80,7 +80,8 @@ void startup() {
     tests::run_all();
     std::cout << "All tests ran successfully" << std::endl;
 
-    Menu::get().set(Menu::State::Root);
+    MenuState::get().reset();
+    GameState::get().reset();
 
     Layer* layers[] = {
         //
@@ -91,7 +92,6 @@ void startup() {
         new ToastLayer(),
         //
         new PauseLayer(),
-        new PausePlanningLayer(),
         //
         new NetworkLayer(),
         new GameLayer(),

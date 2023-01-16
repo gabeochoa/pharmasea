@@ -6,7 +6,7 @@
 //
 #include "engine.h"
 //
-#include "menu.h"
+#include "statemanager.h"
 
 struct AboutLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -28,9 +28,9 @@ A game by:
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (Menu::get().is_not(Menu::State::About)) return false;
+        if (MenuState::get().is_not(menu::State::About)) return false;
         if (event.keycode == raylib::KEY_ESCAPE) {
-            Menu::get().go_back();
+            MenuState::get().go_back();
             return true;
         }
         return ui_context.get()->process_keyevent(event);
@@ -61,7 +61,7 @@ A game by:
                 text(*about_text, about_info);
                 if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                            "Back")) {
-                    Menu::get().go_back();
+                    MenuState::get().go_back();
                 }
                 padding(*ui::components::mk_padding(Size_Px(50.f, 1.f),
                                                     Size_Pct(0.5, 0.f)));
@@ -77,12 +77,12 @@ A game by:
         // constructor and have app / layer handle this for us?
         //
         // Does pause not support this ^^ solution?
-        if (Menu::get().is_not(Menu::State::About)) return;
+        if (MenuState::get().is_not(menu::State::About)) return;
         raylib::SetExitKey(raylib::KEY_NULL);
     }
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().is_not(Menu::State::About)) return;
+        if (MenuState::get().is_not(menu::State::About)) return;
         ext::clear_background(ui_context->active_theme().background);
         draw_ui(dt);
     }

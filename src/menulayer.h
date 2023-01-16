@@ -8,6 +8,7 @@
 #include "external_include.h"
 #include "menu.h"
 #include "raylib.h"
+#include "statemanager.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -27,17 +28,17 @@ struct MenuLayer : public Layer {
     }
 
     bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) {
-        if (Menu::get().is_not(Menu::State::Root)) return false;
+        if (MenuState::get().is_not(menu::State::Root)) return false;
         return ui_context.get()->process_gamepad_axis_event(event);
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (Menu::get().is_not(Menu::State::Root)) return false;
+        if (MenuState::get().is_not(menu::State::Root)) return false;
         return ui_context.get()->process_keyevent(event);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (Menu::get().is_not(Menu::State::Root)) return false;
+        if (MenuState::get().is_not(menu::State::Root)) return false;
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
@@ -68,17 +69,17 @@ struct MenuLayer : public Layer {
                                                 Size_Pct(1.f, 0.f)));
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                        "Play")) {
-                Menu::get().set(Menu::State::Network);
+                MenuState::get().set(menu::State::Network);
             }
             padding(*ui::components::mk_but_pad());
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                        "About")) {
-                Menu::get().set(Menu::State::About);
+                MenuState::get().set(menu::State::About);
             }
             padding(*ui::components::mk_but_pad());
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                        "Settings")) {
-                Menu::get().set(Menu::State::Settings);
+                MenuState::get().set(menu::State::Settings);
             }
             padding(*ui::components::mk_but_pad());
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
@@ -115,16 +116,15 @@ struct MenuLayer : public Layer {
 
     virtual void onUpdate(float) override {
         ZoneScoped;
-        if (Menu::get().is_in_menu()) play_music();
-
-        if (Menu::get().is_not(Menu::State::Root)) return;
+        if (MenuState::get().is_in_menu()) play_music();
+        if (MenuState::get().is_not(menu::State::Root)) return;
         PROFILE();
         raylib::SetExitKey(raylib::KEY_ESCAPE);
     }
 
     virtual void onDraw(float dt) override {
         ZoneScoped;
-        if (Menu::get().is_not(Menu::State::Root)) return;
+        if (MenuState::get().is_not(menu::State::Root)) return;
         PROFILE();
         ClearBackground(ui_context->active_theme().background);
 

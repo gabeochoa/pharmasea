@@ -5,6 +5,7 @@
 #include "entityhelper.h"
 #include "globals.h"
 #include "person.h"
+#include "statemanager.h"
 
 struct TargetCube : public Person {
     TargetCube(vec3 p, Color face_color_in, Color base_color_in)
@@ -18,9 +19,9 @@ struct TargetCube : public Person {
         float speed = 10.0f * dt;
         auto new_pos_x = this->raw_position;
         bool left =
-            (bool) KeyMap::is_event(Menu::State::Game, InputName::TargetLeft);
+            (bool) KeyMap::is_event(menu::State::Game, InputName::TargetLeft);
         bool right =
-            (bool) KeyMap::is_event(Menu::State::Game, InputName::TargetRight);
+            (bool) KeyMap::is_event(menu::State::Game, InputName::TargetRight);
         if (left) new_pos_x.x -= speed;
         if (right) new_pos_x.x += speed;
         return new_pos_x;
@@ -29,10 +30,10 @@ struct TargetCube : public Person {
     virtual vec3 update_zaxis_position(float dt) override {
         float speed = 10.0f * dt;
         auto new_pos_z = this->raw_position;
-        bool up = (bool) KeyMap::is_event(Menu::State::Game,
+        bool up = (bool) KeyMap::is_event(menu::State::Game,
                                           InputName::TargetForward);
         bool down =
-            (bool) KeyMap::is_event(Menu::State::Game, InputName::TargetBack);
+            (bool) KeyMap::is_event(menu::State::Game, InputName::TargetBack);
         if (up) new_pos_z.z -= speed;
         if (down) new_pos_z.z += speed;
         return new_pos_z;

@@ -5,23 +5,23 @@
 #include "engine/globals_register.h"
 #include "engine/layer.h"
 #include "external_include.h"
-#include "menu.h"
+#include "statemanager.h"
 
 using namespace ui;
 
 struct BasePauseLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
-    Menu::State back_state;
-    Menu::State enabled_state;
+    game::State back_state;
+    game::State enabled_state;
 
-    BasePauseLayer(const char* name, Menu::State b_state, Menu::State e_state)
+    BasePauseLayer(const char* name, game::State b_state, game::State e_state)
         : Layer(name), back_state(b_state), enabled_state(e_state) {
         ui_context.reset(new ui::UIContext());
     }
     virtual ~BasePauseLayer() {}
 
     virtual void onEvent(Event& event) override {
-        if (Menu::get().is_not(enabled_state)) return;
+        if (GameState::get().is_not(enabled_state)) return;
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(std::bind(
             &BasePauseLayer::onKeyPressed, this, std::placeholders::_1));
@@ -31,18 +31,18 @@ struct BasePauseLayer : public Layer {
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (KeyMap::get_button(Menu::State::Game, InputName::Pause) ==
+        if (KeyMap::get_button(menu::State::Game, InputName::Pause) ==
             event.button) {
-            Menu::get().go_back();
+            MenuState::get().go_back();
             return true;
         }
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
     bool onKeyPressed(KeyPressedEvent& event) {
-        if (KeyMap::get_key_code(Menu::State::Game, InputName::Pause) ==
+        if (KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
             event.keycode) {
-            Menu::get().go_back();
+            MenuState::get().go_back();
             return true;
         }
         return ui_context.get()->process_keyevent(event);
@@ -51,7 +51,10 @@ struct BasePauseLayer : public Layer {
     virtual void onUpdate(float) override {}
 
     virtual void onDraw(float dt) override {
-        if (Menu::get().is_not(enabled_state)) return;
+        // Note: theres no pausing outside the game, so dont render
+        if (!MenuState::s_in_game()) return;
+
+        if (GameState::get().is_not(enabled_state)) return;
 
         // NOTE: We specifically dont clear background
         // because people are used to pause menu being an overlay
@@ -80,16 +83,16 @@ struct BasePauseLayer : public Layer {
                 {
                     if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                                "Continue")) {
-                        Menu::get().go_back();
+                        GameState::get().go_back();
                     }
                     if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                                "Settings")) {
-                        Menu::get().set(Menu::State::Settings);
+                        MenuState::get().set(menu::State::Settings);
                     }
                     if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                                "Quit")) {
-                        Menu::get().clear_history();
-                        Menu::get().set(Menu::State::Root);
+                        MenuState::get().reset();
+                        GameState::get().reset();
                     }
                 }
                 padding(*ui_context->own(
@@ -104,13 +107,6 @@ struct BasePauseLayer : public Layer {
 
 struct PauseLayer : public BasePauseLayer {
     PauseLayer()
-        : BasePauseLayer("Pause", Menu::State::Game, Menu::State::Paused) {}
+        : BasePauseLayer("Pause", game::State::InRound, game::State::Paused) {}
     virtual ~PauseLayer() {}
-};
-
-struct PausePlanningLayer : public BasePauseLayer {
-    PausePlanningLayer()
-        : BasePauseLayer("Pause", Menu::State::Planning,
-                         Menu::State::PausedPlanning) {}
-    virtual ~PausePlanningLayer() {}
 };
