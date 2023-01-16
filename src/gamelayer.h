@@ -154,8 +154,7 @@ struct GameLayer : public Layer {
 
         // note: for ui stuff
         if (map_ptr) {
-            const auto round = map_ptr->active_round;
-            if (round.has_value()) round->onDraw();
+            map_ptr->onDrawUI(dt);
         }
     }
 };
