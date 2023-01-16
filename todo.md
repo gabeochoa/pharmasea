@@ -21,6 +21,10 @@ kanban-plugin: basic
 - [ ] unrelated: proggy clean font: https://www.dafont.com/proggy-clean.font
 - [ ] consider switching to https://github.com/graphitemaster/0xABAD1DEA for all of our static globals
 - [ ] Look into if its worth using fmod for sound: https://www.fmod.com/
+- [ ] Investigate Fiber jobs: http://gdcvault.com/play/1022186/Parallelizing-the-Naughty-Dog-Engine
+- [ ] Create / Use a flatmap/flatset for better cache locality on smaller data sets
+- [ ] Should we be using arena allocators?
+- [ ] Ability to poll a specific folder for new / changed files
 
 
 ## want for mvp

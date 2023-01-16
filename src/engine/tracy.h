@@ -19,6 +19,7 @@
 #include <tracy/tracy/Tracy.hpp>
 #define TRACY_FRAME_MARK(x) FrameMark
 #define TRACY_ZONE_SCOPED ZoneScoped
+#define TRACY_ZONE(x) ZoneNamedN(x, #x, true)
 #define TRACY_ZONE_NAMED(x, y, z) ZoneNamedN(x, y, z)
 #define TRACY_LOG(msg, size) TracyMessage(msg, size)
 

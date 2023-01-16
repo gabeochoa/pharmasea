@@ -82,6 +82,7 @@ struct ToastLayer : public Layer, public FontSizeCache {
 
             // TODO at some point we want to split the text onto different
             // lines...
+            // https://github.com/emilk/emilib/blob/master/emilib/word_wrap.cpp
             DrawTextEx(font, std::string(toast.msg).c_str(), pos, font_size,
                        spacing, font_color);
 

@@ -6,6 +6,8 @@
 #include <thread>
 #include <utility>
 
+// TODO add support for .interrupt() to force kill when we no longer need the
+// results
 /*
     auto continuous_timer = new auto(
         make_interval_timer([] {
