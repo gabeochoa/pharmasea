@@ -102,6 +102,7 @@ inline bool validation_test(TextfieldValidationDecisionFlag flag,
 typedef std::function<TextfieldValidationDecisionFlag(const std::string&)>
     TextFieldValidationFn;
 
+// TODO add ability to have a cursor and move the cursor with arrow keys
 bool textfield(
     // returns true if text changed
     const Widget& widget,

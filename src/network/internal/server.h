@@ -182,10 +182,19 @@ struct Server {
    private:
     void send_client_packet_to_client(HSteamNetConnection conn,
                                       ClientPacket packet) {
+        // TODO we should probably see if its worth compressing the data we are
+        // sending.
+
+        // TODO write logs for how much data to understand avg packet size per
+        // type
         Buffer buffer = serialize_to_buffer(packet);
-        interface->SendMessageToConnection(
-            conn, buffer.c_str(), (uint32) buffer.size(),
-            k_nSteamNetworkingSend_Reliable, nullptr);
+        interface->SendMessageToConnection(conn, buffer.c_str(),
+                                           (uint32) buffer.size(),
+                                           Channel::RELIABLE, nullptr);
+        // TODO why does unreliable make it so unreliable...
+        // eventually we want the packet to figure out if it should matter or
+        // not
+        // packet.channel, nullptr);
     }
 
     void connection_changed_callback(
