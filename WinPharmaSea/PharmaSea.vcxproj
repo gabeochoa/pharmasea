@@ -117,6 +117,7 @@
     <ClCompile Include="..\src\engine\files.cpp" />
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
     <ClCompile Include="..\src\game.cpp" />
+    <ClCompile Include="..\vendor\tracy\TracyClient.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
