@@ -284,8 +284,8 @@ struct Customer : public AIPerson {
         }
     }
 
-    virtual void game_update(float dt) override {
-        AIPerson::game_update(dt);
+    virtual void in_round_update(float dt) override {
+        AIPerson::in_round_update(dt);
 
         // Register* reg = get_target_register();
         // if (reg) {

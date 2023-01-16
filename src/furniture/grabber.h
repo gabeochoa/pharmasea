@@ -17,9 +17,9 @@ struct Grabber : public Conveyer {
     explicit Grabber(vec2 pos)
         : Conveyer(pos, ui::color::yellow, ui::color::yellow) {}
 
-    virtual void game_update(float dt) override {
+    virtual void in_round_update(float dt) override {
         // Handle the normal item movement code
-        Conveyer::game_update(dt);
+        Conveyer::in_round_update(dt);
 
         // We already have an item so
         if (this->held_item != nullptr) return;

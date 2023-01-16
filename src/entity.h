@@ -287,8 +287,8 @@ struct Entity {
         update_held_item_position();
     }
 
-    virtual void nongame_update(float) {}
-    virtual void game_update(float) {}
+    virtual void planning_update(float) {}
+    virtual void in_round_update(float) {}
 
     // return true if the position should be snapped at every update
     virtual bool is_snappable() { return false; }
@@ -416,9 +416,9 @@ struct Entity {
         // TODO do we run game updates during paused?
         // TODO rename game/nongame to in_round inplanning
         if (GameState::get().is(game::State::InRound)) {
-            game_update(dt);
+            in_round_update(dt);
         } else {
-            nongame_update(dt);
+            planning_update(dt);
         }
         always_update(dt);
     }

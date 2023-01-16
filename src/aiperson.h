@@ -206,7 +206,7 @@ struct AIPerson : public Person {
         }
     }
 
-    virtual void game_update(float dt) override {
+    virtual void in_round_update(float dt) override {
         if ((this->pushed_force.x != 0.0f      //
              || this->pushed_force.z != 0.0f)  //
             && job != nullptr) {
@@ -215,7 +215,7 @@ struct AIPerson : public Person {
             SoundLibrary::get().play("roblox");
         }
 
-        Person::game_update(dt);
+        Person::in_round_update(dt);
 
         if (!job) {
             get_starting_job();

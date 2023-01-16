@@ -31,8 +31,8 @@ struct ItemContainer : public Furniture {
         return true;
     }
 
-    virtual void game_update(float dt) override {
-        Furniture::game_update(dt);
+    virtual void in_round_update(float dt) override {
+        Furniture::in_round_update(dt);
         if (this->held_item == nullptr) {
             this->held_item.reset(
                 // TODO what is this color and what is it for

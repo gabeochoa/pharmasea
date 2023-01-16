@@ -64,8 +64,8 @@ struct Conveyer : public Furniture {
         }
     }
 
-    virtual void game_update(float dt) override {
-        Furniture::game_update(dt);
+    virtual void in_round_update(float dt) override {
+        Furniture::in_round_update(dt);
 
         can_take_from = false;
 

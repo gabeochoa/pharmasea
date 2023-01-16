@@ -40,8 +40,8 @@ struct BasePlayer : public Person {
         match->is_highlighted = true;
     }
 
-    virtual void nongame_update(float dt) override {
-        Person::nongame_update(dt);
+    virtual void planning_update(float dt) override {
+        Person::planning_update(dt);
         highlight_facing_furniture();
 
         // TODO if cannot be placed in this spot make it obvious to the user
