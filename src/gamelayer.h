@@ -64,7 +64,7 @@ struct GameLayer : public Layer {
             GameState::s_pause();
             //  TODO obv need to have this fun on a timer or something instead
             //  of on esc
-            SoundLibrary::get().play_random_match("pa_announcements_");
+            // SoundLibrary::get().play_random_match("pa_announcements_");
             return true;
         }
         return false;

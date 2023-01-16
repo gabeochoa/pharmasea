@@ -11,11 +11,10 @@ using namespace ui;
 
 struct BasePauseLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
-    game::State back_state;
     game::State enabled_state;
 
-    BasePauseLayer(const char* name, game::State b_state, game::State e_state)
-        : Layer(name), back_state(b_state), enabled_state(e_state) {
+    BasePauseLayer(const char* name, game::State e_state)
+        : Layer(name), enabled_state(e_state) {
         ui_context.reset(new ui::UIContext());
     }
     virtual ~BasePauseLayer() {}
@@ -106,7 +105,6 @@ struct BasePauseLayer : public Layer {
 };
 
 struct PauseLayer : public BasePauseLayer {
-    PauseLayer()
-        : BasePauseLayer("Pause", game::State::InRound, game::State::Paused) {}
+    PauseLayer() : BasePauseLayer("Pause", game::State::Paused) {}
     virtual ~PauseLayer() {}
 };
