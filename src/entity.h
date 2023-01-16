@@ -142,6 +142,7 @@ struct Entity {
      * Used for code for when the entity is highlighted
      * */
     virtual void render_highlighted() const {
+        TRACY_ZONE_SCOPED;
         if (model().has_value()) {
             ModelInfo model_info = model().value();
 
@@ -173,6 +174,7 @@ struct Entity {
      * Used for normal gameplay rendering
      * */
     virtual void render_normal() const {
+        TRACY_ZONE_SCOPED;
         if (this->is_highlighted) {
             render_highlighted();
             return;
@@ -396,6 +398,7 @@ struct Entity {
     }
 
     virtual void render() const final {
+        TRACY_ZONE_SCOPED;
         const auto debug_mode_on =
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
 
@@ -409,6 +412,7 @@ struct Entity {
     }
 
     virtual void update(float dt) final {
+        TRACY_ZONE_SCOPED;
         if (Menu::get().is(Menu::State::Game)) {
             game_update(dt);
         } else {
