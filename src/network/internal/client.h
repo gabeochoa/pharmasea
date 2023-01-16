@@ -53,6 +53,10 @@ struct Client {
     Client() {}
     ~Client() { send_leave_info_request(); }
 
+    [[nodiscard]] bool is_connected() const {
+        return connection != k_HSteamNetConnection_Invalid;
+    }
+
     void set_process_message(std::function<void(std::string)> cb) {
         process_message_cb = cb;
     }
