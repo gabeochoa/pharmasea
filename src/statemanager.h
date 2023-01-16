@@ -14,6 +14,7 @@ struct StateManager {
     [[nodiscard]] T read() const { return state; }
 
     T go_back() {
+        log_trace("going from {} to {}", state, prev.top());
         state = prev.top();
         prev.pop();
         return state;
@@ -31,6 +32,7 @@ struct StateManager {
 
     void set(T ns) {
         if (state == ns) return;
+        log_trace("trying to set state to {} (was {})", ns, state);
 
         prev.push(state);
         state = ns;

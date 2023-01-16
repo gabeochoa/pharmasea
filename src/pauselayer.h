@@ -33,7 +33,7 @@ struct BasePauseLayer : public Layer {
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         if (KeyMap::get_button(menu::State::Game, InputName::Pause) ==
             event.button) {
-            MenuState::get().go_back();
+            GameState::get().go_back();
             return true;
         }
         return ui_context.get()->process_gamepad_button_event(event);
@@ -42,7 +42,7 @@ struct BasePauseLayer : public Layer {
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
             event.keycode) {
-            MenuState::get().go_back();
+            GameState::get().go_back();
             return true;
         }
         return ui_context.get()->process_keyevent(event);
