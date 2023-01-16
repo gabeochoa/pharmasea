@@ -139,13 +139,8 @@ struct Server {
             Server::callback_instance = this;
             interface->RunCallbacks();
         };
-        auto poll_local_user_input = []() {
-            // used to handle '/quit'
-        };
-
         poll_incoming_messages();
         poll_connection_state_changes();
-        poll_local_user_input();
         return true;
     }
 

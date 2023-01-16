@@ -257,7 +257,7 @@ struct Server {
             std::get<ClientPacket::PlayerJoinInfo>(orig_packet.msg);
 
         if (info.hashed_version != HASHED_VERSION) {
-            // TODO send error message
+            // TODO send error message announcement
             log_warn(
                 "player tried to join but had incorrect version our "
                 "version : {}, their version : {} ",
