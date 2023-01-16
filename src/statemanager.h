@@ -97,10 +97,11 @@ struct MenuState : public StateManager<menu::State> {
 
 namespace game {
 enum State {
-    Lobby = 0,
-    InRound = 1,
-    Planning = 2,
-    Paused = 3,
+    InMenu = 0,
+    Lobby = 1,
+    InRound = 2,
+    Planning = 3,
+    Paused = 4,
 };
 inline std::ostream& operator<<(std::ostream& os, const State& state) {
     os << "Game::State " << magic_enum::enum_name(state);
@@ -114,7 +115,7 @@ struct GameState : public StateManager<game::State> {
     SINGLETON(GameState)
 
     virtual game::State default_value() const override {
-        return game::State::Lobby;
+        return game::State::InMenu;
     }
 
     game::State pause() {
@@ -138,7 +139,8 @@ struct GameState : public StateManager<game::State> {
 
     [[nodiscard]] static bool s_should_update() {
         const auto s = GameState::get().read();
-        return s == game::State::InRound || s == game::State::Planning;
+        return s == game::State::Lobby || s == game::State::InRound ||
+               s == game::State::Planning;
     }
     [[nodiscard]] static bool s_should_draw() { return s_should_update(); }
 

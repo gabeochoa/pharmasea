@@ -232,9 +232,7 @@ struct NetworkLayer : public Layer {
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                        "Start")) {
                 MenuState::get().set(menu::State::Game);
-                // TODO eventually replace with lobby
-                // GameState::get().set(game::State::Lobby);
-                GameState::get().set(game::State::Planning);
+                GameState::get().set(game::State::Lobby);
             }
             padding(*ui::components::mk_but_pad());
         }
