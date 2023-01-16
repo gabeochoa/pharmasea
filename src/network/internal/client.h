@@ -71,6 +71,19 @@ struct Client {
     void startup() {
         interface = SteamNetworkingSockets();
 
+        /// [connection int32] Upper limit of buffered pending bytes to be sent,
+        /// if this is reached SendMessage will return k_EResultLimitExceeded
+        /// Default is 512k (524288 bytes)
+        SteamNetworkingUtils()->SetGlobalConfigValueInt32(
+            k_ESteamNetworkingConfig_SendBufferSize, 1024 * 1024);
+
+        /// [connection int32] Timeout value (in ms) to use after connection is
+        /// established
+        SteamNetworkingUtils()->SetGlobalConfigValueInt32(
+            k_ESteamNetworkingConfig_TimeoutConnected, 10);
+        // NOTE: we might want to make this number larger to handle flakier
+        // connections
+
         SteamNetworkingConfigValue_t opt;
         opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged,
                    (void *) Client::SteamNetConnectionStatusChangedCallback);
