@@ -166,7 +166,7 @@ struct Player : public BasePlayer {
 
         if (!match) return;
 
-        match->do_work(frame_dt);
+        match->do_work(frame_dt, this);
     }
 
     void handle_in_game_grab_or_drop() {

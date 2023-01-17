@@ -6,6 +6,7 @@
 //
 #include "entity.h"
 #include "globals.h"
+#include "person.h"
 
 struct Furniture : public Entity {
    private:
@@ -63,7 +64,7 @@ struct Furniture : public Entity {
     }
 
     // Note: do nothing by default
-    virtual void do_work(float) {}
+    virtual void do_work(float, Person*) {}
 
     // Does this piece of furniture have work to be done?
     virtual bool has_work() const { return false; }
