@@ -54,11 +54,6 @@ struct Server {
         server_p->onClientDisconnect = std::bind(&Server::process_player_leave,
                                                  this, std::placeholders::_1);
         server_p->startup();
-
-        // TODO add some kind of seed selection screen
-
-        pharmacy_map.reset(new Map());
-        GLOBALS.set("server_map", pharmacy_map.get());
     }
 
     void send_map_state() {
@@ -80,6 +75,12 @@ struct Server {
         TRACY_ZONE_SCOPED;
         thread_id = std::this_thread::get_id();
         GLOBALS.set("server_thread_id", &thread_id);
+
+        // TODO add some kind of seed selection screen
+
+        pharmacy_map.reset(new Map());
+        pharmacy_map->update_seed("default seed");
+        GLOBALS.set("server_map", pharmacy_map.get());
 
         using namespace std::chrono_literals;
         auto start = std::chrono::high_resolution_clock::now();
@@ -140,7 +141,12 @@ struct Server {
                     ClientPacket::GameStateInfo info =
                         std::get<ClientPacket::GameStateInfo>(p.msg);
                     // TODO probably dont need this
-                    current_menu_state = info.host_menu_state;
+                    // current_menu_state = info.host_menu_state;
+
+                    if (current_game_state != info.host_game_state) {
+                        log_info("server game state changed from {} to {}",
+                                 current_game_state, info.host_game_state);
+                    }
                     current_game_state = info.host_game_state;
                 } break;
                 default:

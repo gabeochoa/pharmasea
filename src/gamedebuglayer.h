@@ -11,6 +11,7 @@
 #include "camera.h"
 #include "engine/layer.h"
 #include "entityhelper.h"
+#include "map.h"
 #include "statemanager.h"
 
 struct GameDebugLayer : public Layer {
@@ -35,12 +36,24 @@ struct GameDebugLayer : public Layer {
             &GameDebugLayer::onGamepadAxisMoved, this, std::placeholders::_1));
     }
 
+    void toggle_planning() {
+        if (GameState::get().is(game::State::Lobby)) {
+            const auto map_ptr = GLOBALS.get_ptr<Map>("map");
+            if (map_ptr) {
+                map_ptr->level_info.gen_type = LevelInfo::GeneratorType::Game;
+                map_ptr->update_seed("default seed");
+            }
+        }
+        GameState::s_toggle_planning();
+        EntityHelper::invalidatePathCache();
+    }
+
     bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         if (KeyMap::get_button(menu::State::Game, InputName::TogglePlanning) ==
             event.button) {
-            GameState::s_toggle_planning();
+            toggle_planning();
             return true;
         }
         if (KeyMap::get_button(menu::State::Game, InputName::ToggleDebug) ==
@@ -54,8 +67,7 @@ struct GameDebugLayer : public Layer {
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(menu::State::Game,
                                  InputName::TogglePlanning) == event.keycode) {
-            GameState::s_toggle_planning();
-            EntityHelper::invalidatePathCache();
+            toggle_planning();
             return true;
         }
         if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleDebug) ==
