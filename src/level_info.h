@@ -9,6 +9,7 @@
 #include "engine/ui_color.h"
 #include "entity.h"
 #include "entityhelper.h"
+#include "furniture/character_switcher.h"
 #include "furnitures.h"
 #include "item.h"
 #include "item_helper.h"
@@ -35,6 +36,8 @@ static void generate_and_insert_walls(std::string /* seed */) {
 }
 
 struct LevelInfo {
+    bool was_generated = false;
+
     Entities entities;
     Entities::size_type num_entities;
 
@@ -80,6 +83,14 @@ struct LevelInfo {
         }
     }
 
+    void ensure_generated_map() {
+        if (was_generated) return;
+        was_generated = true;
+        generate_map();
+    }
+
+    virtual void generate_map() = 0;
+
    private:
     friend bitsery::Access;
     template<typename S>
@@ -94,10 +105,20 @@ struct LevelInfo {
         s.container(items, num_items, [](S& s2, std::shared_ptr<Item>& item) {
             s2.ext(item, bitsery::ext::StdSmartPtr{});
         });
+        s.value1b(was_generated);
     }
 };
 
 struct LobbyMapInfo : public LevelInfo {
+    virtual void generate_map() override {
+        {
+            std::shared_ptr<CharacterSwitcher> charSwitch;
+            const auto location = vec2{5, 5};
+            charSwitch.reset(new CharacterSwitcher(location));
+            EntityHelper::addEntity(charSwitch);
+        }
+    }
+
     virtual void onDraw(float dt) const override {
         auto cam = GLOBALS.get_ptr<GameCam>("game_cam");
         if (cam) {
@@ -123,8 +144,6 @@ struct LobbyMapInfo : public LevelInfo {
 };
 
 struct GameMapInfo : public LevelInfo {
-    bool was_generated = false;
-
     //
     std::string seed;
     size_t hashed_seed;
@@ -160,12 +179,6 @@ struct GameMapInfo : public LevelInfo {
         }
     }
 
-    void ensure_generated_map() {
-        if (was_generated) return;
-        was_generated = true;
-        generate_map();
-    }
-
    private:
     auto get_rand_walkable() {
         vec2 location;
@@ -176,7 +189,7 @@ struct GameMapInfo : public LevelInfo {
         return location;
     }
 
-    void generate_map() {
+    virtual void generate_map() override {
         auto generate_tables = [this]() {
             {
                 std::shared_ptr<Table> table;

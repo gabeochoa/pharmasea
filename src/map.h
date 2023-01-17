@@ -15,6 +15,7 @@
 #include "engine/log.h"
 #include "engine/random.h"
 #include "entity.h"
+#include "furniture/character_switcher.h"
 #include "furniture/medicine_cabinet.h"
 #include "furnitures.h"
 #include "level_info.h"
@@ -119,7 +120,7 @@ struct PolymorphicBaseClass<Entity>
 template<>
 struct PolymorphicBaseClass<Furniture>
     : PolymorphicDerivedClasses<Wall, Table, Register, Conveyer, Grabber,
-                                BagBox, MedicineCabinet> {};
+                                BagBox, MedicineCabinet, CharacterSwitcher> {};
 
 template<>
 struct PolymorphicBaseClass<Person> : PolymorphicDerivedClasses<AIPerson> {};
