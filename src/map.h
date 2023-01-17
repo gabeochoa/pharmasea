@@ -140,56 +140,47 @@ struct PolymorphicBaseClass<LevelInfo>
 
 using MyPolymorphicClasses = bitsery::ext::PolymorphicClassesList<Entity, Item>;
 
-struct Map {
-    LobbyMapInfo lobby_info;
-    GameMapInfo game_info;
+//
+// World represents all the pieces of the world that are serializable
+// anything non serializable can go into Map
+//
+struct World {
+    std::array<LevelInfo, 2> levels = {
+        LevelInfo(),
+        LevelInfo(),
+    };
+    int active_level = 0;
 
-    std::vector<std::shared_ptr<RemotePlayer>> remote_players_NOT_SERIALIZED;
-
-    Map(const std::string& _seed = "default_seed") { update_seed(_seed); }
-
-    void update_seed(const std::string& s) { game_info.update_seed(s); }
-
-    Items items() const {
-        return in_lobby_state() ? lobby_info.items : game_info.items;
+    void update_client_static() {
+        client_entities_DO_NOT_USE = levels[active_level].entities;
+        client_items_DO_NOT_USE = levels[active_level].items;
     }
 
-    Entities entities() const {
-        return in_lobby_state() ? lobby_info.entities : game_info.entities;
+    void init(const std::string& seed) {
+        levels[0].type = LevelInfo::Type::Lobby;
+        levels[1].type = LevelInfo::Type::Game;
+
+        update_seed(seed);
+    }
+
+    void update_seed(const std::string& s) {
+        levels[0].update_seed(s);
+        levels[1].update_seed(s);
     }
 
     void onUpdate(float dt) {
         TRACY_ZONE_SCOPED;
-        for (auto rp : remote_players_NOT_SERIALIZED) {
-            rp->update(dt);
-        }
-        if (in_lobby_state()) {
-            lobby_info.onUpdate(dt);
-        } else {
-            game_info.onUpdate(dt);
-        }
+        levels[active_level].onUpdate(dt);
     }
 
     void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
-        for (auto rp : remote_players_NOT_SERIALIZED) {
-            if (rp) rp->render();
-            if (!rp) log_warn("we have invalid remote players");
-        }
-        if (in_lobby_state()) {
-            lobby_info.onDraw(dt);
-        } else {
-            game_info.onDraw(dt);
-        }
+        levels[active_level].onDraw(dt);
     }
 
     void onDrawUI(float dt) {
         TRACY_ZONE_SCOPED;
-        if (in_lobby_state()) {
-            lobby_info.onDrawUI(dt);
-        } else {
-            game_info.onDrawUI(dt);
-        }
+        levels[active_level].onDrawUI(dt);
     }
 
     [[nodiscard]] bool in_lobby_state() const {
@@ -199,20 +190,48 @@ struct Map {
 
     // These are called before every "send_map_state" when server
     // sends everything over to clients
-    void ensure_generated_map() { game_info.ensure_generated_map(); }
-    void grab_things() {
-        if (in_lobby_state()) {
-            lobby_info.grab_things();
-        } else {
-            game_info.grab_things();
-        }
-    }
+    void ensure_generated_map() { levels[active_level].ensure_generated_map(); }
+    void grab_things() { levels[active_level].grab_things(); }
 
    private:
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
-        s.object(lobby_info);
-        s.object(game_info);
+        s.container(levels);
+        s.value4b(active_level);
+    }
+};
+
+struct Map {
+    World world;
+    std::vector<std::shared_ptr<RemotePlayer>> remote_players_NOT_SERIALIZED;
+
+    Map() {}
+
+    void init(const std::string& seed) { world.init(seed); }
+
+    void onUpdate(float dt) {
+        TRACY_ZONE_SCOPED;
+        for (auto rp : remote_players_NOT_SERIALIZED) {
+            rp->update(dt);
+        }
+        world.onUpdate(dt);
+    }
+
+    void onDraw(float dt) const {
+        TRACY_ZONE_SCOPED;
+        for (auto rp : remote_players_NOT_SERIALIZED) {
+            if (rp) rp->render();
+            if (!rp) log_warn("we have invalid remote players");
+        }
+        world.onDraw(dt);
+    }
+
+    void grab_things() { world.grab_things(); }
+    void ensure_generated_map() { world.ensure_generated_map(); }
+
+    void onDrawUI(float dt) {
+        TRACY_ZONE_SCOPED;
+        world.onDrawUI(dt);
     }
 };

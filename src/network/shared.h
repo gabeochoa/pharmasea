@@ -45,7 +45,7 @@ struct ClientPacket {
 
     enum MsgType {
         Announcement,
-        Map,
+        World,
         GameState,
         PlayerControl,
         PlayerJoin,
@@ -58,9 +58,9 @@ struct ClientPacket {
         AnnouncementType type;
     };
 
-    // Map Info
-    struct MapInfo {
-        struct Map map;
+    // World Info
+    struct WorldInfo {
+        struct World world;
     };
 
     // Game Info
@@ -100,7 +100,7 @@ struct ClientPacket {
     typedef std::variant<
         ClientPacket::AnnouncementInfo, ClientPacket::PlayerControlInfo,
         ClientPacket::PlayerJoinInfo, ClientPacket::GameStateInfo,
-        ClientPacket::MapInfo, ClientPacket::PlayerInfo,
+        ClientPacket::WorldInfo, ClientPacket::PlayerInfo,
         ClientPacket::PlayerLeaveInfo>
         Msg;
 
@@ -125,7 +125,7 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
                 return fmt::format("GameStateInfo( menu: {} game: {})",
                                    info.host_menu_state, info.host_game_state);
             },
-            [&](ClientPacket::MapInfo) { return std::string("map info"); },
+            [&](ClientPacket::WorldInfo) { return std::string("map info"); },
             [&](ClientPacket::PlayerInfo info) {
                 return fmt::format("PlayerInfo( pos({}, {}, {}), facing {})",
                                    info.location[0], info.location[1],
@@ -189,7 +189,7 @@ void serialize(S& s, ClientPacket& packet) {
                   s.value4b(info.host_menu_state);
                   s.value4b(info.host_game_state);
               },
-              [](S& s, ClientPacket::MapInfo& info) { s.object(info.map); },
+              [](S& s, ClientPacket::WorldInfo& info) { s.object(info.world); },
               [](S& s, ClientPacket::PlayerInfo& info) {
                   s.text1b(info.username, MAX_NAME_LENGTH);
                   s.value4b(info.location[0]);

@@ -9,6 +9,7 @@
 #include "engine/ui_color.h"
 #include "entity.h"
 #include "entityhelper.h"
+#include "furniture/character_switcher.h"
 #include "furnitures.h"
 #include "item.h"
 #include "item_helper.h"
@@ -16,6 +17,7 @@
 
 constexpr int MAX_MAP_SIZE = 20;
 constexpr int MAX_SEED_LENGTH = 20;
+constexpr int LOBBY_MAP_SIZE = 40;
 
 static void generate_and_insert_walls(std::string /* seed */) {
     // TODO generate walls based on seed
@@ -35,11 +37,20 @@ static void generate_and_insert_walls(std::string /* seed */) {
 }
 
 struct LevelInfo {
+    enum struct Type {
+        Lobby,
+        Game,
+    } type;
+
+    bool was_generated = false;
+
     Entities entities;
     Entities::size_type num_entities;
 
     Items items;
     Items::size_type num_items;
+
+    virtual void update_seed(const std::string&) {}
 
     virtual void onUpdate(float dt) {
         TRACY_ZONE_SCOPED;
@@ -80,6 +91,14 @@ struct LevelInfo {
         }
     }
 
+    void ensure_generated_map() {
+        if (was_generated) return;
+        was_generated = true;
+        generate_map();
+    }
+
+    virtual void generate_map() {}
+
    private:
     friend bitsery::Access;
     template<typename S>
@@ -114,6 +133,31 @@ struct LobbyMapInfo : public LevelInfo {
         LevelInfo::onDraw(dt);
     }
 
+    virtual void generate_map() override {
+        const auto d_color = (Color){155, 75, 0, 255};
+        for (int i = 0; i < LOBBY_MAP_SIZE; i++) {
+            for (int j = 0; j < LOBBY_MAP_SIZE; j++) {
+                if ((i == 0 && j == 0) || (i == 0 && j == 1)) continue;
+                if (i == 0 || j == 0 || i == LOBBY_MAP_SIZE - 1 ||
+                    j == LOBBY_MAP_SIZE - 1) {
+                    vec2 location = vec2{i * TILESIZE, j * TILESIZE};
+                    std::shared_ptr<Wall> wall;
+                    wall.reset(new Wall(location, d_color));
+                    EntityHelper::addEntity(wall);
+                }
+            }
+        }
+
+        const auto generate_character_switcher = []() {
+            std::shared_ptr<CharacterSwitcher> charSwitcher;
+            const auto location = vec2{5, 5};
+            charSwitcher.reset(new CharacterSwitcher(location));
+            EntityHelper::addEntity(charSwitcher);
+        };
+
+        generate_character_switcher();
+    }
+
    private:
     friend bitsery::Access;
     template<typename S>
@@ -123,8 +167,6 @@ struct LobbyMapInfo : public LevelInfo {
 };
 
 struct GameMapInfo : public LevelInfo {
-    bool was_generated = false;
-
     //
     std::string seed;
     size_t hashed_seed;
@@ -134,7 +176,7 @@ struct GameMapInfo : public LevelInfo {
 
     std::optional<Round> active_round;
 
-    void update_seed(const std::string& s) {
+    virtual void update_seed(const std::string& s) override {
         seed = s;
         hashed_seed = hashString(seed);
         generator = make_engine(hashed_seed);
@@ -147,7 +189,6 @@ struct GameMapInfo : public LevelInfo {
     }
 
     virtual void onUpdate(float dt) override {
-        // log_info("update game map info");
         LevelInfo::onUpdate(dt);
         if (active_round.has_value()) {
             active_round->onUpdate(dt);
@@ -160,12 +201,6 @@ struct GameMapInfo : public LevelInfo {
         }
     }
 
-    void ensure_generated_map() {
-        if (was_generated) return;
-        was_generated = true;
-        generate_map();
-    }
-
    private:
     auto get_rand_walkable() {
         vec2 location;
@@ -176,7 +211,8 @@ struct GameMapInfo : public LevelInfo {
         return location;
     }
 
-    void generate_map() {
+    virtual void generate_map() override {
+        log_info("generating game map");
         auto generate_tables = [this]() {
             {
                 std::shared_ptr<Table> table;

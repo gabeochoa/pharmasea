@@ -177,4 +177,8 @@ struct GameState : public StateManager<game::State> {
     static game::State s_toggle_planning() {
         return GameState::get().toggle_planning();
     }
+
+    [[nodiscard]] bool use_lobby_entities() const {
+        return is(game::State::InMenu) || is(game::State::Lobby);
+    }
 };
