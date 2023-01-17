@@ -156,19 +156,12 @@ struct Map {
 
     void update_seed(const std::string& s) { game_info.update_seed(s); }
 
-    Items items() const {
-        return in_lobby_state() ? lobby_info.items : game_info.items;
-    }
-
-    Entities entities() const {
-        return in_lobby_state() ? lobby_info.entities : game_info.entities;
-    }
-
     void onUpdate(float dt) {
         TRACY_ZONE_SCOPED;
         for (auto rp : remote_players_NOT_SERIALIZED) {
             rp->update(dt);
         }
+
         if (in_lobby_state()) {
             lobby_info.onUpdate(dt);
         } else {
@@ -182,6 +175,7 @@ struct Map {
             if (rp) rp->render();
             if (!rp) log_warn("we have invalid remote players");
         }
+
         if (in_lobby_state()) {
             lobby_info.onDraw(dt);
         } else {

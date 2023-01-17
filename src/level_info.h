@@ -205,6 +205,7 @@ struct GameMapInfo : public LevelInfo {
     }
 
     virtual void generate_map() override {
+        log_info("generating game map");
         auto generate_tables = [this]() {
             {
                 std::shared_ptr<Table> table;

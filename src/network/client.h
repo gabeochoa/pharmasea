@@ -20,7 +20,7 @@ struct Client {
     int id = 0;
     std::shared_ptr<internal::Client> client_p;
     std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
-    std::shared_ptr<Map> map;
+    Map pharmacy_map;
     std::vector<ClientPacket::AnnouncementInfo> announcements;
 
     float next_tick_reset = 0.02f;
@@ -32,8 +32,8 @@ struct Client {
             std::bind(&Client::client_process_message_string, this,
                       std::placeholders::_1));
 
-        map.reset(new Map("default_seed"));
-        GLOBALS.set("map", map.get());
+        pharmacy_map = Map("default_seed");
+        GLOBALS.set("map", &pharmacy_map);
     }
 
     void update_username(std::string new_name) {
@@ -124,16 +124,16 @@ struct Client {
             rp->update_name(username);
             // NOTE we add to the map directly because its colocated with
             //      the other entity info
-            map->remote_players_NOT_SERIALIZED.push_back(
+            pharmacy_map.remote_players_NOT_SERIALIZED.push_back(
                 remote_players[client_id]);
             log_info("Adding a player {}", client_id);
         };
 
         auto remove_player = [&](int client_id) {
-            for (auto it = map->remote_players_NOT_SERIALIZED.begin();
-                 it != map->remote_players_NOT_SERIALIZED.end(); it++) {
+            for (auto it = pharmacy_map.remote_players_NOT_SERIALIZED.begin();
+                 it != pharmacy_map.remote_players_NOT_SERIALIZED.end(); it++) {
                 if ((*it)->client_id == client_id) {
-                    map->remote_players_NOT_SERIALIZED.erase(it);
+                    pharmacy_map.remote_players_NOT_SERIALIZED.erase(it);
                     break;
                 }
             }
@@ -208,8 +208,6 @@ struct Client {
             case ClientPacket::MsgType::GameState: {
                 ClientPacket::GameStateInfo info =
                     std::get<ClientPacket::GameStateInfo>(packet.msg);
-                // TODO do we need to clear?
-                // Menu::get().clear_history();
                 MenuState::get().set(info.host_menu_state);
                 GameState::get().set(info.host_game_state);
             } break;
@@ -222,8 +220,15 @@ struct Client {
             case ClientPacket::MsgType::Map: {
                 ClientPacket::MapInfo info =
                     std::get<ClientPacket::MapInfo>(packet.msg);
-                client_entities_DO_NOT_USE = info.map.entities();
-                client_items_DO_NOT_USE = info.map.items();
+
+                client_entities_DO_NOT_USE = info.map.game_info.entities;
+                client_items_DO_NOT_USE = info.map.game_info.items;
+                pharmacy_map.game_info = info.map.game_info;
+
+                client_lobby_entities_DO_NOT_USE = info.map.lobby_info.entities;
+                client_lobby_items_DO_NOT_USE = info.map.lobby_info.items;
+                pharmacy_map.lobby_info = info.map.lobby_info;
+
             } break;
 
             default:

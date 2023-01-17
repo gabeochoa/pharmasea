@@ -40,7 +40,7 @@ struct Server {
     AtomicQueue<ClientPacket> packet_queue;
     std::shared_ptr<internal::Server> server_p;
     std::map<int, std::shared_ptr<Player> > players;
-    std::shared_ptr<Map> pharmacy_map;
+    Map pharmacy_map;
     std::atomic<bool> running;
     std::thread::id thread_id;
     menu::State current_menu_state;
@@ -55,21 +55,19 @@ struct Server {
                                                  this, std::placeholders::_1);
         server_p->startup();
 
-        // TODO add some kind of seed selection screen
-        pharmacy_map.reset(new Map("default_seed"));
-        GLOBALS.set("server_map", pharmacy_map.get());
+        pharmacy_map = Map("default_seed");
     }
 
     void send_map_state() {
-        pharmacy_map->grab_things();
-        pharmacy_map->ensure_generated_map();
+        pharmacy_map.grab_things();
+        pharmacy_map.ensure_generated_map();
 
         ClientPacket map_packet({
             .channel = Channel::RELIABLE,
             .client_id = SERVER_CLIENT_ID,
             .msg_type = network::ClientPacket::MsgType::Map,
             .msg = network::ClientPacket::MapInfo({
-                .map = *pharmacy_map,
+                .map = pharmacy_map,
             }),
         });
         server_p->send_client_packet_to_all(map_packet);
@@ -159,7 +157,7 @@ struct Server {
                     p.second->update(next_update_tick / 1000.f);
                 }
 
-                pharmacy_map->onUpdate(next_update_tick / 1000.f);
+                pharmacy_map.onUpdate(next_update_tick / 1000.f);
                 next_update_tick = 0.f;
             }
         }
