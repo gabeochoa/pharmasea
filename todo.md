@@ -25,6 +25,7 @@ kanban-plugin: basic
 - [ ] Create / Use a flatmap/flatset for better cache locality on smaller data sets
 - [ ] Should we be using arena allocators?
 - [ ] Ability to poll a specific folder for new / changed files
+- [ ] tweeny? https://github.com/mobius3/tweeny
 
 
 ## want for mvp
