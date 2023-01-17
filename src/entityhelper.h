@@ -16,8 +16,6 @@
 #include "statemanager.h"
 
 typedef std::vector<std::shared_ptr<Entity>> Entities;
-static Entities client_lobby_entities_DO_NOT_USE;
-static Entities server_lobby_entities_DO_NOT_USE;
 static Entities client_entities_DO_NOT_USE;
 static Entities server_entities_DO_NOT_USE;
 static std::map<vec2, bool> cache_is_walkable;
@@ -27,18 +25,15 @@ struct EntityHelper {
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
     static Entities& get_entities() {
-        const auto in_lobby = GameState::get().use_lobby_entities();
         if (is_server()) {
-            return in_lobby ? server_lobby_entities_DO_NOT_USE
-                            : server_entities_DO_NOT_USE;
+            return server_entities_DO_NOT_USE;
         }
         // Right now we only have server/client thread, but in the future if we
         // have more then we should check these
 
         // auto client_thread_id =
         // GLOBALS.get_or_default("client_thread_id", std::thread::id());
-        return in_lobby ? client_lobby_entities_DO_NOT_USE
-                        : client_entities_DO_NOT_USE;
+        return client_entities_DO_NOT_USE;
     }
 
     static void addEntity(std::shared_ptr<Entity> e) {

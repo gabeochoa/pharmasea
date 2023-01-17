@@ -37,6 +37,11 @@ static void generate_and_insert_walls(std::string /* seed */) {
 }
 
 struct LevelInfo {
+    enum struct Type {
+        Lobby,
+        Game,
+    } type;
+
     bool was_generated = false;
 
     Entities entities;
@@ -44,6 +49,8 @@ struct LevelInfo {
 
     Items items;
     Items::size_type num_items;
+
+    virtual void update_seed(const std::string&) {}
 
     virtual void onUpdate(float dt) {
         TRACY_ZONE_SCOPED;
@@ -90,7 +97,7 @@ struct LevelInfo {
         generate_map();
     }
 
-    virtual void generate_map() = 0;
+    virtual void generate_map() {}
 
    private:
     friend bitsery::Access;
@@ -169,7 +176,7 @@ struct GameMapInfo : public LevelInfo {
 
     std::optional<Round> active_round;
 
-    void update_seed(const std::string& s) {
+    virtual void update_seed(const std::string& s) override {
         seed = s;
         hashed_seed = hashString(seed);
         generator = make_engine(hashed_seed);

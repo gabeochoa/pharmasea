@@ -55,7 +55,8 @@ struct Server {
                                                  this, std::placeholders::_1);
         server_p->startup();
 
-        pharmacy_map = Map("default_seed");
+        pharmacy_map = Map();
+        pharmacy_map.init("default_seed");
     }
 
     void send_map_state() {
@@ -65,9 +66,9 @@ struct Server {
         ClientPacket map_packet({
             .channel = Channel::RELIABLE,
             .client_id = SERVER_CLIENT_ID,
-            .msg_type = network::ClientPacket::MsgType::Map,
-            .msg = network::ClientPacket::MapInfo({
-                .map = pharmacy_map,
+            .msg_type = network::ClientPacket::MsgType::World,
+            .msg = network::ClientPacket::WorldInfo({
+                .world = pharmacy_map.world,
             }),
         });
         server_p->send_client_packet_to_all(map_packet);

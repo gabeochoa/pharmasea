@@ -32,7 +32,7 @@ struct Client {
             std::bind(&Client::client_process_message_string, this,
                       std::placeholders::_1));
 
-        pharmacy_map = Map("default_seed");
+        pharmacy_map = Map();
         GLOBALS.set("map", &pharmacy_map);
     }
 
@@ -217,18 +217,12 @@ struct Client {
                 update_remote_player(packet.client_id, info.username,
                                      info.location, info.facing_direction);
             } break;
-            case ClientPacket::MsgType::Map: {
-                ClientPacket::MapInfo info =
-                    std::get<ClientPacket::MapInfo>(packet.msg);
+            case ClientPacket::MsgType::World: {
+                ClientPacket::WorldInfo info =
+                    std::get<ClientPacket::WorldInfo>(packet.msg);
 
-                client_entities_DO_NOT_USE = info.map.game_info.entities;
-                client_items_DO_NOT_USE = info.map.game_info.items;
-                pharmacy_map.game_info = info.map.game_info;
-
-                client_lobby_entities_DO_NOT_USE = info.map.lobby_info.entities;
-                client_lobby_items_DO_NOT_USE = info.map.lobby_info.items;
-                pharmacy_map.lobby_info = info.map.lobby_info;
-
+                pharmacy_map.world = info.world;
+                pharmacy_map.world.update_client_static();
             } break;
 
             default:
