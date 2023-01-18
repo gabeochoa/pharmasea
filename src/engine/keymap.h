@@ -48,8 +48,10 @@ enum InputName {
     TargetLeft,
     TargetRight,
     //
-    TogglePlanning,  // DEBUG ONLY
-    ToggleDebug,     // DEBUG ONLY
+    TogglePlanning,     // DEBUG ONLY
+    ToggleDebug,        // DEBUG ONLY
+    ToggleNetworkView,  // DEBUG ONLY
+    ToggleLobby,        // DEBUG ONLY
 };
 
 typedef std::tuple<menu::State, InputName, float, float> UserInput;
@@ -434,8 +436,16 @@ struct KeyMap {
             raylib::GAMEPAD_BUTTON_MIDDLE_LEFT,
         };
 
+        game_map[InputName::ToggleLobby] = {
+            raylib::KEY_L,
+        };
+
         game_map[InputName::ToggleDebug] = {
             raylib::KEY_BACKSLASH,
+        };
+
+        game_map[InputName::ToggleNetworkView] = {
+            raylib::KEY_EQUAL,
         };
     }
 
