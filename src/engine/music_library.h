@@ -37,9 +37,9 @@ struct MusicLibrary {
     float current_volume = 1.f;
 
     struct MusicLibraryImpl : Library<raylib::Music> {
-        virtual void load(const char* filename, const char* name) override {
-            log_info("Loading music: {} from {}", name, filename);
-            this->add(name, raylib::LoadMusicStream(filename));
+        virtual raylib::Music convert_filename_to_object(
+            const char* filename) override {
+            return raylib::LoadMusicStream(filename);
         }
 
         void update_volume(float new_v) {

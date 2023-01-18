@@ -24,9 +24,9 @@ struct TextureLibrary {
 
    private:
     struct TextureLibraryImpl : Library<raylib::Texture2D> {
-        virtual void load(const char* filename, const char* name) override {
-            log_info("Loading texture: {} from {}", name, filename);
-            this->add(name, raylib::LoadTexture(filename));
+        virtual raylib::Texture2D convert_filename_to_object(
+            const char* filename) override {
+            return raylib::LoadTexture(filename);
         }
 
         virtual void unload(raylib::Texture2D texture) override {

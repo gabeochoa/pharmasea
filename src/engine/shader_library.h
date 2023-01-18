@@ -21,11 +21,11 @@ struct ShaderLibrary {
 
    private:
     struct ShaderLibraryImpl : Library<raylib::Shader> {
-        virtual void load(const char* filename, const char* name) override {
-            log_info("Loading shader: {} from {}", name, filename);
+        virtual raylib::Shader convert_filename_to_object(
+            const char* filename) override {
             // TODO null first param sets default vertex shader, do we want
             // this?
-            this->add(name, raylib::LoadShader(0, filename));
+            return raylib::LoadShader(0, filename);
         }
 
         virtual void unload(raylib::Shader shader) override {

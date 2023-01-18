@@ -32,9 +32,9 @@ struct SoundLibrary {
 
    private:
     struct SoundLibraryImpl : Library<raylib::Sound> {
-        virtual void load(const char* filename, const char* name) override {
-            log_info("Loading sound: {} from {}", name, filename);
-            this->add(name, raylib::LoadSound(filename));
+        virtual raylib::Sound convert_filename_to_object(
+            const char* filename) override {
+            return raylib::LoadSound(filename);
         }
         virtual void unload(raylib::Sound sound) override {
             raylib::UnloadSound(sound);

@@ -46,10 +46,11 @@ struct ModelLibrary {
 
    private:
     struct ModelLibraryImpl : Library<raylib::Model> {
-        virtual void load(const char* filename, const char* name) override {
-            log_info("Loading model: {} from {}", name, filename);
-            this->add(name, raylib::LoadModel(filename));
+        virtual raylib::Model convert_filename_to_object(
+            const char* filename) override {
+            return raylib::LoadModel(filename);
         }
+
         virtual void unload(raylib::Model model) override {
             raylib::UnloadModel(model);
         }

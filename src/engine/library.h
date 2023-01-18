@@ -6,6 +6,7 @@
 #include "expected.hpp"
 #include "log.h"
 #include "random.h"
+#include "type_name.h"
 //
 template<typename T>
 struct Library {
@@ -64,11 +65,15 @@ struct Library {
         return (storage.find(name) != storage.end());
     }
 
-    virtual void load(const char* filename, const char* name) = 0;
+    virtual void load(const char* filename, const char* name) {
+        log_trace("Loading {}: {} from {}", type_name<T>(), name, filename);
+        this->add(name, convert_filename_to_object(filename));
+    }
+
+    virtual T convert_filename_to_object(const char* filename) = 0;
 
     void unload_all() {
-        log_info("Library<{}> loaded {} items", typeid(T).name(),
-                 storage.size());
+        log_info("Library<{}> loaded {} items", type_name<T>(), storage.size());
         for (auto kv : storage) {
             unload(kv.second);
         }
