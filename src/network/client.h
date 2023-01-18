@@ -33,6 +33,7 @@ struct Client {
                       std::placeholders::_1));
 
         map.reset(new Map());
+        map->update_seed("default_seed");
         GLOBALS.set("map", map.get());
     }
 

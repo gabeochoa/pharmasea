@@ -15,10 +15,12 @@
 
 struct GameDebugLayer : public Layer {
     bool debug_ui_enabled = false;
+    bool network_ui_enabled = false;
     std::shared_ptr<ui::UIContext> ui_context;
 
     GameDebugLayer() : Layer("Game") {
         GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);
+        GLOBALS.set("network_ui_enabled", &network_ui_enabled);
         ui_context.reset(new ui::UIContext());
     }
     virtual ~GameDebugLayer() {}
@@ -48,6 +50,11 @@ struct GameDebugLayer : public Layer {
             debug_ui_enabled = !debug_ui_enabled;
             return true;
         }
+        if (KeyMap::get_button(menu::State::Game,
+                               InputName::ToggleNetworkView) == event.button) {
+            network_ui_enabled = !network_ui_enabled;
+            return true;
+        }
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
@@ -58,9 +65,21 @@ struct GameDebugLayer : public Layer {
             EntityHelper::invalidatePathCache();
             return true;
         }
+        if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleLobby) ==
+            event.keycode) {
+            EntityHelper::invalidatePathCache();
+            GameState::get().set(game::State::Lobby);
+            return true;
+        }
         if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleDebug) ==
             event.keycode) {
             debug_ui_enabled = !debug_ui_enabled;
+            return true;
+        }
+        if (KeyMap::get_key_code(menu::State::Game,
+                                 InputName::ToggleNetworkView) ==
+            event.keycode) {
+            network_ui_enabled = !network_ui_enabled;
             return true;
         }
         return ui_context.get()->process_keyevent(event);
@@ -73,14 +92,16 @@ struct GameDebugLayer : public Layer {
     virtual void onDraw(float dt) override {
         if (!MenuState::s_in_game()) return;
 
-        if (GameState::get().is(game::State::Planning)) {
-            DrawTextEx(Preload::get().font, "IN PLANNING MODE", vec2{200, 100},
-                       20, 0, RED);
-        }
-
         if (!debug_ui_enabled) {
             DrawTextEx(Preload::get().font, "Press \\ to toggle debug UI",
                        vec2{200, 70}, 20, 0, RED);
+        }
+
+        if (!network_ui_enabled) {
+            DrawTextEx(
+                Preload::get().font,
+                "Press = to toggle network debug UI (only works if host)",
+                vec2{200, 100}, 20, 0, RED);
         }
 
         debug_ui(dt);

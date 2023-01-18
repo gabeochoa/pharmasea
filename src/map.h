@@ -123,7 +123,11 @@ struct PolymorphicBaseClass<Furniture>
                                 BagBox, MedicineCabinet, CharacterSwitcher> {};
 
 template<>
-struct PolymorphicBaseClass<Person> : PolymorphicDerivedClasses<AIPerson> {};
+struct PolymorphicBaseClass<Person>
+    : PolymorphicDerivedClasses<BasePlayer, AIPerson> {};
+
+template<>
+struct PolymorphicBaseClass<BasePlayer> : PolymorphicDerivedClasses<Player> {};
 
 template<>
 struct PolymorphicBaseClass<AIPerson> : PolymorphicDerivedClasses<Customer> {};
@@ -147,7 +151,10 @@ struct Map {
 
     std::vector<std::shared_ptr<RemotePlayer>> remote_players_NOT_SERIALIZED;
 
-    Map(const std::string& _seed = "default_seed") { update_seed(_seed); }
+    Map(const std::string& _seed = "default_seed") {
+        update_seed(_seed);
+        lobby_info.generate_map();
+    }
 
     void update_seed(const std::string& s) { game_info.update_seed(s); }
 

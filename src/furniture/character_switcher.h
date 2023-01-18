@@ -25,6 +25,7 @@ struct CharacterSwitcher : public Furniture {
     // TODO eventually we need it to decide whether it has work based on the
     // current held item
     virtual void do_work(float dt, Person* person) override {
+        log_info("doing work on character switcher");
         const float amt = 0.5f;
         pct_work_complete += amt * dt;
         if (pct_work_complete >= 1.f) {

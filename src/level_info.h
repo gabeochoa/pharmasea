@@ -47,7 +47,7 @@ struct LevelInfo {
     virtual void onUpdate(float dt) {
         TRACY_ZONE_SCOPED;
         for (auto e : EntityHelper::get_entities()) {
-            e->update(dt);
+            if (e) e->update(dt);
         }
     }
 

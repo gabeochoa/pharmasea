@@ -107,7 +107,12 @@ struct GameLayer : public Layer {
         TRACY_ZONE_SCOPED;
         if (!MenuState::s_in_game()) return;
 
-        const auto map_ptr = GLOBALS.get_ptr<Map>("map");
+        auto map_ptr = GLOBALS.get_ptr<Map>("map");
+        const auto network_debug_mode_on =
+            GLOBALS.get_or_default<bool>("network_ui_enabled", false);
+        if (network_debug_mode_on) {
+            map_ptr = GLOBALS.get_ptr<Map>("server_map");
+        }
 
         ext::clear_background(Color{200, 200, 200, 255});
         raylib::BeginMode3D((*cam).get());
@@ -115,6 +120,15 @@ struct GameLayer : public Layer {
             raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f},
                               (vec2){256.0f, 256.0f}, DARKGRAY);
             if (map_ptr) map_ptr->onDraw(dt);
+            if (network_debug_mode_on) {
+                const auto network_players =
+                    GLOBALS
+                        .get_or_default<std::map<int, std::shared_ptr<Player>>>(
+                            "server_players", {});
+                for (auto p : network_players) {
+                    if (p.second) p.second->render();
+                }
+            }
             // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
             // if (nav) {
             // for (auto kv : nav->entityShapes) {
