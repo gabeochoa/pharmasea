@@ -117,6 +117,9 @@ struct Settings {
     void update_master_volume(float nv) {
         data.master_volume = util::clamp(nv, 0.f, 1.f);
         log_info("master volume changed to {}", data.master_volume);
+
+        MusicLibrary::get().update_volume(data.music_volume);
+
         raylib::SetMasterVolume(data.master_volume);
     }
 
@@ -165,7 +168,7 @@ struct Settings {
         bitsery::quickDeserialization<settings::InputAdapter>(
             {buf_str.begin(), buf_str.size()}, data);
 
-        update_all_settings();
+        refresh_settings();
 
         log_info("Settings Loaded: {}", data);
         log_trace("End loading settings file");
@@ -192,22 +195,21 @@ struct Settings {
         return true;
     }
 
-   private:
     // Note: Basically once we load the file,
     // we run into an issue where our settings is correct,
     // but the underlying data isnt being used
     //
     // This function is used by the load to kick raylib into
     // the right config
-    void update_all_settings() {
+    void refresh_settings() {
         // Force a resolution fetch so that after the settings loads we have
         // them ready
         rez::ResolutionExplorer::get().load_resolution_options();
 
         // version doesnt need update
         update_window_size(data.resolution);
-        update_master_volume(data.master_volume);
         update_music_volume(data.music_volume);
+        update_master_volume(data.master_volume);
         update_streamer_safe_box(data.show_streamer_safe_box);
     }
 };

@@ -77,6 +77,12 @@ void startup() {
     // to font requirements
     Preload::create();
 
+    // Note: there was an issue where the master volume wasnt being respected
+    // until you open the settings page.
+    //
+    // Having this line here fixes that
+    Settings::get().refresh_settings();
+
     tests::run_all();
     std::cout << "All tests ran successfully" << std::endl;
 
