@@ -332,8 +332,7 @@ struct Server {
         const Client_t& incoming_client = client_message.first;
         const std::string& msg = client_message.second;
 
-        const ClientPacket packet =
-            network::internal::deserialize_to_packet(msg);
+        const ClientPacket packet = network::deserialize_to_packet(msg);
 
         switch (packet.msg_type) {
             case ClientPacket::MsgType::Announcement: {

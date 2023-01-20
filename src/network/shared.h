@@ -226,4 +226,20 @@ void serialize(S& s, ClientPacket& packet) {
           });
 }
 
+// ClientPacket is in shared.h which is specific to the game,
+// TODO how can we support both abstract while also configuration
+static ClientPacket deserialize_to_packet(const std::string& msg) {
+    TContext ctx{};
+    std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
+        MyPolymorphicClasses{});
+
+    BitseryDeserializer des{ctx, msg.begin(), msg.size()};
+
+    ClientPacket packet;
+    des.object(packet);
+    // TODO obviously theres a ton of validation we can do here but idk
+    // https://github.com/fraillt/bitsery/blob/master/examples/smart_pointers_with_polymorphism.cpp
+    return packet;
+}
+
 }  // namespace network
