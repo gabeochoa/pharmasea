@@ -6,6 +6,7 @@
 //
 #include "../engine/atomic_queue.h"
 #include "../engine/tracy.h"
+#include "../engine/trigger_on_dt.h"
 #include "shared.h"
 //
 #include "internal/server.h"
@@ -104,14 +105,17 @@ struct Server {
         }
     }
 
+    // TODO when trying to convert these to "trigger_on_dt"
+    // ran into an issue where both players would get kicked back to the main
+    // menu not sure why but it seems to be related to the next_map_tick timer
+
     // TODO verify that these numbers make sense, i have a feeling
     // its not 2fps but 1/50 seconds which woudl be 0.5fps
     // NOTE: server time things are in s
     float next_map_tick_reset = 50;  // 2fps
     float next_map_tick = 0;
 
-    float next_update_tick_reset = 4;  // 30fps
-    float next_update_tick = 0;
+    TriggerOnDt next_update_timer = TriggerOnDt(1.f);
 
     void tick(float dt) {
         TRACY_ZONE_SCOPED;
@@ -155,14 +159,12 @@ struct Server {
 
         if (MenuState::s_is_game(current_menu_state)) {
             TRACY_ZONE(tracy_server_gametick);
-            next_update_tick += dt;
-            if (next_update_tick >= next_update_tick_reset) {
+            if (next_update_timer.test(dt)) {
                 for (auto p : players) {
-                    p.second->update(next_update_tick / 1000.f);
+                    p.second->update(next_update_timer / 1000.f);
                 }
 
-                pharmacy_map->onUpdate(next_update_tick / 1000.f);
-                next_update_tick = 0.f;
+                pharmacy_map->onUpdate(next_update_timer / 1000.f);
             }
         }
 
