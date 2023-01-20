@@ -13,6 +13,7 @@
 //
 #include "../map.h"
 #include "../player.h"
+#include "steam/steamnetworkingtypes.h"
 
 namespace network {
 
@@ -36,7 +37,7 @@ struct Server {
     static void stop() { g_server->running = false; }
 
    private:
-    typedef std::pair<Client_t, std::string> ClientMessage;
+    typedef std::pair<internal::Client_t, std::string> ClientMessage;
     AtomicQueue<ClientMessage> incoming_message_queue;
     AtomicQueue<ClientPacket> packet_queue;
     std::shared_ptr<internal::Server> server_p;
@@ -54,6 +55,9 @@ struct Server {
                       std::placeholders::_1, std::placeholders::_2));
         server_p->onClientDisconnect = std::bind(&Server::process_player_leave,
                                                  this, std::placeholders::_1);
+        server_p->onSendClientAnnouncement =
+            std::bind(&Server::send_announcement, this, std::placeholders::_1,
+                      std::placeholders::_2, std::placeholders::_3);
         server_p->startup();
 
         // TODO add some kind of seed selection screen
@@ -75,7 +79,7 @@ struct Server {
                 .map = *pharmacy_map,
             }),
         });
-        server_p->send_client_packet_to_all(map_packet);
+        send_client_packet_to_all(map_packet);
     }
 
     void run() {
@@ -153,7 +157,7 @@ struct Server {
             }
 
             //
-            server_p->send_client_packet_to_all(p);
+            send_client_packet_to_all(p);
             packet_queue.pop_front();
         }
 
@@ -176,15 +180,15 @@ struct Server {
         TRACY_FRAME_MARK("server::tick");
     }
 
-    void process_announcement_packet(const Client_t&,
+    void process_announcement_packet(const internal::Client_t&,
                                      const ClientPacket& packet) {
         const ClientPacket::AnnouncementInfo info =
             std::get<ClientPacket::AnnouncementInfo>(packet.msg);
-        server_p->send_client_packet_to_all(packet);
+        send_client_packet_to_all(packet);
     }
 
-    void process_player_control_packet(const Client_t& incoming_client,
-                                       const ClientPacket& packet) {
+    void process_player_control_packet(
+        const internal::Client_t& incoming_client, const ClientPacket& packet) {
         const ClientPacket::PlayerControlInfo info =
             std::get<ClientPacket::PlayerControlInfo>(packet.msg);
 
@@ -217,7 +221,32 @@ struct Server {
             }),
         });
 
-        server_p->send_client_packet_to_all(player_updated);
+        send_client_packet_to_all(player_updated);
+    }
+
+    void send_announcement(HSteamNetConnection conn, const std::string& msg,
+                           internal::InternalServerAnnouncement type) {
+        AnnouncementType announcementInfo;
+
+        switch (type) {
+            case internal::InternalServerAnnouncement::Info:
+                announcementInfo = AnnouncementType::Message;
+                break;
+            case internal::InternalServerAnnouncement::Warn:
+                announcementInfo = AnnouncementType::Warning;
+                break;
+            case internal::InternalServerAnnouncement::Error:
+                announcementInfo = AnnouncementType::Error;
+                break;
+        }
+
+        ClientPacket announce_packet(
+            {.client_id = SERVER_CLIENT_ID,
+             .msg_type = ClientPacket::MsgType::Announcement,
+             .msg = ClientPacket::AnnouncementInfo(
+                 {.message = msg, .type = announcementInfo})});
+
+        send_client_packet_to_client(conn, announce_packet);
     }
 
     void process_player_leave(int client_id) {
@@ -234,9 +263,9 @@ struct Server {
         for (auto& c : server_p->clients) {
             ids.push_back(c.second.client_id);
         }
-        // Since we are the host, we can use the Client_t to figure
+        // Since we are the host, we can use the internal::Client_t to figure
         // out the id / name
-        server_p->send_client_packet_to_all(
+        send_client_packet_to_all(
             ClientPacket({.client_id = SERVER_CLIENT_ID,
                           .msg_type = ClientPacket::MsgType::PlayerLeave,
                           .msg = ClientPacket::PlayerLeaveInfo({
@@ -245,10 +274,12 @@ struct Server {
                               .client_id = client_id,
                           })}),
             // ignore the person who sent it to us since they disconn
-            [&](Client_t& client) { return client.client_id == client_id; });
+            [&](internal::Client_t& client) {
+                return client.client_id == client_id;
+            });
     }
 
-    void process_player_leave_packet(const Client_t& incoming_client,
+    void process_player_leave_packet(const internal::Client_t& incoming_client,
                                      const ClientPacket&) {
         log_info("processing player leave packet for {}",
                  incoming_client.client_id);
@@ -257,7 +288,7 @@ struct Server {
         process_player_leave(incoming_client.client_id);
     }
 
-    void process_player_join_packet(const Client_t& incoming_client,
+    void process_player_join_packet(const internal::Client_t& incoming_client,
                                     const ClientPacket& orig_packet) {
         ClientPacket::PlayerJoinInfo info =
             std::get<ClientPacket::PlayerJoinInfo>(orig_packet.msg);
@@ -289,9 +320,9 @@ struct Server {
         for (auto& c : server_p->clients) {
             ids.push_back(c.second.client_id);
         }
-        // Since we are the host, we can use the Client_t to figure
+        // Since we are the host, we can use the internal::Client_t to figure
         // out the id / name
-        server_p->send_client_packet_to_all(
+        send_client_packet_to_all(
             ClientPacket({.client_id = SERVER_CLIENT_ID,
                           .msg_type = ClientPacket::MsgType::PlayerJoin,
                           .msg = ClientPacket::PlayerJoinInfo({
@@ -301,11 +332,11 @@ struct Server {
                               .is_you = false,
                           })}),
             // ignore the person who sent it to us
-            [&](Client_t& client) {
+            [&](internal::Client_t& client) {
                 return client.client_id == incoming_client.client_id;
             });
 
-        server_p->send_client_packet_to_all(
+        send_client_packet_to_all(
             ClientPacket({.client_id = SERVER_CLIENT_ID,
                           .msg_type = ClientPacket::MsgType::PlayerJoin,
                           .msg = ClientPacket::PlayerJoinInfo({
@@ -315,13 +346,13 @@ struct Server {
                               .is_you = true,
                           })}),
             // ignore everyone except the one that sent to us
-            [&](Client_t& client) {
+            [&](internal::Client_t& client) {
                 return client.client_id != incoming_client.client_id;
             });
     }
 
-    void server_enqueue_message_string(const Client_t& incoming_client,
-                                       const std::string& msg) {
+    void server_enqueue_message_string(
+        const internal::Client_t& incoming_client, const std::string& msg) {
         incoming_message_queue.push_back(std::make_pair(incoming_client, msg));
     }
 
@@ -329,7 +360,7 @@ struct Server {
         TRACY_ZONE_SCOPED;
         // Note: not using structured binding since they cannot be captured by
         // lambda expr yet
-        const Client_t& incoming_client = client_message.first;
+        const internal::Client_t& incoming_client = client_message.first;
         const std::string& msg = client_message.second;
 
         const ClientPacket packet = network::deserialize_to_packet(msg);
@@ -350,13 +381,33 @@ struct Server {
             default:
                 // No clue so lets just send it to everyone except the guy that
                 // sent it to us
-                server_p->send_client_packet_to_all(
-                    packet, [&](Client_t& client) {
+                send_client_packet_to_all(
+                    packet, [&](internal::Client_t& client) {
                         return client.client_id == incoming_client.client_id;
                     });
                 log_warn("Server: {} not handled yet ", packet.msg_type);
                 break;
         }
+    }
+
+    void send_client_packet_to_client(HSteamNetConnection conn,
+                                      ClientPacket packet) {
+        // TODO we should probably see if its worth compressing the data we are
+        // sending.
+
+        // TODO write logs for how much data to understand avg packet size per
+        // type
+        Buffer buffer = serialize_to_buffer(packet);
+        server_p->send_message_to_connection(conn, buffer.c_str(),
+                                             (uint32) buffer.size());
+    }
+
+    void send_client_packet_to_all(
+        ClientPacket packet,
+        std::function<bool(internal::Client_t&)> exclude = nullptr) {
+        Buffer buffer = serialize_to_buffer(packet);
+        server_p->send_message_to_all(buffer.c_str(), (uint32) buffer.size(),
+                                      exclude);
     }
 };
 

@@ -7,6 +7,7 @@
 #include "../map.h"
 #include "../toastmanager.h"
 #include "../util.h"
+#include "internal/channel.h"
 #include "steam/steamnetworkingtypes.h"
 
 namespace bitsery {
@@ -54,16 +55,6 @@ using TContext =
                bitsery::ext::PolymorphicContext<bitsery::ext::StandardRTTI>>;
 using BitserySerializer = bitsery::Serializer<OutputAdapter, TContext>;
 using BitseryDeserializer = bitsery::Deserializer<InputAdapter, TContext>;
-
-enum Channel {
-    RELIABLE = k_nSteamNetworkingSend_Reliable,
-    UNRELIABLE = k_nSteamNetworkingSend_Unreliable,
-    UNRELIABLE_NO_DELAY = k_nSteamNetworkingSend_UnreliableNoDelay,
-};
-
-struct Client_t {
-    int client_id;
-};
 
 struct ClientPacket {
     Channel channel = Channel::RELIABLE;
@@ -240,6 +231,19 @@ static ClientPacket deserialize_to_packet(const std::string& msg) {
     // TODO obviously theres a ton of validation we can do here but idk
     // https://github.com/fraillt/bitsery/blob/master/examples/smart_pointers_with_polymorphism.cpp
     return packet;
+}
+
+static Buffer serialize_to_buffer(ClientPacket packet) {
+    Buffer buffer;
+    TContext ctx{};
+
+    std::get<1>(ctx).registerBasesList<BitserySerializer>(
+        MyPolymorphicClasses{});
+    BitserySerializer ser{ctx, buffer};
+    ser.object(packet);
+    ser.adapter().flush();
+
+    return buffer;
 }
 
 }  // namespace network

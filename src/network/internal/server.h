@@ -10,24 +10,21 @@
 
 #include "../../engine/assert.h"
 #include "../../toastmanager.h"
-#include "../shared.h"
+#include "channel.h"
 #include "steam/isteamnetworkingsockets.h"
 
 namespace network {
 namespace internal {
 
-static Buffer serialize_to_buffer(ClientPacket packet) {
-    Buffer buffer;
-    TContext ctx{};
+struct Client_t {
+    int client_id;
+};
 
-    std::get<1>(ctx).registerBasesList<BitserySerializer>(
-        MyPolymorphicClasses{});
-    BitserySerializer ser{ctx, buffer};
-    ser.object(packet);
-    ser.adapter().flush();
-
-    return buffer;
-}
+enum struct InternalServerAnnouncement {
+    Info,
+    Warn,
+    Error,
+};
 
 struct Server {
     SteamNetworkingIPAddr address;
@@ -37,12 +34,23 @@ struct Server {
     HSteamNetPollGroup poll_group;
     inline static Server *callback_instance;
     bool running = false;
-    std::function<void(Client_t &client, std::string)> process_message_cb;
+    std::function<void(Client_t &, std::string)> process_message_cb;
+    // TODO add setter and make private
     std::function<void(int)> onClientDisconnect;
+    std::function<void(HSteamNetConnection, std::string,
+                       InternalServerAnnouncement)>
+        onSendClientAnnouncement;
 
     void set_process_message(
         std::function<void(Client_t &client, std::string)> cb) {
         process_message_cb = cb;
+    }
+
+    void set_announcement_cb(
+        std::function<void(HSteamNetConnection, std::string,
+                           InternalServerAnnouncement)>
+            cb) {
+        onSendClientAnnouncement = cb;
     }
 
     std::map<HSteamNetConnection, Client_t> clients;
@@ -56,7 +64,7 @@ struct Server {
     ~Server() {
         for (auto it : clients) {
             send_announcement_to_client(it.first, "server shutdown",
-                                        AnnouncementType::Warning);
+                                        InternalServerAnnouncement::Warn);
             interface->CloseConnection(it.first, 0, "server shutdown", true);
         }
         clients.clear();
@@ -66,32 +74,39 @@ struct Server {
         poll_group = k_HSteamNetPollGroup_Invalid;
     }
 
-    void send_client_packet_to_all(
-        ClientPacket packet,
-        std::function<bool(Client_t &)> exclude = nullptr) {
-        for (auto &c : clients) {
-            if (exclude && exclude(c.second)) continue;
-            send_client_packet_to_client(c.first, packet);
-        }
-    }
-
     void send_announcement_to_client(HSteamNetConnection conn, std::string msg,
-                                     AnnouncementType type) {
-        ClientPacket announce_packet(
-            {.client_id = SERVER_CLIENT_ID,
-             .msg_type = ClientPacket::MsgType::Announcement,
-             .msg = ClientPacket::AnnouncementInfo(
-                 {.message = msg, .type = type})});
-        send_client_packet_to_client(conn, announce_packet);
+                                     InternalServerAnnouncement type) {
+        if (onSendClientAnnouncement) onSendClientAnnouncement(conn, msg, type);
     }
 
     void send_announcement_to_all(
-        const std::string &msg, AnnouncementType type,
+        std::string msg, InternalServerAnnouncement type,
+        std::function<bool(Client_t &)> exclude = nullptr) {
+        if (onSendClientAnnouncement) {
+            for (auto &c : clients) {
+                if (exclude && exclude(c.second)) continue;
+                onSendClientAnnouncement(c.first, msg, type);
+            }
+        }
+    }
+
+    void send_message_to_all(
+        const char *buffer, uint32 size,
         std::function<bool(Client_t &)> exclude = nullptr) {
         for (auto &c : clients) {
             if (exclude && exclude(c.second)) continue;
-            send_announcement_to_client(c.first, msg, type);
+            send_message_to_connection(c.first, buffer, size);
         }
+    }
+
+    void send_message_to_connection(HSteamNetConnection conn,
+                                    const char *buffer, uint32 size) {
+        interface->SendMessageToConnection(conn, buffer, size,
+                                           Channel::RELIABLE, nullptr);
+        // TODO why does unreliable make it so unreliable...
+        // eventually we want the packet to figure out if it should matter or
+        // not
+        // packet.channel, nullptr);
     }
 
     bool run() {
@@ -163,28 +178,11 @@ struct Server {
     }
 
    private:
-    void send_client_packet_to_client(HSteamNetConnection conn,
-                                      ClientPacket packet) {
-        // TODO we should probably see if its worth compressing the data we are
-        // sending.
-
-        // TODO write logs for how much data to understand avg packet size per
-        // type
-        Buffer buffer = serialize_to_buffer(packet);
-        interface->SendMessageToConnection(conn, buffer.c_str(),
-                                           (uint32) buffer.size(),
-                                           Channel::RELIABLE, nullptr);
-        // TODO why does unreliable make it so unreliable...
-        // eventually we want the packet to figure out if it should matter or
-        // not
-        // packet.channel, nullptr);
-    }
-
     void connection_changed_callback(
         SteamNetConnectionStatusChangedCallback_t *info) {
         log_info("connection_changed_callback");
         std::string temp;
-        AnnouncementType annoucement_type;
+        InternalServerAnnouncement annoucement_type;
 
         // What's the state of the connection?
         switch (info->m_info.m_eState) {
@@ -210,14 +208,14 @@ struct Server {
                             "Alas, {} hath fallen into shadow.  ({})",
                             itClient->second.client_id,
                             info->m_info.m_szEndDebug);
-                        annoucement_type = AnnouncementType::Warning;
+                        annoucement_type = InternalServerAnnouncement::Warn;
                     } else {
                         // Note that here we could check the reason code to see
                         // if it was a "usual" connection or an "unusual" one.
                         pszDebugLogAction = "closed by peer";
                         temp = fmt::format("{}; {} hath departed", temp,
                                            itClient->second.client_id);
-                        annoucement_type = AnnouncementType::Warning;
+                        annoucement_type = InternalServerAnnouncement::Warn;
                     }
 
                     // Spew something to our own log.  Note that because we put
@@ -234,14 +232,6 @@ struct Server {
                     int client_id = (int) itClient->second.client_id;
 
                     if (onClientDisconnect) onClientDisconnect(client_id);
-
-                    ClientPacket packet(
-                        {.client_id = client_id,
-                         .msg_type = ClientPacket::MsgType::PlayerLeave,
-                         .msg = ClientPacket::PlayerLeaveInfo({
-                             .client_id = client_id,
-                         })});
-                    send_client_packet_to_all(packet);
 
                     clients.erase(itClient);
 
@@ -309,13 +299,13 @@ struct Server {
                     "upon thine command '/nick' we shall know thee otherwise.",
                     nick_id);
                 send_announcement_to_client(info->m_hConn, temp,
-                                            AnnouncementType::Message);
+                                            InternalServerAnnouncement::Info);
 
                 // Also send them a list of everybody who is already connected
                 if (clients.empty()) {
-                    send_announcement_to_client(info->m_hConn,
-                                                "Thou art utterly alone.",
-                                                AnnouncementType::Message);
+                    send_announcement_to_client(
+                        info->m_hConn, "Thou art utterly alone.",
+                        InternalServerAnnouncement::Info);
                 } else {
                     temp = fmt::format("{} companions greet you:",
                                        (int) clients.size());
@@ -324,7 +314,7 @@ struct Server {
                             info->m_hConn,
                             fmt::format("{}, your id is: {}", temp,
                                         c.second.client_id),
-                            AnnouncementType::Message);
+                            InternalServerAnnouncement::Info);
                 }
 
                 // Add them to the client list, using std::map wacky syntax
@@ -339,7 +329,7 @@ struct Server {
                     "Hark!  A stranger hath joined this merry host.  For "
                     "now we shall call them '{}'",
                     nick_id);
-                send_announcement_to_all(temp, AnnouncementType::Message,
+                send_announcement_to_all(temp, InternalServerAnnouncement::Info,
                                          [&](const Client_t &client) {
                                              return client.client_id == nick_id;
                                          });
