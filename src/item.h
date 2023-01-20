@@ -149,6 +149,14 @@ struct Item {
     }
 };
 
+namespace bitsery {
+
+template<typename S>
+void serialize(S& s, std::shared_ptr<Item>& item) {
+    s.ext(item, bitsery::ext::StdSmartPtr{});
+}
+}  // namespace bitsery
+
 struct Pill : public Item {
     enum struct PillType {
         Red,

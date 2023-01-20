@@ -10,13 +10,39 @@
 #include "steam/steamnetworkingtypes.h"
 
 namespace bitsery {
-template<typename S>
-void serialize(S& s, GamepadAxisWithDir& input) {
-    s.value4b(input.axis);
-    s.value4b(input.dir);
-}
 
+namespace ext {
+template<>
+struct PolymorphicBaseClass<Entity>
+    : PolymorphicDerivedClasses<Furniture, Person> {};
+
+template<>
+struct PolymorphicBaseClass<Furniture>
+    : PolymorphicDerivedClasses<Wall, Table, Register, Conveyer, Grabber,
+                                BagBox, MedicineCabinet, CharacterSwitcher> {};
+
+template<>
+struct PolymorphicBaseClass<Person>
+    : PolymorphicDerivedClasses<BasePlayer, AIPerson> {};
+
+template<>
+struct PolymorphicBaseClass<BasePlayer> : PolymorphicDerivedClasses<Player> {};
+
+template<>
+struct PolymorphicBaseClass<AIPerson> : PolymorphicDerivedClasses<Customer> {};
+
+template<>
+struct PolymorphicBaseClass<Item>
+    : PolymorphicDerivedClasses<Bag, PillBottle, Pill> {};
+
+template<>
+struct PolymorphicBaseClass<LevelInfo>
+    : PolymorphicDerivedClasses<LobbyMapInfo, GameMapInfo> {};
+
+}  // namespace ext
 }  // namespace bitsery
+
+using MyPolymorphicClasses = bitsery::ext::PolymorphicClassesList<Entity, Item>;
 
 namespace network {
 

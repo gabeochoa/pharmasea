@@ -51,8 +51,7 @@ struct Person : public Entity {
     }
 
     virtual std::optional<ModelInfo> model() const override {
-        log_info("model index: {}", model_index);
-        // TODO add character selector in lobby
+        // log_info("model index: {}", model_index);
         return ModelInfo{
             .model = ModelLibrary::get().get(character_models[model_index]),
             .size_scale = 1.5f,

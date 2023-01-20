@@ -31,12 +31,31 @@
 #include <bitsery/adapter/buffer.h>
 #include <bitsery/bitsery.h>
 #include <bitsery/ext/inheritance.h>
+#include <bitsery/ext/pointer.h>
 #include <bitsery/ext/std_map.h>
 #include <bitsery/ext/std_optional.h>
+#include <bitsery/ext/std_smart_ptr.h>
 #include <bitsery/ext/std_tuple.h>
 #include <bitsery/ext/std_variant.h>
 #include <bitsery/traits/string.h>
 #include <bitsery/traits/vector.h>
+
+namespace bitsery {
+template<typename S>
+void serialize(S& s, vec3& data) {
+    s.value4b(data.x);
+    s.value4b(data.y);
+    s.value4b(data.z);
+}
+
+template<typename S>
+void serialize(S& s, Color& data) {
+    s.value1b(data.r);
+    s.value1b(data.g);
+    s.value1b(data.b);
+    s.value1b(data.a);
+}
+}  // namespace bitsery
 
 #include "engine/tracy.h"
 

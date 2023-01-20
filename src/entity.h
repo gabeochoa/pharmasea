@@ -426,3 +426,10 @@ struct Entity {
 };
 
 typedef Entity::FrontFaceDirection EntityDir;
+
+namespace bitsery {
+template<typename S>
+void serialize(S& s, std::shared_ptr<Entity>& entity) {
+    s.ext(entity, bitsery::ext::StdSmartPtr{});
+}
+}  // namespace bitsery

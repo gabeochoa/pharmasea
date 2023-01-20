@@ -2,10 +2,6 @@
 
 #pragma once
 
-#include <bitsery/ext/inheritance.h>
-#include <bitsery/ext/pointer.h>
-#include <bitsery/ext/std_smart_ptr.h>
-
 #include <memory>
 #include <random>
 
@@ -86,65 +82,6 @@ const std::string WALL_TEST = R"(
 ..#.#....#####....
 ...........#......
 ..................)";
-
-namespace bitsery {
-template<typename S>
-void serialize(S& s, vec3& data) {
-    s.value4b(data.x);
-    s.value4b(data.y);
-    s.value4b(data.z);
-}
-
-template<typename S>
-void serialize(S& s, Color& data) {
-    s.value1b(data.r);
-    s.value1b(data.g);
-    s.value1b(data.b);
-    s.value1b(data.a);
-}
-
-template<typename S>
-void serialize(S& s, std::shared_ptr<Item>& item) {
-    s.ext(item, bitsery::ext::StdSmartPtr{});
-}
-
-template<typename S>
-void serialize(S& s, std::shared_ptr<Entity>& entity) {
-    s.ext(entity, bitsery::ext::StdSmartPtr{});
-}
-
-namespace ext {
-template<>
-struct PolymorphicBaseClass<Entity>
-    : PolymorphicDerivedClasses<Furniture, Person> {};
-
-template<>
-struct PolymorphicBaseClass<Furniture>
-    : PolymorphicDerivedClasses<Wall, Table, Register, Conveyer, Grabber,
-                                BagBox, MedicineCabinet, CharacterSwitcher> {};
-
-template<>
-struct PolymorphicBaseClass<Person>
-    : PolymorphicDerivedClasses<BasePlayer, AIPerson> {};
-
-template<>
-struct PolymorphicBaseClass<BasePlayer> : PolymorphicDerivedClasses<Player> {};
-
-template<>
-struct PolymorphicBaseClass<AIPerson> : PolymorphicDerivedClasses<Customer> {};
-
-template<>
-struct PolymorphicBaseClass<Item>
-    : PolymorphicDerivedClasses<Bag, PillBottle, Pill> {};
-
-template<>
-struct PolymorphicBaseClass<LevelInfo>
-    : PolymorphicDerivedClasses<LobbyMapInfo, GameMapInfo> {};
-
-}  // namespace ext
-}  // namespace bitsery
-
-using MyPolymorphicClasses = bitsery::ext::PolymorphicClassesList<Entity, Item>;
 
 struct Map {
     LobbyMapInfo lobby_info;
