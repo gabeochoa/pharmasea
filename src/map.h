@@ -151,11 +151,9 @@ struct Map {
     GameMapInfo game_info;
 
     std::vector<std::shared_ptr<RemotePlayer>> remote_players_NOT_SERIALIZED;
+    std::string seed;
 
-    Map(const std::string& _seed = "default_seed") {
-        update_seed(_seed);
-        lobby_info.generate_map();
-    }
+    Map(const std::string& _seed = "default_seed") : seed(_seed) {}
 
     void update_seed(const std::string& s) { game_info.update_seed(s); }
 
@@ -173,8 +171,10 @@ struct Map {
             rp->update(dt);
         }
         if (in_lobby_state()) {
+            lobby_info.ensure_generated_map(seed);
             lobby_info.onUpdate(dt);
         } else {
+            game_info.ensure_generated_map(seed);
             game_info.onUpdate(dt);
         }
     }
@@ -208,7 +208,9 @@ struct Map {
 
     // These are called before every "send_map_state" when server
     // sends everything over to clients
-    void ensure_generated_map() { game_info.ensure_generated_map(); }
+    void ensure_generated_map() {
+        // game_info.ensure_generated_map(seed);
+    }
     void grab_things() {
         if (in_lobby_state()) {
             lobby_info.grab_things();

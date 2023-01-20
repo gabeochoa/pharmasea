@@ -23,7 +23,7 @@ struct CharacterSwitcher : public Furniture {
         : Furniture(pos, ui::color::brown, ui::color::brown) {}
 
     virtual void do_work(float dt, Person* person) override {
-        const float amt = 1.f;
+        const float amt = 2.f;
         pct_work_complete += amt * dt;
         if (pct_work_complete >= 1.f) {
             pct_work_complete = 0.f;

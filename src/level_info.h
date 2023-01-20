@@ -44,6 +44,8 @@ struct LevelInfo {
     Items items;
     Items::size_type num_items;
 
+    std::string seed;
+
     virtual void onUpdate(float dt) {
         TRACY_ZONE_SCOPED;
         for (auto e : EntityHelper::get_entities()) {
@@ -83,8 +85,9 @@ struct LevelInfo {
         }
     }
 
-    void ensure_generated_map() {
+    void ensure_generated_map(const std::string& new_seed) {
         if (was_generated) return;
+        seed = new_seed;
         was_generated = true;
         generate_map();
     }
@@ -106,6 +109,7 @@ struct LevelInfo {
             s2.ext(item, bitsery::ext::StdSmartPtr{});
         });
         s.value1b(was_generated);
+        s.text1b(seed, MAX_SEED_LENGTH);
     }
 };
 
@@ -145,7 +149,6 @@ struct LobbyMapInfo : public LevelInfo {
 
 struct GameMapInfo : public LevelInfo {
     //
-    std::string seed;
     size_t hashed_seed;
     std::mt19937 generator;
     std::uniform_int_distribution<> dist;
@@ -276,7 +279,10 @@ struct GameMapInfo : public LevelInfo {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<LevelInfo>{});
-        s.text1b(seed, MAX_SEED_LENGTH);
         s.ext(active_round, bitsery::ext::StdOptional{});
+        s.value8b(hashed_seed);
+        // TODO these arent serializable...
+        // s.object(generator);
+        // s.object(dist);
     }
 };
