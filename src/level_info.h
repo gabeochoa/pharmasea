@@ -1,10 +1,6 @@
 
 #pragma once
 
-#include <bitsery/ext/inheritance.h>
-#include <bitsery/ext/pointer.h>
-#include <bitsery/ext/std_smart_ptr.h>
-
 #include "engine/globals_register.h"
 #include "engine/ui_color.h"
 #include "entity.h"

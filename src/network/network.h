@@ -7,6 +7,7 @@
 #include "../engine/settings.h"
 #include "../entities.h"
 //
+#include "../engine/trigger_on_dt.h"
 #include "../statemanager.h"
 #include "shared.h"
 //
@@ -81,26 +82,7 @@ struct Info {
     void lock_in_ip() { client->lock_in_ip(); }
     [[nodiscard]] bool has_set_ip() { return client->conn_info.ip_set; }
 
-    float menu_state_tick = 0.f;
-    float menu_state_tick_reset = 0.1f;
-
-    void send_current_menu_state(float dt) {
-        if (menu_state_tick > 0) {
-            menu_state_tick -= dt;
-            return;
-        }
-        menu_state_tick = menu_state_tick_reset;
-
-        ClientPacket packet({
-            .client_id = SERVER_CLIENT_ID,
-            .msg_type = ClientPacket::MsgType::GameState,
-            .msg = ClientPacket::GameStateInfo({
-                .host_menu_state = MenuState::get().read(),
-                .host_game_state = GameState::get().read(),
-            }),
-        });
-        Server::queue_packet(packet);
-    }
+    TriggerOnDt menu_state_tick_trigger = TriggerOnDt(0.1f);
 
     Info() {}
 
@@ -133,6 +115,21 @@ struct Info {
 #ifdef BUILD_WITHOUT_STEAM
         GameNetworkingSockets_Kill();
 #endif
+    }
+
+    void send_current_menu_state(float dt) {
+        bool run = menu_state_tick_trigger.test(dt);
+        if (!run) return;
+
+        ClientPacket packet({
+            .client_id = SERVER_CLIENT_ID,
+            .msg_type = ClientPacket::MsgType::GameState,
+            .msg = ClientPacket::GameStateInfo({
+                .host_menu_state = MenuState::get().read(),
+                .host_game_state = GameState::get().read(),
+            }),
+        });
+        Server::queue_packet(packet);
     }
 
     void tick(float dt) {
