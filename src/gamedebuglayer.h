@@ -39,10 +39,15 @@ struct GameDebugLayer : public Layer {
 
     bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
 
+    void toggle_planning() {
+        GameState::s_toggle_planning();
+        EntityHelper::invalidatePathCache();
+    }
+
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
         if (KeyMap::get_button(menu::State::Game, InputName::TogglePlanning) ==
             event.button) {
-            GameState::s_toggle_planning();
+            toggle_planning();
             return true;
         }
         if (KeyMap::get_button(menu::State::Game, InputName::ToggleDebug) ==
@@ -61,8 +66,7 @@ struct GameDebugLayer : public Layer {
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(menu::State::Game,
                                  InputName::TogglePlanning) == event.keycode) {
-            GameState::s_toggle_planning();
-            EntityHelper::invalidatePathCache();
+            toggle_planning();
             return true;
         }
         if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleLobby) ==

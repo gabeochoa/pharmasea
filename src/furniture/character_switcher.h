@@ -22,11 +22,8 @@ struct CharacterSwitcher : public Furniture {
     explicit CharacterSwitcher(vec2 pos)
         : Furniture(pos, ui::color::brown, ui::color::brown) {}
 
-    // TODO eventually we need it to decide whether it has work based on the
-    // current held item
     virtual void do_work(float dt, Person* person) override {
-        log_info("doing work on character switcher");
-        const float amt = 0.5f;
+        const float amt = 1.f;
         pct_work_complete += amt * dt;
         if (pct_work_complete >= 1.f) {
             pct_work_complete = 0.f;
