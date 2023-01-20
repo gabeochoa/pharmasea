@@ -18,7 +18,10 @@ struct Map {
     std::vector<std::shared_ptr<RemotePlayer>> remote_players_NOT_SERIALIZED;
     std::string seed;
 
-    Map(const std::string& _seed = "default_seed") : seed(_seed) {}
+    Map(const std::string& _seed = "default_seed") : seed(_seed) {
+        // TODO this is needed for the items to be regenerated
+        update_seed(seed);
+    }
 
     void update_seed(const std::string& s) { game_info.update_seed(s); }
 

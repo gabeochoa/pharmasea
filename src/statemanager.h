@@ -166,7 +166,10 @@ struct GameState : public StateManager<game::State> {
     }
 
     [[nodiscard]] bool is_lobby_like() {
-        return is(game::State::Lobby) || is(game::State::InMenu);
+        return is(game::State::Lobby);  // TODO this is needed to get collisions
+                                        // in lobby mode but breaks game
+                                        // furniture loading for some reason
+                                        //|| is(game::State::InMenu);
     }
 
     [[nodiscard]] static bool s_is_lobby_like() {
