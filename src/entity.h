@@ -207,6 +207,7 @@ struct Entity {
     }
 
     virtual void render_floating_name() const {
+        // log_info("render floating name {} {}", name, this->raw_position);
         raylib::DrawFloatingText(
             this->raw_position + vec3{0, 0.5f * TILESIZE, 0},
             Preload::get().font, name.c_str());

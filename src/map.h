@@ -10,6 +10,7 @@
 #include <random>
 
 #include "engine.h"
+#include "entityhelper.h"
 #include "external_include.h"
 //
 #include "engine/log.h"

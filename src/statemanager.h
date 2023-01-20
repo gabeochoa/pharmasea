@@ -165,6 +165,14 @@ struct GameState : public StateManager<game::State> {
         return s_should_update() || s_should_prev_update();
     }
 
+    [[nodiscard]] bool is_lobby_like() {
+        return is(game::State::Lobby) || is(game::State::InMenu);
+    }
+
+    [[nodiscard]] static bool s_is_lobby_like() {
+        return GameState::get().is_lobby_like();
+    }
+
     game::State toggle_planning() {
         // TODO need logic here to stop loops
         if (is(game::State::Planning)) {

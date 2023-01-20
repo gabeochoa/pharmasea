@@ -98,7 +98,12 @@ struct GameLayer : public Layer {
         //         TODO do we?
         auto map_ptr = GLOBALS.get_ptr<Map>("map");
         if (map_ptr) {
+            // NOTE: today we need to grab things so that the client renders
+            // what they server has access to
             map_ptr->grab_things();
+
+            // TODO we need this so the entity -> floating name moves around
+            // why does that happen
             map_ptr->onUpdate(dt);
         }
     }
@@ -122,9 +127,12 @@ struct GameLayer : public Layer {
             if (map_ptr) map_ptr->onDraw(dt);
             if (network_debug_mode_on) {
                 const auto network_players =
-                    GLOBALS
-                        .get_or_default<std::map<int, std::shared_ptr<Player>>>(
-                            "server_players", {});
+                    // Forcing a copy to avoid the data changing from underneath
+                    // us
+                    std::map<int, std::shared_ptr<Player>>(
+                        GLOBALS.get_or_default<
+                            std::map<int, std::shared_ptr<Player>>>(
+                            "server_players", {}));
                 for (auto p : network_players) {
                     if (p.second) p.second->render();
                 }
