@@ -2,19 +2,11 @@
 
 #pragma once
 
-#include <memory>
-#include <random>
-
 #include "engine.h"
-#include "entityhelper.h"
+#include "engine/log.h"
 #include "external_include.h"
 //
-#include "engine/log.h"
-#include "engine/random.h"
-#include "entity.h"
-#include "furniture/character_switcher.h"
-#include "furniture/medicine_cabinet.h"
-#include "furnitures.h"
+#include "entityhelper.h"
 #include "level_info.h"
 #include "remote_player.h"
 #include "statemanager.h"
