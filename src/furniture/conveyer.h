@@ -40,11 +40,11 @@ struct Conveyer : public Furniture {
     }
 
     virtual bool can_take_item_from() const override {
-        return (this->held_item != nullptr && can_take_from);
+        return (this->held_item() != nullptr && can_take_from);
     }
 
     virtual void update_held_item_position() override {
-        if (held_item != nullptr) {
+        if (held_item() != nullptr) {
             // auto new_pos = this->position;
             // if (this->get<Transform>().face_direction &
             // FrontFaceDirection::FORWARD) { new_pos.z += TILESIZE *
@@ -74,7 +74,7 @@ struct Conveyer : public Furniture {
         can_take_from = false;
 
         // we are not holding anything
-        if (this->held_item == nullptr) {
+        if (this->held_item() == nullptr) {
             return;
         }
 
@@ -108,9 +108,9 @@ struct Conveyer : public Furniture {
 
         can_take_from = true;
         // we reached the end, pass ownership
-        match->held_item = this->held_item;
-        match->held_item->held_by = Item::HeldBy::FURNITURE;
-        this->held_item = nullptr;
+        match->held_item() = this->held_item();
+        match->held_item()->held_by = Item::HeldBy::FURNITURE;
+        this->held_item() = nullptr;
         this->relative_item_pos = Conveyer::ITEM_START;
 
         // TODO if we are pushing onto a conveyer, we need to make sure

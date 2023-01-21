@@ -3,6 +3,7 @@
 
 #include "bitsery/ext/std_smart_ptr.h"
 #include "components/base_component.h"
+#include "components/can_hold_item.h"
 #include "components/has_name.h"
 #include "components/transform.h"
 #include "engine/assert.h"
@@ -38,7 +39,6 @@ struct Entity {
     bool cleanup = false;
     bool is_highlighted = false;
     bool is_held = false;
-    std::shared_ptr<Item> held_item = nullptr;
 
     template<typename T>
     bool hasComponent() const {
@@ -83,6 +83,7 @@ struct Entity {
     void add_static_components() {
         addComponent<Transform>();
         addComponent<HasName>();
+        addComponent<CanHoldItem>();
     }
 
    private:
@@ -101,7 +102,6 @@ struct Entity {
         s.value1b(cleanup);
         s.value1b(is_highlighted);
         s.value1b(is_held);
-        s.object(held_item);
     }
 
    public:
@@ -243,7 +243,7 @@ struct Entity {
     virtual std::optional<ModelInfo> model() const { return {}; }
 
     virtual void update_held_item_position() {
-        if (held_item != nullptr) {
+        if (held_item() != nullptr) {
             auto new_pos = this->get<Transform>().position;
             if (this->get<Transform>().face_direction &
                 Transform::FrontFaceDirection::FORWARD) {
@@ -262,7 +262,7 @@ struct Entity {
                 new_pos.x -= TILESIZE;
             }
 
-            held_item->update_position(new_pos);
+            held_item()->update_position(new_pos);
         }
     }
 
@@ -333,9 +333,14 @@ struct Entity {
     }
 
    public:
+    // TODO at some point migrate these
+    virtual std::shared_ptr<Item> held_item() const {
+        return get<CanHoldItem>().held_item;
+    }
+
     // Whether or not this entity has something we can take from them
     virtual bool can_take_item_from() const {
-        return this->held_item != nullptr;
+        return this->held_item() != nullptr;
     }
 
     /*

@@ -32,10 +32,10 @@ struct Furniture : public Entity {
         : Entity(pos, face_color_in, base_color_in) {}
 
     virtual void update_held_item_position() override {
-        if (held_item == nullptr) return;
+        if (held_item() == nullptr) return;
         auto new_pos = this->get<Transform>().position;
         new_pos.y += TILESIZE / 4;
-        held_item->update_position(new_pos);
+        held_item()->update_position(new_pos);
     }
 
     virtual void render_normal() const override {
@@ -74,8 +74,8 @@ struct Furniture : public Entity {
     virtual bool can_rotate() const { return true; }
     virtual bool can_be_picked_up() { return !this->is_held; }
     virtual bool can_place_item_into(std::shared_ptr<Item> = nullptr) override {
-        return this->held_item == nullptr;
+        return this->held_item() == nullptr;
     }
 
-    virtual bool has_held_item() const { return this->held_item != nullptr; }
+    virtual bool has_held_item() const { return this->held_item() != nullptr; }
 };

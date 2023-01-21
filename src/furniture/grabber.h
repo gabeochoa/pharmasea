@@ -22,7 +22,7 @@ struct Grabber : public Conveyer {
         Conveyer::in_round_update(dt);
 
         // We already have an item so
-        if (this->held_item != nullptr) return;
+        if (this->held_item() != nullptr) return;
 
         auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
             this->get<Transform>().as2(), 1.f,
@@ -38,12 +38,12 @@ struct Grabber : public Conveyer {
 
         // Grab from the furniture match
 
-        auto item = match->held_item;
+        auto item = match->held_item();
 
-        this->held_item = item;
-        this->held_item->held_by = Item::HeldBy::FURNITURE;
+        this->held_item() = item;
+        this->held_item()->held_by = Item::HeldBy::FURNITURE;
         this->relative_item_pos = Conveyer::ITEM_START;
 
-        match->held_item = nullptr;
+        match->held_item() = nullptr;
     }
 };

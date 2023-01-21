@@ -176,11 +176,11 @@ struct Player : public BasePlayer {
 
         // Do we already have something in our hands?
         // We must be trying to drop it
-        if (this->held_item) {
+        if (this->held_item()) {
             const auto _merge_item_from_furniture_into_hand = [&]() {
                 TRACY_ZONE(tracy_merge_item_from_furniture);
                 // our item cant hold anything or is already full
-                if (!this->held_item->empty()) {
+                if (!this->held_item()->empty()) {
                     return false;
                 }
 
@@ -196,9 +196,10 @@ struct Player : public BasePlayer {
                     return false;
                 }
 
-                auto item_to_merge = closest_furniture->held_item;
-                bool eat_was_successful = this->held_item->eat(item_to_merge);
-                if (eat_was_successful) closest_furniture->held_item = nullptr;
+                auto item_to_merge = closest_furniture->held_item();
+                bool eat_was_successful = this->held_item()->eat(item_to_merge);
+                if (eat_was_successful)
+                    closest_furniture->held_item() = nullptr;
                 return eat_was_successful;
             };
 
@@ -213,7 +214,7 @@ struct Player : public BasePlayer {
                                 // is there something there to merge into?
                                 f->has_held_item() &&
                                 // can that thing hold the item we are holding?
-                                f->held_item->can_eat(this->held_item);
+                                f->held_item()->can_eat(this->held_item());
                         });
                 if (!closest_furniture) {
                     return false;
@@ -229,13 +230,13 @@ struct Player : public BasePlayer {
                 // - place the merged item into the player's hand
 
                 bool eat_was_successful =
-                    closest_furniture->held_item->eat(this->held_item);
+                    closest_furniture->held_item()->eat(this->held_item());
                 if (!eat_was_successful) return false;
                 // TODO we need a let_go_of_item() to handle this kind of
                 // transfer because it might get complicated and we might end up
                 // with two things owning this could maybe be solved by
                 // enforcing uniqueptr
-                this->held_item = nullptr;
+                this->held_item() = nullptr;
                 return true;
             };
 
@@ -246,20 +247,21 @@ struct Player : public BasePlayer {
                         this->get<Transform>().as2(), player_reach,
                         this->get<Transform>().face_direction,
                         [this](std::shared_ptr<Furniture> f) {
-                            return f->can_place_item_into(this->held_item);
+                            return f->can_place_item_into(this->held_item());
                         });
                 if (!closest_furniture) {
                     return false;
                 }
 
-                auto item = this->held_item;
+                auto item = this->held_item();
                 item->update_position(
                     closest_furniture->get<Transform>().snap_position());
 
-                closest_furniture->held_item = item;
-                closest_furniture->held_item->held_by = Item::HeldBy::FURNITURE;
+                closest_furniture->held_item() = item;
+                closest_furniture->held_item()->held_by =
+                    Item::HeldBy::FURNITURE;
 
-                this->held_item = nullptr;
+                this->held_item() = nullptr;
                 return true;
             };
 
@@ -281,30 +283,30 @@ struct Player : public BasePlayer {
                         this->get<Transform>().as2(), player_reach,
                         this->get<Transform>().face_direction,
                         [](std::shared_ptr<Furniture> furn) {
-                            return (furn->held_item != nullptr);
+                            return (furn->held_item() != nullptr);
                         });
                 if (!closest_furniture) {
                     return;
                 }
-                auto item = closest_furniture->held_item;
+                auto item = closest_furniture->held_item();
 
-                this->held_item = item;
-                this->held_item->held_by = Item::HeldBy::PLAYER;
+                this->held_item() = item;
+                this->held_item()->held_by = Item::HeldBy::PLAYER;
 
-                closest_furniture->held_item = nullptr;
+                closest_furniture->held_item() = nullptr;
             };
 
             _pickup_item_from_furniture();
 
-            if (this->held_item) return;
+            if (this->held_item()) return;
 
             // Handles the non-furniture grabbing case
             std::shared_ptr<Item> closest_item =
                 ItemHelper::getClosestMatchingItem<Item>(
                     this->get<Transform>().as2(), TILESIZE * player_reach);
-            this->held_item = closest_item;
-            if (this->held_item != nullptr) {
-                this->held_item->held_by = Item::HeldBy::PLAYER;
+            this->held_item() = closest_item;
+            if (this->held_item() != nullptr) {
+                this->held_item()->held_by = Item::HeldBy::PLAYER;
             }
             return;
         }

@@ -179,13 +179,13 @@ struct Customer : public AIPerson {
             case Job::State::WorkingAtEnd: {
                 Register* reg = (Register*) job->data["register"];
 
-                if (reg->held_item == nullptr) {
+                if (reg->held_item() == nullptr) {
                     announce("my rx isnt ready yet");
                     wait_and_return();
                     return;
                 }
 
-                auto bag = dynamic_pointer_cast<Bag>(reg->held_item);
+                auto bag = dynamic_pointer_cast<Bag>(reg->held_item());
                 if (!bag) {
                     announce("this isnt my rx (not a bag)");
                     wait_and_return();
@@ -206,8 +206,8 @@ struct Customer : public AIPerson {
                     return;
                 }
 
-                this->held_item = reg->held_item;
-                reg->held_item = nullptr;
+                this->held_item() = reg->held_item();
+                reg->held_item() = nullptr;
 
                 announce("got it");
                 Customer* me = this;

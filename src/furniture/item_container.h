@@ -33,12 +33,12 @@ struct ItemContainer : public Furniture {
 
     virtual void in_round_update(float dt) override {
         Furniture::in_round_update(dt);
-        if (this->held_item == nullptr) {
-            this->held_item.reset(
+        if (this->held_item() == nullptr) {
+            this->held_item().reset(
                 // TODO what is this color and what is it for
                 new I(this->get<Transform>().position,
                       Color({255, 15, 240, 255})));
-            ItemHelper::addItem(this->held_item);
+            ItemHelper::addItem(this->held_item());
         }
     }
 };

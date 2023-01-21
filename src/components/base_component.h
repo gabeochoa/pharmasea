@@ -46,7 +46,7 @@ struct BaseComponent {
    private:
     friend bitsery::Access;
     template<typename S>
-    void serialize(S& s) {
+    void serialize(S&) {
         // s.object(entity);
     }
 };
