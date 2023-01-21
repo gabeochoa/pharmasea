@@ -2,6 +2,7 @@
 #pragma once
 
 #include "base_player.h"
+#include "components/can_hold_furniture.h"
 #include "engine/keymap.h"
 #include "globals.h"
 #include "raylib.h"
@@ -329,13 +330,16 @@ struct Player : public BasePlayer {
         // planning
 
         // TODO need to auto drop when "in_planning" changes
-        if (this->held_furniture) {
+
+        CanHoldFurniture& ourCHF = get<CanHoldFurniture>();
+
+        if (ourCHF.is_holding_furniture()) {
             const auto _drop_furniture = [&]() {
                 // TODO need to make sure it doesnt place ontop of another
                 // one
-                auto hf = this->held_furniture;
+                auto hf = ourCHF.furniture();
                 hf->on_drop(vec::to3(this->tile_infront(1)));
-                this->held_furniture = nullptr;
+                ourCHF.update(nullptr);
             };
             _drop_furniture();
             return;
@@ -349,8 +353,8 @@ struct Player : public BasePlayer {
                     [](std::shared_ptr<Furniture> f) {
                         return f->can_be_picked_up();
                     });
-            this->held_furniture = closest_furniture;
-            if (this->held_furniture) this->held_furniture->on_pickup();
+            ourCHF.update(closest_furniture);
+            if (ourCHF.is_holding_furniture()) ourCHF.furniture()->on_pickup();
             // NOTE: we want to remove the furniture ONLY from the nav mesh
             //       when picked up because then AI can walk through,
             //       this also means we have to add it back when we place it

@@ -136,6 +136,12 @@ struct SystemManager {
         });
     }
 
+    void in_round_update(float dt) {
+        EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
+            return EntityHelper::ForEachFlow::None;
+        });
+    }
+
     void planning_update(float dt) {
         EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
             system_manager::highlight_facing_furniture(entity, dt);

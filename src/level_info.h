@@ -50,7 +50,10 @@ struct LevelInfo {
 
         system_manager.always_update(dt);
 
+        // TODO do we run game updates during paused?
+        // TODO rename game/nongame to in_round inplanning
         if (GameState::get().is(game::State::InRound)) {
+            system_manager.in_round_update(dt);
         } else {
             system_manager.planning_update(dt);
         }

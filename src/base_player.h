@@ -3,6 +3,7 @@
 #pragma once
 
 #include "components/can_highlight_others.h"
+#include "components/can_hold_furniture.h"
 #include "raylib.h"
 //
 #include "engine/globals_register.h"
@@ -15,9 +16,11 @@
 // BasePlayer and Player
 struct BasePlayer : public Person {
     float player_reach = 1.25f;
-    std::shared_ptr<Furniture> held_furniture;
 
-    void add_static_components() { addComponent<CanHighlightOthers>(); }
+    void add_static_components() {
+        addComponent<CanHighlightOthers>();
+        addComponent<CanHoldFurniture>();
+    }
 
     BasePlayer(vec3 p, Color face_color_in, Color base_color_in)
         : Person(p, face_color_in, base_color_in) {
@@ -46,27 +49,28 @@ struct BasePlayer : public Person {
     virtual void planning_update(float dt) override {
         Person::planning_update(dt);
 
+        // TODO add component for this
         // TODO if cannot be placed in this spot make it obvious to the user
-        if (held_furniture != nullptr) {
-            auto new_pos = this->get<Transform>().position;
-            if (this->get<Transform>().face_direction &
-                Transform::FrontFaceDirection::FORWARD) {
-                new_pos.z += TILESIZE;
-            }
-            if (this->get<Transform>().face_direction &
-                Transform::FrontFaceDirection::RIGHT) {
-                new_pos.x += TILESIZE;
-            }
-            if (this->get<Transform>().face_direction &
-                Transform::FrontFaceDirection::BACK) {
-                new_pos.z -= TILESIZE;
-            }
-            if (this->get<Transform>().face_direction &
-                Transform::FrontFaceDirection::LEFT) {
-                new_pos.x -= TILESIZE;
-            }
-
-            held_furniture->update_position(new_pos);
-        }
+        // if (held_furniture != nullptr) {
+        // auto new_pos = this->get<Transform>().position;
+        // if (this->get<Transform>().face_direction &
+        // Transform::FrontFaceDirection::FORWARD) {
+        // new_pos.z += TILESIZE;
+        // }
+        // if (this->get<Transform>().face_direction &
+        // Transform::FrontFaceDirection::RIGHT) {
+        // new_pos.x += TILESIZE;
+        // }
+        // if (this->get<Transform>().face_direction &
+        // Transform::FrontFaceDirection::BACK) {
+        // new_pos.z -= TILESIZE;
+        // }
+        // if (this->get<Transform>().face_direction &
+        // Transform::FrontFaceDirection::LEFT) {
+        // new_pos.x -= TILESIZE;
+        // }
+        //
+        // held_furniture->update_position(new_pos);
+        // }
     }
 };
