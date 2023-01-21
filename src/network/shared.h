@@ -16,7 +16,8 @@ namespace ext {
 template<>
 struct PolymorphicBaseClass<BaseComponent>
     : PolymorphicDerivedClasses<Transform, HasName, CanHoldItem,
-                                SimpleColoredBoxRenderer> {};
+                                SimpleColoredBoxRenderer, CanBeHighlighted,
+                                CanHighlightOthers> {};
 
 template<>
 struct PolymorphicBaseClass<Entity>

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "components/can_highlight_others.h"
 #include "raylib.h"
 //
 #include "engine/globals_register.h"
@@ -16,30 +17,31 @@ struct BasePlayer : public Person {
     float player_reach = 1.25f;
     std::shared_ptr<Furniture> held_furniture;
 
+    void add_static_components() { addComponent<CanHighlightOthers>(); }
+
     BasePlayer(vec3 p, Color face_color_in, Color base_color_in)
-        : Person(p, face_color_in, base_color_in) {}
+        : Person(p, face_color_in, base_color_in) {
+        add_static_components();
+    }
     BasePlayer(vec2 p, Color face_color_in, Color base_color_in)
-        : Person(p, face_color_in, base_color_in) {}
-    BasePlayer() : Person({0, 0, 0}, ui::color::white, ui::color::white) {}
+        : Person(p, face_color_in, base_color_in) {
+        add_static_components();
+    }
+    BasePlayer() : Person({0, 0, 0}, ui::color::white, ui::color::white) {
+        add_static_components();
+    }
     BasePlayer(vec2 location)
         : Person({location.x, 0, location.y}, {0, 255, 0, 255},
-                 {255, 0, 0, 255}) {}
+                 {255, 0, 0, 255}) {
+        add_static_components();
+    }
 
     virtual float base_speed() override { return 7.5f; }
 
     virtual vec3 update_xaxis_position(float dt) override = 0;
     virtual vec3 update_zaxis_position(float dt) override = 0;
 
-    void highlight_facing_furniture() {
-        // TODO this is impossible to read, what can we do to fix this while
-        // keeping it configurable
-        auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
-            this->get<Transform>().as2(), player_reach,
-            this->get<Transform>().face_direction,
-            [](std::shared_ptr<Furniture>) { return true; });
-        if (!match) return;
-        match->is_highlighted = true;
-    }
+    void highlight_facing_furniture() {}
 
     virtual void planning_update(float dt) override {
         Person::planning_update(dt);

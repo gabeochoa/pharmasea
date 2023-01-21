@@ -1,10 +1,12 @@
 
 #pragma once
 
+#include "../components/can_highlight_others.h"
 #include "../components/custom_item_position.h"
 #include "../components/transform.h"
 #include "../entity.h"
 #include "../entityhelper.h"
+#include "../furniture.h"
 
 namespace system_manager {
 
@@ -77,7 +79,9 @@ inline void render_simple_highlighted(std::shared_ptr<Entity> entity, float) {
 }
 
 inline void render_simple_normal(std::shared_ptr<Entity> entity, float) {
+    if (!entity->has<Transform>()) return;
     Transform& transform = entity->get<Transform>();
+    if (!entity->has<SimpleColoredBoxRenderer>()) return;
     SimpleColoredBoxRenderer& renderer =
         entity->get<SimpleColoredBoxRenderer>();
     DrawCubeCustom(transform.raw_position, transform.size.x, transform.size.y,
@@ -87,7 +91,37 @@ inline void render_simple_normal(std::shared_ptr<Entity> entity, float) {
 }
 
 inline void render(std::shared_ptr<Entity> entity, float dt) {
+    if (entity->has<CanBeHighlighted>() &&
+        entity->get<CanBeHighlighted>().is_highlighted) {
+        render_simple_highlighted(entity, dt);
+        return;
+    }
+
     render_simple_normal(entity, dt);
+}
+
+inline void reset_highlighted(std::shared_ptr<Entity> entity, float) {
+    if (!entity->has<CanBeHighlighted>()) return;
+    CanBeHighlighted& cbh = entity->get<CanBeHighlighted>();
+    cbh.is_highlighted = false;
+}
+
+inline void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
+    if (!entity->has<CanHighlightOthers>()) return;
+
+    // TODO explicity commenting this out so that we get an error
+    // if (!entity->has<Transform>()) return;
+    Transform& transform = entity->get<Transform>();
+
+    // TODO this is impossible to read, what can we do to fix this while
+    // keeping it configurable
+    auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
+        // TODO add a player reach component
+        transform.as2(), 1.25f /*player_reach*/, transform.face_direction,
+        [](std::shared_ptr<Furniture>) { return true; });
+    if (!match) return;
+    if (!match->has<CanBeHighlighted>()) return;
+    match->get<CanBeHighlighted>().is_highlighted = true;
 }
 
 }  // namespace system_manager
@@ -95,6 +129,7 @@ inline void render(std::shared_ptr<Entity> entity, float dt) {
 struct SystemManager {
     void always_update(float dt) {
         EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
+            system_manager::reset_highlighted(entity, dt);
             system_manager::transform_snapper(entity, dt);
             system_manager::update_held_item_position(entity, dt);
             return EntityHelper::ForEachFlow::None;

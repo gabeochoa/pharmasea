@@ -3,6 +3,7 @@
 
 #include "bitsery/ext/std_smart_ptr.h"
 #include "components/base_component.h"
+#include "components/can_be_highlighted.h"
 #include "components/can_hold_item.h"
 #include "components/has_name.h"
 #include "components/simple_colored_box_renderer.h"
@@ -36,7 +37,6 @@ struct Entity {
 
     vec3 pushed_force{0.0, 0.0, 0.0};
     bool cleanup = false;
-    bool is_highlighted = false;
     bool is_held = false;
 
     template<typename T>
@@ -98,7 +98,6 @@ struct Entity {
         s.ext(componentSet, bitsery::ext::StdBitset{});
         s.object(pushed_force);
         s.value1b(cleanup);
-        s.value1b(is_highlighted);
         s.value1b(is_held);
     }
 
@@ -186,11 +185,6 @@ struct Entity {
      * */
     virtual void render_normal() const {
         TRACY_ZONE_SCOPED;
-        if (this->is_highlighted) {
-            render_highlighted();
-            return;
-        }
-
         if (model().has_value()) {
             ModelInfo model_info = model().value();
 
@@ -295,11 +289,7 @@ struct Entity {
         }
     }
 
-    virtual void always_update(float) {
-        is_highlighted = false;
-        update_held_item_position();
-    }
-
+    virtual void always_update(float) { update_held_item_position(); }
     virtual void planning_update(float) {}
     virtual void in_round_update(float) {}
 
