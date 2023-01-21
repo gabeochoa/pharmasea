@@ -6,45 +6,45 @@
 \DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00003\ }
 \DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{engine_8h}{engine.h}}"{}}}
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}engine/globals\_register.h"{}}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}engine/layer.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals__register_8h}{engine/globals\_register.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{layer_8h}{engine/layer.h}}"{}}}
 \DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
 \DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
 \DoxyCodeLine{00009\ }
-\DoxyCodeLine{00010\ \textcolor{keyword}{using\ namespace\ }ui;}
+\DoxyCodeLine{00010\ \textcolor{keyword}{using\ namespace\ }\mbox{\hyperlink{namespaceui}{ui}};}
 \DoxyCodeLine{00011\ }
-\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_base_pause_layer}{BasePauseLayer}}\ :\ \textcolor{keyword}{public}\ Layer\ \{}
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_base_pause_layer}{BasePauseLayer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_layer}{Layer}}\ \{}
 \DoxyCodeLine{00013\ \ \ \ \ std::shared\_ptr<ui::UIContext>\ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}};}
 \DoxyCodeLine{00014\ \ \ \ \ \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game::State}}\ \mbox{\hyperlink{struct_base_pause_layer_a1b6e1b7aa8a403ac03e0ad5da5f198fa}{enabled\_state}};}
 \DoxyCodeLine{00015\ }
-\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{struct_base_pause_layer_ab68826cffc40717c3e7cedb1ca901f70}{BasePauseLayer}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game::State}}\ e\_state)}
-\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ :\ Layer(name),\ \mbox{\hyperlink{struct_base_pause_layer_a1b6e1b7aa8a403ac03e0ad5da5f198fa}{enabled\_state}}(e\_state)\ \{}
-\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}.reset(\textcolor{keyword}{new}\ ui::UIContext());}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{struct_base_pause_layer_ab68826cffc40717c3e7cedb1ca901f70}{BasePauseLayer}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{struct_layer_a2071349b5667273725ae7f05a42db7a6}{name}},\ \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game::State}}\ e\_state)}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_layer}{Layer}}(\mbox{\hyperlink{struct_layer_a2071349b5667273725ae7f05a42db7a6}{name}}),\ \mbox{\hyperlink{struct_base_pause_layer_a1b6e1b7aa8a403ac03e0ad5da5f198fa}{enabled\_state}}(e\_state)\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{structui_1_1_u_i_context}{ui::UIContext}}());}
 \DoxyCodeLine{00019\ \ \ \ \ \}}
 \DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_base_pause_layer_a98c129f44654debafcc00dd6d7e3493b}{\string~BasePauseLayer}}()\ \{\}}
 \DoxyCodeLine{00021\ }
-\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_base_pause_layer_ae0bb9bc25bb38fc892b07b9f85942da1}{onEvent}}(Event\&\ event)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_base_pause_layer_ae0bb9bc25bb38fc892b07b9f85942da1}{onEvent}}(\mbox{\hyperlink{struct_event}{Event}}\&\ event)\textcolor{keyword}{\ override\ }\{}
 \DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (GameState::get().is\_not(\mbox{\hyperlink{struct_base_pause_layer_a1b6e1b7aa8a403ac03e0ad5da5f198fa}{enabled\_state}}))\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ EventDispatcher\ dispatcher(event);}
-\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ dispatcher.dispatch<KeyPressedEvent>(std::bind(}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_event_dispatcher}{EventDispatcher}}\ dispatcher(event);}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_key_pressed_event}{KeyPressedEvent}}>(std::bind(}
 \DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_base_pause_layer_a770bf172af8af3749288f7f7c7117bf4}{BasePauseLayer::onKeyPressed}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
-\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ dispatcher.dispatch<GamepadButtonPressedEvent>(}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_gamepad_button_pressed_event}{GamepadButtonPressedEvent}}>(}
 \DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ std::bind(\&\mbox{\hyperlink{struct_base_pause_layer_af81774e738d01c50c60eb021252df5c7}{BasePauseLayer::onGamepadButtonPressed}},\ \textcolor{keyword}{this},}
 \DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::placeholders::\_1));}
 \DoxyCodeLine{00030\ \ \ \ \ \}}
 \DoxyCodeLine{00031\ }
-\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_base_pause_layer_af81774e738d01c50c60eb021252df5c7}{onGamepadButtonPressed}}(GamepadButtonPressedEvent\&\ event)\ \{}
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (KeyMap::get\_button(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::Pause)\ ==}
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ event.button)\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_base_pause_layer_af81774e738d01c50c60eb021252df5c7}{onGamepadButtonPressed}}(\mbox{\hyperlink{struct_gamepad_button_pressed_event}{GamepadButtonPressedEvent}}\&\ event)\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_key_map_aa512c05b66f7e01fc35b102ff7959349}{KeyMap::get\_button}}(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::Pause)\ ==}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ event.\mbox{\hyperlink{struct_gamepad_button_pressed_event_af34a9b36877fe246213d861ba4711b46}{button}})\ \{}
 \DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ GameState::get().go\_back();}
 \DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
 \DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}.get()-\/>process\_gamepad\_button\_event(event);}
 \DoxyCodeLine{00039\ \ \ \ \ \}}
 \DoxyCodeLine{00040\ }
-\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_base_pause_layer_a770bf172af8af3749288f7f7c7117bf4}{onKeyPressed}}(KeyPressedEvent\&\ event)\ \{}
-\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (KeyMap::get\_key\_code(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::Pause)\ ==}
-\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ event.keycode)\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_base_pause_layer_a770bf172af8af3749288f7f7c7117bf4}{onKeyPressed}}(\mbox{\hyperlink{struct_key_pressed_event}{KeyPressedEvent}}\&\ event)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_key_map_a8026f7f5618d4f427a5c4883872e0332}{KeyMap::get\_key\_code}}(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::Pause)\ ==}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ event.\mbox{\hyperlink{struct_key_event_a099e4f3c01870f67baffeba80b5c1860}{keycode}})\ \{}
 \DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ GameState::get().go\_back();}
 \DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
 \DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \}}
@@ -64,42 +64,42 @@
 \DoxyCodeLine{00060\ }
 \DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}-\/>begin(dt);}
 \DoxyCodeLine{00062\ }
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ root\ =\ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}-\/>own(Widget(}
-\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Px(WIN\_WF(),\ 1.f),\ Size\_Px(WIN\_HF(),\ 1.f),\ GrowFlags::Row));}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ root\ =\ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}-\/>own(\mbox{\hyperlink{structui_1_1_widget}{Widget}}(}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(\mbox{\hyperlink{engine_2globals_8h_a1368a126ad97b64d5180e1cc8b0fac61}{WIN\_WF}}(),\ 1.f),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(\mbox{\hyperlink{engine_2globals_8h_ae4ab98e49b98d8948eb15206b05ae4b8}{WIN\_HF}}(),\ 1.f),\ GrowFlags::Row));}
 \DoxyCodeLine{00065\ }
 \DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}-\/>push\_parent(root);}
 \DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \{}
 \DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ left\_padding\ =\ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}-\/>own(}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Widget(Size\_Px(100.f,\ 1.f),\ Size\_Px(WIN\_HF(),\ 1.f)));}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(\mbox{\hyperlink{engine_2globals_8h_ae4ab98e49b98d8948eb15206b05ae4b8}{WIN\_HF}}(),\ 1.f)));}
 \DoxyCodeLine{00070\ }
 \DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =}
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}-\/>own(Widget(\{.mode\ =\ Children,\ .strictness\ =\ 1.f\},}
-\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Pct(1.f,\ 1.f),\ Column));}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}-\/>own(\mbox{\hyperlink{structui_1_1_widget}{Widget}}(\{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{Children}},\ .strictness\ =\ 1.f\},}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_a401ddddbaf5a749492e067a11779cdf7}{Size\_Pct}}(1.f,\ 1.f),\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{Column}}));}
 \DoxyCodeLine{00074\ }
-\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ padding(*left\_padding);}
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ div(*content);}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*left\_padding);}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*content);}
 \DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}-\/>push\_parent(content);}
 \DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
 \DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ top\_padding\ =\ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}-\/>own(}
-\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Widget(Size\_Px(100.f,\ 1.f),\ Size\_Pct(1.f,\ 0.f)));}
-\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ padding(*top\_padding);}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f),\ \mbox{\hyperlink{ui__widget_8h_a401ddddbaf5a749492e067a11779cdf7}{Size\_Pct}}(1.f,\ 0.f)));}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*top\_padding);}
 \DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (button(*ui::components::mk\_button(MK\_UUID(\textcolor{keywordtype}{id},\ ROOT\_ID)),}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
 \DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Continue"{}}))\ \{}
 \DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GameState::get().go\_back();}
 \DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (button(*ui::components::mk\_button(MK\_UUID(\textcolor{keywordtype}{id},\ ROOT\_ID)),}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
 \DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Settings"{}}))\ \{}
 \DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().set(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu::State::Settings}});}
 \DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (button(*ui::components::mk\_button(MK\_UUID(\textcolor{keywordtype}{id},\ ROOT\_ID)),}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
 \DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Quit"{}}))\ \{}
 \DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().reset();}
 \DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GameState::get().reset();}
 \DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ padding(*\mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}-\/>own(}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Widget(Size\_Px(100.f,\ 1.f),\ Size\_Pct(1.f,\ 0.f))));}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}-\/>own(}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f),\ \mbox{\hyperlink{ui__widget_8h_a401ddddbaf5a749492e067a11779cdf7}{Size\_Pct}}(1.f,\ 0.f))));}
 \DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\_context}}-\/>pop\_parent();}
 \DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \}}
@@ -109,7 +109,7 @@
 \DoxyCodeLine{00105\ \};}
 \DoxyCodeLine{00106\ }
 \DoxyCodeLine{00107\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_pause_layer}{PauseLayer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_pause_layer}{BasePauseLayer}}\ \{}
-\DoxyCodeLine{00108\ \ \ \ \ \mbox{\hyperlink{struct_pause_layer_a4cb8b9c85c496e55b148ad6a4ae3126c}{PauseLayer}}()\ :\ \mbox{\hyperlink{struct_base_pause_layer}{BasePauseLayer}}(\textcolor{stringliteral}{"{}Pause"{}},\ \mbox{\hyperlink{namespacegame}{game}}::State::Paused)\ \{\}}
+\DoxyCodeLine{00108\ \ \ \ \ \mbox{\hyperlink{struct_pause_layer_a4cb8b9c85c496e55b148ad6a4ae3126c}{PauseLayer}}()\ :\ \mbox{\hyperlink{struct_base_pause_layer}{BasePauseLayer}}(\textcolor{stringliteral}{"{}Pause"{}},\ \mbox{\hyperlink{namespacegame}{game}}::\mbox{\hyperlink{structui_1_1_state}{State}}::Paused)\ \{\}}
 \DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_pause_layer_adc8efa0493d4b644cefee67b7dd78698}{\string~PauseLayer}}()\ \{\}}
 \DoxyCodeLine{00110\ \};}
 

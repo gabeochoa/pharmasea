@@ -15,11 +15,38 @@ Inheritance diagram for Version\+Layer\+:\begin{figure}[H]
 \item 
 \mbox{\hyperlink{struct_version_layer_a4cdccc7b5ac763c65a87dd917267ded1}{Version\+Layer}} ()
 \item 
-virtual void \mbox{\hyperlink{struct_version_layer_aab8a0be3b8c56e78bd1071fba1abf6d1}{on\+Event}} (Event \&) override
+virtual void \mbox{\hyperlink{struct_version_layer_aab8a0be3b8c56e78bd1071fba1abf6d1}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&) override
 \item 
 virtual void \mbox{\hyperlink{struct_version_layer_a044089ef0cbe40f90aaa85f9a3c357a4}{on\+Update}} (float) override
 \item 
 virtual void \mbox{\hyperlink{struct_version_layer_a3457fd07658e388444fb2a7ecb1767bf}{on\+Draw}} (float) override
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_layer}{Layer}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_layer_a1a34fba22edc963461e7033025d31cb2}{Layer}} (const std\+::string \&n=\char`\"{}layer\char`\"{})
+\item 
+virtual \mbox{\hyperlink{struct_layer_a2bac093f2a650095a5551fc455d10dc5}{$\sim$\+Layer}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_layer_a88bb97c131c409756e71f3f5db59f983}{on\+Attach}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_layer_a3b780cc2b2576eb59e768407bd59d172}{on\+Detach}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{on\+Update}} (float elapsed)=0
+\item 
+virtual void \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{on\+Draw}} (float elapsed)=0
+\item 
+virtual void \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&)=0
+\item 
+const std\+::string \& \mbox{\hyperlink{struct_layer_a592dabab6ae280b7a3a3f4b195c9833b}{getname}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+\doxysubsubsection*{Public Attributes inherited from \mbox{\hyperlink{struct_layer}{Layer}}}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{struct_layer_ad8c4d484a5efce0cbbd0cf81b3958d17}{id}}
+\item 
+std\+::string \mbox{\hyperlink{struct_layer_a2071349b5667273725ae7f05a42db7a6}{name}}
 \end{DoxyCompactItemize}
 
 
@@ -41,19 +68,31 @@ virtual void \mbox{\hyperlink{struct_version_layer_a3457fd07658e388444fb2a7ecb17
 
 
 
+Implements \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{Layer}}.
+
+
+
 References \mbox{\hyperlink{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}{VERSION}}.
 
 \mbox{\Hypertarget{struct_version_layer_aab8a0be3b8c56e78bd1071fba1abf6d1}\label{struct_version_layer_aab8a0be3b8c56e78bd1071fba1abf6d1}} 
 \index{VersionLayer@{VersionLayer}!onEvent@{onEvent}}
 \index{onEvent@{onEvent}!VersionLayer@{VersionLayer}}
 \doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
-{\footnotesize\ttfamily virtual void Version\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{Event \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily virtual void Version\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_event}{Event}} \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{Layer}}.
 
 \mbox{\Hypertarget{struct_version_layer_a044089ef0cbe40f90aaa85f9a3c357a4}\label{struct_version_layer_a044089ef0cbe40f90aaa85f9a3c357a4}} 
 \index{VersionLayer@{VersionLayer}!onUpdate@{onUpdate}}
 \index{onUpdate@{onUpdate}!VersionLayer@{VersionLayer}}
 \doxysubsubsection{\texorpdfstring{onUpdate()}{onUpdate()}}
 {\footnotesize\ttfamily virtual void Version\+Layer\+::on\+Update (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{Layer}}.
 
 
 

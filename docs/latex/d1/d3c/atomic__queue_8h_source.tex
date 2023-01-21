@@ -1,0 +1,48 @@
+\hypertarget{atomic__queue_8h_source}{}\doxysection{atomic\+\_\+queue.\+h}
+\label{atomic__queue_8h_source}\index{src/engine/atomic\_queue.h@{src/engine/atomic\_queue.h}}
+\mbox{\hyperlink{atomic__queue_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <deque>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_atomic_queue}{AtomicQueue}}\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_atomic_queue_a98934d09208eca93040bff876a38b204}{push\_back}}(\textcolor{keyword}{const}\ T\&\ value)\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ lock(\mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{m\_mutex}});}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{q}}.push\_back(value);}
+\DoxyCodeLine{00012\ \ \ \ \ \}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_atomic_queue_a8c11e416aa90b09d92d792f77d8c58e5}{pop}}()\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ lock(\mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{m\_mutex}});}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{q}}.pop();}
+\DoxyCodeLine{00017\ \ \ \ \ \}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_atomic_queue_ac0f907d5678778573db741e870a6b757}{pop\_front}}()\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ lock(\mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{m\_mutex}});}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{q}}.pop\_front();}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ [[nodiscard]]\ T\&\ \mbox{\hyperlink{struct_atomic_queue_a4d4bfa97b50011802a3eab7c369ef840}{front}}()\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ lock(\mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{m\_mutex}});}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{q}}.front();}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_atomic_queue_acc3f3852f0f0792802fe30443dc764d0}{empty}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ lock(\mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{m\_mutex}});}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{q}}.empty();}
+\DoxyCodeLine{00032\ \ \ \ \ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_atomic_queue_a6bc2bcca02a81f1181895681c7c23ffa}{size}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ lock(\mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{m\_mutex}});}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{q}}.size();}
+\DoxyCodeLine{00037\ \ \ \ \ \}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00040\ \ \ \ \ std::deque<T>\ \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{q}};}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{mutable}\ std::mutex\ \mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{m\_mutex}};}
+\DoxyCodeLine{00042\ \};}
+
+\end{DoxyCode}

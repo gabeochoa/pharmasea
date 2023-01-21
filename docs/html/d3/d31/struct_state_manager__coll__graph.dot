@@ -1,0 +1,8 @@
+digraph "StateManager&lt; T &gt;"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [shape=record,label="{StateManager\< T \>\n|- prev\l- state\l|+ read()\l+ previous()\l+ go_back()\l+ clear_history()\l+ is()\l+ is_not()\l+ tostring()\l+ set()\l+ default_value()\l+ reset()\l+ ~StateManager()\l}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+}

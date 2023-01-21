@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['entity_0',['Entity',['../dc/dc4/struct_entity.html',1,'']]],
-  ['entityhelper_1',['EntityHelper',['../d5/dab/struct_entity_helper.html',1,'']]]
+  ['data_0',['Data',['../d6/d02/structsettings_1_1_data.html',1,'settings']]],
+  ['dropdownconfig_1',['DropdownConfig',['../d5/d1e/structui_1_1_dropdown_config.html',1,'ui']]],
+  ['dropdownstate_2',['DropdownState',['../d0/de4/structui_1_1_dropdown_state.html',1,'ui']]]
 ];

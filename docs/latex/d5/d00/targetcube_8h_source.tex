@@ -12,32 +12,32 @@
 \DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
 \DoxyCodeLine{00009\ }
 \DoxyCodeLine{00010\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_target_cube}{TargetCube}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_person}{Person}}\ \{}
-\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{struct_target_cube_a929cc765d674e7ef3966c1a8862a5566}{TargetCube}}(vec3\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{struct_target_cube_a929cc765d674e7ef3966c1a8862a5566}{TargetCube}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
 \DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
-\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{struct_target_cube_a6b0c2a6441028fe4b8fe7bc4440e8bed}{TargetCube}}(vec2\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{struct_target_cube_a6b0c2a6441028fe4b8fe7bc4440e8bed}{TargetCube}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
 \DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
-\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{struct_target_cube_ae0de19b2e4ca96562a420810f946c26c}{TargetCube}}(vec3\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ c)\ \{\}}
-\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{struct_target_cube_aa6280823f67b195fafa82c99c5488aa9}{TargetCube}}(vec2\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ c)\ \{\}}
+\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{struct_target_cube_ae0de19b2e4ca96562a420810f946c26c}{TargetCube}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ c)\ \{\}}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{struct_target_cube_aa6280823f67b195fafa82c99c5488aa9}{TargetCube}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ c)\ \{\}}
 \DoxyCodeLine{00017\ }
-\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_target_cube_ab8f18a14639aa3542365d2d2ddb08b95}{update\_xaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_target_cube_ab8f18a14639aa3542365d2d2ddb08b95}{update\_xaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
 \DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ speed\ =\ 10.0f\ *\ dt;}
-\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_x\ =\ this-\/>\mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\_position}};}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_x\ =\ this-\/>get<Transform>().raw\_position;}
 \DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ left\ =}
-\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ (bool)\ KeyMap::is\_event(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::TargetLeft);}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ (bool)\ \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{KeyMap::is\_event}}(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::TargetLeft);}
 \DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ right\ =}
-\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ (bool)\ KeyMap::is\_event(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::TargetRight);}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ (bool)\ \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{KeyMap::is\_event}}(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::TargetRight);}
 \DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (left)\ new\_pos\_x.x\ -\/=\ speed;}
 \DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (right)\ new\_pos\_x.x\ +=\ speed;}
 \DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_pos\_x;}
 \DoxyCodeLine{00028\ \ \ \ \ \}}
 \DoxyCodeLine{00029\ }
-\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_target_cube_a682af065bf72ac44e3d0362bdbc3a710}{update\_zaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_target_cube_a682af065bf72ac44e3d0362bdbc3a710}{update\_zaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
 \DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ speed\ =\ 10.0f\ *\ dt;}
-\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_z\ =\ this-\/>\mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\_position}};}
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ up\ =\ (bool)\ KeyMap::is\_event(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_z\ =\ this-\/>get<Transform>().raw\_position;}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ up\ =\ (bool)\ \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{KeyMap::is\_event}}(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},}
 \DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ InputName::TargetForward);}
 \DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ down\ =}
-\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ (bool)\ KeyMap::is\_event(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::TargetBack);}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ (bool)\ \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{KeyMap::is\_event}}(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::TargetBack);}
 \DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (up)\ new\_pos\_z.z\ -\/=\ speed;}
 \DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (down)\ new\_pos\_z.z\ +=\ speed;}
 \DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_pos\_z;}

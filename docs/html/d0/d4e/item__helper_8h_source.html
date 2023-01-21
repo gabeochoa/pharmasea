@@ -83,8 +83,8 @@ $(function() {
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/daf/external__include_8h.html">external_include.h</a>&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">//</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;engine/globals_register.h&quot;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;engine/is_server.h&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="../../db/da1/globals__register_8h.html">engine/globals_register.h</a>&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/db9/is__server_8h.html">engine/is_server.h</a>&quot;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d87/globals_8h.html">globals.h</a>&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">//</span></div>
@@ -104,7 +104,7 @@ $(function() {
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="../../d9/dd0/struct_item_helper.html#a44f1137eaff506c9b1ea4f5e2f48e8a4">   27</a></span>    <span class="keyword">static</span> <a class="code hl_typedef" href="../../d0/d4e/item__helper_8h.html#a175a25f0a9aa01587d97b5daefa2db13">Items</a>&amp; <a class="code hl_function" href="../../d9/dd0/struct_item_helper.html#a44f1137eaff506c9b1ea4f5e2f48e8a4">get_items</a>() {</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <span class="keyword">const</span> <span class="keyword">auto</span> in_lobby = GameState::get().is(<a class="code hl_enumvalue" href="../../d3/d2c/namespacegame.html#ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748">game::State::Lobby</a>);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keywordflow">if</span> (is_server()) {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="../../d6/db9/is__server_8h.html#aa9b37672e835e000097b7b8c69868672">is_server</a>()) {</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            <span class="keywordflow">return</span> in_lobby ? <a class="code hl_variable" href="../../d0/d4e/item__helper_8h.html#a2091150406655e7aa8a4c40ba8beb7e4">server_lobby_items_DO_NOT_USE</a></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>                            : <a class="code hl_variable" href="../../d0/d4e/item__helper_8h.html#a79b83ae9ed8024ef393811b5c3976ae8">server_items_DO_NOT_USE</a>;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        }</div>
@@ -179,7 +179,7 @@ $(function() {
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="../../d9/dd0/struct_item_helper.html#a7d3afea322f196765e7c22a61bea38b3">  103</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> std::vector&lt;std::shared_ptr&lt;T&gt;&gt; <a class="code hl_function" href="../../d9/dd0/struct_item_helper.html#a7d3afea322f196765e7c22a61bea38b3">getitemsInRange</a>(</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        vec2 pos, <span class="keywordtype">float</span> range) {</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> pos, <span class="keywordtype">float</span> range) {</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        std::vector&lt;std::shared_ptr&lt;T&gt;&gt; matching;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; e : <a class="code hl_function" href="../../d9/dd0/struct_item_helper.html#a44f1137eaff506c9b1ea4f5e2f48e8a4">get_items</a>()) {</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keyword">auto</span> s = dynamic_pointer_cast&lt;T&gt;(e);</div>
@@ -193,7 +193,7 @@ $(function() {
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="../../d9/dd0/struct_item_helper.html#a4ee7f424c187b24d9161a907e43fc1e4">  117</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> std::shared_ptr&lt;T&gt; <a class="code hl_function" href="../../d9/dd0/struct_item_helper.html#a4ee7f424c187b24d9161a907e43fc1e4">getClosestMatchingItem</a>(</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        vec2 pos, <span class="keywordtype">float</span> range,</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> pos, <span class="keywordtype">float</span> range,</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        std::function&lt;<span class="keywordtype">bool</span>(std::shared_ptr&lt;T&gt;)&gt; filter = {}) {</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="keywordtype">float</span> best_distance = range;</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        std::shared_ptr&lt;T&gt; best_so_far;</div>
@@ -215,6 +215,10 @@ $(function() {
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>};</div>
 <div class="ttc" id="aexternal__include_8h_html"><div class="ttname"><a href="../../d7/daf/external__include_8h.html">external_include.h</a></div></div>
 <div class="ttc" id="aglobals_8h_html"><div class="ttname"><a href="../../d5/d87/globals_8h.html">globals.h</a></div></div>
+<div class="ttc" id="aglobals__register_8h_html"><div class="ttname"><a href="../../db/da1/globals__register_8h.html">globals_register.h</a></div></div>
+<div class="ttc" id="agraphics_8h_html_acf64f2c7361f0fc6883a80cb1d698f28"><div class="ttname"><a href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a></div><div class="ttdeci">raylib::Vector2 vec2</div><div class="ttdef"><b>Definition:</b> graphics.h:32</div></div>
+<div class="ttc" id="ais__server_8h_html"><div class="ttname"><a href="../../d6/db9/is__server_8h.html">is_server.h</a></div></div>
+<div class="ttc" id="ais__server_8h_html_aa9b37672e835e000097b7b8c69868672"><div class="ttname"><a href="../../d6/db9/is__server_8h.html#aa9b37672e835e000097b7b8c69868672">is_server</a></div><div class="ttdeci">static bool is_server()</div><div class="ttdef"><b>Definition:</b> is_server.h:8</div></div>
 <div class="ttc" id="aitem_8h_html"><div class="ttname"><a href="../../df/d1f/item_8h.html">item.h</a></div></div>
 <div class="ttc" id="aitem__helper_8h_html_a175a25f0a9aa01587d97b5daefa2db13"><div class="ttname"><a href="../../d0/d4e/item__helper_8h.html#a175a25f0a9aa01587d97b5daefa2db13">Items</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; Item &gt; &gt; Items</div><div class="ttdef"><b>Definition:</b> item_helper.h:15</div></div>
 <div class="ttc" id="aitem__helper_8h_html_a2091150406655e7aa8a4c40ba8beb7e4"><div class="ttname"><a href="../../d0/d4e/item__helper_8h.html#a2091150406655e7aa8a4c40ba8beb7e4">server_lobby_items_DO_NOT_USE</a></div><div class="ttdeci">static Items server_lobby_items_DO_NOT_USE</div><div class="ttdef"><b>Definition:</b> item_helper.h:19</div></div>

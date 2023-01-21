@@ -1,0 +1,289 @@
+\hypertarget{struct_app}{}\doxysection{App Struct Reference}
+\label{struct_app}\index{App@{App}}
+
+
+{\ttfamily \#include $<$app.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_app_aa90f6957229b0de094b30961847b6755}{App}} (const \mbox{\hyperlink{struct_app_settings}{App\+Settings}} \&)
+\item 
+\mbox{\hyperlink{struct_app_a34f1f253b1cef5f4ecbac66eaf6964ec}{$\sim$\+App}} ()
+\item 
+void \mbox{\hyperlink{struct_app_af7c955dd8d492147f48bd06727cad94d}{push\+Layer}} (\mbox{\hyperlink{struct_layer}{Layer}} $\ast$layer)
+\item 
+void \mbox{\hyperlink{struct_app_af6a5654f8b1e4ecf053145ef6a287a2e}{push\+Overlay}} (\mbox{\hyperlink{struct_layer}{Layer}} $\ast$layer)
+\item 
+void \mbox{\hyperlink{struct_app_a9705a213438219fe472bb529e4974f7b}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event)
+\item 
+bool \mbox{\hyperlink{struct_app_aae3a117f0d7334a08b163f6fd97e8aff}{on\+Window\+Resize}} (\mbox{\hyperlink{struct_window_resize_event}{Window\+Resize\+Event}} event)
+\item 
+void \mbox{\hyperlink{struct_app_af13609762c5314d6d09047f98bcfe634}{process\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&e)
+\item 
+void \mbox{\hyperlink{struct_app_a28e939e80ae46e74520498d89b658cf4}{close}} ()
+\item 
+void \mbox{\hyperlink{struct_app_ae09dc71078b64c56c673b1ad1d25b5d1}{run}} ()
+\item 
+void \mbox{\hyperlink{struct_app_a9ca8fcda48316cd4eb3e1714d60177a8}{loop}} (float dt)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{struct_app_a5ba5c3223120bbe9fc806df5232eb279}{running}} = false
+\item 
+\mbox{\hyperlink{struct_layer_stack}{Layer\+Stack}} \mbox{\hyperlink{struct_app_acf24f18f145e209a9bea40336ac981d5}{layerstack}}
+\item 
+int \mbox{\hyperlink{struct_app_a2c90198ed2171c619f0f3b9eb49d005a}{width}}
+\item 
+int \mbox{\hyperlink{struct_app_a5b13d0311b1a7dcb70a5c5774a419c31}{height}}
+\item 
+raylib\+::\+Render\+Texture2D \mbox{\hyperlink{struct_app_a621e2c715a31f17e5982b231c55e51a4}{main\+RT}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_app_a6a5adeac7522885380a1af3e16b25731}{draw\+\_\+all\+\_\+to\+\_\+texture}} (float dt)
+\item 
+void \mbox{\hyperlink{struct_app_a53faea464342fbe9173df7d168a97dde}{render\+\_\+to\+\_\+screen}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{struct_app_a9af2527b839cabdebd4697fd97cc2455}{start\+\_\+post\+\_\+processing}} ()
+\item 
+static void \mbox{\hyperlink{struct_app_a52e08943e2548dcf881ae181e43e0d6d}{end\+\_\+post\+\_\+processing}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_app_aa90f6957229b0de094b30961847b6755}\label{struct_app_aa90f6957229b0de094b30961847b6755}} 
+\index{App@{App}!App@{App}}
+\index{App@{App}!App@{App}}
+\doxysubsubsection{\texorpdfstring{App()}{App()}}
+{\footnotesize\ttfamily App\+::\+App (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_app_settings}{App\+Settings}} \&}]{settings }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+References \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}, \mbox{\hyperlink{struct_app_a5b13d0311b1a7dcb70a5c5774a419c31}{height}}, \mbox{\hyperlink{struct_app_a621e2c715a31f17e5982b231c55e51a4}{main\+RT}}, \mbox{\hyperlink{struct_global_value_register_a0020d85a5afb11283c115e425f7e175c}{Global\+Value\+Register\+::set()}}, and \mbox{\hyperlink{struct_app_a2c90198ed2171c619f0f3b9eb49d005a}{width}}.
+
+\mbox{\Hypertarget{struct_app_a34f1f253b1cef5f4ecbac66eaf6964ec}\label{struct_app_a34f1f253b1cef5f4ecbac66eaf6964ec}} 
+\index{App@{App}!````~App@{$\sim$App}}
+\index{````~App@{$\sim$App}!App@{App}}
+\doxysubsubsection{\texorpdfstring{$\sim$App()}{~App()}}
+{\footnotesize\ttfamily App\+::$\sim$\+App (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_app_a621e2c715a31f17e5982b231c55e51a4}{main\+RT}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_app_a28e939e80ae46e74520498d89b658cf4}\label{struct_app_a28e939e80ae46e74520498d89b658cf4}} 
+\index{App@{App}!close@{close}}
+\index{close@{close}!App@{App}}
+\doxysubsubsection{\texorpdfstring{close()}{close()}}
+{\footnotesize\ttfamily void App\+::close (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_app_a5ba5c3223120bbe9fc806df5232eb279}{running}}.
+
+\mbox{\Hypertarget{struct_app_a6a5adeac7522885380a1af3e16b25731}\label{struct_app_a6a5adeac7522885380a1af3e16b25731}} 
+\index{App@{App}!draw\_all\_to\_texture@{draw\_all\_to\_texture}}
+\index{draw\_all\_to\_texture@{draw\_all\_to\_texture}!App@{App}}
+\doxysubsubsection{\texorpdfstring{draw\_all\_to\_texture()}{draw\_all\_to\_texture()}}
+{\footnotesize\ttfamily void App\+::draw\+\_\+all\+\_\+to\+\_\+texture (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_app_acf24f18f145e209a9bea40336ac981d5}{layerstack}}, \mbox{\hyperlink{struct_app_a621e2c715a31f17e5982b231c55e51a4}{main\+RT}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_a9ca8fcda48316cd4eb3e1714d60177a8}{loop()}}.
+
+\mbox{\Hypertarget{struct_app_a52e08943e2548dcf881ae181e43e0d6d}\label{struct_app_a52e08943e2548dcf881ae181e43e0d6d}} 
+\index{App@{App}!end\_post\_processing@{end\_post\_processing}}
+\index{end\_post\_processing@{end\_post\_processing}!App@{App}}
+\doxysubsubsection{\texorpdfstring{end\_post\_processing()}{end\_post\_processing()}}
+{\footnotesize\ttfamily void App\+::end\+\_\+post\+\_\+processing (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_a53faea464342fbe9173df7d168a97dde}{render\+\_\+to\+\_\+screen()}}.
+
+\mbox{\Hypertarget{struct_app_a9ca8fcda48316cd4eb3e1714d60177a8}\label{struct_app_a9ca8fcda48316cd4eb3e1714d60177a8}} 
+\index{App@{App}!loop@{loop}}
+\index{loop@{loop}!App@{App}}
+\doxysubsubsection{\texorpdfstring{loop()}{loop()}}
+{\footnotesize\ttfamily void App\+::loop (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_app_a6a5adeac7522885380a1af3e16b25731}{draw\+\_\+all\+\_\+to\+\_\+texture()}}, \mbox{\hyperlink{struct_app_acf24f18f145e209a9bea40336ac981d5}{layerstack}}, \mbox{\hyperlink{struct_app_af13609762c5314d6d09047f98bcfe634}{process\+Event()}}, \mbox{\hyperlink{struct_app_a53faea464342fbe9173df7d168a97dde}{render\+\_\+to\+\_\+screen()}}, \mbox{\hyperlink{tracy_8h_ac246580cef6dbb3506235a58b6c68644}{TRACY\+\_\+\+FRAME\+\_\+\+MARK}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_ae09dc71078b64c56c673b1ad1d25b5d1}{run()}}.
+
+\mbox{\Hypertarget{struct_app_a9705a213438219fe472bb529e4974f7b}\label{struct_app_a9705a213438219fe472bb529e4974f7b}} 
+\index{App@{App}!onEvent@{onEvent}}
+\index{onEvent@{onEvent}!App@{App}}
+\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
+{\footnotesize\ttfamily void App\+::on\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_event}{Event}} \&}]{event }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{Event\+Dispatcher\+::dispatch()}}, and \mbox{\hyperlink{struct_app_aae3a117f0d7334a08b163f6fd97e8aff}{on\+Window\+Resize()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_af13609762c5314d6d09047f98bcfe634}{process\+Event()}}.
+
+\mbox{\Hypertarget{struct_app_aae3a117f0d7334a08b163f6fd97e8aff}\label{struct_app_aae3a117f0d7334a08b163f6fd97e8aff}} 
+\index{App@{App}!onWindowResize@{onWindowResize}}
+\index{onWindowResize@{onWindowResize}!App@{App}}
+\doxysubsubsection{\texorpdfstring{onWindowResize()}{onWindowResize()}}
+{\footnotesize\ttfamily bool App\+::on\+Window\+Resize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_window_resize_event}{Window\+Resize\+Event}}}]{event }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}, \mbox{\hyperlink{struct_app_a5b13d0311b1a7dcb70a5c5774a419c31}{height}}, \mbox{\hyperlink{struct_window_resize_event_a0b8e43b732753e986354cf08b4b42e39}{Window\+Resize\+Event\+::height}}, \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}, \mbox{\hyperlink{struct_app_a621e2c715a31f17e5982b231c55e51a4}{main\+RT}}, \mbox{\hyperlink{struct_global_value_register_a0020d85a5afb11283c115e425f7e175c}{Global\+Value\+Register\+::set()}}, \mbox{\hyperlink{struct_app_a2c90198ed2171c619f0f3b9eb49d005a}{width}}, and \mbox{\hyperlink{struct_window_resize_event_a31d8c59cb38500600591b98613d2d445}{Window\+Resize\+Event\+::width}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_a9705a213438219fe472bb529e4974f7b}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_app_af13609762c5314d6d09047f98bcfe634}\label{struct_app_af13609762c5314d6d09047f98bcfe634}} 
+\index{App@{App}!processEvent@{processEvent}}
+\index{processEvent@{processEvent}!App@{App}}
+\doxysubsubsection{\texorpdfstring{processEvent()}{processEvent()}}
+{\footnotesize\ttfamily void App\+::process\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_event}{Event}} \&}]{e }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_layer_stack_abc1ae8816a9b21d405062502c0a98f5b}{Layer\+Stack\+::begin()}}, \mbox{\hyperlink{struct_layer_stack_a91c8a0dadf6f79e18d8f41e9572a7c7e}{Layer\+Stack\+::end()}}, \mbox{\hyperlink{struct_event_a4b102a6718fe57cab5568451f94df31b}{Event\+::handled}}, \mbox{\hyperlink{struct_app_acf24f18f145e209a9bea40336ac981d5}{layerstack}}, \mbox{\hyperlink{struct_app_a9705a213438219fe472bb529e4974f7b}{on\+Event()}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_a9ca8fcda48316cd4eb3e1714d60177a8}{loop()}}.
+
+\mbox{\Hypertarget{struct_app_af7c955dd8d492147f48bd06727cad94d}\label{struct_app_af7c955dd8d492147f48bd06727cad94d}} 
+\index{App@{App}!pushLayer@{pushLayer}}
+\index{pushLayer@{pushLayer}!App@{App}}
+\doxysubsubsection{\texorpdfstring{pushLayer()}{pushLayer()}}
+{\footnotesize\ttfamily void App\+::push\+Layer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_layer}{Layer}} $\ast$}]{layer }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_app_acf24f18f145e209a9bea40336ac981d5}{layerstack}}, and \mbox{\hyperlink{struct_layer_stack_a87da032625776caf93747c6eceec52d1}{Layer\+Stack\+::push()}}.
+
+\mbox{\Hypertarget{struct_app_af6a5654f8b1e4ecf053145ef6a287a2e}\label{struct_app_af6a5654f8b1e4ecf053145ef6a287a2e}} 
+\index{App@{App}!pushOverlay@{pushOverlay}}
+\index{pushOverlay@{pushOverlay}!App@{App}}
+\doxysubsubsection{\texorpdfstring{pushOverlay()}{pushOverlay()}}
+{\footnotesize\ttfamily void App\+::push\+Overlay (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_layer}{Layer}} $\ast$}]{layer }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_app_acf24f18f145e209a9bea40336ac981d5}{layerstack}}, and \mbox{\hyperlink{struct_layer_stack_a7220ab1754290bcc23b7714a70d28187}{Layer\+Stack\+::push\+Overlay()}}.
+
+\mbox{\Hypertarget{struct_app_a53faea464342fbe9173df7d168a97dde}\label{struct_app_a53faea464342fbe9173df7d168a97dde}} 
+\index{App@{App}!render\_to\_screen@{render\_to\_screen}}
+\index{render\_to\_screen@{render\_to\_screen}!App@{App}}
+\doxysubsubsection{\texorpdfstring{render\_to\_screen()}{render\_to\_screen()}}
+{\footnotesize\ttfamily void App\+::render\+\_\+to\+\_\+screen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_app_a52e08943e2548dcf881ae181e43e0d6d}{end\+\_\+post\+\_\+processing()}}, \mbox{\hyperlink{struct_app_a621e2c715a31f17e5982b231c55e51a4}{main\+RT}}, \mbox{\hyperlink{struct_app_a9af2527b839cabdebd4697fd97cc2455}{start\+\_\+post\+\_\+processing()}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_a9ca8fcda48316cd4eb3e1714d60177a8}{loop()}}.
+
+\mbox{\Hypertarget{struct_app_ae09dc71078b64c56c673b1ad1d25b5d1}\label{struct_app_ae09dc71078b64c56c673b1ad1d25b5d1}} 
+\index{App@{App}!run@{run}}
+\index{run@{run}!App@{App}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily void App\+::run (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}, \mbox{\hyperlink{struct_app_a9ca8fcda48316cd4eb3e1714d60177a8}{loop()}}, and \mbox{\hyperlink{struct_app_a5ba5c3223120bbe9fc806df5232eb279}{running}}.
+
+\mbox{\Hypertarget{struct_app_a9af2527b839cabdebd4697fd97cc2455}\label{struct_app_a9af2527b839cabdebd4697fd97cc2455}} 
+\index{App@{App}!start\_post\_processing@{start\_post\_processing}}
+\index{start\_post\_processing@{start\_post\_processing}!App@{App}}
+\doxysubsubsection{\texorpdfstring{start\_post\_processing()}{start\_post\_processing()}}
+{\footnotesize\ttfamily void App\+::start\+\_\+post\+\_\+processing (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_shader_library_ad1aa93de6099e82a038b32c93e7163b3}{Shader\+Library\+::get()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_a53faea464342fbe9173df7d168a97dde}{render\+\_\+to\+\_\+screen()}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_app_a5b13d0311b1a7dcb70a5c5774a419c31}\label{struct_app_a5b13d0311b1a7dcb70a5c5774a419c31}} 
+\index{App@{App}!height@{height}}
+\index{height@{height}!App@{App}}
+\doxysubsubsection{\texorpdfstring{height}{height}}
+{\footnotesize\ttfamily int App\+::height}
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_aa90f6957229b0de094b30961847b6755}{App()}}, and \mbox{\hyperlink{struct_app_aae3a117f0d7334a08b163f6fd97e8aff}{on\+Window\+Resize()}}.
+
+\mbox{\Hypertarget{struct_app_acf24f18f145e209a9bea40336ac981d5}\label{struct_app_acf24f18f145e209a9bea40336ac981d5}} 
+\index{App@{App}!layerstack@{layerstack}}
+\index{layerstack@{layerstack}!App@{App}}
+\doxysubsubsection{\texorpdfstring{layerstack}{layerstack}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_layer_stack}{Layer\+Stack}} App\+::layerstack}
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_a6a5adeac7522885380a1af3e16b25731}{draw\+\_\+all\+\_\+to\+\_\+texture()}}, \mbox{\hyperlink{struct_app_a9ca8fcda48316cd4eb3e1714d60177a8}{loop()}}, \mbox{\hyperlink{struct_app_af13609762c5314d6d09047f98bcfe634}{process\+Event()}}, \mbox{\hyperlink{struct_app_af7c955dd8d492147f48bd06727cad94d}{push\+Layer()}}, and \mbox{\hyperlink{struct_app_af6a5654f8b1e4ecf053145ef6a287a2e}{push\+Overlay()}}.
+
+\mbox{\Hypertarget{struct_app_a621e2c715a31f17e5982b231c55e51a4}\label{struct_app_a621e2c715a31f17e5982b231c55e51a4}} 
+\index{App@{App}!mainRT@{mainRT}}
+\index{mainRT@{mainRT}!App@{App}}
+\doxysubsubsection{\texorpdfstring{mainRT}{mainRT}}
+{\footnotesize\ttfamily raylib\+::\+Render\+Texture2D App\+::main\+RT}
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_aa90f6957229b0de094b30961847b6755}{App()}}, \mbox{\hyperlink{struct_app_a6a5adeac7522885380a1af3e16b25731}{draw\+\_\+all\+\_\+to\+\_\+texture()}}, \mbox{\hyperlink{struct_app_aae3a117f0d7334a08b163f6fd97e8aff}{on\+Window\+Resize()}}, \mbox{\hyperlink{struct_app_a53faea464342fbe9173df7d168a97dde}{render\+\_\+to\+\_\+screen()}}, and \mbox{\hyperlink{struct_app_a34f1f253b1cef5f4ecbac66eaf6964ec}{$\sim$\+App()}}.
+
+\mbox{\Hypertarget{struct_app_a5ba5c3223120bbe9fc806df5232eb279}\label{struct_app_a5ba5c3223120bbe9fc806df5232eb279}} 
+\index{App@{App}!running@{running}}
+\index{running@{running}!App@{App}}
+\doxysubsubsection{\texorpdfstring{running}{running}}
+{\footnotesize\ttfamily bool App\+::running = false}
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_a28e939e80ae46e74520498d89b658cf4}{close()}}, and \mbox{\hyperlink{struct_app_ae09dc71078b64c56c673b1ad1d25b5d1}{run()}}.
+
+\mbox{\Hypertarget{struct_app_a2c90198ed2171c619f0f3b9eb49d005a}\label{struct_app_a2c90198ed2171c619f0f3b9eb49d005a}} 
+\index{App@{App}!width@{width}}
+\index{width@{width}!App@{App}}
+\doxysubsubsection{\texorpdfstring{width}{width}}
+{\footnotesize\ttfamily int App\+::width}
+
+
+
+Referenced by \mbox{\hyperlink{struct_app_aa90f6957229b0de094b30961847b6755}{App()}}, and \mbox{\hyperlink{struct_app_aae3a117f0d7334a08b163f6fd97e8aff}{on\+Window\+Resize()}}.
+
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/engine/\mbox{\hyperlink{app_8h}{app.\+h}}\item 
+src/engine/\mbox{\hyperlink{app_8cpp}{app.\+cpp}}\end{DoxyCompactItemize}

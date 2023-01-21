@@ -15,7 +15,7 @@ Inheritance diagram for Level\+Info\+:\begin{figure}[H]
 \item 
 virtual void \mbox{\hyperlink{struct_level_info_a69320651f4975db03abfcf8979341cb4}{on\+Update}} (float dt)
 \item 
-virtual void \mbox{\hyperlink{struct_level_info_ad4d55937b27ced4254b37e8567d40251}{on\+Draw}} (float) const
+virtual void \mbox{\hyperlink{struct_level_info_a7c2985c6599e2a7d5e051cc7f835fc6d}{on\+Draw}} (float dt) const
 \item 
 virtual void \mbox{\hyperlink{struct_level_info_a29c9081e7343c8fb18e46104f73b957b}{on\+Draw\+UI}} (float)
 \item 
@@ -29,6 +29,8 @@ virtual void \mbox{\hyperlink{struct_level_info_a0784ca0f3cf019f17d50596242a0243
 \begin{DoxyCompactItemize}
 \item 
 bool \mbox{\hyperlink{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}{was\+\_\+generated}} = false
+\item 
+\mbox{\hyperlink{struct_system_manager}{System\+Manager}} \mbox{\hyperlink{struct_level_info_a7c46f127f733274ead38458a65ca3016}{system\+\_\+manager}}
 \item 
 \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}} \mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}}
 \item 
@@ -90,11 +92,11 @@ References \mbox{\hyperlink{struct_entity_helper_acc8beb01dd8be784718becdfe5880b
 
 Referenced by \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{Map\+::grab\+\_\+things()}}.
 
-\mbox{\Hypertarget{struct_level_info_ad4d55937b27ced4254b37e8567d40251}\label{struct_level_info_ad4d55937b27ced4254b37e8567d40251}} 
+\mbox{\Hypertarget{struct_level_info_a7c2985c6599e2a7d5e051cc7f835fc6d}\label{struct_level_info_a7c2985c6599e2a7d5e051cc7f835fc6d}} 
 \index{LevelInfo@{LevelInfo}!onDraw@{onDraw}}
 \index{onDraw@{onDraw}!LevelInfo@{LevelInfo}}
 \doxysubsubsection{\texorpdfstring{onDraw()}{onDraw()}}
-{\footnotesize\ttfamily virtual void Level\+Info\+::on\+Draw (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily virtual void Level\+Info\+::on\+Draw (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
 
 
 
@@ -102,7 +104,7 @@ Reimplemented in \mbox{\hyperlink{struct_lobby_map_info_af72bfe92b12587543d0df93
 
 
 
-References \mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}}, and \mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}}.
+References \mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}}, \mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
 
 
 
@@ -134,7 +136,7 @@ Reimplemented in \mbox{\hyperlink{struct_game_map_info_aac456532748e47e912f90269
 
 
 
-References \mbox{\hyperlink{struct_entity_helper_a704ecc99728bb6635523ff9b8e46cd95}{Entity\+Helper\+::get\+\_\+entities()}}.
+References \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
 
 
 
@@ -162,7 +164,7 @@ References \mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}
 
 
 
-Referenced by \mbox{\hyperlink{struct_map_ab6633a39aa81ed9161458051d0b0e662}{Map\+::entities()}}, \mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c45e}{grab\+\_\+things()}}, \mbox{\hyperlink{struct_level_info_ad4d55937b27ced4254b37e8567d40251}{on\+Draw()}}, and \mbox{\hyperlink{struct_level_info_a63c918a28d1647f84c80e76fa26bb3e7}{serialize()}}.
+Referenced by \mbox{\hyperlink{struct_map_ab6633a39aa81ed9161458051d0b0e662}{Map\+::entities()}}, \mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c45e}{grab\+\_\+things()}}, \mbox{\hyperlink{struct_level_info_a7c2985c6599e2a7d5e051cc7f835fc6d}{on\+Draw()}}, and \mbox{\hyperlink{struct_level_info_a63c918a28d1647f84c80e76fa26bb3e7}{serialize()}}.
 
 \mbox{\Hypertarget{struct_level_info_acf7cf891676017e69d101bc6c164fa45}\label{struct_level_info_acf7cf891676017e69d101bc6c164fa45}} 
 \index{LevelInfo@{LevelInfo}!items@{items}}
@@ -172,7 +174,7 @@ Referenced by \mbox{\hyperlink{struct_map_ab6633a39aa81ed9161458051d0b0e662}{Map
 
 
 
-Referenced by \mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c45e}{grab\+\_\+things()}}, \mbox{\hyperlink{struct_map_a020eac8bc34cb0da6f978b410913f82f}{Map\+::items()}}, \mbox{\hyperlink{struct_level_info_ad4d55937b27ced4254b37e8567d40251}{on\+Draw()}}, and \mbox{\hyperlink{struct_level_info_a63c918a28d1647f84c80e76fa26bb3e7}{serialize()}}.
+Referenced by \mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c45e}{grab\+\_\+things()}}, \mbox{\hyperlink{struct_map_a020eac8bc34cb0da6f978b410913f82f}{Map\+::items()}}, \mbox{\hyperlink{struct_level_info_a7c2985c6599e2a7d5e051cc7f835fc6d}{on\+Draw()}}, and \mbox{\hyperlink{struct_level_info_a63c918a28d1647f84c80e76fa26bb3e7}{serialize()}}.
 
 \mbox{\Hypertarget{struct_level_info_aa50fed1dbcca5c43e26680af3a651680}\label{struct_level_info_aa50fed1dbcca5c43e26680af3a651680}} 
 \index{LevelInfo@{LevelInfo}!num\_entities@{num\_entities}}
@@ -203,6 +205,12 @@ Referenced by \mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c4
 
 
 Referenced by \mbox{\hyperlink{struct_level_info_ad3f119e5329f5c5f62537ff53fe3b932}{ensure\+\_\+generated\+\_\+map()}}, \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{Game\+Map\+Info\+::generate\+\_\+map()}}, \mbox{\hyperlink{struct_level_info_a63c918a28d1647f84c80e76fa26bb3e7}{serialize()}}, and \mbox{\hyperlink{struct_game_map_info_a3e6cb1b5e1429089bb8d3498562854b3}{Game\+Map\+Info\+::update\+\_\+seed()}}.
+
+\mbox{\Hypertarget{struct_level_info_a7c46f127f733274ead38458a65ca3016}\label{struct_level_info_a7c46f127f733274ead38458a65ca3016}} 
+\index{LevelInfo@{LevelInfo}!system\_manager@{system\_manager}}
+\index{system\_manager@{system\_manager}!LevelInfo@{LevelInfo}}
+\doxysubsubsection{\texorpdfstring{system\_manager}{system\_manager}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_system_manager}{System\+Manager}} Level\+Info\+::system\+\_\+manager}
 
 \mbox{\Hypertarget{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}\label{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}} 
 \index{LevelInfo@{LevelInfo}!was\_generated@{was\_generated}}

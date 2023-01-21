@@ -7,8 +7,8 @@
 \DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
 \DoxyCodeLine{00004\ \textcolor{comment}{//}}
 \DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{engine_8h}{engine.h}}"{}}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}engine/model\_library.h"{}}}
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}engine/random.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{model__library_8h}{engine/model\_library.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{random_8h}{engine/random.h}}"{}}}
 \DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
 \DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}raylib.h"{}}}
 \DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{vec__util_8h}{vec\_util.h}}"{}}}
@@ -20,8 +20,8 @@
 \DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_item_ae901ac3ab2273113f746340a7db4e388}{id}};}
 \DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_item_a5b372513381b796a0c9d947998695978}{item\_size}}\ =\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2;}
 \DoxyCodeLine{00018\ \ \ \ \ Color\ \mbox{\hyperlink{struct_item_a0b8a557de8ba01a3a0702a04bc14f60c}{color}};}
-\DoxyCodeLine{00019\ \ \ \ \ vec3\ \mbox{\hyperlink{struct_item_ab8f08a383347341fe2eba43cdbfa7dd3}{raw\_position}};}
-\DoxyCodeLine{00020\ \ \ \ \ vec3\ \mbox{\hyperlink{struct_item_aa59326bb87cffcdcf4e7ca6715566b6f}{position}};}
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_item_ab8f08a383347341fe2eba43cdbfa7dd3}{raw\_position}};}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_item_aa59326bb87cffcdcf4e7ca6715566b6f}{position}};}
 \DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_item_aa562c5ebe71449db708de075236c0d5e}{cleanup}}\ =\ \textcolor{keyword}{false};}
 \DoxyCodeLine{00022\ \ \ \ \ \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313}{HeldBy}}\ \mbox{\hyperlink{struct_item_a0eb98a0db3e8e4e6e4b94d92c53f175b}{held\_by}}\ =\ \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a238dfba9b1b1077df2b9d4281d305ad7}{NONE}};}
 \DoxyCodeLine{00023\ }
@@ -46,21 +46,21 @@
 \DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{struct_item_a297720c02984eab37332ae795d22189d}{Item}}()\ \{\}}
 \DoxyCodeLine{00043\ }
 \DoxyCodeLine{00044\ \ \ \ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00045\ \ \ \ \ \mbox{\hyperlink{struct_item_ace3c0716c9ce027c08002c6e997438f3}{Item}}(vec3\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item_ae901ac3ab2273113f746340a7db4e388}{id}}(\mbox{\hyperlink{item_8h_a26702aa361e96e06f946b2c2864bd231}{ITEM\_ID\_GEN}}++),\ \mbox{\hyperlink{struct_item_a0b8a557de8ba01a3a0702a04bc14f60c}{color}}(c),\ \mbox{\hyperlink{struct_item_ab8f08a383347341fe2eba43cdbfa7dd3}{raw\_position}}(p)\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \mbox{\hyperlink{struct_item_ace3c0716c9ce027c08002c6e997438f3}{Item}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item_ae901ac3ab2273113f746340a7db4e388}{id}}(\mbox{\hyperlink{item_8h_a26702aa361e96e06f946b2c2864bd231}{ITEM\_ID\_GEN}}++),\ \mbox{\hyperlink{struct_item_a0b8a557de8ba01a3a0702a04bc14f60c}{color}}(c),\ \mbox{\hyperlink{struct_item_ab8f08a383347341fe2eba43cdbfa7dd3}{raw\_position}}(p)\ \{}
 \DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ this-\/>position\ =\ this-\/>\mbox{\hyperlink{struct_item_a3a2607e15ddf8c337bc7480cadccf307}{snap\_position}}();}
 \DoxyCodeLine{00047\ \ \ \ \ \}}
-\DoxyCodeLine{00048\ \ \ \ \ \mbox{\hyperlink{struct_item_a60a2714859cc1fb2259041b709c17919}{Item}}(vec2\ p,\ Color\ c)}
+\DoxyCodeLine{00048\ \ \ \ \ \mbox{\hyperlink{struct_item_a60a2714859cc1fb2259041b709c17919}{Item}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)}
 \DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_item_ae901ac3ab2273113f746340a7db4e388}{id}}(\mbox{\hyperlink{item_8h_a26702aa361e96e06f946b2c2864bd231}{ITEM\_ID\_GEN}}++),\ \mbox{\hyperlink{struct_item_a0b8a557de8ba01a3a0702a04bc14f60c}{color}}(c),\ \mbox{\hyperlink{struct_item_ab8f08a383347341fe2eba43cdbfa7dd3}{raw\_position}}(\{p.x,\ 0,\ p.y\})\ \{}
 \DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ this-\/>position\ =\ this-\/>\mbox{\hyperlink{struct_item_a3a2607e15ddf8c337bc7480cadccf307}{snap\_position}}();}
 \DoxyCodeLine{00051\ \ \ \ \ \}}
 \DoxyCodeLine{00052\ }
 \DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_item_a33cc9c0bc556b5a33a9d0d58d37c602b}{\string~Item}}()\ \{\}}
 \DoxyCodeLine{00054\ }
-\DoxyCodeLine{00055\ \ \ \ \ vec3\ \mbox{\hyperlink{struct_item_a3a2607e15ddf8c337bc7480cadccf307}{snap\_position}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{vec::snap}}(this-\/>raw\_position);\ \}}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_item_a3a2607e15ddf8c337bc7480cadccf307}{snap\_position}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{vec::snap}}(this-\/>raw\_position);\ \}}
 \DoxyCodeLine{00056\ }
 \DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_item_a1774f336ba7426c027ace19df8eebf2a}{is\_collidable}}()\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
 \DoxyCodeLine{00058\ }
-\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_item_a44db496c8de100b4f6e9bb7e546b0b4f}{model\_scale}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \{0.5f,\ 0.5f,\ 0.5f\};\ \}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_item_a44db496c8de100b4f6e9bb7e546b0b4f}{model\_scale}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \{0.5f,\ 0.5f,\ 0.5f\};\ \}}
 \DoxyCodeLine{00060\ }
 \DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_item_ade8311a0bcadd6d8d30641868f851d8e}{render}}(\textcolor{keywordtype}{bool}\ render\_held\_item\ =\ \textcolor{keyword}{true})\textcolor{keyword}{\ const\ }\{}
 \DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ render\ when\ held\ by\ another\ item}}
@@ -72,14 +72,14 @@
 \DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>\mbox{\hyperlink{struct_item_a0e3e9361df9d2b0071299c51a642c528}{model}}().has\_value())\ \{}
 \DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ sz\ =\ this-\/>\mbox{\hyperlink{struct_item_a325a03f663374790e5ffc0b51f08683b}{size}}();}
 \DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ m\_sc\ =\ this-\/>\mbox{\hyperlink{struct_item_a44db496c8de100b4f6e9bb7e546b0b4f}{model\_scale}}();}
-\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ vec3\ scale\ =\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ scale\ =\ \{}
 \DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sz.x\ *\ m\_sc.x,}
 \DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sz.y\ *\ m\_sc.y,}
 \DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sz.z\ *\ m\_sc.z,}
 \DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
 \DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::DrawModelEx(this-\/>\mbox{\hyperlink{struct_item_a0e3e9361df9d2b0071299c51a642c528}{model}}().value(),\ this-\/>position,}
 \DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{0,\ 1.f,\ 0\},\ 0\ \textcolor{comment}{/*\ rotation\ angle\ */},\ scale,}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ui::color::white);}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1color_ab3981d4504b439492296189f2532b8c6}{ui::color::white}});}
 \DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
 \DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::DrawCube(\mbox{\hyperlink{struct_item_aa59326bb87cffcdcf4e7ca6715566b6f}{position}},\ this-\/>\mbox{\hyperlink{struct_item_a325a03f663374790e5ffc0b51f08683b}{size}}().x,\ this-\/>\mbox{\hyperlink{struct_item_a325a03f663374790e5ffc0b51f08683b}{size}}().y,}
 \DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_item_a325a03f663374790e5ffc0b51f08683b}{size}}().z,\ this-\/>color);}
@@ -90,7 +90,7 @@
 \DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00087\ \ \ \ \ \}}
 \DoxyCodeLine{00088\ }
-\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_item_a04839eb08885c4f89378e636cc9df27f}{update\_position}}(\textcolor{keyword}{const}\ vec3\&\ p)\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_item_a04839eb08885c4f89378e636cc9df27f}{update\_position}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\&\ p)\ \{}
 \DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ this-\/>position\ =\ p;}
 \DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>held\_item\ !=\ \textcolor{keyword}{nullptr})\ \{}
 \DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>held\_item-\/>update\_position(p);}
@@ -101,8 +101,8 @@
 \DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\_bounds}}(this-\/>position,\ this-\/>\mbox{\hyperlink{struct_item_a325a03f663374790e5ffc0b51f08683b}{size}}()\ /\ 2.0f);}
 \DoxyCodeLine{00098\ \ \ \ \ \}}
 \DoxyCodeLine{00099\ }
-\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_item_a325a03f663374790e5ffc0b51f08683b}{size}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (vec3)\{\mbox{\hyperlink{struct_item_a5b372513381b796a0c9d947998695978}{item\_size}},\ \mbox{\hyperlink{struct_item_a5b372513381b796a0c9d947998695978}{item\_size}},\ \mbox{\hyperlink{struct_item_a5b372513381b796a0c9d947998695978}{item\_size}}\};}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_item_a325a03f663374790e5ffc0b51f08683b}{size}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{\mbox{\hyperlink{struct_item_a5b372513381b796a0c9d947998695978}{item\_size}},\ \mbox{\hyperlink{struct_item_a5b372513381b796a0c9d947998695978}{item\_size}},\ \mbox{\hyperlink{struct_item_a5b372513381b796a0c9d947998695978}{item\_size}}\};}
 \DoxyCodeLine{00102\ \ \ \ \ \}}
 \DoxyCodeLine{00103\ }
 \DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{virtual}\ BoundingBox\ \mbox{\hyperlink{struct_item_a3a59ef91c6a7308e3d681740613ad06b}{raw\_bounds}}()\textcolor{keyword}{\ const\ }\{}
@@ -127,18 +127,18 @@
 \DoxyCodeLine{00123\ }
 \DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_item_a182f7bac8365029d055b04e279981a82}{can\_eat}}(std::shared\_ptr<Item>\ item)\ \{}
 \DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_item_a523767b015090eca0c122605de78c846}{has\_holding\_ability}}())\ \{}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ log\_info(\textcolor{stringliteral}{"{}cant\ eat\ because\ we\ cant\ hold\ things"{}});}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}cant\ eat\ because\ we\ cant\ hold\ things"{}});}
 \DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
 \DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note;\ this\ is\ done\ here\ to\ avoid\ -\/Wpotentially-\/evaluated-\/expression}}
 \DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ warning}}
 \DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\&\ underlying\ =\ *item;}
 \DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{typeid}(underlying)\ ==\ \textcolor{keyword}{typeid}(*\textcolor{keyword}{this}))\ \{}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ log\_info(\textcolor{stringliteral}{"{}cant\ put\ an\ item\ into\ an\ item\ of\ the\ same\ type"{}});}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}cant\ put\ an\ item\ into\ an\ item\ of\ the\ same\ type"{}});}
 \DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
 \DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_item_a87521e07ad9e083fa892d52880ce67c5}{empty}}())\ \{}
-\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ log\_info(\textcolor{stringliteral}{"{}cant\ put\ an\ item\ into\ because\ we\ are\ full"{}});}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}cant\ put\ an\ item\ into\ because\ we\ are\ full"{}});}
 \DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
 \DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ will\ eventually\ need\ a\ way\ to\ validate\ the\ kinds\ of\ items}}
@@ -179,29 +179,29 @@
 \DoxyCodeLine{00175\ }
 \DoxyCodeLine{00176\ \ \ \ \textcolor{keyword}{public}:}
 \DoxyCodeLine{00177\ \ \ \ \ \mbox{\hyperlink{struct_pill_a587fedaf245b1bde2fb5fb304eb7a120}{Pill}}()\ \{\ \mbox{\hyperlink{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}{init}}();\ \}}
-\DoxyCodeLine{00178\ \ \ \ \ \mbox{\hyperlink{struct_pill_a04e66b101b42aafa13f6f91036e3e1d4}{Pill}}(vec3\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item}{Item}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}{init}}();\ \}}
-\DoxyCodeLine{00179\ \ \ \ \ \mbox{\hyperlink{struct_pill_ad5f4f40b05fb82729a266cbe60fc3fc3}{Pill}}(vec2\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item}{Item}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}{init}}();\ \}}
+\DoxyCodeLine{00178\ \ \ \ \ \mbox{\hyperlink{struct_pill_a04e66b101b42aafa13f6f91036e3e1d4}{Pill}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item}{Item}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}{init}}();\ \}}
+\DoxyCodeLine{00179\ \ \ \ \ \mbox{\hyperlink{struct_pill_ad5f4f40b05fb82729a266cbe60fc3fc3}{Pill}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item}{Item}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}{init}}();\ \}}
 \DoxyCodeLine{00180\ }
 \DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}{init}}()\ \{}
 \DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ std::size\_t\ num\_pills\ =\ magic\_enum::enum\_count<PillType>();}
-\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ index\ =\ randIn(0,\ num\_pills\ -\/\ 1);}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ index\ =\ \mbox{\hyperlink{random_8h_ac595cabd40bee1b9e1c604ea389dc528}{randIn}}(0,\ num\_pills\ -\/\ 1);}
 \DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_pill_a85ee79b2713671d19be803d5999250a2}{type}}\ =\ magic\_enum::enum\_value<PillType>(index);}
 \DoxyCodeLine{00185\ \ \ \ \ \}}
 \DoxyCodeLine{00186\ }
-\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_pill_ab48d7f73a0c8367132397426da37d537}{model\_scale}}()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ \{3.f,\ 3.0f,\ 12.f\};\ \}}
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_pill_ab48d7f73a0c8367132397426da37d537}{model\_scale}}()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ \{3.f,\ 3.0f,\ 12.f\};\ \}}
 \DoxyCodeLine{00188\ }
 \DoxyCodeLine{00189\ \ \ \ \ \textcolor{keyword}{virtual}\ std::optional<raylib::Model>\ \mbox{\hyperlink{struct_pill_a1845531ad3711bfe9584ca2825979400}{model}}()\textcolor{keyword}{\ const\ override\ }\{}
 \DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{struct_pill_a85ee79b2713671d19be803d5999250a2}{type}})\ \{}
 \DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114aee38e4d5dd68c4e440825018d549cb47}{PillType::Red}}:}
-\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ModelLibrary::get().get(\textcolor{stringliteral}{"{}pill\_red"{}});}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{ModelLibrary::get}}().get(\textcolor{stringliteral}{"{}pill\_red"{}});}
 \DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114ac7a39e7eb165a28ccbf43da08afe7651}{PillType::RedLong}}:}
-\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ModelLibrary::get().get(\textcolor{stringliteral}{"{}pill\_redlong"{}});}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{ModelLibrary::get}}().get(\textcolor{stringliteral}{"{}pill\_redlong"{}});}
 \DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114a9594eec95be70e7b1710f730fdda33d9}{PillType::Blue}}:}
-\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ModelLibrary::get().get(\textcolor{stringliteral}{"{}pill\_blue"{}});}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{ModelLibrary::get}}().get(\textcolor{stringliteral}{"{}pill\_blue"{}});}
 \DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114a23210c6230517c00439c0f3a7301a968}{PillType::BlueLong}}:}
-\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ModelLibrary::get().get(\textcolor{stringliteral}{"{}pill\_bluelong"{}});}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{ModelLibrary::get}}().get(\textcolor{stringliteral}{"{}pill\_bluelong"{}});}
 \DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ log\_warn(\textcolor{stringliteral}{"{}Failed\ to\ get\ matching\ model\ for\ pill\ type:\ \{\}"{}},}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Failed\ to\ get\ matching\ model\ for\ pill\ type:\ \{\}"{}},}
 \DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ magic\_enum::enum\_name(\mbox{\hyperlink{struct_pill_a85ee79b2713671d19be803d5999250a2}{type}}));}
 \DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\};}
 \DoxyCodeLine{00203\ \ \ \ \ \}}
@@ -217,14 +217,14 @@
 \DoxyCodeLine{00213\ }
 \DoxyCodeLine{00214\ \ \ \ \textcolor{keyword}{public}:}
 \DoxyCodeLine{00215\ \ \ \ \ \mbox{\hyperlink{struct_pill_bottle_a2636f2d267b0e28a1fae7176f0645c20}{PillBottle}}()\ \{\}}
-\DoxyCodeLine{00216\ \ \ \ \ \mbox{\hyperlink{struct_pill_bottle_a9fe772b326eccf1ce640a998b98d533f}{PillBottle}}(vec3\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item}{Item}}(p,\ c)\ \{\}}
-\DoxyCodeLine{00217\ \ \ \ \ \mbox{\hyperlink{struct_pill_bottle_a8a7055a72296bd56d6a80b4a93f17698}{PillBottle}}(vec2\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item}{Item}}(p,\ c)\ \{\}}
+\DoxyCodeLine{00216\ \ \ \ \ \mbox{\hyperlink{struct_pill_bottle_a9fe772b326eccf1ce640a998b98d533f}{PillBottle}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item}{Item}}(p,\ c)\ \{\}}
+\DoxyCodeLine{00217\ \ \ \ \ \mbox{\hyperlink{struct_pill_bottle_a8a7055a72296bd56d6a80b4a93f17698}{PillBottle}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item}{Item}}(p,\ c)\ \{\}}
 \DoxyCodeLine{00218\ }
-\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_pill_bottle_a38b4376e4d4994c9ac5728d1cb5fdd1f}{model\_scale}}()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ \{3.f,\ 3.0f,\ 3.f\};\ \}}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_pill_bottle_a38b4376e4d4994c9ac5728d1cb5fdd1f}{model\_scale}}()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ \{3.f,\ 3.0f,\ 3.f\};\ \}}
 \DoxyCodeLine{00220\ }
 \DoxyCodeLine{00221\ \ \ \ \ \textcolor{keyword}{virtual}\ std::optional<raylib::Model>\ \mbox{\hyperlink{struct_pill_bottle_af35a71525e73cf47dc4249f6995ba884}{model}}()\textcolor{keyword}{\ const\ override\ }\{}
 \DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ handle\ empty\ vs\ full}}
-\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ModelLibrary::get().get(\textcolor{stringliteral}{"{}pill\_bottle"{}});}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{ModelLibrary::get}}().get(\textcolor{stringliteral}{"{}pill\_bottle"{}});}
 \DoxyCodeLine{00224\ \ \ \ \ \}}
 \DoxyCodeLine{00225\ \};}
 \DoxyCodeLine{00226\ }
@@ -238,16 +238,16 @@
 \DoxyCodeLine{00234\ }
 \DoxyCodeLine{00235\ \ \ \ \textcolor{keyword}{public}:}
 \DoxyCodeLine{00236\ \ \ \ \ \mbox{\hyperlink{struct_bag_ae0593c22c7dd8b32cab469af92fb200c}{Bag}}()\ \{\}}
-\DoxyCodeLine{00237\ \ \ \ \ \mbox{\hyperlink{struct_bag_a5c00a1e15483889c31a6a6231dce53ae}{Bag}}(vec3\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item}{Item}}(p,\ c)\ \{\}}
-\DoxyCodeLine{00238\ \ \ \ \ \mbox{\hyperlink{struct_bag_a02b61c1c53e9adec80865ff59be0af50}{Bag}}(vec2\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item}{Item}}(p,\ c)\ \{\}}
+\DoxyCodeLine{00237\ \ \ \ \ \mbox{\hyperlink{struct_bag_a5c00a1e15483889c31a6a6231dce53ae}{Bag}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item}{Item}}(p,\ c)\ \{\}}
+\DoxyCodeLine{00238\ \ \ \ \ \mbox{\hyperlink{struct_bag_a02b61c1c53e9adec80865ff59be0af50}{Bag}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_item}{Item}}(p,\ c)\ \{\}}
 \DoxyCodeLine{00239\ }
 \DoxyCodeLine{00240\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_bag_ac8a55c4ee9e9f6e95425bf9b0a5901c8}{has\_holding\_ability}}()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
 \DoxyCodeLine{00241\ }
 \DoxyCodeLine{00242\ \ \ \ \ \textcolor{keyword}{virtual}\ std::optional<raylib::Model>\ \mbox{\hyperlink{struct_bag_ad66adfe94f97d7f5da10da2769049d8e}{model}}()\textcolor{keyword}{\ const\ override\ }\{}
 \DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_item_a87521e07ad9e083fa892d52880ce67c5}{empty}}())\ \{}
-\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ModelLibrary::get().get(\textcolor{stringliteral}{"{}empty\_bag"{}});}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{ModelLibrary::get}}().get(\textcolor{stringliteral}{"{}empty\_bag"{}});}
 \DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ModelLibrary::get().get(\textcolor{stringliteral}{"{}bag"{}});}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{ModelLibrary::get}}().get(\textcolor{stringliteral}{"{}bag"{}});}
 \DoxyCodeLine{00247\ \ \ \ \ \}}
 \DoxyCodeLine{00248\ \};}
 

@@ -1,0 +1,8 @@
+digraph "Job"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [shape=record,label="{Job\n|+ type\l+ state\l+ timePassedInCurrentState\l+ timeToComplete\l+ start\l+ end\l+ path\l+ local\l+ on_cleanup\l+ data\l+ initialized\l+ spot_in_line\l|}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+}

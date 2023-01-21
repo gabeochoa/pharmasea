@@ -1,0 +1,49 @@
+\hypertarget{files_8h_source}{}\doxysection{files.\+h}
+\label{files_8h_source}\index{src/engine/files.h@{src/engine/files.h}}
+\mbox{\hyperlink{files_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{singleton_8h}{singleton.h}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }fs\ =\ std::filesystem;}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_files_config}{FilesConfig}}\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ std::string\_view\ \mbox{\hyperlink{struct_files_config_a64c78440471ed4c929cdb8c5b11c9801}{root\_folder}};}
+\DoxyCodeLine{00014\ \ \ \ \ std::string\_view\ \mbox{\hyperlink{struct_files_config_ab8f7947f9416463dc80006c1b9c2f22c}{settings\_file\_name}};}
+\DoxyCodeLine{00015\ \};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ TODO\ figure\ out\ why\ this\ has\ to\ be\ extern\ in\ order\ for\ Files.settings\_file\ to}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ work}}
+\DoxyCodeLine{00019\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_files}{Files}};}
+\DoxyCodeLine{00020\ \textcolor{keyword}{extern}\ std::shared\_ptr<Files>\ \mbox{\hyperlink{files_8h_ab0ea548bf1da498a0166203a592274b0}{Files\_single}};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_files}{Files}}\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{singleton_8h_ab221b58f7a9b0353666538d67f6e5f2d}{SINGLETON\_PARAM}}(\mbox{\hyperlink{struct_files}{Files}},\ \mbox{\hyperlink{struct_files_config}{FilesConfig}})}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \mbox{\hyperlink{namespacestd}{std}}::\textcolor{keywordtype}{string}\ \mbox{\hyperlink{struct_files_ab023806ec2c32b192e5166c48ad3ce72}{root}}\ =\ "{}example\_game"{};}
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{namespacestd}{std}}::\textcolor{keywordtype}{string}\ \mbox{\hyperlink{struct_files_a07299826f799cd2d38bf803f6ebbf6de}{settings\_file}}\ =\ "{}\mbox{\hyperlink{namespacesettings}{settings}}.bin"{};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ explicit\ \mbox{\hyperlink{struct_files}{Files}}(\mbox{\hyperlink{struct_files_config}{FilesConfig}}\ config);}
+\DoxyCodeLine{00029\ \ \ \ \ [[nodiscard]]\ fs::path\ \mbox{\hyperlink{struct_files_aacfc56230300eea9bea251eb81ac3428}{game\_folder}}()\ const;}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_files_aeb47643e411d9a5288d4a1296a0afbbe}{ensure\_game\_folder\_exists}}();}
+\DoxyCodeLine{00031\ \ \ \ \ [[nodiscard]]\ fs::path\ \mbox{\hyperlink{struct_files_a75d091c1f617a9eb83045a3aff609d06}{settings\_filepath}}()\ const;}
+\DoxyCodeLine{00032\ \ \ \ \ [[nodiscard]]\ fs::path\ \mbox{\hyperlink{struct_files_a10d5c34be91118f16dbe3a379a5a4e5b}{resource\_folder}}()\ const;}
+\DoxyCodeLine{00033\ \ \ \ \ [[nodiscard]]\ fs::path\ \mbox{\hyperlink{struct_files_a192df466809e92cee95af1f31b41f85e}{game\_controller\_db}}()\ const;}
+\DoxyCodeLine{00034\ \ \ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespacestd}{std}}::\textcolor{keywordtype}{string}\ \mbox{\hyperlink{struct_files_a17fa20c074c7af1b1335c231ec791683}{fetch\_resource\_path}}(\mbox{\hyperlink{namespacestd}{std}}::string\_view\ group,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacestd}{std}}::string\_view\ name)\ const;}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_files_a1b6a3ac1b923e6e7f79c9d6c27f6de21}{for\_resources\_in\_folder}}(}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacestd}{std}}::string\_view\ group,\ \mbox{\hyperlink{namespacestd}{std}}::string\_view\ folder,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacestd}{std}}::function<\textcolor{keywordtype}{void}(\mbox{\hyperlink{namespacestd}{std}}::\textcolor{keywordtype}{string},\ \mbox{\hyperlink{namespacestd}{std}}::\textcolor{keywordtype}{string})>)\ const;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ a\ full\ cleanup\ to\ write\ folders\ in\ case\ we\ need\ to\ reset}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_files_ad7bbd4346c8121d649b9789783b16230}{folder\_locations}}()\ const;}
+\DoxyCodeLine{00043\ \};}
+
+\end{DoxyCode}

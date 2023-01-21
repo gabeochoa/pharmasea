@@ -93,60 +93,60 @@ $(function() {
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="../../dd/d8c/namespaceraylib.html#a89c9a7c28380a9b4c6434e1c37f44bdd">   15</a></span><span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="../../dd/d8c/namespaceraylib.html#a89c9a7c28380a9b4c6434e1c37f44bdd">SHOW_TEXT_BOUNDRY</a> = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="../../d5/d75/structraylib_1_1_wave_text_config.html">   17</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="../../d5/d75/structraylib_1_1_wave_text_config.html">WaveTextConfig</a> {</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a16d8b5ce500204c90bd474ff798a3f9d">   18</a></span>    vec3 <a class="code hl_variable" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a16d8b5ce500204c90bd474ff798a3f9d">waveRange</a>;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a3ac36f7f3ee0186d2130188a92409bd5">   19</a></span>    vec3 <a class="code hl_variable" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a3ac36f7f3ee0186d2130188a92409bd5">waveSpeed</a>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a774353a50fade03663e6cb07f3cb3a7e">   20</a></span>    vec3 <a class="code hl_variable" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a774353a50fade03663e6cb07f3cb3a7e">waveOffset</a>;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a16d8b5ce500204c90bd474ff798a3f9d">   18</a></span>    <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> <a class="code hl_variable" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a16d8b5ce500204c90bd474ff798a3f9d">waveRange</a>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a3ac36f7f3ee0186d2130188a92409bd5">   19</a></span>    <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> <a class="code hl_variable" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a3ac36f7f3ee0186d2130188a92409bd5">waveSpeed</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a774353a50fade03663e6cb07f3cb3a7e">   20</a></span>    <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> <a class="code hl_variable" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a774353a50fade03663e6cb07f3cb3a7e">waveOffset</a>;</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="../../dd/d8c/namespaceraylib.html#a17e750bc0f42947c422d26d114cb7233">   21</a></span>} WaveTextConfig;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="../../dd/d8c/namespaceraylib.html#abc5a61fc461e160abbf9e9458d38cbf9">   23</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#abc5a61fc461e160abbf9e9458d38cbf9">DrawTextCodepoint3D</a>(Font font, <span class="keywordtype">int</span> codepoint, vec3 position,</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="../../dd/d8c/namespaceraylib.html#abc5a61fc461e160abbf9e9458d38cbf9">   23</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#abc5a61fc461e160abbf9e9458d38cbf9">DrawTextCodepoint3D</a>(Font <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, <span class="keywordtype">int</span> codepoint, <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> position,</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>                                <span class="keywordtype">float</span> fontSize, <span class="keywordtype">bool</span> backface, Color tint) {</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="comment">// Character index position in sprite font</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="comment">// NOTE: In case a codepoint is not available in the font, index returned</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="comment">// points to &#39;?&#39;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">int</span> index = GetGlyphIndex(font, codepoint);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordtype">float</span> scale = fontSize / (float) font.baseSize;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">int</span> index = GetGlyphIndex(<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, codepoint);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordtype">float</span> scale = fontSize / (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="comment">// Character destination rectangle on screen</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="comment">// NOTE: We consider charsPadding on drawing</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    position.x += (<span class="keywordtype">float</span>) (font.glyphs[index].offsetX - font.glyphPadding) /</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                  (<span class="keywordtype">float</span>) font.baseSize * scale;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    position.z += (float) (font.glyphs[index].offsetY - font.glyphPadding) /</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                  (float) font.baseSize * scale;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    position.x += (<span class="keywordtype">float</span>) (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphs[index].offsetX - <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphPadding) /</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                  (<span class="keywordtype">float</span>) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    position.z += (float) (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphs[index].offsetY - <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphPadding) /</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                  (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="comment">// Character source rectangle from font texture atlas</span></div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="comment">// NOTE: We consider chars padding when drawing, it could be required for</span></div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">// outline/glow shader effects</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    Rectangle srcRec = {font.recs[index].x - (<span class="keywordtype">float</span>) font.glyphPadding,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                        font.recs[index].y - (float) font.glyphPadding,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                        font.recs[index].width + 2.0f * font.glyphPadding,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                        font.recs[index].height + 2.0f * font.glyphPadding};</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    Rectangle srcRec = {<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.recs[index].x - (<span class="keywordtype">float</span>) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphPadding,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                        <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.recs[index].y - (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphPadding,</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                        <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.recs[index].width + 2.0f * <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphPadding,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                        <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.recs[index].height + 2.0f * <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphPadding};</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">float</span> width = (float) (font.recs[index].width + 2.0f * font.glyphPadding) /</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                  (float) font.baseSize * scale;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">float</span> width = (float) (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.recs[index].width + 2.0f * <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphPadding) /</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                  (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordtype">float</span> height =</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        (<span class="keywordtype">float</span>) (font.recs[index].height + 2.0f * font.glyphPadding) /</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        (<span class="keywordtype">float</span>) font.baseSize * scale;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        (<span class="keywordtype">float</span>) (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.recs[index].height + 2.0f * <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphPadding) /</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        (<span class="keywordtype">float</span>) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordflow">if</span> (font.texture.id &gt; 0) {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordflow">if</span> (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.texture.id &gt; 0) {</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keyword">const</span> <span class="keywordtype">float</span> x = 0.0f;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keyword">const</span> <span class="keywordtype">float</span> y = 0.0f;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keyword">const</span> <span class="keywordtype">float</span> z = 0.0f;</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="comment">// normalized texture coordinates of the glyph inside the font texture</span></div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="comment">// (0.0f -&gt; 1.0f)</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keyword">const</span> <span class="keywordtype">float</span> tx = srcRec.x / font.texture.width;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">const</span> <span class="keywordtype">float</span> ty = srcRec.y / font.texture.height;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">const</span> <span class="keywordtype">float</span> tw = (srcRec.x + srcRec.width) / font.texture.width;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">const</span> <span class="keywordtype">float</span> th = (srcRec.y + srcRec.height) / font.texture.height;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keyword">const</span> <span class="keywordtype">float</span> tx = srcRec.x / <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.texture.width;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">const</span> <span class="keywordtype">float</span> ty = srcRec.y / <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.texture.height;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">const</span> <span class="keywordtype">float</span> tw = (srcRec.x + srcRec.width) / <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.texture.width;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">const</span> <span class="keywordtype">float</span> th = (srcRec.y + srcRec.height) / <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.texture.height;</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="../../dd/d8c/namespaceraylib.html#a201c666d2877d6eabeafa095536c4131">SHOW_LETTER_BOUNDRY</a>)</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            DrawCubeWiresV((vec3){position.x + width / 2, position.y,</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            DrawCubeWiresV((<a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a>){position.x + width / 2, position.y,</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                                  position.z + height / 2},</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                           (vec3){width, <a class="code hl_define" href="../../d4/d78/text__util_8h.html#ac13e03ba39f2d2f5351a28146c2f2147">LETTER_BOUNDRY_SIZE</a>, height},</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                           (<a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a>){width, <a class="code hl_define" href="../../d4/d78/text__util_8h.html#ac13e03ba39f2d2f5351a28146c2f2147">LETTER_BOUNDRY_SIZE</a>, height},</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                           <a class="code hl_define" href="../../d4/d78/text__util_8h.html#abaefce3c171709eed5efc8b3b4ec7812">LETTER_BOUNDRY_COLOR</a>);</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        rlCheckRenderBatchLimit(4 + 4 * backface);</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        rlSetTexture(font.texture.id);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        rlSetTexture(<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.texture.id);</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        rlPushMatrix();</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        rlTranslatef(position.x, position.y, position.z);</div>
@@ -188,7 +188,7 @@ $(function() {
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>}</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="comment">// Draw a 2D text in 3D space</span></div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="../../dd/d8c/namespaceraylib.html#adc40755b0f82292edf03a57666161342">  113</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#adc40755b0f82292edf03a57666161342">DrawText3D</a>(Font font, <span class="keyword">const</span> <span class="keywordtype">char</span>* text, vec3 position,</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="../../dd/d8c/namespaceraylib.html#adc40755b0f82292edf03a57666161342">  113</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#adc40755b0f82292edf03a57666161342">DrawText3D</a>(Font <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* text, <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> position,</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                       <span class="keywordtype">float</span> fontSize, <span class="keywordtype">float</span> fontSpacing, <span class="keywordtype">float</span> lineSpacing,</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                       <span class="keywordtype">bool</span> backface, Color tint) {</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> length =</div>
@@ -198,13 +198,13 @@ $(function() {
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordtype">float</span> textOffsetY = 0.0f;  <span class="comment">// Offset between lines (on line break &#39;\n&#39;)</span></div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keywordtype">float</span> textOffsetX = 0.0f;  <span class="comment">// Offset X to next character to draw</span></div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keywordtype">float</span> scale = fontSize / (float) font.baseSize;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keywordtype">float</span> scale = fontSize / (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize;</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    for (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; length;) {</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        <span class="comment">// Get next codepoint from byte string and glyph index in font</span></div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="keywordtype">int</span> codepointByteCount = 0;</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keywordtype">int</span> codepoint = GetCodepoint(&amp;text[i], &amp;codepointByteCount);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keywordtype">int</span> index = GetGlyphIndex(font, codepoint);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keywordtype">int</span> index = GetGlyphIndex(<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, codepoint);</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="comment">// NOTE: Normally we exit the decoding sequence as soon as a bad byte is</span></div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="comment">// found (and return 0x3f) but we need to draw all of the bad bytes</span></div>
@@ -214,23 +214,23 @@ $(function() {
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        <span class="keywordflow">if</span> (codepoint == <span class="charliteral">&#39;\n&#39;</span>) {</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            <span class="comment">// NOTE: Fixed line spacing of 1.5 line-height</span></div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            <span class="comment">// TODO: Support custom line spacing defined by user</span></div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            textOffsetY += scale + lineSpacing / (float) font.baseSize * scale;</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            textOffsetY += scale + lineSpacing / (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>            textOffsetX = 0.0f;</div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>            <span class="keywordflow">if</span> ((codepoint != <span class="charliteral">&#39; &#39;</span>) &amp;&amp; (codepoint != <span class="charliteral">&#39;\t&#39;</span>)) {</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#abc5a61fc461e160abbf9e9458d38cbf9">DrawTextCodepoint3D</a>(font, codepoint,</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                                    (vec3){position.x + textOffsetX, position.y,</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#abc5a61fc461e160abbf9e9458d38cbf9">DrawTextCodepoint3D</a>(<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, codepoint,</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                                    (<a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a>){position.x + textOffsetX, position.y,</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                                           position.z + textOffsetY},</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                                    fontSize, backface, tint);</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>            }</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            <span class="keywordflow">if</span> (font.glyphs[index].advanceX == 0)</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                textOffsetX += (float) (font.recs[index].width + fontSpacing) /</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                               (float) font.baseSize * scale;</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphs[index].advanceX == 0)</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                textOffsetX += (float) (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.recs[index].width + fontSpacing) /</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                               (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                textOffsetX +=</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                    (<span class="keywordtype">float</span>) (font.glyphs[index].advanceX + fontSpacing) /</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                    (<span class="keywordtype">float</span>) font.baseSize * scale;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                    (<span class="keywordtype">float</span>) (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphs[index].advanceX + fontSpacing) /</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                    (<span class="keywordtype">float</span>) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        }</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        i += codepointByteCount;  <span class="comment">// Move text bytes counter to next codepoint</span></div>
@@ -239,7 +239,7 @@ $(function() {
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="comment">// Measure a text in 3D. For some reason `MeasureTextEx()` just doesn&#39;t seem to</span></div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="comment">// work so i had to use this instead.</span></div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="../../dd/d8c/namespaceraylib.html#a6aebd1748cab9a1fdcf103e310507b6b">  164</a></span><span class="keyword">static</span> vec3 <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#a6aebd1748cab9a1fdcf103e310507b6b">MeasureText3D</a>(Font font, <span class="keyword">const</span> <span class="keywordtype">char</span>* text, <span class="keywordtype">float</span> fontSize,</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="../../dd/d8c/namespaceraylib.html#a6aebd1748cab9a1fdcf103e310507b6b">  164</a></span><span class="keyword">static</span> <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#a6aebd1748cab9a1fdcf103e310507b6b">MeasureText3D</a>(Font <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* text, <span class="keywordtype">float</span> fontSize,</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                          <span class="keywordtype">float</span> fontSpacing, <span class="keywordtype">float</span> lineSpacing) {</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keywordtype">int</span> len = TextLength(text);</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keywordtype">int</span> tempLen = 0;  <span class="comment">// Used to count longer text line num chars</span></div>
@@ -247,7 +247,7 @@ $(function() {
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="keywordtype">float</span> tempTextWidth = 0.0f;  <span class="comment">// Used to count longer text line width</span></div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keywordtype">float</span> scale = fontSize / (float) font.baseSize;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keywordtype">float</span> scale = fontSize / (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize;</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keywordtype">float</span> textHeight = scale;</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keywordtype">float</span> textWidth = 0.0f;</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
@@ -259,7 +259,7 @@ $(function() {
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        <span class="keywordtype">int</span> next = 0;</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        letter = GetCodepoint(&amp;text[i], &amp;next);</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        index = GetGlyphIndex(font, letter);</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        index = GetGlyphIndex(<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, letter);</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        <span class="comment">// NOTE: normally we exit the decoding sequence as soon as a bad byte is</span></div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        <span class="comment">// found (and return 0x3f) but we need to draw all of the bad bytes</span></div>
@@ -268,18 +268,18 @@ $(function() {
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        i += next - 1;</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        <span class="keywordflow">if</span> (letter != <span class="charliteral">&#39;\n&#39;</span>) {</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            <span class="keywordflow">if</span> (font.glyphs[index].advanceX != 0)</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                textWidth += (font.glyphs[index].advanceX + fontSpacing) /</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                             (<span class="keywordtype">float</span>) font.baseSize * scale;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphs[index].advanceX != 0)</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                textWidth += (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphs[index].advanceX + fontSpacing) /</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                             (<span class="keywordtype">float</span>) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>                textWidth +=</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                    (font.recs[index].width + font.glyphs[index].offsetX) /</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                    (<span class="keywordtype">float</span>) font.baseSize * scale;</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                    (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.recs[index].width + <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphs[index].offsetX) /</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                    (<span class="keywordtype">float</span>) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            <span class="keywordflow">if</span> (tempTextWidth &lt; textWidth) tempTextWidth = textWidth;</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            lenCounter = 0;</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            textWidth = 0.0f;</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            textHeight += scale + lineSpacing / (float) font.baseSize * scale;</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            textHeight += scale + lineSpacing / (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        }</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        <span class="keywordflow">if</span> (tempLen &lt; lenCounter) tempLen = lenCounter;</div>
@@ -287,9 +287,9 @@ $(function() {
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keywordflow">if</span> (tempTextWidth &lt; textWidth) tempTextWidth = textWidth;</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    vec3 <a class="code hl_namespace" href="../../d4/d9a/namespacevec.html">vec</a> = {0};</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> <a class="code hl_namespace" href="../../d4/d9a/namespacevec.html">vec</a> = {0};</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <a class="code hl_namespace" href="../../d4/d9a/namespacevec.html">vec</a>.x = tempTextWidth +</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            (float) ((tempLen - 1) * fontSpacing / (float) font.baseSize *</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            (float) ((tempLen - 1) * fontSpacing / (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize *</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                     scale);  <span class="comment">// Adds chars spacing to measure</span></div>
 <div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    <a class="code hl_namespace" href="../../d4/d9a/namespacevec.html">vec</a>.y = 0.25f;</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <a class="code hl_namespace" href="../../d4/d9a/namespacevec.html">vec</a>.z = textHeight;</div>
@@ -300,7 +300,7 @@ $(function() {
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="comment">// Draw a 2D text in 3D space and wave the parts that start with `~~` and end</span></div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span><span class="comment">// with `~~`. This is a modified version of the original code by @Nighten found</span></div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="comment">// here https://github.com/NightenDushi/Raylib_DrawTextStyle</span></div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno"><a class="line" href="../../dd/d8c/namespaceraylib.html#aeb18116ce05499755bfce3012bfa0ea1">  225</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#aeb18116ce05499755bfce3012bfa0ea1">DrawTextWave3D</a>(Font font, <span class="keyword">const</span> <span class="keywordtype">char</span>* text, vec3 position,</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno"><a class="line" href="../../dd/d8c/namespaceraylib.html#aeb18116ce05499755bfce3012bfa0ea1">  225</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#aeb18116ce05499755bfce3012bfa0ea1">DrawTextWave3D</a>(Font <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* text, <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> position,</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                           <span class="keywordtype">float</span> fontSize, <span class="keywordtype">float</span> fontSpacing, <span class="keywordtype">float</span> lineSpacing,</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                           <span class="keywordtype">bool</span> backface, <a class="code hl_struct" href="../../d5/d75/structraylib_1_1_wave_text_config.html">WaveTextConfig</a>* config, <span class="keywordtype">float</span> time,</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                           Color tint) {</div>
@@ -310,7 +310,7 @@ $(function() {
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="keywordtype">float</span> textOffsetY = 0.0f;  <span class="comment">// Offset between lines (on line break &#39;\n&#39;)</span></div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordtype">float</span> textOffsetX = 0.0f;  <span class="comment">// Offset X to next character to draw</span></div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keywordtype">float</span> scale = fontSize / (float) font.baseSize;</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keywordtype">float</span> scale = fontSize / (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize;</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="keywordtype">bool</span> wave = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
@@ -318,7 +318,7 @@ $(function() {
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        <span class="comment">// Get next codepoint from byte string and glyph index in font</span></div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        <span class="keywordtype">int</span> codepointByteCount = 0;</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        <span class="keywordtype">int</span> codepoint = GetCodepoint(&amp;text[i], &amp;codepointByteCount);</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        <span class="keywordtype">int</span> index = GetGlyphIndex(font, codepoint);</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        <span class="keywordtype">int</span> index = GetGlyphIndex(<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, codepoint);</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="comment">// NOTE: Normally we exit the decoding sequence as soon as a bad byte is</span></div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="comment">// found (and return 0x3f) but we need to draw all of the bad bytes</span></div>
@@ -328,7 +328,7 @@ $(function() {
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="keywordflow">if</span> (codepoint == <span class="charliteral">&#39;\n&#39;</span>) {</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            <span class="comment">// NOTE: Fixed line spacing of 1.5 line-height</span></div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            <span class="comment">// TODO: Support custom line spacing defined by user</span></div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            textOffsetY += scale + lineSpacing / (float) font.baseSize * scale;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            textOffsetY += scale + lineSpacing / (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            textOffsetX = 0.0f;</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>            k = 0;</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (codepoint == <span class="charliteral">&#39;~&#39;</span>) {</div>
@@ -338,7 +338,7 @@ $(function() {
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>            }</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            <span class="keywordflow">if</span> ((codepoint != <span class="charliteral">&#39; &#39;</span>) &amp;&amp; (codepoint != <span class="charliteral">&#39;\t&#39;</span>)) {</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>                vec3 pos = position;</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>                <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> pos = position;</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>                <span class="keywordflow">if</span> (wave)  <span class="comment">// Apply the wave effect</span></div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>                {</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                    pos.x += sinf(time * config-&gt;<a class="code hl_variable" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a3ac36f7f3ee0186d2130188a92409bd5">waveSpeed</a>.x -</div>
@@ -353,18 +353,18 @@ $(function() {
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>                }</div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span> </div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>                <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#abc5a61fc461e160abbf9e9458d38cbf9">DrawTextCodepoint3D</a>(</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>                    font, codepoint,</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>                    (vec3){pos.x + textOffsetX, pos.y, pos.z + textOffsetY},</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>                    <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, codepoint,</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>                    (<a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a>){pos.x + textOffsetX, pos.y, pos.z + textOffsetY},</div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>                    fontSize, backface, tint);</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>            }</div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>            <span class="keywordflow">if</span> (font.glyphs[index].advanceX == 0)</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>                textOffsetX += (float) (font.recs[index].width + fontSpacing) /</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                               (float) font.baseSize * scale;</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphs[index].advanceX == 0)</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>                textOffsetX += (float) (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.recs[index].width + fontSpacing) /</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                               (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>            <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>                textOffsetX +=</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>                    (<span class="keywordtype">float</span>) (font.glyphs[index].advanceX + fontSpacing) /</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>                    (<span class="keywordtype">float</span>) font.baseSize * scale;</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>                    (<span class="keywordtype">float</span>) (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphs[index].advanceX + fontSpacing) /</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>                    (<span class="keywordtype">float</span>) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>        }</div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
 <div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>        i += codepointByteCount;  <span class="comment">// Move text bytes counter to next codepoint</span></div>
@@ -372,7 +372,7 @@ $(function() {
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>}</div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="comment">// Measure a text in 3D ignoring the `~~` chars.</span></div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno"><a class="line" href="../../dd/d8c/namespaceraylib.html#a9989019e26a3b70fddd628c3fe21e5d1">  297</a></span><span class="keyword">static</span> vec3 <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#a9989019e26a3b70fddd628c3fe21e5d1">MeasureTextWave3D</a>(Font font, <span class="keyword">const</span> <span class="keywordtype">char</span>* text, <span class="keywordtype">float</span> fontSize,</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno"><a class="line" href="../../dd/d8c/namespaceraylib.html#a9989019e26a3b70fddd628c3fe21e5d1">  297</a></span><span class="keyword">static</span> <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> <a class="code hl_function" href="../../dd/d8c/namespaceraylib.html#a9989019e26a3b70fddd628c3fe21e5d1">MeasureTextWave3D</a>(Font <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* text, <span class="keywordtype">float</span> fontSize,</div>
 <div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>                              <span class="keywordtype">float</span> fontSpacing, <span class="keywordtype">float</span> lineSpacing) {</div>
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    <span class="keywordtype">int</span> len = TextLength(text);</div>
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    <span class="keywordtype">int</span> tempLen = 0;  <span class="comment">// Used to count longer text line num chars</span></div>
@@ -380,7 +380,7 @@ $(function() {
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span> </div>
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    <span class="keywordtype">float</span> tempTextWidth = 0.0f;  <span class="comment">// Used to count longer text line width</span></div>
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span> </div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    <span class="keywordtype">float</span> scale = fontSize / (float) font.baseSize;</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    <span class="keywordtype">float</span> scale = fontSize / (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize;</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    <span class="keywordtype">float</span> textHeight = scale;</div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>    <span class="keywordtype">float</span> textWidth = 0.0f;</div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span> </div>
@@ -392,7 +392,7 @@ $(function() {
 <div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span> </div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        <span class="keywordtype">int</span> next = 0;</div>
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        letter = GetCodepoint(&amp;text[i], &amp;next);</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        index = GetGlyphIndex(font, letter);</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        index = GetGlyphIndex(<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, letter);</div>
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span> </div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <span class="comment">// NOTE: normally we exit the decoding sequence as soon as a bad byte is</span></div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        <span class="comment">// found (and return 0x3f) but we need to draw all of the bad bytes</span></div>
@@ -404,19 +404,19 @@ $(function() {
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>            <span class="keywordflow">if</span> (letter == <span class="charliteral">&#39;~&#39;</span> &amp;&amp; GetCodepoint(&amp;text[i + 1], &amp;next) == <span class="charliteral">&#39;~&#39;</span>) {</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>                i++;</div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                <span class="keywordflow">if</span> (font.glyphs[index].advanceX != 0)</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                    textWidth += (font.glyphs[index].advanceX + fontSpacing) /</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                                 (<span class="keywordtype">float</span>) font.baseSize * scale;</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                <span class="keywordflow">if</span> (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphs[index].advanceX != 0)</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                    textWidth += (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphs[index].advanceX + fontSpacing) /</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                                 (<span class="keywordtype">float</span>) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>                <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                    textWidth +=</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                        (font.recs[index].width + font.glyphs[index].offsetX) /</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>                        (<span class="keywordtype">float</span>) font.baseSize * scale;</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                        (<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.recs[index].width + <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.glyphs[index].offsetX) /</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>                        (<span class="keywordtype">float</span>) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>            }</div>
 <div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            <span class="keywordflow">if</span> (tempTextWidth &lt; textWidth) tempTextWidth = textWidth;</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            lenCounter = 0;</div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>            textWidth = 0.0f;</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>            textHeight += scale + lineSpacing / (float) font.baseSize * scale;</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>            textHeight += scale + lineSpacing / (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize * scale;</div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        }</div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>        <span class="keywordflow">if</span> (tempLen &lt; lenCounter) tempLen = lenCounter;</div>
@@ -424,9 +424,9 @@ $(function() {
 <div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span> </div>
 <div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    <span class="keywordflow">if</span> (tempTextWidth &lt; textWidth) tempTextWidth = textWidth;</div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span> </div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    vec3 <a class="code hl_namespace" href="../../d4/d9a/namespacevec.html">vec</a> = {0};</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    <a class="code hl_typedef" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> <a class="code hl_namespace" href="../../d4/d9a/namespacevec.html">vec</a> = {0};</div>
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    <a class="code hl_namespace" href="../../d4/d9a/namespacevec.html">vec</a>.x = tempTextWidth +</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>            (float) ((tempLen - 1) * fontSpacing / (float) font.baseSize *</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>            (float) ((tempLen - 1) * fontSpacing / (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize *</div>
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>                     scale);  <span class="comment">// Adds chars spacing to measure</span></div>
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>    <a class="code hl_namespace" href="../../d4/d9a/namespacevec.html">vec</a>.y = 0.25f;</div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>    <a class="code hl_namespace" href="../../d4/d9a/namespacevec.html">vec</a>.z = textHeight;</div>
@@ -436,6 +436,8 @@ $(function() {
 <div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
 <div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>}  <span class="comment">// namespace raylib</span></div>
 <div class="ttc" id="aexternal__include_8h_html"><div class="ttname"><a href="../../d7/daf/external__include_8h.html">external_include.h</a></div></div>
+<div class="ttc" id="agraphics_8h_html_a308f9233b868e4e52062de502c3d9cef"><div class="ttname"><a href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a></div><div class="ttdeci">raylib::Vector3 vec3</div><div class="ttdef"><b>Definition:</b> graphics.h:33</div></div>
+<div class="ttc" id="anamespacefont_html"><div class="ttname"><a href="../../d7/dd4/namespacefont.html">font</a></div><div class="ttdef"><b>Definition:</b> Karmina_Regular_256.h:21</div></div>
 <div class="ttc" id="anamespaceraylib_html"><div class="ttname"><a href="../../dd/d8c/namespaceraylib.html">raylib</a></div><div class="ttdef"><b>Definition:</b> drawing_util.h:12</div></div>
 <div class="ttc" id="anamespaceraylib_html_a201c666d2877d6eabeafa095536c4131"><div class="ttname"><a href="../../dd/d8c/namespaceraylib.html#a201c666d2877d6eabeafa095536c4131">raylib::SHOW_LETTER_BOUNDRY</a></div><div class="ttdeci">const bool SHOW_LETTER_BOUNDRY</div><div class="ttdef"><b>Definition:</b> text_util.h:14</div></div>
 <div class="ttc" id="anamespaceraylib_html_a6aebd1748cab9a1fdcf103e310507b6b"><div class="ttname"><a href="../../dd/d8c/namespaceraylib.html#a6aebd1748cab9a1fdcf103e310507b6b">raylib::MeasureText3D</a></div><div class="ttdeci">static vec3 MeasureText3D(Font font, const char *text, float fontSize, float fontSpacing, float lineSpacing)</div><div class="ttdef"><b>Definition:</b> text_util.h:164</div></div>

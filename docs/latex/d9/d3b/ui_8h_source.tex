@@ -1,0 +1,759 @@
+\hypertarget{ui_8h_source}{}\doxysection{ui.\+h}
+\label{ui_8h_source}\index{src/engine/ui.h@{src/engine/ui.h}}
+\mbox{\hyperlink{ui_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}raylib.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ui__autolayout_8h}{ui\_autolayout.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ui__color_8h}{ui\_color.h}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ui__components_8h}{ui\_components.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ui__context_8h}{ui\_context.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ui__state_8h}{ui\_state.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ui__theme_8h}{ui\_theme.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ui__widget_8h}{ui\_widget.h}}"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{uuid_8h}{uuid.h}}"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceui}{ui}}\ \{}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ NOTE:\ Because\ we\ use\ mutate\ widget's\ data\ during\ layout}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ \ \ \ \ \ \ do\ not\ pass\ the\ same\ widget\ twice.\ (even\ if\ they\ are\ the\ same\ size).}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ \ \ \ \ \ \ You\ can\ only\ do\ this\ if\ they\ are\ .strictness\ 1.0\ or\ .ignore\_size\ =\ true}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ \ Bad:}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ Widget\ b\ =\ ...;}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ button(b);}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ button(b);}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ \ Good:}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ Widget\ a\ =\ ...;}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ Widget\ b\ =\ ...;}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ button(a);}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ button(b);}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ TODO\ add\ more\ info\ about\ begin()/end()}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}}(}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{//\ returns\ true\ if\ content\ isnt\ empty}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ the\ text\ to\ render}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ content,}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{//\ what\ color\ to\ use}}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74}{theme::Usage}}\ color\_usage\ =\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a421c3240bd6c5c4cd47e5249711f90b1}{theme::Usage::Font}});}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{//\ returns\ true\ if\ the\ button\ was\ clicked\ else\ false}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//\ button\ label\ if\ needed}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ content\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{comment}{//\ TODO\ is\ this\ what\ we\ want?}}
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{button\_list}}(}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ returns\ true\ if\ any\ button\ pressed}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//\ List\ of\ text\ configs\ that\ should\ show\ in\ the\ dropdown}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\&\ options,}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//\ which\ item\ is\ selected}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{int}*\ selectedIndex\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{bool}*\ hasFocus\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{dropdown}}(}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{//\ returns\ true\ if\ dropdown\ value\ was\ changed}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ List\ of\ text\ configs\ that\ should\ show\ in\ the\ dropdown}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\&\ options,}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ whether\ or\ not\ the\ dropdown\ is\ open}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{bool}*\ dropdownState,}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ which\ item\ is\ selected}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{int}*\ selectedIndex);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a3fad4a8075125de9079fb82cb9e0d465}{slider}}(}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{//\ returns\ true\ if\ slider\ moved}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ Current\ value\ of\ the\ slider}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{float}*\ value,}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ min\ value}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{float}\ mnf,}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{comment}{//\ max\ value}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{float}\ mxf);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{enum\ struct}\ \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{TextfieldValidationDecisionFlag}}\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ Nothing}}
+\DoxyCodeLine{00084\ \ \ \ \ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a1a7a5196f987b86773c7d6940253b82d}{None}}\ =\ 0,}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{comment}{//\ Stop\ any\ new\ forward\ input\ (ie\ max\ length)}}
+\DoxyCodeLine{00086\ \ \ \ \ \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba3218c9ded441061dd2e1bc7bca15743d}{StopNewInput}}\ =\ 1\ <<\ 0,}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//\ Show\ checkmark\ /\ green\ text}}
+\DoxyCodeLine{00088\ \ \ \ \ \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba3ac705f2acd51a4613f9188c05c91d0d}{Valid}}\ =\ 1\ <<\ 1,}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{//\ Show\ x\ /\ red\ text}}
+\DoxyCodeLine{00090\ \ \ \ \ \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba4bbb8f967da6d1a610596d7257179c2b}{Invalid}}\ =\ 1\ <<\ 2,}
+\DoxyCodeLine{00091\ \};\ \ \textcolor{comment}{//\ namespace\ ui}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a92afecc0b85dc29c36cdc80897df74c4}{operator!}}(\mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{TextfieldValidationDecisionFlag}}\ f)\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordflow}{return}\ f\ ==\ \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba6adf97f83acf6453d4a6a4b1070f3754}{TextfieldValidationDecisionFlag::None}};}
+\DoxyCodeLine{00095\ \}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a0bf5a70cbb0209928bd2bf2f3848b7c6}{validation\_test}}(\mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{TextfieldValidationDecisionFlag}}\ flag,}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{TextfieldValidationDecisionFlag}}\ mask)\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordflow}{return}\ !!(flag\ \&\ mask);}
+\DoxyCodeLine{00100\ \}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{typedef}\ std::function<\mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{TextfieldValidationDecisionFlag}}(\textcolor{keyword}{const}\ std::string\&)>}
+\DoxyCodeLine{00103\ \ \ \ \ \mbox{\hyperlink{namespaceui_a9b3310140b09d29060f497ef83f246c5}{TextFieldValidationFn}};}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{comment}{//\ TODO\ add\ ability\ to\ have\ a\ cursor\ and\ move\ the\ cursor\ with\ arrow\ keys}}
+\DoxyCodeLine{00106\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield}}(}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ returns\ true\ if\ text\ changed}}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{comment}{//\ the\ string\ value\ being\ edited}}
+\DoxyCodeLine{00110\ \ \ \ \ std::string\&\ content,}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{comment}{//\ validation\ function\ that\ returns\ a\ flag\ describing\ what\ the\ text}}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{//\ input\ should\ do}}
+\DoxyCodeLine{00113\ \ \ \ \ \mbox{\hyperlink{namespaceui_a9b3310140b09d29060f497ef83f246c5}{TextFieldValidationFn}}\ validation\ =\ \{\});}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_aadad469b76dbb557f2985c32613f27fb}{checkbox}}(}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{comment}{//\ Returns\ true\ if\ the\ checkbox\ changed}}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keyword}{const}\ Widget\&\ widget,}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{comment}{//\ whether\ or\ not\ the\ checkbox\ is\ X'd}}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{bool}*\ cbState\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{//\ optional\ label\ to\ replace\ X\ and\ ``}}
+\DoxyCodeLine{00121\ \ \ \ \ std::string*\ label\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00136\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_aa1839faeec0199d1ef759103fce1fe1a}{is\_hot}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\&\ \textcolor{keywordtype}{id})\ \{\ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().hot\_id\ ==\ \textcolor{keywordtype}{id});\ \}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_aab0068660425ea4f46c3ef45730d5d86}{is\_active}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\&\ \textcolor{keywordtype}{id})\ \{\ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().active\_id\ ==\ \textcolor{keywordtype}{id});\ \}}
+\DoxyCodeLine{00139\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a05db1c88785ff2efe63d52d42f4ecc0c}{is\_active\_or\_hot}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\&\ \textcolor{keywordtype}{id})\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceui_aa1839faeec0199d1ef759103fce1fe1a}{is\_hot}}(\textcolor{keywordtype}{id})\ ||\ \mbox{\hyperlink{namespaceui_aab0068660425ea4f46c3ef45730d5d86}{is\_active}}(\textcolor{keywordtype}{id});}
+\DoxyCodeLine{00141\ \}}
+\DoxyCodeLine{00142\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}{is\_active\_and\_hot}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\&\ \textcolor{keywordtype}{id})\ \{}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceui_aa1839faeec0199d1ef759103fce1fe1a}{is\_hot}}(\textcolor{keywordtype}{id})\ \&\&\ \mbox{\hyperlink{namespaceui_aab0068660425ea4f46c3ef45730d5d86}{is\_active}}(\textcolor{keywordtype}{id});}
+\DoxyCodeLine{00144\ \}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\_if\_mouse\_inside}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\ \textcolor{keywordtype}{id},\ \textcolor{keyword}{const}\ Rectangle\&\ rect)\ \{}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordtype}{bool}\ inside\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_aad8381f74551df856eac63917360f499}{is\_mouse\_inside}}(rect);}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordflow}{if}\ (inside)\ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad6d14fd75295a5c39c0b4fe122566232}{hot\_id}}\ =\ id;}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_aab0068660425ea4f46c3ef45730d5d86}{is\_active}}(\mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})\ \&\&\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().mouse\_info.leftDown)\ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_a53b6fc2c85a80a1a7f5803b75eb8dc7d}{active\_id}}\ =\ id;}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00153\ \ \ \ \ \}}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00155\ \}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\_kb\_focus}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\&\ \textcolor{keywordtype}{id})\ \{\ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().kb\_focus\_id\ ==\ \textcolor{keywordtype}{id});\ \}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_ae35de41cc3681263b334e7c7d950f746}{try\_to\_grab\_kb}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\ \textcolor{keywordtype}{id})\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\_kb\_focus}}(\mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}}))\ \{}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{kb\_focus\_id}}\ =\ id;}
+\DoxyCodeLine{00162\ \ \ \ \ \}}
+\DoxyCodeLine{00163\ \}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_a012466e309607e0225b50fe63a149d7f}{draw\_if\_kb\_focus}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\&\ \textcolor{keywordtype}{id},\ std::function<\textcolor{keywordtype}{void}(\textcolor{keywordtype}{void})>\ cb)\ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\_kb\_focus}}(\textcolor{keywordtype}{id}))\ cb();}
+\DoxyCodeLine{00167\ \}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_ab56bfa403cf97b6eedada75235bdf672}{handle\_tabbing}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\ \textcolor{keywordtype}{id})\ \{}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{comment}{//\ TODO\ How\ do\ we\ handle\ something\ that\ wants\ to\ use}}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{comment}{//\ Widget\ Value\ Down/Up\ to\ control\ the\ value?}}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{comment}{//\ Do\ we\ mark\ the\ widget\ type\ with\ "{}nextable"{}?\ (tab\ will\ always\ work\ but}}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{comment}{//\ not\ very\ discoverable}}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\_kb\_focus}}(\textcolor{keywordtype}{id}))\ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().pressed(InputName::WidgetNext)\ ||}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().pressed(InputName::ValueDown)}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ support\ for\ holding\ down\ tab}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ get().is\_held\_down\_debounced(InputName::WidgetNext)\ ||}}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ get().is\_held\_down\_debounced(InputName::ValueDown)}}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ )\ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{kb\_focus\_id}}\ =\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}};}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().is\_held\_down(InputName::WidgetMod))\ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{kb\_focus\_id}}\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_aacd1e37455a44fe2d804c17267005dbd}{last\_processed}};}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().pressed(InputName::ValueUp))\ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{kb\_focus\_id}}\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_aacd1e37455a44fe2d804c17267005dbd}{last\_processed}};}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().pressed(InputName::WidgetBack))\ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{kb\_focus\_id}}\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_aacd1e37455a44fe2d804c17267005dbd}{last\_processed}};}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00194\ \ \ \ \ \}}
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{comment}{//\ before\ any\ returns}}
+\DoxyCodeLine{00196\ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_aacd1e37455a44fe2d804c17267005dbd}{last\_processed}}\ =\ id;}
+\DoxyCodeLine{00197\ \}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_a062fa8a78208818cd2f1b11239615ef0}{\_draw\_focus\_ring}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74}{theme::Usage}}\ usage\ =\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74ad9b1efad2d6b0380f08dc2c1b4382c24}{theme::Usage::Accent}})\ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \mbox{\hyperlink{namespaceui_a012466e309607e0225b50fe63a149d7f}{draw\_if\_kb\_focus}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}},\ [\&]()\ \{}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ const\ auto\ position\ =\ vec2\{}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ widget.rect.x,}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ widget.rect.y,}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ cs\ =\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{widget.rect.width,\ widget.rect.height\};}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ border\_width\ =\ 0.05f;}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ offset\ =}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{cs.x\ *\ (border\_width\ /\ 2),\ cs.y\ *\ (border\_width\ /\ 2)\};}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ new\_pos\ =\ position\ -\/\ offset;}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ new\_cs\ =\ cs\ *\ (1.f\ +\ border\_width);}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().draw\_widget\_rect(}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_pos.x,}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_pos.y,}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_cs.x,}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_cs.y,}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ usage);}
+\DoxyCodeLine{00220\ \ \ \ \ \});}
+\DoxyCodeLine{00221\ \}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame}{UIContext::LastFrame}}\ \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\_widget}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ func)\ \{}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{comment}{//\ TODO\ today\ because\ of\ the\ layer\ check\ we\ cant\ use\ this}}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{comment}{//\ which\ means\ no\ good\ error\ reports\ on\ this\ issue}}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{comment}{//\ you\ will\ just\ segfault}}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{comment}{//\ Basically\ the\ issue\ is\ that\ because\ the\ MK\_UUID\ is\ in\ widget}}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{comment}{//\ constructor\ the\ hash\ is\ the\ same\ for\ two\ ui\ elements.}}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{comment}{//\ This\ will\ only\ happen\ if\ you\ have\ two\ Widgets\ that\ you\ construct\ on}}
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{comment}{//\ the\ same\ layer.\ This\ is\ because\ we\ use\ layer\ id\ (static\ atomic\ inc)}}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{comment}{//\ as\ a\ hash\ key\ In\ order\ for\ us\ to\ get\ the\ "{}default"{}\ state\ id\ for\ a}}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{comment}{//\ layer,\ we\ need\ either\ the\ layer\ id\ or\ an\ example\ widget}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{comment}{//\ if\ (uses\_state\ \&\&\ widget.id\ ==}}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{comment}{//\ get().default\_state\_id)\ \{\ log\_warn("{}You\ need\ to\ initialize\ the\ id\ on}}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{comment}{//\ this\ widget,\ because\ it\ "{}\ "{}uses\ global\ state."{}\ "{}\ In\ your\ widget}}
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{comment}{//\ contructor\ pass\ 'MK\_UUID(id,\ ROOT\_ID)'\ "{}\ "{}as\ the\ first\ parameter."{});}}
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00258\ \ \ \ \ Widget::set\_element(widget,\ func);}
+\DoxyCodeLine{00259\ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_parent_stacking_a8c08b0dbd0de3d43a82e8695310fd812}{add\_child}}(widget.\mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}});}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \_write\_lf\ =\ [](\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget\_ptr)\ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget\ =\ *widget\_ptr;}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ lf\ =\ \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame}{UIContext::LastFrame}}(\{.rect\ =\ widget.\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}\});}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_a5ea3f7bba5392c26e9fc8ad08bff0688}{write\_last\_frame}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}},\ lf);}
+\DoxyCodeLine{00265\ \ \ \ \ \};}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame}{UIContext::LastFrame}}\ lf\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_a58872d5a89d5eb266660e5bc593b4416}{get\_last\_frame}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00268\ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_a929db982f9c55d028603fa235bcbe3ed}{schedule\_render\_call}}(std::bind(\_write\_lf,\ widget.\mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}}));}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keywordflow}{return}\ lf;}
+\DoxyCodeLine{00270\ \}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget)\ \{}
+\DoxyCodeLine{00273\ \ \ \ \ \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\_widget}}(widget,\ \_\_FUNCTION\_\_);}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00275\ \}}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget)\ \{}
+\DoxyCodeLine{00278\ \ \ \ \ \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\_widget}}(widget,\ \_\_FUNCTION\_\_);}
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00280\ \}}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,\ \textcolor{keyword}{const}\ std::string\&\ content,}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74}{theme::Usage}}\ color\_usage)\ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\_widget}}(widget,\ \_\_FUNCTION\_\_);}
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{comment}{//\ No\ need\ to\ render\ if\ text\ is\ empty}}
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keywordflow}{if}\ (content.empty())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00287\ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_a87027241baa3d948dc55f9171fbcc848}{schedule\_draw\_text}}(widget.\mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}},\ content,\ color\_usage);}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00289\ \}}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,\ \textcolor{keyword}{const}\ std::string\&\ content)\ \{}
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \_button\_pressed\ =\ [](\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\ id)\ \{}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ click}}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\_kb\_focus}}(\textcolor{keywordtype}{id})\ \&\&\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_aec68292535e322c14df638ec14b595b1}{pressed}}(\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ae3783cebe980a405a39b362de611c61f}{InputName::WidgetPress}}))\ \{}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_ab1c1b5a54445b3ac2a32a256150b375b}{mouse\_info}}.\mbox{\hyperlink{struct_mouse_info_a81794529e60fe51f38ccd539c88cb74d}{leftDown}}\ \&\&\ \mbox{\hyperlink{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}{is\_active\_and\_hot}}(\textcolor{keywordtype}{id}))\ \{}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{kb\_focus\_id}}\ =\ id;}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00302\ \ \ \ \ \};}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \ \ \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame}{UIContext::LastFrame}}\ lf\ =\ \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\_widget}}(widget,\ \_\_FUNCTION\_\_);}
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keywordflow}{if}\ (!lf.\mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{rect}}.has\_value())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \ \ \ \ \{}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ widget.\mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}}-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}\ =\ lf.\mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{rect}}.value();}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\_if\_mouse\_inside}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}},\ lf.\mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{rect}}.value());}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ae35de41cc3681263b334e7c7d950f746}{try\_to\_grab\_kb}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a062fa8a78208818cd2f1b11239615ef0}{\_draw\_focus\_ring}}(widget);}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_a9d888badd926eb71f428e212d8dfb8b0}{draw\_widget\_rect}}(widget.\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}},\ \mbox{\hyperlink{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}{is\_active\_and\_hot}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}})}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ?\ (theme::Usage::Secondary)}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ (theme::Usage::Primary));}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_adfeb6c42aeed615960663e25176a295b}{\_draw\_text}}(widget.\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}},\ content,\ theme::Usage::Font);}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ab56bfa403cf97b6eedada75235bdf672}{handle\_tabbing}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00320\ \ \ \ \ \}}
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{keywordflow}{return}\ \_button\_pressed(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00322\ \}}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{button\_list}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,\ \textcolor{keyword}{const}\ std::vector<std::string>\&\ options,}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}*\ selectedIndex,\ \textcolor{keywordtype}{bool}*\ hasFocus)\ \{}
+\DoxyCodeLine{00326\ \ \ \ \ \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\_widget}}(widget,\ \_\_FUNCTION\_\_);}
+\DoxyCodeLine{00327\ \ \ \ \ \textcolor{keyword}{auto}\ state\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{widget\_init}}<\mbox{\hyperlink{structui_1_1_button_list_state}{ButtonListState}}>(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{keywordflow}{if}\ (selectedIndex)\ state-\/>\mbox{\hyperlink{structui_1_1_button_list_state_a0e58ab4c39af165bf321df13a428bed7}{selected}}.\mbox{\hyperlink{structui_1_1_state_aa1e2dff86a41ca1eaf627ae8af45de45}{set}}(*selectedIndex);}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ assert\ isn't\ working}}
+\DoxyCodeLine{00331\ \ \ \ \ \textcolor{comment}{//\ M\_ASSERT(widget.growflags\ \&\ GrowFlags::Column,}}
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{comment}{//\ "{}button\ lists\ must\ have\ growflags\ Column"{});}}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{comment}{//\ TODO\ :HASFOCUS\ do\ we\ ever\ want\ to\ read\ the\ value}}
+\DoxyCodeLine{00335\ \ \ \ \ \textcolor{comment}{//\ or\ do\ we\ want\ to\ reset\ focus\ each\ frame}}
+\DoxyCodeLine{00336\ \ \ \ \ \textcolor{comment}{//\ if\ (hasFocus)\ state-\/>hasFocus.set(*hasFocus);}}
+\DoxyCodeLine{00337\ \ \ \ \ state-\/>hasFocus.set(\textcolor{keyword}{false});}
+\DoxyCodeLine{00338\ \ \ \ \ \textcolor{keyword}{auto}\ pressed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_parent_stacking_ad648cbd68c148be90716b0e98b15eab9}{push\_parent}}(widget.\mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}});}
+\DoxyCodeLine{00341\ \ \ \ \ std::vector<std::shared\_ptr<Widget>>\ children;}
+\DoxyCodeLine{00342\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ (int)\ options.size();\ i++)\ \{}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ option\ =\ options[i];}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ std::shared\_ptr<Widget>\ button\_w\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_af65667f4b72d32e1f80fd6851fbefc19}{make\_temp\_widget}}(}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{uuid_8h_a29b2c51698a1b8857c94e07485d41170}{MK\_UUID\_LOOP}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}.\mbox{\hyperlink{structui_1_1uuid_a9f645fff4dea14d48ea438a0219f2c72}{ownerLayer}},\ widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}},\ i),}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .mode\ =\ Percent,}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .value\ =\ 1.f,}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .strictness\ =\ 1.f,}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .mode\ =\ Percent,}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .value\ =\ 1.f\ /\ options.size(),}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .strictness\ =\ 1.f,}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}));}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*button\_w,\ option))\ \{}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>selected\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(i);}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ pressed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ children.push\_back(button\_w);}
+\DoxyCodeLine{00362\ \ \ \ \ \}}
+\DoxyCodeLine{00363\ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_parent_stacking_af98bd6128abc4e07aa371b363d45f11a}{pop\_parent}}();}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ hasFocus\ is\ generally\ a\ readonly\ variable\ because}}
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{comment}{//\ we\ dont\ insert\ it\ into\ state\ on\ button\_list\ start\ see\ :HASFOCUS}}
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{comment}{//\ We\ use\ it\ here\ because\ we\ know\ that\ if\ its\ true,\ the\ caller}}
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{comment}{//\ is\ trying\ to\ force\ this\ to\ have\ focus\ OR\ we\ had\ focus}}
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{comment}{//\ last\ frame.}}
+\DoxyCodeLine{00371\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keywordtype}{bool}\ somethingFocused\ =\ hasFocus\ ?\ *hasFocus\ :\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ this\ exists\ because\ we\ only\ to\ be\ able\ to\ move}}
+\DoxyCodeLine{00374\ \ \ \ \ \textcolor{comment}{//\ up\ and\ down\ if\ we\ are\ messing\ with\ the\ button\ list\ directly}}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{comment}{//\ It\ would\ be\ annoying\ to\ be\ focused\ on\ the\ textfield\ (e.g.)}}
+\DoxyCodeLine{00376\ \ \ \ \ \textcolor{comment}{//\ and\ pressing\ up\ accidentally\ would\ unfocus\ that\ and\ bring\ you\ to\ some}}
+\DoxyCodeLine{00377\ \ \ \ \ \textcolor{comment}{//\ random\ button\ list\ somewhere**}}
+\DoxyCodeLine{00378\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{comment}{//\ **\ in\ this\ situation\ they\ have\ to\ be\ visible,\ so\ no\ worries\ about}}
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{comment}{//\ arrow\ keying\ your\ way\ into\ a\ dropdown}}
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00382\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ options.size();\ i++)\ \{}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ somethingFocused\ |=\ \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\_kb\_focus}}(children[i]-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{00384\ \ \ \ \ \}}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \ \ \ \ \textcolor{keywordflow}{if}\ (somethingFocused)\ \{}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().pressed(\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa4c7748627d106d5c1769ada6dd06223}{InputName::ValueUp}}))\ \{}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>selected\ =\ state-\/>selected\ -\/\ 1;}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>selected\ <\ 0)\ state-\/>selected\ =\ 0;}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{kb\_focus\_id}}\ =\ children[state-\/>selected]-\/>id;}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00392\ }
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().pressed(\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a36ebd7b6065c4d81b7df4143ae3d6109}{InputName::ValueDown}}))\ \{}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>selected\ =\ state-\/>selected\ +\ 1;}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>selected\ >\ (\textcolor{keywordtype}{int})\ options.size()\ -\/\ 1)}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>selected\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(options.size()\ -\/\ 1);}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{kb\_focus\_id}}\ =\ children[state-\/>selected]-\/>id;}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00399\ \ \ \ \ \}}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ This\ has\ to\ be\ after\ value\ changes\ so\ that}}
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{comment}{//\ hasFocus\ is\ handed\ back\ up\ to\ its\ parent\ correctly}}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{comment}{//\ this\ allows\ the\ dropdown\ to\ know\ when\ none\ of\ its\ children\ have\ focus}}
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{comment}{//\ -\/-\/}}
+\DoxyCodeLine{00405\ \ \ \ \ \textcolor{comment}{//\ doing\ this\ above\ the\ keypress,\ allows\ a\ single\ frame}}
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{comment}{//\ where\ neither\ the\ dropdown\ parent\ nor\ its\ children\ are\ in\ focus}}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{comment}{//\ and\ that\ causes\ the\ dropdown\ to\ close\ on\ selection\ change\ which\ isnt}}
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{comment}{//\ what\ we\ want}}
+\DoxyCodeLine{00409\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ options.size();\ i++)\ \{}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ you\ got\ the\ kb\ focus\ somehow}}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (ie\ by\ clicking\ or\ tabbing)}}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ then\ we\ will\ just\ make\ you\ selected}}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\_kb\_focus}}(children[i]-\/>\textcolor{keywordtype}{id}))}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>selected\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(i);}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ state-\/>hasFocus\ =\ state-\/>hasFocus\ |\ \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\_kb\_focus}}(children[i]-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{00416\ \ \ \ \ \}}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>hasFocus)\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{kb\_focus\_id}}\ =\ children[state-\/>selected]-\/>id;}
+\DoxyCodeLine{00419\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasFocus)\ *hasFocus\ =\ state-\/>hasFocus;}
+\DoxyCodeLine{00420\ \ \ \ \ \textcolor{keywordflow}{if}\ (selectedIndex)\ *selectedIndex\ =\ state-\/>selected;}
+\DoxyCodeLine{00421\ \ \ \ \ \textcolor{keywordflow}{return}\ pressed;}
+\DoxyCodeLine{00422\ \}}
+\DoxyCodeLine{00423\ }
+\DoxyCodeLine{00424\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{dropdown}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,\ \textcolor{keyword}{const}\ std::vector<std::string>\&\ options,}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}*\ dropdownState,\ \textcolor{keywordtype}{int}*\ selectedIndex)\ \{}
+\DoxyCodeLine{00426\ \ \ \ \ \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\_widget}}(widget,\ \_\_FUNCTION\_\_);}
+\DoxyCodeLine{00427\ \ \ \ \ \textcolor{keyword}{auto}\ state\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{widget\_init}}<\mbox{\hyperlink{structui_1_1_dropdown_state}{DropdownState}}>(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00428\ \ \ \ \ \textcolor{keywordflow}{if}\ (dropdownState)\ state-\/>\mbox{\hyperlink{structui_1_1_toggle_state_a94706959f0bb66b9497155b1e6a19b6b}{on}}.\mbox{\hyperlink{structui_1_1_state_aa1e2dff86a41ca1eaf627ae8af45de45}{set}}(*dropdownState);}
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{keyword}{auto}\ selected\_option\ =\ options[selectedIndex\ ?\ *selectedIndex\ :\ 0];}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \ \ \ \ \textcolor{comment}{//\ TODO\ when\ you\ tab\ to\ the\ dropdown}}
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{comment}{//\ it\ would\ be\ nice\ if\ it\ opened}}
+\DoxyCodeLine{00433\ \ \ \ \ \textcolor{comment}{//\ try\_to\_grab\_kb(id);}}
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{comment}{//\ if\ (has\_kb\_focus(id))\ \{}}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{comment}{//\ state-\/>on\ =\ true;}}
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00437\ }
+\DoxyCodeLine{00438\ \ \ \ \ \textcolor{keywordtype}{bool}\ return\_value\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00439\ \ \ \ \ \textcolor{keywordtype}{bool}\ pressed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_parent_stacking_ad648cbd68c148be90716b0e98b15eab9}{push\_parent}}(widget.\mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}});}
+\DoxyCodeLine{00442\ \ \ \ \ \{}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ std::shared\_ptr<Widget>\ selected\_widget\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_af65667f4b72d32e1f80fd6851fbefc19}{make\_temp\_widget}}(}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}.\mbox{\hyperlink{structui_1_1uuid_a9f645fff4dea14d48ea438a0219f2c72}{ownerLayer}},\ widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}),}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .mode\ =\ Percent,}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .value\ =\ 1.f,}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .strictness\ =\ 1.f,}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .mode\ =\ Percent,}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .value\ =\ 1.f,}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .strictness\ =\ 0.9f,}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GrowFlags::Column));}
+\DoxyCodeLine{00456\ }
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Draw\ the\ main\ body\ of\ the\ dropdown}}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ pressed\ =\ \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*selected\_widget,\ selected\_option);}
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ right\ now\ you\ can\ change\ values\ through\ tab\ or\ through}}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ arrow\ keys,\ maybe\ we\ should\ only\ allow\ arrows}}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ and\ then\ tab\ just\ switches\ to\ the\ next\ non\ dropdown\ widget}}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ childrenHaveFocus\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00465\ }
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ originally\ we\ only\ did\ this\ when\ the\ dropdown\ wasnt\ already}}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ open\ but\ we\ should\ be\ safe\ to\ always\ do\ this}}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 1.\ doesnt\ toggle\ on,\ sets\ on\ directly}}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 2.\ open\ should\ have\ children\ focused\ anyway}}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 3.\ we\ dont\ eat\ the\ input,\ so\ it\ doesnt\ break\ the\ button\_list}}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ value\ up/down}}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\_kb\_focus}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}))\ \{}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().pressedWithoutEat(\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa4c7748627d106d5c1769ada6dd06223}{InputName::ValueUp}})\ ||}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().pressedWithoutEat(\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a36ebd7b6065c4d81b7df4143ae3d6109}{InputName::ValueDown}}))\ \{}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>on\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ childrenHaveFocus\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00479\ }
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>on)\ \{}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we're\ hoping\ this\ is\ Pixels\ but\ who\ knows}}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ full\_width\ =\ widget.\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[0].\mbox{\hyperlink{structui_1_1_size_expectation_ab7f8f661e874602a85ce82898d155c26}{value}};}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ item\_size\ =\ widget.\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[1].\mbox{\hyperlink{structui_1_1_size_expectation_ab7f8f661e874602a85ce82898d155c26}{value}};}
+\DoxyCodeLine{00484\ }
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ maybe\ we\ could\ do\ a\ hack\ where\ we\ only\ show\ enough\ items}}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ to\ fit\ in\ \ the\ rest\ of\ the\ screen}}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Widget>\ button\_list\_widget\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_af65667f4b72d32e1f80fd6851fbefc19}{make\_temp\_widget}}(}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}.\mbox{\hyperlink{structui_1_1uuid_a9f645fff4dea14d48ea438a0219f2c72}{ownerLayer}},\ widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}),}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(full\_width,\ 1.f),}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(item\_size\ *\ options.size(),\ 1.f),}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GrowFlags::Column));}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \ \ \ \ button\_list\_widget-\/>absolute\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00494\ }
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{button\_list}}(*button\_list\_widget,\ options,\ selectedIndex,}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&childrenHaveFocus))\ \{}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>on\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{kb\_focus\_id}}\ =\ widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}};}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00501\ }
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dropdownState)\ return\_value\ =\ *dropdownState\ !=\ state-\/>on.asT();}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ return\_value\ =\ return\_value\ ||\ (pressed\ \&\&\ state-\/>on.asT());}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ why\ doesnt\ this\ work?}}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ this\ has\ to\ happen\ after\ ret}}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ because\ its\ not\ a\ real\ selection,\ just}}
+\DoxyCodeLine{00509\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ a\ tab\ out}}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (!childrenHaveFocus\ \&\&\ !has\_kb\_focus(widget.id))\ \{}}
+\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\_info("{}kbfocus\ false"{});}}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ state-\/>on\ =\ false;}}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00514\ \ \ \ \ \}}
+\DoxyCodeLine{00515\ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_parent_stacking_af98bd6128abc4e07aa371b363d45f11a}{pop\_parent}}();}
+\DoxyCodeLine{00516\ }
+\DoxyCodeLine{00517\ \ \ \ \ \textcolor{keywordflow}{if}\ (pressed)\ state-\/>on\ =\ !state-\/>on;}
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{keywordflow}{if}\ (dropdownState)\ *dropdownState\ =\ state-\/>on;}
+\DoxyCodeLine{00519\ \ \ \ \ \textcolor{keywordflow}{return}\ return\_value;}
+\DoxyCodeLine{00520\ \}}
+\DoxyCodeLine{00521\ }
+\DoxyCodeLine{00522\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a3fad4a8075125de9079fb82cb9e0d465}{slider}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,\ \textcolor{keywordtype}{bool}\ vertical,\ \textcolor{keywordtype}{float}*\ value,\ \textcolor{keywordtype}{float}\ mnf,}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ mxf)\ \{}
+\DoxyCodeLine{00524\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \_slider\_render\ =\ [](\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget\_ptr,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ vertical,}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ value)\ \{}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget\ =\ *widget\_ptr;}
+\DoxyCodeLine{00527\ }
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a062fa8a78208818cd2f1b11239615ef0}{\_draw\_focus\_ring}}(widget);}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_a9cde81e3fdc093e32dfb15dddf05e9aa}{draw\_widget}}(widget,\ theme::Usage::Primary);\ \ \textcolor{comment}{//\ slider\ rail}}
+\DoxyCodeLine{00530\ }
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ slide}}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ Rectangle\ rect(widget.\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}});}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ maxScale\ =\ 0.8f;}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ pos\_offset\ =}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \ \ \ \ value\ *\ (vertical\ ?\ rect.height\ *\ maxScale\ :\ rect.width\ *\ maxScale);}
+\DoxyCodeLine{00536\ }
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ rect\ =\ \{}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \ \ \ \ vertical\ ?\ rect.x\ :\ rect.x\ +\ pos\_offset,}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ \ \ \ \ vertical\ ?\ rect.y\ +\ pos\_offset\ :\ rect.y,}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \ \ \ \ vertical\ ?\ rect.width\ :\ rect.width\ /\ 5.f,}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \ \ \ \ vertical\ ?\ rect.height\ /\ 5.f\ :\ rect.height,}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00543\ }
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_a9d888badd926eb71f428e212d8dfb8b0}{draw\_widget\_rect}}(rect,\ theme::Usage::Accent);}
+\DoxyCodeLine{00545\ \ \ \ \ \};}
+\DoxyCodeLine{00546\ }
+\DoxyCodeLine{00547\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \_slider\_value\_management\ =\ [](\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ vertical,\ \textcolor{keywordtype}{float}*\ value,}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ mnf,\ \textcolor{keywordtype}{float}\ mxf)\ \{}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ state\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_a83379739a90ddb9768d7d3352b54389d}{get\_widget\_state}}<\mbox{\hyperlink{structui_1_1_slider_state}{SliderState}}>(widget-\/>\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00551\ }
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ value\_changed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\_kb\_focus}}(widget-\/>\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}))\ \{}
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_a61fe1fb42880d0817dddc3eb7891d5b0}{is\_held\_down}}(\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a955248b9eee1168c01d8ed3ff23ecc61}{InputName::ValueRight}}))\ \{}
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>\mbox{\hyperlink{structui_1_1_slider_state_a44ed508c84eca55be63bd3dcd31ca5f5}{value}}\ =\ state-\/>\mbox{\hyperlink{structui_1_1_state_a080a941b44eaf8fe692106d2050c8c1a}{value}}\ +\ 0.005f;}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>value\ >\ mxf)\ state-\/>value\ =\ mxf;}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*value)\ =\ state-\/>value;}
+\DoxyCodeLine{00559\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\_changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00560\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_a61fe1fb42880d0817dddc3eb7891d5b0}{is\_held\_down}}(\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a4c34b45c1e1c5f0d940fdc4ee6e452f1}{InputName::ValueLeft}}))\ \{}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>value\ =\ state-\/>value\ -\/\ 0.005f;}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>value\ <\ mnf)\ state-\/>value\ =\ mnf;}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*value)\ =\ state-\/>value;}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\_changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_a53b6fc2c85a80a1a7f5803b75eb8dc7d}{active\_id}}\ ==\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}})\ \{}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{kb\_focus\_id}}\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}};}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v;}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (vertical)\ \{}
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ =\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_ab1c1b5a54445b3ac2a32a256150b375b}{mouse\_info}}.\mbox{\hyperlink{struct_mouse_info_a60cad00652bbf4ce46b465030dde56dd}{pos}}.y\ -\/\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}.y)\ /}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}.height;}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ =\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_ab1c1b5a54445b3ac2a32a256150b375b}{mouse\_info}}.\mbox{\hyperlink{struct_mouse_info_a60cad00652bbf4ce46b465030dde56dd}{pos}}.x\ -\/\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}.x)\ /}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}.width;}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (v\ <\ mnf)\ v\ =\ mnf;}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (v\ >\ mxf)\ v\ =\ mxf;}
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (v\ !=\ *value)\ \{}
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>value\ =\ v;}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*value)\ =\ state-\/>value;}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\_changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ state-\/>value.changed\_since\ =\ value\_changed;}
+\DoxyCodeLine{00588\ \ \ \ \ \};}
+\DoxyCodeLine{00589\ }
+\DoxyCodeLine{00590\ \ \ \ \ \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame}{UIContext::LastFrame}}\ lf\ =\ \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\_widget}}(widget,\ \_\_FUNCTION\_\_);}
+\DoxyCodeLine{00591\ \ \ \ \ \textcolor{comment}{//\ TODO\ be\ able\ to\ scroll\ this\ bar\ with\ the\ scroll\ wheel}}
+\DoxyCodeLine{00592\ \ \ \ \ \textcolor{keyword}{auto}\ state\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{widget\_init}}<\mbox{\hyperlink{structui_1_1_slider_state}{SliderState}}>(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00593\ \ \ \ \ \textcolor{keywordtype}{bool}\ changed\_previous\_frame\ =\ state-\/>\mbox{\hyperlink{structui_1_1_slider_state_a44ed508c84eca55be63bd3dcd31ca5f5}{value}}.\mbox{\hyperlink{structui_1_1_state_a6e00615f8b6c64b6bf607bb824072ffd}{changed\_since}};}
+\DoxyCodeLine{00594\ \ \ \ \ state-\/>value.changed\_since\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00595\ \ \ \ \ \textcolor{keywordflow}{if}\ (value)\ state-\/>value.set(*value);}
+\DoxyCodeLine{00596\ }
+\DoxyCodeLine{00597\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00598\ \ \ \ \ \textcolor{keywordflow}{if}\ (!lf.\mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{rect}}.has\_value())\ \textcolor{keywordflow}{return}\ changed\_previous\_frame;}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \ \ \ \ widget.\mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}}-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}\ =\ lf.\mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{rect}}.value();}
+\DoxyCodeLine{00601\ \ \ \ \ \mbox{\hyperlink{namespaceui_ae35de41cc3681263b334e7c7d950f746}{try\_to\_grab\_kb}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00602\ \ \ \ \ \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\_if\_mouse\_inside}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}},\ widget.\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}});}
+\DoxyCodeLine{00603\ \ \ \ \ \_slider\_render(widget.\mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}},\ vertical,\ state-\/>value.asT());}
+\DoxyCodeLine{00604\ \ \ \ \ \mbox{\hyperlink{namespaceui_ab56bfa403cf97b6eedada75235bdf672}{handle\_tabbing}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00605\ \ \ \ \ \_slider\_value\_management(widget.\mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}},\ vertical,\ value,\ mnf,\ mxf);}
+\DoxyCodeLine{00606\ }
+\DoxyCodeLine{00607\ \ \ \ \ \textcolor{keywordflow}{return}\ changed\_previous\_frame;}
+\DoxyCodeLine{00608\ \}}
+\DoxyCodeLine{00609\ }
+\DoxyCodeLine{00610\ \textcolor{comment}{//\ TODO\ add\ support\ for\ validating\ the\ actual\ input\ so\ you\ could\ pass\ a\ regex\ to}}
+\DoxyCodeLine{00611\ \textcolor{comment}{//\ not\ allow\ text\ or\ no\ numbers\ or\ something}}
+\DoxyCodeLine{00612\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,\ std::string\&\ content,}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a9b3310140b09d29060f497ef83f246c5}{TextFieldValidationFn}}\ validation)\ \{}
+\DoxyCodeLine{00614\ \ \ \ \ \textcolor{keyword}{auto}\ \_textfield\_render\ =\ [](\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget\_ptr,}
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a9b3310140b09d29060f497ef83f246c5}{TextFieldValidationFn}}\ validation)\ \{}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ state\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_a83379739a90ddb9768d7d3352b54389d}{get\_widget\_state}}<\mbox{\hyperlink{structui_1_1_textfield_state}{TextfieldState}}>(widget\_ptr-\/>\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget\ =\ *widget\_ptr;}
+\DoxyCodeLine{00618\ }
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{TextfieldValidationDecisionFlag}}\ validationFlag\ =}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ \ \ \ \ validation\ ?\ validation(state-\/>buffer.asT())}
+\DoxyCodeLine{00621\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ TextfieldValidationDecisionFlag::None;}
+\DoxyCodeLine{00622\ }
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_invalid\ =\ \mbox{\hyperlink{namespaceui_a0bf5a70cbb0209928bd2bf2f3848b7c6}{validation\_test}}(}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ \ \ \ \ validationFlag,\ TextfieldValidationDecisionFlag::Invalid);}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ focus\_color\ =}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ \ \ \ \ is\_invalid\ ?\ theme::Usage::Error\ :\ theme::Usage::Accent;}
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a062fa8a78208818cd2f1b11239615ef0}{\_draw\_focus\_ring}}(widget,\ focus\_color);}
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Background}}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_a9cde81e3fdc093e32dfb15dddf05e9aa}{draw\_widget}}(widget,\ \mbox{\hyperlink{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}{is\_active\_and\_hot}}(widget.id)}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ?\ theme::Usage::Secondary}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ theme::Usage::Primary);}
+\DoxyCodeLine{00632\ }
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ shouldWriteCursor\ =\ \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\_kb\_focus}}(widget.id)\ \&\&\ state-\/>showCursor;}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ std::string\ focusStr\ =\ shouldWriteCursor\ ?\ \textcolor{stringliteral}{"{}\_"{}}\ :\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ std::string\ focused\_content\ =}
+\DoxyCodeLine{00636\ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}\{\}\{\}"{}},\ state-\/>buffer.asT(),\ focusStr);}
+\DoxyCodeLine{00637\ }
+\DoxyCodeLine{00638\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ text\_color\ =\ is\_invalid\ ?\ theme::Usage::Error\ :\ theme::Usage::Font;}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_adfeb6c42aeed615960663e25176a295b}{\_draw\_text}}(widget.rect,\ focused\_content,\ text\_color);}
+\DoxyCodeLine{00640\ \ \ \ \ \};}
+\DoxyCodeLine{00641\ }
+\DoxyCodeLine{00642\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \_textfield\_value\_management\ =}
+\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \mbox{\hyperlink{namespaceui_a9b3310140b09d29060f497ef83f246c5}{TextFieldValidationFn}}\ validation)\ \{}
+\DoxyCodeLine{00644\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ state\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_a83379739a90ddb9768d7d3352b54389d}{get\_widget\_state}}<\mbox{\hyperlink{structui_1_1_textfield_state}{TextfieldState}}>(widget-\/>\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00645\ }
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ validationFlag\ =\ validation}
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ?\ validation(state-\/>buffer.asT())}
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ TextfieldValidationDecisionFlag::None;}
+\DoxyCodeLine{00649\ }
+\DoxyCodeLine{00650\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>cursorBlinkTime\ =\ state-\/>cursorBlinkTime\ +\ 1;}
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>cursorBlinkTime\ >\ 60)\ \{}
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>cursorBlinkTime\ =\ 0;}
+\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>showCursor\ =\ !state-\/>showCursor;}
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00655\ }
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ changed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00657\ }
+\DoxyCodeLine{00658\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\_kb\_focus}}(widget-\/>\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}))\ \{}
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().keychar\ !=\ \textcolor{keywordtype}{int}())\ \{}
+\DoxyCodeLine{00660\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a0bf5a70cbb0209928bd2bf2f3848b7c6}{validation\_test}}(}
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ validationFlag,}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TextfieldValidationDecisionFlag::StopNewInput))\ \{}
+\DoxyCodeLine{00663\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>buffer.asT().append(}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string(1,\ (\textcolor{keywordtype}{char})\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().keychar));}
+\DoxyCodeLine{00666\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().pressed(\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a6c0fcd985505e101be0549f09b88c9ee}{InputName::WidgetBackspace}})\ ||}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().is\_held\_down\_debounced(\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a6c0fcd985505e101be0549f09b88c9ee}{InputName::WidgetBackspace}}))\ \{}
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>buffer.asT().size()\ >\ 0)\ \{}
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>buffer.asT().pop\_back();}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00676\ }
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().is\_held\_down(\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aae28abdc63defc25deb48cdbccb19457}{InputName::WidgetCtrl}}))\ \{}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().pressed(\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a9cdd31cc8d9388a5e5663850111f5984}{InputName::WidgetPaste}}))\ \{}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ clipboard\ =\ \mbox{\hyperlink{namespaceext_a443d85b48117cbe070de1ea8c533b4b8}{ext::get\_clipboard\_text}}();}
+\DoxyCodeLine{00680\ }
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ make\ a\ copy\ so\ we\ can\ text\ validation}}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ post\_paste(state-\/>buffer.asT());}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ post\_paste.append(clipboard);}
+\DoxyCodeLine{00684\ }
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ vflag\ =}
+\DoxyCodeLine{00686\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ validation\ ?\ validation(post\_paste)}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ TextfieldValidationDecisionFlag::None;}
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ should\ paste\ the\ amount\ that\ fits.\ but\ we}}
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dont\ know\ what\ the\ max\ length\ actually\ is,\ so\ we}}
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ would\ need\ to\ remove\ one\ letter\ at\ a\ time\ until\ we}}
+\DoxyCodeLine{00691\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ hit\ something\ valid.}}
+\DoxyCodeLine{00692\ }
+\DoxyCodeLine{00693\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ probably\ should\ give\ some\ kind\ of\ visual}}
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ error\ to\ the\ user\ that\ you\ cant\ paste\ right\ now}}
+\DoxyCodeLine{00695\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ should\_append\ =\ !\mbox{\hyperlink{namespaceui_a0bf5a70cbb0209928bd2bf2f3848b7c6}{validation\_test}}(}
+\DoxyCodeLine{00696\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vflag,}
+\DoxyCodeLine{00697\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TextfieldValidationDecisionFlag::StopNewInput);}
+\DoxyCodeLine{00698\ }
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ commit\ the\ copy-\/paste}}
+\DoxyCodeLine{00700\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (should\_append)\ state-\/>buffer.asT()\ =\ post\_paste;}
+\DoxyCodeLine{00701\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00702\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00703\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00704\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00705\ }
+\DoxyCodeLine{00706\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().mouse\_info.leftDown\ \&\&\ \mbox{\hyperlink{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}{is\_active\_and\_hot}}(widget-\/>\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}))\ \{}
+\DoxyCodeLine{00707\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{kb\_focus\_id}}\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}};}
+\DoxyCodeLine{00708\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00709\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>buffer.changed\_since\ =\ changed;}
+\DoxyCodeLine{00710\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00711\ }
+\DoxyCodeLine{00712\ \ \ \ \ \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame}{UIContext::LastFrame}}\ lf\ =\ \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\_widget}}(widget,\ \_\_FUNCTION\_\_);}
+\DoxyCodeLine{00713\ \ \ \ \ \textcolor{keyword}{auto}\ state\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{widget\_init}}<\mbox{\hyperlink{structui_1_1_textfield_state}{TextfieldState}}>(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00714\ \ \ \ \ \textcolor{keywordtype}{bool}\ changed\_previous\_frame\ =\ state-\/>\mbox{\hyperlink{structui_1_1_textfield_state_a7916d9d40bcc4a6a8a17ade015e1c4b7}{buffer}}.\mbox{\hyperlink{structui_1_1_state_a6e00615f8b6c64b6bf607bb824072ffd}{changed\_since}};}
+\DoxyCodeLine{00715\ }
+\DoxyCodeLine{00716\ \ \ \ \ \textcolor{keywordflow}{if}\ (!content.empty())\ state-\/>buffer\ =\ content;}
+\DoxyCodeLine{00717\ \ \ \ \ state-\/>buffer.changed\_since\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00718\ }
+\DoxyCodeLine{00719\ \ \ \ \ if\ (!lf.\mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{rect}}.has\_value())\ \textcolor{keywordflow}{return}\ changed\_previous\_frame;}
+\DoxyCodeLine{00720\ }
+\DoxyCodeLine{00721\ \ \ \ \ widget.\mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}}-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}\ =\ lf.\mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{rect}}.value();}
+\DoxyCodeLine{00722\ \ \ \ \ \mbox{\hyperlink{namespaceui_ae35de41cc3681263b334e7c7d950f746}{try\_to\_grab\_kb}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00723\ \ \ \ \ \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\_if\_mouse\_inside}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}},\ widget.\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}});}
+\DoxyCodeLine{00724\ \ \ \ \ \_textfield\_render(widget.\mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}},\ validation);}
+\DoxyCodeLine{00725\ \ \ \ \ \_textfield\_value\_management(widget.\mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}},\ validation);}
+\DoxyCodeLine{00726\ \ \ \ \ \mbox{\hyperlink{namespaceui_ab56bfa403cf97b6eedada75235bdf672}{handle\_tabbing}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00727\ }
+\DoxyCodeLine{00728\ \ \ \ \ content\ =\ state-\/>buffer;}
+\DoxyCodeLine{00729\ \ \ \ \ \textcolor{keywordflow}{return}\ changed\_previous\_frame;}
+\DoxyCodeLine{00730\ \}}
+\DoxyCodeLine{00731\ }
+\DoxyCodeLine{00732\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_aadad469b76dbb557f2985c32613f27fb}{checkbox}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,\ \textcolor{keywordtype}{bool}*\ cbState,\ std::string*\ label)\ \{}
+\DoxyCodeLine{00733\ \ \ \ \ \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\_widget}}(widget,\ \_\_FUNCTION\_\_);}
+\DoxyCodeLine{00734\ \ \ \ \ \textcolor{keyword}{auto}\ state\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{widget\_init}}<\mbox{\hyperlink{structui_1_1_checkbox_state}{CheckboxState}}>(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00735\ \ \ \ \ \textcolor{keywordflow}{if}\ (cbState)\ state-\/>\mbox{\hyperlink{structui_1_1_toggle_state_a94706959f0bb66b9497155b1e6a19b6b}{on}}\ =\ *cbState;}
+\DoxyCodeLine{00736\ \ \ \ \ state-\/>on.\mbox{\hyperlink{structui_1_1_state_a6e00615f8b6c64b6bf607bb824072ffd}{changed\_since}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00737\ }
+\DoxyCodeLine{00738\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(widget,\ (label\ ?\ *label\ :\ (state-\/>on\ ?\ \textcolor{stringliteral}{"{}X"{}}\ :\ \textcolor{stringliteral}{"{}"{}}))}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ))\ \{}
+\DoxyCodeLine{00741\ \ \ \ \ \ \ \ \ state-\/>on\ =\ !state-\/>on;}
+\DoxyCodeLine{00742\ \ \ \ \ \}}
+\DoxyCodeLine{00743\ }
+\DoxyCodeLine{00744\ \ \ \ \ \textcolor{keywordflow}{if}\ (cbState)\ *cbState\ =\ state-\/>on;}
+\DoxyCodeLine{00745\ \ \ \ \ \textcolor{keywordflow}{return}\ state-\/>on.changed\_since;}
+\DoxyCodeLine{00746\ \}}
+\DoxyCodeLine{00747\ }
+\DoxyCodeLine{00748\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{scroll\_view}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_widget}{Widget}}\&\ widget,\ std::function<\textcolor{keywordtype}{void}()>\ children,}
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}*\ startingLocation\ =\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00750\ \ \ \ \ \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame}{UIContext::LastFrame}}\ lf\ =\ \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\_widget}}(widget,\ \_\_FUNCTION\_\_);}
+\DoxyCodeLine{00751\ }
+\DoxyCodeLine{00752\ \ \ \ \ \textcolor{comment}{//\ TODO\ can\ this\ move\ into\ init\_widget?}}
+\DoxyCodeLine{00753\ \ \ \ \ \textcolor{keyword}{auto}\ state\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{widget\_init}}<\mbox{\hyperlink{structui_1_1_scroll_view_state}{ScrollViewState}}>(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}});}
+\DoxyCodeLine{00754\ \ \ \ \ \textcolor{keywordflow}{if}\ (startingLocation)\ state-\/>\mbox{\hyperlink{structui_1_1_scroll_view_state_a47807a6090885ce8000f1eb8838a2ba4}{yoffset}}\ =\ (*startingLocation);}
+\DoxyCodeLine{00755\ }
+\DoxyCodeLine{00756\ \ \ \ \ \textcolor{keywordflow}{if}\ (!lf.\mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{rect}}.has\_value())\ \{}
+\DoxyCodeLine{00757\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00758\ \ \ \ \ \}}
+\DoxyCodeLine{00759\ \ \ \ \ \textcolor{comment}{//\ TODO\ none\ of\ this\ works,\ look\ through\ the\ PRs\ I've\ put\ with\ my}}
+\DoxyCodeLine{00760\ \ \ \ \ \textcolor{comment}{//\ previous\ tries}}
+\DoxyCodeLine{00761\ }
+\DoxyCodeLine{00762\ \ \ \ \ \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\_if\_mouse\_inside}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}},\ lf.\mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{rect}}.value());}
+\DoxyCodeLine{00763\ }
+\DoxyCodeLine{00764\ \ \ \ \ \textcolor{keywordtype}{int}\ rt\_id\ =\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_ae3b856af59ec708d5fcaaee68c0d54df}{get\_new\_render\_texture}}();}
+\DoxyCodeLine{00765\ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_abcfbac61d8329e882440db334fd823a5}{turn\_on\_render\_texture}}(rt\_id);}
+\DoxyCodeLine{00766\ \ \ \ \ children();}
+\DoxyCodeLine{00767\ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_ad623e19e650b75ca4448b524d8860705}{turn\_off\_texture\_mode}}();}
+\DoxyCodeLine{00768\ }
+\DoxyCodeLine{00769\ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_aba0c8913ad45d4d5e249301a9bbc20ed}{draw\_texture}}(rt\_id,\ (Rectangle)\{0,\ 0,\ 1000.f,\ -\/1000.f\},}
+\DoxyCodeLine{00770\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{widget.\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}.x,\ widget.\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}.y\});}
+\DoxyCodeLine{00771\ }
+\DoxyCodeLine{00772\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_aa1839faeec0199d1ef759103fce1fe1a}{is\_hot}}(widget.\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}))\ \{}
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ state-\/>yoffset\ =\ state-\/>yoffset\ +\ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_ad6f167df2fcc1345f12ad9981e5ab2f0}{yscrolled}};}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}}().\mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_ad6f167df2fcc1345f12ad9981e5ab2f0}{yscrolled}}\ =\ 0;}
+\DoxyCodeLine{00775\ \ \ \ \ \}}
+\DoxyCodeLine{00776\ }
+\DoxyCodeLine{00777\ \ \ \ \ \textcolor{comment}{//\ TODO\ support\ opaque\ scroll\ views}}
+\DoxyCodeLine{00778\ }
+\DoxyCodeLine{00779\ \ \ \ \ \textcolor{keywordflow}{return}\ state-\/>yoffset.changed\_since;}
+\DoxyCodeLine{00780\ \}}
+\DoxyCodeLine{00781\ }
+\DoxyCodeLine{00782\ \}\ \ \textcolor{comment}{//\ namespace\ ui}}
+
+\end{DoxyCode}

@@ -1,0 +1,275 @@
+\hypertarget{keymap_8h}{}\doxysection{src/engine/keymap.h File Reference}
+\label{keymap_8h}\index{src/engine/keymap.h@{src/engine/keymap.h}}
+{\ttfamily \#include $<$tuple$>$}\newline
+{\ttfamily \#include \char`\"{}raylib.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../statemanager.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}files.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}event.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}gamepad\+\_\+axis\+\_\+with\+\_\+dir.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}log.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}singleton.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_mouse_info}{Mouse\+Info}}
+\item 
+struct \mbox{\hyperlink{struct_key_map}{Key\+Map}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::tuple$<$ \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}}, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}}, float, float $>$ \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}}
+\item 
+typedef std\+::vector$<$ \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}} $>$ \mbox{\hyperlink{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}{User\+Inputs}}
+\item 
+typedef std\+::variant$<$ int, \mbox{\hyperlink{struct_gamepad_axis_with_dir}{Gamepad\+Axis\+With\+Dir}}, Gamepad\+Button $>$ \mbox{\hyperlink{keymap_8h_a8a184b37374d8c9878481fc98a88bb04}{Any\+Input}}
+\item 
+typedef std\+::vector$<$ \mbox{\hyperlink{keymap_8h_a8a184b37374d8c9878481fc98a88bb04}{Any\+Input}} $>$ \mbox{\hyperlink{keymap_8h_a06410b0127e2a80fd87236d0eaf124dc}{Any\+Inputs}}
+\item 
+typedef std\+::map$<$ \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}}, \mbox{\hyperlink{keymap_8h_a06410b0127e2a80fd87236d0eaf124dc}{Any\+Inputs}} $>$ \mbox{\hyperlink{keymap_8h_a420042914c026eaa83ca56875f95f615}{Layer\+Mapping}}
+\item 
+typedef std\+::map$<$ \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}}, \mbox{\hyperlink{keymap_8h_a420042914c026eaa83ca56875f95f615}{Layer\+Mapping}} $>$ \mbox{\hyperlink{keymap_8h_a4e24bf07f8f900e7be1e8f70900251fe}{Full\+Map}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}} \{ \newline
+\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706adaba8aa0fcd8a87c25fec7d916c789e7}{Pause}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a0cf911d07fa046868a75a24845f01f69}{Widget\+Next}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a0c66d603c83a7be3c2436260bcc26b92}{Widget\+Back}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a39515b3542b2fb0c9a5aedd2fb0d9d18}{Widget\+Mod}}
+, \newline
+\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a6c0fcd985505e101be0549f09b88c9ee}{Widget\+Backspace}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aae28abdc63defc25deb48cdbccb19457}{Widget\+Ctrl}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a9cdd31cc8d9388a5e5663850111f5984}{Widget\+Paste}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ae3783cebe980a405a39b362de611c61f}{Widget\+Press}}
+, \newline
+\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa4c7748627d106d5c1769ada6dd06223}{Value\+Up}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a36ebd7b6065c4d81b7df4143ae3d6109}{Value\+Down}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a4c34b45c1e1c5f0d940fdc4ee6e452f1}{Value\+Left}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a955248b9eee1168c01d8ed3ff23ecc61}{Value\+Right}}
+, \newline
+\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa420d8f198bbc7ca02bda41d4a7e80c9}{Player\+Forward}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ab59be34f7a50c6dd6c8f734bcdf556a8}{Player\+Back}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aad55f505c29b848da8a5cd2dd1ba1c55}{Player\+Left}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a6a23c53e8d9627fc9f6e486e1b59a2d4}{Player\+Right}}
+, \newline
+\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a1836b9c5a5a17c3ea5e1660099a3c011}{Player\+Pickup}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a2f608c4f3b40cf8b5ff2c8d7c30ee320}{Player\+Rotate\+Furniture}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a2f4089af0a9b9787a268711d766b3086}{Player\+Do\+Work}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a9147d61f3ee1828bd8af6992133c90ed}{Target\+Forward}}
+, \newline
+\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac4a7d418a3f8ea0cb0e1cf59c52f92ba}{Target\+Back}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aadcf4813d9324f48ab53ede2dee51bf1}{Target\+Left}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa3ae835727e67e8e6f494c29c0a40633}{Target\+Right}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a2502969dfc0e0b7caa17d00a7a2e050f}{Toggle\+Planning}}
+, \newline
+\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa1f5f5cc43ed0f342a89f7a40185b1a2}{Toggle\+Debug}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a33626f04f68a27fd6677d799de3624f5}{Toggle\+Network\+View}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac54a06308208deba09fee2d3b04a228e}{Toggle\+Lobby}}
+ \}
+\item 
+enum class \mbox{\hyperlink{keymap_8h_a39b053f07dff1a301fb9b8a42a1dc466}{Key\+Map\+Input\+Request\+Error}} \{ \mbox{\hyperlink{keymap_8h_a39b053f07dff1a301fb9b8a42a1dc466a56024f54b37533af536c42d78db12252}{NO\+\_\+\+VALID\+\_\+\+INPUT}} = 0
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static const \mbox{\hyperlink{struct_mouse_info}{Mouse\+Info}} \mbox{\hyperlink{keymap_8h_a8555e7d888be6ddfff7a25e832734f9f}{get\+\_\+mouse\+\_\+info}} ()
+\item 
+std\+::ostream \& \mbox{\hyperlink{keymap_8h_a4f8478343868d078a98f6663564b3a0a}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{keymap_8h_a39b053f07dff1a301fb9b8a42a1dc466}{Key\+Map\+Input\+Request\+Error}} \&info)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{keymap_8h_a8a184b37374d8c9878481fc98a88bb04}\label{keymap_8h_a8a184b37374d8c9878481fc98a88bb04}} 
+\index{keymap.h@{keymap.h}!AnyInput@{AnyInput}}
+\index{AnyInput@{AnyInput}!keymap.h@{keymap.h}}
+\doxysubsubsection{\texorpdfstring{AnyInput}{AnyInput}}
+{\footnotesize\ttfamily typedef std\+::variant$<$int, \mbox{\hyperlink{struct_gamepad_axis_with_dir}{Gamepad\+Axis\+With\+Dir}}, Gamepad\+Button$>$ \mbox{\hyperlink{keymap_8h_a8a184b37374d8c9878481fc98a88bb04}{Any\+Input}}}
+
+\mbox{\Hypertarget{keymap_8h_a06410b0127e2a80fd87236d0eaf124dc}\label{keymap_8h_a06410b0127e2a80fd87236d0eaf124dc}} 
+\index{keymap.h@{keymap.h}!AnyInputs@{AnyInputs}}
+\index{AnyInputs@{AnyInputs}!keymap.h@{keymap.h}}
+\doxysubsubsection{\texorpdfstring{AnyInputs}{AnyInputs}}
+{\footnotesize\ttfamily typedef std\+::vector$<$\mbox{\hyperlink{keymap_8h_a8a184b37374d8c9878481fc98a88bb04}{Any\+Input}}$>$ \mbox{\hyperlink{keymap_8h_a06410b0127e2a80fd87236d0eaf124dc}{Any\+Inputs}}}
+
+\mbox{\Hypertarget{keymap_8h_a4e24bf07f8f900e7be1e8f70900251fe}\label{keymap_8h_a4e24bf07f8f900e7be1e8f70900251fe}} 
+\index{keymap.h@{keymap.h}!FullMap@{FullMap}}
+\index{FullMap@{FullMap}!keymap.h@{keymap.h}}
+\doxysubsubsection{\texorpdfstring{FullMap}{FullMap}}
+{\footnotesize\ttfamily typedef std\+::map$<$\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}}, \mbox{\hyperlink{keymap_8h_a420042914c026eaa83ca56875f95f615}{Layer\+Mapping}}$>$ \mbox{\hyperlink{keymap_8h_a4e24bf07f8f900e7be1e8f70900251fe}{Full\+Map}}}
+
+\mbox{\Hypertarget{keymap_8h_a420042914c026eaa83ca56875f95f615}\label{keymap_8h_a420042914c026eaa83ca56875f95f615}} 
+\index{keymap.h@{keymap.h}!LayerMapping@{LayerMapping}}
+\index{LayerMapping@{LayerMapping}!keymap.h@{keymap.h}}
+\doxysubsubsection{\texorpdfstring{LayerMapping}{LayerMapping}}
+{\footnotesize\ttfamily typedef std\+::map$<$\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}}, \mbox{\hyperlink{keymap_8h_a06410b0127e2a80fd87236d0eaf124dc}{Any\+Inputs}}$>$ \mbox{\hyperlink{keymap_8h_a420042914c026eaa83ca56875f95f615}{Layer\+Mapping}}}
+
+\mbox{\Hypertarget{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}\label{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}} 
+\index{keymap.h@{keymap.h}!UserInput@{UserInput}}
+\index{UserInput@{UserInput}!keymap.h@{keymap.h}}
+\doxysubsubsection{\texorpdfstring{UserInput}{UserInput}}
+{\footnotesize\ttfamily typedef std\+::tuple$<$\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}}, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}}, float, float$>$ \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}}}
+
+\mbox{\Hypertarget{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}\label{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}} 
+\index{keymap.h@{keymap.h}!UserInputs@{UserInputs}}
+\index{UserInputs@{UserInputs}!keymap.h@{keymap.h}}
+\doxysubsubsection{\texorpdfstring{UserInputs}{UserInputs}}
+{\footnotesize\ttfamily typedef std\+::vector$<$\mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}}$>$ \mbox{\hyperlink{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}{User\+Inputs}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}} 
+\index{keymap.h@{keymap.h}!InputName@{InputName}}
+\index{InputName@{InputName}!keymap.h@{keymap.h}}
+\doxysubsubsection{\texorpdfstring{InputName}{InputName}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Pause@{Pause}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!Pause@{Pause}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706adaba8aa0fcd8a87c25fec7d916c789e7}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706adaba8aa0fcd8a87c25fec7d916c789e7}} 
+Pause&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WidgetNext@{WidgetNext}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!WidgetNext@{WidgetNext}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a0cf911d07fa046868a75a24845f01f69}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a0cf911d07fa046868a75a24845f01f69}} 
+Widget\+Next&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WidgetBack@{WidgetBack}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!WidgetBack@{WidgetBack}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a0c66d603c83a7be3c2436260bcc26b92}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a0c66d603c83a7be3c2436260bcc26b92}} 
+Widget\+Back&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WidgetMod@{WidgetMod}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!WidgetMod@{WidgetMod}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a39515b3542b2fb0c9a5aedd2fb0d9d18}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a39515b3542b2fb0c9a5aedd2fb0d9d18}} 
+Widget\+Mod&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WidgetBackspace@{WidgetBackspace}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!WidgetBackspace@{WidgetBackspace}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a6c0fcd985505e101be0549f09b88c9ee}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a6c0fcd985505e101be0549f09b88c9ee}} 
+Widget\+Backspace&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WidgetCtrl@{WidgetCtrl}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!WidgetCtrl@{WidgetCtrl}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aae28abdc63defc25deb48cdbccb19457}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aae28abdc63defc25deb48cdbccb19457}} 
+Widget\+Ctrl&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WidgetPaste@{WidgetPaste}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!WidgetPaste@{WidgetPaste}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a9cdd31cc8d9388a5e5663850111f5984}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a9cdd31cc8d9388a5e5663850111f5984}} 
+Widget\+Paste&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WidgetPress@{WidgetPress}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!WidgetPress@{WidgetPress}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ae3783cebe980a405a39b362de611c61f}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ae3783cebe980a405a39b362de611c61f}} 
+Widget\+Press&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ValueUp@{ValueUp}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!ValueUp@{ValueUp}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa4c7748627d106d5c1769ada6dd06223}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa4c7748627d106d5c1769ada6dd06223}} 
+Value\+Up&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ValueDown@{ValueDown}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!ValueDown@{ValueDown}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a36ebd7b6065c4d81b7df4143ae3d6109}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a36ebd7b6065c4d81b7df4143ae3d6109}} 
+Value\+Down&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ValueLeft@{ValueLeft}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!ValueLeft@{ValueLeft}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a4c34b45c1e1c5f0d940fdc4ee6e452f1}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a4c34b45c1e1c5f0d940fdc4ee6e452f1}} 
+Value\+Left&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ValueRight@{ValueRight}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!ValueRight@{ValueRight}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a955248b9eee1168c01d8ed3ff23ecc61}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a955248b9eee1168c01d8ed3ff23ecc61}} 
+Value\+Right&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PlayerForward@{PlayerForward}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!PlayerForward@{PlayerForward}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa420d8f198bbc7ca02bda41d4a7e80c9}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa420d8f198bbc7ca02bda41d4a7e80c9}} 
+Player\+Forward&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PlayerBack@{PlayerBack}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!PlayerBack@{PlayerBack}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ab59be34f7a50c6dd6c8f734bcdf556a8}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ab59be34f7a50c6dd6c8f734bcdf556a8}} 
+Player\+Back&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PlayerLeft@{PlayerLeft}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!PlayerLeft@{PlayerLeft}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aad55f505c29b848da8a5cd2dd1ba1c55}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aad55f505c29b848da8a5cd2dd1ba1c55}} 
+Player\+Left&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PlayerRight@{PlayerRight}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!PlayerRight@{PlayerRight}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a6a23c53e8d9627fc9f6e486e1b59a2d4}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a6a23c53e8d9627fc9f6e486e1b59a2d4}} 
+Player\+Right&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PlayerPickup@{PlayerPickup}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!PlayerPickup@{PlayerPickup}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a1836b9c5a5a17c3ea5e1660099a3c011}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a1836b9c5a5a17c3ea5e1660099a3c011}} 
+Player\+Pickup&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PlayerRotateFurniture@{PlayerRotateFurniture}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!PlayerRotateFurniture@{PlayerRotateFurniture}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a2f608c4f3b40cf8b5ff2c8d7c30ee320}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a2f608c4f3b40cf8b5ff2c8d7c30ee320}} 
+Player\+Rotate\+Furniture&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PlayerDoWork@{PlayerDoWork}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!PlayerDoWork@{PlayerDoWork}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a2f4089af0a9b9787a268711d766b3086}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a2f4089af0a9b9787a268711d766b3086}} 
+Player\+Do\+Work&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{TargetForward@{TargetForward}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!TargetForward@{TargetForward}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a9147d61f3ee1828bd8af6992133c90ed}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a9147d61f3ee1828bd8af6992133c90ed}} 
+Target\+Forward&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{TargetBack@{TargetBack}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!TargetBack@{TargetBack}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac4a7d418a3f8ea0cb0e1cf59c52f92ba}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac4a7d418a3f8ea0cb0e1cf59c52f92ba}} 
+Target\+Back&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{TargetLeft@{TargetLeft}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!TargetLeft@{TargetLeft}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aadcf4813d9324f48ab53ede2dee51bf1}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aadcf4813d9324f48ab53ede2dee51bf1}} 
+Target\+Left&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{TargetRight@{TargetRight}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!TargetRight@{TargetRight}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa3ae835727e67e8e6f494c29c0a40633}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa3ae835727e67e8e6f494c29c0a40633}} 
+Target\+Right&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{TogglePlanning@{TogglePlanning}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!TogglePlanning@{TogglePlanning}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a2502969dfc0e0b7caa17d00a7a2e050f}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a2502969dfc0e0b7caa17d00a7a2e050f}} 
+Toggle\+Planning&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ToggleDebug@{ToggleDebug}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!ToggleDebug@{ToggleDebug}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa1f5f5cc43ed0f342a89f7a40185b1a2}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa1f5f5cc43ed0f342a89f7a40185b1a2}} 
+Toggle\+Debug&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ToggleNetworkView@{ToggleNetworkView}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!ToggleNetworkView@{ToggleNetworkView}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a33626f04f68a27fd6677d799de3624f5}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a33626f04f68a27fd6677d799de3624f5}} 
+Toggle\+Network\+View&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ToggleLobby@{ToggleLobby}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!ToggleLobby@{ToggleLobby}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac54a06308208deba09fee2d3b04a228e}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac54a06308208deba09fee2d3b04a228e}} 
+Toggle\+Lobby&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{keymap_8h_a39b053f07dff1a301fb9b8a42a1dc466}\label{keymap_8h_a39b053f07dff1a301fb9b8a42a1dc466}} 
+\index{keymap.h@{keymap.h}!KeyMapInputRequestError@{KeyMapInputRequestError}}
+\index{KeyMapInputRequestError@{KeyMapInputRequestError}!keymap.h@{keymap.h}}
+\doxysubsubsection{\texorpdfstring{KeyMapInputRequestError}{KeyMapInputRequestError}}
+{\footnotesize\ttfamily enum class \mbox{\hyperlink{keymap_8h_a39b053f07dff1a301fb9b8a42a1dc466}{Key\+Map\+Input\+Request\+Error}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NO\_VALID\_INPUT@{NO\_VALID\_INPUT}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!NO\_VALID\_INPUT@{NO\_VALID\_INPUT}}}\mbox{\Hypertarget{keymap_8h_a39b053f07dff1a301fb9b8a42a1dc466a56024f54b37533af536c42d78db12252}\label{keymap_8h_a39b053f07dff1a301fb9b8a42a1dc466a56024f54b37533af536c42d78db12252}} 
+NO\+\_\+\+VALID\+\_\+\+INPUT&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{keymap_8h_a8555e7d888be6ddfff7a25e832734f9f}\label{keymap_8h_a8555e7d888be6ddfff7a25e832734f9f}} 
+\index{keymap.h@{keymap.h}!get\_mouse\_info@{get\_mouse\_info}}
+\index{get\_mouse\_info@{get\_mouse\_info}!keymap.h@{keymap.h}}
+\doxysubsubsection{\texorpdfstring{get\_mouse\_info()}{get\_mouse\_info()}}
+{\footnotesize\ttfamily static const \mbox{\hyperlink{struct_mouse_info}{Mouse\+Info}} get\+\_\+mouse\+\_\+info (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{namespaceext_a286e8a217e772c02613bd55259c35e81}{ext\+::get\+\_\+mouse\+\_\+position()}}, and \mbox{\hyperlink{struct_mouse_info_a60cad00652bbf4ce46b465030dde56dd}{Mouse\+Info\+::pos}}.
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_a1ae5080726a7103259a2d530cca1deb6}{ui\+::\+IUIContext\+Input\+Manager\+::begin()}}.
+
+\mbox{\Hypertarget{keymap_8h_a4f8478343868d078a98f6663564b3a0a}\label{keymap_8h_a4f8478343868d078a98f6663564b3a0a}} 
+\index{keymap.h@{keymap.h}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!keymap.h@{keymap.h}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}}
+{\footnotesize\ttfamily std\+::ostream \& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{keymap_8h_a39b053f07dff1a301fb9b8a42a1dc466}{Key\+Map\+Input\+Request\+Error}} \&}]{info }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+

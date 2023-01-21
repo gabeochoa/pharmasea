@@ -1,0 +1,12 @@
+digraph "FontSizeCache"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [shape=record,label="{FontSizeCache\n|+ font\l+ _font_size_memo\l|+ init()\l+ set_font()\l+ get_font_size_impl()\l+ get_font_size()\l}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node2 [shape=record,label="{ToastLayer\n|+ toastPctHeight\l+ toastPctWidth\l+ toastPctBottomPadding\l|+ ToastLayer()\l+ onEvent()\l+ onUpdate()\l+ onDraw()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d2/dd7/struct_toast_layer.html",tooltip=" "];
+  Node1 -> Node3 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node3 [shape=record,label="{ui::UIContext\n|+ statemanager\l+ internal_roots\l+ owned_widgets\l+ hot_id\l+ active_id\l+ kb_focus_id\l+ last_processed\l+ began_and_not_ended\l+ queued_render_calls\l- temp_widgets\l|+ UIContext()\l+ own()\l+ init()\l+ begin()\l+ end()\l+ matching_id_in_tree()\l+ reset_tabbing_if_not\l_visible()\l+ cleanup()\l+ widget_init()\l+ get_widget_state()\l+ render_all()\l+ schedule_render_call()\l+ _draw_text()\l+ draw_text()\l+ schedule_draw_text()\l+ draw_widget_rect()\l+ draw_widget()\l+ widget_center()\l+ make_temp_widget()\l+ schedule_render_texture()\l+ create()\l+ get()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$df/dd7/structui_1_1_u_i_context.html",tooltip=" "];
+}

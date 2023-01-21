@@ -1,0 +1,147 @@
+\hypertarget{struct_atomic_queue}{}\doxysection{Atomic\+Queue\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Struct Template Reference}
+\label{struct_atomic_queue}\index{AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}}
+
+
+{\ttfamily \#include $<$atomic\+\_\+queue.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_atomic_queue_a98934d09208eca93040bff876a38b204}{push\+\_\+back}} (const T \&value)
+\item 
+void \mbox{\hyperlink{struct_atomic_queue_a8c11e416aa90b09d92d792f77d8c58e5}{pop}} ()
+\item 
+void \mbox{\hyperlink{struct_atomic_queue_ac0f907d5678778573db741e870a6b757}{pop\+\_\+front}} ()
+\item 
+T \& \mbox{\hyperlink{struct_atomic_queue_a4d4bfa97b50011802a3eab7c369ef840}{front}} ()
+\item 
+bool \mbox{\hyperlink{struct_atomic_queue_acc3f3852f0f0792802fe30443dc764d0}{empty}} () const
+\item 
+size\+\_\+t \mbox{\hyperlink{struct_atomic_queue_a6bc2bcca02a81f1181895681c7c23ffa}{size}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::deque$<$ T $>$ \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{q}}
+\item 
+std\+::mutex \mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{m\+\_\+mutex}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_atomic_queue_acc3f3852f0f0792802fe30443dc764d0}\label{struct_atomic_queue_acc3f3852f0f0792802fe30443dc764d0}} 
+\index{AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}!empty@{empty}}
+\index{empty@{empty}!AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+bool \mbox{\hyperlink{struct_atomic_queue}{Atomic\+Queue}}$<$ T $>$\+::empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{Atomic\+Queue$<$ T $>$\+::m\+\_\+mutex}}, and \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{Atomic\+Queue$<$ T $>$\+::q}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_server_a610459eab58499f8396ca92fcda99296}{network\+::\+Server\+::tick()}}.
+
+\mbox{\Hypertarget{struct_atomic_queue_a4d4bfa97b50011802a3eab7c369ef840}\label{struct_atomic_queue_a4d4bfa97b50011802a3eab7c369ef840}} 
+\index{AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}!front@{front}}
+\index{front@{front}!AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{front()}{front()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T \& \mbox{\hyperlink{struct_atomic_queue}{Atomic\+Queue}}$<$ T $>$\+::front (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{Atomic\+Queue$<$ T $>$\+::m\+\_\+mutex}}, and \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{Atomic\+Queue$<$ T $>$\+::q}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_server_a610459eab58499f8396ca92fcda99296}{network\+::\+Server\+::tick()}}.
+
+\mbox{\Hypertarget{struct_atomic_queue_a8c11e416aa90b09d92d792f77d8c58e5}\label{struct_atomic_queue_a8c11e416aa90b09d92d792f77d8c58e5}} 
+\index{AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}!pop@{pop}}
+\index{pop@{pop}!AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{pop()}{pop()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{struct_atomic_queue}{Atomic\+Queue}}$<$ T $>$\+::pop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{Atomic\+Queue$<$ T $>$\+::m\+\_\+mutex}}, and \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{Atomic\+Queue$<$ T $>$\+::q}}.
+
+\mbox{\Hypertarget{struct_atomic_queue_ac0f907d5678778573db741e870a6b757}\label{struct_atomic_queue_ac0f907d5678778573db741e870a6b757}} 
+\index{AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}!pop\_front@{pop\_front}}
+\index{pop\_front@{pop\_front}!AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{pop\_front()}{pop\_front()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{struct_atomic_queue}{Atomic\+Queue}}$<$ T $>$\+::pop\+\_\+front (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{Atomic\+Queue$<$ T $>$\+::m\+\_\+mutex}}, and \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{Atomic\+Queue$<$ T $>$\+::q}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_server_a610459eab58499f8396ca92fcda99296}{network\+::\+Server\+::tick()}}.
+
+\mbox{\Hypertarget{struct_atomic_queue_a98934d09208eca93040bff876a38b204}\label{struct_atomic_queue_a98934d09208eca93040bff876a38b204}} 
+\index{AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}!push\_back@{push\_back}}
+\index{push\_back@{push\_back}!AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{push\_back()}{push\_back()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{struct_atomic_queue}{Atomic\+Queue}}$<$ T $>$\+::push\+\_\+back (\begin{DoxyParamCaption}\item[{const T \&}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{Atomic\+Queue$<$ T $>$\+::m\+\_\+mutex}}, and \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{Atomic\+Queue$<$ T $>$\+::q}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_server_a329d1bb4e0868046e83295993955947a}{network\+::\+Server\+::server\+\_\+enqueue\+\_\+message\+\_\+string()}}.
+
+\mbox{\Hypertarget{struct_atomic_queue_a6bc2bcca02a81f1181895681c7c23ffa}\label{struct_atomic_queue_a6bc2bcca02a81f1181895681c7c23ffa}} 
+\index{AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}!size@{size}}
+\index{size@{size}!AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+size\+\_\+t \mbox{\hyperlink{struct_atomic_queue}{Atomic\+Queue}}$<$ T $>$\+::size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}{Atomic\+Queue$<$ T $>$\+::m\+\_\+mutex}}, and \mbox{\hyperlink{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}{Atomic\+Queue$<$ T $>$\+::q}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_server_a610459eab58499f8396ca92fcda99296}{network\+::\+Server\+::tick()}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}\label{struct_atomic_queue_aecbf5b3d318ef544104c25f170b8fe03}} 
+\index{AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}!m\_mutex@{m\_mutex}}
+\index{m\_mutex@{m\_mutex}!AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{m\_mutex}{m\_mutex}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::mutex \mbox{\hyperlink{struct_atomic_queue}{Atomic\+Queue}}$<$ T $>$\+::m\+\_\+mutex\hspace{0.3cm}{\ttfamily [mutable]}, {\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_atomic_queue_acc3f3852f0f0792802fe30443dc764d0}{Atomic\+Queue$<$ T $>$\+::empty()}}, \mbox{\hyperlink{struct_atomic_queue_a4d4bfa97b50011802a3eab7c369ef840}{Atomic\+Queue$<$ T $>$\+::front()}}, \mbox{\hyperlink{struct_atomic_queue_a8c11e416aa90b09d92d792f77d8c58e5}{Atomic\+Queue$<$ T $>$\+::pop()}}, \mbox{\hyperlink{struct_atomic_queue_ac0f907d5678778573db741e870a6b757}{Atomic\+Queue$<$ T $>$\+::pop\+\_\+front()}}, \mbox{\hyperlink{struct_atomic_queue_a98934d09208eca93040bff876a38b204}{Atomic\+Queue$<$ T $>$\+::push\+\_\+back()}}, and \mbox{\hyperlink{struct_atomic_queue_a6bc2bcca02a81f1181895681c7c23ffa}{Atomic\+Queue$<$ T $>$\+::size()}}.
+
+\mbox{\Hypertarget{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}\label{struct_atomic_queue_a4e552bbe4836818dde72906d87e22ffc}} 
+\index{AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}!q@{q}}
+\index{q@{q}!AtomicQueue$<$ T $>$@{AtomicQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{q}{q}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::deque$<$T$>$ \mbox{\hyperlink{struct_atomic_queue}{Atomic\+Queue}}$<$ T $>$\+::q\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_atomic_queue_acc3f3852f0f0792802fe30443dc764d0}{Atomic\+Queue$<$ T $>$\+::empty()}}, \mbox{\hyperlink{struct_atomic_queue_a4d4bfa97b50011802a3eab7c369ef840}{Atomic\+Queue$<$ T $>$\+::front()}}, \mbox{\hyperlink{struct_atomic_queue_a8c11e416aa90b09d92d792f77d8c58e5}{Atomic\+Queue$<$ T $>$\+::pop()}}, \mbox{\hyperlink{struct_atomic_queue_ac0f907d5678778573db741e870a6b757}{Atomic\+Queue$<$ T $>$\+::pop\+\_\+front()}}, \mbox{\hyperlink{struct_atomic_queue_a98934d09208eca93040bff876a38b204}{Atomic\+Queue$<$ T $>$\+::push\+\_\+back()}}, and \mbox{\hyperlink{struct_atomic_queue_a6bc2bcca02a81f1181895681c7c23ffa}{Atomic\+Queue$<$ T $>$\+::size()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/engine/\mbox{\hyperlink{atomic__queue_8h}{atomic\+\_\+queue.\+h}}\end{DoxyCompactItemize}

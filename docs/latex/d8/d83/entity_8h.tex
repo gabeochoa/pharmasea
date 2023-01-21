@@ -1,6 +1,16 @@
 \hypertarget{entity_8h}{}\doxysection{src/entity.h File Reference}
 \label{entity_8h}\index{src/entity.h@{src/entity.h}}
+{\ttfamily \#include \char`\"{}bitsery/ext/std\+\_\+smart\+\_\+ptr.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/base\+\_\+component.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/can\+\_\+be\+\_\+highlighted.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/can\+\_\+hold\+\_\+item.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/has\+\_\+name.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/model\+\_\+renderer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/simple\+\_\+colored\+\_\+box\+\_\+renderer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/transform.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine/assert.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}external\+\_\+include.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$array$>$}\newline
 {\ttfamily \#include $<$map$>$}\newline
 {\ttfamily \#include \char`\"{}drawing\+\_\+util.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}engine/astar.\+h\char`\"{}}\newline
@@ -28,7 +38,7 @@ namespace \mbox{\hyperlink{namespacebitsery}{bitsery}}
 \doxysubsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
-typedef \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Entity\+::\+Front\+Face\+Direction}} \mbox{\hyperlink{entity_8h_a85f0b2e4355278523afbfa71a845ba7f}{Entity\+Dir}}
+typedef Transform\+::\+Transform\+::\+Front\+Face\+Direction \mbox{\hyperlink{entity_8h_ad26590fb3eb6e9012c4a7db85a6f1251}{Entity\+Dir}}
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -43,11 +53,11 @@ static std\+::atomic\+\_\+int \mbox{\hyperlink{entity_8h_a4b85326fceb9eab14680c7
 
 
 \doxysubsection{Typedef Documentation}
-\mbox{\Hypertarget{entity_8h_a85f0b2e4355278523afbfa71a845ba7f}\label{entity_8h_a85f0b2e4355278523afbfa71a845ba7f}} 
+\mbox{\Hypertarget{entity_8h_ad26590fb3eb6e9012c4a7db85a6f1251}\label{entity_8h_ad26590fb3eb6e9012c4a7db85a6f1251}} 
 \index{entity.h@{entity.h}!EntityDir@{EntityDir}}
 \index{EntityDir@{EntityDir}!entity.h@{entity.h}}
 \doxysubsubsection{\texorpdfstring{EntityDir}{EntityDir}}
-{\footnotesize\ttfamily typedef \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Entity\+::\+Front\+Face\+Direction}} \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Entity\+Dir}}}
+{\footnotesize\ttfamily typedef Transform\+::\+Transform\+::\+Front\+Face\+Direction \mbox{\hyperlink{entity_8h_ad26590fb3eb6e9012c4a7db85a6f1251}{Entity\+Dir}}}
 
 
 

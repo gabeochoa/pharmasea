@@ -1,0 +1,221 @@
+\hypertarget{settings_8h_source}{}\doxysection{settings.\+h}
+\label{settings_8h_source}\index{src/engine/settings.h@{src/engine/settings.h}}
+\mbox{\hyperlink{settings_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <raylib/glfw3.h>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}../external\_include.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}../util.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{app_8h}{app.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{event_8h}{event.h}}"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{files_8h}{files.h}}"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{log_8h}{log.h}}"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{music__library_8h}{music\_library.h}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{resolution_8h}{resolution.h}}"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{singleton_8h}{singleton.h}}"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacesettings}{settings}}\ \{}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespacesettings_ab84fd31c11f0272cea714950e2fd5a96}{Buffer}}\ =\ std::string;}
+\DoxyCodeLine{00026\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespacesettings_a5e38b6def8523b2965461f0041030b17}{OutputAdapter}}\ =\ bitsery::OutputBufferAdapter<Buffer>;}
+\DoxyCodeLine{00027\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespacesettings_a3befe7e734acf5f9dea45024f3af5c48}{InputAdapter}}\ =\ bitsery::InputBufferAdapter<Buffer>;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ TODO\ how\ do\ we\ support\ different\ games\ having\ different\ save\ file\ data}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ requirements?}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ TODO\ How\ do\ we\ support\ multiple\ versions}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ we\ dont\ want\ to\ add\ a\ new\ field\ and\ break}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ all\ past\ save\ games}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ we\ need\ some\ way\ to\ only\ parse\ based\ on\ the\ version\ in\ the\ save\ file}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ https://developernote.com/2020/02/basic-\/ideas-\/of-\/version-\/tolerant-\/serialization-\/in-\/cpp/}}
+\DoxyCodeLine{00037\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structsettings_1_1_data}{Data}}\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsettings_1_1_data_a190d6ab540ea7f4f7cd1a8bbfd935410}{engineVersion}}\ =\ 0;}
+\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{structrez_1_1_resolution_info}{rez::ResolutionInfo}}\ \mbox{\hyperlink{structsettings_1_1_data_aafffe716eb70449673bc4e2108529069}{resolution}};}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ Volume\ percent\ [0,\ 1]\ for\ everything}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structsettings_1_1_data_a9c9994cb9d8b7b05e55fdfbaee9c28dc}{master\_volume}}\ =\ 0.5f;}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structsettings_1_1_data_abeaefee8f69f14dc4c4a5b9c869e1a2f}{music\_volume}}\ =\ 0.5f;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structsettings_1_1_data_a4afa877d0b74fe72424c745184b7c51f}{show\_streamer\_safe\_box}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00044\ \ \ \ \ std::string\ \mbox{\hyperlink{structsettings_1_1_data_a6fef1e7188490a22ef93a49e24830b32}{username}}\ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structsettings_1_1_data_a0d2186ba6243dfac33fb9dc02fddf945}{enable\_postprocessing}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00046\ \ \ \ \ std::string\ \mbox{\hyperlink{structsettings_1_1_data_a4517f17f2a9145d722a6c5318cf8d96e}{last\_ip\_joined}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structsettings_1_1_data_ac19b15169723064f655217c4bfe60771}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{structsettings_1_1_data_a190d6ab540ea7f4f7cd1a8bbfd935410}{engineVersion}});}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{structsettings_1_1_data_aafffe716eb70449673bc4e2108529069}{resolution}});}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{structsettings_1_1_data_a9c9994cb9d8b7b05e55fdfbaee9c28dc}{master\_volume}});}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{structsettings_1_1_data_abeaefee8f69f14dc4c4a5b9c869e1a2f}{music\_volume}});}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ s.value1b(\mbox{\hyperlink{structsettings_1_1_data_a4afa877d0b74fe72424c745184b7c51f}{show\_streamer\_safe\_box}});}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ s.text1b(\mbox{\hyperlink{structsettings_1_1_data_a6fef1e7188490a22ef93a49e24830b32}{username}},\ \mbox{\hyperlink{namespacenetwork_ab21ff1d434d3028a68dc8e97cbfa62fd}{network::MAX\_NAME\_LENGTH}});}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ s.value1b(\mbox{\hyperlink{structsettings_1_1_data_a0d2186ba6243dfac33fb9dc02fddf945}{enable\_postprocessing}});}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ s.text1b(\mbox{\hyperlink{structsettings_1_1_data_a4517f17f2a9145d722a6c5318cf8d96e}{last\_ip\_joined}},\ 25);}
+\DoxyCodeLine{00060\ \ \ \ \ \}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{friend}\ std::ostream\&\ \mbox{\hyperlink{structsettings_1_1_data_acb3cdcaca8cbd58ff06965caec4ccbc6}{operator<<}}(std::ostream\&\ os,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structsettings_1_1_data}{Data}}\&\ data)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}Settings("{}}\ <<\ std::endl;}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}version:\ "{}}\ <<\ data.\mbox{\hyperlink{structsettings_1_1_data_a190d6ab540ea7f4f7cd1a8bbfd935410}{engineVersion}}\ <<\ std::endl;}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}resolution:\ "{}}\ <<\ data.\mbox{\hyperlink{structsettings_1_1_data_aafffe716eb70449673bc4e2108529069}{resolution}}.\mbox{\hyperlink{structrez_1_1_resolution_info_ad9aacc5a541da662c487d2140cfb8ea3}{width}}\ <<\ \textcolor{stringliteral}{"{},\ "{}}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ <<\ data.\mbox{\hyperlink{structsettings_1_1_data_aafffe716eb70449673bc4e2108529069}{resolution}}.\mbox{\hyperlink{structrez_1_1_resolution_info_a44b4cbe2fe6bdd9c6f4be4f86723064d}{height}}\ <<\ std::endl;}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}master\ vol:\ "{}}\ <<\ data.\mbox{\hyperlink{structsettings_1_1_data_a9c9994cb9d8b7b05e55fdfbaee9c28dc}{master\_volume}}\ <<\ std::endl;}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}music\ vol:\ "{}}\ <<\ data.\mbox{\hyperlink{structsettings_1_1_data_abeaefee8f69f14dc4c4a5b9c869e1a2f}{music\_volume}}\ <<\ std::endl;}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}Safe\ box:\ "{}}\ <<\ data.\mbox{\hyperlink{structsettings_1_1_data_a4afa877d0b74fe72424c745184b7c51f}{show\_streamer\_safe\_box}}\ <<\ std::endl;}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}username:\ "{}}\ <<\ data.\mbox{\hyperlink{structsettings_1_1_data_a6fef1e7188490a22ef93a49e24830b32}{username}}\ <<\ std::endl;}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}post\_processing:\ "{}}\ <<\ data.\mbox{\hyperlink{structsettings_1_1_data_a0d2186ba6243dfac33fb9dc02fddf945}{enable\_postprocessing}}\ <<\ std::endl;}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}last\ ip\ joined:\ "{}}\ <<\ data.\mbox{\hyperlink{structsettings_1_1_data_a4517f17f2a9145d722a6c5318cf8d96e}{last\_ip\_joined}}\ <<\ std::endl;}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{})"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ \};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \}\ \ \textcolor{comment}{//\ namespace\ settings}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \mbox{\hyperlink{singleton_8h_a2c7d0ae28a9340e96cc64ff071551e31}{SINGLETON\_FWD}}(\mbox{\hyperlink{struct_settings}{Settings}})}
+\DoxyCodeLine{00080\ struct\ \mbox{\hyperlink{struct_settings}{Settings}}\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \mbox{\hyperlink{singleton_8h_ac4940bd51e49be0e873a7bffe9d67ad9}{SINGLETON}}(\mbox{\hyperlink{struct_settings}{Settings}})}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \mbox{\hyperlink{namespacesettings}{settings}}::Data\ data;}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \mbox{\hyperlink{struct_settings}{Settings}}()\ :\ data(\mbox{\hyperlink{namespacesettings}{settings}}::Data())\ \{\}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \mbox{\hyperlink{struct_settings_a4a65be5921dfc9fddc476e5320541d89}{\string~Settings}}()\ \{\}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_a6c6aa3ac8b567d93043e5a4efb334066}{update\_resolution\_from\_index}}(\textcolor{keywordtype}{int}\ index)\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ update\_window\_size(rez::ResolutionExplorer::get().fetch(index));}
+\DoxyCodeLine{00091\ \ \ \ \ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_a1d5093c2da898818f06bb9b4785c7923}{update\_window\_size}}(\mbox{\hyperlink{structrez_1_1_resolution_info}{rez::ResolutionInfo}}\ \mbox{\hyperlink{namespacerez}{rez}})\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ data.resolution\ =\ \mbox{\hyperlink{namespacerez}{rez}};}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ data.resolution.width\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ fminf(3860.f,\ fmaxf(data.resolution.width,\ 1280.f)));}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ data.resolution.height\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ fminf(2160.f,\ fmaxf(data.resolution.height,\ 720.f)));}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_window_resize_event}{WindowResizeEvent}}*\ \textcolor{keyword}{event}\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{struct_window_resize_event}{WindowResizeEvent}}(}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ data.resolution.width,\ data.resolution.height);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{engine_2globals_8h_ad5154e5503dd99b6a6ca185b0f90fc27}{\_\_WIN\_W}}\ =\ data.resolution.width;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{engine_2globals_8h_acc3dac6c5e9d4d5bff434a99ed7193e1}{\_\_WIN\_H}}\ =\ data.resolution.height;}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ App::get().processEvent(*event);}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ event;}
+\DoxyCodeLine{00111\ \ \ \ \ \}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_a029d448e184b4afac15426dd5a7c17c9}{update\_last\_used\_ip\_address}}(\textcolor{keyword}{const}\ std::string\&\ ip)\ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ data.last\_ip\_joined\ =\ ip;}
+\DoxyCodeLine{00115\ \ \ \ \ \}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_ab2a70e409439312ffb45c9e0d13dedcf}{update\_master\_volume}}(\textcolor{keywordtype}{float}\ nv)\ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ data.master\_volume\ =\ \mbox{\hyperlink{namespaceutil_a5020e504940e09639480aed917da6ba1}{util::clamp}}(nv,\ 0.f,\ 1.f);}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}master\ volume\ changed\ to\ \{\}"{}},\ data.master\_volume);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_music_library_aa483c444b8a7363bff5973295fe45217}{MusicLibrary::get}}().update\_volume(data.music\_volume);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ raylib::SetMasterVolume(data.master\_volume);}
+\DoxyCodeLine{00124\ \ \ \ \ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_a50426b179c7be84c0364c65c39f8d40a}{update\_music\_volume}}(\textcolor{keywordtype}{float}\ nv)\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ data.music\_volume\ =\ \mbox{\hyperlink{namespaceutil_a5020e504940e09639480aed917da6ba1}{util::clamp}}(nv,\ 0.f,\ 1.f);}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_music_library_aa483c444b8a7363bff5973295fe45217}{MusicLibrary::get}}().update\_volume(data.music\_volume);}
+\DoxyCodeLine{00129\ \ \ \ \ \}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_afe45a948bfd9104bafeae0dd3e5b3d19}{update\_streamer\_safe\_box}}(\textcolor{keywordtype}{bool}\ sssb)\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ data.show\_streamer\_safe\_box\ =\ sssb;}
+\DoxyCodeLine{00133\ \ \ \ \ \}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_adf66d817eed905476fcba35524e08771}{update\_post\_processing\_enabled}}(\textcolor{keywordtype}{bool}\ pp\_enabled)\ \{}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ data.enable\_postprocessing\ =\ pp\_enabled;}
+\DoxyCodeLine{00137\ \ \ \ \ \}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_settings_ac70d133aadcd67d1d0b9ae4493eb52d3}{get\_current\_resolution\_index}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ rez::ResolutionExplorer::get().index(data.resolution);}
+\DoxyCodeLine{00141\ \ \ \ \ \}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ [[nodiscard]]\ std::vector<std::string>\ \mbox{\hyperlink{struct_settings_ae46acf2bda1b375976a974ede6bed276}{resolution\_options}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ rez::ResolutionExplorer::get().fetch\_options();}
+\DoxyCodeLine{00145\ \ \ \ \ \}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ [[nodiscard]]\ std::string\ \mbox{\hyperlink{struct_settings_a66b973b36dd30a3fd7e829b33f4856cf}{last\_used\_ip}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ data.last\_ip\_joined;}
+\DoxyCodeLine{00149\ \ \ \ \ \}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{comment}{//\ TODO\ these\ could\ be\ private\ and\ inside\ the\ ctor/dtor\ with\ RAII\ if\ we\ are}}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{comment}{//\ okay\ with\ running\ on\ get()\ and\ ignoring\ the\ result}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{comment}{//\ TODO\ music\ volumes\ only\ see\ to\ take\ effect\ once\ you\ open\ SettingsLayer}}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_settings_ac7937605ead46d13fa3067f256778314}{load\_save\_file}}()\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ std::ifstream\ ifs(Files::get().settings\_filepath());}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ifs.is\_open())\ \{}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Failed\ to\ find\ settings\ file\ (Read)\ \{\}"{}},}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Files::get().settings\_filepath());}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}Reading\ settings\ file"{}});}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ std::stringstream\ buffer;}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ buffer\ <<\ ifs.rdbuf();}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ buf\_str\ =\ buffer.str();}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ bitsery::quickDeserialization<settings::InputAdapter>(}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \{buf\_str.begin(),\ buf\_str.size()\},\ data);}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ refresh\_settings();}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}Settings\ Loaded:\ \{\}"{}},\ data);}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}End\ loading\ settings\ file"{}});}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ ifs.close();}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00177\ \ \ \ \ \}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{comment}{//\ TODO\ instead\ of\ writing\ to\ a\ string\ and\ then\ file}}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{comment}{//\ theres\ a\ way\ to\ write\ directly\ to\ the\ file}}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{comment}{//\ https://github.com/fraillt/bitsery/blob/master/examples/file\_stream.cpp}}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_settings_a73563822b1ac037e5b80ec2f62352bbe}{write\_save\_file}}()\ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ std::ofstream\ ofs(Files::get().settings\_filepath());}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ofs.is\_open())\ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Failed\ to\ find\ settings\ file\ (Write)\ \{\}"{}},}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Files::get().settings\_filepath());}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesettings_ab84fd31c11f0272cea714950e2fd5a96}{settings::Buffer}}\ buffer;}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ bitsery::quickSerialization(\mbox{\hyperlink{namespacesettings_a5e38b6def8523b2965461f0041030b17}{settings::OutputAdapter}}\{buffer\},\ data);}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ ofs\ <<\ buffer\ <<\ std::endl;}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ ofs.close();}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}Wrote\ Settings\ File\ to\ \{\}"{}},\ Files::get().settings\_filepath());}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00196\ \ \ \ \ \}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{comment}{//\ Note:\ Basically\ once\ we\ load\ the\ file,}}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{comment}{//\ we\ run\ into\ an\ issue\ where\ our\ settings\ is\ correct,}}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{comment}{//\ but\ the\ underlying\ data\ isnt\ being\ used}}
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{comment}{//\ This\ function\ is\ used\ by\ the\ load\ to\ kick\ raylib\ into}}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{comment}{//\ the\ right\ config}}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_a89d8f29e2dfa5edec7ed308d6d080fc0}{refresh\_settings}}()\ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Force\ a\ resolution\ fetch\ so\ that\ after\ the\ settings\ loads\ we\ have}}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ them\ ready}}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ rez::ResolutionExplorer::get().load\_resolution\_options();}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ version\ doesnt\ need\ update}}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ update\_window\_size(data.resolution);}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ update\_music\_volume(data.music\_volume);}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ update\_master\_volume(data.master\_volume);}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ update\_streamer\_safe\_box(data.show\_streamer\_safe\_box);}
+\DoxyCodeLine{00214\ \ \ \ \ \}}
+\DoxyCodeLine{00215\ \};}
+
+\end{DoxyCode}

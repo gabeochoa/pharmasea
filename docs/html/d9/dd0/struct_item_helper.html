@@ -100,10 +100,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a49e6637067859aa600f3825c435aab03"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dd0/struct_item_helper.html#a49e6637067859aa600f3825c435aab03">forEachItem</a> (std::function&lt; <a class="el" href="../../d9/dd0/struct_item_helper.html#ad8cc798649c7a0bc84c31ef2972435d7">ForEachFlow</a>(std::shared_ptr&lt; <a class="el" href="../../db/d66/struct_item.html">Item</a> &gt;)&gt; cb)</td></tr>
 <tr class="separator:a49e6637067859aa600f3825c435aab03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d3afea322f196765e7c22a61bea38b3"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a7d3afea322f196765e7c22a61bea38b3"><td class="memTemplItemLeft" align="right" valign="top">static constexpr std::vector&lt; std::shared_ptr&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d9/dd0/struct_item_helper.html#a7d3afea322f196765e7c22a61bea38b3">getitemsInRange</a> (vec2 pos, float range)</td></tr>
+<tr class="memitem:a7d3afea322f196765e7c22a61bea38b3"><td class="memTemplItemLeft" align="right" valign="top">static constexpr std::vector&lt; std::shared_ptr&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d9/dd0/struct_item_helper.html#a7d3afea322f196765e7c22a61bea38b3">getitemsInRange</a> (<a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> pos, float range)</td></tr>
 <tr class="separator:a7d3afea322f196765e7c22a61bea38b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ee7f424c187b24d9161a907e43fc1e4"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a4ee7f424c187b24d9161a907e43fc1e4"><td class="memTemplItemLeft" align="right" valign="top">static constexpr std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d9/dd0/struct_item_helper.html#a4ee7f424c187b24d9161a907e43fc1e4">getClosestMatchingItem</a> (vec2 pos, float range, std::function&lt; bool(std::shared_ptr&lt; T &gt;)&gt; filter={})</td></tr>
+<tr class="memitem:a4ee7f424c187b24d9161a907e43fc1e4"><td class="memTemplItemLeft" align="right" valign="top">static constexpr std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d9/dd0/struct_item_helper.html#a4ee7f424c187b24d9161a907e43fc1e4">getClosestMatchingItem</a> (<a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> pos, float range, std::function&lt; bool(std::shared_ptr&lt; T &gt;)&gt; filter={})</td></tr>
 <tr class="separator:a4ee7f424c187b24d9161a907e43fc1e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Enumeration Documentation</h2>
@@ -153,7 +153,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="../../d9/dd0/struct_item_helper.html#a44f1137eaff506c9b1ea4f5e2f48e8a4">get_items()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../da/d05/struct_game_map_info.html#a7f8ea036a76651a221c0c18490a4c22d">GameMapInfo::generate_map()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../da/d05/struct_game_map_info.html#a7f8ea036a76651a221c0c18490a4c22d">GameMapInfo::generate_map()</a>, and <a class="el" href="../../dd/d8c/struct_item_container.html#a7522f088f3cda5726ad38ddbb706f1f9">ItemContainer&lt; I &gt;::in_round_update()</a>.</p>
 
 </div>
 </div>
@@ -235,7 +235,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d0/d4e/item__helper_8h.html#abc7723a5962a94ea43ef9b5de0f2ad39">client_items_DO_NOT_USE</a>, <a class="el" href="../../d0/d4e/item__helper_8h.html#a38f86b6e9e8f5ea89a949554c344cd86">client_lobby_items_DO_NOT_USE</a>, <a class="el" href="../../d3/d2c/namespacegame.html#ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748">game::Lobby</a>, <a class="el" href="../../d0/d4e/item__helper_8h.html#a79b83ae9ed8024ef393811b5c3976ae8">server_items_DO_NOT_USE</a>, and <a class="el" href="../../d0/d4e/item__helper_8h.html#a2091150406655e7aa8a4c40ba8beb7e4">server_lobby_items_DO_NOT_USE</a>.</p>
+<p class="reference">References <a class="el" href="../../d0/d4e/item__helper_8h.html#abc7723a5962a94ea43ef9b5de0f2ad39">client_items_DO_NOT_USE</a>, <a class="el" href="../../d0/d4e/item__helper_8h.html#a38f86b6e9e8f5ea89a949554c344cd86">client_lobby_items_DO_NOT_USE</a>, <a class="el" href="../../d6/db9/is__server_8h.html#aa9b37672e835e000097b7b8c69868672">is_server()</a>, <a class="el" href="../../d3/d2c/namespacegame.html#ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748">game::Lobby</a>, <a class="el" href="../../d0/d4e/item__helper_8h.html#a79b83ae9ed8024ef393811b5c3976ae8">server_items_DO_NOT_USE</a>, and <a class="el" href="../../d0/d4e/item__helper_8h.html#a2091150406655e7aa8a4c40ba8beb7e4">server_lobby_items_DO_NOT_USE</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d9/dd0/struct_item_helper.html#ac9f40a76bb440b45308f4e833c602e2c">addItem()</a>, <a class="el" href="../../d9/dd0/struct_item_helper.html#a2df95661457b3c72b00f496984c7e52b">cleanup()</a>, <a class="el" href="../../d9/dd0/struct_item_helper.html#a49e6637067859aa600f3825c435aab03">forEachItem()</a>, <a class="el" href="../../d9/dd0/struct_item_helper.html#a7d3afea322f196765e7c22a61bea38b3">getitemsInRange()</a>, <a class="el" href="../../d6/d9d/struct_level_info.html#a66f640142946bce849c3b1e73884c45e">LevelInfo::grab_things()</a>, and <a class="el" href="../../d9/dd0/struct_item_helper.html#a8e6ee6589b4e6af3f838aa21940bce46">removeItem()</a>.</p>
 
@@ -255,7 +255,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">static constexpr std::shared_ptr&lt; T &gt; ItemHelper::getClosestMatchingItem </td>
           <td>(</td>
-          <td class="paramtype">vec2&#160;</td>
+          <td class="paramtype"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a>&#160;</td>
           <td class="paramname"><em>pos</em>, </td>
         </tr>
         <tr>
@@ -299,7 +299,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">static constexpr std::vector&lt; std::shared_ptr&lt; T &gt; &gt; ItemHelper::getitemsInRange </td>
           <td>(</td>
-          <td class="paramtype">vec2&#160;</td>
+          <td class="paramtype"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a>&#160;</td>
           <td class="paramname"><em>pos</em>, </td>
         </tr>
         <tr>

@@ -1,0 +1,12 @@
+digraph "AtomicQueue&lt; T &gt;"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [shape=record,label="{AtomicQueue\< T \>\n|- q\l- m_mutex\l|+ push_back()\l+ pop()\l+ pop_front()\l+ front()\l+ empty()\l+ size()\l}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="orange",style="solid",label=" \< ClientMessage \>" ];
+  Node2 [shape=record,label="{AtomicQueue\< ClientMessage \>\n|- q\l- m_mutex\l|+ push_back()\l+ pop()\l+ pop_front()\l+ front()\l+ empty()\l+ size()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d1/dab/struct_atomic_queue.html",tooltip=" "];
+  Node1 -> Node3 [dir="back",color="orange",style="solid",label=" \< network::ClientPacket \>" ];
+  Node3 [shape=record,label="{AtomicQueue\< network\l::ClientPacket \>\n|- q\l- m_mutex\l|+ push_back()\l+ pop()\l+ pop_front()\l+ front()\l+ empty()\l+ size()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d1/dab/struct_atomic_queue.html",tooltip=" "];
+}

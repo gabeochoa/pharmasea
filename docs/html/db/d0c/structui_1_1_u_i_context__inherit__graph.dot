@@ -1,0 +1,20 @@
+digraph "ui::UIContext"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [shape=record,label="{ui::UIContext\n|+ statemanager\l+ internal_roots\l+ owned_widgets\l+ hot_id\l+ active_id\l+ kb_focus_id\l+ last_processed\l+ began_and_not_ended\l+ queued_render_calls\l- temp_widgets\l|+ UIContext()\l+ own()\l+ init()\l+ begin()\l+ end()\l+ matching_id_in_tree()\l+ reset_tabbing_if_not\l_visible()\l+ cleanup()\l+ widget_init()\l+ get_widget_state()\l+ render_all()\l+ schedule_render_call()\l+ _draw_text()\l+ draw_text()\l+ schedule_draw_text()\l+ draw_widget_rect()\l+ draw_widget()\l+ widget_center()\l+ make_temp_widget()\l+ schedule_render_texture()\l+ create()\l+ get()\l}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node2 [shape=record,label="{ui::IUIContextInputManager\n|+ mouse_info\l+ key\l+ mod\l+ button\l+ axis_info\l+ keychar\l+ modchar\l+ yscrolled\l+ keyHeldDownTimer\l+ prevKeyHeldDownTimer\l+ keyHeldDownTimerReset\l+ lastDt\l|+ ~IUIContextInputManager()\l+ init()\l+ begin()\l+ cleanup()\l+ is_mouse_inside()\l+ process_char_press\l_event()\l+ process_keyevent()\l+ process_gamepad_button\l_event()\l+ process_gamepad_axis\l_event()\l+ _pressedButtonWithoutEat()\l+ pressedButtonWithoutEat()\l+ eatButton()\l+ pressed()\l+ handleBadGamepadAxis()\l+ eatAxis()\l+ _pressedWithoutEat()\l+ pressedWithoutEat()\l+ eatKey()\l+ is_held_down_debounced()\l+ is_held_down()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d5/d76/structui_1_1_i_u_i_context_input_manager.html",tooltip=" "];
+  Node3 -> Node1 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node3 [shape=record,label="{ui::IUIContextLastFrame\n|+ last_frame\l|+ get_last_frame()\l+ write_last_frame()\l+ reset_last_frame()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d9/d9d/structui_1_1_i_u_i_context_last_frame.html",tooltip=" "];
+  Node4 -> Node1 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node4 [shape=record,label="{ui::IUIContextRenderTextures\n|+ render_textures\l|+ get_new_render_texture()\l+ turn_on_render_texture()\l+ turn_off_texture_mode()\l+ draw_texture()\l+ unload_all_render_textures()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$da/de3/structui_1_1_i_u_i_context_render_textures.html",tooltip=" "];
+  Node5 -> Node1 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node5 [shape=record,label="{ui::IUIContextTheming\n|+ themestack\l|+ init()\l+ push_theme()\l+ pop_theme()\l+ active_theme()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d5/d7d/structui_1_1_i_u_i_context_theming.html",tooltip=" "];
+  Node6 -> Node1 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node6 [shape=record,label="{ui::IUIContextParentStacking\n|+ parentstack\l|+ push_parent()\l+ pop_parent()\l+ active_parent()\l+ push_parent()\l+ add_child()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$df/da9/structui_1_1_i_u_i_context_parent_stacking.html",tooltip=" "];
+  Node7 -> Node1 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node7 [shape=record,label="{FontSizeCache\n|+ font\l+ _font_size_memo\l|+ init()\l+ set_font()\l+ get_font_size_impl()\l+ get_font_size()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d3/d9d/struct_font_size_cache.html",tooltip=" "];
+}

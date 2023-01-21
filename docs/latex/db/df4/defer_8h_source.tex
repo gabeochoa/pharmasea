@@ -1,0 +1,22 @@
+\hypertarget{defer_8h_source}{}\doxysection{defer.\+h}
+\label{defer_8h_source}\index{src/engine/defer.h@{src/engine/defer.h}}
+\mbox{\hyperlink{defer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ \ \ \ for\ example:}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ \ \ \ \{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ auto\ X\ =\ new\ int[10];}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ defer(free\ x)}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ ...\ rest\ of\ function}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ \ \ \ \}\ //\ free\ happens\ here}}
+\DoxyCodeLine{00014\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ defer(code)\ \(\backslash\)}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\ \ \ \ std::shared\_ptr<void>\ \_(nullptr,\ std::bind([\&]()\ \{\ code;\ \}));}}
+
+\end{DoxyCode}

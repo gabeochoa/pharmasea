@@ -5,7 +5,7 @@
 %%For: 
 %Magnification: 1.00
 %%Orientation: Portrait
-%%BoundingBox: 0 0 500 130.081299
+%%BoundingBox: 0 0 500 236.686386
 %%Pages: 0
 %%BeginSetup
 %%EndSetup
@@ -19,12 +19,12 @@
 /marginwidth 10 def
 /distx 20 def
 /disty 40 def
-/boundaspect 3.843750 def  % aspect ratio of the BoundingBox (width/height)
+/boundaspect 2.112500 def  % aspect ratio of the BoundingBox (width/height)
 /boundx 500 def
 /boundy boundx boundaspect div def
 /xspacing 0 def
 /yspacing 0 def
-/rows 4 def
+/rows 10 def
 /cols 5 def
 /scalefactor 0 def
 /boxfont /Times-Roman findfont fontheight scalefont def
@@ -177,13 +177,18 @@ boxfont setfont
 (Furniture) cw
 (Person) cw
 (Spawner) cw
+(ItemContainer< Bag >) cw
+(ItemContainer< PillBottle >) cw
+(CharacterSwitcher) cw
+(Conveyer) cw
+(ItemContainer< I >) cw
+(Register) cw
+(Table) cw
+(Wall) cw
 (AIPerson) cw
 (BasePlayer) cw
 (TargetCube) cw
 (CustomerSpawner) cw
-(Customer) cw
-(Player) cw
-(RemotePlayer) cw
 /boxwidth boxwidth marginwidth 2 mul add def
 /xspacing boxwidth distx add def
 /yspacing boxheight disty add def
@@ -195,53 +200,72 @@ boundx scalefactor div boundy scalefactor div scale
 
 % ----- classes -----
 
- (Entity) 1.500000 3.000000 box
- (Furniture) 0.000000 2.000000 box
- (Person) 1.500000 2.000000 box
- (Spawner) 3.500000 2.000000 box
- (AIPerson) 0.000000 1.000000 box
- (BasePlayer) 1.500000 1.000000 box
- (TargetCube) 2.500000 1.000000 box
- (CustomerSpawner) 3.500000 1.000000 box
- (Customer) 0.000000 0.000000 box
- (Player) 1.000000 0.000000 box
- (RemotePlayer) 2.000000 0.000000 box
+ (Entity) 2.000000 9.000000 box
+ (Furniture) 0.000000 8.000000 box
+ (Person) 2.000000 8.000000 box
+ (Spawner) 4.000000 8.000000 box
+ (ItemContainer< Bag >) 1.000000 7.000000 box
+1.000000 7.000000 mark
+ (ItemContainer< PillBottle >) 1.000000 6.000000 box
+1.000000 6.000000 mark
+ (CharacterSwitcher) 1.000000 5.000000 box
+ (Conveyer) 1.000000 4.000000 box
+1.000000 4.000000 mark
+ (ItemContainer< I >) 1.000000 3.000000 box
+ (Register) 1.000000 2.000000 box
+ (Table) 1.000000 1.000000 box
+ (Wall) 1.000000 0.000000 box
+ (AIPerson) 3.000000 7.000000 box
+3.000000 7.000000 mark
+ (BasePlayer) 3.000000 6.000000 box
+3.000000 6.000000 mark
+ (TargetCube) 3.000000 5.000000 box
+3.000000 5.000000 mark
+ (CustomerSpawner) 4.000000 7.000000 box
 
 % ----- relations -----
 
 solid
-1 1.500000 2.250000 out
+1 2.000000 8.250000 out
 solid
-0.000000 3.500000 3.000000 conn
+0.000000 4.000000 9.000000 conn
 solid
-0 0.000000 2.750000 in
+0 0.000000 8.750000 in
 solid
-0 1.500000 2.750000 in
+1 0.000000 7.250000 out
 solid
-1 1.500000 1.250000 out
+0 2.000000 8.750000 in
 solid
-0.000000 2.500000 2.000000 conn
+1 2.000000 7.250000 out
 solid
-0 3.500000 2.750000 in
+0 4.000000 8.750000 in
 solid
-1 3.500000 1.250000 out
+1 4.000000 7.250000 out
 solid
-0 0.000000 1.750000 in
+0 0.000000 7.500000 hedge
 solid
-1 0.000000 0.250000 out
+0 0.000000 6.500000 hedge
 solid
-0 1.500000 1.750000 in
+0 0.000000 5.500000 hedge
 solid
-1 1.500000 0.250000 out
+0 0.000000 4.500000 hedge
 solid
-1.000000 2.000000 1.000000 conn
+0 0.000000 3.500000 hedge
 solid
-0 2.500000 1.750000 in
+0 0.000000 2.500000 hedge
 solid
-0 3.500000 1.750000 in
+0 0.000000 1.500000 hedge
 solid
-0 0.000000 0.750000 in
+0 0.000000 0.500000 hedge
 solid
-0 1.000000 0.750000 in
+0.000000 8.000000 0.500000 vedge
 solid
-0 2.000000 0.750000 in
+0 2.000000 7.500000 hedge
+solid
+0 2.000000 6.500000 hedge
+solid
+0 2.000000 5.500000 hedge
+solid
+2.000000 8.000000 5.500000 vedge
+solid
+0 4.000000 7.750000 in

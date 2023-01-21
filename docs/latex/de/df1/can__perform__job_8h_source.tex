@@ -1,0 +1,33 @@
+\hypertarget{can__perform__job_8h_source}{}\doxysection{can\+\_\+perform\+\_\+job.\+h}
+\label{can__perform__job_8h_source}\index{src/components/can\_perform\_job.h@{src/components/can\_perform\_job.h}}
+\mbox{\hyperlink{can__perform__job_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../job.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_can_perform_job_aa1dd6e1d9e31aa8a81497cb0076076cd}{\string~CanPerformJob}}()\ \{\}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_perform_job_ab8a1d36d36914317d620f3059e3a42de}{has\_job}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_can_perform_job_ab6b17841c03be0c79ad12e91e607f94d}{current\_job}}\ !=\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00012\ \ \ \ \ [[nodiscard]]\ std::shared\_ptr<Job>\ \mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{job}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_can_perform_job_ab6b17841c03be0c79ad12e91e607f94d}{current\_job}};\ \}}
+\DoxyCodeLine{00013\ \ \ \ \ [[nodiscard]]\ std::stack<std::shared\_ptr<Job>>\ \mbox{\hyperlink{struct_can_perform_job_a3a3c96f0e78e5a30da8bd46ccc599bda}{job\_queue}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_can_perform_job_a00b95dd86b4e9ad4355718096c34b0a3}{personal\_queue}};}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00018\ \ \ \ \ std::stack<std::shared\_ptr<Job>>\ \mbox{\hyperlink{struct_can_perform_job_a00b95dd86b4e9ad4355718096c34b0a3}{personal\_queue}};}
+\DoxyCodeLine{00019\ \ \ \ \ std::shared\_ptr<Job>\ \mbox{\hyperlink{struct_can_perform_job_ab6b17841c03be0c79ad12e91e607f94d}{current\_job}};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_perform_job_a4de20a3db75ea33b012815c1bb5dd9e6}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ things\ that\ need\ to\ be\ rendered,\ need\ to\ be\ serialized\ :)}}
+\DoxyCodeLine{00026\ \ \ \ \ \}}
+\DoxyCodeLine{00027\ \};}
+
+\end{DoxyCode}

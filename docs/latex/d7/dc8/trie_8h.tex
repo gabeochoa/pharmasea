@@ -1,0 +1,185 @@
+\hypertarget{trie_8h}{}\doxysection{src/engine/trie.h File Reference}
+\label{trie_8h}\index{src/engine/trie.h@{src/engine/trie.h}}
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}../util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}assert.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_trie}{Trie}}
+\item 
+struct \mbox{\hyperlink{struct_trie_1_1_node}{Trie\+::\+Node}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \mbox{\hyperlink{trie_8h_a18ae7c471740dfa5c1b954bfc0afacee}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{struct_trie_1_1_node}{Trie\+::\+Node}} \&obj)
+\item 
+std\+::ostream \& \mbox{\hyperlink{trie_8h_aa59d07547c54bee5958ee1ff44312071}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{struct_trie}{Trie}} \&obj)
+\item 
+void \mbox{\hyperlink{trie_8h_a0119e3b693290d16880e23c487ba0178}{test\+\_\+trie\+\_\+insert\+\_\+once}} ()
+\item 
+void \mbox{\hyperlink{trie_8h_ab7b09ab2910478eaf016f40e49f044e3}{test\+\_\+trie\+\_\+insert\+\_\+once\+\_\+and\+\_\+found}} ()
+\item 
+void \mbox{\hyperlink{trie_8h_a4209744f95e3439133158d065fa135ce}{test\+\_\+trie\+\_\+insert\+\_\+once\+\_\+missing}} ()
+\item 
+void \mbox{\hyperlink{trie_8h_a6f41fd88e4c7cbbb49258d3aeabb6d25}{test\+\_\+trie\+\_\+insert\+\_\+once\+\_\+and\+\_\+dump}} ()
+\item 
+void \mbox{\hyperlink{trie_8h_abd0541bd743eeab12cca2b0dfc24e1b5}{test\+\_\+trie\+\_\+insert\+\_\+ten}} ()
+\item 
+void \mbox{\hyperlink{trie_8h_ab51c9ae6b8b4c607559c3dcf761cd9d7}{test\+\_\+trie\+\_\+insert\+\_\+ten\+\_\+and\+\_\+found}} ()
+\item 
+void \mbox{\hyperlink{trie_8h_ac01beef18a56e26e8f2914bc3489cfae}{test\+\_\+trie\+\_\+insert\+\_\+ten\+\_\+and\+\_\+dump}} ()
+\item 
+void \mbox{\hyperlink{trie_8h_a57783c9a98e7958ba28de85ac4694a38}{test\+\_\+trie\+\_\+insert\+\_\+ten\+\_\+similar\+\_\+and\+\_\+dump\+\_\+prefix}} ()
+\item 
+void \mbox{\hyperlink{trie_8h_a90c8cb395c686c8b3aad41711e69481b}{test\+\_\+trie}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{trie_8h_aa59d07547c54bee5958ee1ff44312071}\label{trie_8h_aa59d07547c54bee5958ee1ff44312071}} 
+\index{trie.h@{trie.h}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!trie.h@{trie.h}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily std\+::ostream \& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{struct_trie}{Trie}} \&}]{obj }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_trie_a9ab9f18b03c75db44b01fc984d19cb65}{Trie\+::root}}.
+
+\mbox{\Hypertarget{trie_8h_a18ae7c471740dfa5c1b954bfc0afacee}\label{trie_8h_a18ae7c471740dfa5c1b954bfc0afacee}} 
+\index{trie.h@{trie.h}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!trie.h@{trie.h}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily std\+::ostream \& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{struct_trie_1_1_node}{Trie\+::\+Node}} \&}]{obj }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_trie_1_1_node_aee46ead17baf0108827f6db5d3622627}{Trie\+::\+Node\+::children}}, and \mbox{\hyperlink{struct_trie_1_1_node_ac793e3f57aa8315098b5421bd71d53e9}{Trie\+::\+Node\+::letter}}.
+
+\mbox{\Hypertarget{trie_8h_a90c8cb395c686c8b3aad41711e69481b}\label{trie_8h_a90c8cb395c686c8b3aad41711e69481b}} 
+\index{trie.h@{trie.h}!test\_trie@{test\_trie}}
+\index{test\_trie@{test\_trie}!trie.h@{trie.h}}
+\doxysubsubsection{\texorpdfstring{test\_trie()}{test\_trie()}}
+{\footnotesize\ttfamily void test\+\_\+trie (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{trie_8h_a0119e3b693290d16880e23c487ba0178}{test\+\_\+trie\+\_\+insert\+\_\+once()}}, \mbox{\hyperlink{trie_8h_a6f41fd88e4c7cbbb49258d3aeabb6d25}{test\+\_\+trie\+\_\+insert\+\_\+once\+\_\+and\+\_\+dump()}}, \mbox{\hyperlink{trie_8h_ab7b09ab2910478eaf016f40e49f044e3}{test\+\_\+trie\+\_\+insert\+\_\+once\+\_\+and\+\_\+found()}}, \mbox{\hyperlink{trie_8h_a4209744f95e3439133158d065fa135ce}{test\+\_\+trie\+\_\+insert\+\_\+once\+\_\+missing()}}, \mbox{\hyperlink{trie_8h_abd0541bd743eeab12cca2b0dfc24e1b5}{test\+\_\+trie\+\_\+insert\+\_\+ten()}}, \mbox{\hyperlink{trie_8h_ac01beef18a56e26e8f2914bc3489cfae}{test\+\_\+trie\+\_\+insert\+\_\+ten\+\_\+and\+\_\+dump()}}, \mbox{\hyperlink{trie_8h_ab51c9ae6b8b4c607559c3dcf761cd9d7}{test\+\_\+trie\+\_\+insert\+\_\+ten\+\_\+and\+\_\+found()}}, and \mbox{\hyperlink{trie_8h_a57783c9a98e7958ba28de85ac4694a38}{test\+\_\+trie\+\_\+insert\+\_\+ten\+\_\+similar\+\_\+and\+\_\+dump\+\_\+prefix()}}.
+
+\mbox{\Hypertarget{trie_8h_a0119e3b693290d16880e23c487ba0178}\label{trie_8h_a0119e3b693290d16880e23c487ba0178}} 
+\index{trie.h@{trie.h}!test\_trie\_insert\_once@{test\_trie\_insert\_once}}
+\index{test\_trie\_insert\_once@{test\_trie\_insert\_once}!trie.h@{trie.h}}
+\doxysubsubsection{\texorpdfstring{test\_trie\_insert\_once()}{test\_trie\_insert\_once()}}
+{\footnotesize\ttfamily void test\+\_\+trie\+\_\+insert\+\_\+once (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_trie_a07caffa9a30b60c94c8d3bd7178fd4f7}{Trie\+::add()}}.
+
+
+
+Referenced by \mbox{\hyperlink{trie_8h_a90c8cb395c686c8b3aad41711e69481b}{test\+\_\+trie()}}.
+
+\mbox{\Hypertarget{trie_8h_a6f41fd88e4c7cbbb49258d3aeabb6d25}\label{trie_8h_a6f41fd88e4c7cbbb49258d3aeabb6d25}} 
+\index{trie.h@{trie.h}!test\_trie\_insert\_once\_and\_dump@{test\_trie\_insert\_once\_and\_dump}}
+\index{test\_trie\_insert\_once\_and\_dump@{test\_trie\_insert\_once\_and\_dump}!trie.h@{trie.h}}
+\doxysubsubsection{\texorpdfstring{test\_trie\_insert\_once\_and\_dump()}{test\_trie\_insert\_once\_and\_dump()}}
+{\footnotesize\ttfamily void test\+\_\+trie\+\_\+insert\+\_\+once\+\_\+and\+\_\+dump (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_trie_a07caffa9a30b60c94c8d3bd7178fd4f7}{Trie\+::add()}}, \mbox{\hyperlink{struct_trie_a32145e563939d2f722c98ec7d441a55a}{Trie\+::dump()}}, and \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}.
+
+
+
+Referenced by \mbox{\hyperlink{trie_8h_a90c8cb395c686c8b3aad41711e69481b}{test\+\_\+trie()}}.
+
+\mbox{\Hypertarget{trie_8h_ab7b09ab2910478eaf016f40e49f044e3}\label{trie_8h_ab7b09ab2910478eaf016f40e49f044e3}} 
+\index{trie.h@{trie.h}!test\_trie\_insert\_once\_and\_found@{test\_trie\_insert\_once\_and\_found}}
+\index{test\_trie\_insert\_once\_and\_found@{test\_trie\_insert\_once\_and\_found}!trie.h@{trie.h}}
+\doxysubsubsection{\texorpdfstring{test\_trie\_insert\_once\_and\_found()}{test\_trie\_insert\_once\_and\_found()}}
+{\footnotesize\ttfamily void test\+\_\+trie\+\_\+insert\+\_\+once\+\_\+and\+\_\+found (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_trie_a07caffa9a30b60c94c8d3bd7178fd4f7}{Trie\+::add()}}, \mbox{\hyperlink{struct_trie_aa991e99ba9e8aec408561f9aa721ab7f}{Trie\+::contains()}}, and \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}.
+
+
+
+Referenced by \mbox{\hyperlink{trie_8h_a90c8cb395c686c8b3aad41711e69481b}{test\+\_\+trie()}}.
+
+\mbox{\Hypertarget{trie_8h_a4209744f95e3439133158d065fa135ce}\label{trie_8h_a4209744f95e3439133158d065fa135ce}} 
+\index{trie.h@{trie.h}!test\_trie\_insert\_once\_missing@{test\_trie\_insert\_once\_missing}}
+\index{test\_trie\_insert\_once\_missing@{test\_trie\_insert\_once\_missing}!trie.h@{trie.h}}
+\doxysubsubsection{\texorpdfstring{test\_trie\_insert\_once\_missing()}{test\_trie\_insert\_once\_missing()}}
+{\footnotesize\ttfamily void test\+\_\+trie\+\_\+insert\+\_\+once\+\_\+missing (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_trie_a07caffa9a30b60c94c8d3bd7178fd4f7}{Trie\+::add()}}, \mbox{\hyperlink{struct_trie_aa991e99ba9e8aec408561f9aa721ab7f}{Trie\+::contains()}}, and \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}.
+
+
+
+Referenced by \mbox{\hyperlink{trie_8h_a90c8cb395c686c8b3aad41711e69481b}{test\+\_\+trie()}}.
+
+\mbox{\Hypertarget{trie_8h_abd0541bd743eeab12cca2b0dfc24e1b5}\label{trie_8h_abd0541bd743eeab12cca2b0dfc24e1b5}} 
+\index{trie.h@{trie.h}!test\_trie\_insert\_ten@{test\_trie\_insert\_ten}}
+\index{test\_trie\_insert\_ten@{test\_trie\_insert\_ten}!trie.h@{trie.h}}
+\doxysubsubsection{\texorpdfstring{test\_trie\_insert\_ten()}{test\_trie\_insert\_ten()}}
+{\footnotesize\ttfamily void test\+\_\+trie\+\_\+insert\+\_\+ten (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_trie_a07caffa9a30b60c94c8d3bd7178fd4f7}{Trie\+::add()}}, and \mbox{\hyperlink{namespaceutil_a5f5caebc89c06dcdd631966f2ba0cb72}{util\+::split\+\_\+re()}}.
+
+
+
+Referenced by \mbox{\hyperlink{trie_8h_a90c8cb395c686c8b3aad41711e69481b}{test\+\_\+trie()}}.
+
+\mbox{\Hypertarget{trie_8h_ac01beef18a56e26e8f2914bc3489cfae}\label{trie_8h_ac01beef18a56e26e8f2914bc3489cfae}} 
+\index{trie.h@{trie.h}!test\_trie\_insert\_ten\_and\_dump@{test\_trie\_insert\_ten\_and\_dump}}
+\index{test\_trie\_insert\_ten\_and\_dump@{test\_trie\_insert\_ten\_and\_dump}!trie.h@{trie.h}}
+\doxysubsubsection{\texorpdfstring{test\_trie\_insert\_ten\_and\_dump()}{test\_trie\_insert\_ten\_and\_dump()}}
+{\footnotesize\ttfamily void test\+\_\+trie\+\_\+insert\+\_\+ten\+\_\+and\+\_\+dump (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_trie_a07caffa9a30b60c94c8d3bd7178fd4f7}{Trie\+::add()}}, \mbox{\hyperlink{struct_trie_a32145e563939d2f722c98ec7d441a55a}{Trie\+::dump()}}, \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}, and \mbox{\hyperlink{namespaceutil_a5f5caebc89c06dcdd631966f2ba0cb72}{util\+::split\+\_\+re()}}.
+
+
+
+Referenced by \mbox{\hyperlink{trie_8h_a90c8cb395c686c8b3aad41711e69481b}{test\+\_\+trie()}}.
+
+\mbox{\Hypertarget{trie_8h_ab51c9ae6b8b4c607559c3dcf761cd9d7}\label{trie_8h_ab51c9ae6b8b4c607559c3dcf761cd9d7}} 
+\index{trie.h@{trie.h}!test\_trie\_insert\_ten\_and\_found@{test\_trie\_insert\_ten\_and\_found}}
+\index{test\_trie\_insert\_ten\_and\_found@{test\_trie\_insert\_ten\_and\_found}!trie.h@{trie.h}}
+\doxysubsubsection{\texorpdfstring{test\_trie\_insert\_ten\_and\_found()}{test\_trie\_insert\_ten\_and\_found()}}
+{\footnotesize\ttfamily void test\+\_\+trie\+\_\+insert\+\_\+ten\+\_\+and\+\_\+found (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_trie_a07caffa9a30b60c94c8d3bd7178fd4f7}{Trie\+::add()}}, \mbox{\hyperlink{struct_trie_aa991e99ba9e8aec408561f9aa721ab7f}{Trie\+::contains()}}, \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}, and \mbox{\hyperlink{namespaceutil_a5f5caebc89c06dcdd631966f2ba0cb72}{util\+::split\+\_\+re()}}.
+
+
+
+Referenced by \mbox{\hyperlink{trie_8h_a90c8cb395c686c8b3aad41711e69481b}{test\+\_\+trie()}}.
+
+\mbox{\Hypertarget{trie_8h_a57783c9a98e7958ba28de85ac4694a38}\label{trie_8h_a57783c9a98e7958ba28de85ac4694a38}} 
+\index{trie.h@{trie.h}!test\_trie\_insert\_ten\_similar\_and\_dump\_prefix@{test\_trie\_insert\_ten\_similar\_and\_dump\_prefix}}
+\index{test\_trie\_insert\_ten\_similar\_and\_dump\_prefix@{test\_trie\_insert\_ten\_similar\_and\_dump\_prefix}!trie.h@{trie.h}}
+\doxysubsubsection{\texorpdfstring{test\_trie\_insert\_ten\_similar\_and\_dump\_prefix()}{test\_trie\_insert\_ten\_similar\_and\_dump\_prefix()}}
+{\footnotesize\ttfamily void test\+\_\+trie\+\_\+insert\+\_\+ten\+\_\+similar\+\_\+and\+\_\+dump\+\_\+prefix (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_trie_a07caffa9a30b60c94c8d3bd7178fd4f7}{Trie\+::add()}}, \mbox{\hyperlink{struct_trie_a32145e563939d2f722c98ec7d441a55a}{Trie\+::dump()}}, \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}, and \mbox{\hyperlink{namespaceutil_a5f5caebc89c06dcdd631966f2ba0cb72}{util\+::split\+\_\+re()}}.
+
+
+
+Referenced by \mbox{\hyperlink{trie_8h_a90c8cb395c686c8b3aad41711e69481b}{test\+\_\+trie()}}.
+

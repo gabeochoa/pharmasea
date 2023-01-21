@@ -1,0 +1,31 @@
+digraph "src/engine/app.h"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [label="src/engine/app.h",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 [label="src/engine/app.cpp",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d5/df2/app_8cpp.html",tooltip=" "];
+  Node1 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 [label="src/engine/settings.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$de/d60/settings_8h.html",tooltip=" "];
+  Node3 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node3 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node4 [label="src/game.cpp",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$df/dd9/game_8cpp.html",tooltip=" "];
+  Node3 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node5 [label="src/network/network.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d9/d94/network_8h.html",tooltip=" "];
+  Node5 -> Node6 [dir="back",color="steelblue1",style="solid"];
+  Node6 [label="src/networklayer.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d3/d80/networklayer_8h.html",tooltip=" "];
+  Node6 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node3 -> Node6 [dir="back",color="steelblue1",style="solid"];
+  Node3 -> Node7 [dir="back",color="steelblue1",style="solid"];
+  Node7 [label="src/settingslayer.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d2/d4a/settingslayer_8h.html",tooltip=" "];
+  Node7 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node3 -> Node8 [dir="back",color="steelblue1",style="solid"];
+  Node8 [label="src/streamersafelayer.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d5/d37/streamersafelayer_8h.html",tooltip=" "];
+  Node8 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node9 [dir="back",color="steelblue1",style="solid"];
+  Node9 [label="src/menulayer.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$de/dc7/menulayer_8h.html",tooltip=" "];
+  Node9 -> Node4 [dir="back",color="steelblue1",style="solid"];
+}

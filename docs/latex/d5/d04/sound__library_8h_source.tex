@@ -1,0 +1,49 @@
+\hypertarget{sound__library_8h_source}{}\doxysection{sound\+\_\+library.\+h}
+\label{sound__library_8h_source}\index{src/engine/sound\_library.h@{src/engine/sound\_library.h}}
+\mbox{\hyperlink{sound__library_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{library_8h}{library.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{singleton_8h}{singleton.h}}"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \mbox{\hyperlink{singleton_8h_a2c7d0ae28a9340e96cc64ff071551e31}{SINGLETON\_FWD}}(\mbox{\hyperlink{struct_sound_library}{SoundLibrary}})}
+\DoxyCodeLine{00009\ struct\ \mbox{\hyperlink{struct_sound_library}{SoundLibrary}}\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \mbox{\hyperlink{singleton_8h_ac4940bd51e49be0e873a7bffe9d67ad9}{SINGLETON}}(\mbox{\hyperlink{struct_sound_library}{SoundLibrary}})}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{comment}{//\ TODO\ if\ we\ add\ a\ "{}sound\ effects"{}\ volume\ slider,\ we\ have\ to\ do\ the\ logic}}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{comment}{//\ from\ MusicLibrary}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ [[nodiscard]]\ raylib::Sound\&\ \mbox{\hyperlink{struct_sound_library_ad2573d3420d3934755b903116c48acd6}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl.get(name);}
+\DoxyCodeLine{00017\ \ \ \ \ \}}
+\DoxyCodeLine{00018\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ raylib::Sound\&\ \mbox{\hyperlink{struct_sound_library_a1e2bb3f66a1d2351d16c171e317627ac}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl.get(name);}
+\DoxyCodeLine{00020\ \ \ \ \ \}}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_sound_library_a1b936a734986049aafe42f6456c8a463}{load}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ impl.load(filename,\ name);}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_sound_library_a2f72a00226069b77c602d379e96fc115}{play}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name)\ \{\ PlaySound(get(name));\ \}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_sound_library_a1b3d5c8a37c5d2ce4d68fcbe6857dd8b}{play\_random\_match}}(\textcolor{keyword}{const}\ std::string\&\ prefix)\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ impl.get\_random\_match(prefix).map(raylib::PlaySound);}
+\DoxyCodeLine{00029\ \ \ \ \ \}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_sound_library_ade7ee2cc830c4610956236357a0f6567}{unload\_all}}()\ \{\ impl.unload\_all();\ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_sound_library_1_1_sound_library_impl}{SoundLibraryImpl}}\ :\ \mbox{\hyperlink{struct_library}{Library}}<raylib::Sound>\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ raylib::Sound\ \mbox{\hyperlink{struct_sound_library_1_1_sound_library_impl_a36f8ffa539c1acca2dc9c834a38af26f}{convert\_filename\_to\_object}}(}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ raylib::LoadSound(filename);}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_sound_library_1_1_sound_library_impl_a20508d8c9c00b2b355ec24b29976318b}{unload}}(raylib::Sound\ sound)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::UnloadSound(sound);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00042\ \ \ \ \ \}\ impl;}
+\DoxyCodeLine{00043\ \};}
+
+\end{DoxyCode}

@@ -4,159 +4,160 @@
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00002\ }
-\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{drawing__util_8h}{drawing\_util.h}}"{}}}
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}engine/ui\_color.h"{}}}
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
-\DoxyCodeLine{00006\ \textcolor{comment}{//}}
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
-\DoxyCodeLine{00008\ \textcolor{comment}{//}}
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{camera_8h}{camera.h}}"{}}}
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{engine_8h}{engine.h}}"{}}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}engine/layer.h"{}}}
-\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}engine/model\_library.h"{}}}
-\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}engine/music\_library.h"{}}}
-\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}engine/texture\_library.h"{}}}
-\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{map_8h}{map.h}}"{}}}
-\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{player_8h}{player.h}}"{}}}
-\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
-\DoxyCodeLine{00018\ }
-\DoxyCodeLine{00019\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_game_layer}{GameLayer}}\ :\ \textcolor{keyword}{public}\ Layer\ \{}
-\DoxyCodeLine{00020\ \ \ \ \ std::shared\_ptr<Player>\ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}};}
-\DoxyCodeLine{00021\ \ \ \ \ std::shared\_ptr<BasePlayer>\ \mbox{\hyperlink{struct_game_layer_a02d82848d230e3efc306e41ccb8a0711}{active\_player}};}
-\DoxyCodeLine{00022\ \ \ \ \ std::shared\_ptr<GameCam>\ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}};}
-\DoxyCodeLine{00023\ \ \ \ \ raylib::Model\ \mbox{\hyperlink{struct_game_layer_a9214aa50097d74419596c09975f03000}{bag\_model}};}
-\DoxyCodeLine{00024\ }
-\DoxyCodeLine{00025\ \ \ \ \ \mbox{\hyperlink{struct_game_layer_a867f76f6783f7d63333a646cbc2bbfa0}{GameLayer}}()\ :\ Layer(\textcolor{stringliteral}{"{}Game"{}})\ \{}
-\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_player}{Player}}(vec2\{-\/3,\ -\/3\}));}
-\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ GLOBALS.set(\textcolor{stringliteral}{"{}player"{}},\ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}.get());}
-\DoxyCodeLine{00028\ }
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ do\ we\ need\ this\ still?}}
-\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}-\/>is\_ghost\_player\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00031\ }
-\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_game_cam}{GameCam}}());}
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ GLOBALS.set(\textcolor{stringliteral}{"{}game\_cam"{}},\ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}.get());}
-\DoxyCodeLine{00034\ \ \ \ \ \}}
-\DoxyCodeLine{00035\ }
-\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_game_layer_ade39138cdf14f80bf254885a49e43fdf}{\string~GameLayer}}()\ \{\}}
-\DoxyCodeLine{00037\ }
-\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_layer_a0cb58f0bb55b154e6236df80fbe0eea0}{onEvent}}(Event\&\ event)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{MenuState::s\_in\_game}}())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ EventDispatcher\ dispatcher(event);}
-\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ dispatcher.dispatch<KeyPressedEvent>(}
-\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ std::bind(\&\mbox{\hyperlink{struct_game_layer_a614faefb9cd5b78e3117eea4bd3de3b1}{GameLayer::onKeyPressed}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
-\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(}
-\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_game_layer_a84417a9ddbc61d6c74a0c1d598661e46}{GameLayer::onGamepadButtonPressed}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
-\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ dispatcher.dispatch<GamepadAxisMovedEvent>(std::bind(}
-\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_game_layer_ac09e8d5b737b41758dffd544d99166cd}{GameLayer::onGamepadAxisMoved}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
-\DoxyCodeLine{00047\ \ \ \ \ \}}
-\DoxyCodeLine{00048\ }
-\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_game_layer_ac09e8d5b737b41758dffd544d99166cd}{onGamepadAxisMoved}}(GamepadAxisMovedEvent\&)\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
-\DoxyCodeLine{00050\ }
-\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_game_layer_a84417a9ddbc61d6c74a0c1d598661e46}{onGamepadButtonPressed}}(GamepadButtonPressedEvent\&\ event)\ \{}
-\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (KeyMap::get\_button(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::Pause)\ ==}
-\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ event.button)\ \{}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_state_a9a3ed09dd6f05acb6aa3a804a8aedc37}{GameState::s\_pause}}();}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00058\ \ \ \ \ \}}
-\DoxyCodeLine{00059\ }
-\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_game_layer_a614faefb9cd5b78e3117eea4bd3de3b1}{onKeyPressed}}(KeyPressedEvent\&\ event)\ \{}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note:\ You\ can\ only\ pause\ in\ game\ state,\ in\ planning\ no\ pause}}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (KeyMap::get\_key\_code(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::Pause)\ ==}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ event.keycode)\ \{}
-\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_state_a9a3ed09dd6f05acb6aa3a804a8aedc37}{GameState::s\_pause}}();}
-\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ TODO\ obv\ need\ to\ have\ this\ fun\ on\ a\ timer\ or\ something\ instead}}
-\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ of\ on\ esc}}
-\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SoundLibrary::get().play\_random\_match("{}pa\_announcements\_"{});}}
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00071\ \ \ \ \ \}}
-\DoxyCodeLine{00072\ }
-\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_layer_acc7d3f410b4c25afd764848638d39c6f}{play\_music}}()\ \{}
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ m\ =\ MusicLibrary::get().get(\textcolor{stringliteral}{"{}supermarket"{}});}
-\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!IsMusicStreamPlaying(m))\ \{}
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ PlayMusicStream(m);}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ UpdateMusicStream(m);}
-\DoxyCodeLine{00079\ \ \ \ \ \}}
-\DoxyCodeLine{00080\ }
-\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514cd}{onUpdate}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ TRACY\_ZONE\_SCOPED;}
-\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{MenuState::s\_in\_game}}())\ \mbox{\hyperlink{struct_game_layer_acc7d3f410b4c25afd764848638d39c6f}{play\_music}}();}
-\DoxyCodeLine{00084\ }
-\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_game_state_aa927cf7b60fe39c96c4d97187a5d33bd}{GameState::s\_should\_update}}())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00086\ }
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ quit\ window\ on\ escape}}
-\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ raylib::SetExitKey(raylib::KEY\_NULL);}
-\DoxyCodeLine{00089\ }
-\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ Why\ does\ updateCamera\ not\ just\ take\ an\ optional\ target?}}
-\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}-\/>updateToTarget(}
-\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ GLOBALS.get\_or\_default<\mbox{\hyperlink{struct_entity}{Entity}}>(\textcolor{stringliteral}{"{}active\_camera\_target"{}},\ *\mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}));}
-\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}-\/>updateCamera();}
-\DoxyCodeLine{00094\ }
-\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}-\/>update(dt);}
-\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ gabe:\ i\ dont\ think\ we\ need\ to\ do\ this}}
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ because\ the\ local\ map\ never\ should\ need\ to\ grab\ things}}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ TODO\ do\ we?}}
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ map\_ptr\ =\ GLOBALS.get\_ptr<\mbox{\hyperlink{struct_map}{Map}}>(\textcolor{stringliteral}{"{}map"{}});}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map\_ptr)\ \{}
-\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ today\ we\ need\ to\ grab\ things\ so\ that\ the\ client\ renders}}
-\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ what\ they\ server\ has\ access\ to}}
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ map\_ptr-\/>\mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\_things}}();}
-\DoxyCodeLine{00104\ }
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ need\ this\ so\ the\ entity\ -\/>\ floating\ name\ moves\ around}}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ why\ does\ that\ happen}}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ map\_ptr-\/>onUpdate(dt);}
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00109\ \ \ \ \ \}}
-\DoxyCodeLine{00110\ }
-\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_layer_ac93aed3c3aeeb92b41fd322d0ca926c5}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ TRACY\_ZONE\_SCOPED;}
-\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{MenuState::s\_in\_game}}())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00114\ }
-\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ map\_ptr\ =\ GLOBALS.get\_ptr<\mbox{\hyperlink{struct_map}{Map}}>(\textcolor{stringliteral}{"{}map"{}});}
-\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ network\_debug\_mode\_on\ =}
-\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ GLOBALS.get\_or\_default<\textcolor{keywordtype}{bool}>(\textcolor{stringliteral}{"{}network\_ui\_enabled"{}},\ \textcolor{keyword}{false});}
-\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (network\_debug\_mode\_on)\ \{}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ map\_ptr\ =\ GLOBALS.get\_ptr<\mbox{\hyperlink{struct_map}{Map}}>(\textcolor{stringliteral}{"{}server\_map"{}});}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00121\ }
-\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ ext::clear\_background(Color\{200,\ 200,\ 200,\ 255\});}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ raylib::BeginMode3D((*cam).get());}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::DrawPlane((vec3)\{0.0f,\ -\/\mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ 0.0f\},}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (vec2)\{256.0f,\ 256.0f\},\ DARKGRAY);}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map\_ptr)\ map\_ptr-\/>onDraw(dt);}
-\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (network\_debug\_mode\_on)\ \{}
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ network\_players\ =}
-\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Forcing\ a\ copy\ to\ avoid\ the\ data\ changing\ from\ underneath}}
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ us}}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<int,\ std::shared\_ptr<Player>>(}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLOBALS.get\_or\_default<}
-\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<int,\ std::shared\_ptr<Player>>>(}
-\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}server\_players"{}},\ \{\}));}
-\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ p\ :\ network\_players)\ \{}
-\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p.second)\ p.second-\/>render();}
-\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ auto\ nav\ =\ GLOBALS.get\_ptr<NavMesh>("{}navmesh"{});}}
-\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (nav)\ \{}}
-\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ (auto\ kv\ :\ nav-\/>entityShapes)\ \{}}
-\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ DrawLineStrip2Din3D(kv.second.hull,\ PINK);}}
-\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ (auto\ kv\ :\ nav-\/>shapes)\ \{}}
-\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ DrawLineStrip2Din3D(kv.hull,\ PINK);}}
-\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{can__be__ghost__player_8h}{components/can\_be\_ghost\_player.h}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{drawing__util_8h}{drawing\_util.h}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ui__color_8h}{engine/ui\_color.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{camera_8h}{camera.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{engine_8h}{engine.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{layer_8h}{engine/layer.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{model__library_8h}{engine/model\_library.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{music__library_8h}{engine/music\_library.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{texture__library_8h}{engine/texture\_library.h}}"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{map_8h}{map.h}}"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{player_8h}{player.h}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_game_layer}{GameLayer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_layer}{Layer}}\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ std::shared\_ptr<Player>\ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}};}
+\DoxyCodeLine{00022\ \ \ \ \ std::shared\_ptr<BasePlayer>\ \mbox{\hyperlink{struct_game_layer_a02d82848d230e3efc306e41ccb8a0711}{active\_player}};}
+\DoxyCodeLine{00023\ \ \ \ \ std::shared\_ptr<GameCam>\ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}};}
+\DoxyCodeLine{00024\ \ \ \ \ raylib::Model\ \mbox{\hyperlink{struct_game_layer_a9214aa50097d74419596c09975f03000}{bag\_model}};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{struct_game_layer_a867f76f6783f7d63333a646cbc2bbfa0}{GameLayer}}()\ :\ \mbox{\hyperlink{struct_layer}{Layer}}(\textcolor{stringliteral}{"{}Game"{}})\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_player}{Player}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{-\/3,\ -\/3\}));}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a0020d85a5afb11283c115e425f7e175c}{set}}(\textcolor{stringliteral}{"{}player"{}},\ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}.get());}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ do\ we\ need\ this\ still?}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}-\/>get<\mbox{\hyperlink{struct_can_be_ghost_player}{CanBeGhostPlayer}}>().update(\textcolor{keyword}{true});}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_game_cam}{GameCam}}());}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a0020d85a5afb11283c115e425f7e175c}{set}}(\textcolor{stringliteral}{"{}game\_cam"{}},\ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}.get());}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_game_layer_ade39138cdf14f80bf254885a49e43fdf}{\string~GameLayer}}()\ \{\}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_layer_a0cb58f0bb55b154e6236df80fbe0eea0}{onEvent}}(\mbox{\hyperlink{struct_event}{Event}}\&\ event)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{MenuState::s\_in\_game}}())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_event_dispatcher}{EventDispatcher}}\ dispatcher(event);}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_key_pressed_event}{KeyPressedEvent}}>(}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ std::bind(\&\mbox{\hyperlink{struct_game_layer_a614faefb9cd5b78e3117eea4bd3de3b1}{GameLayer::onKeyPressed}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_gamepad_button_pressed_event}{GamepadButtonPressedEvent}}>(std::bind(}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_game_layer_a84417a9ddbc61d6c74a0c1d598661e46}{GameLayer::onGamepadButtonPressed}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_gamepad_axis_moved_event}{GamepadAxisMovedEvent}}>(std::bind(}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_game_layer_ac09e8d5b737b41758dffd544d99166cd}{GameLayer::onGamepadAxisMoved}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_game_layer_ac09e8d5b737b41758dffd544d99166cd}{onGamepadAxisMoved}}(\mbox{\hyperlink{struct_gamepad_axis_moved_event}{GamepadAxisMovedEvent}}\&)\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_game_layer_a84417a9ddbc61d6c74a0c1d598661e46}{onGamepadButtonPressed}}(\mbox{\hyperlink{struct_gamepad_button_pressed_event}{GamepadButtonPressedEvent}}\&\ event)\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_key_map_aa512c05b66f7e01fc35b102ff7959349}{KeyMap::get\_button}}(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::Pause)\ ==}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ event.\mbox{\hyperlink{struct_gamepad_button_pressed_event_af34a9b36877fe246213d861ba4711b46}{button}})\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_state_a9a3ed09dd6f05acb6aa3a804a8aedc37}{GameState::s\_pause}}();}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00059\ \ \ \ \ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_game_layer_a614faefb9cd5b78e3117eea4bd3de3b1}{onKeyPressed}}(\mbox{\hyperlink{struct_key_pressed_event}{KeyPressedEvent}}\&\ event)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note:\ You\ can\ only\ pause\ in\ game\ state,\ in\ planning\ no\ pause}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_key_map_a8026f7f5618d4f427a5c4883872e0332}{KeyMap::get\_key\_code}}(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::Pause)\ ==}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ event.\mbox{\hyperlink{struct_key_event_a099e4f3c01870f67baffeba80b5c1860}{keycode}})\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_state_a9a3ed09dd6f05acb6aa3a804a8aedc37}{GameState::s\_pause}}();}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ TODO\ obv\ need\ to\ have\ this\ fun\ on\ a\ timer\ or\ something\ instead}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ of\ on\ esc}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SoundLibrary::get().play\_random\_match("{}pa\_announcements\_"{});}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_layer_acc7d3f410b4c25afd764848638d39c6f}{play\_music}}()\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ m\ =\ \mbox{\hyperlink{struct_music_library_aa483c444b8a7363bff5973295fe45217}{MusicLibrary::get}}().get(\textcolor{stringliteral}{"{}supermarket"{}});}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!IsMusicStreamPlaying(m))\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ PlayMusicStream(m);}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ UpdateMusicStream(m);}
+\DoxyCodeLine{00080\ \ \ \ \ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514cd}{onUpdate}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{MenuState::s\_in\_game}}())\ \mbox{\hyperlink{struct_game_layer_acc7d3f410b4c25afd764848638d39c6f}{play\_music}}();}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_game_state_aa927cf7b60fe39c96c4d97187a5d33bd}{GameState::s\_should\_update}}())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ quit\ window\ on\ escape}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ raylib::SetExitKey(raylib::KEY\_NULL);}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ Why\ does\ updateCamera\ not\ just\ take\ an\ optional\ target?}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}-\/>updateToTarget(}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{get\_or\_default}}<\mbox{\hyperlink{struct_entity}{Entity}}>(\textcolor{stringliteral}{"{}active\_camera\_target"{}},\ *\mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}));}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}-\/>updateCamera();}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}-\/>update(dt);}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ gabe:\ i\ dont\ think\ we\ need\ to\ do\ this}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ because\ the\ local\ map\ never\ should\ need\ to\ grab\ things}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ TODO\ do\ we?}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ map\_ptr\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{get\_ptr}}<\mbox{\hyperlink{struct_map}{Map}}>(\textcolor{stringliteral}{"{}map"{}});}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map\_ptr)\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ today\ we\ need\ to\ grab\ things\ so\ that\ the\ client\ renders}}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ what\ they\ server\ has\ access\ to}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ map\_ptr-\/>\mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\_things}}();}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ need\ this\ so\ the\ entity\ -\/>\ floating\ name\ moves\ around}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ why\ does\ that\ happen}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ map\_ptr-\/>onUpdate(dt);}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00110\ \ \ \ \ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_layer_ac93aed3c3aeeb92b41fd322d0ca926c5}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{MenuState::s\_in\_game}}())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ map\_ptr\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{get\_ptr}}<\mbox{\hyperlink{struct_map}{Map}}>(\textcolor{stringliteral}{"{}map"{}});}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ network\_debug\_mode\_on\ =}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{get\_or\_default}}<\textcolor{keywordtype}{bool}>(\textcolor{stringliteral}{"{}network\_ui\_enabled"{}},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (network\_debug\_mode\_on)\ \{}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ map\_ptr\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{get\_ptr}}<\mbox{\hyperlink{struct_map}{Map}}>(\textcolor{stringliteral}{"{}server\_map"{}});}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceext_a5bb9a44990202857eea129e5b983f183}{ext::clear\_background}}(Color\{200,\ 200,\ 200,\ 255\});}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ raylib::BeginMode3D((*cam).get());}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::DrawPlane((\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{0.0f,\ -\/\mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ 0.0f\},}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}})\{256.0f,\ 256.0f\},\ DARKGRAY);}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map\_ptr)\ map\_ptr-\/>onDraw(dt);}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (network\_debug\_mode\_on)\ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ network\_players\ =}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Forcing\ a\ copy\ to\ avoid\ the\ data\ changing\ from\ underneath}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ us}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<int,\ std::shared\_ptr<Player>>(}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{get\_or\_default}}<}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<int,\ std::shared\_ptr<Player>>>(}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}server\_players"{}},\ \{\}));}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ p\ :\ network\_players)\ \{}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p.second)\ p.second-\/>render();}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ auto\ nav\ =\ GLOBALS.get\_ptr<NavMesh>("{}navmesh"{});}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (nav)\ \{}}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ (auto\ kv\ :\ nav-\/>entityShapes)\ \{}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ DrawLineStrip2Din3D(kv.second.hull,\ PINK);}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ (auto\ kv\ :\ nav-\/>shapes)\ \{}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ DrawLineStrip2Din3D(kv.hull,\ PINK);}}
 \DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ raylib::EndMode3D();}
-\DoxyCodeLine{00152\ }
-\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ note:\ for\ ui\ stuff}}
-\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map\_ptr)\ map\_ptr-\/>onDrawUI(dt);}
-\DoxyCodeLine{00155\ \ \ \ \ \}}
-\DoxyCodeLine{00156\ \};}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ raylib::EndMode3D();}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ note:\ for\ ui\ stuff}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map\_ptr)\ map\_ptr-\/>onDrawUI(dt);}
+\DoxyCodeLine{00156\ \ \ \ \ \}}
+\DoxyCodeLine{00157\ \};}
 
 \end{DoxyCode}

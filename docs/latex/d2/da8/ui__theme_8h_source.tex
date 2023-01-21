@@ -1,0 +1,83 @@
+\hypertarget{ui__theme_8h_source}{}\doxysection{ui\+\_\+theme.\+h}
+\label{ui__theme_8h_source}\index{src/engine/ui\_theme.h@{src/engine/ui\_theme.h}}
+\mbox{\hyperlink{ui__theme_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ui__color_8h}{ui\_color.h}}"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceui}{ui}}\ \{}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }theme\ \{}
+\DoxyCodeLine{00009\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74}{Usage}}\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a421c3240bd6c5c4cd47e5249711f90b1}{Font}},}
+\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a6d28d8c67da1229071a86f73f4ba6b9e}{DarkFont}},}
+\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a9f2ec87a71a283c4ef793caa7a60abff}{Background}},}
+\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a8ba193e7a9c49a44e917f7c2ba2b5653}{Primary}},}
+\DoxyCodeLine{00014\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a4f5291f27fa788a54759585b9127a7ff}{Secondary}},}
+\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74ad9b1efad2d6b0380f08dc2c1b4382c24}{Accent}},}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a09c0ed1271690abcb50cfa0c97a621dd}{Error}},}
+\DoxyCodeLine{00017\ \};}
+\DoxyCodeLine{00018\ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structui_1_1_u_i_theme}{UITheme}}\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ Color\ \mbox{\hyperlink{structui_1_1_u_i_theme_a1a719f22901db504b43a93cbfd92c16b}{font}};}
+\DoxyCodeLine{00022\ \ \ \ \ Color\ \mbox{\hyperlink{structui_1_1_u_i_theme_ab15f444a84c03714b997d1e979004d36}{darkfont}};}
+\DoxyCodeLine{00023\ \ \ \ \ Color\ \mbox{\hyperlink{structui_1_1_u_i_theme_a9bbc9a2d14c393856bc5264d5e28c6f5}{background}};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ Color\ \mbox{\hyperlink{structui_1_1_u_i_theme_a425f9ee8ae84ac101f05dff5a1928954}{primary}};}
+\DoxyCodeLine{00026\ \ \ \ \ Color\ \mbox{\hyperlink{structui_1_1_u_i_theme_ab7af6a3da70ea7dcfea790df7eb2d166}{secondary}};}
+\DoxyCodeLine{00027\ \ \ \ \ Color\ \mbox{\hyperlink{structui_1_1_u_i_theme_ae7ce8715f98f127d8744ca165eeccccb}{accent}};}
+\DoxyCodeLine{00028\ \ \ \ \ Color\ \mbox{\hyperlink{structui_1_1_u_i_theme_a9ef7a2b346357d53d60cf6ea166f5880}{error}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_aa1a8e3bf124ec5eab2c5f0d00cb002a4}{UITheme}}()}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{namespacefont}{font}}(color::isabelline),}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_ab15f444a84c03714b997d1e979004d36}{darkfont}}(color::oxford\_blue),}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_a9bbc9a2d14c393856bc5264d5e28c6f5}{background}}(color::oxford\_blue),}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_a425f9ee8ae84ac101f05dff5a1928954}{primary}}(color::pacific\_blue),}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_ab7af6a3da70ea7dcfea790df7eb2d166}{secondary}}(color::tea\_green),}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_ae7ce8715f98f127d8744ca165eeccccb}{accent}}(color::orange\_soda),}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ find\ a\ better\ error\ color}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_a9ef7a2b346357d53d60cf6ea166f5880}{error}}(color::red)\ \{\}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_a6a285b36d66d26f6eef868c72ae069e7}{UITheme}}(Color\ f,\ Color\ df,\ Color\ bg,\ Color\ p,\ Color\ s,\ Color\ a,\ Color\ e)}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{namespacefont}{font}}(f),}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_ab15f444a84c03714b997d1e979004d36}{darkfont}}(df),}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_a9bbc9a2d14c393856bc5264d5e28c6f5}{background}}(bg),}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_a425f9ee8ae84ac101f05dff5a1928954}{primary}}(p),}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_ab7af6a3da70ea7dcfea790df7eb2d166}{secondary}}(s),}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_ae7ce8715f98f127d8744ca165eeccccb}{accent}}(a),}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme_a9ef7a2b346357d53d60cf6ea166f5880}{error}}(e)\ \{\}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ Color\ \mbox{\hyperlink{structui_1_1_u_i_theme_a72f7e9d15024b59799009b19fa52f0fd}{from\_usage}}(\mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74}{theme::Usage}}\ cu)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (cu)\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a421c3240bd6c5c4cd47e5249711f90b1}{theme::Usage::Font}}:}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structui_1_1_u_i_theme_a1a719f22901db504b43a93cbfd92c16b}{font}};}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a6d28d8c67da1229071a86f73f4ba6b9e}{theme::Usage::DarkFont}}:}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structui_1_1_u_i_theme_ab15f444a84c03714b997d1e979004d36}{darkfont}};}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a9f2ec87a71a283c4ef793caa7a60abff}{theme::Usage::Background}}:}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structui_1_1_u_i_theme_a9bbc9a2d14c393856bc5264d5e28c6f5}{background}};}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a8ba193e7a9c49a44e917f7c2ba2b5653}{theme::Usage::Primary}}:}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structui_1_1_u_i_theme_a425f9ee8ae84ac101f05dff5a1928954}{primary}};}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a4f5291f27fa788a54759585b9127a7ff}{theme::Usage::Secondary}}:}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structui_1_1_u_i_theme_ab7af6a3da70ea7dcfea790df7eb2d166}{secondary}};}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74ad9b1efad2d6b0380f08dc2c1b4382c24}{theme::Usage::Accent}}:}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structui_1_1_u_i_theme_ae7ce8715f98f127d8744ca165eeccccb}{accent}};}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a09c0ed1271690abcb50cfa0c97a621dd}{theme::Usage::Error}}:}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structui_1_1_u_i_theme_a9ef7a2b346357d53d60cf6ea166f5880}{error}};}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structui_1_1_u_i_theme_a9bbc9a2d14c393856bc5264d5e28c6f5}{background}};}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ \};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_u_i_theme}{UITheme}}\ \mbox{\hyperlink{namespaceui_aaf6427befc8330fedd9aa7d987a3ea62}{DEFAULT\_THEME}}\ =\ \mbox{\hyperlink{structui_1_1_u_i_theme}{UITheme}}();}
+\DoxyCodeLine{00071\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_u_i_theme}{UITheme}}\ \mbox{\hyperlink{namespaceui_a0779b4459604c4f53aea51df22cf83ed}{GRAYSCALE}}\ =}
+\DoxyCodeLine{00072\ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_theme}{UITheme}}(\mbox{\hyperlink{namespaceui_1_1color_ab3981d4504b439492296189f2532b8c6}{color::white}},\ \mbox{\hyperlink{namespaceui_1_1color_a6f3faea9aa03a03c9476504055511820}{color::grey}},\ \mbox{\hyperlink{namespaceui_1_1color_a6f3faea9aa03a03c9476504055511820}{color::grey}},\ \mbox{\hyperlink{namespaceui_1_1color_a0f51de1bd64b9c75ee2ae92c79d022d0}{color::black}},}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1color_a90e8738b4b6bbb843035b1226687768a}{color::cool\_grey}},\ \mbox{\hyperlink{namespaceui_1_1color_a4c77328cdbeeaa9188c22ff7b09785b4}{color::off\_white}},}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ is\ there\ a\ better\ error\ color?}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1color_a4c77328cdbeeaa9188c22ff7b09785b4}{color::off\_white}});}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \}\ \ \textcolor{comment}{//\ namespace\ ui}}
+
+\end{DoxyCode}

@@ -1,0 +1,17 @@
+digraph "network::Server"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [shape=record,label="{network::Server\n|- server_p\l- players\l- pharmacy_map\l- running\l- thread_id\l- current_menu_state\l- current_game_state\l- next_map_tick_reset\l- next_map_tick\l|+ start()\l+ queue_packet()\l+ stop()\l- Server()\l- send_map_state()\l- run()\l- tick()\l- process_announcement\l_packet()\l- process_player_control\l_packet()\l- send_announcement()\l- process_player_leave()\l- process_player_leave\l_packet()\l- process_player_join\l_packet()\l- server_enqueue_message\l_string()\l- server_process_message\l_string()\l- send_client_packet\l_to_client()\l- send_client_packet\l_to_all()\l}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [color="grey25",style="solid",label=" -incoming_message_queue" ,arrowhead="odiamond"];
+  Node2 [shape=record,label="{AtomicQueue\< ClientMessage \>\n|- q\l- m_mutex\l|+ push_back()\l+ pop()\l+ pop_front()\l+ front()\l+ empty()\l+ size()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d1/dab/struct_atomic_queue.html",tooltip=" "];
+  Node3 -> Node2 [dir="back",color="orange",style="solid",label=" \< ClientMessage \>" ];
+  Node3 [shape=record,label="{AtomicQueue\< T \>\n|- q\l- m_mutex\l|+ push_back()\l+ pop()\l+ pop_front()\l+ front()\l+ empty()\l+ size()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d1/dab/struct_atomic_queue.html",tooltip=" "];
+  Node4 -> Node1 [color="grey25",style="solid",label=" -packet_queue" ,arrowhead="odiamond"];
+  Node4 [shape=record,label="{AtomicQueue\< network\l::ClientPacket \>\n|- q\l- m_mutex\l|+ push_back()\l+ pop()\l+ pop_front()\l+ front()\l+ empty()\l+ size()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d1/dab/struct_atomic_queue.html",tooltip=" "];
+  Node3 -> Node4 [dir="back",color="orange",style="solid",label=" \< network::ClientPacket \>" ];
+  Node5 -> Node1 [color="grey25",style="solid",label=" -next_update_timer" ,arrowhead="odiamond"];
+  Node5 [shape=record,label="{TriggerOnDt\n|+ reset\l+ current\l|+ TriggerOnDt()\l+ operator float()\l+ test()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$da/d7e/struct_trigger_on_dt.html",tooltip=" "];
+}

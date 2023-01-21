@@ -1,0 +1,35 @@
+\hypertarget{astar_8h}{}\doxysection{src/engine/astar.h File Reference}
+\label{astar_8h}\index{src/engine/astar.h@{src/engine/astar.h}}
+{\ttfamily \#include $<$limits$>$}\newline
+{\ttfamily \#include \char`\"{}../external\+\_\+include.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../globals.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../vec\+\_\+util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}log.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structastar_1_1_score_value}{astar\+::\+Score\+Value}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceastar}{astar}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{namespaceastar_a05bf641d43876bcd1f7fd0ad254d3563}{astar\+::path\+\_\+estimate}} (const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&a, const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&b)
+\item 
+float \mbox{\hyperlink{namespaceastar_a5ed9154348f3c75837c41448c03ddcd7}{astar\+::distance\+\_\+between}} (const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&a, const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&b)
+\item 
+\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{namespaceastar_aaf8fb1cd16f5faae02a731345440c13f}{astar\+::get\+\_\+lowest\+\_\+f}} (const std\+::set$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \&set, std\+::map$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}, Score\+Value $>$ \&fscore)
+\item 
+std\+::vector$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar\+::get\+\_\+neighbors}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} start, std\+::function$<$ bool(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos)$>$ is\+\_\+walkable)
+\item 
+std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{namespaceastar_a83be626a90804773b9392094616e117f}{astar\+::reconstruct\+\_\+path}} (std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ path, std\+::map$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \&parent\+\_\+map, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} current)
+\item 
+std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{astar\+::find\+\_\+path\+\_\+impl}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} start, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} end, std\+::function$<$ bool(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos)$>$ is\+\_\+walkable)
+\item 
+std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}{astar\+::find\+\_\+path}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} start, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} end, std\+::function$<$ bool(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos)$>$ is\+\_\+walkable)
+\end{DoxyCompactItemize}

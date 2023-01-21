@@ -1,0 +1,81 @@
+\hypertarget{ui_8h}{}\doxysection{src/engine/ui.h File Reference}
+\label{ui_8h}\index{src/engine/ui.h@{src/engine/ui.h}}
+{\ttfamily \#include \char`\"{}raylib.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ui\+\_\+autolayout.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ui\+\_\+color.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ui\+\_\+components.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ui\+\_\+context.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ui\+\_\+state.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ui\+\_\+theme.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ui\+\_\+widget.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}uuid.\+h\char`\"{}}\newline
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceui}{ui}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::function$<$ Textfield\+Validation\+Decision\+Flag(const std\+::string \&)$>$ \mbox{\hyperlink{namespaceui_a9b3310140b09d29060f497ef83f246c5}{ui\+::\+Text\+Field\+Validation\+Fn}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum struct \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{ui\+::\+Textfield\+Validation\+Decision\+Flag}} \{ \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba6adf97f83acf6453d4a6a4b1070f3754}{ui\+::\+None}} = 0
+, \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba3218c9ded441061dd2e1bc7bca15743d}{ui\+::\+Stop\+New\+Input}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 0
+, \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba3ac705f2acd51a4613f9188c05c91d0d}{ui\+::\+Valid}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 1
+, \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba4bbb8f967da6d1a610596d7257179c2b}{ui\+::\+Invalid}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 2
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{ui\+::text}} (const Widget \&widget, const std\+::string \&content, theme\+::\+Usage color\+\_\+usage=theme\+::\+Usage\+::\+Font)
+\item 
+bool \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{ui\+::button}} (const Widget \&widget, const std\+::string \&content=\char`\"{}\char`\"{})
+\item 
+bool \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{ui\+::button\+\_\+list}} (const Widget \&widget, const std\+::vector$<$ std\+::string $>$ \&options, int $\ast$selected\+Index=nullptr, bool $\ast$has\+Focus=nullptr)
+\item 
+bool \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{ui\+::dropdown}} (const Widget \&widget, const std\+::vector$<$ std\+::string $>$ \&options, bool $\ast$dropdown\+State, int $\ast$selected\+Index)
+\item 
+bool \mbox{\hyperlink{namespaceui_a3fad4a8075125de9079fb82cb9e0d465}{ui\+::slider}} (const Widget \&widget, float $\ast$value, float mnf, float mxf)
+\item 
+bool \mbox{\hyperlink{namespaceui_a92afecc0b85dc29c36cdc80897df74c4}{ui\+::operator!}} (Textfield\+Validation\+Decision\+Flag f)
+\item 
+bool \mbox{\hyperlink{namespaceui_a0bf5a70cbb0209928bd2bf2f3848b7c6}{ui\+::validation\+\_\+test}} (Textfield\+Validation\+Decision\+Flag flag, Textfield\+Validation\+Decision\+Flag mask)
+\item 
+bool \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{ui\+::textfield}} (const Widget \&widget, std\+::string \&content, Text\+Field\+Validation\+Fn validation=\{\})
+\item 
+bool \mbox{\hyperlink{namespaceui_aadad469b76dbb557f2985c32613f27fb}{ui\+::checkbox}} (const Widget \&widget, bool $\ast$cb\+State=nullptr, std\+::string $\ast$label=nullptr)
+\item 
+bool \mbox{\hyperlink{namespaceui_aa1839faeec0199d1ef759103fce1fe1a}{ui\+::is\+\_\+hot}} (const uuid \&id)
+\item 
+bool \mbox{\hyperlink{namespaceui_aab0068660425ea4f46c3ef45730d5d86}{ui\+::is\+\_\+active}} (const uuid \&id)
+\item 
+bool \mbox{\hyperlink{namespaceui_a05db1c88785ff2efe63d52d42f4ecc0c}{ui\+::is\+\_\+active\+\_\+or\+\_\+hot}} (const uuid \&id)
+\item 
+bool \mbox{\hyperlink{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}{ui\+::is\+\_\+active\+\_\+and\+\_\+hot}} (const uuid \&id)
+\item 
+void \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{ui\+::active\+\_\+if\+\_\+mouse\+\_\+inside}} (const uuid id, const Rectangle \&rect)
+\item 
+bool \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{ui\+::has\+\_\+kb\+\_\+focus}} (const uuid \&id)
+\item 
+void \mbox{\hyperlink{namespaceui_ae35de41cc3681263b334e7c7d950f746}{ui\+::try\+\_\+to\+\_\+grab\+\_\+kb}} (const uuid id)
+\item 
+void \mbox{\hyperlink{namespaceui_a012466e309607e0225b50fe63a149d7f}{ui\+::draw\+\_\+if\+\_\+kb\+\_\+focus}} (const uuid \&id, std\+::function$<$ void(void)$>$ cb)
+\item 
+void \mbox{\hyperlink{namespaceui_ab56bfa403cf97b6eedada75235bdf672}{ui\+::handle\+\_\+tabbing}} (const uuid id)
+\item 
+void \mbox{\hyperlink{namespaceui_a062fa8a78208818cd2f1b11239615ef0}{ui\+::\+\_\+draw\+\_\+focus\+\_\+ring}} (const Widget \&widget, theme\+::\+Usage usage=theme\+::\+Usage\+::\+Accent)
+\item 
+UIContext\+::\+Last\+Frame \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{ui\+::init\+\_\+widget}} (const Widget \&widget, const char $\ast$func)
+\item 
+bool \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{ui\+::padding}} (const Widget \&widget)
+\item 
+bool \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{ui\+::div}} (const Widget \&widget)
+\item 
+bool \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{ui\+::slider}} (const Widget \&widget, bool vertical, float $\ast$value, float mnf, float mxf)
+\item 
+bool \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{ui\+::scroll\+\_\+view}} (const Widget \&widget, std\+::function$<$ void()$>$ children, float $\ast$starting\+Location=nullptr)
+\end{DoxyCompactItemize}

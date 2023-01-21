@@ -1,0 +1,71 @@
+\hypertarget{graphics_8h}{}\doxysection{src/engine/graphics.h File Reference}
+\label{graphics_8h}\index{src/engine/graphics.h@{src/engine/graphics.h}}
+{\ttfamily \#include $<$raylib.\+h$>$}\newline
+{\ttfamily \#include $<$rlgl.\+h$>$}\newline
+{\ttfamily \#include $<$Raylib\+Op\+Overloads.\+h$>$}\newline
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceraylib}{raylib}}
+\item 
+namespace \mbox{\hyperlink{namespaceext}{ext}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef raylib\+::\+Vector2 \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}
+\item 
+typedef raylib\+::\+Vector3 \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}
+\item 
+typedef raylib\+::\+Vector4 \mbox{\hyperlink{graphics_8h_a68414c2977bb70c671afe66488f25ee3}{vec4}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespaceraylib_a0253046e4231c6852baf000f8a009cfd}{raylib\+::operator$<$}} (Vector2 l, Vector2 r)
+\item 
+void \mbox{\hyperlink{namespaceext_a8f6d0019175720d35ae74464c4ce6104}{ext\+::draw\+\_\+fps}} (int x, int y)
+\item 
+void \mbox{\hyperlink{namespaceext_a5bb9a44990202857eea129e5b983f183}{ext\+::clear\+\_\+background}} (raylib\+::\+Color col)
+\item 
+void \mbox{\hyperlink{namespaceext_a41d65f535b60fb25f4b12e58bae9949d}{ext\+::init\+\_\+audio\+\_\+device}} ()
+\item 
+void \mbox{\hyperlink{namespaceext_a49ad0fadb806b7e8aeacd599696e0c61}{ext\+::close\+\_\+audio\+\_\+device}} ()
+\item 
+void \mbox{\hyperlink{namespaceext_a4ce923da4e333ef343d896512102ec85}{ext\+::set\+\_\+clipboard\+\_\+text}} (const char $\ast$text)
+\item 
+auto \mbox{\hyperlink{namespaceext_a443d85b48117cbe070de1ea8c533b4b8}{ext\+::get\+\_\+clipboard\+\_\+text}} ()
+\item 
+\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{namespaceext_a286e8a217e772c02613bd55259c35e81}{ext\+::get\+\_\+mouse\+\_\+position}} ()
+\item 
+bool \mbox{\hyperlink{namespaceext_ab9f2f5110eb6de9c480b9ec159e134c0}{ext\+::is\+\_\+key\+\_\+pressed}} (int keycode)
+\item 
+bool \mbox{\hyperlink{namespaceext_accf8b186f73f96599a11735f60575308}{ext\+::is\+\_\+key\+\_\+down}} (int keycode)
+\item 
+float \mbox{\hyperlink{namespaceext_a8af3ddffe4315853c32c18039c9e1e89}{ext\+::get\+\_\+gamepad\+\_\+axis\+\_\+movement}} (int gamepad, raylib\+::\+Gamepad\+Axis axis)
+\item 
+float \mbox{\hyperlink{namespaceext_a1dfbf6c64678594d99434869366ce2c8}{ext\+::get\+\_\+mouse\+\_\+wheel\+\_\+move}} ()
+\item 
+void \mbox{\hyperlink{namespaceext_a48cee5477bb4d3d0cb4ae35ed5f30b51}{ext\+::set\+\_\+gamepad\+\_\+mappings}} (const char $\ast$mappings)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}\label{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}} 
+\index{graphics.h@{graphics.h}!vec2@{vec2}}
+\index{vec2@{vec2}!graphics.h@{graphics.h}}
+\doxysubsubsection{\texorpdfstring{vec2}{vec2}}
+{\footnotesize\ttfamily typedef raylib\+::\+Vector2 \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}
+
+\mbox{\Hypertarget{graphics_8h_a308f9233b868e4e52062de502c3d9cef}\label{graphics_8h_a308f9233b868e4e52062de502c3d9cef}} 
+\index{graphics.h@{graphics.h}!vec3@{vec3}}
+\index{vec3@{vec3}!graphics.h@{graphics.h}}
+\doxysubsubsection{\texorpdfstring{vec3}{vec3}}
+{\footnotesize\ttfamily typedef raylib\+::\+Vector3 \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}
+
+\mbox{\Hypertarget{graphics_8h_a68414c2977bb70c671afe66488f25ee3}\label{graphics_8h_a68414c2977bb70c671afe66488f25ee3}} 
+\index{graphics.h@{graphics.h}!vec4@{vec4}}
+\index{vec4@{vec4}!graphics.h@{graphics.h}}
+\doxysubsubsection{\texorpdfstring{vec4}{vec4}}
+{\footnotesize\ttfamily typedef raylib\+::\+Vector4 \mbox{\hyperlink{graphics_8h_a68414c2977bb70c671afe66488f25ee3}{vec4}}}
+

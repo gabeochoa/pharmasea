@@ -1,0 +1,32 @@
+\hypertarget{simple__colored__box__renderer_8h_source}{}\doxysection{simple\+\_\+colored\+\_\+box\+\_\+renderer.\+h}
+\label{simple__colored__box__renderer_8h_source}\index{src/components/simple\_colored\_box\_renderer.h@{src/components/simple\_colored\_box\_renderer.h}}
+\mbox{\hyperlink{simple__colored__box__renderer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../item.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_simple_colored_box_renderer_aec928d495e6f45ab3a71d9a4a6200b10}{\string~SimpleColoredBoxRenderer}}()\ \{\}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ Color\ \mbox{\hyperlink{struct_simple_colored_box_renderer_a650f216dd8ad2c3503c3ce7567f9129f}{face\_color}};}
+\DoxyCodeLine{00011\ \ \ \ \ Color\ \mbox{\hyperlink{struct_simple_colored_box_renderer_a43652e104eb689779619fa4780bbc54e}{base\_color}};}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_simple_colored_box_renderer_a2514eddcfff56a0351ec3de5bbccb209}{init}}(Color\ face,\ Color\ base)\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_simple_colored_box_renderer_a650f216dd8ad2c3503c3ce7567f9129f}{face\_color}}\ =\ face;}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_simple_colored_box_renderer_a43652e104eb689779619fa4780bbc54e}{base\_color}}\ =\ base;}
+\DoxyCodeLine{00016\ \ \ \ \ \}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_simple_colored_box_renderer_adbeecdaccce610e410a1909061c2bb80}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_simple_colored_box_renderer_a650f216dd8ad2c3503c3ce7567f9129f}{face\_color}});}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_simple_colored_box_renderer_a43652e104eb689779619fa4780bbc54e}{base\_color}});}
+\DoxyCodeLine{00025\ \ \ \ \ \}}
+\DoxyCodeLine{00026\ \};}
+
+\end{DoxyCode}

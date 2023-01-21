@@ -1,0 +1,124 @@
+\hypertarget{struct_system_manager}{}\doxysection{System\+Manager Struct Reference}
+\label{struct_system_manager}\index{SystemManager@{SystemManager}}
+
+
+{\ttfamily \#include $<$system\+\_\+manager.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_system_manager_ae537b4cc55a37c7315c4d7138a64cf0f}{update}} (float dt)
+\item 
+void \mbox{\hyperlink{struct_system_manager_a29bf4a8930da3f510009e2fa23d66e8a}{render}} (float dt) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_system_manager_ad233621dcb6767fde1ebd0f1cdca1ae1}{always\+\_\+update}} (float dt)
+\item 
+void \mbox{\hyperlink{struct_system_manager_a8711c4d2e2126274060b8e606f09d887}{in\+\_\+round\+\_\+update}} (float dt)
+\item 
+void \mbox{\hyperlink{struct_system_manager_a43d2b23bbc45389756f2f158ca877b40}{planning\+\_\+update}} (float dt)
+\item 
+void \mbox{\hyperlink{struct_system_manager_ae88caf9a5775b7c04110e4c820ec17c3}{render\+\_\+normal}} (float dt) const
+\item 
+void \mbox{\hyperlink{struct_system_manager_a48d2ba02a8115629e6b2066465f33d8a}{render\+\_\+debug}} (float dt) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_system_manager_ad233621dcb6767fde1ebd0f1cdca1ae1}\label{struct_system_manager_ad233621dcb6767fde1ebd0f1cdca1ae1}} 
+\index{SystemManager@{SystemManager}!always\_update@{always\_update}}
+\index{always\_update@{always\_update}!SystemManager@{SystemManager}}
+\doxysubsubsection{\texorpdfstring{always\_update()}{always\_update()}}
+{\footnotesize\ttfamily void System\+Manager\+::always\+\_\+update (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_helper_a61f26ee4774876d30248574c28ba63eb}{Entity\+Helper\+::for\+Each\+Entity()}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610ade35d6cc11c2732bc98475566a7fffe9}{Entity\+Helper\+::\+None}}, \mbox{\hyperlink{namespacesystem__manager_afe9f22e9aaf5690dda2fa12e579ddcb1}{system\+\_\+manager\+::reset\+\_\+highlighted()}}, \mbox{\hyperlink{namespacesystem__manager_a6cf678bc2a6cdee9b0646d1a744d01f2}{system\+\_\+manager\+::transform\+\_\+snapper()}}, and \mbox{\hyperlink{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}{system\+\_\+manager\+::update\+\_\+held\+\_\+item\+\_\+position()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_system_manager_ae537b4cc55a37c7315c4d7138a64cf0f}{update()}}.
+
+\mbox{\Hypertarget{struct_system_manager_a8711c4d2e2126274060b8e606f09d887}\label{struct_system_manager_a8711c4d2e2126274060b8e606f09d887}} 
+\index{SystemManager@{SystemManager}!in\_round\_update@{in\_round\_update}}
+\index{in\_round\_update@{in\_round\_update}!SystemManager@{SystemManager}}
+\doxysubsubsection{\texorpdfstring{in\_round\_update()}{in\_round\_update()}}
+{\footnotesize\ttfamily void System\+Manager\+::in\+\_\+round\+\_\+update (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_helper_a61f26ee4774876d30248574c28ba63eb}{Entity\+Helper\+::for\+Each\+Entity()}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610ade35d6cc11c2732bc98475566a7fffe9}{Entity\+Helper\+::\+None}}, and \mbox{\hyperlink{namespacesystem__manager_ad37dd2580fac8e15a7d95784327e63b9}{system\+\_\+manager\+::update\+\_\+job\+\_\+information()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_system_manager_ae537b4cc55a37c7315c4d7138a64cf0f}{update()}}.
+
+\mbox{\Hypertarget{struct_system_manager_a43d2b23bbc45389756f2f158ca877b40}\label{struct_system_manager_a43d2b23bbc45389756f2f158ca877b40}} 
+\index{SystemManager@{SystemManager}!planning\_update@{planning\_update}}
+\index{planning\_update@{planning\_update}!SystemManager@{SystemManager}}
+\doxysubsubsection{\texorpdfstring{planning\_update()}{planning\_update()}}
+{\footnotesize\ttfamily void System\+Manager\+::planning\+\_\+update (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_helper_a61f26ee4774876d30248574c28ba63eb}{Entity\+Helper\+::for\+Each\+Entity()}}, \mbox{\hyperlink{namespacesystem__manager_a59f2cc661fe66e73806e73eaab658a6d}{system\+\_\+manager\+::highlight\+\_\+facing\+\_\+furniture()}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610ade35d6cc11c2732bc98475566a7fffe9}{Entity\+Helper\+::\+None}}, and \mbox{\hyperlink{namespacesystem__manager_a83ed24ae5e1d1c24133a535d653b172f}{system\+\_\+manager\+::update\+\_\+held\+\_\+furniture\+\_\+position()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_system_manager_ae537b4cc55a37c7315c4d7138a64cf0f}{update()}}.
+
+\mbox{\Hypertarget{struct_system_manager_a29bf4a8930da3f510009e2fa23d66e8a}\label{struct_system_manager_a29bf4a8930da3f510009e2fa23d66e8a}} 
+\index{SystemManager@{SystemManager}!render@{render}}
+\index{render@{render}!SystemManager@{SystemManager}}
+\doxysubsubsection{\texorpdfstring{render()}{render()}}
+{\footnotesize\ttfamily void System\+Manager\+::render (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{Global\+Value\+Register\+::get\+\_\+or\+\_\+default()}}, \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}, \mbox{\hyperlink{struct_system_manager_a48d2ba02a8115629e6b2066465f33d8a}{render\+\_\+debug()}}, and \mbox{\hyperlink{struct_system_manager_ae88caf9a5775b7c04110e4c820ec17c3}{render\+\_\+normal()}}.
+
+\mbox{\Hypertarget{struct_system_manager_a48d2ba02a8115629e6b2066465f33d8a}\label{struct_system_manager_a48d2ba02a8115629e6b2066465f33d8a}} 
+\index{SystemManager@{SystemManager}!render\_debug@{render\_debug}}
+\index{render\_debug@{render\_debug}!SystemManager@{SystemManager}}
+\doxysubsubsection{\texorpdfstring{render\_debug()}{render\_debug()}}
+{\footnotesize\ttfamily void System\+Manager\+::render\+\_\+debug (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_helper_a61f26ee4774876d30248574c28ba63eb}{Entity\+Helper\+::for\+Each\+Entity()}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610ade35d6cc11c2732bc98475566a7fffe9}{Entity\+Helper\+::\+None}}, and \mbox{\hyperlink{namespacesystem__manager_aa69dd786a6109ddeaf28deccc41b0cdc}{system\+\_\+manager\+::render\+\_\+debug()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_system_manager_a29bf4a8930da3f510009e2fa23d66e8a}{render()}}.
+
+\mbox{\Hypertarget{struct_system_manager_ae88caf9a5775b7c04110e4c820ec17c3}\label{struct_system_manager_ae88caf9a5775b7c04110e4c820ec17c3}} 
+\index{SystemManager@{SystemManager}!render\_normal@{render\_normal}}
+\index{render\_normal@{render\_normal}!SystemManager@{SystemManager}}
+\doxysubsubsection{\texorpdfstring{render\_normal()}{render\_normal()}}
+{\footnotesize\ttfamily void System\+Manager\+::render\+\_\+normal (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_helper_a61f26ee4774876d30248574c28ba63eb}{Entity\+Helper\+::for\+Each\+Entity()}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610ade35d6cc11c2732bc98475566a7fffe9}{Entity\+Helper\+::\+None}}, and \mbox{\hyperlink{namespacesystem__manager_a3ac55df2a02efd6903e1546e09601523}{system\+\_\+manager\+::render\+\_\+normal()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_system_manager_a29bf4a8930da3f510009e2fa23d66e8a}{render()}}.
+
+\mbox{\Hypertarget{struct_system_manager_ae537b4cc55a37c7315c4d7138a64cf0f}\label{struct_system_manager_ae537b4cc55a37c7315c4d7138a64cf0f}} 
+\index{SystemManager@{SystemManager}!update@{update}}
+\index{update@{update}!SystemManager@{SystemManager}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily void System\+Manager\+::update (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_system_manager_ad233621dcb6767fde1ebd0f1cdca1ae1}{always\+\_\+update()}}, \mbox{\hyperlink{struct_entity_helper_a704ecc99728bb6635523ff9b8e46cd95}{Entity\+Helper\+::get\+\_\+entities()}}, \mbox{\hyperlink{struct_system_manager_a8711c4d2e2126274060b8e606f09d887}{in\+\_\+round\+\_\+update()}}, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6aa959d7125a25f89281f6d3d3f0170475}{game\+::\+In\+Round}}, and \mbox{\hyperlink{struct_system_manager_a43d2b23bbc45389756f2f158ca877b40}{planning\+\_\+update()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/system/\mbox{\hyperlink{system__manager_8h}{system\+\_\+manager.\+h}}\end{DoxyCompactItemize}

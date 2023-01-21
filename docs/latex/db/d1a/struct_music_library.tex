@@ -1,0 +1,88 @@
+\hypertarget{struct_music_library}{}\doxysection{Music\+Library Struct Reference}
+\label{struct_music_library}\index{MusicLibrary@{MusicLibrary}}
+
+
+{\ttfamily \#include $<$music\+\_\+library.\+h$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_music_library_1_1_music_library_impl}{Music\+Library\+Impl}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+const raylib\+::\+Music \& \mbox{\hyperlink{struct_music_library_aa483c444b8a7363bff5973295fe45217}{get}} (const std\+::string \&name) const
+\item 
+raylib\+::\+Music \& \mbox{\hyperlink{struct_music_library_a15890a58e47ac6f975afd930b42fa01b}{get}} (const std\+::string \&name)
+\item 
+void \mbox{\hyperlink{struct_music_library_aeab0c55ba65d1793675f4a1df8d5c3f7}{load}} (const char $\ast$filename, const char $\ast$name)
+\item 
+void \mbox{\hyperlink{struct_music_library_ad0c364c5dbe6ac93b46e2cb287bf0a4e}{update\+\_\+volume}} (float new\+\_\+v)
+\item 
+void \mbox{\hyperlink{struct_music_library_a062c809ff01336c31bdbbe5a0c03fcef}{unload\+\_\+all}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{struct_music_library_a138df6bcde64153ff6c874d59f5fd18f}{current\+\_\+volume}} = 1.f
+\item 
+\mbox{\hyperlink{struct_music_library_1_1_music_library_impl}{Music\+Library\+::\+Music\+Library\+Impl}} \mbox{\hyperlink{struct_music_library_a8ca59f096a7ef9235dc87a79a5cf20a3}{impl}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_music_library_a15890a58e47ac6f975afd930b42fa01b}\label{struct_music_library_a15890a58e47ac6f975afd930b42fa01b}} 
+\index{MusicLibrary@{MusicLibrary}!get@{get}}
+\index{get@{get}!MusicLibrary@{MusicLibrary}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily raylib\+::\+Music \& Music\+Library\+::get (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_music_library_aa483c444b8a7363bff5973295fe45217}\label{struct_music_library_aa483c444b8a7363bff5973295fe45217}} 
+\index{MusicLibrary@{MusicLibrary}!get@{get}}
+\index{get@{get}!MusicLibrary@{MusicLibrary}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily const raylib\+::\+Music \& Music\+Library\+::get (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_preload_a53f29f58a3ce55f94786ea67228294cd}{Preload\+::load\+\_\+music()}}, \mbox{\hyperlink{struct_game_layer_acc7d3f410b4c25afd764848638d39c6f}{Game\+Layer\+::play\+\_\+music()}}, \mbox{\hyperlink{struct_menu_layer_a43ffc71d9e6fbb63a4b2ed9c453a7570}{Menu\+Layer\+::play\+\_\+music()}}, \mbox{\hyperlink{struct_settings_ab2a70e409439312ffb45c9e0d13dedcf}{Settings\+::update\+\_\+master\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_a50426b179c7be84c0364c65c39f8d40a}{Settings\+::update\+\_\+music\+\_\+volume()}}, and \mbox{\hyperlink{struct_preload_ad948fda8e07939c10d4cbf22dcce9952}{Preload\+::$\sim$\+Preload()}}.
+
+\mbox{\Hypertarget{struct_music_library_aeab0c55ba65d1793675f4a1df8d5c3f7}\label{struct_music_library_aeab0c55ba65d1793675f4a1df8d5c3f7}} 
+\index{MusicLibrary@{MusicLibrary}!load@{load}}
+\index{load@{load}!MusicLibrary@{MusicLibrary}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily void Music\+Library\+::load (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename,  }\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_music_library_a062c809ff01336c31bdbbe5a0c03fcef}\label{struct_music_library_a062c809ff01336c31bdbbe5a0c03fcef}} 
+\index{MusicLibrary@{MusicLibrary}!unload\_all@{unload\_all}}
+\index{unload\_all@{unload\_all}!MusicLibrary@{MusicLibrary}}
+\doxysubsubsection{\texorpdfstring{unload\_all()}{unload\_all()}}
+{\footnotesize\ttfamily void Music\+Library\+::unload\+\_\+all (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_music_library_ad0c364c5dbe6ac93b46e2cb287bf0a4e}\label{struct_music_library_ad0c364c5dbe6ac93b46e2cb287bf0a4e}} 
+\index{MusicLibrary@{MusicLibrary}!update\_volume@{update\_volume}}
+\index{update\_volume@{update\_volume}!MusicLibrary@{MusicLibrary}}
+\doxysubsubsection{\texorpdfstring{update\_volume()}{update\_volume()}}
+{\footnotesize\ttfamily void Music\+Library\+::update\+\_\+volume (\begin{DoxyParamCaption}\item[{float}]{new\+\_\+v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_music_library_a138df6bcde64153ff6c874d59f5fd18f}\label{struct_music_library_a138df6bcde64153ff6c874d59f5fd18f}} 
+\index{MusicLibrary@{MusicLibrary}!current\_volume@{current\_volume}}
+\index{current\_volume@{current\_volume}!MusicLibrary@{MusicLibrary}}
+\doxysubsubsection{\texorpdfstring{current\_volume}{current\_volume}}
+{\footnotesize\ttfamily float Music\+Library\+::current\+\_\+volume = 1.f\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{struct_music_library_a8ca59f096a7ef9235dc87a79a5cf20a3}\label{struct_music_library_a8ca59f096a7ef9235dc87a79a5cf20a3}} 
+\index{MusicLibrary@{MusicLibrary}!impl@{impl}}
+\index{impl@{impl}!MusicLibrary@{MusicLibrary}}
+\doxysubsubsection{\texorpdfstring{impl}{impl}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_music_library_1_1_music_library_impl}{Music\+Library\+::\+Music\+Library\+Impl}} Music\+Library\+::impl\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/engine/\mbox{\hyperlink{music__library_8h}{music\+\_\+library.\+h}}\end{DoxyCompactItemize}

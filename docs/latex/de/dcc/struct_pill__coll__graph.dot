@@ -1,0 +1,12 @@
+digraph "Pill"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [shape=record,label="{Pill\n|+ type\l|+ Pill()\l+ Pill()\l+ Pill()\l+ init()\l+ model_scale()\l+ model()\l- serialize()\l}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node2 [shape=record,label="{Item\n|+ id\l+ item_size\l+ raw_position\l+ position\l+ cleanup\l+ held_by\l+ held_item\l|+ Item()\l+ Item()\l+ ~Item()\l+ snap_position()\l+ is_collidable()\l+ model_scale()\l+ render()\l+ update_position()\l+ bounds()\l+ size()\l+ raw_bounds()\l+ collides()\l+ model()\l+ eat()\l+ can_eat()\l+ has_holding_ability()\l+ empty()\l# Item()\l- serialize()\l}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$db/d66/struct_item.html",tooltip=" "];
+  Node3 -> Node2 [color="grey25",style="solid",label=" +color" ,arrowhead="odiamond"];
+  Node3 [shape=record,label="{Color\n||}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",tooltip=" "];
+}

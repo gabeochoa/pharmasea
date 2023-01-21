@@ -7,35 +7,35 @@
 Inheritance diagram for Person\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[height=4.000000cm]{d3/de1/struct_person}
+\includegraphics[height=3.236994cm]{d3/de1/struct_person}
 \end{center}
 \end{figure}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{struct_person_aff739251b706191cb573969740a43e67}{Person}} (vec3 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\mbox{\hyperlink{struct_person_aff739251b706191cb573969740a43e67}{Person}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
 \item 
-\mbox{\hyperlink{struct_person_a9ff519f2d28ed9ca8674b1a1e3540577}{Person}} (vec2 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\mbox{\hyperlink{struct_person_a9ff519f2d28ed9ca8674b1a1e3540577}{Person}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
 \item 
-\mbox{\hyperlink{struct_person_a598162c372fd3703cd456ce2d31ced11}{Person}} (vec3 p, Color c)
+\mbox{\hyperlink{struct_person_a598162c372fd3703cd456ce2d31ced11}{Person}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color c)
 \item 
-\mbox{\hyperlink{struct_person_a96012bcb85ddaa7c6f290db275bcd86d}{Person}} (vec2 p, Color c)
+\mbox{\hyperlink{struct_person_a96012bcb85ddaa7c6f290db275bcd86d}{Person}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color c)
 \item 
-virtual vec3 \mbox{\hyperlink{struct_person_a0fefe392ef54377872ea4270202b0ecb}{update\+\_\+xaxis\+\_\+position}} (float dt)=0
+virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_person_a0fefe392ef54377872ea4270202b0ecb}{update\+\_\+xaxis\+\_\+position}} (float dt)=0
 \item 
-virtual vec3 \mbox{\hyperlink{struct_person_a134feac9c4147ecb2411ff7a4a51a100}{update\+\_\+zaxis\+\_\+position}} (float dt)=0
+virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_person_a134feac9c4147ecb2411ff7a4a51a100}{update\+\_\+zaxis\+\_\+position}} (float dt)=0
+\item 
+void \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\+\_\+model}} ()
 \item 
 virtual float \mbox{\hyperlink{struct_person_a3ece53b2b9de0628514cb3cc14efa112}{base\+\_\+speed}} ()
 \item 
-virtual vec3 \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}} () const override
+virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}} () const override
 \item 
 void \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\+\_\+next\+\_\+character\+\_\+model}} ()
 \item 
-virtual std\+::optional$<$ Model\+Info $>$ \mbox{\hyperlink{struct_person_aa9f59abcc030fcd0ecb1323ac8f2a4aa}{model}} () const override
+void \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{handle\+\_\+collision}} (int facedir\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+x, int facedir\+\_\+z, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+z)
 \item 
-void \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{handle\+\_\+collision}} (int facedir\+\_\+x, vec3 new\+\_\+pos\+\_\+x, int facedir\+\_\+z, vec3 new\+\_\+pos\+\_\+z)
-\item 
-std\+::tuple$<$ int, int $>$ \mbox{\hyperlink{struct_person_a0438d8fd551998f95723320ede130f44}{get\+\_\+face\+\_\+direction}} (vec3 new\+\_\+pos\+\_\+x, vec3 new\+\_\+pos\+\_\+z)
+std\+::tuple$<$ int, int $>$ \mbox{\hyperlink{struct_person_a0438d8fd551998f95723320ede130f44}{get\+\_\+face\+\_\+direction}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+z)
 \item 
 void \mbox{\hyperlink{struct_person_a5037af23d2d1d1e710a9418ecc1207d8}{update\+\_\+facing\+\_\+direction}} (int facedir\+\_\+x, int facedir\+\_\+z)
 \item 
@@ -44,31 +44,41 @@ virtual void \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{a
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} \mbox{\hyperlink{struct_entity_aa279f81f1d6c0e63a9724310a981250f}{offset\+Face\+Direction}} (\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} starting\+Direction, float offset) const
+{\footnotesize template$<$typename T $>$ }\\bool \mbox{\hyperlink{struct_entity_ac82c57e9b1a366f041fca61d9ddd1459}{has}} () const
 \item 
-\mbox{\hyperlink{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}{Entity}} (vec3 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+{\footnotesize template$<$typename T , typename... TArgs$>$ }\\T \& \mbox{\hyperlink{struct_entity_a54ee9d838c0d24c24b2faf1ea05bbd0b}{add\+Component}} (TArgs \&\&... args)
 \item 
-\mbox{\hyperlink{struct_entity_a69970748dae094cbca81f77a82c1ae66}{Entity}} (vec2 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+{\footnotesize template$<$typename T $>$ }\\T \& \mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}} () const
 \item 
-\mbox{\hyperlink{struct_entity_abed77744bbc522e364be6fc2ab1792ac}{Entity}} (vec3 p, Color c)
+void \mbox{\hyperlink{struct_entity_a9c0606708fe8805c8e90c9510466d618}{add\+\_\+static\+\_\+components}} ()
 \item 
-\mbox{\hyperlink{struct_entity_add145c7ad5ec1aca28429a337ca48304}{Entity}} (vec2 p, Color c)
+\mbox{\hyperlink{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}{Entity}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\item 
+\mbox{\hyperlink{struct_entity_a69970748dae094cbca81f77a82c1ae66}{Entity}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\item 
+\mbox{\hyperlink{struct_entity_abed77744bbc522e364be6fc2ab1792ac}{Entity}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color c)
+\item 
+\mbox{\hyperlink{struct_entity_add145c7ad5ec1aca28429a337ca48304}{Entity}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color c)
 \item 
 virtual \mbox{\hyperlink{struct_entity_a588098978eea6a3486b7361605ff3f0f}{$\sim$\+Entity}} ()
 \item 
-void \mbox{\hyperlink{struct_entity_af8740cbb0b094e46c3b768b7b1a33b59}{update\+\_\+name}} (const std\+::string \&new\+\_\+name)
+virtual void \mbox{\hyperlink{struct_entity_a053c1e45dd6f1752acb7db6e75f48dab}{announce}} (std\+::string text)
 \item 
-virtual bool \mbox{\hyperlink{struct_entity_abac7c61d12e2b5c85d8a8b468a727797}{can\+\_\+take\+\_\+item\+\_\+from}} () const
+virtual bool \mbox{\hyperlink{struct_entity_af864202a00a448f2b30e7b5634e5c490}{is\+\_\+snappable}} ()
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}} (Bounding\+Box b) const
 \item 
+virtual void \mbox{\hyperlink{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}{update\+\_\+position}} (const \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&p)
+\item 
+virtual Bounding\+Box \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\+\_\+bounds}} () const
+\item 
 virtual Bounding\+Box \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}} () const
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}{update\+\_\+position}} (const vec3 \&p)
+\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}{snap\+\_\+position}} () const
 \item 
 void \mbox{\hyperlink{struct_entity_ad0bf9cef410758f173d4b376b1df631f}{rotate\+\_\+facing\+\_\+clockwise}} ()
 \item 
-virtual vec2 \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\+\_\+infront}} (int distance)
+virtual \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\+\_\+infront}} (int distance)
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a489fd7ead99634ebb6c707263598df81}{add\+\_\+to\+\_\+navmesh}} ()
 \item 
@@ -76,7 +86,7 @@ virtual bool \mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{i
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a48efb563c821424fd1a97efcc211cfd8}{on\+\_\+pickup}} ()
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\+\_\+drop}} (vec3 location)
+virtual void \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\+\_\+drop}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} location)
 \item 
 virtual void \mbox{\hyperlink{struct_entity_adab1628044c63c07d189d44b411046a3}{render}} () const final
 \item 
@@ -92,25 +102,17 @@ virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{u
 \item 
 \mbox{\hyperlink{struct_entity_a980f368aa07ce358583982821533a54a}{Entity}} ()
 \item 
-virtual vec3 \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}} () const
-\item 
-virtual Bounding\+Box \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\+\_\+bounds}} () const
+virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}} () const
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a66588b42f69ce15038bd149605a16fc2}{render\+\_\+debug\+\_\+mode}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a8aa106da3c2e49952d46fe6413d06d37}{render\+\_\+highlighted}} () const
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal}} () const
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a4f5def0fc8ea405ab385a65018046168}{render\+\_\+floating\+\_\+name}} () const
 \item 
-virtual std\+::optional$<$ Model\+Info $>$ \mbox{\hyperlink{struct_entity_abe393fa333d9f5eadcc99b0a959539d4}{model}} () const
-\item 
-vec3 \mbox{\hyperlink{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}{snap\+\_\+position}} () const
-\item 
 virtual void \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{update\+\_\+held\+\_\+item\+\_\+position}} ()
 \item 
-virtual vec2 \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading}} ()
+virtual \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading}} ()
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{turn\+\_\+to\+\_\+face\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$target)
 \item 
@@ -119,8 +121,6 @@ virtual void \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{a
 virtual void \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{planning\+\_\+update}} (float)
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\+\_\+round\+\_\+update}} (float)
-\item 
-virtual bool \mbox{\hyperlink{struct_entity_af864202a00a448f2b30e7b5634e5c490}{is\+\_\+snappable}} ()
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}{can\+\_\+place\+\_\+item\+\_\+into}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$=nullptr)
 \end{DoxyCompactItemize}
@@ -137,54 +137,25 @@ std\+::array$<$ std\+::string, 3 $>$ \mbox{\hyperlink{struct_person_a473ff1edcd4
 int \mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\+\_\+index}} = 0
 \end{DoxyCompactItemize}
 \doxysubsection*{Additional Inherited Members}
-\doxysubsubsection*{Public Types inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
-\begin{DoxyCompactItemize}
-\item 
-enum \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} \{ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FORWARD}} = 0x1
-, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{RIGHT}} = 0x2
-, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{BACK}} = 0x4
-, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{LEFT}} = 0x8
- \}
-\end{DoxyCompactItemize}
 \doxysubsubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
 \begin{DoxyCompactItemize}
 \item 
-static vec2 \mbox{\hyperlink{struct_entity_af454ca504cbb7f3549cc206263895b51}{tile\+\_\+infront\+\_\+given\+\_\+pos}} (vec2 tile, int distance, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} direction)
+static \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_entity_a3267ca1897b60de8c1543e3846056145}{tile\+\_\+infront\+\_\+given\+\_\+pos}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} tile, int distance, Transform\+::\+Transform\+::\+Front\+Face\+Direction direction)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
 \begin{DoxyCompactItemize}
 \item 
-const std\+::map$<$ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}}, float $>$ \mbox{\hyperlink{struct_entity_a1d00ed121b7125c7e18506deda3c9c38}{Front\+Face\+Direction\+Map}}
-\item 
-const std\+::map$<$ int, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} $>$ \mbox{\hyperlink{struct_entity_ace4a615925528f48d995ce9443506a4d}{Direction\+To\+Front\+Face\+Map}}
-\item 
 int \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}
 \item 
-vec3 \mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\+\_\+position}}
+\mbox{\hyperlink{base__component_8h_a98fb6146960da76455a4eff579874b99}{Component\+Bit\+Set}} \mbox{\hyperlink{struct_entity_a2bfb3cd4a791f32f53365d156e239a54}{component\+Set}}
 \item 
-vec3 \mbox{\hyperlink{struct_entity_a71e5d4cf6ae2c20d9227dd55c017d797}{prev\+\_\+position}}
+\mbox{\hyperlink{base__component_8h_a5aff059e5e50c5d4acef6bc563a2a367}{Component\+Array}} \mbox{\hyperlink{struct_entity_a268b34f155900bef861b8b3ce6a5fa60}{component\+Array}}
 \item 
-vec3 \mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}}
-\item 
-vec3 \mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\+\_\+force}} \{0.\+0, 0.\+0, 0.\+0\}
-\item 
-Color \mbox{\hyperlink{struct_entity_aceb6290fec072176cef25608188042ed}{face\+\_\+color}}
-\item 
-Color \mbox{\hyperlink{struct_entity_a3978918d89c7165bb86cffb14d55b442}{base\+\_\+color}}
+\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\+\_\+force}} \{0.\+0, 0.\+0, 0.\+0\}
 \item 
 bool \mbox{\hyperlink{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}{cleanup}} = false
 \item 
-bool \mbox{\hyperlink{struct_entity_ad9ba4b65cc992e4bab6da5ce023e41e6}{is\+\_\+highlighted}} = false
-\item 
 bool \mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\+\_\+held}} = false
-\item 
-\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} \mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\+\_\+direction}} = \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{Front\+Face\+Direction\+::\+FORWARD}}
-\item 
-std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \mbox{\hyperlink{struct_entity_a851369e74ee7fc64c3a304875cbdc9f2}{held\+\_\+item}} = nullptr
-\item 
-int \mbox{\hyperlink{struct_entity_aed6000bd2aef3497277d23deb1f1554f}{name\+\_\+length}} = 1
-\item 
-std\+::string \mbox{\hyperlink{struct_entity_a931b21fbdebb1a5963b4bcab5df128f5}{name}} = \char`\"{}\char`\"{}
 \end{DoxyCompactItemize}
 
 
@@ -199,25 +170,41 @@ std\+::string \mbox{\hyperlink{struct_entity_a931b21fbdebb1a5963b4bcab5df128f5}{
 \index{Person@{Person}!Person@{Person}}
 \index{Person@{Person}!Person@{Person}}
 \doxysubsubsection{\texorpdfstring{Person()}{Person()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
-{\footnotesize\ttfamily Person\+::\+Person (\begin{DoxyParamCaption}\item[{vec3}]{p,  }\item[{Color}]{face\+\_\+color\+\_\+in,  }\item[{Color}]{base\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily Person\+::\+Person (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{p,  }\item[{Color}]{face\+\_\+color\+\_\+in,  }\item[{Color}]{base\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\+\_\+model()}}.
 
 \mbox{\Hypertarget{struct_person_a9ff519f2d28ed9ca8674b1a1e3540577}\label{struct_person_a9ff519f2d28ed9ca8674b1a1e3540577}} 
 \index{Person@{Person}!Person@{Person}}
 \index{Person@{Person}!Person@{Person}}
 \doxysubsubsection{\texorpdfstring{Person()}{Person()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
-{\footnotesize\ttfamily Person\+::\+Person (\begin{DoxyParamCaption}\item[{vec2}]{p,  }\item[{Color}]{face\+\_\+color\+\_\+in,  }\item[{Color}]{base\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily Person\+::\+Person (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{p,  }\item[{Color}]{face\+\_\+color\+\_\+in,  }\item[{Color}]{base\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\+\_\+model()}}.
 
 \mbox{\Hypertarget{struct_person_a598162c372fd3703cd456ce2d31ced11}\label{struct_person_a598162c372fd3703cd456ce2d31ced11}} 
 \index{Person@{Person}!Person@{Person}}
 \index{Person@{Person}!Person@{Person}}
 \doxysubsubsection{\texorpdfstring{Person()}{Person()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
-{\footnotesize\ttfamily Person\+::\+Person (\begin{DoxyParamCaption}\item[{vec3}]{p,  }\item[{Color}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily Person\+::\+Person (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{p,  }\item[{Color}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\+\_\+model()}}.
 
 \mbox{\Hypertarget{struct_person_a96012bcb85ddaa7c6f290db275bcd86d}\label{struct_person_a96012bcb85ddaa7c6f290db275bcd86d}} 
 \index{Person@{Person}!Person@{Person}}
 \index{Person@{Person}!Person@{Person}}
 \doxysubsubsection{\texorpdfstring{Person()}{Person()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
-{\footnotesize\ttfamily Person\+::\+Person (\begin{DoxyParamCaption}\item[{vec2}]{p,  }\item[{Color}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily Person\+::\+Person (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{p,  }\item[{Color}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\+\_\+model()}}.
 
 
 
@@ -254,11 +241,11 @@ Reimplemented in \mbox{\hyperlink{struct_a_i_person_a1d93482a63f44830687cf01f936
 \index{Person@{Person}!get\_face\_direction@{get\_face\_direction}}
 \index{get\_face\_direction@{get\_face\_direction}!Person@{Person}}
 \doxysubsubsection{\texorpdfstring{get\_face\_direction()}{get\_face\_direction()}}
-{\footnotesize\ttfamily std\+::tuple$<$ int, int $>$ Person\+::get\+\_\+face\+\_\+direction (\begin{DoxyParamCaption}\item[{vec3}]{new\+\_\+pos\+\_\+x,  }\item[{vec3}]{new\+\_\+pos\+\_\+z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily std\+::tuple$<$ int, int $>$ Person\+::get\+\_\+face\+\_\+direction (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{new\+\_\+pos\+\_\+x,  }\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{new\+\_\+pos\+\_\+z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{Entity\+::\+BACK}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{Entity\+::\+FORWARD}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{Entity\+::\+LEFT}}, \mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{Entity\+::raw\+\_\+position}}, and \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{Entity\+::\+RIGHT}}.
+References \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform\+::\+BACK}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform\+::\+FORWARD}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform\+::\+LEFT}}, and \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform\+::\+RIGHT}}.
 
 
 
@@ -268,29 +255,15 @@ Referenced by \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{
 \index{Person@{Person}!handle\_collision@{handle\_collision}}
 \index{handle\_collision@{handle\_collision}!Person@{Person}}
 \doxysubsubsection{\texorpdfstring{handle\_collision()}{handle\_collision()}}
-{\footnotesize\ttfamily void Person\+::handle\+\_\+collision (\begin{DoxyParamCaption}\item[{int}]{facedir\+\_\+x,  }\item[{vec3}]{new\+\_\+pos\+\_\+x,  }\item[{int}]{facedir\+\_\+z,  }\item[{vec3}]{new\+\_\+pos\+\_\+z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily void Person\+::handle\+\_\+collision (\begin{DoxyParamCaption}\item[{int}]{facedir\+\_\+x,  }\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{new\+\_\+pos\+\_\+x,  }\item[{int}]{facedir\+\_\+z,  }\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{new\+\_\+pos\+\_\+z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{Entity\+::\+BACK}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610a0f3fbeaa77bb603279229e91ec5df0bb}{Entity\+Helper\+::\+Break}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610a3437d4b32aa4696581e8ee4ed2b53af8}{Entity\+Helper\+::\+Continue}}, \mbox{\hyperlink{struct_entity_helper_a61f26ee4774876d30248574c28ba63eb}{Entity\+Helper\+::for\+Each\+Entity()}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{Entity\+::\+FORWARD}}, \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\+\_\+bounds()}}, \mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{Entity\+::is\+\_\+collidable()}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{Entity\+::\+LEFT}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610ade35d6cc11c2732bc98475566a7fffe9}{Entity\+Helper\+::\+None}}, \mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{Entity\+::raw\+\_\+position}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{Entity\+::\+RIGHT}}, \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size()}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+References \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform\+::\+BACK}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610a0f3fbeaa77bb603279229e91ec5df0bb}{Entity\+Helper\+::\+Break}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610a3437d4b32aa4696581e8ee4ed2b53af8}{Entity\+Helper\+::\+Continue}}, \mbox{\hyperlink{struct_entity_helper_a61f26ee4774876d30248574c28ba63eb}{Entity\+Helper\+::for\+Each\+Entity()}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform\+::\+FORWARD}}, \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\+\_\+bounds()}}, \mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{Entity\+::is\+\_\+collidable()}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform\+::\+LEFT}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610ade35d6cc11c2732bc98475566a7fffe9}{Entity\+Helper\+::\+None}}, \mbox{\hyperlink{random_8h_aad2eabec61848c202dd8cf2a800d3398}{rand\+Sign()}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform\+::\+RIGHT}}, \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size()}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
 
 
 
 Referenced by \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{always\+\_\+update()}}, and \mbox{\hyperlink{struct_player_a5bcdf490604929a7ba3b018c8556228b}{Player\+::get\+\_\+position\+\_\+after\+\_\+input()}}.
-
-\mbox{\Hypertarget{struct_person_aa9f59abcc030fcd0ecb1323ac8f2a4aa}\label{struct_person_aa9f59abcc030fcd0ecb1323ac8f2a4aa}} 
-\index{Person@{Person}!model@{model}}
-\index{model@{model}!Person@{Person}}
-\doxysubsubsection{\texorpdfstring{model()}{model()}}
-{\footnotesize\ttfamily virtual std\+::optional$<$ Model\+Info $>$ Person\+::model (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Reimplemented from \mbox{\hyperlink{struct_entity_abe393fa333d9f5eadcc99b0a959539d4}{Entity}}.
-
-
-
-References \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\+\_\+models}}, and \mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\+\_\+index}}.
 
 \mbox{\Hypertarget{struct_person_ae5b351bc647cde72be09092c05e67788}\label{struct_person_ae5b351bc647cde72be09092c05e67788}} 
 \index{Person@{Person}!select\_next\_character\_model@{select\_next\_character\_model}}
@@ -301,6 +274,10 @@ References \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{cha
 
 
 References \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\+\_\+models}}, and \mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\+\_\+index}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_character_switcher_a663fe4562ed789ffef1bf241cc26f452}{Character\+Switcher\+::do\+\_\+work()}}.
 
 \mbox{\Hypertarget{struct_person_ac834d6820b6722e5acf0bd3be05222ae}\label{struct_person_ac834d6820b6722e5acf0bd3be05222ae}} 
 \index{Person@{Person}!serialize@{serialize}}
@@ -317,7 +294,7 @@ References \mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{mod
 \index{Person@{Person}!size@{size}}
 \index{size@{size}!Person@{Person}}
 \doxysubsubsection{\texorpdfstring{size()}{size()}}
-{\footnotesize\ttfamily virtual vec3 Person\+::size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} Person\+::size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
@@ -339,17 +316,27 @@ Referenced by \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{
 
 
 
-References \mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{Entity\+::face\+\_\+direction}}.
-
-
-
 Referenced by \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{always\+\_\+update()}}, and \mbox{\hyperlink{struct_player_a5bcdf490604929a7ba3b018c8556228b}{Player\+::get\+\_\+position\+\_\+after\+\_\+input()}}.
+
+\mbox{\Hypertarget{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}\label{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}} 
+\index{Person@{Person}!update\_model@{update\_model}}
+\index{update\_model@{update\_model}!Person@{Person}}
+\doxysubsubsection{\texorpdfstring{update\_model()}{update\_model()}}
+{\footnotesize\ttfamily void Person\+::update\+\_\+model (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\+\_\+models}}, \mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\+\_\+index}}, and \mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{Model\+Info\+::model\+\_\+name}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_person_aff739251b706191cb573969740a43e67}{Person()}}.
 
 \mbox{\Hypertarget{struct_person_a0fefe392ef54377872ea4270202b0ecb}\label{struct_person_a0fefe392ef54377872ea4270202b0ecb}} 
 \index{Person@{Person}!update\_xaxis\_position@{update\_xaxis\_position}}
 \index{update\_xaxis\_position@{update\_xaxis\_position}!Person@{Person}}
 \doxysubsubsection{\texorpdfstring{update\_xaxis\_position()}{update\_xaxis\_position()}}
-{\footnotesize\ttfamily virtual vec3 Person\+::update\+\_\+xaxis\+\_\+position (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} Person\+::update\+\_\+xaxis\+\_\+position (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
 
 
 
@@ -363,7 +350,7 @@ Referenced by \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{
 \index{Person@{Person}!update\_zaxis\_position@{update\_zaxis\_position}}
 \index{update\_zaxis\_position@{update\_zaxis\_position}!Person@{Person}}
 \doxysubsubsection{\texorpdfstring{update\_zaxis\_position()}{update\_zaxis\_position()}}
-{\footnotesize\ttfamily virtual vec3 Person\+::update\+\_\+zaxis\+\_\+position (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} Person\+::update\+\_\+zaxis\+\_\+position (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
 
 
 
@@ -393,7 +380,7 @@ Referenced by \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{
 \end{DoxyCode}
 
 
-Referenced by \mbox{\hyperlink{struct_person_aa9f59abcc030fcd0ecb1323ac8f2a4aa}{model()}}, and \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\+\_\+next\+\_\+character\+\_\+model()}}.
+Referenced by \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\+\_\+next\+\_\+character\+\_\+model()}}, and \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\+\_\+model()}}.
 
 \mbox{\Hypertarget{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}\label{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}} 
 \index{Person@{Person}!model\_index@{model\_index}}
@@ -403,7 +390,7 @@ Referenced by \mbox{\hyperlink{struct_person_aa9f59abcc030fcd0ecb1323ac8f2a4aa}{
 
 
 
-Referenced by \mbox{\hyperlink{struct_person_aa9f59abcc030fcd0ecb1323ac8f2a4aa}{model()}}, \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\+\_\+next\+\_\+character\+\_\+model()}}, and \mbox{\hyperlink{struct_person_ac834d6820b6722e5acf0bd3be05222ae}{serialize()}}.
+Referenced by \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\+\_\+next\+\_\+character\+\_\+model()}}, \mbox{\hyperlink{struct_person_ac834d6820b6722e5acf0bd3be05222ae}{serialize()}}, and \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\+\_\+model()}}.
 
 
 

@@ -28,59 +28,67 @@
 \DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\_work\_complete}}\ =\ 0.f;}
 \DoxyCodeLine{00025\ }
 \DoxyCodeLine{00026\ \ \ \ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{struct_furniture_ae15aba996a3ad4b7b73bb941e9289dcd}{Furniture}}(vec2\ pos,\ Color\ face\_color\_in)}
+\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{struct_furniture_ae15aba996a3ad4b7b73bb941e9289dcd}{Furniture}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos,\ Color\ face\_color\_in)}
 \DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_entity}{Entity}}(pos,\ face\_color\_in,\ face\_color\_in)\ \{\}}
-\DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{struct_furniture_a3c289ae66cd307325e46544fa8ca0dfa}{Furniture}}(vec3\ pos,\ Color\ face\_color\_in)}
+\DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{struct_furniture_a3c289ae66cd307325e46544fa8ca0dfa}{Furniture}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ pos,\ Color\ face\_color\_in)}
 \DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_entity}{Entity}}(pos,\ face\_color\_in,\ face\_color\_in)\ \{\}}
-\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{struct_furniture_af29143799fcb5ed44cd9d98e88166aa0}{Furniture}}(vec2\ pos,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{struct_furniture_af29143799fcb5ed44cd9d98e88166aa0}{Furniture}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
 \DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_entity}{Entity}}(pos,\ face\_color\_in,\ base\_color\_in)\ \{\}}
 \DoxyCodeLine{00033\ }
 \DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_furniture_a7c1a46b40616fba11f4ff50b6c34d647}{update\_held\_item\_position}}()\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_entity_a851369e74ee7fc64c3a304875cbdc9f2}{held\_item}}\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\ =\ this-\/>\mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}};}
-\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ new\_pos.y\ +=\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 4;}
-\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a851369e74ee7fc64c3a304875cbdc9f2}{held\_item}}-\/>update\_position(new\_pos);}
-\DoxyCodeLine{00039\ \ \ \ \ \}}
-\DoxyCodeLine{00040\ }
-\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_furniture_a8a01b16d5257d928fbabfbe8b6bd6798}{render\_normal}}()\textcolor{keyword}{\ const\ override\ }\{}
-\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{Entity::render\_normal}}();}
-\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}{render\_progress\_bar}}();}
-\DoxyCodeLine{00044\ \ \ \ \ \}}
-\DoxyCodeLine{00045\ }
-\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}{render\_progress\_bar}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\_work\_complete}}\ <=\ 0.01f\ ||\ !\mbox{\hyperlink{struct_furniture_a382b9fccb7dbeafbb514111639666619}{has\_work}}())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00048\ }
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ length\ =\ 20;}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ full\ =\ (int)\ (\mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\_work\_complete}}\ *\ length);}
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ empty\ =\ length\ -\/\ full;}
-\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ progress\ =}
-\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}[\{:=>\{\}\}\{:\ >\{\}\}]"{}},\ \textcolor{stringliteral}{"{}"{}},\ full,\ \textcolor{stringliteral}{"{}"{}},\ empty\ *\ 2);}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ DrawFloatingText(this-\/>\mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\_position}}\ +\ vec3(\{0,\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ 0\}),}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Preload::get().font,\ progress.c\_str());}
-\DoxyCodeLine{00056\ }
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ eventually\ add\ real\ rectangle\ progress\ bar}}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ auto\ game\_cam\ =\ GLOBALS.get<GameCam>("{}game\_cam"{});}}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ DrawBillboardRec(game\_cam.camera,\ TextureLibrary::get().get("{}face"{}),}}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Rectangle(\{0,\ 0,\ 260,\ 260\}),}}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this-\/>raw\_position\ +\ vec3(\{-\/(pct\_complete\ *\ TILESIZE),}}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TILESIZE\ *\ 2,\ 0\}),}}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \{pct\_complete\ *\ TILESIZE,\ TILESIZE\},\ WHITE);}}
-\DoxyCodeLine{00064\ \ \ \ \ \}}
-\DoxyCodeLine{00065\ }
-\DoxyCodeLine{00066\ \ \ \ \ \textcolor{comment}{//\ Note:\ do\ nothing\ by\ default}}
-\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_furniture_ad47e3e72cefaca891da0d2f9a84c496c}{do\_work}}(\textcolor{keywordtype}{float},\ \mbox{\hyperlink{struct_person}{Person}}*)\ \{\}}
-\DoxyCodeLine{00068\ }
-\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ Does\ this\ piece\ of\ furniture\ have\ work\ to\ be\ done?}}
-\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_furniture_a382b9fccb7dbeafbb514111639666619}{has\_work}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
-\DoxyCodeLine{00071\ }
-\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_furniture_a0a970a23706f9c18caa223c4f2716f15}{add\_to\_navmesh}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
-\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_furniture_a53ad044be9587be4aec47c105decacf3}{can\_rotate}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
-\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_furniture_a3c248d20ed012e44420e018a24f0c744}{can\_be\_picked\_up}}()\ \{\ \textcolor{keywordflow}{return}\ !this-\/>\mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\_held}};\ \}}
-\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_furniture_a5f0f46310aed2fdc0f8366f55f42e4d3}{can\_place\_item\_into}}(std::shared\_ptr<Item>\ =\ \textcolor{keyword}{nullptr})\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{struct_entity_a851369e74ee7fc64c3a304875cbdc9f2}{held\_item}}\ ==\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00077\ \ \ \ \ \}}
-\DoxyCodeLine{00078\ }
-\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_furniture_a4972c4d7131e21a0954164846cae3682}{has\_held\_item}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{struct_entity_a851369e74ee7fc64c3a304875cbdc9f2}{held\_item}}\ !=\ \textcolor{keyword}{nullptr};\ \}}
-\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (held\_item()\ ==\ nullptr)\ return;}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ auto\ new\_pos\ =\ this-\/>get<Transform>().position;}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ new\_pos.y\ +=\ TILESIZE\ /\ 4;}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ held\_item()-\/>update\_position(new\_pos);}}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_furniture_a8a01b16d5257d928fbabfbe8b6bd6798}{render\_normal}}()\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{Entity::render\_normal}}();}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}{render\_progress\_bar}}();}
+\DoxyCodeLine{00045\ \ \ \ \ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}{render\_progress\_bar}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\_work\_complete}}\ <=\ 0.01f\ ||\ !\mbox{\hyperlink{struct_furniture_a382b9fccb7dbeafbb514111639666619}{has\_work}}())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ length\ =\ 20;}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ full\ =\ (int)\ (\mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\_work\_complete}}\ *\ length);}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ empty\ =\ length\ -\/\ full;}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ progress\ =}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}[\{:=>\{\}\}\{:\ >\{\}\}]"{}},\ \textcolor{stringliteral}{"{}"{}},\ full,\ \textcolor{stringliteral}{"{}"{}},\ empty\ *\ 2);}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ DrawFloatingText(}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().raw\_position\ +\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}(\{0,\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ 0\}),}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ Preload::get().\mbox{\hyperlink{namespacefont}{font}},\ progress.c\_str());}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ eventually\ add\ real\ rectangle\ progress\ bar}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ auto\ game\_cam\ =\ GLOBALS.get<GameCam>("{}game\_cam"{});}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ DrawBillboardRec(game\_cam.camera,\ TextureLibrary::get().get("{}face"{}),}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Rectangle(\{0,\ 0,\ 260,\ 260\}),}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this-\/>raw\_position\ +\ vec3(\{-\/(pct\_complete\ *\ TILESIZE),}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TILESIZE\ *\ 2,\ 0\}),}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \{pct\_complete\ *\ TILESIZE,\ TILESIZE\},\ WHITE);}}
+\DoxyCodeLine{00066\ \ \ \ \ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//\ Note:\ do\ nothing\ by\ default}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_furniture_ad47e3e72cefaca891da0d2f9a84c496c}{do\_work}}(\textcolor{keywordtype}{float},\ \mbox{\hyperlink{struct_person}{Person}}*)\ \{\}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{//\ Does\ this\ piece\ of\ furniture\ have\ work\ to\ be\ done?}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_furniture_a382b9fccb7dbeafbb514111639666619}{has\_work}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ should\ be\ const}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_furniture_a0a970a23706f9c18caa223c4f2716f15}{add\_to\_navmesh}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_furniture_a53ad044be9587be4aec47c105decacf3}{can\_rotate}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ should\ be\ const}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_furniture_a3c248d20ed012e44420e018a24f0c744}{can\_be\_picked\_up}}()\ \{\ \textcolor{keywordflow}{return}\ !this-\/>\mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\_held}};\ \}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ should\ be\ const}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_furniture_a5f0f46310aed2fdc0f8366f55f42e4d3}{can\_place\_item\_into}}(std::shared\_ptr<Item>\ =\ \textcolor{keyword}{nullptr})\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ should\ be\ a\ separate\ component}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get<CanHoldItem>().empty();}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_furniture_a4972c4d7131e21a0954164846cae3682}{has\_held\_item}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get<CanHoldItem>().is\_holding\_item();}
+\DoxyCodeLine{00087\ \ \ \ \ \}}
+\DoxyCodeLine{00088\ \};}
 
 \end{DoxyCode}

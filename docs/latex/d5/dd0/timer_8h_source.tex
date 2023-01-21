@@ -1,0 +1,122 @@
+\hypertarget{timer_8h_source}{}\doxysection{timer.\+h}
+\label{timer_8h_source}\index{src/engine/timer.h@{src/engine/timer.h}}
+\mbox{\hyperlink{timer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <condition\_variable>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ TODO\ add\ support\ for\ .interrupt()\ to\ force\ kill\ when\ we\ no\ longer\ need\ the}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ results}}
+\DoxyCodeLine{00011\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ \ \ \ auto\ continuous\_timer\ =\ new\ auto(}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ \ \ \ \ \ \ make\_interval\_timer([]\ \{}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ log\_info("{}tick"{});}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ \ \ \ \},}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ \ \ \ std::chrono::milliseconds\{\ 500\ \},\ start\_now)}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ \ \ );}}
+\DoxyCodeLine{00018\ \textcolor{comment}{}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ \ \ auto\ single\_shot\_timer\ =\ new\ auto(}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ \ \ \ \ \ \ \ make\_interval\_timer([]\ \{}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ log\_info("{}tick"{});}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ \ \ \ \ \ \ \ \},}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ \ \ \ \ \ \ \ std::chrono::milliseconds\{\ 500\ \},\ start\_now,\ 1)}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ \ \ \ );}}
+\DoxyCodeLine{00025\ \textcolor{comment}{}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ \ \ \ int\ n\ =\ 15;\ //\ whatever\ count\ you\ want}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ \ \ \ auto\ n\_shot\_timer\ =\ new\ auto(}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ \ \ \ \ \ \ \ make\_interval\_timer([]\ \{}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ log\_info("{}tick"{});}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ \ \ \ \ \ \ \ \},}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ \ \ \ \ \ \ \ std::chrono::milliseconds\{\ 500\ \},\ start\_now,\ n)}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ \ \ \ );}}
+\DoxyCodeLine{00033\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{using\ }\mbox{\hyperlink{timer_8h_a728ba4485cf924a298502446a1959e5b}{interval\_t}}\ =\ std::chrono::milliseconds;}
+\DoxyCodeLine{00036\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structstart__now__t}{start\_now\_t}}\ \{}
+\DoxyCodeLine{00037\ \}\ \mbox{\hyperlink{timer_8h_a1a322f83cc7cbf98dc4686a401930ba4}{start\_now}};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Function>}
+\DoxyCodeLine{00040\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classinterval__timer}{interval\_timer}}\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classinterval__timer_1_1impl}{impl}}\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ Function\ \mbox{\hyperlink{classinterval__timer_1_1impl_afe35ba6df4712be3900dae47ae507101}{f}};}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{timer_8h_a728ba4485cf924a298502446a1959e5b}{interval\_t}}\ \mbox{\hyperlink{classinterval__timer_1_1impl_a5ee4b2ed7663f1f775db0d6df7faef92}{interval}};}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classinterval__timer_1_1impl_a1f6388afec314b08cbf5758d18a69c72}{max\_iter}}\ =\ -\/1;}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ std::thread\ \mbox{\hyperlink{classinterval__timer_1_1impl_aa03c97086bd8264d52acec2a10ab2dab}{thread}};}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ std::mutex\ \mbox{\hyperlink{classinterval__timer_1_1impl_ac78fcbc665453ac7aa797c578a56f683}{mtx}};}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ std::condition\_variable\ \mbox{\hyperlink{classinterval__timer_1_1impl_a9d52d759f95a549ca61a84716f1e8e67}{cvar}};}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classinterval__timer_1_1impl_a2ad3f208ccf7511ffd653731e507064f}{enabled}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classinterval__timer_1_1impl_a4e9d389511daf086dc29f1073ceb640a}{timer}}()\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ deadline\ =\ std::chrono::steady\_clock::now()\ +\ \mbox{\hyperlink{classinterval__timer_1_1impl_a5ee4b2ed7663f1f775db0d6df7faef92}{interval}};}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock\{\mbox{\hyperlink{classinterval__timer_1_1impl_ac78fcbc665453ac7aa797c578a56f683}{mtx}}\};}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\mbox{\hyperlink{classinterval__timer_1_1impl_a2ad3f208ccf7511ffd653731e507064f}{enabled}}\ \&\&\ \mbox{\hyperlink{classinterval__timer_1_1impl_a1f6388afec314b08cbf5758d18a69c72}{max\_iter}}\ !=\ 0)\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classinterval__timer_1_1impl_a9d52d759f95a549ca61a84716f1e8e67}{cvar}}.wait\_until(lock,\ deadline)\ ==}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cv\_status::timeout)\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lock.unlock();}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classinterval__timer_1_1impl_afe35ba6df4712be3900dae47ae507101}{f}}();}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classinterval__timer_1_1impl_a1f6388afec314b08cbf5758d18a69c72}{max\_iter}}\ >\ 0)\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/-\/\mbox{\hyperlink{classinterval__timer_1_1impl_a1f6388afec314b08cbf5758d18a69c72}{max\_iter}};}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ deadline\ +=\ \mbox{\hyperlink{classinterval__timer_1_1impl_a5ee4b2ed7663f1f775db0d6df7faef92}{interval}};}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lock.lock();}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classinterval__timer_1_1impl_af36e8789e5545289294027a2b309dee7}{impl}}(Function\ \mbox{\hyperlink{classinterval__timer_1_1impl_afe35ba6df4712be3900dae47ae507101}{f}},\ \mbox{\hyperlink{timer_8h_a728ba4485cf924a298502446a1959e5b}{interval\_t}}\ \mbox{\hyperlink{classinterval__timer_1_1impl_a5ee4b2ed7663f1f775db0d6df7faef92}{interval}},\ \textcolor{keywordtype}{int}\ max\_iter\_in)}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{classinterval__timer_1_1impl_afe35ba6df4712be3900dae47ae507101}{f}}(\mbox{\hyperlink{namespacestd}{std}}::move(\mbox{\hyperlink{classinterval__timer_1_1impl_afe35ba6df4712be3900dae47ae507101}{f}})),}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classinterval__timer_1_1impl_a5ee4b2ed7663f1f775db0d6df7faef92}{interval}}(\mbox{\hyperlink{namespacestd}{std}}::move(\mbox{\hyperlink{classinterval__timer_1_1impl_a5ee4b2ed7663f1f775db0d6df7faef92}{interval}})),}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classinterval__timer_1_1impl_a1f6388afec314b08cbf5758d18a69c72}{max\_iter}}(\mbox{\hyperlink{namespacestd}{std}}::move(max\_iter\_in))\ \{\}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classinterval__timer_1_1impl_a104b7edddf64f0307c870c1ad4275b5e}{\string~impl}}()\ \{\ \mbox{\hyperlink{classinterval__timer_1_1impl_ad29b1c1c3b0fdeec0f2a913915449ac1}{stop}}();\ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classinterval__timer_1_1impl_aba1a9f5a12ab57bbc58a7c9cdd83bba2}{start}}()\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classinterval__timer_1_1impl_a2ad3f208ccf7511ffd653731e507064f}{enabled}})\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classinterval__timer_1_1impl_a2ad3f208ccf7511ffd653731e507064f}{enabled}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classinterval__timer_1_1impl_aa03c97086bd8264d52acec2a10ab2dab}{thread}}\ =\ std::thread(\&\mbox{\hyperlink{classinterval__timer_1_1impl_a4e9d389511daf086dc29f1073ceb640a}{impl::timer}},\ \textcolor{keyword}{this});}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classinterval__timer_1_1impl_ad29b1c1c3b0fdeec0f2a913915449ac1}{stop}}()\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classinterval__timer_1_1impl_a2ad3f208ccf7511ffd653731e507064f}{enabled}})\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ \_\{\mbox{\hyperlink{classinterval__timer_1_1impl_ac78fcbc665453ac7aa797c578a56f683}{mtx}}\};}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classinterval__timer_1_1impl_a2ad3f208ccf7511ffd653731e507064f}{enabled}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classinterval__timer_1_1impl_a9d52d759f95a549ca61a84716f1e8e67}{cvar}}.notify\_one();}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classinterval__timer_1_1impl_aa03c97086bd8264d52acec2a10ab2dab}{thread}}.join();}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00092\ \ \ \ \ \};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ std::unique\_ptr<impl>\ \mbox{\hyperlink{classinterval__timer_ab951890f99f5a99b40c1c27b351a2ccd}{pimpl}};}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00097\ \ \ \ \ \mbox{\hyperlink{classinterval__timer_ade77c07daa771415369cc2f4acec7833}{interval\_timer}}(Function\ f,\ \mbox{\hyperlink{timer_8h_a728ba4485cf924a298502446a1959e5b}{interval\_t}}\ interval,\ \textcolor{keywordtype}{int}\ max\_iter\ =\ -\/1)}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{classinterval__timer_ab951890f99f5a99b40c1c27b351a2ccd}{pimpl}}\{new\ \mbox{\hyperlink{classinterval__timer_1_1impl}{impl}}(\mbox{\hyperlink{namespacestd}{std}}::move(f),\ \mbox{\hyperlink{namespacestd}{std}}::move(interval),}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacestd}{std}}::move(max\_iter))\}\ \{\}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \mbox{\hyperlink{classinterval__timer_af38a8959efbed5548f597572d839980b}{interval\_timer}}(Function\ f,\ \mbox{\hyperlink{timer_8h_a728ba4485cf924a298502446a1959e5b}{interval\_t}}\ interval,\ \mbox{\hyperlink{structstart__now__t}{start\_now\_t}},}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\_iter\ =\ -\/1)}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{classinterval__timer}{interval\_timer}}(\mbox{\hyperlink{namespacestd}{std}}::move(f),\ \mbox{\hyperlink{namespacestd}{std}}::move(interval),}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacestd}{std}}::move(max\_iter))\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classinterval__timer_aa08c9e82ee4fb07b6250705bd3ed7bab}{start}}();}
+\DoxyCodeLine{00106\ \ \ \ \ \}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classinterval__timer_aa08c9e82ee4fb07b6250705bd3ed7bab}{start}}()\ \{\ \mbox{\hyperlink{classinterval__timer_ab951890f99f5a99b40c1c27b351a2ccd}{pimpl}}-\/>start();\ \}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classinterval__timer_a384fdd0b0145a3dc034cf66af4f49622}{stop}}()\ \{\ \mbox{\hyperlink{classinterval__timer_ab951890f99f5a99b40c1c27b351a2ccd}{pimpl}}-\/>stop();\ \}}
+\DoxyCodeLine{00110\ \};}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Function,\ \textcolor{keyword}{typename}...\ Args>}
+\DoxyCodeLine{00113\ \mbox{\hyperlink{classinterval__timer}{interval\_timer<typename\ std::decay<Function>::type}}>\ \mbox{\hyperlink{timer_8h_a9af081ccb110f82f64130366b5d6d982}{make\_interval\_timer}}(}
+\DoxyCodeLine{00114\ \ \ \ \ Function\&\&\ f,\ Args\&\&...\ args)\ \{}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordflow}{return}\ \{std::forward<Function>(f),\ std::forward<Args>(args)...\};}
+\DoxyCodeLine{00116\ \}}
+
+\end{DoxyCode}

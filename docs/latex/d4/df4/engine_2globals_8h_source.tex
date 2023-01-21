@@ -1,0 +1,46 @@
+\hypertarget{engine_2globals_8h_source}{}\doxysection{globals.\+h}
+\label{engine_2globals_8h_source}\index{src/engine/globals.h@{src/engine/globals.h}}
+\mbox{\hyperlink{engine_2globals_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ https://stackoverflow.com/a/48896410}}
+\DoxyCodeLine{00008\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Str>}
+\DoxyCodeLine{00009\ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{engine_2globals_8h_a471e5aa6d16f0fe8c4c131624777603b}{hashString}}(\textcolor{keyword}{const}\ Str\&\ toHash)\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ For\ this\ example,\ I'm\ requiring\ size\_t\ to\ be\ 64-\/bit,\ but\ you\ could}}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{comment}{//\ easily\ change\ the\ offset\ and\ prime\ used\ to\ the\ appropriate\ ones}}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{comment}{//\ based\ on\ sizeof(size\_t).}}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{static\_assert}(\textcolor{keyword}{sizeof}(size\_t)\ ==\ 8);}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{comment}{//\ FNV-\/1a\ 64\ bit\ algorithm}}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ result\ =\ 0xcbf29ce484222325;\ \ \textcolor{comment}{//\ FNV\ offset\ basis}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{char}\ c\ :\ toHash)\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ result\ \string^=\ c;}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ result\ *=\ 1099511628211;\ \ \textcolor{comment}{//\ FNV\ prime}}
+\DoxyCodeLine{00020\ \ \ \ \ \}}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00022\ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{engine_2globals_8h_acc3dac6c5e9d4d5bff434a99ed7193e1}{\_\_WIN\_H}}\ =\ 720;}
+\DoxyCodeLine{00025\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{engine_2globals_8h_ad5154e5503dd99b6a6ca185b0f90fc27}{\_\_WIN\_W}}\ =\ 1280;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ TODO\ lets\ move\ this\ to\ an\ env\ var\ or\ something}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ we\ shouldnt\ have\ to\ recompile\ to\ change\ the\ level}}
+\DoxyCodeLine{00029\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{engine_2globals_8h_a3ecebc9d2fcb9f207a3373191a0ca251}{LOG\_LEVEL}}\ =\ 2;\ \ \textcolor{comment}{//\ LogLevel::INFO;}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ [[nodiscard]]\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{engine_2globals_8h_afe1358b24401e43a8eabe7880feaf770}{WIN\_W}}()\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{engine_2globals_8h_ad5154e5503dd99b6a6ca185b0f90fc27}{\_\_WIN\_W}};\ \}}
+\DoxyCodeLine{00032\ [[nodiscard]]\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{engine_2globals_8h_a1368a126ad97b64d5180e1cc8b0fac61}{WIN\_WF}}()\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\mbox{\hyperlink{engine_2globals_8h_ad5154e5503dd99b6a6ca185b0f90fc27}{\_\_WIN\_W}});\ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ [[nodiscard]]\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{engine_2globals_8h_af36a79e782a145f85642cd276acd8e0c}{WIN\_H}}()\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{engine_2globals_8h_acc3dac6c5e9d4d5bff434a99ed7193e1}{\_\_WIN\_H}};\ \}}
+\DoxyCodeLine{00035\ [[nodiscard]]\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{engine_2globals_8h_ae4ab98e49b98d8948eb15206b05ae4b8}{WIN\_HF}}()\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\mbox{\hyperlink{engine_2globals_8h_acc3dac6c5e9d4d5bff434a99ed7193e1}{\_\_WIN\_H}});\ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacenetwork}{network}}\ \{}
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ TODO\ add\ note\ for\ max\ name\ length\ in\ ui}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacenetwork_ab21ff1d434d3028a68dc8e97cbfa62fd}{MAX\_NAME\_LENGTH}}\ =\ 25;}
+\DoxyCodeLine{00040\ \}\ \ \textcolor{comment}{//\ namespace\ network}}
+
+\end{DoxyCode}

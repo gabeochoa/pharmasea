@@ -1,0 +1,347 @@
+\hypertarget{structui_1_1_widget}{}\doxysection{ui\+::Widget Struct Reference}
+\label{structui_1_1_widget}\index{ui::Widget@{ui::Widget}}
+
+
+{\ttfamily \#include $<$ui\+\_\+widget.\+h$>$}
+
+Inheritance diagram for ui\+::Widget\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d1/d00/structui_1_1_widget}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{structui_1_1_widget_aeac63f3668d3d4d4294692ffc98cebd7}{cant\+\_\+render}} () const
+\item 
+\mbox{\hyperlink{structui_1_1uuid}{uuid}} \mbox{\hyperlink{structui_1_1_widget_ab2db94a678c481d764fdd23d2cdef9e7}{default\+\_\+id}} () const
+\item 
+\mbox{\hyperlink{structui_1_1_widget_aecd098b95747702874ea0bf595d9cd59}{Widget}} ()
+\item 
+\mbox{\hyperlink{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}{Widget}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&other)
+\item 
+\mbox{\hyperlink{structui_1_1_widget_a75226cc9ed3eb0c54d0ce92661ac6f4d}{Widget}} (\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} x, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} y)
+\item 
+\mbox{\hyperlink{structui_1_1_widget_ad9db00c42216745cd3157891570dacec}{Widget}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} x, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} y)
+\item 
+\mbox{\hyperlink{structui_1_1_widget_ae8261599f0f633a5089eb90bba8c2417}{Widget}} (\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} x, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} y, int flags)
+\item 
+\mbox{\hyperlink{structui_1_1_widget_a38eace581cae6a65f28ddff8ba7f2dbb}{Widget}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} x, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} y, \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792}{Grow\+Flags}} flags)
+\item 
+\mbox{\hyperlink{structui_1_1_widget}{Widget}} \& \mbox{\hyperlink{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}{operator=}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&other)
+\item 
+void \mbox{\hyperlink{structui_1_1_widget_a7f22a7a1b844885e2272406f24b1ef63}{set\+\_\+expectation}} (\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} x, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} y)
+\item 
+void \mbox{\hyperlink{structui_1_1_widget_a1816974419641b355efb1d432379141c}{add\+\_\+child}} (\mbox{\hyperlink{structui_1_1_widget}{Widget}} $\ast$child)
+\item 
+std\+::string \mbox{\hyperlink{structui_1_1_widget_a86934afb010a0dfcc923602f8163e12f}{print}} (int t=0) const
+\item 
+void \mbox{\hyperlink{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}{print\+\_\+tree}} (int t=0) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{structui_1_1_widget_adc00b84fb165ecb9167d8d7594413c61}{set\+\_\+element}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, std\+::string e)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structui_1_1_widget}{Widget}} $\ast$ \mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}}
+\item 
+\mbox{\hyperlink{structui_1_1uuid}{uuid}} \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}
+\item 
+std\+::string \mbox{\hyperlink{structui_1_1_widget_aaac4241fb04b3f48396fd0091e44f9cf}{element}} = \char`\"{}\char`\"{}
+\item 
+bool \mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}} = false
+\item 
+\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} \mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\+\_\+expected}} \mbox{[}2\mbox{]}
+\item 
+float \mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\+\_\+relative\+\_\+pos}} \mbox{[}2\mbox{]} = \{0.f, 0.f\}
+\item 
+float \mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\+\_\+size}} \mbox{[}2\mbox{]} = \{-\/1.f, -\/1.f\}
+\item 
+Rectangle \mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}
+\item 
+int \mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}} = \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a1a7a5196f987b86773c7d6940253b82d}{Grow\+Flags\+::\+None}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{structui_1_1_widget}{Widget}} $\ast$ $>$ \mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}}
+\item 
+\mbox{\hyperlink{structui_1_1_widget}{Widget}} $\ast$ \mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}} = nullptr
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structui_1_1_widget_aecd098b95747702874ea0bf595d9cd59}\label{structui_1_1_widget_aecd098b95747702874ea0bf595d9cd59}} 
+\index{ui::Widget@{ui::Widget}!Widget@{Widget}}
+\index{Widget@{Widget}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{Widget()}{Widget()}\hspace{0.1cm}{\footnotesize\ttfamily [1/6]}}
+{\footnotesize\ttfamily ui\+::\+Widget\+::\+Widget (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_ab2db94a678c481d764fdd23d2cdef9e7}{default\+\_\+id()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}\label{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}} 
+\index{ui::Widget@{ui::Widget}!Widget@{Widget}}
+\index{Widget@{Widget}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{Widget()}{Widget()}\hspace{0.1cm}{\footnotesize\ttfamily [2/6]}}
+{\footnotesize\ttfamily ui\+::\+Widget\+::\+Widget (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}}, \mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}}, \mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\+\_\+relative\+\_\+pos}}, \mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\+\_\+size}}, \mbox{\hyperlink{structui_1_1_widget_aaac4241fb04b3f48396fd0091e44f9cf}{element}}, \mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}, \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}, \mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}}, \mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}, and \mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\+\_\+expected}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a75226cc9ed3eb0c54d0ce92661ac6f4d}\label{structui_1_1_widget_a75226cc9ed3eb0c54d0ce92661ac6f4d}} 
+\index{ui::Widget@{ui::Widget}!Widget@{Widget}}
+\index{Widget@{Widget}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{Widget()}{Widget()}\hspace{0.1cm}{\footnotesize\ttfamily [3/6]}}
+{\footnotesize\ttfamily ui\+::\+Widget\+::\+Widget (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}}}]{x,  }\item[{\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}}}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_ab2db94a678c481d764fdd23d2cdef9e7}{default\+\_\+id()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_ad9db00c42216745cd3157891570dacec}\label{structui_1_1_widget_ad9db00c42216745cd3157891570dacec}} 
+\index{ui::Widget@{ui::Widget}!Widget@{Widget}}
+\index{Widget@{Widget}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{Widget()}{Widget()}\hspace{0.1cm}{\footnotesize\ttfamily [4/6]}}
+{\footnotesize\ttfamily ui\+::\+Widget\+::\+Widget (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&}]{id,  }\item[{\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}}}]{x,  }\item[{\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}}}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_ae8261599f0f633a5089eb90bba8c2417}\label{structui_1_1_widget_ae8261599f0f633a5089eb90bba8c2417}} 
+\index{ui::Widget@{ui::Widget}!Widget@{Widget}}
+\index{Widget@{Widget}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{Widget()}{Widget()}\hspace{0.1cm}{\footnotesize\ttfamily [5/6]}}
+{\footnotesize\ttfamily ui\+::\+Widget\+::\+Widget (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}}}]{x,  }\item[{\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}}}]{y,  }\item[{int}]{flags }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_ab2db94a678c481d764fdd23d2cdef9e7}{default\+\_\+id()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a38eace581cae6a65f28ddff8ba7f2dbb}\label{structui_1_1_widget_a38eace581cae6a65f28ddff8ba7f2dbb}} 
+\index{ui::Widget@{ui::Widget}!Widget@{Widget}}
+\index{Widget@{Widget}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{Widget()}{Widget()}\hspace{0.1cm}{\footnotesize\ttfamily [6/6]}}
+{\footnotesize\ttfamily ui\+::\+Widget\+::\+Widget (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&}]{id,  }\item[{\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}}}]{x,  }\item[{\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}}}]{y,  }\item[{\mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792}{Grow\+Flags}}}]{flags }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structui_1_1_widget_a1816974419641b355efb1d432379141c}\label{structui_1_1_widget_a1816974419641b355efb1d432379141c}} 
+\index{ui::Widget@{ui::Widget}!add\_child@{add\_child}}
+\index{add\_child@{add\_child}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{add\_child()}{add\_child()}}
+{\footnotesize\ttfamily void ui\+::\+Widget\+::add\+\_\+child (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structui_1_1_widget}{Widget}} $\ast$}]{child }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}}, and \mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}}.
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_i_u_i_context_parent_stacking_a8c08b0dbd0de3d43a82e8695310fd812}{ui\+::\+IUIContext\+Parent\+Stacking\+::add\+\_\+child()}}, \mbox{\hyperlink{namespacetests_a6c89df90e18364d2a7bfad532d8c423d}{tests\+::test\+\_\+add\+\_\+child()}}, \mbox{\hyperlink{namespacetests_a9c485f0835d20bd713661d9006ef8f74}{tests\+::test\+\_\+add\+\_\+child\+\_\+again()}}, \mbox{\hyperlink{namespacetests_ac09ca02e5f6f00207ded957b6d8ef5f6}{tests\+::test\+\_\+autolayout\+\_\+wrap\+\_\+column()}}, \mbox{\hyperlink{namespacetests_a6df95556293bfb35d229390885f5ba3c}{tests\+::test\+\_\+single\+\_\+child()}}, \mbox{\hyperlink{namespacetests_a6913b0fb4d8c00d69c5d34148ca94e65}{tests\+::test\+\_\+two\+\_\+children()}}, \mbox{\hyperlink{namespacetests_a13f5b82f53f665367e62f5d4faa3a7f3}{tests\+::test\+\_\+two\+\_\+children\+\_\+parent\+\_\+size()}}, \mbox{\hyperlink{namespacetests_a45fc0d344a5bac1c570c4ccf1c6d4840}{tests\+::test\+\_\+two\+\_\+children\+\_\+parent\+\_\+size\+\_\+too\+\_\+small()}}, \mbox{\hyperlink{namespacetests_a0c52ace8536c4e998401500cfe7954d3}{tests\+::test\+\_\+widget\+\_\+fill\+\_\+space\+\_\+after\+\_\+column()}}, \mbox{\hyperlink{namespacetests_a6e7f167ec9db85fae120b5eda280184b}{tests\+::test\+\_\+widget\+\_\+fill\+\_\+space\+\_\+after\+\_\+column\+\_\+complex()}}, \mbox{\hyperlink{namespacetests_a53b3142f8ceeebba4dba8fce10724421}{tests\+::test\+\_\+widget\+\_\+fill\+\_\+space\+\_\+after\+\_\+column\+\_\+small()}}, \mbox{\hyperlink{namespacetests_a3a220decdc5e3105cecc7188c2b48e5c}{tests\+::test\+\_\+widget\+\_\+fill\+\_\+space\+\_\+after\+\_\+column\+\_\+with\+\_\+child()}}, and \mbox{\hyperlink{namespacetests_ab2d6bea83c9e6d25e0357d5ef578842a}{tests\+::test\+\_\+widget\+\_\+fill\+\_\+space\+\_\+after\+\_\+column\+\_\+with\+\_\+children()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_aeac63f3668d3d4d4294692ffc98cebd7}\label{structui_1_1_widget_aeac63f3668d3d4d4294692ffc98cebd7}} 
+\index{ui::Widget@{ui::Widget}!cant\_render@{cant\_render}}
+\index{cant\_render@{cant\_render}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{cant\_render()}{cant\_render()}}
+{\footnotesize\ttfamily bool ui\+::\+Widget\+::cant\+\_\+render (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\+\_\+size}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_ab2db94a678c481d764fdd23d2cdef9e7}\label{structui_1_1_widget_ab2db94a678c481d764fdd23d2cdef9e7}} 
+\index{ui::Widget@{ui::Widget}!default\_id@{default\_id}}
+\index{default\_id@{default\_id}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{default\_id()}{default\_id()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structui_1_1uuid}{uuid}} ui\+::\+Widget\+::default\+\_\+id (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\+\_\+\+UUID}}, and \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ui\+::\+ROOT\+\_\+\+ID}}.
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_widget_aecd098b95747702874ea0bf595d9cd59}{Widget()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}\label{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}} 
+\index{ui::Widget@{ui::Widget}!operator=@{operator=}}
+\index{operator=@{operator=}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structui_1_1_widget}{Widget}} \& ui\+::\+Widget\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}}, \mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}}, \mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\+\_\+relative\+\_\+pos}}, \mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\+\_\+size}}, \mbox{\hyperlink{structui_1_1_widget_aaac4241fb04b3f48396fd0091e44f9cf}{element}}, \mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}, \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}, \mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}}, \mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}, and \mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\+\_\+expected}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a86934afb010a0dfcc923602f8163e12f}\label{structui_1_1_widget_a86934afb010a0dfcc923602f8163e12f}} 
+\index{ui::Widget@{ui::Widget}!print@{print}}
+\index{print@{print}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily std\+::string ui\+::\+Widget\+::print (\begin{DoxyParamCaption}\item[{int}]{t = {\ttfamily 0} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}}, and \mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a81c2bb3b55789661b8e782103c76984b}{ui\+::operator$<$$<$()}}, and \mbox{\hyperlink{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}{print\+\_\+tree()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}\label{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}} 
+\index{ui::Widget@{ui::Widget}!print\_tree@{print\_tree}}
+\index{print\_tree@{print\_tree}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{print\_tree()}{print\_tree()}}
+{\footnotesize\ttfamily void ui\+::\+Widget\+::print\+\_\+tree (\begin{DoxyParamCaption}\item[{int}]{t = {\ttfamily 0} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}}, \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}, \mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}}, and \mbox{\hyperlink{structui_1_1_widget_a86934afb010a0dfcc923602f8163e12f}{print()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_1_1autolayout_ae91ed2b2dd47ead91ac1050eccf5e715}{ui\+::autolayout\+::\+\_\+sum\+\_\+children\+\_\+axis\+\_\+for\+\_\+child\+\_\+exp()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a0092871caad2d74966974bbe9d9eec7c}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+parent\+\_\+expectation()}}, and \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{ui\+::autolayout\+::fix\+\_\+violating\+\_\+children()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_adc00b84fb165ecb9167d8d7594413c61}\label{structui_1_1_widget_adc00b84fb165ecb9167d8d7594413c61}} 
+\index{ui::Widget@{ui::Widget}!set\_element@{set\_element}}
+\index{set\_element@{set\_element}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{set\_element()}{set\_element()}}
+{\footnotesize\ttfamily static void ui\+::\+Widget\+::set\+\_\+element (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget,  }\item[{std\+::string}]{e }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_aaac4241fb04b3f48396fd0091e44f9cf}{element}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a7f22a7a1b844885e2272406f24b1ef63}\label{structui_1_1_widget_a7f22a7a1b844885e2272406f24b1ef63}} 
+\index{ui::Widget@{ui::Widget}!set\_expectation@{set\_expectation}}
+\index{set\_expectation@{set\_expectation}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{set\_expectation()}{set\_expectation()}}
+{\footnotesize\ttfamily void ui\+::\+Widget\+::set\+\_\+expectation (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}}}]{x,  }\item[{\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}}}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}\label{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}} 
+\index{ui::Widget@{ui::Widget}!absolute@{absolute}}
+\index{absolute@{absolute}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{absolute}{absolute}}
+{\footnotesize\ttfamily bool ui\+::\+Widget\+::absolute = false}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{ui\+::autolayout\+::\+\_\+get\+\_\+total\+\_\+child\+\_\+size\+\_\+for\+\_\+violations()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_aae45c93638cbec24bcef93863cd86d18}{ui\+::autolayout\+::\+\_\+get\+\_\+total\+\_\+number\+\_\+children()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a18510470464391ecc932364a83f8ab96}{ui\+::autolayout\+::\+\_\+max\+\_\+child\+\_\+size()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a5bd15c6386b32294c41dd9e679673289}{ui\+::autolayout\+::\+\_\+solve\+\_\+error\+\_\+with\+\_\+optional()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_ae91ed2b2dd47ead91ac1050eccf5e715}{ui\+::autolayout\+::\+\_\+sum\+\_\+children\+\_\+axis\+\_\+for\+\_\+child\+\_\+exp()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{ui\+::autolayout\+::compute\+\_\+relative\+\_\+positions()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a0092871caad2d74966974bbe9d9eec7c}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+parent\+\_\+expectation()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{ui\+::autolayout\+::fix\+\_\+violating\+\_\+children()}}, \mbox{\hyperlink{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}{operator=()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{ui\+::autolayout\+::tax\+\_\+refund()}}, and \mbox{\hyperlink{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}{Widget()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}\label{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}} 
+\index{ui::Widget@{ui::Widget}!children@{children}}
+\index{children@{children}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{children}{children}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{structui_1_1_widget}{Widget}}$\ast$$>$ ui\+::\+Widget\+::children}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{ui\+::autolayout\+::\+\_\+get\+\_\+total\+\_\+child\+\_\+size\+\_\+for\+\_\+violations()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_aae45c93638cbec24bcef93863cd86d18}{ui\+::autolayout\+::\+\_\+get\+\_\+total\+\_\+number\+\_\+children()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a18510470464391ecc932364a83f8ab96}{ui\+::autolayout\+::\+\_\+max\+\_\+child\+\_\+size()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a5bd15c6386b32294c41dd9e679673289}{ui\+::autolayout\+::\+\_\+solve\+\_\+error\+\_\+with\+\_\+optional()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_ae91ed2b2dd47ead91ac1050eccf5e715}{ui\+::autolayout\+::\+\_\+sum\+\_\+children\+\_\+axis\+\_\+for\+\_\+child\+\_\+exp()}}, \mbox{\hyperlink{structui_1_1_widget_a1816974419641b355efb1d432379141c}{add\+\_\+child()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a6b10e3b4c705bb1633000eea2d421ae6}{ui\+::autolayout\+::calculate\+\_\+standalone()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a6a1e09a56a2fab2e8766405be175f05a}{ui\+::autolayout\+::calculate\+\_\+those\+\_\+with\+\_\+children()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a6aab9728ba4f17593481eb09f2b987a9}{ui\+::autolayout\+::calculate\+\_\+those\+\_\+with\+\_\+parents()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_abb4dae5cd1fd325e0a25026f7468c1b5}{ui\+::autolayout\+::compute\+\_\+rect\+\_\+bounds()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{ui\+::autolayout\+::compute\+\_\+relative\+\_\+positions()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a8eee5d8e9d61273a841f39eac3ecb5cb}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+child\+\_\+expectation()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{ui\+::autolayout\+::fix\+\_\+violating\+\_\+children()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a2f4cda37ca035b07a6c5ff3b6b40b3a1}{ui\+::\+UIContext\+::matching\+\_\+id\+\_\+in\+\_\+tree()}}, \mbox{\hyperlink{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}{operator=()}}, \mbox{\hyperlink{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}{print\+\_\+tree()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a2b73f854ad31e7230ef2b54ca43edc58}{ui\+::autolayout\+::solve\+\_\+violations()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{ui\+::autolayout\+::tax\+\_\+refund()}}, \mbox{\hyperlink{namespacetests_a6c89df90e18364d2a7bfad532d8c423d}{tests\+::test\+\_\+add\+\_\+child()}}, \mbox{\hyperlink{namespacetests_a9c485f0835d20bd713661d9006ef8f74}{tests\+::test\+\_\+add\+\_\+child\+\_\+again()}}, \mbox{\hyperlink{namespacetests_ac09ca02e5f6f00207ded957b6d8ef5f6}{tests\+::test\+\_\+autolayout\+\_\+wrap\+\_\+column()}}, and \mbox{\hyperlink{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}{Widget()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}\label{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}} 
+\index{ui::Widget@{ui::Widget}!computed\_relative\_pos@{computed\_relative\_pos}}
+\index{computed\_relative\_pos@{computed\_relative\_pos}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{computed\_relative\_pos}{computed\_relative\_pos}}
+{\footnotesize\ttfamily float ui\+::\+Widget\+::computed\+\_\+relative\+\_\+pos\mbox{[}2\mbox{]} = \{0.f, 0.f\}}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_1_1autolayout_abb4dae5cd1fd325e0a25026f7468c1b5}{ui\+::autolayout\+::compute\+\_\+rect\+\_\+bounds()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{ui\+::autolayout\+::compute\+\_\+relative\+\_\+positions()}}, \mbox{\hyperlink{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}{operator=()}}, \mbox{\hyperlink{namespacetests_ac09ca02e5f6f00207ded957b6d8ef5f6}{tests\+::test\+\_\+autolayout\+\_\+wrap\+\_\+column()}}, and \mbox{\hyperlink{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}{Widget()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}\label{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}} 
+\index{ui::Widget@{ui::Widget}!computed\_size@{computed\_size}}
+\index{computed\_size@{computed\_size}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{computed\_size}{computed\_size}}
+{\footnotesize\ttfamily float ui\+::\+Widget\+::computed\+\_\+size\mbox{[}2\mbox{]} = \{-\/1.f, -\/1.f\}}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{ui\+::autolayout\+::\+\_\+get\+\_\+total\+\_\+child\+\_\+size\+\_\+for\+\_\+violations()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a18510470464391ecc932364a83f8ab96}{ui\+::autolayout\+::\+\_\+max\+\_\+child\+\_\+size()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a5bd15c6386b32294c41dd9e679673289}{ui\+::autolayout\+::\+\_\+solve\+\_\+error\+\_\+with\+\_\+optional()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_ae91ed2b2dd47ead91ac1050eccf5e715}{ui\+::autolayout\+::\+\_\+sum\+\_\+children\+\_\+axis\+\_\+for\+\_\+child\+\_\+exp()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a6b10e3b4c705bb1633000eea2d421ae6}{ui\+::autolayout\+::calculate\+\_\+standalone()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a6a1e09a56a2fab2e8766405be175f05a}{ui\+::autolayout\+::calculate\+\_\+those\+\_\+with\+\_\+children()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a6aab9728ba4f17593481eb09f2b987a9}{ui\+::autolayout\+::calculate\+\_\+those\+\_\+with\+\_\+parents()}}, \mbox{\hyperlink{structui_1_1_widget_aeac63f3668d3d4d4294692ffc98cebd7}{cant\+\_\+render()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_abb4dae5cd1fd325e0a25026f7468c1b5}{ui\+::autolayout\+::compute\+\_\+rect\+\_\+bounds()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{ui\+::autolayout\+::compute\+\_\+relative\+\_\+positions()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a8eee5d8e9d61273a841f39eac3ecb5cb}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+child\+\_\+expectation()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a0092871caad2d74966974bbe9d9eec7c}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+parent\+\_\+expectation()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a567a0cb9b521e51af53a84e79109712c}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+standalone\+\_\+expectation()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{ui\+::autolayout\+::fix\+\_\+violating\+\_\+children()}}, \mbox{\hyperlink{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}{operator=()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a2b73f854ad31e7230ef2b54ca43edc58}{ui\+::autolayout\+::solve\+\_\+violations()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{ui\+::autolayout\+::tax\+\_\+refund()}}, \mbox{\hyperlink{namespacetests_ac09ca02e5f6f00207ded957b6d8ef5f6}{tests\+::test\+\_\+autolayout\+\_\+wrap\+\_\+column()}}, \mbox{\hyperlink{namespacetests_a26968031671e9848e7ca27b4bb43b2d9}{tests\+::test\+\_\+just\+\_\+root()}}, \mbox{\hyperlink{namespacetests_a6df95556293bfb35d229390885f5ba3c}{tests\+::test\+\_\+single\+\_\+child()}}, \mbox{\hyperlink{namespacetests_a6913b0fb4d8c00d69c5d34148ca94e65}{tests\+::test\+\_\+two\+\_\+children()}}, \mbox{\hyperlink{namespacetests_a13f5b82f53f665367e62f5d4faa3a7f3}{tests\+::test\+\_\+two\+\_\+children\+\_\+parent\+\_\+size()}}, \mbox{\hyperlink{namespacetests_a45fc0d344a5bac1c570c4ccf1c6d4840}{tests\+::test\+\_\+two\+\_\+children\+\_\+parent\+\_\+size\+\_\+too\+\_\+small()}}, and \mbox{\hyperlink{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}{Widget()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_aaac4241fb04b3f48396fd0091e44f9cf}\label{structui_1_1_widget_aaac4241fb04b3f48396fd0091e44f9cf}} 
+\index{ui::Widget@{ui::Widget}!element@{element}}
+\index{element@{element}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{element}{element}}
+{\footnotesize\ttfamily std\+::string ui\+::\+Widget\+::element = \char`\"{}\char`\"{}}
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}{operator=()}}, \mbox{\hyperlink{structui_1_1_widget_adc00b84fb165ecb9167d8d7594413c61}{set\+\_\+element()}}, and \mbox{\hyperlink{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}{Widget()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}\label{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}} 
+\index{ui::Widget@{ui::Widget}!growflags@{growflags}}
+\index{growflags@{growflags}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{growflags}{growflags}}
+{\footnotesize\ttfamily int ui\+::\+Widget\+::growflags = \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a1a7a5196f987b86773c7d6940253b82d}{Grow\+Flags\+::\+None}}}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{ui\+::autolayout\+::\+\_\+get\+\_\+total\+\_\+child\+\_\+size\+\_\+for\+\_\+violations()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{ui\+::autolayout\+::compute\+\_\+relative\+\_\+positions()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a8eee5d8e9d61273a841f39eac3ecb5cb}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+child\+\_\+expectation()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{ui\+::autolayout\+::fix\+\_\+violating\+\_\+children()}}, \mbox{\hyperlink{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}{operator=()}}, \mbox{\hyperlink{namespacetests_ac09ca02e5f6f00207ded957b6d8ef5f6}{tests\+::test\+\_\+autolayout\+\_\+wrap\+\_\+column()}}, and \mbox{\hyperlink{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}{Widget()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}\label{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}} 
+\index{ui::Widget@{ui::Widget}!id@{id}}
+\index{id@{id}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{id}{id}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structui_1_1uuid}{uuid}} ui\+::\+Widget\+::id}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a062fa8a78208818cd2f1b11239615ef0}{ui\+::\+\_\+draw\+\_\+focus\+\_\+ring()}}, \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{ui\+::button()}}, \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{ui\+::button\+\_\+list()}}, \mbox{\hyperlink{namespaceui_aadad469b76dbb557f2985c32613f27fb}{ui\+::checkbox()}}, \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{ui\+::dropdown()}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{ui\+::init\+\_\+widget()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a2f4cda37ca035b07a6c5ff3b6b40b3a1}{ui\+::\+UIContext\+::matching\+\_\+id\+\_\+in\+\_\+tree()}}, \mbox{\hyperlink{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}{operator=()}}, \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{ui\+::scroll\+\_\+view()}}, \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{ui\+::slider()}}, \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{ui\+::textfield()}}, and \mbox{\hyperlink{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}{Widget()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}\label{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}} 
+\index{ui::Widget@{ui::Widget}!me@{me}}
+\index{me@{me}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{me}{me}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structui_1_1_widget}{Widget}}$\ast$ ui\+::\+Widget\+::me}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{ui\+::button()}}, \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{ui\+::button\+\_\+list()}}, \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{ui\+::dropdown()}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{ui\+::init\+\_\+widget()}}, \mbox{\hyperlink{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}{print\+\_\+tree()}}, \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{ui\+::slider()}}, \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{ui\+::text()}}, and \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{ui\+::textfield()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}\label{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}} 
+\index{ui::Widget@{ui::Widget}!parent@{parent}}
+\index{parent@{parent}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{parent}{parent}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structui_1_1_widget}{Widget}}$\ast$ ui\+::\+Widget\+::parent = nullptr}
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_widget_a1816974419641b355efb1d432379141c}{add\+\_\+child()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_abb4dae5cd1fd325e0a25026f7468c1b5}{ui\+::autolayout\+::compute\+\_\+rect\+\_\+bounds()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{ui\+::autolayout\+::compute\+\_\+relative\+\_\+positions()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a0092871caad2d74966974bbe9d9eec7c}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+parent\+\_\+expectation()}}, \mbox{\hyperlink{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}{operator=()}}, \mbox{\hyperlink{structui_1_1_widget_a86934afb010a0dfcc923602f8163e12f}{print()}}, \mbox{\hyperlink{namespacetests_a6c89df90e18364d2a7bfad532d8c423d}{tests\+::test\+\_\+add\+\_\+child()}}, \mbox{\hyperlink{namespacetests_a9c485f0835d20bd713661d9006ef8f74}{tests\+::test\+\_\+add\+\_\+child\+\_\+again()}}, \mbox{\hyperlink{namespacetests_ac09ca02e5f6f00207ded957b6d8ef5f6}{tests\+::test\+\_\+autolayout\+\_\+wrap\+\_\+column()}}, and \mbox{\hyperlink{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}{Widget()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}\label{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}} 
+\index{ui::Widget@{ui::Widget}!rect@{rect}}
+\index{rect@{rect}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{rect}{rect}}
+{\footnotesize\ttfamily Rectangle ui\+::\+Widget\+::rect}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{ui\+::button()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_abb4dae5cd1fd325e0a25026f7468c1b5}{ui\+::autolayout\+::compute\+\_\+rect\+\_\+bounds()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a0765d0c091aa0b25d3bc0f06f4580067}{ui\+::\+UIContext\+::draw\+\_\+text()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a9cde81e3fdc093e32dfb15dddf05e9aa}{ui\+::\+UIContext\+::draw\+\_\+widget()}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{ui\+::init\+\_\+widget()}}, \mbox{\hyperlink{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}{operator=()}}, \mbox{\hyperlink{structui_1_1_widget_a86934afb010a0dfcc923602f8163e12f}{print()}}, \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{ui\+::scroll\+\_\+view()}}, \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{ui\+::slider()}}, \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{ui\+::textfield()}}, and \mbox{\hyperlink{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}{Widget()}}.
+
+\mbox{\Hypertarget{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}\label{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}} 
+\index{ui::Widget@{ui::Widget}!size\_expected@{size\_expected}}
+\index{size\_expected@{size\_expected}!ui::Widget@{ui::Widget}}
+\doxysubsubsection{\texorpdfstring{size\_expected}{size\_expected}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} ui\+::\+Widget\+::size\+\_\+expected\mbox{[}2\mbox{]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_1_1autolayout_a18510470464391ecc932364a83f8ab96}{ui\+::autolayout\+::\+\_\+max\+\_\+child\+\_\+size()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a5bd15c6386b32294c41dd9e679673289}{ui\+::autolayout\+::\+\_\+solve\+\_\+error\+\_\+with\+\_\+optional()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_ae91ed2b2dd47ead91ac1050eccf5e715}{ui\+::autolayout\+::\+\_\+sum\+\_\+children\+\_\+axis\+\_\+for\+\_\+child\+\_\+exp()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a8eee5d8e9d61273a841f39eac3ecb5cb}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+child\+\_\+expectation()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a0092871caad2d74966974bbe9d9eec7c}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+parent\+\_\+expectation()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a567a0cb9b521e51af53a84e79109712c}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+standalone\+\_\+expectation()}}, \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{ui\+::dropdown()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{ui\+::autolayout\+::fix\+\_\+violating\+\_\+children()}}, \mbox{\hyperlink{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}{operator=()}}, \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{ui\+::autolayout\+::tax\+\_\+refund()}}, \mbox{\hyperlink{namespacetests_a6c89df90e18364d2a7bfad532d8c423d}{tests\+::test\+\_\+add\+\_\+child()}}, \mbox{\hyperlink{namespacetests_ac09ca02e5f6f00207ded957b6d8ef5f6}{tests\+::test\+\_\+autolayout\+\_\+wrap\+\_\+column()}}, \mbox{\hyperlink{namespacetests_a26968031671e9848e7ca27b4bb43b2d9}{tests\+::test\+\_\+just\+\_\+root()}}, \mbox{\hyperlink{namespacetests_a6df95556293bfb35d229390885f5ba3c}{tests\+::test\+\_\+single\+\_\+child()}}, \mbox{\hyperlink{namespacetests_a6913b0fb4d8c00d69c5d34148ca94e65}{tests\+::test\+\_\+two\+\_\+children()}}, \mbox{\hyperlink{namespacetests_a13f5b82f53f665367e62f5d4faa3a7f3}{tests\+::test\+\_\+two\+\_\+children\+\_\+parent\+\_\+size()}}, \mbox{\hyperlink{namespacetests_a45fc0d344a5bac1c570c4ccf1c6d4840}{tests\+::test\+\_\+two\+\_\+children\+\_\+parent\+\_\+size\+\_\+too\+\_\+small()}}, and \mbox{\hyperlink{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}{Widget()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/engine/\mbox{\hyperlink{ui__widget_8h}{ui\+\_\+widget.\+h}}\end{DoxyCompactItemize}

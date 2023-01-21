@@ -1,0 +1,25 @@
+\hypertarget{can__be__highlighted_8h_source}{}\doxysection{can\+\_\+be\+\_\+highlighted.\+h}
+\label{can__be__highlighted_8h_source}\index{src/components/can\_be\_highlighted.h@{src/components/can\_be\_highlighted.h}}
+\mbox{\hyperlink{can__be__highlighted_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../item.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_can_be_highlighted}{CanBeHighlighted}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_can_be_highlighted_ac8b1344ce22db8f11233744400813980}{\string~CanBeHighlighted}}()\ \{\}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_be_highlighted_ae4bec42750b2d7b321d4ab40275ee7e7}{is\_highlighted}};}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_be_highlighted_af50fac4e162dcf991fbcd5ca1ea768f4}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ s.value1b(\mbox{\hyperlink{struct_can_be_highlighted_ae4bec42750b2d7b321d4ab40275ee7e7}{is\_highlighted}});}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ \};}
+
+\end{DoxyCode}

@@ -1,0 +1,84 @@
+\hypertarget{assert_8h}{}\doxysection{src/engine/assert.h File Reference}
+\label{assert_8h}\index{src/engine/assert.h@{src/engine/assert.h}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$cassert$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}(x, ...)
+\item 
+\#define \mbox{\hyperlink{assert_8h_a233524c2a07a1962e1c88e335a3b0dfc}{M\+\_\+\+TEST\+\_\+\+IMPL}}(x,  y,  op,  op\+\_\+string, ...)
+\item 
+\#define \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\+\_\+\+TEST\+\_\+\+EQ}}(x,  y, ...)~    \mbox{\hyperlink{assert_8h_a233524c2a07a1962e1c88e335a3b0dfc}{M\+\_\+\+TEST\+\_\+\+IMPL}}(x, y, ==, \char`\"{} did not equal \char`\"{}, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{assert_8h_a4c06fcf9e27cec211272e6a96bfd344d}{M\+\_\+\+TEST\+\_\+\+LEQ}}(x,  y, ...)~    \mbox{\hyperlink{assert_8h_a233524c2a07a1962e1c88e335a3b0dfc}{M\+\_\+\+TEST\+\_\+\+IMPL}}(x, y, $<$=, \char`\"{} was not less than \char`\"{}, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{assert_8h_a8bef75df53a2c81079afd41246c0575d}{M\+\_\+\+TEST\+\_\+\+GEQ}}(x,  y, ...)~    \mbox{\hyperlink{assert_8h_a233524c2a07a1962e1c88e335a3b0dfc}{M\+\_\+\+TEST\+\_\+\+IMPL}}(x, y, $<$=, \char`\"{} was not greater than \char`\"{}, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{assert_8h_ab4623194540dbc3387ba45baf005a101}{M\+\_\+\+TEST\+\_\+\+NEQ}}(x,  y, ...)~    \mbox{\hyperlink{assert_8h_a233524c2a07a1962e1c88e335a3b0dfc}{M\+\_\+\+TEST\+\_\+\+IMPL}}(x, y, !=, \char`\"{} was equal to \char`\"{}, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}\label{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}} 
+\index{assert.h@{assert.h}!M\_ASSERT@{M\_ASSERT}}
+\index{M\_ASSERT@{M\_ASSERT}!assert.h@{assert.h}}
+\doxysubsubsection{\texorpdfstring{M\_ASSERT}{M\_ASSERT}}
+{\footnotesize\ttfamily \#define M\+\_\+\+ASSERT(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (!(x))\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Assertion\ failed:\ "{}};\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \_\_VA\_ARGS\_\_;\ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ assert(x);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{assert_8h_a650848c7f29e557547baddee84454907}\label{assert_8h_a650848c7f29e557547baddee84454907}} 
+\index{assert.h@{assert.h}!M\_TEST\_EQ@{M\_TEST\_EQ}}
+\index{M\_TEST\_EQ@{M\_TEST\_EQ}!assert.h@{assert.h}}
+\doxysubsubsection{\texorpdfstring{M\_TEST\_EQ}{M\_TEST\_EQ}}
+{\footnotesize\ttfamily \#define M\+\_\+\+TEST\+\_\+\+EQ(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y,  }\item[{}]{... }\end{DoxyParamCaption})~    \mbox{\hyperlink{assert_8h_a233524c2a07a1962e1c88e335a3b0dfc}{M\+\_\+\+TEST\+\_\+\+IMPL}}(x, y, ==, \char`\"{} did not equal \char`\"{}, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)}
+
+\mbox{\Hypertarget{assert_8h_a8bef75df53a2c81079afd41246c0575d}\label{assert_8h_a8bef75df53a2c81079afd41246c0575d}} 
+\index{assert.h@{assert.h}!M\_TEST\_GEQ@{M\_TEST\_GEQ}}
+\index{M\_TEST\_GEQ@{M\_TEST\_GEQ}!assert.h@{assert.h}}
+\doxysubsubsection{\texorpdfstring{M\_TEST\_GEQ}{M\_TEST\_GEQ}}
+{\footnotesize\ttfamily \#define M\+\_\+\+TEST\+\_\+\+GEQ(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y,  }\item[{}]{... }\end{DoxyParamCaption})~    \mbox{\hyperlink{assert_8h_a233524c2a07a1962e1c88e335a3b0dfc}{M\+\_\+\+TEST\+\_\+\+IMPL}}(x, y, $<$=, \char`\"{} was not greater than \char`\"{}, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)}
+
+\mbox{\Hypertarget{assert_8h_a233524c2a07a1962e1c88e335a3b0dfc}\label{assert_8h_a233524c2a07a1962e1c88e335a3b0dfc}} 
+\index{assert.h@{assert.h}!M\_TEST\_IMPL@{M\_TEST\_IMPL}}
+\index{M\_TEST\_IMPL@{M\_TEST\_IMPL}!assert.h@{assert.h}}
+\doxysubsubsection{\texorpdfstring{M\_TEST\_IMPL}{M\_TEST\_IMPL}}
+{\footnotesize\ttfamily \#define M\+\_\+\+TEST\+\_\+\+IMPL(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y,  }\item[{}]{op,  }\item[{}]{op\+\_\+string,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (!(x\ op\ y))\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Test\ Failed\(\backslash\)n"{}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \_\_PRETTY\_FUNCTION\_\_;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ ("{}}\ <<\ \_\_FILE\_\_\ <<\ \textcolor{stringliteral}{"{}:"{}}\ <<\ \_\_LINE\_\_\ <<\ \textcolor{stringliteral}{"{})\(\backslash\)n"{}};\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \_\_VA\_ARGS\_\_\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ x\ <<\ op\_string\ <<\ y\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/-\/-\/-\/-\/-\/\ \(\backslash\)n\ "{}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{assert_8h_a4c06fcf9e27cec211272e6a96bfd344d}\label{assert_8h_a4c06fcf9e27cec211272e6a96bfd344d}} 
+\index{assert.h@{assert.h}!M\_TEST\_LEQ@{M\_TEST\_LEQ}}
+\index{M\_TEST\_LEQ@{M\_TEST\_LEQ}!assert.h@{assert.h}}
+\doxysubsubsection{\texorpdfstring{M\_TEST\_LEQ}{M\_TEST\_LEQ}}
+{\footnotesize\ttfamily \#define M\+\_\+\+TEST\+\_\+\+LEQ(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y,  }\item[{}]{... }\end{DoxyParamCaption})~    \mbox{\hyperlink{assert_8h_a233524c2a07a1962e1c88e335a3b0dfc}{M\+\_\+\+TEST\+\_\+\+IMPL}}(x, y, $<$=, \char`\"{} was not less than \char`\"{}, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)}
+
+\mbox{\Hypertarget{assert_8h_ab4623194540dbc3387ba45baf005a101}\label{assert_8h_ab4623194540dbc3387ba45baf005a101}} 
+\index{assert.h@{assert.h}!M\_TEST\_NEQ@{M\_TEST\_NEQ}}
+\index{M\_TEST\_NEQ@{M\_TEST\_NEQ}!assert.h@{assert.h}}
+\doxysubsubsection{\texorpdfstring{M\_TEST\_NEQ}{M\_TEST\_NEQ}}
+{\footnotesize\ttfamily \#define M\+\_\+\+TEST\+\_\+\+NEQ(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y,  }\item[{}]{... }\end{DoxyParamCaption})~    \mbox{\hyperlink{assert_8h_a233524c2a07a1962e1c88e335a3b0dfc}{M\+\_\+\+TEST\+\_\+\+IMPL}}(x, y, !=, \char`\"{} was equal to \char`\"{}, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)}
+

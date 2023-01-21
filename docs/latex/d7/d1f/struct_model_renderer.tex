@@ -1,0 +1,137 @@
+\hypertarget{struct_model_renderer}{}\doxysection{Model\+Renderer Struct Reference}
+\label{struct_model_renderer}\index{ModelRenderer@{ModelRenderer}}
+
+
+{\ttfamily \#include $<$model\+\_\+renderer.\+h$>$}
+
+Inheritance diagram for Model\+Renderer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d7/d1f/struct_model_renderer}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{struct_model_renderer_abdb96c684bde516329f62c5ae822dab6}{$\sim$\+Model\+Renderer}} ()
+\item 
+bool \mbox{\hyperlink{struct_model_renderer_a0f2f87afba472e9cf9dbac1ca7bcbd46}{has\+\_\+model}} () const
+\item 
+std\+::optional$<$ \mbox{\hyperlink{struct_model_info}{Model\+Info}} $>$ \mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{model\+\_\+info}} () const
+\item 
+raylib\+::\+Model \mbox{\hyperlink{struct_model_renderer_a5eb913b5b12c1ac3c40f8cb625761b78}{model}} () const
+\item 
+void \mbox{\hyperlink{struct_model_renderer_a5b690d340b7dc58e4a82739ae857267b}{update}} (\mbox{\hyperlink{struct_model_info}{Model\+Info}} new\+\_\+info)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_base_component_ac74326a615877f3c1a17bc47787ad91e}{Base\+Component}} ()
+\item 
+\mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
+\item 
+virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_model_renderer_a824a8874123dacfc50e0422c7edafddc}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::optional$<$ \mbox{\hyperlink{struct_model_info}{Model\+Info}} $>$ \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_model_renderer_abdb96c684bde516329f62c5ae822dab6}\label{struct_model_renderer_abdb96c684bde516329f62c5ae822dab6}} 
+\index{ModelRenderer@{ModelRenderer}!````~ModelRenderer@{$\sim$ModelRenderer}}
+\index{````~ModelRenderer@{$\sim$ModelRenderer}!ModelRenderer@{ModelRenderer}}
+\doxysubsubsection{\texorpdfstring{$\sim$ModelRenderer()}{~ModelRenderer()}}
+{\footnotesize\ttfamily virtual Model\+Renderer\+::$\sim$\+Model\+Renderer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_model_renderer_a0f2f87afba472e9cf9dbac1ca7bcbd46}\label{struct_model_renderer_a0f2f87afba472e9cf9dbac1ca7bcbd46}} 
+\index{ModelRenderer@{ModelRenderer}!has\_model@{has\_model}}
+\index{has\_model@{has\_model}!ModelRenderer@{ModelRenderer}}
+\doxysubsubsection{\texorpdfstring{has\_model()}{has\_model()}}
+{\footnotesize\ttfamily bool Model\+Renderer\+::has\+\_\+model (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{model\+\_\+info()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_afb81f15da9531f6cb852d76a72a09ecf}{system\+\_\+manager\+::render\+\_\+model\+\_\+highlighted()}}, and \mbox{\hyperlink{namespacesystem__manager_ade2c1588cbfffd59ab73884f9b48cef1}{system\+\_\+manager\+::render\+\_\+model\+\_\+normal()}}.
+
+\mbox{\Hypertarget{struct_model_renderer_a5eb913b5b12c1ac3c40f8cb625761b78}\label{struct_model_renderer_a5eb913b5b12c1ac3c40f8cb625761b78}} 
+\index{ModelRenderer@{ModelRenderer}!model@{model}}
+\index{model@{model}!ModelRenderer@{ModelRenderer}}
+\doxysubsubsection{\texorpdfstring{model()}{model()}}
+{\footnotesize\ttfamily raylib\+::\+Model Model\+Renderer\+::model (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{Model\+Library\+::get()}}, and \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_afb81f15da9531f6cb852d76a72a09ecf}{system\+\_\+manager\+::render\+\_\+model\+\_\+highlighted()}}, and \mbox{\hyperlink{namespacesystem__manager_ade2c1588cbfffd59ab73884f9b48cef1}{system\+\_\+manager\+::render\+\_\+model\+\_\+normal()}}.
+
+\mbox{\Hypertarget{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}\label{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}} 
+\index{ModelRenderer@{ModelRenderer}!model\_info@{model\_info}}
+\index{model\_info@{model\_info}!ModelRenderer@{ModelRenderer}}
+\doxysubsubsection{\texorpdfstring{model\_info()}{model\_info()}}
+{\footnotesize\ttfamily std\+::optional$<$ \mbox{\hyperlink{struct_model_info}{Model\+Info}} $>$ Model\+Renderer\+::model\+\_\+info (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_model_renderer_a0f2f87afba472e9cf9dbac1ca7bcbd46}{has\+\_\+model()}}, \mbox{\hyperlink{namespacesystem__manager_afb81f15da9531f6cb852d76a72a09ecf}{system\+\_\+manager\+::render\+\_\+model\+\_\+highlighted()}}, and \mbox{\hyperlink{namespacesystem__manager_ade2c1588cbfffd59ab73884f9b48cef1}{system\+\_\+manager\+::render\+\_\+model\+\_\+normal()}}.
+
+\mbox{\Hypertarget{struct_model_renderer_a824a8874123dacfc50e0422c7edafddc}\label{struct_model_renderer_a824a8874123dacfc50e0422c7edafddc}} 
+\index{ModelRenderer@{ModelRenderer}!serialize@{serialize}}
+\index{serialize@{serialize}!ModelRenderer@{ModelRenderer}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void Model\+Renderer\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}.
+
+\mbox{\Hypertarget{struct_model_renderer_a5b690d340b7dc58e4a82739ae857267b}\label{struct_model_renderer_a5b690d340b7dc58e4a82739ae857267b}} 
+\index{ModelRenderer@{ModelRenderer}!update@{update}}
+\index{update@{update}!ModelRenderer@{ModelRenderer}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily void Model\+Renderer\+::update (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_info}{Model\+Info}}}]{new\+\_\+info }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}\label{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}} 
+\index{ModelRenderer@{ModelRenderer}!info@{info}}
+\index{info@{info}!ModelRenderer@{ModelRenderer}}
+\doxysubsubsection{\texorpdfstring{info}{info}}
+{\footnotesize\ttfamily std\+::optional$<$\mbox{\hyperlink{struct_model_info}{Model\+Info}}$>$ Model\+Renderer\+::info\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_model_renderer_a5eb913b5b12c1ac3c40f8cb625761b78}{model()}}, \mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{model\+\_\+info()}}, \mbox{\hyperlink{struct_model_renderer_a824a8874123dacfc50e0422c7edafddc}{serialize()}}, and \mbox{\hyperlink{struct_model_renderer_a5b690d340b7dc58e4a82739ae857267b}{update()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/components/\mbox{\hyperlink{model__renderer_8h}{model\+\_\+renderer.\+h}}\end{DoxyCompactItemize}
