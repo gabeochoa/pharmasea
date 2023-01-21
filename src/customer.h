@@ -3,6 +3,7 @@
 #pragma once
 
 #include "components/can_hold_item.h"
+#include "components/can_perform_job.h"
 #include "drawing_util.h"
 #include "entityhelper.h"
 #include "external_include.h"
@@ -66,6 +67,7 @@ struct Customer : public AIPerson {
 
     void init() {
         get<HasName>().update(get_random_name());
+        get<CanPerformJob>().update(WaitInQueue, Wandering);
 
         // TODO turn back on ailments
         // ailment.reset(new Insomnia());
@@ -82,31 +84,24 @@ struct Customer : public AIPerson {
         return ailment ? ailment->stagger() : 0.f;
     }
 
-    virtual void get_starting_job() override {
-        auto job = get<CanPerformJob>().job();
-        job.reset(new Job({
-            .type = WaitInQueue,
-        }));
-    }
+    // virtual void in_round_update(float dt) override {
+    // AIPerson::in_round_update(dt);
 
-    virtual void in_round_update(float dt) override {
-        AIPerson::in_round_update(dt);
+    // Register* reg = get_target_register();
+    // if (reg) {
+    // this->turn_to_face_entity(reg);
+    // }
+    //
+    // if (bubble.has_value())
+    // bubble.value().update(dt, this->get<Transform>().raw_position);
+    // }
 
-        // Register* reg = get_target_register();
-        // if (reg) {
-        // this->turn_to_face_entity(reg);
-        // }
-        //
-        if (bubble.has_value())
-            bubble.value().update(dt, this->get<Transform>().raw_position);
-    }
-
-    virtual void render_normal() const override {
-        auto render_speech_bubble = [&]() {
-            if (!this->bubble.has_value()) return;
-            this->bubble.value().render();
-        };
-        AIPerson::render_normal();
-        render_speech_bubble();
-    }
+    // virtual void render_normal() const override {
+    // auto render_speech_bubble = [&]() {
+    // if (!this->bubble.has_value()) return;
+    // this->bubble.value().render();
+    // };
+    // AIPerson::render_normal();
+    // render_speech_bubble();
+    // }
 };

@@ -14,6 +14,14 @@ struct CanPerformJob : public BaseComponent {
         return personal_queue;
     }
 
+    void update(JobType starting_jt, JobType idle_jt) {
+        starting_job_type = starting_jt;
+        idle_job_type = idle_jt;
+    }
+
+    JobType starting_job_type;
+    JobType idle_job_type;
+
    private:
     std::stack<std::shared_ptr<Job>> personal_queue;
     std::shared_ptr<Job> current_job;

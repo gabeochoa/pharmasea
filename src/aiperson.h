@@ -23,7 +23,9 @@ struct AIPerson : public Person {
         // Only things that need to be rendered, need to be serialized :)
     }
 
-    void add_static_components() { addComponent<CanPerformJob>(); }
+    void add_static_components() {
+        addComponent<CanPerformJob>().update(Wandering, Wandering);
+    }
 
    public:
     AIPerson() : Person() { add_static_components(); }
@@ -79,47 +81,6 @@ struct AIPerson : public Person {
         return new_pos_z;
     }
 
-    virtual Job* get_wandering_job() {
-        // TODO add cooldown so that not all time is spent here
-        int max_tries = 10;
-        int range = 20;
-        bool walkable = false;
-        int i = 0;
-        vec2 target;
-        while (!walkable) {
-            target = (vec2){1.f * randIn(-range, range),
-                            1.f * randIn(-range, range)};
-            walkable = EntityHelper::isWalkable(target);
-            i++;
-            if (i > max_tries) {
-                return nullptr;
-            }
-        }
-        return new Job({.type = Wandering,
-                        .start = this->get<Transform>().as2(),
-                        .end = target});
-    }
-
-    virtual void get_starting_job() {
-        auto job = get<CanPerformJob>().job();
-        job.reset(get_wandering_job());
-    }
-    virtual void get_idle_job() {
-        auto job = get<CanPerformJob>().job();
-        job.reset(get_wandering_job());
-    }
-
-    virtual void find_new_job() {
-        auto job = get<CanPerformJob>().job();
-        auto personal_queue = get<CanPerformJob>().job_queue();
-        if (personal_queue.empty()) {
-            get_idle_job();
-            return;
-        }
-        job = personal_queue.top();
-        personal_queue.pop();
-    }
-
     virtual void in_round_update(float dt) override {
         auto job = get<CanPerformJob>().job();
         if ((this->pushed_force.x != 0.0f      //
@@ -129,20 +90,7 @@ struct AIPerson : public Person {
             job->local = {};
             SoundLibrary::get().play("roblox");
         }
-
         Person::in_round_update(dt);
-
-        if (!job) {
-            get_starting_job();
-            return;
-        }
-
-        if (job->state == Job::State::Completed) {
-            if (job->on_cleanup) job->on_cleanup(this, job.get());
-            job.reset();
-            find_new_job();
-            return;
-        }
     }
 
     virtual bool is_snappable() override { return true; }
