@@ -147,10 +147,13 @@ struct Player : public BasePlayer {
         // Cant rotate outside planning mode
         if (GameState::get().is_not(game::State::Planning)) return;
 
+        // TODO need to figure out if this should be separate from highlighting
+        CanHighlightOthers& cho = this->get<CanHighlightOthers>();
+
         std::shared_ptr<Furniture> match =
             // TODO have this just take a transform
             EntityHelper::getClosestMatchingEntity<Furniture>(
-                this->get<Transform>().as2(), player_reach,
+                this->get<Transform>().as2(), cho.reach(),
                 [](auto&& furniture) { return furniture->can_rotate(); });
 
         if (!match) return;
@@ -163,9 +166,12 @@ struct Player : public BasePlayer {
         // Cant do work during planning
         if (GameState::get().is(game::State::Planning)) return;
 
+        // TODO need to figure out if this should be separate from highlighting
+        CanHighlightOthers& cho = this->get<CanHighlightOthers>();
+
         std::shared_ptr<Furniture> match =
             EntityHelper::getClosestMatchingEntity<Furniture>(
-                this->get<Transform>().as2(), player_reach,
+                this->get<Transform>().as2(), cho.reach(),
                 [](auto&& furniture) { return furniture->has_work(); });
 
         if (!match) return;
@@ -176,6 +182,9 @@ struct Player : public BasePlayer {
     void handle_in_game_grab_or_drop() {
         TRACY_ZONE_SCOPED;
         // TODO Need to auto drop any held furniture
+
+        // TODO need to figure out if this should be separate from highlighting
+        CanHighlightOthers& cho = this->get<CanHighlightOthers>();
 
         // Do we already have something in our hands?
         // We must be trying to drop it
@@ -190,7 +199,7 @@ struct Player : public BasePlayer {
 
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
-                        this->get<Transform>().as2(), player_reach,
+                        this->get<Transform>().as2(), cho.reach(),
                         this->get<Transform>().face_direction,
                         [](std::shared_ptr<Furniture> f) {
                             return f->get<CanHoldItem>().is_holding_item();
@@ -213,7 +222,7 @@ struct Player : public BasePlayer {
                 TRACY_ZONE(tracy_merge_item_in_hand_into_furniture);
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
-                        this->get<Transform>().as2(), player_reach,
+                        this->get<Transform>().as2(), cho.reach(),
                         this->get<Transform>().face_direction,
                         [&](std::shared_ptr<Furniture> f) {
                             return
@@ -252,7 +261,7 @@ struct Player : public BasePlayer {
                 TRACY_ZONE(tracy_place_item_onto_furniture);
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
-                        this->get<Transform>().as2(), player_reach,
+                        this->get<Transform>().as2(), cho.reach(),
                         this->get<Transform>().face_direction,
                         [this](std::shared_ptr<Furniture> f) {
                             return f->can_place_item_into(
@@ -289,7 +298,7 @@ struct Player : public BasePlayer {
             const auto _pickup_item_from_furniture = [&]() {
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
-                        this->get<Transform>().as2(), player_reach,
+                        this->get<Transform>().as2(), cho.reach(),
                         this->get<Transform>().face_direction,
                         [](std::shared_ptr<Furniture> furn) {
                             // TODO fix
@@ -314,7 +323,7 @@ struct Player : public BasePlayer {
             // Handles the non-furniture grabbing case
             std::shared_ptr<Item> closest_item =
                 ItemHelper::getClosestMatchingItem<Item>(
-                    this->get<Transform>().as2(), TILESIZE * player_reach);
+                    this->get<Transform>().as2(), TILESIZE * cho.reach());
             this->get<CanHoldItem>().item() = closest_item;
             // TODO fix
             if (this->get<CanHoldItem>().item() != nullptr) {
@@ -330,6 +339,9 @@ struct Player : public BasePlayer {
         // planning
 
         // TODO need to auto drop when "in_planning" changes
+
+        // TODO need to figure out if this should be separate from highlighting
+        CanHighlightOthers& cho = this->get<CanHighlightOthers>();
 
         CanHoldFurniture& ourCHF = get<CanHoldFurniture>();
 
@@ -348,7 +360,7 @@ struct Player : public BasePlayer {
             // facing, instead of in a box around him
             std::shared_ptr<Furniture> closest_furniture =
                 EntityHelper::getMatchingEntityInFront<Furniture>(
-                    this->get<Transform>().as2(), player_reach,
+                    this->get<Transform>().as2(), cho.reach(),
                     this->get<Transform>().face_direction,
                     [](std::shared_ptr<Furniture> f) {
                         return f->can_be_picked_up();

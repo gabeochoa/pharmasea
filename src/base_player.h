@@ -15,8 +15,6 @@
 // TODO add more information on what the difference is between Person and
 // BasePlayer and Player
 struct BasePlayer : public Person {
-    float player_reach = 1.25f;
-
     void add_static_components() {
         addComponent<CanHighlightOthers>();
         addComponent<CanHoldFurniture>();

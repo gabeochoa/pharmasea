@@ -139,6 +139,7 @@ inline void reset_highlighted(std::shared_ptr<Entity> entity, float) {
 
 inline void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
     if (!entity->has<CanHighlightOthers>()) return;
+    CanHighlightOthers& cho = entity->get<CanHighlightOthers>();
 
     // TODO explicity commenting this out so that we get an error
     // if (!entity->has<Transform>()) return;
@@ -148,7 +149,7 @@ inline void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
     // keeping it configurable
     auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
         // TODO add a player reach component
-        transform.as2(), 1.25f /*player_reach*/, transform.face_direction,
+        transform.as2(), cho.reach(), transform.face_direction,
         [](std::shared_ptr<Furniture>) { return true; });
     if (!match) return;
     if (!match->has<CanBeHighlighted>()) return;

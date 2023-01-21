@@ -8,7 +8,11 @@
 struct CanHighlightOthers : public BaseComponent {
     virtual ~CanHighlightOthers() {}
 
+    [[nodiscard]] float reach() const { return furniture_reach; }
+
    private:
+    float furniture_reach = 1.25f;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
