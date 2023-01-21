@@ -47,6 +47,7 @@ struct Person : public Entity {
         // log_info("model index: {}", model_index);
         // TODO add a component for this
         get<ModelRenderer>().update(ModelInfo{
+            // TODO fix this
             .model_name = character_models[model_index],
             .size_scale = 1.5f,
             .position_offset = vec3{0, 0, 0},

@@ -50,7 +50,10 @@ struct Map {
     void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
         for (auto rp : remote_players_NOT_SERIALIZED) {
-            if (rp) rp->render();
+            // NOTE: we call the render directly ehre because level_info doesnt
+            // own players
+            // TODO why is he so large ..
+            if (rp) system_manager::render_normal(rp, dt);
             if (!rp) log_warn("we have invalid remote players");
         }
         if (in_lobby_state()) {
