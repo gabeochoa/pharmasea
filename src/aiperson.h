@@ -81,17 +81,5 @@ struct AIPerson : public Person {
         return new_pos_z;
     }
 
-    virtual void in_round_update(float dt) override {
-        auto job = get<CanPerformJob>().job();
-        if ((this->pushed_force.x != 0.0f      //
-             || this->pushed_force.z != 0.0f)  //
-            && job != nullptr) {
-            job->path.clear();
-            job->local = {};
-            SoundLibrary::get().play("roblox");
-        }
-        Person::in_round_update(dt);
-    }
-
     virtual bool is_snappable() override { return true; }
 };

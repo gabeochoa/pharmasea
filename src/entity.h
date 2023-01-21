@@ -4,6 +4,7 @@
 #include "bitsery/ext/std_smart_ptr.h"
 #include "components/base_component.h"
 #include "components/can_be_highlighted.h"
+#include "components/can_be_pushed.h"
 #include "components/can_hold_item.h"
 #include "components/has_name.h"
 #include "components/model_renderer.h"
@@ -36,7 +37,6 @@ struct Entity {
     ComponentBitSet componentSet;
     ComponentArray componentArray;
 
-    vec3 pushed_force{0.0, 0.0, 0.0};
     bool cleanup = false;
     bool is_held = false;
 
@@ -86,6 +86,7 @@ struct Entity {
         addComponent<CanHoldItem>();
         addComponent<SimpleColoredBoxRenderer>();
         addComponent<ModelRenderer>();
+        addComponent<CanBePushed>();
     }
 
    private:
@@ -98,7 +99,6 @@ struct Entity {
                         sv.ext(bc, bitsery::ext::StdSmartPtr{});
                     });
         s.ext(componentSet, bitsery::ext::StdBitset{});
-        s.object(pushed_force);
         s.value1b(cleanup);
         s.value1b(is_held);
     }

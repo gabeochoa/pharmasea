@@ -121,28 +121,34 @@ struct Person : public Entity {
 
         if (would_collide_x || would_collide_z) {
             if (auto entity_x = collided_entity_x.lock()) {
+                // TODO remove this check since we can just put CanBePushed on
+                // the person entity and replace with a has<> check
                 if (auto person_ptr_x = dynamic_cast<Person*>(entity_x.get())) {
+                    CanBePushed& cbp = entity_x->get<CanBePushed>();
                     const float random_jitter = randSign() * TILESIZE / 2.0f;
                     if (facedir_x & Transform::FrontFaceDirection::LEFT) {
-                        entity_x->pushed_force.x += tile_div_push_mod;
-                        entity_x->pushed_force.z += random_jitter;
+                        cbp.pushed_force.x += tile_div_push_mod;
+                        cbp.pushed_force.z += random_jitter;
                     }
                     if (facedir_x & Transform::FrontFaceDirection::RIGHT) {
-                        entity_x->pushed_force.x -= tile_div_push_mod;
-                        entity_x->pushed_force.z += random_jitter;
+                        cbp.pushed_force.x -= tile_div_push_mod;
+                        cbp.pushed_force.z += random_jitter;
                     }
                 }
             }
             if (auto entity_z = collided_entity_z.lock()) {
+                // TODO remove this check since we can just put CanBePushed on
+                // the person entity and replace with a has<> check
                 if (auto person_ptr_z = dynamic_cast<Person*>(entity_z.get())) {
+                    CanBePushed& cbp = entity_z->get<CanBePushed>();
                     const float random_jitter = randSign() * TILESIZE / 2.0f;
                     if (facedir_z & Transform::FrontFaceDirection::FORWARD) {
-                        person_ptr_z->pushed_force.x += random_jitter;
-                        person_ptr_z->pushed_force.z += tile_div_push_mod;
+                        cbp.pushed_force.x += random_jitter;
+                        cbp.pushed_force.z += tile_div_push_mod;
                     }
                     if (facedir_z & Transform::FrontFaceDirection::BACK) {
-                        person_ptr_z->pushed_force.x += random_jitter;
-                        person_ptr_z->pushed_force.z -= tile_div_push_mod;
+                        cbp.pushed_force.x += random_jitter;
+                        cbp.pushed_force.z -= tile_div_push_mod;
                     }
                 }
             }
@@ -195,12 +201,16 @@ struct Person : public Entity {
 
         update_facing_direction(facedir_x, facedir_z);
 
-        new_pos_x.x += this->pushed_force.x;
-        this->pushed_force.x = 0.0f;
+        // TODO move to system manager
+        CanBePushed& cbp = this->get<CanBePushed>();
 
-        new_pos_z.z += this->pushed_force.z;
-        this->pushed_force.z = 0.0f;
+        new_pos_x.x += cbp.pushed_force.x;
+        cbp.pushed_force.x = 0.0f;
 
+        new_pos_z.z += cbp.pushed_force.z;
+        cbp.pushed_force.z = 0.0f;
+
+        // TODO what is this for
         // this->get<Transform>().face_direction =
         // Transform::FrontFaceDirection::BACK &
         // Transform::FrontFaceDirection::LEFT;

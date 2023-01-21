@@ -293,6 +293,7 @@ struct SystemManager {
 
     void in_round_update(float dt) {
         EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
+            system_manager::job_system::handle_job_holder_pushed(entity, dt);
             system_manager::job_system::update_job_information(entity, dt);
             return EntityHelper::ForEachFlow::None;
         });

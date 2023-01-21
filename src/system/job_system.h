@@ -391,6 +391,21 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
     }
 }
 
+inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
+    if (!entity->has<CanPerformJob>()) return;
+    CanPerformJob& cpf = entity->get<CanPerformJob>();
+    if (!cpf.has_job()) return;
+    auto job = cpf.job();
+
+    CanBePushed& cbp = entity->get<CanBePushed>();
+
+    if (cbp.pushed_force.x != 0.0f || cbp.pushed_force.z != 0.0f) {
+        job->path.clear();
+        job->local = {};
+        SoundLibrary::get().play("roblox");
+    }
+}
+
 inline void render_job_visual(std::shared_ptr<Entity> entity, float) {
     if (!entity->has<CanPerformJob>()) return;
     CanPerformJob& cpf = entity->get<CanPerformJob>();

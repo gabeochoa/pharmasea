@@ -18,7 +18,7 @@ struct PolymorphicBaseClass<BaseComponent>
     : PolymorphicDerivedClasses<
           Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
           CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
-          CanBeGhostPlayer, CanPerformJob, ModelRenderer> {};
+          CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed> {};
 
 template<>
 struct PolymorphicBaseClass<Entity>
