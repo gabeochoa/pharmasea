@@ -10,6 +10,7 @@
 #include "statemanager.h"
 //
 #include "furniture.h"
+#include "system/system_manager.h"
 
 struct Player : public BasePlayer {
     // Theres no players not in game menu state,
@@ -55,7 +56,11 @@ struct Player : public BasePlayer {
 
     virtual void always_update(float dt) override {
         TRACY_ZONE_SCOPED;
+
         BasePlayer::always_update(dt);
+
+        update_xaxis_position(dt);
+        update_zaxis_position(dt);
 
         bool pickup =
             KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
@@ -79,7 +84,9 @@ struct Player : public BasePlayer {
     // TODO interpolate our old position and new position so its smoother
     virtual vec3 get_position_after_input(UserInputs inpts) {
         TRACY_ZONE_SCOPED;
-        // log_trace("get_position_after_input {}", inpts.size());
+        Transform& transform = get<Transform>();
+        // log_info("old position {}", transform.position);
+        // log_info("get_position_after_input {}", inpts.size());
         for (const UserInput& ui : inpts) {
             const auto menu_state = std::get<0>(ui);
             if (menu_state != state) continue;
@@ -87,8 +94,6 @@ struct Player : public BasePlayer {
             const InputName input_name = std::get<1>(ui);
             const float input_amount = std::get<2>(ui);
             const float frame_dt = std::get<3>(ui);
-
-            Transform& transform = get<Transform>();
 
             if (input_name == InputName::PlayerPickup && input_amount > 0.5f) {
                 grab_or_drop();
@@ -122,14 +127,12 @@ struct Player : public BasePlayer {
                 new_position.z += input_amount * speed;
             }
 
-            const auto fd = get_face_direction(new_position, new_position);
-            int fd_x = std::get<0>(fd);
-            int fd_z = std::get<1>(fd);
-            update_facing_direction(fd_x, fd_z);
-            handle_collision(fd_x, new_position, fd_z, new_position);
+            system_manager::person_update_given_new_pos(
+                this->id, transform, this, frame_dt, new_position,
+                new_position);
             transform.position = transform.raw_position;
         }
-        return this->get<Transform>().position;
+        return transform.position;
     }
 
     void rotate_furniture() {

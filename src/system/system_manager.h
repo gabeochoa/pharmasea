@@ -251,6 +251,161 @@ inline void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
     match->get<CanBeHighlighted>().is_highlighted = true;
 }
 
+// TODO We need like a temporary storage for this
+inline void move_entity_based_on_push_force(std::shared_ptr<Entity> entity,
+                                            float, vec3& new_pos_x,
+                                            vec3& new_pos_z) {
+    CanBePushed& cbp = entity->get<CanBePushed>();
+
+    new_pos_x.x += cbp.pushed_force.x;
+    cbp.pushed_force.x = 0.0f;
+
+    new_pos_z.z += cbp.pushed_force.z;
+    cbp.pushed_force.z = 0.0f;
+}
+
+inline void person_update_given_new_pos(int id, Transform& transform,
+                                        Person* person, float dt,
+                                        vec3 new_pos_x, vec3 new_pos_z) {
+    int facedir_x = -1;
+    int facedir_z = -1;
+
+    vec3 delta_distance_x = new_pos_x - transform.raw_position;
+    if (delta_distance_x.x > 0) {
+        facedir_x = Transform::FrontFaceDirection::RIGHT;
+    } else if (delta_distance_x.x < 0) {
+        facedir_x = Transform::FrontFaceDirection::LEFT;
+    }
+
+    vec3 delta_distance_z = new_pos_z - transform.raw_position;
+    if (delta_distance_z.z > 0) {
+        facedir_z = Transform::FrontFaceDirection::FORWARD;
+    } else if (delta_distance_z.z < 0) {
+        facedir_z = Transform::FrontFaceDirection::BACK;
+    }
+
+    if (facedir_x == -1 && facedir_z == -1) {
+        // do nothing
+    } else if (facedir_x == -1) {
+        transform.face_direction =
+            static_cast<Transform::FrontFaceDirection>(facedir_z);
+    } else if (facedir_z == -1) {
+        transform.face_direction =
+            static_cast<Transform::FrontFaceDirection>(facedir_x);
+    } else {
+        transform.face_direction =
+            static_cast<Transform::FrontFaceDirection>(facedir_x | facedir_z);
+    }
+
+    // TODO what is this for
+    // this->get<Transform>().face_direction =
+    // Transform::FrontFaceDirection::BACK &
+    // Transform::FrontFaceDirection::LEFT;
+
+    // TODO this should be a component
+    {
+        // horizontal check
+        auto new_bounds_x = get_bounds(new_pos_x, transform.size);
+        // vertical check
+        auto new_bounds_y = get_bounds(new_pos_z, transform.size);
+
+        bool would_collide_x = false;
+        bool would_collide_z = false;
+        std::weak_ptr<Entity> collided_entity_x;
+        std::weak_ptr<Entity> collided_entity_z;
+        EntityHelper::forEachEntity([&](auto entity) {
+            if (id == entity->id) {
+                return EntityHelper::ForEachFlow::Continue;
+            }
+            if (!entity->is_collidable()) {
+                return EntityHelper::ForEachFlow::Continue;
+            }
+            if (!person->is_collidable()) {
+                return EntityHelper::ForEachFlow::Continue;
+            }
+            if (CheckCollisionBoxes(new_bounds_x, entity->bounds())) {
+                would_collide_x = true;
+                collided_entity_x = entity;
+            }
+            if (CheckCollisionBoxes(new_bounds_y, entity->bounds())) {
+                would_collide_z = true;
+                collided_entity_z = entity;
+            }
+            // Note: if these are both true, then we definitely dont need to
+            // keep going and can break early, otherwise we should check the
+            // rest to make sure
+            if (would_collide_x && would_collide_z) {
+                return EntityHelper::ForEachFlow::Break;
+            }
+            return EntityHelper::ForEachFlow::None;
+        });
+
+        if (!would_collide_x) {
+            transform.raw_position.x = new_pos_x.x;
+        }
+        if (!would_collide_z) {
+            transform.raw_position.z = new_pos_z.z;
+        }
+
+        // This value determines how "far" to impart a push force on the
+        // collided entity
+        const float directional_push_modifier = 1.0f;
+
+        // Figure out if there's a more graceful way to "jitter" things
+        // around each other
+        const float tile_div_push_mod = TILESIZE / directional_push_modifier;
+
+        if (would_collide_x || would_collide_z) {
+            if (auto entity_x = collided_entity_x.lock()) {
+                // TODO remove this check since we can just put CanBePushed
+                // on the person entity and replace with a has<> check
+                if (auto person_ptr_x = dynamic_cast<Person*>(entity_x.get())) {
+                    CanBePushed& cbp = entity_x->get<CanBePushed>();
+                    const float random_jitter = randSign() * TILESIZE / 2.0f;
+                    if (facedir_x & Transform::FrontFaceDirection::LEFT) {
+                        cbp.pushed_force.x += tile_div_push_mod;
+                        cbp.pushed_force.z += random_jitter;
+                    }
+                    if (facedir_x & Transform::FrontFaceDirection::RIGHT) {
+                        cbp.pushed_force.x -= tile_div_push_mod;
+                        cbp.pushed_force.z += random_jitter;
+                    }
+                }
+            }
+            if (auto entity_z = collided_entity_z.lock()) {
+                // TODO remove this check since we can just put CanBePushed
+                // on the person entity and replace with a has<> check
+                if (auto person_ptr_z = dynamic_cast<Person*>(entity_z.get())) {
+                    CanBePushed& cbp = entity_z->get<CanBePushed>();
+                    const float random_jitter = randSign() * TILESIZE / 2.0f;
+                    if (facedir_z & Transform::FrontFaceDirection::FORWARD) {
+                        cbp.pushed_force.x += random_jitter;
+                        cbp.pushed_force.z += tile_div_push_mod;
+                    }
+                    if (facedir_z & Transform::FrontFaceDirection::BACK) {
+                        cbp.pushed_force.x += random_jitter;
+                        cbp.pushed_force.z -= tile_div_push_mod;
+                    }
+                }
+            }
+        }
+    }
+}
+
+inline void person_update(std::shared_ptr<Entity> entity, float dt) {
+    if (!entity->has<Transform>()) return;
+
+    auto person = dynamic_pointer_cast<Person>(entity);
+    // TODO eventually this should just be a component
+    if (!person) return;
+
+    auto new_pos_x = person->update_xaxis_position(dt);
+    auto new_pos_z = person->update_zaxis_position(dt);
+
+    person_update_given_new_pos(entity->id, entity->get<Transform>(),
+                                person.get(), dt, new_pos_x, new_pos_z);
+}
+
 }  // namespace system_manager
 
 struct SystemManager {
@@ -287,6 +442,8 @@ struct SystemManager {
             system_manager::reset_highlighted(entity, dt);
             system_manager::transform_snapper(entity, dt);
             system_manager::update_held_item_position(entity, dt);
+            // TODO obv this should be more component based
+            system_manager::person_update(entity, dt);
             return EntityHelper::ForEachFlow::None;
         });
     }

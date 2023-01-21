@@ -370,19 +370,7 @@ struct Entity {
         this->update_position(vec::snap(location));
     }
 
-    virtual void render() const final {
-        TRACY_ZONE_SCOPED;
-        const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-
-        if (!debug_mode_on) {
-            render_normal();
-        }
-
-        if (debug_mode_on) {
-            render_debug_mode();
-        }
-    }
+    virtual void render() const final { TRACY_ZONE_SCOPED; }
 
     virtual void update(float dt) final {
         TRACY_ZONE_SCOPED;
