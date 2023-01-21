@@ -1,0 +1,192 @@
+\hypertarget{struct_menu_layer}{}\doxysection{Menu\+Layer Struct Reference}
+\label{struct_menu_layer}\index{MenuLayer@{MenuLayer}}
+
+
+{\ttfamily \#include $<$menulayer.\+h$>$}
+
+Inheritance diagram for Menu\+Layer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d3/d4e/struct_menu_layer}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_menu_layer_a591228d2ab16b31e241af50e64f05111}{Menu\+Layer}} ()
+\item 
+virtual \mbox{\hyperlink{struct_menu_layer_ab644712b97d6f6bf31268dd00895e6c1}{$\sim$\+Menu\+Layer}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_menu_layer_a7ec9ce6cad1c67d136d740c3058772e3}{on\+Event}} (Event \&event) override
+\item 
+bool \mbox{\hyperlink{struct_menu_layer_ace8bbe23e769a464e8871f6e2c3f0d64}{on\+Gamepad\+Axis\+Moved}} (Gamepad\+Axis\+Moved\+Event \&event)
+\item 
+bool \mbox{\hyperlink{struct_menu_layer_aaabdda0fd7af3a9735d2b9f199e7be8f}{on\+Key\+Pressed}} (Key\+Pressed\+Event \&event)
+\item 
+bool \mbox{\hyperlink{struct_menu_layer_a6810e1ad06d05c3c86fa792d5dfc640b}{on\+Gamepad\+Button\+Pressed}} (Gamepad\+Button\+Pressed\+Event \&event)
+\item 
+void \mbox{\hyperlink{struct_menu_layer_a43ffc71d9e6fbb63a4b2ed9c453a7570}{play\+\_\+music}} ()
+\item 
+void \mbox{\hyperlink{struct_menu_layer_a0b7dc7ff2977cc433b5925eab7a0695a}{draw\+\_\+menu\+\_\+buttons}} ()
+\item 
+void \mbox{\hyperlink{struct_menu_layer_a43861cb26d6b151c00ce7edddeeaef61}{draw\+\_\+title\+\_\+section}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_menu_layer_a36aee5e271312bc77d8c4a0c0e6d62ef}{on\+Update}} (float) override
+\item 
+virtual void \mbox{\hyperlink{struct_menu_layer_ab855c8ffa24e0df05e3173fbc2579e08}{on\+Draw}} (float dt) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ ui\+::\+UIContext $>$ \mbox{\hyperlink{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}{ui\+\_\+context}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_menu_layer_a591228d2ab16b31e241af50e64f05111}\label{struct_menu_layer_a591228d2ab16b31e241af50e64f05111}} 
+\index{MenuLayer@{MenuLayer}!MenuLayer@{MenuLayer}}
+\index{MenuLayer@{MenuLayer}!MenuLayer@{MenuLayer}}
+\doxysubsubsection{\texorpdfstring{MenuLayer()}{MenuLayer()}}
+{\footnotesize\ttfamily Menu\+Layer\+::\+Menu\+Layer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}{ui\+\_\+context}}.
+
+\mbox{\Hypertarget{struct_menu_layer_ab644712b97d6f6bf31268dd00895e6c1}\label{struct_menu_layer_ab644712b97d6f6bf31268dd00895e6c1}} 
+\index{MenuLayer@{MenuLayer}!````~MenuLayer@{$\sim$MenuLayer}}
+\index{````~MenuLayer@{$\sim$MenuLayer}!MenuLayer@{MenuLayer}}
+\doxysubsubsection{\texorpdfstring{$\sim$MenuLayer()}{~MenuLayer()}}
+{\footnotesize\ttfamily virtual Menu\+Layer\+::$\sim$\+Menu\+Layer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_menu_layer_a0b7dc7ff2977cc433b5925eab7a0695a}\label{struct_menu_layer_a0b7dc7ff2977cc433b5925eab7a0695a}} 
+\index{MenuLayer@{MenuLayer}!draw\_menu\_buttons@{draw\_menu\_buttons}}
+\index{draw\_menu\_buttons@{draw\_menu\_buttons}!MenuLayer@{MenuLayer}}
+\doxysubsubsection{\texorpdfstring{draw\_menu\_buttons()}{draw\_menu\_buttons()}}
+{\footnotesize\ttfamily void Menu\+Layer\+::draw\+\_\+menu\+\_\+buttons (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a8f7f4c1ce7a4f933663d10543562b096}{menu\+::\+About}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu\+::\+Network}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu\+::\+Settings}}, and \mbox{\hyperlink{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_menu_layer_ab855c8ffa24e0df05e3173fbc2579e08}{on\+Draw()}}.
+
+\mbox{\Hypertarget{struct_menu_layer_a43861cb26d6b151c00ce7edddeeaef61}\label{struct_menu_layer_a43861cb26d6b151c00ce7edddeeaef61}} 
+\index{MenuLayer@{MenuLayer}!draw\_title\_section@{draw\_title\_section}}
+\index{draw\_title\_section@{draw\_title\_section}!MenuLayer@{MenuLayer}}
+\doxysubsubsection{\texorpdfstring{draw\_title\_section()}{draw\_title\_section()}}
+{\footnotesize\ttfamily void Menu\+Layer\+::draw\+\_\+title\+\_\+section (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_menu_layer_ab855c8ffa24e0df05e3173fbc2579e08}{on\+Draw()}}.
+
+\mbox{\Hypertarget{struct_menu_layer_ab855c8ffa24e0df05e3173fbc2579e08}\label{struct_menu_layer_ab855c8ffa24e0df05e3173fbc2579e08}} 
+\index{MenuLayer@{MenuLayer}!onDraw@{onDraw}}
+\index{onDraw@{onDraw}!MenuLayer@{MenuLayer}}
+\doxysubsubsection{\texorpdfstring{onDraw()}{onDraw()}}
+{\footnotesize\ttfamily virtual void Menu\+Layer\+::on\+Draw (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_menu_layer_a0b7dc7ff2977cc433b5925eab7a0695a}{draw\+\_\+menu\+\_\+buttons()}}, \mbox{\hyperlink{struct_menu_layer_a43861cb26d6b151c00ce7edddeeaef61}{draw\+\_\+title\+\_\+section()}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu\+::\+Root}}, and \mbox{\hyperlink{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}{ui\+\_\+context}}.
+
+\mbox{\Hypertarget{struct_menu_layer_a7ec9ce6cad1c67d136d740c3058772e3}\label{struct_menu_layer_a7ec9ce6cad1c67d136d740c3058772e3}} 
+\index{MenuLayer@{MenuLayer}!onEvent@{onEvent}}
+\index{onEvent@{onEvent}!MenuLayer@{MenuLayer}}
+\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
+{\footnotesize\ttfamily virtual void Menu\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_menu_layer_ace8bbe23e769a464e8871f6e2c3f0d64}{on\+Gamepad\+Axis\+Moved()}}, \mbox{\hyperlink{struct_menu_layer_a6810e1ad06d05c3c86fa792d5dfc640b}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_menu_layer_aaabdda0fd7af3a9735d2b9f199e7be8f}{on\+Key\+Pressed()}}.
+
+\mbox{\Hypertarget{struct_menu_layer_ace8bbe23e769a464e8871f6e2c3f0d64}\label{struct_menu_layer_ace8bbe23e769a464e8871f6e2c3f0d64}} 
+\index{MenuLayer@{MenuLayer}!onGamepadAxisMoved@{onGamepadAxisMoved}}
+\index{onGamepadAxisMoved@{onGamepadAxisMoved}!MenuLayer@{MenuLayer}}
+\doxysubsubsection{\texorpdfstring{onGamepadAxisMoved()}{onGamepadAxisMoved()}}
+{\footnotesize\ttfamily bool Menu\+Layer\+::on\+Gamepad\+Axis\+Moved (\begin{DoxyParamCaption}\item[{Gamepad\+Axis\+Moved\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu\+::\+Root}}, and \mbox{\hyperlink{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_menu_layer_a7ec9ce6cad1c67d136d740c3058772e3}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_menu_layer_a6810e1ad06d05c3c86fa792d5dfc640b}\label{struct_menu_layer_a6810e1ad06d05c3c86fa792d5dfc640b}} 
+\index{MenuLayer@{MenuLayer}!onGamepadButtonPressed@{onGamepadButtonPressed}}
+\index{onGamepadButtonPressed@{onGamepadButtonPressed}!MenuLayer@{MenuLayer}}
+\doxysubsubsection{\texorpdfstring{onGamepadButtonPressed()}{onGamepadButtonPressed()}}
+{\footnotesize\ttfamily bool Menu\+Layer\+::on\+Gamepad\+Button\+Pressed (\begin{DoxyParamCaption}\item[{Gamepad\+Button\+Pressed\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu\+::\+Root}}, and \mbox{\hyperlink{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_menu_layer_a7ec9ce6cad1c67d136d740c3058772e3}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_menu_layer_aaabdda0fd7af3a9735d2b9f199e7be8f}\label{struct_menu_layer_aaabdda0fd7af3a9735d2b9f199e7be8f}} 
+\index{MenuLayer@{MenuLayer}!onKeyPressed@{onKeyPressed}}
+\index{onKeyPressed@{onKeyPressed}!MenuLayer@{MenuLayer}}
+\doxysubsubsection{\texorpdfstring{onKeyPressed()}{onKeyPressed()}}
+{\footnotesize\ttfamily bool Menu\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{Key\+Pressed\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu\+::\+Root}}, and \mbox{\hyperlink{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_menu_layer_a7ec9ce6cad1c67d136d740c3058772e3}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_menu_layer_a36aee5e271312bc77d8c4a0c0e6d62ef}\label{struct_menu_layer_a36aee5e271312bc77d8c4a0c0e6d62ef}} 
+\index{MenuLayer@{MenuLayer}!onUpdate@{onUpdate}}
+\index{onUpdate@{onUpdate}!MenuLayer@{MenuLayer}}
+\doxysubsubsection{\texorpdfstring{onUpdate()}{onUpdate()}}
+{\footnotesize\ttfamily virtual void Menu\+Layer\+::on\+Update (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_menu_layer_a43ffc71d9e6fbb63a4b2ed9c453a7570}{play\+\_\+music()}}, and \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu\+::\+Root}}.
+
+\mbox{\Hypertarget{struct_menu_layer_a43ffc71d9e6fbb63a4b2ed9c453a7570}\label{struct_menu_layer_a43ffc71d9e6fbb63a4b2ed9c453a7570}} 
+\index{MenuLayer@{MenuLayer}!play\_music@{play\_music}}
+\index{play\_music@{play\_music}!MenuLayer@{MenuLayer}}
+\doxysubsubsection{\texorpdfstring{play\_music()}{play\_music()}}
+{\footnotesize\ttfamily void Menu\+Layer\+::play\+\_\+music (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_menu_layer_a36aee5e271312bc77d8c4a0c0e6d62ef}{on\+Update()}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}\label{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}} 
+\index{MenuLayer@{MenuLayer}!ui\_context@{ui\_context}}
+\index{ui\_context@{ui\_context}!MenuLayer@{MenuLayer}}
+\doxysubsubsection{\texorpdfstring{ui\_context}{ui\_context}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ui\+::\+UIContext$>$ Menu\+Layer\+::ui\+\_\+context}
+
+
+
+Referenced by \mbox{\hyperlink{struct_menu_layer_a0b7dc7ff2977cc433b5925eab7a0695a}{draw\+\_\+menu\+\_\+buttons()}}, \mbox{\hyperlink{struct_menu_layer_a43861cb26d6b151c00ce7edddeeaef61}{draw\+\_\+title\+\_\+section()}}, \mbox{\hyperlink{struct_menu_layer_a591228d2ab16b31e241af50e64f05111}{Menu\+Layer()}}, \mbox{\hyperlink{struct_menu_layer_ab855c8ffa24e0df05e3173fbc2579e08}{on\+Draw()}}, \mbox{\hyperlink{struct_menu_layer_ace8bbe23e769a464e8871f6e2c3f0d64}{on\+Gamepad\+Axis\+Moved()}}, \mbox{\hyperlink{struct_menu_layer_a6810e1ad06d05c3c86fa792d5dfc640b}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_menu_layer_aaabdda0fd7af3a9735d2b9f199e7be8f}{on\+Key\+Pressed()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{menulayer_8h}{menulayer.\+h}}\end{DoxyCompactItemize}

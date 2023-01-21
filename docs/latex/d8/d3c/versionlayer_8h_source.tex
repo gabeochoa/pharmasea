@@ -1,0 +1,22 @@
+\hypertarget{versionlayer_8h_source}{}\doxysection{versionlayer.\+h}
+\label{versionlayer_8h_source}\index{src/versionlayer.h@{src/versionlayer.h}}
+\mbox{\hyperlink{versionlayer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}engine/layer.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{preload_8h}{preload.h}}"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_version_layer}{VersionLayer}}\ :\ \textcolor{keyword}{public}\ Layer\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \mbox{\hyperlink{struct_version_layer_a4cdccc7b5ac763c65a87dd917267ded1}{VersionLayer}}()\ :\ Layer(\textcolor{stringliteral}{"{}Version"{}})\ \{\}}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_version_layer_aab8a0be3b8c56e78bd1071fba1abf6d1}{onEvent}}(Event\&)\textcolor{keyword}{\ override\ }\{\}}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_version_layer_a044089ef0cbe40f90aaa85f9a3c357a4}{onUpdate}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{\}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_version_layer_a3457fd07658e388444fb2a7ecb1767bf}{onDraw}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ DrawTextEx(Preload::get().font,\ \mbox{\hyperlink{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}{VERSION}}.data(),\ \{5,\ 30\},\ 20,\ 0,\ WHITE);}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ \};}
+
+\end{DoxyCode}

@@ -1,0 +1,86 @@
+\hypertarget{vec__util_8h_source}{}\doxysection{vec\+\_\+util.\+h}
+\label{vec__util_8h_source}\index{src/vec\_util.h@{src/vec\_util.h}}
+\mbox{\hyperlink{vec__util_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ EPSILON}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ EPSILON\ 0.000001f}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{vec__util_8h_a39c52fd1116a4c85f6a446768e4b270c}{neigh\_x}}[8]\ =\ \{-\/1,\ -\/1,\ -\/1,\ 0,\ 0,\ 1,\ 1,\ 1\};}
+\DoxyCodeLine{00011\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{vec__util_8h_ac980e9b912e5a146e732e94a9adb1392}{neigh\_y}}[8]\ =\ \{-\/1,\ 0,\ 1,\ -\/1,\ 1,\ -\/1,\ 0,\ 1\};}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}{forEachNeighbor}}(\textcolor{keywordtype}{int}\ i,\ \textcolor{keywordtype}{int}\ j,\ std::function<\textcolor{keywordtype}{void}(\textcolor{keyword}{const}\ vec2\&)>\ cb,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ step\ =\ 1)\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ a\ =\ 0;\ a\ <\ 8;\ a++)\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ cb(vec2\{(float)\ i\ +\ (\mbox{\hyperlink{vec__util_8h_a39c52fd1116a4c85f6a446768e4b270c}{neigh\_x}}[a]\ *\ step),}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (float)\ j\ +\ (\mbox{\hyperlink{vec__util_8h_ac980e9b912e5a146e732e94a9adb1392}{neigh\_y}}[a]\ *\ step)\});}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ \}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{static}\ std::vector<vec2>\ \mbox{\hyperlink{vec__util_8h_a4a3b66ac1c7427b7059a875740cce0a6}{get\_neighbors}}(\textcolor{keywordtype}{int}\ i,\ \textcolor{keywordtype}{int}\ j,\ \textcolor{keywordtype}{int}\ step\ =\ 1)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ std::vector<vec2>\ ns;}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}{forEachNeighbor}}(}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ i,\ j,\ [\&](\textcolor{keyword}{const}\ vec2\&\ v)\ \{\ ns.push\_back(v);\ \},\ step);}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordflow}{return}\ ns;}
+\DoxyCodeLine{00026\ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{vec__util_8h_add3dd9e63d43f81591ca9e25b88470d7}{comp\_max}}(\textcolor{keyword}{const}\ vec2\&\ a)\ \{\ \textcolor{keywordflow}{return}\ fmax(a.x,\ a.y);\ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{constexpr}\ BoundingBox\ \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\_bounds}}(vec3\ position,\ vec3\ size)\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordflow}{return}\ \{(vec3)\{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position.x\ -\/\ size.x\ /\ 2,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position.y\ -\/\ size.y\ /\ 2,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position.z\ -\/\ size.z\ /\ 2,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ (vec3)\{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position.x\ +\ size.x\ /\ 2,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position.y\ +\ size.y\ /\ 2,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position.z\ +\ size.z\ /\ 2,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \}\};}
+\DoxyCodeLine{00041\ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacevec}{vec}}\ \{}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keywordtype}{float}\ \textcolor{keyword}{constexpr}\ \mbox{\hyperlink{namespacevec_a3e18f73ec09c3b1c14c15a0a42c8405a}{newton\_raphson}}(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ cur,\ \textcolor{keywordtype}{float}\ prev)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordflow}{return}\ cur\ ==\ prev\ ?\ cur\ :\ \mbox{\hyperlink{namespacevec_a3e18f73ec09c3b1c14c15a0a42c8405a}{newton\_raphson}}(x,\ 0.5f\ *\ (cur\ +\ x\ /\ cur),\ cur);}
+\DoxyCodeLine{00047\ \}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{float}\ \textcolor{keyword}{constexpr}\ \mbox{\hyperlink{namespacevec_a20805d1426584aacd75c13c89856132f}{ce\_sqrtf}}(\textcolor{keywordtype}{float}\ x)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordflow}{return}\ x\ >=\ 0\ \&\&\ x\ <\ std::numeric\_limits<float>::infinity()}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ?\ \mbox{\hyperlink{namespacevec_a3e18f73ec09c3b1c14c15a0a42c8405a}{newton\_raphson}}(x,\ x,\ 0)}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ std::numeric\_limits<float>::quiet\_NaN();}
+\DoxyCodeLine{00053\ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespacevec_a4780c4cb2388d6299519924ca0a609a1}{distance}}(vec2\ a,\ vec2\ b)\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacevec_a20805d1426584aacd75c13c89856132f}{ce\_sqrtf}}((a.x\ -\/\ b.x)\ *\ (a.x\ -\/\ b.x)\ +\ (a.y\ -\/\ b.y)\ *\ (a.y\ -\/\ b.y));}
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespacevec_aabd3fc26e0da594069a9f344c48beb8d}{dot2}}(\textcolor{keyword}{const}\ vec2\&\ a,\ \textcolor{keyword}{const}\ vec2\&\ b)\ \{\ \textcolor{keywordflow}{return}\ (a.x\ *\ b.x\ +\ a.y\ *\ b.y);\ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ vec2\ \mbox{\hyperlink{namespacevec_a2b336372bfe6c8bd752922c357866a24}{norm}}(\textcolor{keyword}{const}\ vec2\&\ a)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{float}\ mag\ =\ \mbox{\hyperlink{namespacevec_aabd3fc26e0da594069a9f344c48beb8d}{dot2}}(a,\ a);}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{return}\ (a\ /\ mag);}
+\DoxyCodeLine{00064\ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{constexpr}\ vec3\ \mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{to3}}(vec2\ position)\ \{\ \textcolor{keywordflow}{return}\ \{position.x,\ 0,\ position.y\};\ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{constexpr}\ vec2\ \mbox{\hyperlink{namespacevec_aa79cdef251ee2f487b55dba93ad63ea0}{to2}}(vec3\ position)\ \{\ \textcolor{keywordflow}{return}\ \{position.x,\ position.z\};\ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ vec2\ \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{snap}}(vec2\ position)\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{return}\ \{\mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ round(position.x\ /\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}),\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ round(position.y\ /\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}})\};}
+\DoxyCodeLine{00073\ \}}
+\DoxyCodeLine{00074\ vec3\ \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{snap}}(vec3\ position)\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordflow}{return}\ \{\mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ round(position.x\ /\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}),\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ position.y,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ round(position.z\ /\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}})\};}
+\DoxyCodeLine{00078\ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \}\ \ \textcolor{comment}{//\ namespace\ vec}}
+
+\end{DoxyCode}

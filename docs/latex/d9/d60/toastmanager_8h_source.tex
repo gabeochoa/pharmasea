@@ -1,0 +1,56 @@
+\hypertarget{toastmanager_8h_source}{}\doxysection{toastmanager.\+h}
+\label{toastmanager_8h_source}\index{src/toastmanager.h@{src/toastmanager.h}}
+\mbox{\hyperlink{toastmanager_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}engine/log.h"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{toastmanager_8h_ae413786da4913c98cb49e47afdd9645a}{AnnouncementType}}\ \{\ \mbox{\hyperlink{toastmanager_8h_ae413786da4913c98cb49e47afdd9645aa2dfbf31ed014852927c31c352feac51f}{Message}},\ \mbox{\hyperlink{toastmanager_8h_ae413786da4913c98cb49e47afdd9645aa4dfd42ec49d09d8c6555c218301cc30f}{Error}},\ \mbox{\hyperlink{toastmanager_8h_ae413786da4913c98cb49e47afdd9645aa48f2bb70fceb692a2dedd8cea496c44b}{Warning}}\ \};}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ TODO\ maybe\ this\ should\ live\ in\ the\ engine}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//}}
+\DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_toast_msg}{ToastMsg}}\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_toast_msg_a5654998fc1b12a54399572d379ded0a5}{msg}};}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{toastmanager_8h_ae413786da4913c98cb49e47afdd9645a}{AnnouncementType}}\ \mbox{\hyperlink{struct_toast_msg_a905d95b9722d1d496f752ab99a321845}{type}};}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_toast_msg_a2c672210a0d61ca724273c4ad8b802d4}{timeToShow}}\ =\ 1.f;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_toast_msg_ab8b99b4b490e9ea9c5dee73bced804ac}{timeHasShown}}\ =\ 0.f;}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_toast_msg_aebdf4d181b6566b1d9ce003f58a8cd8b}{pctOpen}}\ =\ 1.f;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_toast_msg_afe46ff5f74ac5b5df2872bcb6e751e37}{update}}(\textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_toast_msg_ab8b99b4b490e9ea9c5dee73bced804ac}{timeHasShown}}\ =\ fmaxf(\mbox{\hyperlink{struct_toast_msg_ab8b99b4b490e9ea9c5dee73bced804ac}{timeHasShown}}\ +\ (0.90f\ *\ dt),\ 0.f);}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_toast_msg_aebdf4d181b6566b1d9ce003f58a8cd8b}{pctOpen}}\ =\ 1.f\ -\/\ (\mbox{\hyperlink{struct_toast_msg_ab8b99b4b490e9ea9c5dee73bced804ac}{timeHasShown}}\ /\ \mbox{\hyperlink{struct_toast_msg_a2c672210a0d61ca724273c4ad8b802d4}{timeToShow}});}
+\DoxyCodeLine{00025\ \ \ \ \ \}}
+\DoxyCodeLine{00026\ \};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{static}\ std::vector<ToastMsg>\ \mbox{\hyperlink{toastmanager_8h_ad435cdf1b1b092994c0d8ca2b0262bab}{TOASTS}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacetoasts}{toasts}}\ \{}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetoasts_a70a7286c6abbedb5f6606c4506250e10}{remove\_complete}}()\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ \mbox{\hyperlink{toastmanager_8h_ad435cdf1b1b092994c0d8ca2b0262bab}{TOASTS}}.begin();}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordflow}{while}\ (it\ !=\ \mbox{\hyperlink{toastmanager_8h_ad435cdf1b1b092994c0d8ca2b0262bab}{TOASTS}}.end())\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((*it).timeHasShown\ >=\ (*it).timeToShow)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{toastmanager_8h_ad435cdf1b1b092994c0d8ca2b0262bab}{TOASTS}}.erase(it);}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ it++;}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetoasts_af28126fd6e7a376ca808fa3f64360fdd}{update}}(\textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ toast\_msg\ :\ \mbox{\hyperlink{toastmanager_8h_ad435cdf1b1b092994c0d8ca2b0262bab}{TOASTS}})\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ toast\_msg.update(dt);}
+\DoxyCodeLine{00046\ \ \ \ \ \}}
+\DoxyCodeLine{00047\ \ \ \ \ \mbox{\hyperlink{namespacetoasts_a70a7286c6abbedb5f6606c4506250e10}{toasts::remove\_complete}}();}
+\DoxyCodeLine{00048\ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \}\ \ \textcolor{comment}{//\ namespace\ toasts}}
+
+\end{DoxyCode}

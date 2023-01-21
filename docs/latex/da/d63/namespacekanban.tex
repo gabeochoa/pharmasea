@@ -1,0 +1,151 @@
+\hypertarget{namespacekanban}{}\doxysection{kanban Namespace Reference}
+\label{namespacekanban}\index{kanban@{kanban}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classkanban_1_1_col}{Col}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacekanban_a9c1a87d86185e1c9990ed1f2f8ac2cef}{pipe\+\_\+join}} (items)
+\begin{DoxyCompactList}\small\item\em now we just output the table \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacekanban_a0d124e1032b7e1fbe40c3761870cf76b}{wrap\+\_\+row}} (inside)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+list \mbox{\hyperlink{namespacekanban_ab713696840d46fb85925aa2ef520765d}{lines}} = \mbox{[}line.\+rstrip() for line in file\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacekanban_ad020a0344ed7aed7211387b934cc6d5e}{columns}} = \mbox{[}$\,$\mbox{]};
+\item 
+None \mbox{\hyperlink{namespacekanban_abfa27c69ba01eab166bd7cf79a767f00}{active\+\_\+column}} = None
+\item 
+list \mbox{\hyperlink{namespacekanban_a71a41df39c4200d712ede020e7bbd73e}{skip\+\_\+col}} = \mbox{[}\char`\"{}backlog\char`\"{}, \char`\"{}want for mvp\char`\"{}\mbox{]}
+\begin{DoxyCompactList}\small\item\em remove backlog \end{DoxyCompactList}\item 
+list \mbox{\hyperlink{namespacekanban_a53e836ae0b9df055c0eee5d01c268a8d}{output\+\_\+lines}} = \mbox{[}$\,$\mbox{]}
+\item 
+max \mbox{\hyperlink{namespacekanban_a3989115eedc02ec742d2a396ff264ddc}{max\+\_\+row\+\_\+idx}} = max(\mbox{[}len(col.\+items) for col in \mbox{\hyperlink{namespacekanban_ad020a0344ed7aed7211387b934cc6d5e}{columns}}\mbox{]})
+\item 
+int \mbox{\hyperlink{namespacekanban_aa1482a659e7b9bf23b0c83ab49fcfc91}{row\+\_\+idx}} = 0
+\item 
+list \mbox{\hyperlink{namespacekanban_a295b041297ef9428199723f5b68ff248}{cur\+\_\+row}} = \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{namespacekanban_aa023c9610fa0e497b268feb7a0a914ba}{else}} \+:
+\item 
+int \mbox{\hyperlink{namespacekanban_a3e2cb261e1a58ef7a1a5067ed2141c13}{index}} = 0
+\begin{DoxyCompactList}\small\item\em WRITE TO FILES. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{namespacekanban_a7c2388450667b6788b54b50ced00d6c3}{todo\+\_\+index}} = 0
+\item 
+int \mbox{\hyperlink{namespacekanban_a1a7681e5cbc0382b87ad254005598d9a}{end\+\_\+todo\+\_\+index}} = 0
+\item 
+open \mbox{\hyperlink{namespacekanban_aac446c72599333a66ae751ea214f48a5}{outF}} = open(\char`\"{}README.\+md\char`\"{}, \char`\"{}w\char`\"{})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacekanban_a9c1a87d86185e1c9990ed1f2f8ac2cef}\label{namespacekanban_a9c1a87d86185e1c9990ed1f2f8ac2cef}} 
+\index{kanban@{kanban}!pipe\_join@{pipe\_join}}
+\index{pipe\_join@{pipe\_join}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{pipe\_join()}{pipe\_join()}}
+{\footnotesize\ttfamily def kanban.\+pipe\+\_\+join (\begin{DoxyParamCaption}\item[{}]{items }\end{DoxyParamCaption})}
+
+
+
+now we just output the table 
+
+\mbox{\Hypertarget{namespacekanban_a0d124e1032b7e1fbe40c3761870cf76b}\label{namespacekanban_a0d124e1032b7e1fbe40c3761870cf76b}} 
+\index{kanban@{kanban}!wrap\_row@{wrap\_row}}
+\index{wrap\_row@{wrap\_row}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{wrap\_row()}{wrap\_row()}}
+{\footnotesize\ttfamily def kanban.\+wrap\+\_\+row (\begin{DoxyParamCaption}\item[{}]{inside }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacekanban_abfa27c69ba01eab166bd7cf79a767f00}\label{namespacekanban_abfa27c69ba01eab166bd7cf79a767f00}} 
+\index{kanban@{kanban}!active\_column@{active\_column}}
+\index{active\_column@{active\_column}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{active\_column}{active\_column}}
+{\footnotesize\ttfamily list kanban.\+active\+\_\+column = None}
+
+\mbox{\Hypertarget{namespacekanban_ad020a0344ed7aed7211387b934cc6d5e}\label{namespacekanban_ad020a0344ed7aed7211387b934cc6d5e}} 
+\index{kanban@{kanban}!columns@{columns}}
+\index{columns@{columns}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{columns}{columns}}
+{\footnotesize\ttfamily filter kanban.\+columns = \mbox{[}$\,$\mbox{]};}
+
+\mbox{\Hypertarget{namespacekanban_a295b041297ef9428199723f5b68ff248}\label{namespacekanban_a295b041297ef9428199723f5b68ff248}} 
+\index{kanban@{kanban}!cur\_row@{cur\_row}}
+\index{cur\_row@{cur\_row}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{cur\_row}{cur\_row}}
+{\footnotesize\ttfamily list kanban.\+cur\+\_\+row = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespacekanban_aa023c9610fa0e497b268feb7a0a914ba}\label{namespacekanban_aa023c9610fa0e497b268feb7a0a914ba}} 
+\index{kanban@{kanban}!else@{else}}
+\index{else@{else}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{else}{else}}
+{\footnotesize\ttfamily kanban.\+else \+:}
+
+\mbox{\Hypertarget{namespacekanban_a1a7681e5cbc0382b87ad254005598d9a}\label{namespacekanban_a1a7681e5cbc0382b87ad254005598d9a}} 
+\index{kanban@{kanban}!end\_todo\_index@{end\_todo\_index}}
+\index{end\_todo\_index@{end\_todo\_index}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{end\_todo\_index}{end\_todo\_index}}
+{\footnotesize\ttfamily int kanban.\+end\+\_\+todo\+\_\+index = 0}
+
+\mbox{\Hypertarget{namespacekanban_a3e2cb261e1a58ef7a1a5067ed2141c13}\label{namespacekanban_a3e2cb261e1a58ef7a1a5067ed2141c13}} 
+\index{kanban@{kanban}!index@{index}}
+\index{index@{index}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{index}{index}}
+{\footnotesize\ttfamily int kanban.\+index = 0}
+
+
+
+WRITE TO FILES. 
+
+\mbox{\Hypertarget{namespacekanban_ab713696840d46fb85925aa2ef520765d}\label{namespacekanban_ab713696840d46fb85925aa2ef520765d}} 
+\index{kanban@{kanban}!lines@{lines}}
+\index{lines@{lines}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{lines}{lines}}
+{\footnotesize\ttfamily list kanban.\+lines = \mbox{[}line.\+rstrip() for line in file\mbox{]}}
+
+\mbox{\Hypertarget{namespacekanban_a3989115eedc02ec742d2a396ff264ddc}\label{namespacekanban_a3989115eedc02ec742d2a396ff264ddc}} 
+\index{kanban@{kanban}!max\_row\_idx@{max\_row\_idx}}
+\index{max\_row\_idx@{max\_row\_idx}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{max\_row\_idx}{max\_row\_idx}}
+{\footnotesize\ttfamily max kanban.\+max\+\_\+row\+\_\+idx = max(\mbox{[}len(col.\+items) for col in \mbox{\hyperlink{namespacekanban_ad020a0344ed7aed7211387b934cc6d5e}{columns}}\mbox{]})}
+
+\mbox{\Hypertarget{namespacekanban_aac446c72599333a66ae751ea214f48a5}\label{namespacekanban_aac446c72599333a66ae751ea214f48a5}} 
+\index{kanban@{kanban}!outF@{outF}}
+\index{outF@{outF}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{outF}{outF}}
+{\footnotesize\ttfamily open kanban.\+outF = open(\char`\"{}README.\+md\char`\"{}, \char`\"{}w\char`\"{})}
+
+\mbox{\Hypertarget{namespacekanban_a53e836ae0b9df055c0eee5d01c268a8d}\label{namespacekanban_a53e836ae0b9df055c0eee5d01c268a8d}} 
+\index{kanban@{kanban}!output\_lines@{output\_lines}}
+\index{output\_lines@{output\_lines}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{output\_lines}{output\_lines}}
+{\footnotesize\ttfamily list kanban.\+output\+\_\+lines = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespacekanban_aa1482a659e7b9bf23b0c83ab49fcfc91}\label{namespacekanban_aa1482a659e7b9bf23b0c83ab49fcfc91}} 
+\index{kanban@{kanban}!row\_idx@{row\_idx}}
+\index{row\_idx@{row\_idx}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{row\_idx}{row\_idx}}
+{\footnotesize\ttfamily int kanban.\+row\+\_\+idx = 0}
+
+\mbox{\Hypertarget{namespacekanban_a71a41df39c4200d712ede020e7bbd73e}\label{namespacekanban_a71a41df39c4200d712ede020e7bbd73e}} 
+\index{kanban@{kanban}!skip\_col@{skip\_col}}
+\index{skip\_col@{skip\_col}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{skip\_col}{skip\_col}}
+{\footnotesize\ttfamily list kanban.\+skip\+\_\+col = \mbox{[}\char`\"{}backlog\char`\"{}, \char`\"{}want for mvp\char`\"{}\mbox{]}}
+
+
+
+remove backlog 
+
+\mbox{\Hypertarget{namespacekanban_a7c2388450667b6788b54b50ced00d6c3}\label{namespacekanban_a7c2388450667b6788b54b50ced00d6c3}} 
+\index{kanban@{kanban}!todo\_index@{todo\_index}}
+\index{todo\_index@{todo\_index}!kanban@{kanban}}
+\doxysubsubsection{\texorpdfstring{todo\_index}{todo\_index}}
+{\footnotesize\ttfamily int kanban.\+todo\+\_\+index = 0}
+

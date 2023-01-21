@@ -1,0 +1,244 @@
+\hypertarget{ailment_8h_source}{}\doxysection{ailment.\+h}
+\label{ailment_8h_source}\index{src/ailment.h@{src/ailment.h}}
+\mbox{\hyperlink{ailment_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ modifies\ person\ behavior,\ applies\ debuffs/buffs}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ hide\ from\ players,\ but\ for\ dev\ porpoises(haha)\ having\ a\ blip\ near\ the\ person}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ could\ be\ useful\ for\ levelbuilding\ can\ have\ multiple\ ailments\ /\ can\ use\ this}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ structure\ to\ have\ slowed/fast\ characters\ for\ example.\ Ex:\ ailment\ speed}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ modifier\ stumbling/shaking?\ visual\ effect\ modifier(?)\ infectivity(?)\ gross\ -\/}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ other\ persons\ avoid\ a\ radius\ around\ them}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_symptom}{Symptom}}\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_symptom_1_1_config}{Config}}\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{struct_symptom_1_1_config_aaf7a38845b7195cc4d9b83d36743f6eb}{Freq}}\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config_aaf7a38845b7195cc4d9b83d36743f6eba6e7b34fa59e1bd229b207892956dc41c}{Never}}\ =\ 0,}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config_aaf7a38845b7195cc4d9b83d36743f6eba66707881f99f255faf3923e0a133eb34}{Often}}\ =\ 1,\ \ \textcolor{comment}{//\ 1\ per\ minute}}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config_aaf7a38845b7195cc4d9b83d36743f6ebae93f994f01c537c4e2f7d8528c3eb5e9}{Count}},}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \}\ \mbox{\hyperlink{struct_symptom_1_1_config_a4d3e0663416437900ffd8341076bfd51}{frequency}}\ =\ \mbox{\hyperlink{struct_symptom_1_1_config_aaf7a38845b7195cc4d9b83d36743f6eba6e7b34fa59e1bd229b207892956dc41c}{Freq::Never}};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{struct_symptom_1_1_config_a025c58e69007dccc11fc21e23a2921e4}{Strength}}\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config_a025c58e69007dccc11fc21e23a2921e4a6adf97f83acf6453d4a6a4b1070f3754}{None}},}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config_a025c58e69007dccc11fc21e23a2921e4a28d0edd045e05cf5af64e35ae0c4c6ef}{Low}},}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config_a025c58e69007dccc11fc21e23a2921e4a87f8a6ab85c9ced3702b4ea641ad4bb5}{Medium}},}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config_a025c58e69007dccc11fc21e23a2921e4a655d20c1ca69519ca647684edbb2db35}{High}},}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config_aaf7a38845b7195cc4d9b83d36743f6ebae93f994f01c537c4e2f7d8528c3eb5e9}{Count}},}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \}\ \mbox{\hyperlink{struct_symptom_1_1_config_a28bcd9c5382a185d4f707a94d41e90bf}{strength}}\ =\ \mbox{\hyperlink{struct_symptom_1_1_config_a025c58e69007dccc11fc21e23a2921e4a6adf97f83acf6453d4a6a4b1070f3754}{Strength::None}};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_symptom_1_1_config_a5d2e549072ac0e3baae42976d02cdf86}{operator<}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_symptom_1_1_config}{Config}}\&\ sym)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{struct_symptom_1_1_config_a4d3e0663416437900ffd8341076bfd51}{frequency}}\ <\ sym.\mbox{\hyperlink{struct_symptom_1_1_config_a4d3e0663416437900ffd8341076bfd51}{frequency}})\ ||}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((\mbox{\hyperlink{struct_symptom_1_1_config_a4d3e0663416437900ffd8341076bfd51}{frequency}}\ ==\ sym.\mbox{\hyperlink{struct_symptom_1_1_config_a4d3e0663416437900ffd8341076bfd51}{frequency}})\ \&\&\ (\mbox{\hyperlink{struct_symptom_1_1_config_a28bcd9c5382a185d4f707a94d41e90bf}{strength}}\ <\ sym.\mbox{\hyperlink{struct_symptom_1_1_config_a28bcd9c5382a185d4f707a94d41e90bf}{strength}}));}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ T\ \mbox{\hyperlink{struct_symptom_1_1_config_a5a2c8f594243362c641e2b6f94dd85bf}{inc\_int}}(T\ t)\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ val\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(t);}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(T::Count);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (val\ !=\ max)\ val++;}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(val);}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ T\ \mbox{\hyperlink{struct_symptom_1_1_config_a637b0f96fe906412916b227052796627}{dec\_int}}(T\ t)\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ val\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(t);}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (val\ !=\ 0)\ val-\/-\/;}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(val);}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config}{Config}}\&\ \mbox{\hyperlink{struct_symptom_1_1_config_a30ebb7a542cc89ec0aacc9c38253b908}{operator++}}()\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config_a4d3e0663416437900ffd8341076bfd51}{frequency}}\ =\ inc\_int<Freq>(\mbox{\hyperlink{struct_symptom_1_1_config_a4d3e0663416437900ffd8341076bfd51}{frequency}});}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config_a28bcd9c5382a185d4f707a94d41e90bf}{strength}}\ =\ inc\_int<Strength>(\mbox{\hyperlink{struct_symptom_1_1_config_a28bcd9c5382a185d4f707a94d41e90bf}{strength}});}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config}{Config}}\&\ \mbox{\hyperlink{struct_symptom_1_1_config_a36bfc2ccd74ff40c5c9fb38efdb4165e}{operator-\/-\/}}()\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config_a4d3e0663416437900ffd8341076bfd51}{frequency}}\ =\ dec\_int<Freq>(\mbox{\hyperlink{struct_symptom_1_1_config_a4d3e0663416437900ffd8341076bfd51}{frequency}});}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_symptom_1_1_config_a28bcd9c5382a185d4f707a94d41e90bf}{strength}}\ =\ dec\_int<Strength>(\mbox{\hyperlink{struct_symptom_1_1_config_a28bcd9c5382a185d4f707a94d41e90bf}{strength}});}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \}\ \mbox{\hyperlink{struct_symptom_a48be25f9c12f474eba9987bb5fcf0ee0}{config}};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_symptom_a3bf69e60b4a78a8fcd89ad8a1c12a49f}{operator<}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_symptom}{Symptom}}\&\ sym)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_symptom_a48be25f9c12f474eba9987bb5fcf0ee0}{config}}\ <\ sym.\mbox{\hyperlink{struct_symptom_a48be25f9c12f474eba9987bb5fcf0ee0}{config}};\ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ only\ really\ need\ this\ today\ because\ below\ we\ dont\ want\ to\ specify}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ things\ as\ itll\ take\ time\ to\ balance\ correctly}}
+\DoxyCodeLine{00070\ \ \ \ \ \mbox{\hyperlink{struct_symptom_ad69d7096297b5789d9704652eeeef372}{Symptom}}()\ \{\}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{struct_symptom_a9f5d3771936f6efa756fe3394e173485}{Symptom}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_symptom_1_1_config}{Config}}\&\ opt)\ :\ \mbox{\hyperlink{struct_symptom_a48be25f9c12f474eba9987bb5fcf0ee0}{config}}(opt)\ \{\}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_symptom_ac060f5e5b54fae5de7e4f3930cf5326b}{worsen}}()\ \{\ ++\mbox{\hyperlink{struct_symptom_a48be25f9c12f474eba9987bb5fcf0ee0}{config}};\ \}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_symptom_aad8dab060c4654355685a99926ce19c3}{heal}}()\ \{\ -\/-\/\mbox{\hyperlink{struct_symptom_a48be25f9c12f474eba9987bb5fcf0ee0}{config}};\ \}}
+\DoxyCodeLine{00075\ \};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_sneeze}{Sneeze}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_symptom}{Symptom}}\ \{\};}
+\DoxyCodeLine{00078\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_vomit}{Vomit}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_symptom}{Symptom}}\ \{\};}
+\DoxyCodeLine{00079\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_irritable}{Irritable}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_symptom}{Symptom}}\ \{\};}
+\DoxyCodeLine{00080\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_sweaty}{Sweaty}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_symptom}{Symptom}}\ \{\};}
+\DoxyCodeLine{00081\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_bowels}{Bowels}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_symptom}{Symptom}}\ \{\};}
+\DoxyCodeLine{00082\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_hallucination}{Hallucination}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_symptom}{Symptom}}\ \{\};}
+\DoxyCodeLine{00083\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_sleepy}{Sleepy}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_symptom}{Symptom}}\ \{\};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{comment}{//}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_ailment}{Ailment}}\ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{speed\_multiplier}}()\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ value\ =\ [\textcolor{keyword}{this}]()\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{config}}.\mbox{\hyperlink{struct_ailment_1_1_config_a45b5a2ce80b3d861c94996430bad1c87}{speed}})\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59faefa5397985b8609a5dbeb430a4bcadd3}{Speed::Slow}}:}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0.5f;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa26b63f278101527e06a5547719568bb5}{Speed::Okay}}:}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0.9f;}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa7a1920d61156abc05a60135aefe8bc67}{Speed::Default}}:}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1.f;}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fae16b5b7f26f54214445cbe38d72c2828}{Speed::Fast}}:}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1.5f;}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \}();}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{struct_ailment_a4b4db8ae7ee23646188a49cf8fe273f7}{num\_comorbids}};\ i++)\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ value\ *=\ \mbox{\hyperlink{struct_ailment_af2e4203faf4979a7931fc6dd84a1db14}{comorbids}}[i].\mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{speed\_multiplier}}();}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_ailment_a00fb6cfcfdcd8834f2b0d5621fe5043a}{clamp}}(\mbox{\hyperlink{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}{overall}}()\ *\ value);}
+\DoxyCodeLine{00105\ \ \ \ \ \}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger}}()\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ value\ =\ [\textcolor{keyword}{this}]()\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{config}}.\mbox{\hyperlink{struct_ailment_1_1_config_a0c938c0d5e14a2dcba8e0338b0c718a7}{stagger}})\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a6adf97f83acf6453d4a6a4b1070f3754}{Stagger::None}}:}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0.0f;}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a0f9197b3e286a7522984831949087332}{Stagger::Little}}:}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0.5f;}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a695c6ae413c00446733d926ccadefd8b}{Stagger::Some}}:}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0.8f;}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a76657b14f61fb22008f7f0a3ecd17b0b}{Stagger::Lots}}:}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1.0f;}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \}();}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{struct_ailment_a4b4db8ae7ee23646188a49cf8fe273f7}{num\_comorbids}};\ i++)\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ value\ *=\ \mbox{\hyperlink{struct_ailment_af2e4203faf4979a7931fc6dd84a1db14}{comorbids}}[i].\mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger}}();}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ clamped\ =\ \mbox{\hyperlink{struct_ailment_a00fb6cfcfdcd8834f2b0d5621fe5043a}{clamp}}(\mbox{\hyperlink{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}{overall}}()\ *\ value);}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ mult\ =\ \mbox{\hyperlink{struct_ailment_ac47ad580aeeaecb224bc061085895254}{stagger\_dir}}\ ?\ 1.5\ :\ 0.5;}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_ac47ad580aeeaecb224bc061085895254}{stagger\_dir}}\ =\ !\mbox{\hyperlink{struct_ailment_ac47ad580aeeaecb224bc061085895254}{stagger\_dir}};}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mult\ *\ clamped;}
+\DoxyCodeLine{00129\ \ \ \ \ \}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{comment}{//\ ensures\ the\ overall\ multiplier\ isnt\ over\ 10x\ strength}}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}{overall}}()\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_ailment_a00fb6cfcfdcd8834f2b0d5621fe5043a}{clamp}}(\mbox{\hyperlink{struct_ailment_a1ed7342cc6ae4ed3560a52e47c2a8dfc}{overall\_mult}}(),\ 0.25f,\ 10.f);\ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{comment}{//\ affects\ all\ others,\ bigger\ than\ 1.0\ is\ stronger\ [0.1,\ 10]}}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_ailment_a1ed7342cc6ae4ed3560a52e47c2a8dfc}{overall\_mult}}()\ \{\ \textcolor{keywordflow}{return}\ 1.0;\ \}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_ailment_ac47ad580aeeaecb224bc061085895254}{stagger\_dir}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_ailment_a00fb6cfcfdcd8834f2b0d5621fe5043a}{clamp}}(\textcolor{keywordtype}{float}\ val,\ \textcolor{keywordtype}{float}\ mn\ =\ 0.1f,\ \textcolor{keywordtype}{float}\ mx\ =\ 1.f)\ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fmaxf(mn,\ fminf(mx,\ val));}
+\DoxyCodeLine{00142\ \ \ \ \ \}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965}{Type}}\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a6adf97f83acf6453d4a6a4b1070f3754}{None}},}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a0cbc6611f5540bd0809a388dc95a615b}{Test}},}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a8b6686705bab67bc81f8f4c522e9a935}{Hooked}},}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a866d815adb055e7d4ed23ac402b221f1}{Insomnia}},}
+\DoxyCodeLine{00150\ \ \ \ \ \};}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59f}{Speed}}\ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59faefa5397985b8609a5dbeb430a4bcadd3}{Slow}},}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa26b63f278101527e06a5547719568bb5}{Okay}},}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa7a1920d61156abc05a60135aefe8bc67}{Default}},}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fae16b5b7f26f54214445cbe38d72c2828}{Fast}},}
+\DoxyCodeLine{00157\ \ \ \ \ \};}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9}{Stagger}}\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a6adf97f83acf6453d4a6a4b1070f3754}{None}},}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a0f9197b3e286a7522984831949087332}{Little}},}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a695c6ae413c00446733d926ccadefd8b}{Some}},}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a76657b14f61fb22008f7f0a3ecd17b0b}{Lots}},}
+\DoxyCodeLine{00164\ \ \ \ \ \};}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_ailment_1_1_config}{Config}}\ \{}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ std::string\_view\ \mbox{\hyperlink{struct_ailment_1_1_config_a575a983c6138f5fde00a2d7f1af54f06}{name}}\ =\ \textcolor{stringliteral}{"{}ailment"{}};}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965}{Type}}\ \mbox{\hyperlink{struct_ailment_1_1_config_a9968324828f2eb14e29564e6f8050364}{type}}\ =\ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a6adf97f83acf6453d4a6a4b1070f3754}{Type::None}};}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59f}{Speed}}\ \mbox{\hyperlink{struct_ailment_1_1_config_a45b5a2ce80b3d861c94996430bad1c87}{speed}}\ =\ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa7a1920d61156abc05a60135aefe8bc67}{Speed::Default}};}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9}{Stagger}}\ \mbox{\hyperlink{struct_ailment_1_1_config_a0c938c0d5e14a2dcba8e0338b0c718a7}{stagger}}\ =\ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a6adf97f83acf6453d4a6a4b1070f3754}{Stagger::None}};}
+\DoxyCodeLine{00171\ \ \ \ \ \}\ \mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{config}};}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ std::set<Symptom>\ \mbox{\hyperlink{struct_ailment_aa105a67b919f67ab813127dd3c76a522}{symptoms}};}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{comment}{//\ Note:\ btw\ idk\ why\ i\ didnt\ use\ a\ vector}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{comment}{//\ These\ are\ other\ ailments\ that\ are\ caused\ by\ this\ ailment}}
+\DoxyCodeLine{00178\ \ \ \ \ \mbox{\hyperlink{struct_ailment}{Ailment}}*\ \mbox{\hyperlink{struct_ailment_af2e4203faf4979a7931fc6dd84a1db14}{comorbids}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_ailment_a4b4db8ae7ee23646188a49cf8fe273f7}{num\_comorbids}}\ =\ 0;}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{struct_ailment_a7e3b9ce9261ee9a55a77f0adaf0bcead}{Ailment}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_ailment_1_1_config}{Config}}\&\ opt)\ :\ \mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{config}}(opt)\ \{\}}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_ailment_ae1fb64b8ccde82a585a1217d89648299}{\string~Ailment}}()\ \{\}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_ailment_a8086cb055fab92c493846a3981268383}{icon\_name}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{config}}.\mbox{\hyperlink{struct_ailment_1_1_config_a9968324828f2eb14e29564e6f8050364}{type}})\ \{}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a6adf97f83acf6453d4a6a4b1070f3754}{Type::None}}:}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}jug"{}};}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a866d815adb055e7d4ed23ac402b221f1}{Type::Insomnia}}:}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}sleepy"{}};}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a0cbc6611f5540bd0809a388dc95a615b}{Type::Test}}:}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a8b6686705bab67bc81f8f4c522e9a935}{Type::Hooked}}:}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}face"{}};}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00195\ \ \ \ \ \}}
+\DoxyCodeLine{00196\ \};}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_t_e_s_t___m_a_x___a_i_l}{TEST\_MAX\_AIL}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_ailment}{Ailment}}\ \{}
+\DoxyCodeLine{00199\ \ \ \ \ \mbox{\hyperlink{struct_t_e_s_t___m_a_x___a_i_l_a569738beb206f517a6c9b9fa0c6e2760}{TEST\_MAX\_AIL}}()}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_ailment}{Ailment}}(\{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .name\ =\ \textcolor{stringliteral}{"{}test\_max\_ailment"{}},}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a0cbc6611f5540bd0809a388dc95a615b}{Ailment::Type::Test}},}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .speed\ =\ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59faefa5397985b8609a5dbeb430a4bcadd3}{Ailment::Speed::Slow}},}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .stagger\ =\ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a76657b14f61fb22008f7f0a3ecd17b0b}{Ailment::Stagger::Lots}},}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \})\ \{\}}
+\DoxyCodeLine{00206\ \};}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_insomnia}{Insomnia}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_ailment}{Ailment}}\ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \mbox{\hyperlink{struct_insomnia_aa51368dfde9aced577b53f76502d4b87}{Insomnia}}()}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_ailment}{Ailment}}(\{}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .name\ =\ \textcolor{stringliteral}{"{}Insomnia"{}},}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a866d815adb055e7d4ed23ac402b221f1}{Ailment::Type::Insomnia}},}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .speed\ =\ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa26b63f278101527e06a5547719568bb5}{Ailment::Speed::Okay}},}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .stagger\ =\ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a6adf97f83acf6453d4a6a4b1070f3754}{Ailment::Stagger::None}},}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \})\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_aa105a67b919f67ab813127dd3c76a522}{symptoms}}.insert(\mbox{\hyperlink{struct_irritable}{Irritable}}());}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_aa105a67b919f67ab813127dd3c76a522}{symptoms}}.insert(\mbox{\hyperlink{struct_sleepy}{Sleepy}}());}
+\DoxyCodeLine{00218\ \ \ \ \ \}}
+\DoxyCodeLine{00219\ \};}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_hooked}{Hooked}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_ailment}{Ailment}}\ \{}
+\DoxyCodeLine{00222\ \ \ \ \ \mbox{\hyperlink{struct_hooked_a143150983ab129b8e919c69decaf30ba}{Hooked}}()}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_ailment}{Ailment}}(\{}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .name\ =\ \textcolor{stringliteral}{"{}Hooked!"{}},}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a8b6686705bab67bc81f8f4c522e9a935}{Ailment::Type::Hooked}},}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .speed\ =\ \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa7a1920d61156abc05a60135aefe8bc67}{Ailment::Speed::Default}},}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .stagger\ =\ \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a76657b14f61fb22008f7f0a3ecd17b0b}{Ailment::Stagger::Lots}},}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \})\ \{}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_aa105a67b919f67ab813127dd3c76a522}{symptoms}}.insert(\mbox{\hyperlink{struct_irritable}{Irritable}}());}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_aa105a67b919f67ab813127dd3c76a522}{symptoms}}.insert(\mbox{\hyperlink{struct_sweaty}{Sweaty}}());}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_aa105a67b919f67ab813127dd3c76a522}{symptoms}}.insert(\mbox{\hyperlink{struct_hallucination}{Hallucination}}());}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_a4b4db8ae7ee23646188a49cf8fe273f7}{num\_comorbids}}\ =\ 1;}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ailment_af2e4203faf4979a7931fc6dd84a1db14}{comorbids}}\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{struct_ailment}{Ailment}}[1]\{\mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a866d815adb055e7d4ed23ac402b221f1}{Insomnia}}()\};}
+\DoxyCodeLine{00235\ \ \ \ \ \}}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \ \ \ \ \mbox{\hyperlink{struct_hooked_a84c5e5c6ae6be9e8d5bc0ee81caf9570}{\string~Hooked}}()\ \{\ \textcolor{keyword}{delete}[]\ \mbox{\hyperlink{struct_ailment_af2e4203faf4979a7931fc6dd84a1db14}{comorbids}};\ \}}
+\DoxyCodeLine{00238\ \};}
+
+\end{DoxyCode}

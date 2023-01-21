@@ -1,0 +1,51 @@
+\hypertarget{remote__player_8h_source}{}\doxysection{remote\+\_\+player.\+h}
+\label{remote__player_8h_source}\index{src/remote\_player.h@{src/remote\_player.h}}
+\mbox{\hyperlink{remote__player_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}raylib.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{text__util_8h}{text\_util.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{util_8h}{util.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__player_8h}{base\_player.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{preload_8h}{preload.h}}"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_remote_player}{RemotePlayer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{comment}{//\ TODO\ what\ is\ a\ reasonable\ default\ value\ here?}}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{comment}{//\ TODO\ who\ sets\ this\ value?}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_remote_player_aa7a75ff7addc75de2879380dd2a2f52f}{client\_id}}\ =\ -\/1;}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{struct_remote_player_a9921878f892ac193e219c1838ea1c7eb}{RemotePlayer}}(vec3\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
+\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{struct_remote_player_a4226b27e71c1e48e117d43fd234cfde0}{RemotePlayer}}(vec2\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{struct_remote_player_a97b94db4de68b6976f1bf991ea0d7b9b}{RemotePlayer}}()\ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(\{0,\ 0,\ 0\},\ WHITE,\ WHITE)\ \{\}}
+\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{struct_remote_player_ae9e556421320f6499cae436dba8e9744}{RemotePlayer}}(vec2\ location)}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(\{location.x,\ 0,\ location.y\},\ \{0,\ 255,\ 0,\ 255\},}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{255,\ 0,\ 0,\ 255\})\ \{\}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_remote_player_a378b49ed2949cee4d48b3651963e311a}{update\_xaxis\_position}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}};}
+\DoxyCodeLine{00030\ \ \ \ \ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_remote_player_a63474776872d8eb9b25c94cac93c7e54}{update\_zaxis\_position}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}};}
+\DoxyCodeLine{00034\ \ \ \ \ \}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_remote_player_ab1498c129a17b839431fa3ba7a6746e5}{update\_remotely}}(\textcolor{keywordtype}{float}*\ location,\ std::string\ username,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ facing\_direction)\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_entity_a931b21fbdebb1a5963b4bcab5df128f5}{name}}\ =\ username;}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}}\ =\ vec3\{location[0],\ location[1],\ location[2]\};}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\_direction}}\ =}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{FrontFaceDirection}}\textcolor{keyword}{>}(facing\_direction);}
+\DoxyCodeLine{00042\ \ \ \ \ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_remote_player_a2c6c65e8cd1383725d002c805105c71c}{is\_collidable}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00045\ \};}
+
+\end{DoxyCode}

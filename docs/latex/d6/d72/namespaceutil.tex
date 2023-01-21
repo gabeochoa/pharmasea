@@ -1,0 +1,105 @@
+\hypertarget{namespaceutil}{}\doxysection{util Namespace Reference}
+\label{namespaceutil}\index{util@{util}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structutil_1_1overloaded}{overloaded}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class... Ts$>$ }\\\mbox{\hyperlink{namespaceutil_addfd55c03039ca8158e80a71b451eecd}{overloaded}} (Ts...) -\/$>$ \mbox{\hyperlink{structutil_1_1overloaded}{overloaded}}$<$ Ts... $>$
+\item 
+{\footnotesize template$<$typename T $>$ }\\int \mbox{\hyperlink{namespaceutil_a7b683e51af99b005d650280fe168daec}{sgn}} (T val)
+\item 
+static float \mbox{\hyperlink{namespaceutil_a754507833912be9c3f11ad02c3ea05f9}{deg2rad}} (float deg)
+\item 
+static float \mbox{\hyperlink{namespaceutil_a9305e21ff6411929f92f427a318cea17}{rad2deg}} (float rad)
+\item 
+static std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{namespaceutil_a8d672475379879339e33f1f9dc6ea961}{split\+\_\+string}} (const std\+::string \&str, const std\+::string \&delimiter)
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{namespaceutil_a5f5caebc89c06dcdd631966f2ba0cb72}{split\+\_\+re}} (const std\+::string \&input, const std\+::string \&regex)
+\item 
+static float \mbox{\hyperlink{namespaceutil_a5020e504940e09639480aed917da6ba1}{clamp}} (float a, float mn, float mx)
+\item 
+{\footnotesize template$<$template$<$ typename... $>$ class Container, typename K , typename V , typename... Ts$>$ }\\V \mbox{\hyperlink{namespaceutil_a5fad71d00f379fced9c845d2387b5304}{map\+\_\+get\+\_\+or\+\_\+default}} (Container$<$ K, V, Ts... $>$ map, K key, V def\+\_\+value)
+\item 
+{\footnotesize template$<$typename Range , typename Value  = typename Range\+::value\+\_\+type$>$ }\\std\+::string \mbox{\hyperlink{namespaceutil_ad3415a1a5060095ee99c99b3aa7a707f}{join}} (Range const \&elements, const char $\ast$const delimiter)
+\item 
+int \mbox{\hyperlink{namespaceutil_af5b41133c9803397e0ac6ceae24431b2}{words\+\_\+in\+\_\+string}} (const std\+::string \&str)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespaceutil_a5020e504940e09639480aed917da6ba1}\label{namespaceutil_a5020e504940e09639480aed917da6ba1}} 
+\index{util@{util}!clamp@{clamp}}
+\index{clamp@{clamp}!util@{util}}
+\doxysubsubsection{\texorpdfstring{clamp()}{clamp()}}
+{\footnotesize\ttfamily static float util\+::clamp (\begin{DoxyParamCaption}\item[{float}]{a,  }\item[{float}]{mn,  }\item[{float}]{mx }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{namespaceutil_a754507833912be9c3f11ad02c3ea05f9}\label{namespaceutil_a754507833912be9c3f11ad02c3ea05f9}} 
+\index{util@{util}!deg2rad@{deg2rad}}
+\index{deg2rad@{deg2rad}!util@{util}}
+\doxysubsubsection{\texorpdfstring{deg2rad()}{deg2rad()}}
+{\footnotesize\ttfamily static float util\+::deg2rad (\begin{DoxyParamCaption}\item[{float}]{deg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{Entity\+::get\+\_\+heading()}}.
+
+\mbox{\Hypertarget{namespaceutil_ad3415a1a5060095ee99c99b3aa7a707f}\label{namespaceutil_ad3415a1a5060095ee99c99b3aa7a707f}} 
+\index{util@{util}!join@{join}}
+\index{join@{join}!util@{util}}
+\doxysubsubsection{\texorpdfstring{join()}{join()}}
+{\footnotesize\ttfamily template$<$typename Range , typename Value  = typename Range\+::value\+\_\+type$>$ \\
+std\+::string util\+::join (\begin{DoxyParamCaption}\item[{Range const \&}]{elements,  }\item[{const char $\ast$const}]{delimiter }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{namespaceutil_a5fad71d00f379fced9c845d2387b5304}\label{namespaceutil_a5fad71d00f379fced9c845d2387b5304}} 
+\index{util@{util}!map\_get\_or\_default@{map\_get\_or\_default}}
+\index{map\_get\_or\_default@{map\_get\_or\_default}!util@{util}}
+\doxysubsubsection{\texorpdfstring{map\_get\_or\_default()}{map\_get\_or\_default()}}
+{\footnotesize\ttfamily template$<$template$<$ typename... $>$ class Container, typename K , typename V , typename... Ts$>$ \\
+V util\+::map\+\_\+get\+\_\+or\+\_\+default (\begin{DoxyParamCaption}\item[{Container$<$ K, V, Ts... $>$}]{map,  }\item[{K}]{key,  }\item[{V}]{def\+\_\+value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{namespaceutil_addfd55c03039ca8158e80a71b451eecd}\label{namespaceutil_addfd55c03039ca8158e80a71b451eecd}} 
+\index{util@{util}!overloaded@{overloaded}}
+\index{overloaded@{overloaded}!util@{util}}
+\doxysubsubsection{\texorpdfstring{overloaded()}{overloaded()}}
+{\footnotesize\ttfamily template$<$class... Ts$>$ \\
+\mbox{\hyperlink{structutil_1_1overloaded}{util\+::overloaded}} (\begin{DoxyParamCaption}\item[{Ts...}]{ }\end{DoxyParamCaption}) -\/$>$  \mbox{\hyperlink{structutil_1_1overloaded}{overloaded}}$<$ Ts... $>$}
+
+\mbox{\Hypertarget{namespaceutil_a9305e21ff6411929f92f427a318cea17}\label{namespaceutil_a9305e21ff6411929f92f427a318cea17}} 
+\index{util@{util}!rad2deg@{rad2deg}}
+\index{rad2deg@{rad2deg}!util@{util}}
+\doxysubsubsection{\texorpdfstring{rad2deg()}{rad2deg()}}
+{\footnotesize\ttfamily static float util\+::rad2deg (\begin{DoxyParamCaption}\item[{float}]{rad }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{Entity\+::turn\+\_\+to\+\_\+face\+\_\+entity()}}.
+
+\mbox{\Hypertarget{namespaceutil_a7b683e51af99b005d650280fe168daec}\label{namespaceutil_a7b683e51af99b005d650280fe168daec}} 
+\index{util@{util}!sgn@{sgn}}
+\index{sgn@{sgn}!util@{util}}
+\doxysubsubsection{\texorpdfstring{sgn()}{sgn()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+int util\+::sgn (\begin{DoxyParamCaption}\item[{T}]{val }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespaceutil_a5f5caebc89c06dcdd631966f2ba0cb72}\label{namespaceutil_a5f5caebc89c06dcdd631966f2ba0cb72}} 
+\index{util@{util}!split\_re@{split\_re}}
+\index{split\_re@{split\_re}!util@{util}}
+\doxysubsubsection{\texorpdfstring{split\_re()}{split\_re()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::string $>$ util\+::split\+\_\+re (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{input,  }\item[{const std\+::string \&}]{regex }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{namespaceutil_a8d672475379879339e33f1f9dc6ea961}\label{namespaceutil_a8d672475379879339e33f1f9dc6ea961}} 
+\index{util@{util}!split\_string@{split\_string}}
+\index{split\_string@{split\_string}!util@{util}}
+\doxysubsubsection{\texorpdfstring{split\_string()}{split\_string()}}
+{\footnotesize\ttfamily static std\+::vector$<$ std\+::string $>$ util\+::split\+\_\+string (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{str,  }\item[{const std\+::string \&}]{delimiter }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{namespaceutil_af5b41133c9803397e0ac6ceae24431b2}\label{namespaceutil_af5b41133c9803397e0ac6ceae24431b2}} 
+\index{util@{util}!words\_in\_string@{words\_in\_string}}
+\index{words\_in\_string@{words\_in\_string}!util@{util}}
+\doxysubsubsection{\texorpdfstring{words\_in\_string()}{words\_in\_string()}}
+{\footnotesize\ttfamily int util\+::words\+\_\+in\+\_\+string (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{str }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+

@@ -1,0 +1,88 @@
+\hypertarget{globals_8h}{}\doxysection{src/globals.h File Reference}
+\label{globals_8h}\index{src/globals.h@{src/globals.h}}
+{\ttfamily \#include \char`\"{}engine/globals.\+h\char`\"{}}\newline
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacenetwork}{network}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+constexpr std\+::string\+\_\+view \mbox{\hyperlink{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}{VERSION}} = \char`\"{}alpha\+\_\+0.\+23.\+01.\+16\char`\"{}
+\item 
+constexpr size\+\_\+t \mbox{\hyperlink{globals_8h_a5d07c476a4df38a957585b4c12bfdf7d}{HASHED\+\_\+\+VERSION}} = hash\+String(\mbox{\hyperlink{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}{VERSION}})
+\item 
+constexpr std\+::string\+\_\+view \mbox{\hyperlink{globals_8h_ae3518c4cf1a0e047e3c4505478b5f15d}{GAME\+\_\+\+FOLDER}} = \char`\"{}pharmasea\char`\"{}
+\item 
+constexpr std\+::string\+\_\+view \mbox{\hyperlink{globals_8h_a77e9a108d26cde9eb23f98a26e1a3024}{SETTINGS\+\_\+\+FILE\+\_\+\+NAME}} = \char`\"{}settings.\+bin\char`\"{}
+\item 
+constexpr int \mbox{\hyperlink{globals_8h_aab26d6b4d9a9de693114dc63909ad7cd}{MAP\+\_\+H}} = 33
+\item 
+constexpr float \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}} = 1.\+0f
+\item 
+constexpr int \mbox{\hyperlink{namespacenetwork_a6aeb6825913b9a386a83c59f8c715a35}{network\+::\+DEFAULT\+\_\+\+PORT}} = 770
+\item 
+constexpr int \mbox{\hyperlink{namespacenetwork_acf4bbd66b0d6716ae9e4e5d9390079c2}{network\+::\+MAX\+\_\+\+CLIENTS}} = 4
+\item 
+constexpr int \mbox{\hyperlink{namespacenetwork_af177a631a8f23b588e2cc5ef90a8d6ac}{network\+::\+MAX\+\_\+\+ANNOUNCEMENT\+\_\+\+LENGTH}} = 200
+\item 
+constexpr int \mbox{\hyperlink{namespacenetwork_ac25927028283483486690041e04cb8c9}{network\+::\+SERVER\+\_\+\+CLIENT\+\_\+\+ID}} = -\/1
+\item 
+constexpr int \mbox{\hyperlink{namespacenetwork_a3855c8561d0a02fbcc26a690abccbac7}{network\+::\+MAX\+\_\+\+INPUTS}} = 100
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{globals_8h_ae3518c4cf1a0e047e3c4505478b5f15d}\label{globals_8h_ae3518c4cf1a0e047e3c4505478b5f15d}} 
+\index{globals.h@{globals.h}!GAME\_FOLDER@{GAME\_FOLDER}}
+\index{GAME\_FOLDER@{GAME\_FOLDER}!globals.h@{globals.h}}
+\doxysubsubsection{\texorpdfstring{GAME\_FOLDER}{GAME\_FOLDER}}
+{\footnotesize\ttfamily constexpr std\+::string\+\_\+view GAME\+\_\+\+FOLDER = \char`\"{}pharmasea\char`\"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \mbox{\hyperlink{game_8cpp_aecc7d8debf54990ffeaaed5bac7d7d81}{startup()}}.
+
+\mbox{\Hypertarget{globals_8h_a5d07c476a4df38a957585b4c12bfdf7d}\label{globals_8h_a5d07c476a4df38a957585b4c12bfdf7d}} 
+\index{globals.h@{globals.h}!HASHED\_VERSION@{HASHED\_VERSION}}
+\index{HASHED\_VERSION@{HASHED\_VERSION}!globals.h@{globals.h}}
+\doxysubsubsection{\texorpdfstring{HASHED\_VERSION}{HASHED\_VERSION}}
+{\footnotesize\ttfamily constexpr size\+\_\+t HASHED\+\_\+\+VERSION = hash\+String(\mbox{\hyperlink{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}{VERSION}})\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\mbox{\Hypertarget{globals_8h_aab26d6b4d9a9de693114dc63909ad7cd}\label{globals_8h_aab26d6b4d9a9de693114dc63909ad7cd}} 
+\index{globals.h@{globals.h}!MAP\_H@{MAP\_H}}
+\index{MAP\_H@{MAP\_H}!globals.h@{globals.h}}
+\doxysubsubsection{\texorpdfstring{MAP\_H}{MAP\_H}}
+{\footnotesize\ttfamily constexpr int MAP\+\_\+H = 33\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\mbox{\Hypertarget{globals_8h_a77e9a108d26cde9eb23f98a26e1a3024}\label{globals_8h_a77e9a108d26cde9eb23f98a26e1a3024}} 
+\index{globals.h@{globals.h}!SETTINGS\_FILE\_NAME@{SETTINGS\_FILE\_NAME}}
+\index{SETTINGS\_FILE\_NAME@{SETTINGS\_FILE\_NAME}!globals.h@{globals.h}}
+\doxysubsubsection{\texorpdfstring{SETTINGS\_FILE\_NAME}{SETTINGS\_FILE\_NAME}}
+{\footnotesize\ttfamily constexpr std\+::string\+\_\+view SETTINGS\+\_\+\+FILE\+\_\+\+NAME = \char`\"{}settings.\+bin\char`\"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \mbox{\hyperlink{game_8cpp_aecc7d8debf54990ffeaaed5bac7d7d81}{startup()}}.
+
+\mbox{\Hypertarget{globals_8h_af3c09b249c48587aba215cce49091fa0}\label{globals_8h_af3c09b249c48587aba215cce49091fa0}} 
+\index{globals.h@{globals.h}!TILESIZE@{TILESIZE}}
+\index{TILESIZE@{TILESIZE}!globals.h@{globals.h}}
+\doxysubsubsection{\texorpdfstring{TILESIZE}{TILESIZE}}
+{\footnotesize\ttfamily constexpr float TILESIZE = 1.\+0f\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceraylib_afdb4c3efe6c13dc14bfce3761b4bab50}{raylib\+::\+Draw\+Floating\+Text()}}, \mbox{\hyperlink{namespaceraylib_adf92235c8362e980a25030f08465d209}{raylib\+::\+Draw\+Line\+Strip2\+Din3\+D()}}, \mbox{\hyperlink{namespaceraylib_af6ad8e8727ef175dbe4d6c0d8b98cbaf}{raylib\+::\+Draw\+Rect2\+Din3\+D()}}, \mbox{\hyperlink{level__info_8h_afb3e321d1045c0376dede5b3997579aa}{generate\+\_\+and\+\_\+insert\+\_\+walls()}}, \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{Game\+Map\+Info\+::generate\+\_\+map()}}, \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{Game\+Map\+Info\+::get\+\_\+rand\+\_\+walkable()}}, \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{Person\+::handle\+\_\+collision()}}, \mbox{\hyperlink{struct_player_a12f2b3445a9b57a5f5b0bdb84d2d14b2}{Player\+::handle\+\_\+in\+\_\+game\+\_\+grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{struct_entity_helper_a3610c9a5865dc6bfa24cdc6f6858a763}{Entity\+Helper\+::is\+Walkable\+Raw\+Entities()}}, \mbox{\hyperlink{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}{Lobby\+Map\+Info\+::on\+Draw()}}, \mbox{\hyperlink{struct_game_layer_ac93aed3c3aeeb92b41fd322d0ca926c5}{Game\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_base_player_af6340fba709d11dc11495766df5dcb05}{Base\+Player\+::planning\+\_\+update()}}, \mbox{\hyperlink{struct_speech_bubble_adf10ca265a146477fa237f6bf66d5660}{Speech\+Bubble\+::render()}}, \mbox{\hyperlink{struct_a_i_person_a0434c4873c2e4aa67b6b2cba2dc6ffcc}{AIPerson\+::render\+\_\+debug\+\_\+mode()}}, \mbox{\hyperlink{struct_entity_a4f5def0fc8ea405ab385a65018046168}{Entity\+::render\+\_\+floating\+\_\+name()}}, \mbox{\hyperlink{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}{Furniture\+::render\+\_\+progress\+\_\+bar()}}, \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{Entity\+::size()}}, \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{Person\+::size()}}, \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{vec\+::snap()}}, \mbox{\hyperlink{struct_entity_af454ca504cbb7f3549cc206263895b51}{Entity\+::tile\+\_\+infront\+\_\+given\+\_\+pos()}}, \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{Entity\+::update\+\_\+held\+\_\+item\+\_\+position()}}, \mbox{\hyperlink{struct_furniture_a7c1a46b40616fba11f4ff50b6c34d647}{Furniture\+::update\+\_\+held\+\_\+item\+\_\+position()}}, and \mbox{\hyperlink{struct_customer_ae2642b7110d32ba456313fe5ac506e23}{Customer\+::wait\+\_\+in\+\_\+queue()}}.
+
+\mbox{\Hypertarget{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}\label{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}} 
+\index{globals.h@{globals.h}!VERSION@{VERSION}}
+\index{VERSION@{VERSION}!globals.h@{globals.h}}
+\doxysubsubsection{\texorpdfstring{VERSION}{VERSION}}
+{\footnotesize\ttfamily constexpr std\+::string\+\_\+view VERSION = \char`\"{}alpha\+\_\+0.\+23.\+01.\+16\char`\"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_version_layer_a3457fd07658e388444fb2a7ecb1767bf}{Version\+Layer\+::on\+Draw()}}.
+

@@ -1,0 +1,199 @@
+\hypertarget{struct_customer_spawner}{}\doxysection{Customer\+Spawner Struct Reference}
+\label{struct_customer_spawner}\index{CustomerSpawner@{CustomerSpawner}}
+
+
+{\ttfamily \#include $<$spawner.\+h$>$}
+
+Inheritance diagram for Customer\+Spawner\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{d2/d99/struct_customer_spawner}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_customer_spawner_a34310bcf7db177824354d0f6a3394743}{Customer\+Spawner}} (vec2 location)
+\item 
+virtual bool \mbox{\hyperlink{struct_customer_spawner_a6cfc00f4eebc11a53ac810c9cc13f93f}{is\+\_\+collidable}} () override
+\item 
+virtual bool \mbox{\hyperlink{struct_customer_spawner_ab0c2a437722c9f6ae1d092ff3c5dfddd}{draw\+\_\+outside\+\_\+debug\+\_\+mode}} () const override
+\item 
+void \mbox{\hyperlink{struct_customer_spawner_a499a258a39168c3d494ed16c9cb600bb}{spawn}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_spawner}{Spawner}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_spawner_aea868c6fb26297dd2d889a0ef354f1f2}{Spawner}} (vec2 location)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} \mbox{\hyperlink{struct_entity_aa279f81f1d6c0e63a9724310a981250f}{offset\+Face\+Direction}} (\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} starting\+Direction, float offset) const
+\item 
+\mbox{\hyperlink{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}{Entity}} (vec3 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\item 
+\mbox{\hyperlink{struct_entity_a69970748dae094cbca81f77a82c1ae66}{Entity}} (vec2 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\item 
+\mbox{\hyperlink{struct_entity_abed77744bbc522e364be6fc2ab1792ac}{Entity}} (vec3 p, Color c)
+\item 
+\mbox{\hyperlink{struct_entity_add145c7ad5ec1aca28429a337ca48304}{Entity}} (vec2 p, Color c)
+\item 
+virtual \mbox{\hyperlink{struct_entity_a588098978eea6a3486b7361605ff3f0f}{$\sim$\+Entity}} ()
+\item 
+void \mbox{\hyperlink{struct_entity_af8740cbb0b094e46c3b768b7b1a33b59}{update\+\_\+name}} (const std\+::string \&new\+\_\+name)
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_abac7c61d12e2b5c85d8a8b468a727797}{can\+\_\+take\+\_\+item\+\_\+from}} () const
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}} (Bounding\+Box b) const
+\item 
+virtual Bounding\+Box \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}{update\+\_\+position}} (const vec3 \&p)
+\item 
+void \mbox{\hyperlink{struct_entity_ad0bf9cef410758f173d4b376b1df631f}{rotate\+\_\+facing\+\_\+clockwise}} ()
+\item 
+virtual vec2 \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\+\_\+infront}} (int distance)
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_a489fd7ead99634ebb6c707263598df81}{add\+\_\+to\+\_\+navmesh}} ()
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{is\+\_\+collidable}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a48efb563c821424fd1a97efcc211cfd8}{on\+\_\+pickup}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\+\_\+drop}} (vec3 location)
+\item 
+virtual void \mbox{\hyperlink{struct_entity_adab1628044c63c07d189d44b411046a3}{render}} () const final
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update}} (float dt) final
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+\doxysubsubsection*{Public Types inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} \{ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FORWARD}} = 0x1
+, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{RIGHT}} = 0x2
+, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{BACK}} = 0x4
+, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{LEFT}} = 0x8
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
+\begin{DoxyCompactItemize}
+\item 
+static vec2 \mbox{\hyperlink{struct_entity_af454ca504cbb7f3549cc206263895b51}{tile\+\_\+infront\+\_\+given\+\_\+pos}} (vec2 tile, int distance, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} direction)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
+\begin{DoxyCompactItemize}
+\item 
+const std\+::map$<$ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}}, float $>$ \mbox{\hyperlink{struct_entity_a1d00ed121b7125c7e18506deda3c9c38}{Front\+Face\+Direction\+Map}}
+\item 
+const std\+::map$<$ int, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} $>$ \mbox{\hyperlink{struct_entity_ace4a615925528f48d995ce9443506a4d}{Direction\+To\+Front\+Face\+Map}}
+\item 
+int \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}
+\item 
+vec3 \mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\+\_\+position}}
+\item 
+vec3 \mbox{\hyperlink{struct_entity_a71e5d4cf6ae2c20d9227dd55c017d797}{prev\+\_\+position}}
+\item 
+vec3 \mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}}
+\item 
+vec3 \mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\+\_\+force}} \{0.\+0, 0.\+0, 0.\+0\}
+\item 
+Color \mbox{\hyperlink{struct_entity_aceb6290fec072176cef25608188042ed}{face\+\_\+color}}
+\item 
+Color \mbox{\hyperlink{struct_entity_a3978918d89c7165bb86cffb14d55b442}{base\+\_\+color}}
+\item 
+bool \mbox{\hyperlink{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}{cleanup}} = false
+\item 
+bool \mbox{\hyperlink{struct_entity_ad9ba4b65cc992e4bab6da5ce023e41e6}{is\+\_\+highlighted}} = false
+\item 
+bool \mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\+\_\+held}} = false
+\item 
+\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} \mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\+\_\+direction}} = \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{Front\+Face\+Direction\+::\+FORWARD}}
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \mbox{\hyperlink{struct_entity_a851369e74ee7fc64c3a304875cbdc9f2}{held\+\_\+item}} = nullptr
+\item 
+int \mbox{\hyperlink{struct_entity_aed6000bd2aef3497277d23deb1f1554f}{name\+\_\+length}} = 1
+\item 
+std\+::string \mbox{\hyperlink{struct_entity_a931b21fbdebb1a5963b4bcab5df128f5}{name}} = \char`\"{}\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_entity_a980f368aa07ce358583982821533a54a}{Entity}} ()
+\item 
+virtual vec3 \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}} () const
+\item 
+virtual Bounding\+Box \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\+\_\+bounds}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a66588b42f69ce15038bd149605a16fc2}{render\+\_\+debug\+\_\+mode}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a8aa106da3c2e49952d46fe6413d06d37}{render\+\_\+highlighted}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a4f5def0fc8ea405ab385a65018046168}{render\+\_\+floating\+\_\+name}} () const
+\item 
+virtual std\+::optional$<$ Model\+Info $>$ \mbox{\hyperlink{struct_entity_abe393fa333d9f5eadcc99b0a959539d4}{model}} () const
+\item 
+vec3 \mbox{\hyperlink{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}{snap\+\_\+position}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{update\+\_\+held\+\_\+item\+\_\+position}} ()
+\item 
+virtual vec2 \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{turn\+\_\+to\+\_\+face\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$target)
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update}} (float)
+\item 
+virtual void \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{planning\+\_\+update}} (float)
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\+\_\+round\+\_\+update}} (float)
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_af864202a00a448f2b30e7b5634e5c490}{is\+\_\+snappable}} ()
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}{can\+\_\+place\+\_\+item\+\_\+into}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$=nullptr)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_customer_spawner_a34310bcf7db177824354d0f6a3394743}\label{struct_customer_spawner_a34310bcf7db177824354d0f6a3394743}} 
+\index{CustomerSpawner@{CustomerSpawner}!CustomerSpawner@{CustomerSpawner}}
+\index{CustomerSpawner@{CustomerSpawner}!CustomerSpawner@{CustomerSpawner}}
+\doxysubsubsection{\texorpdfstring{CustomerSpawner()}{CustomerSpawner()}}
+{\footnotesize\ttfamily Customer\+Spawner\+::\+Customer\+Spawner (\begin{DoxyParamCaption}\item[{vec2}]{location }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_customer_spawner_ab0c2a437722c9f6ae1d092ff3c5dfddd}\label{struct_customer_spawner_ab0c2a437722c9f6ae1d092ff3c5dfddd}} 
+\index{CustomerSpawner@{CustomerSpawner}!draw\_outside\_debug\_mode@{draw\_outside\_debug\_mode}}
+\index{draw\_outside\_debug\_mode@{draw\_outside\_debug\_mode}!CustomerSpawner@{CustomerSpawner}}
+\doxysubsubsection{\texorpdfstring{draw\_outside\_debug\_mode()}{draw\_outside\_debug\_mode()}}
+{\footnotesize\ttfamily virtual bool Customer\+Spawner\+::draw\+\_\+outside\+\_\+debug\+\_\+mode (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+\mbox{\Hypertarget{struct_customer_spawner_a6cfc00f4eebc11a53ac810c9cc13f93f}\label{struct_customer_spawner_a6cfc00f4eebc11a53ac810c9cc13f93f}} 
+\index{CustomerSpawner@{CustomerSpawner}!is\_collidable@{is\_collidable}}
+\index{is\_collidable@{is\_collidable}!CustomerSpawner@{CustomerSpawner}}
+\doxysubsubsection{\texorpdfstring{is\_collidable()}{is\_collidable()}}
+{\footnotesize\ttfamily virtual bool Customer\+Spawner\+::is\+\_\+collidable (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{Entity}}.
+
+\mbox{\Hypertarget{struct_customer_spawner_a499a258a39168c3d494ed16c9cb600bb}\label{struct_customer_spawner_a499a258a39168c3d494ed16c9cb600bb}} 
+\index{CustomerSpawner@{CustomerSpawner}!spawn@{spawn}}
+\index{spawn@{spawn}!CustomerSpawner@{CustomerSpawner}}
+\doxysubsubsection{\texorpdfstring{spawn()}{spawn()}}
+{\footnotesize\ttfamily void Customer\+Spawner\+::spawn (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{Entity\+Helper\+::add\+Entity()}}, and \mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{Entity\+::position}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{spawner_8h}{spawner.\+h}}\end{DoxyCompactItemize}

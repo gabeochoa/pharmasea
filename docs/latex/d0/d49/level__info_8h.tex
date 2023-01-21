@@ -1,0 +1,72 @@
+\hypertarget{level__info_8h}{}\doxysection{src/level\+\_\+info.h File Reference}
+\label{level__info_8h}\index{src/level\_info.h@{src/level\_info.h}}
+{\ttfamily \#include \char`\"{}engine/globals\+\_\+register.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine/ui\+\_\+color.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}entity.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}entityhelper.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}furniture/character\+\_\+switcher.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}furnitures.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}item.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}item\+\_\+helper.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}round.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_level_info}{Level\+Info}}
+\item 
+struct \mbox{\hyperlink{struct_lobby_map_info}{Lobby\+Map\+Info}}
+\item 
+struct \mbox{\hyperlink{struct_game_map_info}{Game\+Map\+Info}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{level__info_8h_afb3e321d1045c0376dede5b3997579aa}{generate\+\_\+and\+\_\+insert\+\_\+walls}} (std\+::string)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+constexpr int \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\+\_\+\+MAP\+\_\+\+SIZE}} = 20
+\item 
+constexpr int \mbox{\hyperlink{level__info_8h_ade8d3a51c249c747df1dbe7eef587729}{MAX\+\_\+\+SEED\+\_\+\+LENGTH}} = 20
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{level__info_8h_afb3e321d1045c0376dede5b3997579aa}\label{level__info_8h_afb3e321d1045c0376dede5b3997579aa}} 
+\index{level\_info.h@{level\_info.h}!generate\_and\_insert\_walls@{generate\_and\_insert\_walls}}
+\index{generate\_and\_insert\_walls@{generate\_and\_insert\_walls}!level\_info.h@{level\_info.h}}
+\doxysubsubsection{\texorpdfstring{generate\_and\_insert\_walls()}{generate\_and\_insert\_walls()}}
+{\footnotesize\ttfamily static void generate\+\_\+and\+\_\+insert\+\_\+walls (\begin{DoxyParamCaption}\item[{std\+::string}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{Entity\+Helper\+::add\+Entity()}}, \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\+\_\+\+MAP\+\_\+\+SIZE}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{Game\+Map\+Info\+::generate\+\_\+map()}}.
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}\label{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}} 
+\index{level\_info.h@{level\_info.h}!MAX\_MAP\_SIZE@{MAX\_MAP\_SIZE}}
+\index{MAX\_MAP\_SIZE@{MAX\_MAP\_SIZE}!level\_info.h@{level\_info.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_MAP\_SIZE}{MAX\_MAP\_SIZE}}
+{\footnotesize\ttfamily constexpr int MAX\+\_\+\+MAP\+\_\+\+SIZE = 20\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \mbox{\hyperlink{level__info_8h_afb3e321d1045c0376dede5b3997579aa}{generate\+\_\+and\+\_\+insert\+\_\+walls()}}, and \mbox{\hyperlink{struct_game_map_info_a3e6cb1b5e1429089bb8d3498562854b3}{Game\+Map\+Info\+::update\+\_\+seed()}}.
+
+\mbox{\Hypertarget{level__info_8h_ade8d3a51c249c747df1dbe7eef587729}\label{level__info_8h_ade8d3a51c249c747df1dbe7eef587729}} 
+\index{level\_info.h@{level\_info.h}!MAX\_SEED\_LENGTH@{MAX\_SEED\_LENGTH}}
+\index{MAX\_SEED\_LENGTH@{MAX\_SEED\_LENGTH}!level\_info.h@{level\_info.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_SEED\_LENGTH}{MAX\_SEED\_LENGTH}}
+{\footnotesize\ttfamily constexpr int MAX\+\_\+\+SEED\+\_\+\+LENGTH = 20\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_level_info_a63c918a28d1647f84c80e76fa26bb3e7}{Level\+Info\+::serialize()}}.
+

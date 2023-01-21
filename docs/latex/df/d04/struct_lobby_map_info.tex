@@ -1,0 +1,102 @@
+\hypertarget{struct_lobby_map_info}{}\doxysection{Lobby\+Map\+Info Struct Reference}
+\label{struct_lobby_map_info}\index{LobbyMapInfo@{LobbyMapInfo}}
+
+
+{\ttfamily \#include $<$level\+\_\+info.\+h$>$}
+
+Inheritance diagram for Lobby\+Map\+Info\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{df/d04/struct_lobby_map_info}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{struct_lobby_map_info_a4cab06a8a972519111860fa37e770b41}{generate\+\_\+map}} () override
+\item 
+virtual void \mbox{\hyperlink{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}{on\+Draw}} (float dt) const override
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_level_info}{Level\+Info}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{struct_level_info_a69320651f4975db03abfcf8979341cb4}{on\+Update}} (float dt)
+\item 
+virtual void \mbox{\hyperlink{struct_level_info_ad4d55937b27ced4254b37e8567d40251}{on\+Draw}} (float) const
+\item 
+virtual void \mbox{\hyperlink{struct_level_info_a29c9081e7343c8fb18e46104f73b957b}{on\+Draw\+UI}} (float)
+\item 
+void \mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c45e}{grab\+\_\+things}} ()
+\item 
+void \mbox{\hyperlink{struct_level_info_ad3f119e5329f5c5f62537ff53fe3b932}{ensure\+\_\+generated\+\_\+map}} (const std\+::string \&new\+\_\+seed)
+\item 
+virtual void \mbox{\hyperlink{struct_level_info_a0784ca0f3cf019f17d50596242a02431}{generate\+\_\+map}} ()=0
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_lobby_map_info_afd342654f0f585313d58cd6cacdcbde5}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+\doxysubsubsection*{Public Attributes inherited from \mbox{\hyperlink{struct_level_info}{Level\+Info}}}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}{was\+\_\+generated}} = false
+\item 
+\mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}} \mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}}
+\item 
+Entities\+::size\+\_\+type \mbox{\hyperlink{struct_level_info_aa50fed1dbcca5c43e26680af3a651680}{num\+\_\+entities}}
+\item 
+\mbox{\hyperlink{item__helper_8h_a175a25f0a9aa01587d97b5daefa2db13}{Items}} \mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}}
+\item 
+Items\+::size\+\_\+type \mbox{\hyperlink{struct_level_info_a9ca4e206a00bce8c4ade2589b1838bad}{num\+\_\+items}}
+\item 
+std\+::string \mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_lobby_map_info_a4cab06a8a972519111860fa37e770b41}\label{struct_lobby_map_info_a4cab06a8a972519111860fa37e770b41}} 
+\index{LobbyMapInfo@{LobbyMapInfo}!generate\_map@{generate\_map}}
+\index{generate\_map@{generate\_map}!LobbyMapInfo@{LobbyMapInfo}}
+\doxysubsubsection{\texorpdfstring{generate\_map()}{generate\_map()}}
+{\footnotesize\ttfamily virtual void Lobby\+Map\+Info\+::generate\+\_\+map (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{struct_level_info_a0784ca0f3cf019f17d50596242a02431}{Level\+Info}}.
+
+
+
+References \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{Entity\+Helper\+::add\+Entity()}}.
+
+\mbox{\Hypertarget{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}\label{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}} 
+\index{LobbyMapInfo@{LobbyMapInfo}!onDraw@{onDraw}}
+\index{onDraw@{onDraw}!LobbyMapInfo@{LobbyMapInfo}}
+\doxysubsubsection{\texorpdfstring{onDraw()}{onDraw()}}
+{\footnotesize\ttfamily virtual void Lobby\+Map\+Info\+::on\+Draw (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_level_info_ad4d55937b27ced4254b37e8567d40251}{Level\+Info}}.
+
+
+
+References \mbox{\hyperlink{struct_level_info_ad4d55937b27ced4254b37e8567d40251}{Level\+Info\+::on\+Draw()}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_map_a3a0e8d65b69ebda41b8a46516c6ca941}{Map\+::on\+Draw()}}.
+
+\mbox{\Hypertarget{struct_lobby_map_info_afd342654f0f585313d58cd6cacdcbde5}\label{struct_lobby_map_info_afd342654f0f585313d58cd6cacdcbde5}} 
+\index{LobbyMapInfo@{LobbyMapInfo}!serialize@{serialize}}
+\index{serialize@{serialize}!LobbyMapInfo@{LobbyMapInfo}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void Lobby\+Map\+Info\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{level__info_8h}{level\+\_\+info.\+h}}\end{DoxyCompactItemize}

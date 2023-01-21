@@ -1,0 +1,203 @@
+\hypertarget{struct_state_manager}{}\doxysection{State\+Manager\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Struct Template Reference}
+\label{struct_state_manager}\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+
+
+{\ttfamily \#include $<$statemanager.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+T \mbox{\hyperlink{struct_state_manager_a20c79acff1c0a92ea4f753ee2334a1ba}{read}} () const
+\item 
+T \mbox{\hyperlink{struct_state_manager_afe880671507f595b73a62debe9878ac1}{previous}} () const
+\item 
+T \mbox{\hyperlink{struct_state_manager_a893d07632226a05e8c959d9d47ef171c}{go\+\_\+back}} ()
+\item 
+void \mbox{\hyperlink{struct_state_manager_aaf92826799dad41d0799674d66505049}{clear\+\_\+history}} ()
+\item 
+bool \mbox{\hyperlink{struct_state_manager_abb2367385952f160c2828340b5051357}{is}} (T s) const
+\item 
+bool \mbox{\hyperlink{struct_state_manager_a2d10fdc9f778421bda192135b38f21f2}{is\+\_\+not}} (T s) const
+\item 
+const std\+::string\+\_\+view \mbox{\hyperlink{struct_state_manager_a27d342e65c27a47dee4a03c8e9f2866e}{tostring}} () const
+\item 
+void \mbox{\hyperlink{struct_state_manager_aab97f85d1876c98911212c036583d65d}{set}} (T ns)
+\item 
+virtual T \mbox{\hyperlink{struct_state_manager_a0146c68b8b1d6d4d5f8f39e5ba444a05}{default\+\_\+value}} () const =0
+\item 
+void \mbox{\hyperlink{struct_state_manager_a2366ee7429004cd58497c957376e39be}{reset}} ()
+\item 
+virtual \mbox{\hyperlink{struct_state_manager_a2d1e64fc776722b52f68d959e036243b}{$\sim$\+State\+Manager}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::stack$<$ T $>$ \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{prev}}
+\item 
+T \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{state}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_state_manager_a2d1e64fc776722b52f68d959e036243b}\label{struct_state_manager_a2d1e64fc776722b52f68d959e036243b}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!````~StateManager@{$\sim$StateManager}}
+\index{````~StateManager@{$\sim$StateManager}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{$\sim$StateManager()}{~StateManager()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+virtual \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::$\sim$\mbox{\hyperlink{struct_state_manager}{State\+Manager}} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_state_manager_aaf92826799dad41d0799674d66505049}\label{struct_state_manager_aaf92826799dad41d0799674d66505049}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!clear\_history@{clear\_history}}
+\index{clear\_history@{clear\_history}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{clear\_history()}{clear\_history()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::clear\+\_\+history (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{State\+Manager$<$ T $>$\+::prev}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_state_manager_a2366ee7429004cd58497c957376e39be}{State\+Manager$<$ T $>$\+::reset()}}.
+
+\mbox{\Hypertarget{struct_state_manager_a0146c68b8b1d6d4d5f8f39e5ba444a05}\label{struct_state_manager_a0146c68b8b1d6d4d5f8f39e5ba444a05}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!default\_value@{default\_value}}
+\index{default\_value@{default\_value}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{default\_value()}{default\_value()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+virtual T \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::default\+\_\+value (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Implemented in \mbox{\hyperlink{struct_menu_state_ada110c34258c50a66b0b64298e574350}{Menu\+State}}, and \mbox{\hyperlink{struct_game_state_a71542bb1a1681939c0345cfe6ca836ff}{Game\+State}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_state_manager_a2366ee7429004cd58497c957376e39be}{State\+Manager$<$ T $>$\+::reset()}}.
+
+\mbox{\Hypertarget{struct_state_manager_a893d07632226a05e8c959d9d47ef171c}\label{struct_state_manager_a893d07632226a05e8c959d9d47ef171c}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!go\_back@{go\_back}}
+\index{go\_back@{go\_back}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{go\_back()}{go\_back()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::go\+\_\+back (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{State\+Manager$<$ T $>$\+::prev}}, and \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{State\+Manager$<$ T $>$\+::state}}.
+
+\mbox{\Hypertarget{struct_state_manager_abb2367385952f160c2828340b5051357}\label{struct_state_manager_abb2367385952f160c2828340b5051357}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!is@{is}}
+\index{is@{is}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{is()}{is()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+bool \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::is (\begin{DoxyParamCaption}\item[{T}]{s }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{State\+Manager$<$ T $>$\+::state}}.
+
+\mbox{\Hypertarget{struct_state_manager_a2d10fdc9f778421bda192135b38f21f2}\label{struct_state_manager_a2d10fdc9f778421bda192135b38f21f2}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!is\_not@{is\_not}}
+\index{is\_not@{is\_not}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{is\_not()}{is\_not()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+bool \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::is\+\_\+not (\begin{DoxyParamCaption}\item[{T}]{s }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{State\+Manager$<$ T $>$\+::state}}.
+
+\mbox{\Hypertarget{struct_state_manager_afe880671507f595b73a62debe9878ac1}\label{struct_state_manager_afe880671507f595b73a62debe9878ac1}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!previous@{previous}}
+\index{previous@{previous}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{previous()}{previous()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::previous (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{State\+Manager$<$ T $>$\+::prev}}.
+
+\mbox{\Hypertarget{struct_state_manager_a20c79acff1c0a92ea4f753ee2334a1ba}\label{struct_state_manager_a20c79acff1c0a92ea4f753ee2334a1ba}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!read@{read}}
+\index{read@{read}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{read()}{read()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::read (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{State\+Manager$<$ T $>$\+::state}}.
+
+\mbox{\Hypertarget{struct_state_manager_a2366ee7429004cd58497c957376e39be}\label{struct_state_manager_a2366ee7429004cd58497c957376e39be}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!reset@{reset}}
+\index{reset@{reset}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{reset()}{reset()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::reset (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_state_manager_aaf92826799dad41d0799674d66505049}{State\+Manager$<$ T $>$\+::clear\+\_\+history()}}, \mbox{\hyperlink{struct_state_manager_a0146c68b8b1d6d4d5f8f39e5ba444a05}{State\+Manager$<$ T $>$\+::default\+\_\+value()}}, and \mbox{\hyperlink{struct_state_manager_aab97f85d1876c98911212c036583d65d}{State\+Manager$<$ T $>$\+::set()}}.
+
+\mbox{\Hypertarget{struct_state_manager_aab97f85d1876c98911212c036583d65d}\label{struct_state_manager_aab97f85d1876c98911212c036583d65d}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!set@{set}}
+\index{set@{set}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{set()}{set()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::set (\begin{DoxyParamCaption}\item[{T}]{ns }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{State\+Manager$<$ T $>$\+::prev}}, and \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{State\+Manager$<$ T $>$\+::state}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_state_manager_a2366ee7429004cd58497c957376e39be}{State\+Manager$<$ T $>$\+::reset()}}.
+
+\mbox{\Hypertarget{struct_state_manager_a27d342e65c27a47dee4a03c8e9f2866e}\label{struct_state_manager_a27d342e65c27a47dee4a03c8e9f2866e}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!tostring@{tostring}}
+\index{tostring@{tostring}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{tostring()}{tostring()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+const std\+::string\+\_\+view \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::tostring (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{State\+Manager$<$ T $>$\+::state}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}\label{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!prev@{prev}}
+\index{prev@{prev}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{prev}{prev}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::stack$<$T$>$ \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::prev\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_state_manager_aaf92826799dad41d0799674d66505049}{State\+Manager$<$ T $>$\+::clear\+\_\+history()}}, \mbox{\hyperlink{struct_state_manager_a893d07632226a05e8c959d9d47ef171c}{State\+Manager$<$ T $>$\+::go\+\_\+back()}}, \mbox{\hyperlink{struct_state_manager_afe880671507f595b73a62debe9878ac1}{State\+Manager$<$ T $>$\+::previous()}}, and \mbox{\hyperlink{struct_state_manager_aab97f85d1876c98911212c036583d65d}{State\+Manager$<$ T $>$\+::set()}}.
+
+\mbox{\Hypertarget{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}\label{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}} 
+\index{StateManager$<$ T $>$@{StateManager$<$ T $>$}!state@{state}}
+\index{state@{state}!StateManager$<$ T $>$@{StateManager$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{state}{state}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T \mbox{\hyperlink{struct_state_manager}{State\+Manager}}$<$ T $>$\+::state\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_state_manager_a893d07632226a05e8c959d9d47ef171c}{State\+Manager$<$ T $>$\+::go\+\_\+back()}}, \mbox{\hyperlink{struct_state_manager_abb2367385952f160c2828340b5051357}{State\+Manager$<$ T $>$\+::is()}}, \mbox{\hyperlink{struct_state_manager_a2d10fdc9f778421bda192135b38f21f2}{State\+Manager$<$ T $>$\+::is\+\_\+not()}}, \mbox{\hyperlink{struct_state_manager_a20c79acff1c0a92ea4f753ee2334a1ba}{State\+Manager$<$ T $>$\+::read()}}, \mbox{\hyperlink{struct_state_manager_aab97f85d1876c98911212c036583d65d}{State\+Manager$<$ T $>$\+::set()}}, and \mbox{\hyperlink{struct_state_manager_a27d342e65c27a47dee4a03c8e9f2866e}{State\+Manager$<$ T $>$\+::tostring()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{statemanager_8h}{statemanager.\+h}}\end{DoxyCompactItemize}

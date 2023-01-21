@@ -1,0 +1,250 @@
+\hypertarget{struct_pill}{}\doxysection{Pill Struct Reference}
+\label{struct_pill}\index{Pill@{Pill}}
+
+
+{\ttfamily \#include $<$item.\+h$>$}
+
+Inheritance diagram for Pill\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{de/d82/struct_pill}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum struct \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114}{Pill\+Type}} \{ \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114aee38e4d5dd68c4e440825018d549cb47}{Red}}
+, \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114ac7a39e7eb165a28ccbf43da08afe7651}{Red\+Long}}
+, \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114a9594eec95be70e7b1710f730fdda33d9}{Blue}}
+, \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114a23210c6230517c00439c0f3a7301a968}{Blue\+Long}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types inherited from \mbox{\hyperlink{struct_item}{Item}}}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313}{Held\+By}} \{ \newline
+\mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a238dfba9b1b1077df2b9d4281d305ad7}{NONE}}
+, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313aead1b164bfce2586f784f684ff72d509}{ITEM}}
+, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313aaca7714ebc132e0fb559664bbe96c552}{PLAYER}}
+, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5}{FURNITURE}}
+, \newline
+\mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a11bd9eb4b8674d3bdbe31462f417a852}{CUSTOMER}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_pill_a587fedaf245b1bde2fb5fb304eb7a120}{Pill}} ()
+\item 
+\mbox{\hyperlink{struct_pill_a04e66b101b42aafa13f6f91036e3e1d4}{Pill}} (vec3 p, Color c)
+\item 
+\mbox{\hyperlink{struct_pill_ad5f4f40b05fb82729a266cbe60fc3fc3}{Pill}} (vec2 p, Color c)
+\item 
+void \mbox{\hyperlink{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}{init}} ()
+\item 
+virtual vec3 \mbox{\hyperlink{struct_pill_ab48d7f73a0c8367132397426da37d537}{model\+\_\+scale}} () const override
+\item 
+virtual std\+::optional$<$ raylib\+::\+Model $>$ \mbox{\hyperlink{struct_pill_a1845531ad3711bfe9584ca2825979400}{model}} () const override
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_item}{Item}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_item_ace3c0716c9ce027c08002c6e997438f3}{Item}} (vec3 p, Color c)
+\item 
+\mbox{\hyperlink{struct_item_a60a2714859cc1fb2259041b709c17919}{Item}} (vec2 p, Color c)
+\item 
+virtual \mbox{\hyperlink{struct_item_a33cc9c0bc556b5a33a9d0d58d37c602b}{$\sim$\+Item}} ()
+\item 
+vec3 \mbox{\hyperlink{struct_item_a3a2607e15ddf8c337bc7480cadccf307}{snap\+\_\+position}} () const
+\item 
+virtual bool \mbox{\hyperlink{struct_item_a1774f336ba7426c027ace19df8eebf2a}{is\+\_\+collidable}} ()
+\item 
+virtual vec3 \mbox{\hyperlink{struct_item_a44db496c8de100b4f6e9bb7e546b0b4f}{model\+\_\+scale}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_item_ade8311a0bcadd6d8d30641868f851d8e}{render}} (bool render\+\_\+held\+\_\+item=true) const
+\item 
+virtual void \mbox{\hyperlink{struct_item_a04839eb08885c4f89378e636cc9df27f}{update\+\_\+position}} (const vec3 \&p)
+\item 
+virtual Bounding\+Box \mbox{\hyperlink{struct_item_a6b50c8e2df7d6031f59ead493f544f03}{bounds}} () const
+\item 
+virtual vec3 \mbox{\hyperlink{struct_item_a325a03f663374790e5ffc0b51f08683b}{size}} () const
+\item 
+virtual Bounding\+Box \mbox{\hyperlink{struct_item_a3a59ef91c6a7308e3d681740613ad06b}{raw\+\_\+bounds}} () const
+\item 
+virtual bool \mbox{\hyperlink{struct_item_a33316076fcf65a5eb36d8bd5d8cf3047}{collides}} (Bounding\+Box b) const
+\item 
+virtual std\+::optional$<$ raylib\+::\+Model $>$ \mbox{\hyperlink{struct_item_a0e3e9361df9d2b0071299c51a642c528}{model}} () const
+\item 
+virtual bool \mbox{\hyperlink{struct_item_a041b916a0c1b4feb83b0a55e97d3fded}{eat}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ item)
+\item 
+virtual bool \mbox{\hyperlink{struct_item_a182f7bac8365029d055b04e279981a82}{can\+\_\+eat}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ item)
+\item 
+virtual bool \mbox{\hyperlink{struct_item_a523767b015090eca0c122605de78c846}{has\+\_\+holding\+\_\+ability}} () const
+\item 
+virtual bool \mbox{\hyperlink{struct_item_a87521e07ad9e083fa892d52880ce67c5}{empty}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114}{Pill\+::\+Pill\+Type}} \mbox{\hyperlink{struct_pill_a85ee79b2713671d19be803d5999250a2}{type}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes inherited from \mbox{\hyperlink{struct_item}{Item}}}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{struct_item_ae901ac3ab2273113f746340a7db4e388}{id}}
+\item 
+float \mbox{\hyperlink{struct_item_a5b372513381b796a0c9d947998695978}{item\+\_\+size}} = \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}} / 2
+\item 
+Color \mbox{\hyperlink{struct_item_a0b8a557de8ba01a3a0702a04bc14f60c}{color}}
+\item 
+vec3 \mbox{\hyperlink{struct_item_ab8f08a383347341fe2eba43cdbfa7dd3}{raw\+\_\+position}}
+\item 
+vec3 \mbox{\hyperlink{struct_item_aa59326bb87cffcdcf4e7ca6715566b6f}{position}}
+\item 
+bool \mbox{\hyperlink{struct_item_aa562c5ebe71449db708de075236c0d5e}{cleanup}} = false
+\item 
+\mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313}{Held\+By}} \mbox{\hyperlink{struct_item_a0eb98a0db3e8e4e6e4b94d92c53f175b}{held\+\_\+by}} = \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a238dfba9b1b1077df2b9d4281d305ad7}{NONE}}
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \mbox{\hyperlink{struct_item_a24622ff456a347d704ac2cc38f922905}{held\+\_\+item}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_pill_ae7523079b9c6599723a06760356c0f62}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+\doxysubsubsection*{Protected Member Functions inherited from \mbox{\hyperlink{struct_item}{Item}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_item_a297720c02984eab37332ae795d22189d}{Item}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{struct_pill_a541adada380f2ffdc6aae0636423d114}\label{struct_pill_a541adada380f2ffdc6aae0636423d114}} 
+\index{Pill@{Pill}!PillType@{PillType}}
+\index{PillType@{PillType}!Pill@{Pill}}
+\doxysubsubsection{\texorpdfstring{PillType}{PillType}}
+{\footnotesize\ttfamily enum struct \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114}{Pill\+::\+Pill\+Type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Red@{Red}!Pill@{Pill}}\index{Pill@{Pill}!Red@{Red}}}\mbox{\Hypertarget{struct_pill_a541adada380f2ffdc6aae0636423d114aee38e4d5dd68c4e440825018d549cb47}\label{struct_pill_a541adada380f2ffdc6aae0636423d114aee38e4d5dd68c4e440825018d549cb47}} 
+Red&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RedLong@{RedLong}!Pill@{Pill}}\index{Pill@{Pill}!RedLong@{RedLong}}}\mbox{\Hypertarget{struct_pill_a541adada380f2ffdc6aae0636423d114ac7a39e7eb165a28ccbf43da08afe7651}\label{struct_pill_a541adada380f2ffdc6aae0636423d114ac7a39e7eb165a28ccbf43da08afe7651}} 
+Red\+Long&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Blue@{Blue}!Pill@{Pill}}\index{Pill@{Pill}!Blue@{Blue}}}\mbox{\Hypertarget{struct_pill_a541adada380f2ffdc6aae0636423d114a9594eec95be70e7b1710f730fdda33d9}\label{struct_pill_a541adada380f2ffdc6aae0636423d114a9594eec95be70e7b1710f730fdda33d9}} 
+Blue&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BlueLong@{BlueLong}!Pill@{Pill}}\index{Pill@{Pill}!BlueLong@{BlueLong}}}\mbox{\Hypertarget{struct_pill_a541adada380f2ffdc6aae0636423d114a23210c6230517c00439c0f3a7301a968}\label{struct_pill_a541adada380f2ffdc6aae0636423d114a23210c6230517c00439c0f3a7301a968}} 
+Blue\+Long&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_pill_a587fedaf245b1bde2fb5fb304eb7a120}\label{struct_pill_a587fedaf245b1bde2fb5fb304eb7a120}} 
+\index{Pill@{Pill}!Pill@{Pill}}
+\index{Pill@{Pill}!Pill@{Pill}}
+\doxysubsubsection{\texorpdfstring{Pill()}{Pill()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Pill\+::\+Pill (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}{init()}}.
+
+\mbox{\Hypertarget{struct_pill_a04e66b101b42aafa13f6f91036e3e1d4}\label{struct_pill_a04e66b101b42aafa13f6f91036e3e1d4}} 
+\index{Pill@{Pill}!Pill@{Pill}}
+\index{Pill@{Pill}!Pill@{Pill}}
+\doxysubsubsection{\texorpdfstring{Pill()}{Pill()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Pill\+::\+Pill (\begin{DoxyParamCaption}\item[{vec3}]{p,  }\item[{Color}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}{init()}}.
+
+\mbox{\Hypertarget{struct_pill_ad5f4f40b05fb82729a266cbe60fc3fc3}\label{struct_pill_ad5f4f40b05fb82729a266cbe60fc3fc3}} 
+\index{Pill@{Pill}!Pill@{Pill}}
+\index{Pill@{Pill}!Pill@{Pill}}
+\doxysubsubsection{\texorpdfstring{Pill()}{Pill()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Pill\+::\+Pill (\begin{DoxyParamCaption}\item[{vec2}]{p,  }\item[{Color}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}{init()}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}\label{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}} 
+\index{Pill@{Pill}!init@{init}}
+\index{init@{init}!Pill@{Pill}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily void Pill\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_pill_a85ee79b2713671d19be803d5999250a2}{type}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_pill_a587fedaf245b1bde2fb5fb304eb7a120}{Pill()}}.
+
+\mbox{\Hypertarget{struct_pill_a1845531ad3711bfe9584ca2825979400}\label{struct_pill_a1845531ad3711bfe9584ca2825979400}} 
+\index{Pill@{Pill}!model@{model}}
+\index{model@{model}!Pill@{Pill}}
+\doxysubsubsection{\texorpdfstring{model()}{model()}}
+{\footnotesize\ttfamily virtual std\+::optional$<$ raylib\+::\+Model $>$ Pill\+::model (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_item_a0e3e9361df9d2b0071299c51a642c528}{Item}}.
+
+
+
+References \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114a9594eec95be70e7b1710f730fdda33d9}{Blue}}, \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114a23210c6230517c00439c0f3a7301a968}{Blue\+Long}}, \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114aee38e4d5dd68c4e440825018d549cb47}{Red}}, \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114ac7a39e7eb165a28ccbf43da08afe7651}{Red\+Long}}, and \mbox{\hyperlink{struct_pill_a85ee79b2713671d19be803d5999250a2}{type}}.
+
+\mbox{\Hypertarget{struct_pill_ab48d7f73a0c8367132397426da37d537}\label{struct_pill_ab48d7f73a0c8367132397426da37d537}} 
+\index{Pill@{Pill}!model\_scale@{model\_scale}}
+\index{model\_scale@{model\_scale}!Pill@{Pill}}
+\doxysubsubsection{\texorpdfstring{model\_scale()}{model\_scale()}}
+{\footnotesize\ttfamily virtual vec3 Pill\+::model\+\_\+scale (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_item_a44db496c8de100b4f6e9bb7e546b0b4f}{Item}}.
+
+\mbox{\Hypertarget{struct_pill_ae7523079b9c6599723a06760356c0f62}\label{struct_pill_ae7523079b9c6599723a06760356c0f62}} 
+\index{Pill@{Pill}!serialize@{serialize}}
+\index{serialize@{serialize}!Pill@{Pill}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void Pill\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_pill_a85ee79b2713671d19be803d5999250a2}{type}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_pill_a85ee79b2713671d19be803d5999250a2}\label{struct_pill_a85ee79b2713671d19be803d5999250a2}} 
+\index{Pill@{Pill}!type@{type}}
+\index{type@{type}!Pill@{Pill}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{struct_pill_a541adada380f2ffdc6aae0636423d114}{Pill\+::\+Pill\+Type}} Pill\+::type}
+
+
+
+Referenced by \mbox{\hyperlink{struct_pill_aa6e10e02d49a8df3598a940a12b648d8}{init()}}, \mbox{\hyperlink{struct_pill_a1845531ad3711bfe9584ca2825979400}{model()}}, and \mbox{\hyperlink{struct_pill_ae7523079b9c6599723a06760356c0f62}{serialize()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{item_8h}{item.\+h}}\end{DoxyCompactItemize}

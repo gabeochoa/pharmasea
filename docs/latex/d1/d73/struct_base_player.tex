@@ -1,0 +1,332 @@
+\hypertarget{struct_base_player}{}\doxysection{Base\+Player Struct Reference}
+\label{struct_base_player}\index{BasePlayer@{BasePlayer}}
+
+
+{\ttfamily \#include $<$base\+\_\+player.\+h$>$}
+
+Inheritance diagram for Base\+Player\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{d1/d73/struct_base_player}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_base_player_acf897471692916ac64d8e8ece7374772}{Base\+Player}} (vec3 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\item 
+\mbox{\hyperlink{struct_base_player_a5131b41be282ffda6a13ff756664271e}{Base\+Player}} (vec2 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\item 
+\mbox{\hyperlink{struct_base_player_af7f71c11f442842588eac5db21e10e23}{Base\+Player}} ()
+\item 
+\mbox{\hyperlink{struct_base_player_a685a37d11666ee2f2b6a320c84fcdaef}{Base\+Player}} (vec2 location)
+\item 
+virtual float \mbox{\hyperlink{struct_base_player_a74f4c25ae6b77e6c29626eaeb63b6b69}{base\+\_\+speed}} () override
+\item 
+virtual vec3 \mbox{\hyperlink{struct_base_player_ac7cc5d9ce27914df418176b5593ecdac}{update\+\_\+xaxis\+\_\+position}} (float dt) override=0
+\item 
+virtual vec3 \mbox{\hyperlink{struct_base_player_ab3fcf3cbe32d97ef9fa465c4d69a50aa}{update\+\_\+zaxis\+\_\+position}} (float dt) override=0
+\item 
+void \mbox{\hyperlink{struct_base_player_a154471c0d1293bd2df5fdb355e76b5ff}{highlight\+\_\+facing\+\_\+furniture}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_base_player_af6340fba709d11dc11495766df5dcb05}{planning\+\_\+update}} (float dt) override
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_person}{Person}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_person_aff739251b706191cb573969740a43e67}{Person}} (vec3 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\item 
+\mbox{\hyperlink{struct_person_a9ff519f2d28ed9ca8674b1a1e3540577}{Person}} (vec2 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\item 
+\mbox{\hyperlink{struct_person_a598162c372fd3703cd456ce2d31ced11}{Person}} (vec3 p, Color c)
+\item 
+\mbox{\hyperlink{struct_person_a96012bcb85ddaa7c6f290db275bcd86d}{Person}} (vec2 p, Color c)
+\item 
+virtual vec3 \mbox{\hyperlink{struct_person_a0fefe392ef54377872ea4270202b0ecb}{update\+\_\+xaxis\+\_\+position}} (float dt)=0
+\item 
+virtual vec3 \mbox{\hyperlink{struct_person_a134feac9c4147ecb2411ff7a4a51a100}{update\+\_\+zaxis\+\_\+position}} (float dt)=0
+\item 
+virtual float \mbox{\hyperlink{struct_person_a3ece53b2b9de0628514cb3cc14efa112}{base\+\_\+speed}} ()
+\item 
+virtual vec3 \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}} () const override
+\item 
+void \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\+\_\+next\+\_\+character\+\_\+model}} ()
+\item 
+virtual std\+::optional$<$ Model\+Info $>$ \mbox{\hyperlink{struct_person_aa9f59abcc030fcd0ecb1323ac8f2a4aa}{model}} () const override
+\item 
+void \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{handle\+\_\+collision}} (int facedir\+\_\+x, vec3 new\+\_\+pos\+\_\+x, int facedir\+\_\+z, vec3 new\+\_\+pos\+\_\+z)
+\item 
+std\+::tuple$<$ int, int $>$ \mbox{\hyperlink{struct_person_a0438d8fd551998f95723320ede130f44}{get\+\_\+face\+\_\+direction}} (vec3 new\+\_\+pos\+\_\+x, vec3 new\+\_\+pos\+\_\+z)
+\item 
+void \mbox{\hyperlink{struct_person_a5037af23d2d1d1e710a9418ecc1207d8}{update\+\_\+facing\+\_\+direction}} (int facedir\+\_\+x, int facedir\+\_\+z)
+\item 
+virtual void \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{always\+\_\+update}} (float dt) override
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} \mbox{\hyperlink{struct_entity_aa279f81f1d6c0e63a9724310a981250f}{offset\+Face\+Direction}} (\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} starting\+Direction, float offset) const
+\item 
+\mbox{\hyperlink{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}{Entity}} (vec3 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\item 
+\mbox{\hyperlink{struct_entity_a69970748dae094cbca81f77a82c1ae66}{Entity}} (vec2 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\item 
+\mbox{\hyperlink{struct_entity_abed77744bbc522e364be6fc2ab1792ac}{Entity}} (vec3 p, Color c)
+\item 
+\mbox{\hyperlink{struct_entity_add145c7ad5ec1aca28429a337ca48304}{Entity}} (vec2 p, Color c)
+\item 
+virtual \mbox{\hyperlink{struct_entity_a588098978eea6a3486b7361605ff3f0f}{$\sim$\+Entity}} ()
+\item 
+void \mbox{\hyperlink{struct_entity_af8740cbb0b094e46c3b768b7b1a33b59}{update\+\_\+name}} (const std\+::string \&new\+\_\+name)
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_abac7c61d12e2b5c85d8a8b468a727797}{can\+\_\+take\+\_\+item\+\_\+from}} () const
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}} (Bounding\+Box b) const
+\item 
+virtual Bounding\+Box \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}{update\+\_\+position}} (const vec3 \&p)
+\item 
+void \mbox{\hyperlink{struct_entity_ad0bf9cef410758f173d4b376b1df631f}{rotate\+\_\+facing\+\_\+clockwise}} ()
+\item 
+virtual vec2 \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\+\_\+infront}} (int distance)
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_a489fd7ead99634ebb6c707263598df81}{add\+\_\+to\+\_\+navmesh}} ()
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{is\+\_\+collidable}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a48efb563c821424fd1a97efcc211cfd8}{on\+\_\+pickup}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\+\_\+drop}} (vec3 location)
+\item 
+virtual void \mbox{\hyperlink{struct_entity_adab1628044c63c07d189d44b411046a3}{render}} () const final
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update}} (float dt) final
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{struct_base_player_a3de8f1c4fa3997abec573158ffb79f00}{player\+\_\+reach}} = 1.\+25f
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_furniture}{Furniture}} $>$ \mbox{\hyperlink{struct_base_player_a542218751287e21d890949f68d2f0141}{held\+\_\+furniture}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
+\begin{DoxyCompactItemize}
+\item 
+const std\+::map$<$ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}}, float $>$ \mbox{\hyperlink{struct_entity_a1d00ed121b7125c7e18506deda3c9c38}{Front\+Face\+Direction\+Map}}
+\item 
+const std\+::map$<$ int, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} $>$ \mbox{\hyperlink{struct_entity_ace4a615925528f48d995ce9443506a4d}{Direction\+To\+Front\+Face\+Map}}
+\item 
+int \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}
+\item 
+vec3 \mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\+\_\+position}}
+\item 
+vec3 \mbox{\hyperlink{struct_entity_a71e5d4cf6ae2c20d9227dd55c017d797}{prev\+\_\+position}}
+\item 
+vec3 \mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}}
+\item 
+vec3 \mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\+\_\+force}} \{0.\+0, 0.\+0, 0.\+0\}
+\item 
+Color \mbox{\hyperlink{struct_entity_aceb6290fec072176cef25608188042ed}{face\+\_\+color}}
+\item 
+Color \mbox{\hyperlink{struct_entity_a3978918d89c7165bb86cffb14d55b442}{base\+\_\+color}}
+\item 
+bool \mbox{\hyperlink{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}{cleanup}} = false
+\item 
+bool \mbox{\hyperlink{struct_entity_ad9ba4b65cc992e4bab6da5ce023e41e6}{is\+\_\+highlighted}} = false
+\item 
+bool \mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\+\_\+held}} = false
+\item 
+\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} \mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\+\_\+direction}} = \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{Front\+Face\+Direction\+::\+FORWARD}}
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \mbox{\hyperlink{struct_entity_a851369e74ee7fc64c3a304875cbdc9f2}{held\+\_\+item}} = nullptr
+\item 
+int \mbox{\hyperlink{struct_entity_aed6000bd2aef3497277d23deb1f1554f}{name\+\_\+length}} = 1
+\item 
+std\+::string \mbox{\hyperlink{struct_entity_a931b21fbdebb1a5963b4bcab5df128f5}{name}} = \char`\"{}\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+\doxysubsubsection*{Public Types inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} \{ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FORWARD}} = 0x1
+, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{RIGHT}} = 0x2
+, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{BACK}} = 0x4
+, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{LEFT}} = 0x8
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
+\begin{DoxyCompactItemize}
+\item 
+static vec2 \mbox{\hyperlink{struct_entity_af454ca504cbb7f3549cc206263895b51}{tile\+\_\+infront\+\_\+given\+\_\+pos}} (vec2 tile, int distance, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} direction)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions inherited from \mbox{\hyperlink{struct_person}{Person}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_person_a0397c6f89fafc12e738923f612bc41a3}{Person}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_entity_a980f368aa07ce358583982821533a54a}{Entity}} ()
+\item 
+virtual vec3 \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}} () const
+\item 
+virtual Bounding\+Box \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\+\_\+bounds}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a66588b42f69ce15038bd149605a16fc2}{render\+\_\+debug\+\_\+mode}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a8aa106da3c2e49952d46fe6413d06d37}{render\+\_\+highlighted}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a4f5def0fc8ea405ab385a65018046168}{render\+\_\+floating\+\_\+name}} () const
+\item 
+virtual std\+::optional$<$ Model\+Info $>$ \mbox{\hyperlink{struct_entity_abe393fa333d9f5eadcc99b0a959539d4}{model}} () const
+\item 
+vec3 \mbox{\hyperlink{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}{snap\+\_\+position}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{update\+\_\+held\+\_\+item\+\_\+position}} ()
+\item 
+virtual vec2 \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{turn\+\_\+to\+\_\+face\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$target)
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update}} (float)
+\item 
+virtual void \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{planning\+\_\+update}} (float)
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\+\_\+round\+\_\+update}} (float)
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_af864202a00a448f2b30e7b5634e5c490}{is\+\_\+snappable}} ()
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}{can\+\_\+place\+\_\+item\+\_\+into}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$=nullptr)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_base_player_acf897471692916ac64d8e8ece7374772}\label{struct_base_player_acf897471692916ac64d8e8ece7374772}} 
+\index{BasePlayer@{BasePlayer}!BasePlayer@{BasePlayer}}
+\index{BasePlayer@{BasePlayer}!BasePlayer@{BasePlayer}}
+\doxysubsubsection{\texorpdfstring{BasePlayer()}{BasePlayer()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily Base\+Player\+::\+Base\+Player (\begin{DoxyParamCaption}\item[{vec3}]{p,  }\item[{Color}]{face\+\_\+color\+\_\+in,  }\item[{Color}]{base\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_base_player_a5131b41be282ffda6a13ff756664271e}\label{struct_base_player_a5131b41be282ffda6a13ff756664271e}} 
+\index{BasePlayer@{BasePlayer}!BasePlayer@{BasePlayer}}
+\index{BasePlayer@{BasePlayer}!BasePlayer@{BasePlayer}}
+\doxysubsubsection{\texorpdfstring{BasePlayer()}{BasePlayer()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily Base\+Player\+::\+Base\+Player (\begin{DoxyParamCaption}\item[{vec2}]{p,  }\item[{Color}]{face\+\_\+color\+\_\+in,  }\item[{Color}]{base\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_base_player_af7f71c11f442842588eac5db21e10e23}\label{struct_base_player_af7f71c11f442842588eac5db21e10e23}} 
+\index{BasePlayer@{BasePlayer}!BasePlayer@{BasePlayer}}
+\index{BasePlayer@{BasePlayer}!BasePlayer@{BasePlayer}}
+\doxysubsubsection{\texorpdfstring{BasePlayer()}{BasePlayer()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily Base\+Player\+::\+Base\+Player (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_base_player_a685a37d11666ee2f2b6a320c84fcdaef}\label{struct_base_player_a685a37d11666ee2f2b6a320c84fcdaef}} 
+\index{BasePlayer@{BasePlayer}!BasePlayer@{BasePlayer}}
+\index{BasePlayer@{BasePlayer}!BasePlayer@{BasePlayer}}
+\doxysubsubsection{\texorpdfstring{BasePlayer()}{BasePlayer()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily Base\+Player\+::\+Base\+Player (\begin{DoxyParamCaption}\item[{vec2}]{location }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_base_player_a74f4c25ae6b77e6c29626eaeb63b6b69}\label{struct_base_player_a74f4c25ae6b77e6c29626eaeb63b6b69}} 
+\index{BasePlayer@{BasePlayer}!base\_speed@{base\_speed}}
+\index{base\_speed@{base\_speed}!BasePlayer@{BasePlayer}}
+\doxysubsubsection{\texorpdfstring{base\_speed()}{base\_speed()}}
+{\footnotesize\ttfamily virtual float Base\+Player\+::base\+\_\+speed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_person_a3ece53b2b9de0628514cb3cc14efa112}{Person}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_player_a5bcdf490604929a7ba3b018c8556228b}{Player\+::get\+\_\+position\+\_\+after\+\_\+input()}}.
+
+\mbox{\Hypertarget{struct_base_player_a154471c0d1293bd2df5fdb355e76b5ff}\label{struct_base_player_a154471c0d1293bd2df5fdb355e76b5ff}} 
+\index{BasePlayer@{BasePlayer}!highlight\_facing\_furniture@{highlight\_facing\_furniture}}
+\index{highlight\_facing\_furniture@{highlight\_facing\_furniture}!BasePlayer@{BasePlayer}}
+\doxysubsubsection{\texorpdfstring{highlight\_facing\_furniture()}{highlight\_facing\_furniture()}}
+{\footnotesize\ttfamily void Base\+Player\+::highlight\+\_\+facing\+\_\+furniture (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{Entity\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{Entity\+::position}}, and \mbox{\hyperlink{namespacevec_aa79cdef251ee2f487b55dba93ad63ea0}{vec\+::to2()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_base_player_af6340fba709d11dc11495766df5dcb05}{planning\+\_\+update()}}.
+
+\mbox{\Hypertarget{struct_base_player_af6340fba709d11dc11495766df5dcb05}\label{struct_base_player_af6340fba709d11dc11495766df5dcb05}} 
+\index{BasePlayer@{BasePlayer}!planning\_update@{planning\_update}}
+\index{planning\_update@{planning\_update}!BasePlayer@{BasePlayer}}
+\doxysubsubsection{\texorpdfstring{planning\_update()}{planning\_update()}}
+{\footnotesize\ttfamily virtual void Base\+Player\+::planning\+\_\+update (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{Entity}}.
+
+
+
+References \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{Entity\+::\+BACK}}, \mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{Entity\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{Entity\+::\+FORWARD}}, \mbox{\hyperlink{struct_base_player_a542218751287e21d890949f68d2f0141}{held\+\_\+furniture}}, \mbox{\hyperlink{struct_base_player_a154471c0d1293bd2df5fdb355e76b5ff}{highlight\+\_\+facing\+\_\+furniture()}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{Entity\+::\+LEFT}}, \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{Entity\+::planning\+\_\+update()}}, \mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{Entity\+::position}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{Entity\+::\+RIGHT}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+
+\mbox{\Hypertarget{struct_base_player_ac7cc5d9ce27914df418176b5593ecdac}\label{struct_base_player_ac7cc5d9ce27914df418176b5593ecdac}} 
+\index{BasePlayer@{BasePlayer}!update\_xaxis\_position@{update\_xaxis\_position}}
+\index{update\_xaxis\_position@{update\_xaxis\_position}!BasePlayer@{BasePlayer}}
+\doxysubsubsection{\texorpdfstring{update\_xaxis\_position()}{update\_xaxis\_position()}}
+{\footnotesize\ttfamily virtual vec3 Base\+Player\+::update\+\_\+xaxis\+\_\+position (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [pure virtual]}}
+
+
+
+Implements \mbox{\hyperlink{struct_person_a0fefe392ef54377872ea4270202b0ecb}{Person}}.
+
+
+
+Implemented in \mbox{\hyperlink{struct_player_a754673edaad609f0dc3ea8d8383339e6}{Player}}, and \mbox{\hyperlink{struct_remote_player_a378b49ed2949cee4d48b3651963e311a}{Remote\+Player}}.
+
+\mbox{\Hypertarget{struct_base_player_ab3fcf3cbe32d97ef9fa465c4d69a50aa}\label{struct_base_player_ab3fcf3cbe32d97ef9fa465c4d69a50aa}} 
+\index{BasePlayer@{BasePlayer}!update\_zaxis\_position@{update\_zaxis\_position}}
+\index{update\_zaxis\_position@{update\_zaxis\_position}!BasePlayer@{BasePlayer}}
+\doxysubsubsection{\texorpdfstring{update\_zaxis\_position()}{update\_zaxis\_position()}}
+{\footnotesize\ttfamily virtual vec3 Base\+Player\+::update\+\_\+zaxis\+\_\+position (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [pure virtual]}}
+
+
+
+Implements \mbox{\hyperlink{struct_person_a134feac9c4147ecb2411ff7a4a51a100}{Person}}.
+
+
+
+Implemented in \mbox{\hyperlink{struct_player_aaae0a725ba6431cb4e7534b460e8a593}{Player}}, and \mbox{\hyperlink{struct_remote_player_a63474776872d8eb9b25c94cac93c7e54}{Remote\+Player}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_base_player_a542218751287e21d890949f68d2f0141}\label{struct_base_player_a542218751287e21d890949f68d2f0141}} 
+\index{BasePlayer@{BasePlayer}!held\_furniture@{held\_furniture}}
+\index{held\_furniture@{held\_furniture}!BasePlayer@{BasePlayer}}
+\doxysubsubsection{\texorpdfstring{held\_furniture}{held\_furniture}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_furniture}{Furniture}}$>$ Base\+Player\+::held\+\_\+furniture}
+
+
+
+Referenced by \mbox{\hyperlink{struct_player_aed722c64fe7a62d9abeb8673f539a443}{Player\+::handle\+\_\+in\+\_\+planning\+\_\+grab\+\_\+or\+\_\+drop()}}, and \mbox{\hyperlink{struct_base_player_af6340fba709d11dc11495766df5dcb05}{planning\+\_\+update()}}.
+
+\mbox{\Hypertarget{struct_base_player_a3de8f1c4fa3997abec573158ffb79f00}\label{struct_base_player_a3de8f1c4fa3997abec573158ffb79f00}} 
+\index{BasePlayer@{BasePlayer}!player\_reach@{player\_reach}}
+\index{player\_reach@{player\_reach}!BasePlayer@{BasePlayer}}
+\doxysubsubsection{\texorpdfstring{player\_reach}{player\_reach}}
+{\footnotesize\ttfamily float Base\+Player\+::player\+\_\+reach = 1.\+25f}
+
+
+
+Referenced by \mbox{\hyperlink{struct_player_a12f2b3445a9b57a5f5b0bdb84d2d14b2}{Player\+::handle\+\_\+in\+\_\+game\+\_\+grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{struct_player_aed722c64fe7a62d9abeb8673f539a443}{Player\+::handle\+\_\+in\+\_\+planning\+\_\+grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{struct_player_ab4cc812de3c497ba1e8699376379dcef}{Player\+::rotate\+\_\+furniture()}}, and \mbox{\hyperlink{struct_player_ac1318fd5b7ce7c808a09ef95611280b5}{Player\+::work\+\_\+furniture()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{base__player_8h}{base\+\_\+player.\+h}}\end{DoxyCompactItemize}

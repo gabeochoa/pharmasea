@@ -1,0 +1,140 @@
+\hypertarget{struct_base_pause_layer}{}\doxysection{Base\+Pause\+Layer Struct Reference}
+\label{struct_base_pause_layer}\index{BasePauseLayer@{BasePauseLayer}}
+
+
+{\ttfamily \#include $<$pauselayer.\+h$>$}
+
+Inheritance diagram for Base\+Pause\+Layer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{d9/de2/struct_base_pause_layer}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_base_pause_layer_ab68826cffc40717c3e7cedb1ca901f70}{Base\+Pause\+Layer}} (const char $\ast$name, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} e\+\_\+state)
+\item 
+virtual \mbox{\hyperlink{struct_base_pause_layer_a98c129f44654debafcc00dd6d7e3493b}{$\sim$\+Base\+Pause\+Layer}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_base_pause_layer_ae0bb9bc25bb38fc892b07b9f85942da1}{on\+Event}} (Event \&event) override
+\item 
+bool \mbox{\hyperlink{struct_base_pause_layer_af81774e738d01c50c60eb021252df5c7}{on\+Gamepad\+Button\+Pressed}} (Gamepad\+Button\+Pressed\+Event \&event)
+\item 
+bool \mbox{\hyperlink{struct_base_pause_layer_a770bf172af8af3749288f7f7c7117bf4}{on\+Key\+Pressed}} (Key\+Pressed\+Event \&event)
+\item 
+virtual void \mbox{\hyperlink{struct_base_pause_layer_a424d1208f560017a082dc9e2e3bf3893}{on\+Update}} (float) override
+\item 
+virtual void \mbox{\hyperlink{struct_base_pause_layer_a4e0a9b326bdf0178083d2c4ed14b89bb}{on\+Draw}} (float dt) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ ui\+::\+UIContext $>$ \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\+\_\+context}}
+\item 
+\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} \mbox{\hyperlink{struct_base_pause_layer_a1b6e1b7aa8a403ac03e0ad5da5f198fa}{enabled\+\_\+state}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_base_pause_layer_ab68826cffc40717c3e7cedb1ca901f70}\label{struct_base_pause_layer_ab68826cffc40717c3e7cedb1ca901f70}} 
+\index{BasePauseLayer@{BasePauseLayer}!BasePauseLayer@{BasePauseLayer}}
+\index{BasePauseLayer@{BasePauseLayer}!BasePauseLayer@{BasePauseLayer}}
+\doxysubsubsection{\texorpdfstring{BasePauseLayer()}{BasePauseLayer()}}
+{\footnotesize\ttfamily Base\+Pause\+Layer\+::\+Base\+Pause\+Layer (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}}}]{e\+\_\+state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\+\_\+context}}.
+
+\mbox{\Hypertarget{struct_base_pause_layer_a98c129f44654debafcc00dd6d7e3493b}\label{struct_base_pause_layer_a98c129f44654debafcc00dd6d7e3493b}} 
+\index{BasePauseLayer@{BasePauseLayer}!````~BasePauseLayer@{$\sim$BasePauseLayer}}
+\index{````~BasePauseLayer@{$\sim$BasePauseLayer}!BasePauseLayer@{BasePauseLayer}}
+\doxysubsubsection{\texorpdfstring{$\sim$BasePauseLayer()}{~BasePauseLayer()}}
+{\footnotesize\ttfamily virtual Base\+Pause\+Layer\+::$\sim$\+Base\+Pause\+Layer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_base_pause_layer_a4e0a9b326bdf0178083d2c4ed14b89bb}\label{struct_base_pause_layer_a4e0a9b326bdf0178083d2c4ed14b89bb}} 
+\index{BasePauseLayer@{BasePauseLayer}!onDraw@{onDraw}}
+\index{onDraw@{onDraw}!BasePauseLayer@{BasePauseLayer}}
+\doxysubsubsection{\texorpdfstring{onDraw()}{onDraw()}}
+{\footnotesize\ttfamily virtual void Base\+Pause\+Layer\+::on\+Draw (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_base_pause_layer_a1b6e1b7aa8a403ac03e0ad5da5f198fa}{enabled\+\_\+state}}, \mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{Menu\+State\+::s\+\_\+in\+\_\+game()}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu\+::\+Settings}}, and \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\+\_\+context}}.
+
+\mbox{\Hypertarget{struct_base_pause_layer_ae0bb9bc25bb38fc892b07b9f85942da1}\label{struct_base_pause_layer_ae0bb9bc25bb38fc892b07b9f85942da1}} 
+\index{BasePauseLayer@{BasePauseLayer}!onEvent@{onEvent}}
+\index{onEvent@{onEvent}!BasePauseLayer@{BasePauseLayer}}
+\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
+{\footnotesize\ttfamily virtual void Base\+Pause\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_base_pause_layer_a1b6e1b7aa8a403ac03e0ad5da5f198fa}{enabled\+\_\+state}}, \mbox{\hyperlink{struct_base_pause_layer_af81774e738d01c50c60eb021252df5c7}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_base_pause_layer_a770bf172af8af3749288f7f7c7117bf4}{on\+Key\+Pressed()}}.
+
+\mbox{\Hypertarget{struct_base_pause_layer_af81774e738d01c50c60eb021252df5c7}\label{struct_base_pause_layer_af81774e738d01c50c60eb021252df5c7}} 
+\index{BasePauseLayer@{BasePauseLayer}!onGamepadButtonPressed@{onGamepadButtonPressed}}
+\index{onGamepadButtonPressed@{onGamepadButtonPressed}!BasePauseLayer@{BasePauseLayer}}
+\doxysubsubsection{\texorpdfstring{onGamepadButtonPressed()}{onGamepadButtonPressed()}}
+{\footnotesize\ttfamily bool Base\+Pause\+Layer\+::on\+Gamepad\+Button\+Pressed (\begin{DoxyParamCaption}\item[{Gamepad\+Button\+Pressed\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, and \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_base_pause_layer_ae0bb9bc25bb38fc892b07b9f85942da1}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_base_pause_layer_a770bf172af8af3749288f7f7c7117bf4}\label{struct_base_pause_layer_a770bf172af8af3749288f7f7c7117bf4}} 
+\index{BasePauseLayer@{BasePauseLayer}!onKeyPressed@{onKeyPressed}}
+\index{onKeyPressed@{onKeyPressed}!BasePauseLayer@{BasePauseLayer}}
+\doxysubsubsection{\texorpdfstring{onKeyPressed()}{onKeyPressed()}}
+{\footnotesize\ttfamily bool Base\+Pause\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{Key\+Pressed\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, and \mbox{\hyperlink{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_base_pause_layer_ae0bb9bc25bb38fc892b07b9f85942da1}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_base_pause_layer_a424d1208f560017a082dc9e2e3bf3893}\label{struct_base_pause_layer_a424d1208f560017a082dc9e2e3bf3893}} 
+\index{BasePauseLayer@{BasePauseLayer}!onUpdate@{onUpdate}}
+\index{onUpdate@{onUpdate}!BasePauseLayer@{BasePauseLayer}}
+\doxysubsubsection{\texorpdfstring{onUpdate()}{onUpdate()}}
+{\footnotesize\ttfamily virtual void Base\+Pause\+Layer\+::on\+Update (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_base_pause_layer_a1b6e1b7aa8a403ac03e0ad5da5f198fa}\label{struct_base_pause_layer_a1b6e1b7aa8a403ac03e0ad5da5f198fa}} 
+\index{BasePauseLayer@{BasePauseLayer}!enabled\_state@{enabled\_state}}
+\index{enabled\_state@{enabled\_state}!BasePauseLayer@{BasePauseLayer}}
+\doxysubsubsection{\texorpdfstring{enabled\_state}{enabled\_state}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} Base\+Pause\+Layer\+::enabled\+\_\+state}
+
+
+
+Referenced by \mbox{\hyperlink{struct_base_pause_layer_a4e0a9b326bdf0178083d2c4ed14b89bb}{on\+Draw()}}, and \mbox{\hyperlink{struct_base_pause_layer_ae0bb9bc25bb38fc892b07b9f85942da1}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}\label{struct_base_pause_layer_a1af3493f95f51f5f0702fdf1c723c129}} 
+\index{BasePauseLayer@{BasePauseLayer}!ui\_context@{ui\_context}}
+\index{ui\_context@{ui\_context}!BasePauseLayer@{BasePauseLayer}}
+\doxysubsubsection{\texorpdfstring{ui\_context}{ui\_context}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ui\+::\+UIContext$>$ Base\+Pause\+Layer\+::ui\+\_\+context}
+
+
+
+Referenced by \mbox{\hyperlink{struct_base_pause_layer_ab68826cffc40717c3e7cedb1ca901f70}{Base\+Pause\+Layer()}}, \mbox{\hyperlink{struct_base_pause_layer_a4e0a9b326bdf0178083d2c4ed14b89bb}{on\+Draw()}}, \mbox{\hyperlink{struct_base_pause_layer_af81774e738d01c50c60eb021252df5c7}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_base_pause_layer_a770bf172af8af3749288f7f7c7117bf4}{on\+Key\+Pressed()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{pauselayer_8h}{pauselayer.\+h}}\end{DoxyCompactItemize}

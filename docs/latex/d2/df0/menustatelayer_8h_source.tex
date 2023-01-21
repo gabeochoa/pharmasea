@@ -1,0 +1,31 @@
+\hypertarget{menustatelayer_8h_source}{}\doxysection{menustatelayer.\+h}
+\label{menustatelayer_8h_source}\index{src/menustatelayer.h@{src/menustatelayer.h}}
+\mbox{\hyperlink{menustatelayer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}engine/layer.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{preload_8h}{preload.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_menu_state_layer}{MenuStateLayer}}\ :\ \textcolor{keyword}{public}\ Layer\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \mbox{\hyperlink{struct_menu_state_layer_a821cf5f88cf75024b9770c28f49b849c}{MenuStateLayer}}()\ :\ Layer(\textcolor{stringliteral}{"{}MenuState"{}})\ \{\}}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_menu_state_layer_af10ea7adff63c7a5c960d466d7c476b5}{\string~MenuStateLayer}}()\ \{\}}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_menu_state_layer_a763265a061c3e9c2e42ca1c72513e4d1}{onEvent}}(Event\&)\textcolor{keyword}{\ override\ }\{\}}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_menu_state_layer_af3504b4a53f58b3a72a857de1db478f9}{onUpdate}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{\}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{comment}{//\ TODO\ better\ system\ for\ handling\ this\ kind\ of\ stuff}}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{comment}{//\ basically\ version\ kinda\ overlaps\ with\ this\ text....}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_menu_state_layer_afb16a823b9456eeefe0cf9c49e84be68}{onDraw}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ DrawTextEx(Preload::get().font,}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string(MenuState::get().tostring()).c\_str(),\ \{5,\ 20\},}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 20,\ 0,\ WHITE);}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ DrawTextEx(Preload::get().font,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string(GameState::get().tostring()).c\_str(),\ \{5,\ 50\},}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 20,\ 0,\ WHITE);}
+\DoxyCodeLine{00024\ \ \ \ \ \}}
+\DoxyCodeLine{00025\ \};}
+
+\end{DoxyCode}

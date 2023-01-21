@@ -1,0 +1,115 @@
+\hypertarget{struct_menu_state}{}\doxysection{Menu\+State Struct Reference}
+\label{struct_menu_state}\index{MenuState@{MenuState}}
+
+
+{\ttfamily \#include $<$statemanager.\+h$>$}
+
+Inheritance diagram for Menu\+State\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d4/d00/struct_menu_state}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_menu_state_ada110c34258c50a66b0b64298e574350}{default\+\_\+value}} () const override
+\item 
+bool \mbox{\hyperlink{struct_menu_state_aa04dabee8e19296896a98a031f554038}{is\+\_\+in\+\_\+menu}} () const
+\item 
+bool \mbox{\hyperlink{struct_menu_state_ab6722382bd51e1e1df704628a7e6081a}{in\+\_\+game}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_state_manager}{State\+Manager$<$ menu\+::\+State $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_state_manager_a20c79acff1c0a92ea4f753ee2334a1ba}{read}} () const
+\item 
+\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_state_manager_afe880671507f595b73a62debe9878ac1}{previous}} () const
+\item 
+\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_state_manager_a893d07632226a05e8c959d9d47ef171c}{go\+\_\+back}} ()
+\item 
+void \mbox{\hyperlink{struct_state_manager_aaf92826799dad41d0799674d66505049}{clear\+\_\+history}} ()
+\item 
+bool \mbox{\hyperlink{struct_state_manager_abb2367385952f160c2828340b5051357}{is}} (\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} s) const
+\item 
+bool \mbox{\hyperlink{struct_state_manager_a2d10fdc9f778421bda192135b38f21f2}{is\+\_\+not}} (\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} s) const
+\item 
+const std\+::string\+\_\+view \mbox{\hyperlink{struct_state_manager_a27d342e65c27a47dee4a03c8e9f2866e}{tostring}} () const
+\item 
+void \mbox{\hyperlink{struct_state_manager_aab97f85d1876c98911212c036583d65d}{set}} (\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} ns)
+\item 
+virtual \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_state_manager_a0146c68b8b1d6d4d5f8f39e5ba444a05}{default\+\_\+value}} () const=0
+\item 
+void \mbox{\hyperlink{struct_state_manager_a2366ee7429004cd58497c957376e39be}{reset}} ()
+\item 
+virtual \mbox{\hyperlink{struct_state_manager_a2d1e64fc776722b52f68d959e036243b}{$\sim$\+State\+Manager}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{s\+\_\+in\+\_\+game}} ()
+\item 
+static bool \mbox{\hyperlink{struct_menu_state_a03b78182ed7f3abc9557b88d12202259}{s\+\_\+is\+\_\+game}} (\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} ms)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_menu_state_ada110c34258c50a66b0b64298e574350}\label{struct_menu_state_ada110c34258c50a66b0b64298e574350}} 
+\index{MenuState@{MenuState}!default\_value@{default\_value}}
+\index{default\_value@{default\_value}!MenuState@{MenuState}}
+\doxysubsubsection{\texorpdfstring{default\_value()}{default\_value()}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} Menu\+State\+::default\+\_\+value (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{struct_state_manager_a0146c68b8b1d6d4d5f8f39e5ba444a05}{State\+Manager$<$ menu\+::\+State $>$}}.
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu\+::\+Root}}.
+
+\mbox{\Hypertarget{struct_menu_state_ab6722382bd51e1e1df704628a7e6081a}\label{struct_menu_state_ab6722382bd51e1e1df704628a7e6081a}} 
+\index{MenuState@{MenuState}!in\_game@{in\_game}}
+\index{in\_game@{in\_game}!MenuState@{MenuState}}
+\doxysubsubsection{\texorpdfstring{in\_game()}{in\_game()}}
+{\footnotesize\ttfamily bool Menu\+State\+::in\+\_\+game (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}.
+
+\mbox{\Hypertarget{struct_menu_state_aa04dabee8e19296896a98a031f554038}\label{struct_menu_state_aa04dabee8e19296896a98a031f554038}} 
+\index{MenuState@{MenuState}!is\_in\_menu@{is\_in\_menu}}
+\index{is\_in\_menu@{is\_in\_menu}!MenuState@{MenuState}}
+\doxysubsubsection{\texorpdfstring{is\_in\_menu()}{is\_in\_menu()}}
+{\footnotesize\ttfamily bool Menu\+State\+::is\+\_\+in\+\_\+menu (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}.
+
+\mbox{\Hypertarget{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}\label{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}} 
+\index{MenuState@{MenuState}!s\_in\_game@{s\_in\_game}}
+\index{s\_in\_game@{s\_in\_game}!MenuState@{MenuState}}
+\doxysubsubsection{\texorpdfstring{s\_in\_game()}{s\_in\_game()}}
+{\footnotesize\ttfamily static bool Menu\+State\+::s\+\_\+in\+\_\+game (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_debug_layer_a6a9d3570fdea06d94c2bdbc408abe358}{Game\+Debug\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_game_layer_ac93aed3c3aeeb92b41fd322d0ca926c5}{Game\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_base_pause_layer_a4e0a9b326bdf0178083d2c4ed14b89bb}{Base\+Pause\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_game_debug_layer_ab2e80b6c6333f12d5e900e784795e25e}{Game\+Debug\+Layer\+::on\+Event()}}, \mbox{\hyperlink{struct_game_layer_a0cb58f0bb55b154e6236df80fbe0eea0}{Game\+Layer\+::on\+Event()}}, \mbox{\hyperlink{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514cd}{Game\+Layer\+::on\+Update()}}, and \mbox{\hyperlink{struct_game_debug_layer_ad3730437d72b79624bb92d20f2055df3}{Game\+Debug\+Layer\+::on\+Update()}}.
+
+\mbox{\Hypertarget{struct_menu_state_a03b78182ed7f3abc9557b88d12202259}\label{struct_menu_state_a03b78182ed7f3abc9557b88d12202259}} 
+\index{MenuState@{MenuState}!s\_is\_game@{s\_is\_game}}
+\index{s\_is\_game@{s\_is\_game}!MenuState@{MenuState}}
+\doxysubsubsection{\texorpdfstring{s\_is\_game()}{s\_is\_game()}}
+{\footnotesize\ttfamily static bool Menu\+State\+::s\+\_\+is\+\_\+game (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}}}]{ms }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{statemanager_8h}{statemanager.\+h}}\end{DoxyCompactItemize}

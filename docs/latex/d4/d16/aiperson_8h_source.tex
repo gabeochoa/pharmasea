@@ -1,0 +1,250 @@
+\hypertarget{aiperson_8h_source}{}\doxysection{aiperson.\+h}
+\label{aiperson_8h_source}\index{src/aiperson.h@{src/aiperson.h}}
+\mbox{\hyperlink{aiperson_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}engine/astar.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}engine/globals\_register.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}engine/is\_server.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}engine/log.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}engine/sound\_library.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{entityhelper_8h}{entityhelper.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{job_8h}{job.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{person_8h}{person.h}}"{}}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_a_i_person}{AIPerson}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_person}{Person}}\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ std::stack<std::shared\_ptr<Job>>\ \mbox{\hyperlink{struct_a_i_person_a33222ae64f1de558afb17b3b4ed78773}{personal\_queue}};}
+\DoxyCodeLine{00018\ \ \ \ \ std::shared\_ptr<Job>\ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_ad62c3a32ab94d258196c115ac19cfd76}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Person>\{\});}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ things\ that\ need\ to\ be\ rendered,\ need\ to\ be\ serialized\ :)}}
+\DoxyCodeLine{00026\ \ \ \ \ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a6da62a57316320187312b91e8c6fa4f0}{AIPerson}}()\ :\ \mbox{\hyperlink{struct_person}{Person}}()\ \{\}}
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a55792e3979b5b2f3813690444c6adbe1}{AIPerson}}(vec3\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
+\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a79530f19bf2eb3d90984b6046156d4ec}{AIPerson}}(vec2\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
+\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a4c6c945ea61dfb3c98cb722d3766558e}{AIPerson}}(vec3\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ c)\ \{\}}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_ae4e13bbbe41ad3113211f87762d8d0ab}{AIPerson}}(vec2\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ c)\ \{\}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_a_i_person_a1d93482a63f44830687cf01f9368dccb}{base\_speed}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ 10.f;\ \}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\_mult}}()\ \{\ \textcolor{keywordflow}{return}\ 0.f;\ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_a0434c4873c2e4aa67b6b2cba2dc6ffcc}{render\_debug\_mode}}()\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a66588b42f69ce15038bd149605a16fc2}{Person::render\_debug\_mode}}();}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ doesnt\ work\ yet\ because\ job-\/>path\ is\ not\ serialized}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ box\_size\ =\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 10.f;}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}\ \&\&\ !\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>path.empty())\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ location\ :\ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>path)\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DrawCube(\mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec::to3}}(location),\ box\_size,\ box\_size,\ box\_size,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ BLUE);}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ are\ seeing\ issues\ where\ customers\ are\ getting\ stuck\ on\ corners}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{//\ when\ turning.\ Before\ I\ feel\ like\ they\ were\ able\ to\ slide\ but\ it\ seems}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//\ like\ not\ anymore?}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_a_i_person_a8a4a8251c55347bcf5e6d29a00d4d49a}{update\_xaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}\ ||\ !\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>local.has\_value())\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\_position}};}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ vec2\ tar\ =\ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>local.value();}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ speed\ =\ this-\/>\mbox{\hyperlink{struct_a_i_person_a1d93482a63f44830687cf01f9368dccb}{base\_speed}}()\ *\ dt;}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\_mult}}()\ !=\ 0)\ speed\ *=\ \mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\_mult}}();}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_x\ =\ this-\/>\mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\_position}};}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tar.x\ >\ this-\/>raw\_position.x)\ new\_pos\_x.x\ +=\ speed;}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tar.x\ <\ this-\/>raw\_position.x)\ new\_pos\_x.x\ -\/=\ speed;}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_pos\_x;}
+\DoxyCodeLine{00069\ \ \ \ \ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_a_i_person_a91edda78370012b664a50dc752dbf058}{update\_zaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}\ ||\ !\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>local.has\_value())\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\_position}};}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ vec2\ tar\ =\ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>local.value();}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ speed\ =\ this-\/>\mbox{\hyperlink{struct_a_i_person_a1d93482a63f44830687cf01f9368dccb}{base\_speed}}()\ *\ dt;}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\_mult}}()\ !=\ 0)\ speed\ *=\ \mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\_mult}}();}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_z\ =\ this-\/>\mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\_position}};}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tar.y\ >\ this-\/>raw\_position.z)\ new\_pos\_z.z\ +=\ speed;}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tar.y\ <\ this-\/>raw\_position.z)\ new\_pos\_z.z\ -\/=\ speed;}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_pos\_z;}
+\DoxyCodeLine{00084\ \ \ \ \ \}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job}{Job}}*\ \mbox{\hyperlink{struct_a_i_person_a3eb3356c4eabfa9a01173eab3218637f}{get\_wandering\_job}}()\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ cooldown\ so\ that\ not\ all\ time\ is\ spent\ here}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\_tries\ =\ 10;}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ range\ =\ 20;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ walkable\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 0;}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ vec2\ target;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (!walkable)\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ target\ =\ (vec2)\{1.f\ *\ randIn(-\/range,\ range),}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1.f\ *\ randIn(-\/range,\ range)\};}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ walkable\ =\ \mbox{\hyperlink{struct_entity_helper_a4d01c0a143c62ae572e5d4e9eb5711f0}{EntityHelper::isWalkable}}(target);}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ i++;}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ >\ max\_tries)\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ \mbox{\hyperlink{struct_job}{Job}}(\{.type\ =\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}},}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .start\ =\ \mbox{\hyperlink{namespacevec_aa79cdef251ee2f487b55dba93ad63ea0}{vec::to2}}(this-\/>\mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}}),}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .end\ =\ target\});}
+\DoxyCodeLine{00105\ \ \ \ \ \}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_a8c6ff5a85ad85ab65dfee6a619c0c4ec}{travel\_on\_path}}(vec2\ me)\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ did\ not\ arrive}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>path.empty())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Grab\ next\ local\ point\ to\ go\ to}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>local.has\_value())\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>local\ =\ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>path.front();}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>path.pop\_front();}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Go\ to\ local\ point}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>local.value()\ ==\ me)\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>local.reset();}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ announce(fmt::format("{}reached\ local\ point\ \{\}\ :\ \{\}\ "{},\ me,}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ job-\/>path.size()));}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00122\ \ \ \ \ \}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_a_i_person_a44ae6683826615f6180660889676c491}{navigate\_to}}(vec2\ goal)\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ vec2\ me\ =\ \mbox{\hyperlink{namespacevec_aa79cdef251ee2f487b55dba93ad63ea0}{vec::to2}}(this-\/>\mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}});}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (me\ ==\ goal)\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ announce("{}reached\ goal"{});}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>path.empty())\ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>path\ =\ astar::find\_path(}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ me,\ goal,}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::bind(\mbox{\hyperlink{struct_entity_helper_a4d01c0a143c62ae572e5d4e9eb5711f0}{EntityHelper::isWalkable}},\ std::placeholders::\_1));}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ announce(fmt::format("{}generated\ path\ from\ \{\}\ to\ \{\}\ with\ \{\}}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ steps"{},\ me,\ goal,\ job-\/>path.size()));}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a8c6ff5a85ad85ab65dfee6a619c0c4ec}{travel\_on\_path}}(me);}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00139\ \ \ \ \ \}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_abef4c9ddde1feb6d83e7187877455584}{wandering}}()\ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>state)\ \{}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea223e06f5cb15fc701ea1e686f7934f4f}{Job::State::Initialize}}:\ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a610c4917727b87cb7f9a82af53399579}{announce}}(\textcolor{stringliteral}{"{}starting\ a\ new\ wandering\ job"{}});}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job::State::HeadingToStart}};}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job::State::HeadingToStart}}:\ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ arrived\ =\ \mbox{\hyperlink{struct_a_i_person_a44ae6683826615f6180660889676c491}{navigate\_to}}(\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>start);}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ cannot\ mutate\ this-\/>job\ inside\ navigate\ because\ the}}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ `job-\/>state`\ below\ will\ change\ the\ new\ job\ and\ not\ the\ old}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ one\ this\ foot-\/gun\ might\ be\ solvable\ by\ passing\ in\ the\ global}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ job\ to\ the\ job\ processing\ function,\ then\ it\ wont\ change\ until}}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ next\ call}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>path.size()\ ==\ 0)\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a33222ae64f1de558afb17b3b4ed78773}{personal\_queue}}.push(\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}});}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>job.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_job}{Job}}(\{}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}},}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}));}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>state\ =\ arrived\ ?\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{Job::State::WorkingAtStart}}}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job::State::HeadingToStart}};}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{Job::State::WorkingAtStart}}:\ \{}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}};}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}}:\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ arrived\ =\ \mbox{\hyperlink{struct_a_i_person_a44ae6683826615f6180660889676c491}{navigate\_to}}(\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>end);}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>state\ =\ arrived\ ?\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7}{Job::State::WorkingAtEnd}}}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}};}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7}{Job::State::WorkingAtEnd}}:\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}};}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}}:\ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}};}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00185\ \ \ \ \ \}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_a5710c2532f9031cd86c986a8ffef2aab}{get\_starting\_job}}()\ \{\ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}.reset(\mbox{\hyperlink{struct_a_i_person_a3eb3356c4eabfa9a01173eab3218637f}{get\_wandering\_job}}());\ \}}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_ad1c946a4db57102d0aaf2dfac4a0f16c}{get\_idle\_job}}()\ \{\ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}.reset(\mbox{\hyperlink{struct_a_i_person_a3eb3356c4eabfa9a01173eab3218637f}{get\_wandering\_job}}());\ \}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_a90cc4372573d28217c13b36ffed70a75}{find\_new\_job}}()\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_a_i_person_a33222ae64f1de558afb17b3b4ed78773}{personal\_queue}}.empty())\ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_ad1c946a4db57102d0aaf2dfac4a0f16c}{get\_idle\_job}}();}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}\ =\ \mbox{\hyperlink{struct_a_i_person_a33222ae64f1de558afb17b3b4ed78773}{personal\_queue}}.top();}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a33222ae64f1de558afb17b3b4ed78773}{personal\_queue}}.pop();}
+\DoxyCodeLine{00197\ \ \ \ \ \}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_a3d58d8cfda9f8e2317e30b1a354dc203}{process\_job}}(\textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>type)\ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}}:}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_abef4c9ddde1feb6d83e7187877455584}{wandering}}();}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00207\ \ \ \ \ \}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_a96ac966279b3fae533fb2cfb9533e820}{in\_round\_update}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((this-\/>\mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\_force}}.x\ !=\ 0.0f\ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ this-\/>pushed\_force.z\ !=\ 0.0f)\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \&\&\ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>job-\/>path.clear();}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>job-\/>local\ =\ \{\};}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ SoundLibrary::get().play(\textcolor{stringliteral}{"{}roblox"{}});}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{Person::in\_round\_update}}(dt);}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}})\ \{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a5710c2532f9031cd86c986a8ffef2aab}{get\_starting\_job}}();}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>state\ ==\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}})\ \{}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>on\_cleanup)\ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}-\/>on\_cleanup(\textcolor{keyword}{this},\ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}.get());}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a738b6d87c8ade5fc0ce35c361082d98a}{job}}.reset();}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a90cc4372573d28217c13b36ffed70a75}{find\_new\_job}}();}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a3d58d8cfda9f8e2317e30b1a354dc203}{process\_job}}(dt);}
+\DoxyCodeLine{00233\ \ \ \ \ \}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_a610c4917727b87cb7f9a82af53399579}{announce}}(std::string\ text)\ \{}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ have\ some\ way\ of\ distinguishing\ between\ server\ logs\ and\ regular}}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ client\ logs}}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_server())\ \{}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ log\_info(\textcolor{stringliteral}{"{}server:\ \{\}:\ \{\}"{}},\ this-\/>\textcolor{keywordtype}{id},\ text);}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00241\ \ \ \ \ \}}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_a_i_person_a7a34eb065642bd59056aa0ea727fed7e}{is\_snappable}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00244\ \};}
+
+\end{DoxyCode}

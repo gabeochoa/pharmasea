@@ -1,0 +1,72 @@
+\hypertarget{base__player_8h_source}{}\doxysection{base\+\_\+player.\+h}
+\label{base__player_8h_source}\index{src/base\_player.h@{src/base\_player.h}}
+\mbox{\hyperlink{base__player_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}raylib.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}engine/globals\_register.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}engine/keymap.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{person_8h}{person.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{furniture_8h}{furniture.h}}"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ TODO\ add\ more\ information\ on\ what\ the\ difference\ is\ between\ Person\ and}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ BasePlayer\ and\ Player}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_base_player}{BasePlayer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_person}{Person}}\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_base_player_a3de8f1c4fa3997abec573158ffb79f00}{player\_reach}}\ =\ 1.25f;}
+\DoxyCodeLine{00017\ \ \ \ \ std::shared\_ptr<Furniture>\ \mbox{\hyperlink{struct_base_player_a542218751287e21d890949f68d2f0141}{held\_furniture}};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{struct_base_player_acf897471692916ac64d8e8ece7374772}{BasePlayer}}(vec3\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
+\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{struct_base_player_a5131b41be282ffda6a13ff756664271e}{BasePlayer}}(vec2\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{struct_base_player_af7f71c11f442842588eac5db21e10e23}{BasePlayer}}()\ :\ \mbox{\hyperlink{struct_person}{Person}}(\{0,\ 0,\ 0\},\ ui::color::white,\ ui::color::white)\ \{\}}
+\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{struct_base_player_a685a37d11666ee2f2b6a320c84fcdaef}{BasePlayer}}(vec2\ location)}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(\{location.x,\ 0,\ location.y\},\ \{0,\ 255,\ 0,\ 255\},}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{255,\ 0,\ 0,\ 255\})\ \{\}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_base_player_a74f4c25ae6b77e6c29626eaeb63b6b69}{base\_speed}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ 7.5f;\ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_base_player_ac7cc5d9ce27914df418176b5593ecdac}{update\_xaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\ \textcolor{keyword}{override}\ =\ 0;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_base_player_ab3fcf3cbe32d97ef9fa465c4d69a50aa}{update\_zaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\ \textcolor{keyword}{override}\ =\ 0;}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_base_player_a154471c0d1293bd2df5fdb355e76b5ff}{highlight\_facing\_furniture}}()\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ is\ impossible\ to\ read,\ what\ can\ we\ do\ to\ fix\ this\ while}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ keeping\ it\ configurable}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ match\ =\ EntityHelper::getMatchingEntityInFront<Furniture>(}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacevec_aa79cdef251ee2f487b55dba93ad63ea0}{vec::to2}}(this-\/>\mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}}),\ player\_reach,\ this-\/>\mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\_direction}},}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ [](std::shared\_ptr<Furniture>)\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \});}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!match)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ match-\/>is\_highlighted\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00041\ \ \ \ \ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_base_player_af6340fba709d11dc11495766df5dcb05}{planning\_update}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{Person::planning\_update}}(dt);}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_base_player_a154471c0d1293bd2df5fdb355e76b5ff}{highlight\_facing\_furniture}}();}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ if\ cannot\ be\ placed\ in\ this\ spot\ make\ it\ obvious\ to\ the\ user}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_base_player_a542218751287e21d890949f68d2f0141}{held\_furniture}}\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\ =\ this-\/>\mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}};}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>\mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\_direction}}\ \&\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FrontFaceDirection::FORWARD}})\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_pos.z\ +=\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}};}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>\mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\_direction}}\ \&\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{FrontFaceDirection::RIGHT}})\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_pos.x\ +=\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}};}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>\mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\_direction}}\ \&\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{FrontFaceDirection::BACK}})\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_pos.z\ -\/=\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}};}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>\mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\_direction}}\ \&\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{FrontFaceDirection::LEFT}})\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_pos.x\ -\/=\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}};}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_base_player_a542218751287e21d890949f68d2f0141}{held\_furniture}}-\/>update\_position(new\_pos);}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \}}
+\DoxyCodeLine{00066\ \};}
+
+\end{DoxyCode}

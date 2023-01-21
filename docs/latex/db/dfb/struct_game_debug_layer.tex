@@ -1,0 +1,215 @@
+\hypertarget{struct_game_debug_layer}{}\doxysection{Game\+Debug\+Layer Struct Reference}
+\label{struct_game_debug_layer}\index{GameDebugLayer@{GameDebugLayer}}
+
+
+{\ttfamily \#include $<$gamedebuglayer.\+h$>$}
+
+Inheritance diagram for Game\+Debug\+Layer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{db/dfb/struct_game_debug_layer}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_game_debug_layer_a5a9d1c41ab2e61b4792409af19f6d463}{Game\+Debug\+Layer}} ()
+\item 
+virtual \mbox{\hyperlink{struct_game_debug_layer_a6b053cd611c544c4ac4783f21da4721c}{$\sim$\+Game\+Debug\+Layer}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_game_debug_layer_ab2e80b6c6333f12d5e900e784795e25e}{on\+Event}} (Event \&event) override
+\item 
+bool \mbox{\hyperlink{struct_game_debug_layer_ad43118850e1f82497e7f05b18e1bb139}{on\+Gamepad\+Axis\+Moved}} (Gamepad\+Axis\+Moved\+Event \&)
+\item 
+void \mbox{\hyperlink{struct_game_debug_layer_a9e336c722f2c4d11ad35491754a57e15}{toggle\+\_\+planning}} ()
+\item 
+bool \mbox{\hyperlink{struct_game_debug_layer_a1cce640d4f310a3364c0a5185ab62438}{on\+Gamepad\+Button\+Pressed}} (Gamepad\+Button\+Pressed\+Event \&event)
+\item 
+bool \mbox{\hyperlink{struct_game_debug_layer_ad78328056a1a212b6b8f974d367c836d}{on\+Key\+Pressed}} (Key\+Pressed\+Event \&event)
+\item 
+virtual void \mbox{\hyperlink{struct_game_debug_layer_ad3730437d72b79624bb92d20f2055df3}{on\+Update}} (float) override
+\item 
+virtual void \mbox{\hyperlink{struct_game_debug_layer_a6a9d3570fdea06d94c2bdbc408abe358}{on\+Draw}} (float dt) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\+\_\+ui\+\_\+enabled}} = false
+\item 
+bool \mbox{\hyperlink{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}{network\+\_\+ui\+\_\+enabled}} = false
+\item 
+std\+::shared\+\_\+ptr$<$ ui\+::\+UIContext $>$ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\+\_\+context}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_game_debug_layer_a15d4d728339945a68ed417c6789b9e9d}{draw\+\_\+all\+\_\+debug\+\_\+ui}} ()
+\item 
+void \mbox{\hyperlink{struct_game_debug_layer_ab6871e69ac7627526353f7f082a41a05}{debug\+\_\+ui}} (float dt)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_game_debug_layer_a5a9d1c41ab2e61b4792409af19f6d463}\label{struct_game_debug_layer_a5a9d1c41ab2e61b4792409af19f6d463}} 
+\index{GameDebugLayer@{GameDebugLayer}!GameDebugLayer@{GameDebugLayer}}
+\index{GameDebugLayer@{GameDebugLayer}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{GameDebugLayer()}{GameDebugLayer()}}
+{\footnotesize\ttfamily Game\+Debug\+Layer\+::\+Game\+Debug\+Layer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\+\_\+ui\+\_\+enabled}}, \mbox{\hyperlink{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}{network\+\_\+ui\+\_\+enabled}}, and \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\+\_\+context}}.
+
+\mbox{\Hypertarget{struct_game_debug_layer_a6b053cd611c544c4ac4783f21da4721c}\label{struct_game_debug_layer_a6b053cd611c544c4ac4783f21da4721c}} 
+\index{GameDebugLayer@{GameDebugLayer}!````~GameDebugLayer@{$\sim$GameDebugLayer}}
+\index{````~GameDebugLayer@{$\sim$GameDebugLayer}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{$\sim$GameDebugLayer()}{~GameDebugLayer()}}
+{\footnotesize\ttfamily virtual Game\+Debug\+Layer\+::$\sim$\+Game\+Debug\+Layer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_game_debug_layer_ab6871e69ac7627526353f7f082a41a05}\label{struct_game_debug_layer_ab6871e69ac7627526353f7f082a41a05}} 
+\index{GameDebugLayer@{GameDebugLayer}!debug\_ui@{debug\_ui}}
+\index{debug\_ui@{debug\_ui}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{debug\_ui()}{debug\_ui()}}
+{\footnotesize\ttfamily void Game\+Debug\+Layer\+::debug\+\_\+ui (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\+\_\+ui\+\_\+enabled}}, \mbox{\hyperlink{struct_game_debug_layer_a15d4d728339945a68ed417c6789b9e9d}{draw\+\_\+all\+\_\+debug\+\_\+ui()}}, and \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_debug_layer_a6a9d3570fdea06d94c2bdbc408abe358}{on\+Draw()}}.
+
+\mbox{\Hypertarget{struct_game_debug_layer_a15d4d728339945a68ed417c6789b9e9d}\label{struct_game_debug_layer_a15d4d728339945a68ed417c6789b9e9d}} 
+\index{GameDebugLayer@{GameDebugLayer}!draw\_all\_debug\_ui@{draw\_all\_debug\_ui}}
+\index{draw\_all\_debug\_ui@{draw\_all\_debug\_ui}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{draw\_all\_debug\_ui()}{draw\_all\_debug\_ui()}}
+{\footnotesize\ttfamily void Game\+Debug\+Layer\+::draw\+\_\+all\+\_\+debug\+\_\+ui (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_debug_layer_ab6871e69ac7627526353f7f082a41a05}{debug\+\_\+ui()}}.
+
+\mbox{\Hypertarget{struct_game_debug_layer_a6a9d3570fdea06d94c2bdbc408abe358}\label{struct_game_debug_layer_a6a9d3570fdea06d94c2bdbc408abe358}} 
+\index{GameDebugLayer@{GameDebugLayer}!onDraw@{onDraw}}
+\index{onDraw@{onDraw}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{onDraw()}{onDraw()}}
+{\footnotesize\ttfamily virtual void Game\+Debug\+Layer\+::on\+Draw (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_game_debug_layer_ab6871e69ac7627526353f7f082a41a05}{debug\+\_\+ui()}}, \mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\+\_\+ui\+\_\+enabled}}, \mbox{\hyperlink{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}{network\+\_\+ui\+\_\+enabled}}, and \mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{Menu\+State\+::s\+\_\+in\+\_\+game()}}.
+
+\mbox{\Hypertarget{struct_game_debug_layer_ab2e80b6c6333f12d5e900e784795e25e}\label{struct_game_debug_layer_ab2e80b6c6333f12d5e900e784795e25e}} 
+\index{GameDebugLayer@{GameDebugLayer}!onEvent@{onEvent}}
+\index{onEvent@{onEvent}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
+{\footnotesize\ttfamily virtual void Game\+Debug\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_game_debug_layer_ad43118850e1f82497e7f05b18e1bb139}{on\+Gamepad\+Axis\+Moved()}}, \mbox{\hyperlink{struct_game_debug_layer_a1cce640d4f310a3364c0a5185ab62438}{on\+Gamepad\+Button\+Pressed()}}, \mbox{\hyperlink{struct_game_debug_layer_ad78328056a1a212b6b8f974d367c836d}{on\+Key\+Pressed()}}, and \mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{Menu\+State\+::s\+\_\+in\+\_\+game()}}.
+
+\mbox{\Hypertarget{struct_game_debug_layer_ad43118850e1f82497e7f05b18e1bb139}\label{struct_game_debug_layer_ad43118850e1f82497e7f05b18e1bb139}} 
+\index{GameDebugLayer@{GameDebugLayer}!onGamepadAxisMoved@{onGamepadAxisMoved}}
+\index{onGamepadAxisMoved@{onGamepadAxisMoved}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{onGamepadAxisMoved()}{onGamepadAxisMoved()}}
+{\footnotesize\ttfamily bool Game\+Debug\+Layer\+::on\+Gamepad\+Axis\+Moved (\begin{DoxyParamCaption}\item[{Gamepad\+Axis\+Moved\+Event \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_debug_layer_ab2e80b6c6333f12d5e900e784795e25e}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_game_debug_layer_a1cce640d4f310a3364c0a5185ab62438}\label{struct_game_debug_layer_a1cce640d4f310a3364c0a5185ab62438}} 
+\index{GameDebugLayer@{GameDebugLayer}!onGamepadButtonPressed@{onGamepadButtonPressed}}
+\index{onGamepadButtonPressed@{onGamepadButtonPressed}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{onGamepadButtonPressed()}{onGamepadButtonPressed()}}
+{\footnotesize\ttfamily bool Game\+Debug\+Layer\+::on\+Gamepad\+Button\+Pressed (\begin{DoxyParamCaption}\item[{Gamepad\+Button\+Pressed\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\+\_\+ui\+\_\+enabled}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, \mbox{\hyperlink{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}{network\+\_\+ui\+\_\+enabled}}, \mbox{\hyperlink{struct_game_debug_layer_a9e336c722f2c4d11ad35491754a57e15}{toggle\+\_\+planning()}}, and \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_debug_layer_ab2e80b6c6333f12d5e900e784795e25e}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_game_debug_layer_ad78328056a1a212b6b8f974d367c836d}\label{struct_game_debug_layer_ad78328056a1a212b6b8f974d367c836d}} 
+\index{GameDebugLayer@{GameDebugLayer}!onKeyPressed@{onKeyPressed}}
+\index{onKeyPressed@{onKeyPressed}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{onKeyPressed()}{onKeyPressed()}}
+{\footnotesize\ttfamily bool Game\+Debug\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{Key\+Pressed\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\+\_\+ui\+\_\+enabled}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, \mbox{\hyperlink{struct_entity_helper_a6fef0ba4ee7eaf9d9933c7cacdbb617c}{Entity\+Helper\+::invalidate\+Path\+Cache()}}, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game\+::\+Lobby}}, \mbox{\hyperlink{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}{network\+\_\+ui\+\_\+enabled}}, \mbox{\hyperlink{struct_game_debug_layer_a9e336c722f2c4d11ad35491754a57e15}{toggle\+\_\+planning()}}, and \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_debug_layer_ab2e80b6c6333f12d5e900e784795e25e}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_game_debug_layer_ad3730437d72b79624bb92d20f2055df3}\label{struct_game_debug_layer_ad3730437d72b79624bb92d20f2055df3}} 
+\index{GameDebugLayer@{GameDebugLayer}!onUpdate@{onUpdate}}
+\index{onUpdate@{onUpdate}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{onUpdate()}{onUpdate()}}
+{\footnotesize\ttfamily virtual void Game\+Debug\+Layer\+::on\+Update (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{Menu\+State\+::s\+\_\+in\+\_\+game()}}.
+
+\mbox{\Hypertarget{struct_game_debug_layer_a9e336c722f2c4d11ad35491754a57e15}\label{struct_game_debug_layer_a9e336c722f2c4d11ad35491754a57e15}} 
+\index{GameDebugLayer@{GameDebugLayer}!toggle\_planning@{toggle\_planning}}
+\index{toggle\_planning@{toggle\_planning}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{toggle\_planning()}{toggle\_planning()}}
+{\footnotesize\ttfamily void Game\+Debug\+Layer\+::toggle\+\_\+planning (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_helper_a6fef0ba4ee7eaf9d9933c7cacdbb617c}{Entity\+Helper\+::invalidate\+Path\+Cache()}}, and \mbox{\hyperlink{struct_game_state_afe57b59bb7d55344195913ca91fbf586}{Game\+State\+::s\+\_\+toggle\+\_\+planning()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_debug_layer_a1cce640d4f310a3364c0a5185ab62438}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_game_debug_layer_ad78328056a1a212b6b8f974d367c836d}{on\+Key\+Pressed()}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}\label{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}} 
+\index{GameDebugLayer@{GameDebugLayer}!debug\_ui\_enabled@{debug\_ui\_enabled}}
+\index{debug\_ui\_enabled@{debug\_ui\_enabled}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{debug\_ui\_enabled}{debug\_ui\_enabled}}
+{\footnotesize\ttfamily bool Game\+Debug\+Layer\+::debug\+\_\+ui\+\_\+enabled = false}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_debug_layer_ab6871e69ac7627526353f7f082a41a05}{debug\+\_\+ui()}}, \mbox{\hyperlink{struct_game_debug_layer_a5a9d1c41ab2e61b4792409af19f6d463}{Game\+Debug\+Layer()}}, \mbox{\hyperlink{struct_game_debug_layer_a6a9d3570fdea06d94c2bdbc408abe358}{on\+Draw()}}, \mbox{\hyperlink{struct_game_debug_layer_a1cce640d4f310a3364c0a5185ab62438}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_game_debug_layer_ad78328056a1a212b6b8f974d367c836d}{on\+Key\+Pressed()}}.
+
+\mbox{\Hypertarget{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}\label{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}} 
+\index{GameDebugLayer@{GameDebugLayer}!network\_ui\_enabled@{network\_ui\_enabled}}
+\index{network\_ui\_enabled@{network\_ui\_enabled}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{network\_ui\_enabled}{network\_ui\_enabled}}
+{\footnotesize\ttfamily bool Game\+Debug\+Layer\+::network\+\_\+ui\+\_\+enabled = false}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_debug_layer_a5a9d1c41ab2e61b4792409af19f6d463}{Game\+Debug\+Layer()}}, \mbox{\hyperlink{struct_game_debug_layer_a6a9d3570fdea06d94c2bdbc408abe358}{on\+Draw()}}, \mbox{\hyperlink{struct_game_debug_layer_a1cce640d4f310a3364c0a5185ab62438}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_game_debug_layer_ad78328056a1a212b6b8f974d367c836d}{on\+Key\+Pressed()}}.
+
+\mbox{\Hypertarget{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}\label{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}} 
+\index{GameDebugLayer@{GameDebugLayer}!ui\_context@{ui\_context}}
+\index{ui\_context@{ui\_context}!GameDebugLayer@{GameDebugLayer}}
+\doxysubsubsection{\texorpdfstring{ui\_context}{ui\_context}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ui\+::\+UIContext$>$ Game\+Debug\+Layer\+::ui\+\_\+context}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_debug_layer_ab6871e69ac7627526353f7f082a41a05}{debug\+\_\+ui()}}, \mbox{\hyperlink{struct_game_debug_layer_a5a9d1c41ab2e61b4792409af19f6d463}{Game\+Debug\+Layer()}}, \mbox{\hyperlink{struct_game_debug_layer_a1cce640d4f310a3364c0a5185ab62438}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_game_debug_layer_ad78328056a1a212b6b8f974d367c836d}{on\+Key\+Pressed()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{gamedebuglayer_8h}{gamedebuglayer.\+h}}\end{DoxyCompactItemize}

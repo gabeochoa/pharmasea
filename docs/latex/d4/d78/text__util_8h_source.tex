@@ -1,0 +1,365 @@
+\hypertarget{text__util_8h_source}{}\doxysection{text\+\_\+util.\+h}
+\label{text__util_8h_source}\index{src/text\_util.h@{src/text\_util.h}}
+\mbox{\hyperlink{text__util_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceraylib}{raylib}}\ \{}
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ This\ code\ comes\ from\ Raylib\ examples\ (https://www.raylib.com/examples.html)}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ LETTER\_BOUNDRY\_SIZE\ 0.25f}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ TEXT\_MAX\_LAYERS\ 32}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ LETTER\_BOUNDRY\_COLOR\ VIOLET}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceraylib_a201c666d2877d6eabeafa095536c4131}{SHOW\_LETTER\_BOUNDRY}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00015\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespaceraylib_a89c9a7c28380a9b4c6434e1c37f44bdd}{SHOW\_TEXT\_BOUNDRY}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structraylib_1_1_wave_text_config}{WaveTextConfig}}\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ vec3\ \mbox{\hyperlink{structraylib_1_1_wave_text_config_a16d8b5ce500204c90bd474ff798a3f9d}{waveRange}};}
+\DoxyCodeLine{00019\ \ \ \ \ vec3\ \mbox{\hyperlink{structraylib_1_1_wave_text_config_a3ac36f7f3ee0186d2130188a92409bd5}{waveSpeed}};}
+\DoxyCodeLine{00020\ \ \ \ \ vec3\ \mbox{\hyperlink{structraylib_1_1_wave_text_config_a774353a50fade03663e6cb07f3cb3a7e}{waveOffset}};}
+\DoxyCodeLine{00021\ \}\ WaveTextConfig;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceraylib_abc5a61fc461e160abbf9e9458d38cbf9}{DrawTextCodepoint3D}}(Font\ font,\ \textcolor{keywordtype}{int}\ codepoint,\ vec3\ position,}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fontSize,\ \textcolor{keywordtype}{bool}\ backface,\ Color\ tint)\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{comment}{//\ Character\ index\ position\ in\ sprite\ font}}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ In\ case\ a\ codepoint\ is\ not\ available\ in\ the\ font,\ index\ returned}}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ points\ to\ '?'}}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{int}\ index\ =\ GetGlyphIndex(font,\ codepoint);}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{float}\ scale\ =\ fontSize\ /\ (float)\ font.baseSize;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{comment}{//\ Character\ destination\ rectangle\ on\ screen}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ We\ consider\ charsPadding\ on\ drawing}}
+\DoxyCodeLine{00033\ \ \ \ \ position.x\ +=\ (\textcolor{keywordtype}{float})\ (font.glyphs[index].offsetX\ -\/\ font.glyphPadding)\ /}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00035\ \ \ \ \ position.z\ +=\ (float)\ (font.glyphs[index].offsetY\ -\/\ font.glyphPadding)\ /}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (float)\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{//\ Character\ source\ rectangle\ from\ font\ texture\ atlas}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ We\ consider\ chars\ padding\ when\ drawing,\ it\ could\ be\ required\ for}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ outline/glow\ shader\ effects}}
+\DoxyCodeLine{00041\ \ \ \ \ Rectangle\ srcRec\ =\ \{font.recs[index].x\ -\/\ (\textcolor{keywordtype}{float})\ font.glyphPadding,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ font.recs[index].y\ -\/\ (float)\ font.glyphPadding,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ font.recs[index].width\ +\ 2.0f\ *\ font.glyphPadding,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ font.recs[index].height\ +\ 2.0f\ *\ font.glyphPadding\};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{float}\ width\ =\ (float)\ (font.recs[index].width\ +\ 2.0f\ *\ font.glyphPadding)\ /}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (float)\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{float}\ height\ =}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ (font.recs[index].height\ +\ 2.0f\ *\ font.glyphPadding)\ /}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordflow}{if}\ (font.texture.id\ >\ 0)\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ x\ =\ 0.0f;}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ y\ =\ 0.0f;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ z\ =\ 0.0f;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ normalized\ texture\ coordinates\ of\ the\ glyph\ inside\ the\ font\ texture}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (0.0f\ -\/>\ 1.0f)}}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ tx\ =\ srcRec.x\ /\ font.texture.width;}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ ty\ =\ srcRec.y\ /\ font.texture.height;}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ tw\ =\ (srcRec.x\ +\ srcRec.width)\ /\ font.texture.width;}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ th\ =\ (srcRec.y\ +\ srcRec.height)\ /\ font.texture.height;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceraylib_a201c666d2877d6eabeafa095536c4131}{SHOW\_LETTER\_BOUNDRY}})}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ DrawCubeWiresV((vec3)\{position.x\ +\ width\ /\ 2,\ position.y,}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position.z\ +\ height\ /\ 2\},}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (vec3)\{width,\ \mbox{\hyperlink{text__util_8h_ac13e03ba39f2d2f5351a28146c2f2147}{LETTER\_BOUNDRY\_SIZE}},\ height\},}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{text__util_8h_abaefce3c171709eed5efc8b3b4ec7812}{LETTER\_BOUNDRY\_COLOR}});}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ rlCheckRenderBatchLimit(4\ +\ 4\ *\ backface);}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ rlSetTexture(font.texture.id);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ rlPushMatrix();}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ rlTranslatef(position.x,\ position.y,\ position.z);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ rlBegin(RL\_QUADS);}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ rlColor4ub(tint.r,\ tint.g,\ tint.b,\ tint.a);}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Front\ Face}}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ rlNormal3f(0.0f,\ 1.0f,\ 0.0f);\ \ \textcolor{comment}{//\ Normal\ Pointing\ Up}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ rlTexCoord2f(tx,\ ty);}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ rlVertex3f(x,\ y,\ z);\ \ \textcolor{comment}{//\ Top\ Left\ Of\ The\ Texture\ and\ Quad}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ rlTexCoord2f(tx,\ th);}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ rlVertex3f(x,\ y,\ z\ +\ height);\ \ \textcolor{comment}{//\ Bottom\ Left\ Of\ The\ Texture\ and\ Quad}}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ rlTexCoord2f(tw,\ th);}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ rlVertex3f(x\ +\ width,\ y,}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ z\ +\ height);\ \ \textcolor{comment}{//\ Bottom\ Right\ Of\ The\ Texture\ and\ Quad}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ rlTexCoord2f(tw,\ ty);}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ rlVertex3f(x\ +\ width,\ y,\ z);\ \ \textcolor{comment}{//\ Top\ Right\ Of\ The\ Texture\ and\ Quad}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (backface)\ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Back\ Face}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ rlNormal3f(0.0f,\ -\/1.0f,\ 0.0f);\ \ \textcolor{comment}{//\ Normal\ Pointing\ Down}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ rlTexCoord2f(tx,\ ty);}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ rlVertex3f(x,\ y,\ z);\ \ \textcolor{comment}{//\ Top\ Right\ Of\ The\ Texture\ and\ Quad}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ rlTexCoord2f(tw,\ ty);}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ rlVertex3f(x\ +\ width,\ y,\ z);\ \ \textcolor{comment}{//\ Top\ Left\ Of\ The\ Texture\ and\ Quad}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ rlTexCoord2f(tw,\ th);}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ rlVertex3f(x\ +\ width,\ y,}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ z\ +\ height);\ \ \textcolor{comment}{//\ Bottom\ Left\ Of\ The\ Texture\ and\ Quad}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ rlTexCoord2f(tx,\ th);}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ rlVertex3f(x,\ y,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ z\ +\ height);\ \ \textcolor{comment}{//\ Bottom\ Right\ Of\ The\ Texture\ and\ Quad}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ rlEnd();}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ rlPopMatrix();}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ rlSetTexture(0);}
+\DoxyCodeLine{00109\ \ \ \ \ \}}
+\DoxyCodeLine{00110\ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{comment}{//\ Draw\ a\ 2D\ text\ in\ 3D\ space}}
+\DoxyCodeLine{00113\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceraylib_adc40755b0f82292edf03a57666161342}{DrawText3D}}(Font\ font,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ text,\ vec3\ position,}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fontSize,\ \textcolor{keywordtype}{float}\ fontSpacing,\ \textcolor{keywordtype}{float}\ lineSpacing,}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ backface,\ Color\ tint)\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ length\ =}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ TextLength(text);\ \ \textcolor{comment}{//\ Total\ length\ in\ bytes\ of\ the\ text,}}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ scanned\ by\ codepoints\ in\ loop}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{float}\ textOffsetY\ =\ 0.0f;\ \ \textcolor{comment}{//\ Offset\ between\ lines\ (on\ line\ break\ '\(\backslash\)n')}}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{float}\ textOffsetX\ =\ 0.0f;\ \ \textcolor{comment}{//\ Offset\ X\ to\ next\ character\ to\ draw}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{float}\ scale\ =\ fontSize\ /\ (float)\ font.baseSize;}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ for\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ length;)\ \{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ next\ codepoint\ from\ byte\ string\ and\ glyph\ index\ in\ font}}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ codepointByteCount\ =\ 0;}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ codepoint\ =\ GetCodepoint(\&text[i],\ \&codepointByteCount);}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ index\ =\ GetGlyphIndex(font,\ codepoint);}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ Normally\ we\ exit\ the\ decoding\ sequence\ as\ soon\ as\ a\ bad\ byte\ is}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ found\ (and\ return\ 0x3f)\ but\ we\ need\ to\ draw\ all\ of\ the\ bad\ bytes}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ using\ the\ '?'\ symbol\ moving\ one\ byte}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (codepoint\ ==\ 0x3f)\ codepointByteCount\ =\ 1;}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (codepoint\ ==\ \textcolor{charliteral}{'\(\backslash\)n'})\ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ Fixed\ line\ spacing\ of\ 1.5\ line-\/height}}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ Support\ custom\ line\ spacing\ defined\ by\ user}}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ textOffsetY\ +=\ scale\ +\ lineSpacing\ /\ (float)\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ textOffsetX\ =\ 0.0f;}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((codepoint\ !=\ \textcolor{charliteral}{'\ '})\ \&\&\ (codepoint\ !=\ \textcolor{charliteral}{'\(\backslash\)t'}))\ \{}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceraylib_abc5a61fc461e160abbf9e9458d38cbf9}{DrawTextCodepoint3D}}(font,\ codepoint,}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (vec3)\{position.x\ +\ textOffsetX,\ position.y,}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position.z\ +\ textOffsetY\},}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fontSize,\ backface,\ tint);}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (font.glyphs[index].advanceX\ ==\ 0)}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ textOffsetX\ +=\ (float)\ (font.recs[index].width\ +\ fontSpacing)\ /}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (float)\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ textOffsetX\ +=}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ (font.glyphs[index].advanceX\ +\ fontSpacing)\ /}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ i\ +=\ codepointByteCount;\ \ \textcolor{comment}{//\ Move\ text\ bytes\ counter\ to\ next\ codepoint}}
+\DoxyCodeLine{00159\ \ \ \ \ \}}
+\DoxyCodeLine{00160\ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{comment}{//\ Measure\ a\ text\ in\ 3D.\ For\ some\ reason\ `MeasureTextEx()`\ just\ doesn't\ seem\ to}}
+\DoxyCodeLine{00163\ \textcolor{comment}{//\ work\ so\ i\ had\ to\ use\ this\ instead.}}
+\DoxyCodeLine{00164\ \textcolor{keyword}{static}\ vec3\ \mbox{\hyperlink{namespaceraylib_a6aebd1748cab9a1fdcf103e310507b6b}{MeasureText3D}}(Font\ font,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ text,\ \textcolor{keywordtype}{float}\ fontSize,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fontSpacing,\ \textcolor{keywordtype}{float}\ lineSpacing)\ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keywordtype}{int}\ len\ =\ TextLength(text);}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordtype}{int}\ tempLen\ =\ 0;\ \ \textcolor{comment}{//\ Used\ to\ count\ longer\ text\ line\ num\ chars}}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keywordtype}{int}\ lenCounter\ =\ 0;}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keywordtype}{float}\ tempTextWidth\ =\ 0.0f;\ \ \textcolor{comment}{//\ Used\ to\ count\ longer\ text\ line\ width}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keywordtype}{float}\ scale\ =\ fontSize\ /\ (float)\ font.baseSize;}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordtype}{float}\ textHeight\ =\ scale;}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keywordtype}{float}\ textWidth\ =\ 0.0f;}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keywordtype}{int}\ letter\ =\ 0;\ \ \textcolor{comment}{//\ Current\ character}}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keywordtype}{int}\ index\ =\ 0;\ \ \ \textcolor{comment}{//\ Index\ position\ in\ sprite\ font}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ for\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ len;\ i++)\ \{}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ lenCounter++;}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ next\ =\ 0;}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ letter\ =\ GetCodepoint(\&text[i],\ \&next);}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ index\ =\ GetGlyphIndex(font,\ letter);}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ normally\ we\ exit\ the\ decoding\ sequence\ as\ soon\ as\ a\ bad\ byte\ is}}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ found\ (and\ return\ 0x3f)\ but\ we\ need\ to\ draw\ all\ of\ the\ bad\ bytes}}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ using\ the\ '?'\ symbol\ so\ to\ not\ skip\ any\ we\ set\ next\ =\ 1}}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (letter\ ==\ 0x3f)\ next\ =\ 1;}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ i\ +=\ next\ -\/\ 1;}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (letter\ !=\ \textcolor{charliteral}{'\(\backslash\)n'})\ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (font.glyphs[index].advanceX\ !=\ 0)}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ textWidth\ +=\ (font.glyphs[index].advanceX\ +\ fontSpacing)\ /}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ textWidth\ +=}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (font.recs[index].width\ +\ font.glyphs[index].offsetX)\ /}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tempTextWidth\ <\ textWidth)\ tempTextWidth\ =\ textWidth;}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ lenCounter\ =\ 0;}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ textWidth\ =\ 0.0f;}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ textHeight\ +=\ scale\ +\ lineSpacing\ /\ (float)\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tempLen\ <\ lenCounter)\ tempLen\ =\ lenCounter;}
+\DoxyCodeLine{00208\ \ \ \ \ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keywordflow}{if}\ (tempTextWidth\ <\ textWidth)\ tempTextWidth\ =\ textWidth;}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ vec3\ \mbox{\hyperlink{namespacevec}{vec}}\ =\ \{0\};}
+\DoxyCodeLine{00213\ \ \ \ \ \mbox{\hyperlink{namespacevec}{vec}}.x\ =\ tempTextWidth\ +}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ (float)\ ((tempLen\ -\/\ 1)\ *\ fontSpacing\ /\ (float)\ font.baseSize\ *}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ scale);\ \ \textcolor{comment}{//\ Adds\ chars\ spacing\ to\ measure}}
+\DoxyCodeLine{00216\ \ \ \ \ \mbox{\hyperlink{namespacevec}{vec}}.y\ =\ 0.25f;}
+\DoxyCodeLine{00217\ \ \ \ \ \mbox{\hyperlink{namespacevec}{vec}}.z\ =\ textHeight;}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacevec}{vec}};}
+\DoxyCodeLine{00220\ \}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{comment}{//\ Draw\ a\ 2D\ text\ in\ 3D\ space\ and\ wave\ the\ parts\ that\ start\ with\ `\string~\string~`\ and\ end}}
+\DoxyCodeLine{00223\ \textcolor{comment}{//\ with\ `\string~\string~`.\ This\ is\ a\ modified\ version\ of\ the\ original\ code\ by\ @Nighten\ found}}
+\DoxyCodeLine{00224\ \textcolor{comment}{//\ here\ https://github.com/NightenDushi/Raylib\_DrawTextStyle}}
+\DoxyCodeLine{00225\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceraylib_aeb18116ce05499755bfce3012bfa0ea1}{DrawTextWave3D}}(Font\ font,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ text,\ vec3\ position,}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fontSize,\ \textcolor{keywordtype}{float}\ fontSpacing,\ \textcolor{keywordtype}{float}\ lineSpacing,}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ backface,\ \mbox{\hyperlink{structraylib_1_1_wave_text_config}{WaveTextConfig}}*\ config,\ \textcolor{keywordtype}{float}\ time,}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Color\ tint)\ \{}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keywordtype}{int}\ length\ =\ TextLength(text);\ \ \textcolor{comment}{//\ Total\ length\ in\ bytes\ of\ the\ text,}}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ scanned\ by\ codepoints\ in\ loop}}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordtype}{float}\ textOffsetY\ =\ 0.0f;\ \ \textcolor{comment}{//\ Offset\ between\ lines\ (on\ line\ break\ '\(\backslash\)n')}}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keywordtype}{float}\ textOffsetX\ =\ 0.0f;\ \ \textcolor{comment}{//\ Offset\ X\ to\ next\ character\ to\ draw}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keywordtype}{float}\ scale\ =\ fontSize\ /\ (float)\ font.baseSize;}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keywordtype}{bool}\ wave\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ for\ (\textcolor{keywordtype}{int}\ i\ =\ 0,\ k\ =\ 0;\ i\ <\ length;\ ++k)\ \{}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ next\ codepoint\ from\ byte\ string\ and\ glyph\ index\ in\ font}}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ codepointByteCount\ =\ 0;}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ codepoint\ =\ GetCodepoint(\&text[i],\ \&codepointByteCount);}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ index\ =\ GetGlyphIndex(font,\ codepoint);}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ Normally\ we\ exit\ the\ decoding\ sequence\ as\ soon\ as\ a\ bad\ byte\ is}}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ found\ (and\ return\ 0x3f)\ but\ we\ need\ to\ draw\ all\ of\ the\ bad\ bytes}}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ using\ the\ '?'\ symbol\ moving\ one\ byte}}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (codepoint\ ==\ 0x3f)\ codepointByteCount\ =\ 1;}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (codepoint\ ==\ \textcolor{charliteral}{'\(\backslash\)n'})\ \{}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ Fixed\ line\ spacing\ of\ 1.5\ line-\/height}}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ Support\ custom\ line\ spacing\ defined\ by\ user}}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ textOffsetY\ +=\ scale\ +\ lineSpacing\ /\ (float)\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ textOffsetX\ =\ 0.0f;}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ k\ =\ 0;}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (codepoint\ ==\ \textcolor{charliteral}{'\string~'})\ \{}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (GetCodepoint(\&text[i\ +\ 1],\ \&codepointByteCount)\ ==\ \textcolor{charliteral}{'\string~'})\ \{}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ codepointByteCount\ +=\ 1;}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wave\ =\ !wave;}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((codepoint\ !=\ \textcolor{charliteral}{'\ '})\ \&\&\ (codepoint\ !=\ \textcolor{charliteral}{'\(\backslash\)t'}))\ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vec3\ pos\ =\ position;}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (wave)\ \ \textcolor{comment}{//\ Apply\ the\ wave\ effect}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pos.x\ +=\ sinf(time\ *\ config-\/>\mbox{\hyperlink{structraylib_1_1_wave_text_config_a3ac36f7f3ee0186d2130188a92409bd5}{waveSpeed}}.x\ -\/}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ k\ *\ config-\/>\mbox{\hyperlink{structraylib_1_1_wave_text_config_a774353a50fade03663e6cb07f3cb3a7e}{waveOffset}}.x)\ *}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ config-\/>\mbox{\hyperlink{structraylib_1_1_wave_text_config_a16d8b5ce500204c90bd474ff798a3f9d}{waveRange}}.x;}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pos.y\ +=\ sinf(time\ *\ config-\/>\mbox{\hyperlink{structraylib_1_1_wave_text_config_a3ac36f7f3ee0186d2130188a92409bd5}{waveSpeed}}.y\ -\/}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ k\ *\ config-\/>\mbox{\hyperlink{structraylib_1_1_wave_text_config_a774353a50fade03663e6cb07f3cb3a7e}{waveOffset}}.y)\ *}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ config-\/>\mbox{\hyperlink{structraylib_1_1_wave_text_config_a16d8b5ce500204c90bd474ff798a3f9d}{waveRange}}.y;}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pos.z\ +=\ sinf(time\ *\ config-\/>\mbox{\hyperlink{structraylib_1_1_wave_text_config_a3ac36f7f3ee0186d2130188a92409bd5}{waveSpeed}}.z\ -\/}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ k\ *\ config-\/>\mbox{\hyperlink{structraylib_1_1_wave_text_config_a774353a50fade03663e6cb07f3cb3a7e}{waveOffset}}.z)\ *}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ config-\/>\mbox{\hyperlink{structraylib_1_1_wave_text_config_a16d8b5ce500204c90bd474ff798a3f9d}{waveRange}}.z;}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceraylib_abc5a61fc461e160abbf9e9458d38cbf9}{DrawTextCodepoint3D}}(}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ font,\ codepoint,}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (vec3)\{pos.x\ +\ textOffsetX,\ pos.y,\ pos.z\ +\ textOffsetY\},}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fontSize,\ backface,\ tint);}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (font.glyphs[index].advanceX\ ==\ 0)}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ textOffsetX\ +=\ (float)\ (font.recs[index].width\ +\ fontSpacing)\ /}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (float)\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ textOffsetX\ +=}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ (font.glyphs[index].advanceX\ +\ fontSpacing)\ /}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ i\ +=\ codepointByteCount;\ \ \textcolor{comment}{//\ Move\ text\ bytes\ counter\ to\ next\ codepoint}}
+\DoxyCodeLine{00293\ \ \ \ \ \}}
+\DoxyCodeLine{00294\ \}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \textcolor{comment}{//\ Measure\ a\ text\ in\ 3D\ ignoring\ the\ `\string~\string~`\ chars.}}
+\DoxyCodeLine{00297\ \textcolor{keyword}{static}\ vec3\ \mbox{\hyperlink{namespaceraylib_a9989019e26a3b70fddd628c3fe21e5d1}{MeasureTextWave3D}}(Font\ font,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ text,\ \textcolor{keywordtype}{float}\ fontSize,}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fontSpacing,\ \textcolor{keywordtype}{float}\ lineSpacing)\ \{}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keywordtype}{int}\ len\ =\ TextLength(text);}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keywordtype}{int}\ tempLen\ =\ 0;\ \ \textcolor{comment}{//\ Used\ to\ count\ longer\ text\ line\ num\ chars}}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keywordtype}{int}\ lenCounter\ =\ 0;}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{keywordtype}{float}\ tempTextWidth\ =\ 0.0f;\ \ \textcolor{comment}{//\ Used\ to\ count\ longer\ text\ line\ width}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keywordtype}{float}\ scale\ =\ fontSize\ /\ (float)\ font.baseSize;}
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{keywordtype}{float}\ textHeight\ =\ scale;}
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{keywordtype}{float}\ textWidth\ =\ 0.0f;}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{keywordtype}{int}\ letter\ =\ 0;\ \ \textcolor{comment}{//\ Current\ character}}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keywordtype}{int}\ index\ =\ 0;\ \ \ \textcolor{comment}{//\ Index\ position\ in\ sprite\ font}}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ for\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ len;\ i++)\ \{}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ lenCounter++;}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ next\ =\ 0;}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ letter\ =\ GetCodepoint(\&text[i],\ \&next);}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ index\ =\ GetGlyphIndex(font,\ letter);}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ normally\ we\ exit\ the\ decoding\ sequence\ as\ soon\ as\ a\ bad\ byte\ is}}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ found\ (and\ return\ 0x3f)\ but\ we\ need\ to\ draw\ all\ of\ the\ bad\ bytes}}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ using\ the\ '?'\ symbol\ so\ to\ not\ skip\ any\ we\ set\ next\ =\ 1}}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (letter\ ==\ 0x3f)\ next\ =\ 1;}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ i\ +=\ next\ -\/\ 1;}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (letter\ !=\ \textcolor{charliteral}{'\(\backslash\)n'})\ \{}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (letter\ ==\ \textcolor{charliteral}{'\string~'}\ \&\&\ GetCodepoint(\&text[i\ +\ 1],\ \&next)\ ==\ \textcolor{charliteral}{'\string~'})\ \{}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i++;}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (font.glyphs[index].advanceX\ !=\ 0)}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ textWidth\ +=\ (font.glyphs[index].advanceX\ +\ fontSpacing)\ /}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ textWidth\ +=}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (font.recs[index].width\ +\ font.glyphs[index].offsetX)\ /}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tempTextWidth\ <\ textWidth)\ tempTextWidth\ =\ textWidth;}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ lenCounter\ =\ 0;}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ textWidth\ =\ 0.0f;}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ textHeight\ +=\ scale\ +\ lineSpacing\ /\ (float)\ font.baseSize\ *\ scale;}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tempLen\ <\ lenCounter)\ tempLen\ =\ lenCounter;}
+\DoxyCodeLine{00345\ \ \ \ \ \}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keywordflow}{if}\ (tempTextWidth\ <\ textWidth)\ tempTextWidth\ =\ textWidth;}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ \ \ \ \ vec3\ \mbox{\hyperlink{namespacevec}{vec}}\ =\ \{0\};}
+\DoxyCodeLine{00350\ \ \ \ \ \mbox{\hyperlink{namespacevec}{vec}}.x\ =\ tempTextWidth\ +}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ (float)\ ((tempLen\ -\/\ 1)\ *\ fontSpacing\ /\ (float)\ font.baseSize\ *}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ scale);\ \ \textcolor{comment}{//\ Adds\ chars\ spacing\ to\ measure}}
+\DoxyCodeLine{00353\ \ \ \ \ \mbox{\hyperlink{namespacevec}{vec}}.y\ =\ 0.25f;}
+\DoxyCodeLine{00354\ \ \ \ \ \mbox{\hyperlink{namespacevec}{vec}}.z\ =\ textHeight;}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacevec}{vec}};}
+\DoxyCodeLine{00357\ \}}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \}\ \ \textcolor{comment}{//\ namespace\ raylib}}
+
+\end{DoxyCode}

@@ -1,0 +1,212 @@
+\hypertarget{preload_8h_source}{}\doxysection{preload.\+h}
+\label{preload_8h_source}\index{src/preload.h@{src/preload.h}}
+\mbox{\hyperlink{preload_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}engine/graphics.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}engine/singleton.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}raylib.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}engine/files.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}engine/model\_library.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}engine/music\_library.h"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}engine/shader\_library.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}engine/sound\_library.h"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}engine/texture\_library.h"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}resources/fonts/Karmina\_Regular\_256.h"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{inline}\ raylib::Font\ \mbox{\hyperlink{preload_8h_a108c8b052151c0743ff49fadafc86d3e}{load\_karmina\_regular}}()\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{auto}\ font\ =\ font::LoadFont\_KarminaRegular256();}
+\DoxyCodeLine{00020\ \ \ \ \ raylib::GenTextureMipmaps(\&font.texture);}
+\DoxyCodeLine{00021\ \ \ \ \ raylib::SetTextureFilter(font.texture,\ raylib::TEXTURE\_FILTER\_POINT);}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordflow}{return}\ font;}
+\DoxyCodeLine{00023\ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ SINGLETON\_FWD(\mbox{\hyperlink{struct_preload}{Preload}})}
+\DoxyCodeLine{00026\ struct\ \mbox{\hyperlink{struct_preload}{Preload}}\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ SINGLETON(\mbox{\hyperlink{struct_preload}{Preload}})}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{namespaceraylib}{raylib}}::Font\ font;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{struct_preload}{Preload}}()\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ load\_shaders();}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ load\_fonts();}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ load\_textures();}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ load\_models();}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ ext::init\_audio\_device();}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ load\_sounds();}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ load\_music();}
+\DoxyCodeLine{00041\ \ \ \ \ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{struct_preload_ad948fda8e07939c10d4cbf22dcce9952}{\string~Preload}}()\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ ext::close\_audio\_device();}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ TextureLibrary::get().unload\_all();}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ MusicLibrary::get().unload\_all();}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ ModelLibrary::get().unload\_all();}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ SoundLibrary::get().unload\_all();}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ ShaderLibrary::get().unload\_all();}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_preload_ad654805886a06f09c38f67c9b0c0ddeb}{load\_fonts}}()\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Font\ loading\ must\ happen\ after\ InitWindow}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ font\ =\ \mbox{\hyperlink{preload_8h_a108c8b052151c0743ff49fadafc86d3e}{load\_karmina\_regular}}();}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE\ if\ you\ go\ back\ to\ files,\ load\ fonts\ from\ install\ folder,\ instead}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ of\ local\ path}}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ font\ =\ LoadFontEx("{}./resources/fonts/constan.ttf"{},\ 96,\ 0,\ 0);}}
+\DoxyCodeLine{00061\ \ \ \ \ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_preload_a2cf7610aae5693b91bece9e323f20c56}{load\_textures}}()\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::tuple<const\ char*,\ const\ char*,\ const\ char*>\ textures[]\ =\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}images"{}},\ \textcolor{stringliteral}{"{}face.png"{}},\ \textcolor{stringliteral}{"{}face"{}}\},}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}images"{}},\ \textcolor{stringliteral}{"{}jug.png"{}},\ \textcolor{stringliteral}{"{}jug"{}}\},}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}images"{}},\ \textcolor{stringliteral}{"{}sleepyico.png"{}},\ \textcolor{stringliteral}{"{}sleepy"{}}\},}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ t\ :\ textures)\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ TextureLibrary::get().load(}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Files::get()}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .fetch\_resource\_path(std::get<0>(t),\ std::get<1>(t))}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .c\_str(),}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::get<2>(t));}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00077\ \ \ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_preload_ad4d9891aefb639eb811421e583b3bf8f}{load\_models}}()\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ support\ for\ model\ groups}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ ModelLibrary::ModelLoadingInfo\ models[]\ =\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models"{}},}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}bag.obj"{}},}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}bag"{}},}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models"{}},}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}empty\_bag.obj"{}},}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}empty\_bag"{}},}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models"{}},}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}conveyer.obj"{}},}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}conveyer"{}},}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models"{}},}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}register.obj"{}},}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}register"{}},}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models/kennynl"{}},}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}can.obj"{}},}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}pill\_bottle"{}},}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models/kennynl"{}},}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}boxOpen.glb"{}},}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}open\_box"{}},}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models/kennynl"{}},}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}box.glb"{}},}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}box"{}},}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models/kennynl"{}},}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}barrel.glb"{}},}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}medicine\_cabinet"{}},}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models/kennynl"{}},}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}pillow.glb"{}},}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}pill\_red"{}},}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models/kennynl"{}},}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}pillowBlue.glb"{}},}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}pill\_blue"{}},}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models/kennynl"{}},}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}pillowLong.glb"{}},}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}pill\_redlong"{}},}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models/kennynl"{}},}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}pillowBlueLong.glb"{}},}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}pill\_bluelong"{}},}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models/kaykit"{}},}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}character\_bear.gltf"{}},}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}character\_bear"{}},}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models/kaykit"{}},}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}character\_dog.gltf"{}},}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}character\_dog"{}},}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::ModelLoadingInfo\{}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .folder\ =\ \textcolor{stringliteral}{"{}models/kaykit"{}},}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filename\ =\ \textcolor{stringliteral}{"{}character\_duck.gltf"{}},}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .libraryname\ =\ \textcolor{stringliteral}{"{}character\_duck"{}},}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ m\ :\ models)\ \{}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ ModelLibrary::get().load(m);}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00163\ \ \ \ \ \}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_preload_a67a10f5bd7c7955f49e19b251baec8d1}{load\_sounds}}()\ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ SoundLibrary::get().load(}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ Files::get()}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .fetch\_resource\_path(\textcolor{stringliteral}{"{}sounds"{}},\ \textcolor{stringliteral}{"{}roblox\_oof.ogg"{}})}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .c\_str(),}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}roblox"{}});}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ Files::get().for\_resources\_in\_folder(}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}sounds"{}},\ \textcolor{stringliteral}{"{}pa\_announcements"{}},}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ std::string\&\ name,\ \textcolor{keyword}{const}\ std::string\&\ filename)\ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SoundLibrary::get().load(}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filename.c\_str(),}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}pa\_announcements\_\{\}"{}},\ name).c\_str());}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00179\ \ \ \ \ \}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_preload_a53f29f58a3ce55f94786ea67228294cd}{load\_music}}()\ \{}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ MusicLibrary::get().load(}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ Files::get()}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .fetch\_resource\_path(\textcolor{stringliteral}{"{}music"{}},\ \textcolor{stringliteral}{"{}supermarket.ogg"{}})}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .c\_str(),}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}supermarket"{}});}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ MusicLibrary::get().load(}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ Files::get().fetch\_resource\_path(\textcolor{stringliteral}{"{}music"{}},\ \textcolor{stringliteral}{"{}theme.ogg"{}}).c\_str(),}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}theme"{}});}
+\DoxyCodeLine{00191\ \ \ \ \ \}}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_preload_abf6fc9d111ce28241fc9a42c9fef390b}{load\_shaders}}()\ \{}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ std::tuple<const\ char*,\ const\ char*,\ const\ char*>\ shaders[]\ =\ \{}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}shaders"{}},\ \textcolor{stringliteral}{"{}post\_processing.fs"{}},\ \textcolor{stringliteral}{"{}post\_processing"{}}\},}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ s\ :\ shaders)\ \{}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ ShaderLibrary::get().load(}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Files::get()}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .fetch\_resource\_path(std::get<0>(s),\ std::get<1>(s))}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .c\_str(),}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::get<2>(s));}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00205\ \ \ \ \ \}}
+\DoxyCodeLine{00206\ \};}
+
+\end{DoxyCode}

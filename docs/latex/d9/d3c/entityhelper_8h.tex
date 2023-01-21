@@ -1,0 +1,72 @@
+\hypertarget{entityhelper_8h}{}\doxysection{src/entityhelper.h File Reference}
+\label{entityhelper_8h}\index{src/entityhelper.h@{src/entityhelper.h}}
+{\ttfamily \#include $<$thread$>$}\newline
+{\ttfamily \#include \char`\"{}assert.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}external\+\_\+include.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine/globals\+\_\+register.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine/is\+\_\+server.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}globals.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}entity.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}item.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}statemanager.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_entity_helper}{Entity\+Helper}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ $>$ \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}} \mbox{\hyperlink{entityhelper_8h_a0615e7b6a0303e4452ecbbaed94def95}{client\+\_\+entities\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE}}
+\item 
+static \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}} \mbox{\hyperlink{entityhelper_8h_aab3fbb2ee54d9709656c0ac5dbce2c82}{server\+\_\+entities\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE}}
+\item 
+static std\+::map$<$ vec2, bool $>$ \mbox{\hyperlink{entityhelper_8h_a4285a99212a3ccfa8dc8ab3198e2e679}{cache\+\_\+is\+\_\+walkable}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}\label{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}} 
+\index{entityhelper.h@{entityhelper.h}!Entities@{Entities}}
+\index{Entities@{Entities}!entityhelper.h@{entityhelper.h}}
+\doxysubsubsection{\texorpdfstring{Entities}{Entities}}
+{\footnotesize\ttfamily typedef std\+::vector$<$std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_entity}{Entity}}$>$ $>$ \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}}}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{entityhelper_8h_a4285a99212a3ccfa8dc8ab3198e2e679}\label{entityhelper_8h_a4285a99212a3ccfa8dc8ab3198e2e679}} 
+\index{entityhelper.h@{entityhelper.h}!cache\_is\_walkable@{cache\_is\_walkable}}
+\index{cache\_is\_walkable@{cache\_is\_walkable}!entityhelper.h@{entityhelper.h}}
+\doxysubsubsection{\texorpdfstring{cache\_is\_walkable}{cache\_is\_walkable}}
+{\footnotesize\ttfamily std\+::map$<$vec2, bool$>$ cache\+\_\+is\+\_\+walkable\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_helper_a6fef0ba4ee7eaf9d9933c7cacdbb617c}{Entity\+Helper\+::invalidate\+Path\+Cache()}}, \mbox{\hyperlink{struct_entity_helper_ade7521aa6947bb12904da39e3e8df343}{Entity\+Helper\+::invalidate\+Path\+Cache\+Location()}}, and \mbox{\hyperlink{struct_entity_helper_a4d01c0a143c62ae572e5d4e9eb5711f0}{Entity\+Helper\+::is\+Walkable()}}.
+
+\mbox{\Hypertarget{entityhelper_8h_a0615e7b6a0303e4452ecbbaed94def95}\label{entityhelper_8h_a0615e7b6a0303e4452ecbbaed94def95}} 
+\index{entityhelper.h@{entityhelper.h}!client\_entities\_DO\_NOT\_USE@{client\_entities\_DO\_NOT\_USE}}
+\index{client\_entities\_DO\_NOT\_USE@{client\_entities\_DO\_NOT\_USE}!entityhelper.h@{entityhelper.h}}
+\doxysubsubsection{\texorpdfstring{client\_entities\_DO\_NOT\_USE}{client\_entities\_DO\_NOT\_USE}}
+{\footnotesize\ttfamily \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}} client\+\_\+entities\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_helper_a704ecc99728bb6635523ff9b8e46cd95}{Entity\+Helper\+::get\+\_\+entities()}}.
+
+\mbox{\Hypertarget{entityhelper_8h_aab3fbb2ee54d9709656c0ac5dbce2c82}\label{entityhelper_8h_aab3fbb2ee54d9709656c0ac5dbce2c82}} 
+\index{entityhelper.h@{entityhelper.h}!server\_entities\_DO\_NOT\_USE@{server\_entities\_DO\_NOT\_USE}}
+\index{server\_entities\_DO\_NOT\_USE@{server\_entities\_DO\_NOT\_USE}!entityhelper.h@{entityhelper.h}}
+\doxysubsubsection{\texorpdfstring{server\_entities\_DO\_NOT\_USE}{server\_entities\_DO\_NOT\_USE}}
+{\footnotesize\ttfamily \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}} server\+\_\+entities\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{Game\+Map\+Info\+::generate\+\_\+map()}}, and \mbox{\hyperlink{struct_entity_helper_a704ecc99728bb6635523ff9b8e46cd95}{Entity\+Helper\+::get\+\_\+entities()}}.
+

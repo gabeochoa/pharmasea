@@ -1,0 +1,276 @@
+\hypertarget{struct_network_layer}{}\doxysection{Network\+Layer Struct Reference}
+\label{struct_network_layer}\index{NetworkLayer@{NetworkLayer}}
+
+
+{\ttfamily \#include $<$networklayer.\+h$>$}
+
+Inheritance diagram for Network\+Layer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d8/dcc/struct_network_layer}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_network_layer_a6894a175bcbb8ffc9e42b2ddbc399ca8}{Network\+Layer}} ()
+\item 
+virtual \mbox{\hyperlink{struct_network_layer_a38705efe3dc6c50eed3ac75f45cb1209}{$\sim$\+Network\+Layer}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_network_layer_ac2b9a912799db09a761b41885eaf5cf5}{on\+Event}} (Event \&event) override
+\item 
+bool \mbox{\hyperlink{struct_network_layer_a3afcb961c3248b6ac8381142a5ac81c1}{on\+Char\+Pressed\+Event}} (Char\+Pressed\+Event \&event)
+\item 
+bool \mbox{\hyperlink{struct_network_layer_a8eeae00b7267e1a282fe39a09beb884b}{on\+Gamepad\+Axis\+Moved}} (Gamepad\+Axis\+Moved\+Event \&event)
+\item 
+bool \mbox{\hyperlink{struct_network_layer_acf4f8f71d0cade871919e8ec67c51880}{on\+Key\+Pressed}} (Key\+Pressed\+Event \&event)
+\item 
+bool \mbox{\hyperlink{struct_network_layer_a954bb75983572ea781d6593589d36bd4}{on\+Gamepad\+Button\+Pressed}} (Gamepad\+Button\+Pressed\+Event \&event)
+\item 
+virtual void \mbox{\hyperlink{struct_network_layer_aae3049c0787e1569a8c4c745796e9e39}{on\+Update}} (float dt) override
+\item 
+void \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{draw\+\_\+username}} ()
+\item 
+void \mbox{\hyperlink{struct_network_layer_a4f9997f77d6526472acab2f2ce3e1adf}{draw\+\_\+base\+\_\+screen}} ()
+\item 
+void \mbox{\hyperlink{struct_network_layer_a3484d948630f94d4e3df79efb4cee697}{draw\+\_\+ip\+\_\+input\+\_\+screen}} ()
+\item 
+void \mbox{\hyperlink{struct_network_layer_a85337a1e904b99e5786c5535a1316211}{draw\+\_\+connected\+\_\+screen}} ()
+\item 
+void \mbox{\hyperlink{struct_network_layer_aab6121b4fc0ea70eff61a2e8e68684c1}{draw\+\_\+username\+\_\+picker}} ()
+\item 
+void \mbox{\hyperlink{struct_network_layer_aee957927e795153c4fa3afcbf12ddb1a}{draw\+\_\+screen\+\_\+selector\+\_\+logic}} ()
+\item 
+void \mbox{\hyperlink{struct_network_layer_aaa33b73ae69448c2aaecce32bc97a0bf}{handle\+\_\+announcements}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_network_layer_abea8f78391e9cae25f4a80d8fbf74714}{on\+Draw}} (float dt) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ ui\+::\+UIContext $>$ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\+\_\+context}}
+\item 
+std\+::shared\+\_\+ptr$<$ network\+::\+Info $>$ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\+\_\+info}}
+\item 
+std\+::string \mbox{\hyperlink{struct_network_layer_ac35d32c4c42e71a69fced5efec74f9c6}{my\+\_\+ip\+\_\+address}}
+\item 
+bool \mbox{\hyperlink{struct_network_layer_a6f570199ba8ee9d5c72aa436c637b189}{should\+\_\+show\+\_\+host\+\_\+ip}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_network_layer_a6894a175bcbb8ffc9e42b2ddbc399ca8}\label{struct_network_layer_a6894a175bcbb8ffc9e42b2ddbc399ca8}} 
+\index{NetworkLayer@{NetworkLayer}!NetworkLayer@{NetworkLayer}}
+\index{NetworkLayer@{NetworkLayer}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{NetworkLayer()}{NetworkLayer()}}
+{\footnotesize\ttfamily Network\+Layer\+::\+Network\+Layer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_network_layer_ac35d32c4c42e71a69fced5efec74f9c6}{my\+\_\+ip\+\_\+address}}, \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\+\_\+info}}, and \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\+\_\+context}}.
+
+\mbox{\Hypertarget{struct_network_layer_a38705efe3dc6c50eed3ac75f45cb1209}\label{struct_network_layer_a38705efe3dc6c50eed3ac75f45cb1209}} 
+\index{NetworkLayer@{NetworkLayer}!````~NetworkLayer@{$\sim$NetworkLayer}}
+\index{````~NetworkLayer@{$\sim$NetworkLayer}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{$\sim$NetworkLayer()}{~NetworkLayer()}}
+{\footnotesize\ttfamily virtual Network\+Layer\+::$\sim$\+Network\+Layer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_network_layer_a4f9997f77d6526472acab2f2ce3e1adf}\label{struct_network_layer_a4f9997f77d6526472acab2f2ce3e1adf}} 
+\index{NetworkLayer@{NetworkLayer}!draw\_base\_screen@{draw\_base\_screen}}
+\index{draw\_base\_screen@{draw\_base\_screen}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{draw\_base\_screen()}{draw\_base\_screen()}}
+{\footnotesize\ttfamily void Network\+Layer\+::draw\+\_\+base\+\_\+screen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{draw\+\_\+username()}}, \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\+\_\+info}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu\+::\+Root}}, and \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\+\_\+context}}.
+
+\mbox{\Hypertarget{struct_network_layer_a85337a1e904b99e5786c5535a1316211}\label{struct_network_layer_a85337a1e904b99e5786c5535a1316211}} 
+\index{NetworkLayer@{NetworkLayer}!draw\_connected\_screen@{draw\_connected\_screen}}
+\index{draw\_connected\_screen@{draw\_connected\_screen}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{draw\_connected\_screen()}{draw\_connected\_screen()}}
+{\footnotesize\ttfamily void Network\+Layer\+::draw\+\_\+connected\+\_\+screen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, and \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game\+::\+Lobby}}.
+
+\mbox{\Hypertarget{struct_network_layer_a3484d948630f94d4e3df79efb4cee697}\label{struct_network_layer_a3484d948630f94d4e3df79efb4cee697}} 
+\index{NetworkLayer@{NetworkLayer}!draw\_ip\_input\_screen@{draw\_ip\_input\_screen}}
+\index{draw\_ip\_input\_screen@{draw\_ip\_input\_screen}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{draw\_ip\_input\_screen()}{draw\_ip\_input\_screen()}}
+{\footnotesize\ttfamily void Network\+Layer\+::draw\+\_\+ip\+\_\+input\+\_\+screen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{draw\+\_\+username()}}, \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\+\_\+info}}, \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\+\_\+context}}, and \mbox{\hyperlink{networklayer_8h_a9381b7560a4f62aff0b2b22873876a70}{validate\+\_\+ip()}}.
+
+\mbox{\Hypertarget{struct_network_layer_aee957927e795153c4fa3afcbf12ddb1a}\label{struct_network_layer_aee957927e795153c4fa3afcbf12ddb1a}} 
+\index{NetworkLayer@{NetworkLayer}!draw\_screen\_selector\_logic@{draw\_screen\_selector\_logic}}
+\index{draw\_screen\_selector\_logic@{draw\_screen\_selector\_logic}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{draw\_screen\_selector\_logic()}{draw\_screen\_selector\_logic()}}
+{\footnotesize\ttfamily void Network\+Layer\+::draw\+\_\+screen\+\_\+selector\+\_\+logic (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_network_layer_acd567438052b6a765a0669402e44a9ea}\label{struct_network_layer_acd567438052b6a765a0669402e44a9ea}} 
+\index{NetworkLayer@{NetworkLayer}!draw\_username@{draw\_username}}
+\index{draw\_username@{draw\_username}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{draw\_username()}{draw\_username()}}
+{\footnotesize\ttfamily void Network\+Layer\+::draw\+\_\+username (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\+\_\+info}}, and \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_a4f9997f77d6526472acab2f2ce3e1adf}{draw\+\_\+base\+\_\+screen()}}, and \mbox{\hyperlink{struct_network_layer_a3484d948630f94d4e3df79efb4cee697}{draw\+\_\+ip\+\_\+input\+\_\+screen()}}.
+
+\mbox{\Hypertarget{struct_network_layer_aab6121b4fc0ea70eff61a2e8e68684c1}\label{struct_network_layer_aab6121b4fc0ea70eff61a2e8e68684c1}} 
+\index{NetworkLayer@{NetworkLayer}!draw\_username\_picker@{draw\_username\_picker}}
+\index{draw\_username\_picker@{draw\_username\_picker}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{draw\_username\_picker()}{draw\_username\_picker()}}
+{\footnotesize\ttfamily void Network\+Layer\+::draw\+\_\+username\+\_\+picker (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_network_layer_aaa33b73ae69448c2aaecce32bc97a0bf}\label{struct_network_layer_aaa33b73ae69448c2aaecce32bc97a0bf}} 
+\index{NetworkLayer@{NetworkLayer}!handle\_announcements@{handle\_announcements}}
+\index{handle\_announcements@{handle\_announcements}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{handle\_announcements()}{handle\_announcements()}}
+{\footnotesize\ttfamily void Network\+Layer\+::handle\+\_\+announcements (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{toastmanager_8h_ad435cdf1b1b092994c0d8ca2b0262bab}{TOASTS}}.
+
+\mbox{\Hypertarget{struct_network_layer_a3afcb961c3248b6ac8381142a5ac81c1}\label{struct_network_layer_a3afcb961c3248b6ac8381142a5ac81c1}} 
+\index{NetworkLayer@{NetworkLayer}!onCharPressedEvent@{onCharPressedEvent}}
+\index{onCharPressedEvent@{onCharPressedEvent}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{onCharPressedEvent()}{onCharPressedEvent()}}
+{\footnotesize\ttfamily bool Network\+Layer\+::on\+Char\+Pressed\+Event (\begin{DoxyParamCaption}\item[{Char\+Pressed\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu\+::\+Network}}, and \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_ac2b9a912799db09a761b41885eaf5cf5}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_network_layer_abea8f78391e9cae25f4a80d8fbf74714}\label{struct_network_layer_abea8f78391e9cae25f4a80d8fbf74714}} 
+\index{NetworkLayer@{NetworkLayer}!onDraw@{onDraw}}
+\index{onDraw@{onDraw}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{onDraw()}{onDraw()}}
+{\footnotesize\ttfamily virtual void Network\+Layer\+::on\+Draw (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu\+::\+Network}}.
+
+\mbox{\Hypertarget{struct_network_layer_ac2b9a912799db09a761b41885eaf5cf5}\label{struct_network_layer_ac2b9a912799db09a761b41885eaf5cf5}} 
+\index{NetworkLayer@{NetworkLayer}!onEvent@{onEvent}}
+\index{onEvent@{onEvent}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
+{\footnotesize\ttfamily virtual void Network\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_network_layer_a3afcb961c3248b6ac8381142a5ac81c1}{on\+Char\+Pressed\+Event()}}, \mbox{\hyperlink{struct_network_layer_a8eeae00b7267e1a282fe39a09beb884b}{on\+Gamepad\+Axis\+Moved()}}, \mbox{\hyperlink{struct_network_layer_a954bb75983572ea781d6593589d36bd4}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_network_layer_acf4f8f71d0cade871919e8ec67c51880}{on\+Key\+Pressed()}}.
+
+\mbox{\Hypertarget{struct_network_layer_a8eeae00b7267e1a282fe39a09beb884b}\label{struct_network_layer_a8eeae00b7267e1a282fe39a09beb884b}} 
+\index{NetworkLayer@{NetworkLayer}!onGamepadAxisMoved@{onGamepadAxisMoved}}
+\index{onGamepadAxisMoved@{onGamepadAxisMoved}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{onGamepadAxisMoved()}{onGamepadAxisMoved()}}
+{\footnotesize\ttfamily bool Network\+Layer\+::on\+Gamepad\+Axis\+Moved (\begin{DoxyParamCaption}\item[{Gamepad\+Axis\+Moved\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu\+::\+Network}}, and \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_ac2b9a912799db09a761b41885eaf5cf5}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_network_layer_a954bb75983572ea781d6593589d36bd4}\label{struct_network_layer_a954bb75983572ea781d6593589d36bd4}} 
+\index{NetworkLayer@{NetworkLayer}!onGamepadButtonPressed@{onGamepadButtonPressed}}
+\index{onGamepadButtonPressed@{onGamepadButtonPressed}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{onGamepadButtonPressed()}{onGamepadButtonPressed()}}
+{\footnotesize\ttfamily bool Network\+Layer\+::on\+Gamepad\+Button\+Pressed (\begin{DoxyParamCaption}\item[{Gamepad\+Button\+Pressed\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu\+::\+Network}}, and \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_ac2b9a912799db09a761b41885eaf5cf5}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_network_layer_acf4f8f71d0cade871919e8ec67c51880}\label{struct_network_layer_acf4f8f71d0cade871919e8ec67c51880}} 
+\index{NetworkLayer@{NetworkLayer}!onKeyPressed@{onKeyPressed}}
+\index{onKeyPressed@{onKeyPressed}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{onKeyPressed()}{onKeyPressed()}}
+{\footnotesize\ttfamily bool Network\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{Key\+Pressed\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu\+::\+Network}}, and \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_ac2b9a912799db09a761b41885eaf5cf5}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_network_layer_aae3049c0787e1569a8c4c745796e9e39}\label{struct_network_layer_aae3049c0787e1569a8c4c745796e9e39}} 
+\index{NetworkLayer@{NetworkLayer}!onUpdate@{onUpdate}}
+\index{onUpdate@{onUpdate}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{onUpdate()}{onUpdate()}}
+{\footnotesize\ttfamily virtual void Network\+Layer\+::on\+Update (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu\+::\+Network}}, and \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\+\_\+info}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_network_layer_ac35d32c4c42e71a69fced5efec74f9c6}\label{struct_network_layer_ac35d32c4c42e71a69fced5efec74f9c6}} 
+\index{NetworkLayer@{NetworkLayer}!my\_ip\_address@{my\_ip\_address}}
+\index{my\_ip\_address@{my\_ip\_address}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{my\_ip\_address}{my\_ip\_address}}
+{\footnotesize\ttfamily std\+::string Network\+Layer\+::my\+\_\+ip\+\_\+address}
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_a6894a175bcbb8ffc9e42b2ddbc399ca8}{Network\+Layer()}}.
+
+\mbox{\Hypertarget{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}\label{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}} 
+\index{NetworkLayer@{NetworkLayer}!network\_info@{network\_info}}
+\index{network\_info@{network\_info}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{network\_info}{network\_info}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$network\+::\+Info$>$ Network\+Layer\+::network\+\_\+info}
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_a4f9997f77d6526472acab2f2ce3e1adf}{draw\+\_\+base\+\_\+screen()}}, \mbox{\hyperlink{struct_network_layer_a3484d948630f94d4e3df79efb4cee697}{draw\+\_\+ip\+\_\+input\+\_\+screen()}}, \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{draw\+\_\+username()}}, \mbox{\hyperlink{struct_network_layer_a6894a175bcbb8ffc9e42b2ddbc399ca8}{Network\+Layer()}}, and \mbox{\hyperlink{struct_network_layer_aae3049c0787e1569a8c4c745796e9e39}{on\+Update()}}.
+
+\mbox{\Hypertarget{struct_network_layer_a6f570199ba8ee9d5c72aa436c637b189}\label{struct_network_layer_a6f570199ba8ee9d5c72aa436c637b189}} 
+\index{NetworkLayer@{NetworkLayer}!should\_show\_host\_ip@{should\_show\_host\_ip}}
+\index{should\_show\_host\_ip@{should\_show\_host\_ip}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{should\_show\_host\_ip}{should\_show\_host\_ip}}
+{\footnotesize\ttfamily bool Network\+Layer\+::should\+\_\+show\+\_\+host\+\_\+ip = false}
+
+\mbox{\Hypertarget{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}\label{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}} 
+\index{NetworkLayer@{NetworkLayer}!ui\_context@{ui\_context}}
+\index{ui\_context@{ui\_context}!NetworkLayer@{NetworkLayer}}
+\doxysubsubsection{\texorpdfstring{ui\_context}{ui\_context}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ui\+::\+UIContext$>$ Network\+Layer\+::ui\+\_\+context}
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_a4f9997f77d6526472acab2f2ce3e1adf}{draw\+\_\+base\+\_\+screen()}}, \mbox{\hyperlink{struct_network_layer_a3484d948630f94d4e3df79efb4cee697}{draw\+\_\+ip\+\_\+input\+\_\+screen()}}, \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{draw\+\_\+username()}}, \mbox{\hyperlink{struct_network_layer_a6894a175bcbb8ffc9e42b2ddbc399ca8}{Network\+Layer()}}, \mbox{\hyperlink{struct_network_layer_a3afcb961c3248b6ac8381142a5ac81c1}{on\+Char\+Pressed\+Event()}}, \mbox{\hyperlink{struct_network_layer_a8eeae00b7267e1a282fe39a09beb884b}{on\+Gamepad\+Axis\+Moved()}}, \mbox{\hyperlink{struct_network_layer_a954bb75983572ea781d6593589d36bd4}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_network_layer_acf4f8f71d0cade871919e8ec67c51880}{on\+Key\+Pressed()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{networklayer_8h}{networklayer.\+h}}\end{DoxyCompactItemize}

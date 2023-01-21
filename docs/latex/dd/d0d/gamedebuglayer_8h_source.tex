@@ -1,0 +1,159 @@
+\hypertarget{gamedebuglayer_8h_source}{}\doxysection{gamedebuglayer.\+h}
+\label{gamedebuglayer_8h_source}\index{src/gamedebuglayer.h@{src/gamedebuglayer.h}}
+\mbox{\hyperlink{gamedebuglayer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{drawing__util_8h}{drawing\_util.h}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}engine/event.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{engine_8h}{engine.h}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{preload_8h}{preload.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{camera_8h}{camera.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}engine/layer.h"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{entityhelper_8h}{entityhelper.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_game_debug_layer}{GameDebugLayer}}\ :\ \textcolor{keyword}{public}\ Layer\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\_ui\_enabled}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}{network\_ui\_enabled}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00019\ \ \ \ \ std::shared\_ptr<ui::UIContext>\ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_a5a9d1c41ab2e61b4792409af19f6d463}{GameDebugLayer}}()\ :\ Layer(\textcolor{stringliteral}{"{}Game"{}})\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ GLOBALS.set(\textcolor{stringliteral}{"{}debug\_ui\_enabled"{}},\ \&\mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\_ui\_enabled}});}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ GLOBALS.set(\textcolor{stringliteral}{"{}network\_ui\_enabled"{}},\ \&\mbox{\hyperlink{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}{network\_ui\_enabled}});}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}.reset(\textcolor{keyword}{new}\ ui::UIContext());}
+\DoxyCodeLine{00025\ \ \ \ \ \}}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_game_debug_layer_a6b053cd611c544c4ac4783f21da4721c}{\string~GameDebugLayer}}()\ \{\}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_debug_layer_ab2e80b6c6333f12d5e900e784795e25e}{onEvent}}(Event\&\ event)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{MenuState::s\_in\_game}}())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ EventDispatcher\ dispatcher(event);}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ dispatcher.dispatch<KeyPressedEvent>(std::bind(}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_game_debug_layer_ad78328056a1a212b6b8f974d367c836d}{GameDebugLayer::onKeyPressed}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ dispatcher.dispatch<GamepadButtonPressedEvent>(}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ std::bind(\&\mbox{\hyperlink{struct_game_debug_layer_a1cce640d4f310a3364c0a5185ab62438}{GameDebugLayer::onGamepadButtonPressed}},\ \textcolor{keyword}{this},}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::placeholders::\_1));}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ dispatcher.dispatch<GamepadAxisMovedEvent>(std::bind(}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_game_debug_layer_ad43118850e1f82497e7f05b18e1bb139}{GameDebugLayer::onGamepadAxisMoved}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
+\DoxyCodeLine{00038\ \ \ \ \ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_game_debug_layer_ad43118850e1f82497e7f05b18e1bb139}{onGamepadAxisMoved}}(GamepadAxisMovedEvent\&)\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_debug_layer_a9e336c722f2c4d11ad35491754a57e15}{toggle\_planning}}()\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_state_afe57b59bb7d55344195913ca91fbf586}{GameState::s\_toggle\_planning}}();}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a6fef0ba4ee7eaf9d9933c7cacdbb617c}{EntityHelper::invalidatePathCache}}();}
+\DoxyCodeLine{00045\ \ \ \ \ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_game_debug_layer_a1cce640d4f310a3364c0a5185ab62438}{onGamepadButtonPressed}}(GamepadButtonPressedEvent\&\ event)\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (KeyMap::get\_button(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::TogglePlanning)\ ==}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ event.button)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_a9e336c722f2c4d11ad35491754a57e15}{toggle\_planning}}();}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (KeyMap::get\_button(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::ToggleDebug)\ ==}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ event.button)\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\_ui\_enabled}}\ =\ !\mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\_ui\_enabled}};}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (KeyMap::get\_button(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ InputName::ToggleNetworkView)\ ==\ event.button)\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}{network\_ui\_enabled}}\ =\ !\mbox{\hyperlink{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}{network\_ui\_enabled}};}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}.get()-\/>process\_gamepad\_button\_event(event);}
+\DoxyCodeLine{00064\ \ \ \ \ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_game_debug_layer_ad78328056a1a212b6b8f974d367c836d}{onKeyPressed}}(KeyPressedEvent\&\ event)\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (KeyMap::get\_key\_code(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ InputName::TogglePlanning)\ ==\ event.keycode)\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_a9e336c722f2c4d11ad35491754a57e15}{toggle\_planning}}();}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (KeyMap::get\_key\_code(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::ToggleLobby)\ ==}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ event.keycode)\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a6fef0ba4ee7eaf9d9933c7cacdbb617c}{EntityHelper::invalidatePathCache}}();}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ GameState::get().set(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game::State::Lobby}});}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (KeyMap::get\_key\_code(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ InputName::ToggleDebug)\ ==}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ event.keycode)\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\_ui\_enabled}}\ =\ !\mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\_ui\_enabled}};}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (KeyMap::get\_key\_code(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ InputName::ToggleNetworkView)\ ==}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ event.keycode)\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}{network\_ui\_enabled}}\ =\ !\mbox{\hyperlink{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}{network\_ui\_enabled}};}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}.get()-\/>process\_keyevent(event);}
+\DoxyCodeLine{00090\ \ \ \ \ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_debug_layer_ad3730437d72b79624bb92d20f2055df3}{onUpdate}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{MenuState::s\_in\_game}}())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00094\ \ \ \ \ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_debug_layer_a6a9d3570fdea06d94c2bdbc408abe358}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{MenuState::s\_in\_game}}())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\_ui\_enabled}})\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ DrawTextEx(Preload::get().font,\ \textcolor{stringliteral}{"{}Press\ \(\backslash\)\(\backslash\)\ to\ toggle\ debug\ UI"{}},}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vec2\{200,\ 70\},\ 20,\ 0,\ RED);}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_game_debug_layer_afda40fb4a858e0f32670f53836a2b6d5}{network\_ui\_enabled}})\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ DrawTextEx(}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Preload::get().font,}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Press\ =\ to\ toggle\ network\ debug\ UI\ (only\ works\ if\ host)"{}},}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vec2\{200,\ 100\},\ 20,\ 0,\ RED);}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_ab6871e69ac7627526353f7f082a41a05}{debug\_ui}}(dt);}
+\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{//\ TODO\ implement\ or\ remove}}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_debug_layer_a15d4d728339945a68ed417c6789b9e9d}{draw\_all\_debug\_ui}}()\ \{\}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_debug_layer_ab6871e69ac7627526353f7f082a41a05}{debug\_ui}}(\textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_game_debug_layer_aedbbf095ca340443b80a08a8991b405d}{debug\_ui\_enabled}})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ namespace\ }ui;}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}-\/>begin(dt);}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ root\ =\ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}-\/>own(Widget(}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Px(WIN\_WF(),\ 1.f),\ Size\_Px(WIN\_HF(),\ 1.f),\ GrowFlags::Row));}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}-\/>push\_parent(root);}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ left\_padding\ =\ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}-\/>own(}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Widget(Size\_Px(100.f,\ 1.f),\ Size\_Px(WIN\_HF(),\ 1.f)));}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}-\/>own(Widget(\{.mode\ =\ Children,\ .strictness\ =\ 1.f\},}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Pct(1.f,\ 1.0f),\ Column));}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ padding(*left\_padding);}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ div(*content);}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}-\/>push\_parent(content);}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ top\_padding\ =\ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}-\/>own(}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Widget(Size\_Px(100.f,\ 1.f),\ Size\_Pct(1.f,\ 0.f)));}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ padding(*top\_padding);}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_a15d4d728339945a68ed417c6789b9e9d}{draw\_all\_debug\_ui}}();}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ padding(*\mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}-\/>own(}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Widget(Size\_Px(100.f,\ 1.f),\ Size\_Pct(1.f,\ 0.f))));}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_debug_layer_ae4728f93a37d838778d4b9b0e7adada0}{ui\_context}}-\/>end(root.get());}
+\DoxyCodeLine{00152\ \ \ \ \ \}}
+\DoxyCodeLine{00153\ \};}
+
+\end{DoxyCode}

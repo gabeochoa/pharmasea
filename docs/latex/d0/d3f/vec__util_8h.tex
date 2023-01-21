@@ -1,0 +1,125 @@
+\hypertarget{vec__util_8h}{}\doxysection{src/vec\+\_\+util.h File Reference}
+\label{vec__util_8h}\index{src/vec\_util.h@{src/vec\_util.h}}
+{\ttfamily \#include \char`\"{}external\+\_\+include.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}globals.\+h\char`\"{}}\newline
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacevec}{vec}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{vec__util_8h_a002b2f4894492820fe708b1b7e7c5e70}{EPSILON}}~0.\+000001f
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}{for\+Each\+Neighbor}} (int i, int j, std\+::function$<$ void(const vec2 \&)$>$ cb, int step=1)
+\item 
+static std\+::vector$<$ vec2 $>$ \mbox{\hyperlink{vec__util_8h_a4a3b66ac1c7427b7059a875740cce0a6}{get\+\_\+neighbors}} (int i, int j, int step=1)
+\item 
+float \mbox{\hyperlink{vec__util_8h_add3dd9e63d43f81591ca9e25b88470d7}{comp\+\_\+max}} (const vec2 \&a)
+\item 
+constexpr Bounding\+Box \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\+\_\+bounds}} (vec3 position, vec3 size)
+\item 
+float constexpr \mbox{\hyperlink{namespacevec_a3e18f73ec09c3b1c14c15a0a42c8405a}{vec\+::newton\+\_\+raphson}} (float x, float cur, float prev)
+\item 
+float constexpr \mbox{\hyperlink{namespacevec_a20805d1426584aacd75c13c89856132f}{vec\+::ce\+\_\+sqrtf}} (float x)
+\item 
+constexpr float \mbox{\hyperlink{namespacevec_a4780c4cb2388d6299519924ca0a609a1}{vec\+::distance}} (vec2 a, vec2 b)
+\item 
+float \mbox{\hyperlink{namespacevec_aabd3fc26e0da594069a9f344c48beb8d}{vec\+::dot2}} (const vec2 \&a, const vec2 \&b)
+\item 
+vec2 \mbox{\hyperlink{namespacevec_a2b336372bfe6c8bd752922c357866a24}{vec\+::norm}} (const vec2 \&a)
+\item 
+constexpr vec3 \mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec\+::to3}} (vec2 position)
+\item 
+constexpr vec2 \mbox{\hyperlink{namespacevec_aa79cdef251ee2f487b55dba93ad63ea0}{vec\+::to2}} (vec3 position)
+\item 
+vec2 \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{vec\+::snap}} (vec2 position)
+\item 
+vec3 \mbox{\hyperlink{namespacevec_ade144f304cbabbf68741ea3e19b96f1e}{vec\+::snap}} (vec3 position)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr int \mbox{\hyperlink{vec__util_8h_a39c52fd1116a4c85f6a446768e4b270c}{neigh\+\_\+x}} \mbox{[}8\mbox{]} = \{-\/1, -\/1, -\/1, 0, 0, 1, 1, 1\}
+\item 
+static constexpr int \mbox{\hyperlink{vec__util_8h_ac980e9b912e5a146e732e94a9adb1392}{neigh\+\_\+y}} \mbox{[}8\mbox{]} = \{-\/1, 0, 1, -\/1, 1, -\/1, 0, 1\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{vec__util_8h_a002b2f4894492820fe708b1b7e7c5e70}\label{vec__util_8h_a002b2f4894492820fe708b1b7e7c5e70}} 
+\index{vec\_util.h@{vec\_util.h}!EPSILON@{EPSILON}}
+\index{EPSILON@{EPSILON}!vec\_util.h@{vec\_util.h}}
+\doxysubsubsection{\texorpdfstring{EPSILON}{EPSILON}}
+{\footnotesize\ttfamily \#define EPSILON~0.\+000001f}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{vec__util_8h_add3dd9e63d43f81591ca9e25b88470d7}\label{vec__util_8h_add3dd9e63d43f81591ca9e25b88470d7}} 
+\index{vec\_util.h@{vec\_util.h}!comp\_max@{comp\_max}}
+\index{comp\_max@{comp\_max}!vec\_util.h@{vec\_util.h}}
+\doxysubsubsection{\texorpdfstring{comp\_max()}{comp\_max()}}
+{\footnotesize\ttfamily float comp\+\_\+max (\begin{DoxyParamCaption}\item[{const vec2 \&}]{a }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}\label{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}} 
+\index{vec\_util.h@{vec\_util.h}!forEachNeighbor@{forEachNeighbor}}
+\index{forEachNeighbor@{forEachNeighbor}!vec\_util.h@{vec\_util.h}}
+\doxysubsubsection{\texorpdfstring{forEachNeighbor()}{forEachNeighbor()}}
+{\footnotesize\ttfamily static void for\+Each\+Neighbor (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{j,  }\item[{std\+::function$<$ void(const vec2 \&)$>$}]{cb,  }\item[{int}]{step = {\ttfamily 1} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{vec__util_8h_a39c52fd1116a4c85f6a446768e4b270c}{neigh\+\_\+x}}, and \mbox{\hyperlink{vec__util_8h_ac980e9b912e5a146e732e94a9adb1392}{neigh\+\_\+y}}.
+
+
+
+Referenced by \mbox{\hyperlink{vec__util_8h_a4a3b66ac1c7427b7059a875740cce0a6}{get\+\_\+neighbors()}}.
+
+\mbox{\Hypertarget{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}\label{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}} 
+\index{vec\_util.h@{vec\_util.h}!get\_bounds@{get\_bounds}}
+\index{get\_bounds@{get\_bounds}!vec\_util.h@{vec\_util.h}}
+\doxysubsubsection{\texorpdfstring{get\_bounds()}{get\_bounds()}}
+{\footnotesize\ttfamily constexpr Bounding\+Box get\+\_\+bounds (\begin{DoxyParamCaption}\item[{vec3}]{position,  }\item[{vec3}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{Entity\+::bounds()}}, \mbox{\hyperlink{struct_item_a6b50c8e2df7d6031f59ead493f544f03}{Item\+::bounds()}}, \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{Person\+::handle\+\_\+collision()}}, \mbox{\hyperlink{struct_entity_helper_a3610c9a5865dc6bfa24cdc6f6858a763}{Entity\+Helper\+::is\+Walkable\+Raw\+Entities()}}, \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{Entity\+::raw\+\_\+bounds()}}, and \mbox{\hyperlink{struct_item_a3a59ef91c6a7308e3d681740613ad06b}{Item\+::raw\+\_\+bounds()}}.
+
+\mbox{\Hypertarget{vec__util_8h_a4a3b66ac1c7427b7059a875740cce0a6}\label{vec__util_8h_a4a3b66ac1c7427b7059a875740cce0a6}} 
+\index{vec\_util.h@{vec\_util.h}!get\_neighbors@{get\_neighbors}}
+\index{get\_neighbors@{get\_neighbors}!vec\_util.h@{vec\_util.h}}
+\doxysubsubsection{\texorpdfstring{get\_neighbors()}{get\_neighbors()}}
+{\footnotesize\ttfamily static std\+::vector$<$ vec2 $>$ get\+\_\+neighbors (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{j,  }\item[{int}]{step = {\ttfamily 1} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}{for\+Each\+Neighbor()}}.
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{vec__util_8h_a39c52fd1116a4c85f6a446768e4b270c}\label{vec__util_8h_a39c52fd1116a4c85f6a446768e4b270c}} 
+\index{vec\_util.h@{vec\_util.h}!neigh\_x@{neigh\_x}}
+\index{neigh\_x@{neigh\_x}!vec\_util.h@{vec\_util.h}}
+\doxysubsubsection{\texorpdfstring{neigh\_x}{neigh\_x}}
+{\footnotesize\ttfamily constexpr int neigh\+\_\+x\mbox{[}8\mbox{]} = \{-\/1, -\/1, -\/1, 0, 0, 1, 1, 1\}\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+
+
+Referenced by \mbox{\hyperlink{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}{for\+Each\+Neighbor()}}.
+
+\mbox{\Hypertarget{vec__util_8h_ac980e9b912e5a146e732e94a9adb1392}\label{vec__util_8h_ac980e9b912e5a146e732e94a9adb1392}} 
+\index{vec\_util.h@{vec\_util.h}!neigh\_y@{neigh\_y}}
+\index{neigh\_y@{neigh\_y}!vec\_util.h@{vec\_util.h}}
+\doxysubsubsection{\texorpdfstring{neigh\_y}{neigh\_y}}
+{\footnotesize\ttfamily constexpr int neigh\+\_\+y\mbox{[}8\mbox{]} = \{-\/1, 0, 1, -\/1, 1, -\/1, 0, 1\}\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+
+
+Referenced by \mbox{\hyperlink{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}{for\+Each\+Neighbor()}}.
+

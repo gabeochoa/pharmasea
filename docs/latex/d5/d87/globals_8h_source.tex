@@ -1,0 +1,36 @@
+\hypertarget{globals_8h_source}{}\doxysection{globals.\+h}
+\label{globals_8h_source}\index{src/globals.h@{src/globals.h}}
+\mbox{\hyperlink{globals_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}engine/globals.h"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ YY\ /\ MM\ /\ DD\ (Monday\ of\ week)}}
+\DoxyCodeLine{00007\ \textcolor{keyword}{constexpr}\ std::string\_view\ \mbox{\hyperlink{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}{VERSION}}\ =\ \textcolor{stringliteral}{"{}alpha\_0.23.01.16"{}};}
+\DoxyCodeLine{00008\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{globals_8h_a5d07c476a4df38a957585b4c12bfdf7d}{HASHED\_VERSION}}\ =\ hashString(\mbox{\hyperlink{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}{VERSION}});}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{constexpr}\ std::string\_view\ \mbox{\hyperlink{globals_8h_ae3518c4cf1a0e047e3c4505478b5f15d}{GAME\_FOLDER}}\ =\ \textcolor{stringliteral}{"{}pharmasea"{}};}
+\DoxyCodeLine{00011\ \textcolor{keyword}{constexpr}\ std::string\_view\ \mbox{\hyperlink{globals_8h_a77e9a108d26cde9eb23f98a26e1a3024}{SETTINGS\_FILE\_NAME}}\ =\ \textcolor{stringliteral}{"{}settings.bin"{}};}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{globals_8h_aab26d6b4d9a9de693114dc63909ad7cd}{MAP\_H}}\ =\ 33;}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ constexpr\ int\ MAP\_W\ =\ 12;}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ constexpr\ float\ WIN\_RATIO\ =\ WIN\_W\ *\ 1.f\ /\ WIN\_H;}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ TODO\ currently\ astar\ only\ supports\ tiles\ that\ are\ on\ the\ grid}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ if\ you\ change\ this\ here,\ then\ go\ in\ there\ and\ add\ support\ as\ well}}
+\DoxyCodeLine{00019\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ =\ 1.0f;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ TODO\ is\ there\ a\ way\ for\ us\ to\ move\ these\ to\ engine}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ and\ then\ let\ the\ game\ pass\ them\ in\ or\ something\ \_while\_\ staying\ const?}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ and\ typed}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacenetwork}{network}}\ \{}
+\DoxyCodeLine{00025\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacenetwork_a6aeb6825913b9a386a83c59f8c715a35}{DEFAULT\_PORT}}\ =\ 770;}
+\DoxyCodeLine{00026\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacenetwork_acf4bbd66b0d6716ae9e4e5d9390079c2}{MAX\_CLIENTS}}\ =\ 4;}
+\DoxyCodeLine{00027\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacenetwork_af177a631a8f23b588e2cc5ef90a8d6ac}{MAX\_ANNOUNCEMENT\_LENGTH}}\ =\ 200;}
+\DoxyCodeLine{00028\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacenetwork_ac25927028283483486690041e04cb8c9}{SERVER\_CLIENT\_ID}}\ =\ -\/1;}
+\DoxyCodeLine{00029\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacenetwork_a3855c8561d0a02fbcc26a690abccbac7}{MAX\_INPUTS}}\ =\ 100;}
+\DoxyCodeLine{00030\ \}\ \ \textcolor{comment}{//\ namespace\ network}}
+
+\end{DoxyCode}

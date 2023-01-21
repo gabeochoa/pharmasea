@@ -1,0 +1,288 @@
+\hypertarget{settingslayer_8h_source}{}\doxysection{settingslayer.\+h}
+\label{settingslayer_8h_source}\index{src/settingslayer.h@{src/settingslayer.h}}
+\mbox{\hyperlink{settingslayer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{engine_8h}{engine.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}engine/layer.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}engine/settings.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}engine/trie.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}menu.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{using\ namespace\ }ui;}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ TODO\ add\ support\ for\ customizing\ keymap}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ TODO\ is\ there\ a\ way\ to\ automatically\ build\ this\ UI\ based\ on\ the}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ settings::data\ format?}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ (though\ some\ settings\ probably\ dont\ need\ to\ show)}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_settings_layer}{SettingsLayer}}\ :\ \textcolor{keyword}{public}\ Layer\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ way\ to\ get\ into\ keybindings\ mode}}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{enum}\ \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7a}{ActiveWindow}}\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}{Root}}\ =\ 0,}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aa3cced6d07c1abcbe3fb61a2a1588e71f}{KeyBindings}}\ =\ 1,}
+\DoxyCodeLine{00025\ \ \ \ \ \}\ \mbox{\hyperlink{struct_settings_layer_a3544b379d9ac79e8178f07bac7c634d8}{activeWindow}}\ =\ \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}{ActiveWindow::Root}};}
+\DoxyCodeLine{00026\ \ \ \ \ Trie\ \mbox{\hyperlink{struct_settings_layer_adb61f10c121d444e8dd5aa337b74a520}{keyBindingTrie}};}
+\DoxyCodeLine{00027\ \ \ \ \ std::array<std::pair<InputName,\ std::string\_view>,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ magic\_enum::enum\_count<InputName>()>}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a045da42d7bacfd0e06acc78bc1f07cf3}{keyInputNames}};}
+\DoxyCodeLine{00030\ \ \ \ \ std::vector<std::pair<InputName,\ AnyInputs>>\ \mbox{\hyperlink{struct_settings_layer_abb51e478cf9528499223798ba0884570}{keyInputValues}};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ std::shared\_ptr<ui::UIContext>\ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}};}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_settings_layer_abb2340d359898fb9cb000b832df56f76}{windowSizeDropdownState}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_settings_layer_a2436c15dac32006970485af13ace1163}{windowSizeDropdownIndex}}\ =\ 0;}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_settings_layer_a46d3a6a66e6c06e5ed3e06ee668cde2b}{resolution\_dropdown\_open}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_settings_layer_a6a11c15cb09ededbc30112342c7b293d}{resolution\_selected\_index}}\ =\ 0;}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a1d190e9acf832ded498984746352e2a1}{SettingsLayer}}()\ :\ Layer(\textcolor{stringliteral}{"{}Settings"{}})\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}.reset(\textcolor{keyword}{new}\ ui::UIContext());}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a6a11c15cb09ededbc30112342c7b293d}{resolution\_selected\_index}}\ =}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ Settings::get().get\_current\_resolution\_index();}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_settings_layer_a6a11c15cb09ededbc30112342c7b293d}{resolution\_selected\_index}}\ <\ 0)\ \mbox{\hyperlink{struct_settings_layer_a6a11c15cb09ededbc30112342c7b293d}{resolution\_selected\_index}}\ =\ 0;}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a045da42d7bacfd0e06acc78bc1f07cf3}{keyInputNames}}\ =\ magic\_enum::enum\_entries<InputName>();}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ kv\ :\ \mbox{\hyperlink{struct_settings_layer_a045da42d7bacfd0e06acc78bc1f07cf3}{keyInputNames}})\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_adb61f10c121d444e8dd5aa337b74a520}{keyBindingTrie}}.add(std::string(kv.second));}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_abb51e478cf9528499223798ba0884570}{keyInputValues}}.push\_back(std::make\_pair(}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ kv.first,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ KeyMap::get\_valid\_inputs(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ kv.first)));}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_settings_layer_a4c0c1e7cea44f09d4ea9316582a8d8c6}{\string~SettingsLayer}}()\ \{\}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_layer_a3d582e4d4c4f4c77de135351afad5ab6}{onEvent}}(Event\&\ event)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ EventDispatcher\ dispatcher(event);}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ dispatcher.dispatch<KeyPressedEvent>(std::bind(}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}{SettingsLayer::onKeyPressed}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ dispatcher.dispatch<GamepadButtonPressedEvent>(}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ std::bind(\&\mbox{\hyperlink{struct_settings_layer_a7de19f92164510ae75ff9043db1c16cd}{SettingsLayer::onGamepadButtonPressed}},\ \textcolor{keyword}{this},}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::placeholders::\_1));}
+\DoxyCodeLine{00063\ \ \ \ \ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}{onKeyPressed}}(KeyPressedEvent\&\ event)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu::State::Settings}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (event.keycode\ ==\ raylib::KEY\_ESCAPE\ \&\&}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a3544b379d9ac79e8178f07bac7c634d8}{activeWindow}}\ !=\ \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}{ActiveWindow::Root}})\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a3544b379d9ac79e8178f07bac7c634d8}{activeWindow}}\ =\ \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}{ActiveWindow::Root}};}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (event.keycode\ ==\ raylib::KEY\_ESCAPE)\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().go\_back();}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}.get()-\/>process\_keyevent(event);}
+\DoxyCodeLine{00080\ \ \ \ \ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_settings_layer_a7de19f92164510ae75ff9043db1c16cd}{onGamepadButtonPressed}}(GamepadButtonPressedEvent\&\ event)\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu::State::Settings}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}.get()-\/>process\_gamepad\_button\_event(event);}
+\DoxyCodeLine{00085\ \ \ \ \ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}{streamer\_safe\_box}}()\ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ container\ =\ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>own(}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ Widget(\{.mode\ =\ Children\},\ \{.mode\ =\ Children\},\ GrowFlags::Row));}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ div(*container);}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>push\_parent(container);}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ text(*ui::components::mk\_text(),\ \textcolor{stringliteral}{"{}Show\ Streamer\ Safe\ Box"{}});}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ checkbox\_widget\ =\ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>own(Widget(}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MK\_UUID(\textcolor{keywordtype}{id},\ ROOT\_ID),\ Size\_Px(75.f,\ 0.5f),\ Size\_Px(25.f,\ 1.f)));}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ sssb\ =\ Settings::get().data.show\_streamer\_safe\_box;}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (checkbox(*checkbox\_widget,\ \&sssb))\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Settings::get().update\_streamer\_safe\_box(sssb);}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00103\ \ \ \ \ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}{enable\_post\_processing}}()\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ container\ =\ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>own(}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ Widget(\{.mode\ =\ Children\},\ \{.mode\ =\ Children\},\ GrowFlags::Row));}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ div(*container);}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>push\_parent(container);}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ text(*ui::components::mk\_text(),\ \textcolor{stringliteral}{"{}Enable\ Post-\/Processing\ Shaders"{}});}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ checkbox\_widget\ =\ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>own(Widget(}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MK\_UUID(\textcolor{keywordtype}{id},\ ROOT\_ID),\ Size\_Px(75.f,\ 0.5f),\ Size\_Px(25.f,\ 1.f)));}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ sssb\ =\ Settings::get().data.enable\_postprocessing;}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (checkbox(*checkbox\_widget,\ \&sssb))\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Settings::get().update\_post\_processing\_enabled(sssb);}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00121\ \ \ \ \ \}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}{master\_volume}}()\ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ volume\_slider\_container\ =\ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>own(}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ Widget(\{.mode\ =\ Children\},\ \{.mode\ =\ Children\},\ GrowFlags::Row));}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ div(*volume\_slider\_container);}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>push\_parent(volume\_slider\_container);}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ text(*ui::components::mk\_text(),\ \textcolor{stringliteral}{"{}Master\ Volume"{}});}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ padding(*ui::components::mk\_padding(Size\_Px(100.f,\ 1.f),}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Px(100.f,\ 1.f)));}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ slider\_widget\ =\ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>own(Widget(}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MK\_UUID(\textcolor{keywordtype}{id},\ ROOT\_ID),\ Size\_Px(100.f,\ 1.f),\ Size\_Px(30.f,\ 1.f)));}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}*\ mv\ =\ \&(Settings::get().data.master\_volume);}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (slider(*slider\_widget,\ \textcolor{keyword}{false},\ mv,\ 0.f,\ 1.f))\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Settings::get().update\_master\_volume(*mv);}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00143\ \ \ \ \ \}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}{music\_volume}}()\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ volume\_slider\_container\ =\ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>own(}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ Widget(\{.mode\ =\ Children\},\ \{.mode\ =\ Children\},\ GrowFlags::Row));}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ div(*volume\_slider\_container);}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>push\_parent(volume\_slider\_container);}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ text(*ui::components::mk\_text(),\ \textcolor{stringliteral}{"{}Music\ Volume"{}});}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ padding(*ui::components::mk\_padding(Size\_Px(100.f,\ 1.f),}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Px(100.f,\ 1.f)));}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ slider\_widget\ =\ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>own(Widget(}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MK\_UUID(\textcolor{keywordtype}{id},\ ROOT\_ID),\ Size\_Px(100.f,\ 1.f),\ Size\_Px(30.f,\ 1.f)));}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}*\ mv\ =\ \&(Settings::get().data.music\_volume);}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (slider(*slider\_widget,\ \textcolor{keyword}{false},\ mv,\ 0.f,\ 1.f))\ \{}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Settings::get().update\_music\_volume(*mv);}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00165\ \ \ \ \ \}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{resolution\_switcher}}()\ \{}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ resolution\_switcher\_container\ =\ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>own(}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ Widget(\{.mode\ =\ Children\},\ \{.mode\ =\ Children\},\ GrowFlags::Row));}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ div(*resolution\_switcher\_container);}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>push\_parent(resolution\_switcher\_container);}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ text(*ui::components::mk\_text(),\ \textcolor{stringliteral}{"{}Resolution"{}});}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ padding(*ui::components::mk\_padding(Size\_Px(100.f,\ 1.f),}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Px(100.f,\ 1.f)));}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ dropdown\_widget\ =}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>own(Widget(\{Size\_Px(100.f,\ 1.f),\ Size\_Px(50.f,\ 1.f),}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GrowFlags::Row\ |\ GrowFlags::Column\}));}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dropdown(*dropdown\_widget,\ Settings::get().resolution\_options(),}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_settings_layer_a46d3a6a66e6c06e5ed3e06ee668cde2b}{resolution\_dropdown\_open}},}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_settings_layer_a6a11c15cb09ededbc30112342c7b293d}{resolution\_selected\_index}}))\ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Settings::get().update\_resolution\_from\_index(}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a6a11c15cb09ededbc30112342c7b293d}{resolution\_selected\_index}});}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00191\ \ \ \ \ \}}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_layer_a8de4b3fe663f67830806e1d142f1b84b}{back\_button}}()\ \{}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (button(*ui::components::mk\_button(MK\_UUID(\textcolor{keywordtype}{id},\ ROOT\_ID),}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Px(120.f,\ 1.f),}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Px(50.f,\ 1.f)),}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Back"{}}))\ \{}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().go\_back();}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ padding(*ui::components::mk\_padding(Size\_Px(100.f,\ 1.f),}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Pct(0.5f,\ 0.f)));}
+\DoxyCodeLine{00202\ \ \ \ \ \}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}{draw\_root\_settings}}(\textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ padding(*ui::components::mk\_padding(Size\_Px(100.f,\ 1.f),}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Px(100.f,\ 0.5f)));}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}{master\_volume}}();}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}{music\_volume}}();}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{resolution\_switcher}}();}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}{streamer\_safe\_box}}();}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}{enable\_post\_processing}}();}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a8de4b3fe663f67830806e1d142f1b84b}{back\_button}}();}
+\DoxyCodeLine{00213\ \ \ \ \ \}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_layer_a384cf5682b9576212bed7d1949abbd24}{draw\_keybindings}}(\textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ tons\ more\ work\ to\ do\ here\ but\ for\ the\ most\ part\ this\ shows\ its}}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ possible\ to\ load\ all\ of\ them}}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ save\ all\ the\ changed\ inputs}}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ kv\ :\ \mbox{\hyperlink{struct_settings_layer_a045da42d7bacfd0e06acc78bc1f07cf3}{keyInputNames}})\ \{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ keys\ =}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ KeyMap::get\_valid\_keys(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}},\ kv.first);}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ handle\ multiple\ keys}}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (keys.empty())\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ opt\_key\ =\ magic\_enum::enum\_cast<raylib::KeyboardKey>(keys[0]);}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!opt\_key.has\_value())\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::KeyboardKey\ kbKey\ =\ opt\_key.value();}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (button(*ui::components::mk\_button(}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MK\_UUID\_LOOP(\textcolor{keywordtype}{id},\ ROOT\_ID,\ kv.first)),}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}\{\}(\{\})"{}},\ kv.second,}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ magic\_enum::enum\_name(kbKey))))\ \{}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}HI\ "{}}\ <<\ kv.second\ <<\ std::endl;}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00236\ \ \ \ \ \}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\_ui}}(\textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ namespace\ }ui;}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>begin(dt);}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ root\ =\ ui::components::mk\_root();}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>push\_parent(root);}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ padding(*ui::components::mk\_padding(Size\_Px(100.f,\ 1.f),}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Px(WIN\_HF(),\ 1.f)));}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>own(Widget(\{.mode\ =\ Children,\ .strictness\ =\ 1.f\},}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Pct(1.f,\ 1.f),\ Column));}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ div(*content);}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>push\_parent(content);}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{struct_settings_layer_a3544b379d9ac79e8178f07bac7c634d8}{activeWindow}})\ \{}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}{ActiveWindow::Root}}:}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}{draw\_root\_settings}}(dt);}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aa3cced6d07c1abcbe3fb61a2a1588e71f}{ActiveWindow::KeyBindings}}:}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a384cf5682b9576212bed7d1949abbd24}{draw\_keybindings}}(dt);}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>end(root.get());}
+\DoxyCodeLine{00270\ \ \ \ \ \}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_layer_a61847ff955819ef4cfffe526202d9df3}{onUpdate}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu::State::Settings}}))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ raylib::SetExitKey(raylib::KEY\_NULL);}
+\DoxyCodeLine{00275\ \ \ \ \ \}}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_settings_layer_a25715e82ed14d56401b9a39b57c03b0b}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu::State::Settings}}))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ ext::clear\_background(\mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\_context}}-\/>active\_theme().background);}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\_ui}}(dt);}
+\DoxyCodeLine{00281\ \ \ \ \ \}}
+\DoxyCodeLine{00282\ \};}
+
+\end{DoxyCode}

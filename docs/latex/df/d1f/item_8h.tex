@@ -1,0 +1,44 @@
+\hypertarget{item_8h}{}\doxysection{src/item.h File Reference}
+\label{item_8h}\index{src/item.h@{src/item.h}}
+{\ttfamily \#include \char`\"{}external\+\_\+include.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine/model\+\_\+library.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine/random.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}globals.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}raylib.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}vec\+\_\+util.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_item}{Item}}
+\item 
+struct \mbox{\hyperlink{struct_pill}{Pill}}
+\item 
+struct \mbox{\hyperlink{struct_pill_bottle}{Pill\+Bottle}}
+\item 
+struct \mbox{\hyperlink{struct_bag}{Bag}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacebitsery}{bitsery}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{namespacebitsery_a3e47fd9b1774ea3777645fad2892ffce}{bitsery\+::serialize}} (S \&s, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \&item)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::atomic\+\_\+int \mbox{\hyperlink{item_8h_a26702aa361e96e06f946b2c2864bd231}{ITEM\+\_\+\+ID\+\_\+\+GEN}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{item_8h_a26702aa361e96e06f946b2c2864bd231}\label{item_8h_a26702aa361e96e06f946b2c2864bd231}} 
+\index{item.h@{item.h}!ITEM\_ID\_GEN@{ITEM\_ID\_GEN}}
+\index{ITEM\_ID\_GEN@{ITEM\_ID\_GEN}!item.h@{item.h}}
+\doxysubsubsection{\texorpdfstring{ITEM\_ID\_GEN}{ITEM\_ID\_GEN}}
+{\footnotesize\ttfamily std\+::atomic\+\_\+int ITEM\+\_\+\+ID\+\_\+\+GEN = 0\hspace{0.3cm}{\ttfamily [static]}}
+

@@ -1,0 +1,814 @@
+\hypertarget{struct_entity}{}\doxysection{Entity Struct Reference}
+\label{struct_entity}\index{Entity@{Entity}}
+
+
+{\ttfamily \#include $<$entity.\+h$>$}
+
+Inheritance diagram for Entity\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.642277cm]{dc/dc4/struct_entity}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} \{ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FORWARD}} = 0x1
+, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{RIGHT}} = 0x2
+, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{BACK}} = 0x4
+, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{LEFT}} = 0x8
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} \mbox{\hyperlink{struct_entity_aa279f81f1d6c0e63a9724310a981250f}{offset\+Face\+Direction}} (\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} starting\+Direction, float offset) const
+\item 
+\mbox{\hyperlink{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}{Entity}} (vec3 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\item 
+\mbox{\hyperlink{struct_entity_a69970748dae094cbca81f77a82c1ae66}{Entity}} (vec2 p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\item 
+\mbox{\hyperlink{struct_entity_abed77744bbc522e364be6fc2ab1792ac}{Entity}} (vec3 p, Color c)
+\item 
+\mbox{\hyperlink{struct_entity_add145c7ad5ec1aca28429a337ca48304}{Entity}} (vec2 p, Color c)
+\item 
+virtual \mbox{\hyperlink{struct_entity_a588098978eea6a3486b7361605ff3f0f}{$\sim$\+Entity}} ()
+\item 
+void \mbox{\hyperlink{struct_entity_af8740cbb0b094e46c3b768b7b1a33b59}{update\+\_\+name}} (const std\+::string \&new\+\_\+name)
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_abac7c61d12e2b5c85d8a8b468a727797}{can\+\_\+take\+\_\+item\+\_\+from}} () const
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}} (Bounding\+Box b) const
+\item 
+virtual Bounding\+Box \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}{update\+\_\+position}} (const vec3 \&p)
+\item 
+void \mbox{\hyperlink{struct_entity_ad0bf9cef410758f173d4b376b1df631f}{rotate\+\_\+facing\+\_\+clockwise}} ()
+\item 
+virtual vec2 \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\+\_\+infront}} (int distance)
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_a489fd7ead99634ebb6c707263598df81}{add\+\_\+to\+\_\+navmesh}} ()
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{is\+\_\+collidable}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a48efb563c821424fd1a97efcc211cfd8}{on\+\_\+pickup}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\+\_\+drop}} (vec3 location)
+\item 
+virtual void \mbox{\hyperlink{struct_entity_adab1628044c63c07d189d44b411046a3}{render}} () const final
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update}} (float dt) final
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static vec2 \mbox{\hyperlink{struct_entity_af454ca504cbb7f3549cc206263895b51}{tile\+\_\+infront\+\_\+given\+\_\+pos}} (vec2 tile, int distance, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} direction)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const std\+::map$<$ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}}, float $>$ \mbox{\hyperlink{struct_entity_a1d00ed121b7125c7e18506deda3c9c38}{Front\+Face\+Direction\+Map}}
+\item 
+const std\+::map$<$ int, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} $>$ \mbox{\hyperlink{struct_entity_ace4a615925528f48d995ce9443506a4d}{Direction\+To\+Front\+Face\+Map}}
+\item 
+int \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}
+\item 
+vec3 \mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\+\_\+position}}
+\item 
+vec3 \mbox{\hyperlink{struct_entity_a71e5d4cf6ae2c20d9227dd55c017d797}{prev\+\_\+position}}
+\item 
+vec3 \mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}}
+\item 
+vec3 \mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\+\_\+force}} \{0.\+0, 0.\+0, 0.\+0\}
+\item 
+Color \mbox{\hyperlink{struct_entity_aceb6290fec072176cef25608188042ed}{face\+\_\+color}}
+\item 
+Color \mbox{\hyperlink{struct_entity_a3978918d89c7165bb86cffb14d55b442}{base\+\_\+color}}
+\item 
+bool \mbox{\hyperlink{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}{cleanup}} = false
+\item 
+bool \mbox{\hyperlink{struct_entity_ad9ba4b65cc992e4bab6da5ce023e41e6}{is\+\_\+highlighted}} = false
+\item 
+bool \mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\+\_\+held}} = false
+\item 
+\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} \mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\+\_\+direction}} = \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{Front\+Face\+Direction\+::\+FORWARD}}
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \mbox{\hyperlink{struct_entity_a851369e74ee7fc64c3a304875cbdc9f2}{held\+\_\+item}} = nullptr
+\item 
+int \mbox{\hyperlink{struct_entity_aed6000bd2aef3497277d23deb1f1554f}{name\+\_\+length}} = 1
+\item 
+std\+::string \mbox{\hyperlink{struct_entity_a931b21fbdebb1a5963b4bcab5df128f5}{name}} = \char`\"{}\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_entity_a980f368aa07ce358583982821533a54a}{Entity}} ()
+\item 
+virtual vec3 \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}} () const
+\item 
+virtual Bounding\+Box \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\+\_\+bounds}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a66588b42f69ce15038bd149605a16fc2}{render\+\_\+debug\+\_\+mode}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a8aa106da3c2e49952d46fe6413d06d37}{render\+\_\+highlighted}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a4f5def0fc8ea405ab385a65018046168}{render\+\_\+floating\+\_\+name}} () const
+\item 
+virtual std\+::optional$<$ Model\+Info $>$ \mbox{\hyperlink{struct_entity_abe393fa333d9f5eadcc99b0a959539d4}{model}} () const
+\item 
+vec3 \mbox{\hyperlink{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}{snap\+\_\+position}} () const
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{update\+\_\+held\+\_\+item\+\_\+position}} ()
+\item 
+virtual vec2 \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{turn\+\_\+to\+\_\+face\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$target)
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update}} (float)
+\item 
+virtual void \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{planning\+\_\+update}} (float)
+\item 
+virtual void \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\+\_\+round\+\_\+update}} (float)
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_af864202a00a448f2b30e7b5634e5c490}{is\+\_\+snappable}} ()
+\item 
+virtual bool \mbox{\hyperlink{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}{can\+\_\+place\+\_\+item\+\_\+into}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$=nullptr)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}\label{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}} 
+\index{Entity@{Entity}!FrontFaceDirection@{FrontFaceDirection}}
+\index{FrontFaceDirection@{FrontFaceDirection}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{FrontFaceDirection}{FrontFaceDirection}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Entity\+::\+Front\+Face\+Direction}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FORWARD@{FORWARD}!Entity@{Entity}}\index{Entity@{Entity}!FORWARD@{FORWARD}}}\mbox{\Hypertarget{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}\label{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}} 
+FORWARD&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RIGHT@{RIGHT}!Entity@{Entity}}\index{Entity@{Entity}!RIGHT@{RIGHT}}}\mbox{\Hypertarget{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}\label{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}} 
+RIGHT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BACK@{BACK}!Entity@{Entity}}\index{Entity@{Entity}!BACK@{BACK}}}\mbox{\Hypertarget{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}\label{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}} 
+BACK&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LEFT@{LEFT}!Entity@{Entity}}\index{Entity@{Entity}!LEFT@{LEFT}}}\mbox{\Hypertarget{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}\label{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}} 
+LEFT&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}\label{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}} 
+\index{Entity@{Entity}!Entity@{Entity}}
+\index{Entity@{Entity}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{Entity()}{Entity()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
+{\footnotesize\ttfamily Entity\+::\+Entity (\begin{DoxyParamCaption}\item[{vec3}]{p,  }\item[{Color}]{face\+\_\+color\+\_\+in,  }\item[{Color}]{base\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}{snap\+\_\+position()}}.
+
+\mbox{\Hypertarget{struct_entity_a69970748dae094cbca81f77a82c1ae66}\label{struct_entity_a69970748dae094cbca81f77a82c1ae66}} 
+\index{Entity@{Entity}!Entity@{Entity}}
+\index{Entity@{Entity}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{Entity()}{Entity()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
+{\footnotesize\ttfamily Entity\+::\+Entity (\begin{DoxyParamCaption}\item[{vec2}]{p,  }\item[{Color}]{face\+\_\+color\+\_\+in,  }\item[{Color}]{base\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_entity_abed77744bbc522e364be6fc2ab1792ac}\label{struct_entity_abed77744bbc522e364be6fc2ab1792ac}} 
+\index{Entity@{Entity}!Entity@{Entity}}
+\index{Entity@{Entity}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{Entity()}{Entity()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
+{\footnotesize\ttfamily Entity\+::\+Entity (\begin{DoxyParamCaption}\item[{vec3}]{p,  }\item[{Color}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}{snap\+\_\+position()}}.
+
+\mbox{\Hypertarget{struct_entity_add145c7ad5ec1aca28429a337ca48304}\label{struct_entity_add145c7ad5ec1aca28429a337ca48304}} 
+\index{Entity@{Entity}!Entity@{Entity}}
+\index{Entity@{Entity}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{Entity()}{Entity()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily Entity\+::\+Entity (\begin{DoxyParamCaption}\item[{vec2}]{p,  }\item[{Color}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_entity_a588098978eea6a3486b7361605ff3f0f}\label{struct_entity_a588098978eea6a3486b7361605ff3f0f}} 
+\index{Entity@{Entity}!````~Entity@{$\sim$Entity}}
+\index{````~Entity@{$\sim$Entity}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{$\sim$Entity()}{~Entity()}}
+{\footnotesize\ttfamily virtual Entity\+::$\sim$\+Entity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\mbox{\Hypertarget{struct_entity_a980f368aa07ce358583982821533a54a}\label{struct_entity_a980f368aa07ce358583982821533a54a}} 
+\index{Entity@{Entity}!Entity@{Entity}}
+\index{Entity@{Entity}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{Entity()}{Entity()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily Entity\+::\+Entity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_entity_a489fd7ead99634ebb6c707263598df81}\label{struct_entity_a489fd7ead99634ebb6c707263598df81}} 
+\index{Entity@{Entity}!add\_to\_navmesh@{add\_to\_navmesh}}
+\index{add\_to\_navmesh@{add\_to\_navmesh}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{add\_to\_navmesh()}{add\_to\_navmesh()}}
+{\footnotesize\ttfamily virtual bool Entity\+::add\+\_\+to\+\_\+navmesh (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{struct_furniture_a0a970a23706f9c18caa223c4f2716f15}{Furniture}}.
+
+\mbox{\Hypertarget{struct_entity_a5818b221f4df3eed692b5394a0a0c804}\label{struct_entity_a5818b221f4df3eed692b5394a0a0c804}} 
+\index{Entity@{Entity}!always\_update@{always\_update}}
+\index{always\_update@{always\_update}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{always\_update()}{always\_update()}}
+{\footnotesize\ttfamily virtual void Entity\+::always\+\_\+update (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{Person}}, and \mbox{\hyperlink{struct_player_aa61138623d84040a973dd22da01ec2d3}{Player}}.
+
+
+
+References \mbox{\hyperlink{struct_entity_ad9ba4b65cc992e4bab6da5ce023e41e6}{is\+\_\+highlighted}}, \mbox{\hyperlink{struct_entity_af864202a00a448f2b30e7b5634e5c490}{is\+\_\+snappable()}}, \mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\+\_\+position}}, \mbox{\hyperlink{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}{snap\+\_\+position()}}, and \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{update\+\_\+held\+\_\+item\+\_\+position()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{Person\+::always\+\_\+update()}}, \mbox{\hyperlink{struct_player_aa61138623d84040a973dd22da01ec2d3}{Player\+::always\+\_\+update()}}, and \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update()}}.
+
+\mbox{\Hypertarget{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}\label{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}} 
+\index{Entity@{Entity}!bounds@{bounds}}
+\index{bounds@{bounds}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{bounds()}{bounds()}}
+{\footnotesize\ttfamily virtual Bounding\+Box Entity\+::bounds (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\+\_\+bounds()}}, and \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides()}}, and \mbox{\hyperlink{struct_entity_a66588b42f69ce15038bd149605a16fc2}{render\+\_\+debug\+\_\+mode()}}.
+
+\mbox{\Hypertarget{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}\label{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}} 
+\index{Entity@{Entity}!can\_place\_item\_into@{can\_place\_item\_into}}
+\index{can\_place\_item\_into@{can\_place\_item\_into}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{can\_place\_item\_into()}{can\_place\_item\_into()}}
+{\footnotesize\ttfamily virtual bool Entity\+::can\+\_\+place\+\_\+item\+\_\+into (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$}]{ = {\ttfamily nullptr} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{struct_furniture_a5f0f46310aed2fdc0f8366f55f42e4d3}{Furniture}}.
+
+\mbox{\Hypertarget{struct_entity_abac7c61d12e2b5c85d8a8b468a727797}\label{struct_entity_abac7c61d12e2b5c85d8a8b468a727797}} 
+\index{Entity@{Entity}!can\_take\_item\_from@{can\_take\_item\_from}}
+\index{can\_take\_item\_from@{can\_take\_item\_from}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{can\_take\_item\_from()}{can\_take\_item\_from()}}
+{\footnotesize\ttfamily virtual bool Entity\+::can\+\_\+take\+\_\+item\+\_\+from (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\mbox{\Hypertarget{struct_entity_a565b5f806268523149cff7eeda2f7091}\label{struct_entity_a565b5f806268523149cff7eeda2f7091}} 
+\index{Entity@{Entity}!collides@{collides}}
+\index{collides@{collides}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{collides()}{collides()}}
+{\footnotesize\ttfamily virtual bool Entity\+::collides (\begin{DoxyParamCaption}\item[{Bounding\+Box}]{b }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds()}}.
+
+\mbox{\Hypertarget{struct_entity_ae32aa83d8bae67c396468b025675ee74}\label{struct_entity_ae32aa83d8bae67c396468b025675ee74}} 
+\index{Entity@{Entity}!get\_heading@{get\_heading}}
+\index{get\_heading@{get\_heading}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{get\_heading()}{get\_heading()}}
+{\footnotesize\ttfamily virtual vec2 Entity\+::get\+\_\+heading (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{namespaceutil_a754507833912be9c3f11ad02c3ea05f9}{util\+::deg2rad()}}, and \mbox{\hyperlink{struct_entity_a1d00ed121b7125c7e18506deda3c9c38}{Front\+Face\+Direction\+Map}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{turn\+\_\+to\+\_\+face\+\_\+entity()}}.
+
+\mbox{\Hypertarget{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}\label{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}} 
+\index{Entity@{Entity}!in\_round\_update@{in\_round\_update}}
+\index{in\_round\_update@{in\_round\_update}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{in\_round\_update()}{in\_round\_update()}}
+{\footnotesize\ttfamily virtual void Entity\+::in\+\_\+round\+\_\+update (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{struct_a_i_person_a96ac966279b3fae533fb2cfb9533e820}{AIPerson}}, and \mbox{\hyperlink{struct_customer_a648cd551e96ad1d075660d1227c53f63}{Customer}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_a_i_person_a96ac966279b3fae533fb2cfb9533e820}{AIPerson\+::in\+\_\+round\+\_\+update()}}, and \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update()}}.
+
+\mbox{\Hypertarget{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}\label{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}} 
+\index{Entity@{Entity}!is\_collidable@{is\_collidable}}
+\index{is\_collidable@{is\_collidable}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{is\_collidable()}{is\_collidable()}}
+{\footnotesize\ttfamily virtual bool Entity\+::is\+\_\+collidable (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{struct_player_a587fe74993a7068ac261ef6bfd93b999}{Player}}, \mbox{\hyperlink{struct_remote_player_a2c6c65e8cd1383725d002c805105c71c}{Remote\+Player}}, \mbox{\hyperlink{struct_customer_spawner_a6cfc00f4eebc11a53ac810c9cc13f93f}{Customer\+Spawner}}, and \mbox{\hyperlink{struct_target_cube_a65c0e00df0a55e680e483a4692f8bbf3}{Target\+Cube}}.
+
+
+
+References \mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\+\_\+held}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{Person\+::handle\+\_\+collision()}}.
+
+\mbox{\Hypertarget{struct_entity_af864202a00a448f2b30e7b5634e5c490}\label{struct_entity_af864202a00a448f2b30e7b5634e5c490}} 
+\index{Entity@{Entity}!is\_snappable@{is\_snappable}}
+\index{is\_snappable@{is\_snappable}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{is\_snappable()}{is\_snappable()}}
+{\footnotesize\ttfamily virtual bool Entity\+::is\+\_\+snappable (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{struct_a_i_person_a7a34eb065642bd59056aa0ea727fed7e}{AIPerson}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update()}}.
+
+\mbox{\Hypertarget{struct_entity_abe393fa333d9f5eadcc99b0a959539d4}\label{struct_entity_abe393fa333d9f5eadcc99b0a959539d4}} 
+\index{Entity@{Entity}!model@{model}}
+\index{model@{model}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{model()}{model()}}
+{\footnotesize\ttfamily virtual std\+::optional$<$ Model\+Info $>$ Entity\+::model (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{struct_person_aa9f59abcc030fcd0ecb1323ac8f2a4aa}{Person}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a8aa106da3c2e49952d46fe6413d06d37}{render\+\_\+highlighted()}}, and \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal()}}.
+
+\mbox{\Hypertarget{struct_entity_aa279f81f1d6c0e63a9724310a981250f}\label{struct_entity_aa279f81f1d6c0e63a9724310a981250f}} 
+\index{Entity@{Entity}!offsetFaceDirection@{offsetFaceDirection}}
+\index{offsetFaceDirection@{offsetFaceDirection}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{offsetFaceDirection()}{offsetFaceDirection()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} Entity\+::offset\+Face\+Direction (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}}}]{starting\+Direction,  }\item[{float}]{offset }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_ace4a615925528f48d995ce9443506a4d}{Direction\+To\+Front\+Face\+Map}}, and \mbox{\hyperlink{struct_entity_a1d00ed121b7125c7e18506deda3c9c38}{Front\+Face\+Direction\+Map}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_ad0bf9cef410758f173d4b376b1df631f}{rotate\+\_\+facing\+\_\+clockwise()}}.
+
+\mbox{\Hypertarget{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}\label{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}} 
+\index{Entity@{Entity}!on\_drop@{on\_drop}}
+\index{on\_drop@{on\_drop}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{on\_drop()}{on\_drop()}}
+{\footnotesize\ttfamily virtual void Entity\+::on\+\_\+drop (\begin{DoxyParamCaption}\item[{vec3}]{location }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{vec\+::snap()}}, and \mbox{\hyperlink{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}{update\+\_\+position()}}.
+
+\mbox{\Hypertarget{struct_entity_a48efb563c821424fd1a97efcc211cfd8}\label{struct_entity_a48efb563c821424fd1a97efcc211cfd8}} 
+\index{Entity@{Entity}!on\_pickup@{on\_pickup}}
+\index{on\_pickup@{on\_pickup}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{on\_pickup()}{on\_pickup()}}
+{\footnotesize\ttfamily virtual void Entity\+::on\+\_\+pickup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\mbox{\Hypertarget{struct_entity_ab1754f9ef37144a8999f11c11d923c95}\label{struct_entity_ab1754f9ef37144a8999f11c11d923c95}} 
+\index{Entity@{Entity}!planning\_update@{planning\_update}}
+\index{planning\_update@{planning\_update}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{planning\_update()}{planning\_update()}}
+{\footnotesize\ttfamily virtual void Entity\+::planning\+\_\+update (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{struct_base_player_af6340fba709d11dc11495766df5dcb05}{Base\+Player}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_base_player_af6340fba709d11dc11495766df5dcb05}{Base\+Player\+::planning\+\_\+update()}}, and \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update()}}.
+
+\mbox{\Hypertarget{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}\label{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}} 
+\index{Entity@{Entity}!raw\_bounds@{raw\_bounds}}
+\index{raw\_bounds@{raw\_bounds}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{raw\_bounds()}{raw\_bounds()}}
+{\footnotesize\ttfamily virtual Bounding\+Box Entity\+::raw\+\_\+bounds (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\+\_\+bounds()}}, and \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size()}}.
+
+\mbox{\Hypertarget{struct_entity_adab1628044c63c07d189d44b411046a3}\label{struct_entity_adab1628044c63c07d189d44b411046a3}} 
+\index{Entity@{Entity}!render@{render}}
+\index{render@{render}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{render()}{render()}}
+{\footnotesize\ttfamily virtual void Entity\+::render (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [final]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_a66588b42f69ce15038bd149605a16fc2}{render\+\_\+debug\+\_\+mode()}}, and \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal()}}.
+
+\mbox{\Hypertarget{struct_entity_a66588b42f69ce15038bd149605a16fc2}\label{struct_entity_a66588b42f69ce15038bd149605a16fc2}} 
+\index{Entity@{Entity}!render\_debug\_mode@{render\_debug\_mode}}
+\index{render\_debug\_mode@{render\_debug\_mode}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{render\_debug\_mode()}{render\_debug\_mode()}}
+{\footnotesize\ttfamily virtual void Entity\+::render\+\_\+debug\+\_\+mode (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{struct_a_i_person_a0434c4873c2e4aa67b6b2cba2dc6ffcc}{AIPerson}}, and \mbox{\hyperlink{struct_player_aec0e3481c5583bd4087da4acadef6068}{Player}}.
+
+
+
+References \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_adab1628044c63c07d189d44b411046a3}{render()}}, and \mbox{\hyperlink{struct_a_i_person_a0434c4873c2e4aa67b6b2cba2dc6ffcc}{AIPerson\+::render\+\_\+debug\+\_\+mode()}}.
+
+\mbox{\Hypertarget{struct_entity_a4f5def0fc8ea405ab385a65018046168}\label{struct_entity_a4f5def0fc8ea405ab385a65018046168}} 
+\index{Entity@{Entity}!render\_floating\_name@{render\_floating\_name}}
+\index{render\_floating\_name@{render\_floating\_name}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{render\_floating\_name()}{render\_floating\_name()}}
+{\footnotesize\ttfamily virtual void Entity\+::render\+\_\+floating\+\_\+name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{namespaceraylib_afdb4c3efe6c13dc14bfce3761b4bab50}{raylib\+::\+Draw\+Floating\+Text()}}, \mbox{\hyperlink{struct_entity_a931b21fbdebb1a5963b4bcab5df128f5}{name}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal()}}.
+
+\mbox{\Hypertarget{struct_entity_a8aa106da3c2e49952d46fe6413d06d37}\label{struct_entity_a8aa106da3c2e49952d46fe6413d06d37}} 
+\index{Entity@{Entity}!render\_highlighted@{render\_highlighted}}
+\index{render\_highlighted@{render\_highlighted}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{render\_highlighted()}{render\_highlighted()}}
+{\footnotesize\ttfamily virtual void Entity\+::render\+\_\+highlighted (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\+\_\+direction}}, \mbox{\hyperlink{struct_entity_a1d00ed121b7125c7e18506deda3c9c38}{Front\+Face\+Direction\+Map}}, \mbox{\hyperlink{struct_entity_abe393fa333d9f5eadcc99b0a959539d4}{model()}}, and \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal()}}.
+
+\mbox{\Hypertarget{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}\label{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}} 
+\index{Entity@{Entity}!render\_normal@{render\_normal}}
+\index{render\_normal@{render\_normal}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{render\_normal()}{render\_normal()}}
+{\footnotesize\ttfamily virtual void Entity\+::render\+\_\+normal (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{struct_customer_a5de6c29c3042fcce794a46b10e1e151d}{Customer}}, \mbox{\hyperlink{struct_furniture_a8a01b16d5257d928fbabfbe8b6bd6798}{Furniture}}, and \mbox{\hyperlink{struct_player_a45a9e4289d133516d797c4eeb4f71a9c}{Player}}.
+
+
+
+References \mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\+\_\+direction}}, \mbox{\hyperlink{struct_entity_a1d00ed121b7125c7e18506deda3c9c38}{Front\+Face\+Direction\+Map}}, \mbox{\hyperlink{struct_entity_abe393fa333d9f5eadcc99b0a959539d4}{model()}}, \mbox{\hyperlink{struct_entity_a4f5def0fc8ea405ab385a65018046168}{render\+\_\+floating\+\_\+name()}}, \mbox{\hyperlink{struct_entity_a8aa106da3c2e49952d46fe6413d06d37}{render\+\_\+highlighted()}}, and \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_adab1628044c63c07d189d44b411046a3}{render()}}, \mbox{\hyperlink{struct_player_aec0e3481c5583bd4087da4acadef6068}{Player\+::render\+\_\+debug\+\_\+mode()}}, \mbox{\hyperlink{struct_customer_a5de6c29c3042fcce794a46b10e1e151d}{Customer\+::render\+\_\+normal()}}, \mbox{\hyperlink{struct_furniture_a8a01b16d5257d928fbabfbe8b6bd6798}{Furniture\+::render\+\_\+normal()}}, and \mbox{\hyperlink{struct_player_a45a9e4289d133516d797c4eeb4f71a9c}{Player\+::render\+\_\+normal()}}.
+
+\mbox{\Hypertarget{struct_entity_ad0bf9cef410758f173d4b376b1df631f}\label{struct_entity_ad0bf9cef410758f173d4b376b1df631f}} 
+\index{Entity@{Entity}!rotate\_facing\_clockwise@{rotate\_facing\_clockwise}}
+\index{rotate\_facing\_clockwise@{rotate\_facing\_clockwise}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{rotate\_facing\_clockwise()}{rotate\_facing\_clockwise()}}
+{\footnotesize\ttfamily void Entity\+::rotate\+\_\+facing\+\_\+clockwise (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_aa279f81f1d6c0e63a9724310a981250f}{offset\+Face\+Direction()}}.
+
+\mbox{\Hypertarget{struct_entity_a906c2b31c7b4052674edb3a6b709a618}\label{struct_entity_a906c2b31c7b4052674edb3a6b709a618}} 
+\index{Entity@{Entity}!serialize@{serialize}}
+\index{serialize@{serialize}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void Entity\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_a3978918d89c7165bb86cffb14d55b442}{base\+\_\+color}}, \mbox{\hyperlink{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}{cleanup}}, \mbox{\hyperlink{struct_entity_aceb6290fec072176cef25608188042ed}{face\+\_\+color}}, \mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\+\_\+direction}}, \mbox{\hyperlink{struct_entity_a851369e74ee7fc64c3a304875cbdc9f2}{held\+\_\+item}}, \mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\+\_\+held}}, \mbox{\hyperlink{struct_entity_ad9ba4b65cc992e4bab6da5ce023e41e6}{is\+\_\+highlighted}}, \mbox{\hyperlink{struct_entity_a931b21fbdebb1a5963b4bcab5df128f5}{name}}, \mbox{\hyperlink{struct_entity_aed6000bd2aef3497277d23deb1f1554f}{name\+\_\+length}}, \mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}}, \mbox{\hyperlink{struct_entity_a71e5d4cf6ae2c20d9227dd55c017d797}{prev\+\_\+position}}, \mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\+\_\+force}}, and \mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\+\_\+position}}.
+
+\mbox{\Hypertarget{struct_entity_a5bf4b6d2410b01633b53312465535ee0}\label{struct_entity_a5bf4b6d2410b01633b53312465535ee0}} 
+\index{Entity@{Entity}!size@{size}}
+\index{size@{size}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily virtual vec3 Entity\+::size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{Person}}.
+
+
+
+References \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds()}}, \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\+\_\+bounds()}}, \mbox{\hyperlink{struct_entity_a8aa106da3c2e49952d46fe6413d06d37}{render\+\_\+highlighted()}}, and \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal()}}.
+
+\mbox{\Hypertarget{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}\label{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}} 
+\index{Entity@{Entity}!snap\_position@{snap\_position}}
+\index{snap\_position@{snap\_position}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{snap\_position()}{snap\_position()}}
+{\footnotesize\ttfamily vec3 Entity\+::snap\+\_\+position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+References \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{vec\+::snap()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update()}}, \mbox{\hyperlink{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}{Entity()}}, and \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\+\_\+infront()}}.
+
+\mbox{\Hypertarget{struct_entity_a5ccbde35c86805a9450faa4da52f414d}\label{struct_entity_a5ccbde35c86805a9450faa4da52f414d}} 
+\index{Entity@{Entity}!tile\_infront@{tile\_infront}}
+\index{tile\_infront@{tile\_infront}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{tile\_infront()}{tile\_infront()}}
+{\footnotesize\ttfamily virtual vec2 Entity\+::tile\+\_\+infront (\begin{DoxyParamCaption}\item[{int}]{distance }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}{snap\+\_\+position()}}, \mbox{\hyperlink{struct_entity_af454ca504cbb7f3549cc206263895b51}{tile\+\_\+infront\+\_\+given\+\_\+pos()}}, and \mbox{\hyperlink{namespacevec_aa79cdef251ee2f487b55dba93ad63ea0}{vec\+::to2()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_player_aed722c64fe7a62d9abeb8673f539a443}{Player\+::handle\+\_\+in\+\_\+planning\+\_\+grab\+\_\+or\+\_\+drop()}}.
+
+\mbox{\Hypertarget{struct_entity_af454ca504cbb7f3549cc206263895b51}\label{struct_entity_af454ca504cbb7f3549cc206263895b51}} 
+\index{Entity@{Entity}!tile\_infront\_given\_pos@{tile\_infront\_given\_pos}}
+\index{tile\_infront\_given\_pos@{tile\_infront\_given\_pos}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{tile\_infront\_given\_pos()}{tile\_infront\_given\_pos()}}
+{\footnotesize\ttfamily static vec2 Entity\+::tile\+\_\+infront\+\_\+given\+\_\+pos (\begin{DoxyParamCaption}\item[{vec2}]{tile,  }\item[{int}]{distance,  }\item[{\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}}}]{direction }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{BACK}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FORWARD}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{LEFT}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{RIGHT}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_helper_a50cbd85165343e46ce2bf545be696f44}{Entity\+Helper\+::get\+Matching\+Entity\+In\+Front()}}, and \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\+\_\+infront()}}.
+
+\mbox{\Hypertarget{struct_entity_a86799bd4754255d67557ff0fe67a67d1}\label{struct_entity_a86799bd4754255d67557ff0fe67a67d1}} 
+\index{Entity@{Entity}!turn\_to\_face\_entity@{turn\_to\_face\_entity}}
+\index{turn\_to\_face\_entity@{turn\_to\_face\_entity}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{turn\_to\_face\_entity()}{turn\_to\_face\_entity()}}
+{\footnotesize\ttfamily virtual void Entity\+::turn\+\_\+to\+\_\+face\+\_\+entity (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_entity}{Entity}} $\ast$}]{target }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{namespacevec_aabd3fc26e0da594069a9f344c48beb8d}{vec\+::dot2()}}, \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading()}}, \mbox{\hyperlink{namespacevec_a2b336372bfe6c8bd752922c357866a24}{vec\+::norm()}}, and \mbox{\hyperlink{namespaceutil_a9305e21ff6411929f92f427a318cea17}{util\+::rad2deg()}}.
+
+\mbox{\Hypertarget{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}\label{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}} 
+\index{Entity@{Entity}!update@{update}}
+\index{update@{update}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily virtual void Entity\+::update (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [final]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update()}}, \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\+\_\+round\+\_\+update()}}, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6aa959d7125a25f89281f6d3d3f0170475}{game\+::\+In\+Round}}, and \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{planning\+\_\+update()}}.
+
+\mbox{\Hypertarget{struct_entity_a8652719eab721d6546c7066ebbdc2c49}\label{struct_entity_a8652719eab721d6546c7066ebbdc2c49}} 
+\index{Entity@{Entity}!update\_held\_item\_position@{update\_held\_item\_position}}
+\index{update\_held\_item\_position@{update\_held\_item\_position}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{update\_held\_item\_position()}{update\_held\_item\_position()}}
+{\footnotesize\ttfamily virtual void Entity\+::update\+\_\+held\+\_\+item\+\_\+position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{struct_furniture_a7c1a46b40616fba11f4ff50b6c34d647}{Furniture}}.
+
+
+
+References \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{BACK}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FORWARD}}, \mbox{\hyperlink{struct_entity_a851369e74ee7fc64c3a304875cbdc9f2}{held\+\_\+item}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{LEFT}}, \mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}}, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{RIGHT}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update()}}.
+
+\mbox{\Hypertarget{struct_entity_af8740cbb0b094e46c3b768b7b1a33b59}\label{struct_entity_af8740cbb0b094e46c3b768b7b1a33b59}} 
+\index{Entity@{Entity}!update\_name@{update\_name}}
+\index{update\_name@{update\_name}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{update\_name()}{update\_name()}}
+{\footnotesize\ttfamily void Entity\+::update\+\_\+name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{new\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_a931b21fbdebb1a5963b4bcab5df128f5}{name}}, and \mbox{\hyperlink{struct_entity_aed6000bd2aef3497277d23deb1f1554f}{name\+\_\+length}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{Customer\+::init()}}.
+
+\mbox{\Hypertarget{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}\label{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}} 
+\index{Entity@{Entity}!update\_position@{update\_position}}
+\index{update\_position@{update\_position}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{update\_position()}{update\_position()}}
+{\footnotesize\ttfamily virtual void Entity\+::update\+\_\+position (\begin{DoxyParamCaption}\item[{const vec3 \&}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\+\_\+drop()}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_entity_a3978918d89c7165bb86cffb14d55b442}\label{struct_entity_a3978918d89c7165bb86cffb14d55b442}} 
+\index{Entity@{Entity}!base\_color@{base\_color}}
+\index{base\_color@{base\_color}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{base\_color}{base\_color}}
+{\footnotesize\ttfamily Color Entity\+::base\+\_\+color}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}.
+
+\mbox{\Hypertarget{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}\label{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}} 
+\index{Entity@{Entity}!cleanup@{cleanup}}
+\index{cleanup@{cleanup}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{cleanup}{cleanup}}
+{\footnotesize\ttfamily bool Entity\+::cleanup = false}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}.
+
+\mbox{\Hypertarget{struct_entity_ace4a615925528f48d995ce9443506a4d}\label{struct_entity_ace4a615925528f48d995ce9443506a4d}} 
+\index{Entity@{Entity}!DirectionToFrontFaceMap@{DirectionToFrontFaceMap}}
+\index{DirectionToFrontFaceMap@{DirectionToFrontFaceMap}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{DirectionToFrontFaceMap}{DirectionToFrontFaceMap}}
+{\footnotesize\ttfamily const std\+::map$<$int, \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}}$>$ Entity\+::\+Direction\+To\+Front\+Face\+Map}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{0,\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FORWARD}}\},\ \ \ \ \ \ \ \ \{45,\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FORWARD}}\ |\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{RIGHT}}\},\ \{90,\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{RIGHT}}\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{135,\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{BACK}}\ |\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{RIGHT}}\},\ \{180,\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{BACK}}\},\ \ \ \ \ \ \ \ \ \ \ \{225,\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{BACK}}\ |\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{LEFT}}\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{270,\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{LEFT}}\},\ \ \ \ \ \ \ \ \ \{315,\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FORWARD}}\ |\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{LEFT}}\}\}}
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{struct_entity_aa279f81f1d6c0e63a9724310a981250f}{offset\+Face\+Direction()}}.
+
+\mbox{\Hypertarget{struct_entity_aceb6290fec072176cef25608188042ed}\label{struct_entity_aceb6290fec072176cef25608188042ed}} 
+\index{Entity@{Entity}!face\_color@{face\_color}}
+\index{face\_color@{face\_color}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{face\_color}{face\_color}}
+{\footnotesize\ttfamily Color Entity\+::face\+\_\+color}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}.
+
+\mbox{\Hypertarget{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}\label{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}} 
+\index{Entity@{Entity}!face\_direction@{face\_direction}}
+\index{face\_direction@{face\_direction}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{face\_direction}{face\_direction}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}} Entity\+::face\+\_\+direction = \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{Front\+Face\+Direction\+::\+FORWARD}}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_player_a12f2b3445a9b57a5f5b0bdb84d2d14b2}{Player\+::handle\+\_\+in\+\_\+game\+\_\+grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{struct_player_aed722c64fe7a62d9abeb8673f539a443}{Player\+::handle\+\_\+in\+\_\+planning\+\_\+grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{struct_base_player_a154471c0d1293bd2df5fdb355e76b5ff}{Base\+Player\+::highlight\+\_\+facing\+\_\+furniture()}}, \mbox{\hyperlink{struct_base_player_af6340fba709d11dc11495766df5dcb05}{Base\+Player\+::planning\+\_\+update()}}, \mbox{\hyperlink{struct_entity_a8aa106da3c2e49952d46fe6413d06d37}{render\+\_\+highlighted()}}, \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal()}}, \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}, \mbox{\hyperlink{struct_person_a5037af23d2d1d1e710a9418ecc1207d8}{Person\+::update\+\_\+facing\+\_\+direction()}}, and \mbox{\hyperlink{struct_remote_player_ab1498c129a17b839431fa3ba7a6746e5}{Remote\+Player\+::update\+\_\+remotely()}}.
+
+\mbox{\Hypertarget{struct_entity_a1d00ed121b7125c7e18506deda3c9c38}\label{struct_entity_a1d00ed121b7125c7e18506deda3c9c38}} 
+\index{Entity@{Entity}!FrontFaceDirectionMap@{FrontFaceDirectionMap}}
+\index{FrontFaceDirectionMap@{FrontFaceDirectionMap}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{FrontFaceDirectionMap}{FrontFaceDirectionMap}}
+{\footnotesize\ttfamily const std\+::map$<$\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{Front\+Face\+Direction}}, float$>$ Entity\+::\+Front\+Face\+Direction\+Map}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FORWARD}},\ 0.0f\},\ \ \ \ \ \ \ \ \{\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FORWARD}}\ |\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{RIGHT}},\ 45.0f\},\ \{\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{RIGHT}},\ 90.0f\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{BACK}}\ |\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{RIGHT}},\ 135.0f\},\ \{\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{BACK}},\ 180.0f\},\ \ \ \ \ \ \ \ \ \ \ \{\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{BACK}}\ |\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{LEFT}},\ 225.0f\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{LEFT}},\ 270.0f\},\ \ \ \ \ \ \ \ \ \{\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FORWARD}}\ |\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{LEFT}},\ 315.0f\}\}}
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading()}}, \mbox{\hyperlink{struct_entity_aa279f81f1d6c0e63a9724310a981250f}{offset\+Face\+Direction()}}, \mbox{\hyperlink{struct_entity_a8aa106da3c2e49952d46fe6413d06d37}{render\+\_\+highlighted()}}, and \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal()}}.
+
+\mbox{\Hypertarget{struct_entity_a851369e74ee7fc64c3a304875cbdc9f2}\label{struct_entity_a851369e74ee7fc64c3a304875cbdc9f2}} 
+\index{Entity@{Entity}!held\_item@{held\_item}}
+\index{held\_item@{held\_item}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{held\_item}{held\_item}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_item}{Item}}$>$ Entity\+::held\+\_\+item = nullptr}
+
+
+
+Referenced by \mbox{\hyperlink{struct_furniture_a5f0f46310aed2fdc0f8366f55f42e4d3}{Furniture\+::can\+\_\+place\+\_\+item\+\_\+into()}}, \mbox{\hyperlink{struct_player_a12f2b3445a9b57a5f5b0bdb84d2d14b2}{Player\+::handle\+\_\+in\+\_\+game\+\_\+grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{struct_furniture_a4972c4d7131e21a0954164846cae3682}{Furniture\+::has\+\_\+held\+\_\+item()}}, \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}, \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{update\+\_\+held\+\_\+item\+\_\+position()}}, \mbox{\hyperlink{struct_furniture_a7c1a46b40616fba11f4ff50b6c34d647}{Furniture\+::update\+\_\+held\+\_\+item\+\_\+position()}}, and \mbox{\hyperlink{struct_customer_ae2642b7110d32ba456313fe5ac506e23}{Customer\+::wait\+\_\+in\+\_\+queue()}}.
+
+\mbox{\Hypertarget{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}\label{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}} 
+\index{Entity@{Entity}!id@{id}}
+\index{id@{id}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{id}{id}}
+{\footnotesize\ttfamily int Entity\+::id}
+
+\mbox{\Hypertarget{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}\label{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}} 
+\index{Entity@{Entity}!is\_held@{is\_held}}
+\index{is\_held@{is\_held}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{is\_held}{is\_held}}
+{\footnotesize\ttfamily bool Entity\+::is\+\_\+held = false}
+
+
+
+Referenced by \mbox{\hyperlink{struct_furniture_a3c248d20ed012e44420e018a24f0c744}{Furniture\+::can\+\_\+be\+\_\+picked\+\_\+up()}}, \mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{is\+\_\+collidable()}}, and \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}.
+
+\mbox{\Hypertarget{struct_entity_ad9ba4b65cc992e4bab6da5ce023e41e6}\label{struct_entity_ad9ba4b65cc992e4bab6da5ce023e41e6}} 
+\index{Entity@{Entity}!is\_highlighted@{is\_highlighted}}
+\index{is\_highlighted@{is\_highlighted}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{is\_highlighted}{is\_highlighted}}
+{\footnotesize\ttfamily bool Entity\+::is\+\_\+highlighted = false}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update()}}, and \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}.
+
+\mbox{\Hypertarget{struct_entity_a931b21fbdebb1a5963b4bcab5df128f5}\label{struct_entity_a931b21fbdebb1a5963b4bcab5df128f5}} 
+\index{Entity@{Entity}!name@{name}}
+\index{name@{name}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{name}{name}}
+{\footnotesize\ttfamily std\+::string Entity\+::name = \char`\"{}\char`\"{}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a4f5def0fc8ea405ab385a65018046168}{render\+\_\+floating\+\_\+name()}}, \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}, \mbox{\hyperlink{struct_entity_af8740cbb0b094e46c3b768b7b1a33b59}{update\+\_\+name()}}, and \mbox{\hyperlink{struct_remote_player_ab1498c129a17b839431fa3ba7a6746e5}{Remote\+Player\+::update\+\_\+remotely()}}.
+
+\mbox{\Hypertarget{struct_entity_aed6000bd2aef3497277d23deb1f1554f}\label{struct_entity_aed6000bd2aef3497277d23deb1f1554f}} 
+\index{Entity@{Entity}!name\_length@{name\_length}}
+\index{name\_length@{name\_length}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{name\_length}{name\_length}}
+{\footnotesize\ttfamily int Entity\+::name\+\_\+length = 1}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}, and \mbox{\hyperlink{struct_entity_af8740cbb0b094e46c3b768b7b1a33b59}{update\+\_\+name()}}.
+
+\mbox{\Hypertarget{struct_entity_a39cf107f07a27cde481ca719b2a31d86}\label{struct_entity_a39cf107f07a27cde481ca719b2a31d86}} 
+\index{Entity@{Entity}!position@{position}}
+\index{position@{position}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{position}{position}}
+{\footnotesize\ttfamily vec3 Entity\+::position}
+
+
+
+Referenced by \mbox{\hyperlink{struct_player_a5bcdf490604929a7ba3b018c8556228b}{Player\+::get\+\_\+position\+\_\+after\+\_\+input()}}, \mbox{\hyperlink{struct_a_i_person_a3eb3356c4eabfa9a01173eab3218637f}{AIPerson\+::get\+\_\+wandering\+\_\+job()}}, \mbox{\hyperlink{struct_player_a12f2b3445a9b57a5f5b0bdb84d2d14b2}{Player\+::handle\+\_\+in\+\_\+game\+\_\+grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{struct_player_aed722c64fe7a62d9abeb8673f539a443}{Player\+::handle\+\_\+in\+\_\+planning\+\_\+grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{struct_base_player_a154471c0d1293bd2df5fdb355e76b5ff}{Base\+Player\+::highlight\+\_\+facing\+\_\+furniture()}}, \mbox{\hyperlink{struct_a_i_person_a44ae6683826615f6180660889676c491}{AIPerson\+::navigate\+\_\+to()}}, \mbox{\hyperlink{struct_base_player_af6340fba709d11dc11495766df5dcb05}{Base\+Player\+::planning\+\_\+update()}}, \mbox{\hyperlink{struct_player_ab4cc812de3c497ba1e8699376379dcef}{Player\+::rotate\+\_\+furniture()}}, \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}, \mbox{\hyperlink{struct_customer_spawner_a499a258a39168c3d494ed16c9cb600bb}{Customer\+Spawner\+::spawn()}}, \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{update\+\_\+held\+\_\+item\+\_\+position()}}, \mbox{\hyperlink{struct_furniture_a7c1a46b40616fba11f4ff50b6c34d647}{Furniture\+::update\+\_\+held\+\_\+item\+\_\+position()}}, \mbox{\hyperlink{struct_remote_player_ab1498c129a17b839431fa3ba7a6746e5}{Remote\+Player\+::update\+\_\+remotely()}}, \mbox{\hyperlink{struct_remote_player_a378b49ed2949cee4d48b3651963e311a}{Remote\+Player\+::update\+\_\+xaxis\+\_\+position()}}, \mbox{\hyperlink{struct_remote_player_a63474776872d8eb9b25c94cac93c7e54}{Remote\+Player\+::update\+\_\+zaxis\+\_\+position()}}, \mbox{\hyperlink{struct_game_cam_a211e1b0b5a8a727732d2fcdbcd1f2f43}{Game\+Cam\+::update\+To\+Target()}}, \mbox{\hyperlink{struct_customer_ae2642b7110d32ba456313fe5ac506e23}{Customer\+::wait\+\_\+in\+\_\+queue()}}, and \mbox{\hyperlink{struct_player_ac1318fd5b7ce7c808a09ef95611280b5}{Player\+::work\+\_\+furniture()}}.
+
+\mbox{\Hypertarget{struct_entity_a71e5d4cf6ae2c20d9227dd55c017d797}\label{struct_entity_a71e5d4cf6ae2c20d9227dd55c017d797}} 
+\index{Entity@{Entity}!prev\_position@{prev\_position}}
+\index{prev\_position@{prev\_position}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{prev\_position}{prev\_position}}
+{\footnotesize\ttfamily vec3 Entity\+::prev\+\_\+position}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}.
+
+\mbox{\Hypertarget{struct_entity_a912b85998f1c61035aa11c293a8ed99b}\label{struct_entity_a912b85998f1c61035aa11c293a8ed99b}} 
+\index{Entity@{Entity}!pushed\_force@{pushed\_force}}
+\index{pushed\_force@{pushed\_force}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{pushed\_force}{pushed\_force}}
+{\footnotesize\ttfamily vec3 Entity\+::pushed\+\_\+force \{0.\+0, 0.\+0, 0.\+0\}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{Person\+::always\+\_\+update()}}, \mbox{\hyperlink{struct_a_i_person_a96ac966279b3fae533fb2cfb9533e820}{AIPerson\+::in\+\_\+round\+\_\+update()}}, and \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}.
+
+\mbox{\Hypertarget{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}\label{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}} 
+\index{Entity@{Entity}!raw\_position@{raw\_position}}
+\index{raw\_position@{raw\_position}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{raw\_position}{raw\_position}}
+{\footnotesize\ttfamily vec3 Entity\+::raw\+\_\+position}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update()}}, \mbox{\hyperlink{struct_person_a0438d8fd551998f95723320ede130f44}{Person\+::get\+\_\+face\+\_\+direction()}}, \mbox{\hyperlink{struct_player_a5bcdf490604929a7ba3b018c8556228b}{Player\+::get\+\_\+position\+\_\+after\+\_\+input()}}, \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{Person\+::handle\+\_\+collision()}}, \mbox{\hyperlink{struct_customer_a648cd551e96ad1d075660d1227c53f63}{Customer\+::in\+\_\+round\+\_\+update()}}, \mbox{\hyperlink{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}{Furniture\+::render\+\_\+progress\+\_\+bar()}}, \mbox{\hyperlink{struct_entity_a906c2b31c7b4052674edb3a6b709a618}{serialize()}}, \mbox{\hyperlink{struct_a_i_person_a8a4a8251c55347bcf5e6d29a00d4d49a}{AIPerson\+::update\+\_\+xaxis\+\_\+position()}}, \mbox{\hyperlink{struct_player_a754673edaad609f0dc3ea8d8383339e6}{Player\+::update\+\_\+xaxis\+\_\+position()}}, \mbox{\hyperlink{struct_target_cube_ab8f18a14639aa3542365d2d2ddb08b95}{Target\+Cube\+::update\+\_\+xaxis\+\_\+position()}}, \mbox{\hyperlink{struct_a_i_person_a91edda78370012b664a50dc752dbf058}{AIPerson\+::update\+\_\+zaxis\+\_\+position()}}, \mbox{\hyperlink{struct_player_aaae0a725ba6431cb4e7534b460e8a593}{Player\+::update\+\_\+zaxis\+\_\+position()}}, and \mbox{\hyperlink{struct_target_cube_a682af065bf72ac44e3d0362bdbc3a710}{Target\+Cube\+::update\+\_\+zaxis\+\_\+position()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{entity_8h}{entity.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,113 @@
+\hypertarget{vendor__include_8h}{}\doxysection{src/vendor\+\_\+include.h File Reference}
+\label{vendor__include_8h}\index{src/vendor\_include.h@{src/vendor\_include.h}}
+{\ttfamily \#include \char`\"{}engine/graphics.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$fmt/format.\+h$>$}\newline
+{\ttfamily \#include $<$fmt/ostream.\+h$>$}\newline
+{\ttfamily \#include $<$fmt/xchar.\+h$>$}\newline
+{\ttfamily \#include $<$expected.\+hpp$>$}\newline
+{\ttfamily \#include $<$magic\+\_\+enum/magic\+\_\+enum.\+hpp$>$}\newline
+{\ttfamily \#include $<$magic\+\_\+enum/magic\+\_\+enum\+\_\+fuse.\+hpp$>$}\newline
+{\ttfamily \#include $<$bitsery/adapter/buffer.\+h$>$}\newline
+{\ttfamily \#include $<$bitsery/bitsery.\+h$>$}\newline
+{\ttfamily \#include $<$bitsery/ext/inheritance.\+h$>$}\newline
+{\ttfamily \#include $<$bitsery/ext/pointer.\+h$>$}\newline
+{\ttfamily \#include $<$bitsery/ext/std\+\_\+map.\+h$>$}\newline
+{\ttfamily \#include $<$bitsery/ext/std\+\_\+optional.\+h$>$}\newline
+{\ttfamily \#include $<$bitsery/ext/std\+\_\+smart\+\_\+ptr.\+h$>$}\newline
+{\ttfamily \#include $<$bitsery/ext/std\+\_\+tuple.\+h$>$}\newline
+{\ttfamily \#include $<$bitsery/ext/std\+\_\+variant.\+h$>$}\newline
+{\ttfamily \#include $<$bitsery/traits/string.\+h$>$}\newline
+{\ttfamily \#include $<$bitsery/traits/vector.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}engine/tracy.\+h\char`\"{}}\newline
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacebitsery}{bitsery}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{vendor__include_8h_a27b3249db8d77bd236109bda307bc263}{FMT\+\_\+\+HEADER\+\_\+\+ONLY}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{namespacebitsery_acc1387f10c3a539446c5ebdd78afebda}{bitsery\+::serialize}} (S \&s, vec3 \&data)
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{namespacebitsery_a049d595684de1c7f1063fad9162ddfd7}{bitsery\+::serialize}} (S \&s, Color \&data)
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type \mbox{\hyperlink{vendor__include_8h_a79c80c24ac8306ebe08417657610ed52}{operator$\sim$}} (T a)
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type \mbox{\hyperlink{vendor__include_8h_a9efd44f5defcfa5ce3956c178df9ba13}{operator$\vert$}} (T a, T b)
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type \mbox{\hyperlink{vendor__include_8h_a1fdf607e0981ec30c17e8e6e304931ec}{operator\&}} (T a, T b)
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type \mbox{\hyperlink{vendor__include_8h_a1e5ffda343da19e793126abd1dd68f51}{operator$^\wedge$}} (T a, T b)
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type \mbox{\hyperlink{vendor__include_8h_ac403f3de06f98046ab8cba6eba7b5fef}{operator$\vert$=}} (T \&a, T b)
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type \mbox{\hyperlink{vendor__include_8h_afb52cf0a10faf5fd37f779a895351bfc}{operator\&=}} (T \&a, T b)
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type \mbox{\hyperlink{vendor__include_8h_ae72099970e296f8d1df3ff218c3d7432}{operator$^\wedge$=}} (T \&a, T b)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{vendor__include_8h_a27b3249db8d77bd236109bda307bc263}\label{vendor__include_8h_a27b3249db8d77bd236109bda307bc263}} 
+\index{vendor\_include.h@{vendor\_include.h}!FMT\_HEADER\_ONLY@{FMT\_HEADER\_ONLY}}
+\index{FMT\_HEADER\_ONLY@{FMT\_HEADER\_ONLY}!vendor\_include.h@{vendor\_include.h}}
+\doxysubsubsection{\texorpdfstring{FMT\_HEADER\_ONLY}{FMT\_HEADER\_ONLY}}
+{\footnotesize\ttfamily \#define FMT\+\_\+\+HEADER\+\_\+\+ONLY}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{vendor__include_8h_a1fdf607e0981ec30c17e8e6e304931ec}\label{vendor__include_8h_a1fdf607e0981ec30c17e8e6e304931ec}} 
+\index{vendor\_include.h@{vendor\_include.h}!operator\&@{operator\&}}
+\index{operator\&@{operator\&}!vendor\_include.h@{vendor\_include.h}}
+\doxysubsubsection{\texorpdfstring{operator\&()}{operator\&()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type operator\& (\begin{DoxyParamCaption}\item[{T}]{a,  }\item[{T}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{vendor__include_8h_afb52cf0a10faf5fd37f779a895351bfc}\label{vendor__include_8h_afb52cf0a10faf5fd37f779a895351bfc}} 
+\index{vendor\_include.h@{vendor\_include.h}!operator\&=@{operator\&=}}
+\index{operator\&=@{operator\&=}!vendor\_include.h@{vendor\_include.h}}
+\doxysubsubsection{\texorpdfstring{operator\&=()}{operator\&=()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type operator\&= (\begin{DoxyParamCaption}\item[{T \&}]{a,  }\item[{T}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{vendor__include_8h_a1e5ffda343da19e793126abd1dd68f51}\label{vendor__include_8h_a1e5ffda343da19e793126abd1dd68f51}} 
+\index{vendor\_include.h@{vendor\_include.h}!operator$^\wedge$@{operator$^\wedge$}}
+\index{operator$^\wedge$@{operator$^\wedge$}!vendor\_include.h@{vendor\_include.h}}
+\doxysubsubsection{\texorpdfstring{operator$^\wedge$()}{operator^()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type operator$^\wedge$ (\begin{DoxyParamCaption}\item[{T}]{a,  }\item[{T}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{vendor__include_8h_ae72099970e296f8d1df3ff218c3d7432}\label{vendor__include_8h_ae72099970e296f8d1df3ff218c3d7432}} 
+\index{vendor\_include.h@{vendor\_include.h}!operator$^\wedge$=@{operator$^\wedge$=}}
+\index{operator$^\wedge$=@{operator$^\wedge$=}!vendor\_include.h@{vendor\_include.h}}
+\doxysubsubsection{\texorpdfstring{operator$^\wedge$=()}{operator^=()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type operator$^\wedge$= (\begin{DoxyParamCaption}\item[{T \&}]{a,  }\item[{T}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{vendor__include_8h_a9efd44f5defcfa5ce3956c178df9ba13}\label{vendor__include_8h_a9efd44f5defcfa5ce3956c178df9ba13}} 
+\index{vendor\_include.h@{vendor\_include.h}!operator\texttt{"|}@{operator\texttt{"|}}}
+\index{operator\texttt{"|}@{operator\texttt{"|}}!vendor\_include.h@{vendor\_include.h}}
+\doxysubsubsection{\texorpdfstring{operator\texttt{"|}()}{operator|()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type operator$\vert$ (\begin{DoxyParamCaption}\item[{T}]{a,  }\item[{T}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{vendor__include_8h_ac403f3de06f98046ab8cba6eba7b5fef}\label{vendor__include_8h_ac403f3de06f98046ab8cba6eba7b5fef}} 
+\index{vendor\_include.h@{vendor\_include.h}!operator\texttt{"|}=@{operator\texttt{"|}=}}
+\index{operator\texttt{"|}=@{operator\texttt{"|}=}!vendor\_include.h@{vendor\_include.h}}
+\doxysubsubsection{\texorpdfstring{operator\texttt{"|}=()}{operator|=()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type operator$\vert$= (\begin{DoxyParamCaption}\item[{T \&}]{a,  }\item[{T}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{vendor__include_8h_a79c80c24ac8306ebe08417657610ed52}\label{vendor__include_8h_a79c80c24ac8306ebe08417657610ed52}} 
+\index{vendor\_include.h@{vendor\_include.h}!operator$\sim$@{operator$\sim$}}
+\index{operator$\sim$@{operator$\sim$}!vendor\_include.h@{vendor\_include.h}}
+\doxysubsubsection{\texorpdfstring{operator$\sim$()}{operator~()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, T $>$\+::type operator$\sim$ (\begin{DoxyParamCaption}\item[{T}]{a }\end{DoxyParamCaption})}
+

@@ -1,0 +1,192 @@
+\hypertarget{drawing__util_8h_source}{}\doxysection{drawing\+\_\+util.\+h}
+\label{drawing__util_8h_source}\index{src/drawing\_util.h@{src/drawing\_util.h}}
+\mbox{\hyperlink{drawing__util_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}raylib.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}rlgl.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{text__util_8h}{text\_util.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{vec__util_8h}{vec\_util.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceraylib}{raylib}}\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceraylib_acb8e649e3bdf6bac4febd4e384e21e6f}{DrawPctFilledCircle}}(\textcolor{keyword}{const}\ vec2\ position,\ \textcolor{keywordtype}{float}\ radius,}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Color\ backgroundColor,\ Color\ foregroundColor,}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ pct\_filled,\ \textcolor{keywordtype}{float}\ startAngle\ =\ 180)\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ endAngle\ =\ startAngle\ +\ (360\ *\ pct\_filled);}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ segments\ =\ 40;}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ raylib::DrawCircle((\textcolor{keywordtype}{int})\ position.x,\ (\textcolor{keywordtype}{int})\ position.y,\ radius,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ backgroundColor);}
+\DoxyCodeLine{00022\ \ \ \ \ raylib::DrawCircleSector(position,\ radius,\ startAngle,\ endAngle,\ segments,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ foregroundColor);\ \ \textcolor{comment}{//\ Draw\ a\ piece\ of\ a\ circle}}
+\DoxyCodeLine{00024\ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceraylib_adf92235c8362e980a25030f08465d209}{DrawLineStrip2Din3D}}(\textcolor{keyword}{const}\ std::vector<vec2>\&\ points,\ Color\ color)\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ std::optional<vec3>\ point;}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ p\ :\ points)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ p3\ =\ \mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec::to3}}(p);}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ p3.x\ -\/=\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2;}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ p3.y\ -\/=\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2;}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ p3.z\ -\/=\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2;}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (point.has\_value())\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ DrawLine3D(point.value(),\ p3,\ color);}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ point\ =\ p3;}
+\DoxyCodeLine{00037\ \ \ \ \ \}}
+\DoxyCodeLine{00038\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceraylib_af6ad8e8727ef175dbe4d6c0d8b98cbaf}{DrawRect2Din3D}}(Vector3\ position,\ \textcolor{keywordtype}{float}\ width,\ \textcolor{keywordtype}{float}\ height,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Color\ color\ =\ RED)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ code\ doesnt\ work\ yet,}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ TODO\ likely\ want\ to\ add\ Z\ rotation\ so\ it\ follows\ camera\ (but\ we\ cannot}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{//\ include\ "{}cam.h"{}\ in\ here}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{float}\ x\ =\ 0.0f;}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{float}\ y\ =\ 0.0f;}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{float}\ z\ =\ 0.0f;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ rlPushMatrix();}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ Be\ careful!\ Function\ order\ matters\ (rotate\ -\/>\ scale\ -\/>\ translate)}}
+\DoxyCodeLine{00052\ \ \ \ \ rlTranslatef(position.x,\ position.y\ +\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ position.z);}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ rlRotatef(front\_facing\_angle,\ 0,\ 1,\ 0);}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{//\ rlScalef(2.0f,\ 2.0f,\ 2.0f);}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{float}\ length\ =\ width;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ rlBegin(RL\_TRIANGLES);}
+\DoxyCodeLine{00059\ \ \ \ \ rlColor4ub(color.r,\ color.g,\ color.b,\ color.a);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//\ Front\ Face\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00062\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Left}}
+\DoxyCodeLine{00063\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00064\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Right}}
+\DoxyCodeLine{00067\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00068\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//\ Back\ Face\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00071\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Left}}
+\DoxyCodeLine{00072\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00073\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Right}}
+\DoxyCodeLine{00076\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00077\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ rlEnd();}
+\DoxyCodeLine{00080\ \ \ \ \ rlPopMatrix();}
+\DoxyCodeLine{00081\ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceraylib_a582e7972929eca76b184705ee1b65a7d}{DrawCubeCustom}}(Vector3\ position,\ \textcolor{keywordtype}{float}\ width,\ \textcolor{keywordtype}{float}\ height,}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ length,\ \textcolor{keywordtype}{float}\ front\_facing\_angle,}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Color\ face\_color,\ Color\ base\_color)\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{float}\ x\ =\ 0.0f;}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{float}\ y\ =\ 0.0f;}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{float}\ z\ =\ 0.0f;}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ rlPushMatrix();}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ Be\ careful!\ Function\ order\ matters\ (rotate\ -\/>\ scale\ -\/>\ translate)}}
+\DoxyCodeLine{00093\ \ \ \ \ rlTranslatef(position.x,\ position.y,\ position.z);}
+\DoxyCodeLine{00094\ \ \ \ \ rlRotatef(front\_facing\_angle,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{comment}{//\ rlScalef(2.0f,\ 2.0f,\ 2.0f);}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ rlBegin(RL\_TRIANGLES);}
+\DoxyCodeLine{00098\ \ \ \ \ rlColor4ub(face\_color.r,\ face\_color.g,\ face\_color.b,\ face\_color.a);}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{comment}{//\ Front\ Face\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00101\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Left}}
+\DoxyCodeLine{00102\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00103\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Right}}
+\DoxyCodeLine{00106\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00107\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ rlColor4ub(base\_color.r,\ base\_color.g,\ base\_color.b,\ base\_color.a);}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{comment}{//\ Back\ Face\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00111\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Left}}
+\DoxyCodeLine{00112\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00113\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Right}}
+\DoxyCodeLine{00116\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00117\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{//\ Top\ Face\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00120\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00121\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Left}}
+\DoxyCodeLine{00122\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Right}}
+\DoxyCodeLine{00125\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00126\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{//\ Bottom\ Face\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00129\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00130\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00131\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Left}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Right}}
+\DoxyCodeLine{00134\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00135\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{comment}{//\ Right\ face\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00138\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00139\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Right}}
+\DoxyCodeLine{00140\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Left}}
+\DoxyCodeLine{00143\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00144\ \ \ \ \ rlVertex3f(x\ +\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{comment}{//\ Left\ Face\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00147\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00148\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00149\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Right}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Left}}
+\DoxyCodeLine{00152\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ +\ height\ /\ 2,\ z\ +\ length\ /\ 2);\ \ \textcolor{comment}{//\ Top\ Left}}
+\DoxyCodeLine{00153\ \ \ \ \ rlVertex3f(x\ -\/\ width\ /\ 2,\ y\ -\/\ height\ /\ 2,\ z\ -\/\ length\ /\ 2);\ \ \textcolor{comment}{//\ Bottom\ Right}}
+\DoxyCodeLine{00154\ \ \ \ \ rlEnd();}
+\DoxyCodeLine{00155\ \ \ \ \ rlPopMatrix();}
+\DoxyCodeLine{00156\ \}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceraylib_afdb4c3efe6c13dc14bfce3761b4bab50}{DrawFloatingText}}(\textcolor{keyword}{const}\ vec3\&\ position,\ Font\ font,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ text,}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Color\ color\ =\ BLACK)\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ rlPushMatrix();}
+\DoxyCodeLine{00161\ \ \ \ \ rlTranslatef(\ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ position.x,\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ position.y,\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ position.z\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00165\ \ \ \ \ );}
+\DoxyCodeLine{00166\ \ \ \ \ rlRotatef(90.0f,\ 1.0f,\ 0.0f,\ 0.0f);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ rlTranslatef(\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ -\/0.5f\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ 0.f,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ -\/1.05f\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ \ \textcolor{comment}{//\ this\ is\ Y}}
+\DoxyCodeLine{00172\ \ \ \ \ );}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ \mbox{\hyperlink{namespaceraylib_adc40755b0f82292edf03a57666161342}{DrawText3D}}(\ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ font,\ text,\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \{0.f\},\ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ 96,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ font\ size}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ 4,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ font\ spacing}}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ 4,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ line\ spacing}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keyword}{true},\ \ \ \ \ \ \ \ \textcolor{comment}{//\ backface}}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ color);}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \ \ rlPopMatrix();}
+\DoxyCodeLine{00184\ \}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \}\ \ \textcolor{comment}{//\ namespace\ raylib}}
+
+\end{DoxyCode}

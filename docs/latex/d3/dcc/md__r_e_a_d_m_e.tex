@@ -1,0 +1,343 @@
+libraries used\+:
+\begin{DoxyItemize}
+\item raylib
+\item Raylib Operator Overloads \href{https://github.com/ProfJski/RaylibOpOverloads}{\texttt{ https\+://github.\+com/\+Prof\+Jski/\+Raylib\+Op\+Overloads}}
+\begin{DoxyItemize}
+\item Added a \#define that removes all the raygui stuff
+\item Made every function inline since i globally include and the linker not happy with so many definitions (odr?)
+\end{DoxyItemize}
+\item App\+Data stuff \href{https://github.com/sago007/PlatformFolders}{\texttt{ https\+://github.\+com/sago007/\+Platform\+Folders}}
+\item Steam\textquotesingle{}s Game\+Networking\+Sockets \href{https://github.com/ValveSoftware/GameNetworkingSockets}{\texttt{ https\+://github.\+com/\+Valve\+Software/\+Game\+Networking\+Sockets}}
+\item HTTPRequest \href{https://github.com/elnormous/HTTPRequest}{\texttt{ https\+://github.\+com/elnormous/\+HTTPRequest}}
+\item fmt \href{https://github.com/fmtlib/fmt}{\texttt{ https\+://github.\+com/fmtlib/fmt}}
+\item tl\+::expected \href{https://github.com/TartanLlama/expected}{\texttt{ https\+://github.\+com/\+Tartan\+Llama/expected}}
+\item magic enum \href{https://github.com/Neargye/magic_enum.git}{\texttt{ https\+://github.\+com/\+Neargye/magic\+\_\+enum.\+git}}
+\item tracy \href{https://github.com/wolfpld/tracy}{\texttt{ https\+://github.\+com/wolfpld/tracy}}
+\end{DoxyItemize}
+
+Models from
+\begin{DoxyItemize}
+\item \href{https://www.kenney.nl/assets?q=3d}{\texttt{ https\+://www.\+kenney.\+nl/assets?q=3d}}
+\item \href{https://kaylousberg.itch.io/kay-kit-mini-game-variety-pack}{\texttt{ https\+://kaylousberg.\+itch.\+io/kay-\/kit-\/mini-\/game-\/variety-\/pack}}
+\end{DoxyItemize}
+
+Info about the todo chart
+\begin{DoxyItemize}
+\item full raw data is in \mbox{\hyperlink{todo_8md}{todo.\+md}} and managed by obsidian
+\item hide the \char`\"{}backlog\char`\"{} here but trust me theres lots more todo
+\item only show the most recent 10 done items
+\item to regerate the table below run python \mbox{\hyperlink{kanban_8py}{kanban.\+py}}
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md2}{}\doxysection{TODOs}\label{md__r_e_a_d_m_e_autotoc_md2}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ needed to play once   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ in progress   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ blocked   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ done    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ needed to play once   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ in progress   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ blocked   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ done    }\\\cline{1-4}
+\endhead
+In pause menu, remap key bindings in layer for arrows keys to choose options   &Support for \char`\"{}windows\char`\"{} or \char`\"{}modals\char`\"{} in ui framework   &highlight furniture under selection   &Magic Enum? \href{https://github.com/Neargye/magic_enum}{\texttt{ https\+://github.\+com/\+Neargye/magic\+\_\+enum}}    \\\cline{1-4}
+BUG\+: if customer runs into someone you both get stuck   &dropdown needs scrollbar when subwindow goes offscreen   &&change UI from in world to render-\/to-\/texture    \\\cline{1-4}
+WARN\+: need a way to warn that UI elements are offscreen \char`\"{}purpling\char`\"{}   &pill bottle barrel   &&Add ailments for customers    \\\cline{1-4}
+BUG\+: Hide pause buttons from non-\/host since they dont really do anything anyway   &placeholder bottle pill filler   &&bag box to get paper bags from    \\\cline{1-4}
+BUG\+: When host opens settings, probably dont bring everyone else too   &Ability to do different shaders between gaming and menu   &&Put all things that have to be loaded in a single place    \\\cline{1-4}
+button hover state color change   &&&resolution switcher to settings page    \\\cline{1-4}
+&&&Disallow target cube from going outside of bounds    \\\cline{1-4}
+&&&Refactor Library to be more generic    \\\cline{1-4}
+&&&add diagonal facing direction    \\\cline{1-4}
+&&&Add easy-\/to-\/use UI buttons   \\\cline{1-4}
+\end{longtabu}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md3}{}\doxysection{End TODO}\label{md__r_e_a_d_m_e_autotoc_md3}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md4}{}\doxysection{Changelog}\label{md__r_e_a_d_m_e_autotoc_md4}
+if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added and then just checkout that hash (sorry im not doing releases / tags atm)\hypertarget{md__r_e_a_d_m_e_autotoc_md5}{}\doxysubsection{alpha\+\_\+0.\+23.\+01.\+16}\label{md__r_e_a_d_m_e_autotoc_md5}
+bug fixes
+\begin{DoxyItemize}
+\item Change item position for table so empty bag is easier to see
+\item dont allow bags to go into bags
+\item fix bug where sounds loaded after settings load would use wrong volume setting (though might still be happening)
+\item fix a todo for stopping paste when itll go over max length
+\end{DoxyItemize}
+
+impact
+\begin{DoxyItemize}
+\item Add new player models (no more red square)
+\item Add Round timer UI
+\item Render items held inside other items (kinda janky tho)
+\item Add pills and pill bottles (with Supply as barrel)
+\item Make it so you can drop merge items (holding pill bottle drop onto bag)
+\item Box model now responds to planning vs game (it opens \+:D )
+\item Add logic so customers only want to pick up a bag containing a pill bottle
+\item Add toast system to show all the network annoucements that we\textquotesingle{}ve had logs for
+\item Remove player from game when they disconnect
+\item Add \char`\"{}last used ip\char`\"{} button for quality of life
+\item new Music for menu and in game
+\item Add a bunch of PA announcment sounds
+\item add validation for ip address input (2 weeks ago) $<$\+Gabe Ochoa$>$
+\item Added \char`\"{}hold to backspace\char`\"{} for textfiends and should feel decent
+\end{DoxyItemize}
+
+better eng
+\begin{DoxyItemize}
+\item Better Model Library api
+\item Can now \char`\"{}do work\char`\"{} on some furniture
+\item add ability for sound library to play a random sound given a prefix
+\item add expected and magic\+\_\+enum libraries
+\item add basic tracing support through Tracy (much better than PROFILE())
+\item base class for an item container
+\item new job system that is hopefully more readable and more resilient
+\item smaller font cache
+\item add util\+::join and util\+::words\+\_\+in\+\_\+string for later wrap use
+\item extract font sizer to its own file
+\item add toast framework
+\item move raylib into a namespace, and expose through graphics.\+h
+\item add basic trie datastructure
+\item introduce delay for small packets to remove overhead and reduce map update speed by 2x
+\item add message queue so we can separate process and deserialize later on
+\item increase packet buffer size to 1mb
+\item UIContext cleanup its not better but it is more readable
+\item add print statement on close to show how many things are in the library
+\item add for-\/each in folder to files api
+\item better sound play api
+\item move controller loading to File\+::get() api
+\end{DoxyItemize}
+
+soon
+\begin{DoxyItemize}
+\item Add ability to save and load chosen player model
+\item disable pathfinding cache for now due to too many segfaults...
+\item add menu system in settingslayer which loads and prepares us for keybinding settings
+\item internal server cleanup though more to do here
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md6}{}\doxysubsection{alpha\+\_\+0.\+22.\+12.\+26}\label{md__r_e_a_d_m_e_autotoc_md6}
+Last update of the year
+
+impact
+\begin{DoxyItemize}
+\item none cause its code freeze time, see ya in january
+\end{DoxyItemize}
+
+better eng
+\begin{DoxyItemize}
+\item start engine extraction so we can use this for other games in the future \+:)
+\item fix bug where settings screen would show the wrong resolution on startup
+\item add more default resolutions
+\item fixed undefined behavior in network/client.\+h
+\item fixed bug with map serialization
+\item deleted world.\+h you will be missed.
+\end{DoxyItemize}
+
+soon
+\begin{DoxyItemize}
+\item scrolling?
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md7}{}\doxysubsection{alpha\+\_\+0.\+22.\+12.\+05}\label{md__r_e_a_d_m_e_autotoc_md7}
+impact
+\begin{DoxyItemize}
+\item Conveyer! and Grabber Conveyer!
+\begin{DoxyItemize}
+\item You can now grab items and transport them to customers without touching items
+\end{DoxyItemize}
+\item Fix issue with layer order so Pause Menu is ontop of all game items
+\item Resolution Switcher in settings page! (But hard to use \+:\$)
+\item Basic Symptoms and Ailments with speed and stagger modifiers
+\item Bag-\/\+Box furniture, to get empty bags from (new model for empty bags)
+\item Pill Bottle model, but not in game yet
+\item Post-\/\+Processing shaders written by AI (+ can disable in settings)
+\end{DoxyItemize}
+
+better eng
+\begin{DoxyItemize}
+\item Added dropdowns (but you cant scroll yet)
+\item Switched to tracking todos in Obsidian with a \mbox{\hyperlink{kanban_8py}{kanban.\+py}} script to populate readme
+\item Add Ideas about \char`\"{}\+Bar\char`\"{}s to \mbox{\hyperlink{ideas_8md}{ideas.\+md}} cause idk anything about pharmacies
+\item Lots of updates to UI rendering code to remove deprecated rendering
+\item Unloading support for Library destroy-\/cleanup
+\item Switched from our own operator overloads to using a library (though i had to mess with it a bit)
+\item Faster compiling on mac through .o separation (though still lots causing recompilation at the moment since game.\+cpp includes everything)
+\item Menu UI modernization updates (though many more to do)
+\item Remove need to pass mouse information into UI context
+\end{DoxyItemize}
+
+soon
+\begin{DoxyItemize}
+\item Scrolling UI elements
+\item Able to have different post processing shaders for game / menu
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md8}{}\doxysubsection{alpha\+\_\+0.\+22.\+11.\+21}\label{md__r_e_a_d_m_e_autotoc_md8}
+impact
+\begin{DoxyItemize}
+\item Conveyer works and delivers to Register
+\item Streamer Safe box visualization and settings
+\end{DoxyItemize}
+
+better eng
+\begin{DoxyItemize}
+\item Inputs are enum\textquotesingle{}d so we can better track usage
+\item Add helper macros for UI Size expectations
+\item Better menu system to allow easier go\+\_\+back functionality
+\item better get\+Matching\+Entity
+\item 
+\end{DoxyItemize}
+
+soon
+\begin{DoxyItemize}
+\item Conveyer Grabber
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md9}{}\doxysubsection{alpha\+\_\+0.\+22.\+11.\+14}\label{md__r_e_a_d_m_e_autotoc_md9}
+impact
+\begin{DoxyItemize}
+\item Map now send across network
+\item Map now respects seed sent in
+\item Version checking for player join
+\item Friends can now pick up items and you can see!
+\end{DoxyItemize}
+
+better eng
+\begin{DoxyItemize}
+\item Serialize entity, map, furniture, item (unblocks syncing across network)
+\item Add planning and game modes (and pausedplanning)
+\item more constexpr for globals
+\item add announcement types to annoucements (eventually do popups?)
+\item better default tab location on Network screen
+\item Fix issue where tabbed item could be invisible
+\item Move server into its own thread
+\end{DoxyItemize}
+
+soon
+\begin{DoxyItemize}
+\item Conveyer
+\item Add settings page to pause menu ?
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md10}{}\doxysubsection{alpha\+\_\+0.\+22.\+11.\+07}\label{md__r_e_a_d_m_e_autotoc_md10}
+impact
+\begin{DoxyItemize}
+\item Show IP address of host (hidden by default, has toggle button)
+\item Add copy button for ip
+\item Add ability to edit username from any screen showing it
+\item Add settings.\+bin file for storing settings across sessions
+\item $^\wedge$\+Skip username selector when already setup
+\item Add pause menu (continue / quit)
+\item Fix bug where \char`\"{}exit\char`\"{} button would just crash game to close instead of using close() functionality (so now saves work on exit button)
+\item Fix crash when switching from host to peer after hosting
+\end{DoxyItemize}
+
+better eng
+\begin{DoxyItemize}
+\item Slightly better focus ring selection, still need much more work on network screen
+\item Tables spawn with items on them since items cant be on the ground
+\item Add debug ui layer and move most debug info to it (Turn it on / off with \textquotesingle{}\textbackslash{}\textquotesingle{})
+\item Add defer which you can use to force cleanup at end of scope (see defer.\+h for usage)
+\item Add profiler to see avg ms spent in function
+\end{DoxyItemize}
+
+soon
+\begin{DoxyItemize}
+\item Conveyer
+\item Add settings page to pause menu ?
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md11}{}\doxysubsection{alpha\+\_\+0.\+22.\+10.\+31}\label{md__r_e_a_d_m_e_autotoc_md11}
+impact
+\begin{DoxyItemize}
+\item Added the ability to paste into textfields
+\item Multiplayer on both platforms ! (though you need to port forward \+:770)
+\item Multiplayer movement is now sync\textquotesingle{}d across the network
+\end{DoxyItemize}
+
+better eng
+\begin{DoxyItemize}
+\item We made the decision to switch from yojimbo to Game\+Network\+Sockets.
+\item create Library$<$\+T$>$ base class for easier library management later
+\item Add UI context ownership for widgets for better UI code
+\item Made {\ttfamily Entity\+Helper\+::get\+Matching\+Entity\+In\+Front} feel much better.
+\end{DoxyItemize}
+
+soon
+\begin{DoxyItemize}
+\item Sync more info across network
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md12}{}\doxysubsection{alpha\+\_\+0.\+22.\+10.\+25}\label{md__r_e_a_d_m_e_autotoc_md12}
+impact
+\begin{DoxyItemize}
+\item Spent most of the week doing network programming with enet.
+\begin{DoxyItemize}
+\item Got multiplayer movement working (check screenshots folder)
+\item Had too many issues on windows, need to migrate over to a new library
+\end{DoxyItemize}
+\item Character names generator (Thanks Alice for the lists)
+\item Textfield ui component
+\item Timer object that can be treated as continuous or as n-\/shot timer
+\item Music and Sounds!
+\begin{DoxyItemize}
+\item Customer order sound effect
+\item Gameplay placeholder music WAHWAH
+\item Placeholder roblox oof sound when running into customers
+\item Volume slider now actually controls master volume
+\end{DoxyItemize}
+\item Table that you can use to place items down
+\item Prevent Person types from getting stuck in each other. (might need some more work)
+\item Model for Cash Register (though its a bit dark cause no textures)
+\item Job System for customers !
+\begin{DoxyItemize}
+\item They will now come in and line up for their RX,
+\item once they get one at the register they\textquotesingle{}ll take it and go
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+better engineering
+\begin{DoxyItemize}
+\item Gabe got a windows machine setup to help create builds long term
+\item Include libs directly in vendor folder for easier first time setup
+\item Added better UI memory management so we can use composable functions for design / branching
+\item Added working headers for ailments/medicines/names (functionality coming soon?)
+\item Cached all is\+Walkable checks
+\end{DoxyItemize}
+
+soon
+\begin{DoxyItemize}
+\item switching to yojimbo
+\item System for highlighting selected items / furniture (working sometimes but definitely not done)
+\item autolayout (launched but still missing dropdown ui element)
+\item Had windows issues with Sago library, blocked until we can figure out windows.\+h
+\item Working on a stagger walk
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md13}{}\doxysubsection{alpha\+\_\+0.\+22.\+10.\+17}\label{md__r_e_a_d_m_e_autotoc_md13}
+impact
+\begin{DoxyItemize}
+\item added Controller movement for camera / menus
+\item New ailment icons and bag model
+\item Switched from manually checking entities for pathfinding to using a navmesh w/ caching
+\item Added Register furniture and customers now wait in line
+\item Remove all non theme\textquotesingle{}d ui color usages
+\item Can now pick up and rotate furniture
+\end{DoxyItemize}
+
+better engineering
+\begin{DoxyItemize}
+\item All loading happens in preloader now
+\item Rotational facing logic rehaul + diagonal walking
+\item Better font caching
+\item Reduced lots of warnings
+\item Better testing infrastructure
+\item Slowed down the customer and made picking up items easier
+\end{DoxyItemize}
+
+soon
+\begin{DoxyItemize}
+\item Tests for entity fetching
+\item System for highlighting selected items / furniture
+\item Migration to autolayout 99\% complete (missing dropdown ui element)
+\item Had windows issues with Sago library, blocked until we can figure out windows.\+h
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md14}{}\doxysubsection{alpha\+\_\+0.\+22.\+10.\+10}\label{md__r_e_a_d_m_e_autotoc_md14}
+
+\begin{DoxyItemize}
+\item nicer buttons and colors across all UI (unified theme \+:) )
+\item new font!!
+\item added texture loading with an image file
+\item cleaned up a bunch of code (maybe making folders next? wdyt)
+\item added a new customer person that has a name above their head (see video)
+\item added a texture library
+\item Speech Bubble on Customer (though with billboard cant place anything on it yet)
+\item Started work on a UI autolayout-\/er
+\item Added a tests/ folder with a way for all tests to run on startup
+\end{DoxyItemize}
+
+pre-\/history
+\begin{DoxyItemize}
+\item added a library for finding the right savegame folder (like App\+Data etc) cause its different on every platform.
+\item added loading / writing settings files (uncomment \#define WRITE\+\_\+\+FILES to test it out)
+\item added a focus ring so its more obvious what you are tabbed into on ui 
+\end{DoxyItemize}

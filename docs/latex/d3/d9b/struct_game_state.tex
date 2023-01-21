@@ -1,0 +1,235 @@
+\hypertarget{struct_game_state}{}\doxysection{Game\+State Struct Reference}
+\label{struct_game_state}\index{GameState@{GameState}}
+
+
+{\ttfamily \#include $<$statemanager.\+h$>$}
+
+Inheritance diagram for Game\+State\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d3/d9b/struct_game_state}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} \mbox{\hyperlink{struct_game_state_a71542bb1a1681939c0345cfe6ca836ff}{default\+\_\+value}} () const override
+\item 
+\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} \mbox{\hyperlink{struct_game_state_a228158ebec1a4c100b5cb2619b1bdf55}{pause}} ()
+\item 
+bool \mbox{\hyperlink{struct_game_state_a2d62cd0d89b2aaa9bacfa80b49a7b43d}{in\+\_\+round}} () const
+\item 
+bool \mbox{\hyperlink{struct_game_state_af423fac39ba58bc63455688b80bd4d5a}{is\+\_\+paused}} () const
+\item 
+bool \mbox{\hyperlink{struct_game_state_a2e3b0d7bd560e40eb05d4a481f0e6822}{is\+\_\+paused\+\_\+in}} (\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} s) const
+\item 
+bool \mbox{\hyperlink{struct_game_state_a536dc3946352b94c4eadaec0075cb7a4}{is\+\_\+lobby\+\_\+like}} ()
+\item 
+\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} \mbox{\hyperlink{struct_game_state_a8b478e1d36679117fcbe03c6ce658692}{toggle\+\_\+planning}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_state_manager}{State\+Manager$<$ game\+::\+State $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} \mbox{\hyperlink{struct_state_manager_a20c79acff1c0a92ea4f753ee2334a1ba}{read}} () const
+\item 
+\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} \mbox{\hyperlink{struct_state_manager_afe880671507f595b73a62debe9878ac1}{previous}} () const
+\item 
+\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} \mbox{\hyperlink{struct_state_manager_a893d07632226a05e8c959d9d47ef171c}{go\+\_\+back}} ()
+\item 
+void \mbox{\hyperlink{struct_state_manager_aaf92826799dad41d0799674d66505049}{clear\+\_\+history}} ()
+\item 
+bool \mbox{\hyperlink{struct_state_manager_abb2367385952f160c2828340b5051357}{is}} (\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} s) const
+\item 
+bool \mbox{\hyperlink{struct_state_manager_a2d10fdc9f778421bda192135b38f21f2}{is\+\_\+not}} (\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} s) const
+\item 
+const std\+::string\+\_\+view \mbox{\hyperlink{struct_state_manager_a27d342e65c27a47dee4a03c8e9f2866e}{tostring}} () const
+\item 
+void \mbox{\hyperlink{struct_state_manager_aab97f85d1876c98911212c036583d65d}{set}} (\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} ns)
+\item 
+virtual \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} \mbox{\hyperlink{struct_state_manager_a0146c68b8b1d6d4d5f8f39e5ba444a05}{default\+\_\+value}} () const=0
+\item 
+void \mbox{\hyperlink{struct_state_manager_a2366ee7429004cd58497c957376e39be}{reset}} ()
+\item 
+virtual \mbox{\hyperlink{struct_state_manager_a2d1e64fc776722b52f68d959e036243b}{$\sim$\+State\+Manager}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} \mbox{\hyperlink{struct_game_state_a9a3ed09dd6f05acb6aa3a804a8aedc37}{s\+\_\+pause}} ()
+\item 
+static bool \mbox{\hyperlink{struct_game_state_abbfb101b96ae617d2b67acbf58f50693}{s\+\_\+in\+\_\+round}} ()
+\item 
+static bool \mbox{\hyperlink{struct_game_state_aa05d18280f97f53cf194870e36735c83}{s\+\_\+is\+\_\+paused}} ()
+\item 
+static bool \mbox{\hyperlink{struct_game_state_acaa3aea2f1e23dfa9834f01707919061}{is\+\_\+update\+\_\+state}} (\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} s)
+\item 
+static bool \mbox{\hyperlink{struct_game_state_aa927cf7b60fe39c96c4d97187a5d33bd}{s\+\_\+should\+\_\+update}} ()
+\item 
+static bool \mbox{\hyperlink{struct_game_state_a0d4c630593512b0ee98c6b3039dde9c5}{s\+\_\+should\+\_\+prev\+\_\+update}} ()
+\item 
+static bool \mbox{\hyperlink{struct_game_state_a09d601963cf4fd939de751c85347e824}{s\+\_\+should\+\_\+draw}} ()
+\item 
+static bool \mbox{\hyperlink{struct_game_state_a2218af92929b3ebaf515c2f14bb88441}{s\+\_\+is\+\_\+lobby\+\_\+like}} ()
+\item 
+static \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} \mbox{\hyperlink{struct_game_state_afe57b59bb7d55344195913ca91fbf586}{s\+\_\+toggle\+\_\+planning}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_game_state_a71542bb1a1681939c0345cfe6ca836ff}\label{struct_game_state_a71542bb1a1681939c0345cfe6ca836ff}} 
+\index{GameState@{GameState}!default\_value@{default\_value}}
+\index{default\_value@{default\_value}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{default\_value()}{default\_value()}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} Game\+State\+::default\+\_\+value (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{struct_state_manager_a0146c68b8b1d6d4d5f8f39e5ba444a05}{State\+Manager$<$ game\+::\+State $>$}}.
+
+
+
+References \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a8ce023a3ed1ebef12557522a415fd66e}{game\+::\+In\+Menu}}.
+
+\mbox{\Hypertarget{struct_game_state_a2d62cd0d89b2aaa9bacfa80b49a7b43d}\label{struct_game_state_a2d62cd0d89b2aaa9bacfa80b49a7b43d}} 
+\index{GameState@{GameState}!in\_round@{in\_round}}
+\index{in\_round@{in\_round}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{in\_round()}{in\_round()}}
+{\footnotesize\ttfamily bool Game\+State\+::in\+\_\+round (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6aa959d7125a25f89281f6d3d3f0170475}{game\+::\+In\+Round}}.
+
+\mbox{\Hypertarget{struct_game_state_a536dc3946352b94c4eadaec0075cb7a4}\label{struct_game_state_a536dc3946352b94c4eadaec0075cb7a4}} 
+\index{GameState@{GameState}!is\_lobby\_like@{is\_lobby\_like}}
+\index{is\_lobby\_like@{is\_lobby\_like}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{is\_lobby\_like()}{is\_lobby\_like()}}
+{\footnotesize\ttfamily bool Game\+State\+::is\+\_\+lobby\+\_\+like (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game\+::\+Lobby}}.
+
+\mbox{\Hypertarget{struct_game_state_af423fac39ba58bc63455688b80bd4d5a}\label{struct_game_state_af423fac39ba58bc63455688b80bd4d5a}} 
+\index{GameState@{GameState}!is\_paused@{is\_paused}}
+\index{is\_paused@{is\_paused}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{is\_paused()}{is\_paused()}}
+{\footnotesize\ttfamily bool Game\+State\+::is\+\_\+paused (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a11b4fa8848972848a83f78e73c86c2e4}{game\+::\+Paused}}.
+
+\mbox{\Hypertarget{struct_game_state_a2e3b0d7bd560e40eb05d4a481f0e6822}\label{struct_game_state_a2e3b0d7bd560e40eb05d4a481f0e6822}} 
+\index{GameState@{GameState}!is\_paused\_in@{is\_paused\_in}}
+\index{is\_paused\_in@{is\_paused\_in}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{is\_paused\_in()}{is\_paused\_in()}}
+{\footnotesize\ttfamily bool Game\+State\+::is\+\_\+paused\+\_\+in (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}}}]{s }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a11b4fa8848972848a83f78e73c86c2e4}{game\+::\+Paused}}.
+
+\mbox{\Hypertarget{struct_game_state_acaa3aea2f1e23dfa9834f01707919061}\label{struct_game_state_acaa3aea2f1e23dfa9834f01707919061}} 
+\index{GameState@{GameState}!is\_update\_state@{is\_update\_state}}
+\index{is\_update\_state@{is\_update\_state}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{is\_update\_state()}{is\_update\_state()}}
+{\footnotesize\ttfamily static bool Game\+State\+::is\+\_\+update\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}}}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6aa959d7125a25f89281f6d3d3f0170475}{game\+::\+In\+Round}}, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game\+::\+Lobby}}, and \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game\+::\+Planning}}.
+
+\mbox{\Hypertarget{struct_game_state_a228158ebec1a4c100b5cb2619b1bdf55}\label{struct_game_state_a228158ebec1a4c100b5cb2619b1bdf55}} 
+\index{GameState@{GameState}!pause@{pause}}
+\index{pause@{pause}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{pause()}{pause()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} Game\+State\+::pause (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a11b4fa8848972848a83f78e73c86c2e4}{game\+::\+Paused}}.
+
+\mbox{\Hypertarget{struct_game_state_abbfb101b96ae617d2b67acbf58f50693}\label{struct_game_state_abbfb101b96ae617d2b67acbf58f50693}} 
+\index{GameState@{GameState}!s\_in\_round@{s\_in\_round}}
+\index{s\_in\_round@{s\_in\_round}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{s\_in\_round()}{s\_in\_round()}}
+{\footnotesize\ttfamily static bool Game\+State\+::s\+\_\+in\+\_\+round (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_player_a2b4d2c3ea68f6154a211c8a5a7e8a395}{Player\+::grab\+\_\+or\+\_\+drop()}}, and \mbox{\hyperlink{struct_round_af8d63a1a16145eb67f5b8fe240f4263e}{Round\+::on\+Update()}}.
+
+\mbox{\Hypertarget{struct_game_state_a2218af92929b3ebaf515c2f14bb88441}\label{struct_game_state_a2218af92929b3ebaf515c2f14bb88441}} 
+\index{GameState@{GameState}!s\_is\_lobby\_like@{s\_is\_lobby\_like}}
+\index{s\_is\_lobby\_like@{s\_is\_lobby\_like}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{s\_is\_lobby\_like()}{s\_is\_lobby\_like()}}
+{\footnotesize\ttfamily static bool Game\+State\+::s\+\_\+is\+\_\+lobby\+\_\+like (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{struct_game_state_aa05d18280f97f53cf194870e36735c83}\label{struct_game_state_aa05d18280f97f53cf194870e36735c83}} 
+\index{GameState@{GameState}!s\_is\_paused@{s\_is\_paused}}
+\index{s\_is\_paused@{s\_is\_paused}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{s\_is\_paused()}{s\_is\_paused()}}
+{\footnotesize\ttfamily static bool Game\+State\+::s\+\_\+is\+\_\+paused (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{struct_game_state_a9a3ed09dd6f05acb6aa3a804a8aedc37}\label{struct_game_state_a9a3ed09dd6f05acb6aa3a804a8aedc37}} 
+\index{GameState@{GameState}!s\_pause@{s\_pause}}
+\index{s\_pause@{s\_pause}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{s\_pause()}{s\_pause()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} Game\+State\+::s\+\_\+pause (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_layer_a84417a9ddbc61d6c74a0c1d598661e46}{Game\+Layer\+::on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_game_layer_a614faefb9cd5b78e3117eea4bd3de3b1}{Game\+Layer\+::on\+Key\+Pressed()}}.
+
+\mbox{\Hypertarget{struct_game_state_a09d601963cf4fd939de751c85347e824}\label{struct_game_state_a09d601963cf4fd939de751c85347e824}} 
+\index{GameState@{GameState}!s\_should\_draw@{s\_should\_draw}}
+\index{s\_should\_draw@{s\_should\_draw}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{s\_should\_draw()}{s\_should\_draw()}}
+{\footnotesize\ttfamily static bool Game\+State\+::s\+\_\+should\+\_\+draw (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{struct_game_state_a0d4c630593512b0ee98c6b3039dde9c5}\label{struct_game_state_a0d4c630593512b0ee98c6b3039dde9c5}} 
+\index{GameState@{GameState}!s\_should\_prev\_update@{s\_should\_prev\_update}}
+\index{s\_should\_prev\_update@{s\_should\_prev\_update}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{s\_should\_prev\_update()}{s\_should\_prev\_update()}}
+{\footnotesize\ttfamily static bool Game\+State\+::s\+\_\+should\+\_\+prev\+\_\+update (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a11b4fa8848972848a83f78e73c86c2e4}{game\+::\+Paused}}.
+
+\mbox{\Hypertarget{struct_game_state_aa927cf7b60fe39c96c4d97187a5d33bd}\label{struct_game_state_aa927cf7b60fe39c96c4d97187a5d33bd}} 
+\index{GameState@{GameState}!s\_should\_update@{s\_should\_update}}
+\index{s\_should\_update@{s\_should\_update}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{s\_should\_update()}{s\_should\_update()}}
+{\footnotesize\ttfamily static bool Game\+State\+::s\+\_\+should\+\_\+update (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514cd}{Game\+Layer\+::on\+Update()}}.
+
+\mbox{\Hypertarget{struct_game_state_afe57b59bb7d55344195913ca91fbf586}\label{struct_game_state_afe57b59bb7d55344195913ca91fbf586}} 
+\index{GameState@{GameState}!s\_toggle\_planning@{s\_toggle\_planning}}
+\index{s\_toggle\_planning@{s\_toggle\_planning}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{s\_toggle\_planning()}{s\_toggle\_planning()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} Game\+State\+::s\+\_\+toggle\+\_\+planning (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_debug_layer_a9e336c722f2c4d11ad35491754a57e15}{Game\+Debug\+Layer\+::toggle\+\_\+planning()}}.
+
+\mbox{\Hypertarget{struct_game_state_a8b478e1d36679117fcbe03c6ce658692}\label{struct_game_state_a8b478e1d36679117fcbe03c6ce658692}} 
+\index{GameState@{GameState}!toggle\_planning@{toggle\_planning}}
+\index{toggle\_planning@{toggle\_planning}!GameState@{GameState}}
+\doxysubsubsection{\texorpdfstring{toggle\_planning()}{toggle\_planning()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6}{game\+::\+State}} Game\+State\+::toggle\+\_\+planning (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6aa959d7125a25f89281f6d3d3f0170475}{game\+::\+In\+Round}}, and \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game\+::\+Planning}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{statemanager_8h}{statemanager.\+h}}\end{DoxyCompactItemize}

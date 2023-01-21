@@ -1,0 +1,68 @@
+\hypertarget{text__util_8h}{}\doxysection{src/text\+\_\+util.h File Reference}
+\label{text__util_8h}\index{src/text\_util.h@{src/text\_util.h}}
+{\ttfamily \#include \char`\"{}external\+\_\+include.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structraylib_1_1_wave_text_config}{raylib\+::\+Wave\+Text\+Config}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceraylib}{raylib}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{text__util_8h_ac13e03ba39f2d2f5351a28146c2f2147}{LETTER\+\_\+\+BOUNDRY\+\_\+\+SIZE}}~0.\+25f
+\item 
+\#define \mbox{\hyperlink{text__util_8h_a179cc5548cef658744067f16fd341096}{TEXT\+\_\+\+MAX\+\_\+\+LAYERS}}~32
+\item 
+\#define \mbox{\hyperlink{text__util_8h_abaefce3c171709eed5efc8b3b4ec7812}{LETTER\+\_\+\+BOUNDRY\+\_\+\+COLOR}}~VIOLET
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structraylib_1_1_wave_text_config}{raylib\+::\+Wave\+Text\+Config}} \mbox{\hyperlink{namespaceraylib_a17e750bc0f42947c422d26d114cb7233}{raylib\+::\+Wave\+Text\+Config}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{namespaceraylib_abc5a61fc461e160abbf9e9458d38cbf9}{raylib\+::\+Draw\+Text\+Codepoint3D}} (Font font, int codepoint, vec3 position, float font\+Size, bool backface, Color tint)
+\item 
+static void \mbox{\hyperlink{namespaceraylib_adc40755b0f82292edf03a57666161342}{raylib\+::\+Draw\+Text3D}} (Font font, const char $\ast$text, vec3 position, float font\+Size, float font\+Spacing, float line\+Spacing, bool backface, Color tint)
+\item 
+static vec3 \mbox{\hyperlink{namespaceraylib_a6aebd1748cab9a1fdcf103e310507b6b}{raylib\+::\+Measure\+Text3D}} (Font font, const char $\ast$text, float font\+Size, float font\+Spacing, float line\+Spacing)
+\item 
+static void \mbox{\hyperlink{namespaceraylib_aeb18116ce05499755bfce3012bfa0ea1}{raylib\+::\+Draw\+Text\+Wave3D}} (Font font, const char $\ast$text, vec3 position, float font\+Size, float font\+Spacing, float line\+Spacing, bool backface, Wave\+Text\+Config $\ast$config, float time, Color tint)
+\item 
+static vec3 \mbox{\hyperlink{namespaceraylib_a9989019e26a3b70fddd628c3fe21e5d1}{raylib\+::\+Measure\+Text\+Wave3D}} (Font font, const char $\ast$text, float font\+Size, float font\+Spacing, float line\+Spacing)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const bool \mbox{\hyperlink{namespaceraylib_a201c666d2877d6eabeafa095536c4131}{raylib\+::\+SHOW\+\_\+\+LETTER\+\_\+\+BOUNDRY}} = false
+\item 
+const bool \mbox{\hyperlink{namespaceraylib_a89c9a7c28380a9b4c6434e1c37f44bdd}{raylib\+::\+SHOW\+\_\+\+TEXT\+\_\+\+BOUNDRY}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{text__util_8h_abaefce3c171709eed5efc8b3b4ec7812}\label{text__util_8h_abaefce3c171709eed5efc8b3b4ec7812}} 
+\index{text\_util.h@{text\_util.h}!LETTER\_BOUNDRY\_COLOR@{LETTER\_BOUNDRY\_COLOR}}
+\index{LETTER\_BOUNDRY\_COLOR@{LETTER\_BOUNDRY\_COLOR}!text\_util.h@{text\_util.h}}
+\doxysubsubsection{\texorpdfstring{LETTER\_BOUNDRY\_COLOR}{LETTER\_BOUNDRY\_COLOR}}
+{\footnotesize\ttfamily \#define LETTER\+\_\+\+BOUNDRY\+\_\+\+COLOR~VIOLET}
+
+\mbox{\Hypertarget{text__util_8h_ac13e03ba39f2d2f5351a28146c2f2147}\label{text__util_8h_ac13e03ba39f2d2f5351a28146c2f2147}} 
+\index{text\_util.h@{text\_util.h}!LETTER\_BOUNDRY\_SIZE@{LETTER\_BOUNDRY\_SIZE}}
+\index{LETTER\_BOUNDRY\_SIZE@{LETTER\_BOUNDRY\_SIZE}!text\_util.h@{text\_util.h}}
+\doxysubsubsection{\texorpdfstring{LETTER\_BOUNDRY\_SIZE}{LETTER\_BOUNDRY\_SIZE}}
+{\footnotesize\ttfamily \#define LETTER\+\_\+\+BOUNDRY\+\_\+\+SIZE~0.\+25f}
+
+\mbox{\Hypertarget{text__util_8h_a179cc5548cef658744067f16fd341096}\label{text__util_8h_a179cc5548cef658744067f16fd341096}} 
+\index{text\_util.h@{text\_util.h}!TEXT\_MAX\_LAYERS@{TEXT\_MAX\_LAYERS}}
+\index{TEXT\_MAX\_LAYERS@{TEXT\_MAX\_LAYERS}!text\_util.h@{text\_util.h}}
+\doxysubsubsection{\texorpdfstring{TEXT\_MAX\_LAYERS}{TEXT\_MAX\_LAYERS}}
+{\footnotesize\ttfamily \#define TEXT\+\_\+\+MAX\+\_\+\+LAYERS~32}
+

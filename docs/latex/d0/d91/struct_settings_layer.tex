@@ -1,0 +1,386 @@
+\hypertarget{struct_settings_layer}{}\doxysection{Settings\+Layer Struct Reference}
+\label{struct_settings_layer}\index{SettingsLayer@{SettingsLayer}}
+
+
+{\ttfamily \#include $<$settingslayer.\+h$>$}
+
+Inheritance diagram for Settings\+Layer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d0/d91/struct_settings_layer}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7a}{Active\+Window}} \{ \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}{Root}} = 0
+, \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aa3cced6d07c1abcbe3fb61a2a1588e71f}{Key\+Bindings}} = 1
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_settings_layer_a1d190e9acf832ded498984746352e2a1}{Settings\+Layer}} ()
+\item 
+virtual \mbox{\hyperlink{struct_settings_layer_a4c0c1e7cea44f09d4ea9316582a8d8c6}{$\sim$\+Settings\+Layer}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_settings_layer_a3d582e4d4c4f4c77de135351afad5ab6}{on\+Event}} (Event \&event) override
+\item 
+bool \mbox{\hyperlink{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}{on\+Key\+Pressed}} (Key\+Pressed\+Event \&event)
+\item 
+bool \mbox{\hyperlink{struct_settings_layer_a7de19f92164510ae75ff9043db1c16cd}{on\+Gamepad\+Button\+Pressed}} (Gamepad\+Button\+Pressed\+Event \&event)
+\item 
+void \mbox{\hyperlink{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}{streamer\+\_\+safe\+\_\+box}} ()
+\item 
+void \mbox{\hyperlink{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}{enable\+\_\+post\+\_\+processing}} ()
+\item 
+void \mbox{\hyperlink{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}{master\+\_\+volume}} ()
+\item 
+void \mbox{\hyperlink{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}{music\+\_\+volume}} ()
+\item 
+void \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{resolution\+\_\+switcher}} ()
+\item 
+void \mbox{\hyperlink{struct_settings_layer_a8de4b3fe663f67830806e1d142f1b84b}{back\+\_\+button}} ()
+\item 
+void \mbox{\hyperlink{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}{draw\+\_\+root\+\_\+settings}} (float)
+\item 
+void \mbox{\hyperlink{struct_settings_layer_a384cf5682b9576212bed7d1949abbd24}{draw\+\_\+keybindings}} (float)
+\item 
+void \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\+\_\+ui}} (float dt)
+\item 
+virtual void \mbox{\hyperlink{struct_settings_layer_a61847ff955819ef4cfffe526202d9df3}{on\+Update}} (float) override
+\item 
+virtual void \mbox{\hyperlink{struct_settings_layer_a25715e82ed14d56401b9a39b57c03b0b}{on\+Draw}} (float dt) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7a}{Settings\+Layer\+::\+Active\+Window}} \mbox{\hyperlink{struct_settings_layer_a3544b379d9ac79e8178f07bac7c634d8}{active\+Window}} = \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}{Active\+Window\+::\+Root}}
+\item 
+Trie \mbox{\hyperlink{struct_settings_layer_adb61f10c121d444e8dd5aa337b74a520}{key\+Binding\+Trie}}
+\item 
+std\+::array$<$ std\+::pair$<$ Input\+Name, std\+::string\+\_\+view $>$, magic\+\_\+enum\+::enum\+\_\+count$<$ Input\+Name $>$()$>$ \mbox{\hyperlink{struct_settings_layer_a045da42d7bacfd0e06acc78bc1f07cf3}{key\+Input\+Names}}
+\item 
+std\+::vector$<$ std\+::pair$<$ Input\+Name, Any\+Inputs $>$ $>$ \mbox{\hyperlink{struct_settings_layer_abb51e478cf9528499223798ba0884570}{key\+Input\+Values}}
+\item 
+std\+::shared\+\_\+ptr$<$ ui\+::\+UIContext $>$ \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}
+\item 
+bool \mbox{\hyperlink{struct_settings_layer_abb2340d359898fb9cb000b832df56f76}{window\+Size\+Dropdown\+State}} = false
+\item 
+int \mbox{\hyperlink{struct_settings_layer_a2436c15dac32006970485af13ace1163}{window\+Size\+Dropdown\+Index}} = 0
+\item 
+bool \mbox{\hyperlink{struct_settings_layer_a46d3a6a66e6c06e5ed3e06ee668cde2b}{resolution\+\_\+dropdown\+\_\+open}} = false
+\item 
+int \mbox{\hyperlink{struct_settings_layer_a6a11c15cb09ededbc30112342c7b293d}{resolution\+\_\+selected\+\_\+index}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7a}\label{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7a}} 
+\index{SettingsLayer@{SettingsLayer}!ActiveWindow@{ActiveWindow}}
+\index{ActiveWindow@{ActiveWindow}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{ActiveWindow}{ActiveWindow}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7a}{Settings\+Layer\+::\+Active\+Window}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Root@{Root}!SettingsLayer@{SettingsLayer}}\index{SettingsLayer@{SettingsLayer}!Root@{Root}}}\mbox{\Hypertarget{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}\label{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}} 
+Root&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{KeyBindings@{KeyBindings}!SettingsLayer@{SettingsLayer}}\index{SettingsLayer@{SettingsLayer}!KeyBindings@{KeyBindings}}}\mbox{\Hypertarget{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aa3cced6d07c1abcbe3fb61a2a1588e71f}\label{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aa3cced6d07c1abcbe3fb61a2a1588e71f}} 
+Key\+Bindings&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_settings_layer_a1d190e9acf832ded498984746352e2a1}\label{struct_settings_layer_a1d190e9acf832ded498984746352e2a1}} 
+\index{SettingsLayer@{SettingsLayer}!SettingsLayer@{SettingsLayer}}
+\index{SettingsLayer@{SettingsLayer}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{SettingsLayer()}{SettingsLayer()}}
+{\footnotesize\ttfamily Settings\+Layer\+::\+Settings\+Layer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, \mbox{\hyperlink{struct_settings_layer_adb61f10c121d444e8dd5aa337b74a520}{key\+Binding\+Trie}}, \mbox{\hyperlink{struct_settings_layer_a045da42d7bacfd0e06acc78bc1f07cf3}{key\+Input\+Names}}, \mbox{\hyperlink{struct_settings_layer_abb51e478cf9528499223798ba0884570}{key\+Input\+Values}}, \mbox{\hyperlink{struct_settings_layer_a6a11c15cb09ededbc30112342c7b293d}{resolution\+\_\+selected\+\_\+index}}, and \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
+
+\mbox{\Hypertarget{struct_settings_layer_a4c0c1e7cea44f09d4ea9316582a8d8c6}\label{struct_settings_layer_a4c0c1e7cea44f09d4ea9316582a8d8c6}} 
+\index{SettingsLayer@{SettingsLayer}!````~SettingsLayer@{$\sim$SettingsLayer}}
+\index{````~SettingsLayer@{$\sim$SettingsLayer}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{$\sim$SettingsLayer()}{~SettingsLayer()}}
+{\footnotesize\ttfamily virtual Settings\+Layer\+::$\sim$\+Settings\+Layer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_settings_layer_a8de4b3fe663f67830806e1d142f1b84b}\label{struct_settings_layer_a8de4b3fe663f67830806e1d142f1b84b}} 
+\index{SettingsLayer@{SettingsLayer}!back\_button@{back\_button}}
+\index{back\_button@{back\_button}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{back\_button()}{back\_button()}}
+{\footnotesize\ttfamily void Settings\+Layer\+::back\+\_\+button (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}{draw\+\_\+root\+\_\+settings()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_a384cf5682b9576212bed7d1949abbd24}\label{struct_settings_layer_a384cf5682b9576212bed7d1949abbd24}} 
+\index{SettingsLayer@{SettingsLayer}!draw\_keybindings@{draw\_keybindings}}
+\index{draw\_keybindings@{draw\_keybindings}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{draw\_keybindings()}{draw\_keybindings()}}
+{\footnotesize\ttfamily void Settings\+Layer\+::draw\+\_\+keybindings (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, and \mbox{\hyperlink{struct_settings_layer_a045da42d7bacfd0e06acc78bc1f07cf3}{key\+Input\+Names}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\+\_\+ui()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}\label{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}} 
+\index{SettingsLayer@{SettingsLayer}!draw\_root\_settings@{draw\_root\_settings}}
+\index{draw\_root\_settings@{draw\_root\_settings}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{draw\_root\_settings()}{draw\_root\_settings()}}
+{\footnotesize\ttfamily void Settings\+Layer\+::draw\+\_\+root\+\_\+settings (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_settings_layer_a8de4b3fe663f67830806e1d142f1b84b}{back\+\_\+button()}}, \mbox{\hyperlink{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}{enable\+\_\+post\+\_\+processing()}}, \mbox{\hyperlink{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}{master\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}{music\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{resolution\+\_\+switcher()}}, and \mbox{\hyperlink{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}{streamer\+\_\+safe\+\_\+box()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\+\_\+ui()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}\label{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}} 
+\index{SettingsLayer@{SettingsLayer}!draw\_ui@{draw\_ui}}
+\index{draw\_ui@{draw\_ui}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{draw\_ui()}{draw\_ui()}}
+{\footnotesize\ttfamily void Settings\+Layer\+::draw\+\_\+ui (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_settings_layer_a3544b379d9ac79e8178f07bac7c634d8}{active\+Window}}, \mbox{\hyperlink{struct_settings_layer_a384cf5682b9576212bed7d1949abbd24}{draw\+\_\+keybindings()}}, \mbox{\hyperlink{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}{draw\+\_\+root\+\_\+settings()}}, \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aa3cced6d07c1abcbe3fb61a2a1588e71f}{Key\+Bindings}}, \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}{Root}}, and \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_a25715e82ed14d56401b9a39b57c03b0b}{on\+Draw()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}\label{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}} 
+\index{SettingsLayer@{SettingsLayer}!enable\_post\_processing@{enable\_post\_processing}}
+\index{enable\_post\_processing@{enable\_post\_processing}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{enable\_post\_processing()}{enable\_post\_processing()}}
+{\footnotesize\ttfamily void Settings\+Layer\+::enable\+\_\+post\+\_\+processing (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}{draw\+\_\+root\+\_\+settings()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}\label{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}} 
+\index{SettingsLayer@{SettingsLayer}!master\_volume@{master\_volume}}
+\index{master\_volume@{master\_volume}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{master\_volume()}{master\_volume()}}
+{\footnotesize\ttfamily void Settings\+Layer\+::master\+\_\+volume (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}{draw\+\_\+root\+\_\+settings()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}\label{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}} 
+\index{SettingsLayer@{SettingsLayer}!music\_volume@{music\_volume}}
+\index{music\_volume@{music\_volume}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{music\_volume()}{music\_volume()}}
+{\footnotesize\ttfamily void Settings\+Layer\+::music\+\_\+volume (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}{draw\+\_\+root\+\_\+settings()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_a25715e82ed14d56401b9a39b57c03b0b}\label{struct_settings_layer_a25715e82ed14d56401b9a39b57c03b0b}} 
+\index{SettingsLayer@{SettingsLayer}!onDraw@{onDraw}}
+\index{onDraw@{onDraw}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{onDraw()}{onDraw()}}
+{\footnotesize\ttfamily virtual void Settings\+Layer\+::on\+Draw (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\+\_\+ui()}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu\+::\+Settings}}, and \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
+
+\mbox{\Hypertarget{struct_settings_layer_a3d582e4d4c4f4c77de135351afad5ab6}\label{struct_settings_layer_a3d582e4d4c4f4c77de135351afad5ab6}} 
+\index{SettingsLayer@{SettingsLayer}!onEvent@{onEvent}}
+\index{onEvent@{onEvent}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
+{\footnotesize\ttfamily virtual void Settings\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{struct_settings_layer_a7de19f92164510ae75ff9043db1c16cd}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}{on\+Key\+Pressed()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_a7de19f92164510ae75ff9043db1c16cd}\label{struct_settings_layer_a7de19f92164510ae75ff9043db1c16cd}} 
+\index{SettingsLayer@{SettingsLayer}!onGamepadButtonPressed@{onGamepadButtonPressed}}
+\index{onGamepadButtonPressed@{onGamepadButtonPressed}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{onGamepadButtonPressed()}{onGamepadButtonPressed()}}
+{\footnotesize\ttfamily bool Settings\+Layer\+::on\+Gamepad\+Button\+Pressed (\begin{DoxyParamCaption}\item[{Gamepad\+Button\+Pressed\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu\+::\+Settings}}, and \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_a3d582e4d4c4f4c77de135351afad5ab6}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}\label{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}} 
+\index{SettingsLayer@{SettingsLayer}!onKeyPressed@{onKeyPressed}}
+\index{onKeyPressed@{onKeyPressed}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{onKeyPressed()}{onKeyPressed()}}
+{\footnotesize\ttfamily bool Settings\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{Key\+Pressed\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_settings_layer_a3544b379d9ac79e8178f07bac7c634d8}{active\+Window}}, \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}{Root}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu\+::\+Settings}}, and \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_a3d582e4d4c4f4c77de135351afad5ab6}{on\+Event()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_a61847ff955819ef4cfffe526202d9df3}\label{struct_settings_layer_a61847ff955819ef4cfffe526202d9df3}} 
+\index{SettingsLayer@{SettingsLayer}!onUpdate@{onUpdate}}
+\index{onUpdate@{onUpdate}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{onUpdate()}{onUpdate()}}
+{\footnotesize\ttfamily virtual void Settings\+Layer\+::on\+Update (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu\+::\+Settings}}.
+
+\mbox{\Hypertarget{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}\label{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}} 
+\index{SettingsLayer@{SettingsLayer}!resolution\_switcher@{resolution\_switcher}}
+\index{resolution\_switcher@{resolution\_switcher}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{resolution\_switcher()}{resolution\_switcher()}}
+{\footnotesize\ttfamily void Settings\+Layer\+::resolution\+\_\+switcher (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_settings_layer_a46d3a6a66e6c06e5ed3e06ee668cde2b}{resolution\+\_\+dropdown\+\_\+open}}, \mbox{\hyperlink{struct_settings_layer_a6a11c15cb09ededbc30112342c7b293d}{resolution\+\_\+selected\+\_\+index}}, and \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}{draw\+\_\+root\+\_\+settings()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}\label{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}} 
+\index{SettingsLayer@{SettingsLayer}!streamer\_safe\_box@{streamer\_safe\_box}}
+\index{streamer\_safe\_box@{streamer\_safe\_box}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{streamer\_safe\_box()}{streamer\_safe\_box()}}
+{\footnotesize\ttfamily void Settings\+Layer\+::streamer\+\_\+safe\+\_\+box (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}{draw\+\_\+root\+\_\+settings()}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_settings_layer_a3544b379d9ac79e8178f07bac7c634d8}\label{struct_settings_layer_a3544b379d9ac79e8178f07bac7c634d8}} 
+\index{SettingsLayer@{SettingsLayer}!activeWindow@{activeWindow}}
+\index{activeWindow@{activeWindow}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{activeWindow}{activeWindow}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7a}{Settings\+Layer\+::\+Active\+Window}} Settings\+Layer\+::active\+Window = \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}{Active\+Window\+::\+Root}}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\+\_\+ui()}}, and \mbox{\hyperlink{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}{on\+Key\+Pressed()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_adb61f10c121d444e8dd5aa337b74a520}\label{struct_settings_layer_adb61f10c121d444e8dd5aa337b74a520}} 
+\index{SettingsLayer@{SettingsLayer}!keyBindingTrie@{keyBindingTrie}}
+\index{keyBindingTrie@{keyBindingTrie}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{keyBindingTrie}{keyBindingTrie}}
+{\footnotesize\ttfamily Trie Settings\+Layer\+::key\+Binding\+Trie}
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_a1d190e9acf832ded498984746352e2a1}{Settings\+Layer()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_a045da42d7bacfd0e06acc78bc1f07cf3}\label{struct_settings_layer_a045da42d7bacfd0e06acc78bc1f07cf3}} 
+\index{SettingsLayer@{SettingsLayer}!keyInputNames@{keyInputNames}}
+\index{keyInputNames@{keyInputNames}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{keyInputNames}{keyInputNames}}
+{\footnotesize\ttfamily std\+::array$<$std\+::pair$<$Input\+Name, std\+::string\+\_\+view$>$, magic\+\_\+enum\+::enum\+\_\+count$<$Input\+Name$>$()$>$ Settings\+Layer\+::key\+Input\+Names}
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_a384cf5682b9576212bed7d1949abbd24}{draw\+\_\+keybindings()}}, and \mbox{\hyperlink{struct_settings_layer_a1d190e9acf832ded498984746352e2a1}{Settings\+Layer()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_abb51e478cf9528499223798ba0884570}\label{struct_settings_layer_abb51e478cf9528499223798ba0884570}} 
+\index{SettingsLayer@{SettingsLayer}!keyInputValues@{keyInputValues}}
+\index{keyInputValues@{keyInputValues}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{keyInputValues}{keyInputValues}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::pair$<$Input\+Name, Any\+Inputs$>$ $>$ Settings\+Layer\+::key\+Input\+Values}
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_a1d190e9acf832ded498984746352e2a1}{Settings\+Layer()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_a46d3a6a66e6c06e5ed3e06ee668cde2b}\label{struct_settings_layer_a46d3a6a66e6c06e5ed3e06ee668cde2b}} 
+\index{SettingsLayer@{SettingsLayer}!resolution\_dropdown\_open@{resolution\_dropdown\_open}}
+\index{resolution\_dropdown\_open@{resolution\_dropdown\_open}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{resolution\_dropdown\_open}{resolution\_dropdown\_open}}
+{\footnotesize\ttfamily bool Settings\+Layer\+::resolution\+\_\+dropdown\+\_\+open = false}
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{resolution\+\_\+switcher()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_a6a11c15cb09ededbc30112342c7b293d}\label{struct_settings_layer_a6a11c15cb09ededbc30112342c7b293d}} 
+\index{SettingsLayer@{SettingsLayer}!resolution\_selected\_index@{resolution\_selected\_index}}
+\index{resolution\_selected\_index@{resolution\_selected\_index}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{resolution\_selected\_index}{resolution\_selected\_index}}
+{\footnotesize\ttfamily int Settings\+Layer\+::resolution\+\_\+selected\+\_\+index = 0}
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{resolution\+\_\+switcher()}}, and \mbox{\hyperlink{struct_settings_layer_a1d190e9acf832ded498984746352e2a1}{Settings\+Layer()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}\label{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}} 
+\index{SettingsLayer@{SettingsLayer}!ui\_context@{ui\_context}}
+\index{ui\_context@{ui\_context}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{ui\_context}{ui\_context}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ui\+::\+UIContext$>$ Settings\+Layer\+::ui\+\_\+context}
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\+\_\+ui()}}, \mbox{\hyperlink{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}{enable\+\_\+post\+\_\+processing()}}, \mbox{\hyperlink{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}{master\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}{music\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_a25715e82ed14d56401b9a39b57c03b0b}{on\+Draw()}}, \mbox{\hyperlink{struct_settings_layer_a7de19f92164510ae75ff9043db1c16cd}{on\+Gamepad\+Button\+Pressed()}}, \mbox{\hyperlink{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}{on\+Key\+Pressed()}}, \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{resolution\+\_\+switcher()}}, \mbox{\hyperlink{struct_settings_layer_a1d190e9acf832ded498984746352e2a1}{Settings\+Layer()}}, and \mbox{\hyperlink{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}{streamer\+\_\+safe\+\_\+box()}}.
+
+\mbox{\Hypertarget{struct_settings_layer_a2436c15dac32006970485af13ace1163}\label{struct_settings_layer_a2436c15dac32006970485af13ace1163}} 
+\index{SettingsLayer@{SettingsLayer}!windowSizeDropdownIndex@{windowSizeDropdownIndex}}
+\index{windowSizeDropdownIndex@{windowSizeDropdownIndex}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{windowSizeDropdownIndex}{windowSizeDropdownIndex}}
+{\footnotesize\ttfamily int Settings\+Layer\+::window\+Size\+Dropdown\+Index = 0}
+
+\mbox{\Hypertarget{struct_settings_layer_abb2340d359898fb9cb000b832df56f76}\label{struct_settings_layer_abb2340d359898fb9cb000b832df56f76}} 
+\index{SettingsLayer@{SettingsLayer}!windowSizeDropdownState@{windowSizeDropdownState}}
+\index{windowSizeDropdownState@{windowSizeDropdownState}!SettingsLayer@{SettingsLayer}}
+\doxysubsubsection{\texorpdfstring{windowSizeDropdownState}{windowSizeDropdownState}}
+{\footnotesize\ttfamily bool Settings\+Layer\+::window\+Size\+Dropdown\+State = false}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{settingslayer_8h}{settingslayer.\+h}}\end{DoxyCompactItemize}

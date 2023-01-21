@@ -1,0 +1,266 @@
+\hypertarget{struct_game_cam}{}\doxysection{Game\+Cam Struct Reference}
+\label{struct_game_cam}\index{GameCam@{GameCam}}
+
+
+{\ttfamily \#include $<$camera.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_game_cam_a519ca48bdd700ba0ef0cfa85e753dcd0}{angle\+Min\+Max\+Clamp}} ()
+\item 
+void \mbox{\hyperlink{struct_game_cam_aa04badc32db03242f9d8259c3f022384}{update\+Target\+Angle}} (float dx, float dy, float dz)
+\item 
+void \mbox{\hyperlink{struct_game_cam_a2260298173fe1660028e43c0acd1f4fa}{update\+Target\+Distance}} ()
+\item 
+void \mbox{\hyperlink{struct_game_cam_ae8cd682580edf0178f48292c2fd038bb}{update\+Target\+Distance\+And\+Angle}} ()
+\item 
+\mbox{\hyperlink{struct_game_cam_a8f92e106c3d76f78f73f60a4ce69dcae}{Game\+Cam}} ()
+\item 
+void \mbox{\hyperlink{struct_game_cam_a211e1b0b5a8a727732d2fcdbcd1f2f43}{update\+To\+Target}} (\mbox{\hyperlink{struct_entity}{Entity}} entity)
+\item 
+void \mbox{\hyperlink{struct_game_cam_a905ee6006b9a65d8d4d1506121a9fd7d}{update\+Camera}} ()
+\item 
+void \mbox{\hyperlink{struct_game_cam_a550f34dec8d09884af95514ec85841b5}{debug\+Camera}} ()
+\item 
+raylib\+::\+Camera3D \mbox{\hyperlink{struct_game_cam_a1ecdc6bb888736f76eb86a6c24fcc95c}{get}} ()
+\item 
+raylib\+::\+Camera3D $\ast$ \mbox{\hyperlink{struct_game_cam_a544c61acc1f33735f48e6e9269a5b3dd}{get\+\_\+ptr}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+raylib\+::\+Camera3D \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}
+\item 
+float \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\+\_\+distance}} = 0.\+0f
+\item 
+float \mbox{\hyperlink{struct_game_cam_ab5fc2184426fa9484519de2b947267b2}{free\+\_\+distance\+\_\+min\+\_\+clamp}} = 10.\+0f
+\item 
+float \mbox{\hyperlink{struct_game_cam_acfb64855e59b2278ec1cf0d85f767a1a}{free\+\_\+distance\+\_\+max\+\_\+clamp}} = 20.\+0f
+\item 
+float \mbox{\hyperlink{struct_game_cam_ad89aaab4d9815a3d280585eaba0beeb8}{free\+\_\+angle\+\_\+min}} = (-\/89.\+0f) $\ast$ DEG2\+RAD
+\item 
+float \mbox{\hyperlink{struct_game_cam_aaf559651385674c3547b53f59f0c6b3c}{free\+\_\+angle\+\_\+max}} = (0.\+0f) $\ast$ DEG2\+RAD
+\item 
+float \mbox{\hyperlink{struct_game_cam_a573b28aaf2e92591fb0dbd34c1ddbc74}{scroll\+\_\+sensitivity}} = 1.\+0f
+\item 
+float \mbox{\hyperlink{struct_game_cam_a2d6524b9df1a6a49a882c8ba530905d8}{default\+\_\+angle\+\_\+y}} = -\/45.f $\ast$ DEG2\+RAD
+\item 
+vec2 \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}} = \{0.\+0, 0.\+0\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_game_cam_a8f92e106c3d76f78f73f60a4ce69dcae}\label{struct_game_cam_a8f92e106c3d76f78f73f60a4ce69dcae}} 
+\index{GameCam@{GameCam}!GameCam@{GameCam}}
+\index{GameCam@{GameCam}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{GameCam()}{GameCam()}}
+{\footnotesize\ttfamily Game\+Cam\+::\+Game\+Cam (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}, \mbox{\hyperlink{struct_game_cam_a2d6524b9df1a6a49a882c8ba530905d8}{default\+\_\+angle\+\_\+y}}, and \mbox{\hyperlink{struct_game_cam_ae8cd682580edf0178f48292c2fd038bb}{update\+Target\+Distance\+And\+Angle()}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_game_cam_a519ca48bdd700ba0ef0cfa85e753dcd0}\label{struct_game_cam_a519ca48bdd700ba0ef0cfa85e753dcd0}} 
+\index{GameCam@{GameCam}!angleMinMaxClamp@{angleMinMaxClamp}}
+\index{angleMinMaxClamp@{angleMinMaxClamp}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{angleMinMaxClamp()}{angleMinMaxClamp()}}
+{\footnotesize\ttfamily void Game\+Cam\+::angle\+Min\+Max\+Clamp (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}, \mbox{\hyperlink{struct_game_cam_aaf559651385674c3547b53f59f0c6b3c}{free\+\_\+angle\+\_\+max}}, and \mbox{\hyperlink{struct_game_cam_ad89aaab4d9815a3d280585eaba0beeb8}{free\+\_\+angle\+\_\+min}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_cam_a905ee6006b9a65d8d4d1506121a9fd7d}{update\+Camera()}}, and \mbox{\hyperlink{struct_game_cam_aa04badc32db03242f9d8259c3f022384}{update\+Target\+Angle()}}.
+
+\mbox{\Hypertarget{struct_game_cam_a550f34dec8d09884af95514ec85841b5}\label{struct_game_cam_a550f34dec8d09884af95514ec85841b5}} 
+\index{GameCam@{GameCam}!debugCamera@{debugCamera}}
+\index{debugCamera@{debugCamera}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{debugCamera()}{debugCamera()}}
+{\footnotesize\ttfamily void Game\+Cam\+::debug\+Camera (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_game_cam_a1ecdc6bb888736f76eb86a6c24fcc95c}\label{struct_game_cam_a1ecdc6bb888736f76eb86a6c24fcc95c}} 
+\index{GameCam@{GameCam}!get@{get}}
+\index{get@{get}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily raylib\+::\+Camera3D Game\+Cam\+::get (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_speech_bubble_adf10ca265a146477fa237f6bf66d5660}{Speech\+Bubble\+::render()}}.
+
+\mbox{\Hypertarget{struct_game_cam_a544c61acc1f33735f48e6e9269a5b3dd}\label{struct_game_cam_a544c61acc1f33735f48e6e9269a5b3dd}} 
+\index{GameCam@{GameCam}!get\_ptr@{get\_ptr}}
+\index{get\_ptr@{get\_ptr}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{get\_ptr()}{get\_ptr()}}
+{\footnotesize\ttfamily raylib\+::\+Camera3D $\ast$ Game\+Cam\+::get\+\_\+ptr (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.
+
+\mbox{\Hypertarget{struct_game_cam_a905ee6006b9a65d8d4d1506121a9fd7d}\label{struct_game_cam_a905ee6006b9a65d8d4d1506121a9fd7d}} 
+\index{GameCam@{GameCam}!updateCamera@{updateCamera}}
+\index{updateCamera@{updateCamera}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{updateCamera()}{updateCamera()}}
+{\footnotesize\ttfamily void Game\+Cam\+::update\+Camera (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}, \mbox{\hyperlink{struct_game_cam_a519ca48bdd700ba0ef0cfa85e753dcd0}{angle\+Min\+Max\+Clamp()}}, \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}, \mbox{\hyperlink{vec__util_8h_a002b2f4894492820fe708b1b7e7c5e70}{EPSILON}}, \mbox{\hyperlink{struct_game_cam_acfb64855e59b2278ec1cf0d85f767a1a}{free\+\_\+distance\+\_\+max\+\_\+clamp}}, \mbox{\hyperlink{struct_game_cam_ab5fc2184426fa9484519de2b947267b2}{free\+\_\+distance\+\_\+min\+\_\+clamp}}, \mbox{\hyperlink{struct_game_cam_a573b28aaf2e92591fb0dbd34c1ddbc74}{scroll\+\_\+sensitivity}}, and \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\+\_\+distance}}.
+
+\mbox{\Hypertarget{struct_game_cam_aa04badc32db03242f9d8259c3f022384}\label{struct_game_cam_aa04badc32db03242f9d8259c3f022384}} 
+\index{GameCam@{GameCam}!updateTargetAngle@{updateTargetAngle}}
+\index{updateTargetAngle@{updateTargetAngle}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{updateTargetAngle()}{updateTargetAngle()}}
+{\footnotesize\ttfamily void Game\+Cam\+::update\+Target\+Angle (\begin{DoxyParamCaption}\item[{float}]{dx,  }\item[{float}]{dy,  }\item[{float}]{dz }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}, and \mbox{\hyperlink{struct_game_cam_a519ca48bdd700ba0ef0cfa85e753dcd0}{angle\+Min\+Max\+Clamp()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_cam_ae8cd682580edf0178f48292c2fd038bb}{update\+Target\+Distance\+And\+Angle()}}.
+
+\mbox{\Hypertarget{struct_game_cam_a2260298173fe1660028e43c0acd1f4fa}\label{struct_game_cam_a2260298173fe1660028e43c0acd1f4fa}} 
+\index{GameCam@{GameCam}!updateTargetDistance@{updateTargetDistance}}
+\index{updateTargetDistance@{updateTargetDistance}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{updateTargetDistance()}{updateTargetDistance()}}
+{\footnotesize\ttfamily void Game\+Cam\+::update\+Target\+Distance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}, and \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\+\_\+distance}}.
+
+\mbox{\Hypertarget{struct_game_cam_ae8cd682580edf0178f48292c2fd038bb}\label{struct_game_cam_ae8cd682580edf0178f48292c2fd038bb}} 
+\index{GameCam@{GameCam}!updateTargetDistanceAndAngle@{updateTargetDistanceAndAngle}}
+\index{updateTargetDistanceAndAngle@{updateTargetDistanceAndAngle}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{updateTargetDistanceAndAngle()}{updateTargetDistanceAndAngle()}}
+{\footnotesize\ttfamily void Game\+Cam\+::update\+Target\+Distance\+And\+Angle (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}, \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\+\_\+distance}}, and \mbox{\hyperlink{struct_game_cam_aa04badc32db03242f9d8259c3f022384}{update\+Target\+Angle()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_cam_a8f92e106c3d76f78f73f60a4ce69dcae}{Game\+Cam()}}.
+
+\mbox{\Hypertarget{struct_game_cam_a211e1b0b5a8a727732d2fcdbcd1f2f43}\label{struct_game_cam_a211e1b0b5a8a727732d2fcdbcd1f2f43}} 
+\index{GameCam@{GameCam}!updateToTarget@{updateToTarget}}
+\index{updateToTarget@{updateToTarget}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{updateToTarget()}{updateToTarget()}}
+{\footnotesize\ttfamily void Game\+Cam\+::update\+To\+Target (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_entity}{Entity}}}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}, and \mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{Entity\+::position}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}\label{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}} 
+\index{GameCam@{GameCam}!angle@{angle}}
+\index{angle@{angle}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{angle}{angle}}
+{\footnotesize\ttfamily vec2 Game\+Cam\+::angle = \{0.\+0, 0.\+0\}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_cam_a519ca48bdd700ba0ef0cfa85e753dcd0}{angle\+Min\+Max\+Clamp()}}, \mbox{\hyperlink{struct_game_cam_a8f92e106c3d76f78f73f60a4ce69dcae}{Game\+Cam()}}, \mbox{\hyperlink{struct_game_cam_a905ee6006b9a65d8d4d1506121a9fd7d}{update\+Camera()}}, and \mbox{\hyperlink{struct_game_cam_aa04badc32db03242f9d8259c3f022384}{update\+Target\+Angle()}}.
+
+\mbox{\Hypertarget{struct_game_cam_a42af36465edc5c70a53034b79fb55020}\label{struct_game_cam_a42af36465edc5c70a53034b79fb55020}} 
+\index{GameCam@{GameCam}!camera@{camera}}
+\index{camera@{camera}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{camera}{camera}}
+{\footnotesize\ttfamily raylib\+::\+Camera3D Game\+Cam\+::camera}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_cam_a1ecdc6bb888736f76eb86a6c24fcc95c}{get()}}, \mbox{\hyperlink{struct_game_cam_a544c61acc1f33735f48e6e9269a5b3dd}{get\+\_\+ptr()}}, \mbox{\hyperlink{camera_8h_aa8a0cdcca3b2d7a864afadd2f1eb51ee}{operator$<$$<$()}}, \mbox{\hyperlink{struct_speech_bubble_adf10ca265a146477fa237f6bf66d5660}{Speech\+Bubble\+::render()}}, \mbox{\hyperlink{struct_game_cam_a905ee6006b9a65d8d4d1506121a9fd7d}{update\+Camera()}}, \mbox{\hyperlink{struct_game_cam_a2260298173fe1660028e43c0acd1f4fa}{update\+Target\+Distance()}}, \mbox{\hyperlink{struct_game_cam_ae8cd682580edf0178f48292c2fd038bb}{update\+Target\+Distance\+And\+Angle()}}, and \mbox{\hyperlink{struct_game_cam_a211e1b0b5a8a727732d2fcdbcd1f2f43}{update\+To\+Target()}}.
+
+\mbox{\Hypertarget{struct_game_cam_a2d6524b9df1a6a49a882c8ba530905d8}\label{struct_game_cam_a2d6524b9df1a6a49a882c8ba530905d8}} 
+\index{GameCam@{GameCam}!default\_angle\_y@{default\_angle\_y}}
+\index{default\_angle\_y@{default\_angle\_y}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{default\_angle\_y}{default\_angle\_y}}
+{\footnotesize\ttfamily float Game\+Cam\+::default\+\_\+angle\+\_\+y = -\/45.f $\ast$ DEG2\+RAD}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_cam_a8f92e106c3d76f78f73f60a4ce69dcae}{Game\+Cam()}}.
+
+\mbox{\Hypertarget{struct_game_cam_aaf559651385674c3547b53f59f0c6b3c}\label{struct_game_cam_aaf559651385674c3547b53f59f0c6b3c}} 
+\index{GameCam@{GameCam}!free\_angle\_max@{free\_angle\_max}}
+\index{free\_angle\_max@{free\_angle\_max}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{free\_angle\_max}{free\_angle\_max}}
+{\footnotesize\ttfamily float Game\+Cam\+::free\+\_\+angle\+\_\+max = (0.\+0f) $\ast$ DEG2\+RAD}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_cam_a519ca48bdd700ba0ef0cfa85e753dcd0}{angle\+Min\+Max\+Clamp()}}.
+
+\mbox{\Hypertarget{struct_game_cam_ad89aaab4d9815a3d280585eaba0beeb8}\label{struct_game_cam_ad89aaab4d9815a3d280585eaba0beeb8}} 
+\index{GameCam@{GameCam}!free\_angle\_min@{free\_angle\_min}}
+\index{free\_angle\_min@{free\_angle\_min}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{free\_angle\_min}{free\_angle\_min}}
+{\footnotesize\ttfamily float Game\+Cam\+::free\+\_\+angle\+\_\+min = (-\/89.\+0f) $\ast$ DEG2\+RAD}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_cam_a519ca48bdd700ba0ef0cfa85e753dcd0}{angle\+Min\+Max\+Clamp()}}.
+
+\mbox{\Hypertarget{struct_game_cam_acfb64855e59b2278ec1cf0d85f767a1a}\label{struct_game_cam_acfb64855e59b2278ec1cf0d85f767a1a}} 
+\index{GameCam@{GameCam}!free\_distance\_max\_clamp@{free\_distance\_max\_clamp}}
+\index{free\_distance\_max\_clamp@{free\_distance\_max\_clamp}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{free\_distance\_max\_clamp}{free\_distance\_max\_clamp}}
+{\footnotesize\ttfamily float Game\+Cam\+::free\+\_\+distance\+\_\+max\+\_\+clamp = 20.\+0f}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_cam_a905ee6006b9a65d8d4d1506121a9fd7d}{update\+Camera()}}.
+
+\mbox{\Hypertarget{struct_game_cam_ab5fc2184426fa9484519de2b947267b2}\label{struct_game_cam_ab5fc2184426fa9484519de2b947267b2}} 
+\index{GameCam@{GameCam}!free\_distance\_min\_clamp@{free\_distance\_min\_clamp}}
+\index{free\_distance\_min\_clamp@{free\_distance\_min\_clamp}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{free\_distance\_min\_clamp}{free\_distance\_min\_clamp}}
+{\footnotesize\ttfamily float Game\+Cam\+::free\+\_\+distance\+\_\+min\+\_\+clamp = 10.\+0f}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_cam_a905ee6006b9a65d8d4d1506121a9fd7d}{update\+Camera()}}.
+
+\mbox{\Hypertarget{struct_game_cam_a573b28aaf2e92591fb0dbd34c1ddbc74}\label{struct_game_cam_a573b28aaf2e92591fb0dbd34c1ddbc74}} 
+\index{GameCam@{GameCam}!scroll\_sensitivity@{scroll\_sensitivity}}
+\index{scroll\_sensitivity@{scroll\_sensitivity}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{scroll\_sensitivity}{scroll\_sensitivity}}
+{\footnotesize\ttfamily float Game\+Cam\+::scroll\+\_\+sensitivity = 1.\+0f}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_cam_a905ee6006b9a65d8d4d1506121a9fd7d}{update\+Camera()}}.
+
+\mbox{\Hypertarget{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}\label{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}} 
+\index{GameCam@{GameCam}!target\_distance@{target\_distance}}
+\index{target\_distance@{target\_distance}!GameCam@{GameCam}}
+\doxysubsubsection{\texorpdfstring{target\_distance}{target\_distance}}
+{\footnotesize\ttfamily float Game\+Cam\+::target\+\_\+distance = 0.\+0f}
+
+
+
+Referenced by \mbox{\hyperlink{camera_8h_aa8a0cdcca3b2d7a864afadd2f1eb51ee}{operator$<$$<$()}}, \mbox{\hyperlink{struct_game_cam_a905ee6006b9a65d8d4d1506121a9fd7d}{update\+Camera()}}, \mbox{\hyperlink{struct_game_cam_a2260298173fe1660028e43c0acd1f4fa}{update\+Target\+Distance()}}, and \mbox{\hyperlink{struct_game_cam_ae8cd682580edf0178f48292c2fd038bb}{update\+Target\+Distance\+And\+Angle()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{camera_8h}{camera.\+h}}\end{DoxyCompactItemize}
