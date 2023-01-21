@@ -35,10 +35,10 @@ inline ComponentID get_type_id() noexcept {
 }  // namespace components
 
 struct BaseComponent {
-    std::shared_ptr<Entity> entity;
+    // std::shared_ptr<Entity> entity;
 
     BaseComponent() {}
-    BaseComponent(const BaseComponent& other) : entity(other.entity) {}
+    // BaseComponent(const BaseComponent& other) : entity(other.entity) {}
     BaseComponent(BaseComponent&&) = default;
 
     virtual ~BaseComponent() {}
@@ -47,6 +47,6 @@ struct BaseComponent {
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
-        s.object(entity);
+        // s.object(entity);
     }
 };

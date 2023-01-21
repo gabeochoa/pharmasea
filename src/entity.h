@@ -58,9 +58,10 @@ struct Entity {
         log_trace("adding component {} {} to entity {}",
                   components::get_type_id<T>(), type_name<T>(), id);
 
-        std::shared_ptr<T> component =
-            std::make_shared<T>(std::forward<TArgs>(args)...);
-        component->entity = std::shared_ptr<Entity>(this);
+        std::shared_ptr<T> component;
+        component.reset(new T(std::forward<TArgs>(args)...));
+        // TODO figure out why this causes double free
+        // component->entity = std::shared_ptr<Entity>(this);
         componentArray[components::get_type_id<T>()] = component;
         componentSet[components::get_type_id<T>()] = true;
 
