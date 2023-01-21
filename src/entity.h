@@ -243,27 +243,28 @@ struct Entity {
     virtual std::optional<ModelInfo> model() const { return {}; }
 
     virtual void update_held_item_position() {
-        if (held_item() != nullptr) {
-            auto new_pos = this->get<Transform>().position;
-            if (this->get<Transform>().face_direction &
-                Transform::FrontFaceDirection::FORWARD) {
-                new_pos.z += TILESIZE;
-            }
-            if (this->get<Transform>().face_direction &
-                Transform::FrontFaceDirection::RIGHT) {
-                new_pos.x += TILESIZE;
-            }
-            if (this->get<Transform>().face_direction &
-                Transform::FrontFaceDirection::BACK) {
-                new_pos.z -= TILESIZE;
-            }
-            if (this->get<Transform>().face_direction &
-                Transform::FrontFaceDirection::LEFT) {
-                new_pos.x -= TILESIZE;
-            }
-
-            held_item()->update_position(new_pos);
-        }
+        // TODO
+        // if (held_item() != nullptr) {
+        // auto new_pos = this->get<Transform>().position;
+        // if (this->get<Transform>().face_direction &
+        // Transform::FrontFaceDirection::FORWARD) {
+        // new_pos.z += TILESIZE;
+        // }
+        // if (this->get<Transform>().face_direction &
+        // Transform::FrontFaceDirection::RIGHT) {
+        // new_pos.x += TILESIZE;
+        // }
+        // if (this->get<Transform>().face_direction &
+        // Transform::FrontFaceDirection::BACK) {
+        // new_pos.z -= TILESIZE;
+        // }
+        // if (this->get<Transform>().face_direction &
+        // Transform::FrontFaceDirection::LEFT) {
+        // new_pos.x -= TILESIZE;
+        // }
+        //
+        // held_item()->update_position(new_pos);
+        // }
     }
 
     virtual vec2 get_heading() {
@@ -333,16 +334,6 @@ struct Entity {
     }
 
    public:
-    // TODO at some point migrate these
-    virtual std::shared_ptr<Item> held_item() const {
-        return get<CanHoldItem>().held_item;
-    }
-
-    // Whether or not this entity has something we can take from them
-    virtual bool can_take_item_from() const {
-        return this->held_item() != nullptr;
-    }
-
     /*
      * Given another bounding box, check if it collides with this entity
      *

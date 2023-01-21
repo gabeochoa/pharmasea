@@ -22,7 +22,7 @@ struct Grabber : public Conveyer {
         Conveyer::in_round_update(dt);
 
         // We already have an item so
-        if (this->held_item() != nullptr) return;
+        if (get<CanHoldItem>().is_holding_item()) return;
 
         auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
             this->get<Transform>().as2(), 1.f,
@@ -30,7 +30,8 @@ struct Grabber : public Conveyer {
             this->get<Transform>().offsetFaceDirection(
                 this->get<Transform>().face_direction, 180),
             [this](std::shared_ptr<Furniture> furn) {
-                return this->id != furn->id && furn->can_take_item_from();
+                return this->id != furn->id &&
+                       furn->get<CanHoldItem>().can_take_item_from();
             });
 
         // No furniture behind us
@@ -38,12 +39,13 @@ struct Grabber : public Conveyer {
 
         // Grab from the furniture match
 
-        auto item = match->held_item();
+        CanHoldItem& matchCHI = match->get<CanHoldItem>();
+        CanHoldItem& ourCHI = this->get<CanHoldItem>();
 
-        this->held_item() = item;
-        this->held_item()->held_by = Item::HeldBy::FURNITURE;
+        ourCHI.update(matchCHI.item());
+        ourCHI.item()->held_by = Item::HeldBy::FURNITURE;
         this->relative_item_pos = Conveyer::ITEM_START;
 
-        match->held_item() = nullptr;
+        matchCHI.update(nullptr);
     }
 };

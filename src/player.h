@@ -97,6 +97,8 @@ struct Player : public BasePlayer {
             const float input_amount = std::get<2>(ui);
             const float frame_dt = std::get<3>(ui);
 
+            Transform& transform = get<Transform>();
+
             if (input_name == InputName::PlayerPickup && input_amount > 0.5f) {
                 grab_or_drop();
                 continue;
@@ -117,7 +119,7 @@ struct Player : public BasePlayer {
             // Movement down here...
 
             const float speed = this->base_speed() * frame_dt;
-            auto new_position = this->get<Transform>().position;
+            auto new_position = transform.position;
 
             if (input_name == InputName::PlayerLeft) {
                 new_position.x -= input_amount * speed;
@@ -134,8 +136,7 @@ struct Player : public BasePlayer {
             int fd_z = std::get<1>(fd);
             update_facing_direction(fd_x, fd_z);
             handle_collision(fd_x, new_position, fd_z, new_position);
-            this->get<Transform>().position =
-                this->get<Transform>().raw_position;
+            transform.position = transform.raw_position;
         }
         return this->get<Transform>().position;
     }
@@ -146,6 +147,7 @@ struct Player : public BasePlayer {
         if (GameState::get().is_not(game::State::Planning)) return;
 
         std::shared_ptr<Furniture> match =
+            // TODO have this just take a transform
             EntityHelper::getClosestMatchingEntity<Furniture>(
                 this->get<Transform>().as2(), player_reach,
                 [](auto&& furniture) { return furniture->can_rotate(); });
@@ -176,11 +178,12 @@ struct Player : public BasePlayer {
 
         // Do we already have something in our hands?
         // We must be trying to drop it
-        if (this->held_item()) {
+        // TODO fix
+        if (this->get<CanHoldItem>().item()) {
             const auto _merge_item_from_furniture_into_hand = [&]() {
                 TRACY_ZONE(tracy_merge_item_from_furniture);
                 // our item cant hold anything or is already full
-                if (!this->held_item()->empty()) {
+                if (!this->get<CanHoldItem>().item()->empty()) {
                     return false;
                 }
 
@@ -189,17 +192,19 @@ struct Player : public BasePlayer {
                         this->get<Transform>().as2(), player_reach,
                         this->get<Transform>().face_direction,
                         [](std::shared_ptr<Furniture> f) {
-                            return f->has_held_item();
+                            return f->get<CanHoldItem>().is_holding_item();
                         });
 
                 if (!closest_furniture) {
                     return false;
                 }
 
-                auto item_to_merge = closest_furniture->held_item();
-                bool eat_was_successful = this->held_item()->eat(item_to_merge);
+                auto item_to_merge =
+                    closest_furniture->get<CanHoldItem>().item();
+                bool eat_was_successful =
+                    this->get<CanHoldItem>().item()->eat(item_to_merge);
                 if (eat_was_successful)
-                    closest_furniture->held_item() = nullptr;
+                    closest_furniture->get<CanHoldItem>().item() = nullptr;
                 return eat_was_successful;
             };
 
@@ -212,9 +217,10 @@ struct Player : public BasePlayer {
                         [&](std::shared_ptr<Furniture> f) {
                             return
                                 // is there something there to merge into?
-                                f->has_held_item() &&
+                                f->get<CanHoldItem>().is_holding_item() &&
                                 // can that thing hold the item we are holding?
-                                f->held_item()->can_eat(this->held_item());
+                                f->get<CanHoldItem>().item()->can_eat(
+                                    this->get<CanHoldItem>().item());
                         });
                 if (!closest_furniture) {
                     return false;
@@ -230,13 +236,14 @@ struct Player : public BasePlayer {
                 // - place the merged item into the player's hand
 
                 bool eat_was_successful =
-                    closest_furniture->held_item()->eat(this->held_item());
+                    closest_furniture->get<CanHoldItem>().item()->eat(
+                        this->get<CanHoldItem>().item());
                 if (!eat_was_successful) return false;
                 // TODO we need a let_go_of_item() to handle this kind of
                 // transfer because it might get complicated and we might end up
                 // with two things owning this could maybe be solved by
                 // enforcing uniqueptr
-                this->held_item() = nullptr;
+                this->get<CanHoldItem>().item() = nullptr;
                 return true;
             };
 
@@ -247,21 +254,22 @@ struct Player : public BasePlayer {
                         this->get<Transform>().as2(), player_reach,
                         this->get<Transform>().face_direction,
                         [this](std::shared_ptr<Furniture> f) {
-                            return f->can_place_item_into(this->held_item());
+                            return f->can_place_item_into(
+                                this->get<CanHoldItem>().item());
                         });
                 if (!closest_furniture) {
                     return false;
                 }
 
-                auto item = this->held_item();
+                auto item = this->get<CanHoldItem>().item();
                 item->update_position(
                     closest_furniture->get<Transform>().snap_position());
 
-                closest_furniture->held_item() = item;
-                closest_furniture->held_item()->held_by =
+                closest_furniture->get<CanHoldItem>().item() = item;
+                closest_furniture->get<CanHoldItem>().item()->held_by =
                     Item::HeldBy::FURNITURE;
 
-                this->held_item() = nullptr;
+                this->get<CanHoldItem>().item() = nullptr;
                 return true;
             };
 
@@ -283,30 +291,33 @@ struct Player : public BasePlayer {
                         this->get<Transform>().as2(), player_reach,
                         this->get<Transform>().face_direction,
                         [](std::shared_ptr<Furniture> furn) {
-                            return (furn->held_item() != nullptr);
+                            // TODO fix
+                            return (furn->get<CanHoldItem>().item() != nullptr);
                         });
                 if (!closest_furniture) {
                     return;
                 }
-                auto item = closest_furniture->held_item();
+                auto item = closest_furniture->get<CanHoldItem>().item();
 
-                this->held_item() = item;
-                this->held_item()->held_by = Item::HeldBy::PLAYER;
+                this->get<CanHoldItem>().item() = item;
+                this->get<CanHoldItem>().item()->held_by = Item::HeldBy::PLAYER;
 
-                closest_furniture->held_item() = nullptr;
+                closest_furniture->get<CanHoldItem>().item() = nullptr;
             };
 
             _pickup_item_from_furniture();
 
-            if (this->held_item()) return;
+            // TODO fix
+            if (this->get<CanHoldItem>().item()) return;
 
             // Handles the non-furniture grabbing case
             std::shared_ptr<Item> closest_item =
                 ItemHelper::getClosestMatchingItem<Item>(
                     this->get<Transform>().as2(), TILESIZE * player_reach);
-            this->held_item() = closest_item;
-            if (this->held_item() != nullptr) {
-                this->held_item()->held_by = Item::HeldBy::PLAYER;
+            this->get<CanHoldItem>().item() = closest_item;
+            // TODO fix
+            if (this->get<CanHoldItem>().item() != nullptr) {
+                this->get<CanHoldItem>().item()->held_by = Item::HeldBy::PLAYER;
             }
             return;
         }

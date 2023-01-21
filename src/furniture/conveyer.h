@@ -39,33 +39,34 @@ struct Conveyer : public Furniture {
         };
     }
 
-    virtual bool can_take_item_from() const override {
-        return (this->held_item() != nullptr && can_take_from);
+    // TODO fix
+    bool can_take_item_from() const {
+        return (get<CanHoldItem>().is_holding_item() && can_take_from);
     }
 
     virtual void update_held_item_position() override {
-        if (held_item() != nullptr) {
-            // auto new_pos = this->position;
-            // if (this->get<Transform>().face_direction &
-            // FrontFaceDirection::FORWARD) { new_pos.z += TILESIZE *
-            // relative_item_pos;
-            // }
-            // if (this->get<Transform>().face_direction &
-            // FrontFaceDirection::RIGHT) { new_pos.x += TILESIZE *
-            // relative_item_pos;
-            // }
-            // if (this->get<Transform>().face_direction &
-            // FrontFaceDirection::BACK) { new_pos.z -= TILESIZE *
-            // relative_item_pos;
-            // }
-            // if (this->get<Transform>().face_direction &
-            // FrontFaceDirection::LEFT) { new_pos.x -= TILESIZE *
-            // relative_item_pos;
-            // }
-            // new_pos.y += TILESIZE / 4;
-            //
-            // held_item->update_position(new_pos);
-        }
+        // if (held_item() != nullptr) {
+        // auto new_pos = this->position;
+        // if (this->get<Transform>().face_direction &
+        // FrontFaceDirection::FORWARD) { new_pos.z += TILESIZE *
+        // relative_item_pos;
+        // }
+        // if (this->get<Transform>().face_direction &
+        // FrontFaceDirection::RIGHT) { new_pos.x += TILESIZE *
+        // relative_item_pos;
+        // }
+        // if (this->get<Transform>().face_direction &
+        // FrontFaceDirection::BACK) { new_pos.z -= TILESIZE *
+        // relative_item_pos;
+        // }
+        // if (this->get<Transform>().face_direction &
+        // FrontFaceDirection::LEFT) { new_pos.x -= TILESIZE *
+        // relative_item_pos;
+        // }
+        // new_pos.y += TILESIZE / 4;
+        //
+        // held_item->update_position(new_pos);
+        // }
     }
 
     virtual void in_round_update(float dt) override {
@@ -74,7 +75,7 @@ struct Conveyer : public Furniture {
         can_take_from = false;
 
         // we are not holding anything
-        if (this->held_item() == nullptr) {
+        if (get<CanHoldItem>().empty()) {
             return;
         }
 
@@ -108,9 +109,13 @@ struct Conveyer : public Furniture {
 
         can_take_from = true;
         // we reached the end, pass ownership
-        match->held_item() = this->held_item();
-        match->held_item()->held_by = Item::HeldBy::FURNITURE;
-        this->held_item() = nullptr;
+
+        CanHoldItem& matchCHI = match->get<CanHoldItem>();
+        CanHoldItem& ourCHI = this->get<CanHoldItem>();
+
+        matchCHI.item() = ourCHI.item();
+        matchCHI.item()->held_by = Item::HeldBy::FURNITURE;
+        ourCHI.item() = nullptr;
         this->relative_item_pos = Conveyer::ITEM_START;
 
         // TODO if we are pushing onto a conveyer, we need to make sure

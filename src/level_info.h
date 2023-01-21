@@ -202,7 +202,7 @@ struct GameMapInfo : public LevelInfo {
                 std::shared_ptr<Pill> item;
                 item.reset(new Pill(location, Color{255, 15, 240, 255}));
                 ItemHelper::addItem(item);
-                table->held_item() = item;
+                table->get<CanHoldItem>().update(item);
             }
 
             {
@@ -214,7 +214,7 @@ struct GameMapInfo : public LevelInfo {
                 std::shared_ptr<PillBottle> item;
                 item.reset(new PillBottle(location, RED));
                 ItemHelper::addItem(item);
-                table->held_item() = item;
+                table->get<CanHoldItem>().update(item);
             }
         };
 

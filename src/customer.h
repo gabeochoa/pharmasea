@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "components/can_hold_item.h"
 #include "drawing_util.h"
 #include "entityhelper.h"
 #include "external_include.h"
@@ -179,13 +180,15 @@ struct Customer : public AIPerson {
             case Job::State::WorkingAtEnd: {
                 Register* reg = (Register*) job->data["register"];
 
-                if (reg->held_item() == nullptr) {
+                CanHoldItem& regCHI = reg->get<CanHoldItem>();
+
+                if (regCHI.empty()) {
                     announce("my rx isnt ready yet");
                     wait_and_return();
                     return;
                 }
 
-                auto bag = dynamic_pointer_cast<Bag>(reg->held_item());
+                auto bag = reg->get<CanHoldItem>().asT<Bag>();
                 if (!bag) {
                     announce("this isnt my rx (not a bag)");
                     wait_and_return();
@@ -198,6 +201,8 @@ struct Customer : public AIPerson {
                     return;
                 }
 
+                // TODO eventually migrate item to ECS
+                // auto pill_bottle = bag->get<CanHoldItem>().asT<PillBottle>();
                 auto pill_bottle =
                     dynamic_pointer_cast<PillBottle>(bag->held_item);
                 if (!pill_bottle) {
@@ -206,8 +211,9 @@ struct Customer : public AIPerson {
                     return;
                 }
 
-                this->held_item() = reg->held_item();
-                reg->held_item() = nullptr;
+                CanHoldItem& ourCHI = this->get<CanHoldItem>();
+                ourCHI.update(regCHI.item());
+                regCHI.update(nullptr);
 
                 announce("got it");
                 Customer* me = this;

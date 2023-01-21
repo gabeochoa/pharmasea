@@ -34,10 +34,10 @@ struct Table : public Furniture {
     virtual bool has_work() const override { return true; }
 
     virtual void update_held_item_position() override {
-        if (held_item() != nullptr) {
-            auto new_pos = this->get<Transform>().position;
-            new_pos.y += TILESIZE / 2;
-            held_item()->update_position(new_pos);
-        }
+        // if (held_item() != nullptr) {
+        // auto new_pos = this->get<Transform>().position;
+        // new_pos.y += TILESIZE / 2;
+        // held_item()->update_position(new_pos);
+        // }
     }
 };
