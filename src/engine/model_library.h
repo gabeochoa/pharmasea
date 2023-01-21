@@ -8,13 +8,27 @@
 #include "singleton.h"
 
 struct ModelInfo {
-    raylib::Model model;
+    // Note this has to be a string because the string_view isnt serializable in
+    // bitsery
+    std::string model_name;
+
     float size_scale;
     vec3 position_offset;
     // TODO it would be nice to support this,
     // but we have no way of doing a double rotation on diff axis
     // vec3 rotation_axis = vec3{0, 1, 0};
     float rotation_angle = 0;
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        // TODO make a const or something
+        s.text1b(model_name, 100);
+        s.value4b(size_scale);
+        s.object(position_offset);
+        s.value4b(rotation_angle);
+    }
 };
 
 SINGLETON_FWD(ModelLibrary)

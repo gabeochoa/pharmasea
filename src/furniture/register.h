@@ -39,7 +39,18 @@ struct Register : public Furniture {
    public:
     Register() : Furniture() {}
     explicit Register(vec2 pos)
-        : Furniture(pos, ui::color::grey, ui::color::grey) {}
+        : Furniture(pos, ui::color::grey, ui::color::grey) {
+        update_model();
+    }
+
+    void update_model() {
+        // TODO add a component for this
+        get<ModelRenderer>().update(ModelInfo{
+            .model_name = "register",
+            .size_scale = 10.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        });
+    }
 
     int position_in_line(AIPerson* entity) {
         for (int i = 0; i < (int) ppl_in_line.size(); i++) {
@@ -73,13 +84,5 @@ struct Register : public Furniture {
         auto front = this->tile_infront((next_line_position + 1) * 2);
         next_line_position++;
         return front;
-    }
-
-    virtual std::optional<ModelInfo> model() const override {
-        return ModelInfo{
-            .model = ModelLibrary::get().get("register"),
-            .size_scale = 10.f,
-            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-        };
     }
 };

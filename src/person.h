@@ -30,14 +30,29 @@ struct Person : public Entity {
 
    public:
     Person(vec3 p, Color face_color_in, Color base_color_in)
-        : Entity(p, face_color_in, base_color_in) {}
+        : Entity(p, face_color_in, base_color_in) {
+        update_model();
+    }
     Person(vec2 p, Color face_color_in, Color base_color_in)
-        : Entity(p, face_color_in, base_color_in) {}
-    Person(vec3 p, Color c) : Entity(p, c) {}
-    Person(vec2 p, Color c) : Entity(p, c) {}
+        : Entity(p, face_color_in, base_color_in) {
+        update_model();
+    }
+    Person(vec3 p, Color c) : Entity(p, c) { update_model(); }
+    Person(vec2 p, Color c) : Entity(p, c) { update_model(); }
 
     virtual vec3 update_xaxis_position(float dt) = 0;
     virtual vec3 update_zaxis_position(float dt) = 0;
+
+    void update_model() {
+        // log_info("model index: {}", model_index);
+        // TODO add a component for this
+        get<ModelRenderer>().update(ModelInfo{
+            .model_name = character_models[model_index],
+            .size_scale = 1.5f,
+            .position_offset = vec3{0, 0, 0},
+            .rotation_angle = 180,
+        });
+    }
 
     virtual float base_speed() { return 10.f; }
 
@@ -48,16 +63,6 @@ struct Person : public Entity {
 
     void select_next_character_model() {
         model_index = (model_index + 1) % character_models.size();
-    }
-
-    virtual std::optional<ModelInfo> model() const override {
-        // log_info("model index: {}", model_index);
-        return ModelInfo{
-            .model = ModelLibrary::get().get(character_models[model_index]),
-            .size_scale = 1.5f,
-            .position_offset = vec3{0, 0, 0},
-            .rotation_angle = 180,
-        };
     }
 
     void handle_collision(int facedir_x, vec3 new_pos_x, int facedir_z,

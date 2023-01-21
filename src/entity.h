@@ -6,6 +6,7 @@
 #include "components/can_be_highlighted.h"
 #include "components/can_hold_item.h"
 #include "components/has_name.h"
+#include "components/model_renderer.h"
 #include "components/simple_colored_box_renderer.h"
 #include "components/transform.h"
 #include "engine/assert.h"
@@ -84,6 +85,7 @@ struct Entity {
         addComponent<HasName>();
         addComponent<CanHoldItem>();
         addComponent<SimpleColoredBoxRenderer>();
+        addComponent<ModelRenderer>();
     }
 
    private:
@@ -150,65 +152,10 @@ struct Entity {
     }
 
     /*
-     * Used for code for when the entity is highlighted
-     * */
-    virtual void render_highlighted() const {
-        TRACY_ZONE_SCOPED;
-        if (model().has_value()) {
-            ModelInfo model_info = model().value();
-
-            Color base = ui::color::getHighlighted(WHITE /*this->base_color*/);
-
-            float rotation_angle =
-                // TODO make this api better
-                180.f + static_cast<int>(
-                            this->get<Transform>().FrontFaceDirectionMap.at(
-                                this->get<Transform>().face_direction));
-
-            DrawModelEx(model_info.model,
-                        {
-                            this->get<Transform>().position.x +
-                                model_info.position_offset.x,
-                            this->get<Transform>().position.y +
-                                model_info.position_offset.y,
-                            this->get<Transform>().position.z +
-                                model_info.position_offset.z,
-                        },
-                        vec3{0.f, 1.f, 0.f}, rotation_angle,
-                        this->size() * model_info.size_scale, base);
-            return;
-        }
-    }
-
-    /*
      * Used for normal gameplay rendering
      * */
     virtual void render_normal() const {
         TRACY_ZONE_SCOPED;
-        if (model().has_value()) {
-            ModelInfo model_info = model().value();
-
-            float rotation_angle =
-                // TODO make this api better
-                180.f + static_cast<int>(
-                            this->get<Transform>().FrontFaceDirectionMap.at(
-                                this->get<Transform>().face_direction));
-
-            raylib::DrawModelEx(model_info.model,
-                                {
-                                    this->get<Transform>().position.x +
-                                        model_info.position_offset.x,
-                                    this->get<Transform>().position.y +
-                                        model_info.position_offset.y,
-                                    this->get<Transform>().position.z +
-                                        model_info.position_offset.z,
-                                },
-                                vec3{0, 1, 0},
-                                model_info.rotation_angle + rotation_angle,
-                                this->size() * model_info.size_scale,
-                                WHITE /*this->base_color*/);
-        }
-
         render_floating_name();
     }
 
@@ -217,8 +164,6 @@ struct Entity {
             this->get<Transform>().raw_position + vec3{0, 0.5f * TILESIZE, 0},
             Preload::get().font, this->get<HasName>().name.c_str());
     }
-
-    virtual std::optional<ModelInfo> model() const { return {}; }
 
     virtual void update_held_item_position() {
         // TODO

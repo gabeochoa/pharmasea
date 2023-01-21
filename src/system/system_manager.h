@@ -464,6 +464,65 @@ inline void render_debug(std::shared_ptr<Entity> entity, float dt) {
     render_job_visual(entity, dt);
 }
 
+inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
+    if (!entity->has<ModelRenderer>()) return false;
+    if (!entity->has<CanBeHighlighted>()) return false;
+
+    ModelRenderer& renderer = entity->get<ModelRenderer>();
+    if (!renderer.has_model()) return false;
+
+    if (!entity->has<Transform>()) return false;
+    Transform& transform = entity->get<Transform>();
+
+    ModelInfo model_info = renderer.model_info().value();
+    Color base = ui::color::getHighlighted(WHITE /*this->base_color*/);
+
+    float rotation_angle =
+        // TODO make this api better
+        180.f + static_cast<int>(transform.FrontFaceDirectionMap.at(
+                    transform.face_direction));
+
+    DrawModelEx(renderer.model(),
+                {
+                    transform.position.x + model_info.position_offset.x,
+                    transform.position.y + model_info.position_offset.y,
+                    transform.position.z + model_info.position_offset.z,
+                },
+                vec3{0.f, 1.f, 0.f}, rotation_angle,
+                transform.size * model_info.size_scale, base);
+
+    return true;
+}
+
+inline bool render_model_normal(std::shared_ptr<Entity> entity, float) {
+    if (!entity->has<ModelRenderer>()) return false;
+
+    ModelRenderer& renderer = entity->get<ModelRenderer>();
+    if (!renderer.has_model()) return false;
+
+    if (!entity->has<Transform>()) return false;
+    Transform& transform = entity->get<Transform>();
+
+    ModelInfo model_info = renderer.model_info().value();
+
+    float rotation_angle =
+        // TODO make this api better
+        180.f + static_cast<int>(transform.FrontFaceDirectionMap.at(
+                    transform.face_direction));
+
+    raylib::DrawModelEx(
+        renderer.model(),
+        {
+            transform.position.x + model_info.position_offset.x,
+            transform.position.y + model_info.position_offset.y,
+            transform.position.z + model_info.position_offset.z,
+        },
+        vec3{0, 1, 0}, model_info.rotation_angle + rotation_angle,
+        transform.size * model_info.size_scale, WHITE /*this->base_color*/);
+
+    return true;
+}
+
 inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
     // Ghost player cant render during normal mode
     if (entity->has<CanBeGhostPlayer>() &&
@@ -473,11 +532,17 @@ inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
 
     if (entity->has<CanBeHighlighted>() &&
         entity->get<CanBeHighlighted>().is_highlighted) {
-        render_simple_highlighted(entity, dt);
+        bool used = render_model_highlighted(entity, dt);
+        if (!used) {
+            render_simple_highlighted(entity, dt);
+        }
         return;
     }
 
-    render_simple_normal(entity, dt);
+    bool used = render_model_normal(entity, dt);
+    if (!used) {
+        render_simple_normal(entity, dt);
+    }
 }
 
 inline void reset_highlighted(std::shared_ptr<Entity> entity, float) {

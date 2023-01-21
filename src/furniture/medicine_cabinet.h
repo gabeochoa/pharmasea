@@ -18,13 +18,16 @@ struct MedicineCabinet : public ItemContainer<PillBottle> {
 
    public:
     MedicineCabinet() {}
-    explicit MedicineCabinet(vec2 pos) : ItemContainer<PillBottle>(pos) {}
+    explicit MedicineCabinet(vec2 pos) : ItemContainer<PillBottle>(pos) {
+        update_model();
+    }
 
-    virtual std::optional<ModelInfo> model() const override {
-        return ModelInfo{
-            .model = ModelLibrary::get().get("medicine_cabinet"),
+    void update_model() {
+        // TODO add a component for this
+        get<ModelRenderer>().update(ModelInfo{
+            .model_name = "medicine_cabinet",
             .size_scale = 2.f,
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-        };
+        });
     }
 };

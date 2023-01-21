@@ -19,16 +19,16 @@ struct BagBox : public ItemContainer<Bag> {
 
    public:
     BagBox() {}
-    explicit BagBox(vec2 pos) : ItemContainer<Bag>(pos) {}
+    explicit BagBox(vec2 pos) : ItemContainer<Bag>(pos) { update_model(); }
 
-    virtual std::optional<ModelInfo> model() const override {
+    void update_model() {
+        // log_info("model index: {}", model_index);
+        // TODO add a component for this
         const bool in_planning = GameState::get().is(game::State::Planning);
-
-        return ModelInfo{
-            .model = in_planning ? ModelLibrary::get().get("box")
-                                 : ModelLibrary::get().get("open_box"),
+        get<ModelRenderer>().update(ModelInfo{
+            .model_name = in_planning ? "box" : "open_box",
             .size_scale = 4.f,
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-        };
+        });
     }
 };

@@ -27,16 +27,21 @@ struct Conveyer : public Furniture {
    public:
     Conveyer() {}
     explicit Conveyer(vec2 pos)
-        : Furniture(pos, ui::color::blue, ui::color::blue) {}
+        : Furniture(pos, ui::color::blue, ui::color::blue) {
+        update_model();
+    }
     Conveyer(vec2 pos, Color face_color, Color base_color)
-        : Furniture(pos, face_color, base_color) {}
+        : Furniture(pos, face_color, base_color) {
+        update_model();
+    }
 
-    virtual std::optional<ModelInfo> model() const override {
-        return ModelInfo{
-            .model = ModelLibrary::get().get("conveyer"),
+    void update_model() {
+        // TODO add a component for this
+        get<ModelRenderer>().update(ModelInfo{
+            .model_name = "conveyer",
             .size_scale = 0.5f,
             .position_offset = vec3{0, 0, 0},
-        };
+        });
     }
 
     // TODO fix
