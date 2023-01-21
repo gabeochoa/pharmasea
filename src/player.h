@@ -57,7 +57,7 @@ struct Player : public BasePlayer {
     virtual void always_update(float dt) override {
         TRACY_ZONE_SCOPED;
 
-        BasePlayer::always_update(dt);
+        Entity::always_update(dt);
 
         update_xaxis_position(dt);
         update_zaxis_position(dt);
