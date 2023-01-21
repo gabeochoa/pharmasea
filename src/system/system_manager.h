@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../components/can_highlight_others.h"
+#include "../components/can_hold_furniture.h"
 #include "../components/custom_item_position.h"
 #include "../components/transform.h"
 #include "../entity.h"
@@ -19,6 +20,36 @@ inline void transform_snapper(std::shared_ptr<Entity> entity, float) {
     } else {
         transform.position = transform.raw_position;
     }
+}
+
+inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
+                                           float) {
+    if (!entity->has<CanHoldFurniture>()) return;
+    CanHoldFurniture& can_hold_furniture = entity->get<CanHoldFurniture>();
+
+    // TODO explicity commenting this out so that we get an error
+    // if (!entity->has<Transform>()) return;
+    Transform& transform = entity->get<Transform>();
+
+    // TODO if cannot be placed in this spot make it obvious to the user
+
+    if (can_hold_furniture.empty()) return;
+
+    auto new_pos = transform.position;
+    if (transform.face_direction & Transform::FrontFaceDirection::FORWARD) {
+        new_pos.z += TILESIZE;
+    }
+    if (transform.face_direction & Transform::FrontFaceDirection::RIGHT) {
+        new_pos.x += TILESIZE;
+    }
+    if (transform.face_direction & Transform::FrontFaceDirection::BACK) {
+        new_pos.z -= TILESIZE;
+    }
+    if (transform.face_direction & Transform::FrontFaceDirection::LEFT) {
+        new_pos.x -= TILESIZE;
+    }
+
+    can_hold_furniture.furniture()->update_position(new_pos);
 }
 
 inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
@@ -145,6 +176,7 @@ struct SystemManager {
     void planning_update(float dt) {
         EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
             system_manager::highlight_facing_furniture(entity, dt);
+            system_manager::update_held_furniture_position(entity, dt);
             return EntityHelper::ForEachFlow::None;
         });
     }

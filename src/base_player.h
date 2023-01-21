@@ -43,34 +43,4 @@ struct BasePlayer : public Person {
 
     virtual vec3 update_xaxis_position(float dt) override = 0;
     virtual vec3 update_zaxis_position(float dt) override = 0;
-
-    void highlight_facing_furniture() {}
-
-    virtual void planning_update(float dt) override {
-        Person::planning_update(dt);
-
-        // TODO add component for this
-        // TODO if cannot be placed in this spot make it obvious to the user
-        // if (held_furniture != nullptr) {
-        // auto new_pos = this->get<Transform>().position;
-        // if (this->get<Transform>().face_direction &
-        // Transform::FrontFaceDirection::FORWARD) {
-        // new_pos.z += TILESIZE;
-        // }
-        // if (this->get<Transform>().face_direction &
-        // Transform::FrontFaceDirection::RIGHT) {
-        // new_pos.x += TILESIZE;
-        // }
-        // if (this->get<Transform>().face_direction &
-        // Transform::FrontFaceDirection::BACK) {
-        // new_pos.z -= TILESIZE;
-        // }
-        // if (this->get<Transform>().face_direction &
-        // Transform::FrontFaceDirection::LEFT) {
-        // new_pos.x -= TILESIZE;
-        // }
-        //
-        // held_furniture->update_position(new_pos);
-        // }
-    }
 };
