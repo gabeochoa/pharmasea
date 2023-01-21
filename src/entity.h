@@ -300,6 +300,16 @@ struct Entity {
     }
 
    public:
+    virtual void announce(std::string text) {
+        // TODO have some way of distinguishing between server logs and regular
+        // client logs
+        if (is_server()) {
+            log_info("server: {}: {}", this->id, text);
+        } else {
+            log_info("client: {}: {}", this->id, text);
+        }
+    }
+
     // return true if the position should be snapped at every update
     virtual bool is_snappable() { return false; }
     /*

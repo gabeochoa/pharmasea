@@ -47,32 +47,13 @@ struct LevelInfo {
 
     virtual void onUpdate(float dt) {
         TRACY_ZONE_SCOPED;
-
-        system_manager.always_update(dt);
-
-        // TODO do we run game updates during paused?
-        // TODO rename game/nongame to in_round inplanning
-        if (GameState::get().is(game::State::InRound)) {
-            system_manager.in_round_update(dt);
-        } else {
-            system_manager.planning_update(dt);
-        }
-
-        for (auto e : EntityHelper::get_entities()) {
-            if (e) e->update(dt);
-        }
+        system_manager.update(dt);
     }
 
     virtual void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
 
-        const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-        if (debug_mode_on) {
-            system_manager.render_debug(dt);
-        } else {
-            system_manager.render_normal(dt);
-        }
+        system_manager.render(dt);
 
         for (auto e : entities) {
             if (e) e->render();
