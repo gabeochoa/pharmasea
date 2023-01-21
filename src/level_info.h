@@ -189,6 +189,9 @@ struct GameMapInfo : public LevelInfo {
     }
 
     virtual void generate_map() override {
+        server_entities_DO_NOT_USE.clear();
+        server_items_DO_NOT_USE.clear();
+
         auto generate_tables = [this]() {
             {
                 std::shared_ptr<Table> table;
