@@ -2,6 +2,7 @@
 #pragma once
 
 #include "base_player.h"
+#include "components/can_be_ghost_player.h"
 #include "components/can_hold_furniture.h"
 #include "engine/keymap.h"
 #include "globals.h"
@@ -16,7 +17,6 @@ struct Player : public BasePlayer {
 
     std::string username;
     std::vector<UserInput> inputs;
-    bool is_ghost_player = false;
 
     // NOTE: this is kept public because we use it in the network when prepping
     // server players
@@ -30,19 +30,9 @@ struct Player : public BasePlayer {
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
                      {255, 0, 0, 255}) {}
 
-    virtual void render_normal() const override {
-        if (!is_ghost_player) {
-            BasePlayer::render_normal();
-        }
+    virtual bool is_collidable() override {
+        return get<CanBeGhostPlayer>().is_not_ghost();
     }
-
-    virtual void render_debug_mode() const override {
-        if (is_ghost_player) {
-            BasePlayer::render_normal();
-        }
-    }
-
-    virtual bool is_collidable() override { return !is_ghost_player; }
 
     virtual vec3 update_xaxis_position(float dt) override {
         float left = KeyMap::is_event(state, InputName::PlayerLeft);

@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../components/can_be_ghost_player.h"
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/custom_item_position.h"
@@ -121,7 +122,28 @@ inline void render_simple_normal(std::shared_ptr<Entity> entity, float) {
                    renderer.face_color, renderer.base_color);
 }
 
-inline void render(std::shared_ptr<Entity> entity, float dt) {
+inline void render_debug(std::shared_ptr<Entity> entity, float dt) {
+    // Ghost player only render during debug mode
+    if (entity->has<CanBeGhostPlayer>() &&
+        entity->get<CanBeGhostPlayer>().is_not_ghost()) {
+        return;
+    }
+    if (entity->has<CanBeHighlighted>() &&
+        entity->get<CanBeHighlighted>().is_highlighted) {
+        render_simple_highlighted(entity, dt);
+        return;
+    }
+
+    render_simple_normal(entity, dt);
+}
+
+inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
+    // Ghost player cant render during normal mode
+    if (entity->has<CanBeGhostPlayer>() &&
+        entity->get<CanBeGhostPlayer>().is_ghost()) {
+        return;
+    }
+
     if (entity->has<CanBeHighlighted>() &&
         entity->get<CanBeHighlighted>().is_highlighted) {
         render_simple_highlighted(entity, dt);
@@ -182,9 +204,16 @@ struct SystemManager {
         });
     }
 
-    void render(float dt) const {
+    void render_normal(float dt) const {
         EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
-            system_manager::render(entity, dt);
+            system_manager::render_normal(entity, dt);
+            return EntityHelper::ForEachFlow::None;
+        });
+    }
+
+    void render_debug(float dt) const {
+        EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
+            system_manager::render_debug(entity, dt);
             return EntityHelper::ForEachFlow::None;
         });
     }

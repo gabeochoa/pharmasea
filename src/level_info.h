@@ -66,7 +66,13 @@ struct LevelInfo {
     virtual void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
 
-        system_manager.render(dt);
+        const auto debug_mode_on =
+            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+        if (debug_mode_on) {
+            system_manager.render_debug(dt);
+        } else {
+            system_manager.render_normal(dt);
+        }
 
         for (auto e : entities) {
             if (e) e->render();

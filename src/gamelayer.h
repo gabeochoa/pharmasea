@@ -1,5 +1,6 @@
 #pragma once
 
+#include "components/can_be_ghost_player.h"
 #include "drawing_util.h"
 #include "engine/ui_color.h"
 #include "external_include.h"
@@ -27,7 +28,7 @@ struct GameLayer : public Layer {
         GLOBALS.set("player", player.get());
 
         // TODO do we need this still?
-        player->is_ghost_player = true;
+        player->get<CanBeGhostPlayer>().update(true);
 
         cam.reset(new GameCam());
         GLOBALS.set("game_cam", cam.get());

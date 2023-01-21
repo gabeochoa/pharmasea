@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "components/can_be_ghost_player.h"
 #include "components/can_highlight_others.h"
 #include "components/can_hold_furniture.h"
 #include "raylib.h"
@@ -18,6 +19,8 @@ struct BasePlayer : public Person {
     void add_static_components() {
         addComponent<CanHighlightOthers>();
         addComponent<CanHoldFurniture>();
+        // TODO this should be in Player but putting it here for now
+        addComponent<CanBeGhostPlayer>();
     }
 
     BasePlayer(vec3 p, Color face_color_in, Color base_color_in)
