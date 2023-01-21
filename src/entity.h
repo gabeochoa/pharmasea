@@ -5,6 +5,7 @@
 #include "components/base_component.h"
 #include "components/can_hold_item.h"
 #include "components/has_name.h"
+#include "components/simple_colored_box_renderer.h"
 #include "components/transform.h"
 #include "engine/assert.h"
 #include "external_include.h"
@@ -34,8 +35,6 @@ struct Entity {
     ComponentArray componentArray;
 
     vec3 pushed_force{0.0, 0.0, 0.0};
-    Color face_color;
-    Color base_color;
     bool cleanup = false;
     bool is_highlighted = false;
     bool is_held = false;
@@ -84,6 +83,7 @@ struct Entity {
         addComponent<Transform>();
         addComponent<HasName>();
         addComponent<CanHoldItem>();
+        addComponent<SimpleColoredBoxRenderer>();
     }
 
    private:
@@ -97,8 +97,6 @@ struct Entity {
                     });
         s.ext(componentSet, bitsery::ext::StdBitset{});
         s.object(pushed_force);
-        s.object(face_color);
-        s.object(base_color);
         s.value1b(cleanup);
         s.value1b(is_highlighted);
         s.value1b(is_held);
@@ -106,31 +104,29 @@ struct Entity {
 
    public:
     Entity(vec3 p, Color face_color_in, Color base_color_in)
-        : id(ENTITY_ID_GEN++),
-          face_color(face_color_in),
-          base_color(base_color_in) {
+        : id(ENTITY_ID_GEN++) {
         add_static_components();
         get<Transform>().init(p, size());
+        get<SimpleColoredBoxRenderer>().init(face_color_in, base_color_in);
     }
 
     Entity(vec2 p, Color face_color_in, Color base_color_in)
-        : id(ENTITY_ID_GEN++),
-          face_color(face_color_in),
-          base_color(base_color_in) {
+        : id(ENTITY_ID_GEN++) {
         add_static_components();
         get<Transform>().init({p.x, 0, p.y}, size());
+        get<SimpleColoredBoxRenderer>().init(face_color_in, base_color_in);
     }
 
-    Entity(vec3 p, Color c)
-        : id(ENTITY_ID_GEN++), face_color(c), base_color(c) {
+    Entity(vec3 p, Color c) : id(ENTITY_ID_GEN++) {
         add_static_components();
         get<Transform>().init(p, size());
+        get<SimpleColoredBoxRenderer>().init(c, c);
     }
 
-    Entity(vec2 p, Color c)
-        : id(ENTITY_ID_GEN++), face_color(c), base_color(c) {
+    Entity(vec2 p, Color c) : id(ENTITY_ID_GEN++) {
         add_static_components();
         get<Transform>().init({p.x, 0, p.y}, size());
+        get<SimpleColoredBoxRenderer>().init(c, c);
     }
 
     virtual ~Entity() {}
@@ -139,6 +135,7 @@ struct Entity {
     Entity() {
         add_static_components();
         get<Transform>().init({0, 0, 0}, size());
+        get<SimpleColoredBoxRenderer>().init(BLACK, BLACK);
     }
 
     virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
@@ -161,7 +158,7 @@ struct Entity {
         if (model().has_value()) {
             ModelInfo model_info = model().value();
 
-            Color base = ui::color::getHighlighted(this->base_color);
+            Color base = ui::color::getHighlighted(WHITE /*this->base_color*/);
 
             float rotation_angle =
                 // TODO make this api better
@@ -182,14 +179,6 @@ struct Entity {
                         this->size() * model_info.size_scale, base);
             return;
         }
-
-        Color f = ui::color::getHighlighted(this->face_color);
-        Color b = ui::color::getHighlighted(this->base_color);
-        DrawCubeCustom(this->get<Transform>().raw_position, this->size().x,
-                       this->size().y, this->size().z,
-                       this->get<Transform>().FrontFaceDirectionMap.at(
-                           this->get<Transform>().face_direction),
-                       f, b);
     }
 
     /*
@@ -211,24 +200,19 @@ struct Entity {
                             this->get<Transform>().FrontFaceDirectionMap.at(
                                 this->get<Transform>().face_direction));
 
-            raylib::DrawModelEx(
-                model_info.model,
-                {
-                    this->get<Transform>().position.x +
-                        model_info.position_offset.x,
-                    this->get<Transform>().position.y +
-                        model_info.position_offset.y,
-                    this->get<Transform>().position.z +
-                        model_info.position_offset.z,
-                },
-                vec3{0, 1, 0}, model_info.rotation_angle + rotation_angle,
-                this->size() * model_info.size_scale, this->base_color);
-        } else {
-            DrawCubeCustom(this->get<Transform>().raw_position, this->size().x,
-                           this->size().y, this->size().z,
-                           this->get<Transform>().FrontFaceDirectionMap.at(
-                               this->get<Transform>().face_direction),
-                           this->face_color, this->base_color);
+            raylib::DrawModelEx(model_info.model,
+                                {
+                                    this->get<Transform>().position.x +
+                                        model_info.position_offset.x,
+                                    this->get<Transform>().position.y +
+                                        model_info.position_offset.y,
+                                    this->get<Transform>().position.z +
+                                        model_info.position_offset.z,
+                                },
+                                vec3{0, 1, 0},
+                                model_info.rotation_angle + rotation_angle,
+                                this->size() * model_info.size_scale,
+                                WHITE /*this->base_color*/);
         }
 
         render_floating_name();

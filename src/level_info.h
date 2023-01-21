@@ -55,8 +55,11 @@ struct LevelInfo {
         }
     }
 
-    virtual void onDraw(float) const {
+    virtual void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
+
+        system_manager.render(dt);
+
         for (auto e : entities) {
             if (e) e->render();
             if (!e) log_warn("We have invalid entities");

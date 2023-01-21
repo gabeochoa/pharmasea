@@ -60,6 +60,36 @@ inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
     can_hold_item.item()->update_position(new_pos);
 }
 
+inline void render_simple_highlighted(std::shared_ptr<Entity> entity, float) {
+    if (!entity->has<Transform>()) return;
+    Transform& transform = entity->get<Transform>();
+    if (!entity->has<SimpleColoredBoxRenderer>()) return;
+    SimpleColoredBoxRenderer& renderer =
+        entity->get<SimpleColoredBoxRenderer>();
+
+    Color f = ui::color::getHighlighted(renderer.face_color);
+    Color b = ui::color::getHighlighted(renderer.base_color);
+    // TODO replace size with Bounds component when it exists
+    DrawCubeCustom(transform.raw_position, transform.size.x, transform.size.y,
+                   transform.size.z,
+                   transform.FrontFaceDirectionMap.at(transform.face_direction),
+                   f, b);
+}
+
+inline void render_simple_normal(std::shared_ptr<Entity> entity, float) {
+    Transform& transform = entity->get<Transform>();
+    SimpleColoredBoxRenderer& renderer =
+        entity->get<SimpleColoredBoxRenderer>();
+    DrawCubeCustom(transform.raw_position, transform.size.x, transform.size.y,
+                   transform.size.z,
+                   transform.FrontFaceDirectionMap.at(transform.face_direction),
+                   renderer.face_color, renderer.base_color);
+}
+
+inline void render(std::shared_ptr<Entity> entity, float dt) {
+    render_simple_normal(entity, dt);
+}
+
 }  // namespace system_manager
 
 struct SystemManager {
@@ -67,6 +97,13 @@ struct SystemManager {
         EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
             system_manager::transform_snapper(entity, dt);
             system_manager::update_held_item_position(entity, dt);
+            return EntityHelper::ForEachFlow::None;
+        });
+    }
+
+    void render(float dt) const {
+        EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
+            system_manager::render(entity, dt);
             return EntityHelper::ForEachFlow::None;
         });
     }

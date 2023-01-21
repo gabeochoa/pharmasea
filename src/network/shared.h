@@ -15,7 +15,8 @@ namespace bitsery {
 namespace ext {
 template<>
 struct PolymorphicBaseClass<BaseComponent>
-    : PolymorphicDerivedClasses<Transform, HasName, CanHoldItem> {};
+    : PolymorphicDerivedClasses<Transform, HasName, CanHoldItem,
+                                SimpleColoredBoxRenderer> {};
 
 template<>
 struct PolymorphicBaseClass<Entity>
