@@ -36,7 +36,8 @@ struct ItemContainer : public Furniture {
         if (this->held_item == nullptr) {
             this->held_item.reset(
                 // TODO what is this color and what is it for
-                new I(this->position, Color({255, 15, 240, 255})));
+                new I(this->get<Transform>().position,
+                      Color({255, 15, 240, 255})));
             ItemHelper::addItem(this->held_item);
         }
     }

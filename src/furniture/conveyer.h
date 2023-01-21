@@ -45,22 +45,26 @@ struct Conveyer : public Furniture {
 
     virtual void update_held_item_position() override {
         if (held_item != nullptr) {
-            auto new_pos = this->position;
-            if (this->face_direction & FrontFaceDirection::FORWARD) {
-                new_pos.z += TILESIZE * relative_item_pos;
-            }
-            if (this->face_direction & FrontFaceDirection::RIGHT) {
-                new_pos.x += TILESIZE * relative_item_pos;
-            }
-            if (this->face_direction & FrontFaceDirection::BACK) {
-                new_pos.z -= TILESIZE * relative_item_pos;
-            }
-            if (this->face_direction & FrontFaceDirection::LEFT) {
-                new_pos.x -= TILESIZE * relative_item_pos;
-            }
-            new_pos.y += TILESIZE / 4;
-
-            held_item->update_position(new_pos);
+            // auto new_pos = this->position;
+            // if (this->get<Transform>().face_direction &
+            // FrontFaceDirection::FORWARD) { new_pos.z += TILESIZE *
+            // relative_item_pos;
+            // }
+            // if (this->get<Transform>().face_direction &
+            // FrontFaceDirection::RIGHT) { new_pos.x += TILESIZE *
+            // relative_item_pos;
+            // }
+            // if (this->get<Transform>().face_direction &
+            // FrontFaceDirection::BACK) { new_pos.z -= TILESIZE *
+            // relative_item_pos;
+            // }
+            // if (this->get<Transform>().face_direction &
+            // FrontFaceDirection::LEFT) { new_pos.x -= TILESIZE *
+            // relative_item_pos;
+            // }
+            // new_pos.y += TILESIZE / 4;
+            //
+            // held_item->update_position(new_pos);
         }
     }
 
@@ -81,7 +85,8 @@ struct Conveyer : public Furniture {
         }
 
         auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
-            vec::to2(this->position), 1.f, this->face_direction,
+            this->get<Transform>().as2(), 1.f,
+            this->get<Transform>().face_direction,
             [this](std::shared_ptr<Furniture> furn) {
                 return this->id != furn->id && furn->can_place_item_into();
             });

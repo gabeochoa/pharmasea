@@ -26,19 +26,20 @@ struct RemotePlayer : public BasePlayer {
                      {255, 0, 0, 255}) {}
 
     virtual vec3 update_xaxis_position(float) override {
-        return this->position;
+        return this->get<Transform>().position;
     }
 
     virtual vec3 update_zaxis_position(float) override {
-        return this->position;
+        return this->get<Transform>().position;
     }
 
     virtual void update_remotely(float* location, std::string username,
                                  int facing_direction) {
         this->name = username;
-        this->position = vec3{location[0], location[1], location[2]};
-        this->face_direction =
-            static_cast<FrontFaceDirection>(facing_direction);
+        this->get<Transform>().position =
+            vec3{location[0], location[1], location[2]};
+        this->get<Transform>().face_direction =
+            static_cast<Transform::FrontFaceDirection>(facing_direction);
     }
 
     virtual bool is_collidable() override { return false; }

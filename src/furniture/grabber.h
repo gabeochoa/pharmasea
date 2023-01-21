@@ -25,9 +25,10 @@ struct Grabber : public Conveyer {
         if (this->held_item != nullptr) return;
 
         auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
-            vec::to2(this->position), 1.f,
+            this->get<Transform>().as2(), 1.f,
             // Behind
-            Entity::offsetFaceDirection(this->face_direction, 180),
+            this->get<Transform>().offsetFaceDirection(
+                this->get<Transform>().face_direction, 180),
             [this](std::shared_ptr<Furniture> furn) {
                 return this->id != furn->id && furn->can_take_item_from();
             });

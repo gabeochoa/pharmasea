@@ -65,7 +65,7 @@ struct GameCam {
     }
 
     void updateToTarget(Entity entity) {
-        camera.target = (vec3){entity.position};
+        camera.target = entity.get<Transform>().position;
     }
 
     void updateCamera() {

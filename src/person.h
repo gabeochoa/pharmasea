@@ -99,10 +99,10 @@ struct Person : public Entity {
         });
 
         if (!would_collide_x) {
-            this->raw_position.x = new_pos_x.x;
+            this->get<Transform>().raw_position.x = new_pos_x.x;
         }
         if (!would_collide_z) {
-            this->raw_position.z = new_pos_z.z;
+            this->get<Transform>().raw_position.z = new_pos_z.z;
         }
 
         // This value determines how "far" to impart a push force on the
@@ -117,11 +117,11 @@ struct Person : public Entity {
             if (auto entity_x = collided_entity_x.lock()) {
                 if (auto person_ptr_x = dynamic_cast<Person*>(entity_x.get())) {
                     const float random_jitter = randSign() * TILESIZE / 2.0f;
-                    if (facedir_x & FrontFaceDirection::LEFT) {
+                    if (facedir_x & Transform::FrontFaceDirection::LEFT) {
                         entity_x->pushed_force.x += tile_div_push_mod;
                         entity_x->pushed_force.z += random_jitter;
                     }
-                    if (facedir_x & FrontFaceDirection::RIGHT) {
+                    if (facedir_x & Transform::FrontFaceDirection::RIGHT) {
                         entity_x->pushed_force.x -= tile_div_push_mod;
                         entity_x->pushed_force.z += random_jitter;
                     }
@@ -130,11 +130,11 @@ struct Person : public Entity {
             if (auto entity_z = collided_entity_z.lock()) {
                 if (auto person_ptr_z = dynamic_cast<Person*>(entity_z.get())) {
                     const float random_jitter = randSign() * TILESIZE / 2.0f;
-                    if (facedir_z & FrontFaceDirection::FORWARD) {
+                    if (facedir_z & Transform::FrontFaceDirection::FORWARD) {
                         person_ptr_z->pushed_force.x += random_jitter;
                         person_ptr_z->pushed_force.z += tile_div_push_mod;
                     }
-                    if (facedir_z & FrontFaceDirection::BACK) {
+                    if (facedir_z & Transform::FrontFaceDirection::BACK) {
                         person_ptr_z->pushed_force.x += random_jitter;
                         person_ptr_z->pushed_force.z -= tile_div_push_mod;
                     }
@@ -147,18 +147,18 @@ struct Person : public Entity {
         int facedir_x = -1;
         int facedir_z = -1;
 
-        vec3 delta_distance_x = new_pos_x - this->raw_position;
+        vec3 delta_distance_x = new_pos_x - this->get<Transform>().raw_position;
         if (delta_distance_x.x > 0) {
-            facedir_x = FrontFaceDirection::RIGHT;
+            facedir_x = Transform::FrontFaceDirection::RIGHT;
         } else if (delta_distance_x.x < 0) {
-            facedir_x = FrontFaceDirection::LEFT;
+            facedir_x = Transform::FrontFaceDirection::LEFT;
         }
 
-        vec3 delta_distance_z = new_pos_z - this->raw_position;
+        vec3 delta_distance_z = new_pos_z - this->get<Transform>().raw_position;
         if (delta_distance_z.z > 0) {
-            facedir_z = FrontFaceDirection::FORWARD;
+            facedir_z = Transform::FrontFaceDirection::FORWARD;
         } else if (delta_distance_z.z < 0) {
-            facedir_z = FrontFaceDirection::BACK;
+            facedir_z = Transform::FrontFaceDirection::BACK;
         }
         return std::make_tuple(facedir_x, facedir_z);
     }
@@ -167,12 +167,15 @@ struct Person : public Entity {
         if (facedir_x == -1 && facedir_z == -1) {
             // do nothing
         } else if (facedir_x == -1) {
-            this->face_direction = static_cast<FrontFaceDirection>(facedir_z);
+            this->get<Transform>().face_direction =
+                static_cast<Transform::FrontFaceDirection>(facedir_z);
         } else if (facedir_z == -1) {
-            this->face_direction = static_cast<FrontFaceDirection>(facedir_x);
+            this->get<Transform>().face_direction =
+                static_cast<Transform::FrontFaceDirection>(facedir_x);
         } else {
-            this->face_direction =
-                static_cast<FrontFaceDirection>(facedir_x | facedir_z);
+            this->get<Transform>().face_direction =
+                static_cast<Transform::FrontFaceDirection>(facedir_x |
+                                                           facedir_z);
         }
     }
 
@@ -192,8 +195,9 @@ struct Person : public Entity {
         new_pos_z.z += this->pushed_force.z;
         this->pushed_force.z = 0.0f;
 
-        // this->face_direction = FrontFaceDirection::BACK &
-        // FrontFaceDirection::LEFT;
+        // this->get<Transform>().face_direction =
+        // Transform::FrontFaceDirection::BACK &
+        // Transform::FrontFaceDirection::LEFT;
 
         handle_collision(facedir_x, new_pos_x, facedir_z, new_pos_z);
 

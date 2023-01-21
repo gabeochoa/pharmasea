@@ -118,7 +118,7 @@ struct EntityHelper {
         for (auto& e : get_entities()) {
             auto s = dynamic_pointer_cast<T>(e);
             if (!s) continue;
-            if (vec::distance(pos, vec::to2(e->position)) < range) {
+            if (vec::distance(pos, e->get<Transform>().as2()) < range) {
                 matching.push_back(s);
             }
         }
@@ -129,7 +129,7 @@ struct EntityHelper {
     static std::shared_ptr<T> getMatchingEntityInFront(
         vec2 pos,                                       //
         float range,                                    //
-        Entity::FrontFaceDirection direction,           //
+        Transform::FrontFaceDirection direction,        //
         std::function<bool(std::shared_ptr<T>)> filter  //
     ) {
         TRACY_ZONE_SCOPED;
@@ -146,15 +146,15 @@ struct EntityHelper {
                 if (!current_entity) continue;
                 if (!filter(current_entity)) continue;
 
-                float cur_dist =
-                    vec::distance(vec::to2(current_entity->position), tile);
+                float cur_dist = vec::distance(
+                    current_entity->template get<Transform>().as2(), tile);
                 // outside reach
                 if (abs(cur_dist) > 1) continue;
                 // this is behind us
                 if (cur_dist < 0) continue;
 
-                if (vec::to2(vec::snap(current_entity->position)) ==
-                    vec::snap(tile)) {
+                if (vec::to2(current_entity->template get<Transform>()
+                                 .snap_position()) == vec::snap(tile)) {
                     return current_entity;
                 }
             }
@@ -172,7 +172,7 @@ struct EntityHelper {
             auto s = dynamic_pointer_cast<T>(e);
             if (!s) continue;
             if (!filter(s)) continue;
-            float d = vec::distance(pos, vec::to2(e->position));
+            float d = vec::distance(pos, e->get<Transform>().as2());
             if (d > range) continue;
             if (d < best_distance) {
                 best_so_far = s;

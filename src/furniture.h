@@ -33,7 +33,7 @@ struct Furniture : public Entity {
 
     virtual void update_held_item_position() override {
         if (held_item == nullptr) return;
-        auto new_pos = this->position;
+        auto new_pos = this->get<Transform>().position;
         new_pos.y += TILESIZE / 4;
         held_item->update_position(new_pos);
     }
@@ -51,8 +51,9 @@ struct Furniture : public Entity {
         const int empty = length - full;
         auto progress =
             fmt::format("[{:=>{}}{: >{}}]", "", full, "", empty * 2);
-        DrawFloatingText(this->raw_position + vec3({0, TILESIZE, 0}),
-                         Preload::get().font, progress.c_str());
+        DrawFloatingText(
+            this->get<Transform>().raw_position + vec3({0, TILESIZE, 0}),
+            Preload::get().font, progress.c_str());
 
         // TODO eventually add real rectangle progress bar
         // auto game_cam = GLOBALS.get<GameCam>("game_cam");

@@ -55,31 +55,31 @@ struct AIPerson : public Person {
     // like not anymore?
     virtual vec3 update_xaxis_position(float dt) override {
         if (!job || !job->local.has_value()) {
-            return this->raw_position;
+            return this->get<Transform>().raw_position;
         }
 
         vec2 tar = job->local.value();
         float speed = this->base_speed() * dt;
         if (stagger_mult() != 0) speed *= stagger_mult();
 
-        auto new_pos_x = this->raw_position;
-        if (tar.x > this->raw_position.x) new_pos_x.x += speed;
-        if (tar.x < this->raw_position.x) new_pos_x.x -= speed;
+        auto new_pos_x = this->get<Transform>().raw_position;
+        if (tar.x > this->get<Transform>().raw_position.x) new_pos_x.x += speed;
+        if (tar.x < this->get<Transform>().raw_position.x) new_pos_x.x -= speed;
         return new_pos_x;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
         if (!job || !job->local.has_value()) {
-            return this->raw_position;
+            return this->get<Transform>().raw_position;
         }
 
         vec2 tar = job->local.value();
         float speed = this->base_speed() * dt;
         if (stagger_mult() != 0) speed *= stagger_mult();
 
-        auto new_pos_z = this->raw_position;
-        if (tar.y > this->raw_position.z) new_pos_z.z += speed;
-        if (tar.y < this->raw_position.z) new_pos_z.z -= speed;
+        auto new_pos_z = this->get<Transform>().raw_position;
+        if (tar.y > this->get<Transform>().raw_position.z) new_pos_z.z += speed;
+        if (tar.y < this->get<Transform>().raw_position.z) new_pos_z.z -= speed;
         return new_pos_z;
     }
 
@@ -100,7 +100,7 @@ struct AIPerson : public Person {
             }
         }
         return new Job({.type = Wandering,
-                        .start = vec::to2(this->position),
+                        .start = this->get<Transform>().as2(),
                         .end = target});
     }
 
@@ -122,7 +122,7 @@ struct AIPerson : public Person {
     }
 
     bool navigate_to(vec2 goal) {
-        vec2 me = vec::to2(this->position);
+        vec2 me = this->get<Transform>().as2();
         if (me == goal) {
             // announce("reached goal");
             return true;

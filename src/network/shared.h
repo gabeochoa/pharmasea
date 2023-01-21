@@ -14,6 +14,10 @@ namespace bitsery {
 
 namespace ext {
 template<>
+struct PolymorphicBaseClass<BaseComponent>
+    : PolymorphicDerivedClasses<Transform> {};
+
+template<>
 struct PolymorphicBaseClass<Entity>
     : PolymorphicDerivedClasses<Furniture, Person> {};
 
@@ -43,7 +47,8 @@ struct PolymorphicBaseClass<LevelInfo>
 }  // namespace ext
 }  // namespace bitsery
 
-using MyPolymorphicClasses = bitsery::ext::PolymorphicClassesList<Entity, Item>;
+using MyPolymorphicClasses =
+    bitsery::ext::PolymorphicClassesList<Entity, Item, BaseComponent>;
 
 namespace network {
 

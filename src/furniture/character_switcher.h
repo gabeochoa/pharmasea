@@ -36,7 +36,7 @@ struct CharacterSwitcher : public Furniture {
 
     virtual void update_held_item_position() override {
         if (held_item != nullptr) {
-            auto new_pos = this->position;
+            auto new_pos = this->get<Transform>().position;
             new_pos.y += TILESIZE / 2;
             held_item->update_position(new_pos);
         }

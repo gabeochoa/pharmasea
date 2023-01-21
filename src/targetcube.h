@@ -17,7 +17,7 @@ struct TargetCube : public Person {
 
     virtual vec3 update_xaxis_position(float dt) override {
         float speed = 10.0f * dt;
-        auto new_pos_x = this->raw_position;
+        auto new_pos_x = this->get<Transform>().raw_position;
         bool left =
             (bool) KeyMap::is_event(menu::State::Game, InputName::TargetLeft);
         bool right =
@@ -29,7 +29,7 @@ struct TargetCube : public Person {
 
     virtual vec3 update_zaxis_position(float dt) override {
         float speed = 10.0f * dt;
-        auto new_pos_z = this->raw_position;
+        auto new_pos_z = this->get<Transform>().raw_position;
         bool up = (bool) KeyMap::is_event(menu::State::Game,
                                           InputName::TargetForward);
         bool down =

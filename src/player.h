@@ -50,7 +50,7 @@ struct Player : public BasePlayer {
             inputs.push_back({state, InputName::PlayerLeft, left, dt});
         if (right > 0)
             inputs.push_back({state, InputName::PlayerRight, right, dt});
-        return this->raw_position;
+        return this->get<Transform>().raw_position;
     }
 
     virtual vec3 update_zaxis_position(float dt) override {
@@ -59,7 +59,7 @@ struct Player : public BasePlayer {
         if (up > 0) inputs.push_back({state, InputName::PlayerForward, up, dt});
         if (down > 0)
             inputs.push_back({state, InputName::PlayerBack, down, dt});
-        return this->raw_position;
+        return this->get<Transform>().raw_position;
     }
 
     virtual void always_update(float dt) override {
@@ -117,7 +117,7 @@ struct Player : public BasePlayer {
             // Movement down here...
 
             const float speed = this->base_speed() * frame_dt;
-            auto new_position = this->position;
+            auto new_position = this->get<Transform>().position;
 
             if (input_name == InputName::PlayerLeft) {
                 new_position.x -= input_amount * speed;
@@ -134,9 +134,10 @@ struct Player : public BasePlayer {
             int fd_z = std::get<1>(fd);
             update_facing_direction(fd_x, fd_z);
             handle_collision(fd_x, new_position, fd_z, new_position);
-            this->position = this->raw_position;
+            this->get<Transform>().position =
+                this->get<Transform>().raw_position;
         }
-        return this->position;
+        return this->get<Transform>().position;
     }
 
     void rotate_furniture() {
@@ -146,7 +147,7 @@ struct Player : public BasePlayer {
 
         std::shared_ptr<Furniture> match =
             EntityHelper::getClosestMatchingEntity<Furniture>(
-                vec::to2(this->position), player_reach,
+                this->get<Transform>().as2(), player_reach,
                 [](auto&& furniture) { return furniture->can_rotate(); });
 
         if (!match) return;
@@ -161,7 +162,7 @@ struct Player : public BasePlayer {
 
         std::shared_ptr<Furniture> match =
             EntityHelper::getClosestMatchingEntity<Furniture>(
-                vec::to2(this->position), player_reach,
+                this->get<Transform>().as2(), player_reach,
                 [](auto&& furniture) { return furniture->has_work(); });
 
         if (!match) return;
@@ -185,8 +186,9 @@ struct Player : public BasePlayer {
 
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
-                        vec::to2(this->position), player_reach,
-                        this->face_direction, [](std::shared_ptr<Furniture> f) {
+                        this->get<Transform>().as2(), player_reach,
+                        this->get<Transform>().face_direction,
+                        [](std::shared_ptr<Furniture> f) {
                             return f->has_held_item();
                         });
 
@@ -204,8 +206,8 @@ struct Player : public BasePlayer {
                 TRACY_ZONE(tracy_merge_item_in_hand_into_furniture);
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
-                        vec::to2(this->position), player_reach,
-                        this->face_direction,
+                        this->get<Transform>().as2(), player_reach,
+                        this->get<Transform>().face_direction,
                         [&](std::shared_ptr<Furniture> f) {
                             return
                                 // is there something there to merge into?
@@ -241,8 +243,8 @@ struct Player : public BasePlayer {
                 TRACY_ZONE(tracy_place_item_onto_furniture);
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
-                        vec::to2(this->position), player_reach,
-                        this->face_direction,
+                        this->get<Transform>().as2(), player_reach,
+                        this->get<Transform>().face_direction,
                         [this](std::shared_ptr<Furniture> f) {
                             return f->can_place_item_into(this->held_item);
                         });
@@ -251,7 +253,8 @@ struct Player : public BasePlayer {
                 }
 
                 auto item = this->held_item;
-                item->update_position(vec::snap(closest_furniture->position));
+                item->update_position(
+                    closest_furniture->get<Transform>().snap_position());
 
                 closest_furniture->held_item = item;
                 closest_furniture->held_item->held_by = Item::HeldBy::FURNITURE;
@@ -275,8 +278,8 @@ struct Player : public BasePlayer {
             const auto _pickup_item_from_furniture = [&]() {
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
-                        vec::to2(this->position), player_reach,
-                        this->face_direction,
+                        this->get<Transform>().as2(), player_reach,
+                        this->get<Transform>().face_direction,
                         [](std::shared_ptr<Furniture> furn) {
                             return (furn->held_item != nullptr);
                         });
@@ -298,7 +301,7 @@ struct Player : public BasePlayer {
             // Handles the non-furniture grabbing case
             std::shared_ptr<Item> closest_item =
                 ItemHelper::getClosestMatchingItem<Item>(
-                    vec::to2(this->position), TILESIZE * player_reach);
+                    this->get<Transform>().as2(), TILESIZE * player_reach);
             this->held_item = closest_item;
             if (this->held_item != nullptr) {
                 this->held_item->held_by = Item::HeldBy::PLAYER;
@@ -328,8 +331,9 @@ struct Player : public BasePlayer {
             // facing, instead of in a box around him
             std::shared_ptr<Furniture> closest_furniture =
                 EntityHelper::getMatchingEntityInFront<Furniture>(
-                    vec::to2(this->position), player_reach,
-                    this->face_direction, [](std::shared_ptr<Furniture> f) {
+                    this->get<Transform>().as2(), player_reach,
+                    this->get<Transform>().face_direction,
+                    [](std::shared_ptr<Furniture> f) {
                         return f->can_be_picked_up();
                     });
             this->held_furniture = closest_furniture;

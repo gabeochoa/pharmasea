@@ -34,7 +34,8 @@ struct BasePlayer : public Person {
         // TODO this is impossible to read, what can we do to fix this while
         // keeping it configurable
         auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
-            vec::to2(this->position), player_reach, this->face_direction,
+            this->get<Transform>().as2(), player_reach,
+            this->get<Transform>().face_direction,
             [](std::shared_ptr<Furniture>) { return true; });
         if (!match) return;
         match->is_highlighted = true;
@@ -46,17 +47,21 @@ struct BasePlayer : public Person {
 
         // TODO if cannot be placed in this spot make it obvious to the user
         if (held_furniture != nullptr) {
-            auto new_pos = this->position;
-            if (this->face_direction & FrontFaceDirection::FORWARD) {
+            auto new_pos = this->get<Transform>().position;
+            if (this->get<Transform>().face_direction &
+                Transform::FrontFaceDirection::FORWARD) {
                 new_pos.z += TILESIZE;
             }
-            if (this->face_direction & FrontFaceDirection::RIGHT) {
+            if (this->get<Transform>().face_direction &
+                Transform::FrontFaceDirection::RIGHT) {
                 new_pos.x += TILESIZE;
             }
-            if (this->face_direction & FrontFaceDirection::BACK) {
+            if (this->get<Transform>().face_direction &
+                Transform::FrontFaceDirection::BACK) {
                 new_pos.z -= TILESIZE;
             }
-            if (this->face_direction & FrontFaceDirection::LEFT) {
+            if (this->get<Transform>().face_direction &
+                Transform::FrontFaceDirection::LEFT) {
                 new_pos.x -= TILESIZE;
             }
 

@@ -1,10 +1,15 @@
 
 #pragma once
 
+#include "bitsery/ext/std_smart_ptr.h"
+#include "components/base_component.h"
+#include "engine/assert.h"
 #include "external_include.h"
 //
+#include <array>
 #include <map>
 
+#include "components/transform.h"
 #include "drawing_util.h"
 #include "engine/astar.h"
 #include "engine/is_server.h"
@@ -21,63 +26,80 @@
 
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
-    enum FrontFaceDirection {
-        FORWARD = 0x1,
-        RIGHT = 0x2,
-        BACK = 0x4,
-        LEFT = 0x8
-    };
-
-    const std::map<FrontFaceDirection, float> FrontFaceDirectionMap{
-        {FORWARD, 0.0f},        {FORWARD | RIGHT, 45.0f}, {RIGHT, 90.0f},
-        {BACK | RIGHT, 135.0f}, {BACK, 180.0f},           {BACK | LEFT, 225.0f},
-        {LEFT, 270.0f},         {FORWARD | LEFT, 315.0f}};
-
-    const std::map<int, FrontFaceDirection> DirectionToFrontFaceMap{
-        {0, FORWARD},        {45, FORWARD | RIGHT}, {90, RIGHT},
-        {135, BACK | RIGHT}, {180, BACK},           {225, BACK | LEFT},
-        {270, LEFT},         {315, FORWARD | LEFT}};
-
-    FrontFaceDirection offsetFaceDirection(FrontFaceDirection startingDirection,
-                                           float offset) const {
-        const auto degreesOffset =
-            static_cast<int>(FrontFaceDirectionMap.at(startingDirection) +
-                             static_cast<int>(offset));
-        return DirectionToFrontFaceMap.at(degreesOffset % 360);
-    }
-
     int id;
-    vec3 raw_position;
-    vec3 prev_position;
-    vec3 position;
+
+    ComponentBitSet componentSet;
+    ComponentArray componentArray;
+
     vec3 pushed_force{0.0, 0.0, 0.0};
     Color face_color;
     Color base_color;
     bool cleanup = false;
     bool is_highlighted = false;
     bool is_held = false;
-    FrontFaceDirection face_direction = FrontFaceDirection::FORWARD;
     std::shared_ptr<Item> held_item = nullptr;
 
     //
     int name_length = 1;
     std::string name = "";
 
+    template<typename T>
+    bool hasComponent() const {
+        log_trace("checking component {} {} on entity {}",
+                  components::get_type_id<T>(), type_name<T>(), id);
+        log_trace("your set is now {}", componentSet);
+        bool result = componentSet[components::get_type_id<T>()];
+        log_trace("and the result was {}", result);
+        return result;
+    }
+
+    template<typename T, typename... TArgs>
+    T& addComponent(TArgs&&... args) {
+        M_ASSERT(!this->hasComponent<T>(),
+                 "This entity already has this component attached");
+
+        log_trace("adding component {} {} to entity {}",
+                  components::get_type_id<T>(), type_name<T>(), id);
+
+        std::shared_ptr<T> component =
+            std::make_shared<T>(std::forward<TArgs>(args)...);
+        component->entity = std::shared_ptr<Entity>(this);
+        componentArray[components::get_type_id<T>()] = component;
+        componentSet[components::get_type_id<T>()] = true;
+
+        log_trace("your set is now {}", componentSet);
+
+        return *component;
+    }
+
+    template<typename T>
+    T& get() const {
+        if (!hasComponent<T>()) {
+            log_error("Entity {} did not have component {} requested", id,
+                      type_name<T>());
+        }
+        auto ptr(componentArray[components::get_type_id<T>()]);
+        return *dynamic_pointer_cast<T>(ptr);
+    }
+
+    void add_static_components() { addComponent<Transform>(); }
+
    private:
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.value4b(id);
-        s.object(raw_position);
-        s.object(prev_position);
-        s.object(position);
+        s.container(componentArray,
+                    [](S& sv, std::shared_ptr<BaseComponent> bc) {
+                        sv.ext(bc, bitsery::ext::StdSmartPtr{});
+                    });
+        s.ext(componentSet, bitsery::ext::StdBitset{});
         s.object(pushed_force);
         s.object(face_color);
         s.object(base_color);
         s.value1b(cleanup);
         s.value1b(is_highlighted);
         s.value1b(is_held);
-        s.value4b(face_direction);
         s.object(held_item);
         s.value4b(name_length);
         s.text1b(name, name_length);
@@ -86,31 +108,30 @@ struct Entity {
    public:
     Entity(vec3 p, Color face_color_in, Color base_color_in)
         : id(ENTITY_ID_GEN++),
-          raw_position(p),
           face_color(face_color_in),
           base_color(base_color_in) {
-        this->position = this->snap_position();
+        add_static_components();
+        get<Transform>().init(p, size());
     }
 
     Entity(vec2 p, Color face_color_in, Color base_color_in)
         : id(ENTITY_ID_GEN++),
-          raw_position({p.x, 0, p.y}),
           face_color(face_color_in),
           base_color(base_color_in) {
-        this->position = this->snap_position();
+        add_static_components();
+        get<Transform>().init({p.x, 0, p.y}, size());
     }
 
     Entity(vec3 p, Color c)
-        : id(ENTITY_ID_GEN++), raw_position(p), face_color(c), base_color(c) {
-        this->position = this->snap_position();
+        : id(ENTITY_ID_GEN++), face_color(c), base_color(c) {
+        add_static_components();
+        get<Transform>().init(p, size());
     }
 
     Entity(vec2 p, Color c)
-        : id(ENTITY_ID_GEN++),
-          raw_position({p.x, 0, p.y}),
-          face_color(c),
-          base_color(c) {
-        this->position = this->snap_position();
+        : id(ENTITY_ID_GEN++), face_color(c), base_color(c) {
+        add_static_components();
+        get<Transform>().init({p.x, 0, p.y}, size());
     }
 
     virtual ~Entity() {}
@@ -121,20 +142,20 @@ struct Entity {
     }
 
    protected:
-    Entity() {}
+    Entity() {
+        add_static_components();
+        get<Transform>().init({0, 0, 0}, size());
+    }
 
     virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
-
-    virtual BoundingBox raw_bounds() const {
-        return get_bounds(this->raw_position, this->size());
-    }
 
     /*
      * Used for code that should only render when debug mode is on
      * */
     virtual void render_debug_mode() const {
         DrawBoundingBox(this->bounds(), MAROON);
-        DrawFloatingText(this->raw_position, Preload::get().font,
+        DrawFloatingText(this->get<Transform>().raw_position,
+                         Preload::get().font,
                          fmt::format("{}", this->id).c_str());
     }
 
@@ -149,14 +170,19 @@ struct Entity {
             Color base = ui::color::getHighlighted(this->base_color);
 
             float rotation_angle =
-                180.f +
-                static_cast<int>(FrontFaceDirectionMap.at(face_direction));
+                // TODO make this api better
+                180.f + static_cast<int>(
+                            this->get<Transform>().FrontFaceDirectionMap.at(
+                                this->get<Transform>().face_direction));
 
             DrawModelEx(model_info.model,
                         {
-                            this->position.x + model_info.position_offset.x,
-                            this->position.y + model_info.position_offset.y,
-                            this->position.z + model_info.position_offset.z,
+                            this->get<Transform>().position.x +
+                                model_info.position_offset.x,
+                            this->get<Transform>().position.y +
+                                model_info.position_offset.y,
+                            this->get<Transform>().position.z +
+                                model_info.position_offset.z,
                         },
                         vec3{0.f, 1.f, 0.f}, rotation_angle,
                         this->size() * model_info.size_scale, base);
@@ -165,8 +191,10 @@ struct Entity {
 
         Color f = ui::color::getHighlighted(this->face_color);
         Color b = ui::color::getHighlighted(this->base_color);
-        DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                       this->size().z, FrontFaceDirectionMap.at(face_direction),
+        DrawCubeCustom(this->get<Transform>().raw_position, this->size().x,
+                       this->size().y, this->size().z,
+                       this->get<Transform>().FrontFaceDirectionMap.at(
+                           this->get<Transform>().face_direction),
                        f, b);
     }
 
@@ -184,22 +212,28 @@ struct Entity {
             ModelInfo model_info = model().value();
 
             float rotation_angle =
-                180.f +
-                static_cast<int>(FrontFaceDirectionMap.at(face_direction));
+                // TODO make this api better
+                180.f + static_cast<int>(
+                            this->get<Transform>().FrontFaceDirectionMap.at(
+                                this->get<Transform>().face_direction));
 
             raylib::DrawModelEx(
                 model_info.model,
                 {
-                    this->position.x + model_info.position_offset.x,
-                    this->position.y + model_info.position_offset.y,
-                    this->position.z + model_info.position_offset.z,
+                    this->get<Transform>().position.x +
+                        model_info.position_offset.x,
+                    this->get<Transform>().position.y +
+                        model_info.position_offset.y,
+                    this->get<Transform>().position.z +
+                        model_info.position_offset.z,
                 },
                 vec3{0, 1, 0}, model_info.rotation_angle + rotation_angle,
                 this->size() * model_info.size_scale, this->base_color);
         } else {
-            DrawCubeCustom(this->raw_position, this->size().x, this->size().y,
-                           this->size().z,
-                           FrontFaceDirectionMap.at(face_direction),
+            DrawCubeCustom(this->get<Transform>().raw_position, this->size().x,
+                           this->size().y, this->size().z,
+                           this->get<Transform>().FrontFaceDirectionMap.at(
+                               this->get<Transform>().face_direction),
                            this->face_color, this->base_color);
         }
 
@@ -207,29 +241,30 @@ struct Entity {
     }
 
     virtual void render_floating_name() const {
-        // log_info("render floating name {} {}", name, this->raw_position);
         raylib::DrawFloatingText(
-            this->raw_position + vec3{0, 0.5f * TILESIZE, 0},
+            this->get<Transform>().raw_position + vec3{0, 0.5f * TILESIZE, 0},
             Preload::get().font, name.c_str());
     }
 
     virtual std::optional<ModelInfo> model() const { return {}; }
 
-    vec3 snap_position() const { return vec::snap(this->raw_position); }
-
     virtual void update_held_item_position() {
         if (held_item != nullptr) {
-            auto new_pos = this->position;
-            if (this->face_direction & FrontFaceDirection::FORWARD) {
+            auto new_pos = this->get<Transform>().position;
+            if (this->get<Transform>().face_direction &
+                Transform::FrontFaceDirection::FORWARD) {
                 new_pos.z += TILESIZE;
             }
-            if (this->face_direction & FrontFaceDirection::RIGHT) {
+            if (this->get<Transform>().face_direction &
+                Transform::FrontFaceDirection::RIGHT) {
                 new_pos.x += TILESIZE;
             }
-            if (this->face_direction & FrontFaceDirection::BACK) {
+            if (this->get<Transform>().face_direction &
+                Transform::FrontFaceDirection::BACK) {
                 new_pos.z -= TILESIZE;
             }
-            if (this->face_direction & FrontFaceDirection::LEFT) {
+            if (this->get<Transform>().face_direction &
+                Transform::FrontFaceDirection::LEFT) {
                 new_pos.x -= TILESIZE;
             }
 
@@ -239,7 +274,8 @@ struct Entity {
 
     virtual vec2 get_heading() {
         const float target_facing_ang =
-            util::deg2rad(FrontFaceDirectionMap.at(this->face_direction));
+            util::deg2rad(this->get<Transform>().FrontFaceDirectionMap.at(
+                this->get<Transform>().face_direction));
         return vec2{
             cosf(target_facing_ang),
             sinf(target_facing_ang),
@@ -265,25 +301,28 @@ struct Entity {
         int turn_degrees = (180 - (int) theta_deg) % 360;
         // TODO fix this
         (void) turn_degrees;
-        /*
         if (turn_degrees > 0 && turn_degrees <= 45) {
-            this->face_direction = static_cast<FrontFaceDirection>(0);
+            this->get<Transform>().face_direction =
+                static_cast<Transform::FrontFaceDirection>(0);
         } else if (turn_degrees > 45 && turn_degrees <= 135) {
-            this->face_direction = static_cast<FrontFaceDirection>(90);
+            this->get<Transform>().face_direction =
+                static_cast<Transform::FrontFaceDirection>(90);
         } else if (turn_degrees > 135 && turn_degrees <= 225) {
-            this->face_direction = static_cast<FrontFaceDirection>(180);
+            this->get<Transform>().face_direction =
+                static_cast<Transform::FrontFaceDirection>(180);
         } else if (turn_degrees > 225) {
-            this->face_direction = static_cast<FrontFaceDirection>(270);
+            this->get<Transform>().face_direction =
+                static_cast<Transform::FrontFaceDirection>(270);
         }
-        */
     }
 
     virtual void always_update(float) {
         is_highlighted = false;
         if (this->is_snappable()) {
-            this->position = this->snap_position();
+            this->get<Transform>().position = this->snap_position();
         } else {
-            this->position = this->raw_position;
+            this->get<Transform>().position =
+                this->get<Transform>().raw_position;
         }
         update_held_item_position();
     }
@@ -311,15 +350,8 @@ struct Entity {
      * @param BoundingBox the box to test
      * */
     virtual bool collides(BoundingBox b) const {
-        return CheckCollisionBoxes(this->bounds(), b);
-    }
-
-    /*
-     * Get the bounding box for this entity
-     * @returns BoundingBox the box
-     * */
-    virtual BoundingBox bounds() const {
-        return get_bounds(this->position, this->size() / 2.0f);
+        // TODO fix move to collision component
+        return CheckCollisionBoxes(this->get<Transform>().bounds(), b);
     }
 
     /*
@@ -327,13 +359,37 @@ struct Entity {
      *
      * @param vec3 the position to move to
      * */
-    virtual void update_position(const vec3& p) { this->raw_position = p; }
+    virtual void update_position(const vec3& p) {
+        // TODO fix
+        this->get<Transform>().raw_position = p;
+    }
+
+    [[nodiscard]] virtual BoundingBox raw_bounds() const {
+        // TODO fix  size
+        return get_bounds(this->get<Transform>().raw_position, this->size());
+    }
+
+    /*
+     * Get the bounding box for this entity
+     * @returns BoundingBox the box
+     * */
+    [[nodiscard]] virtual BoundingBox bounds() const {
+        // TODO fix  size
+        return get_bounds(this->get<Transform>().position, this->size());
+    }
+
+    [[nodiscard]] vec3 snap_position() const {
+        // TODO have callers go direct
+        return this->get<Transform>().snap_position();
+    }
 
     /*
      * Rotate the facing direction of this entity, clockwise 90 degrees
      * */
     void rotate_facing_clockwise() {
-        this->face_direction = offsetFaceDirection(this->face_direction, 90);
+        this->get<Transform>().face_direction =
+            this->get<Transform>().offsetFaceDirection(
+                this->get<Transform>().face_direction, 90);
     }
 
     /*
@@ -345,36 +401,39 @@ struct Entity {
      * @returns vec2 the location `distance` tiles ahead
      * */
     virtual vec2 tile_infront(int distance) {
+        // TODO fix snap
         vec2 tile = vec::to2(this->snap_position());
-        return tile_infront_given_pos(tile, distance, this->face_direction);
+        return tile_infront_given_pos(tile, distance,
+                                      this->get<Transform>().face_direction);
     }
 
     /*
-     * Given a tile, distance, and direction, returns the location of the tile
-     * `distance` distance in front of the tile
+     * Given a tile, distance, and direction, returns the location of the
+     * tile `distance` distance in front of the tile
      *
      * @param vec2, the starting location
      * @param int, how far in front to go
-     * @param FrontFaceDirection, which direction to go
+     * @param Transform::FrontFaceDirection, which direction to go
      *
      * @returns vec2 the location `distance` tiles ahead
      * */
-    static vec2 tile_infront_given_pos(vec2 tile, int distance,
-                                       FrontFaceDirection direction) {
-        if (direction & FORWARD) {
+    static vec2 tile_infront_given_pos(
+        vec2 tile, int distance,
+        Transform::Transform::FrontFaceDirection direction) {
+        if (direction & Transform::FORWARD) {
             tile.y += distance * TILESIZE;
             tile.y = ceil(tile.y);
         }
-        if (direction & BACK) {
+        if (direction & Transform::BACK) {
             tile.y -= distance * TILESIZE;
             tile.y = floor(tile.y);
         }
 
-        if (direction & RIGHT) {
+        if (direction & Transform::RIGHT) {
             tile.x += distance * TILESIZE;
             tile.x = ceil(tile.x);
         }
-        if (direction & LEFT) {
+        if (direction & Transform::LEFT) {
             tile.x -= distance * TILESIZE;
             tile.x = floor(tile.x);
         }
@@ -385,8 +444,8 @@ struct Entity {
     virtual bool add_to_navmesh() { return false; }
     // return true if the item has collision and is currently collidable
     virtual bool is_collidable() {
-        // by default we disable collisions when you are holding something since
-        // its generally inside your bounding box
+        // by default we disable collisions when you are holding something
+        // since its generally inside your bounding box
         return !is_held;
     }
     // Used to tell an entity its been picked up
@@ -425,7 +484,7 @@ struct Entity {
     }
 };
 
-typedef Entity::FrontFaceDirection EntityDir;
+typedef Transform::Transform::FrontFaceDirection EntityDir;
 
 namespace bitsery {
 template<typename S>

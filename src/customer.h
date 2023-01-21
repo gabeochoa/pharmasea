@@ -104,7 +104,7 @@ struct Customer : public AIPerson {
                 // TODO replace with finding the one with the least people in it
                 std::shared_ptr<Register> closest_target =
                     EntityHelper::getClosestMatchingEntity<Register>(
-                        vec::to2(this->position), TILESIZE * 100.f,
+                        this->get<Transform>().as2(), TILESIZE * 100.f,
                         [](auto&&) { return true; });
 
                 if (!closest_target) {
@@ -292,7 +292,8 @@ struct Customer : public AIPerson {
         // this->turn_to_face_entity(reg);
         // }
         //
-        if (bubble.has_value()) bubble.value().update(dt, this->raw_position);
+        if (bubble.has_value())
+            bubble.value().update(dt, this->get<Transform>().raw_position);
     }
 
     virtual void render_normal() const override {
