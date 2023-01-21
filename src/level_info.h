@@ -50,6 +50,11 @@ struct LevelInfo {
 
         system_manager.always_update(dt);
 
+        if (GameState::get().is(game::State::InRound)) {
+        } else {
+            system_manager.planning_update(dt);
+        }
+
         for (auto e : EntityHelper::get_entities()) {
             if (e) e->update(dt);
         }

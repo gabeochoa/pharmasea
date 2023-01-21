@@ -45,7 +45,6 @@ struct BasePlayer : public Person {
 
     virtual void planning_update(float dt) override {
         Person::planning_update(dt);
-        highlight_facing_furniture();
 
         // TODO if cannot be placed in this spot make it obvious to the user
         if (held_furniture != nullptr) {
