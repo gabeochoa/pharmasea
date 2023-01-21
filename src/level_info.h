@@ -10,6 +10,7 @@
 #include "item.h"
 #include "item_helper.h"
 #include "round.h"
+#include "system/system_manager.h"
 
 constexpr int MAX_MAP_SIZE = 20;
 constexpr int MAX_SEED_LENGTH = 20;
@@ -34,6 +35,8 @@ static void generate_and_insert_walls(std::string /* seed */) {
 struct LevelInfo {
     bool was_generated = false;
 
+    SystemManager system_manager;
+
     Entities entities;
     Entities::size_type num_entities;
 
@@ -44,6 +47,9 @@ struct LevelInfo {
 
     virtual void onUpdate(float dt) {
         TRACY_ZONE_SCOPED;
+
+        system_manager.always_update(dt);
+
         for (auto e : EntityHelper::get_entities()) {
             if (e) e->update(dt);
         }

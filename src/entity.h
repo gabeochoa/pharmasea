@@ -41,7 +41,7 @@ struct Entity {
     bool is_held = false;
 
     template<typename T>
-    bool hasComponent() const {
+    bool has() const {
         log_trace("checking component {} {} on entity {}",
                   components::get_type_id<T>(), type_name<T>(), id);
         log_trace("your set is now {}", componentSet);
@@ -52,7 +52,7 @@ struct Entity {
 
     template<typename T, typename... TArgs>
     T& addComponent(TArgs&&... args) {
-        M_ASSERT(!this->hasComponent<T>(),
+        M_ASSERT(!this->has<T>(),
                  "This entity already has this component attached");
 
         log_trace("adding component {} {} to entity {}",
@@ -72,7 +72,7 @@ struct Entity {
 
     template<typename T>
     T& get() const {
-        if (!hasComponent<T>()) {
+        if (!has<T>()) {
             log_error("Entity {} did not have component {} requested", id,
                       type_name<T>());
         }
@@ -313,20 +313,12 @@ struct Entity {
 
     virtual void always_update(float) {
         is_highlighted = false;
-        if (this->is_snappable()) {
-            this->get<Transform>().position = this->snap_position();
-        } else {
-            this->get<Transform>().position =
-                this->get<Transform>().raw_position;
-        }
         update_held_item_position();
     }
 
     virtual void planning_update(float) {}
     virtual void in_round_update(float) {}
 
-    // return true if the position should be snapped at every update
-    virtual bool is_snappable() { return false; }
     // Whether or not this entity can hold items at the moment
     // -- doesnt need to be static, can dynamically change values
     virtual bool can_place_item_into(std::shared_ptr<Item> = nullptr) {
@@ -334,6 +326,8 @@ struct Entity {
     }
 
    public:
+    // return true if the position should be snapped at every update
+    virtual bool is_snappable() { return false; }
     /*
      * Given another bounding box, check if it collides with this entity
      *
