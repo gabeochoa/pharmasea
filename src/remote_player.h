@@ -35,7 +35,7 @@ struct RemotePlayer : public BasePlayer {
 
     virtual void update_remotely(float* location, std::string username,
                                  int facing_direction) {
-        this->name = username;
+        this->get<HasName>().name = username;
         this->get<Transform>().position =
             vec3{location[0], location[1], location[2]};
         this->get<Transform>().face_direction =

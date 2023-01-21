@@ -3,13 +3,14 @@
 
 #include "bitsery/ext/std_smart_ptr.h"
 #include "components/base_component.h"
+#include "components/has_name.h"
+#include "components/transform.h"
 #include "engine/assert.h"
 #include "external_include.h"
 //
 #include <array>
 #include <map>
 
-#include "components/transform.h"
 #include "drawing_util.h"
 #include "engine/astar.h"
 #include "engine/is_server.h"
@@ -38,10 +39,6 @@ struct Entity {
     bool is_highlighted = false;
     bool is_held = false;
     std::shared_ptr<Item> held_item = nullptr;
-
-    //
-    int name_length = 1;
-    std::string name = "";
 
     template<typename T>
     bool hasComponent() const {
@@ -82,7 +79,10 @@ struct Entity {
         return *dynamic_pointer_cast<T>(ptr);
     }
 
-    void add_static_components() { addComponent<Transform>(); }
+    void add_static_components() {
+        addComponent<Transform>();
+        addComponent<HasName>();
+    }
 
    private:
     friend bitsery::Access;
@@ -101,8 +101,6 @@ struct Entity {
         s.value1b(is_highlighted);
         s.value1b(is_held);
         s.object(held_item);
-        s.value4b(name_length);
-        s.text1b(name, name_length);
     }
 
    public:
@@ -135,11 +133,6 @@ struct Entity {
     }
 
     virtual ~Entity() {}
-
-    void update_name(const std::string& new_name) {
-        name = new_name;
-        name_length = (int) name.size();
-    }
 
    protected:
     Entity() {
@@ -243,7 +236,7 @@ struct Entity {
     virtual void render_floating_name() const {
         raylib::DrawFloatingText(
             this->get<Transform>().raw_position + vec3{0, 0.5f * TILESIZE, 0},
-            Preload::get().font, name.c_str());
+            Preload::get().font, this->get<HasName>().name.c_str());
     }
 
     virtual std::optional<ModelInfo> model() const { return {}; }

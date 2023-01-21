@@ -225,7 +225,8 @@ struct NetworkLayer : public Layer {
                 Widget(MK_UUID_LOOP(id, ROOT_ID, kv.first),
                        Size_Px(120.f, 0.5f), Size_Px(100.f, 1.f)));
             text(*player_text,
-                 fmt::format("{}({})", kv.second->name, kv.first));
+                 fmt::format("{}({})", kv.second->get<HasName>().name,
+                             kv.first));
         }
 
         if (network_info->is_host()) {

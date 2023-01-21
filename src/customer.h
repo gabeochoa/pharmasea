@@ -64,7 +64,7 @@ struct Customer : public AIPerson {
     Customer(vec2 p, Color c) : AIPerson(p, c) { init(); }
 
     void init() {
-        update_name(get_random_name());
+        get<HasName>().update(get_random_name());
 
         // TODO turn back on ailments
         // ailment.reset(new Insomnia());

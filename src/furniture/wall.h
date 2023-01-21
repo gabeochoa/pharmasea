@@ -38,6 +38,7 @@ struct Wall : public Furniture {
     }
 
     virtual void render_normal() const override {
+        // TODO fix
         // switch (this->type) {
         // case Type::DOUBLE_TEE: {
         // DrawCubeCustom(this->raw_position,                        //

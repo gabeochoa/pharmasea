@@ -122,7 +122,7 @@ struct Client {
             remote_players[client_id] = std::make_shared<RemotePlayer>();
             auto rp = remote_players[client_id];
             rp->client_id = client_id;
-            rp->update_name(username);
+            rp->get<HasName>().update(username);
             // NOTE we add to the map directly because its colocated with
             //      the other entity info
             map->remote_players_NOT_SERIALIZED.push_back(
