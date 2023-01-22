@@ -64,9 +64,7 @@ struct GameCam {
         raylib::SetCameraMode(this->camera, raylib::CAMERA_CUSTOM);
     }
 
-    void updateToTarget(Entity entity) {
-        camera.target = entity.get<Transform>().position;
-    }
+    void updateToTarget(const vec3& position) { camera.target = position; }
 
     void updateCamera() {
         auto mouseWheelMove = ext::get_mouse_wheel_move();

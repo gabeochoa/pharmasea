@@ -88,9 +88,10 @@ struct GameLayer : public Layer {
         // Dont quit window on escape
         raylib::SetExitKey(raylib::KEY_NULL);
 
-        // TODO Why does updateCamera not just take an optional target?
-        cam->updateToTarget(
-            GLOBALS.get_or_default<Entity>("active_camera_target", *player));
+        auto act = GLOBALS.get_ptr<Entity>("active_camera_target");
+        if (act) {
+            cam->updateToTarget(act->get<Transform>().position);
+        }
         cam->updateCamera();
 
         player->update(dt);
