@@ -25,20 +25,16 @@ struct RemotePlayer : public BasePlayer {
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
                      {255, 0, 0, 255}) {}
 
-    virtual vec3 update_xaxis_position(float) override {
-        return this->get<Transform>().position;
-    }
+    void update_remotely(float* location, std::string username,
+                         int facing_direction) {
+        HasName& hasname = this->get<HasName>();
+        hasname.name = username;
 
-    virtual vec3 update_zaxis_position(float) override {
-        return this->get<Transform>().position;
-    }
-
-    virtual void update_remotely(float* location, std::string username,
-                                 int facing_direction) {
         this->get<HasName>().name = username;
-        this->get<Transform>().position =
-            vec3{location[0], location[1], location[2]};
-        this->get<Transform>().face_direction =
+        Transform& transform = this->get<Transform>();
+        // TODO add setters
+        transform.position = vec3{location[0], location[1], location[2]};
+        transform.face_direction =
             static_cast<Transform::FrontFaceDirection>(facing_direction);
     }
 

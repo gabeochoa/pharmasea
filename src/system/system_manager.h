@@ -5,6 +5,7 @@
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/can_perform_job.h"
+#include "../components/collects_user_input.h"
 #include "../components/custom_item_position.h"
 #include "../components/transform.h"
 #include "../customer.h"
@@ -404,6 +405,45 @@ inline void person_update(std::shared_ptr<Entity> entity, float dt) {
 
     person_update_given_new_pos(entity->id, entity->get<Transform>(),
                                 person.get(), dt, new_pos_x, new_pos_z);
+}
+
+inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
+    if (!entity->has<CollectsUserInput>()) return;
+    CollectsUserInput& cui = entity->get<CollectsUserInput>();
+
+    // Theres no players not in game menu state,
+    const menu::State state = menu::State::Game;
+
+    float left = KeyMap::is_event(state, InputName::PlayerLeft);
+    float right = KeyMap::is_event(state, InputName::PlayerRight);
+    if (left > 0)
+        cui.inputs.push_back({state, InputName::PlayerLeft, left, dt});
+    if (right > 0)
+        cui.inputs.push_back({state, InputName::PlayerRight, right, dt});
+
+    float up = KeyMap::is_event(state, InputName::PlayerForward);
+    float down = KeyMap::is_event(state, InputName::PlayerBack);
+    if (up > 0) cui.inputs.push_back({state, InputName::PlayerForward, up, dt});
+    if (down > 0)
+        cui.inputs.push_back({state, InputName::PlayerBack, down, dt});
+
+    bool pickup =
+        KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
+    if (pickup) {
+        cui.inputs.push_back({state, InputName::PlayerPickup, 1.f, dt});
+    }
+
+    bool rotate = KeyMap::is_event_once_DO_NOT_USE(
+        state, InputName::PlayerRotateFurniture);
+    if (rotate) {
+        cui.inputs.push_back(
+            {state, InputName::PlayerRotateFurniture, 1.f, dt});
+    }
+
+    float do_work = KeyMap::is_event(state, InputName::PlayerDoWork);
+    if (do_work > 0) {
+        cui.inputs.push_back({state, InputName::PlayerDoWork, 1.f, dt});
+    }
 }
 
 }  // namespace system_manager

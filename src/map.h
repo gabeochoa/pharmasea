@@ -36,9 +36,12 @@ struct Map {
 
     void onUpdate(float dt) {
         TRACY_ZONE_SCOPED;
-        for (auto rp : remote_players_NOT_SERIALIZED) {
-            rp->update(dt);
-        }
+        SystemManager::get().update(
+            container_cast(remote_players_NOT_SERIALIZED,
+                           "converting sp<RemotePlayer> to sp<Entity> as these "
+                           "are not serialized and so not part of level info"),
+            dt);
+
         if (in_lobby_state()) {
             lobby_info.ensure_generated_map(seed);
             lobby_info.onUpdate(dt);
@@ -50,13 +53,13 @@ struct Map {
 
     void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
-        for (auto rp : remote_players_NOT_SERIALIZED) {
-            // NOTE: we call the render directly ehre because level_info doesnt
-            // own players
-            // TODO why is he so large ..
-            if (rp) system_manager::render_normal(rp, dt);
-            if (!rp) log_warn("we have invalid remote players");
-        }
+
+        SystemManager::get().render(
+            container_cast(remote_players_NOT_SERIALIZED,
+                           "converting sp<RemotePlayer> to sp<Entity> as these "
+                           "are not serialized and so not part of level info"),
+            dt);
+
         if (in_lobby_state()) {
             lobby_info.onDraw(dt);
         } else {

@@ -4,6 +4,7 @@
 #include "base_player.h"
 #include "components/can_be_ghost_player.h"
 #include "components/can_hold_furniture.h"
+#include "components/collects_user_input.h"
 #include "engine/keymap.h"
 #include "globals.h"
 #include "raylib.h"
@@ -17,76 +18,37 @@ struct Player : public BasePlayer {
     const menu::State state = menu::State::Game;
 
     std::string username;
-    std::vector<UserInput> inputs;
+
+    void add_static_components() { addComponent<CanBeGhostPlayer>(); }
 
     // NOTE: this is kept public because we use it in the network when prepping
     // server players
-    Player() : BasePlayer({0, 0, 0}, WHITE, WHITE) {}
+    Player() : BasePlayer({0, 0, 0}, WHITE, WHITE) { add_static_components(); }
 
     Player(vec3 p, Color face_color_in, Color base_color_in)
-        : BasePlayer(p, face_color_in, base_color_in) {}
+        : BasePlayer(p, face_color_in, base_color_in) {
+        add_static_components();
+    }
     Player(vec2 p, Color face_color_in, Color base_color_in)
-        : BasePlayer(p, face_color_in, base_color_in) {}
+        : BasePlayer(p, face_color_in, base_color_in) {
+        add_static_components();
+    }
     Player(vec2 location)
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
-                     {255, 0, 0, 255}) {}
+                     {255, 0, 0, 255}) {
+        add_static_components();
+    }
 
     virtual bool is_collidable() override {
         return get<CanBeGhostPlayer>().is_not_ghost();
-    }
-
-    virtual vec3 update_xaxis_position(float dt) override {
-        float left = KeyMap::is_event(state, InputName::PlayerLeft);
-        float right = KeyMap::is_event(state, InputName::PlayerRight);
-        if (left > 0)
-            inputs.push_back({state, InputName::PlayerLeft, left, dt});
-        if (right > 0)
-            inputs.push_back({state, InputName::PlayerRight, right, dt});
-        return this->get<Transform>().raw_position;
-    }
-
-    virtual vec3 update_zaxis_position(float dt) override {
-        float up = KeyMap::is_event(state, InputName::PlayerForward);
-        float down = KeyMap::is_event(state, InputName::PlayerBack);
-        if (up > 0) inputs.push_back({state, InputName::PlayerForward, up, dt});
-        if (down > 0)
-            inputs.push_back({state, InputName::PlayerBack, down, dt});
-        return this->get<Transform>().raw_position;
-    }
-
-    virtual void always_update(float dt) override {
-        TRACY_ZONE_SCOPED;
-
-        Entity::always_update(dt);
-
-        update_xaxis_position(dt);
-        update_zaxis_position(dt);
-
-        bool pickup =
-            KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
-        if (pickup) {
-            inputs.push_back({state, InputName::PlayerPickup, 1.f, dt});
-        }
-
-        bool rotate = KeyMap::is_event_once_DO_NOT_USE(
-            state, InputName::PlayerRotateFurniture);
-        if (rotate) {
-            inputs.push_back(
-                {state, InputName::PlayerRotateFurniture, 1.f, dt});
-        }
-
-        float do_work = KeyMap::is_event(state, InputName::PlayerDoWork);
-        if (do_work > 0) {
-            inputs.push_back({state, InputName::PlayerDoWork, 1.f, dt});
-        }
     }
 
     // TODO interpolate our old position and new position so its smoother
     virtual vec3 get_position_after_input(UserInputs inpts) {
         TRACY_ZONE_SCOPED;
         Transform& transform = get<Transform>();
-        // log_info("old position {}", transform.position);
-        // log_info("get_position_after_input {}", inpts.size());
+        log_info("old position {}", transform.position);
+        log_info("get_position_after_input {}", inpts.size());
         for (const UserInput& ui : inpts) {
             const auto menu_state = std::get<0>(ui);
             if (menu_state != state) continue;
