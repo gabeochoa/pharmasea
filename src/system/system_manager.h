@@ -599,7 +599,9 @@ inline void process_input(const std::shared_ptr<Entity> entity,
                     player->get<Transform>().as2(), cho.reach(),
                     player->get<Transform>().face_direction,
                     [](std::shared_ptr<Furniture> f) {
-                        return f->can_be_picked_up();
+                        // TODO right now walls inherit this from furniture but
+                        // eventually that should not be the case
+                        return f->get<CanBeHeld>().is_not_held();
                     });
             ourCHF.update(closest_furniture);
             if (ourCHF.is_holding_furniture()) ourCHF.furniture()->on_pickup();
