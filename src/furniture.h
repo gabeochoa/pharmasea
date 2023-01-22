@@ -33,7 +33,6 @@ struct Furniture : public Entity {
         // });
     }
 
-   public:
     Furniture(vec2 pos, Color face_color_in)
         : Entity(pos, face_color_in, face_color_in) {
         add_static_components();
@@ -48,6 +47,7 @@ struct Furniture : public Entity {
         get<HasWork>().init([](std::shared_ptr<Person>, float) {});
     }
 
+   public:
     // TODO this should be const
     virtual bool add_to_navmesh() override { return true; }
     virtual bool can_rotate() const { return true; }
