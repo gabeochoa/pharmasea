@@ -35,10 +35,14 @@ struct RemotePlayer : public BasePlayer {
 
     virtual void update_remotely(float* location, std::string username,
                                  int facing_direction) {
+        HasName& hasname = this->get<HasName>();
+        hasname.name = username;
+
         this->get<HasName>().name = username;
-        this->get<Transform>().position =
-            vec3{location[0], location[1], location[2]};
-        this->get<Transform>().face_direction =
+        Transform& transform = this->get<Transform>();
+        // TODO add setters
+        transform.position = vec3{location[0], location[1], location[2]};
+        transform.face_direction =
             static_cast<Transform::FrontFaceDirection>(facing_direction);
     }
 
