@@ -279,7 +279,7 @@ struct Player : public BasePlayer {
         }
     }
 
-    virtual void grab_or_drop() {
+    void grab_or_drop() {
         if (GameState::s_in_round()) {
             handle_in_game_grab_or_drop();
         } else if (GameState::get().is(game::State::Planning)) {
