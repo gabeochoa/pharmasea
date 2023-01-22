@@ -8,7 +8,6 @@
 #include "components/has_work.h"
 #include "entity.h"
 #include "globals.h"
-#include "person.h"
 
 struct Furniture : public Entity {
    private:
@@ -31,22 +30,12 @@ struct Furniture : public Entity {
         // new_pos.y += TILESIZE / 4;
         // return new_pos;
         // });
+        get<HasWork>().init([](std::shared_ptr<Person>, float) {});
     }
 
    public:
-    Furniture(vec2 pos, Color face_color_in)
-        : Entity(pos, face_color_in, face_color_in) {
-        add_static_components();
-    }
-    Furniture(vec3 pos, Color face_color_in)
-        : Entity(pos, face_color_in, face_color_in) {
-        add_static_components();
-    }
-    Furniture(vec2 pos, Color face_color_in, Color base_color_in)
-        : Entity(pos, face_color_in, base_color_in) {
-        add_static_components();
-        get<HasWork>().init([](std::shared_ptr<Person>, float) {});
-    }
+    Furniture(vec3 pos, Color) : Entity(pos) { add_static_components(); }
+    Furniture(vec2 pos, Color) : Entity(pos) { add_static_components(); }
 
     // TODO this should be const
     virtual bool add_to_navmesh() override { return true; }

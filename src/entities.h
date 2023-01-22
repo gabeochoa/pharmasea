@@ -5,5 +5,4 @@
 //
 #include "entity.h"
 //
-#include "person.h"
 #include "player.h"

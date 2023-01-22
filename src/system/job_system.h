@@ -12,7 +12,6 @@
 #include "../entityhelper.h"
 #include "../furniture.h"
 #include "../furniture/register.h"
-#include "../person.h"
 
 namespace system_manager {
 

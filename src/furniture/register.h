@@ -8,15 +8,10 @@
 #include "../globals.h"
 //
 #include "../furniture.h"
-#include "../person.h"
 
 struct RegisterNextQueuePosition : Person {
-    RegisterNextQueuePosition(vec3 p, Color face_color_in, Color base_color_in)
-        : Person(p, face_color_in, base_color_in) {}
-    RegisterNextQueuePosition(vec2 p, Color face_color_in, Color base_color_in)
-        : Person(p, face_color_in, base_color_in) {}
-    RegisterNextQueuePosition(vec3 p, Color c) : Person(p, c) {}
-    RegisterNextQueuePosition(vec2 p, Color c) : Person(p, c) {}
+    RegisterNextQueuePosition(vec3 p, Color, Color) : Person(p) {}
+    RegisterNextQueuePosition(vec3 p, Color) : Person(p) {}
 
     virtual bool is_collidable() override { return false; }
 };
@@ -39,8 +34,7 @@ struct Register : public Furniture {
 
    public:
     Register() : Furniture() {}
-    explicit Register(vec2 pos)
-        : Furniture(pos, ui::color::grey, ui::color::grey) {
+    explicit Register(vec2 pos) : Furniture(pos, ui::color::grey) {
         update_model();
     }
 

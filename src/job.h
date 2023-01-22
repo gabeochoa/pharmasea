@@ -18,7 +18,7 @@ enum JobType {
     MAX_JOB_TYPE,
 };
 
-struct Person;
+struct Entity;
 
 struct Job {
     JobType type;
@@ -42,7 +42,7 @@ struct Job {
     std::deque<vec2> path;
 
     // AIPerson
-    std::function<void(Person*, Job*)> on_cleanup = nullptr;
+    std::function<void(Entity*, Job*)> on_cleanup = nullptr;
 
     std::map<std::string, void*> data;
 

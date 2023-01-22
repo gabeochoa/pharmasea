@@ -9,7 +9,6 @@
 #include "furnitures.h"
 #include "item.h"
 #include "item_helper.h"
-#include "person.h"
 #include "round.h"
 #include "system/system_manager.h"
 

@@ -52,13 +52,7 @@ struct Conveyer : public Furniture {
 
    public:
     Conveyer() {}
-    explicit Conveyer(vec2 pos)
-        : Furniture(pos, ui::color::blue, ui::color::blue) {
-        add_static_components();
-        update_model();
-    }
-    Conveyer(vec2 pos, Color face_color, Color base_color)
-        : Furniture(pos, face_color, base_color) {
+    Conveyer(vec2 pos, Color c = BLUE) : Furniture(pos, c) {
         add_static_components();
         update_model();
     }

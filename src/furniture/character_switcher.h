@@ -3,8 +3,8 @@
 
 #include "../external_include.h"
 //
+#include "../entity.h"
 #include "../globals.h"
-#include "../person.h"
 //
 #include "../furniture.h"
 
@@ -18,8 +18,7 @@ struct CharacterSwitcher : public Furniture {
 
    public:
     CharacterSwitcher() {}
-    explicit CharacterSwitcher(vec2 pos)
-        : Furniture(pos, ui::color::brown, ui::color::brown) {
+    explicit CharacterSwitcher(vec2 pos) : Furniture(pos, ui::color::brown) {
         get<HasWork>().init([this](std::shared_ptr<Person>, float dt) {
             const float amt = 2.f;
             HasWork& hasWork = this->get<HasWork>();
