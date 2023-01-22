@@ -165,31 +165,6 @@ struct Entity {
             Preload::get().font, this->get<HasName>().name.c_str());
     }
 
-    virtual void update_held_item_position() {
-        // TODO
-        // if (held_item() != nullptr) {
-        // auto new_pos = this->get<Transform>().position;
-        // if (this->get<Transform>().face_direction &
-        // Transform::FrontFaceDirection::FORWARD) {
-        // new_pos.z += TILESIZE;
-        // }
-        // if (this->get<Transform>().face_direction &
-        // Transform::FrontFaceDirection::RIGHT) {
-        // new_pos.x += TILESIZE;
-        // }
-        // if (this->get<Transform>().face_direction &
-        // Transform::FrontFaceDirection::BACK) {
-        // new_pos.z -= TILESIZE;
-        // }
-        // if (this->get<Transform>().face_direction &
-        // Transform::FrontFaceDirection::LEFT) {
-        // new_pos.x -= TILESIZE;
-        // }
-        //
-        // held_item()->update_position(new_pos);
-        // }
-    }
-
     virtual vec2 get_heading() {
         const float target_facing_ang =
             util::deg2rad(this->get<Transform>().FrontFaceDirectionMap.at(
@@ -234,7 +209,6 @@ struct Entity {
         }
     }
 
-    virtual void always_update(float) final { update_held_item_position(); }
     virtual void in_round_update(float) {}
 
     // Whether or not this entity can hold items at the moment
@@ -364,7 +338,6 @@ struct Entity {
         if (GameState::get().is(game::State::InRound)) {
             in_round_update(dt);
         }
-        always_update(dt);
     }
 };
 

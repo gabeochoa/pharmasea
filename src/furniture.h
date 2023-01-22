@@ -4,6 +4,7 @@
 #include "drawing_util.h"
 #include "external_include.h"
 //
+#include "components/custom_item_position.h"
 #include "entity.h"
 #include "globals.h"
 #include "person.h"
@@ -23,20 +24,27 @@ struct Furniture : public Entity {
 
     float pct_work_complete = 0.f;
 
+    void add_static_components() {
+        // addComponent<CustomHeldItemPosition>().init(
+        // [](Transform& transform) -> vec3 {
+        // auto new_pos = transform.position;
+        // new_pos.y += TILESIZE / 4;
+        // return new_pos;
+        // });
+    }
+
    public:
     Furniture(vec2 pos, Color face_color_in)
-        : Entity(pos, face_color_in, face_color_in) {}
+        : Entity(pos, face_color_in, face_color_in) {
+        add_static_components();
+    }
     Furniture(vec3 pos, Color face_color_in)
-        : Entity(pos, face_color_in, face_color_in) {}
+        : Entity(pos, face_color_in, face_color_in) {
+        add_static_components();
+    }
     Furniture(vec2 pos, Color face_color_in, Color base_color_in)
-        : Entity(pos, face_color_in, base_color_in) {}
-
-    virtual void update_held_item_position() override {
-        // TODO
-        // if (held_item() == nullptr) return;
-        // auto new_pos = this->get<Transform>().position;
-        // new_pos.y += TILESIZE / 4;
-        // held_item()->update_position(new_pos);
+        : Entity(pos, face_color_in, base_color_in) {
+        add_static_components();
     }
 
     virtual void render_normal() const override {
