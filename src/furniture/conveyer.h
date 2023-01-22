@@ -18,27 +18,7 @@ struct Conveyer : public Furniture {
 
     void add_static_components() {
         addComponent<CustomHeldItemPosition>().init(
-            [this](Transform& transform) -> vec3 {
-                auto new_pos = transform.position;
-                if (transform.face_direction &
-                    Transform::FrontFaceDirection::FORWARD) {
-                    new_pos.z += TILESIZE * relative_item_pos;
-                }
-                if (transform.face_direction &
-                    Transform::FrontFaceDirection::RIGHT) {
-                    new_pos.x += TILESIZE * relative_item_pos;
-                }
-                if (transform.face_direction &
-                    Transform::FrontFaceDirection::BACK) {
-                    new_pos.z -= TILESIZE * relative_item_pos;
-                }
-                if (transform.face_direction &
-                    Transform::FrontFaceDirection::LEFT) {
-                    new_pos.x -= TILESIZE * relative_item_pos;
-                }
-                new_pos.y += TILESIZE / 4;
-                return new_pos;
-            });
+            CustomHeldItemPosition::Positioner::Conveyer);
     }
 
    private:

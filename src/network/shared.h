@@ -28,8 +28,8 @@ struct PolymorphicBaseClass<Entity>
 
 template<>
 struct PolymorphicBaseClass<Furniture>
-    : PolymorphicDerivedClasses<Wall, Table, Register, Conveyer, Grabber,
-                                BagBox, MedicineCabinet, CharacterSwitcher> {};
+    : PolymorphicDerivedClasses<Wall, Register, Conveyer, Grabber, BagBox,
+                                MedicineCabinet, CharacterSwitcher> {};
 
 template<>
 struct PolymorphicBaseClass<Person>

@@ -193,9 +193,10 @@ struct GameMapInfo : public LevelInfo {
 
         auto generate_tables = [this]() {
             {
-                std::shared_ptr<Table> table;
                 const auto location = get_rand_walkable();
-                table.reset(new Table(location));
+
+                std::shared_ptr<Furniture> table;
+                table.reset(Furniture::make_table(location));
                 EntityHelper::addEntity(table);
 
                 std::shared_ptr<Pill> item;
@@ -205,9 +206,10 @@ struct GameMapInfo : public LevelInfo {
             }
 
             {
-                std::shared_ptr<Table> table;
                 const auto location = get_rand_walkable();
-                table.reset(new Table(location));
+
+                std::shared_ptr<Furniture> table;
+                table.reset(Furniture::make_table(location));
                 EntityHelper::addEntity(table);
 
                 std::shared_ptr<PillBottle> item;

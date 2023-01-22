@@ -15,6 +15,7 @@
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../furniture.h"
+#include "../furniture/conveyer.h"
 #include "../furniture/register.h"
 #include "job_system.h"
 #include "rendering_system.h"
@@ -65,30 +66,57 @@ inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
 
 inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
     if (!entity->has<CanHoldItem>()) return;
-    CanHoldItem& can_hold_item = entity->get<CanHoldItem>();
+    const CanHoldItem& can_hold_item = entity->get<CanHoldItem>();
     if (can_hold_item.empty()) return;
 
     if (!entity->has<Transform>()) return;
-    Transform& transform = entity->get<Transform>();
+    const Transform& transform = entity->get<Transform>();
 
-    if (entity->has<CustomHeldItemPosition>()) {
+    vec3 new_pos = transform.position;
+
+    // TODO disabling custom positions for now until i can figure out the seg
+    // fault
+    if (false && entity->has<CustomHeldItemPosition>()) {
         CustomHeldItemPosition& custom_item_position =
             entity->get<CustomHeldItemPosition>();
 
-        if (custom_item_position.mutator) {
-            can_hold_item.item()->update_position(
-                custom_item_position.mutator(transform));
-        } else {
-            log_warn(
-                "Entity has custom held item position but didnt initalize the "
-                "component");
+        switch (custom_item_position.positioner) {
+            case CustomHeldItemPosition::Positioner::Default:
+                new_pos.y += TILESIZE / 4;
+                break;
+            case CustomHeldItemPosition::Positioner::Table:
+                new_pos.y += TILESIZE / 2;
+                break;
+            case CustomHeldItemPosition::Positioner::Conveyer:
+                auto conveyer = dynamic_pointer_cast<Conveyer>(entity);
+                if (!conveyer) {
+                    log_warn("Using custom held conveyer but not a conveyer");
+                    break;
+                }
+                if (transform.face_direction &
+                    Transform::FrontFaceDirection::FORWARD) {
+                    new_pos.z += TILESIZE * conveyer->relative_item_pos;
+                }
+                if (transform.face_direction &
+                    Transform::FrontFaceDirection::RIGHT) {
+                    new_pos.x += TILESIZE * conveyer->relative_item_pos;
+                }
+                if (transform.face_direction &
+                    Transform::FrontFaceDirection::BACK) {
+                    new_pos.z -= TILESIZE * conveyer->relative_item_pos;
+                }
+                if (transform.face_direction &
+                    Transform::FrontFaceDirection::LEFT) {
+                    new_pos.x -= TILESIZE * conveyer->relative_item_pos;
+                }
+                new_pos.y += TILESIZE / 4;
+                break;
         }
+        can_hold_item.item()->update_position(new_pos);
         return;
     }
 
     // Default
-
-    auto new_pos = transform.position;
     if (transform.face_direction & Transform::FrontFaceDirection::FORWARD) {
         new_pos.z += TILESIZE;
     }
@@ -407,7 +435,7 @@ inline void process_input(const std::shared_ptr<Entity> entity,
         if (!match) return;
 
         HasWork& hasWork = match->get<HasWork>();
-        if (hasWork.do_work) hasWork.do_work(player, frame_dt);
+        if (hasWork.do_work) hasWork.do_work(hasWork, player, frame_dt);
     };
 
     const auto handle_in_game_grab_or_drop = [player]() {

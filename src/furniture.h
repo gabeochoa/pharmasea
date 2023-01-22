@@ -28,19 +28,11 @@ struct Furniture : public Entity {
         addComponent<HasWork>();
         addComponent<IsSolid>();
         addComponent<IsRotatable>();
-        // addComponent<CustomHeldItemPosition>().init(
-        // addComponent<CustomHeldItemPosition>().init(
-        // [](Transform& transform) -> vec3 {
-        // auto new_pos = transform.position;
-        // new_pos.y += TILESIZE / 4;
-        // return new_pos;
-        // });
+        addComponent<CustomHeldItemPosition>().init(
+            CustomHeldItemPosition::Positioner::Default);
+        get<HasWork>().init([](HasWork&, std::shared_ptr<Person>, float) {});
     }
 
-    Furniture(vec2 pos, Color face_color_in)
-        : Entity(pos, face_color_in, face_color_in) {
-        add_static_components();
-    }
     Furniture(vec3 pos, Color face_color_in)
         : Entity(pos, face_color_in, face_color_in) {
         add_static_components();
@@ -48,8 +40,9 @@ struct Furniture : public Entity {
     Furniture(vec2 pos, Color face_color_in, Color base_color_in)
         : Entity(pos, face_color_in, base_color_in) {
         add_static_components();
-        get<HasWork>().init([](std::shared_ptr<Person>, float) {});
     }
+    Furniture(vec2 pos, Color face_color_in)
+        : Furniture(pos, face_color_in, face_color_in) {}
 
    public:
     // TODO this should be const
@@ -62,5 +55,23 @@ struct Furniture : public Entity {
 
     virtual bool has_held_item() const {
         return get<CanHoldItem>().is_holding_item();
+    }
+
+    static Furniture* make_table(vec2 pos) {
+        Furniture* table =
+            new Furniture(pos, ui::color::brown, ui::color::brown);
+
+        table->addComponent<CustomHeldItemPosition>().init(
+            CustomHeldItemPosition::Positioner::Table);
+        table->get<HasWork>().init(
+            [](HasWork& hasWork, std::shared_ptr<Person>, float dt) {
+                // TODO eventually we need it to decide whether it has work
+                // based on the current held item
+                const float amt = 0.5f;
+                hasWork.pct_work_complete += amt * dt;
+                if (hasWork.pct_work_complete >= 1.f)
+                    hasWork.pct_work_complete = 0.f;
+            });
+        return table;
     }
 };

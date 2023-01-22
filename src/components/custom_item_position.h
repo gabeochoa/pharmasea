@@ -6,17 +6,19 @@
 #include "transform.h"
 
 struct CustomHeldItemPosition : public BaseComponent {
-    std::function<vec3(Transform&)> mutator;
+    enum struct Positioner {
+        Default,
+        Table,
+        Conveyer
+    } positioner = Positioner::Default;
 
-    void init(std::function<vec3(Transform&)> mut) {
-        // TODO enforce that to have this one you have to have a transform
-        mutator = mut;
-    }
+    void init(Positioner p) { positioner = p; }
 
    private:
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+        s.value4b(positioner);
     }
 };
