@@ -58,9 +58,6 @@ struct Player : public BasePlayer {
 
         Entity::always_update(dt);
 
-        update_xaxis_position(dt);
-        update_zaxis_position(dt);
-
         bool pickup =
             KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
         if (pickup) {

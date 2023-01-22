@@ -44,11 +44,7 @@ inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
 
     // TODO if cannot be placed in this spot make it obvious to the user
 
-    if (can_hold_furniture.empty()) {
-        log_info("not holding anything");
-        return;
-    }
-    log_info("holding something ");
+    if (can_hold_furniture.empty()) return;
 
     auto new_pos = transform.position;
     if (transform.face_direction & Transform::FrontFaceDirection::FORWARD) {
@@ -479,7 +475,7 @@ struct SystemManager {
             system_manager::transform_snapper(entity, dt);
             system_manager::update_held_item_position(entity, dt);
 
-            // system_manager::collect_user_input(entity, dt);
+            system_manager::collect_user_input(entity, dt);
             // TODO obv this should be more component based
             system_manager::person_update(entity, dt);
         }
