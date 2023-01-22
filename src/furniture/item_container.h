@@ -6,7 +6,6 @@
 #include "../entity.h"
 #include "../globals.h"
 //
-#include "../aiperson.h"
 #include "../furniture.h"
 
 // TODO we can use concepts here to force this to be an Item

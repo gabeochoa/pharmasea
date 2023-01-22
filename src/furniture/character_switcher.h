@@ -3,10 +3,9 @@
 
 #include "../external_include.h"
 //
-#include "../entity.h"
 #include "../globals.h"
+#include "../person.h"
 //
-#include "../aiperson.h"
 #include "../furniture.h"
 
 struct CharacterSwitcher : public Furniture {
@@ -21,13 +20,14 @@ struct CharacterSwitcher : public Furniture {
     CharacterSwitcher() {}
     explicit CharacterSwitcher(vec2 pos)
         : Furniture(pos, ui::color::brown, ui::color::brown) {
-        get<HasWork>().init([this](std::shared_ptr<Person> person, float dt) {
+        get<HasWork>().init([this](std::shared_ptr<Person>, float dt) {
             const float amt = 2.f;
             HasWork& hasWork = this->get<HasWork>();
             hasWork.pct_work_complete += amt * dt;
             if (hasWork.pct_work_complete >= 1.f) {
                 hasWork.pct_work_complete = 0.f;
-                person->select_next_character_model();
+                // TODO replace when we have a system for this
+                // person->select_next_character_model();
             }
         });
     }

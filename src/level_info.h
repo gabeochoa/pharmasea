@@ -9,6 +9,7 @@
 #include "furnitures.h"
 #include "item.h"
 #include "item_helper.h"
+#include "person.h"
 #include "round.h"
 #include "system/system_manager.h"
 
@@ -242,7 +243,7 @@ struct GameMapInfo : public LevelInfo {
         const auto generate_customer = []() {
             const auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
             std::shared_ptr<Customer> customer;
-            customer.reset(AIPerson::create_customer(location, RED));
+            customer.reset(Person::create_customer(location, RED));
             EntityHelper::addEntity(customer);
         };
 

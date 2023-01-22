@@ -31,8 +31,7 @@ struct PolymorphicBaseClass<Furniture>
                                 BagBox, MedicineCabinet, CharacterSwitcher> {};
 
 template<>
-struct PolymorphicBaseClass<Person>
-    : PolymorphicDerivedClasses<BasePlayer, AIPerson> {};
+struct PolymorphicBaseClass<Person> : PolymorphicDerivedClasses<BasePlayer> {};
 
 template<>
 struct PolymorphicBaseClass<BasePlayer> : PolymorphicDerivedClasses<Player> {};

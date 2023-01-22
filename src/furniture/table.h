@@ -6,9 +6,9 @@
 #include "../entity.h"
 #include "../globals.h"
 //
-#include "../aiperson.h"
 #include "../components/custom_item_position.h"
 #include "../furniture.h"
+#include "../person.h"
 
 struct Table : public Furniture {
    private:

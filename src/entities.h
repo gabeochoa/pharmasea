@@ -5,6 +5,5 @@
 //
 #include "entity.h"
 //
-#include "aiperson.h"
 #include "person.h"
 #include "player.h"

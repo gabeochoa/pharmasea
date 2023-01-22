@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "../aiperson.h"
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
@@ -13,6 +12,7 @@
 #include "../entityhelper.h"
 #include "../furniture.h"
 #include "../furniture/register.h"
+#include "../person.h"
 
 namespace system_manager {
 
