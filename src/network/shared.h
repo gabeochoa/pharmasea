@@ -19,7 +19,7 @@ struct PolymorphicBaseClass<BaseComponent>
           Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
           CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
           CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
-          CanHaveAilment, CustomHeldItemPosition> {};
+          CanHaveAilment, CustomHeldItemPosition, HasWork> {};
 
 template<>
 struct PolymorphicBaseClass<Entity>

@@ -5,6 +5,7 @@
 #include "external_include.h"
 //
 #include "components/custom_item_position.h"
+#include "components/has_work.h"
 #include "entity.h"
 #include "globals.h"
 #include "person.h"
@@ -16,15 +17,14 @@ struct Furniture : public Entity {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<Entity>{});
         // Only need to serialize things that are needed for render
-        s.value4b(pct_work_complete);
     }
 
    protected:
     Furniture() : Entity() {}
 
-    float pct_work_complete = 0.f;
-
     void add_static_components() {
+        addComponent<HasWork>();
+        // addComponent<CustomHeldItemPosition>().init(
         // addComponent<CustomHeldItemPosition>().init(
         // [](Transform& transform) -> vec3 {
         // auto new_pos = transform.position;
@@ -47,35 +47,8 @@ struct Furniture : public Entity {
         add_static_components();
     }
 
-    // TODO add render for progress bar
-    // render_progress_bar();
-
-    void render_progress_bar() const {
-        if (pct_work_complete <= 0.01f || !has_work()) return;
-
-        const int length = 20;
-        const int full = (int) (pct_work_complete * length);
-        const int empty = length - full;
-        auto progress =
-            fmt::format("[{:=>{}}{: >{}}]", "", full, "", empty * 2);
-        DrawFloatingText(
-            this->get<Transform>().raw_position + vec3({0, TILESIZE, 0}),
-            Preload::get().font, progress.c_str());
-
-        // TODO eventually add real rectangle progress bar
-        // auto game_cam = GLOBALS.get<GameCam>("game_cam");
-        // DrawBillboardRec(game_cam.camera, TextureLibrary::get().get("face"),
-        // Rectangle({0, 0, 260, 260}),
-        // this->raw_position + vec3({-(pct_complete * TILESIZE),
-        // TILESIZE * 2, 0}),
-        // {pct_complete * TILESIZE, TILESIZE}, WHITE);
-    }
-
     // Note: do nothing by default
     virtual void do_work(float, std::shared_ptr<Person>) {}
-
-    // Does this piece of furniture have work to be done?
-    virtual bool has_work() const { return false; }
 
     // TODO this should be const
     virtual bool add_to_navmesh() override { return true; }

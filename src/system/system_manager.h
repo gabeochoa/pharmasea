@@ -393,7 +393,11 @@ inline void process_input(const std::shared_ptr<Entity> entity,
         std::shared_ptr<Furniture> match =
             EntityHelper::getClosestMatchingEntity<Furniture>(
                 player->get<Transform>().as2(), cho.reach(),
-                [](auto&& furniture) { return furniture->has_work(); });
+                [](std::shared_ptr<Furniture> furniture) {
+                    if (!furniture->has<HasWork>()) return false;
+                    HasWork& hasWork = furniture->get<HasWork>();
+                    return hasWork.has_work();
+                });
 
         if (!match) return;
 
@@ -485,6 +489,7 @@ struct SystemManager {
         for (auto& entity : entity_list) {
             system_manager::render_manager::render_normal(entity, dt);
             system_manager::render_manager::render_floating_name(entity, dt);
+            system_manager::render_manager::render_progress_bar(entity, dt);
         }
     }
 
