@@ -38,9 +38,6 @@ template<>
 struct PolymorphicBaseClass<BasePlayer> : PolymorphicDerivedClasses<Player> {};
 
 template<>
-struct PolymorphicBaseClass<AIPerson> : PolymorphicDerivedClasses<Customer> {};
-
-template<>
 struct PolymorphicBaseClass<Item>
     : PolymorphicDerivedClasses<Bag, PillBottle, Pill> {};
 

@@ -2,13 +2,13 @@
 
 #pragma once
 
+#include "../aiperson.h"
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/can_perform_job.h"
 #include "../components/custom_item_position.h"
 #include "../components/transform.h"
-#include "../customer.h"
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../furniture.h"

@@ -11,7 +11,6 @@
 #include "../components/is_snappable.h"
 #include "../components/responds_to_user_input.h"
 #include "../components/transform.h"
-#include "../customer.h"
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../furniture.h"
