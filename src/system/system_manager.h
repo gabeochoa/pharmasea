@@ -379,7 +379,9 @@ inline void process_input(const std::shared_ptr<Entity> entity,
             // TODO have this just take a transform
             EntityHelper::getClosestMatchingEntity<Furniture>(
                 player->get<Transform>().as2(), cho.reach(),
-                [](auto&& furniture) { return furniture->can_rotate(); });
+                [](auto&& furniture) {
+                    return furniture->template has<IsRotatable>();
+                });
 
         if (!match) return;
         match->rotate_facing_clockwise();

@@ -20,7 +20,7 @@ struct PolymorphicBaseClass<BaseComponent>
           CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
           CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
           CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed,
-          IsSolid, CanBeHeld> {};
+          IsSolid, CanBeHeld, IsRotatable> {};
 
 template<>
 struct PolymorphicBaseClass<Entity>

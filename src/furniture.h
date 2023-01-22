@@ -6,6 +6,7 @@
 //
 #include "components/custom_item_position.h"
 #include "components/has_work.h"
+#include "components/is_rotatable.h"
 #include "components/is_solid.h"
 #include "entity.h"
 #include "globals.h"
@@ -26,6 +27,7 @@ struct Furniture : public Entity {
     void add_static_components() {
         addComponent<HasWork>();
         addComponent<IsSolid>();
+        addComponent<IsRotatable>();
         // addComponent<CustomHeldItemPosition>().init(
         // addComponent<CustomHeldItemPosition>().init(
         // [](Transform& transform) -> vec3 {
@@ -52,7 +54,6 @@ struct Furniture : public Entity {
    public:
     // TODO this should be const
     virtual bool add_to_navmesh() override { return true; }
-    virtual bool can_rotate() const { return true; }
     // TODO this should be const
     virtual bool can_be_picked_up() {
         return this->get<CanBeHeld>().is_not_held();
