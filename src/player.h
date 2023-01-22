@@ -10,7 +10,6 @@
 #include "statemanager.h"
 //
 #include "furniture.h"
-#include "system/system_manager.h"
 
 struct Player : public BasePlayer {
     // Theres no players not in game menu state,
@@ -111,31 +110,11 @@ struct Player : public BasePlayer {
                 work_furniture(frame_dt);
                 continue;
             }
-
-            // Movement down here...
-
-            const float speed = this->base_speed() * frame_dt;
-            auto new_position = transform.position;
-
-            if (input_name == InputName::PlayerLeft) {
-                new_position.x -= input_amount * speed;
-            } else if (input_name == InputName::PlayerRight) {
-                new_position.x += input_amount * speed;
-            } else if (input_name == InputName::PlayerForward) {
-                new_position.z -= input_amount * speed;
-            } else if (input_name == InputName::PlayerBack) {
-                new_position.z += input_amount * speed;
-            }
-
-            system_manager::person_update_given_new_pos(
-                this->id, transform, this, frame_dt, new_position,
-                new_position);
-            transform.position = transform.raw_position;
         }
         return transform.position;
     }
 
-    void rotate_furniture() {
+    virtual void rotate_furniture() override {
         TRACY_ZONE_SCOPED;
         // Cant rotate outside planning mode
         if (GameState::get().is_not(game::State::Planning)) return;
@@ -300,18 +279,18 @@ struct Player : public BasePlayer {
                 if (!closest_furniture) {
                     return;
                 }
-                auto item = closest_furniture->get<CanHoldItem>().item();
+                CanHoldItem& furnCanHold =
+                    closest_furniture->get<CanHoldItem>();
 
-                this->get<CanHoldItem>().item() = item;
+                this->get<CanHoldItem>().item() = furnCanHold.item();
                 this->get<CanHoldItem>().item()->held_by = Item::HeldBy::PLAYER;
 
-                closest_furniture->get<CanHoldItem>().item() = nullptr;
+                furnCanHold.item() = nullptr;
             };
 
             _pickup_item_from_furniture();
 
-            // TODO fix
-            if (this->get<CanHoldItem>().item()) return;
+            if (this->get<CanHoldItem>().is_holding_item()) return;
 
             // Handles the non-furniture grabbing case
             std::shared_ptr<Item> closest_item =

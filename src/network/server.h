@@ -196,7 +196,10 @@ struct Server {
 
         if (!player) return;
 
-        auto updated_position = player->get_position_after_input(info.inputs);
+        player->get_position_after_input(info.inputs);
+
+        SystemManager::get().process_inputs(Entities{player}, info.inputs);
+        auto updated_position = player->get<Transform>().position;
 
         // TODO if the position and face direction didnt change
         //      then we can early return

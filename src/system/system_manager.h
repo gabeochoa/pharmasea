@@ -1,18 +1,21 @@
 
 #pragma once
 
+#include "../base_player.h"
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/can_perform_job.h"
 #include "../components/collects_user_input.h"
 #include "../components/custom_item_position.h"
+#include "../components/responds_to_user_input.h"
 #include "../components/transform.h"
 #include "../customer.h"
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../furniture.h"
 #include "../furniture/register.h"
+#include "../player.h"
 #include "job_system.h"
 #include "rendering_system.h"
 
@@ -32,15 +35,20 @@ inline void transform_snapper(std::shared_ptr<Entity> entity, float) {
 inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
                                            float) {
     if (!entity->has<CanHoldFurniture>()) return;
-    CanHoldFurniture& can_hold_furniture = entity->get<CanHoldFurniture>();
+    const CanHoldFurniture& can_hold_furniture =
+        entity->get<CanHoldFurniture>();
 
     // TODO explicity commenting this out so that we get an error
     // if (!entity->has<Transform>()) return;
-    Transform& transform = entity->get<Transform>();
+    const Transform& transform = entity->get<Transform>();
 
     // TODO if cannot be placed in this spot make it obvious to the user
 
-    if (can_hold_furniture.empty()) return;
+    if (can_hold_furniture.empty()) {
+        log_info("not holding anything");
+        return;
+    }
+    log_info("holding something ");
 
     auto new_pos = transform.position;
     if (transform.face_direction & Transform::FrontFaceDirection::FORWARD) {
@@ -139,8 +147,9 @@ inline void move_entity_based_on_push_force(std::shared_ptr<Entity> entity,
 }
 
 inline void person_update_given_new_pos(int id, Transform& transform,
-                                        Person* person, float dt,
-                                        vec3 new_pos_x, vec3 new_pos_z) {
+                                        std::shared_ptr<Person> person,
+                                        float dt, vec3 new_pos_x,
+                                        vec3 new_pos_z) {
     int facedir_x = -1;
     int facedir_z = -1;
 
@@ -276,8 +285,8 @@ inline void person_update(std::shared_ptr<Entity> entity, float dt) {
     auto new_pos_x = person->update_xaxis_position(dt);
     auto new_pos_z = person->update_zaxis_position(dt);
 
-    person_update_given_new_pos(entity->id, entity->get<Transform>(),
-                                person.get(), dt, new_pos_x, new_pos_z);
+    person_update_given_new_pos(entity->id, entity->get<Transform>(), person,
+                                dt, new_pos_x, new_pos_z);
 }
 
 inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
@@ -319,6 +328,75 @@ inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
     }
 }
 
+inline void process_player_rotate_furniture(std::shared_ptr<Entity> entity,
+                                            float dt) {
+    std::shared_ptr<BasePlayer> player =
+        dynamic_pointer_cast<BasePlayer>(entity);
+    if (!player) return;
+
+    player->rotate_furniture();
+}
+
+inline void process_player_movement_input(std::shared_ptr<Entity> entity,
+                                          float dt, InputName input_name,
+                                          float input_amount) {
+    if (!entity->has<Transform>()) return;
+    Transform& transform = entity->get<Transform>();
+    std::shared_ptr<Player> player = dynamic_pointer_cast<Player>(entity);
+
+    const float speed = player->base_speed() * dt;
+    auto new_position = transform.position;
+
+    if (input_name == InputName::PlayerLeft) {
+        new_position.x -= input_amount * speed;
+    } else if (input_name == InputName::PlayerRight) {
+        new_position.x += input_amount * speed;
+    } else if (input_name == InputName::PlayerForward) {
+        new_position.z -= input_amount * speed;
+    } else if (input_name == InputName::PlayerBack) {
+        new_position.z += input_amount * speed;
+    }
+
+    person_update_given_new_pos(entity->id, transform, player, dt, new_position,
+                                new_position);
+    transform.position = transform.raw_position;
+};
+
+inline void process_input(const std::shared_ptr<Entity> entity,
+                          const UserInput& input) {
+    const auto menu_state = std::get<0>(input);
+    if (menu_state != menu::State::Game) return;
+
+    const InputName input_name = std::get<1>(input);
+    const float input_amount = std::get<2>(input);
+    const float frame_dt = std::get<3>(input);
+
+    switch (input_name) {
+        case InputName::PlayerLeft:
+        case InputName::PlayerRight:
+        case InputName::PlayerForward:
+        case InputName::PlayerBack:
+            return process_player_movement_input(entity, frame_dt, input_name,
+                                                 input_amount);
+        default:
+            return;
+    }
+
+    // The inputs below here only trigger when the input amount was enough
+    bool was_pressed = input_amount >= 0.5;
+    if (!was_pressed) {
+        return;
+    }
+
+    switch (input_name) {
+        case InputName::PlayerRotateFurniture:
+            system_manager::process_player_rotate_furniture(entity, frame_dt);
+            break;
+        default:
+            break;
+    }
+}
+
 }  // namespace system_manager
 
 SINGLETON_FWD(SystemManager)
@@ -336,6 +414,15 @@ struct SystemManager {
     }
 
     void update(float dt) { update(EntityHelper::get_entities(), dt); }
+
+    void process_inputs(const Entities& entities, const UserInputs& inputs) {
+        for (auto& entity : entities) {
+            if (!entity->has<RespondsToUserInput>()) continue;
+            for (auto input : inputs) {
+                system_manager::process_input(entity, input);
+            }
+        }
+    }
 
     void render(const Entities& entities, float dt) const {
         const auto debug_mode_on =

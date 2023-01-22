@@ -5,6 +5,7 @@
 #include "components/can_be_ghost_player.h"
 #include "components/can_highlight_others.h"
 #include "components/can_hold_furniture.h"
+#include "components/responds_to_user_input.h"
 #include "raylib.h"
 //
 #include "engine/globals_register.h"
@@ -21,6 +22,8 @@ struct BasePlayer : public Person {
         addComponent<CanHoldFurniture>();
         // TODO this should be in Player but putting it here for now
         addComponent<CanBeGhostPlayer>();
+        // TODO this should be in Player but putting it here for now
+        addComponent<RespondsToUserInput>();
     }
 
     BasePlayer(vec3 p, Color face_color_in, Color base_color_in)
@@ -41,6 +44,8 @@ struct BasePlayer : public Person {
     }
 
     virtual float base_speed() override { return 7.5f; }
+
+    virtual void rotate_furniture() {}
 
     virtual vec3 update_xaxis_position(float dt) override = 0;
     virtual vec3 update_zaxis_position(float dt) override = 0;

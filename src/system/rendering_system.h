@@ -52,10 +52,9 @@ inline bool render_debug(std::shared_ptr<Entity> entity, float dt) {
     job_system::render_job_visual(entity, dt);
 
     // Ghost player only render during debug mode
-    if (entity->has<CanBeGhostPlayer>()) {
-        if (entity->get<CanBeGhostPlayer>().is_ghost()) {
-            return render_simple_normal(entity, dt);
-        }
+    if (entity->has<CanBeGhostPlayer>() &&
+        entity->get<CanBeGhostPlayer>().is_ghost()) {
+        render_simple_normal(entity, dt);
     }
     return render_bounding_box(entity, dt);
 }

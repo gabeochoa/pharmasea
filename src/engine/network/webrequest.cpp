@@ -1,9 +1,9 @@
 
 #include "webrequest.h"
 
-#include "../log.h"
 #include <HTTPRequest.hpp>
 
+#include "../log.h"
 
 namespace network {
 tl::expected<std::string, NetworkRequestError> get_remote_ip_address() {
