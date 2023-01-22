@@ -328,15 +328,6 @@ inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
     }
 }
 
-inline void process_player_rotate_furniture(std::shared_ptr<Entity> entity,
-                                            float dt) {
-    std::shared_ptr<BasePlayer> player =
-        dynamic_pointer_cast<BasePlayer>(entity);
-    if (!player) return;
-
-    player->rotate_furniture();
-}
-
 inline void process_player_movement_input(std::shared_ptr<Entity> entity,
                                           float dt, InputName input_name,
                                           float input_amount) {
@@ -379,7 +370,7 @@ inline void process_input(const std::shared_ptr<Entity> entity,
             return process_player_movement_input(entity, frame_dt, input_name,
                                                  input_amount);
         default:
-            return;
+            break;
     }
 
     // The inputs below here only trigger when the input amount was enough
@@ -388,10 +379,18 @@ inline void process_input(const std::shared_ptr<Entity> entity,
         return;
     }
 
+    std::shared_ptr<Player> player = dynamic_pointer_cast<Player>(entity);
+    if (!player) return;
+
     switch (input_name) {
         case InputName::PlayerRotateFurniture:
-            system_manager::process_player_rotate_furniture(entity, frame_dt);
+            player->rotate_furniture();
             break;
+        case InputName::PlayerPickup:
+            player->grab_or_drop();
+            break;
+        case InputName::PlayerDoWork:
+            player->work_furniture(frame_dt);
         default:
             break;
     }

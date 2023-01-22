@@ -93,23 +93,6 @@ struct Player : public BasePlayer {
             const InputName input_name = std::get<1>(ui);
             const float input_amount = std::get<2>(ui);
             const float frame_dt = std::get<3>(ui);
-
-            if (input_name == InputName::PlayerPickup && input_amount > 0.5f) {
-                grab_or_drop();
-                continue;
-            }
-
-            if (input_name == InputName::PlayerRotateFurniture &&
-                input_amount > 0.5f) {
-                rotate_furniture();
-                continue;
-            }
-
-            // TODO replace with correctly named input
-            if (input_name == InputName::PlayerDoWork && input_amount > 0.5f) {
-                work_furniture(frame_dt);
-                continue;
-            }
         }
         return transform.position;
     }
