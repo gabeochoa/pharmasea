@@ -146,6 +146,8 @@ struct EntityHelper {
                 if (!current_entity) continue;
                 if (!filter(current_entity)) continue;
 
+                if (!current_entity->template has<Transform>()) continue;
+
                 float cur_dist = vec::distance(
                     current_entity->template get<Transform>().as2(), tile);
                 // outside reach

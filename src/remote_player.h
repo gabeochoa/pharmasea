@@ -17,8 +17,33 @@ struct RemotePlayer : public BasePlayer {
     int client_id = -1;
 
     RemotePlayer(vec3 p, Color face_color_in, Color base_color_in)
-        : BasePlayer(p, face_color_in, base_color_in) {}
-    RemotePlayer() : BasePlayer({0, 0, 0}, WHITE, WHITE) {}
+        : BasePlayer(p, face_color_in, base_color_in) {
+        this->addComponent<Transform>();
+        this->addComponent<HasName>();
+        this->addComponent<CanHoldItem>();
+        this->addComponent<ModelRenderer>();
+        this->addComponent<CanBePushed>();
+        this->addComponent<SimpleColoredBoxRenderer>().init(face_color_in,
+                                                            base_color_in);
+        this->addComponent<CanPerformJob>().update(Wandering, Wandering);
+        this->addComponent<HasBaseSpeed>().update(10.f);
+        this->addComponent<HasName>();
+        this->addComponent<CanHighlightOthers>();
+        this->addComponent<CanHoldFurniture>();
+    }
+    RemotePlayer() : BasePlayer({0, 0, 0}, WHITE, WHITE) {
+        this->addComponent<Transform>();
+        this->addComponent<HasName>();
+        this->addComponent<CanHoldItem>();
+        this->addComponent<ModelRenderer>();
+        this->addComponent<CanBePushed>();
+        this->addComponent<SimpleColoredBoxRenderer>().init(WHITE, WHITE);
+        this->addComponent<CanPerformJob>().update(Wandering, Wandering);
+        this->addComponent<HasBaseSpeed>().update(10.f);
+        this->addComponent<HasName>();
+        this->addComponent<CanHighlightOthers>();
+        this->addComponent<CanHoldFurniture>();
+    }
 
     virtual void update_remotely(float* location, std::string username,
                                  int facing_direction) {

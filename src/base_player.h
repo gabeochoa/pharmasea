@@ -18,11 +18,10 @@
 // BasePlayer and Player
 struct BasePlayer : public Person {
     void add_static_components() {
-        addComponent<CanHighlightOthers>();
-        addComponent<CanHoldFurniture>();
-
-        // addComponent<HasBaseSpeed>().update(10.f);
-        get<HasBaseSpeed>().update(7.5f);
+        this->addComponent<Transform>();
+        this->addComponent<CanHighlightOthers>();
+        this->addComponent<CanHoldFurniture>();
+        this->addComponent<HasBaseSpeed>().update(7.5f);
     }
 
     BasePlayer(vec3 p, Color, Color) : Person(p) { add_static_components(); }

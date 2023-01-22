@@ -87,8 +87,10 @@ struct Entity {
         log_info("adding component {} {} to entity {}",
                  components::get_type_id<T>(), type_name<T>(), id);
 
-        M_ASSERT(!this->has<T>(),
-                 "This entity already has this component attached");
+        // TODO eventually turn back on the assert
+        if (this->has<T>()) return this->get<T>();
+        // M_ASSERT(!this->has<T>(),
+        // "This entity already has this component attached");
 
         std::shared_ptr<T> component;
         component.reset(new T(std::forward<TArgs>(args)...));
@@ -105,8 +107,8 @@ struct Entity {
     template<typename T>
     T& get() const {
         if (!has<T>()) {
-            log_error("Entity {} did not have component {} requested", id,
-                      type_name<T>());
+            log_error("Failed fetching component {} {} from entity {}",
+                      components::get_type_id<T>(), type_name<T>(), id);
         }
         auto ptr(componentArray[components::get_type_id<T>()]);
         return *dynamic_pointer_cast<T>(ptr);
@@ -127,8 +129,9 @@ struct Entity {
     }
 
    public:
-    Entity(vec3 p) : id(ENTITY_ID_GEN++) {}
-    Entity(vec2 p) : id(ENTITY_ID_GEN++) {}
+    // TODO remove these addComponents
+    Entity(vec3 p) : id(ENTITY_ID_GEN++) { this->addComponent<Transform>(); }
+    Entity(vec2 p) : id(ENTITY_ID_GEN++) { this->addComponent<Transform>(); }
 
     virtual ~Entity() {}
 

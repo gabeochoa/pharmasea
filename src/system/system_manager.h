@@ -114,8 +114,7 @@ inline void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
     if (!entity->has<CanHighlightOthers>()) return;
     CanHighlightOthers& cho = entity->get<CanHighlightOthers>();
 
-    // TODO explicity commenting this out so that we get an error
-    // if (!entity->has<Transform>()) return;
+    if (!entity->has<Transform>()) return;
     Transform& transform = entity->get<Transform>();
 
     // TODO this is impossible to read, what can we do to fix this while
@@ -124,6 +123,7 @@ inline void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
         // TODO add a player reach component
         transform.as2(), cho.reach(), transform.face_direction,
         [](std::shared_ptr<Furniture>) { return true; });
+
     if (!match) return;
     if (!match->has<CanBeHighlighted>()) return;
     match->get<CanBeHighlighted>().is_highlighted = true;
