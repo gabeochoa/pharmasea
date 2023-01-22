@@ -196,10 +196,10 @@ inline void person_update_given_new_pos(int id, Transform& transform,
             if (id == entity->id) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if (!entity->is_collidable()) {
+            if (!is_collidable(entity)) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if (!person->is_collidable()) {
+            if (!is_collidable(person)) {
                 return EntityHelper::ForEachFlow::Continue;
             }
             if (CheckCollisionBoxes(new_bounds_x, entity->bounds())) {

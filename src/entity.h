@@ -296,12 +296,6 @@ struct Entity {
 
     // TODO not currently used as we disabled navmesh
     virtual bool add_to_navmesh() { return false; }
-    // return true if the item has collision and is currently collidable
-    virtual bool is_collidable() {
-        // by default we disable collisions when you are holding something
-        // since its generally inside your bounding box
-        return !is_held;
-    }
     // Used to tell an entity its been picked up
     virtual void on_pickup() { this->is_held = true; }
 

@@ -6,6 +6,7 @@
 //
 #include "components/custom_item_position.h"
 #include "components/has_work.h"
+#include "components/is_solid.h"
 #include "entity.h"
 #include "globals.h"
 #include "person.h"
@@ -24,6 +25,7 @@ struct Furniture : public Entity {
 
     void add_static_components() {
         addComponent<HasWork>();
+        addComponent<IsSolid>();
         // addComponent<CustomHeldItemPosition>().init(
         // addComponent<CustomHeldItemPosition>().init(
         // [](Transform& transform) -> vec3 {

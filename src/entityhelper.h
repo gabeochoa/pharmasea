@@ -6,6 +6,8 @@
 #include "assert.h"
 #include "external_include.h"
 //
+#include "components/can_be_ghost_player.h"
+#include "components/is_solid.h"
 #include "engine/globals_register.h"
 #include "engine/is_server.h"
 #include "globals.h"
@@ -14,6 +16,27 @@
 #include "entity.h"
 #include "item.h"
 #include "statemanager.h"
+
+// TODO eventually move to system manager but for now has to be in here
+// to prevent circular includes
+
+// return true if the item has collision and is currently collidable
+[[nodiscard]] inline bool is_collidable(std::shared_ptr<Entity> entity) {
+    // by default we disable collisions when you are holding something
+    // since its generally inside your bounding box
+    if (entity->is_held) return false;
+
+    if (entity->has<IsSolid>()) {
+        return true;
+    }
+
+    // if you are a ghost player and are currently not a ghost
+    // then you are collidable
+    if (entity->has<CanBeGhostPlayer>()) {
+        return entity->get<CanBeGhostPlayer>().is_not_ghost();
+    }
+    return false;
+}
 
 typedef std::vector<std::shared_ptr<Entity>> Entities;
 static Entities client_entities_DO_NOT_USE;
@@ -224,7 +247,7 @@ struct EntityHelper {
         auto bounds = get_bounds({pos.x, 0.f, pos.y}, {TILESIZE});
         bool hit_impassible_entity = false;
         forEachEntity([&](auto entity) {
-            if (entity->is_collidable() && entity->collides(bounds)) {
+            if (is_collidable(entity) && entity->collides(bounds)) {
                 hit_impassible_entity = true;
                 return ForEachFlow::Break;
             }

@@ -70,8 +70,6 @@ struct RemotePlayer : public BasePlayer {
         transform.face_direction =
             static_cast<Transform::FrontFaceDirection>(facing_direction);
     }
-
-    virtual bool is_collidable() override { return false; }
 };
 
 struct Player : public BasePlayer {
@@ -102,9 +100,5 @@ struct Player : public BasePlayer {
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
                      {255, 0, 0, 255}) {
         add_static_components();
-    }
-
-    virtual bool is_collidable() override {
-        return get<CanBeGhostPlayer>().is_not_ghost();
     }
 };

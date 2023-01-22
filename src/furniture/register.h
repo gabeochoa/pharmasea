@@ -17,8 +17,6 @@ struct RegisterNextQueuePosition : Person {
         : Person(p, face_color_in, base_color_in) {}
     RegisterNextQueuePosition(vec3 p, Color c) : Person(p, c) {}
     RegisterNextQueuePosition(vec2 p, Color c) : Person(p, c) {}
-
-    virtual bool is_collidable() override { return false; }
 };
 
 struct Register : public Furniture {
