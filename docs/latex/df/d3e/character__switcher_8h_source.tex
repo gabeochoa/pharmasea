@@ -10,31 +10,30 @@
 \DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}../entity.h"{}}}
 \DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}../globals.h"{}}}
 \DoxyCodeLine{00008\ \textcolor{comment}{//}}
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}../aiperson.h"{}}}
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}../furniture.h"{}}}
-\DoxyCodeLine{00011\ }
-\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_character_switcher}{CharacterSwitcher}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_furniture}{Furniture}}\ \{}
-\DoxyCodeLine{00013\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_character_switcher_a5eb56a5ad9857e904f532177bd19636a}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Furniture>\{\});}
-\DoxyCodeLine{00018\ \ \ \ \ \}}
-\DoxyCodeLine{00019\ }
-\DoxyCodeLine{00020\ \ \ \ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{struct_character_switcher_a00b6e54ed0b65fa5d4eaee04979c0570}{CharacterSwitcher}}()\ \{\}}
-\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{struct_character_switcher_abb99507472b0ea5cb48970cffbe90732}{CharacterSwitcher}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)}
-\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_furniture}{Furniture}}(pos,\ \mbox{\hyperlink{namespaceui}{ui}}::color::brown,\ \mbox{\hyperlink{namespaceui}{ui}}::color::brown)\ \{}
-\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ get<HasWork>().init([\textcolor{keyword}{this}](std::shared\_ptr<Person>\ person,\ \textcolor{keywordtype}{float}\ dt)\ \{}
-\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ amt\ =\ 2.f;}
-\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_work}{HasWork}}\&\ hasWork\ =\ this-\/>get<HasWork>();}
-\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ hasWork.\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ +=\ amt\ *\ dt;}
-\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasWork.\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ >=\ 1.f)\ \{}
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasWork.\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ =\ 0.f;}
-\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ person-\/>select\_next\_character\_model();}
-\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00033\ \ \ \ \ \}}
-\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}../furniture.h"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_character_switcher}{CharacterSwitcher}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_furniture}{Furniture}}\ \{}
+\DoxyCodeLine{00012\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_character_switcher_a5eb56a5ad9857e904f532177bd19636a}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Furniture>\{\});}
+\DoxyCodeLine{00017\ \ \ \ \ \}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{struct_character_switcher_a00b6e54ed0b65fa5d4eaee04979c0570}{CharacterSwitcher}}()\ \{\}}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{struct_character_switcher_abb99507472b0ea5cb48970cffbe90732}{CharacterSwitcher}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)\ :\ \mbox{\hyperlink{struct_furniture}{Furniture}}(pos,\ \mbox{\hyperlink{namespaceui}{ui}}::color::brown)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ get<HasWork>().init([\textcolor{keyword}{this}](std::shared\_ptr<Person>,\ \textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ amt\ =\ 2.f;}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_work}{HasWork}}\&\ hasWork\ =\ this-\/>get<HasWork>();}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ hasWork.\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ +=\ amt\ *\ dt;}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasWork.\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ >=\ 1.f)\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasWork.\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ =\ 0.f;}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ replace\ when\ we\ have\ a\ system\ for\ this}}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ person-\/>select\_next\_character\_model();}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00032\ \ \ \ \ \}}
+\DoxyCodeLine{00033\ \};}
 
 \end{DoxyCode}

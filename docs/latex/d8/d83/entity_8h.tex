@@ -1,26 +1,37 @@
 \hypertarget{entity_8h}{}\doxysection{src/entity.h File Reference}
 \label{entity_8h}\index{src/entity.h@{src/entity.h}}
+{\ttfamily \#include $<$array$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
 {\ttfamily \#include \char`\"{}bitsery/ext/std\+\_\+smart\+\_\+ptr.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}components/base\+\_\+component.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ailment.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}camera.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}components/can\+\_\+be\+\_\+highlighted.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}components/can\+\_\+be\+\_\+pushed.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/can\+\_\+have\+\_\+ailment.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}components/can\+\_\+hold\+\_\+item.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/can\+\_\+perform\+\_\+job.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/has\+\_\+base\+\_\+speed.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}components/has\+\_\+name.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/is\+\_\+snappable.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}components/model\+\_\+renderer.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}components/simple\+\_\+colored\+\_\+box\+\_\+renderer.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}components/transform.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}engine/assert.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}external\+\_\+include.\+h\char`\"{}}\newline
-{\ttfamily \#include $<$array$>$}\newline
-{\ttfamily \#include $<$map$>$}\newline
 {\ttfamily \#include \char`\"{}drawing\+\_\+util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine/assert.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}engine/astar.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine/globals\+\_\+register.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}engine/is\+\_\+server.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine/keymap.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine/log.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}engine/model\+\_\+library.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine/sound\+\_\+library.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}external\+\_\+include.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}globals.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}item.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}item\+\_\+helper.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}job.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}menu.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}names.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}preload.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}raylib.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}text\+\_\+util.\+h\char`\"{}}\newline
@@ -28,6 +39,8 @@
 {\ttfamily \#include \char`\"{}vec\+\_\+util.\+h\char`\"{}}\newline
 \doxysubsection*{Classes}
 \begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_speech_bubble}{Speech\+Bubble}}
 \item 
 struct \mbox{\hyperlink{struct_entity}{Entity}}
 \end{DoxyCompactItemize}
@@ -38,6 +51,12 @@ namespace \mbox{\hyperlink{namespacebitsery}{bitsery}}
 \end{DoxyCompactItemize}
 \doxysubsection*{Typedefs}
 \begin{DoxyCompactItemize}
+\item 
+typedef \mbox{\hyperlink{struct_entity}{Entity}} \mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}}
+\item 
+typedef \mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} \mbox{\hyperlink{entity_8h_aa1779d6542cb841e35ef95458ba746f4}{AIPerson}}
+\item 
+typedef \mbox{\hyperlink{entity_8h_aa1779d6542cb841e35ef95458ba746f4}{AIPerson}} \mbox{\hyperlink{entity_8h_aadf661d0fd229919339dfe16d7c2192f}{Customer}}
 \item 
 typedef Transform\+::\+Transform\+::\+Front\+Face\+Direction \mbox{\hyperlink{entity_8h_ad26590fb3eb6e9012c4a7db85a6f1251}{Entity\+Dir}}
 \end{DoxyCompactItemize}
@@ -54,11 +73,29 @@ static std\+::atomic\+\_\+int \mbox{\hyperlink{entity_8h_a4b85326fceb9eab14680c7
 
 
 \doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{entity_8h_aa1779d6542cb841e35ef95458ba746f4}\label{entity_8h_aa1779d6542cb841e35ef95458ba746f4}} 
+\index{entity.h@{entity.h}!AIPerson@{AIPerson}}
+\index{AIPerson@{AIPerson}!entity.h@{entity.h}}
+\doxysubsubsection{\texorpdfstring{AIPerson}{AIPerson}}
+{\footnotesize\ttfamily typedef \mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} \mbox{\hyperlink{entity_8h_aa1779d6542cb841e35ef95458ba746f4}{AIPerson}}}
+
+\mbox{\Hypertarget{entity_8h_aadf661d0fd229919339dfe16d7c2192f}\label{entity_8h_aadf661d0fd229919339dfe16d7c2192f}} 
+\index{entity.h@{entity.h}!Customer@{Customer}}
+\index{Customer@{Customer}!entity.h@{entity.h}}
+\doxysubsubsection{\texorpdfstring{Customer}{Customer}}
+{\footnotesize\ttfamily typedef \mbox{\hyperlink{entity_8h_aa1779d6542cb841e35ef95458ba746f4}{AIPerson}} \mbox{\hyperlink{entity_8h_aadf661d0fd229919339dfe16d7c2192f}{Customer}}}
+
 \mbox{\Hypertarget{entity_8h_ad26590fb3eb6e9012c4a7db85a6f1251}\label{entity_8h_ad26590fb3eb6e9012c4a7db85a6f1251}} 
 \index{entity.h@{entity.h}!EntityDir@{EntityDir}}
 \index{EntityDir@{EntityDir}!entity.h@{entity.h}}
 \doxysubsubsection{\texorpdfstring{EntityDir}{EntityDir}}
 {\footnotesize\ttfamily typedef Transform\+::\+Transform\+::\+Front\+Face\+Direction \mbox{\hyperlink{entity_8h_ad26590fb3eb6e9012c4a7db85a6f1251}{Entity\+Dir}}}
+
+\mbox{\Hypertarget{entity_8h_af461df511455b8bb0e6537602de78011}\label{entity_8h_af461df511455b8bb0e6537602de78011}} 
+\index{entity.h@{entity.h}!Person@{Person}}
+\index{Person@{Person}!entity.h@{entity.h}}
+\doxysubsubsection{\texorpdfstring{Person}{Person}}
+{\footnotesize\ttfamily typedef \mbox{\hyperlink{struct_entity}{Entity}} \mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}}}
 
 
 

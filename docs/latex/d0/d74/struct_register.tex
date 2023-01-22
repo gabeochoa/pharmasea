@@ -19,26 +19,24 @@ Inheritance diagram for Register\+:\begin{figure}[H]
 \item 
 void \mbox{\hyperlink{struct_register_a2306726654fefe617d10d36bfdff8749}{update\+\_\+model}} ()
 \item 
-int \mbox{\hyperlink{struct_register_a52675c14bbf0f4a3d02035c16ee0546f}{position\+\_\+in\+\_\+line}} (\mbox{\hyperlink{struct_a_i_person}{AIPerson}} $\ast$entity)
+int \mbox{\hyperlink{struct_register_a7d4420756a802e18730957fd728be69f}{position\+\_\+in\+\_\+line}} (\mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} $\ast$entity)
 \item 
-bool \mbox{\hyperlink{struct_register_ac6e47c902ad42f108f2a2aef41c16026}{can\+\_\+move\+\_\+up}} (\mbox{\hyperlink{struct_a_i_person}{AIPerson}} $\ast$entity)
+bool \mbox{\hyperlink{struct_register_a4204310a2779452ec06d6ccbf4ab3ebd}{can\+\_\+move\+\_\+up}} (\mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} $\ast$entity)
 \item 
-void \mbox{\hyperlink{struct_register_a81d82daec8200089b62c1a97288c7938}{leave\+\_\+line}} (\mbox{\hyperlink{struct_a_i_person}{AIPerson}} $\ast$entity)
+void \mbox{\hyperlink{struct_register_a0eb87e753d333bab65b4997411ab8519}{leave\+\_\+line}} (\mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} $\ast$entity)
 \item 
-bool \mbox{\hyperlink{struct_register_a45ae07a467402f2504f9105fe0f00a47}{is\+\_\+in\+\_\+line}} (\mbox{\hyperlink{struct_a_i_person}{AIPerson}} $\ast$entity)
+bool \mbox{\hyperlink{struct_register_a8f1449806fd979cfc4df88f7e3f58332}{is\+\_\+in\+\_\+line}} (\mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} $\ast$entity)
 \item 
 bool \mbox{\hyperlink{struct_register_a5a6397f692a798de835cbdad9cc3f402}{has\+\_\+space\+\_\+in\+\_\+queue}} ()
 \item 
-\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_register_a674bdeb8aa6413236b266f45d2973b57}{get\+\_\+next\+\_\+queue\+\_\+position}} (\mbox{\hyperlink{struct_a_i_person}{AIPerson}} $\ast$entity)
+\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_register_a042abba7c7da313aaac25b0b07f56512}{get\+\_\+next\+\_\+queue\+\_\+position}} (\mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} $\ast$entity)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_furniture}{Furniture}}}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{struct_furniture_ae15aba996a3ad4b7b73bb941e9289dcd}{Furniture}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos, Color face\+\_\+color\+\_\+in)
+\mbox{\hyperlink{struct_furniture_a18226aac787ee89a03cff0e59b81e9a7}{Furniture}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} pos, Color)
 \item 
-\mbox{\hyperlink{struct_furniture_a3c289ae66cd307325e46544fa8ca0dfa}{Furniture}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} pos, Color face\+\_\+color\+\_\+in)
-\item 
-\mbox{\hyperlink{struct_furniture_af29143799fcb5ed44cd9d98e88166aa0}{Furniture}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
+\mbox{\hyperlink{struct_furniture_ad7a3e508311309d0ff7161675d145821}{Furniture}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos, Color)
 \item 
 virtual bool \mbox{\hyperlink{struct_furniture_a0a970a23706f9c18caa223c4f2716f15}{add\+\_\+to\+\_\+navmesh}} () override
 \item 
@@ -59,21 +57,13 @@ virtual bool \mbox{\hyperlink{struct_furniture_a4972c4d7131e21a0954164846cae3682
 \item 
 {\footnotesize template$<$typename T $>$ }\\T \& \mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}} () const
 \item 
-void \mbox{\hyperlink{struct_entity_a9c0606708fe8805c8e90c9510466d618}{add\+\_\+static\+\_\+components}} ()
+\mbox{\hyperlink{struct_entity_aae68a37f2c3957a2e9021da692cf4de5}{Entity}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p)
 \item 
-\mbox{\hyperlink{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}{Entity}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
-\item 
-\mbox{\hyperlink{struct_entity_a69970748dae094cbca81f77a82c1ae66}{Entity}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
-\item 
-\mbox{\hyperlink{struct_entity_abed77744bbc522e364be6fc2ab1792ac}{Entity}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color c)
-\item 
-\mbox{\hyperlink{struct_entity_add145c7ad5ec1aca28429a337ca48304}{Entity}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color c)
+\mbox{\hyperlink{struct_entity_a98803606da6cdd3c679837d6f1336e75}{Entity}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p)
 \item 
 virtual \mbox{\hyperlink{struct_entity_a588098978eea6a3486b7361605ff3f0f}{$\sim$\+Entity}} ()
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a053c1e45dd6f1752acb7db6e75f48dab}{announce}} (std\+::string text)
-\item 
-virtual bool \mbox{\hyperlink{struct_entity_af864202a00a448f2b30e7b5634e5c490}{is\+\_\+snappable}} ()
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}} (Bounding\+Box b) const
 \item 
@@ -100,7 +90,7 @@ virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{u
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-std\+::deque$<$ \mbox{\hyperlink{struct_a_i_person}{AIPerson}} $\ast$ $>$ \mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\+\_\+in\+\_\+line}}
+std\+::deque$<$ \mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} $\ast$ $>$ \mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\+\_\+in\+\_\+line}}
 \item 
 int \mbox{\hyperlink{struct_register_acf7d318a1555dd41124082c19bfdcb0b}{max\+\_\+queue\+\_\+size}} = 3
 \item 
@@ -129,6 +119,14 @@ bool \mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\+\_\+h
 \begin{DoxyCompactItemize}
 \item 
 static \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_entity_a3267ca1897b60de8c1543e3846056145}{tile\+\_\+infront\+\_\+given\+\_\+pos}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} tile, int distance, Transform\+::\+Transform\+::\+Front\+Face\+Direction direction)
+\item 
+static \mbox{\hyperlink{struct_entity}{Entity}} $\ast$ \mbox{\hyperlink{struct_entity_ab5fd3c8f76c9d895f49ce409a5f5fac7}{create\+\_\+entity}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} pos, Color face\+\_\+color, Color base\+\_\+color)
+\item 
+static \mbox{\hyperlink{struct_entity}{Entity}} $\ast$ \mbox{\hyperlink{struct_entity_a58168c41a26918358a165a5cded9af4b}{create\+\_\+person}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} pos, Color face\+\_\+color, Color base\+\_\+color)
+\item 
+static \mbox{\hyperlink{struct_entity}{Entity}} $\ast$ \mbox{\hyperlink{struct_entity_aa8e8e83351720475c692b5a7752b7647}{create\+\_\+aiperson}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} pos, Color face\+\_\+color, Color base\+\_\+color)
+\item 
+static \mbox{\hyperlink{struct_entity}{Entity}} $\ast$ \mbox{\hyperlink{struct_entity_a97ba9c85bbaffc49c9786308ae9a67b6}{create\+\_\+customer}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos, Color base\+\_\+color)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Protected Member Functions inherited from \mbox{\hyperlink{struct_furniture}{Furniture}}}
 \begin{DoxyCompactItemize}
@@ -141,8 +139,6 @@ void \mbox{\hyperlink{struct_furniture_a9712525c986150cbd108c3ae286af43f}{add\+\
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{struct_entity_a980f368aa07ce358583982821533a54a}{Entity}} ()
-\item 
-virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}} () const
 \item 
 virtual \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading}} ()
 \item 
@@ -174,29 +170,29 @@ References \mbox{\hyperlink{struct_register_a2306726654fefe617d10d36bfdff8749}{u
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{struct_register_ac6e47c902ad42f108f2a2aef41c16026}\label{struct_register_ac6e47c902ad42f108f2a2aef41c16026}} 
+\mbox{\Hypertarget{struct_register_a4204310a2779452ec06d6ccbf4ab3ebd}\label{struct_register_a4204310a2779452ec06d6ccbf4ab3ebd}} 
 \index{Register@{Register}!can\_move\_up@{can\_move\_up}}
 \index{can\_move\_up@{can\_move\_up}!Register@{Register}}
 \doxysubsubsection{\texorpdfstring{can\_move\_up()}{can\_move\_up()}}
-{\footnotesize\ttfamily bool Register\+::can\+\_\+move\+\_\+up (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a_i_person}{AIPerson}} $\ast$}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily bool Register\+::can\+\_\+move\+\_\+up (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} $\ast$}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{Entity\+::id}}, and \mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\+\_\+in\+\_\+line}}.
+References \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{Entity\+::id}}, and \mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\+\_\+in\+\_\+line}}.
 
 
 
 Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information()}}.
 
-\mbox{\Hypertarget{struct_register_a674bdeb8aa6413236b266f45d2973b57}\label{struct_register_a674bdeb8aa6413236b266f45d2973b57}} 
+\mbox{\Hypertarget{struct_register_a042abba7c7da313aaac25b0b07f56512}\label{struct_register_a042abba7c7da313aaac25b0b07f56512}} 
 \index{Register@{Register}!get\_next\_queue\_position@{get\_next\_queue\_position}}
 \index{get\_next\_queue\_position@{get\_next\_queue\_position}!Register@{Register}}
 \doxysubsubsection{\texorpdfstring{get\_next\_queue\_position()}{get\_next\_queue\_position()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} Register\+::get\+\_\+next\+\_\+queue\+\_\+position (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a_i_person}{AIPerson}} $\ast$}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} Register\+::get\+\_\+next\+\_\+queue\+\_\+position (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} $\ast$}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}, \mbox{\hyperlink{struct_register_ab2df0027c3bcd21e0e9356f79b014482}{next\+\_\+line\+\_\+position}}, \mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\+\_\+in\+\_\+line}}, and \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{Entity\+::tile\+\_\+infront()}}.
+References \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}, \mbox{\hyperlink{struct_register_ab2df0027c3bcd21e0e9356f79b014482}{next\+\_\+line\+\_\+position}}, \mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\+\_\+in\+\_\+line}}, and \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{Entity\+::tile\+\_\+infront()}}.
 
 \mbox{\Hypertarget{struct_register_a5a6397f692a798de835cbdad9cc3f402}\label{struct_register_a5a6397f692a798de835cbdad9cc3f402}} 
 \index{Register@{Register}!has\_space\_in\_queue@{has\_space\_in\_queue}}
@@ -208,43 +204,43 @@ References \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+
 
 References \mbox{\hyperlink{struct_register_acf7d318a1555dd41124082c19bfdcb0b}{max\+\_\+queue\+\_\+size}}, and \mbox{\hyperlink{struct_register_ab2df0027c3bcd21e0e9356f79b014482}{next\+\_\+line\+\_\+position}}.
 
-\mbox{\Hypertarget{struct_register_a45ae07a467402f2504f9105fe0f00a47}\label{struct_register_a45ae07a467402f2504f9105fe0f00a47}} 
+\mbox{\Hypertarget{struct_register_a8f1449806fd979cfc4df88f7e3f58332}\label{struct_register_a8f1449806fd979cfc4df88f7e3f58332}} 
 \index{Register@{Register}!is\_in\_line@{is\_in\_line}}
 \index{is\_in\_line@{is\_in\_line}!Register@{Register}}
 \doxysubsubsection{\texorpdfstring{is\_in\_line()}{is\_in\_line()}}
-{\footnotesize\ttfamily bool Register\+::is\+\_\+in\+\_\+line (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a_i_person}{AIPerson}} $\ast$}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily bool Register\+::is\+\_\+in\+\_\+line (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} $\ast$}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{struct_register_a52675c14bbf0f4a3d02035c16ee0546f}{position\+\_\+in\+\_\+line()}}.
+References \mbox{\hyperlink{struct_register_a7d4420756a802e18730957fd728be69f}{position\+\_\+in\+\_\+line()}}.
 
-\mbox{\Hypertarget{struct_register_a81d82daec8200089b62c1a97288c7938}\label{struct_register_a81d82daec8200089b62c1a97288c7938}} 
+\mbox{\Hypertarget{struct_register_a0eb87e753d333bab65b4997411ab8519}\label{struct_register_a0eb87e753d333bab65b4997411ab8519}} 
 \index{Register@{Register}!leave\_line@{leave\_line}}
 \index{leave\_line@{leave\_line}!Register@{Register}}
 \doxysubsubsection{\texorpdfstring{leave\_line()}{leave\_line()}}
-{\footnotesize\ttfamily void Register\+::leave\+\_\+line (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a_i_person}{AIPerson}} $\ast$}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily void Register\+::leave\+\_\+line (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} $\ast$}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{struct_register_a52675c14bbf0f4a3d02035c16ee0546f}{position\+\_\+in\+\_\+line()}}, and \mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\+\_\+in\+\_\+line}}.
+References \mbox{\hyperlink{struct_register_a7d4420756a802e18730957fd728be69f}{position\+\_\+in\+\_\+line()}}, and \mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\+\_\+in\+\_\+line}}.
 
 
 
 Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information()}}.
 
-\mbox{\Hypertarget{struct_register_a52675c14bbf0f4a3d02035c16ee0546f}\label{struct_register_a52675c14bbf0f4a3d02035c16ee0546f}} 
+\mbox{\Hypertarget{struct_register_a7d4420756a802e18730957fd728be69f}\label{struct_register_a7d4420756a802e18730957fd728be69f}} 
 \index{Register@{Register}!position\_in\_line@{position\_in\_line}}
 \index{position\_in\_line@{position\_in\_line}!Register@{Register}}
 \doxysubsubsection{\texorpdfstring{position\_in\_line()}{position\_in\_line()}}
-{\footnotesize\ttfamily int Register\+::position\+\_\+in\+\_\+line (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a_i_person}{AIPerson}} $\ast$}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily int Register\+::position\+\_\+in\+\_\+line (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} $\ast$}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{Entity\+::id}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, and \mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\+\_\+in\+\_\+line}}.
+References \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{Entity\+::id}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, and \mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\+\_\+in\+\_\+line}}.
 
 
 
-Referenced by \mbox{\hyperlink{struct_register_a45ae07a467402f2504f9105fe0f00a47}{is\+\_\+in\+\_\+line()}}, \mbox{\hyperlink{struct_register_a81d82daec8200089b62c1a97288c7938}{leave\+\_\+line()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information()}}.
+Referenced by \mbox{\hyperlink{struct_register_a8f1449806fd979cfc4df88f7e3f58332}{is\+\_\+in\+\_\+line()}}, \mbox{\hyperlink{struct_register_a0eb87e753d333bab65b4997411ab8519}{leave\+\_\+line()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information()}}.
 
 \mbox{\Hypertarget{struct_register_a18bde4ae5c701253e65d7be145c38648}\label{struct_register_a18bde4ae5c701253e65d7be145c38648}} 
 \index{Register@{Register}!serialize@{serialize}}
@@ -288,17 +284,17 @@ Referenced by \mbox{\hyperlink{struct_register_a5a6397f692a798de835cbdad9cc3f402
 
 
 
-Referenced by \mbox{\hyperlink{struct_register_a674bdeb8aa6413236b266f45d2973b57}{get\+\_\+next\+\_\+queue\+\_\+position()}}, and \mbox{\hyperlink{struct_register_a5a6397f692a798de835cbdad9cc3f402}{has\+\_\+space\+\_\+in\+\_\+queue()}}.
+Referenced by \mbox{\hyperlink{struct_register_a042abba7c7da313aaac25b0b07f56512}{get\+\_\+next\+\_\+queue\+\_\+position()}}, and \mbox{\hyperlink{struct_register_a5a6397f692a798de835cbdad9cc3f402}{has\+\_\+space\+\_\+in\+\_\+queue()}}.
 
-\mbox{\Hypertarget{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}\label{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}} 
+\mbox{\Hypertarget{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}\label{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}} 
 \index{Register@{Register}!ppl\_in\_line@{ppl\_in\_line}}
 \index{ppl\_in\_line@{ppl\_in\_line}!Register@{Register}}
 \doxysubsubsection{\texorpdfstring{ppl\_in\_line}{ppl\_in\_line}}
-{\footnotesize\ttfamily std\+::deque$<$\mbox{\hyperlink{struct_a_i_person}{AIPerson}}$\ast$$>$ Register\+::ppl\+\_\+in\+\_\+line}
+{\footnotesize\ttfamily std\+::deque$<$\mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}}$\ast$$>$ Register\+::ppl\+\_\+in\+\_\+line}
 
 
 
-Referenced by \mbox{\hyperlink{struct_register_ac6e47c902ad42f108f2a2aef41c16026}{can\+\_\+move\+\_\+up()}}, \mbox{\hyperlink{struct_register_a674bdeb8aa6413236b266f45d2973b57}{get\+\_\+next\+\_\+queue\+\_\+position()}}, \mbox{\hyperlink{struct_register_a81d82daec8200089b62c1a97288c7938}{leave\+\_\+line()}}, and \mbox{\hyperlink{struct_register_a52675c14bbf0f4a3d02035c16ee0546f}{position\+\_\+in\+\_\+line()}}.
+Referenced by \mbox{\hyperlink{struct_register_a4204310a2779452ec06d6ccbf4ab3ebd}{can\+\_\+move\+\_\+up()}}, \mbox{\hyperlink{struct_register_a042abba7c7da313aaac25b0b07f56512}{get\+\_\+next\+\_\+queue\+\_\+position()}}, \mbox{\hyperlink{struct_register_a0eb87e753d333bab65b4997411ab8519}{leave\+\_\+line()}}, and \mbox{\hyperlink{struct_register_a7d4420756a802e18730957fd728be69f}{position\+\_\+in\+\_\+line()}}.
 
 
 
