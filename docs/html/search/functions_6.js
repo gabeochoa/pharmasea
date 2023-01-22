@@ -20,6 +20,6 @@ var searchData=
   ['from_5fusage_17',['from_usage',['../d3/dce/structui_1_1_u_i_theme.html#a72f7e9d15024b59799009b19fa52f0fd',1,'ui::UITheme']]],
   ['front_18',['front',['../d1/dab/struct_atomic_queue.html#a4d4bfa97b50011802a3eab7c369ef840',1,'AtomicQueue']]],
   ['function_5fraii_19',['function_raii',['../dc/dcf/structprofile_1_1function__raii.html#a384a7cf55658b31d2b70bd1d2ff42c9b',1,'profile::function_raii']]],
-  ['furniture_20',['Furniture',['../d0/d8b/struct_furniture.html#ac0e99da147fde76016511e2887b3e9f6',1,'Furniture::Furniture()'],['../d0/d8b/struct_furniture.html#ae15aba996a3ad4b7b73bb941e9289dcd',1,'Furniture::Furniture(vec2 pos, Color face_color_in)'],['../d0/d8b/struct_furniture.html#a3c289ae66cd307325e46544fa8ca0dfa',1,'Furniture::Furniture(vec3 pos, Color face_color_in)'],['../d0/d8b/struct_furniture.html#af29143799fcb5ed44cd9d98e88166aa0',1,'Furniture::Furniture(vec2 pos, Color face_color_in, Color base_color_in)']]],
+  ['furniture_20',['Furniture',['../d0/d8b/struct_furniture.html#ac0e99da147fde76016511e2887b3e9f6',1,'Furniture::Furniture()'],['../d0/d8b/struct_furniture.html#a18226aac787ee89a03cff0e59b81e9a7',1,'Furniture::Furniture(vec3 pos, Color)'],['../d0/d8b/struct_furniture.html#ad7a3e508311309d0ff7161675d145821',1,'Furniture::Furniture(vec2 pos, Color)']]],
   ['furniture_21',['furniture',['../d6/dad/struct_can_hold_furniture.html#a831f3fd4c2384009a940700a433cfc20',1,'CanHoldFurniture']]]
 ];

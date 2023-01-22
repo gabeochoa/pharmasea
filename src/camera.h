@@ -2,8 +2,8 @@
 
 #include "external_include.h"
 //
+#include "components/transform.h"
 #include "engine/log.h"
-#include "entity.h"
 #include "globals.h"
 #include "raylib.h"
 

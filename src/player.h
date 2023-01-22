@@ -32,10 +32,6 @@ struct Player : public BasePlayer {
         : BasePlayer(p, face_color_in, base_color_in) {
         add_static_components();
     }
-    Player(vec2 p, Color face_color_in, Color base_color_in)
-        : BasePlayer(p, face_color_in, base_color_in) {
-        add_static_components();
-    }
     Player(vec2 location)
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
                      {255, 0, 0, 255}) {

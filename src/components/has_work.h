@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../person.h"
+#include "../entity.h"
 #include "base_component.h"
 
 struct HasWork : public BaseComponent {

@@ -22,27 +22,22 @@
 \DoxyCodeLine{00018\ }
 \DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{struct_remote_player_a9921878f892ac193e219c1838ea1c7eb}{RemotePlayer}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
 \DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
-\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{struct_remote_player_a4226b27e71c1e48e117d43fd234cfde0}{RemotePlayer}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
-\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
-\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{struct_remote_player_a97b94db4de68b6976f1bf991ea0d7b9b}{RemotePlayer}}()\ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(\{0,\ 0,\ 0\},\ WHITE,\ WHITE)\ \{\}}
-\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{struct_remote_player_ae9e556421320f6499cae436dba8e9744}{RemotePlayer}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ location)}
-\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(\{location.x,\ 0,\ location.y\},\ \{0,\ 255,\ 0,\ 255\},}
-\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{255,\ 0,\ 0,\ 255\})\ \{\}}
+\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{struct_remote_player_a97b94db4de68b6976f1bf991ea0d7b9b}{RemotePlayer}}()\ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(\{0,\ 0,\ 0\},\ WHITE,\ WHITE)\ \{\}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_remote_player_ab1498c129a17b839431fa3ba7a6746e5}{update\_remotely}}(\textcolor{keywordtype}{float}*\ location,\ std::string\ username,}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ facing\_direction)\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_name}{HasName}}\&\ hasname\ =\ this-\/>get<HasName>();}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ hasname.\mbox{\hyperlink{struct_has_name_a9b8c5e7a1ca7671ebaa1948c7492a424}{name}}\ =\ username;}
 \DoxyCodeLine{00027\ }
-\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_remote_player_ab1498c129a17b839431fa3ba7a6746e5}{update\_remotely}}(\textcolor{keywordtype}{float}*\ location,\ std::string\ username,}
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ facing\_direction)\ \{}
-\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_name}{HasName}}\&\ hasname\ =\ this-\/>get<HasName>();}
-\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ hasname.\mbox{\hyperlink{struct_has_name_a9b8c5e7a1ca7671ebaa1948c7492a424}{name}}\ =\ username;}
-\DoxyCodeLine{00032\ }
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ this-\/>get<HasName>().name\ =\ username;}
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ this-\/>get<Transform>();}
-\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ setters}}
-\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{position}}\ =\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{location[0],\ location[1],\ location[2]\};}
-\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}}\ =}
-\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(facing\_direction);}
-\DoxyCodeLine{00039\ \ \ \ \ \}}
-\DoxyCodeLine{00040\ }
-\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_remote_player_a2c6c65e8cd1383725d002c805105c71c}{is\_collidable}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
-\DoxyCodeLine{00042\ \};}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ this-\/>get<HasName>().name\ =\ username;}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ this-\/>get<Transform>();}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ setters}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{position}}\ =\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{location[0],\ location[1],\ location[2]\};}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}}\ =}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(facing\_direction);}
+\DoxyCodeLine{00034\ \ \ \ \ \}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_remote_player_a2c6c65e8cd1383725d002c805105c71c}{is\_collidable}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00037\ \};}
 
 \end{DoxyCode}

@@ -11,85 +11,79 @@
 \DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}../entity.h"{}}}
 \DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}../globals.h"{}}}
 \DoxyCodeLine{00009\ \textcolor{comment}{//}}
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}../aiperson.h"{}}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}../furniture.h"{}}}
-\DoxyCodeLine{00012\ }
-\DoxyCodeLine{00013\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_register_next_queue_position}{RegisterNextQueuePosition}}\ :\ \mbox{\hyperlink{struct_person}{Person}}\ \{}
-\DoxyCodeLine{00014\ \ \ \ \ \mbox{\hyperlink{struct_register_next_queue_position_a3ddbe1e3dbc639fa4762aa260d730db5}{RegisterNextQueuePosition}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
-\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
-\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{struct_register_next_queue_position_a453370798e70814587b1316edaded850}{RegisterNextQueuePosition}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
-\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
-\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{struct_register_next_queue_position_aeb5278282ff279ce1863ebe857484af2}{RegisterNextQueuePosition}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ c)\ \{\}}
-\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{struct_register_next_queue_position_a013bb63b8b90de46bab3d8e7a3c90b97}{RegisterNextQueuePosition}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ c)\ \{\}}
-\DoxyCodeLine{00020\ }
-\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_register_next_queue_position_a406d834adf910da78b448966f2275bff}{is\_collidable}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
-\DoxyCodeLine{00022\ \};}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}../furniture.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_register_next_queue_position}{RegisterNextQueuePosition}}\ :\ \mbox{\hyperlink{struct_entity}{Person}}\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{struct_register_next_queue_position_a520aecb1e62fe14e05f0def158e005a4}{RegisterNextQueuePosition}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color,\ Color)\ :\ \mbox{\hyperlink{struct_entity}{Person}}(p)\ \{\}}
+\DoxyCodeLine{00014\ \ \ \ \ \mbox{\hyperlink{struct_register_next_queue_position_a20a1ef221c60c197a549ca1cf4d9afaa}{RegisterNextQueuePosition}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color)\ :\ \mbox{\hyperlink{struct_entity}{Person}}(p)\ \{\}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_register_next_queue_position_a406d834adf910da78b448966f2275bff}{is\_collidable}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00017\ \};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_register}{Register}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_furniture}{Furniture}}\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ std::deque<Person*>\ \mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\_in\_line}};}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_register_acf7d318a1555dd41124082c19bfdcb0b}{max\_queue\_size}}\ =\ 3;}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_register_ab2df0027c3bcd21e0e9356f79b014482}{next\_line\_position}}\ =\ 0;}
 \DoxyCodeLine{00023\ }
-\DoxyCodeLine{00024\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_register}{Register}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_furniture}{Furniture}}\ \{}
-\DoxyCodeLine{00025\ \ \ \ \ std::deque<AIPerson*>\ \mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\_in\_line}};}
-\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_register_acf7d318a1555dd41124082c19bfdcb0b}{max\_queue\_size}}\ =\ 3;}
-\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_register_ab2df0027c3bcd21e0e9356f79b014482}{next\_line\_position}}\ =\ 0;}
-\DoxyCodeLine{00028\ }
-\DoxyCodeLine{00029\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_register_a18bde4ae5c701253e65d7be145c38648}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Furniture>\{\});}
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ need\ to\ serialize\ things\ that\ are\ needed\ for\ render}}
-\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ s.value4b(max\_queue\_size);}}
-\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ s.value4b(next\_line\_position);}}
-\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ s.container(ppl\_in\_line,\ max\_queue\_size);}}
-\DoxyCodeLine{00038\ \ \ \ \ \}}
-\DoxyCodeLine{00039\ }
-\DoxyCodeLine{00040\ \ \ \ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{struct_register_a669b96861697fb8c04bce79f04390c66}{Register}}()\ :\ \mbox{\hyperlink{struct_furniture}{Furniture}}()\ \{\}}
-\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{struct_register_a836763a1ab3ebd6cc3383cc972943db1}{Register}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)}
-\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_furniture}{Furniture}}(pos,\ \mbox{\hyperlink{namespaceui}{ui}}::color::grey,\ \mbox{\hyperlink{namespaceui}{ui}}::color::grey)\ \{}
-\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_register_a2306726654fefe617d10d36bfdff8749}{update\_model}}();}
-\DoxyCodeLine{00045\ \ \ \ \ \}}
-\DoxyCodeLine{00046\ }
-\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_register_a2306726654fefe617d10d36bfdff8749}{update\_model}}()\ \{}
-\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ a\ component\ for\ this}}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ get<ModelRenderer>().update(\mbox{\hyperlink{struct_model_info}{ModelInfo}}\{}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}}\ =\ \textcolor{stringliteral}{"{}register"{}},}
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ .size\_scale\ =\ 10.f,}
-\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ .position\_offset\ =\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0,\ -\/\mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2.f,\ 0\},}
-\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00054\ \ \ \ \ \}}
-\DoxyCodeLine{00055\ }
-\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_register_a52675c14bbf0f4a3d02035c16ee0546f}{position\_in\_line}}(\mbox{\hyperlink{struct_a_i_person}{AIPerson}}*\ entity)\ \{}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ (int)\ \mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\_in\_line}}.size();\ i++)\ \{}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>\mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}\ ==\ \mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\_in\_line}}[i]-\/>id)\ \textcolor{keywordflow}{return}\ i;}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Cannot\ find\ entity\ \{\}"{}},\ entity-\/>\mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}});}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
-\DoxyCodeLine{00062\ \ \ \ \ \}}
-\DoxyCodeLine{00063\ }
-\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_register_ac6e47c902ad42f108f2a2aef41c16026}{can\_move\_up}}(\mbox{\hyperlink{struct_a_i_person}{AIPerson}}*\ entity)\ \{}
-\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ entity-\/>\mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}\ ==\ \mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\_in\_line}}.front()-\/>id;}
-\DoxyCodeLine{00066\ \ \ \ \ \}}
-\DoxyCodeLine{00067\ }
-\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_register_a81d82daec8200089b62c1a97288c7938}{leave\_line}}(\mbox{\hyperlink{struct_a_i_person}{AIPerson}}*\ entity)\ \{}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ pos\ =\ this-\/>\mbox{\hyperlink{struct_register_a52675c14bbf0f4a3d02035c16ee0546f}{position\_in\_line}}(entity);}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos\ ==\ -\/1)\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos\ ==\ 0)\ \{}
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\_in\_line}}.pop\_front();}
-\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\_in\_line}}.erase(\mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\_in\_line}}.begin()\ +\ pos);}
-\DoxyCodeLine{00076\ \ \ \ \ \}}
-\DoxyCodeLine{00077\ }
-\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_register_a45ae07a467402f2504f9105fe0f00a47}{is\_in\_line}}(\mbox{\hyperlink{struct_a_i_person}{AIPerson}}*\ entity)\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_register_a52675c14bbf0f4a3d02035c16ee0546f}{position\_in\_line}}(entity)\ !=\ -\/1;\ \}}
-\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_register_a5a6397f692a798de835cbdad9cc3f402}{has\_space\_in\_queue}}()\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_register_ab2df0027c3bcd21e0e9356f79b014482}{next\_line\_position}}\ <\ \mbox{\hyperlink{struct_register_acf7d318a1555dd41124082c19bfdcb0b}{max\_queue\_size}};\ \}}
-\DoxyCodeLine{00080\ }
-\DoxyCodeLine{00081\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_register_a674bdeb8aa6413236b266f45d2973b57}{get\_next\_queue\_position}}(\mbox{\hyperlink{struct_a_i_person}{AIPerson}}*\ entity)\ \{}
-\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(entity,\ \textcolor{stringliteral}{"{}entity\ passed\ to\ register\ queue\ should\ not\ be\ null"{}});}
-\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_register_aaa92e3005c08cbf6cd11a3620b7339b9}{ppl\_in\_line}}.push\_back(entity);}
-\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ place\ the\ customers\ stand\ is\ 1\ tile\ infront\ of\ the\ register}}
-\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ front\ =\ this-\/>\mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\_infront}}((next\_line\_position\ +\ 1)\ *\ 2);}
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_register_ab2df0027c3bcd21e0e9356f79b014482}{next\_line\_position}}++;}
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ front;}
-\DoxyCodeLine{00088\ \ \ \ \ \}}
-\DoxyCodeLine{00089\ \};}
+\DoxyCodeLine{00024\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_register_a18bde4ae5c701253e65d7be145c38648}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Furniture>\{\});}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ need\ to\ serialize\ things\ that\ are\ needed\ for\ render}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ s.value4b(max\_queue\_size);}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ s.value4b(next\_line\_position);}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ s.container(ppl\_in\_line,\ max\_queue\_size);}}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{struct_register_a669b96861697fb8c04bce79f04390c66}{Register}}()\ :\ \mbox{\hyperlink{struct_furniture}{Furniture}}()\ \{\}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{struct_register_a836763a1ab3ebd6cc3383cc972943db1}{Register}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)\ :\ \mbox{\hyperlink{struct_furniture}{Furniture}}(pos,\ \mbox{\hyperlink{namespaceui}{ui}}::color::grey)\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_register_a2306726654fefe617d10d36bfdff8749}{update\_model}}();}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_register_a2306726654fefe617d10d36bfdff8749}{update\_model}}()\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ a\ component\ for\ this}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ get<ModelRenderer>().update(\mbox{\hyperlink{struct_model_info}{ModelInfo}}\{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}}\ =\ \textcolor{stringliteral}{"{}register"{}},}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ .size\_scale\ =\ 10.f,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ .position\_offset\ =\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0,\ -\/\mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2.f,\ 0\},}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_register_a7d4420756a802e18730957fd728be69f}{position\_in\_line}}(\mbox{\hyperlink{struct_entity}{Person}}*\ entity)\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ (int)\ \mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\_in\_line}}.size();\ i++)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>\mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}\ ==\ \mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\_in\_line}}[i]-\/>id)\ \textcolor{keywordflow}{return}\ i;}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Cannot\ find\ entity\ \{\}"{}},\ entity-\/>\mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}});}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_register_a4204310a2779452ec06d6ccbf4ab3ebd}{can\_move\_up}}(\mbox{\hyperlink{struct_entity}{Person}}*\ entity)\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ entity-\/>\mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}\ ==\ \mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\_in\_line}}.front()-\/>id;}
+\DoxyCodeLine{00060\ \ \ \ \ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_register_a0eb87e753d333bab65b4997411ab8519}{leave\_line}}(\mbox{\hyperlink{struct_entity}{Person}}*\ entity)\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ pos\ =\ this-\/>\mbox{\hyperlink{struct_register_a7d4420756a802e18730957fd728be69f}{position\_in\_line}}(entity);}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos\ ==\ -\/1)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos\ ==\ 0)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\_in\_line}}.pop\_front();}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\_in\_line}}.erase(\mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\_in\_line}}.begin()\ +\ pos);}
+\DoxyCodeLine{00070\ \ \ \ \ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_register_a8f1449806fd979cfc4df88f7e3f58332}{is\_in\_line}}(\mbox{\hyperlink{struct_entity}{Person}}*\ entity)\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_register_a7d4420756a802e18730957fd728be69f}{position\_in\_line}}(entity)\ !=\ -\/1;\ \}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_register_a5a6397f692a798de835cbdad9cc3f402}{has\_space\_in\_queue}}()\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_register_ab2df0027c3bcd21e0e9356f79b014482}{next\_line\_position}}\ <\ \mbox{\hyperlink{struct_register_acf7d318a1555dd41124082c19bfdcb0b}{max\_queue\_size}};\ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_register_a042abba7c7da313aaac25b0b07f56512}{get\_next\_queue\_position}}(\mbox{\hyperlink{struct_entity}{Person}}*\ entity)\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(entity,\ \textcolor{stringliteral}{"{}entity\ passed\ to\ register\ queue\ should\ not\ be\ null"{}});}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_register_a8f5b0ddbc788430aa0ba5e7f9baf5cdc}{ppl\_in\_line}}.push\_back(entity);}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ place\ the\ customers\ stand\ is\ 1\ tile\ infront\ of\ the\ register}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ front\ =\ this-\/>\mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\_infront}}((next\_line\_position\ +\ 1)\ *\ 2);}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_register_ab2df0027c3bcd21e0e9356f79b014482}{next\_line\_position}}++;}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ front;}
+\DoxyCodeLine{00082\ \ \ \ \ \}}
+\DoxyCodeLine{00083\ \};}
 
 \end{DoxyCode}

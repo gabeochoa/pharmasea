@@ -5,7 +5,7 @@
 %%For: 
 %Magnification: 1.00
 %%Orientation: Portrait
-%%BoundingBox: 0 0 500 965.909119
+%%BoundingBox: 0 0 500 1079.545410
 %%Pages: 0
 %%BeginSetup
 %%EndSetup
@@ -19,12 +19,12 @@
 /marginwidth 10 def
 /distx 20 def
 /disty 40 def
-/boundaspect 0.517647 def  % aspect ratio of the BoundingBox (width/height)
+/boundaspect 0.463158 def  % aspect ratio of the BoundingBox (width/height)
 /boundx 500 def
 /boundy boundx boundaspect div def
 /xspacing 0 def
 /yspacing 0 def
-/rows 17 def
+/rows 19 def
 /cols 2 def
 /scalefactor 0 def
 /boxfont /Times-Roman findfont fontheight scalefont def
@@ -184,8 +184,10 @@ boxfont setfont
 (CanPerformJob) cw
 (CollectsUserInput) cw
 (CustomHeldItemPosition) cw
+(HasBaseSpeed) cw
 (HasName) cw
 (HasWork) cw
+(IsSnappable) cw
 (ModelRenderer) cw
 (RespondsToUserInput) cw
 (SimpleColoredBoxRenderer) cw
@@ -201,19 +203,21 @@ boundx scalefactor div boundy scalefactor div scale
 
 % ----- classes -----
 
- (BaseComponent) 0.000000 16.000000 box
- (CanBeGhostPlayer) 1.000000 15.000000 box
- (CanBeHighlighted) 1.000000 14.000000 box
- (CanBePushed) 1.000000 13.000000 box
- (CanHaveAilment) 1.000000 12.000000 box
- (CanHighlightOthers) 1.000000 11.000000 box
- (CanHoldFurniture) 1.000000 10.000000 box
- (CanHoldItem) 1.000000 9.000000 box
- (CanPerformJob) 1.000000 8.000000 box
- (CollectsUserInput) 1.000000 7.000000 box
- (CustomHeldItemPosition) 1.000000 6.000000 box
- (HasName) 1.000000 5.000000 box
- (HasWork) 1.000000 4.000000 box
+ (BaseComponent) 0.000000 18.000000 box
+ (CanBeGhostPlayer) 1.000000 17.000000 box
+ (CanBeHighlighted) 1.000000 16.000000 box
+ (CanBePushed) 1.000000 15.000000 box
+ (CanHaveAilment) 1.000000 14.000000 box
+ (CanHighlightOthers) 1.000000 13.000000 box
+ (CanHoldFurniture) 1.000000 12.000000 box
+ (CanHoldItem) 1.000000 11.000000 box
+ (CanPerformJob) 1.000000 10.000000 box
+ (CollectsUserInput) 1.000000 9.000000 box
+ (CustomHeldItemPosition) 1.000000 8.000000 box
+ (HasBaseSpeed) 1.000000 7.000000 box
+ (HasName) 1.000000 6.000000 box
+ (HasWork) 1.000000 5.000000 box
+ (IsSnappable) 1.000000 4.000000 box
  (ModelRenderer) 1.000000 3.000000 box
  (RespondsToUserInput) 1.000000 2.000000 box
  (SimpleColoredBoxRenderer) 1.000000 1.000000 box
@@ -222,7 +226,11 @@ boundx scalefactor div boundy scalefactor div scale
 % ----- relations -----
 
 solid
-1 0.000000 15.250000 out
+1 0.000000 17.250000 out
+solid
+0 0.000000 17.500000 hedge
+solid
+0 0.000000 16.500000 hedge
 solid
 0 0.000000 15.500000 hedge
 solid
@@ -256,4 +264,4 @@ solid
 solid
 0 0.000000 0.500000 hedge
 solid
-0.000000 16.000000 0.500000 vedge
+0.000000 18.000000 0.500000 vedge

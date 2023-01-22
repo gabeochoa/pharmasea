@@ -33,9 +33,9 @@ struct Wall : public Furniture {
     Wall(vec3 p, Color c) : Furniture(p, c) {}
     Wall(vec2 p, Color c) : Furniture(p, c) {}
 
-    virtual vec3 size() const override {
-        return {TILESIZE, TILESIZE, TILESIZE};
-    }
+    // virtual vec3 size() const override {
+    // return {TILESIZE, TILESIZE, TILESIZE};
+    // }
 
     // virtual void render_normal() const override {
     // TODO fix

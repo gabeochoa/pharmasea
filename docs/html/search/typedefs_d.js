@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['walltype_0',['WallType',['../d1/d4f/wall_8h.html#ab233bfb7a98dad5863d64070172f61ba',1,'wall.h']]],
-  ['wavetextconfig_1',['WaveTextConfig',['../dd/d8c/namespaceraylib.html#a17e750bc0f42947c422d26d114cb7233',1,'raylib']]]
+  ['vec2_0',['vec2',['../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28',1,'graphics.h']]],
+  ['vec3_1',['vec3',['../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef',1,'graphics.h']]],
+  ['vec4_2',['vec4',['../d7/d04/graphics_8h.html#a68414c2977bb70c671afe66488f25ee3',1,'graphics.h']]]
 ];

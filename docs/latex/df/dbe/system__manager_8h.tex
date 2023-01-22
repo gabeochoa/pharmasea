@@ -7,9 +7,9 @@
 {\ttfamily \#include \char`\"{}../components/can\+\_\+perform\+\_\+job.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/collects\+\_\+user\+\_\+input.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/custom\+\_\+item\+\_\+position.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/is\+\_\+snappable.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/responds\+\_\+to\+\_\+user\+\_\+input.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/transform.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}../customer.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../entity.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../entityhelper.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../furniture.\+h\char`\"{}}\newline
@@ -42,7 +42,7 @@ void \mbox{\hyperlink{namespacesystem__manager_a59f2cc661fe66e73806e73eaab658a6d
 \item 
 void \mbox{\hyperlink{namespacesystem__manager_a23e2737adee52e940c7942a7e312cb90}{system\+\_\+manager\+::move\+\_\+entity\+\_\+based\+\_\+on\+\_\+push\+\_\+force}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&new\+\_\+pos\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&new\+\_\+pos\+\_\+z)
 \item 
-void \mbox{\hyperlink{namespacesystem__manager_a27a95df8b20f1e69fe055a138e7f7e5d}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos}} (int id, \mbox{\hyperlink{struct_transform}{Transform}} \&transform, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_person}{Person}} $>$ person, float dt, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+z)
+void \mbox{\hyperlink{namespacesystem__manager_a27a95df8b20f1e69fe055a138e7f7e5d}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos}} (int id, \mbox{\hyperlink{struct_transform}{Transform}} \&transform, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{entity_8h_af461df511455b8bb0e6537602de78011}{Person}} $>$ person, float dt, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+z)
 \item 
 void \mbox{\hyperlink{namespacesystem__manager_a659184773c10c97c2fae2ef1f542e0c6}{system\+\_\+manager\+::collect\+\_\+user\+\_\+input}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
 \item 

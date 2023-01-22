@@ -16,6 +16,5 @@ var searchData=
   ['constexpr_5fcontainers_2eh_13',['constexpr_containers.h',['../d3/dc4/constexpr__containers_8h.html',1,'']]],
   ['container_5fcast_2eh_14',['container_cast.h',['../db/d91/container__cast_8h.html',1,'']]],
   ['conveyer_2eh_15',['conveyer.h',['../de/d1f/conveyer_8h.html',1,'']]],
-  ['custom_5fitem_5fposition_2eh_16',['custom_item_position.h',['../df/de8/custom__item__position_8h.html',1,'']]],
-  ['customer_2eh_17',['customer.h',['../d3/d35/customer_8h.html',1,'']]]
+  ['custom_5fitem_5fposition_2eh_16',['custom_item_position.h',['../df/de8/custom__item__position_8h.html',1,'']]]
 ];

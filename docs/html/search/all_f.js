@@ -21,7 +21,7 @@ var searchData=
   ['olive_5fgreen_18',['olive_green',['../d9/db4/namespaceui_1_1color.html#ab2ebf87fd2780ad1da65880d4248125b',1,'ui::color']]],
   ['olive_5fyellow_19',['olive_yellow',['../d9/db4/namespaceui_1_1color.html#a6e7612bd78945a40234e180296275a76',1,'ui::color']]],
   ['on_20',['on',['../dd/db8/structui_1_1_toggle_state.html#a94706959f0bb66b9497155b1e6a19b6b',1,'ui::ToggleState']]],
-  ['on_5fcleanup_21',['on_cleanup',['../d2/d63/struct_job.html#a2fd96529bde0648dd5e5ce630e9d7fe7',1,'Job']]],
+  ['on_5fcleanup_21',['on_cleanup',['../d2/d63/struct_job.html#a7429ae14345980e303ffb83bdea17dc9',1,'Job']]],
   ['on_5fdrop_22',['on_drop',['../dc/dc4/struct_entity.html#a022f3b004d41c9302ee47fd8d83a583f',1,'Entity']]],
   ['on_5fpickup_23',['on_pickup',['../dc/dc4/struct_entity.html#a48efb563c821424fd1a97efcc211cfd8',1,'Entity']]],
   ['on_5fsteam_5fnetwork_5fconnection_5fstatus_5fchanged_24',['on_steam_network_connection_status_changed',['../d7/d6b/structnetwork_1_1internal_1_1_client.html#ab40ca38e2734d0e329d376df2124de3c',1,'network::internal::Client']]],

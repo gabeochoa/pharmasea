@@ -6,7 +6,6 @@
 #include "../entity.h"
 #include "../globals.h"
 //
-#include "../aiperson.h"
 #include "../furniture.h"
 
 // TODO we can use concepts here to force this to be an Item
@@ -21,7 +20,7 @@ struct ItemContainer : public Furniture {
 
    public:
     ItemContainer() {}
-    explicit ItemContainer(vec2 pos) : Furniture(pos, WHITE, WHITE) {}
+    explicit ItemContainer(vec2 pos) : Furniture(pos, WHITE) {}
 
     virtual bool can_place_item_into(
         std::shared_ptr<Item> item = nullptr) override {

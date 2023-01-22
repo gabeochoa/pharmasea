@@ -1,34 +1,66 @@
 
 #pragma once
-
-#include "bitsery/ext/std_smart_ptr.h"
-#include "components/base_component.h"
-#include "components/can_be_highlighted.h"
-#include "components/can_be_pushed.h"
-#include "components/can_hold_item.h"
-#include "components/has_name.h"
-#include "components/model_renderer.h"
-#include "components/simple_colored_box_renderer.h"
-#include "components/transform.h"
-#include "engine/assert.h"
-#include "external_include.h"
-//
 #include <array>
 #include <map>
 
+#include "bitsery/ext/std_smart_ptr.h"
+
+//
+#include "ailment.h"
+#include "camera.h"
+#include "components/can_be_highlighted.h"
+#include "components/can_be_pushed.h"
+#include "components/can_have_ailment.h"
+#include "components/can_hold_item.h"
+#include "components/can_perform_job.h"
+#include "components/has_base_speed.h"
+#include "components/has_name.h"
+#include "components/is_snappable.h"
+#include "components/model_renderer.h"
+#include "components/simple_colored_box_renderer.h"
+#include "components/transform.h"
 #include "drawing_util.h"
+#include "engine/assert.h"
 #include "engine/astar.h"
+#include "engine/globals_register.h"
 #include "engine/is_server.h"
+#include "engine/keymap.h"
+#include "engine/log.h"
 #include "engine/model_library.h"
+#include "engine/sound_library.h"
+#include "external_include.h"
 #include "globals.h"
 #include "item.h"
 #include "item_helper.h"
+#include "job.h"
 #include "menu.h"
+#include "names.h"
 #include "preload.h"
 #include "raylib.h"
 #include "text_util.h"
 #include "util.h"
 #include "vec_util.h"
+
+struct SpeechBubble {
+    vec3 position;
+    // TODO we arent using any string functionality can we swap to const char*?
+    // perhaps in a typedef?
+    std::string icon_tex_name;
+
+    explicit SpeechBubble(std::string icon) : icon_tex_name(icon) {}
+
+    void update(float, vec3 pos) { this->position = pos; }
+    void render() const {
+        GameCam cam = GLOBALS.get<GameCam>("game_cam");
+        raylib::Texture texture = TextureLibrary::get().get(icon_tex_name);
+        raylib::DrawBillboard(cam.camera, texture,
+                              vec3{position.x,                      //
+                                   position.y + (TILESIZE * 1.5f),  //
+                                   position.z},                     //
+                              TILESIZE,                             //
+                              raylib::WHITE);
+    }
+};
 
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
@@ -52,11 +84,13 @@ struct Entity {
 
     template<typename T, typename... TArgs>
     T& addComponent(TArgs&&... args) {
-        M_ASSERT(!this->has<T>(),
-                 "This entity already has this component attached");
+        log_info("adding component {} {} to entity {}",
+                 components::get_type_id<T>(), type_name<T>(), id);
 
-        log_trace("adding component {} {} to entity {}",
-                  components::get_type_id<T>(), type_name<T>(), id);
+        // TODO eventually turn back on the assert
+        if (this->has<T>()) return this->get<T>();
+        // M_ASSERT(!this->has<T>(),
+        // "This entity already has this component attached");
 
         std::shared_ptr<T> component;
         component.reset(new T(std::forward<TArgs>(args)...));
@@ -73,20 +107,11 @@ struct Entity {
     template<typename T>
     T& get() const {
         if (!has<T>()) {
-            log_error("Entity {} did not have component {} requested", id,
-                      type_name<T>());
+            log_error("Failed fetching component {} {} from entity {}",
+                      components::get_type_id<T>(), type_name<T>(), id);
         }
         auto ptr(componentArray[components::get_type_id<T>()]);
         return *dynamic_pointer_cast<T>(ptr);
-    }
-
-    void add_static_components() {
-        addComponent<Transform>();
-        addComponent<HasName>();
-        addComponent<CanHoldItem>();
-        addComponent<SimpleColoredBoxRenderer>();
-        addComponent<ModelRenderer>();
-        addComponent<CanBePushed>();
     }
 
    private:
@@ -104,42 +129,14 @@ struct Entity {
     }
 
    public:
-    Entity(vec3 p, Color face_color_in, Color base_color_in)
-        : id(ENTITY_ID_GEN++) {
-        add_static_components();
-        get<Transform>().init(p, size());
-        get<SimpleColoredBoxRenderer>().init(face_color_in, base_color_in);
-    }
-
-    Entity(vec2 p, Color face_color_in, Color base_color_in)
-        : id(ENTITY_ID_GEN++) {
-        add_static_components();
-        get<Transform>().init({p.x, 0, p.y}, size());
-        get<SimpleColoredBoxRenderer>().init(face_color_in, base_color_in);
-    }
-
-    Entity(vec3 p, Color c) : id(ENTITY_ID_GEN++) {
-        add_static_components();
-        get<Transform>().init(p, size());
-        get<SimpleColoredBoxRenderer>().init(c, c);
-    }
-
-    Entity(vec2 p, Color c) : id(ENTITY_ID_GEN++) {
-        add_static_components();
-        get<Transform>().init({p.x, 0, p.y}, size());
-        get<SimpleColoredBoxRenderer>().init(c, c);
-    }
+    // TODO remove these addComponents
+    Entity(vec3 p) : id(ENTITY_ID_GEN++) { this->addComponent<Transform>(); }
+    Entity(vec2 p) : id(ENTITY_ID_GEN++) { this->addComponent<Transform>(); }
 
     virtual ~Entity() {}
 
    protected:
-    Entity() {
-        add_static_components();
-        get<Transform>().init({0, 0, 0}, size());
-        get<SimpleColoredBoxRenderer>().init(BLACK, BLACK);
-    }
-
-    virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
+    Entity() {}
 
     virtual vec2 get_heading() {
         const float target_facing_ang =
@@ -225,7 +222,8 @@ struct Entity {
      * */
     [[nodiscard]] virtual BoundingBox bounds() const {
         // TODO fix  size
-        return get_bounds(this->get<Transform>().position, this->size());
+        vec3 size = {TILESIZE, TILESIZE, TILESIZE};
+        return get_bounds(this->get<Transform>().position, size);
     }
 
     [[nodiscard]] vec3 snap_position() const {
@@ -313,8 +311,132 @@ struct Entity {
             in_round_update(dt);
         }
     }
+
+   public:
+    static Entity* create_entity(vec3 pos, Color face_color, Color base_color) {
+        Entity* entity = new Entity(pos);
+        entity->addComponent<Transform>();
+        entity->addComponent<HasName>();
+        entity->addComponent<CanHoldItem>();
+        entity->addComponent<SimpleColoredBoxRenderer>();
+        entity->addComponent<ModelRenderer>();
+        entity->addComponent<CanBePushed>();
+
+        entity->get<Transform>().init(pos, {TILESIZE, TILESIZE, TILESIZE});
+        entity->get<SimpleColoredBoxRenderer>().init(face_color, base_color);
+        return entity;
+    }
+
+    static Entity* create_person(vec3 pos, Color face_color, Color base_color) {
+        // TODO move into component
+        // s.value4b(model_index);
+        std::array<std::string, 3> character_models = {
+            "character_duck",
+            "character_dog",
+            "character_bear",
+        };
+        int model_index = 0;
+        // void select_next_character_model() {
+        // model_index = (model_index + 1) % character_models.size();
+        // }
+
+        Entity* person = new Entity(pos);
+        person->addComponent<Transform>();
+        person->addComponent<HasName>();
+        person->addComponent<CanHoldItem>();
+        person->addComponent<ModelRenderer>();
+        person->addComponent<CanBePushed>();
+
+        person->addComponent<SimpleColoredBoxRenderer>().init(face_color,
+                                                              base_color);
+        person->addComponent<HasBaseSpeed>().update(10.f);
+
+        const float sz = TILESIZE * 0.75f;
+        person->get<Transform>().init(pos, {sz, sz, sz});
+
+        // log_info("model index: {}", model_index);
+        // TODO add a component for this
+        person->get<ModelRenderer>().update(ModelInfo{
+            // TODO fix this
+            .model_name = character_models[model_index],
+            .size_scale = 1.5f,
+            .position_offset = vec3{0, 0, 0},
+            .rotation_angle = 180,
+        });
+
+        return person;
+    }
+
+    static Entity* create_aiperson(vec3 pos, Color face_color,
+                                   Color base_color) {
+        Entity* aiperson = new Entity(pos);
+
+        aiperson->addComponent<Transform>();
+        aiperson->addComponent<HasName>();
+        aiperson->addComponent<CanHoldItem>();
+        aiperson->addComponent<ModelRenderer>();
+        aiperson->addComponent<CanBePushed>();
+        aiperson->addComponent<SimpleColoredBoxRenderer>().init(face_color,
+                                                                base_color);
+        aiperson->addComponent<CanPerformJob>().update(Wandering, Wandering);
+        aiperson->addComponent<HasBaseSpeed>().update(10.f);
+
+        return aiperson;
+    }
+
+    static Entity* create_customer(vec2 pos, Color base_color) {
+        Entity* customer = new Entity({pos.x, 0, pos.y});
+
+        customer->addComponent<Transform>();
+        customer->addComponent<HasName>();
+        customer->addComponent<CanHoldItem>();
+        customer->addComponent<ModelRenderer>();
+        customer->addComponent<CanBePushed>();
+
+        customer->addComponent<SimpleColoredBoxRenderer>().init(base_color,
+                                                                base_color);
+        customer->addComponent<CanPerformJob>().update(Wandering, Wandering);
+        customer->addComponent<HasBaseSpeed>().update(10.f);
+
+        customer->addComponent<CanHaveAilment>().update(
+            std::make_shared<Insomnia>());
+
+        customer->get<HasName>().update(get_random_name());
+        customer->get<CanPerformJob>().update(WaitInQueue, Wandering);
+
+        // TODO turn back on bubbles
+        // std::optional<SpeechBubble> bubble;
+        // bubble = SpeechBubble(ailment->icon_name());
+
+        // TODO support this
+        // virtual void in_round_update(float dt) override {
+        // AIPerson::in_round_update(dt);
+
+        // Register* reg = get_target_register();
+        // if (reg) {
+        // this->turn_to_face_entity(reg);
+        // }
+        //
+        // if (bubble.has_value())
+        // bubble.value().update(dt, this->get<Transform>().raw_position);
+        // }
+
+        // virtual void render_normal() const override {
+        // auto render_speech_bubble = [&]() {
+        // if (!this->bubble.has_value()) return;
+        // this->bubble.value().render();
+        // };
+        // AIPerson::render_normal();
+        // render_speech_bubble();
+        // }
+
+        return customer;
+    }
 };
 
+typedef Entity Person;
+typedef Person AIPerson;
+typedef AIPerson Customer;
 typedef Transform::Transform::FrontFaceDirection EntityDir;
 
 namespace bitsery {

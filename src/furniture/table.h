@@ -6,7 +6,6 @@
 #include "../entity.h"
 #include "../globals.h"
 //
-#include "../aiperson.h"
 #include "../components/custom_item_position.h"
 #include "../furniture.h"
 
@@ -29,8 +28,7 @@ struct Table : public Furniture {
 
    public:
     Table() { add_static_components(); }
-    explicit Table(vec2 pos)
-        : Furniture(pos, ui::color::brown, ui::color::brown) {
+    explicit Table(vec2 pos) : Furniture(pos, ui::color::brown) {
         add_static_components();
         get<HasWork>().init([this](std::shared_ptr<Person>, float dt) {
             // TODO eventually we need it to decide whether it has work based on

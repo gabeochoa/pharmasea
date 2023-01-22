@@ -10,7 +10,7 @@
 //
 #include "engine/globals_register.h"
 #include "engine/keymap.h"
-#include "person.h"
+#include "entity.h"
 //
 #include "furniture.h"
 
@@ -18,27 +18,12 @@
 // BasePlayer and Player
 struct BasePlayer : public Person {
     void add_static_components() {
-        addComponent<CanHighlightOthers>();
-        addComponent<CanHoldFurniture>();
-
-        // addComponent<HasBaseSpeed>().update(10.f);
-        get<HasBaseSpeed>().update(7.5f);
+        this->addComponent<Transform>();
+        this->addComponent<CanHighlightOthers>();
+        this->addComponent<CanHoldFurniture>();
+        this->addComponent<HasBaseSpeed>().update(7.5f);
     }
 
-    BasePlayer(vec3 p, Color face_color_in, Color base_color_in)
-        : Person(p, face_color_in, base_color_in) {
-        add_static_components();
-    }
-    BasePlayer(vec2 p, Color face_color_in, Color base_color_in)
-        : Person(p, face_color_in, base_color_in) {
-        add_static_components();
-    }
-    BasePlayer() : Person({0, 0, 0}, ui::color::white, ui::color::white) {
-        add_static_components();
-    }
-    BasePlayer(vec2 location)
-        : Person({location.x, 0, location.y}, {0, 255, 0, 255},
-                 {255, 0, 0, 255}) {
-        add_static_components();
-    }
+    BasePlayer(vec3 p, Color, Color) : Person(p) { add_static_components(); }
+    BasePlayer() : Person({0, 0, 0}) { add_static_components(); }
 };

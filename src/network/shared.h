@@ -23,7 +23,7 @@ struct PolymorphicBaseClass<BaseComponent>
 
 template<>
 struct PolymorphicBaseClass<Entity>
-    : PolymorphicDerivedClasses<Furniture, Person> {};
+    : PolymorphicDerivedClasses<Furniture, BasePlayer> {};
 
 template<>
 struct PolymorphicBaseClass<Furniture>
@@ -31,14 +31,7 @@ struct PolymorphicBaseClass<Furniture>
                                 BagBox, MedicineCabinet, CharacterSwitcher> {};
 
 template<>
-struct PolymorphicBaseClass<Person>
-    : PolymorphicDerivedClasses<BasePlayer, AIPerson> {};
-
-template<>
 struct PolymorphicBaseClass<BasePlayer> : PolymorphicDerivedClasses<Player> {};
-
-template<>
-struct PolymorphicBaseClass<AIPerson> : PolymorphicDerivedClasses<Customer> {};
 
 template<>
 struct PolymorphicBaseClass<Item>

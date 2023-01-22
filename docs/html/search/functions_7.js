@@ -31,7 +31,7 @@ var searchData=
   ['get_5fneighbors_28',['get_neighbors',['../d0/d3f/vec__util_8h.html#a4a3b66ac1c7427b7059a875740cce0a6',1,'get_neighbors():&#160;vec_util.h'],['../dd/de3/namespaceastar.html#a9f1223e812b7ef83a3fc8ddcc99d44b2',1,'astar::get_neighbors()']]],
   ['get_5fnew_5frender_5ftexture_29',['get_new_render_texture',['../da/de3/structui_1_1_i_u_i_context_render_textures.html#ae3b856af59ec708d5fcaaee68c0d54df',1,'ui::IUIContextRenderTextures']]],
   ['get_5fnext_5fjob_5ftype_30',['get_next_job_type',['../db/dc2/struct_can_perform_job.html#a119ca4c6de9f3fc86b3c67da69b3902c',1,'CanPerformJob']]],
-  ['get_5fnext_5fqueue_5fposition_31',['get_next_queue_position',['../d0/d74/struct_register.html#a674bdeb8aa6413236b266f45d2973b57',1,'Register']]],
+  ['get_5fnext_5fqueue_5fposition_31',['get_next_queue_position',['../d0/d74/struct_register.html#a042abba7c7da313aaac25b0b07f56512',1,'Register']]],
   ['get_5for_5fcreate_5flayer_5fmap_32',['get_or_create_layer_map',['../dd/d43/struct_key_map.html#ad31d679bfe8c1ee413fccd03d31eb44c',1,'KeyMap']]],
   ['get_5for_5fdefault_33',['get_or_default',['../da/d2a/struct_global_value_register.html#a2ebfe0e4ca648cac401ec3c1ee1afae5',1,'GlobalValueRegister']]],
   ['get_5fptr_34',['get_ptr',['../d3/dd1/struct_game_cam.html#a544c61acc1f33735f48e6e9269a5b3dd',1,'GameCam::get_ptr()'],['../d1/d46/struct_menu_cam.html#a802664d0ba62d6fcca6baa245001f7c4',1,'MenuCam::get_ptr()'],['../da/d2a/struct_global_value_register.html#af490d6abcf31e2e41b1f0eead7f94f0a',1,'GlobalValueRegister::get_ptr()']]],

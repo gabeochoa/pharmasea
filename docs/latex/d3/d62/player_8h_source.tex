@@ -36,19 +36,15 @@
 \DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
 \DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_player_aca4162f041a00a8339968db3570bda31}{add\_static\_components}}();}
 \DoxyCodeLine{00034\ \ \ \ \ \}}
-\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{struct_player_a3082ae1c3b97e6eafcb8b1849f5df2b4}{Player}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
-\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
-\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_player_aca4162f041a00a8339968db3570bda31}{add\_static\_components}}();}
-\DoxyCodeLine{00038\ \ \ \ \ \}}
-\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{struct_player_a38b451618f39a22d1752b1603e6cdbca}{Player}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ location)}
-\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(\{location.x,\ 0,\ location.y\},\ \{0,\ 255,\ 0,\ 255\},}
-\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{255,\ 0,\ 0,\ 255\})\ \{}
-\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_player_aca4162f041a00a8339968db3570bda31}{add\_static\_components}}();}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{struct_player_a38b451618f39a22d1752b1603e6cdbca}{Player}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ location)}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_base_player}{BasePlayer}}(\{location.x,\ 0,\ location.y\},\ \{0,\ 255,\ 0,\ 255\},}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{255,\ 0,\ 0,\ 255\})\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_player_aca4162f041a00a8339968db3570bda31}{add\_static\_components}}();}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_player_a587fe74993a7068ac261ef6bfd93b999}{is\_collidable}}()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get<CanBeGhostPlayer>().is\_not\_ghost();}
 \DoxyCodeLine{00043\ \ \ \ \ \}}
-\DoxyCodeLine{00044\ }
-\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_player_a587fe74993a7068ac261ef6bfd93b999}{is\_collidable}}()\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get<CanBeGhostPlayer>().is\_not\_ghost();}
-\DoxyCodeLine{00047\ \ \ \ \ \}}
-\DoxyCodeLine{00048\ \};}
+\DoxyCodeLine{00044\ \};}
 
 \end{DoxyCode}
