@@ -94,6 +94,8 @@ struct Entity {
         addComponent<CanBePushed>();
     }
 
+    virtual ~Entity() {}
+
    private:
     friend bitsery::Access;
     template<typename S>
@@ -108,7 +110,7 @@ struct Entity {
         s.value1b(is_held);
     }
 
-   public:
+   protected:
     Entity(vec3 p, Color face_color_in, Color base_color_in)
         : id(ENTITY_ID_GEN++) {
         add_static_components();
@@ -135,9 +137,6 @@ struct Entity {
         get<SimpleColoredBoxRenderer>().init(c, c);
     }
 
-    virtual ~Entity() {}
-
-   protected:
     Entity() {
         add_static_components();
         get<Transform>().init({0, 0, 0}, size());
