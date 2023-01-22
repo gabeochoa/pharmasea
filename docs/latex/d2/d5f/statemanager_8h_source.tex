@@ -8,9 +8,9 @@
 \DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <iostream>}}
 \DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stack>}}
 \DoxyCodeLine{00006\ }
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}engine/log.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{log_8h}{engine/log.h}}"{}}}
 \DoxyCodeLine{00008\ \textcolor{comment}{//}}
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}engine/singleton.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{singleton_8h}{engine/singleton.h}}"{}}}
 \DoxyCodeLine{00010\ }
 \DoxyCodeLine{00011\ \textcolor{comment}{//\ TODO\ eventually\ extract\ this\ piece\ to\ engine}}
 \DoxyCodeLine{00012\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
@@ -19,7 +19,7 @@
 \DoxyCodeLine{00015\ \ \ \ \ [[nodiscard]]\ T\ \mbox{\hyperlink{struct_state_manager_afe880671507f595b73a62debe9878ac1}{previous}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{prev}}.top();\ \}}
 \DoxyCodeLine{00016\ }
 \DoxyCodeLine{00017\ \ \ \ \ T\ \mbox{\hyperlink{struct_state_manager_a893d07632226a05e8c959d9d47ef171c}{go\_back}}()\ \{}
-\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ log\_info(\textcolor{stringliteral}{"{}going\ from\ \{\}\ to\ \{\}"{}},\ \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{state}},\ \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{prev}}.top());}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}going\ from\ \{\}\ to\ \{\}"{}},\ \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{state}},\ \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{prev}}.top());}
 \DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{state}}\ =\ \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{prev}}.top();}
 \DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{prev}}.pop();}
 \DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{state}};}
@@ -37,7 +37,7 @@
 \DoxyCodeLine{00033\ }
 \DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_state_manager_aab97f85d1876c98911212c036583d65d}{set}}(T\ ns)\ \{}
 \DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{state}}\ ==\ ns)\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ log\_info(\textcolor{stringliteral}{"{}trying\ to\ set\ state\ to\ \{\}\ (was\ \{\})"{}},\ ns,\ \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{state}});}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}trying\ to\ set\ state\ to\ \{\}\ (was\ \{\})"{}},\ ns,\ \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{state}});}
 \DoxyCodeLine{00037\ }
 \DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{prev}}.push(\mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{state}});}
 \DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_state_manager_a226cc4ac86f4bfb113768db3d34da6be}{state}}\ =\ ns;}
@@ -45,7 +45,7 @@
 \DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note:\ this\ is\ just\ for\ dev\ to\ figure\ out\ if}}
 \DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ we\ have\ any\ issues\ in\ our\ logic\ that\ allows\ circular\ visits}}
 \DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{prev}}.size()\ >=\ 10)\ \{}
-\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ log\_warn(\textcolor{stringliteral}{"{}prev\ state\ getting\ large:\ \{\}"{}},\ \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{prev}}.size());}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}prev\ state\ getting\ large:\ \{\}"{}},\ \mbox{\hyperlink{struct_state_manager_a6dad89bcf0ef6a4294f9bce33e210b69}{prev}}.size());}
 \DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ at\ some\ point\ we\ could\ condense\ the\ results\ if\ there\ is\ a}}
 \DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ loop}}
 \DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \}}
@@ -70,7 +70,7 @@
 \DoxyCodeLine{00066\ \ \ \ \ \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{Root}}\ =\ 0,}
 \DoxyCodeLine{00067\ \ \ \ \ \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a8f7f4c1ce7a4f933663d10543562b096}{About}}\ =\ 1,}
 \DoxyCodeLine{00068\ \ \ \ \ \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{Network}}\ =\ 2,}
-\DoxyCodeLine{00069\ \ \ \ \ \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{Settings}}\ =\ 3,}
+\DoxyCodeLine{00069\ \ \ \ \ \mbox{\hyperlink{struct_settings}{Settings}}\ =\ 3,}
 \DoxyCodeLine{00070\ \ \ \ \ \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{Game}}\ =\ 4,}
 \DoxyCodeLine{00071\ }
 \DoxyCodeLine{00072\ \ \ \ \ \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a71ff71526d15db86eb50fcac245d183b}{UI}}\ =\ 99,}
@@ -83,9 +83,9 @@
 \DoxyCodeLine{00079\ }
 \DoxyCodeLine{00080\ \}\ \ \textcolor{comment}{//\ namespace\ menu}}
 \DoxyCodeLine{00081\ }
-\DoxyCodeLine{00082\ SINGLETON\_FWD(\mbox{\hyperlink{struct_menu_state}{MenuState}})}
+\DoxyCodeLine{00082\ \mbox{\hyperlink{singleton_8h_a2c7d0ae28a9340e96cc64ff071551e31}{SINGLETON\_FWD}}(\mbox{\hyperlink{struct_menu_state}{MenuState}})}
 \DoxyCodeLine{00083\ struct\ \mbox{\hyperlink{struct_menu_state}{MenuState}}\ :\ public\ \mbox{\hyperlink{struct_state_manager}{StateManager}}<\mbox{\hyperlink{namespacemenu}{menu}}::State>\ \{}
-\DoxyCodeLine{00084\ \ \ \ \ SINGLETON(\mbox{\hyperlink{struct_menu_state}{MenuState}})}
+\DoxyCodeLine{00084\ \ \ \ \ \mbox{\hyperlink{singleton_8h_ac4940bd51e49be0e873a7bffe9d67ad9}{SINGLETON}}(\mbox{\hyperlink{struct_menu_state}{MenuState}})}
 \DoxyCodeLine{00085\ }
 \DoxyCodeLine{00086\ \ \ \ \ virtual\ \mbox{\hyperlink{namespacemenu}{menu}}::State\ default\_value()\textcolor{keyword}{\ const\ override\ }\{}
 \DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu::State::Root}};}
@@ -115,9 +115,9 @@
 \DoxyCodeLine{00111\ }
 \DoxyCodeLine{00112\ \}\ \ \textcolor{comment}{//\ namespace\ game}}
 \DoxyCodeLine{00113\ }
-\DoxyCodeLine{00114\ SINGLETON\_FWD(\mbox{\hyperlink{struct_game_state}{GameState}})}
+\DoxyCodeLine{00114\ \mbox{\hyperlink{singleton_8h_a2c7d0ae28a9340e96cc64ff071551e31}{SINGLETON\_FWD}}(\mbox{\hyperlink{struct_game_state}{GameState}})}
 \DoxyCodeLine{00115\ struct\ \mbox{\hyperlink{struct_game_state}{GameState}}\ :\ public\ \mbox{\hyperlink{struct_state_manager}{StateManager}}<\mbox{\hyperlink{namespacegame}{game}}::State>\ \{}
-\DoxyCodeLine{00116\ \ \ \ \ SINGLETON(\mbox{\hyperlink{struct_game_state}{GameState}})}
+\DoxyCodeLine{00116\ \ \ \ \ \mbox{\hyperlink{singleton_8h_ac4940bd51e49be0e873a7bffe9d67ad9}{SINGLETON}}(\mbox{\hyperlink{struct_game_state}{GameState}})}
 \DoxyCodeLine{00117\ }
 \DoxyCodeLine{00118\ \ \ \ \ virtual\ \mbox{\hyperlink{namespacegame}{game}}::State\ default\_value()\textcolor{keyword}{\ const\ override\ }\{}
 \DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a8ce023a3ed1ebef12557522a415fd66e}{game::State::InMenu}};}

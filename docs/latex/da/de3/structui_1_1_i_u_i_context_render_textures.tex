@@ -1,0 +1,117 @@
+\hypertarget{structui_1_1_i_u_i_context_render_textures}{}\doxysection{ui\+::IUIContext\+Render\+Textures Struct Reference}
+\label{structui_1_1_i_u_i_context_render_textures}\index{ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}}
+
+
+{\ttfamily \#include $<$ui\+\_\+context.\+h$>$}
+
+Inheritance diagram for ui\+::IUIContext\+Render\+Textures\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{da/de3/structui_1_1_i_u_i_context_render_textures}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_ae3b856af59ec708d5fcaaee68c0d54df}{get\+\_\+new\+\_\+render\+\_\+texture}} ()
+\item 
+void \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_abcfbac61d8329e882440db334fd823a5}{turn\+\_\+on\+\_\+render\+\_\+texture}} (int rt\+\_\+index)
+\item 
+void \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_ad623e19e650b75ca4448b524d8860705}{turn\+\_\+off\+\_\+texture\+\_\+mode}} ()
+\item 
+void \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_aba0c8913ad45d4d5e249301a9bbc20ed}{draw\+\_\+texture}} (int rt\+\_\+id, Rectangle source, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} position)
+\item 
+void \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_a60cc9a62764d7baef0761cd69dd4be07}{unload\+\_\+all\+\_\+render\+\_\+textures}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ raylib\+::\+Render\+Texture2D $>$ \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_a4056ec2f5b1f3e3e32432e591db606e6}{render\+\_\+textures}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structui_1_1_i_u_i_context_render_textures_aba0c8913ad45d4d5e249301a9bbc20ed}\label{structui_1_1_i_u_i_context_render_textures_aba0c8913ad45d4d5e249301a9bbc20ed}} 
+\index{ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}!draw\_texture@{draw\_texture}}
+\index{draw\_texture@{draw\_texture}!ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}}
+\doxysubsubsection{\texorpdfstring{draw\_texture()}{draw\_texture()}}
+{\footnotesize\ttfamily void ui\+::\+IUIContext\+Render\+Textures\+::draw\+\_\+texture (\begin{DoxyParamCaption}\item[{int}]{rt\+\_\+id,  }\item[{Rectangle}]{source,  }\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{position }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_a4056ec2f5b1f3e3e32432e591db606e6}{render\+\_\+textures}}.
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_u_i_context_a84876ef2d2f9dd46fb78c0c0ce8dd1d4}{ui\+::\+UIContext\+::schedule\+\_\+render\+\_\+texture()}}, and \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{ui\+::scroll\+\_\+view()}}.
+
+\mbox{\Hypertarget{structui_1_1_i_u_i_context_render_textures_ae3b856af59ec708d5fcaaee68c0d54df}\label{structui_1_1_i_u_i_context_render_textures_ae3b856af59ec708d5fcaaee68c0d54df}} 
+\index{ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}!get\_new\_render\_texture@{get\_new\_render\_texture}}
+\index{get\_new\_render\_texture@{get\_new\_render\_texture}!ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}}
+\doxysubsubsection{\texorpdfstring{get\_new\_render\_texture()}{get\_new\_render\_texture()}}
+{\footnotesize\ttfamily int ui\+::\+IUIContext\+Render\+Textures\+::get\+\_\+new\+\_\+render\+\_\+texture (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_a4056ec2f5b1f3e3e32432e591db606e6}{render\+\_\+textures}}, \mbox{\hyperlink{engine_2globals_8h_af36a79e782a145f85642cd276acd8e0c}{WIN\+\_\+\+H()}}, and \mbox{\hyperlink{engine_2globals_8h_afe1358b24401e43a8eabe7880feaf770}{WIN\+\_\+\+W()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{ui\+::scroll\+\_\+view()}}.
+
+\mbox{\Hypertarget{structui_1_1_i_u_i_context_render_textures_ad623e19e650b75ca4448b524d8860705}\label{structui_1_1_i_u_i_context_render_textures_ad623e19e650b75ca4448b524d8860705}} 
+\index{ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}!turn\_off\_texture\_mode@{turn\_off\_texture\_mode}}
+\index{turn\_off\_texture\_mode@{turn\_off\_texture\_mode}!ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}}
+\doxysubsubsection{\texorpdfstring{turn\_off\_texture\_mode()}{turn\_off\_texture\_mode()}}
+{\footnotesize\ttfamily void ui\+::\+IUIContext\+Render\+Textures\+::turn\+\_\+off\+\_\+texture\+\_\+mode (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{ui\+::scroll\+\_\+view()}}.
+
+\mbox{\Hypertarget{structui_1_1_i_u_i_context_render_textures_abcfbac61d8329e882440db334fd823a5}\label{structui_1_1_i_u_i_context_render_textures_abcfbac61d8329e882440db334fd823a5}} 
+\index{ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}!turn\_on\_render\_texture@{turn\_on\_render\_texture}}
+\index{turn\_on\_render\_texture@{turn\_on\_render\_texture}!ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}}
+\doxysubsubsection{\texorpdfstring{turn\_on\_render\_texture()}{turn\_on\_render\_texture()}}
+{\footnotesize\ttfamily void ui\+::\+IUIContext\+Render\+Textures\+::turn\+\_\+on\+\_\+render\+\_\+texture (\begin{DoxyParamCaption}\item[{int}]{rt\+\_\+index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_a4056ec2f5b1f3e3e32432e591db606e6}{render\+\_\+textures}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{ui\+::scroll\+\_\+view()}}.
+
+\mbox{\Hypertarget{structui_1_1_i_u_i_context_render_textures_a60cc9a62764d7baef0761cd69dd4be07}\label{structui_1_1_i_u_i_context_render_textures_a60cc9a62764d7baef0761cd69dd4be07}} 
+\index{ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}!unload\_all\_render\_textures@{unload\_all\_render\_textures}}
+\index{unload\_all\_render\_textures@{unload\_all\_render\_textures}!ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}}
+\doxysubsubsection{\texorpdfstring{unload\_all\_render\_textures()}{unload\_all\_render\_textures()}}
+{\footnotesize\ttfamily void ui\+::\+IUIContext\+Render\+Textures\+::unload\+\_\+all\+\_\+render\+\_\+textures (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_a4056ec2f5b1f3e3e32432e591db606e6}{render\+\_\+textures}}.
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_u_i_context_ad521a68f8be4f3373804eb11306ce62b}{ui\+::\+UIContext\+::begin()}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structui_1_1_i_u_i_context_render_textures_a4056ec2f5b1f3e3e32432e591db606e6}\label{structui_1_1_i_u_i_context_render_textures_a4056ec2f5b1f3e3e32432e591db606e6}} 
+\index{ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}!render\_textures@{render\_textures}}
+\index{render\_textures@{render\_textures}!ui::IUIContextRenderTextures@{ui::IUIContextRenderTextures}}
+\doxysubsubsection{\texorpdfstring{render\_textures}{render\_textures}}
+{\footnotesize\ttfamily std\+::vector$<$raylib\+::\+Render\+Texture2D$>$ ui\+::\+IUIContext\+Render\+Textures\+::render\+\_\+textures}
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_aba0c8913ad45d4d5e249301a9bbc20ed}{draw\+\_\+texture()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_ae3b856af59ec708d5fcaaee68c0d54df}{get\+\_\+new\+\_\+render\+\_\+texture()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_abcfbac61d8329e882440db334fd823a5}{turn\+\_\+on\+\_\+render\+\_\+texture()}}, and \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_a60cc9a62764d7baef0761cd69dd4be07}{unload\+\_\+all\+\_\+render\+\_\+textures()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/engine/\mbox{\hyperlink{ui__context_8h}{ui\+\_\+context.\+h}}\end{DoxyCompactItemize}

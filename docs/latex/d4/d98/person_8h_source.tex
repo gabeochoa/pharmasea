@@ -10,7 +10,7 @@
 \DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{entity_8h}{entity.h}}"{}}}
 \DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{entityhelper_8h}{entityhelper.h}}"{}}}
 \DoxyCodeLine{00008\ \textcolor{comment}{//}}
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}engine/keymap.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{keymap_8h}{engine/keymap.h}}"{}}}
 \DoxyCodeLine{00010\ }
 \DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_person}{Person}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_entity}{Entity}}\ \{}
 \DoxyCodeLine{00012\ \ \ \ \textcolor{keyword}{private}:}
@@ -33,176 +33,186 @@
 \DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{struct_person_a0397c6f89fafc12e738923f612bc41a3}{Person}}()\ :\ \mbox{\hyperlink{struct_entity}{Entity}}()\ \{\}}
 \DoxyCodeLine{00030\ }
 \DoxyCodeLine{00031\ \ \ \ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{struct_person_aff739251b706191cb573969740a43e67}{Person}}(vec3\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
-\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{struct_person_a9ff519f2d28ed9ca8674b1a1e3540577}{Person}}(vec2\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
-\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ face\_color\_in,\ base\_color\_in)\ \{\}}
-\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{struct_person_a598162c372fd3703cd456ce2d31ced11}{Person}}(vec3\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ c)\ \{\}}
-\DoxyCodeLine{00037\ \ \ \ \ \mbox{\hyperlink{struct_person_a96012bcb85ddaa7c6f290db275bcd86d}{Person}}(vec2\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ c)\ \{\}}
-\DoxyCodeLine{00038\ }
-\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_person_a0fefe392ef54377872ea4270202b0ecb}{update\_xaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\ =\ 0;}
-\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_person_a134feac9c4147ecb2411ff7a4a51a100}{update\_zaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\ =\ 0;}
-\DoxyCodeLine{00041\ }
-\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_person_a3ece53b2b9de0628514cb3cc14efa112}{base\_speed}}()\ \{\ \textcolor{keywordflow}{return}\ 10.f;\ \}}
-\DoxyCodeLine{00043\ }
-\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{virtual}\ vec3\ \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}}()\textcolor{keyword}{\ const\ override\ }\{}
-\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ sz\ =\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ 0.75f;}
-\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (vec3)\{sz,\ sz,\ sz\};}
-\DoxyCodeLine{00047\ \ \ \ \ \}}
-\DoxyCodeLine{00048\ }
-\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\_next\_character\_model}}()\ \{}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}\ =\ (\mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}\ +\ 1)\ \%\ \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\_models}}.size();}
-\DoxyCodeLine{00051\ \ \ \ \ \}}
-\DoxyCodeLine{00052\ }
-\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{virtual}\ std::optional<ModelInfo>\ \mbox{\hyperlink{struct_person_aa9f59abcc030fcd0ecb1323ac8f2a4aa}{model}}()\textcolor{keyword}{\ const\ override\ }\{}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\_info("{}model\ index:\ \{\}"{},\ model\_index);}}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ModelInfo\{}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ .model\ =\ ModelLibrary::get().get(\mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\_models}}[\mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}]),}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ .size\_scale\ =\ 1.5f,}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ .position\_offset\ =\ vec3\{0,\ 0,\ 0\},}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ .rotation\_angle\ =\ 180,}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00061\ \ \ \ \ \}}
-\DoxyCodeLine{00062\ }
-\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{handle\_collision}}(\textcolor{keywordtype}{int}\ facedir\_x,\ vec3\ new\_pos\_x,\ \textcolor{keywordtype}{int}\ facedir\_z,}
-\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vec3\ new\_pos\_z)\ \{}
-\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_bounds\_x\ =}
-\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\_bounds}}(new\_pos\_x,\ this-\/>\mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}}());\ \ \textcolor{comment}{//\ horizontal\ check}}
-\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_bounds\_y\ =}
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\_bounds}}(new\_pos\_z,\ this-\/>\mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}}());\ \ \textcolor{comment}{//\ vertical\ check}}
-\DoxyCodeLine{00069\ }
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ would\_collide\_x\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ would\_collide\_z\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ std::weak\_ptr<Entity>\ collided\_entity\_x;}
-\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ std::weak\_ptr<Entity>\ collided\_entity\_z;}
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a61f26ee4774876d30248574c28ba63eb}{EntityHelper::forEachEntity}}([\&](\textcolor{keyword}{auto}\ entity)\ \{}
-\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>\textcolor{keywordtype}{id}\ ==\ entity-\/>id)\ \{}
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ EntityHelper::ForEachFlow::Continue;}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (!entity-\/>is\_collidable())\ \{}
-\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ EntityHelper::ForEachFlow::Continue;}
-\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (!this-\/>\mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{is\_collidable}}())\ \{}
-\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610a3437d4b32aa4696581e8ee4ed2b53af8}{EntityHelper::ForEachFlow::Continue}};}
+\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{struct_person_aff739251b706191cb573969740a43e67}{Person}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\_model}}();}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{struct_person_a9ff519f2d28ed9ca8674b1a1e3540577}{Person}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\_model}}();}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{struct_person_a598162c372fd3703cd456ce2d31ced11}{Person}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\_model}}();\ \}}
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{struct_person_a96012bcb85ddaa7c6f290db275bcd86d}{Person}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\_model}}();\ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_person_a0fefe392ef54377872ea4270202b0ecb}{update\_xaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\ =\ 0;}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_person_a134feac9c4147ecb2411ff7a4a51a100}{update\_zaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\ =\ 0;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\_model}}()\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\_info("{}model\ index:\ \{\}"{},\ model\_index);}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ a\ component\ for\ this}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ get<ModelRenderer>().update(\mbox{\hyperlink{struct_model_info}{ModelInfo}}\{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ this}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}}\ =\ \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\_models}}[\mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}],}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ .size\_scale\ =\ 1.5f,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ .position\_offset\ =\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0,\ 0,\ 0\},}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ .rotation\_angle\ =\ 180,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_person_a3ece53b2b9de0628514cb3cc14efa112}{base\_speed}}()\ \{\ \textcolor{keywordflow}{return}\ 10.f;\ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}}()\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ sz\ =\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ 0.75f;}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{sz,\ sz,\ sz\};}
+\DoxyCodeLine{00063\ \ \ \ \ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\_next\_character\_model}}()\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}\ =\ (\mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}\ +\ 1)\ \%\ \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\_models}}.size();}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{handle\_collision}}(\textcolor{keywordtype}{int}\ facedir\_x,\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ new\_pos\_x,\ \textcolor{keywordtype}{int}\ facedir\_z,}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ new\_pos\_z)\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_bounds\_x\ =}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\_bounds}}(new\_pos\_x,\ this-\/>\mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}}());\ \ \textcolor{comment}{//\ horizontal\ check}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_bounds\_y\ =}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\_bounds}}(new\_pos\_z,\ this-\/>\mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}}());\ \ \textcolor{comment}{//\ vertical\ check}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ would\_collide\_x\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ would\_collide\_z\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ std::weak\_ptr<Entity>\ collided\_entity\_x;}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ std::weak\_ptr<Entity>\ collided\_entity\_z;}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a61f26ee4774876d30248574c28ba63eb}{EntityHelper::forEachEntity}}([\&](\textcolor{keyword}{auto}\ entity)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>\textcolor{keywordtype}{id}\ ==\ entity-\/>id)\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ EntityHelper::ForEachFlow::Continue;}
 \DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (CheckCollisionBoxes(new\_bounds\_x,\ entity-\/>bounds()))\ \{}
-\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ would\_collide\_x\ =\ true;}
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ collided\_entity\_x\ =\ entity;}
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (CheckCollisionBoxes(new\_bounds\_y,\ entity-\/>bounds()))\ \{}
-\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ would\_collide\_z\ =\ true;}
-\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ collided\_entity\_z\ =\ entity;}
-\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note:\ if\ these\ are\ both\ true,\ then\ we\ definitely\ dont\ need\ to}}
-\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ keep\ going\ and\ can\ break\ early,\ otherwise\ we\ should\ check\ the}}
-\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rest\ to\ make\ sure}}
-\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (would\_collide\_x\ \&\&\ would\_collide\_z)\ \{}
-\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610a0f3fbeaa77bb603279229e91ec5df0bb}{EntityHelper::ForEachFlow::Break}};}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (!entity-\/>is\_collidable())\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ EntityHelper::ForEachFlow::Continue;}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (!this-\/>\mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{is\_collidable}}())\ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610a3437d4b32aa4696581e8ee4ed2b53af8}{EntityHelper::ForEachFlow::Continue}};}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (CheckCollisionBoxes(new\_bounds\_x,\ entity-\/>bounds()))\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ would\_collide\_x\ =\ true;}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ collided\_entity\_x\ =\ entity;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (CheckCollisionBoxes(new\_bounds\_y,\ entity-\/>bounds()))\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ would\_collide\_z\ =\ true;}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ collided\_entity\_z\ =\ entity;}
 \DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610ade35d6cc11c2732bc98475566a7fffe9}{EntityHelper::ForEachFlow::None}};}
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00100\ }
-\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!would\_collide\_x)\ \{}
-\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\_position}}.x\ =\ new\_pos\_x.x;}
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!would\_collide\_z)\ \{}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\_position}}.z\ =\ new\_pos\_z.z;}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00107\ }
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ value\ determines\ how\ "{}far"{}\ to\ impart\ a\ push\ force\ on\ the}}
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ collided\ entity}}
-\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ directional\_push\_modifier\ =\ 1.0f;}
-\DoxyCodeLine{00111\ }
-\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Figure\ out\ if\ there's\ a\ more\ graceful\ way\ to\ "{}jitter"{}\ things\ around}}
-\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ each\ other}}
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ tile\_div\_push\_mod\ =\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ directional\_push\_modifier;}
-\DoxyCodeLine{00115\ }
-\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (would\_collide\_x\ ||\ would\_collide\_z)\ \{}
-\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ entity\_x\ =\ collided\_entity\_x.lock())\ \{}
-\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ person\_ptr\_x\ =\ \textcolor{keyword}{dynamic\_cast<}\mbox{\hyperlink{struct_person}{Person}}*\textcolor{keyword}{>}(entity\_x.get()))\ \{}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ random\_jitter\ =\ randSign()\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2.0f;}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_x\ \&\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{FrontFaceDirection::LEFT}})\ \{}
-\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity\_x-\/>pushed\_force.x\ +=\ tile\_div\_push\_mod;}
-\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity\_x-\/>pushed\_force.z\ +=\ random\_jitter;}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_x\ \&\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{FrontFaceDirection::RIGHT}})\ \{}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity\_x-\/>pushed\_force.x\ -\/=\ tile\_div\_push\_mod;}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity\_x-\/>pushed\_force.z\ +=\ random\_jitter;}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ entity\_z\ =\ collided\_entity\_z.lock())\ \{}
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ person\_ptr\_z\ =\ \textcolor{keyword}{dynamic\_cast<}\mbox{\hyperlink{struct_person}{Person}}*\textcolor{keyword}{>}(entity\_z.get()))\ \{}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ random\_jitter\ =\ randSign()\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2.0f;}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_z\ \&\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FrontFaceDirection::FORWARD}})\ \{}
-\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ person\_ptr\_z-\/>pushed\_force.x\ +=\ random\_jitter;}
-\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ person\_ptr\_z-\/>pushed\_force.z\ +=\ tile\_div\_push\_mod;}
-\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_z\ \&\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{FrontFaceDirection::BACK}})\ \{}
-\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ person\_ptr\_z-\/>pushed\_force.x\ +=\ random\_jitter;}
-\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ person\_ptr\_z-\/>pushed\_force.z\ -\/=\ tile\_div\_push\_mod;}
-\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00144\ \ \ \ \ \}}
-\DoxyCodeLine{00145\ }
-\DoxyCodeLine{00146\ \ \ \ \ std::tuple<int,\ int>\ \mbox{\hyperlink{struct_person_a0438d8fd551998f95723320ede130f44}{get\_face\_direction}}(vec3\ new\_pos\_x,\ vec3\ new\_pos\_z)\ \{}
-\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ facedir\_x\ =\ -\/1;}
-\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ facedir\_z\ =\ -\/1;}
-\DoxyCodeLine{00149\ }
-\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ vec3\ delta\_distance\_x\ =\ new\_pos\_x\ -\/\ this-\/>\mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\_position}};}
-\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (delta\_distance\_x.x\ >\ 0)\ \{}
-\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ facedir\_x\ =\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a8d87fee3e7f22fa69d0e5bb43993ebfe}{FrontFaceDirection::RIGHT}};}
-\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (delta\_distance\_x.x\ <\ 0)\ \{}
-\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ facedir\_x\ =\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484ab5f6762fbff3012f3e22e1fde3e61aa8}{FrontFaceDirection::LEFT}};}
-\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00156\ }
-\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ vec3\ delta\_distance\_z\ =\ new\_pos\_z\ -\/\ this-\/>\mbox{\hyperlink{struct_entity_a818bf3bbc983a6b7e89e5851c7607bd3}{raw\_position}};}
-\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (delta\_distance\_z.z\ >\ 0)\ \{}
-\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ facedir\_z\ =\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a57ca34daf3dcec786d11b94bb7f87fe8}{FrontFaceDirection::FORWARD}};}
-\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (delta\_distance\_z.z\ <\ 0)\ \{}
-\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ facedir\_z\ =\ \mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484a4b03ff619767f5f9fd85a823c9c097f0}{FrontFaceDirection::BACK}};}
-\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_tuple(facedir\_x,\ facedir\_z);}
-\DoxyCodeLine{00164\ \ \ \ \ \}}
-\DoxyCodeLine{00165\ }
-\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_a5037af23d2d1d1e710a9418ecc1207d8}{update\_facing\_direction}}(\textcolor{keywordtype}{int}\ facedir\_x,\ \textcolor{keywordtype}{int}\ facedir\_z)\ \{}
-\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_x\ ==\ -\/1\ \&\&\ facedir\_z\ ==\ -\/1)\ \{}
-\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ do\ nothing}}
-\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (facedir\_x\ ==\ -\/1)\ \{}
-\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\_direction}}\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{FrontFaceDirection}}\textcolor{keyword}{>}(facedir\_z);}
-\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (facedir\_z\ ==\ -\/1)\ \{}
-\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\_direction}}\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{FrontFaceDirection}}\textcolor{keyword}{>}(facedir\_x);}
-\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_entity_a93f4ff6e246e2a2c69042fc8d5884358}{face\_direction}}\ =}
-\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_entity_ad7303705b91fa9ed426096c2bcfd0484}{FrontFaceDirection}}\textcolor{keyword}{>}(facedir\_x\ |\ facedir\_z);}
-\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00177\ \ \ \ \ \}}
-\DoxyCodeLine{00178\ }
-\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{always\_update}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_x\ =\ this-\/>\mbox{\hyperlink{struct_person_a0fefe392ef54377872ea4270202b0ecb}{update\_xaxis\_position}}(dt);}
-\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_z\ =\ this-\/>\mbox{\hyperlink{struct_person_a134feac9c4147ecb2411ff7a4a51a100}{update\_zaxis\_position}}(dt);}
-\DoxyCodeLine{00182\ }
-\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ facedirs\ =\ \mbox{\hyperlink{struct_person_a0438d8fd551998f95723320ede130f44}{get\_face\_direction}}(new\_pos\_x,\ new\_pos\_z);}
-\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ facedir\_x\ =\ std::get<0>(facedirs);}
-\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ facedir\_z\ =\ std::get<1>(facedirs);}
-\DoxyCodeLine{00186\ }
-\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_a5037af23d2d1d1e710a9418ecc1207d8}{update\_facing\_direction}}(facedir\_x,\ facedir\_z);}
-\DoxyCodeLine{00188\ }
-\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ new\_pos\_x.x\ +=\ this-\/>\mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\_force}}.x;}
-\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\_force}}.x\ =\ 0.0f;}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note:\ if\ these\ are\ both\ true,\ then\ we\ definitely\ dont\ need\ to}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ keep\ going\ and\ can\ break\ early,\ otherwise\ we\ should\ check\ the}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rest\ to\ make\ sure}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (would\_collide\_x\ \&\&\ would\_collide\_z)\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610a0f3fbeaa77bb603279229e91ec5df0bb}{EntityHelper::ForEachFlow::Break}};}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610ade35d6cc11c2732bc98475566a7fffe9}{EntityHelper::ForEachFlow::None}};}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!would\_collide\_x)\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().raw\_position.x\ =\ new\_pos\_x.x;}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!would\_collide\_z)\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().raw\_position.z\ =\ new\_pos\_z.z;}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ value\ determines\ how\ "{}far"{}\ to\ impart\ a\ push\ force\ on\ the}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ collided\ entity}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ directional\_push\_modifier\ =\ 1.0f;}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Figure\ out\ if\ there's\ a\ more\ graceful\ way\ to\ "{}jitter"{}\ things\ around}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ each\ other}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ tile\_div\_push\_mod\ =\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ directional\_push\_modifier;}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (would\_collide\_x\ ||\ would\_collide\_z)\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ entity\_x\ =\ collided\_entity\_x.lock())\ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ person\_ptr\_x\ =\ \textcolor{keyword}{dynamic\_cast<}\mbox{\hyperlink{struct_person}{Person}}*\textcolor{keyword}{>}(entity\_x.get()))\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ random\_jitter\ =\ \mbox{\hyperlink{random_8h_aad2eabec61848c202dd8cf2a800d3398}{randSign}}()\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2.0f;}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_x\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform::FrontFaceDirection::LEFT}})\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity\_x-\/>pushed\_force.x\ +=\ tile\_div\_push\_mod;}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity\_x-\/>pushed\_force.z\ +=\ random\_jitter;}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_x\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform::FrontFaceDirection::RIGHT}})\ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity\_x-\/>pushed\_force.x\ -\/=\ tile\_div\_push\_mod;}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity\_x-\/>pushed\_force.z\ +=\ random\_jitter;}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ entity\_z\ =\ collided\_entity\_z.lock())\ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ person\_ptr\_z\ =\ \textcolor{keyword}{dynamic\_cast<}\mbox{\hyperlink{struct_person}{Person}}*\textcolor{keyword}{>}(entity\_z.get()))\ \{}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ random\_jitter\ =\ \mbox{\hyperlink{random_8h_aad2eabec61848c202dd8cf2a800d3398}{randSign}}()\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2.0f;}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_z\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform::FrontFaceDirection::FORWARD}})\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ person\_ptr\_z-\/>pushed\_force.x\ +=\ random\_jitter;}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ person\_ptr\_z-\/>pushed\_force.z\ +=\ tile\_div\_push\_mod;}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_z\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform::FrontFaceDirection::BACK}})\ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ person\_ptr\_z-\/>pushed\_force.x\ +=\ random\_jitter;}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ person\_ptr\_z-\/>pushed\_force.z\ -\/=\ tile\_div\_push\_mod;}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00150\ \ \ \ \ \}}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ std::tuple<int,\ int>\ \mbox{\hyperlink{struct_person_a0438d8fd551998f95723320ede130f44}{get\_face\_direction}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ new\_pos\_x,\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ new\_pos\_z)\ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ facedir\_x\ =\ -\/1;}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ facedir\_z\ =\ -\/1;}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ delta\_distance\_x\ =\ new\_pos\_x\ -\/\ this-\/>get<Transform>().raw\_position;}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (delta\_distance\_x.x\ >\ 0)\ \{}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ facedir\_x\ =\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform::FrontFaceDirection::RIGHT}};}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (delta\_distance\_x.x\ <\ 0)\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ facedir\_x\ =\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform::FrontFaceDirection::LEFT}};}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ delta\_distance\_z\ =\ new\_pos\_z\ -\/\ this-\/>get<Transform>().raw\_position;}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (delta\_distance\_z.z\ >\ 0)\ \{}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ facedir\_z\ =\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform::FrontFaceDirection::FORWARD}};}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (delta\_distance\_z.z\ <\ 0)\ \{}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ facedir\_z\ =\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform::FrontFaceDirection::BACK}};}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_tuple(facedir\_x,\ facedir\_z);}
+\DoxyCodeLine{00170\ \ \ \ \ \}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_a5037af23d2d1d1e710a9418ecc1207d8}{update\_facing\_direction}}(\textcolor{keywordtype}{int}\ facedir\_x,\ \textcolor{keywordtype}{int}\ facedir\_z)\ \{}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_x\ ==\ -\/1\ \&\&\ facedir\_z\ ==\ -\/1)\ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ do\ nothing}}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (facedir\_x\ ==\ -\/1)\ \{}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(facedir\_z);}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (facedir\_z\ ==\ -\/1)\ \{}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(facedir\_x);}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(facedir\_x\ |}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ facedir\_z);}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00186\ \ \ \ \ \}}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{always\_update}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_x\ =\ this-\/>\mbox{\hyperlink{struct_person_a0fefe392ef54377872ea4270202b0ecb}{update\_xaxis\_position}}(dt);}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_z\ =\ this-\/>\mbox{\hyperlink{struct_person_a134feac9c4147ecb2411ff7a4a51a100}{update\_zaxis\_position}}(dt);}
 \DoxyCodeLine{00191\ }
-\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ new\_pos\_z.z\ +=\ this-\/>\mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\_force}}.z;}
-\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\_force}}.z\ =\ 0.0f;}
-\DoxyCodeLine{00194\ }
-\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this-\/>face\_direction\ =\ FrontFaceDirection::BACK\ \&}}
-\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ FrontFaceDirection::LEFT;}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ facedirs\ =\ \mbox{\hyperlink{struct_person_a0438d8fd551998f95723320ede130f44}{get\_face\_direction}}(new\_pos\_x,\ new\_pos\_z);}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ facedir\_x\ =\ std::get<0>(facedirs);}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ facedir\_z\ =\ std::get<1>(facedirs);}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_a5037af23d2d1d1e710a9418ecc1207d8}{update\_facing\_direction}}(facedir\_x,\ facedir\_z);}
 \DoxyCodeLine{00197\ }
-\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{handle\_collision}}(facedir\_x,\ new\_pos\_x,\ facedir\_z,\ new\_pos\_z);}
-\DoxyCodeLine{00199\ }
-\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{Entity::always\_update}}(dt);}
-\DoxyCodeLine{00201\ \ \ \ \ \}}
-\DoxyCodeLine{00202\ \};}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ new\_pos\_x.x\ +=\ this-\/>\mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\_force}}.x;}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\_force}}.x\ =\ 0.0f;}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ new\_pos\_z.z\ +=\ this-\/>\mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\_force}}.z;}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\_force}}.z\ =\ 0.0f;}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this-\/>get<Transform>().face\_direction\ =}}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Transform::FrontFaceDirection::BACK\ \&}}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Transform::FrontFaceDirection::LEFT;}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{handle\_collision}}(facedir\_x,\ new\_pos\_x,\ facedir\_z,\ new\_pos\_z);}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{Entity::always\_update}}(dt);}
+\DoxyCodeLine{00211\ \ \ \ \ \}}
+\DoxyCodeLine{00212\ \};}
 
 \end{DoxyCode}

@@ -1,0 +1,62 @@
+\hypertarget{music__library_8h_source}{}\doxysection{music\+\_\+library.\+h}
+\label{music__library_8h_source}\index{src/engine/music\_library.h@{src/engine/music\_library.h}}
+\mbox{\hyperlink{music__library_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{library_8h}{library.h}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{singleton_8h}{singleton.h}}"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \mbox{\hyperlink{singleton_8h_a2c7d0ae28a9340e96cc64ff071551e31}{SINGLETON\_FWD}}(\mbox{\hyperlink{struct_music_library}{MusicLibrary}})}
+\DoxyCodeLine{00007\ struct\ \mbox{\hyperlink{struct_music_library}{MusicLibrary}}\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \mbox{\hyperlink{singleton_8h_ac4940bd51e49be0e873a7bffe9d67ad9}{SINGLETON}}(\mbox{\hyperlink{struct_music_library}{MusicLibrary}})}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ raylib::Music\&\ \mbox{\hyperlink{struct_music_library_aa483c444b8a7363bff5973295fe45217}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl.get(name);}
+\DoxyCodeLine{00012\ \ \ \ \ \}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ [[nodiscard]]\ raylib::Music\&\ \mbox{\hyperlink{struct_music_library_a15890a58e47ac6f975afd930b42fa01b}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl.get(name);}
+\DoxyCodeLine{00016\ \ \ \ \ \}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_music_library_aeab0c55ba65d1793675f4a1df8d5c3f7}{load}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name)\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ impl.load(filename,\ name);}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ SPEED:\ right\ now\ we\ loop\ over\ every\ sound\ again}}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ could\ just\ look\ up\ the\ newly\ added\ one}}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ update\_volume(current\_volume);}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_music_library_ad0c364c5dbe6ac93b46e2cb287bf0a4e}{update\_volume}}(\textcolor{keywordtype}{float}\ new\_v)\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ impl.update\_volume(new\_v);}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ current\_volume\ =\ new\_v;}
+\DoxyCodeLine{00028\ \ \ \ \ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_music_library_a062c809ff01336c31bdbbe5a0c03fcef}{unload\_all}}()\ \{\ impl.unload\_all();\ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//\ Note:\ this\ is\ set\ from\ settings}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ we\ store\ this\ because\ when\ a\ new\ music\ is\ added\ it\ uses\ the\ default}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//\ volume\ instead\ of\ the\ one\ in\ settings\ because\ we\ are\ reactive.\ this}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ allows\ us\ to\ locally\ cache\ the\ most\ recent\ volume\ and\ handle\ it\ here}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{float}\ current\_volume\ =\ 1.f;}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_music_library_1_1_music_library_impl}{MusicLibraryImpl}}\ :\ \mbox{\hyperlink{struct_library}{Library}}<raylib::Music>\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ raylib::Music\ \mbox{\hyperlink{struct_music_library_1_1_music_library_impl_a0d06ee2c9ffbbb279b5556f84f3e4cda}{convert\_filename\_to\_object}}(}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ raylib::LoadMusicStream(filename);}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_music_library_1_1_music_library_impl_afea00373c023deb05a3e2538b953605e}{update\_volume}}(\textcolor{keywordtype}{float}\ new\_v)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ kv\ :\ storage)\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}updating\ music\ volume\ for\ \{\}\ to\ \{\}"{}},\ kv.first,\ new\_v);}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ raylib::SetMusicVolume(kv.second,\ new\_v);}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_music_library_1_1_music_library_impl_a647ec7e5615843f18780660a53f7ba52}{unload}}(raylib::Music\ music)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::UnloadMusicStream(music);}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00055\ \ \ \ \ \}\ impl;}
+\DoxyCodeLine{00056\ \};}
+
+\end{DoxyCode}

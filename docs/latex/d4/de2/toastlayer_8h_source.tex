@@ -7,20 +7,20 @@
 \DoxyCodeLine{00003\ }
 \DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
 \DoxyCodeLine{00005\ \textcolor{comment}{//}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}engine/font\_sizer.h"{}}}
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}engine/layer.h"{}}}
-\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}engine/ui\_theme.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{font__sizer_8h}{engine/font\_sizer.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{layer_8h}{engine/layer.h}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ui__theme_8h}{engine/ui\_theme.h}}"{}}}
 \DoxyCodeLine{00009\ \textcolor{comment}{//}}
 \DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{toastmanager_8h}{toastmanager.h}}"{}}}
 \DoxyCodeLine{00011\ }
-\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_toast_layer}{ToastLayer}}\ :\ \textcolor{keyword}{public}\ Layer,\ \textcolor{keyword}{public}\ FontSizeCache\ \{}
-\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{struct_toast_layer_a6e3c2a59f44814845877d7a0d04f78c4}{ToastLayer}}()\ :\ Layer(\textcolor{stringliteral}{"{}Toasts"{}})\ \{\ FontSizeCache::init();\ \}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_toast_layer}{ToastLayer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_layer}{Layer}},\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_font_size_cache}{FontSizeCache}}\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{struct_toast_layer_a6e3c2a59f44814845877d7a0d04f78c4}{ToastLayer}}()\ :\ \mbox{\hyperlink{struct_layer}{Layer}}(\textcolor{stringliteral}{"{}Toasts"{}})\ \{\ \mbox{\hyperlink{struct_font_size_cache_a6dec47d3663e069b6cdba660ef1899ce}{FontSizeCache::init}}();\ \}}
 \DoxyCodeLine{00014\ }
 \DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_toast_layer_a18acec2452ca123828d01515a118dc27}{toastPctHeight}}\ =\ 0.05f;}
 \DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_toast_layer_a0b38273a2f7625fcb37e96d332766661}{toastPctWidth}}\ =\ 0.25f;}
 \DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_toast_layer_a5f530e4b014352cbf9d29a51fa602d7e}{toastPctBottomPadding}}\ =\ 0.01f;}
 \DoxyCodeLine{00018\ }
-\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_toast_layer_a7f7353602665476177466d4157d4fb16}{onEvent}}(Event\&)\textcolor{keyword}{\ override\ }\{\}}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_toast_layer_a7f7353602665476177466d4157d4fb16}{onEvent}}(\mbox{\hyperlink{struct_event}{Event}}\&)\textcolor{keyword}{\ override\ }\{\}}
 \DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_toast_layer_a87cee46f5e3be4fbfcac99188a5453ef}{onUpdate}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{\ \mbox{\hyperlink{namespacetoasts_af28126fd6e7a376ca808fa3f64360fdd}{toasts::update}}(dt);\ \}}
 \DoxyCodeLine{00021\ }
 \DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_toast_layer_af1710e2476d178c69ea9d07895f38d88}{onDraw}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{}
@@ -28,36 +28,36 @@
 \DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
 \DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{toastmanager_8h_ad435cdf1b1b092994c0d8ca2b0262bab}{TOASTS}}.empty())\ \textcolor{keywordflow}{return};}
 \DoxyCodeLine{00026\ }
-\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ bot\_padd\ =\ (int)\ (WIN\_HF()\ *\ \mbox{\hyperlink{struct_toast_layer_a5f530e4b014352cbf9d29a51fa602d7e}{toastPctBottomPadding}});}
-\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ toastWidth\ =\ (WIN\_WF()\ *\ \mbox{\hyperlink{struct_toast_layer_a0b38273a2f7625fcb37e96d332766661}{toastPctWidth}});}
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ toastHeight\ =\ (WIN\_HF()\ *\ \mbox{\hyperlink{struct_toast_layer_a18acec2452ca123828d01515a118dc27}{toastPctHeight}});}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ bot\_padd\ =\ (int)\ (\mbox{\hyperlink{engine_2globals_8h_ae4ab98e49b98d8948eb15206b05ae4b8}{WIN\_HF}}()\ *\ \mbox{\hyperlink{struct_toast_layer_a5f530e4b014352cbf9d29a51fa602d7e}{toastPctBottomPadding}});}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ toastWidth\ =\ (\mbox{\hyperlink{engine_2globals_8h_a1368a126ad97b64d5180e1cc8b0fac61}{WIN\_WF}}()\ *\ \mbox{\hyperlink{struct_toast_layer_a0b38273a2f7625fcb37e96d332766661}{toastPctWidth}});}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ toastHeight\ =\ (\mbox{\hyperlink{engine_2globals_8h_ae4ab98e49b98d8948eb15206b05ae4b8}{WIN\_HF}}()\ *\ \mbox{\hyperlink{struct_toast_layer_a18acec2452ca123828d01515a118dc27}{toastPctHeight}});}
 \DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ offY\ =\ 0.f;}
 \DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ spacing\ =\ 0.f;}
 \DoxyCodeLine{00032\ }
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ Color\ accent\ =\ ui::DEFAULT\_THEME.from\_usage(ui::theme::Accent);}
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ Color\ font\_color\ =\ ui::DEFAULT\_THEME.from\_usage(ui::theme::Font);}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ Color\ accent\ =\ \mbox{\hyperlink{namespaceui_aaf6427befc8330fedd9aa7d987a3ea62}{ui::DEFAULT\_THEME}}.\mbox{\hyperlink{structui_1_1_u_i_theme_a72f7e9d15024b59799009b19fa52f0fd}{from\_usage}}(\mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74ad9b1efad2d6b0380f08dc2c1b4382c24}{ui::theme::Accent}});}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ Color\ font\_color\ =\ \mbox{\hyperlink{namespaceui_aaf6427befc8330fedd9aa7d987a3ea62}{ui::DEFAULT\_THEME}}.\mbox{\hyperlink{structui_1_1_u_i_theme_a72f7e9d15024b59799009b19fa52f0fd}{from\_usage}}(\mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a421c3240bd6c5c4cd47e5249711f90b1}{ui::theme::Font}});}
 \DoxyCodeLine{00035\ }
 \DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ background\_color\ =\ [](\mbox{\hyperlink{toastmanager_8h_ae413786da4913c98cb49e47afdd9645a}{AnnouncementType}}\ type)\ \{}
 \DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (type)\ \{}
 \DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ AnnouncementType::Warning:}
-\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ui::theme::Secondary;}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a4f5291f27fa788a54759585b9127a7ff}{ui::theme::Secondary}};}
 \DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ AnnouncementType::Error:}
-\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ui::theme::Error;}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a09c0ed1271690abcb50cfa0c97a621dd}{ui::theme::Error}};}
 \DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
 \DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ AnnouncementType::Message:}
-\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ui::theme::Primary;}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a8ba193e7a9c49a44e917f7c2ba2b5653}{ui::theme::Primary}};}
 \DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \};}
 \DoxyCodeLine{00047\ }
 \DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ toast\ :\ \mbox{\hyperlink{toastmanager_8h_ad435cdf1b1b092994c0d8ca2b0262bab}{TOASTS}})\ \{}
 \DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ Color\ primary\ =}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ui::DEFAULT\_THEME.from\_usage(background\_color(toast.type));}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaf6427befc8330fedd9aa7d987a3ea62}{ui::DEFAULT\_THEME}}.\mbox{\hyperlink{structui_1_1_u_i_theme_a72f7e9d15024b59799009b19fa52f0fd}{from\_usage}}(background\_color(toast.type));}
 \DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ interpolate\ the\ alpha\ on\ these\ to\ look\ nicer,\ (pop\ in\ /}}
 \DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ pop\ out)}}
 \DoxyCodeLine{00053\ }
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ vec2\ pos\ =\ \{}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WIN\_WF()\ *\ 0.72f,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (WIN\_HF()\ *\ 0.05f)\ +\ offY,\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos\ =\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{engine_2globals_8h_a1368a126ad97b64d5180e1cc8b0fac61}{WIN\_WF}}()\ *\ 0.72f,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{engine_2globals_8h_ae4ab98e49b98d8948eb15206b05ae4b8}{WIN\_HF}}()\ *\ 0.05f)\ +\ offY,\ \ \textcolor{comment}{//}}
 \DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
 \DoxyCodeLine{00058\ }
 \DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ DrawRectangleRounded(}
@@ -78,7 +78,7 @@
 \DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
 \DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0.15f,\ 4,\ accent);}
 \DoxyCodeLine{00076\ }
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ font\_size\ =\ get\_font\_size(std::string(toast.msg),\ toastWidth,}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ font\_size\ =\ \mbox{\hyperlink{struct_font_size_cache_ac06ce873dae318420f9ae2931ba170b5}{get\_font\_size}}(std::string(toast.msg),\ toastWidth,}
 \DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ toastHeight,\ spacing);}
 \DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ really\ would\ prefer\ to\ wrap\ the\ text,\ but\ its\ kinda}}
 \DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ hard\ to\ do}}
@@ -87,7 +87,7 @@
 \DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ at\ some\ point\ we\ want\ to\ split\ the\ text\ onto\ different}}
 \DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ lines...}}
 \DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ https://github.com/emilk/emilib/blob/master/emilib/word\_wrap.cpp}}
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ DrawTextEx(font,\ std::string(toast.msg).c\_str(),\ pos,\ font\_size,}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ DrawTextEx(\mbox{\hyperlink{namespacefont}{font}},\ std::string(toast.msg).c\_str(),\ pos,\ font\_size,}
 \DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ spacing,\ font\_color);}
 \DoxyCodeLine{00088\ }
 \DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ offY\ +=\ (bot\_padd\ +\ toastHeight);}

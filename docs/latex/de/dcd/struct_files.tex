@@ -1,0 +1,167 @@
+\hypertarget{struct_files}{}\doxysection{Files Struct Reference}
+\label{struct_files}\index{Files@{Files}}
+
+
+{\ttfamily \#include $<$files.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_files_a0b7baf90873fc328c43ba89c318ac28a}{Files}} (\mbox{\hyperlink{struct_files_config}{Files\+Config}} config)
+\item 
+fs\+::path \mbox{\hyperlink{struct_files_aacfc56230300eea9bea251eb81ac3428}{game\+\_\+folder}} () const
+\item 
+bool \mbox{\hyperlink{struct_files_aeb47643e411d9a5288d4a1296a0afbbe}{ensure\+\_\+game\+\_\+folder\+\_\+exists}} ()
+\item 
+fs\+::path \mbox{\hyperlink{struct_files_a75d091c1f617a9eb83045a3aff609d06}{settings\+\_\+filepath}} () const
+\item 
+fs\+::path \mbox{\hyperlink{struct_files_a10d5c34be91118f16dbe3a379a5a4e5b}{resource\+\_\+folder}} () const
+\item 
+fs\+::path \mbox{\hyperlink{struct_files_a192df466809e92cee95af1f31b41f85e}{game\+\_\+controller\+\_\+db}} () const
+\item 
+std\+::string \mbox{\hyperlink{struct_files_a17fa20c074c7af1b1335c231ec791683}{fetch\+\_\+resource\+\_\+path}} (std\+::string\+\_\+view group, std\+::string\+\_\+view name) const
+\item 
+void \mbox{\hyperlink{struct_files_a1b6a3ac1b923e6e7f79c9d6c27f6de21}{for\+\_\+resources\+\_\+in\+\_\+folder}} (std\+::string\+\_\+view group, std\+::string\+\_\+view folder, std\+::function$<$ void(std\+::string, std\+::string)$>$) const
+\item 
+void \mbox{\hyperlink{struct_files_ad7bbd4346c8121d649b9789783b16230}{folder\+\_\+locations}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{struct_files_ab023806ec2c32b192e5166c48ad3ce72}{root}} = \char`\"{}example\+\_\+game\char`\"{}
+\item 
+std\+::string \mbox{\hyperlink{struct_files_a07299826f799cd2d38bf803f6ebbf6de}{settings\+\_\+file}} = \char`\"{}settings.\+bin\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_files_a0b7baf90873fc328c43ba89c318ac28a}\label{struct_files_a0b7baf90873fc328c43ba89c318ac28a}} 
+\index{Files@{Files}!Files@{Files}}
+\index{Files@{Files}!Files@{Files}}
+\doxysubsubsection{\texorpdfstring{Files()}{Files()}}
+{\footnotesize\ttfamily Files\+::\+Files (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_files_config}{Files\+Config}}}]{config }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+References \mbox{\hyperlink{struct_files_aeb47643e411d9a5288d4a1296a0afbbe}{ensure\+\_\+game\+\_\+folder\+\_\+exists()}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_files_aeb47643e411d9a5288d4a1296a0afbbe}\label{struct_files_aeb47643e411d9a5288d4a1296a0afbbe}} 
+\index{Files@{Files}!ensure\_game\_folder\_exists@{ensure\_game\_folder\_exists}}
+\index{ensure\_game\_folder\_exists@{ensure\_game\_folder\_exists}!Files@{Files}}
+\doxysubsubsection{\texorpdfstring{ensure\_game\_folder\_exists()}{ensure\_game\_folder\_exists()}}
+{\footnotesize\ttfamily bool Files\+::ensure\+\_\+game\+\_\+folder\+\_\+exists (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_files_aacfc56230300eea9bea251eb81ac3428}{game\+\_\+folder()}}, and \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_files_a0b7baf90873fc328c43ba89c318ac28a}{Files()}}.
+
+\mbox{\Hypertarget{struct_files_a17fa20c074c7af1b1335c231ec791683}\label{struct_files_a17fa20c074c7af1b1335c231ec791683}} 
+\index{Files@{Files}!fetch\_resource\_path@{fetch\_resource\_path}}
+\index{fetch\_resource\_path@{fetch\_resource\_path}!Files@{Files}}
+\doxysubsubsection{\texorpdfstring{fetch\_resource\_path()}{fetch\_resource\_path()}}
+{\footnotesize\ttfamily std\+::string Files\+::fetch\+\_\+resource\+\_\+path (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{group,  }\item[{std\+::string\+\_\+view}]{name }\end{DoxyParamCaption}) const}
+
+
+
+References \mbox{\hyperlink{struct_files_a10d5c34be91118f16dbe3a379a5a4e5b}{resource\+\_\+folder()}}.
+
+\mbox{\Hypertarget{struct_files_ad7bbd4346c8121d649b9789783b16230}\label{struct_files_ad7bbd4346c8121d649b9789783b16230}} 
+\index{Files@{Files}!folder\_locations@{folder\_locations}}
+\index{folder\_locations@{folder\_locations}!Files@{Files}}
+\doxysubsubsection{\texorpdfstring{folder\_locations()}{folder\_locations()}}
+{\footnotesize\ttfamily void Files\+::folder\+\_\+locations (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+References \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}.
+
+\mbox{\Hypertarget{struct_files_a1b6a3ac1b923e6e7f79c9d6c27f6de21}\label{struct_files_a1b6a3ac1b923e6e7f79c9d6c27f6de21}} 
+\index{Files@{Files}!for\_resources\_in\_folder@{for\_resources\_in\_folder}}
+\index{for\_resources\_in\_folder@{for\_resources\_in\_folder}!Files@{Files}}
+\doxysubsubsection{\texorpdfstring{for\_resources\_in\_folder()}{for\_resources\_in\_folder()}}
+{\footnotesize\ttfamily void Files\+::for\+\_\+resources\+\_\+in\+\_\+folder (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{group,  }\item[{std\+::string\+\_\+view}]{folder,  }\item[{std\+::function$<$ void(std\+::string, std\+::string)$>$}]{cb }\end{DoxyParamCaption}) const}
+
+
+
+References \mbox{\hyperlink{struct_files_a10d5c34be91118f16dbe3a379a5a4e5b}{resource\+\_\+folder()}}.
+
+\mbox{\Hypertarget{struct_files_a192df466809e92cee95af1f31b41f85e}\label{struct_files_a192df466809e92cee95af1f31b41f85e}} 
+\index{Files@{Files}!game\_controller\_db@{game\_controller\_db}}
+\index{game\_controller\_db@{game\_controller\_db}!Files@{Files}}
+\doxysubsubsection{\texorpdfstring{game\_controller\_db()}{game\_controller\_db()}}
+{\footnotesize\ttfamily fs\+::path Files\+::game\+\_\+controller\+\_\+db (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+References \mbox{\hyperlink{struct_files_a10d5c34be91118f16dbe3a379a5a4e5b}{resource\+\_\+folder()}}.
+
+\mbox{\Hypertarget{struct_files_aacfc56230300eea9bea251eb81ac3428}\label{struct_files_aacfc56230300eea9bea251eb81ac3428}} 
+\index{Files@{Files}!game\_folder@{game\_folder}}
+\index{game\_folder@{game\_folder}!Files@{Files}}
+\doxysubsubsection{\texorpdfstring{game\_folder()}{game\_folder()}}
+{\footnotesize\ttfamily fs\+::path Files\+::game\+\_\+folder (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+References \mbox{\hyperlink{struct_files_ab023806ec2c32b192e5166c48ad3ce72}{root}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_files_aeb47643e411d9a5288d4a1296a0afbbe}{ensure\+\_\+game\+\_\+folder\+\_\+exists()}}, and \mbox{\hyperlink{struct_files_a75d091c1f617a9eb83045a3aff609d06}{settings\+\_\+filepath()}}.
+
+\mbox{\Hypertarget{struct_files_a10d5c34be91118f16dbe3a379a5a4e5b}\label{struct_files_a10d5c34be91118f16dbe3a379a5a4e5b}} 
+\index{Files@{Files}!resource\_folder@{resource\_folder}}
+\index{resource\_folder@{resource\_folder}!Files@{Files}}
+\doxysubsubsection{\texorpdfstring{resource\_folder()}{resource\_folder()}}
+{\footnotesize\ttfamily fs\+::path Files\+::resource\+\_\+folder (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Referenced by \mbox{\hyperlink{struct_files_a17fa20c074c7af1b1335c231ec791683}{fetch\+\_\+resource\+\_\+path()}}, \mbox{\hyperlink{struct_files_a1b6a3ac1b923e6e7f79c9d6c27f6de21}{for\+\_\+resources\+\_\+in\+\_\+folder()}}, and \mbox{\hyperlink{struct_files_a192df466809e92cee95af1f31b41f85e}{game\+\_\+controller\+\_\+db()}}.
+
+\mbox{\Hypertarget{struct_files_a75d091c1f617a9eb83045a3aff609d06}\label{struct_files_a75d091c1f617a9eb83045a3aff609d06}} 
+\index{Files@{Files}!settings\_filepath@{settings\_filepath}}
+\index{settings\_filepath@{settings\_filepath}!Files@{Files}}
+\doxysubsubsection{\texorpdfstring{settings\_filepath()}{settings\_filepath()}}
+{\footnotesize\ttfamily fs\+::path Files\+::settings\+\_\+filepath (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+References \mbox{\hyperlink{struct_files_aacfc56230300eea9bea251eb81ac3428}{game\+\_\+folder()}}, and \mbox{\hyperlink{struct_files_a07299826f799cd2d38bf803f6ebbf6de}{settings\+\_\+file}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_files_ab023806ec2c32b192e5166c48ad3ce72}\label{struct_files_ab023806ec2c32b192e5166c48ad3ce72}} 
+\index{Files@{Files}!root@{root}}
+\index{root@{root}!Files@{Files}}
+\doxysubsubsection{\texorpdfstring{root}{root}}
+{\footnotesize\ttfamily std\+::string Files\+::root = \char`\"{}example\+\_\+game\char`\"{}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_files_aacfc56230300eea9bea251eb81ac3428}{game\+\_\+folder()}}.
+
+\mbox{\Hypertarget{struct_files_a07299826f799cd2d38bf803f6ebbf6de}\label{struct_files_a07299826f799cd2d38bf803f6ebbf6de}} 
+\index{Files@{Files}!settings\_file@{settings\_file}}
+\index{settings\_file@{settings\_file}!Files@{Files}}
+\doxysubsubsection{\texorpdfstring{settings\_file}{settings\_file}}
+{\footnotesize\ttfamily std\+::string Files\+::settings\+\_\+file = \char`\"{}settings.\+bin\char`\"{}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_files_a75d091c1f617a9eb83045a3aff609d06}{settings\+\_\+filepath()}}.
+
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/engine/\mbox{\hyperlink{files_8h}{files.\+h}}\item 
+src/engine/\mbox{\hyperlink{files_8cpp}{files.\+cpp}}\end{DoxyCompactItemize}

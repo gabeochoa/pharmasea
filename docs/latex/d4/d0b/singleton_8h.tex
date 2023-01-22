@@ -1,0 +1,56 @@
+\hypertarget{singleton_8h}{}\doxysection{src/engine/singleton.h File Reference}
+\label{singleton_8h}\index{src/engine/singleton.h@{src/engine/singleton.h}}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{singleton_8h_a2c7d0ae28a9340e96cc64ff071551e31}{SINGLETON\+\_\+\+FWD}}(type)
+\item 
+\#define \mbox{\hyperlink{singleton_8h_ac4940bd51e49be0e873a7bffe9d67ad9}{SINGLETON}}(type)
+\item 
+\#define \mbox{\hyperlink{singleton_8h_ab221b58f7a9b0353666538d67f6e5f2d}{SINGLETON\+\_\+\+PARAM}}(type,  param\+\_\+type)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{singleton_8h_ac4940bd51e49be0e873a7bffe9d67ad9}\label{singleton_8h_ac4940bd51e49be0e873a7bffe9d67ad9}} 
+\index{singleton.h@{singleton.h}!SINGLETON@{SINGLETON}}
+\index{SINGLETON@{SINGLETON}!singleton.h@{singleton.h}}
+\doxysubsubsection{\texorpdfstring{SINGLETON}{SINGLETON}}
+{\footnotesize\ttfamily \#define SINGLETON(\begin{DoxyParamCaption}\item[{}]{type }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ type\&\ create()\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (!type\#\#\_single)\ type\#\#\_single.reset(\textcolor{keyword}{new}\ type());\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *type\#\#\_single;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ [[nodiscard]]\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ type\&\ get()\ \{\ \textcolor{keywordflow}{return}\ create();\ \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{singleton_8h_a2c7d0ae28a9340e96cc64ff071551e31}\label{singleton_8h_a2c7d0ae28a9340e96cc64ff071551e31}} 
+\index{singleton.h@{singleton.h}!SINGLETON\_FWD@{SINGLETON\_FWD}}
+\index{SINGLETON\_FWD@{SINGLETON\_FWD}!singleton.h@{singleton.h}}
+\doxysubsubsection{\texorpdfstring{SINGLETON\_FWD}{SINGLETON\_FWD}}
+{\footnotesize\ttfamily \#define SINGLETON\+\_\+\+FWD(\begin{DoxyParamCaption}\item[{}]{type }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{struct\ }type;\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{static}\ std::shared\_ptr<type>\ type\#\#\_single;}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{singleton_8h_ab221b58f7a9b0353666538d67f6e5f2d}\label{singleton_8h_ab221b58f7a9b0353666538d67f6e5f2d}} 
+\index{singleton.h@{singleton.h}!SINGLETON\_PARAM@{SINGLETON\_PARAM}}
+\index{SINGLETON\_PARAM@{SINGLETON\_PARAM}!singleton.h@{singleton.h}}
+\doxysubsubsection{\texorpdfstring{SINGLETON\_PARAM}{SINGLETON\_PARAM}}
+{\footnotesize\ttfamily \#define SINGLETON\+\_\+\+PARAM(\begin{DoxyParamCaption}\item[{}]{type,  }\item[{}]{param\+\_\+type }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ type*\ create(\textcolor{keyword}{const}\ param\_type\&\ pt)\ \{\ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (!type\#\#\_single)\ type\#\#\_single.reset(\textcolor{keyword}{new}\ type(pt));\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ type\#\#\_single.get();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ [[nodiscard]]\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ type\&\ get()\ \{\ \textcolor{keywordflow}{return}\ *type\#\#\_single;\ \}}
+
+\end{DoxyCode}

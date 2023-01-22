@@ -1,0 +1,24 @@
+\hypertarget{trigger__on__dt_8h_source}{}\doxysection{trigger\+\_\+on\+\_\+dt.\+h}
+\label{trigger__on__dt_8h_source}\index{src/engine/trigger\_on\_dt.h@{src/engine/trigger\_on\_dt.h}}
+\mbox{\hyperlink{trigger__on__dt_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_trigger_on_dt}{TriggerOnDt}}\ \{}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_trigger_on_dt_ac6bb8f14486e7edbe4f9225e02f40f9f}{reset}};}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_trigger_on_dt_a1909a8d0144f4496d761c863fc9e4248}{current}};}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \ \ \ \ \mbox{\hyperlink{struct_trigger_on_dt_a054a9419c8dc994eeacaac4dfd17cbc3}{TriggerOnDt}}(\textcolor{keywordtype}{float}\ timeToPass)\ :\ \mbox{\hyperlink{struct_trigger_on_dt_ac6bb8f14486e7edbe4f9225e02f40f9f}{reset}}(timeToPass)\ \{\}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{operator}\ float()\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_trigger_on_dt_ac6bb8f14486e7edbe4f9225e02f40f9f}{reset}};\ \}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_trigger_on_dt_a82591d0168d54307d344a5935220ec26}{test}}(\textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_trigger_on_dt_a1909a8d0144f4496d761c863fc9e4248}{current}}\ -\/=\ dt;}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_trigger_on_dt_a1909a8d0144f4496d761c863fc9e4248}{current}}\ >\ 0)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_trigger_on_dt_a1909a8d0144f4496d761c863fc9e4248}{current}}\ =\ \mbox{\hyperlink{struct_trigger_on_dt_ac6bb8f14486e7edbe4f9225e02f40f9f}{reset}};}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00017\ \ \ \ \ \}}
+\DoxyCodeLine{00018\ \};}
+
+\end{DoxyCode}

@@ -4,6 +4,7 @@
 #include "bitsery/ext/std_smart_ptr.h"
 #include "components/base_component.h"
 #include "components/can_be_highlighted.h"
+#include "components/can_be_pushed.h"
 #include "components/can_hold_item.h"
 #include "components/has_name.h"
 #include "components/model_renderer.h"
@@ -36,7 +37,6 @@ struct Entity {
     ComponentBitSet componentSet;
     ComponentArray componentArray;
 
-    vec3 pushed_force{0.0, 0.0, 0.0};
     bool cleanup = false;
     bool is_held = false;
 
@@ -86,6 +86,7 @@ struct Entity {
         addComponent<CanHoldItem>();
         addComponent<SimpleColoredBoxRenderer>();
         addComponent<ModelRenderer>();
+        addComponent<CanBePushed>();
     }
 
    private:
@@ -98,7 +99,6 @@ struct Entity {
                         sv.ext(bc, bitsery::ext::StdSmartPtr{});
                     });
         s.ext(componentSet, bitsery::ext::StdBitset{});
-        s.object(pushed_force);
         s.value1b(cleanup);
         s.value1b(is_held);
     }
@@ -370,19 +370,7 @@ struct Entity {
         this->update_position(vec::snap(location));
     }
 
-    virtual void render() const final {
-        TRACY_ZONE_SCOPED;
-        const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-
-        if (!debug_mode_on) {
-            render_normal();
-        }
-
-        if (debug_mode_on) {
-            render_debug_mode();
-        }
-    }
+    virtual void render() const final { TRACY_ZONE_SCOPED; }
 
     virtual void update(float dt) final {
         TRACY_ZONE_SCOPED;

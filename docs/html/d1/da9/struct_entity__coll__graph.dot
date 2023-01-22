@@ -1,0 +1,8 @@
+digraph "Entity"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [shape=record,label="{Entity\n|+ id\l+ componentSet\l+ componentArray\l+ pushed_force\l+ cleanup\l+ is_held\l|+ has()\l+ addComponent()\l+ get()\l+ add_static_components()\l+ Entity()\l+ Entity()\l+ Entity()\l+ Entity()\l+ ~Entity()\l+ announce()\l+ is_snappable()\l+ collides()\l+ update_position()\l+ raw_bounds()\l+ bounds()\l+ snap_position()\l+ rotate_facing_clockwise()\l+ tile_infront()\l+ add_to_navmesh()\l+ is_collidable()\l+ on_pickup()\l+ on_drop()\l+ render()\l+ update()\l+ tile_infront_given\l_pos()\l# Entity()\l# size()\l# render_debug_mode()\l# render_normal()\l# render_floating_name()\l# update_held_item_position()\l# get_heading()\l# turn_to_face_entity()\l# always_update()\l# planning_update()\l# in_round_update()\l# can_place_item_into()\l- serialize()\l}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+}

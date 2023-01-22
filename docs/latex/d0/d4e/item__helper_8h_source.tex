@@ -9,8 +9,8 @@
 \DoxyCodeLine{00005\ }
 \DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
 \DoxyCodeLine{00007\ \textcolor{comment}{//}}
-\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}engine/globals\_register.h"{}}}
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}engine/is\_server.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals__register_8h}{engine/globals\_register.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{is__server_8h}{engine/is\_server.h}}"{}}}
 \DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
 \DoxyCodeLine{00011\ }
 \DoxyCodeLine{00012\ \textcolor{comment}{//}}
@@ -30,7 +30,7 @@
 \DoxyCodeLine{00026\ }
 \DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{item__helper_8h_a175a25f0a9aa01587d97b5daefa2db13}{Items}}\&\ \mbox{\hyperlink{struct_item_helper_a44f1137eaff506c9b1ea4f5e2f48e8a4}{get\_items}}()\ \{}
 \DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ in\_lobby\ =\ GameState::get().is(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game::State::Lobby}});}
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_server())\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{is__server_8h_aa9b37672e835e000097b7b8c69868672}{is\_server}}())\ \{}
 \DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ in\_lobby\ ?\ \mbox{\hyperlink{item__helper_8h_a2091150406655e7aa8a4c40ba8beb7e4}{server\_lobby\_items\_DO\_NOT\_USE}}}
 \DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{item__helper_8h_a79b83ae9ed8024ef393811b5c3976ae8}{server\_items\_DO\_NOT\_USE}};}
 \DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \}}
@@ -105,7 +105,7 @@
 \DoxyCodeLine{00101\ }
 \DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
 \DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ std::vector<std::shared\_ptr<T>>\ \mbox{\hyperlink{struct_item_helper_a7d3afea322f196765e7c22a61bea38b3}{getitemsInRange}}(}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ vec2\ pos,\ \textcolor{keywordtype}{float}\ range)\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos,\ \textcolor{keywordtype}{float}\ range)\ \{}
 \DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ std::vector<std::shared\_ptr<T>>\ matching;}
 \DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ e\ :\ \mbox{\hyperlink{struct_item_helper_a44f1137eaff506c9b1ea4f5e2f48e8a4}{get\_items}}())\ \{}
 \DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ s\ =\ dynamic\_pointer\_cast<T>(e);}
@@ -119,7 +119,7 @@
 \DoxyCodeLine{00115\ }
 \DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
 \DoxyCodeLine{00117\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ std::shared\_ptr<T>\ \mbox{\hyperlink{struct_item_helper_a4ee7f424c187b24d9161a907e43fc1e4}{getClosestMatchingItem}}(}
-\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ vec2\ pos,\ \textcolor{keywordtype}{float}\ range,}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos,\ \textcolor{keywordtype}{float}\ range,}
 \DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ std::function<\textcolor{keywordtype}{bool}(std::shared\_ptr<T>)>\ filter\ =\ \{\})\ \{}
 \DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ best\_distance\ =\ range;}
 \DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ std::shared\_ptr<T>\ best\_so\_far;}

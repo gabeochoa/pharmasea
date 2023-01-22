@@ -1,0 +1,97 @@
+\hypertarget{structui_1_1_state_manager}{}\doxysection{ui\+::State\+Manager Struct Reference}
+\label{structui_1_1_state_manager}\index{ui::StateManager@{ui::StateManager}}
+
+
+{\ttfamily \#include $<$ui\+\_\+state.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{structui_1_1_state_manager_ae4265a4c90253ddb18d86bbe2bde895c}{add\+State}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} id, const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{structui_1_1_u_i_state}{UIState}} $>$ \&state)
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{structui_1_1_state_manager_a6ec4ca88f6192d857fed9ad7e8ac4a55}{get\+And\+Create\+If\+None}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} id)
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{structui_1_1_u_i_state}{UIState}} $>$ \mbox{\hyperlink{structui_1_1_state_manager_af2eb71ebffe06e8d512646188d5e7b1a}{get}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} id)
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{structui_1_1_state_manager_ae7d2f9777d0d4ecbd1d52d83e250be8f}{get\+\_\+as}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} id)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::map$<$ \mbox{\hyperlink{structui_1_1uuid}{uuid}}, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{structui_1_1_u_i_state}{UIState}} $>$ $>$ \mbox{\hyperlink{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}{states}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structui_1_1_state_manager_ae4265a4c90253ddb18d86bbe2bde895c}\label{structui_1_1_state_manager_ae4265a4c90253ddb18d86bbe2bde895c}} 
+\index{ui::StateManager@{ui::StateManager}!addState@{addState}}
+\index{addState@{addState}!ui::StateManager@{ui::StateManager}}
+\doxysubsubsection{\texorpdfstring{addState()}{addState()}}
+{\footnotesize\ttfamily void ui\+::\+State\+Manager\+::add\+State (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}}}]{id,  }\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{structui_1_1_u_i_state}{UIState}} $>$ \&}]{state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}{states}}.
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_state_manager_a6ec4ca88f6192d857fed9ad7e8ac4a55}{get\+And\+Create\+If\+None()}}.
+
+\mbox{\Hypertarget{structui_1_1_state_manager_af2eb71ebffe06e8d512646188d5e7b1a}\label{structui_1_1_state_manager_af2eb71ebffe06e8d512646188d5e7b1a}} 
+\index{ui::StateManager@{ui::StateManager}!get@{get}}
+\index{get@{get}!ui::StateManager@{ui::StateManager}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{structui_1_1_u_i_state}{UIState}} $>$ ui\+::\+State\+Manager\+::get (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}}}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}{states}}.
+
+\mbox{\Hypertarget{structui_1_1_state_manager_ae7d2f9777d0d4ecbd1d52d83e250be8f}\label{structui_1_1_state_manager_ae7d2f9777d0d4ecbd1d52d83e250be8f}} 
+\index{ui::StateManager@{ui::StateManager}!get\_as@{get\_as}}
+\index{get\_as@{get\_as}!ui::StateManager@{ui::StateManager}}
+\doxysubsubsection{\texorpdfstring{get\_as()}{get\_as()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::shared\+\_\+ptr$<$ T $>$ ui\+::\+State\+Manager\+::get\+\_\+as (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}}}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}{states}}.
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_u_i_context_a83379739a90ddb9768d7d3352b54389d}{ui\+::\+UIContext\+::get\+\_\+widget\+\_\+state()}}.
+
+\mbox{\Hypertarget{structui_1_1_state_manager_a6ec4ca88f6192d857fed9ad7e8ac4a55}\label{structui_1_1_state_manager_a6ec4ca88f6192d857fed9ad7e8ac4a55}} 
+\index{ui::StateManager@{ui::StateManager}!getAndCreateIfNone@{getAndCreateIfNone}}
+\index{getAndCreateIfNone@{getAndCreateIfNone}!ui::StateManager@{ui::StateManager}}
+\doxysubsubsection{\texorpdfstring{getAndCreateIfNone()}{getAndCreateIfNone()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::shared\+\_\+ptr$<$ T $>$ ui\+::\+State\+Manager\+::get\+And\+Create\+If\+None (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}}}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_state_manager_ae4265a4c90253ddb18d86bbe2bde895c}{add\+State()}}, and \mbox{\hyperlink{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}{states}}.
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{ui\+::\+UIContext\+::widget\+\_\+init()}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}\label{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}} 
+\index{ui::StateManager@{ui::StateManager}!states@{states}}
+\index{states@{states}!ui::StateManager@{ui::StateManager}}
+\doxysubsubsection{\texorpdfstring{states}{states}}
+{\footnotesize\ttfamily std\+::map$<$\mbox{\hyperlink{structui_1_1uuid}{uuid}}, std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{structui_1_1_u_i_state}{UIState}}$>$ $>$ ui\+::\+State\+Manager\+::states}
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_state_manager_ae4265a4c90253ddb18d86bbe2bde895c}{add\+State()}}, \mbox{\hyperlink{structui_1_1_state_manager_af2eb71ebffe06e8d512646188d5e7b1a}{get()}}, \mbox{\hyperlink{structui_1_1_state_manager_ae7d2f9777d0d4ecbd1d52d83e250be8f}{get\+\_\+as()}}, and \mbox{\hyperlink{structui_1_1_state_manager_a6ec4ca88f6192d857fed9ad7e8ac4a55}{get\+And\+Create\+If\+None()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/engine/\mbox{\hyperlink{ui__state_8h}{ui\+\_\+state.\+h}}\end{DoxyCompactItemize}

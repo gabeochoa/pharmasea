@@ -1,0 +1,91 @@
+\hypertarget{structui_1_1_button_config}{}\doxysection{ui\+::Button\+Config Struct Reference}
+\label{structui_1_1_button_config}\index{ui::ButtonConfig@{ui::ButtonConfig}}
+
+
+{\ttfamily \#include $<$ui\+\_\+widget.\+h$>$}
+
+Inheritance diagram for ui\+::Button\+Config\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{dc/de2/structui_1_1_button_config}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{structui_1_1_button_config_a982849d0c2a1c69e85ba0ccc7b80d085}{text}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes inherited from \mbox{\hyperlink{structui_1_1_widget}{ui\+::\+Widget}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structui_1_1_widget}{Widget}} $\ast$ \mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{me}}
+\item 
+\mbox{\hyperlink{structui_1_1uuid}{uuid}} \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}
+\item 
+std\+::string \mbox{\hyperlink{structui_1_1_widget_aaac4241fb04b3f48396fd0091e44f9cf}{element}} = \char`\"{}\char`\"{}
+\item 
+bool \mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}} = false
+\item 
+\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} \mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\+\_\+expected}} \mbox{[}2\mbox{]}
+\item 
+float \mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\+\_\+relative\+\_\+pos}} \mbox{[}2\mbox{]} = \{0.f, 0.f\}
+\item 
+float \mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\+\_\+size}} \mbox{[}2\mbox{]} = \{-\/1.f, -\/1.f\}
+\item 
+Rectangle \mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}
+\item 
+int \mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}} = \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a1a7a5196f987b86773c7d6940253b82d}{Grow\+Flags\+::\+None}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{structui_1_1_widget}{Widget}} $\ast$ $>$ \mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}}
+\item 
+\mbox{\hyperlink{structui_1_1_widget}{Widget}} $\ast$ \mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}} = nullptr
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{structui_1_1_widget}{ui\+::\+Widget}}}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{structui_1_1_widget_aeac63f3668d3d4d4294692ffc98cebd7}{cant\+\_\+render}} () const
+\item 
+\mbox{\hyperlink{structui_1_1uuid}{uuid}} \mbox{\hyperlink{structui_1_1_widget_ab2db94a678c481d764fdd23d2cdef9e7}{default\+\_\+id}} () const
+\item 
+\mbox{\hyperlink{structui_1_1_widget_aecd098b95747702874ea0bf595d9cd59}{Widget}} ()
+\item 
+\mbox{\hyperlink{structui_1_1_widget_a681b241d21aa9a6ede22953f1686a967}{Widget}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&other)
+\item 
+\mbox{\hyperlink{structui_1_1_widget_a75226cc9ed3eb0c54d0ce92661ac6f4d}{Widget}} (\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} x, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} y)
+\item 
+\mbox{\hyperlink{structui_1_1_widget_ad9db00c42216745cd3157891570dacec}{Widget}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} x, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} y)
+\item 
+\mbox{\hyperlink{structui_1_1_widget_ae8261599f0f633a5089eb90bba8c2417}{Widget}} (\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} x, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} y, int flags)
+\item 
+\mbox{\hyperlink{structui_1_1_widget_a38eace581cae6a65f28ddff8ba7f2dbb}{Widget}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&\mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{id}}, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} x, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} y, \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792}{Grow\+Flags}} flags)
+\item 
+\mbox{\hyperlink{structui_1_1_widget}{Widget}} \& \mbox{\hyperlink{structui_1_1_widget_a03cb2afb50fcf3097c94144e113c8a67}{operator=}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&other)
+\item 
+void \mbox{\hyperlink{structui_1_1_widget_a7f22a7a1b844885e2272406f24b1ef63}{set\+\_\+expectation}} (\mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} x, \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} y)
+\item 
+void \mbox{\hyperlink{structui_1_1_widget_a1816974419641b355efb1d432379141c}{add\+\_\+child}} (\mbox{\hyperlink{structui_1_1_widget}{Widget}} $\ast$child)
+\item 
+std\+::string \mbox{\hyperlink{structui_1_1_widget_a86934afb010a0dfcc923602f8163e12f}{print}} (int t=0) const
+\item 
+void \mbox{\hyperlink{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}{print\+\_\+tree}} (int t=0) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{structui_1_1_widget}{ui\+::\+Widget}}}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{structui_1_1_widget_adc00b84fb165ecb9167d8d7594413c61}{set\+\_\+element}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, std\+::string e)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structui_1_1_button_config_a982849d0c2a1c69e85ba0ccc7b80d085}\label{structui_1_1_button_config_a982849d0c2a1c69e85ba0ccc7b80d085}} 
+\index{ui::ButtonConfig@{ui::ButtonConfig}!text@{text}}
+\index{text@{text}!ui::ButtonConfig@{ui::ButtonConfig}}
+\doxysubsubsection{\texorpdfstring{text}{text}}
+{\footnotesize\ttfamily std\+::string ui\+::\+Button\+Config\+::text}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/engine/\mbox{\hyperlink{ui__widget_8h}{ui\+\_\+widget.\+h}}\end{DoxyCompactItemize}

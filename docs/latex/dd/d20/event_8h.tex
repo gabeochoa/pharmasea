@@ -1,0 +1,225 @@
+\hypertarget{event_8h}{}\doxysection{src/engine/event.h File Reference}
+\label{event_8h}\index{src/engine/event.h@{src/engine/event.h}}
+{\ttfamily \#include \char`\"{}../external\+\_\+include.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}gamepad\+\_\+axis\+\_\+with\+\_\+dir.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_event}{Event}}
+\item 
+struct \mbox{\hyperlink{struct_event_dispatcher}{Event\+Dispatcher}}
+\item 
+struct \mbox{\hyperlink{struct_key_event}{Key\+Event}}
+\item 
+struct \mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}}
+\item 
+struct \mbox{\hyperlink{struct_char_pressed_event}{Char\+Pressed\+Event}}
+\item 
+struct \mbox{\hyperlink{struct_window_resize_event}{Window\+Resize\+Event}}
+\item 
+struct \mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}}
+\item 
+struct \mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{event_8h_ad27cc17b25bb93134368d5eb21126eae}{BIT}}(x)~(1 $<$$<$ x)
+\item 
+\#define \mbox{\hyperlink{event_8h_ac3c4a787c33137ed4324ced409fff1cc}{MACRO\+\_\+\+EVENT\+\_\+\+TYPE}}(type)
+\item 
+\#define \mbox{\hyperlink{event_8h_a6c129ecea018dc2954566aa4126dcac3}{MACRO\+\_\+\+EVENT\+\_\+\+CATEGORY}}(cat)~    virtual int get\+Category\+Flags() const override \{ return cat; \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6fa}{Event\+Type}} \{ \newline
+\mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa6adf97f83acf6453d4a6a4b1070f3754}{None}} = 0
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faac984201d37197ab297a14d19efee4b07}{Window\+Close}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa9f8f27bff2915738c4fe1b970e12f89c}{Window\+Resize}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa1c68d5453b28d52622bf5486a5fd95ca}{Window\+Focus}}
+, \newline
+\mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa1c2119b9d61e623975f13f1029f1d97c}{Window\+Lost\+Focus}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faab94473d9dfc85f8fdbf5cb3b1d992bda}{Window\+Moved}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa559b408d45669603dbac61cd15984f13}{App\+Tick}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faac177abb86f28dea426f2e3409e14bcda}{App\+Update}}
+, \newline
+\mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa4b2eb3c601042333ac1c0565ff58e3d6}{App\+Render}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa7349f643d689997b7c54bf93e4095f5c}{Mouse\+Button\+Pressed}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa7584c169de594c27f00084b93186fd7c}{Mouse\+Button\+Released}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faac2770ad109c8063ce69a3608a9a16c08}{Mouse\+Moved}}
+, \newline
+\mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa50edb169910041bb3c06f6e8322d74c1}{Mouse\+Scrolled}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faac17e6984c1e5a887a49831beadee6bca}{Key\+Pressed}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa4a77f07c8ad223b71ab4ce78a63841ab}{Key\+Released}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa9afbfd35b289eb4fc7f1bc148d7b422e}{Key\+Typed}}
+, \newline
+\mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faafa986eb06aa86f1d47366acb1d84bc46}{Char\+Pressed}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa18389e2bd7b6b426f7b9d9164bf4a5ba}{Gamepad\+Axis\+Moved}}
+, \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faae2a9941e644616b8853693e7b3b22c96}{Gamepad\+Button\+Pressed}}
+ \}
+\item 
+enum \mbox{\hyperlink{event_8h_aa8b0556527d429476e3f3d6cfab1a21f}{Event\+Category}} \{ \newline
+\mbox{\hyperlink{event_8h_aa8b0556527d429476e3f3d6cfab1a21fab0f100582d9984660bf3ada1e026390f}{Event\+Category\+None}} = 0
+, \mbox{\hyperlink{event_8h_aa8b0556527d429476e3f3d6cfab1a21fa3f43864a1b89faf381e95d28e5b52846}{Event\+Category\+Application}} = BIT(0)
+, \mbox{\hyperlink{event_8h_aa8b0556527d429476e3f3d6cfab1a21fa352e01ef44a28d0831b9429181b99150}{Event\+Category\+Input}} = BIT(1)
+, \mbox{\hyperlink{event_8h_aa8b0556527d429476e3f3d6cfab1a21fa4214ff57065e765108fcdf3e781f9d4f}{Event\+Category\+Keyboard}} = BIT(2)
+, \newline
+\mbox{\hyperlink{event_8h_aa8b0556527d429476e3f3d6cfab1a21faf3f5f68228efdd30f0b07869e86e2712}{Event\+Category\+Mouse}} = BIT(3)
+, \mbox{\hyperlink{event_8h_aa8b0556527d429476e3f3d6cfab1a21fad9da379e2b26bfbe841d7425ae9468aa}{Event\+Category\+Mouse\+Button}} = BIT(4)
+, \mbox{\hyperlink{event_8h_aa8b0556527d429476e3f3d6cfab1a21fa560c2dbec038a60e68cc5b6fb05f8c81}{Event\+Category\+Gamepad}} = BIT(5)
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{event_8h_ad27cc17b25bb93134368d5eb21126eae}\label{event_8h_ad27cc17b25bb93134368d5eb21126eae}} 
+\index{event.h@{event.h}!BIT@{BIT}}
+\index{BIT@{BIT}!event.h@{event.h}}
+\doxysubsubsection{\texorpdfstring{BIT}{BIT}}
+{\footnotesize\ttfamily \#define BIT(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(1 $<$$<$ x)}
+
+\mbox{\Hypertarget{event_8h_a6c129ecea018dc2954566aa4126dcac3}\label{event_8h_a6c129ecea018dc2954566aa4126dcac3}} 
+\index{event.h@{event.h}!MACRO\_EVENT\_CATEGORY@{MACRO\_EVENT\_CATEGORY}}
+\index{MACRO\_EVENT\_CATEGORY@{MACRO\_EVENT\_CATEGORY}!event.h@{event.h}}
+\doxysubsubsection{\texorpdfstring{MACRO\_EVENT\_CATEGORY}{MACRO\_EVENT\_CATEGORY}}
+{\footnotesize\ttfamily \#define MACRO\+\_\+\+EVENT\+\_\+\+CATEGORY(\begin{DoxyParamCaption}\item[{}]{cat }\end{DoxyParamCaption})~    virtual int get\+Category\+Flags() const override \{ return cat; \}}
+
+\mbox{\Hypertarget{event_8h_ac3c4a787c33137ed4324ced409fff1cc}\label{event_8h_ac3c4a787c33137ed4324ced409fff1cc}} 
+\index{event.h@{event.h}!MACRO\_EVENT\_TYPE@{MACRO\_EVENT\_TYPE}}
+\index{MACRO\_EVENT\_TYPE@{MACRO\_EVENT\_TYPE}!event.h@{event.h}}
+\doxysubsubsection{\texorpdfstring{MACRO\_EVENT\_TYPE}{MACRO\_EVENT\_TYPE}}
+{\footnotesize\ttfamily \#define MACRO\+\_\+\+EVENT\+\_\+\+TYPE(\begin{DoxyParamCaption}\item[{}]{type }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6fa}{EventType}}\ getStaticType()\ \{\ \textcolor{keywordflow}{return}\ EventType::type;\ \}\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6fa}{EventType}}\ getEventType()\textcolor{keyword}{\ const\ override\ }\{\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ getStaticType();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ getName()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ \#type;\ \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{event_8h_aa8b0556527d429476e3f3d6cfab1a21f}\label{event_8h_aa8b0556527d429476e3f3d6cfab1a21f}} 
+\index{event.h@{event.h}!EventCategory@{EventCategory}}
+\index{EventCategory@{EventCategory}!event.h@{event.h}}
+\doxysubsubsection{\texorpdfstring{EventCategory}{EventCategory}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{event_8h_aa8b0556527d429476e3f3d6cfab1a21f}{Event\+Category}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EventCategoryNone@{EventCategoryNone}!event.h@{event.h}}\index{event.h@{event.h}!EventCategoryNone@{EventCategoryNone}}}\mbox{\Hypertarget{event_8h_aa8b0556527d429476e3f3d6cfab1a21fab0f100582d9984660bf3ada1e026390f}\label{event_8h_aa8b0556527d429476e3f3d6cfab1a21fab0f100582d9984660bf3ada1e026390f}} 
+Event\+Category\+None&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EventCategoryApplication@{EventCategoryApplication}!event.h@{event.h}}\index{event.h@{event.h}!EventCategoryApplication@{EventCategoryApplication}}}\mbox{\Hypertarget{event_8h_aa8b0556527d429476e3f3d6cfab1a21fa3f43864a1b89faf381e95d28e5b52846}\label{event_8h_aa8b0556527d429476e3f3d6cfab1a21fa3f43864a1b89faf381e95d28e5b52846}} 
+Event\+Category\+Application&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EventCategoryInput@{EventCategoryInput}!event.h@{event.h}}\index{event.h@{event.h}!EventCategoryInput@{EventCategoryInput}}}\mbox{\Hypertarget{event_8h_aa8b0556527d429476e3f3d6cfab1a21fa352e01ef44a28d0831b9429181b99150}\label{event_8h_aa8b0556527d429476e3f3d6cfab1a21fa352e01ef44a28d0831b9429181b99150}} 
+Event\+Category\+Input&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EventCategoryKeyboard@{EventCategoryKeyboard}!event.h@{event.h}}\index{event.h@{event.h}!EventCategoryKeyboard@{EventCategoryKeyboard}}}\mbox{\Hypertarget{event_8h_aa8b0556527d429476e3f3d6cfab1a21fa4214ff57065e765108fcdf3e781f9d4f}\label{event_8h_aa8b0556527d429476e3f3d6cfab1a21fa4214ff57065e765108fcdf3e781f9d4f}} 
+Event\+Category\+Keyboard&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EventCategoryMouse@{EventCategoryMouse}!event.h@{event.h}}\index{event.h@{event.h}!EventCategoryMouse@{EventCategoryMouse}}}\mbox{\Hypertarget{event_8h_aa8b0556527d429476e3f3d6cfab1a21faf3f5f68228efdd30f0b07869e86e2712}\label{event_8h_aa8b0556527d429476e3f3d6cfab1a21faf3f5f68228efdd30f0b07869e86e2712}} 
+Event\+Category\+Mouse&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EventCategoryMouseButton@{EventCategoryMouseButton}!event.h@{event.h}}\index{event.h@{event.h}!EventCategoryMouseButton@{EventCategoryMouseButton}}}\mbox{\Hypertarget{event_8h_aa8b0556527d429476e3f3d6cfab1a21fad9da379e2b26bfbe841d7425ae9468aa}\label{event_8h_aa8b0556527d429476e3f3d6cfab1a21fad9da379e2b26bfbe841d7425ae9468aa}} 
+Event\+Category\+Mouse\+Button&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EventCategoryGamepad@{EventCategoryGamepad}!event.h@{event.h}}\index{event.h@{event.h}!EventCategoryGamepad@{EventCategoryGamepad}}}\mbox{\Hypertarget{event_8h_aa8b0556527d429476e3f3d6cfab1a21fa560c2dbec038a60e68cc5b6fb05f8c81}\label{event_8h_aa8b0556527d429476e3f3d6cfab1a21fa560c2dbec038a60e68cc5b6fb05f8c81}} 
+Event\+Category\+Gamepad&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6fa}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6fa}} 
+\index{event.h@{event.h}!EventType@{EventType}}
+\index{EventType@{EventType}!event.h@{event.h}}
+\doxysubsubsection{\texorpdfstring{EventType}{EventType}}
+{\footnotesize\ttfamily enum class \mbox{\hyperlink{event_8h_a2628ea8d12e8b2563c32f05dc7fff6fa}{Event\+Type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{None@{None}!event.h@{event.h}}\index{event.h@{event.h}!None@{None}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa6adf97f83acf6453d4a6a4b1070f3754}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa6adf97f83acf6453d4a6a4b1070f3754}} 
+None&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WindowClose@{WindowClose}!event.h@{event.h}}\index{event.h@{event.h}!WindowClose@{WindowClose}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faac984201d37197ab297a14d19efee4b07}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faac984201d37197ab297a14d19efee4b07}} 
+Window\+Close&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WindowResize@{WindowResize}!event.h@{event.h}}\index{event.h@{event.h}!WindowResize@{WindowResize}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa9f8f27bff2915738c4fe1b970e12f89c}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa9f8f27bff2915738c4fe1b970e12f89c}} 
+Window\+Resize&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WindowFocus@{WindowFocus}!event.h@{event.h}}\index{event.h@{event.h}!WindowFocus@{WindowFocus}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa1c68d5453b28d52622bf5486a5fd95ca}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa1c68d5453b28d52622bf5486a5fd95ca}} 
+Window\+Focus&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WindowLostFocus@{WindowLostFocus}!event.h@{event.h}}\index{event.h@{event.h}!WindowLostFocus@{WindowLostFocus}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa1c2119b9d61e623975f13f1029f1d97c}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa1c2119b9d61e623975f13f1029f1d97c}} 
+Window\+Lost\+Focus&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WindowMoved@{WindowMoved}!event.h@{event.h}}\index{event.h@{event.h}!WindowMoved@{WindowMoved}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faab94473d9dfc85f8fdbf5cb3b1d992bda}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faab94473d9dfc85f8fdbf5cb3b1d992bda}} 
+Window\+Moved&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AppTick@{AppTick}!event.h@{event.h}}\index{event.h@{event.h}!AppTick@{AppTick}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa559b408d45669603dbac61cd15984f13}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa559b408d45669603dbac61cd15984f13}} 
+App\+Tick&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AppUpdate@{AppUpdate}!event.h@{event.h}}\index{event.h@{event.h}!AppUpdate@{AppUpdate}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faac177abb86f28dea426f2e3409e14bcda}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faac177abb86f28dea426f2e3409e14bcda}} 
+App\+Update&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AppRender@{AppRender}!event.h@{event.h}}\index{event.h@{event.h}!AppRender@{AppRender}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa4b2eb3c601042333ac1c0565ff58e3d6}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa4b2eb3c601042333ac1c0565ff58e3d6}} 
+App\+Render&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MouseButtonPressed@{MouseButtonPressed}!event.h@{event.h}}\index{event.h@{event.h}!MouseButtonPressed@{MouseButtonPressed}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa7349f643d689997b7c54bf93e4095f5c}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa7349f643d689997b7c54bf93e4095f5c}} 
+Mouse\+Button\+Pressed&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MouseButtonReleased@{MouseButtonReleased}!event.h@{event.h}}\index{event.h@{event.h}!MouseButtonReleased@{MouseButtonReleased}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa7584c169de594c27f00084b93186fd7c}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa7584c169de594c27f00084b93186fd7c}} 
+Mouse\+Button\+Released&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MouseMoved@{MouseMoved}!event.h@{event.h}}\index{event.h@{event.h}!MouseMoved@{MouseMoved}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faac2770ad109c8063ce69a3608a9a16c08}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faac2770ad109c8063ce69a3608a9a16c08}} 
+Mouse\+Moved&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MouseScrolled@{MouseScrolled}!event.h@{event.h}}\index{event.h@{event.h}!MouseScrolled@{MouseScrolled}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa50edb169910041bb3c06f6e8322d74c1}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa50edb169910041bb3c06f6e8322d74c1}} 
+Mouse\+Scrolled&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{KeyPressed@{KeyPressed}!event.h@{event.h}}\index{event.h@{event.h}!KeyPressed@{KeyPressed}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faac17e6984c1e5a887a49831beadee6bca}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faac17e6984c1e5a887a49831beadee6bca}} 
+Key\+Pressed&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{KeyReleased@{KeyReleased}!event.h@{event.h}}\index{event.h@{event.h}!KeyReleased@{KeyReleased}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa4a77f07c8ad223b71ab4ce78a63841ab}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa4a77f07c8ad223b71ab4ce78a63841ab}} 
+Key\+Released&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{KeyTyped@{KeyTyped}!event.h@{event.h}}\index{event.h@{event.h}!KeyTyped@{KeyTyped}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa9afbfd35b289eb4fc7f1bc148d7b422e}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa9afbfd35b289eb4fc7f1bc148d7b422e}} 
+Key\+Typed&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CharPressed@{CharPressed}!event.h@{event.h}}\index{event.h@{event.h}!CharPressed@{CharPressed}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faafa986eb06aa86f1d47366acb1d84bc46}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faafa986eb06aa86f1d47366acb1d84bc46}} 
+Char\+Pressed&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GamepadAxisMoved@{GamepadAxisMoved}!event.h@{event.h}}\index{event.h@{event.h}!GamepadAxisMoved@{GamepadAxisMoved}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa18389e2bd7b6b426f7b9d9164bf4a5ba}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faa18389e2bd7b6b426f7b9d9164bf4a5ba}} 
+Gamepad\+Axis\+Moved&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GamepadButtonPressed@{GamepadButtonPressed}!event.h@{event.h}}\index{event.h@{event.h}!GamepadButtonPressed@{GamepadButtonPressed}}}\mbox{\Hypertarget{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faae2a9941e644616b8853693e7b3b22c96}\label{event_8h_a2628ea8d12e8b2563c32f05dc7fff6faae2a9941e644616b8853693e7b3b22c96}} 
+Gamepad\+Button\+Pressed&\\
+\hline
+
+\end{DoxyEnumFields}

@@ -1,0 +1,49 @@
+\hypertarget{uuid_8h}{}\doxysection{src/engine/uuid.h File Reference}
+\label{uuid_8h}\index{src/engine/uuid.h@{src/engine/uuid.h}}
+{\ttfamily \#include $<$ostream$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structui_1_1uuid}{ui\+::uuid}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceui}{ui}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\+\_\+\+UUID}}(x,  parent)~uuid(x, parent, \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{uuid_8h_a29b2c51698a1b8857c94e07485d41170}{MK\+\_\+\+UUID\+\_\+\+LOOP}}(x,  parent,  index)~    uuid(x, parent, \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+, index)
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \mbox{\hyperlink{namespaceui_a939a38a309eae872e34e90e14ded60a3}{ui\+::operator$<$$<$}} (std\+::ostream \&os, const uuid \&obj)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static uuid \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ui\+::\+ROOT\+\_\+\+ID}} = \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\+\_\+\+UUID}}(-\/1, -\/1)
+\item 
+static uuid \mbox{\hyperlink{namespaceui_a689be801e494a73ff61acfa8b4813b95}{ui\+::\+FAKE\+\_\+\+ID}} = \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\+\_\+\+UUID}}(-\/2, -\/1)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{uuid_8h_adc09be3a75c11622885375dd96c7170e}\label{uuid_8h_adc09be3a75c11622885375dd96c7170e}} 
+\index{uuid.h@{uuid.h}!MK\_UUID@{MK\_UUID}}
+\index{MK\_UUID@{MK\_UUID}!uuid.h@{uuid.h}}
+\doxysubsubsection{\texorpdfstring{MK\_UUID}{MK\_UUID}}
+{\footnotesize\ttfamily \#define MK\+\_\+\+UUID(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{parent }\end{DoxyParamCaption})~uuid(x, parent, \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+)}
+
+\mbox{\Hypertarget{uuid_8h_a29b2c51698a1b8857c94e07485d41170}\label{uuid_8h_a29b2c51698a1b8857c94e07485d41170}} 
+\index{uuid.h@{uuid.h}!MK\_UUID\_LOOP@{MK\_UUID\_LOOP}}
+\index{MK\_UUID\_LOOP@{MK\_UUID\_LOOP}!uuid.h@{uuid.h}}
+\doxysubsubsection{\texorpdfstring{MK\_UUID\_LOOP}{MK\_UUID\_LOOP}}
+{\footnotesize\ttfamily \#define MK\+\_\+\+UUID\+\_\+\+LOOP(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{parent,  }\item[{}]{index }\end{DoxyParamCaption})~    uuid(x, parent, \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+, index)}
+

@@ -1,4 +1,30 @@
 var searchData=
 [
-  ['on_5fcleanup_0',['on_cleanup',['../d2/d63/struct_job.html#a2fd96529bde0648dd5e5ce630e9d7fe7',1,'Job']]]
+  ['name_0',['name',['../d9/dce/struct_ailment_1_1_config.html#a575a983c6138f5fde00a2d7f1af54f06',1,'Ailment::Config::name()'],['../de/d7b/struct_has_name.html#a9b8c5e7a1ca7671ebaa1948c7492a424',1,'HasName::name()'],['../db/dfc/struct_layer.html#a2071349b5667273725ae7f05a42db7a6',1,'Layer::name()'],['../dc/dcf/structprofile_1_1function__raii.html#a3c791960a81e1568cbc9bddd2e13f5ba',1,'profile::function_raii::name()']]],
+  ['name_5flength_1',['name_length',['../de/d7b/struct_has_name.html#ae11eb28867a0a917ad45f9d67caf1bf8',1,'HasName']]],
+  ['nasty_5fgreen_2',['nasty_green',['../d9/db4/namespaceui_1_1color.html#a0232fa7c6af39072e379701642ea99d9',1,'ui::color']]],
+  ['navy_3',['navy',['../d9/db4/namespaceui_1_1color.html#a71e0c2f8c92b77288525693ad59cd6a5',1,'ui::color']]],
+  ['navy_5fblue_4',['navy_blue',['../d9/db4/namespaceui_1_1color.html#ae112cae35664b02d51b2ab28d9762983',1,'ui::color']]],
+  ['navy_5fgreen_5',['navy_green',['../d9/db4/namespaceui_1_1color.html#a7a0a3866d66291460467b521b525e4c2',1,'ui::color']]],
+  ['neigh_5fx_6',['neigh_x',['../d0/d3f/vec__util_8h.html#a39c52fd1116a4c85f6a446768e4b270c',1,'vec_util.h']]],
+  ['neigh_5fy_7',['neigh_y',['../d0/d3f/vec__util_8h.html#ac980e9b912e5a146e732e94a9adb1392',1,'vec_util.h']]],
+  ['neon_5fblue_8',['neon_blue',['../d9/db4/namespaceui_1_1color.html#a13b9683022ae8500bc076ddd3a2a5f82',1,'ui::color']]],
+  ['neon_5fgreen_9',['neon_green',['../d9/db4/namespaceui_1_1color.html#a9c054d446e6e6d152d2483df8929e0ae',1,'ui::color']]],
+  ['neon_5fpink_10',['neon_pink',['../d9/db4/namespaceui_1_1color.html#a29645dfb52114e6b93878d6d0fa0aee1',1,'ui::color']]],
+  ['neon_5fpurple_11',['neon_purple',['../d9/db4/namespaceui_1_1color.html#a26b30e77f21a8a0a4a476b0b772077aa',1,'ui::color']]],
+  ['neon_5fred_12',['neon_red',['../d9/db4/namespaceui_1_1color.html#a0be0befb046e1a3752dcdbd42cf77269',1,'ui::color']]],
+  ['neon_5fyellow_13',['neon_yellow',['../d9/db4/namespaceui_1_1color.html#a7a016f26df59f197e0d6122fcb633b30',1,'ui::color']]],
+  ['network_5finfo_14',['network_info',['../d8/dcc/struct_network_layer.html#af16fa4f196cf775253ff4a0ced7e304e',1,'NetworkLayer']]],
+  ['network_5fui_5fenabled_15',['network_ui_enabled',['../db/dfb/struct_game_debug_layer.html#afda40fb4a858e0f32670f53836a2b6d5',1,'GameDebugLayer']]],
+  ['next_5fline_5fposition_16',['next_line_position',['../d0/d74/struct_register.html#ab2df0027c3bcd21e0e9356f79b014482',1,'Register']]],
+  ['next_5fmap_5ftick_17',['next_map_tick',['../d3/da7/structnetwork_1_1_server.html#a0aea3fd24cb104c7121150893227e759',1,'network::Server']]],
+  ['next_5fmap_5ftick_5freset_18',['next_map_tick_reset',['../d3/da7/structnetwork_1_1_server.html#a2012c042977f3715da1619fe4c44354a',1,'network::Server']]],
+  ['next_5ftick_19',['next_tick',['../d4/d35/structnetwork_1_1_client.html#af6ca04ac14d46fa679e48c52ee6af215',1,'network::Client']]],
+  ['next_5ftick_5freset_20',['next_tick_reset',['../d4/d35/structnetwork_1_1_client.html#ad552716a0f1393345ca00f8d30701014',1,'network::Client']]],
+  ['next_5fupdate_5ftimer_21',['next_update_timer',['../d3/da7/structnetwork_1_1_server.html#ae5863d19a4fcac42c3a7a8b58578cbd6',1,'network::Server']]],
+  ['nice_5fblue_22',['nice_blue',['../d9/db4/namespaceui_1_1color.html#acecd104d0d9da457681fadadfd45d88b',1,'ui::color']]],
+  ['night_5fblue_23',['night_blue',['../d9/db4/namespaceui_1_1color.html#a27fa02d375e987ab4a2eb050a147a415',1,'ui::color']]],
+  ['num_5fcomorbids_24',['num_comorbids',['../db/d42/struct_ailment.html#a4b4db8ae7ee23646188a49cf8fe273f7',1,'Ailment']]],
+  ['num_5fentities_25',['num_entities',['../d6/d9d/struct_level_info.html#aa50fed1dbcca5c43e26680af3a651680',1,'LevelInfo']]],
+  ['num_5fitems_26',['num_items',['../d6/d9d/struct_level_info.html#a9ca4e206a00bce8c4ade2589b1838bad',1,'LevelInfo::num_items()'],['../db/df8/structprofile_1_1_samples.html#ae48b81be255454311630ce703cdbfe92',1,'profile::Samples::num_items()']]]
 ];

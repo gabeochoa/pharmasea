@@ -1,0 +1,37 @@
+\hypertarget{can__hold__item_8h_source}{}\doxysection{can\+\_\+hold\+\_\+item.\+h}
+\label{can__hold__item_8h_source}\index{src/components/can\_hold\_item.h@{src/components/can\_hold\_item.h}}
+\mbox{\hyperlink{can__hold__item_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}../item.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00007\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_can_hold_item_ab40a36ecd23d604341a99279a4814a2a}{\string~CanHoldItem}}()\ \{\}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{empty}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_can_hold_item_a82ecfe70923e55ee5fddde1c2461d2b1}{held\_item}}\ ==\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00010\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_hold_item_ae846dc6de7e3b22454114d68f9449581}{is\_holding\_item}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !\mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{empty}}();\ \}}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{comment}{//\ Whether\ or\ not\ this\ entity\ has\ something\ we\ can\ take\ from\ them}}
+\DoxyCodeLine{00012\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_hold_item_a81ced0366bb6ce69389287421347767d}{can\_take\_item\_from}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !\mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{empty}}();\ \}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00015\ \ \ \ \ [[nodiscard]]\ std::shared\_ptr<T>\ \mbox{\hyperlink{struct_can_hold_item_a6197306bfad85f4b2816fcdd6f3b450b}{asT}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dynamic\_pointer\_cast<T>(\mbox{\hyperlink{struct_can_hold_item_a82ecfe70923e55ee5fddde1c2461d2b1}{held\_item}});}
+\DoxyCodeLine{00017\ \ \ \ \ \}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_hold_item_a1859b1b208d938ed63a5eea0d7a5fd47}{update}}(std::shared\_ptr<Item>\ \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{item}})\ \{\ \mbox{\hyperlink{struct_can_hold_item_a82ecfe70923e55ee5fddde1c2461d2b1}{held\_item}}\ =\ \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{item}};\ \}}
+\DoxyCodeLine{00020\ \ \ \ \ [[nodiscard]]\ std::shared\_ptr<Item>\ \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{item}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_can_hold_item_a82ecfe70923e55ee5fddde1c2461d2b1}{held\_item}};\ \}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00023\ \ \ \ \ std::shared\_ptr<Item>\ \mbox{\hyperlink{struct_can_hold_item_a82ecfe70923e55ee5fddde1c2461d2b1}{held\_item}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_hold_item_a3397cfb2f0bf08692b5fb33a3da2d568}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_can_hold_item_a82ecfe70923e55ee5fddde1c2461d2b1}{held\_item}});}
+\DoxyCodeLine{00030\ \ \ \ \ \}}
+\DoxyCodeLine{00031\ \};}
+
+\end{DoxyCode}

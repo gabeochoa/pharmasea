@@ -1,0 +1,69 @@
+\hypertarget{base__component_8h}{}\doxysection{src/components/base\+\_\+component.h File Reference}
+\label{base__component_8h}\index{src/components/base\_component.h@{src/components/base\_component.h}}
+{\ttfamily \#include $<$array$>$}\newline
+{\ttfamily \#include $<$bitset$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include \char`\"{}../vendor\+\_\+include.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_base_component}{Base\+Component}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacecomponents}{components}}
+\item 
+namespace \mbox{\hyperlink{namespacecomponents_1_1internal}{components\+::internal}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{base__component_8h_a98fb6146960da76455a4eff579874b99}{Component\+Bit\+Set}} = std\+::bitset$<$ \mbox{\hyperlink{base__component_8h_a94f76e23195dbdeee169cc932589d8c2}{max\+\_\+num\+\_\+components}} $>$
+\item 
+using \mbox{\hyperlink{base__component_8h_a5aff059e5e50c5d4acef6bc563a2a367}{Component\+Array}} = std\+::array$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_base_component}{Base\+Component}} $>$, \mbox{\hyperlink{base__component_8h_a94f76e23195dbdeee169cc932589d8c2}{max\+\_\+num\+\_\+components}} $>$
+\item 
+using \mbox{\hyperlink{base__component_8h_abe9a936bbede2282b4b50d41672650fc}{Component\+ID}} = int
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{base__component_8h_abe9a936bbede2282b4b50d41672650fc}{Component\+ID}} \mbox{\hyperlink{namespacecomponents_1_1internal_a5e6a128f8b3e5d49dfe1c62088626a87}{components\+::internal\+::get\+\_\+unique\+\_\+id}} () noexcept
+\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{base__component_8h_abe9a936bbede2282b4b50d41672650fc}{Component\+ID}} \mbox{\hyperlink{namespacecomponents_a0028953e981b5d753f5f701dbba74ed1}{components\+::get\+\_\+type\+\_\+id}} () noexcept
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+constexpr int \mbox{\hyperlink{base__component_8h_a94f76e23195dbdeee169cc932589d8c2}{max\+\_\+num\+\_\+components}} = 64
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{base__component_8h_a5aff059e5e50c5d4acef6bc563a2a367}\label{base__component_8h_a5aff059e5e50c5d4acef6bc563a2a367}} 
+\index{base\_component.h@{base\_component.h}!ComponentArray@{ComponentArray}}
+\index{ComponentArray@{ComponentArray}!base\_component.h@{base\_component.h}}
+\doxysubsubsection{\texorpdfstring{ComponentArray}{ComponentArray}}
+{\footnotesize\ttfamily using \mbox{\hyperlink{base__component_8h_a5aff059e5e50c5d4acef6bc563a2a367}{Component\+Array}} =  std\+::array$<$std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_base_component}{Base\+Component}}$>$, \mbox{\hyperlink{base__component_8h_a94f76e23195dbdeee169cc932589d8c2}{max\+\_\+num\+\_\+components}}$>$}
+
+\mbox{\Hypertarget{base__component_8h_a98fb6146960da76455a4eff579874b99}\label{base__component_8h_a98fb6146960da76455a4eff579874b99}} 
+\index{base\_component.h@{base\_component.h}!ComponentBitSet@{ComponentBitSet}}
+\index{ComponentBitSet@{ComponentBitSet}!base\_component.h@{base\_component.h}}
+\doxysubsubsection{\texorpdfstring{ComponentBitSet}{ComponentBitSet}}
+{\footnotesize\ttfamily using \mbox{\hyperlink{base__component_8h_a98fb6146960da76455a4eff579874b99}{Component\+Bit\+Set}} =  std\+::bitset$<$\mbox{\hyperlink{base__component_8h_a94f76e23195dbdeee169cc932589d8c2}{max\+\_\+num\+\_\+components}}$>$}
+
+\mbox{\Hypertarget{base__component_8h_abe9a936bbede2282b4b50d41672650fc}\label{base__component_8h_abe9a936bbede2282b4b50d41672650fc}} 
+\index{base\_component.h@{base\_component.h}!ComponentID@{ComponentID}}
+\index{ComponentID@{ComponentID}!base\_component.h@{base\_component.h}}
+\doxysubsubsection{\texorpdfstring{ComponentID}{ComponentID}}
+{\footnotesize\ttfamily using \mbox{\hyperlink{base__component_8h_abe9a936bbede2282b4b50d41672650fc}{Component\+ID}} =  int}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{base__component_8h_a94f76e23195dbdeee169cc932589d8c2}\label{base__component_8h_a94f76e23195dbdeee169cc932589d8c2}} 
+\index{base\_component.h@{base\_component.h}!max\_num\_components@{max\_num\_components}}
+\index{max\_num\_components@{max\_num\_components}!base\_component.h@{base\_component.h}}
+\doxysubsubsection{\texorpdfstring{max\_num\_components}{max\_num\_components}}
+{\footnotesize\ttfamily constexpr int max\+\_\+num\+\_\+components = 64\hspace{0.3cm}{\ttfamily [constexpr]}}
+

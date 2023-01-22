@@ -1,6 +1,24 @@
 var searchData=
 [
-  ['config_0',['Config',['../d9/dce/struct_ailment_1_1_config.html',1,'Ailment::Config'],['../d4/d87/struct_symptom_1_1_config.html',1,'Symptom::Config']]],
-  ['customer_1',['Customer',['../d9/d68/struct_customer.html',1,'']]],
-  ['customerspawner_2',['CustomerSpawner',['../d2/d99/struct_customer_spawner.html',1,'']]]
+  ['canbeghostplayer_0',['CanBeGhostPlayer',['../dc/dba/struct_can_be_ghost_player.html',1,'']]],
+  ['canbehighlighted_1',['CanBeHighlighted',['../d9/d05/struct_can_be_highlighted.html',1,'']]],
+  ['canhighlightothers_2',['CanHighlightOthers',['../d9/d6b/struct_can_highlight_others.html',1,'']]],
+  ['canholdfurniture_3',['CanHoldFurniture',['../d6/dad/struct_can_hold_furniture.html',1,'']]],
+  ['canholditem_4',['CanHoldItem',['../da/d55/struct_can_hold_item.html',1,'']]],
+  ['canperformjob_5',['CanPerformJob',['../db/dc2/struct_can_perform_job.html',1,'']]],
+  ['cemap_6',['CEMap',['../dd/d44/struct_c_e_map.html',1,'']]],
+  ['cevector_7',['CEVector',['../d9/dd2/struct_c_e_vector.html',1,'']]],
+  ['characterswitcher_8',['CharacterSwitcher',['../d6/d27/struct_character_switcher.html',1,'']]],
+  ['charpressedevent_9',['CharPressedEvent',['../dd/d5b/struct_char_pressed_event.html',1,'']]],
+  ['checkboxstate_10',['CheckboxState',['../d8/dd3/structui_1_1_checkbox_state.html',1,'ui']]],
+  ['client_11',['Client',['../d4/d35/structnetwork_1_1_client.html',1,'network::Client'],['../d7/d6b/structnetwork_1_1internal_1_1_client.html',1,'network::internal::Client']]],
+  ['client_5ft_12',['Client_t',['../d6/d93/structnetwork_1_1internal_1_1_client__t.html',1,'network::internal']]],
+  ['clientpacket_13',['ClientPacket',['../dd/d1c/structnetwork_1_1_client_packet.html',1,'network']]],
+  ['comparevec_14',['CompareVec',['../d8/d35/struct_polygon_1_1_compare_vec.html',1,'Polygon']]],
+  ['config_15',['Config',['../d9/dce/struct_ailment_1_1_config.html',1,'Ailment::Config'],['../d4/d87/struct_symptom_1_1_config.html',1,'Symptom::Config']]],
+  ['connectioninfo_16',['ConnectionInfo',['../d9/d08/structnetwork_1_1_client_1_1_connection_info.html',1,'network::Client']]],
+  ['conveyer_17',['Conveyer',['../dd/de4/struct_conveyer.html',1,'']]],
+  ['customer_18',['Customer',['../d9/d68/struct_customer.html',1,'']]],
+  ['customerspawner_19',['CustomerSpawner',['../d2/d99/struct_customer_spawner.html',1,'']]],
+  ['customhelditemposition_20',['CustomHeldItemPosition',['../db/d9c/struct_custom_held_item_position.html',1,'']]]
 ];

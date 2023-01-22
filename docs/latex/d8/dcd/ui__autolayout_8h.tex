@@ -1,0 +1,55 @@
+\hypertarget{ui__autolayout_8h}{}\doxysection{src/engine/ui\+\_\+autolayout.h File Reference}
+\label{ui__autolayout_8h}\index{src/engine/ui\_autolayout.h@{src/engine/ui\_autolayout.h}}
+{\ttfamily \#include \char`\"{}../vec\+\_\+util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}assert.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}log.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ui\+\_\+widget.\+h\char`\"{}}\newline
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceui}{ui}}
+\item 
+namespace \mbox{\hyperlink{namespaceui_1_1autolayout}{ui\+::autolayout}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{namespaceui_1_1autolayout_a567a0cb9b521e51af53a84e79109712c}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+standalone\+\_\+expectation}} (Widget $\ast$widget, int exp\+\_\+index)
+\item 
+float \mbox{\hyperlink{namespaceui_1_1autolayout_a0092871caad2d74966974bbe9d9eec7c}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+parent\+\_\+expectation}} (Widget $\ast$widget, int exp\+\_\+index)
+\item 
+float \mbox{\hyperlink{namespaceui_1_1autolayout_ae91ed2b2dd47ead91ac1050eccf5e715}{ui\+::autolayout\+::\+\_\+sum\+\_\+children\+\_\+axis\+\_\+for\+\_\+child\+\_\+exp}} (Widget $\ast$widget, int exp\+\_\+index)
+\item 
+float \mbox{\hyperlink{namespaceui_1_1autolayout_a18510470464391ecc932364a83f8ab96}{ui\+::autolayout\+::\+\_\+max\+\_\+child\+\_\+size}} (Widget $\ast$widget, int exp\+\_\+index)
+\item 
+float \mbox{\hyperlink{namespaceui_1_1autolayout_a8eee5d8e9d61273a841f39eac3ecb5cb}{ui\+::autolayout\+::compute\+\_\+size\+\_\+for\+\_\+child\+\_\+expectation}} (Widget $\ast$widget, int exp\+\_\+index)
+\item 
+void \mbox{\hyperlink{namespaceui_1_1autolayout_a6b10e3b4c705bb1633000eea2d421ae6}{ui\+::autolayout\+::calculate\+\_\+standalone}} (Widget $\ast$widget)
+\item 
+void \mbox{\hyperlink{namespaceui_1_1autolayout_a6aab9728ba4f17593481eb09f2b987a9}{ui\+::autolayout\+::calculate\+\_\+those\+\_\+with\+\_\+parents}} (Widget $\ast$widget)
+\item 
+void \mbox{\hyperlink{namespaceui_1_1autolayout_a6a1e09a56a2fab2e8766405be175f05a}{ui\+::autolayout\+::calculate\+\_\+those\+\_\+with\+\_\+children}} (Widget $\ast$widget)
+\item 
+float \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{ui\+::autolayout\+::\+\_\+get\+\_\+total\+\_\+child\+\_\+size\+\_\+for\+\_\+violations}} (Widget $\ast$widget, int exp\+\_\+index)
+\item 
+void \mbox{\hyperlink{namespaceui_1_1autolayout_a5bd15c6386b32294c41dd9e679673289}{ui\+::autolayout\+::\+\_\+solve\+\_\+error\+\_\+with\+\_\+optional}} (Widget $\ast$widget, int exp\+\_\+index, float $\ast$error)
+\item 
+void \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{ui\+::autolayout\+::fix\+\_\+violating\+\_\+children}} (Widget $\ast$widget, int exp\+\_\+index, float error, int num\+\_\+children)
+\item 
+void \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{ui\+::autolayout\+::tax\+\_\+refund}} (Widget $\ast$widget, int exp\+\_\+index, float error)
+\item 
+int \mbox{\hyperlink{namespaceui_1_1autolayout_aae45c93638cbec24bcef93863cd86d18}{ui\+::autolayout\+::\+\_\+get\+\_\+total\+\_\+number\+\_\+children}} (Widget $\ast$widget)
+\item 
+void \mbox{\hyperlink{namespaceui_1_1autolayout_a2b73f854ad31e7230ef2b54ca43edc58}{ui\+::autolayout\+::solve\+\_\+violations}} (Widget $\ast$widget)
+\item 
+void \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{ui\+::autolayout\+::compute\+\_\+relative\+\_\+positions}} (Widget $\ast$widget)
+\item 
+void \mbox{\hyperlink{namespaceui_1_1autolayout_abb4dae5cd1fd325e0a25026f7468c1b5}{ui\+::autolayout\+::compute\+\_\+rect\+\_\+bounds}} (Widget $\ast$widget)
+\item 
+void \mbox{\hyperlink{namespaceui_1_1autolayout_ae1da33e0d70012c26db6bcc59e81f81d}{ui\+::autolayout\+::process\+\_\+widget}} (Widget $\ast$widget)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const float \mbox{\hyperlink{namespaceui_1_1autolayout_a4f52a8d4bf398b9d43a834041a52b148}{ui\+::autolayout\+::\+ACCEPTABLE\+\_\+\+ERROR}} = 0.\+5f
+\end{DoxyCompactItemize}

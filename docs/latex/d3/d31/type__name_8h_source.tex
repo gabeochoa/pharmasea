@@ -1,0 +1,30 @@
+\hypertarget{type__name_8h_source}{}\doxysection{type\+\_\+name.\+h}
+\label{type__name_8h_source}\index{src/engine/type\_name.h@{src/engine/type\_name.h}}
+\mbox{\hyperlink{type__name_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00006\ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{type__name_8h_a9588db268376dfa73d101458aeb1f9ad}{type\_name}}()\ \{}
+\DoxyCodeLine{00007\ \ \ \ \ std::string\_view\ name,\ prefix,\ suffix;}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifdef\ \_\_clang\_\_}}
+\DoxyCodeLine{00009\ \ \ \ \ name\ =\ \_\_PRETTY\_FUNCTION\_\_;}
+\DoxyCodeLine{00010\ \ \ \ \ prefix\ =\ \textcolor{stringliteral}{"{}auto\ type\_name()\ [T\ =\ "{}};}
+\DoxyCodeLine{00011\ \ \ \ \ suffix\ =\ \textcolor{stringliteral}{"{}]"{}};}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#elif\ defined(\_\_GNUC\_\_)}}
+\DoxyCodeLine{00013\ \ \ \ \ name\ =\ \_\_PRETTY\_FUNCTION\_\_;}
+\DoxyCodeLine{00014\ \ \ \ \ prefix\ =\ \textcolor{stringliteral}{"{}constexpr\ auto\ type\_name()\ [with\ T\ =\ "{}};}
+\DoxyCodeLine{00015\ \ \ \ \ suffix\ =\ \textcolor{stringliteral}{"{}]"{}};}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#elif\ defined(\_MSC\_VER)}}
+\DoxyCodeLine{00017\ \ \ \ \ name\ =\ \_\_FUNCSIG\_\_;}
+\DoxyCodeLine{00018\ \ \ \ \ prefix\ =\ \textcolor{stringliteral}{"{}auto\ \_\_cdecl\ type\_name<"{}};}
+\DoxyCodeLine{00019\ \ \ \ \ suffix\ =\ \textcolor{stringliteral}{"{}>(void)"{}};}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00021\ \ \ \ \ name.remove\_prefix(prefix.size());}
+\DoxyCodeLine{00022\ \ \ \ \ name.remove\_suffix(suffix.size());}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordflow}{return}\ name;}
+\DoxyCodeLine{00024\ \}}
+
+\end{DoxyCode}

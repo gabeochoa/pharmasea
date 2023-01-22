@@ -17,9 +17,9 @@ Inheritance diagram for About\+Layer\+:\begin{figure}[H]
 \item 
 virtual \mbox{\hyperlink{struct_about_layer_a94f280489cebc79b2c1074f38e0a37e6}{$\sim$\+About\+Layer}} ()
 \item 
-virtual void \mbox{\hyperlink{struct_about_layer_a2bbdf1eeb5ff20ab73818827f367cceb}{on\+Event}} (Event \&event) override
+virtual void \mbox{\hyperlink{struct_about_layer_a2bbdf1eeb5ff20ab73818827f367cceb}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event) override
 \item 
-bool \mbox{\hyperlink{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}{on\+Key\+Pressed}} (Key\+Pressed\+Event \&event)
+bool \mbox{\hyperlink{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&event)
 \item 
 void \mbox{\hyperlink{struct_about_layer_a83aac603d819bbf4fab40ff1f2ded4b5}{draw\+\_\+ui}} (float dt)
 \item 
@@ -27,12 +27,38 @@ virtual void \mbox{\hyperlink{struct_about_layer_a16c2078a04e30de43ed29ad65a26e0
 \item 
 virtual void \mbox{\hyperlink{struct_about_layer_adbc71241190550a06e0e943c8e6a40ff}{on\+Draw}} (float dt) override
 \end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_layer}{Layer}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_layer_a1a34fba22edc963461e7033025d31cb2}{Layer}} (const std\+::string \&n=\char`\"{}layer\char`\"{})
+\item 
+virtual \mbox{\hyperlink{struct_layer_a2bac093f2a650095a5551fc455d10dc5}{$\sim$\+Layer}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_layer_a88bb97c131c409756e71f3f5db59f983}{on\+Attach}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_layer_a3b780cc2b2576eb59e768407bd59d172}{on\+Detach}} ()
+\item 
+virtual void \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{on\+Update}} (float elapsed)=0
+\item 
+virtual void \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{on\+Draw}} (float elapsed)=0
+\item 
+virtual void \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&)=0
+\item 
+const std\+::string \& \mbox{\hyperlink{struct_layer_a592dabab6ae280b7a3a3f4b195c9833b}{getname}} () const
+\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-std\+::shared\+\_\+ptr$<$ ui\+::\+UIContext $>$ \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\+\_\+context}}
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{structui_1_1_u_i_context}{ui\+::\+UIContext}} $>$ \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\+\_\+context}}
 \item 
 const std\+::string \mbox{\hyperlink{struct_about_layer_a5f14ce8693a5b607c64bee7d69490ad3}{about\+\_\+info}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes inherited from \mbox{\hyperlink{struct_layer}{Layer}}}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{struct_layer_ad8c4d484a5efce0cbbd0cf81b3958d17}{id}}
+\item 
+std\+::string \mbox{\hyperlink{struct_layer_a2071349b5667273725ae7f05a42db7a6}{name}}
 \end{DoxyCompactItemize}
 
 
@@ -64,7 +90,7 @@ References \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296
 
 
 
-References \mbox{\hyperlink{struct_about_layer_a5f14ce8693a5b607c64bee7d69490ad3}{about\+\_\+info}}, and \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\+\_\+context}}.
+References \mbox{\hyperlink{struct_about_layer_a5f14ce8693a5b607c64bee7d69490ad3}{about\+\_\+info}}, \mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui\+::components\+::mk\+\_\+button()}}, \mbox{\hyperlink{namespaceui_1_1components_ab9d5ec6ef029bc105f7f7680602d1e75}{ui\+::components\+::mk\+\_\+padding()}}, \mbox{\hyperlink{namespaceui_1_1components_a5a694fe6b83009441f8e0d47f604bbb7}{ui\+::components\+::mk\+\_\+root()}}, \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\+\_\+\+UUID}}, \mbox{\hyperlink{ui__widget_8h_a57b2d93efb9bf19b1389f00098a3e50c}{Size\+\_\+\+FullH}}, \mbox{\hyperlink{ui__widget_8h_a401ddddbaf5a749492e067a11779cdf7}{Size\+\_\+\+Pct}}, \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\+\_\+\+Px}}, and \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\+\_\+context}}.
 
 
 
@@ -78,27 +104,35 @@ Referenced by \mbox{\hyperlink{struct_about_layer_adbc71241190550a06e0e943c8e6a4
 
 
 
-References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a8f7f4c1ce7a4f933663d10543562b096}{menu\+::\+About}}, \mbox{\hyperlink{struct_about_layer_a83aac603d819bbf4fab40ff1f2ded4b5}{draw\+\_\+ui()}}, and \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\+\_\+context}}.
+Implements \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{Layer}}.
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a8f7f4c1ce7a4f933663d10543562b096}{menu\+::\+About}}, \mbox{\hyperlink{namespaceext_a5bb9a44990202857eea129e5b983f183}{ext\+::clear\+\_\+background()}}, \mbox{\hyperlink{struct_about_layer_a83aac603d819bbf4fab40ff1f2ded4b5}{draw\+\_\+ui()}}, and \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\+\_\+context}}.
 
 \mbox{\Hypertarget{struct_about_layer_a2bbdf1eeb5ff20ab73818827f367cceb}\label{struct_about_layer_a2bbdf1eeb5ff20ab73818827f367cceb}} 
 \index{AboutLayer@{AboutLayer}!onEvent@{onEvent}}
 \index{onEvent@{onEvent}!AboutLayer@{AboutLayer}}
 \doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
-{\footnotesize\ttfamily virtual void About\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily virtual void About\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_event}{Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
-References \mbox{\hyperlink{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}{on\+Key\+Pressed()}}.
+Implements \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{Layer}}.
+
+
+
+References \mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{Event\+Dispatcher\+::dispatch()}}, and \mbox{\hyperlink{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}{on\+Key\+Pressed()}}.
 
 \mbox{\Hypertarget{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}\label{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}} 
 \index{AboutLayer@{AboutLayer}!onKeyPressed@{onKeyPressed}}
 \index{onKeyPressed@{onKeyPressed}!AboutLayer@{AboutLayer}}
 \doxysubsubsection{\texorpdfstring{onKeyPressed()}{onKeyPressed()}}
-{\footnotesize\ttfamily bool About\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{Key\+Pressed\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily bool About\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a8f7f4c1ce7a4f933663d10543562b096}{menu\+::\+About}}, and \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\+\_\+context}}.
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a8f7f4c1ce7a4f933663d10543562b096}{menu\+::\+About}}, \mbox{\hyperlink{struct_key_event_a099e4f3c01870f67baffeba80b5c1860}{Key\+Event\+::keycode}}, and \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\+\_\+context}}.
 
 
 
@@ -109,6 +143,10 @@ Referenced by \mbox{\hyperlink{struct_about_layer_a2bbdf1eeb5ff20ab73818827f367c
 \index{onUpdate@{onUpdate}!AboutLayer@{AboutLayer}}
 \doxysubsubsection{\texorpdfstring{onUpdate()}{onUpdate()}}
 {\footnotesize\ttfamily virtual void About\+Layer\+::on\+Update (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{Layer}}.
 
 
 
@@ -140,7 +178,7 @@ Referenced by \mbox{\hyperlink{struct_about_layer_a83aac603d819bbf4fab40ff1f2ded
 \index{AboutLayer@{AboutLayer}!ui\_context@{ui\_context}}
 \index{ui\_context@{ui\_context}!AboutLayer@{AboutLayer}}
 \doxysubsubsection{\texorpdfstring{ui\_context}{ui\_context}}
-{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ui\+::\+UIContext$>$ About\+Layer\+::ui\+\_\+context}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{structui_1_1_u_i_context}{ui\+::\+UIContext}}$>$ About\+Layer\+::ui\+\_\+context}
 
 
 

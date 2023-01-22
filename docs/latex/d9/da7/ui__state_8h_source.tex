@@ -1,0 +1,104 @@
+\hypertarget{ui__state_8h_source}{}\doxysection{ui\+\_\+state.\+h}
+\label{ui__state_8h_source}\index{src/engine/ui\_state.h@{src/engine/ui\_state.h}}
+\mbox{\hyperlink{ui__state_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}../std\_include.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{uuid_8h}{uuid.h}}"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceui}{ui}}\ \{}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structui_1_1_state}{State}}\ \{}
+\DoxyCodeLine{00010\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00011\ \ \ \ \ T\ \mbox{\hyperlink{structui_1_1_state_a080a941b44eaf8fe692106d2050c8c1a}{value}}\ =\ T();}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structui_1_1_state_a6e00615f8b6c64b6bf607bb824072ffd}{changed\_since}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{structui_1_1_state_ae560c754fe57b548bb8c75b05da62144}{State}}()\ \{\}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{comment}{//\ Note:\ these\ should\ not\ be\ explicit}}
+\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{structui_1_1_state_aa1a8fc3779dcee064969d9fffbbd76a3}{State}}(T\ val)\ :\ \mbox{\hyperlink{structui_1_1_state_a080a941b44eaf8fe692106d2050c8c1a}{value}}(val)\ \{\}}
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{structui_1_1_state_a0008ac1f5e7d6d2344e646b0c4ff5d37}{State}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_state}{State<T>}}\&\ s)\ :\ \mbox{\hyperlink{structui_1_1_state_a080a941b44eaf8fe692106d2050c8c1a}{value}}(s.\mbox{\hyperlink{structui_1_1_state_a080a941b44eaf8fe692106d2050c8c1a}{value}})\ \{\}}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{structui_1_1_state}{State<T>}}\&\ \mbox{\hyperlink{structui_1_1_state_ad4597189b3170b03f2fbc01425cdfcd1}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1_state}{State<T>}}\&\ other)\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ this-\/>value\ =\ other.\mbox{\hyperlink{structui_1_1_state_a080a941b44eaf8fe692106d2050c8c1a}{value}};}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_state_a6e00615f8b6c64b6bf607bb824072ffd}{changed\_since}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00024\ \ \ \ \ \}}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{operator}\ T()\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structui_1_1_state_a080a941b44eaf8fe692106d2050c8c1a}{value}};\ \}}
+\DoxyCodeLine{00026\ \ \ \ \ T\&\ \mbox{\hyperlink{structui_1_1_state_a3029885aedc10501c5bb00a473637d08}{asT}}()\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structui_1_1_state_a080a941b44eaf8fe692106d2050c8c1a}{value}};\ \}}
+\DoxyCodeLine{00027\ \ \ \ \ T\&\ \mbox{\hyperlink{structui_1_1_state_ae3a86a003ebfc7b54cd24d3f4ae13d57}{get}}()\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structui_1_1_state_a080a941b44eaf8fe692106d2050c8c1a}{value}};\ \}}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structui_1_1_state_aa1e2dff86a41ca1eaf627ae8af45de45}{set}}(\textcolor{keyword}{const}\ T\&\ v)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_state_a080a941b44eaf8fe692106d2050c8c1a}{value}}\ =\ v;}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_state_a6e00615f8b6c64b6bf607bb824072ffd}{changed\_since}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00031\ \ \ \ \ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//\ TODO\ how\ can\ we\ support\ +=\ and\ -\/=?}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ is\ there\ a\ simple\ way\ to\ unfold\ the\ types,}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//\ tried\ and\ seeing\ nullptr\ for\ checkboxstate}}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ Base\ statetype\ for\ any\ UI\ component}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structui_1_1_u_i_state}{UIState}}\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{structui_1_1_u_i_state_aa4b3ed590beb77d45a788288643cbe81}{\string~UIState}}()\ \{\}}
+\DoxyCodeLine{00041\ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structui_1_1_toggle_state}{ToggleState}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{structui_1_1_u_i_state}{UIState}}\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \mbox{\hyperlink{structui_1_1_state}{State<bool>}}\ \mbox{\hyperlink{structui_1_1_toggle_state_a94706959f0bb66b9497155b1e6a19b6b}{on}};}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structui_1_1_scroll_view_state}{ScrollViewState}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{structui_1_1_u_i_state}{UIState}}\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \mbox{\hyperlink{structui_1_1_state}{State<float>}}\ \mbox{\hyperlink{structui_1_1_scroll_view_state_a47807a6090885ce8000f1eb8838a2ba4}{yoffset}};}
+\DoxyCodeLine{00049\ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structui_1_1_dropdown_state}{DropdownState}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{structui_1_1_toggle_state}{ToggleState}}\ \{\};}
+\DoxyCodeLine{00052\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structui_1_1_checkbox_state}{CheckboxState}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{structui_1_1_toggle_state}{ToggleState}}\ \{\};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structui_1_1_button_list_state}{ButtonListState}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{structui_1_1_u_i_state}{UIState}}\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{structui_1_1_state}{State<int>}}\ \mbox{\hyperlink{structui_1_1_button_list_state_a0e58ab4c39af165bf321df13a428bed7}{selected}};}
+\DoxyCodeLine{00056\ \ \ \ \ \mbox{\hyperlink{structui_1_1_state}{State<bool>}}\ \mbox{\hyperlink{structui_1_1_button_list_state_af8be2e528fb4d7baf7845f79f6b26f66}{hasFocus}};}
+\DoxyCodeLine{00057\ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structui_1_1_slider_state}{SliderState}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{structui_1_1_u_i_state}{UIState}}\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{structui_1_1_state}{State<float>}}\ \mbox{\hyperlink{structui_1_1_slider_state_a44ed508c84eca55be63bd3dcd31ca5f5}{value}};}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structui_1_1_textfield_state}{TextfieldState}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{structui_1_1_u_i_state}{UIState}}\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{structui_1_1_state}{State<std::string>}}\ \mbox{\hyperlink{structui_1_1_textfield_state_a7916d9d40bcc4a6a8a17ade015e1c4b7}{buffer}};}
+\DoxyCodeLine{00065\ \ \ \ \ \mbox{\hyperlink{structui_1_1_state}{State<int>}}\ \mbox{\hyperlink{structui_1_1_textfield_state_a80bd6d616f14f4e5cb59789691047df2}{cursorBlinkTime}};}
+\DoxyCodeLine{00066\ \ \ \ \ \mbox{\hyperlink{structui_1_1_state}{State<bool>}}\ \mbox{\hyperlink{structui_1_1_textfield_state_ac6eab065f8c0a6606770f9b67966bbd7}{showCursor}};}
+\DoxyCodeLine{00067\ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structui_1_1_state_manager}{StateManager}}\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ std::map<uuid,\ std::shared\_ptr<UIState>>\ \mbox{\hyperlink{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}{states}};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structui_1_1_state_manager_ae4265a4c90253ddb18d86bbe2bde895c}{addState}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\ \textcolor{keywordtype}{id},\ \textcolor{keyword}{const}\ std::shared\_ptr<UIState>\&\ state)\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}{states}}[id]\ =\ state;}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00082\ \ \ \ \ std::shared\_ptr<T>\ \mbox{\hyperlink{structui_1_1_state_manager_a6ec4ca88f6192d857fed9ad7e8ac4a55}{getAndCreateIfNone}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\ \textcolor{keywordtype}{id})\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}{states}}.find(\textcolor{keywordtype}{id})\ ==\ \mbox{\hyperlink{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}{states}}.end())\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_state_manager_ae4265a4c90253ddb18d86bbe2bde895c}{addState}}(\textcolor{keywordtype}{id},\ std::make\_shared<T>());}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get\_as<T>(\textcolor{keywordtype}{id});}
+\DoxyCodeLine{00087\ \ \ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ std::shared\_ptr<UIState>\ \mbox{\hyperlink{structui_1_1_state_manager_af2eb71ebffe06e8d512646188d5e7b1a}{get}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\ \textcolor{keywordtype}{id})\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}{states}}[id];\ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00092\ \ \ \ \ std::shared\_ptr<T>\ \mbox{\hyperlink{structui_1_1_state_manager_ae7d2f9777d0d4ecbd1d52d83e250be8f}{get\_as}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structui_1_1uuid}{uuid}}\ \textcolor{keywordtype}{id})\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dynamic\_pointer\_cast<T>(\mbox{\hyperlink{structui_1_1_state_manager_adcdc4c07cd6c6e92d2b761a1744acf2b}{states}}.at(\textcolor{keywordtype}{id}));}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (std::exception)\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00098\ \ \ \ \ \}}
+\DoxyCodeLine{00099\ \};}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \}\ \ \textcolor{comment}{//\ namespace\ ui}}
+
+\end{DoxyCode}

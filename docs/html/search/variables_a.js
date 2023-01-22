@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['keybindingtrie_0',['keyBindingTrie',['../d0/d91/struct_settings_layer.html#adb61f10c121d444e8dd5aa337b74a520',1,'SettingsLayer']]],
-  ['keyinputnames_1',['keyInputNames',['../d0/d91/struct_settings_layer.html#a045da42d7bacfd0e06acc78bc1f07cf3',1,'SettingsLayer']]],
-  ['keyinputvalues_2',['keyInputValues',['../d0/d91/struct_settings_layer.html#abb51e478cf9528499223798ba0884570',1,'SettingsLayer']]]
+  ['jade_0',['jade',['../d9/db4/namespaceui_1_1color.html#a6f6a14e4b550b2f0447753bf5a1e9916',1,'ui::color']]],
+  ['jade_5fgreen_1',['jade_green',['../d9/db4/namespaceui_1_1color.html#a5ca965689a316be73e8aeddf623856c7',1,'ui::color']]],
+  ['jungle_5fgreen_2',['jungle_green',['../d9/db4/namespaceui_1_1color.html#abd0fbf1d5e28f53afc738d90c569368a',1,'ui::color']]]
 ];

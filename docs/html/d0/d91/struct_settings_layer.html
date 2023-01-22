@@ -83,8 +83,11 @@ $(function() {
 Inheritance diagram for SettingsLayer:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="../../d0/d91/struct_settings_layer.png" alt=""/>
- </div></div>
+  <img src="../../d0/d91/struct_settings_layer.png" usemap="#SettingsLayer_map" alt=""/>
+  <map id="SettingsLayer_map" name="SettingsLayer_map">
+<area href="../../db/dfc/struct_layer.html" alt="Layer" shape="rect" coords="0,0,89,24"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -99,11 +102,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1d190e9acf832ded498984746352e2a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c0c1e7cea44f09d4ea9316582a8d8c6"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#a4c0c1e7cea44f09d4ea9316582a8d8c6">~SettingsLayer</a> ()</td></tr>
 <tr class="separator:a4c0c1e7cea44f09d4ea9316582a8d8c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d582e4d4c4f4c77de135351afad5ab6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#a3d582e4d4c4f4c77de135351afad5ab6">onEvent</a> (Event &amp;event) override</td></tr>
+<tr class="memitem:a3d582e4d4c4f4c77de135351afad5ab6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#a3d582e4d4c4f4c77de135351afad5ab6">onEvent</a> (<a class="el" href="../../de/d6a/struct_event.html">Event</a> &amp;event) override</td></tr>
 <tr class="separator:a3d582e4d4c4f4c77de135351afad5ab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae02dea54b3504a2ae28c6e30f6b2a4f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#ae02dea54b3504a2ae28c6e30f6b2a4f7">onKeyPressed</a> (KeyPressedEvent &amp;event)</td></tr>
+<tr class="memitem:ae02dea54b3504a2ae28c6e30f6b2a4f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#ae02dea54b3504a2ae28c6e30f6b2a4f7">onKeyPressed</a> (<a class="el" href="../../d4/deb/struct_key_pressed_event.html">KeyPressedEvent</a> &amp;event)</td></tr>
 <tr class="separator:ae02dea54b3504a2ae28c6e30f6b2a4f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7de19f92164510ae75ff9043db1c16cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#a7de19f92164510ae75ff9043db1c16cd">onGamepadButtonPressed</a> (GamepadButtonPressedEvent &amp;event)</td></tr>
+<tr class="memitem:a7de19f92164510ae75ff9043db1c16cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#a7de19f92164510ae75ff9043db1c16cd">onGamepadButtonPressed</a> (<a class="el" href="../../dd/d36/struct_gamepad_button_pressed_event.html">GamepadButtonPressedEvent</a> &amp;event)</td></tr>
 <tr class="separator:a7de19f92164510ae75ff9043db1c16cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad034cf2f8a7b156822029fc66868ac7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#ad034cf2f8a7b156822029fc66868ac7b">streamer_safe_box</a> ()</td></tr>
 <tr class="separator:ad034cf2f8a7b156822029fc66868ac7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,18 +130,35 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a61847ff955819ef4cfffe526202d9df3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25715e82ed14d56401b9a39b57c03b0b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#a25715e82ed14d56401b9a39b57c03b0b">onDraw</a> (float dt) override</td></tr>
 <tr class="separator:a25715e82ed14d56401b9a39b57c03b0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_struct_layer"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_struct_layer')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../db/dfc/struct_layer.html">Layer</a></td></tr>
+<tr class="memitem:a1a34fba22edc963461e7033025d31cb2 inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#a1a34fba22edc963461e7033025d31cb2">Layer</a> (const std::string &amp;n=&quot;layer&quot;)</td></tr>
+<tr class="separator:a1a34fba22edc963461e7033025d31cb2 inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bac093f2a650095a5551fc455d10dc5 inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#a2bac093f2a650095a5551fc455d10dc5">~Layer</a> ()</td></tr>
+<tr class="separator:a2bac093f2a650095a5551fc455d10dc5 inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88bb97c131c409756e71f3f5db59f983 inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#a88bb97c131c409756e71f3f5db59f983">onAttach</a> ()</td></tr>
+<tr class="separator:a88bb97c131c409756e71f3f5db59f983 inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b780cc2b2576eb59e768407bd59d172 inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#a3b780cc2b2576eb59e768407bd59d172">onDetach</a> ()</td></tr>
+<tr class="separator:a3b780cc2b2576eb59e768407bd59d172 inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48aac9e190e03beef1e02a34e8fefd0f inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#a48aac9e190e03beef1e02a34e8fefd0f">onUpdate</a> (float elapsed)=0</td></tr>
+<tr class="separator:a48aac9e190e03beef1e02a34e8fefd0f inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e8efa32b1a8749dc24ddc07ea90f29b inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#a2e8efa32b1a8749dc24ddc07ea90f29b">onDraw</a> (float elapsed)=0</td></tr>
+<tr class="separator:a2e8efa32b1a8749dc24ddc07ea90f29b inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa11590c772daca6da696f7b789e16852 inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#aa11590c772daca6da696f7b789e16852">onEvent</a> (<a class="el" href="../../de/d6a/struct_event.html">Event</a> &amp;)=0</td></tr>
+<tr class="separator:aa11590c772daca6da696f7b789e16852 inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a592dabab6ae280b7a3a3f4b195c9833b inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#a592dabab6ae280b7a3a3f4b195c9833b">getname</a> () const</td></tr>
+<tr class="separator:a592dabab6ae280b7a3a3f4b195c9833b inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a3544b379d9ac79e8178f07bac7c634d8"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="../../d0/d91/struct_settings_layer.html#a5a29db2a76602aa3634eb5fab6b3df7a">SettingsLayer::ActiveWindow</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#a3544b379d9ac79e8178f07bac7c634d8">activeWindow</a> = <a class="el" href="../../d0/d91/struct_settings_layer.html#a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1">ActiveWindow::Root</a></td></tr>
 <tr class="separator:a3544b379d9ac79e8178f07bac7c634d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb61f10c121d444e8dd5aa337b74a520"><td class="memItemLeft" align="right" valign="top">Trie&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#adb61f10c121d444e8dd5aa337b74a520">keyBindingTrie</a></td></tr>
+<tr class="memitem:adb61f10c121d444e8dd5aa337b74a520"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/dec/struct_trie.html">Trie</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#adb61f10c121d444e8dd5aa337b74a520">keyBindingTrie</a></td></tr>
 <tr class="separator:adb61f10c121d444e8dd5aa337b74a520"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a045da42d7bacfd0e06acc78bc1f07cf3"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::pair&lt; InputName, std::string_view &gt;, magic_enum::enum_count&lt; InputName &gt;()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#a045da42d7bacfd0e06acc78bc1f07cf3">keyInputNames</a></td></tr>
+<tr class="memitem:a045da42d7bacfd0e06acc78bc1f07cf3"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::pair&lt; <a class="el" href="../../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706">InputName</a>, std::string_view &gt;, magic_enum::enum_count&lt; <a class="el" href="../../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706">InputName</a> &gt;()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#a045da42d7bacfd0e06acc78bc1f07cf3">keyInputNames</a></td></tr>
 <tr class="separator:a045da42d7bacfd0e06acc78bc1f07cf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb51e478cf9528499223798ba0884570"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; InputName, AnyInputs &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#abb51e478cf9528499223798ba0884570">keyInputValues</a></td></tr>
+<tr class="memitem:abb51e478cf9528499223798ba0884570"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; <a class="el" href="../../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706">InputName</a>, <a class="el" href="../../da/d9a/keymap_8h.html#a06410b0127e2a80fd87236d0eaf124dc">AnyInputs</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#abb51e478cf9528499223798ba0884570">keyInputValues</a></td></tr>
 <tr class="separator:abb51e478cf9528499223798ba0884570"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19364694cf9d49c927f03b8538f2a6ee"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; ui::UIContext &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a></td></tr>
+<tr class="memitem:a19364694cf9d49c927f03b8538f2a6ee"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="../../df/dd7/structui_1_1_u_i_context.html">ui::UIContext</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a></td></tr>
 <tr class="separator:a19364694cf9d49c927f03b8538f2a6ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb2340d359898fb9cb000b832df56f76"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#abb2340d359898fb9cb000b832df56f76">windowSizeDropdownState</a> = false</td></tr>
 <tr class="separator:abb2340d359898fb9cb000b832df56f76"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,6 +168,11 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a46d3a6a66e6c06e5ed3e06ee668cde2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a11c15cb09ededbc30112342c7b293d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d91/struct_settings_layer.html#a6a11c15cb09ededbc30112342c7b293d">resolution_selected_index</a> = 0</td></tr>
 <tr class="separator:a6a11c15cb09ededbc30112342c7b293d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_struct_layer"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_struct_layer')"><img src="../../closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="../../db/dfc/struct_layer.html">Layer</a></td></tr>
+<tr class="memitem:ad8c4d484a5efce0cbbd0cf81b3958d17 inherit pub_attribs_struct_layer"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#ad8c4d484a5efce0cbbd0cf81b3958d17">id</a></td></tr>
+<tr class="separator:ad8c4d484a5efce0cbbd0cf81b3958d17 inherit pub_attribs_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2071349b5667273725ae7f05a42db7a6 inherit pub_attribs_struct_layer"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#a2071349b5667273725ae7f05a42db7a6">name</a></td></tr>
+<tr class="separator:a2071349b5667273725ae7f05a42db7a6 inherit pub_attribs_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a5a29db2a76602aa3634eb5fab6b3df7a" name="a5a29db2a76602aa3634eb5fab6b3df7a"></a>
@@ -192,7 +217,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d8/d10/namespacemenu.html#a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb">menu::Game</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#adb61f10c121d444e8dd5aa337b74a520">keyBindingTrie</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a045da42d7bacfd0e06acc78bc1f07cf3">keyInputNames</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#abb51e478cf9528499223798ba0884570">keyInputValues</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a6a11c15cb09ededbc30112342c7b293d">resolution_selected_index</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
+<p class="reference">References <a class="el" href="../../da/dec/struct_trie.html#a07caffa9a30b60c94c8d3bd7178fd4f7">Trie::add()</a>, <a class="el" href="../../d8/d10/namespacemenu.html#a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb">menu::Game</a>, <a class="el" href="../../dd/d43/struct_key_map.html#a272f832449ddd7bbf21acfc46a964971">KeyMap::get_valid_inputs()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#adb61f10c121d444e8dd5aa337b74a520">keyBindingTrie</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a045da42d7bacfd0e06acc78bc1f07cf3">keyInputNames</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#abb51e478cf9528499223798ba0884570">keyInputValues</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a6a11c15cb09ededbc30112342c7b293d">resolution_selected_index</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
 
 </div>
 </div>
@@ -245,6 +270,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">References <a class="el" href="../../d3/df6/namespaceui.html#a380e02610b30c63b493fc680b30d5522">ui::button()</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#acbb94740ff213102251f65d9380f6a67">ui::components::mk_button()</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#ab9d5ec6ef029bc105f7f7680602d1e75">ui::components::mk_padding()</a>, <a class="el" href="../../dd/d1d/uuid_8h.html#adc09be3a75c11622885375dd96c7170e">MK_UUID</a>, <a class="el" href="../../d3/df6/namespaceui.html#ad861ac8ced30946ccb2ce39f3a68cd93">ui::padding()</a>, <a class="el" href="../../d3/df6/namespaceui.html#abdfa554668b605387f3da5a242418d5d">ui::ROOT_ID</a>, <a class="el" href="../../de/d06/ui__widget_8h.html#a401ddddbaf5a749492e067a11779cdf7">Size_Pct</a>, and <a class="el" href="../../de/d06/ui__widget_8h.html#ac08c4e7524192c92e76ece1f70463125">Size_Px</a>.</p>
+
 <p class="reference">Referenced by <a class="el" href="../../d0/d91/struct_settings_layer.html#ad18cb265fa3c9fd30ee613e8763db085">draw_root_settings()</a>.</p>
 
 </div>
@@ -273,7 +300,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d8/d10/namespacemenu.html#a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb">menu::Game</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a045da42d7bacfd0e06acc78bc1f07cf3">keyInputNames</a>.</p>
+<p class="reference">References <a class="el" href="../../d3/df6/namespaceui.html#a380e02610b30c63b493fc680b30d5522">ui::button()</a>, <a class="el" href="../../d8/d10/namespacemenu.html#a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb">menu::Game</a>, <a class="el" href="../../dd/d43/struct_key_map.html#ad04a7b0d73aadcd917f427004062d10f">KeyMap::get_valid_keys()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a045da42d7bacfd0e06acc78bc1f07cf3">keyInputNames</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#acbb94740ff213102251f65d9380f6a67">ui::components::mk_button()</a>, <a class="el" href="../../dd/d1d/uuid_8h.html#a29b2c51698a1b8857c94e07485d41170">MK_UUID_LOOP</a>, and <a class="el" href="../../d3/df6/namespaceui.html#abdfa554668b605387f3da5a242418d5d">ui::ROOT_ID</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d0/d91/struct_settings_layer.html#ac7ac7226fc96d9ba1950092a1f25dd1a">draw_ui()</a>.</p>
 
@@ -303,7 +330,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#a8de4b3fe663f67830806e1d142f1b84b">back_button()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#af8a10237406e508e5de36cc3e9ad1d0c">enable_post_processing()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#ac918b802645133df5aeadd80478c6df3">master_volume()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a2ba0d94a3400a2144ac4975899326bcd">music_volume()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#ab868e4dbe9bb6e71502d728d2e776704">resolution_switcher()</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#ad034cf2f8a7b156822029fc66868ac7b">streamer_safe_box()</a>.</p>
+<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#a8de4b3fe663f67830806e1d142f1b84b">back_button()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#af8a10237406e508e5de36cc3e9ad1d0c">enable_post_processing()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#ac918b802645133df5aeadd80478c6df3">master_volume()</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#ab9d5ec6ef029bc105f7f7680602d1e75">ui::components::mk_padding()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a2ba0d94a3400a2144ac4975899326bcd">music_volume()</a>, <a class="el" href="../../d3/df6/namespaceui.html#ad861ac8ced30946ccb2ce39f3a68cd93">ui::padding()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#ab868e4dbe9bb6e71502d728d2e776704">resolution_switcher()</a>, <a class="el" href="../../de/d06/ui__widget_8h.html#ac08c4e7524192c92e76ece1f70463125">Size_Px</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#ad034cf2f8a7b156822029fc66868ac7b">streamer_safe_box()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d0/d91/struct_settings_layer.html#ac7ac7226fc96d9ba1950092a1f25dd1a">draw_ui()</a>.</p>
 
@@ -333,7 +360,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#a3544b379d9ac79e8178f07bac7c634d8">activeWindow</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a384cf5682b9576212bed7d1949abbd24">draw_keybindings()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#ad18cb265fa3c9fd30ee613e8763db085">draw_root_settings()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a5a29db2a76602aa3634eb5fab6b3df7aa3cced6d07c1abcbe3fb61a2a1588e71f">KeyBindings</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1">Root</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
+<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#a3544b379d9ac79e8178f07bac7c634d8">activeWindow</a>, <a class="el" href="../../d3/df6/namespaceui.html#a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38">ui::Children</a>, <a class="el" href="../../d3/df6/namespaceui.html#af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c">ui::Column</a>, <a class="el" href="../../d3/df6/namespaceui.html#aaa7b801003350ccb64131704e1458860">ui::div()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a384cf5682b9576212bed7d1949abbd24">draw_keybindings()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#ad18cb265fa3c9fd30ee613e8763db085">draw_root_settings()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a5a29db2a76602aa3634eb5fab6b3df7aa3cced6d07c1abcbe3fb61a2a1588e71f">KeyBindings</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#ab9d5ec6ef029bc105f7f7680602d1e75">ui::components::mk_padding()</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#a5a694fe6b83009441f8e0d47f604bbb7">ui::components::mk_root()</a>, <a class="el" href="../../d3/df6/namespaceui.html#ad861ac8ced30946ccb2ce39f3a68cd93">ui::padding()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1">Root</a>, <a class="el" href="../../de/d06/ui__widget_8h.html#a401ddddbaf5a749492e067a11779cdf7">Size_Pct</a>, <a class="el" href="../../de/d06/ui__widget_8h.html#ac08c4e7524192c92e76ece1f70463125">Size_Px</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>, and <a class="el" href="../../d4/df4/engine_2globals_8h.html#ae4ab98e49b98d8948eb15206b05ae4b8">WIN_HF()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d0/d91/struct_settings_layer.html#a25715e82ed14d56401b9a39b57c03b0b">onDraw()</a>.</p>
 
@@ -362,7 +389,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
+<p class="reference">References <a class="el" href="../../d3/df6/namespaceui.html#aadad469b76dbb557f2985c32613f27fb">ui::checkbox()</a>, <a class="el" href="../../d3/df6/namespaceui.html#a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38">ui::Children</a>, <a class="el" href="../../d3/df6/namespaceui.html#aaa7b801003350ccb64131704e1458860">ui::div()</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#adbeac191e9ed084b7341ea736a36dc8a">ui::components::mk_text()</a>, <a class="el" href="../../dd/d1d/uuid_8h.html#adc09be3a75c11622885375dd96c7170e">MK_UUID</a>, <a class="el" href="../../d3/df6/namespaceui.html#abdfa554668b605387f3da5a242418d5d">ui::ROOT_ID</a>, <a class="el" href="../../de/d06/ui__widget_8h.html#ac08c4e7524192c92e76ece1f70463125">Size_Px</a>, <a class="el" href="../../d3/df6/namespaceui.html#a3cebd653255345fd49c6e745206c3834">ui::text()</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d0/d91/struct_settings_layer.html#ad18cb265fa3c9fd30ee613e8763db085">draw_root_settings()</a>.</p>
 
@@ -391,7 +418,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
+<p class="reference">References <a class="el" href="../../d3/df6/namespaceui.html#a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38">ui::Children</a>, <a class="el" href="../../d3/df6/namespaceui.html#aaa7b801003350ccb64131704e1458860">ui::div()</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#ab9d5ec6ef029bc105f7f7680602d1e75">ui::components::mk_padding()</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#adbeac191e9ed084b7341ea736a36dc8a">ui::components::mk_text()</a>, <a class="el" href="../../dd/d1d/uuid_8h.html#adc09be3a75c11622885375dd96c7170e">MK_UUID</a>, <a class="el" href="../../d3/df6/namespaceui.html#ad861ac8ced30946ccb2ce39f3a68cd93">ui::padding()</a>, <a class="el" href="../../d3/df6/namespaceui.html#abdfa554668b605387f3da5a242418d5d">ui::ROOT_ID</a>, <a class="el" href="../../de/d06/ui__widget_8h.html#ac08c4e7524192c92e76ece1f70463125">Size_Px</a>, <a class="el" href="../../d3/df6/namespaceui.html#a3fad4a8075125de9079fb82cb9e0d465">ui::slider()</a>, <a class="el" href="../../d3/df6/namespaceui.html#a3cebd653255345fd49c6e745206c3834">ui::text()</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d0/d91/struct_settings_layer.html#ad18cb265fa3c9fd30ee613e8763db085">draw_root_settings()</a>.</p>
 
@@ -420,7 +447,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
+<p class="reference">References <a class="el" href="../../d3/df6/namespaceui.html#a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38">ui::Children</a>, <a class="el" href="../../d3/df6/namespaceui.html#aaa7b801003350ccb64131704e1458860">ui::div()</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#ab9d5ec6ef029bc105f7f7680602d1e75">ui::components::mk_padding()</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#adbeac191e9ed084b7341ea736a36dc8a">ui::components::mk_text()</a>, <a class="el" href="../../dd/d1d/uuid_8h.html#adc09be3a75c11622885375dd96c7170e">MK_UUID</a>, <a class="el" href="../../d3/df6/namespaceui.html#ad861ac8ced30946ccb2ce39f3a68cd93">ui::padding()</a>, <a class="el" href="../../d3/df6/namespaceui.html#abdfa554668b605387f3da5a242418d5d">ui::ROOT_ID</a>, <a class="el" href="../../de/d06/ui__widget_8h.html#ac08c4e7524192c92e76ece1f70463125">Size_Px</a>, <a class="el" href="../../d3/df6/namespaceui.html#a3fad4a8075125de9079fb82cb9e0d465">ui::slider()</a>, <a class="el" href="../../d3/df6/namespaceui.html#a3cebd653255345fd49c6e745206c3834">ui::text()</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d0/d91/struct_settings_layer.html#ad18cb265fa3c9fd30ee613e8763db085">draw_root_settings()</a>.</p>
 
@@ -450,7 +477,9 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#ac7ac7226fc96d9ba1950092a1f25dd1a">draw_ui()</a>, <a class="el" href="../../d8/d10/namespacemenu.html#a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c">menu::Settings</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
+<p>Implements <a class="el" href="../../db/dfc/struct_layer.html#a2e8efa32b1a8749dc24ddc07ea90f29b">Layer</a>.</p>
+
+<p class="reference">References <a class="el" href="../../db/d3c/namespaceext.html#a5bb9a44990202857eea129e5b983f183">ext::clear_background()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#ac7ac7226fc96d9ba1950092a1f25dd1a">draw_ui()</a>, <a class="el" href="../../d8/d10/namespacemenu.html#a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c">menu::Settings</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
 
 </div>
 </div>
@@ -466,7 +495,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void SettingsLayer::onEvent </td>
           <td>(</td>
-          <td class="paramtype">Event &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="../../de/d6a/struct_event.html">Event</a> &amp;&#160;</td>
           <td class="paramname"><em>event</em></td><td>)</td>
           <td></td>
         </tr>
@@ -478,7 +507,9 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#a7de19f92164510ae75ff9043db1c16cd">onGamepadButtonPressed()</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#ae02dea54b3504a2ae28c6e30f6b2a4f7">onKeyPressed()</a>.</p>
+<p>Implements <a class="el" href="../../db/dfc/struct_layer.html#aa11590c772daca6da696f7b789e16852">Layer</a>.</p>
+
+<p class="reference">References <a class="el" href="../../de/d3c/struct_event_dispatcher.html#aaa084fba3bab5eb635066b00f1985c24">EventDispatcher::dispatch()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a7de19f92164510ae75ff9043db1c16cd">onGamepadButtonPressed()</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#ae02dea54b3504a2ae28c6e30f6b2a4f7">onKeyPressed()</a>.</p>
 
 </div>
 </div>
@@ -494,7 +525,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool SettingsLayer::onGamepadButtonPressed </td>
           <td>(</td>
-          <td class="paramtype">GamepadButtonPressedEvent &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="../../dd/d36/struct_gamepad_button_pressed_event.html">GamepadButtonPressedEvent</a> &amp;&#160;</td>
           <td class="paramname"><em>event</em></td><td>)</td>
           <td></td>
         </tr>
@@ -524,7 +555,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool SettingsLayer::onKeyPressed </td>
           <td>(</td>
-          <td class="paramtype">KeyPressedEvent &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="../../d4/deb/struct_key_pressed_event.html">KeyPressedEvent</a> &amp;&#160;</td>
           <td class="paramname"><em>event</em></td><td>)</td>
           <td></td>
         </tr>
@@ -536,7 +567,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#a3544b379d9ac79e8178f07bac7c634d8">activeWindow</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1">Root</a>, <a class="el" href="../../d8/d10/namespacemenu.html#a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c">menu::Settings</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
+<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#a3544b379d9ac79e8178f07bac7c634d8">activeWindow</a>, <a class="el" href="../../d2/d13/struct_key_event.html#a099e4f3c01870f67baffeba80b5c1860">KeyEvent::keycode</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1">Root</a>, <a class="el" href="../../d8/d10/namespacemenu.html#a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c">menu::Settings</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d0/d91/struct_settings_layer.html#a3d582e4d4c4f4c77de135351afad5ab6">onEvent()</a>.</p>
 
@@ -566,6 +597,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Implements <a class="el" href="../../db/dfc/struct_layer.html#a48aac9e190e03beef1e02a34e8fefd0f">Layer</a>.</p>
+
 <p class="reference">References <a class="el" href="../../d8/d10/namespacemenu.html#a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c">menu::Settings</a>.</p>
 
 </div>
@@ -593,7 +626,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#a46d3a6a66e6c06e5ed3e06ee668cde2b">resolution_dropdown_open</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a6a11c15cb09ededbc30112342c7b293d">resolution_selected_index</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
+<p class="reference">References <a class="el" href="../../d3/df6/namespaceui.html#a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38">ui::Children</a>, <a class="el" href="../../d3/df6/namespaceui.html#aaa7b801003350ccb64131704e1458860">ui::div()</a>, <a class="el" href="../../d3/df6/namespaceui.html#a37a6f0a92290144cc0e49fbed1bf5190">ui::dropdown()</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#ab9d5ec6ef029bc105f7f7680602d1e75">ui::components::mk_padding()</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#adbeac191e9ed084b7341ea736a36dc8a">ui::components::mk_text()</a>, <a class="el" href="../../d3/df6/namespaceui.html#ad861ac8ced30946ccb2ce39f3a68cd93">ui::padding()</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a46d3a6a66e6c06e5ed3e06ee668cde2b">resolution_dropdown_open</a>, <a class="el" href="../../d0/d91/struct_settings_layer.html#a6a11c15cb09ededbc30112342c7b293d">resolution_selected_index</a>, <a class="el" href="../../de/d06/ui__widget_8h.html#ac08c4e7524192c92e76ece1f70463125">Size_Px</a>, <a class="el" href="../../d3/df6/namespaceui.html#a3cebd653255345fd49c6e745206c3834">ui::text()</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d0/d91/struct_settings_layer.html#ad18cb265fa3c9fd30ee613e8763db085">draw_root_settings()</a>.</p>
 
@@ -622,7 +655,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
+<p class="reference">References <a class="el" href="../../d3/df6/namespaceui.html#aadad469b76dbb557f2985c32613f27fb">ui::checkbox()</a>, <a class="el" href="../../d3/df6/namespaceui.html#a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38">ui::Children</a>, <a class="el" href="../../d3/df6/namespaceui.html#aaa7b801003350ccb64131704e1458860">ui::div()</a>, <a class="el" href="../../d1/d6f/namespaceui_1_1components.html#adbeac191e9ed084b7341ea736a36dc8a">ui::components::mk_text()</a>, <a class="el" href="../../dd/d1d/uuid_8h.html#adc09be3a75c11622885375dd96c7170e">MK_UUID</a>, <a class="el" href="../../d3/df6/namespaceui.html#abdfa554668b605387f3da5a242418d5d">ui::ROOT_ID</a>, <a class="el" href="../../de/d06/ui__widget_8h.html#ac08c4e7524192c92e76ece1f70463125">Size_Px</a>, <a class="el" href="../../d3/df6/namespaceui.html#a3cebd653255345fd49c6e745206c3834">ui::text()</a>, and <a class="el" href="../../d0/d91/struct_settings_layer.html#a19364694cf9d49c927f03b8538f2a6ee">ui_context</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d0/d91/struct_settings_layer.html#ad18cb265fa3c9fd30ee613e8763db085">draw_root_settings()</a>.</p>
 
@@ -652,7 +685,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Trie SettingsLayer::keyBindingTrie</td>
+          <td class="memname"><a class="el" href="../../da/dec/struct_trie.html">Trie</a> SettingsLayer::keyBindingTrie</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -668,7 +701,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::array&lt;std::pair&lt;InputName, std::string_view&gt;, magic_enum::enum_count&lt;InputName&gt;()&gt; SettingsLayer::keyInputNames</td>
+          <td class="memname">std::array&lt;std::pair&lt;<a class="el" href="../../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706">InputName</a>, std::string_view&gt;, magic_enum::enum_count&lt;<a class="el" href="../../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706">InputName</a>&gt;()&gt; SettingsLayer::keyInputNames</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -684,7 +717,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;std::pair&lt;InputName, AnyInputs&gt; &gt; SettingsLayer::keyInputValues</td>
+          <td class="memname">std::vector&lt;std::pair&lt;<a class="el" href="../../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706">InputName</a>, <a class="el" href="../../da/d9a/keymap_8h.html#a06410b0127e2a80fd87236d0eaf124dc">AnyInputs</a>&gt; &gt; SettingsLayer::keyInputValues</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -732,7 +765,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;ui::UIContext&gt; SettingsLayer::ui_context</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="../../df/dd7/structui_1_1_u_i_context.html">ui::UIContext</a>&gt; SettingsLayer::ui_context</td>
         </tr>
       </table>
 </div><div class="memdoc">

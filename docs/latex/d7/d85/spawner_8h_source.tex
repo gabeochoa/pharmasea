@@ -5,24 +5,24 @@
 \DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00002\ }
 \DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ui\_color.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ui__color_8h}{ui\_color.h}}"{}}}
 \DoxyCodeLine{00005\ \textcolor{comment}{//}}
 \DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{entity_8h}{entity.h}}"{}}}
 \DoxyCodeLine{00007\ }
 \DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_spawner}{Spawner}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_entity}{Entity}}\ \{}
-\DoxyCodeLine{00009\ \ \ \ \ \mbox{\hyperlink{struct_spawner_aea868c6fb26297dd2d889a0ef354f1f2}{Spawner}}(vec2\ location)\ :\ \mbox{\hyperlink{struct_entity}{Entity}}(location,\ ui::color::pine\_green)\ \{\}}
+\DoxyCodeLine{00009\ \ \ \ \ \mbox{\hyperlink{struct_spawner_aea868c6fb26297dd2d889a0ef354f1f2}{Spawner}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ location)\ :\ \mbox{\hyperlink{struct_entity}{Entity}}(location,\ \mbox{\hyperlink{namespaceui}{ui}}::color::pine\_green)\ \{\}}
 \DoxyCodeLine{00010\ \};}
 \DoxyCodeLine{00011\ }
 \DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{customer_8h}{customer.h}}"{}}}
-\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}timer.h"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{timer_8h}{timer.h}}"{}}}
 \DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_customer_spawner}{CustomerSpawner}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_spawner}{Spawner}}\ \{}
-\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{struct_customer_spawner_a34310bcf7db177824354d0f6a3394743}{CustomerSpawner}}(vec2\ location)\ :\ \mbox{\hyperlink{struct_spawner}{Spawner}}(location)\ \{\}}
+\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{struct_customer_spawner_a34310bcf7db177824354d0f6a3394743}{CustomerSpawner}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ location)\ :\ \mbox{\hyperlink{struct_spawner}{Spawner}}(location)\ \{\}}
 \DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_customer_spawner_a6cfc00f4eebc11a53ac810c9cc13f93f}{is\_collidable}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
 \DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_customer_spawner_ab0c2a437722c9f6ae1d092ff3c5dfddd}{draw\_outside\_debug\_mode}}()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
 \DoxyCodeLine{00018\ }
 \DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_customer_spawner_a499a258a39168c3d494ed16c9cb600bb}{spawn}}()\ \{}
 \DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ std::shared\_ptr<Customer>\ customer;}
-\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ customer.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_customer}{Customer}}(this-\/>\mbox{\hyperlink{struct_entity_a39cf107f07a27cde481ca719b2a31d86}{position}},\ RED));}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ customer.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_customer}{Customer}}(this-\/>position,\ RED));}
 \DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(customer);}
 \DoxyCodeLine{00023\ \ \ \ \ \}}
 \DoxyCodeLine{00024\ \};}

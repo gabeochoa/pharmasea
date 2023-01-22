@@ -1,0 +1,8 @@
+digraph "EntityHelper"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [shape=record,label="{EntityHelper\n||+ get_entities()\l+ addEntity()\l+ removeEntity()\l+ cleanup()\l+ forEachEntity()\l+ getEntitiesInRange()\l+ getMatchingEntityInFront()\l+ getClosestMatchingEntity()\l+ invalidatePathCacheLocation()\l+ invalidatePathCache()\l+ isWalkable()\l+ isWalkableRawEntities()\l}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+}

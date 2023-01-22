@@ -1,0 +1,143 @@
+\hypertarget{astar_8h_source}{}\doxysection{astar.\+h}
+\label{astar_8h_source}\index{src/engine/astar.h@{src/engine/astar.h}}
+\mbox{\hyperlink{astar_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}../external\_include.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}../globals.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}../util.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}../vec\_util.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{log_8h}{log.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceastar}{astar}}\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structastar_1_1_score_value}{ScoreValue}}\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structastar_1_1_score_value_a98309bb6fe87de4ffb884335b7b0e1db}{value}};}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{structastar_1_1_score_value_a7e8b0a9e3b6d09e309a8509fbeeafefa}{ScoreValue}}()\ \{\ \mbox{\hyperlink{structastar_1_1_score_value_a98309bb6fe87de4ffb884335b7b0e1db}{value}}\ =\ std::numeric\_limits<float>::max();\ \}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{structastar_1_1_score_value_ad419bc1cd3bce374f37a4c8c870cd32a}{ScoreValue}}(\textcolor{keywordtype}{float}\ v)\ :\ \mbox{\hyperlink{structastar_1_1_score_value_a98309bb6fe87de4ffb884335b7b0e1db}{value}}(v)\ \{\}}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{operator}\ float()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structastar_1_1_score_value_a98309bb6fe87de4ffb884335b7b0e1db}{value}};\ \}}
+\DoxyCodeLine{00019\ \};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceastar_a05bf641d43876bcd1f7fd0ad254d3563}{path\_estimate}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\&\ a,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\&\ b)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacevec_a4780c4cb2388d6299519924ca0a609a1}{vec::distance}}(a,\ b);}
+\DoxyCodeLine{00023\ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceastar_a5ed9154348f3c75837c41448c03ddcd7}{distance\_between}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\&\ a,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\&\ b)\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacevec_a4780c4cb2388d6299519924ca0a609a1}{vec::distance}}(a,\ b);}
+\DoxyCodeLine{00027\ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{namespaceastar_aaf8fb1cd16f5faae02a731345440c13f}{get\_lowest\_f}}(\textcolor{keyword}{const}\ std::set<vec2>\&\ set,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<vec2,\ ScoreValue>\&\ fscore)\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{float}\ bestscore\ =\ std::numeric\_limits<float>::max();}
+\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ loc\ =\ *(set.begin());}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ location\ :\ set)\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ score\ =\ fscore[location];}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (score\ <\ bestscore)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ bestscore\ =\ score;}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ loc\ =\ location;}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordflow}{return}\ loc;}
+\DoxyCodeLine{00041\ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ std::vector<vec2>\ \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{get\_neighbors}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ start,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::function<\textcolor{keywordtype}{bool}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)>\ is\_walkable)\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ std::vector<vec2>\ output;}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{int}\ step\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(floor(\mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}));}
+\DoxyCodeLine{00047\ \ \ \ \ \mbox{\hyperlink{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}{forEachNeighbor}}(}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(start.x),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(start.y),}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ [\&](\textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\&\ v)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ auto\ neighbor\ =\ vec::snap(v);}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (is\_walkable(neighbor))\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.push\_back(neighbor);}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ step);}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordflow}{return}\ output;}
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ std::deque<vec2>\ \mbox{\hyperlink{namespaceastar_a83be626a90804773b9392094616e117f}{reconstruct\_path}}(std::deque<vec2>\ path,}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<vec2,\ vec2>\&\ parent\_map,}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ current)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordflow}{if}\ (!parent\_map.contains(current))\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ path;}
+\DoxyCodeLine{00064\ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{auto}\ parent\ =\ parent\_map[current];}
+\DoxyCodeLine{00066\ \ \ \ \ path.push\_front(parent);}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceastar_a83be626a90804773b9392094616e117f}{reconstruct\_path}}(path,\ parent\_map,\ parent);}
+\DoxyCodeLine{00068\ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ std::deque<vec2>\ \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{find\_path\_impl}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ start,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ end,}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::function<\textcolor{keywordtype}{bool}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)>\ is\_walkable)\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordflow}{if}\ (!is\_walkable(end))\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::deque<vec2>\{\};}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ std::set<vec2>\ openset;}
+\DoxyCodeLine{00077\ \ \ \ \ openset.insert(start);}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ std::map<vec2,\ vec2>\ parent\_map;}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ std::map<vec2,\ ScoreValue>\ gscore;}
+\DoxyCodeLine{00082\ \ \ \ \ std::map<vec2,\ ScoreValue>\ fscore;}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ gscore[start]\ =\ \mbox{\hyperlink{structastar_1_1_score_value}{ScoreValue}}(0);}
+\DoxyCodeLine{00085\ \ \ \ \ fscore[start]\ =\ \mbox{\hyperlink{structastar_1_1_score_value}{ScoreValue}}(0\ +\ \mbox{\hyperlink{namespaceastar_a05bf641d43876bcd1f7fd0ad254d3563}{path\_estimate}}(start,\ end));}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 0;}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{while}\ (!openset.empty())\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ i++;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ >\ 1000)\ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a6ae72553ea9805dd87a463d6f710364d}{log\_error}}(\textcolor{stringliteral}{"{}astar:\ hit\ interation\ limit"{}});}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ cur\ =\ \mbox{\hyperlink{namespaceastar_aaf8fb1cd16f5faae02a731345440c13f}{get\_lowest\_f}}(openset,\ fscore);}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ it\ =\ openset.begin();\ it\ !=\ openset.end();)\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it-\/>x\ ==\ cur.x\ \&\&\ it-\/>y\ ==\ cur.y)}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ it\ =\ openset.erase(it);}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++it;}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ utils\ for\ comparing\ these}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cur.x\ ==\ end.x\ \&\&\ cur.y\ ==\ end.y)\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ path\ =\ \mbox{\hyperlink{namespaceastar_a83be626a90804773b9392094616e117f}{reconstruct\_path}}(\{\},\ parent\_map,\ cur);}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ path.push\_back(end);}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ path;}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ std::vector<vec2>\ neighbors\ =\ \mbox{\hyperlink{vec__util_8h_a4a3b66ac1c7427b7059a875740cce0a6}{get\_neighbors}}(cur,\ is\_walkable);}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ neighbor\ :\ neighbors)\ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_gscore\ =\ gscore[cur]\ +\ \mbox{\hyperlink{namespaceastar_a5ed9154348f3c75837c41448c03ddcd7}{distance\_between}}(cur,\ neighbor);}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ neighbor\_gscore\ =\ gscore[neighbor];}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (new\_gscore\ <\ neighbor\_gscore)\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parent\_map[neighbor]\ =\ cur;}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gscore[neighbor]\ =\ \mbox{\hyperlink{structastar_1_1_score_value}{ScoreValue}}(new\_gscore);}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fscore[neighbor]\ =}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structastar_1_1_score_value}{ScoreValue}}(new\_gscore\ +\ \mbox{\hyperlink{namespaceastar_a05bf641d43876bcd1f7fd0ad254d3563}{path\_estimate}}(neighbor,\ end));}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!openset.contains(neighbor))\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ openset.insert(neighbor);}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00126\ \ \ \ \ \}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keywordflow}{return}\ std::deque<vec2>\{\};}
+\DoxyCodeLine{00129\ \}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{comment}{//\ TODO\ should\ we\ add\ a\ cache\ here?}}
+\DoxyCodeLine{00132\ \textcolor{keyword}{inline}\ std::deque<vec2>\ \mbox{\hyperlink{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}{find\_path}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ start,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ end,}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::function<\textcolor{keywordtype}{bool}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)>\ is\_walkable)\ \{}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{astar::find\_path\_impl}}(start,\ end,\ is\_walkable);}
+\DoxyCodeLine{00135\ \}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \}\ \ \textcolor{comment}{//\ namespace\ astar}}
+
+\end{DoxyCode}

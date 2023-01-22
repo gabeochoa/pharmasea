@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['targetcube_0',['TargetCube',['../d9/d4e/struct_target_cube.html',1,'']]],
-  ['test_5fmax_5fail_1',['TEST_MAX_AIL',['../d3/da1/struct_t_e_s_t___m_a_x___a_i_l.html',1,'']]],
-  ['toastlayer_2',['ToastLayer',['../d2/dd7/struct_toast_layer.html',1,'']]],
-  ['toastmsg_3',['ToastMsg',['../df/d0f/struct_toast_msg.html',1,'']]]
+  ['register_0',['Register',['../d0/d74/struct_register.html',1,'']]],
+  ['registernextqueueposition_1',['RegisterNextQueuePosition',['../dc/dc6/struct_register_next_queue_position.html',1,'']]],
+  ['remoteplayer_2',['RemotePlayer',['../d8/dd0/struct_remote_player.html',1,'']]],
+  ['resolutionexplorer_3',['ResolutionExplorer',['../df/d37/structrez_1_1_resolution_explorer.html',1,'rez']]],
+  ['resolutioninfo_4',['ResolutionInfo',['../d6/d15/structrez_1_1_resolution_info.html',1,'rez']]],
+  ['round_5',['Round',['../de/d28/struct_round.html',1,'']]]
 ];

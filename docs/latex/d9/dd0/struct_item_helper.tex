@@ -25,9 +25,9 @@ static void \mbox{\hyperlink{struct_item_helper_a2df95661457b3c72b00f496984c7e52
 \item 
 static void \mbox{\hyperlink{struct_item_helper_a49e6637067859aa600f3825c435aab03}{for\+Each\+Item}} (std\+::function$<$ \mbox{\hyperlink{struct_item_helper_ad8cc798649c7a0bc84c31ef2972435d7}{For\+Each\+Flow}}(std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$)$>$ cb)
 \item 
-{\footnotesize template$<$typename T $>$ }\\static constexpr std\+::vector$<$ std\+::shared\+\_\+ptr$<$ T $>$ $>$ \mbox{\hyperlink{struct_item_helper_a7d3afea322f196765e7c22a61bea38b3}{getitems\+In\+Range}} (vec2 pos, float range)
+{\footnotesize template$<$typename T $>$ }\\static constexpr std\+::vector$<$ std\+::shared\+\_\+ptr$<$ T $>$ $>$ \mbox{\hyperlink{struct_item_helper_a7d3afea322f196765e7c22a61bea38b3}{getitems\+In\+Range}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos, float range)
 \item 
-{\footnotesize template$<$typename T $>$ }\\static constexpr std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{struct_item_helper_a4ee7f424c187b24d9161a907e43fc1e4}{get\+Closest\+Matching\+Item}} (vec2 pos, float range, std\+::function$<$ bool(std\+::shared\+\_\+ptr$<$ T $>$)$>$ filter=\{\})
+{\footnotesize template$<$typename T $>$ }\\static constexpr std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{struct_item_helper_a4ee7f424c187b24d9161a907e43fc1e4}{get\+Closest\+Matching\+Item}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos, float range, std\+::function$<$ bool(std\+::shared\+\_\+ptr$<$ T $>$)$>$ filter=\{\})
 \end{DoxyCompactItemize}
 
 
@@ -67,7 +67,7 @@ References \mbox{\hyperlink{struct_item_helper_a44f1137eaff506c9b1ea4f5e2f48e8a4
 
 
 
-Referenced by \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{Game\+Map\+Info\+::generate\+\_\+map()}}.
+Referenced by \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{Game\+Map\+Info\+::generate\+\_\+map()}}, and \mbox{\hyperlink{struct_item_container_a7522f088f3cda5726ad38ddbb706f1f9}{Item\+Container$<$ I $>$\+::in\+\_\+round\+\_\+update()}}.
 
 \mbox{\Hypertarget{struct_item_helper_a2df95661457b3c72b00f496984c7e52b}\label{struct_item_helper_a2df95661457b3c72b00f496984c7e52b}} 
 \index{ItemHelper@{ItemHelper}!cleanup@{cleanup}}
@@ -97,7 +97,7 @@ References \mbox{\hyperlink{struct_item_helper_a44f1137eaff506c9b1ea4f5e2f48e8a4
 
 
 
-References \mbox{\hyperlink{item__helper_8h_abc7723a5962a94ea43ef9b5de0f2ad39}{client\+\_\+items\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE}}, \mbox{\hyperlink{item__helper_8h_a38f86b6e9e8f5ea89a949554c344cd86}{client\+\_\+lobby\+\_\+items\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE}}, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game\+::\+Lobby}}, \mbox{\hyperlink{item__helper_8h_a79b83ae9ed8024ef393811b5c3976ae8}{server\+\_\+items\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE}}, and \mbox{\hyperlink{item__helper_8h_a2091150406655e7aa8a4c40ba8beb7e4}{server\+\_\+lobby\+\_\+items\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE}}.
+References \mbox{\hyperlink{item__helper_8h_abc7723a5962a94ea43ef9b5de0f2ad39}{client\+\_\+items\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE}}, \mbox{\hyperlink{item__helper_8h_a38f86b6e9e8f5ea89a949554c344cd86}{client\+\_\+lobby\+\_\+items\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE}}, \mbox{\hyperlink{is__server_8h_aa9b37672e835e000097b7b8c69868672}{is\+\_\+server()}}, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game\+::\+Lobby}}, \mbox{\hyperlink{item__helper_8h_a79b83ae9ed8024ef393811b5c3976ae8}{server\+\_\+items\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE}}, and \mbox{\hyperlink{item__helper_8h_a2091150406655e7aa8a4c40ba8beb7e4}{server\+\_\+lobby\+\_\+items\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE}}.
 
 
 
@@ -108,14 +108,14 @@ Referenced by \mbox{\hyperlink{struct_item_helper_ac9f40a76bb440b45308f4e833c602
 \index{getClosestMatchingItem@{getClosestMatchingItem}!ItemHelper@{ItemHelper}}
 \doxysubsubsection{\texorpdfstring{getClosestMatchingItem()}{getClosestMatchingItem()}}
 {\footnotesize\ttfamily template$<$typename T $>$ \\
-static constexpr std\+::shared\+\_\+ptr$<$ T $>$ Item\+Helper\+::get\+Closest\+Matching\+Item (\begin{DoxyParamCaption}\item[{vec2}]{pos,  }\item[{float}]{range,  }\item[{std\+::function$<$ bool(std\+::shared\+\_\+ptr$<$ T $>$)$>$}]{filter = {\ttfamily \{\}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [constexpr]}}
+static constexpr std\+::shared\+\_\+ptr$<$ T $>$ Item\+Helper\+::get\+Closest\+Matching\+Item (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{pos,  }\item[{float}]{range,  }\item[{std\+::function$<$ bool(std\+::shared\+\_\+ptr$<$ T $>$)$>$}]{filter = {\ttfamily \{\}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [constexpr]}}
 
 \mbox{\Hypertarget{struct_item_helper_a7d3afea322f196765e7c22a61bea38b3}\label{struct_item_helper_a7d3afea322f196765e7c22a61bea38b3}} 
 \index{ItemHelper@{ItemHelper}!getitemsInRange@{getitemsInRange}}
 \index{getitemsInRange@{getitemsInRange}!ItemHelper@{ItemHelper}}
 \doxysubsubsection{\texorpdfstring{getitemsInRange()}{getitemsInRange()}}
 {\footnotesize\ttfamily template$<$typename T $>$ \\
-static constexpr std\+::vector$<$ std\+::shared\+\_\+ptr$<$ T $>$ $>$ Item\+Helper\+::getitems\+In\+Range (\begin{DoxyParamCaption}\item[{vec2}]{pos,  }\item[{float}]{range }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [constexpr]}}
+static constexpr std\+::vector$<$ std\+::shared\+\_\+ptr$<$ T $>$ $>$ Item\+Helper\+::getitems\+In\+Range (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{pos,  }\item[{float}]{range }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [constexpr]}}
 
 
 

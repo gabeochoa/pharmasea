@@ -1,0 +1,352 @@
+\hypertarget{structnetwork_1_1_info}{}\doxysection{network\+::Info Struct Reference}
+\label{structnetwork_1_1_info}\index{network::Info@{network::Info}}
+
+
+{\ttfamily \#include $<$network.\+h$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994}{Role}} \{ \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ae10321bdd2ffe904d485458b56187dbf}{s\+\_\+\+None}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 0
+, \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994a5795cf7bf923ad4f113076102e530875}{s\+\_\+\+Host}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 1
+, \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ac29bd98fe47d716cd571eef8499043f7}{s\+\_\+\+Client}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 2
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{structnetwork_1_1_info_ab5e306058f8f1a24fc2e53c21d0afb96}{is\+\_\+host}} ()
+\item 
+bool \mbox{\hyperlink{structnetwork_1_1_info_acc704d9cf7a3ea7b77454c32809df263}{is\+\_\+client}} ()
+\item 
+bool \mbox{\hyperlink{structnetwork_1_1_info_a373096823962040a49649bbc70cf7a60}{has\+\_\+role}} ()
+\item 
+void \mbox{\hyperlink{structnetwork_1_1_info_ac148b5f2fe47bef554b09b61500aea09}{set\+\_\+role}} (\mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994}{Role}} role)
+\item 
+void \mbox{\hyperlink{structnetwork_1_1_info_ae2068087bee03f27b30a8fcc70b0987f}{lock\+\_\+in\+\_\+username}} ()
+\item 
+void \mbox{\hyperlink{structnetwork_1_1_info_a0aae20305d451c049a64047f941e507c}{unlock\+\_\+username}} ()
+\item 
+std\+::string \& \mbox{\hyperlink{structnetwork_1_1_info_a183f03ad1223170d26a31a5e7ec0216f}{host\+\_\+ip\+\_\+address}} ()
+\item 
+void \mbox{\hyperlink{structnetwork_1_1_info_a99f2c06880db06ef64e68af6f78cedfa}{lock\+\_\+in\+\_\+ip}} ()
+\item 
+bool \mbox{\hyperlink{structnetwork_1_1_info_a9bcf7a87bb457d78a87e743f85accb4d}{has\+\_\+set\+\_\+ip}} ()
+\item 
+\mbox{\hyperlink{structnetwork_1_1_info_ac596696f29c36f885b90f0ca635c024d}{Info}} ()
+\item 
+\mbox{\hyperlink{structnetwork_1_1_info_ad96b18e7ee5671d3ffa9a68606f78568}{$\sim$\+Info}} ()
+\item 
+void \mbox{\hyperlink{structnetwork_1_1_info_a353278b43dc26905b0a61609d11ab412}{cleanup\+\_\+server}} ()
+\item 
+void \mbox{\hyperlink{structnetwork_1_1_info_aa0fd3bfab8950e15d253a3261c3d6fbe}{send\+\_\+current\+\_\+menu\+\_\+state}} (float dt)
+\item 
+void \mbox{\hyperlink{structnetwork_1_1_info_abbfea37cd270c2eddf48fdb4ad0b9513}{tick}} (float dt)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{structnetwork_1_1_info_a6e71c241a75b76e7bc45e25a7d6cbd79}{init\+\_\+connections}} ()
+\item 
+static void \mbox{\hyperlink{structnetwork_1_1_info_a30004e1b2db2b0a4973c8636ea30c64f}{shutdown\+\_\+connections}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994}{network\+::\+Info\+::\+Role}} \mbox{\hyperlink{structnetwork_1_1_info_a468083a1a103d425df70fce1aaa41ec9}{desired\+\_\+role}} = \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ae10321bdd2ffe904d485458b56187dbf}{s\+\_\+\+None}}
+\item 
+std\+::thread\+::id \mbox{\hyperlink{structnetwork_1_1_info_a23bb7a60bfd1f833e69ca3e3e7853b3e}{client\+\_\+thread\+\_\+id}}
+\item 
+std\+::thread\+::id \mbox{\hyperlink{structnetwork_1_1_info_a171a9b963c9627da58de28e568e01c83}{server\+\_\+thread\+\_\+id}}
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{structnetwork_1_1_client}{Client}} $>$ \mbox{\hyperlink{structnetwork_1_1_info_a49a3df80a3900fb65e31490d19e21774}{client}}
+\item 
+std\+::thread \mbox{\hyperlink{structnetwork_1_1_info_a770ad018f4e4905c2e9a3d215652fed3}{server\+\_\+thread}}
+\item 
+bool \mbox{\hyperlink{structnetwork_1_1_info_a6027a17a76dbd371302b493a04bb32bb}{username\+\_\+set}} = false
+\item 
+\mbox{\hyperlink{struct_trigger_on_dt}{Trigger\+On\+Dt}} \mbox{\hyperlink{structnetwork_1_1_info_ad2ef31fe5d52bfd584d13ff33cf7fe8c}{menu\+\_\+state\+\_\+tick\+\_\+trigger}} = \mbox{\hyperlink{struct_trigger_on_dt}{Trigger\+On\+Dt}}(0.\+1f)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994}\label{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994}} 
+\index{network::Info@{network::Info}!Role@{Role}}
+\index{Role@{Role}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{Role}{Role}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994}{network\+::\+Info\+::\+Role}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{s\_None@{s\_None}!network::Info@{network::Info}}\index{network::Info@{network::Info}!s\_None@{s\_None}}}\mbox{\Hypertarget{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ae10321bdd2ffe904d485458b56187dbf}\label{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ae10321bdd2ffe904d485458b56187dbf}} 
+s\+\_\+\+None&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{s\_Host@{s\_Host}!network::Info@{network::Info}}\index{network::Info@{network::Info}!s\_Host@{s\_Host}}}\mbox{\Hypertarget{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994a5795cf7bf923ad4f113076102e530875}\label{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994a5795cf7bf923ad4f113076102e530875}} 
+s\+\_\+\+Host&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{s\_Client@{s\_Client}!network::Info@{network::Info}}\index{network::Info@{network::Info}!s\_Client@{s\_Client}}}\mbox{\Hypertarget{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ac29bd98fe47d716cd571eef8499043f7}\label{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ac29bd98fe47d716cd571eef8499043f7}} 
+s\+\_\+\+Client&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structnetwork_1_1_info_ac596696f29c36f885b90f0ca635c024d}\label{structnetwork_1_1_info_ac596696f29c36f885b90f0ca635c024d}} 
+\index{network::Info@{network::Info}!Info@{Info}}
+\index{Info@{Info}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{Info()}{Info()}}
+{\footnotesize\ttfamily network\+::\+Info\+::\+Info (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{structnetwork_1_1_info_ad96b18e7ee5671d3ffa9a68606f78568}\label{structnetwork_1_1_info_ad96b18e7ee5671d3ffa9a68606f78568}} 
+\index{network::Info@{network::Info}!````~Info@{$\sim$Info}}
+\index{````~Info@{$\sim$Info}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{$\sim$Info()}{~Info()}}
+{\footnotesize\ttfamily network\+::\+Info\+::$\sim$\+Info (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_info_a49a3df80a3900fb65e31490d19e21774}{client}}, \mbox{\hyperlink{structnetwork_1_1_info_a468083a1a103d425df70fce1aaa41ec9}{desired\+\_\+role}}, and \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ae10321bdd2ffe904d485458b56187dbf}{s\+\_\+\+None}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structnetwork_1_1_info_a353278b43dc26905b0a61609d11ab412}\label{structnetwork_1_1_info_a353278b43dc26905b0a61609d11ab412}} 
+\index{network::Info@{network::Info}!cleanup\_server@{cleanup\_server}}
+\index{cleanup\_server@{cleanup\_server}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{cleanup\_server()}{cleanup\_server()}}
+{\footnotesize\ttfamily void network\+::\+Info\+::cleanup\+\_\+server (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_info_a770ad018f4e4905c2e9a3d215652fed3}{server\+\_\+thread}}, \mbox{\hyperlink{structnetwork_1_1_info_a171a9b963c9627da58de28e568e01c83}{server\+\_\+thread\+\_\+id}}, and \mbox{\hyperlink{structnetwork_1_1_server_a06ad5b510a12f0bea95d92dd2d351217}{network\+::\+Server\+::stop()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_a373096823962040a49649bbc70cf7a60}\label{structnetwork_1_1_info_a373096823962040a49649bbc70cf7a60}} 
+\index{network::Info@{network::Info}!has\_role@{has\_role}}
+\index{has\_role@{has\_role}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{has\_role()}{has\_role()}}
+{\footnotesize\ttfamily bool network\+::\+Info\+::has\+\_\+role (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_info_acc704d9cf7a3ea7b77454c32809df263}{is\+\_\+client()}}, and \mbox{\hyperlink{structnetwork_1_1_info_ab5e306058f8f1a24fc2e53c21d0afb96}{is\+\_\+host()}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_info_abbfea37cd270c2eddf48fdb4ad0b9513}{tick()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_a9bcf7a87bb457d78a87e743f85accb4d}\label{structnetwork_1_1_info_a9bcf7a87bb457d78a87e743f85accb4d}} 
+\index{network::Info@{network::Info}!has\_set\_ip@{has\_set\_ip}}
+\index{has\_set\_ip@{has\_set\_ip}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{has\_set\_ip()}{has\_set\_ip()}}
+{\footnotesize\ttfamily bool network\+::\+Info\+::has\+\_\+set\+\_\+ip (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_info_a49a3df80a3900fb65e31490d19e21774}{client}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_a183f03ad1223170d26a31a5e7ec0216f}\label{structnetwork_1_1_info_a183f03ad1223170d26a31a5e7ec0216f}} 
+\index{network::Info@{network::Info}!host\_ip\_address@{host\_ip\_address}}
+\index{host\_ip\_address@{host\_ip\_address}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{host\_ip\_address()}{host\_ip\_address()}}
+{\footnotesize\ttfamily std\+::string \& network\+::\+Info\+::host\+\_\+ip\+\_\+address (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_info_a49a3df80a3900fb65e31490d19e21774}{client}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_a6e71c241a75b76e7bc45e25a7d6cbd79}\label{structnetwork_1_1_info_a6e71c241a75b76e7bc45e25a7d6cbd79}} 
+\index{network::Info@{network::Info}!init\_connections@{init\_connections}}
+\index{init\_connections@{init\_connections}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{init\_connections()}{init\_connections()}}
+{\footnotesize\ttfamily static void network\+::\+Info\+::init\+\_\+connections (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{namespacenetwork_a31a595750c2d6a31ee5b59d623c95c84}{network\+::log\+\_\+debug()}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, and \mbox{\hyperlink{namespacenetwork_a0cf71a5c786a7a5c693b0b96b4a32a39}{network\+::\+START\+\_\+\+TIME}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_a6894a175bcbb8ffc9e42b2ddbc399ca8}{Network\+Layer\+::\+Network\+Layer()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_acc704d9cf7a3ea7b77454c32809df263}\label{structnetwork_1_1_info_acc704d9cf7a3ea7b77454c32809df263}} 
+\index{network::Info@{network::Info}!is\_client@{is\_client}}
+\index{is\_client@{is\_client}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{is\_client()}{is\_client()}}
+{\footnotesize\ttfamily bool network\+::\+Info\+::is\+\_\+client (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_info_a468083a1a103d425df70fce1aaa41ec9}{desired\+\_\+role}}, and \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ac29bd98fe47d716cd571eef8499043f7}{s\+\_\+\+Client}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_info_a373096823962040a49649bbc70cf7a60}{has\+\_\+role()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_ab5e306058f8f1a24fc2e53c21d0afb96}\label{structnetwork_1_1_info_ab5e306058f8f1a24fc2e53c21d0afb96}} 
+\index{network::Info@{network::Info}!is\_host@{is\_host}}
+\index{is\_host@{is\_host}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{is\_host()}{is\_host()}}
+{\footnotesize\ttfamily bool network\+::\+Info\+::is\+\_\+host (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_info_a468083a1a103d425df70fce1aaa41ec9}{desired\+\_\+role}}, and \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994a5795cf7bf923ad4f113076102e530875}{s\+\_\+\+Host}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_info_a373096823962040a49649bbc70cf7a60}{has\+\_\+role()}}, and \mbox{\hyperlink{structnetwork_1_1_info_abbfea37cd270c2eddf48fdb4ad0b9513}{tick()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_a99f2c06880db06ef64e68af6f78cedfa}\label{structnetwork_1_1_info_a99f2c06880db06ef64e68af6f78cedfa}} 
+\index{network::Info@{network::Info}!lock\_in\_ip@{lock\_in\_ip}}
+\index{lock\_in\_ip@{lock\_in\_ip}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{lock\_in\_ip()}{lock\_in\_ip()}}
+{\footnotesize\ttfamily void network\+::\+Info\+::lock\+\_\+in\+\_\+ip (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_info_a49a3df80a3900fb65e31490d19e21774}{client}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_ae2068087bee03f27b30a8fcc70b0987f}\label{structnetwork_1_1_info_ae2068087bee03f27b30a8fcc70b0987f}} 
+\index{network::Info@{network::Info}!lock\_in\_username@{lock\_in\_username}}
+\index{lock\_in\_username@{lock\_in\_username}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{lock\_in\_username()}{lock\_in\_username()}}
+{\footnotesize\ttfamily void network\+::\+Info\+::lock\+\_\+in\+\_\+username (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_info_a6027a17a76dbd371302b493a04bb32bb}{username\+\_\+set}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_aa0fd3bfab8950e15d253a3261c3d6fbe}\label{structnetwork_1_1_info_aa0fd3bfab8950e15d253a3261c3d6fbe}} 
+\index{network::Info@{network::Info}!send\_current\_menu\_state@{send\_current\_menu\_state}}
+\index{send\_current\_menu\_state@{send\_current\_menu\_state}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{send\_current\_menu\_state()}{send\_current\_menu\_state()}}
+{\footnotesize\ttfamily void network\+::\+Info\+::send\+\_\+current\+\_\+menu\+\_\+state (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa27d768ec34bb2753f2f7ab235d14d57e}{network\+::\+Client\+Packet\+::\+Game\+State}}, \mbox{\hyperlink{structnetwork_1_1_info_ad2ef31fe5d52bfd584d13ff33cf7fe8c}{menu\+\_\+state\+\_\+tick\+\_\+trigger}}, \mbox{\hyperlink{structnetwork_1_1_server_ad2dbf3b633a0ab10535d0ea7d5cea785}{network\+::\+Server\+::queue\+\_\+packet()}}, \mbox{\hyperlink{namespacenetwork_ac25927028283483486690041e04cb8c9}{network\+::\+SERVER\+\_\+\+CLIENT\+\_\+\+ID}}, and \mbox{\hyperlink{struct_trigger_on_dt_a82591d0168d54307d344a5935220ec26}{Trigger\+On\+Dt\+::test()}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_info_abbfea37cd270c2eddf48fdb4ad0b9513}{tick()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_ac148b5f2fe47bef554b09b61500aea09}\label{structnetwork_1_1_info_ac148b5f2fe47bef554b09b61500aea09}} 
+\index{network::Info@{network::Info}!set\_role@{set\_role}}
+\index{set\_role@{set\_role}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{set\_role()}{set\_role()}}
+{\footnotesize\ttfamily void network\+::\+Info\+::set\+\_\+role (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994}{Role}}}]{role }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_info_a49a3df80a3900fb65e31490d19e21774}{client}}, \mbox{\hyperlink{structnetwork_1_1_info_a23bb7a60bfd1f833e69ca3e3e7853b3e}{client\+\_\+thread\+\_\+id}}, \mbox{\hyperlink{namespacenetwork_a6aeb6825913b9a386a83c59f8c715a35}{network\+::\+DEFAULT\+\_\+\+PORT}}, \mbox{\hyperlink{structnetwork_1_1_info_a468083a1a103d425df70fce1aaa41ec9}{desired\+\_\+role}}, \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}, \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ac29bd98fe47d716cd571eef8499043f7}{s\+\_\+\+Client}}, \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994a5795cf7bf923ad4f113076102e530875}{s\+\_\+\+Host}}, \mbox{\hyperlink{structnetwork_1_1_info_a770ad018f4e4905c2e9a3d215652fed3}{server\+\_\+thread}}, \mbox{\hyperlink{structnetwork_1_1_info_a171a9b963c9627da58de28e568e01c83}{server\+\_\+thread\+\_\+id}}, \mbox{\hyperlink{struct_global_value_register_a0020d85a5afb11283c115e425f7e175c}{Global\+Value\+Register\+::set()}}, and \mbox{\hyperlink{structnetwork_1_1_server_a7b357ef27dc5a9b1a1091716f0a75c77}{network\+::\+Server\+::start()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_a30004e1b2db2b0a4973c8636ea30c64f}\label{structnetwork_1_1_info_a30004e1b2db2b0a4973c8636ea30c64f}} 
+\index{network::Info@{network::Info}!shutdown\_connections@{shutdown\_connections}}
+\index{shutdown\_connections@{shutdown\_connections}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{shutdown\_connections()}{shutdown\_connections()}}
+{\footnotesize\ttfamily static void network\+::\+Info\+::shutdown\+\_\+connections (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_a38705efe3dc6c50eed3ac75f45cb1209}{Network\+Layer\+::$\sim$\+Network\+Layer()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_abbfea37cd270c2eddf48fdb4ad0b9513}\label{structnetwork_1_1_info_abbfea37cd270c2eddf48fdb4ad0b9513}} 
+\index{network::Info@{network::Info}!tick@{tick}}
+\index{tick@{tick}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{tick()}{tick()}}
+{\footnotesize\ttfamily void network\+::\+Info\+::tick (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_info_a49a3df80a3900fb65e31490d19e21774}{client}}, \mbox{\hyperlink{structnetwork_1_1_info_a373096823962040a49649bbc70cf7a60}{has\+\_\+role()}}, \mbox{\hyperlink{structnetwork_1_1_info_ab5e306058f8f1a24fc2e53c21d0afb96}{is\+\_\+host()}}, and \mbox{\hyperlink{structnetwork_1_1_info_aa0fd3bfab8950e15d253a3261c3d6fbe}{send\+\_\+current\+\_\+menu\+\_\+state()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_a0aae20305d451c049a64047f941e507c}\label{structnetwork_1_1_info_a0aae20305d451c049a64047f941e507c}} 
+\index{network::Info@{network::Info}!unlock\_username@{unlock\_username}}
+\index{unlock\_username@{unlock\_username}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{unlock\_username()}{unlock\_username()}}
+{\footnotesize\ttfamily void network\+::\+Info\+::unlock\+\_\+username (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1_info_a6027a17a76dbd371302b493a04bb32bb}{username\+\_\+set}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structnetwork_1_1_info_a49a3df80a3900fb65e31490d19e21774}\label{structnetwork_1_1_info_a49a3df80a3900fb65e31490d19e21774}} 
+\index{network::Info@{network::Info}!client@{client}}
+\index{client@{client}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{client}{client}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{structnetwork_1_1_client}{Client}}$>$ network\+::\+Info\+::client}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_info_a9bcf7a87bb457d78a87e743f85accb4d}{has\+\_\+set\+\_\+ip()}}, \mbox{\hyperlink{structnetwork_1_1_info_a183f03ad1223170d26a31a5e7ec0216f}{host\+\_\+ip\+\_\+address()}}, \mbox{\hyperlink{structnetwork_1_1_info_a99f2c06880db06ef64e68af6f78cedfa}{lock\+\_\+in\+\_\+ip()}}, \mbox{\hyperlink{structnetwork_1_1_info_ac148b5f2fe47bef554b09b61500aea09}{set\+\_\+role()}}, \mbox{\hyperlink{structnetwork_1_1_info_abbfea37cd270c2eddf48fdb4ad0b9513}{tick()}}, and \mbox{\hyperlink{structnetwork_1_1_info_ad96b18e7ee5671d3ffa9a68606f78568}{$\sim$\+Info()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_a23bb7a60bfd1f833e69ca3e3e7853b3e}\label{structnetwork_1_1_info_a23bb7a60bfd1f833e69ca3e3e7853b3e}} 
+\index{network::Info@{network::Info}!client\_thread\_id@{client\_thread\_id}}
+\index{client\_thread\_id@{client\_thread\_id}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{client\_thread\_id}{client\_thread\_id}}
+{\footnotesize\ttfamily std\+::thread\+::id network\+::\+Info\+::client\+\_\+thread\+\_\+id}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_info_ac148b5f2fe47bef554b09b61500aea09}{set\+\_\+role()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_a468083a1a103d425df70fce1aaa41ec9}\label{structnetwork_1_1_info_a468083a1a103d425df70fce1aaa41ec9}} 
+\index{network::Info@{network::Info}!desired\_role@{desired\_role}}
+\index{desired\_role@{desired\_role}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{desired\_role}{desired\_role}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994}{network\+::\+Info\+::\+Role}} network\+::\+Info\+::desired\+\_\+role = \mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ae10321bdd2ffe904d485458b56187dbf}{s\+\_\+\+None}}}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_info_acc704d9cf7a3ea7b77454c32809df263}{is\+\_\+client()}}, \mbox{\hyperlink{structnetwork_1_1_info_ab5e306058f8f1a24fc2e53c21d0afb96}{is\+\_\+host()}}, \mbox{\hyperlink{structnetwork_1_1_info_ac148b5f2fe47bef554b09b61500aea09}{set\+\_\+role()}}, and \mbox{\hyperlink{structnetwork_1_1_info_ad96b18e7ee5671d3ffa9a68606f78568}{$\sim$\+Info()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_ad2ef31fe5d52bfd584d13ff33cf7fe8c}\label{structnetwork_1_1_info_ad2ef31fe5d52bfd584d13ff33cf7fe8c}} 
+\index{network::Info@{network::Info}!menu\_state\_tick\_trigger@{menu\_state\_tick\_trigger}}
+\index{menu\_state\_tick\_trigger@{menu\_state\_tick\_trigger}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{menu\_state\_tick\_trigger}{menu\_state\_tick\_trigger}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_trigger_on_dt}{Trigger\+On\+Dt}} network\+::\+Info\+::menu\+\_\+state\+\_\+tick\+\_\+trigger = \mbox{\hyperlink{struct_trigger_on_dt}{Trigger\+On\+Dt}}(0.\+1f)}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_info_aa0fd3bfab8950e15d253a3261c3d6fbe}{send\+\_\+current\+\_\+menu\+\_\+state()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_a770ad018f4e4905c2e9a3d215652fed3}\label{structnetwork_1_1_info_a770ad018f4e4905c2e9a3d215652fed3}} 
+\index{network::Info@{network::Info}!server\_thread@{server\_thread}}
+\index{server\_thread@{server\_thread}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{server\_thread}{server\_thread}}
+{\footnotesize\ttfamily std\+::thread network\+::\+Info\+::server\+\_\+thread}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_info_a353278b43dc26905b0a61609d11ab412}{cleanup\+\_\+server()}}, and \mbox{\hyperlink{structnetwork_1_1_info_ac148b5f2fe47bef554b09b61500aea09}{set\+\_\+role()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_a171a9b963c9627da58de28e568e01c83}\label{structnetwork_1_1_info_a171a9b963c9627da58de28e568e01c83}} 
+\index{network::Info@{network::Info}!server\_thread\_id@{server\_thread\_id}}
+\index{server\_thread\_id@{server\_thread\_id}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{server\_thread\_id}{server\_thread\_id}}
+{\footnotesize\ttfamily std\+::thread\+::id network\+::\+Info\+::server\+\_\+thread\+\_\+id}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_info_a353278b43dc26905b0a61609d11ab412}{cleanup\+\_\+server()}}, and \mbox{\hyperlink{structnetwork_1_1_info_ac148b5f2fe47bef554b09b61500aea09}{set\+\_\+role()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_info_a6027a17a76dbd371302b493a04bb32bb}\label{structnetwork_1_1_info_a6027a17a76dbd371302b493a04bb32bb}} 
+\index{network::Info@{network::Info}!username\_set@{username\_set}}
+\index{username\_set@{username\_set}!network::Info@{network::Info}}
+\doxysubsubsection{\texorpdfstring{username\_set}{username\_set}}
+{\footnotesize\ttfamily bool network\+::\+Info\+::username\+\_\+set = false}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_info_ae2068087bee03f27b30a8fcc70b0987f}{lock\+\_\+in\+\_\+username()}}, and \mbox{\hyperlink{structnetwork_1_1_info_a0aae20305d451c049a64047f941e507c}{unlock\+\_\+username()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/network/\mbox{\hyperlink{network_8h}{network.\+h}}\end{DoxyCompactItemize}

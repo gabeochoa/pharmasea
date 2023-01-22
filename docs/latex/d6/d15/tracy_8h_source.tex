@@ -1,0 +1,51 @@
+\hypertarget{tracy_8h_source}{}\doxysection{tracy.\+h}
+\label{tracy_8h_source}\index{src/engine/tracy.h@{src/engine/tracy.h}}
+\mbox{\hyperlink{tracy_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifdef\ \_\_APPLE\_\_}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ push}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ ignored\ "{}-\/Weverything"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ ignored\ "{}-\/Wshadow"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#ifdef\ WIN32}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ push}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ ignored\ "{}-\/Wshadow"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#ifdef\ ENABLE\_TRACING}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ TRACY\_ENABLE\ 1}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <tracy/tracy/Tracy.hpp>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ TRACY\_FRAME\_MARK(x)\ FrameMark}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ TRACY\_ZONE\_SCOPED\ ZoneScoped}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ TRACY\_ZONE(x)\ ZoneNamedN(x,\ \#x,\ true)}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ TRACY\_ZONE\_NAMED(x,\ y,\ z)\ ZoneNamedN(x,\ y,\ z)}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ TRACY\_LOG(msg,\ size)\ TracyMessage(msg,\ size)}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ TODO\ add\ a\ note\ for\ whether\ we\ need\ these\ voids}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ TRACY\_FRAME\_MARK(x)\ void}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ TRACY\_ZONE\_SCOPED\ void}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ TRACY\_ZONE\_NAMED(x,\ y,\ z)\ void}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ TRACY\_LOG(msg,\ size)\ void}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifdef\ \_\_APPLE\_\_}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#pragma\ enable\_warn}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#ifdef\ WIN32}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ pop}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

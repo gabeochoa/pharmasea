@@ -1,0 +1,321 @@
+\hypertarget{structnetwork_1_1internal_1_1_server}{}\doxysection{network\+::internal\+::Server Struct Reference}
+\label{structnetwork_1_1internal_1_1_server}\index{network::internal::Server@{network::internal::Server}}
+
+
+{\ttfamily \#include $<$server.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9e31022543396132a768ffd19972c3c7}{set\+\_\+process\+\_\+message}} (std\+::function$<$ void(\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\+\_\+t}} \&client, std\+::string)$>$ cb)
+\item 
+void \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_ad13649771032de021d7716c0256bb74d}{set\+\_\+announcement\+\_\+cb}} (std\+::function$<$ void(HSteam\+Net\+Connection, std\+::string, \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{Internal\+Server\+Announcement}})$>$ cb)
+\item 
+\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a2dfd5bd163e4a63c3b5a71e438b10b39}{Server}} (int port)
+\item 
+\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a5a0c9ae6ecd9bc69c4b450d4302e4fe3}{$\sim$\+Server}} ()
+\item 
+void \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3bfb968fb1383e184f95d7da7a780ea3}{send\+\_\+announcement\+\_\+to\+\_\+client}} (HSteam\+Net\+Connection conn, std\+::string msg, \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{Internal\+Server\+Announcement}} type)
+\item 
+void \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a1967120c9dd27462080742f4194248f3}{send\+\_\+announcement\+\_\+to\+\_\+all}} (std\+::string msg, \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{Internal\+Server\+Announcement}} type, std\+::function$<$ bool(\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\+\_\+t}} \&)$>$ exclude=nullptr)
+\item 
+void \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_aa28a4876360fc9bced11a7a8003e5097}{send\+\_\+message\+\_\+to\+\_\+all}} (const char $\ast$buffer, uint32 size, std\+::function$<$ bool(\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\+\_\+t}} \&)$>$ exclude=nullptr)
+\item 
+void \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7a20ef64958d26f7fbfc6b4dee808111}{send\+\_\+message\+\_\+to\+\_\+connection}} (HSteam\+Net\+Connection conn, const char $\ast$buffer, uint32 size)
+\item 
+bool \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a55e2053981f7328cbc553433ddba8071}{run}} ()
+\item 
+void \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7ed6f50da932b98feb08d81d5e50399c}{startup}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Steam\+Networking\+IPAddr \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a82f910e341e75d31e7866ee8925ea90b}{address}}
+\item 
+ISteam\+Networking\+Sockets $\ast$ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}} = nullptr
+\item 
+HSteam\+Listen\+Socket \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a4ad58842dd20bee7bab52c1be2770c9b}{listen\+\_\+sock}}
+\item 
+HSteam\+Net\+Poll\+Group \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}{poll\+\_\+group}}
+\item 
+bool \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a40691249230a5280770e4e9ee50131c1}{running}} = false
+\item 
+std\+::function$<$ void(\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\+\_\+t}} \&, std\+::string)$>$ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a272983c084ed76fa9400e22727e6949f}{process\+\_\+message\+\_\+cb}}
+\item 
+std\+::function$<$ void(int)$>$ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_acb771213c587e0d18ae88c6ed742d58e}{on\+Client\+Disconnect}}
+\item 
+std\+::function$<$ void(HSteam\+Net\+Connection, std\+::string, \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{Internal\+Server\+Announcement}})$>$ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a015cbd8cdcf0387183f429510e4a19aa}{on\+Send\+Client\+Announcement}}
+\item 
+std\+::map$<$ HSteam\+Net\+Connection, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\+\_\+t}} $>$ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{structnetwork_1_1internal_1_1_server}{Server}} $\ast$ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a71478aec345c0cab053e6802a6e39f91}{callback\+\_\+instance}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3908c7fd2a359c5b1382f4e8d25ad1eb}{connection\+\_\+changed\+\_\+callback}} (Steam\+Net\+Connection\+Status\+Changed\+Callback\+\_\+t $\ast$info)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_aafc3a5feaed0ec9117765eae359dafdf}{Steam\+Net\+Connection\+Status\+Changed\+Callback}} (Steam\+Net\+Connection\+Status\+Changed\+Callback\+\_\+t $\ast$p\+Info)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a2dfd5bd163e4a63c3b5a71e438b10b39}\label{structnetwork_1_1internal_1_1_server_a2dfd5bd163e4a63c3b5a71e438b10b39}} 
+\index{network::internal::Server@{network::internal::Server}!Server@{Server}}
+\index{Server@{Server}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{Server()}{Server()}}
+{\footnotesize\ttfamily network\+::internal\+::\+Server\+::\+Server (\begin{DoxyParamCaption}\item[{int}]{port }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a82f910e341e75d31e7866ee8925ea90b}{address}}, and \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a5a0c9ae6ecd9bc69c4b450d4302e4fe3}\label{structnetwork_1_1internal_1_1_server_a5a0c9ae6ecd9bc69c4b450d4302e4fe3}} 
+\index{network::internal::Server@{network::internal::Server}!````~Server@{$\sim$Server}}
+\index{````~Server@{$\sim$Server}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{$\sim$Server()}{~Server()}}
+{\footnotesize\ttfamily network\+::internal\+::\+Server\+::$\sim$\+Server (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a4ad58842dd20bee7bab52c1be2770c9b}{listen\+\_\+sock}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}{poll\+\_\+group}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3bfb968fb1383e184f95d7da7a780ea3}{send\+\_\+announcement\+\_\+to\+\_\+client()}}, and \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a56525ae64d370c0b448ac0d60710ef17}{network\+::internal\+::\+Warn}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a3908c7fd2a359c5b1382f4e8d25ad1eb}\label{structnetwork_1_1internal_1_1_server_a3908c7fd2a359c5b1382f4e8d25ad1eb}} 
+\index{network::internal::Server@{network::internal::Server}!connection\_changed\_callback@{connection\_changed\_callback}}
+\index{connection\_changed\_callback@{connection\_changed\_callback}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{connection\_changed\_callback()}{connection\_changed\_callback()}}
+{\footnotesize\ttfamily void network\+::internal\+::\+Server\+::connection\+\_\+changed\+\_\+callback (\begin{DoxyParamCaption}\item[{Steam\+Net\+Connection\+Status\+Changed\+Callback\+\_\+t $\ast$}]{info }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t_a659dc10e6a0c3edd7e3b467c89078e11}{network\+::internal\+::\+Client\+\_\+t\+::client\+\_\+id}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}, \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a4059b0251f66a18cb56f544728796875}{network\+::internal\+::\+Info}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}, \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_acb771213c587e0d18ae88c6ed742d58e}{on\+Client\+Disconnect}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}{poll\+\_\+group}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a1967120c9dd27462080742f4194248f3}{send\+\_\+announcement\+\_\+to\+\_\+all()}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3bfb968fb1383e184f95d7da7a780ea3}{send\+\_\+announcement\+\_\+to\+\_\+client()}}, and \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a56525ae64d370c0b448ac0d60710ef17}{network\+::internal\+::\+Warn}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_aafc3a5feaed0ec9117765eae359dafdf}{Steam\+Net\+Connection\+Status\+Changed\+Callback()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a55e2053981f7328cbc553433ddba8071}\label{structnetwork_1_1internal_1_1_server_a55e2053981f7328cbc553433ddba8071}} 
+\index{network::internal::Server@{network::internal::Server}!run@{run}}
+\index{run@{run}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily bool network\+::internal\+::\+Server\+::run (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a71478aec345c0cab053e6802a6e39f91}{callback\+\_\+instance}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}, \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}{poll\+\_\+group}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a272983c084ed76fa9400e22727e6949f}{process\+\_\+message\+\_\+cb}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a40691249230a5280770e4e9ee50131c1}{running}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a1967120c9dd27462080742f4194248f3}\label{structnetwork_1_1internal_1_1_server_a1967120c9dd27462080742f4194248f3}} 
+\index{network::internal::Server@{network::internal::Server}!send\_announcement\_to\_all@{send\_announcement\_to\_all}}
+\index{send\_announcement\_to\_all@{send\_announcement\_to\_all}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{send\_announcement\_to\_all()}{send\_announcement\_to\_all()}}
+{\footnotesize\ttfamily void network\+::internal\+::\+Server\+::send\+\_\+announcement\+\_\+to\+\_\+all (\begin{DoxyParamCaption}\item[{std\+::string}]{msg,  }\item[{\mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{Internal\+Server\+Announcement}}}]{type,  }\item[{std\+::function$<$ bool(\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\+\_\+t}} \&)$>$}]{exclude = {\ttfamily nullptr} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a015cbd8cdcf0387183f429510e4a19aa}{on\+Send\+Client\+Announcement}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3908c7fd2a359c5b1382f4e8d25ad1eb}{connection\+\_\+changed\+\_\+callback()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a3bfb968fb1383e184f95d7da7a780ea3}\label{structnetwork_1_1internal_1_1_server_a3bfb968fb1383e184f95d7da7a780ea3}} 
+\index{network::internal::Server@{network::internal::Server}!send\_announcement\_to\_client@{send\_announcement\_to\_client}}
+\index{send\_announcement\_to\_client@{send\_announcement\_to\_client}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{send\_announcement\_to\_client()}{send\_announcement\_to\_client()}}
+{\footnotesize\ttfamily void network\+::internal\+::\+Server\+::send\+\_\+announcement\+\_\+to\+\_\+client (\begin{DoxyParamCaption}\item[{HSteam\+Net\+Connection}]{conn,  }\item[{std\+::string}]{msg,  }\item[{\mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{Internal\+Server\+Announcement}}}]{type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a015cbd8cdcf0387183f429510e4a19aa}{on\+Send\+Client\+Announcement}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3908c7fd2a359c5b1382f4e8d25ad1eb}{connection\+\_\+changed\+\_\+callback()}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a5a0c9ae6ecd9bc69c4b450d4302e4fe3}{$\sim$\+Server()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_aa28a4876360fc9bced11a7a8003e5097}\label{structnetwork_1_1internal_1_1_server_aa28a4876360fc9bced11a7a8003e5097}} 
+\index{network::internal::Server@{network::internal::Server}!send\_message\_to\_all@{send\_message\_to\_all}}
+\index{send\_message\_to\_all@{send\_message\_to\_all}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{send\_message\_to\_all()}{send\_message\_to\_all()}}
+{\footnotesize\ttfamily void network\+::internal\+::\+Server\+::send\+\_\+message\+\_\+to\+\_\+all (\begin{DoxyParamCaption}\item[{const char $\ast$}]{buffer,  }\item[{uint32}]{size,  }\item[{std\+::function$<$ bool(\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\+\_\+t}} \&)$>$}]{exclude = {\ttfamily nullptr} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7a20ef64958d26f7fbfc6b4dee808111}{send\+\_\+message\+\_\+to\+\_\+connection()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a7a20ef64958d26f7fbfc6b4dee808111}\label{structnetwork_1_1internal_1_1_server_a7a20ef64958d26f7fbfc6b4dee808111}} 
+\index{network::internal::Server@{network::internal::Server}!send\_message\_to\_connection@{send\_message\_to\_connection}}
+\index{send\_message\_to\_connection@{send\_message\_to\_connection}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{send\_message\_to\_connection()}{send\_message\_to\_connection()}}
+{\footnotesize\ttfamily void network\+::internal\+::\+Server\+::send\+\_\+message\+\_\+to\+\_\+connection (\begin{DoxyParamCaption}\item[{HSteam\+Net\+Connection}]{conn,  }\item[{const char $\ast$}]{buffer,  }\item[{uint32}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_aa28a4876360fc9bced11a7a8003e5097}{send\+\_\+message\+\_\+to\+\_\+all()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_ad13649771032de021d7716c0256bb74d}\label{structnetwork_1_1internal_1_1_server_ad13649771032de021d7716c0256bb74d}} 
+\index{network::internal::Server@{network::internal::Server}!set\_announcement\_cb@{set\_announcement\_cb}}
+\index{set\_announcement\_cb@{set\_announcement\_cb}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{set\_announcement\_cb()}{set\_announcement\_cb()}}
+{\footnotesize\ttfamily void network\+::internal\+::\+Server\+::set\+\_\+announcement\+\_\+cb (\begin{DoxyParamCaption}\item[{std\+::function$<$ void(HSteam\+Net\+Connection, std\+::string, \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{Internal\+Server\+Announcement}})$>$}]{cb }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a015cbd8cdcf0387183f429510e4a19aa}{on\+Send\+Client\+Announcement}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a9e31022543396132a768ffd19972c3c7}\label{structnetwork_1_1internal_1_1_server_a9e31022543396132a768ffd19972c3c7}} 
+\index{network::internal::Server@{network::internal::Server}!set\_process\_message@{set\_process\_message}}
+\index{set\_process\_message@{set\_process\_message}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{set\_process\_message()}{set\_process\_message()}}
+{\footnotesize\ttfamily void network\+::internal\+::\+Server\+::set\+\_\+process\+\_\+message (\begin{DoxyParamCaption}\item[{std\+::function$<$ void(\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\+\_\+t}} \&client, std\+::string)$>$}]{cb }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a272983c084ed76fa9400e22727e6949f}{process\+\_\+message\+\_\+cb}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a7ed6f50da932b98feb08d81d5e50399c}\label{structnetwork_1_1internal_1_1_server_a7ed6f50da932b98feb08d81d5e50399c}} 
+\index{network::internal::Server@{network::internal::Server}!startup@{startup}}
+\index{startup@{startup}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{startup()}{startup()}}
+{\footnotesize\ttfamily void network\+::internal\+::\+Server\+::startup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{[}connection int32\mbox{]} Upper limit of buffered pending bytes to be sent, if this is reached Send\+Message will return k\+\_\+\+EResult\+Limit\+Exceeded Default is 512k (524288 bytes)
+
+\mbox{[}connection int32\mbox{]} Timeout value (in ms) to use after connection is established
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a82f910e341e75d31e7866ee8925ea90b}{address}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a4ad58842dd20bee7bab52c1be2770c9b}{listen\+\_\+sock}}, \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}{poll\+\_\+group}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a40691249230a5280770e4e9ee50131c1}{running}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_aafc3a5feaed0ec9117765eae359dafdf}{Steam\+Net\+Connection\+Status\+Changed\+Callback()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_aafc3a5feaed0ec9117765eae359dafdf}\label{structnetwork_1_1internal_1_1_server_aafc3a5feaed0ec9117765eae359dafdf}} 
+\index{network::internal::Server@{network::internal::Server}!SteamNetConnectionStatusChangedCallback@{SteamNetConnectionStatusChangedCallback}}
+\index{SteamNetConnectionStatusChangedCallback@{SteamNetConnectionStatusChangedCallback}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{SteamNetConnectionStatusChangedCallback()}{SteamNetConnectionStatusChangedCallback()}}
+{\footnotesize\ttfamily static void network\+::internal\+::\+Server\+::\+Steam\+Net\+Connection\+Status\+Changed\+Callback (\begin{DoxyParamCaption}\item[{Steam\+Net\+Connection\+Status\+Changed\+Callback\+\_\+t $\ast$}]{p\+Info }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a71478aec345c0cab053e6802a6e39f91}{callback\+\_\+instance}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3908c7fd2a359c5b1382f4e8d25ad1eb}{connection\+\_\+changed\+\_\+callback()}}.
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7ed6f50da932b98feb08d81d5e50399c}{startup()}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a82f910e341e75d31e7866ee8925ea90b}\label{structnetwork_1_1internal_1_1_server_a82f910e341e75d31e7866ee8925ea90b}} 
+\index{network::internal::Server@{network::internal::Server}!address@{address}}
+\index{address@{address}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{address}{address}}
+{\footnotesize\ttfamily Steam\+Networking\+IPAddr network\+::internal\+::\+Server\+::address}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a2dfd5bd163e4a63c3b5a71e438b10b39}{Server()}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7ed6f50da932b98feb08d81d5e50399c}{startup()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a71478aec345c0cab053e6802a6e39f91}\label{structnetwork_1_1internal_1_1_server_a71478aec345c0cab053e6802a6e39f91}} 
+\index{network::internal::Server@{network::internal::Server}!callback\_instance@{callback\_instance}}
+\index{callback\_instance@{callback\_instance}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{callback\_instance}{callback\_instance}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structnetwork_1_1internal_1_1_server}{Server}}$\ast$ network\+::internal\+::\+Server\+::callback\+\_\+instance\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a55e2053981f7328cbc553433ddba8071}{run()}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_aafc3a5feaed0ec9117765eae359dafdf}{Steam\+Net\+Connection\+Status\+Changed\+Callback()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}\label{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}} 
+\index{network::internal::Server@{network::internal::Server}!clients@{clients}}
+\index{clients@{clients}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{clients}{clients}}
+{\footnotesize\ttfamily std\+::map$<$HSteam\+Net\+Connection, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\+\_\+t}}$>$ network\+::internal\+::\+Server\+::clients}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3908c7fd2a359c5b1382f4e8d25ad1eb}{connection\+\_\+changed\+\_\+callback()}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a55e2053981f7328cbc553433ddba8071}{run()}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a1967120c9dd27462080742f4194248f3}{send\+\_\+announcement\+\_\+to\+\_\+all()}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_aa28a4876360fc9bced11a7a8003e5097}{send\+\_\+message\+\_\+to\+\_\+all()}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a5a0c9ae6ecd9bc69c4b450d4302e4fe3}{$\sim$\+Server()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}\label{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}} 
+\index{network::internal::Server@{network::internal::Server}!interface@{interface}}
+\index{interface@{interface}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{interface}{interface}}
+{\footnotesize\ttfamily ISteam\+Networking\+Sockets$\ast$ network\+::internal\+::\+Server\+::interface = nullptr}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3908c7fd2a359c5b1382f4e8d25ad1eb}{connection\+\_\+changed\+\_\+callback()}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a55e2053981f7328cbc553433ddba8071}{run()}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7a20ef64958d26f7fbfc6b4dee808111}{send\+\_\+message\+\_\+to\+\_\+connection()}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7ed6f50da932b98feb08d81d5e50399c}{startup()}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a5a0c9ae6ecd9bc69c4b450d4302e4fe3}{$\sim$\+Server()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a4ad58842dd20bee7bab52c1be2770c9b}\label{structnetwork_1_1internal_1_1_server_a4ad58842dd20bee7bab52c1be2770c9b}} 
+\index{network::internal::Server@{network::internal::Server}!listen\_sock@{listen\_sock}}
+\index{listen\_sock@{listen\_sock}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{listen\_sock}{listen\_sock}}
+{\footnotesize\ttfamily HSteam\+Listen\+Socket network\+::internal\+::\+Server\+::listen\+\_\+sock}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7ed6f50da932b98feb08d81d5e50399c}{startup()}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a5a0c9ae6ecd9bc69c4b450d4302e4fe3}{$\sim$\+Server()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_acb771213c587e0d18ae88c6ed742d58e}\label{structnetwork_1_1internal_1_1_server_acb771213c587e0d18ae88c6ed742d58e}} 
+\index{network::internal::Server@{network::internal::Server}!onClientDisconnect@{onClientDisconnect}}
+\index{onClientDisconnect@{onClientDisconnect}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{onClientDisconnect}{onClientDisconnect}}
+{\footnotesize\ttfamily std\+::function$<$void(int)$>$ network\+::internal\+::\+Server\+::on\+Client\+Disconnect}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3908c7fd2a359c5b1382f4e8d25ad1eb}{connection\+\_\+changed\+\_\+callback()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a015cbd8cdcf0387183f429510e4a19aa}\label{structnetwork_1_1internal_1_1_server_a015cbd8cdcf0387183f429510e4a19aa}} 
+\index{network::internal::Server@{network::internal::Server}!onSendClientAnnouncement@{onSendClientAnnouncement}}
+\index{onSendClientAnnouncement@{onSendClientAnnouncement}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{onSendClientAnnouncement}{onSendClientAnnouncement}}
+{\footnotesize\ttfamily std\+::function$<$void(HSteam\+Net\+Connection, std\+::string, \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{Internal\+Server\+Announcement}})$>$ network\+::internal\+::\+Server\+::on\+Send\+Client\+Announcement}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a1967120c9dd27462080742f4194248f3}{send\+\_\+announcement\+\_\+to\+\_\+all()}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3bfb968fb1383e184f95d7da7a780ea3}{send\+\_\+announcement\+\_\+to\+\_\+client()}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_ad13649771032de021d7716c0256bb74d}{set\+\_\+announcement\+\_\+cb()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}\label{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}} 
+\index{network::internal::Server@{network::internal::Server}!poll\_group@{poll\_group}}
+\index{poll\_group@{poll\_group}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{poll\_group}{poll\_group}}
+{\footnotesize\ttfamily HSteam\+Net\+Poll\+Group network\+::internal\+::\+Server\+::poll\+\_\+group}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3908c7fd2a359c5b1382f4e8d25ad1eb}{connection\+\_\+changed\+\_\+callback()}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a55e2053981f7328cbc553433ddba8071}{run()}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7ed6f50da932b98feb08d81d5e50399c}{startup()}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a5a0c9ae6ecd9bc69c4b450d4302e4fe3}{$\sim$\+Server()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a272983c084ed76fa9400e22727e6949f}\label{structnetwork_1_1internal_1_1_server_a272983c084ed76fa9400e22727e6949f}} 
+\index{network::internal::Server@{network::internal::Server}!process\_message\_cb@{process\_message\_cb}}
+\index{process\_message\_cb@{process\_message\_cb}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{process\_message\_cb}{process\_message\_cb}}
+{\footnotesize\ttfamily std\+::function$<$void(\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\+\_\+t}} \&, std\+::string)$>$ network\+::internal\+::\+Server\+::process\+\_\+message\+\_\+cb}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a55e2053981f7328cbc553433ddba8071}{run()}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9e31022543396132a768ffd19972c3c7}{set\+\_\+process\+\_\+message()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_server_a40691249230a5280770e4e9ee50131c1}\label{structnetwork_1_1internal_1_1_server_a40691249230a5280770e4e9ee50131c1}} 
+\index{network::internal::Server@{network::internal::Server}!running@{running}}
+\index{running@{running}!network::internal::Server@{network::internal::Server}}
+\doxysubsubsection{\texorpdfstring{running}{running}}
+{\footnotesize\ttfamily bool network\+::internal\+::\+Server\+::running = false}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a55e2053981f7328cbc553433ddba8071}{run()}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7ed6f50da932b98feb08d81d5e50399c}{startup()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/network/internal/\mbox{\hyperlink{internal_2server_8h}{server.\+h}}\end{DoxyCompactItemize}

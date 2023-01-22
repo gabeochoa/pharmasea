@@ -79,7 +79,7 @@ $(function() {
 <a href="../../d8/d22/names_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// a list of names to pull from name generator</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;engine/random.h&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="../../d1/d79/random_8h.html">engine/random.h</a>&quot;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/daf/external__include_8h.html">external_include.h</a>&quot;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="../../d8/d22/names_8h.html#a29223aad6b80f45f8c4a9e0ed2620618">    7</a></span><span class="keyword">const</span> std::array&lt;const char*, 19&gt; <a class="code hl_variable" href="../../d8/d22/names_8h.html#a29223aad6b80f45f8c4a9e0ed2620618">first_names</a> = {</div>
@@ -92,8 +92,8 @@ $(function() {
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>                                               <span class="stringliteral">&quot;Amore&quot;</span>,  <span class="stringliteral">&quot;Fishman&quot;</span>};</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="../../d8/d22/names_8h.html#a167c58458649f7e55a9f415bc16e8686">   16</a></span><span class="keyword">static</span> std::string <a class="code hl_function" href="../../d8/d22/names_8h.html#a167c58458649f7e55a9f415bc16e8686">get_random_name</a>() {</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keywordtype">int</span> first = randIn(0, <a class="code hl_variable" href="../../d8/d22/names_8h.html#a29223aad6b80f45f8c4a9e0ed2620618">first_names</a>.size() - 1);</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keywordtype">int</span> last = randIn(0, <a class="code hl_variable" href="../../d8/d22/names_8h.html#a3d8821b98d26c010680ba3b6e7ea1284">last_names</a>.size() - 1);</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keywordtype">int</span> first = <a class="code hl_function" href="../../d1/d79/random_8h.html#ac595cabd40bee1b9e1c604ea389dc528">randIn</a>(0, <a class="code hl_variable" href="../../d8/d22/names_8h.html#a29223aad6b80f45f8c4a9e0ed2620618">first_names</a>.size() - 1);</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keywordtype">int</span> last = <a class="code hl_function" href="../../d1/d79/random_8h.html#ac595cabd40bee1b9e1c604ea389dc528">randIn</a>(0, <a class="code hl_variable" href="../../d8/d22/names_8h.html#a3d8821b98d26c010680ba3b6e7ea1284">last_names</a>.size() - 1);</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keywordflow">return</span> fmt::format(<span class="stringliteral">&quot;{} {}&quot;</span>, <a class="code hl_variable" href="../../d8/d22/names_8h.html#a29223aad6b80f45f8c4a9e0ed2620618">first_names</a>[first], <a class="code hl_variable" href="../../d8/d22/names_8h.html#a3d8821b98d26c010680ba3b6e7ea1284">last_names</a>[last]);</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>}</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
@@ -106,6 +106,8 @@ $(function() {
 <div class="ttc" id="anames_8h_html_a167c58458649f7e55a9f415bc16e8686"><div class="ttname"><a href="../../d8/d22/names_8h.html#a167c58458649f7e55a9f415bc16e8686">get_random_name</a></div><div class="ttdeci">static std::string get_random_name()</div><div class="ttdef"><b>Definition:</b> names.h:16</div></div>
 <div class="ttc" id="anames_8h_html_a29223aad6b80f45f8c4a9e0ed2620618"><div class="ttname"><a href="../../d8/d22/names_8h.html#a29223aad6b80f45f8c4a9e0ed2620618">first_names</a></div><div class="ttdeci">const std::array&lt; const char *, 19 &gt; first_names</div><div class="ttdef"><b>Definition:</b> names.h:7</div></div>
 <div class="ttc" id="anames_8h_html_a3d8821b98d26c010680ba3b6e7ea1284"><div class="ttname"><a href="../../d8/d22/names_8h.html#a3d8821b98d26c010680ba3b6e7ea1284">last_names</a></div><div class="ttdeci">const std::array&lt; const char *, 8 &gt; last_names</div><div class="ttdef"><b>Definition:</b> names.h:12</div></div>
+<div class="ttc" id="arandom_8h_html"><div class="ttname"><a href="../../d1/d79/random_8h.html">random.h</a></div></div>
+<div class="ttc" id="arandom_8h_html_ac595cabd40bee1b9e1c604ea389dc528"><div class="ttname"><a href="../../d1/d79/random_8h.html#ac595cabd40bee1b9e1c604ea389dc528">randIn</a></div><div class="ttdeci">int randIn(int a, int b)</div><div class="ttdef"><b>Definition:</b> random.h:6</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

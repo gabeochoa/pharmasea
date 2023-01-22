@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bitsery_0',['bitsery',['../d7/d83/namespacebitsery.html',1,'']]]
+  ['astar_0',['astar',['../dd/de3/namespaceastar.html',1,'']]]
 ];

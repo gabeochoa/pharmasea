@@ -1,0 +1,42 @@
+\hypertarget{texture__library_8h_source}{}\doxysection{texture\+\_\+library.\+h}
+\label{texture__library_8h_source}\index{src/engine/texture\_library.h@{src/engine/texture\_library.h}}
+\mbox{\hyperlink{texture__library_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{library_8h}{library.h}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{singleton_8h}{singleton.h}}"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \mbox{\hyperlink{singleton_8h_a2c7d0ae28a9340e96cc64ff071551e31}{SINGLETON\_FWD}}(\mbox{\hyperlink{struct_texture_library}{TextureLibrary}})}
+\DoxyCodeLine{00008\ struct\ \mbox{\hyperlink{struct_texture_library}{TextureLibrary}}\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \mbox{\hyperlink{singleton_8h_ac4940bd51e49be0e873a7bffe9d67ad9}{SINGLETON}}(\mbox{\hyperlink{struct_texture_library}{TextureLibrary}})}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ void\ unload\_all()\ \{\ impl.unload\_all();\ \}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ [[nodiscard]]\ raylib::Texture2D\&\ \mbox{\hyperlink{struct_texture_library_a485f4bc29c5437bb7b0b9698b4ddf898}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl.get(name);}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ raylib::Texture2D\&\ \mbox{\hyperlink{struct_texture_library_a8e5a98c921e7169d3da8e8a134995c5c}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl.get(name);}
+\DoxyCodeLine{00019\ \ \ \ \ \}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_texture_library_a721265e7b49909bb07a5e6d7e4e69d01}{load}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ impl.load(filename,\ name);}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_texture_library_1_1_texture_library_impl}{TextureLibraryImpl}}\ :\ \mbox{\hyperlink{struct_library}{Library}}<raylib::Texture2D>\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ raylib::Texture2D\ \mbox{\hyperlink{struct_texture_library_1_1_texture_library_impl_a0252ee45756d40b8a891830b31d0e74a}{convert\_filename\_to\_object}}(}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ raylib::LoadTexture(filename);}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_texture_library_1_1_texture_library_impl_aa2754141529413c767b4c2341630a14e}{unload}}(raylib::Texture2D\ texture)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::UnloadTexture(texture);}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00035\ \ \ \ \ \}\ impl;}
+\DoxyCodeLine{00036\ \};}
+
+\end{DoxyCode}

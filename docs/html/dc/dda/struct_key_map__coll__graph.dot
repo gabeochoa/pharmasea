@@ -1,0 +1,8 @@
+digraph "KeyMap"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [shape=record,label="{KeyMap\n|- mapping\l|+ forEachInputInMap()\l+ forEachCharTyped()\l+ is_event()\l+ is_event_once_DO_NOT\l_USE()\l+ get_key_code()\l+ get_axis()\l+ get_button()\l+ does_layer_map_contain\l_key()\l+ does_layer_map_contain\l_button()\l+ does_layer_map_contain\l_axis()\l+ get_valid_inputs()\l+ get_valid_keys()\l- KeyMap()\l- get_or_create_layer\l_map()\l- load_game_keys()\l- load_ui_keys()\l- load_default_keys()\l- load_controller_db()\l- visit_key()\l- visit_key_down()\l- visit_axis()\l- visit_button()\l- visit_button_down()\l}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+}

@@ -1,0 +1,41 @@
+\hypertarget{shader__library_8h_source}{}\doxysection{shader\+\_\+library.\+h}
+\label{shader__library_8h_source}\index{src/engine/shader\_library.h@{src/engine/shader\_library.h}}
+\mbox{\hyperlink{shader__library_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{library_8h}{library.h}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{singleton_8h}{singleton.h}}"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \mbox{\hyperlink{singleton_8h_a2c7d0ae28a9340e96cc64ff071551e31}{SINGLETON\_FWD}}(\mbox{\hyperlink{struct_shader_library}{ShaderLibrary}})}
+\DoxyCodeLine{00007\ struct\ \mbox{\hyperlink{struct_shader_library}{ShaderLibrary}}\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \mbox{\hyperlink{singleton_8h_ac4940bd51e49be0e873a7bffe9d67ad9}{SINGLETON}}(\mbox{\hyperlink{struct_shader_library}{ShaderLibrary}})}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ [[nodiscard]]\ raylib::Shader\&\ \mbox{\hyperlink{struct_shader_library_ad1aa93de6099e82a038b32c93e7163b3}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl.get(name);}
+\DoxyCodeLine{00012\ \ \ \ \ \}}
+\DoxyCodeLine{00013\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ raylib::Shader\&\ \mbox{\hyperlink{struct_shader_library_a3f2394fa8d0f4b9f52315fa81c177581}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl.get(name);}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_shader_library_aebd605762bc0d94a6fc7088ec9fedac7}{load}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name)\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ impl.load(filename,\ name);}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_shader_library_a3a81461c948f8d3e553cb9c43304e31e}{unload\_all}}()\ \{\ impl.unload\_all();\ \}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_shader_library_1_1_shader_library_impl}{ShaderLibraryImpl}}\ :\ \mbox{\hyperlink{struct_library}{Library}}<raylib::Shader>\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ raylib::Shader\ \mbox{\hyperlink{struct_shader_library_1_1_shader_library_impl_a6e1807b11316fabb510a4ca5b02b7262}{convert\_filename\_to\_object}}(}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ null\ first\ param\ sets\ default\ vertex\ shader,\ do\ we\ want}}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this?}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ raylib::LoadShader(0,\ filename);}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_shader_library_1_1_shader_library_impl_ac9bef0abf3de30d4095a2022b19a5b2c}{unload}}(raylib::Shader\ shader)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::UnloadShader(shader);}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00034\ \ \ \ \ \}\ impl;}
+\DoxyCodeLine{00035\ \};}
+
+\end{DoxyCode}

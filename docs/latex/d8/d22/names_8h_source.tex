@@ -5,7 +5,7 @@
 \DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00002\ \textcolor{comment}{//\ a\ list\ of\ names\ to\ pull\ from\ name\ generator}}
 \DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}engine/random.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{random_8h}{engine/random.h}}"{}}}
 \DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
 \DoxyCodeLine{00006\ }
 \DoxyCodeLine{00007\ \textcolor{keyword}{const}\ std::array<const\ char*,\ 19>\ \mbox{\hyperlink{names_8h_a29223aad6b80f45f8c4a9e0ed2620618}{first\_names}}\ =\ \{}
@@ -18,8 +18,8 @@
 \DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Amore"{}},\ \ \textcolor{stringliteral}{"{}Fishman"{}}\};}
 \DoxyCodeLine{00015\ }
 \DoxyCodeLine{00016\ \textcolor{keyword}{static}\ std::string\ \mbox{\hyperlink{names_8h_a167c58458649f7e55a9f415bc16e8686}{get\_random\_name}}()\ \{}
-\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{int}\ first\ =\ randIn(0,\ \mbox{\hyperlink{names_8h_a29223aad6b80f45f8c4a9e0ed2620618}{first\_names}}.size()\ -\/\ 1);}
-\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{int}\ last\ =\ randIn(0,\ \mbox{\hyperlink{names_8h_a3d8821b98d26c010680ba3b6e7ea1284}{last\_names}}.size()\ -\/\ 1);}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{int}\ first\ =\ \mbox{\hyperlink{random_8h_ac595cabd40bee1b9e1c604ea389dc528}{randIn}}(0,\ \mbox{\hyperlink{names_8h_a29223aad6b80f45f8c4a9e0ed2620618}{first\_names}}.size()\ -\/\ 1);}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{int}\ last\ =\ \mbox{\hyperlink{random_8h_ac595cabd40bee1b9e1c604ea389dc528}{randIn}}(0,\ \mbox{\hyperlink{names_8h_a3d8821b98d26c010680ba3b6e7ea1284}{last\_names}}.size()\ -\/\ 1);}
 \DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordflow}{return}\ fmt::format(\textcolor{stringliteral}{"{}\{\}\ \{\}"{}},\ \mbox{\hyperlink{names_8h_a29223aad6b80f45f8c4a9e0ed2620618}{first\_names}}[first],\ \mbox{\hyperlink{names_8h_a3d8821b98d26c010680ba3b6e7ea1284}{last\_names}}[last]);}
 \DoxyCodeLine{00020\ \}}
 \DoxyCodeLine{00021\ }

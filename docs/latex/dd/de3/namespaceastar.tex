@@ -1,0 +1,117 @@
+\hypertarget{namespaceastar}{}\doxysection{astar Namespace Reference}
+\label{namespaceastar}\index{astar@{astar}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structastar_1_1_score_value}{Score\+Value}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{namespaceastar_a05bf641d43876bcd1f7fd0ad254d3563}{path\+\_\+estimate}} (const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&a, const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&b)
+\item 
+float \mbox{\hyperlink{namespaceastar_a5ed9154348f3c75837c41448c03ddcd7}{distance\+\_\+between}} (const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&a, const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&b)
+\item 
+\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{namespaceastar_aaf8fb1cd16f5faae02a731345440c13f}{get\+\_\+lowest\+\_\+f}} (const std\+::set$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \&set, std\+::map$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}, \mbox{\hyperlink{structastar_1_1_score_value}{Score\+Value}} $>$ \&fscore)
+\item 
+std\+::vector$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{get\+\_\+neighbors}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} start, std\+::function$<$ bool(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos)$>$ is\+\_\+walkable)
+\item 
+std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{namespaceastar_a83be626a90804773b9392094616e117f}{reconstruct\+\_\+path}} (std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ path, std\+::map$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \&parent\+\_\+map, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} current)
+\item 
+std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{find\+\_\+path\+\_\+impl}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} start, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} end, std\+::function$<$ bool(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos)$>$ is\+\_\+walkable)
+\item 
+std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}{find\+\_\+path}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} start, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} end, std\+::function$<$ bool(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos)$>$ is\+\_\+walkable)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespaceastar_a5ed9154348f3c75837c41448c03ddcd7}\label{namespaceastar_a5ed9154348f3c75837c41448c03ddcd7}} 
+\index{astar@{astar}!distance\_between@{distance\_between}}
+\index{distance\_between@{distance\_between}!astar@{astar}}
+\doxysubsubsection{\texorpdfstring{distance\_between()}{distance\_between()}}
+{\footnotesize\ttfamily float astar\+::distance\+\_\+between (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&}]{a,  }\item[{const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacevec_a4780c4cb2388d6299519924ca0a609a1}{vec\+::distance()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{find\+\_\+path\+\_\+impl()}}.
+
+\mbox{\Hypertarget{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}\label{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}} 
+\index{astar@{astar}!find\_path@{find\_path}}
+\index{find\_path@{find\_path}!astar@{astar}}
+\doxysubsubsection{\texorpdfstring{find\_path()}{find\_path()}}
+{\footnotesize\ttfamily std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ astar\+::find\+\_\+path (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{start,  }\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{end,  }\item[{std\+::function$<$ bool(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos)$>$}]{is\+\_\+walkable }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}{find\+\_\+path()}}, and \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{find\+\_\+path\+\_\+impl()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}{find\+\_\+path()}}, and \mbox{\hyperlink{namespacesystem__manager_ad37dd2580fac8e15a7d95784327e63b9}{system\+\_\+manager\+::update\+\_\+job\+\_\+information()}}.
+
+\mbox{\Hypertarget{namespaceastar_a5f1709497770393433f6517db883f8aa}\label{namespaceastar_a5f1709497770393433f6517db883f8aa}} 
+\index{astar@{astar}!find\_path\_impl@{find\_path\_impl}}
+\index{find\_path\_impl@{find\_path\_impl}!astar@{astar}}
+\doxysubsubsection{\texorpdfstring{find\_path\_impl()}{find\_path\_impl()}}
+{\footnotesize\ttfamily std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ astar\+::find\+\_\+path\+\_\+impl (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{start,  }\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{end,  }\item[{std\+::function$<$ bool(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos)$>$}]{is\+\_\+walkable }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceastar_a5ed9154348f3c75837c41448c03ddcd7}{distance\+\_\+between()}}, \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{find\+\_\+path\+\_\+impl()}}, \mbox{\hyperlink{namespaceastar_aaf8fb1cd16f5faae02a731345440c13f}{get\+\_\+lowest\+\_\+f()}}, \mbox{\hyperlink{vec__util_8h_a4a3b66ac1c7427b7059a875740cce0a6}{get\+\_\+neighbors()}}, \mbox{\hyperlink{log_8h_a6ae72553ea9805dd87a463d6f710364d}{log\+\_\+error}}, \mbox{\hyperlink{namespaceastar_a05bf641d43876bcd1f7fd0ad254d3563}{path\+\_\+estimate()}}, and \mbox{\hyperlink{namespaceastar_a83be626a90804773b9392094616e117f}{reconstruct\+\_\+path()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}{find\+\_\+path()}}, and \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{find\+\_\+path\+\_\+impl()}}.
+
+\mbox{\Hypertarget{namespaceastar_aaf8fb1cd16f5faae02a731345440c13f}\label{namespaceastar_aaf8fb1cd16f5faae02a731345440c13f}} 
+\index{astar@{astar}!get\_lowest\_f@{get\_lowest\_f}}
+\index{get\_lowest\_f@{get\_lowest\_f}!astar@{astar}}
+\doxysubsubsection{\texorpdfstring{get\_lowest\_f()}{get\_lowest\_f()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} astar\+::get\+\_\+lowest\+\_\+f (\begin{DoxyParamCaption}\item[{const std\+::set$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \&}]{set,  }\item[{std\+::map$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}, \mbox{\hyperlink{structastar_1_1_score_value}{Score\+Value}} $>$ \&}]{fscore }\end{DoxyParamCaption})}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{find\+\_\+path\+\_\+impl()}}.
+
+\mbox{\Hypertarget{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}\label{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}} 
+\index{astar@{astar}!get\_neighbors@{get\_neighbors}}
+\index{get\_neighbors@{get\_neighbors}!astar@{astar}}
+\doxysubsubsection{\texorpdfstring{get\_neighbors()}{get\_neighbors()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ astar\+::get\+\_\+neighbors (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{start,  }\item[{std\+::function$<$ bool(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos)$>$}]{is\+\_\+walkable }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}{for\+Each\+Neighbor()}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+
+\mbox{\Hypertarget{namespaceastar_a05bf641d43876bcd1f7fd0ad254d3563}\label{namespaceastar_a05bf641d43876bcd1f7fd0ad254d3563}} 
+\index{astar@{astar}!path\_estimate@{path\_estimate}}
+\index{path\_estimate@{path\_estimate}!astar@{astar}}
+\doxysubsubsection{\texorpdfstring{path\_estimate()}{path\_estimate()}}
+{\footnotesize\ttfamily float astar\+::path\+\_\+estimate (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&}]{a,  }\item[{const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacevec_a4780c4cb2388d6299519924ca0a609a1}{vec\+::distance()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{find\+\_\+path\+\_\+impl()}}.
+
+\mbox{\Hypertarget{namespaceastar_a83be626a90804773b9392094616e117f}\label{namespaceastar_a83be626a90804773b9392094616e117f}} 
+\index{astar@{astar}!reconstruct\_path@{reconstruct\_path}}
+\index{reconstruct\_path@{reconstruct\_path}!astar@{astar}}
+\doxysubsubsection{\texorpdfstring{reconstruct\_path()}{reconstruct\_path()}}
+{\footnotesize\ttfamily std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ astar\+::reconstruct\+\_\+path (\begin{DoxyParamCaption}\item[{std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$}]{path,  }\item[{std\+::map$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \&}]{parent\+\_\+map,  }\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{current }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceastar_a83be626a90804773b9392094616e117f}{reconstruct\+\_\+path()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{find\+\_\+path\+\_\+impl()}}, and \mbox{\hyperlink{namespaceastar_a83be626a90804773b9392094616e117f}{reconstruct\+\_\+path()}}.
+

@@ -1,0 +1,363 @@
+\hypertarget{internal_2server_8h_source}{}\doxysection{server.\+h}
+\label{internal_2server_8h_source}\index{src/network/internal/server.h@{src/network/internal/server.h}}
+\mbox{\hyperlink{internal_2server_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <steam/isteamnetworkingutils.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <steam/steamnetworkingsockets.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <steam/steamnetworkingtypes.h>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}../../engine/assert.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}../../toastmanager.h"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{channel_8h}{channel.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}steam/isteamnetworkingsockets.h"{}}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacenetwork}{network}}\ \{}
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }internal\ \{}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\_t}}\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t_a659dc10e6a0c3edd7e3b467c89078e11}{client\_id}};}
+\DoxyCodeLine{00021\ \};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{enum\ struct}\ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{InternalServerAnnouncement}}\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a4059b0251f66a18cb56f544728796875}{Info}},}
+\DoxyCodeLine{00025\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a56525ae64d370c0b448ac0d60710ef17}{Warn}},}
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a902b0d55fddef6f8d651fe1035b7d4bd}{Error}},}
+\DoxyCodeLine{00027\ \};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structnetwork_1_1internal_1_1_server}{Server}}\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ SteamNetworkingIPAddr\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a82f910e341e75d31e7866ee8925ea90b}{address}};}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{comment}{//\ Note:\ initialized\ in\ `startup()`}}
+\DoxyCodeLine{00032\ \ \ \ \ ISteamNetworkingSockets\ *\textcolor{keyword}{interface\ }=\ nullptr;}
+\DoxyCodeLine{00033\ \ \ \ \ HSteamListenSocket\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a4ad58842dd20bee7bab52c1be2770c9b}{listen\_sock}};}
+\DoxyCodeLine{00034\ \ \ \ \ HSteamNetPollGroup\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}{poll\_group}};}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server}{Server}}\ *\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a71478aec345c0cab053e6802a6e39f91}{callback\_instance}};}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a40691249230a5280770e4e9ee50131c1}{running}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00037\ \ \ \ \ std::function<void(\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\_t}}\ \&,\ std::string)>\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a272983c084ed76fa9400e22727e6949f}{process\_message\_cb}};}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ setter\ and\ make\ private}}
+\DoxyCodeLine{00039\ \ \ \ \ std::function<void(\textcolor{keywordtype}{int})>\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_acb771213c587e0d18ae88c6ed742d58e}{onClientDisconnect}};}
+\DoxyCodeLine{00040\ \ \ \ \ std::function<void(HSteamNetConnection,\ std::string,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{InternalServerAnnouncement}})>}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a015cbd8cdcf0387183f429510e4a19aa}{onSendClientAnnouncement}};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9e31022543396132a768ffd19972c3c7}{set\_process\_message}}(}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ std::function<\textcolor{keywordtype}{void}(\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\_t}}\ \&client,\ std::string)>\ cb)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a272983c084ed76fa9400e22727e6949f}{process\_message\_cb}}\ =\ cb;}
+\DoxyCodeLine{00047\ \ \ \ \ \}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_ad13649771032de021d7716c0256bb74d}{set\_announcement\_cb}}(}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ std::function<\textcolor{keywordtype}{void}(HSteamNetConnection,\ std::string,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{InternalServerAnnouncement}})>}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ cb)\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a015cbd8cdcf0387183f429510e4a19aa}{onSendClientAnnouncement}}\ =\ cb;}
+\DoxyCodeLine{00054\ \ \ \ \ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ std::map<HSteamNetConnection,\ Client\_t>\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a2dfd5bd163e4a63c3b5a71e438b10b39}{Server}}(\textcolor{keywordtype}{int}\ port)\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(port\ >\ 0\ \&\&\ port\ <\ 65535,\ \textcolor{stringliteral}{"{}invalid\ port"{}});}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a82f910e341e75d31e7866ee8925ea90b}{address}}.Clear();}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a82f910e341e75d31e7866ee8925ea90b}{address}}.m\_port\ =\ (\textcolor{keywordtype}{unsigned}\ short)\ port;}
+\DoxyCodeLine{00062\ \ \ \ \ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a5a0c9ae6ecd9bc69c4b450d4302e4fe3}{\string~Server}}()\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ it\ :\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}})\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3bfb968fb1383e184f95d7da7a780ea3}{send\_announcement\_to\_client}}(it.first,\ \textcolor{stringliteral}{"{}server\ shutdown"{}},}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a56525ae64d370c0b448ac0d60710ef17}{InternalServerAnnouncement::Warn}});}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>CloseConnection(it.first,\ 0,\ \textcolor{stringliteral}{"{}server\ shutdown"{}},\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}.clear();}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>CloseListenSocket(\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a4ad58842dd20bee7bab52c1be2770c9b}{listen\_sock}});}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a4ad58842dd20bee7bab52c1be2770c9b}{listen\_sock}}\ =\ k\_HSteamListenSocket\_Invalid;}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>DestroyPollGroup(\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}{poll\_group}});}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}{poll\_group}}\ =\ k\_HSteamNetPollGroup\_Invalid;}
+\DoxyCodeLine{00075\ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3bfb968fb1383e184f95d7da7a780ea3}{send\_announcement\_to\_client}}(HSteamNetConnection\ conn,\ std::string\ msg,}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{InternalServerAnnouncement}}\ type)\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a015cbd8cdcf0387183f429510e4a19aa}{onSendClientAnnouncement}})\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a015cbd8cdcf0387183f429510e4a19aa}{onSendClientAnnouncement}}(conn,\ msg,\ type);}
+\DoxyCodeLine{00080\ \ \ \ \ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a1967120c9dd27462080742f4194248f3}{send\_announcement\_to\_all}}(}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ std::string\ msg,\ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{InternalServerAnnouncement}}\ type,}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ std::function<\textcolor{keywordtype}{bool}(\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\_t}}\ \&)>\ exclude\ =\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a015cbd8cdcf0387183f429510e4a19aa}{onSendClientAnnouncement}})\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&c\ :\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}})\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exclude\ \&\&\ exclude(c.second))\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a015cbd8cdcf0387183f429510e4a19aa}{onSendClientAnnouncement}}(c.first,\ msg,\ type);}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00091\ \ \ \ \ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_aa28a4876360fc9bced11a7a8003e5097}{send\_message\_to\_all}}(}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *buffer,\ uint32\ size,}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ std::function<\textcolor{keywordtype}{bool}(\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\_t}}\ \&)>\ exclude\ =\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&c\ :\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}})\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exclude\ \&\&\ exclude(c.second))\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7a20ef64958d26f7fbfc6b4dee808111}{send\_message\_to\_connection}}(c.first,\ buffer,\ size);}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00100\ \ \ \ \ \}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7a20ef64958d26f7fbfc6b4dee808111}{send\_message\_to\_connection}}(HSteamNetConnection\ conn,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *buffer,\ uint32\ size)\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>SendMessageToConnection(conn,\ buffer,\ size,}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Channel::RELIABLE,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ why\ does\ unreliable\ make\ it\ so\ unreliable...}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ eventually\ we\ want\ the\ packet\ to\ figure\ out\ if\ it\ should\ matter\ or}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ not}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ packet.channel,\ nullptr);}}
+\DoxyCodeLine{00110\ \ \ \ \ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a55e2053981f7328cbc553433ddba8071}{run}}()\ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a40691249230a5280770e4e9ee50131c1}{running}})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ poll\_incoming\_messages\ =\ [\&]()\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ ISteamNetworkingMessage\ *incoming\_msg\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ Should\ we\ run\ this\ for\ more\ messages?}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ num\_msgs\ =\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>ReceiveMessagesOnPollGroup(}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}{poll\_group}},\ \&incoming\_msg,\ 1\ \textcolor{comment}{/*\ num\ max\ messages*/});}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_msgs\ ==\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_msgs\ ==\ -\/1)\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}Failed\ checking\ for\ messages"{}});}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ cmd;}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ cmd.assign((\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)\ incoming\_msg-\/>m\_pData,}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ incoming\_msg-\/>m\_cbSize);}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\_t}}\ client\ =\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}[incoming\_msg-\/>m\_conn];}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ incoming\_msg-\/>Release();}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a272983c084ed76fa9400e22727e6949f}{process\_message\_cb}}(client,\ cmd);}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ poll\_connection\_state\_changes\ =\ [\&]()\ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a71478aec345c0cab053e6802a6e39f91}{Server::callback\_instance}}\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>RunCallbacks();}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ poll\_incoming\_messages();}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ poll\_connection\_state\_changes();}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00143\ \ \ \ \ \}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{comment}{//\ TODO\ replace\ with\ tl::expected}}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a7ed6f50da932b98feb08d81d5e50399c}{startup}}()\ \{}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{keyword}{interface\ }=\ SteamNetworkingSockets();}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ SteamNetworkingUtils()-\/>SetGlobalConfigValueInt32(}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ k\_ESteamNetworkingConfig\_SendBufferSize,\ 1024\ *\ 1024);}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ SteamNetworkingUtils()-\/>SetGlobalConfigValueInt32(}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ k\_ESteamNetworkingConfig\_TimeoutConnected,\ 10);}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ SteamNetworkingConfigValue\_t\ opt;}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ opt.SetPtr(k\_ESteamNetworkingConfig\_Callback\_ConnectionStatusChanged,}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{void}\ *)\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_aafc3a5feaed0ec9117765eae359dafdf}{Server::SteamNetConnectionStatusChangedCallback}});}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a4ad58842dd20bee7bab52c1be2770c9b}{listen\_sock}}\ =\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>CreateListenSocketIP(\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a82f910e341e75d31e7866ee8925ea90b}{address}},\ 1,\ \&opt);}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a4ad58842dd20bee7bab52c1be2770c9b}{listen\_sock}}\ ==\ k\_HSteamListenSocket\_Invalid)\ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Failed\ to\ listen\ on\ port\ \{\}"{}},\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a82f910e341e75d31e7866ee8925ea90b}{address}}.m\_port);}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}{poll\_group}}\ =\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>CreatePollGroup();}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}{poll\_group}}\ ==\ k\_HSteamNetPollGroup\_Invalid)\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}(poll\ group)\ Failed\ to\ listen\ on\ port\ \{\}"{}},}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a82f910e341e75d31e7866ee8925ea90b}{address}}.m\_port);}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}Server\ listening\ on\ port"{}});}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a40691249230a5280770e4e9ee50131c1}{running}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00178\ \ \ \ \ \}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3908c7fd2a359c5b1382f4e8d25ad1eb}{connection\_changed\_callback}}(}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ SteamNetConnectionStatusChangedCallback\_t\ *info)\ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}connection\_changed\_callback"{}});}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ std::string\ temp;}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322}{InternalServerAnnouncement}}\ annoucement\_type;}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ What's\ the\ state\ of\ the\ connection?}}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (info-\/>m\_info.m\_eState)\ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ k\_ESteamNetworkingConnectionState\_ClosedByPeer:}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ k\_ESteamNetworkingConnectionState\_ProblemDetectedLocally:\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ignore\ if\ they\ were\ not\ previously\ connected.\ \ (If\ they}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ disconnected\ before\ we\ accepted\ the\ connection.)}}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (info-\/>m\_eOldState\ ==}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ k\_ESteamNetworkingConnectionState\_Connected)\ \{}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Locate\ the\ client.\ \ Note\ that\ it\ should\ have\ been\ found,}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ because\ this\ is\ the\ only\ codepath\ where\ we\ remove\ clients}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (except\ on\ shutdown),\ and\ connection\ change\ callbacks\ are}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dispatched\ in\ queue\ order.}}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ itClient\ =\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}.find(info-\/>m\_hConn);}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(itClient\ !=\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}.end());}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Select\ appropriate\ log\ messages}}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *pszDebugLogAction;}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (info-\/>m\_info.m\_eState\ ==}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ k\_ESteamNetworkingConnectionState\_ProblemDetectedLocally)\ \{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pszDebugLogAction\ =\ \textcolor{stringliteral}{"{}problem\ detected\ locally"{}};}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\ =\ fmt::format(}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Alas,\ \{\}\ hath\ fallen\ into\ shadow.\ \ (\{\})"{}},}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ itClient-\/>second.client\_id,}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ info-\/>m\_info.m\_szEndDebug);}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ annoucement\_type\ =\ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a56525ae64d370c0b448ac0d60710ef17}{InternalServerAnnouncement::Warn}};}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note\ that\ here\ we\ could\ check\ the\ reason\ code\ to\ see}}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ it\ was\ a\ "{}usual"{}\ connection\ or\ an\ "{}unusual"{}\ one.}}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pszDebugLogAction\ =\ \textcolor{stringliteral}{"{}closed\ by\ peer"{}};}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\ =\ fmt::format(\textcolor{stringliteral}{"{}\{\};\ \{\}\ hath\ departed"{}},\ temp,}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ itClient-\/>second.client\_id);}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ annoucement\_type\ =\ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a56525ae64d370c0b448ac0d60710ef17}{InternalServerAnnouncement::Warn}};}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Spew\ something\ to\ our\ own\ log.\ \ Note\ that\ because\ we\ put}}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ their\ nick\ as\ the\ connection\ description,\ it\ will\ show}}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ up,\ along\ with\ their\ transport-\/specific\ data\ (e.g.\ their}}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ IP\ address)}}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Connection\ \{\}\ \{\},\ reason\ \{\}:\ \{\}\(\backslash\)n"{}},}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ info-\/>m\_info.m\_szConnectionDescription,}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pszDebugLogAction,\ info-\/>m\_info.m\_eEndReason,}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ info-\/>m\_info.m\_szEndDebug);}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ change\ keepalive\ timeout\ to\ be\ lower?}}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ client\_id\ =\ (int)\ itClient-\/>second.client\_id;}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_acb771213c587e0d18ae88c6ed742d58e}{onClientDisconnect}})\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_acb771213c587e0d18ae88c6ed742d58e}{onClientDisconnect}}(client\_id);}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}.erase(itClient);}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Send\ a\ message\ so\ everybody\ else\ knows\ what\ happened}}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a1967120c9dd27462080742f4194248f3}{send\_announcement\_to\_all}}(temp,\ annoucement\_type);}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ info-\/>m\_eOldState\ ==}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ k\_ESteamNetworkingConnectionState\_Connecting,}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}We\ expected\ them\ not\ to\ be\ connected\ but\ they\ were"{}});}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Clean\ up\ the\ connection.\ \ This\ is\ important!}}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ connection\ is\ "{}closed"{}\ in\ the\ network\ sense,\ but}}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ it\ has\ not\ been\ destroyed.\ \ We\ must\ close\ it\ on\ our\ end,\ too}}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ to\ finish\ up.\ \ The\ reason\ information\ do\ not\ matter\ in\ this}}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ case,\ and\ we\ cannot\ linger\ because\ it's\ already\ closed\ on\ the}}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ other\ end,\ so\ we\ just\ pass\ 0's.}}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>CloseConnection(info-\/>m\_hConn,\ 0,\ \textcolor{keyword}{nullptr},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ k\_ESteamNetworkingConnectionState\_Connecting:\ \{}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ must\ be\ a\ new\ connection}}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}.find(info-\/>m\_hConn)\ ==\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}.end(),}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Client\ already\ connected\ but\ shouldnt\ be"{}});}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}Connection\ request\ from\ \{\}"{}},}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ info-\/>m\_info.m\_szConnectionDescription);}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ client\ is\ attempting\ to\ connect}}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Try\ to\ accept\ the\ connection.}}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>AcceptConnection(info-\/>m\_hConn)\ !=\ k\_EResultOK)\ \{}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ could\ fail.\ \ If\ the\ remote\ host\ tried\ to\ connect,}}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ but\ then\ disconnected,\ the\ connection\ may\ already\ be\ half}}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ closed.\ \ Just\ destroy\ whatever\ we\ have\ on\ our\ side.}}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>CloseConnection(info-\/>m\_hConn,\ 0,\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{false});}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Can't\ accept\ connection.\ (It\ was\ already\ closed?)"{}});}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Assign\ the\ poll\ group}}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>SetConnectionPollGroup(info-\/>m\_hConn,}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a9f47de7926528a819a0bbc22985674b7}{poll\_group}}))\ \{}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>CloseConnection(info-\/>m\_hConn,\ 0,\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{false});}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}Failed\ to\ set\ poll\ group?"{}});}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Generate\ a\ random\ nick.\ \ A\ random\ temporary\ nick}}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ is\ really\ dumb\ and\ not\ how\ you\ would\ write\ a\ real\ chat}}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ server.\ You\ would\ want\ them\ to\ have\ some\ sort\ of\ signon}}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ message,\ and\ you\ would\ keep\ their\ client\ in\ a\ state\ of\ limbo}}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (connected,\ but\ not\ logged\ on)\ until\ them.\ \ I'm\ trying\ to}}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ keep\ this\ example\ code\ really\ simple.}}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nick\_id\ =\ 10000\ +\ (rand()\ \%\ 100000);}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Send\ them\ a\ welcome\ message}}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\ =\ fmt::format(}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Welcome,\ stranger.\ \ Thou\ art\ known\ to\ us\ for\ now\ as\ '\{\}';\ "{}}}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}upon\ thine\ command\ '/nick'\ we\ shall\ know\ thee\ otherwise."{}},}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nick\_id);}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3bfb968fb1383e184f95d7da7a780ea3}{send\_announcement\_to\_client}}(info-\/>m\_hConn,\ temp,}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a4059b0251f66a18cb56f544728796875}{InternalServerAnnouncement::Info}});}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Also\ send\ them\ a\ list\ of\ everybody\ who\ is\ already\ connected}}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}.empty())\ \{}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3bfb968fb1383e184f95d7da7a780ea3}{send\_announcement\_to\_client}}(}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ info-\/>m\_hConn,\ \textcolor{stringliteral}{"{}Thou\ art\ utterly\ alone."{}},}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a4059b0251f66a18cb56f544728796875}{InternalServerAnnouncement::Info}});}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\ =\ fmt::format(\textcolor{stringliteral}{"{}\{\}\ companions\ greet\ you:"{}},}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{int})\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}.size());}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&c\ :\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}})}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3bfb968fb1383e184f95d7da7a780ea3}{send\_announcement\_to\_client}}(}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ info-\/>m\_hConn,}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}\{\},\ your\ id\ is:\ \{\}"{}},\ temp,}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.second.client\_id),}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a4059b0251f66a18cb56f544728796875}{InternalServerAnnouncement::Info}});}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ them\ to\ the\ client\ list,\ using\ std::map\ wacky\ syntax}}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}[info-\/>m\_hConn];}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a94e3c8fcfbf1984faa0c03cbd9237f77}{clients}}[info-\/>m\_hConn].client\_id\ =\ nick\_id;}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a6aac00255d477accb7c9abd0e0315872}{interface}}-\/>SetConnectionName(}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ info-\/>m\_hConn,\ fmt::format(\textcolor{stringliteral}{"{}\{\}"{}},\ nick\_id).c\_str());}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Let\ everybody\ else\ know\ who\ they\ are\ for\ now}}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\ =\ fmt::format(}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Hark!\ \ A\ stranger\ hath\ joined\ this\ merry\ host.\ \ For\ "{}}}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}now\ we\ shall\ call\ them\ '\{\}'"{}},}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nick\_id);}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a1967120c9dd27462080742f4194248f3}{send\_announcement\_to\_all}}(temp,\ \mbox{\hyperlink{namespacenetwork_1_1internal_aa04f495996f850eea952b0225450b322a4059b0251f66a18cb56f544728796875}{InternalServerAnnouncement::Info}},}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\&](\textcolor{keyword}{const}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t}{Client\_t}}\ \&client)\ \{}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ client.\mbox{\hyperlink{structnetwork_1_1internal_1_1_client__t_a659dc10e6a0c3edd7e3b467c89078e11}{client\_id}}\ ==\ nick\_id;}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ k\_ESteamNetworkingConnectionState\_Connected:}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ will\ get\ a\ callback\ immediately\ after\ accepting\ the}}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ connection.\ Since\ we\ are\ the\ server,\ we\ can\ ignore\ this,\ it's}}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ not\ news\ to\ us.}}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ k\_ESteamNetworkingConnectionState\_None:}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ We\ will\ get\ callbacks\ here\ when\ we\ destroy\ connections.}}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ You\ can\ ignore\ these.}}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Silences\ -\/Wswitch}}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00354\ \ \ \ \ \}}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_aafc3a5feaed0ec9117765eae359dafdf}{SteamNetConnectionStatusChangedCallback}}(}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ SteamNetConnectionStatusChangedCallback\_t\ *pInfo)\ \{}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a71478aec345c0cab053e6802a6e39f91}{callback\_instance}}-\/>\mbox{\hyperlink{structnetwork_1_1internal_1_1_server_a3908c7fd2a359c5b1382f4e8d25ad1eb}{connection\_changed\_callback}}(pInfo);}
+\DoxyCodeLine{00359\ \ \ \ \ \}}
+\DoxyCodeLine{00360\ \};}
+\DoxyCodeLine{00361\ \}\ \ \textcolor{comment}{//\ namespace\ internal}}
+\DoxyCodeLine{00362\ \}\ \ \textcolor{comment}{//\ namespace\ network}}
+
+\end{DoxyCode}

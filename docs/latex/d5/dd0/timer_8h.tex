@@ -1,0 +1,61 @@
+\hypertarget{timer_8h}{}\doxysection{src/engine/timer.h File Reference}
+\label{timer_8h}\index{src/engine/timer.h@{src/engine/timer.h}}
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$condition\+\_\+variable$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$mutex$>$}\newline
+{\ttfamily \#include $<$thread$>$}\newline
+{\ttfamily \#include $<$utility$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structstart__now__t}{start\+\_\+now\+\_\+t}}
+\item 
+class \mbox{\hyperlink{classinterval__timer}{interval\+\_\+timer$<$ Function $>$}}
+\item 
+class \mbox{\hyperlink{classinterval__timer_1_1impl}{interval\+\_\+timer$<$ Function $>$\+::impl}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{timer_8h_a728ba4485cf924a298502446a1959e5b}{interval\+\_\+t}} = std\+::chrono\+::milliseconds
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Function , typename... Args$>$ }\\\mbox{\hyperlink{classinterval__timer}{interval\+\_\+timer}}$<$ typename std\+::decay$<$ Function $>$\+::type $>$ \mbox{\hyperlink{timer_8h_a9af081ccb110f82f64130366b5d6d982}{make\+\_\+interval\+\_\+timer}} (Function \&\&f, Args \&\&... args)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+constexpr struct \mbox{\hyperlink{structstart__now__t}{start\+\_\+now\+\_\+t}} \mbox{\hyperlink{timer_8h_a1a322f83cc7cbf98dc4686a401930ba4}{start\+\_\+now}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{timer_8h_a728ba4485cf924a298502446a1959e5b}\label{timer_8h_a728ba4485cf924a298502446a1959e5b}} 
+\index{timer.h@{timer.h}!interval\_t@{interval\_t}}
+\index{interval\_t@{interval\_t}!timer.h@{timer.h}}
+\doxysubsubsection{\texorpdfstring{interval\_t}{interval\_t}}
+{\footnotesize\ttfamily using \mbox{\hyperlink{timer_8h_a728ba4485cf924a298502446a1959e5b}{interval\+\_\+t}} =  std\+::chrono\+::milliseconds}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{timer_8h_a9af081ccb110f82f64130366b5d6d982}\label{timer_8h_a9af081ccb110f82f64130366b5d6d982}} 
+\index{timer.h@{timer.h}!make\_interval\_timer@{make\_interval\_timer}}
+\index{make\_interval\_timer@{make\_interval\_timer}!timer.h@{timer.h}}
+\doxysubsubsection{\texorpdfstring{make\_interval\_timer()}{make\_interval\_timer()}}
+{\footnotesize\ttfamily template$<$typename Function , typename... Args$>$ \\
+\mbox{\hyperlink{classinterval__timer}{interval\+\_\+timer}}$<$ typename std\+::decay$<$ Function $>$\+::type $>$ make\+\_\+interval\+\_\+timer (\begin{DoxyParamCaption}\item[{Function \&\&}]{f,  }\item[{Args \&\&...}]{args }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{timer_8h_a1a322f83cc7cbf98dc4686a401930ba4}\label{timer_8h_a1a322f83cc7cbf98dc4686a401930ba4}} 
+\index{timer.h@{timer.h}!start\_now@{start\_now}}
+\index{start\_now@{start\_now}!timer.h@{timer.h}}
+\doxysubsubsection{\texorpdfstring{start\_now}{start\_now}}
+{\footnotesize\ttfamily constexpr struct \mbox{\hyperlink{structstart__now__t}{start\+\_\+now\+\_\+t}} start\+\_\+now}
+

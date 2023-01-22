@@ -1,0 +1,31 @@
+digraph "Graphical Class Hierarchy"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="LR";
+  Node0 [label="BaseComponent",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d0/d50/struct_base_component.html",tooltip=" "];
+  Node0 -> Node1 [dir="back",color="steelblue1",style="solid"];
+  Node1 [label="CanBeGhostPlayer",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$dc/dba/struct_can_be_ghost_player.html",tooltip=" "];
+  Node0 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 [label="CanBeHighlighted",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d9/d05/struct_can_be_highlighted.html",tooltip=" "];
+  Node0 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 [label="CanHighlightOthers",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d9/d6b/struct_can_highlight_others.html",tooltip=" "];
+  Node0 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node4 [label="CanHoldFurniture",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d6/dad/struct_can_hold_furniture.html",tooltip=" "];
+  Node0 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node5 [label="CanHoldItem",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$da/d55/struct_can_hold_item.html",tooltip=" "];
+  Node0 -> Node6 [dir="back",color="steelblue1",style="solid"];
+  Node6 [label="CanPerformJob",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$db/dc2/struct_can_perform_job.html",tooltip=" "];
+  Node0 -> Node7 [dir="back",color="steelblue1",style="solid"];
+  Node7 [label="CustomHeldItemPosition",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$db/d9c/struct_custom_held_item_position.html",tooltip=" "];
+  Node0 -> Node8 [dir="back",color="steelblue1",style="solid"];
+  Node8 [label="HasName",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$de/d7b/struct_has_name.html",tooltip=" "];
+  Node0 -> Node9 [dir="back",color="steelblue1",style="solid"];
+  Node9 [label="ModelRenderer",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d7/d1f/struct_model_renderer.html",tooltip=" "];
+  Node0 -> Node10 [dir="back",color="steelblue1",style="solid"];
+  Node10 [label="SimpleColoredBoxRenderer",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$dd/dee/struct_simple_colored_box_renderer.html",tooltip=" "];
+  Node0 -> Node11 [dir="back",color="steelblue1",style="solid"];
+  Node11 [label="Transform",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$dd/d69/struct_transform.html",tooltip=" "];
+}

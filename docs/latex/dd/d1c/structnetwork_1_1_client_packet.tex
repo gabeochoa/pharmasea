@@ -1,0 +1,146 @@
+\hypertarget{structnetwork_1_1_client_packet}{}\doxysection{network\+::Client\+Packet Struct Reference}
+\label{structnetwork_1_1_client_packet}\index{network::ClientPacket@{network::ClientPacket}}
+
+
+{\ttfamily \#include $<$shared.\+h$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_announcement_info}{Announcement\+Info}}
+\item 
+struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_game_state_info}{Game\+State\+Info}}
+\item 
+struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_map_info}{Map\+Info}}
+\item 
+struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_control_info}{Player\+Control\+Info}}
+\item 
+struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_info}{Player\+Info}}
+\item 
+struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_join_info}{Player\+Join\+Info}}
+\item 
+struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_leave_info}{Player\+Leave\+Info}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989f}{Msg\+Type}} \{ \newline
+\mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989faca8862f28ec5f9281f3310089ee1b0a2}{Announcement}}
+, \mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fadc1689eb51fd7dccbf385b6c258afb23}{Map}}
+, \mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa27d768ec34bb2753f2f7ab235d14d57e}{Game\+State}}
+, \mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989faa79178dcf4b9ce19ac0fff77148d642c}{Player\+Control}}
+, \newline
+\mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa12e7cf4cc4954a80632c66fa23f2e17a}{Player\+Join}}
+, \mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa1920fa7b0acebea4b0195925abf5bb7f}{Player\+Leave}}
+, \mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa320147bb2c8639ba072b32dd21cb1067}{Player\+Location}}
+ \}
+\item 
+typedef std\+::variant$<$ \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_announcement_info}{Client\+Packet\+::\+Announcement\+Info}}, \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_control_info}{Client\+Packet\+::\+Player\+Control\+Info}}, \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_join_info}{Client\+Packet\+::\+Player\+Join\+Info}}, \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_game_state_info}{Client\+Packet\+::\+Game\+State\+Info}}, \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_map_info}{Client\+Packet\+::\+Map\+Info}}, \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_info}{Client\+Packet\+::\+Player\+Info}}, \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_leave_info}{Client\+Packet\+::\+Player\+Leave\+Info}} $>$ \mbox{\hyperlink{structnetwork_1_1_client_packet_a8b764c2200658cb2460a824d39418d19}{Msg}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{channel_8h_a1ce9b523fd4f3b5bbcadcd796183455a}{Channel}} \mbox{\hyperlink{structnetwork_1_1_client_packet_ad90966fdca7c47222a5b0f0e837d04bb}{channel}} = Channel\+::\+RELIABLE
+\item 
+int \mbox{\hyperlink{structnetwork_1_1_client_packet_aac14602a4a11d31626bb53de7a1c8461}{client\+\_\+id}}
+\item 
+enum \mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989f}{network\+::\+Client\+Packet\+::\+Msg\+Type}} \mbox{\hyperlink{structnetwork_1_1_client_packet_aee7665870f2a000055e34b3c6c8aec71}{msg\+\_\+type}}
+\item 
+\mbox{\hyperlink{structnetwork_1_1_client_packet_a8b764c2200658cb2460a824d39418d19}{Msg}} \mbox{\hyperlink{structnetwork_1_1_client_packet_a5c08535f0530c222b70c237a08794381}{msg}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{structnetwork_1_1_client_packet_a8b764c2200658cb2460a824d39418d19}\label{structnetwork_1_1_client_packet_a8b764c2200658cb2460a824d39418d19}} 
+\index{network::ClientPacket@{network::ClientPacket}!Msg@{Msg}}
+\index{Msg@{Msg}!network::ClientPacket@{network::ClientPacket}}
+\doxysubsubsection{\texorpdfstring{Msg}{Msg}}
+{\footnotesize\ttfamily typedef std\+::variant$<$ \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_announcement_info}{Client\+Packet\+::\+Announcement\+Info}}, \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_control_info}{Client\+Packet\+::\+Player\+Control\+Info}}, \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_join_info}{Client\+Packet\+::\+Player\+Join\+Info}}, \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_game_state_info}{Client\+Packet\+::\+Game\+State\+Info}}, \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_map_info}{Client\+Packet\+::\+Map\+Info}}, \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_info}{Client\+Packet\+::\+Player\+Info}}, \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_leave_info}{Client\+Packet\+::\+Player\+Leave\+Info}}$>$ \mbox{\hyperlink{structnetwork_1_1_client_packet_a8b764c2200658cb2460a824d39418d19}{network\+::\+Client\+Packet\+::\+Msg}}}
+
+
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989f}\label{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989f}} 
+\index{network::ClientPacket@{network::ClientPacket}!MsgType@{MsgType}}
+\index{MsgType@{MsgType}!network::ClientPacket@{network::ClientPacket}}
+\doxysubsubsection{\texorpdfstring{MsgType}{MsgType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989f}{network\+::\+Client\+Packet\+::\+Msg\+Type}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Announcement@{Announcement}!network::ClientPacket@{network::ClientPacket}}\index{network::ClientPacket@{network::ClientPacket}!Announcement@{Announcement}}}\mbox{\Hypertarget{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989faca8862f28ec5f9281f3310089ee1b0a2}\label{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989faca8862f28ec5f9281f3310089ee1b0a2}} 
+Announcement&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Map@{Map}!network::ClientPacket@{network::ClientPacket}}\index{network::ClientPacket@{network::ClientPacket}!Map@{Map}}}\mbox{\Hypertarget{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fadc1689eb51fd7dccbf385b6c258afb23}\label{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fadc1689eb51fd7dccbf385b6c258afb23}} 
+Map&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GameState@{GameState}!network::ClientPacket@{network::ClientPacket}}\index{network::ClientPacket@{network::ClientPacket}!GameState@{GameState}}}\mbox{\Hypertarget{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa27d768ec34bb2753f2f7ab235d14d57e}\label{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa27d768ec34bb2753f2f7ab235d14d57e}} 
+Game\+State&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PlayerControl@{PlayerControl}!network::ClientPacket@{network::ClientPacket}}\index{network::ClientPacket@{network::ClientPacket}!PlayerControl@{PlayerControl}}}\mbox{\Hypertarget{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989faa79178dcf4b9ce19ac0fff77148d642c}\label{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989faa79178dcf4b9ce19ac0fff77148d642c}} 
+Player\+Control&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PlayerJoin@{PlayerJoin}!network::ClientPacket@{network::ClientPacket}}\index{network::ClientPacket@{network::ClientPacket}!PlayerJoin@{PlayerJoin}}}\mbox{\Hypertarget{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa12e7cf4cc4954a80632c66fa23f2e17a}\label{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa12e7cf4cc4954a80632c66fa23f2e17a}} 
+Player\+Join&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PlayerLeave@{PlayerLeave}!network::ClientPacket@{network::ClientPacket}}\index{network::ClientPacket@{network::ClientPacket}!PlayerLeave@{PlayerLeave}}}\mbox{\Hypertarget{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa1920fa7b0acebea4b0195925abf5bb7f}\label{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa1920fa7b0acebea4b0195925abf5bb7f}} 
+Player\+Leave&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PlayerLocation@{PlayerLocation}!network::ClientPacket@{network::ClientPacket}}\index{network::ClientPacket@{network::ClientPacket}!PlayerLocation@{PlayerLocation}}}\mbox{\Hypertarget{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa320147bb2c8639ba072b32dd21cb1067}\label{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989fa320147bb2c8639ba072b32dd21cb1067}} 
+Player\+Location&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structnetwork_1_1_client_packet_ad90966fdca7c47222a5b0f0e837d04bb}\label{structnetwork_1_1_client_packet_ad90966fdca7c47222a5b0f0e837d04bb}} 
+\index{network::ClientPacket@{network::ClientPacket}!channel@{channel}}
+\index{channel@{channel}!network::ClientPacket@{network::ClientPacket}}
+\doxysubsubsection{\texorpdfstring{channel}{channel}}
+{\footnotesize\ttfamily \mbox{\hyperlink{channel_8h_a1ce9b523fd4f3b5bbcadcd796183455a}{Channel}} network\+::\+Client\+Packet\+::channel = Channel\+::\+RELIABLE}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a69075013e8c8f88ef750e25d45e471e9}{network\+::internal\+::\+Client\+::send\+\_\+packet\+\_\+to\+\_\+server()}}, and \mbox{\hyperlink{namespacenetwork_a1e62ea975ea4c7dcb8a7fb13f347d831}{network\+::serialize()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_client_packet_aac14602a4a11d31626bb53de7a1c8461}\label{structnetwork_1_1_client_packet_aac14602a4a11d31626bb53de7a1c8461}} 
+\index{network::ClientPacket@{network::ClientPacket}!client\_id@{client\_id}}
+\index{client\_id@{client\_id}!network::ClientPacket@{network::ClientPacket}}
+\doxysubsubsection{\texorpdfstring{client\_id}{client\_id}}
+{\footnotesize\ttfamily int network\+::\+Client\+Packet\+::client\+\_\+id}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_client_acdb127c63e3c7a36575f590cf525e0a9}{network\+::\+Client\+::client\+\_\+process\+\_\+message\+\_\+string()}}, \mbox{\hyperlink{namespacenetwork_a8f6972f6d0cd4df75a978e0d72e2e06f}{network\+::operator$<$$<$()}}, \mbox{\hyperlink{structnetwork_1_1_server_ad4dcb46379c20303561f79d019c169a9}{network\+::\+Server\+::process\+\_\+player\+\_\+control\+\_\+packet()}}, \mbox{\hyperlink{structnetwork_1_1_server_afe2a62abb4fd826cd780bb70daf8bae0}{network\+::\+Server\+::process\+\_\+player\+\_\+join\+\_\+packet()}}, and \mbox{\hyperlink{namespacenetwork_a1e62ea975ea4c7dcb8a7fb13f347d831}{network\+::serialize()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_client_packet_a5c08535f0530c222b70c237a08794381}\label{structnetwork_1_1_client_packet_a5c08535f0530c222b70c237a08794381}} 
+\index{network::ClientPacket@{network::ClientPacket}!msg@{msg}}
+\index{msg@{msg}!network::ClientPacket@{network::ClientPacket}}
+\doxysubsubsection{\texorpdfstring{msg}{msg}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structnetwork_1_1_client_packet_a8b764c2200658cb2460a824d39418d19}{Msg}} network\+::\+Client\+Packet\+::msg}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_client_acdb127c63e3c7a36575f590cf525e0a9}{network\+::\+Client\+::client\+\_\+process\+\_\+message\+\_\+string()}}, \mbox{\hyperlink{namespacenetwork_a8f6972f6d0cd4df75a978e0d72e2e06f}{network\+::operator$<$$<$()}}, \mbox{\hyperlink{structnetwork_1_1_server_a7f24bbd6b1ad331e28cad274f95344ea}{network\+::\+Server\+::process\+\_\+announcement\+\_\+packet()}}, \mbox{\hyperlink{structnetwork_1_1_server_ad4dcb46379c20303561f79d019c169a9}{network\+::\+Server\+::process\+\_\+player\+\_\+control\+\_\+packet()}}, \mbox{\hyperlink{structnetwork_1_1_server_afe2a62abb4fd826cd780bb70daf8bae0}{network\+::\+Server\+::process\+\_\+player\+\_\+join\+\_\+packet()}}, \mbox{\hyperlink{namespacenetwork_a1e62ea975ea4c7dcb8a7fb13f347d831}{network\+::serialize()}}, and \mbox{\hyperlink{structnetwork_1_1_server_a610459eab58499f8396ca92fcda99296}{network\+::\+Server\+::tick()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1_client_packet_aee7665870f2a000055e34b3c6c8aec71}\label{structnetwork_1_1_client_packet_aee7665870f2a000055e34b3c6c8aec71}} 
+\index{network::ClientPacket@{network::ClientPacket}!msg\_type@{msg\_type}}
+\index{msg\_type@{msg\_type}!network::ClientPacket@{network::ClientPacket}}
+\doxysubsubsection{\texorpdfstring{msg\_type}{msg\_type}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989f}{network\+::\+Client\+Packet\+::\+Msg\+Type}} network\+::\+Client\+Packet\+::msg\+\_\+type}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_client_acdb127c63e3c7a36575f590cf525e0a9}{network\+::\+Client\+::client\+\_\+process\+\_\+message\+\_\+string()}}, \mbox{\hyperlink{namespacenetwork_a8f6972f6d0cd4df75a978e0d72e2e06f}{network\+::operator$<$$<$()}}, \mbox{\hyperlink{namespacenetwork_a1e62ea975ea4c7dcb8a7fb13f347d831}{network\+::serialize()}}, \mbox{\hyperlink{structnetwork_1_1_server_a514a3fd3663f3984c847b253347ee29c}{network\+::\+Server\+::server\+\_\+process\+\_\+message\+\_\+string()}}, and \mbox{\hyperlink{structnetwork_1_1_server_a610459eab58499f8396ca92fcda99296}{network\+::\+Server\+::tick()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/network/\mbox{\hyperlink{shared_8h}{shared.\+h}}\end{DoxyCompactItemize}

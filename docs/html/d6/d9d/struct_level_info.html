@@ -94,8 +94,8 @@ Inheritance diagram for LevelInfo:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a69320651f4975db03abfcf8979341cb4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d9d/struct_level_info.html#a69320651f4975db03abfcf8979341cb4">onUpdate</a> (float dt)</td></tr>
 <tr class="separator:a69320651f4975db03abfcf8979341cb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4d55937b27ced4254b37e8567d40251"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d9d/struct_level_info.html#ad4d55937b27ced4254b37e8567d40251">onDraw</a> (float) const</td></tr>
-<tr class="separator:ad4d55937b27ced4254b37e8567d40251"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c2985c6599e2a7d5e051cc7f835fc6d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d9d/struct_level_info.html#a7c2985c6599e2a7d5e051cc7f835fc6d">onDraw</a> (float dt) const</td></tr>
+<tr class="separator:a7c2985c6599e2a7d5e051cc7f835fc6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29c9081e7343c8fb18e46104f73b957b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d9d/struct_level_info.html#a29c9081e7343c8fb18e46104f73b957b">onDrawUI</a> (float)</td></tr>
 <tr class="separator:a29c9081e7343c8fb18e46104f73b957b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66f640142946bce849c3b1e73884c45e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d9d/struct_level_info.html#a66f640142946bce849c3b1e73884c45e">grab_things</a> ()</td></tr>
@@ -109,6 +109,8 @@ Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a098c0e83c76b9b85263af606e0b465f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d9d/struct_level_info.html#a098c0e83c76b9b85263af606e0b465f7">was_generated</a> = false</td></tr>
 <tr class="separator:a098c0e83c76b9b85263af606e0b465f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c46f127f733274ead38458a65ca3016"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d8/d4f/struct_system_manager.html">SystemManager</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d9d/struct_level_info.html#a7c46f127f733274ead38458a65ca3016">system_manager</a></td></tr>
+<tr class="separator:a7c46f127f733274ead38458a65ca3016"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9ac8f187c4e95277137ff7d38a5efe4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d9/d3c/entityhelper_8h.html#a183abbcc97de7f620b2aafb4880e06f7">Entities</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d9d/struct_level_info.html#ac9ac8f187c4e95277137ff7d38a5efe4">entities</a></td></tr>
 <tr class="separator:ac9ac8f187c4e95277137ff7d38a5efe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa50fed1dbcca5c43e26680af3a651680"><td class="memItemLeft" align="right" valign="top">Entities::size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d9d/struct_level_info.html#aa50fed1dbcca5c43e26680af3a651680">num_entities</a></td></tr>
@@ -215,8 +217,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad4d55937b27ced4254b37e8567d40251" name="ad4d55937b27ced4254b37e8567d40251"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4d55937b27ced4254b37e8567d40251">&#9670;&#160;</a></span>onDraw()</h2>
+<a id="a7c2985c6599e2a7d5e051cc7f835fc6d" name="a7c2985c6599e2a7d5e051cc7f835fc6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c2985c6599e2a7d5e051cc7f835fc6d">&#9670;&#160;</a></span>onDraw()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -228,7 +230,7 @@ Private Member Functions</h2></td></tr>
           <td class="memname">virtual void LevelInfo::onDraw </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>dt</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -241,7 +243,7 @@ Private Member Functions</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="../../df/d04/struct_lobby_map_info.html#af72bfe92b12587543d0df931323584b3">LobbyMapInfo</a>.</p>
 
-<p class="reference">References <a class="el" href="../../d6/d9d/struct_level_info.html#ac9ac8f187c4e95277137ff7d38a5efe4">entities</a>, and <a class="el" href="../../d6/d9d/struct_level_info.html#acf7cf891676017e69d101bc6c164fa45">items</a>.</p>
+<p class="reference">References <a class="el" href="../../d6/d9d/struct_level_info.html#ac9ac8f187c4e95277137ff7d38a5efe4">entities</a>, <a class="el" href="../../d6/d9d/struct_level_info.html#acf7cf891676017e69d101bc6c164fa45">items</a>, <a class="el" href="../../d7/d7f/log_8h.html#a04af09851c431d178f16b24fa1aac1e9">log_warn</a>, and <a class="el" href="../../d6/d15/tracy_8h.html#af0966b1b117a1e09190aaee5d5175e27">TRACY_ZONE_SCOPED</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../df/d91/struct_map.html#a3a0e8d65b69ebda41b8a46516c6ca941">Map::onDraw()</a>, and <a class="el" href="../../df/d04/struct_lobby_map_info.html#af72bfe92b12587543d0df931323584b3">LobbyMapInfo::onDraw()</a>.</p>
 
@@ -303,7 +305,7 @@ Private Member Functions</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="../../da/d05/struct_game_map_info.html#aac456532748e47e912f90269ab54e216">GameMapInfo</a>.</p>
 
-<p class="reference">References <a class="el" href="../../d5/dab/struct_entity_helper.html#a704ecc99728bb6635523ff9b8e46cd95">EntityHelper::get_entities()</a>.</p>
+<p class="reference">References <a class="el" href="../../d6/d15/tracy_8h.html#af0966b1b117a1e09190aaee5d5175e27">TRACY_ZONE_SCOPED</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../df/d91/struct_map.html#a0d162dc968a2d18848e241c8c7f9e865">Map::onUpdate()</a>, and <a class="el" href="../../da/d05/struct_game_map_info.html#aac456532748e47e912f90269ab54e216">GameMapInfo::onUpdate()</a>.</p>
 
@@ -352,7 +354,7 @@ template&lt;typename S &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../df/d91/struct_map.html#ab6633a39aa81ed9161458051d0b0e662">Map::entities()</a>, <a class="el" href="../../d6/d9d/struct_level_info.html#a66f640142946bce849c3b1e73884c45e">grab_things()</a>, <a class="el" href="../../d6/d9d/struct_level_info.html#ad4d55937b27ced4254b37e8567d40251">onDraw()</a>, and <a class="el" href="../../d6/d9d/struct_level_info.html#a63c918a28d1647f84c80e76fa26bb3e7">serialize()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../df/d91/struct_map.html#ab6633a39aa81ed9161458051d0b0e662">Map::entities()</a>, <a class="el" href="../../d6/d9d/struct_level_info.html#a66f640142946bce849c3b1e73884c45e">grab_things()</a>, <a class="el" href="../../d6/d9d/struct_level_info.html#a7c2985c6599e2a7d5e051cc7f835fc6d">onDraw()</a>, and <a class="el" href="../../d6/d9d/struct_level_info.html#a63c918a28d1647f84c80e76fa26bb3e7">serialize()</a>.</p>
 
 </div>
 </div>
@@ -368,7 +370,7 @@ template&lt;typename S &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d6/d9d/struct_level_info.html#a66f640142946bce849c3b1e73884c45e">grab_things()</a>, <a class="el" href="../../df/d91/struct_map.html#a020eac8bc34cb0da6f978b410913f82f">Map::items()</a>, <a class="el" href="../../d6/d9d/struct_level_info.html#ad4d55937b27ced4254b37e8567d40251">onDraw()</a>, and <a class="el" href="../../d6/d9d/struct_level_info.html#a63c918a28d1647f84c80e76fa26bb3e7">serialize()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d6/d9d/struct_level_info.html#a66f640142946bce849c3b1e73884c45e">grab_things()</a>, <a class="el" href="../../df/d91/struct_map.html#a020eac8bc34cb0da6f978b410913f82f">Map::items()</a>, <a class="el" href="../../d6/d9d/struct_level_info.html#a7c2985c6599e2a7d5e051cc7f835fc6d">onDraw()</a>, and <a class="el" href="../../d6/d9d/struct_level_info.html#a63c918a28d1647f84c80e76fa26bb3e7">serialize()</a>.</p>
 
 </div>
 </div>
@@ -417,6 +419,20 @@ template&lt;typename S &gt; </div>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="../../d6/d9d/struct_level_info.html#ad3f119e5329f5c5f62537ff53fe3b932">ensure_generated_map()</a>, <a class="el" href="../../da/d05/struct_game_map_info.html#a7f8ea036a76651a221c0c18490a4c22d">GameMapInfo::generate_map()</a>, <a class="el" href="../../d6/d9d/struct_level_info.html#a63c918a28d1647f84c80e76fa26bb3e7">serialize()</a>, and <a class="el" href="../../da/d05/struct_game_map_info.html#a3e6cb1b5e1429089bb8d3498562854b3">GameMapInfo::update_seed()</a>.</p>
+
+</div>
+</div>
+<a id="a7c46f127f733274ead38458a65ca3016" name="a7c46f127f733274ead38458a65ca3016"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c46f127f733274ead38458a65ca3016">&#9670;&#160;</a></span>system_manager</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d8/d4f/struct_system_manager.html">SystemManager</a> LevelInfo::system_manager</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

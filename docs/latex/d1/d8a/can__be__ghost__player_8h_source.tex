@@ -1,0 +1,30 @@
+\hypertarget{can__be__ghost__player_8h_source}{}\doxysection{can\+\_\+be\+\_\+ghost\+\_\+player.\+h}
+\label{can__be__ghost__player_8h_source}\index{src/components/can\_be\_ghost\_player.h@{src/components/can\_be\_ghost\_player.h}}
+\mbox{\hyperlink{can__be__ghost__player_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../item.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_can_be_ghost_player}{CanBeGhostPlayer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_can_be_ghost_player_a7705088c62eeef8434d11e684e9228cb}{\string~CanBeGhostPlayer}}()\ \{\}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_be_ghost_player_ad4572f68bf5a8824b88f0792da4771a0}{is\_ghost}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_can_be_ghost_player_a8992c92508cdd9d2dfb81281fe65b8f8}{ghost}};\ \}}
+\DoxyCodeLine{00011\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_be_ghost_player_a1558a2b3105e0c72b0f33b433a8f66da}{is\_not\_ghost}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !\mbox{\hyperlink{struct_can_be_ghost_player_ad4572f68bf5a8824b88f0792da4771a0}{is\_ghost}}();\ \}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_be_ghost_player_afe090a24c8df10260e9a6bdfab6fb022}{update}}(\textcolor{keywordtype}{bool}\ g)\ \{\ \mbox{\hyperlink{struct_can_be_ghost_player_a8992c92508cdd9d2dfb81281fe65b8f8}{ghost}}\ =\ g;\ \}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_be_ghost_player_a8992c92508cdd9d2dfb81281fe65b8f8}{ghost}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_be_ghost_player_a3b82c05c30dc28b617cc4014978152e6}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ s.value1b(\mbox{\hyperlink{struct_can_be_ghost_player_a8992c92508cdd9d2dfb81281fe65b8f8}{ghost}});}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ \};}
+
+\end{DoxyCode}

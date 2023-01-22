@@ -5,26 +5,26 @@
 \DoxyCodeLine{00001\ }
 \DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}engine/layer.h"{}}}
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}engine/settings.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{layer_8h}{engine/layer.h}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{settings_8h}{engine/settings.h}}"{}}}
 \DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{preload_8h}{preload.h}}"{}}}
 \DoxyCodeLine{00007\ }
-\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_streamer_safe_layer}{StreamerSafeLayer}}\ :\ \textcolor{keyword}{public}\ Layer\ \{}
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_streamer_safe_layer}{StreamerSafeLayer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_layer}{Layer}}\ \{}
 \DoxyCodeLine{00009\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_streamer_safe_layer_adc0f343126ea9e897e7ab0d54ef83591}{streamer\_box\_size}};}
 \DoxyCodeLine{00010\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_streamer_safe_layer_ad5c8a7afa00ade11f62c75586e86fdc3}{streamer\_box\_padd}};}
 \DoxyCodeLine{00011\ }
-\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{struct_streamer_safe_layer_a6151d2245233d33997d8ff3bbb860c6e}{StreamerSafeLayer}}()\ :\ Layer(\textcolor{stringliteral}{"{}StreamerSafe"{}})\ \{}
-\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_streamer_safe_layer_adc0f343126ea9e897e7ab0d54ef83591}{streamer\_box\_size}}\ =\ WIN\_H()\ /\ 3;}
+\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{struct_streamer_safe_layer_a6151d2245233d33997d8ff3bbb860c6e}{StreamerSafeLayer}}()\ :\ \mbox{\hyperlink{struct_layer}{Layer}}(\textcolor{stringliteral}{"{}StreamerSafe"{}})\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_streamer_safe_layer_adc0f343126ea9e897e7ab0d54ef83591}{streamer\_box\_size}}\ =\ \mbox{\hyperlink{engine_2globals_8h_af36a79e782a145f85642cd276acd8e0c}{WIN\_H}}()\ /\ 3;}
 \DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_streamer_safe_layer_ad5c8a7afa00ade11f62c75586e86fdc3}{streamer\_box\_padd}}\ =\ 50;}
 \DoxyCodeLine{00015\ \ \ \ \ \}}
 \DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_streamer_safe_layer_a091cc82880043753f6bf4b30e5198a28}{\string~StreamerSafeLayer}}()\ \{\}}
-\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_streamer_safe_layer_aa4521aefaa0b666b629ee3c8de640f46}{onEvent}}(Event\&)\textcolor{keyword}{\ override\ }\{\}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_streamer_safe_layer_aa4521aefaa0b666b629ee3c8de640f46}{onEvent}}(\mbox{\hyperlink{struct_event}{Event}}\&)\textcolor{keyword}{\ override\ }\{\}}
 \DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_streamer_safe_layer_aa5a21158f507b5dc88a84f73524d0fea}{onUpdate}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{\}}
 \DoxyCodeLine{00019\ }
 \DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_streamer_safe_layer_a6537fe319ba82606836c3e4e7b6bae19}{onDraw}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{}
 \DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Settings::get().data.show\_streamer\_safe\_box)\ \{}
-\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ x\_pos\ =\ WIN\_W()\ -\/\ \mbox{\hyperlink{struct_streamer_safe_layer_adc0f343126ea9e897e7ab0d54ef83591}{streamer\_box\_size}}\ -\/\ \mbox{\hyperlink{struct_streamer_safe_layer_ad5c8a7afa00ade11f62c75586e86fdc3}{streamer\_box\_padd}};}
-\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ y\_pos\ =\ WIN\_H()\ -\/\ \mbox{\hyperlink{struct_streamer_safe_layer_adc0f343126ea9e897e7ab0d54ef83591}{streamer\_box\_size}}\ -\/\ \mbox{\hyperlink{struct_streamer_safe_layer_ad5c8a7afa00ade11f62c75586e86fdc3}{streamer\_box\_padd}};}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ x\_pos\ =\ \mbox{\hyperlink{engine_2globals_8h_afe1358b24401e43a8eabe7880feaf770}{WIN\_W}}()\ -\/\ \mbox{\hyperlink{struct_streamer_safe_layer_adc0f343126ea9e897e7ab0d54ef83591}{streamer\_box\_size}}\ -\/\ \mbox{\hyperlink{struct_streamer_safe_layer_ad5c8a7afa00ade11f62c75586e86fdc3}{streamer\_box\_padd}};}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ y\_pos\ =\ \mbox{\hyperlink{engine_2globals_8h_af36a79e782a145f85642cd276acd8e0c}{WIN\_H}}()\ -\/\ \mbox{\hyperlink{struct_streamer_safe_layer_adc0f343126ea9e897e7ab0d54ef83591}{streamer\_box\_size}}\ -\/\ \mbox{\hyperlink{struct_streamer_safe_layer_ad5c8a7afa00ade11f62c75586e86fdc3}{streamer\_box\_padd}};}
 \DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ FS\ =\ 20.f;}
 \DoxyCodeLine{00025\ }
 \DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ DrawRectangleRoundedLines(}
@@ -33,8 +33,8 @@
 \DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0.25f\ \textcolor{comment}{/*\ roundness\ */},\ (int)\ (FS\ /\ 4.f)\ \textcolor{comment}{/*\ segments\ */},}
 \DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (FS\ /\ 4.f)\ \textcolor{comment}{/*\ lineThick\ */},\ BLACK);}
 \DoxyCodeLine{00031\ }
-\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ DrawTextEx(Preload::get().font,\ \textcolor{stringliteral}{"{}safe\ zone"{}},}
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vec2\{(float)\ x\_pos\ +\ (\mbox{\hyperlink{struct_streamer_safe_layer_adc0f343126ea9e897e7ab0d54ef83591}{streamer\_box\_size}}\ /\ 2.f)\ -\/\ (FS),}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ DrawTextEx(Preload::get().\mbox{\hyperlink{namespacefont}{font}},\ \textcolor{stringliteral}{"{}safe\ zone"{}},}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{(float)\ x\_pos\ +\ (\mbox{\hyperlink{struct_streamer_safe_layer_adc0f343126ea9e897e7ab0d54ef83591}{streamer\_box\_size}}\ /\ 2.f)\ -\/\ (FS),}
 \DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ y\_pos\ +\ (\mbox{\hyperlink{struct_streamer_safe_layer_adc0f343126ea9e897e7ab0d54ef83591}{streamer\_box\_size}}\ /\ 2.f)\ -\/\ FS\},}
 \DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FS,\ 0,\ WHITE);}
 \DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \}}

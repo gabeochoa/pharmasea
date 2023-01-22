@@ -5,289 +5,293 @@
 \DoxyCodeLine{00001\ }
 \DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}engine/globals\_register.h"{}}}
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}engine/ui\_color.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals__register_8h}{engine/globals\_register.h}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ui__color_8h}{engine/ui\_color.h}}"{}}}
 \DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{entity_8h}{entity.h}}"{}}}
 \DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{entityhelper_8h}{entityhelper.h}}"{}}}
-\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}furniture/character\_switcher.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{character__switcher_8h}{furniture/character\_switcher.h}}"{}}}
 \DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{furnitures_8h}{furnitures.h}}"{}}}
 \DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{item_8h}{item.h}}"{}}}
 \DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{item__helper_8h}{item\_helper.h}}"{}}}
 \DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{round_8h}{round.h}}"{}}}
-\DoxyCodeLine{00013\ }
-\DoxyCodeLine{00014\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\_MAP\_SIZE}}\ =\ 20;}
-\DoxyCodeLine{00015\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{level__info_8h_ade8d3a51c249c747df1dbe7eef587729}{MAX\_SEED\_LENGTH}}\ =\ 20;}
-\DoxyCodeLine{00016\ }
-\DoxyCodeLine{00017\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{level__info_8h_afb3e321d1045c0376dede5b3997579aa}{generate\_and\_insert\_walls}}(std::string\ \textcolor{comment}{/*\ seed\ */})\ \{}
-\DoxyCodeLine{00018\ \ \ \ \ \textcolor{comment}{//\ TODO\ generate\ walls\ based\ on\ seed}}
-\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ d\_color\ =\ (Color)\{155,\ 75,\ 0,\ 255\};}
-\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\_MAP\_SIZE}};\ i++)\ \{}
-\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\_MAP\_SIZE}};\ j++)\ \{}
-\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((i\ ==\ 0\ \&\&\ j\ ==\ 0)\ ||\ (i\ ==\ 0\ \&\&\ j\ ==\ 1))\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ 0\ ||\ j\ ==\ 0\ ||\ i\ ==\ \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\_MAP\_SIZE}}\ -\/\ 1\ ||}
-\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ j\ ==\ \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\_MAP\_SIZE}}\ -\/\ 1)\ \{}
-\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vec2\ location\ =\ vec2\{i\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ j\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\};}
-\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Wall>\ wall;}
-\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wall.reset(\textcolor{keyword}{new}\ Wall(location,\ d\_color));}
-\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(wall);}
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00031\ \ \ \ \ \}}
-\DoxyCodeLine{00032\ \}}
-\DoxyCodeLine{00033\ }
-\DoxyCodeLine{00034\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_level_info}{LevelInfo}}\ \{}
-\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}{was\_generated}}\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00036\ }
-\DoxyCodeLine{00037\ \ \ \ \ \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}}\ \mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}};}
-\DoxyCodeLine{00038\ \ \ \ \ Entities::size\_type\ \mbox{\hyperlink{struct_level_info_aa50fed1dbcca5c43e26680af3a651680}{num\_entities}};}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{system__manager_8h}{system/system\_manager.h}}"{}}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\_MAP\_SIZE}}\ =\ 20;}
+\DoxyCodeLine{00016\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{level__info_8h_ade8d3a51c249c747df1dbe7eef587729}{MAX\_SEED\_LENGTH}}\ =\ 20;}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{level__info_8h_afb3e321d1045c0376dede5b3997579aa}{generate\_and\_insert\_walls}}(std::string\ \textcolor{comment}{/*\ seed\ */})\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{comment}{//\ TODO\ generate\ walls\ based\ on\ seed}}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ d\_color\ =\ (Color)\{155,\ 75,\ 0,\ 255\};}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\_MAP\_SIZE}};\ i++)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\_MAP\_SIZE}};\ j++)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((i\ ==\ 0\ \&\&\ j\ ==\ 0)\ ||\ (i\ ==\ 0\ \&\&\ j\ ==\ 1))\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ 0\ ||\ j\ ==\ 0\ ||\ i\ ==\ \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\_MAP\_SIZE}}\ -\/\ 1\ ||}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ j\ ==\ \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\_MAP\_SIZE}}\ -\/\ 1)\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ location\ =\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{i\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ j\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\};}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Wall>\ wall;}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wall.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_wall}{Wall}}(location,\ d\_color));}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(wall);}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00032\ \ \ \ \ \}}
+\DoxyCodeLine{00033\ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_level_info}{LevelInfo}}\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}{was\_generated}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{struct_system_manager}{SystemManager}}\ \mbox{\hyperlink{struct_level_info_a7c46f127f733274ead38458a65ca3016}{system\_manager}};}
 \DoxyCodeLine{00039\ }
-\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{item__helper_8h_a175a25f0a9aa01587d97b5daefa2db13}{Items}}\ \mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}};}
-\DoxyCodeLine{00041\ \ \ \ \ Items::size\_type\ \mbox{\hyperlink{struct_level_info_a9ca4e206a00bce8c4ade2589b1838bad}{num\_items}};}
+\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}}\ \mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}};}
+\DoxyCodeLine{00041\ \ \ \ \ Entities::size\_type\ \mbox{\hyperlink{struct_level_info_aa50fed1dbcca5c43e26680af3a651680}{num\_entities}};}
 \DoxyCodeLine{00042\ }
-\DoxyCodeLine{00043\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}};}
-\DoxyCodeLine{00044\ }
-\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_a69320651f4975db03abfcf8979341cb4}{onUpdate}}(\textcolor{keywordtype}{float}\ dt)\ \{}
-\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ TRACY\_ZONE\_SCOPED;}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ e\ :\ \mbox{\hyperlink{struct_entity_helper_a704ecc99728bb6635523ff9b8e46cd95}{EntityHelper::get\_entities}}())\ \{}
-\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (e)\ e-\/>update(dt);}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00050\ \ \ \ \ \}}
-\DoxyCodeLine{00051\ }
-\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_ad4d55937b27ced4254b37e8567d40251}{onDraw}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ TRACY\_ZONE\_SCOPED;}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ e\ :\ \mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}})\ \{}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (e)\ e-\/>render();}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!e)\ log\_warn(\textcolor{stringliteral}{"{}We\ have\ invalid\ entities"{}});}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00058\ }
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ i\ :\ \mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}})\ \{}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i)\ i-\/>render();}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!i)\ log\_warn(\textcolor{stringliteral}{"{}we\ have\ invalid\ items"{}});}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00063\ \ \ \ \ \}}
-\DoxyCodeLine{00064\ }
-\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_a29c9081e7343c8fb18e46104f73b957b}{onDrawUI}}(\textcolor{keywordtype}{float})\ \{\}}
-\DoxyCodeLine{00066\ }
-\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c45e}{grab\_things}}()\ \{}
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}}.clear();}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_acc8beb01dd8be784718becdfe5880b62}{EntityHelper::cleanup}}();}
-\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ es\ =\ \mbox{\hyperlink{struct_entity_helper_a704ecc99728bb6635523ff9b8e46cd95}{EntityHelper::get\_entities}}();}
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>entities\ =\ es;}
-\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_aa50fed1dbcca5c43e26680af3a651680}{num\_entities}}\ =\ this-\/>entities.size();}
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00075\ }
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}}.clear();}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ is\ =\ \mbox{\hyperlink{struct_item_helper_a44f1137eaff506c9b1ea4f5e2f48e8a4}{ItemHelper::get\_items}}();}
-\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>items\ =\ is;}
-\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a9ca4e206a00bce8c4ade2589b1838bad}{num\_items}}\ =\ this-\/>items.size();}
-\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00082\ \ \ \ \ \}}
-\DoxyCodeLine{00083\ }
-\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_ad3f119e5329f5c5f62537ff53fe3b932}{ensure\_generated\_map}}(\textcolor{keyword}{const}\ std::string\&\ new\_seed)\ \{}
-\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}{was\_generated}})\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}}\ =\ new\_seed;}
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}{was\_generated}}\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a0784ca0f3cf019f17d50596242a02431}{generate\_map}}();}
-\DoxyCodeLine{00089\ \ \ \ \ \}}
-\DoxyCodeLine{00090\ }
-\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_a0784ca0f3cf019f17d50596242a02431}{generate\_map}}()\ =\ 0;}
-\DoxyCodeLine{00092\ }
-\DoxyCodeLine{00093\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_a63c918a28d1647f84c80e76fa26bb3e7}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ s.value8b(\mbox{\hyperlink{struct_level_info_aa50fed1dbcca5c43e26680af3a651680}{num\_entities}});}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ s.container(\mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}},\ \mbox{\hyperlink{struct_level_info_aa50fed1dbcca5c43e26680af3a651680}{num\_entities}},}
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](S\&\ s2,\ std::shared\_ptr<Entity>\&\ entity)\ \{}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s2.ext(entity,\ bitsery::ext::StdSmartPtr\{\});}
-\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00102\ }
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ s.value8b(\mbox{\hyperlink{struct_level_info_a9ca4e206a00bce8c4ade2589b1838bad}{num\_items}});}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ s.container(\mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}},\ \mbox{\hyperlink{struct_level_info_a9ca4e206a00bce8c4ade2589b1838bad}{num\_items}},\ [](S\&\ s2,\ std::shared\_ptr<Item>\&\ item)\ \{}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ s2.ext(item,\ bitsery::ext::StdSmartPtr\{\});}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ s.value1b(\mbox{\hyperlink{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}{was\_generated}});}
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ s.text1b(\mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}},\ \mbox{\hyperlink{level__info_8h_ade8d3a51c249c747df1dbe7eef587729}{MAX\_SEED\_LENGTH}});}
-\DoxyCodeLine{00109\ \ \ \ \ \}}
-\DoxyCodeLine{00110\ \};}
-\DoxyCodeLine{00111\ }
-\DoxyCodeLine{00112\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_lobby_map_info}{LobbyMapInfo}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_level_info}{LevelInfo}}\ \{}
-\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_lobby_map_info_a4cab06a8a972519111860fa37e770b41}{generate\_map}}()\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<CharacterSwitcher>\ charSwitch;}
-\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ vec2\{5,\ 5\};}
-\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ charSwitch.reset(\textcolor{keyword}{new}\ CharacterSwitcher(location));}
-\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(charSwitch);}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00120\ \ \ \ \ \}}
-\DoxyCodeLine{00121\ }
-\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ const\ override\ }\{}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ cam\ =\ GLOBALS.get\_ptr<\mbox{\hyperlink{struct_game_cam}{GameCam}}>(\textcolor{stringliteral}{"{}game\_cam"{}});}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cam)\ \{}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::DrawBillboard(cam-\/>camera,}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TextureLibrary::get().get(\textcolor{stringliteral}{"{}face"{}}),}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1.f,}
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0.f,}
-\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1.f,}
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ WHITE);}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00134\ }
-\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_ad4d55937b27ced4254b37e8567d40251}{LevelInfo::onDraw}}(dt);}
-\DoxyCodeLine{00136\ \ \ \ \ \}}
-\DoxyCodeLine{00137\ }
-\DoxyCodeLine{00138\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_lobby_map_info_afd342654f0f585313d58cd6cacdcbde5}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<LevelInfo>\{\});}
-\DoxyCodeLine{00143\ \ \ \ \ \}}
-\DoxyCodeLine{00144\ \};}
-\DoxyCodeLine{00145\ }
-\DoxyCodeLine{00146\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_game_map_info}{GameMapInfo}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_level_info}{LevelInfo}}\ \{}
-\DoxyCodeLine{00147\ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_game_map_info_a12073e2d5e1bc9ef09a80ff0f0e3e0cc}{hashed\_seed}};}
-\DoxyCodeLine{00149\ \ \ \ \ std::mt19937\ \mbox{\hyperlink{struct_game_map_info_ac18f762f1448b128665628d2375d814c}{generator}};}
-\DoxyCodeLine{00150\ \ \ \ \ std::uniform\_int\_distribution<>\ \mbox{\hyperlink{struct_game_map_info_afcab4192a82f3790641aa7726309adb7}{dist}};}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{item__helper_8h_a175a25f0a9aa01587d97b5daefa2db13}{Items}}\ \mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}};}
+\DoxyCodeLine{00044\ \ \ \ \ Items::size\_type\ \mbox{\hyperlink{struct_level_info_a9ca4e206a00bce8c4ade2589b1838bad}{num\_items}};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_a69320651f4975db03abfcf8979341cb4}{onUpdate}}(\textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager}{system\_manager}}.update(dt);}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_a7c2985c6599e2a7d5e051cc7f835fc6d}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager}{system\_manager}}.render(dt);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ e\ :\ \mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}})\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (e)\ e-\/>render();}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!e)\ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}We\ have\ invalid\ entities"{}});}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ i\ :\ \mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}})\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i)\ i-\/>render();}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!i)\ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}we\ have\ invalid\ items"{}});}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_a29c9081e7343c8fb18e46104f73b957b}{onDrawUI}}(\textcolor{keywordtype}{float})\ \{\}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c45e}{grab\_things}}()\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}}.clear();}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_acc8beb01dd8be784718becdfe5880b62}{EntityHelper::cleanup}}();}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ es\ =\ \mbox{\hyperlink{struct_entity_helper_a704ecc99728bb6635523ff9b8e46cd95}{EntityHelper::get\_entities}}();}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>entities\ =\ es;}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_aa50fed1dbcca5c43e26680af3a651680}{num\_entities}}\ =\ this-\/>entities.size();}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}}.clear();}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ is\ =\ \mbox{\hyperlink{struct_item_helper_a44f1137eaff506c9b1ea4f5e2f48e8a4}{ItemHelper::get\_items}}();}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>items\ =\ is;}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a9ca4e206a00bce8c4ade2589b1838bad}{num\_items}}\ =\ this-\/>items.size();}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00086\ \ \ \ \ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_ad3f119e5329f5c5f62537ff53fe3b932}{ensure\_generated\_map}}(\textcolor{keyword}{const}\ std::string\&\ new\_seed)\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}{was\_generated}})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}}\ =\ new\_seed;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}{was\_generated}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a0784ca0f3cf019f17d50596242a02431}{generate\_map}}();}
+\DoxyCodeLine{00093\ \ \ \ \ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_a0784ca0f3cf019f17d50596242a02431}{generate\_map}}()\ =\ 0;}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_level_info_a63c918a28d1647f84c80e76fa26bb3e7}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ s.value8b(\mbox{\hyperlink{struct_level_info_aa50fed1dbcca5c43e26680af3a651680}{num\_entities}});}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ s.container(\mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}},\ \mbox{\hyperlink{struct_level_info_aa50fed1dbcca5c43e26680af3a651680}{num\_entities}},}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](S\&\ s2,\ std::shared\_ptr<Entity>\&\ entity)\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s2.ext(entity,\ bitsery::ext::StdSmartPtr\{\});}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ s.value8b(\mbox{\hyperlink{struct_level_info_a9ca4e206a00bce8c4ade2589b1838bad}{num\_items}});}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ s.container(\mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}},\ \mbox{\hyperlink{struct_level_info_a9ca4e206a00bce8c4ade2589b1838bad}{num\_items}},\ [](S\&\ s2,\ std::shared\_ptr<Item>\&\ item)\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ s2.ext(item,\ bitsery::ext::StdSmartPtr\{\});}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ s.value1b(\mbox{\hyperlink{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}{was\_generated}});}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ s.text1b(\mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}},\ \mbox{\hyperlink{level__info_8h_ade8d3a51c249c747df1dbe7eef587729}{MAX\_SEED\_LENGTH}});}
+\DoxyCodeLine{00113\ \ \ \ \ \}}
+\DoxyCodeLine{00114\ \};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_lobby_map_info}{LobbyMapInfo}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_level_info}{LevelInfo}}\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_lobby_map_info_a4cab06a8a972519111860fa37e770b41}{generate\_map}}()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<CharacterSwitcher>\ charSwitch;}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{5,\ 5\};}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ charSwitch.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_character_switcher}{CharacterSwitcher}}(location));}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(charSwitch);}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00124\ \ \ \ \ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ cam\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{get\_ptr}}<\mbox{\hyperlink{struct_game_cam}{GameCam}}>(\textcolor{stringliteral}{"{}game\_cam"{}});}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cam)\ \{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::DrawBillboard(cam-\/>camera,}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_texture_library_a485f4bc29c5437bb7b0b9698b4ddf898}{TextureLibrary::get}}().get(\textcolor{stringliteral}{"{}face"{}}),}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1.f,}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0.f,}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1.f,}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ WHITE);}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a7c2985c6599e2a7d5e051cc7f835fc6d}{LevelInfo::onDraw}}(dt);}
+\DoxyCodeLine{00140\ \ \ \ \ \}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_lobby_map_info_afd342654f0f585313d58cd6cacdcbde5}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<LevelInfo>\{\});}
+\DoxyCodeLine{00147\ \ \ \ \ \}}
+\DoxyCodeLine{00148\ \};}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_game_map_info}{GameMapInfo}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_level_info}{LevelInfo}}\ \{}
 \DoxyCodeLine{00151\ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00152\ }
-\DoxyCodeLine{00153\ \ \ \ \ std::optional<Round>\ \mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}};}
-\DoxyCodeLine{00154\ }
-\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_map_info_a3e6cb1b5e1429089bb8d3498562854b3}{update\_seed}}(\textcolor{keyword}{const}\ std::string\&\ s)\ \{}
-\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}}\ =\ s;}
-\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_map_info_a12073e2d5e1bc9ef09a80ff0f0e3e0cc}{hashed\_seed}}\ =\ hashString(\mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}});}
-\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_map_info_ac18f762f1448b128665628d2375d814c}{generator}}\ =\ make\_engine(\mbox{\hyperlink{struct_game_map_info_a12073e2d5e1bc9ef09a80ff0f0e3e0cc}{hashed\_seed}});}
-\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ leaving\ at\ 1\ because\ we\ dont\ have\ a\ door\ to\ block\ the\ entrance}}
-\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_map_info_afcab4192a82f3790641aa7726309adb7}{dist}}\ =\ std::uniform\_int\_distribution<>(1,\ \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\_MAP\_SIZE}}\ -\/\ 1);}
-\DoxyCodeLine{00161\ }
-\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}}\ =\ \mbox{\hyperlink{struct_round}{Round}}(120.f);}
-\DoxyCodeLine{00163\ }
-\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ need\ to\ regenerate\ the\ map\ and\ clean\ up\ entitiyhelper}}
-\DoxyCodeLine{00165\ \ \ \ \ \}}
-\DoxyCodeLine{00166\ }
-\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_map_info_aac456532748e47e912f90269ab54e216}{onUpdate}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\_info("{}update\ game\ map\ info"{});}}
-\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a69320651f4975db03abfcf8979341cb4}{LevelInfo::onUpdate}}(dt);}
-\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}}.has\_value())\ \{}
-\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}}-\/>onUpdate(dt);}
-\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00173\ \ \ \ \ \}}
-\DoxyCodeLine{00174\ }
-\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_map_info_a6f7aefa1a79a33f4ef973f1ef0a4cc87}{onDrawUI}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}}.has\_value())\ \{}
-\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}}-\/>onDraw();}
-\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00179\ \ \ \ \ \}}
-\DoxyCodeLine{00180\ }
-\DoxyCodeLine{00181\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}()\ \{}
-\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ vec2\ location;}
-\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
-\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ location\ =}
-\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vec2\{\mbox{\hyperlink{struct_game_map_info_afcab4192a82f3790641aa7726309adb7}{dist}}(\mbox{\hyperlink{struct_game_map_info_ac18f762f1448b128665628d2375d814c}{generator}})\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ \mbox{\hyperlink{struct_game_map_info_afcab4192a82f3790641aa7726309adb7}{dist}}(\mbox{\hyperlink{struct_game_map_info_ac18f762f1448b128665628d2375d814c}{generator}})\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\};}
-\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (!\mbox{\hyperlink{struct_entity_helper_a4d01c0a143c62ae572e5d4e9eb5711f0}{EntityHelper::isWalkable}}(location));}
-\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ location;}
-\DoxyCodeLine{00189\ \ \ \ \ \}}
-\DoxyCodeLine{00190\ }
-\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{generate\_map}}()\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{entityhelper_8h_aab3fbb2ee54d9709656c0ac5dbce2c82}{server\_entities\_DO\_NOT\_USE}}.clear();}
-\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{item__helper_8h_a79b83ae9ed8024ef393811b5c3976ae8}{server\_items\_DO\_NOT\_USE}}.clear();}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_game_map_info_a12073e2d5e1bc9ef09a80ff0f0e3e0cc}{hashed\_seed}};}
+\DoxyCodeLine{00153\ \ \ \ \ std::mt19937\ \mbox{\hyperlink{struct_game_map_info_ac18f762f1448b128665628d2375d814c}{generator}};}
+\DoxyCodeLine{00154\ \ \ \ \ std::uniform\_int\_distribution<>\ \mbox{\hyperlink{struct_game_map_info_afcab4192a82f3790641aa7726309adb7}{dist}};}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ std::optional<Round>\ \mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}};}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_map_info_a3e6cb1b5e1429089bb8d3498562854b3}{update\_seed}}(\textcolor{keyword}{const}\ std::string\&\ s)\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}}\ =\ s;}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_map_info_a12073e2d5e1bc9ef09a80ff0f0e3e0cc}{hashed\_seed}}\ =\ \mbox{\hyperlink{engine_2globals_8h_a471e5aa6d16f0fe8c4c131624777603b}{hashString}}(\mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}});}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_map_info_ac18f762f1448b128665628d2375d814c}{generator}}\ =\ \mbox{\hyperlink{random_8h_a25c02b6c920a4da696d78a83163fd1a7}{make\_engine}}(\mbox{\hyperlink{struct_game_map_info_a12073e2d5e1bc9ef09a80ff0f0e3e0cc}{hashed\_seed}});}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ leaving\ at\ 1\ because\ we\ dont\ have\ a\ door\ to\ block\ the\ entrance}}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_map_info_afcab4192a82f3790641aa7726309adb7}{dist}}\ =\ std::uniform\_int\_distribution<>(1,\ \mbox{\hyperlink{level__info_8h_a0dfad442b5c2ecae4de70a16543ec5db}{MAX\_MAP\_SIZE}}\ -\/\ 1);}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}}\ =\ \mbox{\hyperlink{struct_round}{Round}}(120.f);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ need\ to\ regenerate\ the\ map\ and\ clean\ up\ entitiyhelper}}
+\DoxyCodeLine{00169\ \ \ \ \ \}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_map_info_aac456532748e47e912f90269ab54e216}{onUpdate}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\_info("{}update\ game\ map\ info"{});}}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_level_info_a69320651f4975db03abfcf8979341cb4}{LevelInfo::onUpdate}}(dt);}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}}.has\_value())\ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}}-\/>onUpdate(dt);}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00177\ \ \ \ \ \}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_map_info_a6f7aefa1a79a33f4ef973f1ef0a4cc87}{onDrawUI}}(\textcolor{keywordtype}{float})\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}}.has\_value())\ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}}-\/>onDraw();}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00183\ \ \ \ \ \}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}()\ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ location;}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ location\ =}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{\mbox{\hyperlink{struct_game_map_info_afcab4192a82f3790641aa7726309adb7}{dist}}(\mbox{\hyperlink{struct_game_map_info_ac18f762f1448b128665628d2375d814c}{generator}})\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ \mbox{\hyperlink{struct_game_map_info_afcab4192a82f3790641aa7726309adb7}{dist}}(\mbox{\hyperlink{struct_game_map_info_ac18f762f1448b128665628d2375d814c}{generator}})\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\};}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (!\mbox{\hyperlink{struct_entity_helper_a4d01c0a143c62ae572e5d4e9eb5711f0}{EntityHelper::isWalkable}}(location));}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ location;}
+\DoxyCodeLine{00193\ \ \ \ \ \}}
 \DoxyCodeLine{00194\ }
-\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ generate\_tables\ =\ [\textcolor{keyword}{this}]()\ \{}
-\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Table>\ table;}
-\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
-\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ table.reset(\textcolor{keyword}{new}\ Table(location));}
-\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(table);}
-\DoxyCodeLine{00201\ }
-\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Pill>\ item;}
-\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_pill}{Pill}}(location,\ Color\{255,\ 15,\ 240,\ 255\}));}
-\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_item_helper_ac9f40a76bb440b45308f4e833c602e2c}{ItemHelper::addItem}}(item);}
-\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ table-\/>held\_item\ =\ item;}
-\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00207\ }
-\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Table>\ table;}
-\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
-\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ table.reset(\textcolor{keyword}{new}\ Table(location));}
-\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(table);}
-\DoxyCodeLine{00213\ }
-\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<PillBottle>\ item;}
-\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_pill_bottle}{PillBottle}}(location,\ RED));}
-\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_item_helper_ac9f40a76bb440b45308f4e833c602e2c}{ItemHelper::addItem}}(item);}
-\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ table-\/>held\_item\ =\ item;}
-\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00220\ }
-\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ generate\_medicine\_cabinet\ =\ [\textcolor{keyword}{this}]()\ \{}
-\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<MedicineCabinet>\ medicineCab;}
-\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
-\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ medicineCab.reset(\textcolor{keyword}{new}\ MedicineCabinet(location));}
-\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(medicineCab);}
-\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00227\ }
-\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ generate\_bag\_box\ =\ [\textcolor{keyword}{this}]()\ \{}
-\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BagBox>\ bagbox;}
-\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
-\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ bagbox.reset(\textcolor{keyword}{new}\ BagBox(location));}
-\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(bagbox);}
-\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00234\ }
-\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ generate\_register\ =\ [\textcolor{keyword}{this}]()\ \{}
-\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Register>\ reg;}
-\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
-\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ reg.reset(\textcolor{keyword}{new}\ Register(location));}
-\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(reg);}
-\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00241\ }
-\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ replace\ with\ a\ CustomerSpawner\ eventually}}
-\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ generate\_customer\ =\ []()\ \{}
-\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ vec2\{-\/10\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ -\/10\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\};}
-\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Customer>\ customer;}
-\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ customer.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_customer}{Customer}}(location,\ RED));}
-\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(customer);}
-\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00249\ }
-\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ generate\_test\ =\ [\textcolor{keyword}{this}]()\ \{}
-\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 5;\ i++)\ \{}
-\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
-\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Conveyer>\ conveyer;}
-\DoxyCodeLine{00254\ }
-\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ 0)}
-\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ conveyer.reset(\textcolor{keyword}{new}\ Conveyer(location));}
-\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ conveyer.reset(\textcolor{keyword}{new}\ Grabber(location));}
-\DoxyCodeLine{00259\ }
-\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(conveyer);}
-\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{generate\_map}}()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{entityhelper_8h_aab3fbb2ee54d9709656c0ac5dbce2c82}{server\_entities\_DO\_NOT\_USE}}.clear();}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{item__helper_8h_a79b83ae9ed8024ef393811b5c3976ae8}{server\_items\_DO\_NOT\_USE}}.clear();}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ generate\_tables\ =\ [\textcolor{keyword}{this}]()\ \{}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Table>\ table;}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ table.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_table}{Table}}(location));}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(table);}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Pill>\ item;}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_pill}{Pill}}(location,\ Color\{255,\ 15,\ 240,\ 255\}));}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_item_helper_ac9f40a76bb440b45308f4e833c602e2c}{ItemHelper::addItem}}(item);}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ table-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().update(item);}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Table>\ table;}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ table.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_table}{Table}}(location));}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(table);}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<PillBottle>\ item;}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_pill_bottle}{PillBottle}}(location,\ RED));}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_item_helper_ac9f40a76bb440b45308f4e833c602e2c}{ItemHelper::addItem}}(item);}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ table-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().update(item);}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ generate\_medicine\_cabinet\ =\ [\textcolor{keyword}{this}]()\ \{}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<MedicineCabinet>\ medicineCab;}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ medicineCab.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_medicine_cabinet}{MedicineCabinet}}(location));}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(medicineCab);}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ generate\_bag\_box\ =\ [\textcolor{keyword}{this}]()\ \{}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BagBox>\ bagbox;}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ bagbox.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_bag_box}{BagBox}}(location));}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(bagbox);}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ generate\_register\ =\ [\textcolor{keyword}{this}]()\ \{}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Register>\ reg;}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ reg.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_register}{Register}}(location));}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(reg);}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ replace\ with\ a\ CustomerSpawner\ eventually}}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ generate\_customer\ =\ []()\ \{}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{-\/10\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ -\/10\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\};}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Customer>\ customer;}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ customer.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_customer}{Customer}}(location,\ RED));}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(customer);}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ generate\_test\ =\ [\textcolor{keyword}{this}]()\ \{}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 5;\ i++)\ \{}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Conveyer>\ conveyer;}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ 0)}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ conveyer.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_conveyer}{Conveyer}}(location));}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ conveyer.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_grabber}{Grabber}}(location));}
 \DoxyCodeLine{00263\ }
-\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{level__info_8h_afb3e321d1045c0376dede5b3997579aa}{generate\_and\_insert\_walls}}(this-\/>\mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}});}
-\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ generate\_tables();}
-\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ generate\_tables();}
-\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ generate\_medicine\_cabinet();}
-\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ generate\_bag\_box();}
-\DoxyCodeLine{00269\ }
-\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ generate\_register();}
-\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ generate\_customer();}
-\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ generate\_test();}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(conveyer);}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{level__info_8h_afb3e321d1045c0376dede5b3997579aa}{generate\_and\_insert\_walls}}(this-\/>\mbox{\hyperlink{struct_level_info_a8dcf578c65e9ac0f297b2f8af7cc72da}{seed}});}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ generate\_tables();}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ generate\_tables();}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ generate\_medicine\_cabinet();}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ generate\_bag\_box();}
 \DoxyCodeLine{00273\ }
-\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a6fef0ba4ee7eaf9d9933c7cacdbb617c}{EntityHelper::invalidatePathCache}}();}
-\DoxyCodeLine{00275\ \ \ \ \ \}}
-\DoxyCodeLine{00276\ }
-\DoxyCodeLine{00277\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_map_info_ae200d81ff78b22ac7831c70b54ca8508}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<LevelInfo>\{\});}
-\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ s.ext(\mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}},\ bitsery::ext::StdOptional\{\});}
-\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ s.value8b(\mbox{\hyperlink{struct_game_map_info_a12073e2d5e1bc9ef09a80ff0f0e3e0cc}{hashed\_seed}});}
-\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ these\ arent\ serializable...}}
-\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ s.object(generator);}}
-\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ s.object(dist);}}
-\DoxyCodeLine{00286\ \ \ \ \ \}}
-\DoxyCodeLine{00287\ \};}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ generate\_register();}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ generate\_customer();}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ generate\_test();}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a6fef0ba4ee7eaf9d9933c7cacdbb617c}{EntityHelper::invalidatePathCache}}();}
+\DoxyCodeLine{00279\ \ \ \ \ \}}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_map_info_ae200d81ff78b22ac7831c70b54ca8508}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<LevelInfo>\{\});}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ s.ext(\mbox{\hyperlink{struct_game_map_info_a481f7928c2eb62df1745df8a04438816}{active\_round}},\ bitsery::ext::StdOptional\{\});}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ s.value8b(\mbox{\hyperlink{struct_game_map_info_a12073e2d5e1bc9ef09a80ff0f0e3e0cc}{hashed\_seed}});}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ these\ arent\ serializable...}}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ s.object(generator);}}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ s.object(dist);}}
+\DoxyCodeLine{00290\ \ \ \ \ \}}
+\DoxyCodeLine{00291\ \};}
 
 \end{DoxyCode}

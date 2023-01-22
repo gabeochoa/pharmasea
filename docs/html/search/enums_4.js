@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pilltype_0',['PillType',['../de/d82/struct_pill.html#a541adada380f2ffdc6aae0636423d114',1,'Pill']]]
+  ['growflags_0',['GrowFlags',['../d3/df6/namespaceui.html#af411c02f7e3e273b94558e6bda1aa792',1,'ui']]]
 ];

@@ -1,0 +1,28 @@
+\hypertarget{custom__item__position_8h_source}{}\doxysection{custom\+\_\+item\+\_\+position.\+h}
+\label{custom__item__position_8h_source}\index{src/components/custom\_item\_position.h@{src/components/custom\_item\_position.h}}
+\mbox{\hyperlink{custom__item__position_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../item.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{transform_8h}{transform.h}}"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_custom_held_item_position}{CustomHeldItemPosition}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ std::function<\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}(\mbox{\hyperlink{struct_transform}{Transform}}\&)>\ \mbox{\hyperlink{struct_custom_held_item_position_aaf39ca6256db891c2020cbfaeee1f476}{mutator}};}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_custom_held_item_position_acffc587edfb66f6d656ab86faf658cf6}{init}}(std::function<\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}(\mbox{\hyperlink{struct_transform}{Transform}}\&)>\ mut)\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ enforce\ that\ to\ have\ this\ one\ you\ have\ to\ have\ a\ transform}}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_custom_held_item_position_aaf39ca6256db891c2020cbfaeee1f476}{mutator}}\ =\ mut;}
+\DoxyCodeLine{00014\ \ \ \ \ \}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_custom_held_item_position_a75be4a58fbef982df1c14edecd1100d6}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00021\ \ \ \ \ \}}
+\DoxyCodeLine{00022\ \};}
+
+\end{DoxyCode}

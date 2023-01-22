@@ -4,7 +4,7 @@
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00002\ }
-\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}engine/graphics.h"{}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{graphics_8h}{engine/graphics.h}}"{}}}
 \DoxyCodeLine{00004\ }
 \DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifdef\ \_\_APPLE\_\_}}
 \DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ push}}
@@ -36,84 +36,86 @@
 \DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ <bitsery/bitsery.h>}}
 \DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ <bitsery/ext/inheritance.h>}}
 \DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ <bitsery/ext/pointer.h>}}
-\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ <bitsery/ext/std\_map.h>}}
-\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ <bitsery/ext/std\_optional.h>}}
-\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ <bitsery/ext/std\_smart\_ptr.h>}}
-\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <bitsery/ext/std\_tuple.h>}}
-\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <bitsery/ext/std\_variant.h>}}
-\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ <bitsery/traits/string.h>}}
-\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ <bitsery/traits/vector.h>}}
-\DoxyCodeLine{00042\ }
-\DoxyCodeLine{00043\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacebitsery}{bitsery}}\ \{}
-\DoxyCodeLine{00044\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00045\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacebitsery_a1090e6e410c14fa09ef29c2eb6b1f3af}{serialize}}(S\&\ s,\ vec3\&\ data)\ \{}
-\DoxyCodeLine{00046\ \ \ \ \ s.value4b(data.x);}
-\DoxyCodeLine{00047\ \ \ \ \ s.value4b(data.y);}
-\DoxyCodeLine{00048\ \ \ \ \ s.value4b(data.z);}
-\DoxyCodeLine{00049\ \}}
-\DoxyCodeLine{00050\ }
-\DoxyCodeLine{00051\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00052\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacebitsery_a1090e6e410c14fa09ef29c2eb6b1f3af}{serialize}}(S\&\ s,\ Color\&\ data)\ \{}
-\DoxyCodeLine{00053\ \ \ \ \ s.value1b(data.r);}
-\DoxyCodeLine{00054\ \ \ \ \ s.value1b(data.g);}
-\DoxyCodeLine{00055\ \ \ \ \ s.value1b(data.b);}
-\DoxyCodeLine{00056\ \ \ \ \ s.value1b(data.a);}
-\DoxyCodeLine{00057\ \}}
-\DoxyCodeLine{00058\ \}\ \ \textcolor{comment}{//\ namespace\ bitsery}}
-\DoxyCodeLine{00059\ }
-\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#include\ "{}engine/tracy.h"{}}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ <bitsery/ext/std\_bitset.h>}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ <bitsery/ext/std\_map.h>}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ <bitsery/ext/std\_optional.h>}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <bitsery/ext/std\_smart\_ptr.h>}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <bitsery/ext/std\_tuple.h>}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ <bitsery/ext/std\_variant.h>}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ <bitsery/traits/array.h>}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ <bitsery/traits/string.h>}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ <bitsery/traits/vector.h>}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacebitsery}{bitsery}}\ \{}
+\DoxyCodeLine{00046\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacebitsery_a1090e6e410c14fa09ef29c2eb6b1f3af}{serialize}}(S\&\ s,\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\&\ data)\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ s.value4b(data.x);}
+\DoxyCodeLine{00049\ \ \ \ \ s.value4b(data.y);}
+\DoxyCodeLine{00050\ \ \ \ \ s.value4b(data.z);}
+\DoxyCodeLine{00051\ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00054\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacebitsery_a1090e6e410c14fa09ef29c2eb6b1f3af}{serialize}}(S\&\ s,\ Color\&\ data)\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ s.value1b(data.r);}
+\DoxyCodeLine{00056\ \ \ \ \ s.value1b(data.g);}
+\DoxyCodeLine{00057\ \ \ \ \ s.value1b(data.b);}
+\DoxyCodeLine{00058\ \ \ \ \ s.value1b(data.a);}
+\DoxyCodeLine{00059\ \}}
+\DoxyCodeLine{00060\ \}\ \ \textcolor{comment}{//\ namespace\ bitsery}}
 \DoxyCodeLine{00061\ }
-\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#ifdef\ \_\_APPLE\_\_}}
-\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
-\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#pragma\ enable\_warn}}
-\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{00067\ }
-\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#ifdef\ WIN32}}
-\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ pop}}
-\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{00071\ }
-\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
-\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ \_\_PRETTY\_FUNCTION\_\_\ \_\_FUNCSIG\_\_}}
-\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{00075\ }
-\DoxyCodeLine{00076\ \textcolor{comment}{//\ For\ bitwise\ operations}}
-\DoxyCodeLine{00077\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
-\DoxyCodeLine{00078\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_a79c80c24ac8306ebe08417657610ed52}{operator\string~}}(T\ a)\ \{}
-\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(\string~static\_cast<int>(a));}
-\DoxyCodeLine{00080\ \}}
-\DoxyCodeLine{00081\ }
-\DoxyCodeLine{00082\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
-\DoxyCodeLine{00083\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_a9efd44f5defcfa5ce3956c178df9ba13}{operator|}}(T\ a,\ T\ b)\ \{}
-\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}((\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(a)\ |\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(b)));}
-\DoxyCodeLine{00085\ \}}
-\DoxyCodeLine{00086\ }
-\DoxyCodeLine{00087\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
-\DoxyCodeLine{00088\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_a1fdf607e0981ec30c17e8e6e304931ec}{operator\&}}(T\ a,\ T\ b)\ \{}
-\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}((\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(a)\ \&\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(b)));}
-\DoxyCodeLine{00090\ \}}
-\DoxyCodeLine{00091\ }
-\DoxyCodeLine{00092\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
-\DoxyCodeLine{00093\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_a1e5ffda343da19e793126abd1dd68f51}{operator\string^}}(T\ a,\ T\ b)\ \{}
-\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}((\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(a)\ \string^\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(b)));}
-\DoxyCodeLine{00095\ \}}
-\DoxyCodeLine{00096\ }
-\DoxyCodeLine{00097\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
-\DoxyCodeLine{00098\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_ac403f3de06f98046ab8cba6eba7b5fef}{operator|=}}(T\&\ a,\ T\ b)\ \{}
-\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}T\&\textcolor{keyword}{>}(}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ (\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{int}\&\textcolor{keyword}{>}(a)\ |=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(b)));}
-\DoxyCodeLine{00101\ \}}
-\DoxyCodeLine{00102\ }
-\DoxyCodeLine{00103\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
-\DoxyCodeLine{00104\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_afb52cf0a10faf5fd37f779a895351bfc}{operator\&=}}(T\&\ a,\ T\ b)\ \{}
-\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}T\&\textcolor{keyword}{>}(}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ (\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{int}\&\textcolor{keyword}{>}(a)\ \&=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(b)));}
-\DoxyCodeLine{00107\ \}}
-\DoxyCodeLine{00108\ }
-\DoxyCodeLine{00109\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
-\DoxyCodeLine{00110\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_ae72099970e296f8d1df3ff218c3d7432}{operator\string^=}}(T\&\ a,\ T\ b)\ \{}
-\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}T\&\textcolor{keyword}{>}(}
-\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ (\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{int}\&\textcolor{keyword}{>}(a)\ \string^=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(b)));}
-\DoxyCodeLine{00113\ \}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tracy_8h}{engine/tracy.h}}"{}}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#ifdef\ \_\_APPLE\_\_}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#pragma\ enable\_warn}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#ifdef\ WIN32}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ pop}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ \_\_PRETTY\_FUNCTION\_\_\ \_\_FUNCSIG\_\_}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{comment}{//\ For\ bitwise\ operations}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00080\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_a79c80c24ac8306ebe08417657610ed52}{operator\string~}}(T\ a)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(\string~static\_cast<int>(a));}
+\DoxyCodeLine{00082\ \}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00085\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_a9efd44f5defcfa5ce3956c178df9ba13}{operator|}}(T\ a,\ T\ b)\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}((\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(a)\ |\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(b)));}
+\DoxyCodeLine{00087\ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00090\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_a1fdf607e0981ec30c17e8e6e304931ec}{operator\&}}(T\ a,\ T\ b)\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}((\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(a)\ \&\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(b)));}
+\DoxyCodeLine{00092\ \}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00095\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_a1e5ffda343da19e793126abd1dd68f51}{operator\string^}}(T\ a,\ T\ b)\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}((\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(a)\ \string^\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(b)));}
+\DoxyCodeLine{00097\ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00100\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_ac403f3de06f98046ab8cba6eba7b5fef}{operator|=}}(T\&\ a,\ T\ b)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}T\&\textcolor{keyword}{>}(}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ (\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{int}\&\textcolor{keyword}{>}(a)\ |=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(b)));}
+\DoxyCodeLine{00103\ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00106\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_afb52cf0a10faf5fd37f779a895351bfc}{operator\&=}}(T\&\ a,\ T\ b)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}T\&\textcolor{keyword}{>}(}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ (\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{int}\&\textcolor{keyword}{>}(a)\ \&=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(b)));}
+\DoxyCodeLine{00109\ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00112\ \textcolor{keyword}{typename}\ std::enable\_if<std::is\_enum<T>::value,\ T>::type\ \mbox{\hyperlink{vendor__include_8h_ae72099970e296f8d1df3ff218c3d7432}{operator\string^=}}(T\&\ a,\ T\ b)\ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}T\&\textcolor{keyword}{>}(}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ (\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{int}\&\textcolor{keyword}{>}(a)\ \string^=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(b)));}
+\DoxyCodeLine{00115\ \}}
 
 \end{DoxyCode}

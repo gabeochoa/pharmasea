@@ -1,0 +1,129 @@
+\hypertarget{struct_can_perform_job}{}\doxysection{Can\+Perform\+Job Struct Reference}
+\label{struct_can_perform_job}\index{CanPerformJob@{CanPerformJob}}
+
+
+{\ttfamily \#include $<$can\+\_\+perform\+\_\+job.\+h$>$}
+
+Inheritance diagram for Can\+Perform\+Job\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{db/dc2/struct_can_perform_job}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{struct_can_perform_job_aa1dd6e1d9e31aa8a81497cb0076076cd}{$\sim$\+Can\+Perform\+Job}} ()
+\item 
+bool \mbox{\hyperlink{struct_can_perform_job_ab8a1d36d36914317d620f3059e3a42de}{has\+\_\+job}} () const
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_job}{Job}} $>$ \mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{job}} () const
+\item 
+std\+::stack$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_job}{Job}} $>$ $>$ \mbox{\hyperlink{struct_can_perform_job_a3a3c96f0e78e5a30da8bd46ccc599bda}{job\+\_\+queue}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_base_component_ac74326a615877f3c1a17bc47787ad91e}{Base\+Component}} ()
+\item 
+\mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
+\item 
+virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_can_perform_job_a4de20a3db75ea33b012815c1bb5dd9e6}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::stack$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_job}{Job}} $>$ $>$ \mbox{\hyperlink{struct_can_perform_job_a00b95dd86b4e9ad4355718096c34b0a3}{personal\+\_\+queue}}
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_job}{Job}} $>$ \mbox{\hyperlink{struct_can_perform_job_ab6b17841c03be0c79ad12e91e607f94d}{current\+\_\+job}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_can_perform_job_aa1dd6e1d9e31aa8a81497cb0076076cd}\label{struct_can_perform_job_aa1dd6e1d9e31aa8a81497cb0076076cd}} 
+\index{CanPerformJob@{CanPerformJob}!````~CanPerformJob@{$\sim$CanPerformJob}}
+\index{````~CanPerformJob@{$\sim$CanPerformJob}!CanPerformJob@{CanPerformJob}}
+\doxysubsubsection{\texorpdfstring{$\sim$CanPerformJob()}{~CanPerformJob()}}
+{\footnotesize\ttfamily virtual Can\+Perform\+Job\+::$\sim$\+Can\+Perform\+Job (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_can_perform_job_ab8a1d36d36914317d620f3059e3a42de}\label{struct_can_perform_job_ab8a1d36d36914317d620f3059e3a42de}} 
+\index{CanPerformJob@{CanPerformJob}!has\_job@{has\_job}}
+\index{has\_job@{has\_job}!CanPerformJob@{CanPerformJob}}
+\doxysubsubsection{\texorpdfstring{has\_job()}{has\_job()}}
+{\footnotesize\ttfamily bool Can\+Perform\+Job\+::has\+\_\+job (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_perform_job_ab6b17841c03be0c79ad12e91e607f94d}{current\+\_\+job}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_adba12593f9411a7caa0cedb2ed812877}{system\+\_\+manager\+::render\+\_\+job\+\_\+visual()}}.
+
+\mbox{\Hypertarget{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}\label{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}} 
+\index{CanPerformJob@{CanPerformJob}!job@{job}}
+\index{job@{job}!CanPerformJob@{CanPerformJob}}
+\doxysubsubsection{\texorpdfstring{job()}{job()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_job}{Job}} $>$ Can\+Perform\+Job\+::job (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_perform_job_ab6b17841c03be0c79ad12e91e607f94d}{current\+\_\+job}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_adba12593f9411a7caa0cedb2ed812877}{system\+\_\+manager\+::render\+\_\+job\+\_\+visual()}}, and \mbox{\hyperlink{namespacesystem__manager_ad37dd2580fac8e15a7d95784327e63b9}{system\+\_\+manager\+::update\+\_\+job\+\_\+information()}}.
+
+\mbox{\Hypertarget{struct_can_perform_job_a3a3c96f0e78e5a30da8bd46ccc599bda}\label{struct_can_perform_job_a3a3c96f0e78e5a30da8bd46ccc599bda}} 
+\index{CanPerformJob@{CanPerformJob}!job\_queue@{job\_queue}}
+\index{job\_queue@{job\_queue}!CanPerformJob@{CanPerformJob}}
+\doxysubsubsection{\texorpdfstring{job\_queue()}{job\_queue()}}
+{\footnotesize\ttfamily std\+::stack$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_job}{Job}} $>$ $>$ Can\+Perform\+Job\+::job\+\_\+queue (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_perform_job_a00b95dd86b4e9ad4355718096c34b0a3}{personal\+\_\+queue}}.
+
+\mbox{\Hypertarget{struct_can_perform_job_a4de20a3db75ea33b012815c1bb5dd9e6}\label{struct_can_perform_job_a4de20a3db75ea33b012815c1bb5dd9e6}} 
+\index{CanPerformJob@{CanPerformJob}!serialize@{serialize}}
+\index{serialize@{serialize}!CanPerformJob@{CanPerformJob}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void Can\+Perform\+Job\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_can_perform_job_ab6b17841c03be0c79ad12e91e607f94d}\label{struct_can_perform_job_ab6b17841c03be0c79ad12e91e607f94d}} 
+\index{CanPerformJob@{CanPerformJob}!current\_job@{current\_job}}
+\index{current\_job@{current\_job}!CanPerformJob@{CanPerformJob}}
+\doxysubsubsection{\texorpdfstring{current\_job}{current\_job}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_job}{Job}}$>$ Can\+Perform\+Job\+::current\+\_\+job\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_can_perform_job_ab8a1d36d36914317d620f3059e3a42de}{has\+\_\+job()}}, and \mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{job()}}.
+
+\mbox{\Hypertarget{struct_can_perform_job_a00b95dd86b4e9ad4355718096c34b0a3}\label{struct_can_perform_job_a00b95dd86b4e9ad4355718096c34b0a3}} 
+\index{CanPerformJob@{CanPerformJob}!personal\_queue@{personal\_queue}}
+\index{personal\_queue@{personal\_queue}!CanPerformJob@{CanPerformJob}}
+\doxysubsubsection{\texorpdfstring{personal\_queue}{personal\_queue}}
+{\footnotesize\ttfamily std\+::stack$<$std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_job}{Job}}$>$ $>$ Can\+Perform\+Job\+::personal\+\_\+queue\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_can_perform_job_a3a3c96f0e78e5a30da8bd46ccc599bda}{job\+\_\+queue()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/components/\mbox{\hyperlink{can__perform__job_8h}{can\+\_\+perform\+\_\+job.\+h}}\end{DoxyCompactItemize}

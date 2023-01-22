@@ -1,0 +1,685 @@
+\hypertarget{namespaceui}{}\doxysection{ui Namespace Reference}
+\label{namespaceui}\index{ui@{ui}}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceui_1_1autolayout}{autolayout}}
+\item 
+namespace \mbox{\hyperlink{namespaceui_1_1color}{color}}
+\item 
+namespace \mbox{\hyperlink{namespaceui_1_1components}{components}}
+\item 
+namespace \mbox{\hyperlink{namespaceui_1_1theme}{theme}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structui_1_1_button_config}{Button\+Config}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_button_list_state}{Button\+List\+State}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_checkbox_state}{Checkbox\+State}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_dropdown_config}{Dropdown\+Config}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_dropdown_state}{Dropdown\+State}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager}{IUIContext\+Input\+Manager}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame}{IUIContext\+Last\+Frame}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_i_u_i_context_parent_stacking}{IUIContext\+Parent\+Stacking}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures}{IUIContext\+Render\+Textures}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_i_u_i_context_theming}{IUIContext\+Theming}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_scroll_view_state}{Scroll\+View\+State}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_slider_state}{Slider\+State}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_state}{State}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_state_manager}{State\+Manager}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_textfield_state}{Textfield\+State}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_toggle_state}{Toggle\+State}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_u_i_context}{UIContext}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_u_i_state}{UIState}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_u_i_theme}{UITheme}}
+\item 
+struct \mbox{\hyperlink{structui_1_1uuid}{uuid}}
+\item 
+struct \mbox{\hyperlink{structui_1_1_widget}{Widget}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::function$<$ \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{Textfield\+Validation\+Decision\+Flag}}(const std\+::string \&)$>$ \mbox{\hyperlink{namespaceui_a9b3310140b09d29060f497ef83f246c5}{Text\+Field\+Validation\+Fn}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum struct \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{Textfield\+Validation\+Decision\+Flag}} \{ \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba6adf97f83acf6453d4a6a4b1070f3754}{None}} = 0
+, \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba3218c9ded441061dd2e1bc7bca15743d}{Stop\+New\+Input}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 0
+, \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba3ac705f2acd51a4613f9188c05c91d0d}{Valid}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 1
+, \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba4bbb8f967da6d1a610596d7257179c2b}{Invalid}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 2
+ \}
+\item 
+enum \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9}{Size\+Mode}} \{ \newline
+\mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9ad26dcbad5ddad79ed7e7d5eb374df74c}{Null}}
+, \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a62654fe258cf0fb3d51337dda982982e}{Pixels}}
+, \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a63e6eeb436e0169b87103f339878a663}{Text}}
+, \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}{Percent}}
+, \newline
+\mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{Children}}
+ \}
+\item 
+enum \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792}{Grow\+Flags}} \{ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a1a7a5196f987b86773c7d6940253b82d}{None}} = (1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 0)
+, \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}{Row}} = (1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 1)
+, \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{Column}} = (1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 2)
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, const std\+::string \&content, \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74}{theme\+::\+Usage}} color\+\_\+usage=\mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a421c3240bd6c5c4cd47e5249711f90b1}{theme\+::\+Usage\+::\+Font}})
+\item 
+bool \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, const std\+::string \&content=\char`\"{}\char`\"{})
+\item 
+bool \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{button\+\_\+list}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, const std\+::vector$<$ std\+::string $>$ \&options, int $\ast$selected\+Index=nullptr, bool $\ast$has\+Focus=nullptr)
+\item 
+bool \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{dropdown}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, const std\+::vector$<$ std\+::string $>$ \&options, bool $\ast$dropdown\+State, int $\ast$selected\+Index)
+\item 
+bool \mbox{\hyperlink{namespaceui_a3fad4a8075125de9079fb82cb9e0d465}{slider}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, float $\ast$value, float mnf, float mxf)
+\item 
+bool \mbox{\hyperlink{namespaceui_a92afecc0b85dc29c36cdc80897df74c4}{operator!}} (\mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{Textfield\+Validation\+Decision\+Flag}} f)
+\item 
+bool \mbox{\hyperlink{namespaceui_a0bf5a70cbb0209928bd2bf2f3848b7c6}{validation\+\_\+test}} (\mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{Textfield\+Validation\+Decision\+Flag}} flag, \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{Textfield\+Validation\+Decision\+Flag}} mask)
+\item 
+bool \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, std\+::string \&content, \mbox{\hyperlink{namespaceui_a9b3310140b09d29060f497ef83f246c5}{Text\+Field\+Validation\+Fn}} validation=\{\})
+\item 
+bool \mbox{\hyperlink{namespaceui_aadad469b76dbb557f2985c32613f27fb}{checkbox}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, bool $\ast$cb\+State=nullptr, std\+::string $\ast$label=nullptr)
+\item 
+bool \mbox{\hyperlink{namespaceui_aa1839faeec0199d1ef759103fce1fe1a}{is\+\_\+hot}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&id)
+\item 
+bool \mbox{\hyperlink{namespaceui_aab0068660425ea4f46c3ef45730d5d86}{is\+\_\+active}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&id)
+\item 
+bool \mbox{\hyperlink{namespaceui_a05db1c88785ff2efe63d52d42f4ecc0c}{is\+\_\+active\+\_\+or\+\_\+hot}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&id)
+\item 
+bool \mbox{\hyperlink{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}{is\+\_\+active\+\_\+and\+\_\+hot}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&id)
+\item 
+void \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\+\_\+if\+\_\+mouse\+\_\+inside}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} id, const Rectangle \&rect)
+\item 
+bool \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\+\_\+kb\+\_\+focus}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&id)
+\item 
+void \mbox{\hyperlink{namespaceui_ae35de41cc3681263b334e7c7d950f746}{try\+\_\+to\+\_\+grab\+\_\+kb}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} id)
+\item 
+void \mbox{\hyperlink{namespaceui_a012466e309607e0225b50fe63a149d7f}{draw\+\_\+if\+\_\+kb\+\_\+focus}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&id, std\+::function$<$ void(void)$>$ cb)
+\item 
+void \mbox{\hyperlink{namespaceui_ab56bfa403cf97b6eedada75235bdf672}{handle\+\_\+tabbing}} (const \mbox{\hyperlink{structui_1_1uuid}{uuid}} id)
+\item 
+void \mbox{\hyperlink{namespaceui_a062fa8a78208818cd2f1b11239615ef0}{\+\_\+draw\+\_\+focus\+\_\+ring}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74}{theme\+::\+Usage}} usage=\mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74ad9b1efad2d6b0380f08dc2c1b4382c24}{theme\+::\+Usage\+::\+Accent}})
+\item 
+\mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame}{UIContext\+::\+Last\+Frame}} \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, const char $\ast$func)
+\item 
+bool \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget)
+\item 
+bool \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget)
+\item 
+bool \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{slider}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, bool vertical, float $\ast$value, float mnf, float mxf)
+\item 
+bool \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{scroll\+\_\+view}} (const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&widget, std\+::function$<$ void()$>$ children, float $\ast$starting\+Location=nullptr)
+\item 
+\mbox{\hyperlink{structui_1_1_u_i_context}{UIContext}} \& \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get}} ()
+\item 
+std\+::ostream \& \mbox{\hyperlink{namespaceui_a5889a74de9583ad8f7eb1f8f5e4c6e11}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} \&exp)
+\item 
+std\+::ostream \& \mbox{\hyperlink{namespaceui_a81c2bb3b55789661b8e782103c76984b}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&w)
+\item 
+std\+::ostream \& \mbox{\hyperlink{namespaceui_a939a38a309eae872e34e90e14ded60a3}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&obj)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{namespaceui_ae1e768dbebd851fc7a914487733ffa6d}{STATE}} = \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a71ff71526d15db86eb50fcac245d183b}{menu\+::\+State\+::\+UI}}
+\item 
+static std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{structui_1_1_u_i_context}{UIContext}} $>$ \mbox{\hyperlink{namespaceui_a6471517e6572be9a557a7605ecca7453}{\+\_\+uicontext}}
+\item 
+\mbox{\hyperlink{structui_1_1_u_i_context}{UIContext}} $\ast$ \mbox{\hyperlink{namespaceui_a29c5f65ba90cc845f4a6fec89c89f475}{global\+Context}}
+\item 
+static const \mbox{\hyperlink{structui_1_1_u_i_theme}{UITheme}} \mbox{\hyperlink{namespaceui_aaf6427befc8330fedd9aa7d987a3ea62}{DEFAULT\+\_\+\+THEME}} = \mbox{\hyperlink{structui_1_1_u_i_theme}{UITheme}}()
+\item 
+static const \mbox{\hyperlink{structui_1_1_u_i_theme}{UITheme}} \mbox{\hyperlink{namespaceui_a0779b4459604c4f53aea51df22cf83ed}{GRAYSCALE}}
+\item 
+static \mbox{\hyperlink{structui_1_1uuid}{uuid}} \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\+\_\+\+ID}} = \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\+\_\+\+UUID}}(-\/1, -\/1)
+\item 
+static \mbox{\hyperlink{structui_1_1uuid}{uuid}} \mbox{\hyperlink{namespaceui_a689be801e494a73ff61acfa8b4813b95}{FAKE\+\_\+\+ID}} = \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\+\_\+\+UUID}}(-\/2, -\/1)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{namespaceui_a9b3310140b09d29060f497ef83f246c5}\label{namespaceui_a9b3310140b09d29060f497ef83f246c5}} 
+\index{ui@{ui}!TextFieldValidationFn@{TextFieldValidationFn}}
+\index{TextFieldValidationFn@{TextFieldValidationFn}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{TextFieldValidationFn}{TextFieldValidationFn}}
+{\footnotesize\ttfamily typedef std\+::function$<$\mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{Textfield\+Validation\+Decision\+Flag}}(const std\+::string\&)$>$ \mbox{\hyperlink{namespaceui_a9b3310140b09d29060f497ef83f246c5}{ui\+::\+Text\+Field\+Validation\+Fn}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{namespaceui_af411c02f7e3e273b94558e6bda1aa792}\label{namespaceui_af411c02f7e3e273b94558e6bda1aa792}} 
+\index{ui@{ui}!GrowFlags@{GrowFlags}}
+\index{GrowFlags@{GrowFlags}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{GrowFlags}{GrowFlags}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792}{ui\+::\+Grow\+Flags}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{None@{None}!ui@{ui}}\index{ui@{ui}!None@{None}}}\mbox{\Hypertarget{namespaceui_af411c02f7e3e273b94558e6bda1aa792a1a7a5196f987b86773c7d6940253b82d}\label{namespaceui_af411c02f7e3e273b94558e6bda1aa792a1a7a5196f987b86773c7d6940253b82d}} 
+None&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Row@{Row}!ui@{ui}}\index{ui@{ui}!Row@{Row}}}\mbox{\Hypertarget{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}\label{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}} 
+Row&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Column@{Column}!ui@{ui}}\index{ui@{ui}!Column@{Column}}}\mbox{\Hypertarget{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}\label{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}} 
+Column&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9}\label{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9}} 
+\index{ui@{ui}!SizeMode@{SizeMode}}
+\index{SizeMode@{SizeMode}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{SizeMode}{SizeMode}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9}{ui\+::\+Size\+Mode}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Null@{Null}!ui@{ui}}\index{ui@{ui}!Null@{Null}}}\mbox{\Hypertarget{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9ad26dcbad5ddad79ed7e7d5eb374df74c}\label{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9ad26dcbad5ddad79ed7e7d5eb374df74c}} 
+Null&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Pixels@{Pixels}!ui@{ui}}\index{ui@{ui}!Pixels@{Pixels}}}\mbox{\Hypertarget{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a62654fe258cf0fb3d51337dda982982e}\label{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a62654fe258cf0fb3d51337dda982982e}} 
+Pixels&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Text@{Text}!ui@{ui}}\index{ui@{ui}!Text@{Text}}}\mbox{\Hypertarget{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a63e6eeb436e0169b87103f339878a663}\label{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a63e6eeb436e0169b87103f339878a663}} 
+Text&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Percent@{Percent}!ui@{ui}}\index{ui@{ui}!Percent@{Percent}}}\mbox{\Hypertarget{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}\label{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}} 
+Percent&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Children@{Children}!ui@{ui}}\index{ui@{ui}!Children@{Children}}}\mbox{\Hypertarget{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}\label{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}} 
+Children&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}\label{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}} 
+\index{ui@{ui}!TextfieldValidationDecisionFlag@{TextfieldValidationDecisionFlag}}
+\index{TextfieldValidationDecisionFlag@{TextfieldValidationDecisionFlag}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{TextfieldValidationDecisionFlag}{TextfieldValidationDecisionFlag}}
+{\footnotesize\ttfamily enum struct \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{ui\+::\+Textfield\+Validation\+Decision\+Flag}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{None@{None}!ui@{ui}}\index{ui@{ui}!None@{None}}}\mbox{\Hypertarget{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba6adf97f83acf6453d4a6a4b1070f3754}\label{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba6adf97f83acf6453d4a6a4b1070f3754}} 
+None&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{StopNewInput@{StopNewInput}!ui@{ui}}\index{ui@{ui}!StopNewInput@{StopNewInput}}}\mbox{\Hypertarget{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba3218c9ded441061dd2e1bc7bca15743d}\label{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba3218c9ded441061dd2e1bc7bca15743d}} 
+Stop\+New\+Input&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Valid@{Valid}!ui@{ui}}\index{ui@{ui}!Valid@{Valid}}}\mbox{\Hypertarget{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba3ac705f2acd51a4613f9188c05c91d0d}\label{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba3ac705f2acd51a4613f9188c05c91d0d}} 
+Valid&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Invalid@{Invalid}!ui@{ui}}\index{ui@{ui}!Invalid@{Invalid}}}\mbox{\Hypertarget{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba4bbb8f967da6d1a610596d7257179c2b}\label{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba4bbb8f967da6d1a610596d7257179c2b}} 
+Invalid&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespaceui_a062fa8a78208818cd2f1b11239615ef0}\label{namespaceui_a062fa8a78208818cd2f1b11239615ef0}} 
+\index{ui@{ui}!\_draw\_focus\_ring@{\_draw\_focus\_ring}}
+\index{\_draw\_focus\_ring@{\_draw\_focus\_ring}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{\_draw\_focus\_ring()}{\_draw\_focus\_ring()}}
+{\footnotesize\ttfamily void ui\+::\+\_\+draw\+\_\+focus\+\_\+ring (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget,  }\item[{\mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74}{theme\+::\+Usage}}}]{usage = {\ttfamily \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74ad9b1efad2d6b0380f08dc2c1b4382c24}{theme\+::\+Usage\+::\+Accent}}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespaceui_a012466e309607e0225b50fe63a149d7f}{draw\+\_\+if\+\_\+kb\+\_\+focus()}}, \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, and \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{ui\+::\+Widget\+::id}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{slider()}}, and \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield()}}.
+
+\mbox{\Hypertarget{namespaceui_a25a0df485d678e500d898346b907beeb}\label{namespaceui_a25a0df485d678e500d898346b907beeb}} 
+\index{ui@{ui}!active\_if\_mouse\_inside@{active\_if\_mouse\_inside}}
+\index{active\_if\_mouse\_inside@{active\_if\_mouse\_inside}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{active\_if\_mouse\_inside()}{active\_if\_mouse\_inside()}}
+{\footnotesize\ttfamily void ui\+::active\+\_\+if\+\_\+mouse\+\_\+inside (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}}}]{id,  }\item[{const Rectangle \&}]{rect }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_u_i_context_a53b6fc2c85a80a1a7f5803b75eb8dc7d}{ui\+::\+UIContext\+::active\+\_\+id}}, \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, \mbox{\hyperlink{structui_1_1_u_i_context_ad6d14fd75295a5c39c0b4fe122566232}{ui\+::\+UIContext\+::hot\+\_\+id}}, \mbox{\hyperlink{namespaceui_aab0068660425ea4f46c3ef45730d5d86}{is\+\_\+active()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_aad8381f74551df856eac63917360f499}{ui\+::\+IUIContext\+Input\+Manager\+::is\+\_\+mouse\+\_\+inside()}}, and \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\+\_\+\+ID}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{scroll\+\_\+view()}}, \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{slider()}}, and \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield()}}.
+
+\mbox{\Hypertarget{namespaceui_a380e02610b30c63b493fc680b30d5522}\label{namespaceui_a380e02610b30c63b493fc680b30d5522}} 
+\index{ui@{ui}!button@{button}}
+\index{button@{button}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{button()}{button()}}
+{\footnotesize\ttfamily bool ui\+::button (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget,  }\item[{const std\+::string \&}]{content = {\ttfamily \char`\"{}\char`\"{}} }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceui_a062fa8a78208818cd2f1b11239615ef0}{\+\_\+draw\+\_\+focus\+\_\+ring()}}, \mbox{\hyperlink{structui_1_1_u_i_context_adfeb6c42aeed615960663e25176a295b}{ui\+::\+UIContext\+::\+\_\+draw\+\_\+text()}}, \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\+\_\+if\+\_\+mouse\+\_\+inside()}}, \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a9d888badd926eb71f428e212d8dfb8b0}{ui\+::\+UIContext\+::draw\+\_\+widget\+\_\+rect()}}, \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, \mbox{\hyperlink{namespaceui_ab56bfa403cf97b6eedada75235bdf672}{handle\+\_\+tabbing()}}, \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\+\_\+kb\+\_\+focus()}}, \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{ui\+::\+Widget\+::id}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}, \mbox{\hyperlink{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}{is\+\_\+active\+\_\+and\+\_\+hot()}}, \mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{ui\+::\+UIContext\+::kb\+\_\+focus\+\_\+id}}, \mbox{\hyperlink{struct_mouse_info_a81794529e60fe51f38ccd539c88cb74d}{Mouse\+Info\+::left\+Down}}, \mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{ui\+::\+Widget\+::me}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_ab1c1b5a54445b3ac2a32a256150b375b}{ui\+::\+IUIContext\+Input\+Manager\+::mouse\+\_\+info}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_aec68292535e322c14df638ec14b595b1}{ui\+::\+IUIContext\+Input\+Manager\+::pressed()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{ui\+::\+IUIContext\+Last\+Frame\+::\+Last\+Frame\+::rect}}, \mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{ui\+::\+Widget\+::rect}}, \mbox{\hyperlink{namespaceui_ae35de41cc3681263b334e7c7d950f746}{try\+\_\+to\+\_\+grab\+\_\+kb()}}, and \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ae3783cebe980a405a39b362de611c61f}{Widget\+Press}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_a8de4b3fe663f67830806e1d142f1b84b}{Settings\+Layer\+::back\+\_\+button()}}, \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{button\+\_\+list()}}, \mbox{\hyperlink{namespaceui_aadad469b76dbb557f2985c32613f27fb}{checkbox()}}, \mbox{\hyperlink{struct_network_layer_a4f9997f77d6526472acab2f2ce3e1adf}{Network\+Layer\+::draw\+\_\+base\+\_\+screen()}}, \mbox{\hyperlink{struct_network_layer_a85337a1e904b99e5786c5535a1316211}{Network\+Layer\+::draw\+\_\+connected\+\_\+screen()}}, \mbox{\hyperlink{struct_settings_layer_a384cf5682b9576212bed7d1949abbd24}{Settings\+Layer\+::draw\+\_\+keybindings()}}, \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{Network\+Layer\+::draw\+\_\+username()}}, \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{dropdown()}}, and \mbox{\hyperlink{struct_base_pause_layer_a4e0a9b326bdf0178083d2c4ed14b89bb}{Base\+Pause\+Layer\+::on\+Draw()}}.
+
+\mbox{\Hypertarget{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}\label{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}} 
+\index{ui@{ui}!button\_list@{button\_list}}
+\index{button\_list@{button\_list}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{button\_list()}{button\_list()}}
+{\footnotesize\ttfamily bool ui\+::button\+\_\+list (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget,  }\item[{const std\+::vector$<$ std\+::string $>$ \&}]{options,  }\item[{int $\ast$}]{selected\+Index = {\ttfamily nullptr},  }\item[{bool $\ast$}]{has\+Focus = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{button\+\_\+list()}}, \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\+\_\+kb\+\_\+focus()}}, \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{ui\+::\+Widget\+::id}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}, \mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{ui\+::\+UIContext\+::kb\+\_\+focus\+\_\+id}}, \mbox{\hyperlink{structui_1_1_u_i_context_af65667f4b72d32e1f80fd6851fbefc19}{ui\+::\+UIContext\+::make\+\_\+temp\+\_\+widget()}}, \mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{ui\+::\+Widget\+::me}}, \mbox{\hyperlink{uuid_8h_a29b2c51698a1b8857c94e07485d41170}{MK\+\_\+\+UUID\+\_\+\+LOOP}}, \mbox{\hyperlink{structui_1_1uuid_a9f645fff4dea14d48ea438a0219f2c72}{ui\+::uuid\+::owner\+Layer}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_parent_stacking_af98bd6128abc4e07aa371b363d45f11a}{ui\+::\+IUIContext\+Parent\+Stacking\+::pop\+\_\+parent()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_parent_stacking_ad648cbd68c148be90716b0e98b15eab9}{ui\+::\+IUIContext\+Parent\+Stacking\+::push\+\_\+parent()}}, \mbox{\hyperlink{structui_1_1_button_list_state_a0e58ab4c39af165bf321df13a428bed7}{ui\+::\+Button\+List\+State\+::selected}}, \mbox{\hyperlink{structui_1_1_state_aa1e2dff86a41ca1eaf627ae8af45de45}{ui\+::\+State$<$ T $>$\+::set()}}, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a36ebd7b6065c4d81b7df4143ae3d6109}{Value\+Down}}, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa4c7748627d106d5c1769ada6dd06223}{Value\+Up}}, and \mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{ui\+::\+UIContext\+::widget\+\_\+init()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{button\+\_\+list()}}, and \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{dropdown()}}.
+
+\mbox{\Hypertarget{namespaceui_aadad469b76dbb557f2985c32613f27fb}\label{namespaceui_aadad469b76dbb557f2985c32613f27fb}} 
+\index{ui@{ui}!checkbox@{checkbox}}
+\index{checkbox@{checkbox}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{checkbox()}{checkbox()}}
+{\footnotesize\ttfamily bool ui\+::checkbox (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget,  }\item[{bool $\ast$}]{cb\+State = {\ttfamily nullptr},  }\item[{std\+::string $\ast$}]{label = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, \mbox{\hyperlink{structui_1_1_state_a6e00615f8b6c64b6bf607bb824072ffd}{ui\+::\+State$<$ T $>$\+::changed\+\_\+since}}, \mbox{\hyperlink{namespaceui_aadad469b76dbb557f2985c32613f27fb}{checkbox()}}, \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{ui\+::\+Widget\+::id}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}, \mbox{\hyperlink{structui_1_1_toggle_state_a94706959f0bb66b9497155b1e6a19b6b}{ui\+::\+Toggle\+State\+::on}}, and \mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{ui\+::\+UIContext\+::widget\+\_\+init()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_aadad469b76dbb557f2985c32613f27fb}{checkbox()}}, \mbox{\hyperlink{struct_network_layer_a85337a1e904b99e5786c5535a1316211}{Network\+Layer\+::draw\+\_\+connected\+\_\+screen()}}, \mbox{\hyperlink{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}{Settings\+Layer\+::enable\+\_\+post\+\_\+processing()}}, and \mbox{\hyperlink{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}{Settings\+Layer\+::streamer\+\_\+safe\+\_\+box()}}.
+
+\mbox{\Hypertarget{namespaceui_aaa7b801003350ccb64131704e1458860}\label{namespaceui_aaa7b801003350ccb64131704e1458860}} 
+\index{ui@{ui}!div@{div}}
+\index{div@{div}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{div()}{div()}}
+{\footnotesize\ttfamily bool ui\+::div (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div()}}, and \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div()}}, \mbox{\hyperlink{struct_network_layer_a4f9997f77d6526472acab2f2ce3e1adf}{Network\+Layer\+::draw\+\_\+base\+\_\+screen()}}, \mbox{\hyperlink{struct_network_layer_a85337a1e904b99e5786c5535a1316211}{Network\+Layer\+::draw\+\_\+connected\+\_\+screen()}}, \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{Settings\+Layer\+::draw\+\_\+ui()}}, \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{Network\+Layer\+::draw\+\_\+username()}}, \mbox{\hyperlink{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}{Settings\+Layer\+::enable\+\_\+post\+\_\+processing()}}, \mbox{\hyperlink{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}{Settings\+Layer\+::master\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}{Settings\+Layer\+::music\+\_\+volume()}}, \mbox{\hyperlink{struct_network_layer_abea8f78391e9cae25f4a80d8fbf74714}{Network\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_base_pause_layer_a4e0a9b326bdf0178083d2c4ed14b89bb}{Base\+Pause\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{Settings\+Layer\+::resolution\+\_\+switcher()}}, and \mbox{\hyperlink{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}{Settings\+Layer\+::streamer\+\_\+safe\+\_\+box()}}.
+
+\mbox{\Hypertarget{namespaceui_a012466e309607e0225b50fe63a149d7f}\label{namespaceui_a012466e309607e0225b50fe63a149d7f}} 
+\index{ui@{ui}!draw\_if\_kb\_focus@{draw\_if\_kb\_focus}}
+\index{draw\_if\_kb\_focus@{draw\_if\_kb\_focus}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{draw\_if\_kb\_focus()}{draw\_if\_kb\_focus()}}
+{\footnotesize\ttfamily void ui\+::draw\+\_\+if\+\_\+kb\+\_\+focus (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&}]{id,  }\item[{std\+::function$<$ void(void)$>$}]{cb }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\+\_\+kb\+\_\+focus()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a062fa8a78208818cd2f1b11239615ef0}{\+\_\+draw\+\_\+focus\+\_\+ring()}}.
+
+\mbox{\Hypertarget{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}\label{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}} 
+\index{ui@{ui}!dropdown@{dropdown}}
+\index{dropdown@{dropdown}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{dropdown()}{dropdown()}}
+{\footnotesize\ttfamily bool ui\+::dropdown (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget,  }\item[{const std\+::vector$<$ std\+::string $>$ \&}]{options,  }\item[{bool $\ast$}]{dropdown\+State,  }\item[{int $\ast$}]{selected\+Index }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{button\+\_\+list()}}, \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{dropdown()}}, \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\+\_\+kb\+\_\+focus()}}, \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{ui\+::\+Widget\+::id}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}, \mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{ui\+::\+UIContext\+::kb\+\_\+focus\+\_\+id}}, \mbox{\hyperlink{structui_1_1_u_i_context_af65667f4b72d32e1f80fd6851fbefc19}{ui\+::\+UIContext\+::make\+\_\+temp\+\_\+widget()}}, \mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{ui\+::\+Widget\+::me}}, \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\+\_\+\+UUID}}, \mbox{\hyperlink{structui_1_1_toggle_state_a94706959f0bb66b9497155b1e6a19b6b}{ui\+::\+Toggle\+State\+::on}}, \mbox{\hyperlink{structui_1_1uuid_a9f645fff4dea14d48ea438a0219f2c72}{ui\+::uuid\+::owner\+Layer}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_parent_stacking_af98bd6128abc4e07aa371b363d45f11a}{ui\+::\+IUIContext\+Parent\+Stacking\+::pop\+\_\+parent()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_parent_stacking_ad648cbd68c148be90716b0e98b15eab9}{ui\+::\+IUIContext\+Parent\+Stacking\+::push\+\_\+parent()}}, \mbox{\hyperlink{structui_1_1_state_aa1e2dff86a41ca1eaf627ae8af45de45}{ui\+::\+State$<$ T $>$\+::set()}}, \mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{ui\+::\+Widget\+::size\+\_\+expected}}, \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\+\_\+\+Px}}, \mbox{\hyperlink{structui_1_1_size_expectation_ab7f8f661e874602a85ce82898d155c26}{ui\+::\+Size\+Expectation\+::value}}, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a36ebd7b6065c4d81b7df4143ae3d6109}{Value\+Down}}, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa4c7748627d106d5c1769ada6dd06223}{Value\+Up}}, and \mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{ui\+::\+UIContext\+::widget\+\_\+init()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{dropdown()}}, and \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{Settings\+Layer\+::resolution\+\_\+switcher()}}.
+
+\mbox{\Hypertarget{namespaceui_a2da481ff1755d5067c9671218c8ac30a}\label{namespaceui_a2da481ff1755d5067c9671218c8ac30a}} 
+\index{ui@{ui}!get@{get}}
+\index{get@{get}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structui_1_1_u_i_context}{UIContext}} \& ui\+::get (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structui_1_1_u_i_context_aa759e6fd41adbcf805457f9b9f4b464e}{ui\+::\+UIContext\+::get()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a062fa8a78208818cd2f1b11239615ef0}{\+\_\+draw\+\_\+focus\+\_\+ring()}}, \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\+\_\+if\+\_\+mouse\+\_\+inside()}}, \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{button\+\_\+list()}}, \mbox{\hyperlink{namespaceui_aadad469b76dbb557f2985c32613f27fb}{checkbox()}}, \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{dropdown()}}, \mbox{\hyperlink{namespaceui_ab56bfa403cf97b6eedada75235bdf672}{handle\+\_\+tabbing()}}, \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\+\_\+kb\+\_\+focus()}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}, \mbox{\hyperlink{namespaceui_aab0068660425ea4f46c3ef45730d5d86}{is\+\_\+active()}}, \mbox{\hyperlink{namespaceui_aa1839faeec0199d1ef759103fce1fe1a}{is\+\_\+hot()}}, \mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui\+::components\+::mk\+\_\+but\+\_\+pad()}}, \mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui\+::components\+::mk\+\_\+button()}}, \mbox{\hyperlink{namespaceui_1_1components_a7d90f6f8b0cda913945996ec9b8ad668}{ui\+::components\+::mk\+\_\+column()}}, \mbox{\hyperlink{namespaceui_1_1components_af83b71747ba79b542b59b7ca0e4a108e}{ui\+::components\+::mk\+\_\+icon\+\_\+button()}}, \mbox{\hyperlink{namespaceui_1_1components_ab9d5ec6ef029bc105f7f7680602d1e75}{ui\+::components\+::mk\+\_\+padding()}}, \mbox{\hyperlink{namespaceui_1_1components_a5a694fe6b83009441f8e0d47f604bbb7}{ui\+::components\+::mk\+\_\+root()}}, \mbox{\hyperlink{namespaceui_1_1components_a3c8c58d605572e66e3d334f870f44b79}{ui\+::components\+::mk\+\_\+row()}}, \mbox{\hyperlink{namespaceui_1_1components_adbeac191e9ed084b7341ea736a36dc8a}{ui\+::components\+::mk\+\_\+text()}}, \mbox{\hyperlink{namespaceui_1_1components_ab344248d83218f8540c1999d4b9639c2}{ui\+::components\+::mk\+\_\+text\+\_\+id()}}, \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{scroll\+\_\+view()}}, \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{slider()}}, \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text()}}, \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield()}}, and \mbox{\hyperlink{namespaceui_ae35de41cc3681263b334e7c7d950f746}{try\+\_\+to\+\_\+grab\+\_\+kb()}}.
+
+\mbox{\Hypertarget{namespaceui_ab56bfa403cf97b6eedada75235bdf672}\label{namespaceui_ab56bfa403cf97b6eedada75235bdf672}} 
+\index{ui@{ui}!handle\_tabbing@{handle\_tabbing}}
+\index{handle\_tabbing@{handle\_tabbing}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{handle\_tabbing()}{handle\_tabbing()}}
+{\footnotesize\ttfamily void ui\+::handle\+\_\+tabbing (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}}}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\+\_\+kb\+\_\+focus()}}, \mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{ui\+::\+UIContext\+::kb\+\_\+focus\+\_\+id}}, \mbox{\hyperlink{structui_1_1_u_i_context_aacd1e37455a44fe2d804c17267005dbd}{ui\+::\+UIContext\+::last\+\_\+processed}}, and \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\+\_\+\+ID}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{slider()}}, and \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield()}}.
+
+\mbox{\Hypertarget{namespaceui_ad781d7ddc33d11ad4264d928daec0264}\label{namespaceui_ad781d7ddc33d11ad4264d928daec0264}} 
+\index{ui@{ui}!has\_kb\_focus@{has\_kb\_focus}}
+\index{has\_kb\_focus@{has\_kb\_focus}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{has\_kb\_focus()}{has\_kb\_focus()}}
+{\footnotesize\ttfamily bool ui\+::has\+\_\+kb\+\_\+focus (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{button\+\_\+list()}}, \mbox{\hyperlink{namespaceui_a012466e309607e0225b50fe63a149d7f}{draw\+\_\+if\+\_\+kb\+\_\+focus()}}, \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{dropdown()}}, \mbox{\hyperlink{namespaceui_ab56bfa403cf97b6eedada75235bdf672}{handle\+\_\+tabbing()}}, \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{slider()}}, \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield()}}, and \mbox{\hyperlink{namespaceui_ae35de41cc3681263b334e7c7d950f746}{try\+\_\+to\+\_\+grab\+\_\+kb()}}.
+
+\mbox{\Hypertarget{namespaceui_ae37d1375a920f533f522d2aa31537608}\label{namespaceui_ae37d1375a920f533f522d2aa31537608}} 
+\index{ui@{ui}!init\_widget@{init\_widget}}
+\index{init\_widget@{init\_widget}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{init\_widget()}{init\_widget()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame}{UIContext\+::\+Last\+Frame}} ui\+::init\+\_\+widget (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget,  }\item[{const char $\ast$}]{func }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{structui_1_1_i_u_i_context_parent_stacking_a8c08b0dbd0de3d43a82e8695310fd812}{ui\+::\+IUIContext\+Parent\+Stacking\+::add\+\_\+child()}}, \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_a58872d5a89d5eb266660e5bc593b4416}{ui\+::\+IUIContext\+Last\+Frame\+::get\+\_\+last\+\_\+frame()}}, \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{ui\+::\+Widget\+::id}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}, \mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{ui\+::\+Widget\+::me}}, \mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{ui\+::\+Widget\+::rect}}, \mbox{\hyperlink{structui_1_1_u_i_context_a929db982f9c55d028603fa235bcbe3ed}{ui\+::\+UIContext\+::schedule\+\_\+render\+\_\+call()}}, and \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_a5ea3f7bba5392c26e9fc8ad08bff0688}{ui\+::\+IUIContext\+Last\+Frame\+::write\+\_\+last\+\_\+frame()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, \mbox{\hyperlink{namespaceui_ae2db3936c2bbb5c065652caa488be1f0}{button\+\_\+list()}}, \mbox{\hyperlink{namespaceui_aadad469b76dbb557f2985c32613f27fb}{checkbox()}}, \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div()}}, \mbox{\hyperlink{namespaceui_a37a6f0a92290144cc0e49fbed1bf5190}{dropdown()}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}, \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding()}}, \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{scroll\+\_\+view()}}, \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{slider()}}, \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text()}}, and \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield()}}.
+
+\mbox{\Hypertarget{namespaceui_aab0068660425ea4f46c3ef45730d5d86}\label{namespaceui_aab0068660425ea4f46c3ef45730d5d86}} 
+\index{ui@{ui}!is\_active@{is\_active}}
+\index{is\_active@{is\_active}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{is\_active()}{is\_active()}}
+{\footnotesize\ttfamily bool ui\+::is\+\_\+active (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\+\_\+if\+\_\+mouse\+\_\+inside()}}, \mbox{\hyperlink{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}{is\+\_\+active\+\_\+and\+\_\+hot()}}, and \mbox{\hyperlink{namespaceui_a05db1c88785ff2efe63d52d42f4ecc0c}{is\+\_\+active\+\_\+or\+\_\+hot()}}.
+
+\mbox{\Hypertarget{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}\label{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}} 
+\index{ui@{ui}!is\_active\_and\_hot@{is\_active\_and\_hot}}
+\index{is\_active\_and\_hot@{is\_active\_and\_hot}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{is\_active\_and\_hot()}{is\_active\_and\_hot()}}
+{\footnotesize\ttfamily bool ui\+::is\+\_\+active\+\_\+and\+\_\+hot (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespaceui_aab0068660425ea4f46c3ef45730d5d86}{is\+\_\+active()}}, and \mbox{\hyperlink{namespaceui_aa1839faeec0199d1ef759103fce1fe1a}{is\+\_\+hot()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, and \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield()}}.
+
+\mbox{\Hypertarget{namespaceui_a05db1c88785ff2efe63d52d42f4ecc0c}\label{namespaceui_a05db1c88785ff2efe63d52d42f4ecc0c}} 
+\index{ui@{ui}!is\_active\_or\_hot@{is\_active\_or\_hot}}
+\index{is\_active\_or\_hot@{is\_active\_or\_hot}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{is\_active\_or\_hot()}{is\_active\_or\_hot()}}
+{\footnotesize\ttfamily bool ui\+::is\+\_\+active\+\_\+or\+\_\+hot (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespaceui_aab0068660425ea4f46c3ef45730d5d86}{is\+\_\+active()}}, and \mbox{\hyperlink{namespaceui_aa1839faeec0199d1ef759103fce1fe1a}{is\+\_\+hot()}}.
+
+\mbox{\Hypertarget{namespaceui_aa1839faeec0199d1ef759103fce1fe1a}\label{namespaceui_aa1839faeec0199d1ef759103fce1fe1a}} 
+\index{ui@{ui}!is\_hot@{is\_hot}}
+\index{is\_hot@{is\_hot}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{is\_hot()}{is\_hot()}}
+{\footnotesize\ttfamily bool ui\+::is\+\_\+hot (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+////// ////// ////// ////// ////// ////// ////// 
+
+References \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}{is\+\_\+active\+\_\+and\+\_\+hot()}}, \mbox{\hyperlink{namespaceui_a05db1c88785ff2efe63d52d42f4ecc0c}{is\+\_\+active\+\_\+or\+\_\+hot()}}, and \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{scroll\+\_\+view()}}.
+
+\mbox{\Hypertarget{namespaceui_a92afecc0b85dc29c36cdc80897df74c4}\label{namespaceui_a92afecc0b85dc29c36cdc80897df74c4}} 
+\index{ui@{ui}!operator"!@{operator"!}}
+\index{operator"!@{operator"!}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{operator"!()}{operator!()}}
+{\footnotesize\ttfamily bool ui\+::operator! (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{Textfield\+Validation\+Decision\+Flag}}}]{f }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7ba6adf97f83acf6453d4a6a4b1070f3754}{None}}.
+
+\mbox{\Hypertarget{namespaceui_a5889a74de9583ad8f7eb1f8f5e4c6e11}\label{namespaceui_a5889a74de9583ad8f7eb1f8f5e4c6e11}} 
+\index{ui@{ui}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily std\+::ostream \& ui\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{structui_1_1_size_expectation}{Size\+Expectation}} \&}]{exp }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{Children}}, \mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{ui\+::\+Size\+Expectation\+::mode}}, \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9ad26dcbad5ddad79ed7e7d5eb374df74c}{Null}}, \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}{Percent}}, \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a62654fe258cf0fb3d51337dda982982e}{Pixels}}, \mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{ui\+::\+Size\+Expectation\+::strictness}}, \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a63e6eeb436e0169b87103f339878a663}{Text}}, and \mbox{\hyperlink{structui_1_1_size_expectation_ab7f8f661e874602a85ce82898d155c26}{ui\+::\+Size\+Expectation\+::value}}.
+
+\mbox{\Hypertarget{namespaceui_a939a38a309eae872e34e90e14ded60a3}\label{namespaceui_a939a38a309eae872e34e90e14ded60a3}} 
+\index{ui@{ui}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily std\+::ostream \& ui\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}} \&}]{obj }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespaceui_a81c2bb3b55789661b8e782103c76984b}\label{namespaceui_a81c2bb3b55789661b8e782103c76984b}} 
+\index{ui@{ui}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily std\+::ostream \& ui\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{w }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{structui_1_1_widget_a86934afb010a0dfcc923602f8163e12f}{ui\+::\+Widget\+::print()}}.
+
+\mbox{\Hypertarget{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}\label{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}} 
+\index{ui@{ui}!padding@{padding}}
+\index{padding@{padding}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{padding()}{padding()}}
+{\footnotesize\ttfamily bool ui\+::padding (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}, and \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_a8de4b3fe663f67830806e1d142f1b84b}{Settings\+Layer\+::back\+\_\+button()}}, \mbox{\hyperlink{struct_network_layer_a4f9997f77d6526472acab2f2ce3e1adf}{Network\+Layer\+::draw\+\_\+base\+\_\+screen()}}, \mbox{\hyperlink{struct_network_layer_a85337a1e904b99e5786c5535a1316211}{Network\+Layer\+::draw\+\_\+connected\+\_\+screen()}}, \mbox{\hyperlink{struct_settings_layer_ad18cb265fa3c9fd30ee613e8763db085}{Settings\+Layer\+::draw\+\_\+root\+\_\+settings()}}, \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{Settings\+Layer\+::draw\+\_\+ui()}}, \mbox{\hyperlink{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}{Settings\+Layer\+::master\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}{Settings\+Layer\+::music\+\_\+volume()}}, \mbox{\hyperlink{struct_network_layer_abea8f78391e9cae25f4a80d8fbf74714}{Network\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_base_pause_layer_a4e0a9b326bdf0178083d2c4ed14b89bb}{Base\+Pause\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding()}}, and \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{Settings\+Layer\+::resolution\+\_\+switcher()}}.
+
+\mbox{\Hypertarget{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}\label{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}} 
+\index{ui@{ui}!scroll\_view@{scroll\_view}}
+\index{scroll\_view@{scroll\_view}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{scroll\_view()}{scroll\_view()}}
+{\footnotesize\ttfamily bool ui\+::scroll\+\_\+view (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget,  }\item[{std\+::function$<$ void()$>$}]{children,  }\item[{float $\ast$}]{starting\+Location = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\+\_\+if\+\_\+mouse\+\_\+inside()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_aba0c8913ad45d4d5e249301a9bbc20ed}{ui\+::\+IUIContext\+Render\+Textures\+::draw\+\_\+texture()}}, \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_ae3b856af59ec708d5fcaaee68c0d54df}{ui\+::\+IUIContext\+Render\+Textures\+::get\+\_\+new\+\_\+render\+\_\+texture()}}, \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{ui\+::\+Widget\+::id}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}, \mbox{\hyperlink{namespaceui_aa1839faeec0199d1ef759103fce1fe1a}{is\+\_\+hot()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{ui\+::\+IUIContext\+Last\+Frame\+::\+Last\+Frame\+::rect}}, \mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{ui\+::\+Widget\+::rect}}, \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{scroll\+\_\+view()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_ad623e19e650b75ca4448b524d8860705}{ui\+::\+IUIContext\+Render\+Textures\+::turn\+\_\+off\+\_\+texture\+\_\+mode()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures_abcfbac61d8329e882440db334fd823a5}{ui\+::\+IUIContext\+Render\+Textures\+::turn\+\_\+on\+\_\+render\+\_\+texture()}}, \mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{ui\+::\+UIContext\+::widget\+\_\+init()}}, \mbox{\hyperlink{structui_1_1_scroll_view_state_a47807a6090885ce8000f1eb8838a2ba4}{ui\+::\+Scroll\+View\+State\+::yoffset}}, and \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_ad6f167df2fcc1345f12ad9981e5ab2f0}{ui\+::\+IUIContext\+Input\+Manager\+::yscrolled}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a1ffb3d51da3016587e9b96ebecaf12ae}{scroll\+\_\+view()}}.
+
+\mbox{\Hypertarget{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}\label{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}} 
+\index{ui@{ui}!slider@{slider}}
+\index{slider@{slider}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{slider()}{slider()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily bool ui\+::slider (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget,  }\item[{bool}]{vertical,  }\item[{float $\ast$}]{value,  }\item[{float}]{mnf,  }\item[{float}]{mxf }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceui_a062fa8a78208818cd2f1b11239615ef0}{\+\_\+draw\+\_\+focus\+\_\+ring()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a53b6fc2c85a80a1a7f5803b75eb8dc7d}{ui\+::\+UIContext\+::active\+\_\+id}}, \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\+\_\+if\+\_\+mouse\+\_\+inside()}}, \mbox{\hyperlink{structui_1_1_state_a6e00615f8b6c64b6bf607bb824072ffd}{ui\+::\+State$<$ T $>$\+::changed\+\_\+since}}, \mbox{\hyperlink{structui_1_1_u_i_context_a9cde81e3fdc093e32dfb15dddf05e9aa}{ui\+::\+UIContext\+::draw\+\_\+widget()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a9d888badd926eb71f428e212d8dfb8b0}{ui\+::\+UIContext\+::draw\+\_\+widget\+\_\+rect()}}, \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a83379739a90ddb9768d7d3352b54389d}{ui\+::\+UIContext\+::get\+\_\+widget\+\_\+state()}}, \mbox{\hyperlink{namespaceui_ab56bfa403cf97b6eedada75235bdf672}{handle\+\_\+tabbing()}}, \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\+\_\+kb\+\_\+focus()}}, \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{ui\+::\+Widget\+::id}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_a61fe1fb42880d0817dddc3eb7891d5b0}{ui\+::\+IUIContext\+Input\+Manager\+::is\+\_\+held\+\_\+down()}}, \mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{ui\+::\+UIContext\+::kb\+\_\+focus\+\_\+id}}, \mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{ui\+::\+Widget\+::me}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_ab1c1b5a54445b3ac2a32a256150b375b}{ui\+::\+IUIContext\+Input\+Manager\+::mouse\+\_\+info}}, \mbox{\hyperlink{struct_mouse_info_a60cad00652bbf4ce46b465030dde56dd}{Mouse\+Info\+::pos}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{ui\+::\+IUIContext\+Last\+Frame\+::\+Last\+Frame\+::rect}}, \mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{ui\+::\+Widget\+::rect}}, \mbox{\hyperlink{namespaceui_a3fad4a8075125de9079fb82cb9e0d465}{slider()}}, \mbox{\hyperlink{namespaceui_ae35de41cc3681263b334e7c7d950f746}{try\+\_\+to\+\_\+grab\+\_\+kb()}}, \mbox{\hyperlink{structui_1_1_state_a080a941b44eaf8fe692106d2050c8c1a}{ui\+::\+State$<$ T $>$\+::value}}, \mbox{\hyperlink{structui_1_1_slider_state_a44ed508c84eca55be63bd3dcd31ca5f5}{ui\+::\+Slider\+State\+::value}}, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a4c34b45c1e1c5f0d940fdc4ee6e452f1}{Value\+Left}}, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a955248b9eee1168c01d8ed3ff23ecc61}{Value\+Right}}, and \mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{ui\+::\+UIContext\+::widget\+\_\+init()}}.
+
+\mbox{\Hypertarget{namespaceui_a3fad4a8075125de9079fb82cb9e0d465}\label{namespaceui_a3fad4a8075125de9079fb82cb9e0d465}} 
+\index{ui@{ui}!slider@{slider}}
+\index{slider@{slider}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{slider()}{slider()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily bool ui\+::slider (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget,  }\item[{float $\ast$}]{value,  }\item[{float}]{mnf,  }\item[{float}]{mxf }\end{DoxyParamCaption})}
+
+
+
+Referenced by \mbox{\hyperlink{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}{Settings\+Layer\+::master\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}{Settings\+Layer\+::music\+\_\+volume()}}, and \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{slider()}}.
+
+\mbox{\Hypertarget{namespaceui_a3cebd653255345fd49c6e745206c3834}\label{namespaceui_a3cebd653255345fd49c6e745206c3834}} 
+\index{ui@{ui}!text@{text}}
+\index{text@{text}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{text()}{text()}}
+{\footnotesize\ttfamily bool ui\+::text (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget,  }\item[{const std\+::string \&}]{content,  }\item[{\mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74}{theme\+::\+Usage}}}]{color\+\_\+usage = {\ttfamily \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a421c3240bd6c5c4cd47e5249711f90b1}{theme\+::\+Usage\+::\+Font}}} }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}, \mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{ui\+::\+Widget\+::me}}, \mbox{\hyperlink{structui_1_1_u_i_context_a87027241baa3d948dc55f9171fbcc848}{ui\+::\+UIContext\+::schedule\+\_\+draw\+\_\+text()}}, and \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_a85337a1e904b99e5786c5535a1316211}{Network\+Layer\+::draw\+\_\+connected\+\_\+screen()}}, \mbox{\hyperlink{struct_network_layer_a3484d948630f94d4e3df79efb4cee697}{Network\+Layer\+::draw\+\_\+ip\+\_\+input\+\_\+screen()}}, \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{Network\+Layer\+::draw\+\_\+username()}}, \mbox{\hyperlink{struct_network_layer_aab6121b4fc0ea70eff61a2e8e68684c1}{Network\+Layer\+::draw\+\_\+username\+\_\+picker()}}, \mbox{\hyperlink{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}{Settings\+Layer\+::enable\+\_\+post\+\_\+processing()}}, \mbox{\hyperlink{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}{Settings\+Layer\+::master\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}{Settings\+Layer\+::music\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{Settings\+Layer\+::resolution\+\_\+switcher()}}, \mbox{\hyperlink{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}{Settings\+Layer\+::streamer\+\_\+safe\+\_\+box()}}, and \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text()}}.
+
+\mbox{\Hypertarget{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}\label{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}} 
+\index{ui@{ui}!textfield@{textfield}}
+\index{textfield@{textfield}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{textfield()}{textfield()}}
+{\footnotesize\ttfamily bool ui\+::textfield (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1_widget}{Widget}} \&}]{widget,  }\item[{std\+::string \&}]{content,  }\item[{\mbox{\hyperlink{namespaceui_a9b3310140b09d29060f497ef83f246c5}{Text\+Field\+Validation\+Fn}}}]{validation = {\ttfamily \{\}} }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{namespaceui_a062fa8a78208818cd2f1b11239615ef0}{\+\_\+draw\+\_\+focus\+\_\+ring()}}, \mbox{\hyperlink{structui_1_1_u_i_context_adfeb6c42aeed615960663e25176a295b}{ui\+::\+UIContext\+::\+\_\+draw\+\_\+text()}}, \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\+\_\+if\+\_\+mouse\+\_\+inside()}}, \mbox{\hyperlink{structui_1_1_textfield_state_a7916d9d40bcc4a6a8a17ade015e1c4b7}{ui\+::\+Textfield\+State\+::buffer}}, \mbox{\hyperlink{structui_1_1_state_a6e00615f8b6c64b6bf607bb824072ffd}{ui\+::\+State$<$ T $>$\+::changed\+\_\+since}}, \mbox{\hyperlink{structui_1_1_u_i_context_a9cde81e3fdc093e32dfb15dddf05e9aa}{ui\+::\+UIContext\+::draw\+\_\+widget()}}, \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, \mbox{\hyperlink{namespaceext_a443d85b48117cbe070de1ea8c533b4b8}{ext\+::get\+\_\+clipboard\+\_\+text()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a83379739a90ddb9768d7d3352b54389d}{ui\+::\+UIContext\+::get\+\_\+widget\+\_\+state()}}, \mbox{\hyperlink{namespaceui_ab56bfa403cf97b6eedada75235bdf672}{handle\+\_\+tabbing()}}, \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\+\_\+kb\+\_\+focus()}}, \mbox{\hyperlink{structui_1_1_widget_a693c17bbedb1b085cec1b9c134cdfefb}{ui\+::\+Widget\+::id}}, \mbox{\hyperlink{namespaceui_ae37d1375a920f533f522d2aa31537608}{init\+\_\+widget()}}, \mbox{\hyperlink{namespaceui_a74a4ab475a3d0ba985f5229684ce073e}{is\+\_\+active\+\_\+and\+\_\+hot()}}, \mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{ui\+::\+UIContext\+::kb\+\_\+focus\+\_\+id}}, \mbox{\hyperlink{structui_1_1_widget_ad577b0323ef967168f14ab156ee5d32f}{ui\+::\+Widget\+::me}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame_1_1_last_frame_a9d837ffcb3ee030219517b687b0f6827}{ui\+::\+IUIContext\+Last\+Frame\+::\+Last\+Frame\+::rect}}, \mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{ui\+::\+Widget\+::rect}}, \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield()}}, \mbox{\hyperlink{namespaceui_ae35de41cc3681263b334e7c7d950f746}{try\+\_\+to\+\_\+grab\+\_\+kb()}}, \mbox{\hyperlink{namespaceui_a0bf5a70cbb0209928bd2bf2f3848b7c6}{validation\+\_\+test()}}, \mbox{\hyperlink{structui_1_1_u_i_context_ac806f20568f8720e72fb7a39d02b86b0}{ui\+::\+UIContext\+::widget\+\_\+init()}}, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a6c0fcd985505e101be0549f09b88c9ee}{Widget\+Backspace}}, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aae28abdc63defc25deb48cdbccb19457}{Widget\+Ctrl}}, and \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a9cdd31cc8d9388a5e5663850111f5984}{Widget\+Paste}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_a3484d948630f94d4e3df79efb4cee697}{Network\+Layer\+::draw\+\_\+ip\+\_\+input\+\_\+screen()}}, \mbox{\hyperlink{struct_network_layer_aab6121b4fc0ea70eff61a2e8e68684c1}{Network\+Layer\+::draw\+\_\+username\+\_\+picker()}}, and \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield()}}.
+
+\mbox{\Hypertarget{namespaceui_ae35de41cc3681263b334e7c7d950f746}\label{namespaceui_ae35de41cc3681263b334e7c7d950f746}} 
+\index{ui@{ui}!try\_to\_grab\_kb@{try\_to\_grab\_kb}}
+\index{try\_to\_grab\_kb@{try\_to\_grab\_kb}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{try\_to\_grab\_kb()}{try\_to\_grab\_kb()}}
+{\footnotesize\ttfamily void ui\+::try\+\_\+to\+\_\+grab\+\_\+kb (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structui_1_1uuid}{uuid}}}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespaceui_a2da481ff1755d5067c9671218c8ac30a}{get()}}, \mbox{\hyperlink{namespaceui_ad781d7ddc33d11ad4264d928daec0264}{has\+\_\+kb\+\_\+focus()}}, \mbox{\hyperlink{structui_1_1_u_i_context_ad1f495dbc772c349b5685875e0c8ae8e}{ui\+::\+UIContext\+::kb\+\_\+focus\+\_\+id}}, and \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\+\_\+\+ID}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button()}}, \mbox{\hyperlink{namespaceui_af52eddc1b26997d4c28ea3d1aafb1058}{slider()}}, and \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield()}}.
+
+\mbox{\Hypertarget{namespaceui_a0bf5a70cbb0209928bd2bf2f3848b7c6}\label{namespaceui_a0bf5a70cbb0209928bd2bf2f3848b7c6}} 
+\index{ui@{ui}!validation\_test@{validation\_test}}
+\index{validation\_test@{validation\_test}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{validation\_test()}{validation\_test()}}
+{\footnotesize\ttfamily bool ui\+::validation\+\_\+test (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{Textfield\+Validation\+Decision\+Flag}}}]{flag,  }\item[{\mbox{\hyperlink{namespaceui_a67ddc6f198d6548e36b9b488e600ce7b}{Textfield\+Validation\+Decision\+Flag}}}]{mask }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield()}}.
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespaceui_a6471517e6572be9a557a7605ecca7453}\label{namespaceui_a6471517e6572be9a557a7605ecca7453}} 
+\index{ui@{ui}!\_uicontext@{\_uicontext}}
+\index{\_uicontext@{\_uicontext}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{\_uicontext}{\_uicontext}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{structui_1_1_u_i_context}{UIContext}}$>$ ui\+::\+\_\+uicontext\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_u_i_context_aa759e6fd41adbcf805457f9b9f4b464e}{ui\+::\+UIContext\+::get()}}.
+
+\mbox{\Hypertarget{namespaceui_aaf6427befc8330fedd9aa7d987a3ea62}\label{namespaceui_aaf6427befc8330fedd9aa7d987a3ea62}} 
+\index{ui@{ui}!DEFAULT\_THEME@{DEFAULT\_THEME}}
+\index{DEFAULT\_THEME@{DEFAULT\_THEME}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{DEFAULT\_THEME}{DEFAULT\_THEME}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{structui_1_1_u_i_theme}{UITheme}} ui\+::\+DEFAULT\+\_\+\+THEME = \mbox{\hyperlink{structui_1_1_u_i_theme}{UITheme}}()\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_i_u_i_context_theming_ae1a2277dd7ac29f6edbd51f39bbf4ced}{ui\+::\+IUIContext\+Theming\+::active\+\_\+theme()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_theming_aff23bcc37d89b58c35873fe8e58ef1d9}{ui\+::\+IUIContext\+Theming\+::init()}}, and \mbox{\hyperlink{struct_toast_layer_af1710e2476d178c69ea9d07895f38d88}{Toast\+Layer\+::on\+Draw()}}.
+
+\mbox{\Hypertarget{namespaceui_a689be801e494a73ff61acfa8b4813b95}\label{namespaceui_a689be801e494a73ff61acfa8b4813b95}} 
+\index{ui@{ui}!FAKE\_ID@{FAKE\_ID}}
+\index{FAKE\_ID@{FAKE\_ID}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{FAKE\_ID}{FAKE\_ID}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structui_1_1uuid}{uuid}} ui\+::\+FAKE\+\_\+\+ID = \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\+\_\+\+UUID}}(-\/2, -\/1)\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_u_i_context_a99a6bfb1e6afb7c916300e06f9c95976}{ui\+::\+UIContext\+::cleanup()}}.
+
+\mbox{\Hypertarget{namespaceui_a29c5f65ba90cc845f4a6fec89c89f475}\label{namespaceui_a29c5f65ba90cc845f4a6fec89c89f475}} 
+\index{ui@{ui}!globalContext@{globalContext}}
+\index{globalContext@{globalContext}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{globalContext}{globalContext}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structui_1_1_u_i_context}{UIContext}}$\ast$ ui\+::global\+Context}
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_u_i_context_ad521a68f8be4f3373804eb11306ce62b}{ui\+::\+UIContext\+::begin()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a99a6bfb1e6afb7c916300e06f9c95976}{ui\+::\+UIContext\+::cleanup()}}, and \mbox{\hyperlink{structui_1_1_u_i_context_aa759e6fd41adbcf805457f9b9f4b464e}{ui\+::\+UIContext\+::get()}}.
+
+\mbox{\Hypertarget{namespaceui_a0779b4459604c4f53aea51df22cf83ed}\label{namespaceui_a0779b4459604c4f53aea51df22cf83ed}} 
+\index{ui@{ui}!GRAYSCALE@{GRAYSCALE}}
+\index{GRAYSCALE@{GRAYSCALE}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{GRAYSCALE}{GRAYSCALE}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{structui_1_1_u_i_theme}{UITheme}} ui\+::\+GRAYSCALE\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\ \ \ \ UITheme(color::white,\ color::grey,\ color::grey,\ color::black,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ color::cool\_grey,\ color::off\_white,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ color::off\_white)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespaceui_abdfa554668b605387f3da5a242418d5d}\label{namespaceui_abdfa554668b605387f3da5a242418d5d}} 
+\index{ui@{ui}!ROOT\_ID@{ROOT\_ID}}
+\index{ROOT\_ID@{ROOT\_ID}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{ROOT\_ID}{ROOT\_ID}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structui_1_1uuid}{uuid}} ui\+::\+ROOT\+\_\+\+ID = \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\+\_\+\+UUID}}(-\/1, -\/1)\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespaceui_a25a0df485d678e500d898346b907beeb}{active\+\_\+if\+\_\+mouse\+\_\+inside()}}, \mbox{\hyperlink{struct_settings_layer_a8de4b3fe663f67830806e1d142f1b84b}{Settings\+Layer\+::back\+\_\+button()}}, \mbox{\hyperlink{structui_1_1_u_i_context_ad521a68f8be4f3373804eb11306ce62b}{ui\+::\+UIContext\+::begin()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a99a6bfb1e6afb7c916300e06f9c95976}{ui\+::\+UIContext\+::cleanup()}}, \mbox{\hyperlink{structui_1_1_widget_ab2db94a678c481d764fdd23d2cdef9e7}{ui\+::\+Widget\+::default\+\_\+id()}}, \mbox{\hyperlink{struct_network_layer_a4f9997f77d6526472acab2f2ce3e1adf}{Network\+Layer\+::draw\+\_\+base\+\_\+screen()}}, \mbox{\hyperlink{struct_network_layer_a85337a1e904b99e5786c5535a1316211}{Network\+Layer\+::draw\+\_\+connected\+\_\+screen()}}, \mbox{\hyperlink{struct_network_layer_a3484d948630f94d4e3df79efb4cee697}{Network\+Layer\+::draw\+\_\+ip\+\_\+input\+\_\+screen()}}, \mbox{\hyperlink{struct_settings_layer_a384cf5682b9576212bed7d1949abbd24}{Settings\+Layer\+::draw\+\_\+keybindings()}}, \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{Network\+Layer\+::draw\+\_\+username()}}, \mbox{\hyperlink{struct_network_layer_aab6121b4fc0ea70eff61a2e8e68684c1}{Network\+Layer\+::draw\+\_\+username\+\_\+picker()}}, \mbox{\hyperlink{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}{Settings\+Layer\+::enable\+\_\+post\+\_\+processing()}}, \mbox{\hyperlink{namespaceui_ab56bfa403cf97b6eedada75235bdf672}{handle\+\_\+tabbing()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a4b19153db7eabb23204be4c81572f65a}{ui\+::\+UIContext\+::init()}}, \mbox{\hyperlink{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}{Settings\+Layer\+::master\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}{Settings\+Layer\+::music\+\_\+volume()}}, \mbox{\hyperlink{struct_base_pause_layer_a4e0a9b326bdf0178083d2c4ed14b89bb}{Base\+Pause\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{structui_1_1_u_i_context_a1f792c1b6bac9f8d6c7b2ba8950a4ecc}{ui\+::\+UIContext\+::reset\+\_\+tabbing\+\_\+if\+\_\+not\+\_\+visible()}}, \mbox{\hyperlink{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}{Settings\+Layer\+::streamer\+\_\+safe\+\_\+box()}}, and \mbox{\hyperlink{namespaceui_ae35de41cc3681263b334e7c7d950f746}{try\+\_\+to\+\_\+grab\+\_\+kb()}}.
+
+\mbox{\Hypertarget{namespaceui_ae1e768dbebd851fc7a914487733ffa6d}\label{namespaceui_ae1e768dbebd851fc7a914487733ffa6d}} 
+\index{ui@{ui}!STATE@{STATE}}
+\index{STATE@{STATE}!ui@{ui}}
+\doxysubsubsection{\texorpdfstring{STATE}{STATE}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} ui\+::\+STATE = \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a71ff71526d15db86eb50fcac245d183b}{menu\+::\+State\+::\+UI}}}
+
+
+
+Referenced by \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_a61fe1fb42880d0817dddc3eb7891d5b0}{ui\+::\+IUIContext\+Input\+Manager\+::is\+\_\+held\+\_\+down()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_aec68292535e322c14df638ec14b595b1}{ui\+::\+IUIContext\+Input\+Manager\+::pressed()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_a54cc46f708d87c5e545e6b888a89d8e8}{ui\+::\+IUIContext\+Input\+Manager\+::pressed\+Button\+Without\+Eat()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_a02e41d2ffac6331a01db22464bb6e773}{ui\+::\+IUIContext\+Input\+Manager\+::pressed\+Without\+Eat()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_a6c8e1f4e04324464b952716c14a291a8}{ui\+::\+IUIContext\+Input\+Manager\+::process\+\_\+gamepad\+\_\+axis\+\_\+event()}}, \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_ad3607109a9a6cd11e06d6060869bc564}{ui\+::\+IUIContext\+Input\+Manager\+::process\+\_\+gamepad\+\_\+button\+\_\+event()}}, and \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager_aa0ba9edd8a98f1d93584cf28f9f13ed0}{ui\+::\+IUIContext\+Input\+Manager\+::process\+\_\+keyevent()}}.
+

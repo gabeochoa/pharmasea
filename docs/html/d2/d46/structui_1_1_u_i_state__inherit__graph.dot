@@ -1,0 +1,22 @@
+digraph "ui::UIState"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [shape=record,label="{ui::UIState\n||+ ~UIState()\l}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node2 [shape=record,label="{ui::ButtonListState\n|+ selected\l+ hasFocus\l|}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d9/d96/structui_1_1_button_list_state.html",tooltip=" "];
+  Node1 -> Node3 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node3 [shape=record,label="{ui::ScrollViewState\n|+ yoffset\l|}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d1/dbc/structui_1_1_scroll_view_state.html",tooltip=" "];
+  Node1 -> Node4 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node4 [shape=record,label="{ui::SliderState\n|+ value\l|}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$de/d0b/structui_1_1_slider_state.html",tooltip=" "];
+  Node1 -> Node5 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node5 [shape=record,label="{ui::TextfieldState\n|+ buffer\l+ cursorBlinkTime\l+ showCursor\l|}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$df/d1c/structui_1_1_textfield_state.html",tooltip=" "];
+  Node1 -> Node6 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node6 [shape=record,label="{ui::ToggleState\n|+ on\l|}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$dd/db8/structui_1_1_toggle_state.html",tooltip=" "];
+  Node6 -> Node7 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node7 [shape=record,label="{ui::CheckboxState\n||}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d8/dd3/structui_1_1_checkbox_state.html",tooltip=" "];
+  Node6 -> Node8 [dir="back",color="steelblue1",style="solid",arrowtail="onormal"];
+  Node8 [shape=record,label="{ui::DropdownState\n||}",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$d0/de4/structui_1_1_dropdown_state.html",tooltip=" "];
+}

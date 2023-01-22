@@ -1,0 +1,19 @@
+\hypertarget{is__server_8h_source}{}\doxysection{is\+\_\+server.\+h}
+\label{is__server_8h_source}\index{src/engine/is\_server.h@{src/engine/is\_server.h}}
+\mbox{\hyperlink{is__server_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals__register_8h}{globals\_register.h}}"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ [[nodiscard]]\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{is__server_8h_aa9b37672e835e000097b7b8c69868672}{is\_server}}()\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{auto}\ my\_thread\_id\ =\ std::this\_thread::get\_id();}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{auto}\ server\_thread\_id\ =}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{get\_or\_default}}(\textcolor{stringliteral}{"{}server\_thread\_id"{}},\ std::thread::id());}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordflow}{return}\ my\_thread\_id\ ==\ server\_thread\_id;}
+\DoxyCodeLine{00013\ \}}
+
+\end{DoxyCode}

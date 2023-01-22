@@ -12,7 +12,7 @@
 \DoxyCodeLine{00008\ \textcolor{comment}{//}}
 \DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
 \DoxyCodeLine{00010\ }
-\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_about_layer}{AboutLayer}}\ :\ \textcolor{keyword}{public}\ Layer\ \{}
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_about_layer}{AboutLayer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_layer}{Layer}}\ \{}
 \DoxyCodeLine{00012\ \ \ \ \ std::shared\_ptr<ui::UIContext>\ \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\_context}};}
 \DoxyCodeLine{00013\ }
 \DoxyCodeLine{00014\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ this\ is\ not\ aligned\ on\ purpose}}
@@ -22,18 +22,18 @@
 \DoxyCodeLine{00018\ \textcolor{stringliteral}{\ \ \ \ Brett}}
 \DoxyCodeLine{00019\ \textcolor{stringliteral}{\ \ \ \ Alice)"{};}}
 \DoxyCodeLine{00020\ \textcolor{stringliteral}{}}
-\DoxyCodeLine{00021\ \textcolor{stringliteral}{\ \ \ \ \mbox{\hyperlink{struct_about_layer_a4f1d6b771a181b45509a3b3accee11e2}{AboutLayer}}()\ :\ Layer(}\textcolor{stringliteral}{"{}About"{}})\ \{\ \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\_context}}.reset(\textcolor{keyword}{new}\ ui::UIContext());\ \}}
+\DoxyCodeLine{00021\ \textcolor{stringliteral}{\ \ \ \ \mbox{\hyperlink{struct_about_layer_a4f1d6b771a181b45509a3b3accee11e2}{AboutLayer}}()\ :\ \mbox{\hyperlink{struct_layer}{Layer}}(}\textcolor{stringliteral}{"{}About"{}})\ \{\ \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\_context}}.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{structui_1_1_u_i_context}{ui::UIContext}}());\ \}}
 \DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_about_layer_a94f280489cebc79b2c1074f38e0a37e6}{\string~AboutLayer}}()\ \{\}}
 \DoxyCodeLine{00023\ }
-\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_about_layer_a2bbdf1eeb5ff20ab73818827f367cceb}{onEvent}}(Event\&\ event)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ EventDispatcher\ dispatcher(event);}
-\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ dispatcher.dispatch<KeyPressedEvent>(}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_about_layer_a2bbdf1eeb5ff20ab73818827f367cceb}{onEvent}}(\mbox{\hyperlink{struct_event}{Event}}\&\ event)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_event_dispatcher}{EventDispatcher}}\ dispatcher(event);}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_key_pressed_event}{KeyPressedEvent}}>(}
 \DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ std::bind(\&\mbox{\hyperlink{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}{AboutLayer::onKeyPressed}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
 \DoxyCodeLine{00028\ \ \ \ \ \}}
 \DoxyCodeLine{00029\ }
-\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}{onKeyPressed}}(KeyPressedEvent\&\ event)\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}{onKeyPressed}}(\mbox{\hyperlink{struct_key_pressed_event}{KeyPressedEvent}}\&\ event)\ \{}
 \DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a8f7f4c1ce7a4f933663d10543562b096}{menu::State::About}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (event.keycode\ ==\ raylib::KEY\_ESCAPE)\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (event.\mbox{\hyperlink{struct_key_event_a099e4f3c01870f67baffeba80b5c1860}{keycode}}\ ==\ raylib::KEY\_ESCAPE)\ \{}
 \DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().go\_back();}
 \DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
 \DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \}}
@@ -42,33 +42,33 @@
 \DoxyCodeLine{00038\ }
 \DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_about_layer_a83aac603d819bbf4fab40ff1f2ded4b5}{draw\_ui}}(\textcolor{keywordtype}{float}\ dt)\ \{}
 \DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ raylib::SetExitKey(raylib::KEY\_NULL);}
-\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ namespace\ }ui;}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ namespace\ }\mbox{\hyperlink{namespaceui}{ui}};}
 \DoxyCodeLine{00042\ }
 \DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\_context}}-\/>begin(dt);}
-\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ root\ =\ ui::components::mk\_root();}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ root\ =\ \mbox{\hyperlink{namespaceui_1_1components_a5a694fe6b83009441f8e0d47f604bbb7}{ui::components::mk\_root}}();}
 \DoxyCodeLine{00045\ }
 \DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\_context}}.get()-\/>push\_parent(root);}
 \DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ padding(*ui::components::mk\_padding(Size\_Px(100.f,\ 1.f),}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_FullH(0.f)));}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ padding(*\mbox{\hyperlink{namespaceui_1_1components_ab9d5ec6ef029bc105f7f7680602d1e75}{ui::components::mk\_padding}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f),}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_a57b2d93efb9bf19b1389f00098a3e50c}{Size\_FullH}}(0.f)));}
 \DoxyCodeLine{00050\ }
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =\ \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\_context}}-\/>own(Widget(}
-\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{.mode\ =\ Children\},\ Size\_Pct(1.f,\ 1.f),\ GrowFlags::Column));}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =\ \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\_context}}-\/>own(\mbox{\hyperlink{structui_1_1_widget}{Widget}}(}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{.mode\ =\ Children\},\ \mbox{\hyperlink{ui__widget_8h_a401ddddbaf5a749492e067a11779cdf7}{Size\_Pct}}(1.f,\ 1.f),\ GrowFlags::Column));}
 \DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ div(*content);}
 \DoxyCodeLine{00054\ }
 \DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\_context}}.get()-\/>push\_parent(content);}
 \DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ padding(*ui::components::mk\_padding(Size\_Px(100.f,\ 1.f),}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Pct(0.5,\ 0.f)));}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ padding(*\mbox{\hyperlink{namespaceui_1_1components_ab9d5ec6ef029bc105f7f7680602d1e75}{ui::components::mk\_padding}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f),}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_a401ddddbaf5a749492e067a11779cdf7}{Size\_Pct}}(0.5,\ 0.f)));}
 \DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ about\_text\ =\ \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\_context}}-\/>own(}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Widget(Size\_Px(200.f,\ 0.5f),\ Size\_Px(400.f,\ 0.5f)));}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(200.f,\ 0.5f),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(400.f,\ 0.5f)));}
 \DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text(*about\_text,\ \mbox{\hyperlink{struct_about_layer_a5f14ce8693a5b607c64bee7d69490ad3}{about\_info}});}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (button(*ui::components::mk\_button(MK\_UUID(\textcolor{keywordtype}{id},\ ROOT\_ID)),}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (button(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ ROOT\_ID)),}
 \DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Back"{}}))\ \{}
 \DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().go\_back();}
 \DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ padding(*ui::components::mk\_padding(Size\_Px(50.f,\ 1.f),}
-\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Size\_Pct(0.5,\ 0.f)));}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ padding(*\mbox{\hyperlink{namespaceui_1_1components_ab9d5ec6ef029bc105f7f7680602d1e75}{ui::components::mk\_padding}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(50.f,\ 1.f),}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_a401ddddbaf5a749492e067a11779cdf7}{Size\_Pct}}(0.5,\ 0.f)));}
 \DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\_context}}.get()-\/>pop\_parent();}
 \DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \}}
@@ -87,7 +87,7 @@
 \DoxyCodeLine{00083\ }
 \DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_about_layer_adbc71241190550a06e0e943c8e6a40ff}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
 \DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a8f7f4c1ce7a4f933663d10543562b096}{menu::State::About}}))\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ ext::clear\_background(\mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\_context}}-\/>active\_theme().background);}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceext_a5bb9a44990202857eea129e5b983f183}{ext::clear\_background}}(\mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\_context}}-\/>active\_theme().background);}
 \DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_about_layer_a83aac603d819bbf4fab40ff1f2ded4b5}{draw\_ui}}(dt);}
 \DoxyCodeLine{00088\ \ \ \ \ \}}
 \DoxyCodeLine{00089\ \};}
