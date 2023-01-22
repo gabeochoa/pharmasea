@@ -7,5 +7,4 @@
 #include "furniture/grabber.h"
 #include "furniture/medicine_cabinet.h"
 #include "furniture/register.h"
-#include "furniture/wall.h"
 #include "globals.h"

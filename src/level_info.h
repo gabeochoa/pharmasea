@@ -5,6 +5,7 @@
 #include "engine/ui_color.h"
 #include "entity.h"
 #include "entityhelper.h"
+#include "furniture.h"
 #include "furnitures.h"
 #include "item.h"
 #include "item_helper.h"
@@ -23,8 +24,8 @@ static void generate_and_insert_walls(std::string /* seed */) {
             if (i == 0 || j == 0 || i == MAX_MAP_SIZE - 1 ||
                 j == MAX_MAP_SIZE - 1) {
                 vec2 location = vec2{i * TILESIZE, j * TILESIZE};
-                std::shared_ptr<Wall> wall;
-                wall.reset(new Wall(location, d_color));
+                std::shared_ptr<Furniture> wall;
+                wall.reset(Furniture::make_wall(location, d_color));
                 EntityHelper::addEntity(wall);
             }
         }
