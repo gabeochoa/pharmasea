@@ -29,7 +29,6 @@ struct Person : public Entity {
    protected:
     Person() : Entity() {}
 
-   public:
     Person(vec3 p, Color face_color_in, Color base_color_in)
         : Entity(p, face_color_in, base_color_in) {
         update_component();
@@ -41,6 +40,7 @@ struct Person : public Entity {
     Person(vec3 p, Color c) : Entity(p, c) { update_component(); }
     Person(vec2 p, Color c) : Entity(p, c) { update_component(); }
 
+   public:
     void update_component() {
         addComponent<HasBaseSpeed>().update(10.f);
         // log_info("model index: {}", model_index);
