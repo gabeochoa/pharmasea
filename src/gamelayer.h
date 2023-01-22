@@ -88,12 +88,13 @@ struct GameLayer : public Layer {
         // Dont quit window on escape
         raylib::SetExitKey(raylib::KEY_NULL);
 
-        // TODO Why does updateCamera not just take an optional target?
-        cam->updateToTarget(
-            GLOBALS.get_or_default<Entity>("active_camera_target", *player));
+        auto cam_target = GLOBALS.get_ptr<Entity>("active_camera_target");
+        if (cam_target) {
+            cam->updateToTarget(cam_target->get<Transform>());
+        }
         cam->updateCamera();
 
-        player->update(dt);
+        // SystemManager::get().update(Entities{player}, dt);
         // NOTE: gabe: i dont think we need to do this
         //         because the local map never should need to grab things
         //         TODO do we?
