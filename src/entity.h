@@ -141,30 +141,6 @@ struct Entity {
 
     virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
 
-    /*
-     * Used for code that should only render when debug mode is on
-     * */
-    virtual void render_debug_mode() const {
-        DrawBoundingBox(this->bounds(), MAROON);
-        DrawFloatingText(this->get<Transform>().raw_position,
-                         Preload::get().font,
-                         fmt::format("{}", this->id).c_str());
-    }
-
-    /*
-     * Used for normal gameplay rendering
-     * */
-    virtual void render_normal() const {
-        TRACY_ZONE_SCOPED;
-        render_floating_name();
-    }
-
-    virtual void render_floating_name() const {
-        raylib::DrawFloatingText(
-            this->get<Transform>().raw_position + vec3{0, 0.5f * TILESIZE, 0},
-            Preload::get().font, this->get<HasName>().name.c_str());
-    }
-
     virtual vec2 get_heading() {
         const float target_facing_ang =
             util::deg2rad(this->get<Transform>().FrontFaceDirectionMap.at(

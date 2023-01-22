@@ -484,6 +484,7 @@ struct SystemManager {
                        float dt) const {
         for (auto& entity : entity_list) {
             system_manager::render_manager::render_normal(entity, dt);
+            system_manager::render_manager::render_floating_name(entity, dt);
         }
     }
 

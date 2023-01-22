@@ -140,6 +140,18 @@ inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
     }
 }
 
+inline void render_floating_name(std::shared_ptr<Entity> entity, float) {
+    if (!entity->has<HasName>()) return;
+    HasName& hasName = entity->get<HasName>();
+
+    if (!entity->has<Transform>()) return;
+    Transform& transform = entity->get<Transform>();
+
+    raylib::DrawFloatingText(
+        transform.raw_position + vec3{0, 0.5f * TILESIZE, 0},
+        Preload::get().font, hasName.name.c_str());
+}
+
 }  // namespace render_manager
 
 }  // namespace system_manager

@@ -47,10 +47,8 @@ struct Furniture : public Entity {
         add_static_components();
     }
 
-    virtual void render_normal() const override {
-        Entity::render_normal();
-        render_progress_bar();
-    }
+    // TODO add render for progress bar
+    // render_progress_bar();
 
     void render_progress_bar() const {
         if (pct_work_complete <= 0.01f || !has_work()) return;
