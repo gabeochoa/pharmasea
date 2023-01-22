@@ -10,53 +10,53 @@
 \DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{entity_8h}{entity.h}}"{}}}
 \DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{entityhelper_8h}{entityhelper.h}}"{}}}
 \DoxyCodeLine{00008\ \textcolor{comment}{//}}
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{keymap_8h}{engine/keymap.h}}"{}}}
-\DoxyCodeLine{00010\ }
-\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_person}{Person}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_entity}{Entity}}\ \{}
-\DoxyCodeLine{00012\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00013\ \ \ \ \ std::array<std::string,\ 3>\ \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\_models}}\ =\ \{}
-\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_duck"{}},}
-\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_dog"{}},}
-\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_bear"{}},}
-\DoxyCodeLine{00017\ \ \ \ \ \};}
-\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}\ =\ 0;}
-\DoxyCodeLine{00019\ }
-\DoxyCodeLine{00020\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_ac834d6820b6722e5acf0bd3be05222ae}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Entity>\{\});}
-\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}});}
-\DoxyCodeLine{00026\ \ \ \ \ \}}
-\DoxyCodeLine{00027\ }
-\DoxyCodeLine{00028\ \ \ \ \textcolor{keyword}{protected}:}
-\DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{struct_person_a0397c6f89fafc12e738923f612bc41a3}{Person}}()\ :\ \mbox{\hyperlink{struct_entity}{Entity}}()\ \{\}}
-\DoxyCodeLine{00030\ }
-\DoxyCodeLine{00031\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{has__base__speed_8h}{components/has\_base\_speed.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{keymap_8h}{engine/keymap.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_person}{Person}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_entity}{Entity}}\ \{}
+\DoxyCodeLine{00013\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00014\ \ \ \ \ std::array<std::string,\ 3>\ \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\_models}}\ =\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_duck"{}},}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_dog"{}},}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_bear"{}},}
+\DoxyCodeLine{00018\ \ \ \ \ \};}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}\ =\ 0;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_ac834d6820b6722e5acf0bd3be05222ae}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Entity>\{\});}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}});}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{struct_person_a0397c6f89fafc12e738923f612bc41a3}{Person}}()\ :\ \mbox{\hyperlink{struct_entity}{Entity}}()\ \{\}}
+\DoxyCodeLine{00031\ }
 \DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{struct_person_aff739251b706191cb573969740a43e67}{Person}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
 \DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\_model}}();}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_a9ba2212ff043b0e44f9889efc5ce0a87}{update\_component}}();}
 \DoxyCodeLine{00035\ \ \ \ \ \}}
 \DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{struct_person_a9ff519f2d28ed9ca8674b1a1e3540577}{Person}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
 \DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
-\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\_model}}();}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_a9ba2212ff043b0e44f9889efc5ce0a87}{update\_component}}();}
 \DoxyCodeLine{00039\ \ \ \ \ \}}
-\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{struct_person_a598162c372fd3703cd456ce2d31ced11}{Person}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\_model}}();\ \}}
-\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{struct_person_a96012bcb85ddaa7c6f290db275bcd86d}{Person}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\_model}}();\ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{struct_person_a598162c372fd3703cd456ce2d31ced11}{Person}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_person_a9ba2212ff043b0e44f9889efc5ce0a87}{update\_component}}();\ \}}
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{struct_person_a96012bcb85ddaa7c6f290db275bcd86d}{Person}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_person_a9ba2212ff043b0e44f9889efc5ce0a87}{update\_component}}();\ \}}
 \DoxyCodeLine{00042\ }
-\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\_model}}()\ \{}
-\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\_info("{}model\ index:\ \{\}"{},\ model\_index);}}
-\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ a\ component\ for\ this}}
-\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ get<ModelRenderer>().update(\mbox{\hyperlink{struct_model_info}{ModelInfo}}\{}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ this}}
-\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}}\ =\ \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\_models}}[\mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}],}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ .size\_scale\ =\ 1.5f,}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ .position\_offset\ =\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0,\ 0,\ 0\},}
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ .rotation\_angle\ =\ 180,}
-\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00053\ \ \ \ \ \}}
-\DoxyCodeLine{00054\ }
-\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_person_a3ece53b2b9de0628514cb3cc14efa112}{base\_speed}}()\ \{\ \textcolor{keywordflow}{return}\ 10.f;\ \}}
+\DoxyCodeLine{00043\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_a9ba2212ff043b0e44f9889efc5ce0a87}{update\_component}}()\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ addComponent<HasBaseSpeed>().update(10.f);}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\_info("{}model\ index:\ \{\}"{},\ model\_index);}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ a\ component\ for\ this}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ get<ModelRenderer>().update(\mbox{\hyperlink{struct_model_info}{ModelInfo}}\{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ this}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}}\ =\ \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\_models}}[\mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}],}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ .size\_scale\ =\ 1.5f,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ .position\_offset\ =\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0,\ 0,\ 0\},}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ .rotation\_angle\ =\ 180,}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00055\ \ \ \ \ \}}
 \DoxyCodeLine{00056\ }
 \DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}}()\textcolor{keyword}{\ const\ override\ }\{}
 \DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ sz\ =\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ 0.75f;}

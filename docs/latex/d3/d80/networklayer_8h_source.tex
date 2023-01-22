@@ -17,336 +17,335 @@
 \DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{layer_8h}{engine/layer.h}}"{}}}
 \DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{settings_8h}{engine/settings.h}}"{}}\ \ \textcolor{comment}{//\ Used\ for\ username}}
 \DoxyCodeLine{00015\ \textcolor{comment}{//}}
-\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{engine_8h}{engine.h}}"{}}}
-\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{webrequest_8h}{engine/network/webrequest.h}}"{}}}
-\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{network_8h}{network/network.h}}"{}}}
-\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{player_8h}{player.h}}"{}}}
-\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{remote__player_8h}{remote\_player.h}}"{}}}
-\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
-\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{toastmanager_8h}{toastmanager.h}}"{}}}
-\DoxyCodeLine{00023\ }
-\DoxyCodeLine{00024\ \textcolor{keyword}{using\ namespace\ }\mbox{\hyperlink{namespaceui}{ui}};}
-\DoxyCodeLine{00025\ }
-\DoxyCodeLine{00026\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{networklayer_8h_a9381b7560a4f62aff0b2b22873876a70}{validate\_ip}}(\textcolor{keyword}{const}\ std::string\&\ ip)\ \{}
-\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ should\ fail\ for\ 00000.00000.0000\ but\ shouldnt}}
-\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ this\ too\ 000000000000}}
-\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00030\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ this\ is\ const\ static\ cause\ its\ faster\ :)}}
-\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{static}\ std::regex\ ip\_regex(}
-\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ R\textcolor{stringliteral}{"{}(\string^(?:(?:25[0-\/5]|2[0-\/4][0-\/9]|[01]?[0-\/9][0-\/9]?)\(\backslash\).)\{3\}(?:25[0-\/5]|2[0-\/4][0-\/9]|[01]?[0-\/9][0-\/9]?)\$)"{});}}
-\DoxyCodeLine{00033\ \textcolor{stringliteral}{\ \ \ \ }\textcolor{keywordflow}{return}\ std::regex\_match(ip,\ ip\_regex);}
-\DoxyCodeLine{00034\ \}}
-\DoxyCodeLine{00035\ }
-\DoxyCodeLine{00036\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_network_layer}{NetworkLayer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_layer}{Layer}}\ \{}
-\DoxyCodeLine{00037\ \ \ \ \ std::shared\_ptr<ui::UIContext>\ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}};}
-\DoxyCodeLine{00038\ \ \ \ \ std::shared\_ptr<network::Info>\ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}};}
-\DoxyCodeLine{00039\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_network_layer_ac35d32c4c42e71a69fced5efec74f9c6}{my\_ip\_address}};}
-\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_network_layer_a6f570199ba8ee9d5c72aa436c637b189}{should\_show\_host\_ip}}\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00041\ }
-\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{struct_network_layer_a6894a175bcbb8ffc9e42b2ddbc399ca8}{NetworkLayer}}()\ :\ \mbox{\hyperlink{struct_layer}{Layer}}(\textcolor{stringliteral}{"{}Network"{}})\ \{}
-\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{structui_1_1_u_i_context}{ui::UIContext}}());}
-\DoxyCodeLine{00044\ }
-\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1_info_a6e71c241a75b76e7bc45e25a7d6cbd79}{network::Info::init\_connections}}();}
-\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{structnetwork_1_1_info}{network::Info}}());}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ac35d32c4c42e71a69fced5efec74f9c6}{my\_ip\_address}}\ =\ \mbox{\hyperlink{namespacenetwork_a519230d733e75d903449898d5b2bb958}{network::get\_remote\_ip\_address}}().value\_or(\textcolor{stringliteral}{"{}"{}});}
-\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!Settings::get().data.username.empty())\ \{}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>lock\_in\_username();}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00051\ \ \ \ \ \}}
-\DoxyCodeLine{00052\ }
-\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_network_layer_a38705efe3dc6c50eed3ac75f45cb1209}{\string~NetworkLayer}}()\ \{\ \mbox{\hyperlink{structnetwork_1_1_info_a30004e1b2db2b0a4973c8636ea30c64f}{network::Info::shutdown\_connections}}();\ \}}
-\DoxyCodeLine{00054\ }
-\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_ac2b9a912799db09a761b41885eaf5cf5}{onEvent}}(\mbox{\hyperlink{struct_event}{Event}}\&\ event)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_event_dispatcher}{EventDispatcher}}\ dispatcher(event);}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_key_pressed_event}{KeyPressedEvent}}>(std::bind(}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_network_layer_acf4f8f71d0cade871919e8ec67c51880}{NetworkLayer::onKeyPressed}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_gamepad_button_pressed_event}{GamepadButtonPressedEvent}}>(}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ std::bind(\&\mbox{\hyperlink{struct_network_layer_a954bb75983572ea781d6593589d36bd4}{NetworkLayer::onGamepadButtonPressed}},\ \textcolor{keyword}{this},}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::placeholders::\_1));}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_gamepad_axis_moved_event}{GamepadAxisMovedEvent}}>(std::bind(}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_network_layer_a8eeae00b7267e1a282fe39a09beb884b}{NetworkLayer::onGamepadAxisMoved}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
-\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_char_pressed_event}{CharPressedEvent}}>(std::bind(}
-\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_network_layer_a3afcb961c3248b6ac8381142a5ac81c1}{NetworkLayer::onCharPressedEvent}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
-\DoxyCodeLine{00066\ \ \ \ \ \}}
-\DoxyCodeLine{00067\ }
-\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_network_layer_a3afcb961c3248b6ac8381142a5ac81c1}{onCharPressedEvent}}(\mbox{\hyperlink{struct_char_pressed_event}{CharPressedEvent}}\&\ event)\ \{}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu::State::Network}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}.get()-\/>process\_char\_press\_event(event);}
-\DoxyCodeLine{00071\ \ \ \ \ \}}
-\DoxyCodeLine{00072\ }
-\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_network_layer_a8eeae00b7267e1a282fe39a09beb884b}{onGamepadAxisMoved}}(\mbox{\hyperlink{struct_gamepad_axis_moved_event}{GamepadAxisMovedEvent}}\&\ event)\ \{}
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu::State::Network}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}.get()-\/>process\_gamepad\_axis\_event(event);}
-\DoxyCodeLine{00076\ \ \ \ \ \}}
-\DoxyCodeLine{00077\ }
-\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_network_layer_acf4f8f71d0cade871919e8ec67c51880}{onKeyPressed}}(\mbox{\hyperlink{struct_key_pressed_event}{KeyPressedEvent}}\&\ event)\ \{}
-\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu::State::Network}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}.get()-\/>process\_keyevent(event);}
-\DoxyCodeLine{00081\ \ \ \ \ \}}
-\DoxyCodeLine{00082\ }
-\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_network_layer_a954bb75983572ea781d6593589d36bd4}{onGamepadButtonPressed}}(\mbox{\hyperlink{struct_gamepad_button_pressed_event}{GamepadButtonPressedEvent}}\&\ event)\ \{}
-\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu::State::Network}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}.get()-\/>process\_gamepad\_button\_event(event);}
-\DoxyCodeLine{00086\ \ \ \ \ \}}
-\DoxyCodeLine{00087\ }
-\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_aae3049c0787e1569a8c4c745796e9e39}{onUpdate}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ this\ has\ to\ go\ above\ the\ checks\ since\ it\ always\ has\ to\ run}}
-\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>tick(dt);}
-\DoxyCodeLine{00091\ }
-\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu::State::Network}}))\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ we\ get\ here,\ then\ user\ clicked\ "{}join"{}}}
-\DoxyCodeLine{00094\ \ \ \ \ \}}
-\DoxyCodeLine{00095\ }
-\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{draw\_username}}()\ \{}
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =\ \mbox{\hyperlink{namespaceui_1_1components_a3c8c58d605572e66e3d334f870f44b79}{ui::components::mk\_row}}();}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*content);}
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>push\_parent(content);}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}}(*\mbox{\hyperlink{namespaceui_1_1components_adbeac191e9ed084b7341ea736a36dc8a}{ui::components::mk\_text}}(),}
-\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}Username:\ \{\}"{}},\ Settings::get().data.username));}
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_af83b71747ba79b542b59b7ca0e4a108e}{ui::components::mk\_icon\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Edit"{}}))\ \{}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>unlock\_username();}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>pop\_parent();}
-\DoxyCodeLine{00109\ \ \ \ \ \}}
-\DoxyCodeLine{00110\ }
-\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_a4f9997f77d6526472acab2f2ce3e1adf}{draw\_base\_screen}}()\ \{}
-\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =\ \mbox{\hyperlink{namespaceui_1_1components_a3c8c58d605572e66e3d334f870f44b79}{ui::components::mk\_row}}();}
-\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*content);}
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>push\_parent(content);}
-\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ col1\ =\ \mbox{\hyperlink{namespaceui_1_1components_a7d90f6f8b0cda913945996ec9b8ad668}{ui::components::mk\_column}}();}
-\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*col1);}
-\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>push\_parent(col1);}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
-\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
-\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Host"{}}))\ \{}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>set\_role(\mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994a5795cf7bf923ad4f113076102e530875}{network::Info::Role::s\_Host}});}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Join"{}}))\ \{}
-\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>set\_role(\mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ac29bd98fe47d716cd571eef8499043f7}{network::Info::Role::s\_Client}});}
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Back"{}}))\ \{}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().clear\_history();}
-\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().set(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu::State::Root}});}
-\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>pop\_parent();}
-\DoxyCodeLine{00138\ }
-\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
-\DoxyCodeLine{00140\ }
-\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ col2\ =\ \mbox{\hyperlink{namespaceui_1_1components_a7d90f6f8b0cda913945996ec9b8ad668}{ui::components::mk\_column}}();}
-\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*col2);}
-\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>push\_parent(col2);}
-\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{draw\_username}}();}
-\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>pop\_parent();}
-\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>pop\_parent();}
-\DoxyCodeLine{00151\ \ \ \ \ \}}
-\DoxyCodeLine{00152\ }
-\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_a3484d948630f94d4e3df79efb4cee697}{draw\_ip\_input\_screen}}()\ \{}
-\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{draw\_username}}();}
-\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ip\_address\_input\ =\ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>own(\mbox{\hyperlink{structui_1_1_widget}{Widget}}(}
-\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}}),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(400.f,\ 1.f),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(25.f,\ 0.5f)));}
-\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}}(*\mbox{\hyperlink{namespaceui_1_1components_adbeac191e9ed084b7341ea736a36dc8a}{ui::components::mk\_text}}(),\ \textcolor{stringliteral}{"{}Enter\ IP\ Address"{}});}
-\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ trimming\ of\ whitespace\ or\ validate\ whitespace}}
-\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield}}(*ip\_address\_input,\ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>host\_ip\_address(),}
-\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ std::string\&\ content)\ \{}
-\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ xxx.xxx.xxx.xxx}}
-\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (content.size()\ >\ 15)\ \{}
-\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ TextfieldValidationDecisionFlag::StopNewInput;}
-\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (\mbox{\hyperlink{networklayer_8h_a9381b7560a4f62aff0b2b22873876a70}{validate\_ip}}(content))\ \{}
-\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ TextfieldValidationDecisionFlag::Valid;}
-\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ TextfieldValidationDecisionFlag::Invalid;}
-\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
-\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
-\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Load\ Last\ Used\ IP"{}}))\ \{}
-\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>host\_ip\_address()\ =\ Settings::get().last\_used\_ip();}
-\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
-\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Connect"{}}))\ \{}
-\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ Settings::get().update\_last\_used\_ip\_address(}
-\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>host\_ip\_address());}
-\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>lock\_in\_ip();}
-\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
-\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),\ \textcolor{stringliteral}{"{}Back"{}}))\ \{}
-\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>unlock\_username();}
-\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00185\ \ \ \ \ \}}
-\DoxyCodeLine{00186\ }
-\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_a85337a1e904b99e5786c5535a1316211}{draw\_connected\_screen}}()\ \{}
-\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ draw\_host\_network\_info\ =\ [\&]()\ \{}
-\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (network\_info-\/>is\_host())\ \{}
-\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =\ ui\_context-\/>own(}
-\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{Children}},\ .strictness\ =\ 1.f\},}
-\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{Children}},\ .strictness\ =\ 1.f\},\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}{Row}}));}
-\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*content);}
-\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ui\_context-\/>push\_parent(content);}
-\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ip\ =}
-\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ should\_show\_host\_ip\ ?\ my\_ip\_address\ :\ \textcolor{stringliteral}{"{}***.***.***.***"{}};}
-\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}}(*\mbox{\hyperlink{namespaceui_1_1components_adbeac191e9ed084b7341ea736a36dc8a}{ui::components::mk\_text}}(),}
-\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}Your\ IP\ is:\ \{\}"{}},\ ip));}
-\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ checkbox\_widget\ =\ ui\_context-\/>own(}
-\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}}),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(75.f,\ 0.5f),}
-\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(25.f,\ 1.f)));}
-\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ show\_hide\_host\_ip\_text\ =}
-\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ should\_show\_host\_ip\ ?\ \textcolor{stringliteral}{"{}Hide"{}}\ :\ \textcolor{stringliteral}{"{}Show"{}};}
-\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_aadad469b76dbb557f2985c32613f27fb}{checkbox}}(*checkbox\_widget,\ \&should\_show\_host\_ip,}
-\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&show\_hide\_host\_ip\_text))\ \{}
-\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_af83b71747ba79b542b59b7ca0e4a108e}{ui::components::mk\_icon\_button}}(}
-\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
-\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Copy"{}}))\ \{}
-\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceext_a4ce923da4e333ef343d896512102ec85}{ext::set\_clipboard\_text}}(my\_ip\_address.c\_str());}
-\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ui\_context-\/>pop\_parent();}
-\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ button\ to\ edit\ as\ long\ as\ you\ arent\ currently}}
-\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ hosting\ people?}}
-\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ draw\_username();}
-\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00220\ }
-\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ kv\ :\ network\_info-\/>client-\/>remote\_players)\ \{}
-\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ figure\ out\ why\ there\ are\ null\ rps}}
-\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!kv.second)\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ player\_text\ =\ ui\_context-\/>own(}
-\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{uuid_8h_a29b2c51698a1b8857c94e07485d41170}{MK\_UUID\_LOOP}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}},\ kv.first),}
-\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(120.f,\ 0.5f),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f)));}
-\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}}(*player\_text,}
-\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}\{\}(\{\})"{}},\ kv.second-\/>get<\mbox{\hyperlink{struct_has_name}{HasName}}>().\mbox{\hyperlink{struct_has_name_a9b8c5e7a1ca7671ebaa1948c7492a424}{name}},}
-\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ kv.first));}
-\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00231\ }
-\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (network\_info-\/>is\_host())\ \{}
-\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
-\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Start"{}}))\ \{}
-\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().set(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}});}
-\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GameState::get().set(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game::State::Lobby}});}
-\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
-\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00240\ }
-\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
-\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Disconnect"{}}))\ \{}
-\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ network\_info.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{structnetwork_1_1_info}{network::Info}}());}
-\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00245\ }
-\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
-\DoxyCodeLine{00247\ }
-\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ draw\_host\_network\_info();}
-\DoxyCodeLine{00249\ \ \ \ \ \}}
-\DoxyCodeLine{00250\ }
-\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_aab6121b4fc0ea70eff61a2e8e68684c1}{draw\_username\_picker}}()\ \{}
-\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ username\_input\ =\ ui\_context-\/>own(}
-\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}}),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(400.f,\ 1.f),}
-\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a62654fe258cf0fb3d51337dda982982e}{Pixels}},\ .value\ =\ 25.f,\ .strictness\ =\ 0.5f\}));}
-\DoxyCodeLine{00255\ }
-\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ player\_text\ =\ ui\_context-\/>own(}
-\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a62654fe258cf0fb3d51337dda982982e}{Pixels}},\ .value\ =\ 120.f,\ .strictness\ =\ 0.5f\},}
-\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f)));}
-\DoxyCodeLine{00259\ }
-\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}}(*player\_text,\ \textcolor{stringliteral}{"{}Username:\ "{}});}
-\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ theres\ a\ problem\ where\ it\ is\ constantly\ saving\ as\ you\ type\ which}}
-\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ might\ not\ be\ expected}}
-\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield}}(*username\_input,\ Settings::get().data.username,}
-\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ probably\ make\ a\ "{}username\ validation"{}\ function}}
-\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ std::string\&\ content)\ \{}
-\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (content.size()\ >=\ network::MAX\_NAME\_LENGTH)\ \{}
-\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ TextfieldValidationDecisionFlag::StopNewInput;}
-\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ TextfieldValidationDecisionFlag::Valid;}
-\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
-\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
-\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Lock\ in"{}}))\ \{}
-\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ network\_info-\/>lock\_in\_username();}
-\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
-\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),\ \textcolor{stringliteral}{"{}Back"{}}))\ \{}
-\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().go\_back();}
-\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00280\ \ \ \ \ \}}
-\DoxyCodeLine{00281\ }
-\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_aee957927e795153c4fa3afcbf12ddb1a}{draw\_screen\_selector\_logic}}()\ \{}
-\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!network\_info-\/>username\_set)\ \{}
-\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ draw\_username\_picker();}
-\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (network\_info-\/>has\_role())\ \{}
-\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!(network\_info-\/>has\_set\_ip()))\ \{}
-\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ draw\_ip\_input\_screen();}
-\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ draw\_connected\_screen();}
-\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ draw\_base\_screen();}
-\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00294\ \ \ \ \ \}}
-\DoxyCodeLine{00295\ }
-\DoxyCodeLine{00296\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_aaa33b73ae69448c2aaecce32bc97a0bf}{handle\_announcements}}()\ \{}
-\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!network\_info-\/>client)\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00298\ }
-\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ info\ :\ network\_info-\/>client-\/>announcements)\ \{}
-\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}Announcement:\ \{\}"{}},\ info.message);}
-\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ support\ for\ other\ annoucement\ types}}
-\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{toastmanager_8h_ad435cdf1b1b092994c0d8ca2b0262bab}{TOASTS}}.push\_back(\{.msg\ =\ info.message,\ .timeToShow\ =\ 10\});}
-\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ network\_info-\/>client-\/>announcements.clear();}
-\DoxyCodeLine{00305\ \ \ \ \ \}}
-\DoxyCodeLine{00306\ }
-\DoxyCodeLine{00307\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_abea8f78391e9cae25f4a80d8fbf74714}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ an\ overlay\ that\ shows\ who's\ currently\ available}}
-\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ draw\_network\_overlay();}}
-\DoxyCodeLine{00310\ }
-\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu::State::Network}}))\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00312\ }
-\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ ui\_context-\/>begin(dt);}
-\DoxyCodeLine{00314\ }
-\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ ClearBackground(ui\_context-\/>active\_theme().background);}
-\DoxyCodeLine{00316\ }
-\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ root\ =\ \mbox{\hyperlink{namespaceui_1_1components_a5a694fe6b83009441f8e0d47f604bbb7}{ui::components::mk\_root}}();}
-\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ ui\_context-\/>push\_parent(root);}
-\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ left\_padding\ =\ ui\_context-\/>own(}
-\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(\mbox{\hyperlink{engine_2globals_8h_ae4ab98e49b98d8948eb15206b05ae4b8}{WIN\_HF}}(),\ 1.f)));}
-\DoxyCodeLine{00322\ }
-\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =\ ui\_context-\/>own(\mbox{\hyperlink{structui_1_1_widget}{Widget}}(}
-\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{Children}},\ .strictness\ =\ 1.f\},}
-\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}{Percent}},\ .value\ =\ 1.f,\ .strictness\ =\ 1.0f\},\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{Column}}));}
-\DoxyCodeLine{00326\ }
-\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*left\_padding);}
-\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*content);}
-\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ ui\_context-\/>push\_parent(content);}
-\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ top\_padding\ =\ ui\_context-\/>own(}
-\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f),\ \mbox{\hyperlink{ui__widget_8h_a401ddddbaf5a749492e067a11779cdf7}{Size\_Pct}}(1.f,\ 0.f)));}
-\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*top\_padding);}
-\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ draw\_screen\_selector\_logic();}
-\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ handle\_announcements();}
-\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*ui\_context-\/>own(}
-\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f),\ \mbox{\hyperlink{ui__widget_8h_a401ddddbaf5a749492e067a11779cdf7}{Size\_Pct}}(1.f,\ 0.f))));}
-\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ ui\_context-\/>pop\_parent();}
-\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ ui\_context-\/>pop\_parent();}
-\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ ui\_context-\/>end(root.get());}
-\DoxyCodeLine{00345\ \ \ \ \ \}}
-\DoxyCodeLine{00346\ \};}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__player_8h}{base\_player.h}}"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{engine_8h}{engine.h}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{webrequest_8h}{engine/network/webrequest.h}}"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{network_8h}{network/network.h}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{toastmanager_8h}{toastmanager.h}}"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{using\ namespace\ }\mbox{\hyperlink{namespaceui}{ui}};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{networklayer_8h_a9381b7560a4f62aff0b2b22873876a70}{validate\_ip}}(\textcolor{keyword}{const}\ std::string\&\ ip)\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ should\ fail\ for\ 00000.00000.0000\ but\ shouldnt}}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ this\ too\ 000000000000}}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ this\ is\ const\ static\ cause\ its\ faster\ :)}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{static}\ std::regex\ ip\_regex(}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ R\textcolor{stringliteral}{"{}(\string^(?:(?:25[0-\/5]|2[0-\/4][0-\/9]|[01]?[0-\/9][0-\/9]?)\(\backslash\).)\{3\}(?:25[0-\/5]|2[0-\/4][0-\/9]|[01]?[0-\/9][0-\/9]?)\$)"{});}}
+\DoxyCodeLine{00032\ \textcolor{stringliteral}{\ \ \ \ }\textcolor{keywordflow}{return}\ std::regex\_match(ip,\ ip\_regex);}
+\DoxyCodeLine{00033\ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_network_layer}{NetworkLayer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_layer}{Layer}}\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ std::shared\_ptr<ui::UIContext>\ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}};}
+\DoxyCodeLine{00037\ \ \ \ \ std::shared\_ptr<network::Info>\ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}};}
+\DoxyCodeLine{00038\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_network_layer_ac35d32c4c42e71a69fced5efec74f9c6}{my\_ip\_address}};}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_network_layer_a6f570199ba8ee9d5c72aa436c637b189}{should\_show\_host\_ip}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{struct_network_layer_a6894a175bcbb8ffc9e42b2ddbc399ca8}{NetworkLayer}}()\ :\ \mbox{\hyperlink{struct_layer}{Layer}}(\textcolor{stringliteral}{"{}Network"{}})\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{structui_1_1_u_i_context}{ui::UIContext}}());}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork_1_1_info_a6e71c241a75b76e7bc45e25a7d6cbd79}{network::Info::init\_connections}}();}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{structnetwork_1_1_info}{network::Info}}());}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ac35d32c4c42e71a69fced5efec74f9c6}{my\_ip\_address}}\ =\ \mbox{\hyperlink{namespacenetwork_a519230d733e75d903449898d5b2bb958}{network::get\_remote\_ip\_address}}().value\_or(\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!Settings::get().data.username.empty())\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>lock\_in\_username();}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_network_layer_a38705efe3dc6c50eed3ac75f45cb1209}{\string~NetworkLayer}}()\ \{\ \mbox{\hyperlink{structnetwork_1_1_info_a30004e1b2db2b0a4973c8636ea30c64f}{network::Info::shutdown\_connections}}();\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_ac2b9a912799db09a761b41885eaf5cf5}{onEvent}}(\mbox{\hyperlink{struct_event}{Event}}\&\ event)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_event_dispatcher}{EventDispatcher}}\ dispatcher(event);}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_key_pressed_event}{KeyPressedEvent}}>(std::bind(}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_network_layer_acf4f8f71d0cade871919e8ec67c51880}{NetworkLayer::onKeyPressed}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_gamepad_button_pressed_event}{GamepadButtonPressedEvent}}>(}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ std::bind(\&\mbox{\hyperlink{struct_network_layer_a954bb75983572ea781d6593589d36bd4}{NetworkLayer::onGamepadButtonPressed}},\ \textcolor{keyword}{this},}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::placeholders::\_1));}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_gamepad_axis_moved_event}{GamepadAxisMovedEvent}}>(std::bind(}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_network_layer_a8eeae00b7267e1a282fe39a09beb884b}{NetworkLayer::onGamepadAxisMoved}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ dispatcher.\mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{dispatch}}<\mbox{\hyperlink{struct_char_pressed_event}{CharPressedEvent}}>(std::bind(}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{struct_network_layer_a3afcb961c3248b6ac8381142a5ac81c1}{NetworkLayer::onCharPressedEvent}},\ \textcolor{keyword}{this},\ std::placeholders::\_1));}
+\DoxyCodeLine{00065\ \ \ \ \ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_network_layer_a3afcb961c3248b6ac8381142a5ac81c1}{onCharPressedEvent}}(\mbox{\hyperlink{struct_char_pressed_event}{CharPressedEvent}}\&\ event)\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu::State::Network}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}.get()-\/>process\_char\_press\_event(event);}
+\DoxyCodeLine{00070\ \ \ \ \ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_network_layer_a8eeae00b7267e1a282fe39a09beb884b}{onGamepadAxisMoved}}(\mbox{\hyperlink{struct_gamepad_axis_moved_event}{GamepadAxisMovedEvent}}\&\ event)\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu::State::Network}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}.get()-\/>process\_gamepad\_axis\_event(event);}
+\DoxyCodeLine{00075\ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_network_layer_acf4f8f71d0cade871919e8ec67c51880}{onKeyPressed}}(\mbox{\hyperlink{struct_key_pressed_event}{KeyPressedEvent}}\&\ event)\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu::State::Network}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}.get()-\/>process\_keyevent(event);}
+\DoxyCodeLine{00080\ \ \ \ \ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_network_layer_a954bb75983572ea781d6593589d36bd4}{onGamepadButtonPressed}}(\mbox{\hyperlink{struct_gamepad_button_pressed_event}{GamepadButtonPressedEvent}}\&\ event)\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu::State::Network}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}.get()-\/>process\_gamepad\_button\_event(event);}
+\DoxyCodeLine{00085\ \ \ \ \ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_aae3049c0787e1569a8c4c745796e9e39}{onUpdate}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ this\ has\ to\ go\ above\ the\ checks\ since\ it\ always\ has\ to\ run}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>tick(dt);}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu::State::Network}}))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ we\ get\ here,\ then\ user\ clicked\ "{}join"{}}}
+\DoxyCodeLine{00093\ \ \ \ \ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{draw\_username}}()\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =\ \mbox{\hyperlink{namespaceui_1_1components_a3c8c58d605572e66e3d334f870f44b79}{ui::components::mk\_row}}();}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*content);}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>push\_parent(content);}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}}(*\mbox{\hyperlink{namespaceui_1_1components_adbeac191e9ed084b7341ea736a36dc8a}{ui::components::mk\_text}}(),}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}Username:\ \{\}"{}},\ Settings::get().data.username));}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_af83b71747ba79b542b59b7ca0e4a108e}{ui::components::mk\_icon\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Edit"{}}))\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>unlock\_username();}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00108\ \ \ \ \ \}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_a4f9997f77d6526472acab2f2ce3e1adf}{draw\_base\_screen}}()\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =\ \mbox{\hyperlink{namespaceui_1_1components_a3c8c58d605572e66e3d334f870f44b79}{ui::components::mk\_row}}();}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*content);}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>push\_parent(content);}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ col1\ =\ \mbox{\hyperlink{namespaceui_1_1components_a7d90f6f8b0cda913945996ec9b8ad668}{ui::components::mk\_column}}();}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*col1);}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>push\_parent(col1);}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Host"{}}))\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>set\_role(\mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994a5795cf7bf923ad4f113076102e530875}{network::Info::Role::s\_Host}});}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Join"{}}))\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>set\_role(\mbox{\hyperlink{structnetwork_1_1_info_ab7c682c85a2ca9c353e7069beb33c994ac29bd98fe47d716cd571eef8499043f7}{network::Info::Role::s\_Client}});}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Back"{}}))\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().clear\_history();}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().set(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu::State::Root}});}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ col2\ =\ \mbox{\hyperlink{namespaceui_1_1components_a7d90f6f8b0cda913945996ec9b8ad668}{ui::components::mk\_column}}();}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*col2);}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>push\_parent(col2);}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{draw\_username}}();}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>pop\_parent();}
+\DoxyCodeLine{00150\ \ \ \ \ \}}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_a3484d948630f94d4e3df79efb4cee697}{draw\_ip\_input\_screen}}()\ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_acd567438052b6a765a0669402e44a9ea}{draw\_username}}();}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ip\_address\_input\ =\ \mbox{\hyperlink{struct_network_layer_ad2bfc9bc20354e98cb9db9d1a101d6cb}{ui\_context}}-\/>own(\mbox{\hyperlink{structui_1_1_widget}{Widget}}(}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}}),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(400.f,\ 1.f),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(25.f,\ 0.5f)));}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}}(*\mbox{\hyperlink{namespaceui_1_1components_adbeac191e9ed084b7341ea736a36dc8a}{ui::components::mk\_text}}(),\ \textcolor{stringliteral}{"{}Enter\ IP\ Address"{}});}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ trimming\ of\ whitespace\ or\ validate\ whitespace}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield}}(*ip\_address\_input,\ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>host\_ip\_address(),}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ std::string\&\ content)\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ xxx.xxx.xxx.xxx}}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (content.size()\ >\ 15)\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ TextfieldValidationDecisionFlag::StopNewInput;}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (\mbox{\hyperlink{networklayer_8h_a9381b7560a4f62aff0b2b22873876a70}{validate\_ip}}(content))\ \{}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ TextfieldValidationDecisionFlag::Valid;}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ TextfieldValidationDecisionFlag::Invalid;}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Load\ Last\ Used\ IP"{}}))\ \{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>host\_ip\_address()\ =\ Settings::get().last\_used\_ip();}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Connect"{}}))\ \{}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ Settings::get().update\_last\_used\_ip\_address(}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>host\_ip\_address());}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>lock\_in\_ip();}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),\ \textcolor{stringliteral}{"{}Back"{}}))\ \{}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_network_layer_af16fa4f196cf775253ff4a0ced7e304e}{network\_info}}-\/>unlock\_username();}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00184\ \ \ \ \ \}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_a85337a1e904b99e5786c5535a1316211}{draw\_connected\_screen}}()\ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ draw\_host\_network\_info\ =\ [\&]()\ \{}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (network\_info-\/>is\_host())\ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =\ ui\_context-\/>own(}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{Children}},\ .strictness\ =\ 1.f\},}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{Children}},\ .strictness\ =\ 1.f\},\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}{Row}}));}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*content);}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ui\_context-\/>push\_parent(content);}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ip\ =}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ should\_show\_host\_ip\ ?\ my\_ip\_address\ :\ \textcolor{stringliteral}{"{}***.***.***.***"{}};}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}}(*\mbox{\hyperlink{namespaceui_1_1components_adbeac191e9ed084b7341ea736a36dc8a}{ui::components::mk\_text}}(),}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}Your\ IP\ is:\ \{\}"{}},\ ip));}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ checkbox\_widget\ =\ ui\_context-\/>own(}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}}),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(75.f,\ 0.5f),}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(25.f,\ 1.f)));}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ show\_hide\_host\_ip\_text\ =}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ should\_show\_host\_ip\ ?\ \textcolor{stringliteral}{"{}Hide"{}}\ :\ \textcolor{stringliteral}{"{}Show"{}};}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_aadad469b76dbb557f2985c32613f27fb}{checkbox}}(*checkbox\_widget,\ \&should\_show\_host\_ip,}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&show\_hide\_host\_ip\_text))\ \{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_af83b71747ba79b542b59b7ca0e4a108e}{ui::components::mk\_icon\_button}}(}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Copy"{}}))\ \{}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceext_a4ce923da4e333ef343d896512102ec85}{ext::set\_clipboard\_text}}(my\_ip\_address.c\_str());}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ui\_context-\/>pop\_parent();}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ button\ to\ edit\ as\ long\ as\ you\ arent\ currently}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ hosting\ people?}}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ draw\_username();}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ kv\ :\ network\_info-\/>client-\/>remote\_players)\ \{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ figure\ out\ why\ there\ are\ null\ rps}}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!kv.second)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ player\_text\ =\ ui\_context-\/>own(}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{uuid_8h_a29b2c51698a1b8857c94e07485d41170}{MK\_UUID\_LOOP}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}},\ kv.first),}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(120.f,\ 0.5f),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f)));}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}}(*player\_text,}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}\{\}(\{\})"{}},\ kv.second-\/>get<\mbox{\hyperlink{struct_has_name}{HasName}}>().\mbox{\hyperlink{struct_has_name_a9b8c5e7a1ca7671ebaa1948c7492a424}{name}},}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ kv.first));}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (network\_info-\/>is\_host())\ \{}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Start"{}}))\ \{}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().set(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}});}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GameState::get().set(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game::State::Lobby}});}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Disconnect"{}}))\ \{}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ network\_info.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{structnetwork_1_1_info}{network::Info}}());}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ draw\_host\_network\_info();}
+\DoxyCodeLine{00248\ \ \ \ \ \}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_aab6121b4fc0ea70eff61a2e8e68684c1}{draw\_username\_picker}}()\ \{}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ username\_input\ =\ ui\_context-\/>own(}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}}),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(400.f,\ 1.f),}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a62654fe258cf0fb3d51337dda982982e}{Pixels}},\ .value\ =\ 25.f,\ .strictness\ =\ 0.5f\}));}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ player\_text\ =\ ui\_context-\/>own(}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a62654fe258cf0fb3d51337dda982982e}{Pixels}},\ .value\ =\ 120.f,\ .strictness\ =\ 0.5f\},}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f)));}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_a3cebd653255345fd49c6e745206c3834}{text}}(*player\_text,\ \textcolor{stringliteral}{"{}Username:\ "{}});}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ theres\ a\ problem\ where\ it\ is\ constantly\ saving\ as\ you\ type\ which}}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ might\ not\ be\ expected}}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_abb7f9f870d99acc1e62cfefe6404366c}{textfield}}(*username\_input,\ Settings::get().data.username,}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ probably\ make\ a\ "{}username\ validation"{}\ function}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ std::string\&\ content)\ \{}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (content.size()\ >=\ network::MAX\_NAME\_LENGTH)\ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ TextfieldValidationDecisionFlag::StopNewInput;}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ TextfieldValidationDecisionFlag::Valid;}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Lock\ in"{}}))\ \{}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ network\_info-\/>lock\_in\_username();}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*\mbox{\hyperlink{namespaceui_1_1components_a26b33ce7cbc033aedd226d04c8529bfe}{ui::components::mk\_but\_pad}}());}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespaceui_a380e02610b30c63b493fc680b30d5522}{button}}(*\mbox{\hyperlink{namespaceui_1_1components_acbb94740ff213102251f65d9380f6a67}{ui::components::mk\_button}}(\mbox{\hyperlink{uuid_8h_adc09be3a75c11622885375dd96c7170e}{MK\_UUID}}(\textcolor{keywordtype}{id},\ \mbox{\hyperlink{namespaceui_abdfa554668b605387f3da5a242418d5d}{ROOT\_ID}})),\ \textcolor{stringliteral}{"{}Back"{}}))\ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ MenuState::get().go\_back();}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00279\ \ \ \ \ \}}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_aee957927e795153c4fa3afcbf12ddb1a}{draw\_screen\_selector\_logic}}()\ \{}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!network\_info-\/>username\_set)\ \{}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ draw\_username\_picker();}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (network\_info-\/>has\_role())\ \{}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!(network\_info-\/>has\_set\_ip()))\ \{}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ draw\_ip\_input\_screen();}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ draw\_connected\_screen();}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ draw\_base\_screen();}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00293\ \ \ \ \ \}}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00295\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_aaa33b73ae69448c2aaecce32bc97a0bf}{handle\_announcements}}()\ \{}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!network\_info-\/>client)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ info\ :\ network\_info-\/>client-\/>announcements)\ \{}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}Announcement:\ \{\}"{}},\ info.message);}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ support\ for\ other\ annoucement\ types}}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{toastmanager_8h_ad435cdf1b1b092994c0d8ca2b0262bab}{TOASTS}}.push\_back(\{.msg\ =\ info.message,\ .timeToShow\ =\ 10\});}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ network\_info-\/>client-\/>announcements.clear();}
+\DoxyCodeLine{00304\ \ \ \ \ \}}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_network_layer_abea8f78391e9cae25f4a80d8fbf74714}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ an\ overlay\ that\ shows\ who's\ currently\ available}}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ draw\_network\_overlay();}}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (MenuState::get().is\_not(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6aeec89088ee408b80387155272b113256}{menu::State::Network}}))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ ui\_context-\/>begin(dt);}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ ClearBackground(ui\_context-\/>active\_theme().background);}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ root\ =\ \mbox{\hyperlink{namespaceui_1_1components_a5a694fe6b83009441f8e0d47f604bbb7}{ui::components::mk\_root}}();}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ ui\_context-\/>push\_parent(root);}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ left\_padding\ =\ ui\_context-\/>own(}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f),\ \mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(\mbox{\hyperlink{engine_2globals_8h_ae4ab98e49b98d8948eb15206b05ae4b8}{WIN\_HF}}(),\ 1.f)));}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ content\ =\ ui\_context-\/>own(\mbox{\hyperlink{structui_1_1_widget}{Widget}}(}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{Children}},\ .strictness\ =\ 1.f\},}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{.mode\ =\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}{Percent}},\ .value\ =\ 1.f,\ .strictness\ =\ 1.0f\},\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{Column}}));}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*left\_padding);}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_aaa7b801003350ccb64131704e1458860}{div}}(*content);}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ ui\_context-\/>push\_parent(content);}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ top\_padding\ =\ ui\_context-\/>own(}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f),\ \mbox{\hyperlink{ui__widget_8h_a401ddddbaf5a749492e067a11779cdf7}{Size\_Pct}}(1.f,\ 0.f)));}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*top\_padding);}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ draw\_screen\_selector\_logic();}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ handle\_announcements();}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_ad861ac8ced30946ccb2ce39f3a68cd93}{padding}}(*ui\_context-\/>own(}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}(\mbox{\hyperlink{ui__widget_8h_ac08c4e7524192c92e76ece1f70463125}{Size\_Px}}(100.f,\ 1.f),\ \mbox{\hyperlink{ui__widget_8h_a401ddddbaf5a749492e067a11779cdf7}{Size\_Pct}}(1.f,\ 0.f))));}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ ui\_context-\/>pop\_parent();}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ ui\_context-\/>pop\_parent();}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ ui\_context-\/>end(root.get());}
+\DoxyCodeLine{00344\ \ \ \ \ \}}
+\DoxyCodeLine{00345\ \};}
 
 \end{DoxyCode}

@@ -3,6 +3,9 @@
 {\ttfamily \#include $<$thread$>$}\newline
 {\ttfamily \#include \char`\"{}assert.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}external\+\_\+include.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/can\+\_\+be\+\_\+ghost\+\_\+player.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/can\+\_\+be\+\_\+held.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/is\+\_\+solid.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}engine/globals\+\_\+register.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}engine/is\+\_\+server.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}globals.\+h\char`\"{}}\newline
@@ -18,6 +21,11 @@ struct \mbox{\hyperlink{struct_entity_helper}{Entity\+Helper}}
 \begin{DoxyCompactItemize}
 \item 
 typedef std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ $>$ \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{entityhelper_8h_af5fa95f4f8a66aa99b729afba587f746}{is\+\_\+collidable}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity)
 \end{DoxyCompactItemize}
 \doxysubsection*{Variables}
 \begin{DoxyCompactItemize}
@@ -36,6 +44,19 @@ static std\+::map$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698
 \index{Entities@{Entities}!entityhelper.h@{entityhelper.h}}
 \doxysubsubsection{\texorpdfstring{Entities}{Entities}}
 {\footnotesize\ttfamily typedef std\+::vector$<$std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_entity}{Entity}}$>$ $>$ \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}}}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{entityhelper_8h_af5fa95f4f8a66aa99b729afba587f746}\label{entityhelper_8h_af5fa95f4f8a66aa99b729afba587f746}} 
+\index{entityhelper.h@{entityhelper.h}!is\_collidable@{is\_collidable}}
+\index{is\_collidable@{is\_collidable}!entityhelper.h@{entityhelper.h}}
+\doxysubsubsection{\texorpdfstring{is\_collidable()}{is\_collidable()}}
+{\footnotesize\ttfamily bool is\+\_\+collidable (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_entity_helper_a3610c9a5865dc6bfa24cdc6f6858a763}{Entity\+Helper\+::is\+Walkable\+Raw\+Entities()}}, and \mbox{\hyperlink{namespacesystem__manager_a27a95df8b20f1e69fe055a138e7f7e5d}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos()}}.
 
 
 

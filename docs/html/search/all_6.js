@@ -78,11 +78,12 @@ var searchData=
   ['full_75',['FULL',['../df/d69/struct_wall.html#ab40f3bd4d498bf9d99dcfa609a432f5dae2f0b5e58e488e47e59bae640c05e9e6',1,'Wall']]],
   ['fullmap_76',['FullMap',['../da/d9a/keymap_8h.html#a4e24bf07f8f900e7be1e8f70900251fe',1,'keymap.h']]],
   ['function_5fraii_77',['function_raii',['../dc/dcf/structprofile_1_1function__raii.html#a384a7cf55658b31d2b70bd1d2ff42c9b',1,'profile::function_raii::function_raii()'],['../dc/dcf/structprofile_1_1function__raii.html',1,'profile::function_raii']]],
-  ['furniture_78',['furniture',['../d6/dad/struct_can_hold_furniture.html#a831f3fd4c2384009a940700a433cfc20',1,'CanHoldFurniture']]],
-  ['furniture_79',['FURNITURE',['../db/d66/struct_item.html#a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5',1,'Item']]],
-  ['furniture_80',['Furniture',['../d0/d8b/struct_furniture.html#af29143799fcb5ed44cd9d98e88166aa0',1,'Furniture::Furniture(vec2 pos, Color face_color_in, Color base_color_in)'],['../d0/d8b/struct_furniture.html#a3c289ae66cd307325e46544fa8ca0dfa',1,'Furniture::Furniture(vec3 pos, Color face_color_in)'],['../d0/d8b/struct_furniture.html#ae15aba996a3ad4b7b73bb941e9289dcd',1,'Furniture::Furniture(vec2 pos, Color face_color_in)'],['../d0/d8b/struct_furniture.html#ac0e99da147fde76016511e2887b3e9f6',1,'Furniture::Furniture()'],['../d0/d8b/struct_furniture.html',1,'Furniture']]],
-  ['furniture_2eh_81',['furniture.h',['../d1/d57/furniture_8h.html',1,'']]],
-  ['furniture_5freach_82',['furniture_reach',['../d9/d6b/struct_can_highlight_others.html#a439521001d57989dc4ae50956788874f',1,'CanHighlightOthers']]],
-  ['furnitures_2eh_83',['furnitures.h',['../d7/d84/furnitures_8h.html',1,'']]],
-  ['fzinfo_84',['FZInfo',['../d4/d5d/struct_f_z_info.html',1,'']]]
+  ['furniture_78',['FURNITURE',['../db/d66/struct_item.html#a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5',1,'Item']]],
+  ['furniture_79',['Furniture',['../d0/d8b/struct_furniture.html#af29143799fcb5ed44cd9d98e88166aa0',1,'Furniture::Furniture(vec2 pos, Color face_color_in, Color base_color_in)'],['../d0/d8b/struct_furniture.html#a3c289ae66cd307325e46544fa8ca0dfa',1,'Furniture::Furniture(vec3 pos, Color face_color_in)'],['../d0/d8b/struct_furniture.html#ae15aba996a3ad4b7b73bb941e9289dcd',1,'Furniture::Furniture(vec2 pos, Color face_color_in)'],['../d0/d8b/struct_furniture.html#ac0e99da147fde76016511e2887b3e9f6',1,'Furniture::Furniture()']]],
+  ['furniture_80',['furniture',['../d6/dad/struct_can_hold_furniture.html#a831f3fd4c2384009a940700a433cfc20',1,'CanHoldFurniture']]],
+  ['furniture_81',['Furniture',['../d0/d8b/struct_furniture.html',1,'']]],
+  ['furniture_2eh_82',['furniture.h',['../d1/d57/furniture_8h.html',1,'']]],
+  ['furniture_5freach_83',['furniture_reach',['../d9/d6b/struct_can_highlight_others.html#a439521001d57989dc4ae50956788874f',1,'CanHighlightOthers']]],
+  ['furnitures_2eh_84',['furnitures.h',['../d7/d84/furnitures_8h.html',1,'']]],
+  ['fzinfo_85',['FZInfo',['../d4/d5d/struct_f_z_info.html',1,'']]]
 ];

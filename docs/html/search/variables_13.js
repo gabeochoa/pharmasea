@@ -89,7 +89,7 @@ var searchData=
   ['start_5fnow_86',['start_now',['../d5/dd0/timer_8h.html#a1a322f83cc7cbf98dc4686a401930ba4',1,'timer.h']]],
   ['start_5ftime_87',['START_TIME',['../db/d3f/namespacenetwork.html#a0cf71a5c786a7a5c693b0b96b4a32a39',1,'network']]],
   ['starting_5fjob_5ftype_88',['starting_job_type',['../db/dc2/struct_can_perform_job.html#a3be6c1deadd63e3742c4ab7ae86a8b8e',1,'CanPerformJob']]],
-  ['state_89',['state',['../da/dbf/struct_state_manager.html#a226cc4ac86f4bfb113768db3d34da6be',1,'StateManager::state()'],['../d3/db1/struct_player.html#aeff32fff0439d7ae2480ef92bc8962a2',1,'Player::state()'],['../d2/d63/struct_job.html#a5f001c363f99db97dc40cccbed8cbf26',1,'Job::state()']]],
+  ['state_89',['state',['../da/dbf/struct_state_manager.html#a226cc4ac86f4bfb113768db3d34da6be',1,'StateManager::state()'],['../d2/d63/struct_job.html#a5f001c363f99db97dc40cccbed8cbf26',1,'Job::state()'],['../d3/db1/struct_player.html#aeff32fff0439d7ae2480ef92bc8962a2',1,'Player::state()']]],
   ['state_90',['STATE',['../d3/df6/namespaceui.html#ae1e768dbebd851fc7a914487733ffa6d',1,'ui']]],
   ['statemanager_91',['statemanager',['../df/dd7/structui_1_1_u_i_context.html#a88c02f48d83a327fffd43e6ace427a0a',1,'ui::UIContext']]],
   ['states_92',['states',['../d0/daf/structui_1_1_state_manager.html#adcdc4c07cd6c6e92d2b761a1744acf2b',1,'ui::StateManager']]],
