@@ -7,7 +7,6 @@
 #include "../base_player.h"
 #include "../engine/globals_register.h"
 #include "../engine/log.h"
-#include "../player.h"
 
 namespace network {
 

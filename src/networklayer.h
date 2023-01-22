@@ -17,7 +17,6 @@
 #include "engine.h"
 #include "engine/network/webrequest.h"
 #include "network/network.h"
-#include "player.h"
 #include "statemanager.h"
 #include "toastmanager.h"
 
