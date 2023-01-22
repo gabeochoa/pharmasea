@@ -8,6 +8,7 @@
 #include "../components/can_perform_job.h"
 #include "../components/collects_user_input.h"
 #include "../components/custom_item_position.h"
+#include "../components/is_snappable.h"
 #include "../components/responds_to_user_input.h"
 #include "../components/transform.h"
 #include "../customer.h"
@@ -23,9 +24,9 @@ namespace system_manager {
 
 inline void transform_snapper(std::shared_ptr<Entity> entity, float) {
     if (!entity->has<Transform>()) return;
-
     Transform& transform = entity->get<Transform>();
-    if (entity->is_snappable()) {
+
+    if (entity->has<IsSnappable>()) {
         transform.position = transform.snap_position();
     } else {
         transform.position = transform.raw_position;

@@ -204,8 +204,6 @@ struct Entity {
         }
     }
 
-    // return true if the position should be snapped at every update
-    virtual bool is_snappable() { return false; }
     /*
      * Given another bounding box, check if it collides with this entity
      *

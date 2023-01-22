@@ -10,6 +10,7 @@
 #include "engine/sound_library.h"
 //
 #include "components/can_perform_job.h"
+#include "components/is_snappable.h"
 #include "entityhelper.h"
 #include "job.h"
 #include "person.h"
@@ -43,6 +44,4 @@ struct AIPerson : public Person {
     virtual float base_speed() override { return 10.f; }
 
     virtual float stagger_mult() { return 0.f; }
-
-    virtual bool is_snappable() override { return true; }
 };
