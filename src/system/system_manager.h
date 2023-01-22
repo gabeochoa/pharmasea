@@ -408,73 +408,75 @@ inline void person_update(std::shared_ptr<Entity> entity, float dt) {
 
 }  // namespace system_manager
 
+SINGLETON_FWD(SystemManager)
 struct SystemManager {
-    void update(float dt) {
-        // TODO eventually this shouldnt exist
-        for (auto e : EntityHelper::get_entities()) {
-            if (e) e->update(dt);
-        }
+    SINGLETON(SystemManager)
 
-        always_update(dt);
-
+    void update(const Entities& entities, float dt) {
+        always_update(entities, dt);
         // TODO do we run game updates during paused?
-        // TODO rename game/nongame to in_round inplanning
         if (GameState::get().is(game::State::InRound)) {
-            in_round_update(dt);
+            in_round_update(entities, dt);
         } else {
-            planning_update(dt);
+            planning_update(entities, dt);
         }
     }
 
-    void render(float dt) const {
+    void update(float dt) { update(EntityHelper::get_entities(), dt); }
+
+    void render(const Entities& entities, float dt) const {
         const auto debug_mode_on =
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
         if (debug_mode_on) {
-            render_debug(dt);
+            render_debug(entities, dt);
         } else {
-            render_normal(dt);
+            render_normal(entities, dt);
         }
     }
 
+    void render(float dt) const { render(EntityHelper::get_entities(), dt); }
+
    private:
-    void always_update(float dt) {
-        EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
+    void always_update(const std::vector<std::shared_ptr<Entity>>& entity_list,
+                       float dt) {
+        for (auto& entity : entity_list) {
             system_manager::reset_highlighted(entity, dt);
             system_manager::transform_snapper(entity, dt);
             system_manager::update_held_item_position(entity, dt);
+
+            system_manager::collect_user_input(entity, dt);
             // TODO obv this should be more component based
             system_manager::person_update(entity, dt);
-            return EntityHelper::ForEachFlow::None;
-        });
+        }
     }
 
-    void in_round_update(float dt) {
-        EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
+    void in_round_update(
+        const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
+        for (auto& entity : entity_list) {
             system_manager::job_system::handle_job_holder_pushed(entity, dt);
             system_manager::job_system::update_job_information(entity, dt);
-            return EntityHelper::ForEachFlow::None;
-        });
+        }
     }
 
-    void planning_update(float dt) {
-        EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
+    void planning_update(
+        const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
+        for (auto& entity : entity_list) {
             system_manager::highlight_facing_furniture(entity, dt);
             system_manager::update_held_furniture_position(entity, dt);
-            return EntityHelper::ForEachFlow::None;
-        });
+        }
     }
 
-    void render_normal(float dt) const {
-        EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
+    void render_normal(const std::vector<std::shared_ptr<Entity>>& entity_list,
+                       float dt) const {
+        for (auto& entity : entity_list) {
             system_manager::render_normal(entity, dt);
-            return EntityHelper::ForEachFlow::None;
-        });
+        }
     }
 
-    void render_debug(float dt) const {
-        EntityHelper::forEachEntity([dt](std::shared_ptr<Entity> entity) {
+    void render_debug(const std::vector<std::shared_ptr<Entity>>& entity_list,
+                      float dt) const {
+        for (auto& entity : entity_list) {
             system_manager::render_debug(entity, dt);
-            return EntityHelper::ForEachFlow::None;
-        });
+        }
     }
 };

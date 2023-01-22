@@ -160,7 +160,8 @@ struct Client {
             remote_players.erase(client_id);
         };
 
-        auto update_remote_player = [&](int client_id, std::string username,
+        auto update_remote_player = [&](int client_id,
+                                        const std::string& username,
                                         float* location, int facing) {
             if (!remote_players.contains(client_id)) {
                 log_warn("Remote player doesnt exist but should: {}",
