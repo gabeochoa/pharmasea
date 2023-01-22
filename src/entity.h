@@ -234,8 +234,7 @@ struct Entity {
         }
     }
 
-    virtual void always_update(float) { update_held_item_position(); }
-    virtual void planning_update(float) {}
+    virtual void always_update(float) final { update_held_item_position(); }
     virtual void in_round_update(float) {}
 
     // Whether or not this entity can hold items at the moment
@@ -364,8 +363,6 @@ struct Entity {
         TRACY_ZONE_SCOPED;
         if (GameState::get().is(game::State::InRound)) {
             in_round_update(dt);
-        } else {
-            planning_update(dt);
         }
         always_update(dt);
     }
