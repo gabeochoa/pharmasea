@@ -9,15 +9,16 @@
 //
 #include "../aiperson.h"
 #include "../furniture.h"
-#include "../targetcube.h"
 
-struct RegisterNextQueuePosition : TargetCube {
+struct RegisterNextQueuePosition : Person {
     RegisterNextQueuePosition(vec3 p, Color face_color_in, Color base_color_in)
-        : TargetCube(p, face_color_in, base_color_in) {}
+        : Person(p, face_color_in, base_color_in) {}
     RegisterNextQueuePosition(vec2 p, Color face_color_in, Color base_color_in)
-        : TargetCube(p, face_color_in, base_color_in) {}
-    RegisterNextQueuePosition(vec3 p, Color c) : TargetCube(p, c) {}
-    RegisterNextQueuePosition(vec2 p, Color c) : TargetCube(p, c) {}
+        : Person(p, face_color_in, base_color_in) {}
+    RegisterNextQueuePosition(vec3 p, Color c) : Person(p, c) {}
+    RegisterNextQueuePosition(vec2 p, Color c) : Person(p, c) {}
+
+    virtual bool is_collidable() override { return false; }
 };
 
 struct Register : public Furniture {

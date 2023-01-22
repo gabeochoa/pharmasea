@@ -406,6 +406,43 @@ inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
     }
 }
 
+inline void update_position_from_job(std::shared_ptr<Entity> entity, float) {
+    if (!entity->has<Transform>()) return;
+    Transform& transform = entity->get<Transform>();
+
+    if (!entity->has<CanPerformJob>()) return;
+    CanPerformJob& cpf = entity->get<CanPerformJob>();
+    if (!cpf.has_job()) return;
+    auto job = cpf.job();
+
+    if (!job || !job->local.has_value()) {
+        return;
+    }
+
+    vec2 tar = job->local.value();
+    float speed = 3.f;  // entity->base_speed() * dt;
+    // if (entity->stagger_mult() != 0) speed *= stagger_mult();
+
+    // this was moved when doing ecs, idk if its still true anymore
+    // TODO we are seeing issues where customers are getting stuck on corners
+    // when turning. Before I feel like they were able to slide but it seems
+    // like not anymore?
+
+    auto new_pos_x = transform.raw_position;
+    if (tar.x > transform.raw_position.x) new_pos_x.x += speed;
+    if (tar.x < transform.raw_position.x) new_pos_x.x -= speed;
+
+    auto new_pos_z = transform.raw_position;
+    if (tar.y > transform.raw_position.z) new_pos_z.z += speed;
+    if (tar.y < transform.raw_position.z) new_pos_z.z -= speed;
+
+    // TODO do we need to unr the whole person_update...() function with
+    // collision?
+
+    transform.position.x = new_pos_x.x;
+    transform.position.z = new_pos_z.z;
+}
+
 inline void render_job_visual(std::shared_ptr<Entity> entity, float) {
     if (!entity->has<CanPerformJob>()) return;
     CanPerformJob& cpf = entity->get<CanPerformJob>();

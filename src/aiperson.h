@@ -44,42 +44,5 @@ struct AIPerson : public Person {
 
     virtual float stagger_mult() { return 0.f; }
 
-    // TODO we are seeing issues where customers are getting stuck on corners
-    // when turning. Before I feel like they were able to slide but it seems
-    // like not anymore?
-    virtual vec3 update_xaxis_position(float dt) override {
-        auto job = get<CanPerformJob>().job();
-
-        if (!job || !job->local.has_value()) {
-            return this->get<Transform>().raw_position;
-        }
-
-        vec2 tar = job->local.value();
-        float speed = this->base_speed() * dt;
-        if (stagger_mult() != 0) speed *= stagger_mult();
-
-        auto new_pos_x = this->get<Transform>().raw_position;
-        if (tar.x > this->get<Transform>().raw_position.x) new_pos_x.x += speed;
-        if (tar.x < this->get<Transform>().raw_position.x) new_pos_x.x -= speed;
-        return new_pos_x;
-    }
-
-    virtual vec3 update_zaxis_position(float dt) override {
-        auto job = get<CanPerformJob>().job();
-
-        if (!job || !job->local.has_value()) {
-            return this->get<Transform>().raw_position;
-        }
-
-        vec2 tar = job->local.value();
-        float speed = this->base_speed() * dt;
-        if (stagger_mult() != 0) speed *= stagger_mult();
-
-        auto new_pos_z = this->get<Transform>().raw_position;
-        if (tar.y > this->get<Transform>().raw_position.z) new_pos_z.z += speed;
-        if (tar.y < this->get<Transform>().raw_position.z) new_pos_z.z -= speed;
-        return new_pos_z;
-    }
-
     virtual bool is_snappable() override { return true; }
 };

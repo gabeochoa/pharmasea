@@ -271,20 +271,6 @@ inline void person_update_given_new_pos(int id, Transform& transform,
     }
 }
 
-inline void person_update(std::shared_ptr<Entity> entity, float dt) {
-    if (!entity->has<Transform>()) return;
-
-    auto player = dynamic_pointer_cast<Player>(entity);
-    // TODO eventually this should just be a component
-    if (!player) return;
-
-    auto new_pos_x = player->update_xaxis_position(dt);
-    auto new_pos_z = player->update_zaxis_position(dt);
-
-    person_update_given_new_pos(entity->id, entity->get<Transform>(), player,
-                                dt, new_pos_x, new_pos_z);
-}
-
 inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
     if (!entity->has<CollectsUserInput>()) return;
     CollectsUserInput& cui = entity->get<CollectsUserInput>();
@@ -477,7 +463,7 @@ struct SystemManager {
 
             system_manager::collect_user_input(entity, dt);
             // TODO obv this should be more component based
-            system_manager::person_update(entity, dt);
+            // system_manager::person_update(entity, dt);
         }
     }
 
