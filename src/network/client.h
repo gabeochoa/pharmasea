@@ -97,18 +97,19 @@ struct Client {
 
     void send_player_input_packet(int my_id) {
         Player* me = GLOBALS.get_ptr<Player>("player");
+        CollectsUserInput& cui = me->get<CollectsUserInput>();
 
-        if (me->inputs.empty()) return;
+        if (cui.inputs.empty()) return;
 
         ClientPacket packet({
             .channel = Channel::UNRELIABLE_NO_DELAY,
             .client_id = my_id,
             .msg_type = network::ClientPacket::MsgType::PlayerControl,
             .msg = network::ClientPacket::PlayerControlInfo({
-                .inputs = me->inputs,
+                .inputs = cui.inputs,
             }),
         });
-        me->inputs.clear();
+        cui.inputs.clear();
         client_p->send_packet_to_server(packet);
     }
 
