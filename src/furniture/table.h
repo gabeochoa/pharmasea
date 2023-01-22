@@ -24,7 +24,7 @@ struct Table : public Furniture {
 
     // TODO eventually we need it to decide whether it has work based on the
     // current held item
-    virtual void do_work(float dt, Person*) override {
+    virtual void do_work(float dt, std::shared_ptr<Person>) override {
         const float amt = 0.5f;
         pct_work_complete += amt * dt;
         if (pct_work_complete >= 1.f) pct_work_complete = 0.f;

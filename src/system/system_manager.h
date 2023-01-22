@@ -400,6 +400,24 @@ inline void process_input(const std::shared_ptr<Entity> entity,
         match->rotate_facing_clockwise();
     };
 
+    const auto work_furniture = [player, frame_dt]() {
+        TRACY_ZONE_SCOPED;
+        // Cant do work during planning
+        if (GameState::get().is(game::State::Planning)) return;
+
+        // TODO need to figure out if this should be separate from highlighting
+        CanHighlightOthers& cho = player->get<CanHighlightOthers>();
+
+        std::shared_ptr<Furniture> match =
+            EntityHelper::getClosestMatchingEntity<Furniture>(
+                player->get<Transform>().as2(), cho.reach(),
+                [](auto&& furniture) { return furniture->has_work(); });
+
+        if (!match) return;
+
+        match->do_work(frame_dt, player);
+    };
+
     switch (input_name) {
         case InputName::PlayerRotateFurniture:
             rotate_furniture();
@@ -408,7 +426,7 @@ inline void process_input(const std::shared_ptr<Entity> entity,
             player->grab_or_drop();
             break;
         case InputName::PlayerDoWork:
-            player->work_furniture(frame_dt);
+            work_furniture();
         default:
             break;
     }

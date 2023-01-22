@@ -22,7 +22,7 @@ struct CharacterSwitcher : public Furniture {
     explicit CharacterSwitcher(vec2 pos)
         : Furniture(pos, ui::color::brown, ui::color::brown) {}
 
-    virtual void do_work(float dt, Person* person) override {
+    virtual void do_work(float dt, std::shared_ptr<Person> person) override {
         const float amt = 2.f;
         pct_work_complete += amt * dt;
         if (pct_work_complete >= 1.f) {

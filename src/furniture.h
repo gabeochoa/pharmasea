@@ -66,7 +66,7 @@ struct Furniture : public Entity {
     }
 
     // Note: do nothing by default
-    virtual void do_work(float, Person*) {}
+    virtual void do_work(float, std::shared_ptr<Person>) {}
 
     // Does this piece of furniture have work to be done?
     virtual bool has_work() const { return false; }

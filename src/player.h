@@ -80,24 +80,6 @@ struct Player : public BasePlayer {
         }
     }
 
-    void work_furniture(float frame_dt) {
-        TRACY_ZONE_SCOPED;
-        // Cant do work during planning
-        if (GameState::get().is(game::State::Planning)) return;
-
-        // TODO need to figure out if this should be separate from highlighting
-        CanHighlightOthers& cho = this->get<CanHighlightOthers>();
-
-        std::shared_ptr<Furniture> match =
-            EntityHelper::getClosestMatchingEntity<Furniture>(
-                this->get<Transform>().as2(), cho.reach(),
-                [](auto&& furniture) { return furniture->has_work(); });
-
-        if (!match) return;
-
-        match->do_work(frame_dt, this);
-    }
-
     void handle_in_game_grab_or_drop() {
         TRACY_ZONE_SCOPED;
         // TODO Need to auto drop any held furniture
