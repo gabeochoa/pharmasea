@@ -98,17 +98,19 @@ struct Client {
     void send_player_input_packet(int my_id) {
         Player* me = GLOBALS.get_ptr<Player>("player");
 
-        if (me->inputs.empty()) return;
+        auto& inputs = me->get<CollectsUserInput>().inputs;
+
+        if (inputs.empty()) return;
 
         ClientPacket packet({
             .channel = Channel::UNRELIABLE_NO_DELAY,
             .client_id = my_id,
             .msg_type = network::ClientPacket::MsgType::PlayerControl,
             .msg = network::ClientPacket::PlayerControlInfo({
-                .inputs = me->inputs,
+                .inputs = inputs,
             }),
         });
-        me->inputs.clear();
+        inputs.clear();
         client_p->send_packet_to_server(packet);
     }
 
@@ -197,6 +199,7 @@ struct Client {
                     add_new_player(id, client_p->username);
                     GLOBALS.set("active_camera_target",
                                 remote_players[id].get());
+                    GLOBALS.set("active_player", remote_players[id].get());
                 }
 
                 for (auto client_id : info.all_clients) {

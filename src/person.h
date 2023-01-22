@@ -40,9 +40,6 @@ struct Person : public Entity {
     Person(vec3 p, Color c) : Entity(p, c) { update_model(); }
     Person(vec2 p, Color c) : Entity(p, c) { update_model(); }
 
-    virtual vec3 update_xaxis_position(float dt) = 0;
-    virtual vec3 update_zaxis_position(float dt) = 0;
-
     void update_model() {
         // log_info("model index: {}", model_index);
         // TODO add a component for this
@@ -54,6 +51,10 @@ struct Person : public Entity {
             .rotation_angle = 180,
         });
     }
+
+    virtual vec3 update_xaxis_position(float dt) {}
+
+    virtual vec3 update_zaxis_position(float dt) {}
 
     virtual float base_speed() { return 10.f; }
 

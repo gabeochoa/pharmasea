@@ -13,22 +13,18 @@
 #include "engine/model_library.h"
 #include "engine/music_library.h"
 #include "engine/texture_library.h"
+#include "local_player.h"
 #include "map.h"
-#include "player.h"
 #include "statemanager.h"
 
 struct GameLayer : public Layer {
-    std::shared_ptr<Player> player;
-    std::shared_ptr<BasePlayer> active_player;
+    std::shared_ptr<LocalPlayer> player;
     std::shared_ptr<GameCam> cam;
     raylib::Model bag_model;
 
     GameLayer() : Layer("Game") {
-        player.reset(new Player(vec2{-3, -3}));
+        player.reset(new LocalPlayer(vec2{-3, -3}));
         GLOBALS.set("player", player.get());
-
-        // TODO do we need this still?
-        player->get<CanBeGhostPlayer>().update(true);
 
         cam.reset(new GameCam());
         GLOBALS.set("game_cam", cam.get());
@@ -94,7 +90,8 @@ struct GameLayer : public Layer {
         }
         cam->updateCamera();
 
-        // SystemManager::get().update(Entities{player}, dt);
+        SystemManager::get().update(Entities{player}, dt);
+
         // NOTE: gabe: i dont think we need to do this
         //         because the local map never should need to grab things
         //         TODO do we?
