@@ -439,7 +439,11 @@ inline void update_position_from_job(std::shared_ptr<Entity> entity, float dt) {
     }
 
     vec2 tar = job->local.value();
-    float speed = 3.f * dt;  // entity->base_speed() * dt;
+
+    if (!entity->has<HasBaseSpeed>()) return;
+    HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
+
+    float speed = hasBaseSpeed.speed() * dt;
 
     float speed_multiplier = 1.f;
     float stagger_multiplier = 0.f;

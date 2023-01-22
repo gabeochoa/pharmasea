@@ -42,6 +42,4 @@ struct AIPerson : public Person {
     }
     AIPerson(vec3 p, Color c) : Person(p, c) { add_static_components(); }
     AIPerson(vec2 p, Color c) : Person(p, c) { add_static_components(); }
-
-    virtual float stagger_mult() { return 0.f; }
 };
