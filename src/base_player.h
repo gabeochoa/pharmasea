@@ -20,6 +20,9 @@ struct BasePlayer : public Person {
     void add_static_components() {
         addComponent<CanHighlightOthers>();
         addComponent<CanHoldFurniture>();
+
+        // addComponent<HasBaseSpeed>().update(10.f);
+        get<HasBaseSpeed>().update(7.5f);
     }
 
     BasePlayer(vec3 p, Color face_color_in, Color base_color_in)
@@ -38,6 +41,4 @@ struct BasePlayer : public Person {
                  {255, 0, 0, 255}) {
         add_static_components();
     }
-
-    virtual float base_speed() override { return 7.5f; }
 };

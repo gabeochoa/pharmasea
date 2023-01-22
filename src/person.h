@@ -6,6 +6,7 @@
 #include "entity.h"
 #include "entityhelper.h"
 //
+#include "components/has_base_speed.h"
 #include "engine/keymap.h"
 
 struct Person : public Entity {
@@ -31,16 +32,17 @@ struct Person : public Entity {
    public:
     Person(vec3 p, Color face_color_in, Color base_color_in)
         : Entity(p, face_color_in, base_color_in) {
-        update_model();
+        update_component();
     }
     Person(vec2 p, Color face_color_in, Color base_color_in)
         : Entity(p, face_color_in, base_color_in) {
-        update_model();
+        update_component();
     }
-    Person(vec3 p, Color c) : Entity(p, c) { update_model(); }
-    Person(vec2 p, Color c) : Entity(p, c) { update_model(); }
+    Person(vec3 p, Color c) : Entity(p, c) { update_component(); }
+    Person(vec2 p, Color c) : Entity(p, c) { update_component(); }
 
-    void update_model() {
+    void update_component() {
+        addComponent<HasBaseSpeed>().update(10.f);
         // log_info("model index: {}", model_index);
         // TODO add a component for this
         get<ModelRenderer>().update(ModelInfo{
@@ -51,8 +53,6 @@ struct Person : public Entity {
             .rotation_angle = 180,
         });
     }
-
-    virtual float base_speed() { return 10.f; }
 
     virtual vec3 size() const override {
         const float sz = TILESIZE * 0.75f;

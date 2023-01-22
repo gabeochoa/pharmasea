@@ -10,6 +10,7 @@
 #include "engine/sound_library.h"
 //
 #include "components/can_perform_job.h"
+#include "components/has_base_speed.h"
 #include "components/is_snappable.h"
 #include "entityhelper.h"
 #include "job.h"
@@ -26,6 +27,7 @@ struct AIPerson : public Person {
 
     void add_static_components() {
         addComponent<CanPerformJob>().update(Wandering, Wandering);
+        addComponent<HasBaseSpeed>().update(10.f);
     }
 
    public:
@@ -40,8 +42,6 @@ struct AIPerson : public Person {
     }
     AIPerson(vec3 p, Color c) : Person(p, c) { add_static_components(); }
     AIPerson(vec2 p, Color c) : Person(p, c) { add_static_components(); }
-
-    virtual float base_speed() override { return 10.f; }
 
     virtual float stagger_mult() { return 0.f; }
 };

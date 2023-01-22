@@ -318,7 +318,10 @@ inline void process_player_movement_input(std::shared_ptr<Entity> entity,
     Transform& transform = entity->get<Transform>();
     std::shared_ptr<Player> player = dynamic_pointer_cast<Player>(entity);
 
-    const float speed = player->base_speed() * dt;
+    if (!entity->has<HasBaseSpeed>()) return;
+    HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
+
+    const float speed = hasBaseSpeed.speed() * dt;
     auto new_position = transform.position;
 
     if (input_name == InputName::PlayerLeft) {
