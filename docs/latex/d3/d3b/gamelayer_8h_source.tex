@@ -92,72 +92,73 @@
 \DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ quit\ window\ on\ escape}}
 \DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ raylib::SetExitKey(raylib::KEY\_NULL);}
 \DoxyCodeLine{00090\ }
-\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ Why\ does\ updateCamera\ not\ just\ take\ an\ optional\ target?}}
-\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}-\/>updateToTarget(}
-\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{get\_or\_default}}<\mbox{\hyperlink{struct_entity}{Entity}}>(\textcolor{stringliteral}{"{}active\_camera\_target"{}},\ *\mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}));}
-\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}-\/>updateCamera();}
-\DoxyCodeLine{00095\ }
-\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}-\/>update(dt);}
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ gabe:\ i\ dont\ think\ we\ need\ to\ do\ this}}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ because\ the\ local\ map\ never\ should\ need\ to\ grab\ things}}
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ TODO\ do\ we?}}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ map\_ptr\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{get\_ptr}}<\mbox{\hyperlink{struct_map}{Map}}>(\textcolor{stringliteral}{"{}map"{}});}
-\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map\_ptr)\ \{}
-\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ today\ we\ need\ to\ grab\ things\ so\ that\ the\ client\ renders}}
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ what\ they\ server\ has\ access\ to}}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ map\_ptr-\/>\mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\_things}}();}
-\DoxyCodeLine{00105\ }
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ need\ this\ so\ the\ entity\ -\/>\ floating\ name\ moves\ around}}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ why\ does\ that\ happen}}
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ map\_ptr-\/>onUpdate(dt);}
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00110\ \ \ \ \ \}}
-\DoxyCodeLine{00111\ }
-\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_layer_ac93aed3c3aeeb92b41fd322d0ca926c5}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{MenuState::s\_in\_game}}())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00115\ }
-\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ map\_ptr\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{get\_ptr}}<\mbox{\hyperlink{struct_map}{Map}}>(\textcolor{stringliteral}{"{}map"{}});}
-\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ network\_debug\_mode\_on\ =}
-\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{get\_or\_default}}<\textcolor{keywordtype}{bool}>(\textcolor{stringliteral}{"{}network\_ui\_enabled"{}},\ \textcolor{keyword}{false});}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (network\_debug\_mode\_on)\ \{}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ map\_ptr\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{get\_ptr}}<\mbox{\hyperlink{struct_map}{Map}}>(\textcolor{stringliteral}{"{}server\_map"{}});}
-\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00122\ }
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceext_a5bb9a44990202857eea129e5b983f183}{ext::clear\_background}}(Color\{200,\ 200,\ 200,\ 255\});}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ raylib::BeginMode3D((*cam).get());}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::DrawPlane((\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{0.0f,\ -\/\mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ 0.0f\},}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}})\{256.0f,\ 256.0f\},\ DARKGRAY);}
-\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map\_ptr)\ map\_ptr-\/>onDraw(dt);}
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (network\_debug\_mode\_on)\ \{}
-\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ network\_players\ =}
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Forcing\ a\ copy\ to\ avoid\ the\ data\ changing\ from\ underneath}}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ us}}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<int,\ std::shared\_ptr<Player>>(}
-\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{get\_or\_default}}<}
-\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<int,\ std::shared\_ptr<Player>>>(}
-\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}server\_players"{}},\ \{\}));}
-\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ p\ :\ network\_players)\ \{}
-\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p.second)\ p.second-\/>render();}
-\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ auto\ nav\ =\ GLOBALS.get\_ptr<NavMesh>("{}navmesh"{});}}
-\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (nav)\ \{}}
-\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ (auto\ kv\ :\ nav-\/>entityShapes)\ \{}}
-\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ DrawLineStrip2Din3D(kv.second.hull,\ PINK);}}
-\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ (auto\ kv\ :\ nav-\/>shapes)\ \{}}
-\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ DrawLineStrip2Din3D(kv.hull,\ PINK);}}
-\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ act\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{get\_ptr}}<\mbox{\hyperlink{struct_entity}{Entity}}>(\textcolor{stringliteral}{"{}active\_camera\_target"{}});}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (act)\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}-\/>updateToTarget(act-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().\mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{position}});}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}-\/>updateCamera();}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ SystemManager::get().update(\mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}}\{\mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}\},\ dt);}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}-\/>update(dt);}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ gabe:\ i\ dont\ think\ we\ need\ to\ do\ this}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ because\ the\ local\ map\ never\ should\ need\ to\ grab\ things}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ TODO\ do\ we?}}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ map\_ptr\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{get\_ptr}}<\mbox{\hyperlink{struct_map}{Map}}>(\textcolor{stringliteral}{"{}map"{}});}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map\_ptr)\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ today\ we\ need\ to\ grab\ things\ so\ that\ the\ client\ renders}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ what\ they\ server\ has\ access\ to}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ map\_ptr-\/>\mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\_things}}();}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ need\ this\ so\ the\ entity\ -\/>\ floating\ name\ moves\ around}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ why\ does\ that\ happen}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ map\_ptr-\/>onUpdate(dt);}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00113\ \ \ \ \ \}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_layer_ac93aed3c3aeeb92b41fd322d0ca926c5}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{MenuState::s\_in\_game}}())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ map\_ptr\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{get\_ptr}}<\mbox{\hyperlink{struct_map}{Map}}>(\textcolor{stringliteral}{"{}map"{}});}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ network\_debug\_mode\_on\ =}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{get\_or\_default}}<\textcolor{keywordtype}{bool}>(\textcolor{stringliteral}{"{}network\_ui\_enabled"{}},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (network\_debug\_mode\_on)\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ map\_ptr\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{get\_ptr}}<\mbox{\hyperlink{struct_map}{Map}}>(\textcolor{stringliteral}{"{}server\_map"{}});}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceext_a5bb9a44990202857eea129e5b983f183}{ext::clear\_background}}(Color\{200,\ 200,\ 200,\ 255\});}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ raylib::BeginMode3D((*cam).get());}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::DrawPlane((\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{0.0f,\ -\/\mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ 0.0f\},}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}})\{256.0f,\ 256.0f\},\ DARKGRAY);}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map\_ptr)\ map\_ptr-\/>onDraw(dt);}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (network\_debug\_mode\_on)\ \{}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ network\_players\ =}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Forcing\ a\ copy\ to\ avoid\ the\ data\ changing\ from\ underneath}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ us}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<int,\ std::shared\_ptr<Player>>(}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{get\_or\_default}}<}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<int,\ std::shared\_ptr<Player>>>(}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}server\_players"{}},\ \{\}));}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SystemManager::get().render(\mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}}\{\mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}\},\ dt);}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ auto\ nav\ =\ GLOBALS.get\_ptr<NavMesh>("{}navmesh"{});}}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (nav)\ \{}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ (auto\ kv\ :\ nav-\/>entityShapes)\ \{}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ DrawLineStrip2Din3D(kv.second.hull,\ PINK);}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ (auto\ kv\ :\ nav-\/>shapes)\ \{}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ DrawLineStrip2Din3D(kv.hull,\ PINK);}}
 \DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ raylib::EndMode3D();}
-\DoxyCodeLine{00153\ }
-\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ note:\ for\ ui\ stuff}}
-\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map\_ptr)\ map\_ptr-\/>onDrawUI(dt);}
-\DoxyCodeLine{00156\ \ \ \ \ \}}
-\DoxyCodeLine{00157\ \};}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ raylib::EndMode3D();}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ note:\ for\ ui\ stuff}}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map\_ptr)\ map\_ptr-\/>onDrawUI(dt);}
+\DoxyCodeLine{00157\ \ \ \ \ \}}
+\DoxyCodeLine{00158\ \};}
 
 \end{DoxyCode}

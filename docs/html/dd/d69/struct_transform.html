@@ -107,6 +107,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afde7c64d0d8492b16b6d6f6dba8f5137"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a60da37217348723a8a273fe6e1db5f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d69/struct_transform.html#a7a60da37217348723a8a273fe6e1db5f">init</a> (<a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> pos, <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> sz)</td></tr>
 <tr class="separator:a7a60da37217348723a8a273fe6e1db5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c85c012d52bec3f8297cd480c6711b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d69/struct_transform.html#a3c85c012d52bec3f8297cd480c6711b9">update</a> (<a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> npos)</td></tr>
+<tr class="separator:a3c85c012d52bec3f8297cd480c6711b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb1c3da9267cef25c5ece078dbceb849"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d69/struct_transform.html#aeb1c3da9267cef25c5ece078dbceb849">as2</a> () const</td></tr>
 <tr class="separator:aeb1c3da9267cef25c5ece078dbceb849"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3c0d92c8ce1f9c2754f0c512cfd087b"><td class="memItemLeft" align="right" valign="top">virtual BoundingBox&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d69/struct_transform.html#af3c0d92c8ce1f9c2754f0c512cfd087b">raw_bounds</a> () const</td></tr>
@@ -219,7 +221,7 @@ Private Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="../../d4/d9a/namespacevec.html#aa79cdef251ee2f487b55dba93ad63ea0">vec::to2()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../d5/dab/struct_entity_helper.html#a321f609c7e2ac2633d18562edcebb49c">EntityHelper::getClosestMatchingEntity()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#ae92914dda24df2609cd0578075bf3bd4">EntityHelper::getEntitiesInRange()</a>, and <a class="el" href="../../d9/d49/namespacesystem__manager.html#ad37dd2580fac8e15a7d95784327e63b9">system_manager::update_job_information()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d5/dab/struct_entity_helper.html#a321f609c7e2ac2633d18562edcebb49c">EntityHelper::getClosestMatchingEntity()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#ae92914dda24df2609cd0578075bf3bd4">EntityHelper::getEntitiesInRange()</a>, <a class="el" href="../../dd/de4/struct_conveyer.html#a1ab235f62b991959290eab61ebbcf1f1">Conveyer::in_round_update()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a947c5a65ae1a78b3c4e46fdf76e2f86b">system_manager::process_input()</a>, and <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a77e67ff8d61329379931c6d03ea68708">system_manager::job_system::update_job_information()</a>.</p>
 
 </div>
 </div>
@@ -247,6 +249,8 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="../../d0/d3f/vec__util_8h.html#a7bc0ade59022f5ab1ebe03a4d6cee6aa">get_bounds()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#a96dc2039762efb4a2886fee1925b8a98">system_manager::render_manager::render_bounding_box()</a>.</p>
 
 </div>
 </div>
@@ -408,7 +412,37 @@ template&lt;typename S &gt; </div>
 
 <p class="reference">References <a class="el" href="../../d4/d9a/namespacevec.html#a5a3a9e37c6f80541240d5cb6cdb4fd4e">vec::snap()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../d3/db1/struct_player.html#a12f2b3445a9b57a5f5b0bdb84d2d14b2">Player::handle_in_game_grab_or_drop()</a>, and <a class="el" href="../../d9/d49/namespacesystem__manager.html#a6cf678bc2a6cdee9b0646d1a744d01f2">system_manager::transform_snapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d9/d49/namespacesystem__manager.html#a947c5a65ae1a78b3c4e46fdf76e2f86b">system_manager::process_input()</a>, and <a class="el" href="../../d9/d49/namespacesystem__manager.html#a6cf678bc2a6cdee9b0646d1a744d01f2">system_manager::transform_snapper()</a>.</p>
+
+</div>
+</div>
+<a id="a3c85c012d52bec3f8297cd480c6711b9" name="a3c85c012d52bec3f8297cd480c6711b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c85c012d52bec3f8297cd480c6711b9">&#9670;&#160;</a></span>update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Transform::update </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a>&#160;</td>
+          <td class="paramname"><em>npos</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../dd/d69/struct_transform.html#aa2bf3882fe729c29ae1bf2d52612b5dd">raw_position</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d9/d49/namespacesystem__manager.html#a83ed24ae5e1d1c24133a535d653b172f">system_manager::update_held_furniture_position()</a>.</p>
 
 </div>
 </div>
@@ -449,7 +483,7 @@ template&lt;typename S &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../dc/dc4/struct_entity.html#ae32aa83d8bae67c396468b025675ee74">Entity::get_heading()</a>, <a class="el" href="../../d3/db1/struct_player.html#a12f2b3445a9b57a5f5b0bdb84d2d14b2">Player::handle_in_game_grab_or_drop()</a>, <a class="el" href="../../d3/db1/struct_player.html#aed722c64fe7a62d9abeb8673f539a443">Player::handle_in_planning_grab_or_drop()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#afb81f15da9531f6cb852d76a72a09ecf">system_manager::render_model_highlighted()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#ade2c1588cbfffd59ab73884f9b48cef1">system_manager::render_model_normal()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a88899e9d93d6b94303f9f42998f6c268">system_manager::render_simple_highlighted()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#acb2b04d1008e658796308df346b50525">system_manager::render_simple_normal()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a2c4a75d18ad97efdebcb1709c3b8a62d">serialize()</a>, and <a class="el" href="../../d9/d49/namespacesystem__manager.html#aaf4c71db1de570e1fa2b96cd420ba642">system_manager::update_held_item_position()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../dd/de4/struct_conveyer.html#a47f8f31438b58f276f0a96cf3c349c53">Conveyer::add_static_components()</a>, <a class="el" href="../../dc/dc4/struct_entity.html#ae32aa83d8bae67c396468b025675ee74">Entity::get_heading()</a>, <a class="el" href="../../dd/de4/struct_conveyer.html#a1ab235f62b991959290eab61ebbcf1f1">Conveyer::in_round_update()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a27a95df8b20f1e69fe055a138e7f7e5d">system_manager::person_update_given_new_pos()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a947c5a65ae1a78b3c4e46fdf76e2f86b">system_manager::process_input()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#afd1ea546dd69491d4f5a71dbce050700">system_manager::render_manager::render_model_highlighted()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#a623ca4092034e5947a74092c361262cb">system_manager::render_manager::render_model_normal()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#ab516cfffd82eecca31558c6344a21c78">system_manager::render_manager::render_simple_highlighted()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#aa89264dbe8a54e3b35d66e45e7963cd6">system_manager::render_manager::render_simple_normal()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a2c4a75d18ad97efdebcb1709c3b8a62d">serialize()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a83ed24ae5e1d1c24133a535d653b172f">system_manager::update_held_furniture_position()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#aaf4c71db1de570e1fa2b96cd420ba642">system_manager::update_held_item_position()</a>, and <a class="el" href="../../d8/dd0/struct_remote_player.html#ab1498c129a17b839431fa3ba7a6746e5">RemotePlayer::update_remotely()</a>.</p>
 
 </div>
 </div>
@@ -469,7 +503,7 @@ template&lt;typename S &gt; </div>
 <div class="line">        {<a class="code hl_enumvalue" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f">BACK</a> | <a class="code hl_enumvalue" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e">RIGHT</a>, 135.0f}, {<a class="code hl_enumvalue" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f">BACK</a>, 180.0f},           {<a class="code hl_enumvalue" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f">BACK</a> | <a class="code hl_enumvalue" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d">LEFT</a>, 225.0f},</div>
 <div class="line">        {<a class="code hl_enumvalue" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d">LEFT</a>, 270.0f},         {<a class="code hl_enumvalue" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f">FORWARD</a> | <a class="code hl_enumvalue" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d">LEFT</a>, 315.0f}}</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="../../dd/d69/struct_transform.html#a8fce7c1e6ebe62c45d465ab949fbd20a">offsetFaceDirection()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#afb81f15da9531f6cb852d76a72a09ecf">system_manager::render_model_highlighted()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#ade2c1588cbfffd59ab73884f9b48cef1">system_manager::render_model_normal()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a88899e9d93d6b94303f9f42998f6c268">system_manager::render_simple_highlighted()</a>, and <a class="el" href="../../d9/d49/namespacesystem__manager.html#acb2b04d1008e658796308df346b50525">system_manager::render_simple_normal()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../dd/d69/struct_transform.html#a8fce7c1e6ebe62c45d465ab949fbd20a">offsetFaceDirection()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#afd1ea546dd69491d4f5a71dbce050700">system_manager::render_manager::render_model_highlighted()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#a623ca4092034e5947a74092c361262cb">system_manager::render_manager::render_model_normal()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#ab516cfffd82eecca31558c6344a21c78">system_manager::render_manager::render_simple_highlighted()</a>, and <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#aa89264dbe8a54e3b35d66e45e7963cd6">system_manager::render_manager::render_simple_normal()</a>.</p>
 
 </div>
 </div>
@@ -485,7 +519,7 @@ template&lt;typename S &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d3/db1/struct_player.html#a5bcdf490604929a7ba3b018c8556228b">Player::get_position_after_input()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a7a60da37217348723a8a273fe6e1db5f">init()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a2c4a75d18ad97efdebcb1709c3b8a62d">serialize()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a6cf678bc2a6cdee9b0646d1a744d01f2">system_manager::transform_snapper()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a83ed24ae5e1d1c24133a535d653b172f">system_manager::update_held_furniture_position()</a>, and <a class="el" href="../../d9/d49/namespacesystem__manager.html#aaf4c71db1de570e1fa2b96cd420ba642">system_manager::update_held_item_position()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../dd/de4/struct_conveyer.html#a47f8f31438b58f276f0a96cf3c349c53">Conveyer::add_static_components()</a>, <a class="el" href="../../d5/d0d/struct_table.html#ad076d57da63c494f59ec1e5ce5f002d6">Table::add_static_components()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a7a60da37217348723a8a273fe6e1db5f">init()</a>, <a class="el" href="../../d2/d9e/struct_game_layer.html#a4f215c223179bd3f6f2e305ae9c514cd">GameLayer::onUpdate()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a3e8126dd8986710c90900c8230f55c8d">system_manager::process_player_movement_input()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a2c4a75d18ad97efdebcb1709c3b8a62d">serialize()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a6cf678bc2a6cdee9b0646d1a744d01f2">system_manager::transform_snapper()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a83ed24ae5e1d1c24133a535d653b172f">system_manager::update_held_furniture_position()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#aaf4c71db1de570e1fa2b96cd420ba642">system_manager::update_held_item_position()</a>, <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a80b48eb7354e4827e21605e41577269f">system_manager::job_system::update_position_from_job()</a>, and <a class="el" href="../../d8/dd0/struct_remote_player.html#ab1498c129a17b839431fa3ba7a6746e5">RemotePlayer::update_remotely()</a>.</p>
 
 </div>
 </div>
@@ -517,7 +551,7 @@ template&lt;typename S &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d3/db1/struct_player.html#a5bcdf490604929a7ba3b018c8556228b">Player::get_position_after_input()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a7a60da37217348723a8a273fe6e1db5f">init()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a88899e9d93d6b94303f9f42998f6c268">system_manager::render_simple_highlighted()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#acb2b04d1008e658796308df346b50525">system_manager::render_simple_normal()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a2c4a75d18ad97efdebcb1709c3b8a62d">serialize()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a6cf678bc2a6cdee9b0646d1a744d01f2">system_manager::transform_snapper()</a>, <a class="el" href="../../d0/d3e/struct_a_i_person.html#a8a4a8251c55347bcf5e6d29a00d4d49a">AIPerson::update_xaxis_position()</a>, and <a class="el" href="../../d0/d3e/struct_a_i_person.html#a91edda78370012b664a50dc752dbf058">AIPerson::update_zaxis_position()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../dd/d69/struct_transform.html#a7a60da37217348723a8a273fe6e1db5f">init()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a27a95df8b20f1e69fe055a138e7f7e5d">system_manager::person_update_given_new_pos()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a3e8126dd8986710c90900c8230f55c8d">system_manager::process_player_movement_input()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#a96dc2039762efb4a2886fee1925b8a98">system_manager::render_manager::render_bounding_box()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#af1f746a942f74088a5a2eac0fc0b51d0">system_manager::render_manager::render_floating_name()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#abc7e8a0a6363013bf0a0776751ce06d1">system_manager::render_manager::render_progress_bar()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#ab516cfffd82eecca31558c6344a21c78">system_manager::render_manager::render_simple_highlighted()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#aa89264dbe8a54e3b35d66e45e7963cd6">system_manager::render_manager::render_simple_normal()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a2c4a75d18ad97efdebcb1709c3b8a62d">serialize()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a6cf678bc2a6cdee9b0646d1a744d01f2">system_manager::transform_snapper()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a3c85c012d52bec3f8297cd480c6711b9">update()</a>, and <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a80b48eb7354e4827e21605e41577269f">system_manager::job_system::update_position_from_job()</a>.</p>
 
 </div>
 </div>
@@ -533,7 +567,7 @@ template&lt;typename S &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../dd/d69/struct_transform.html#a7a60da37217348723a8a273fe6e1db5f">init()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#afb81f15da9531f6cb852d76a72a09ecf">system_manager::render_model_highlighted()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#ade2c1588cbfffd59ab73884f9b48cef1">system_manager::render_model_normal()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a88899e9d93d6b94303f9f42998f6c268">system_manager::render_simple_highlighted()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#acb2b04d1008e658796308df346b50525">system_manager::render_simple_normal()</a>, and <a class="el" href="../../dd/d69/struct_transform.html#a2c4a75d18ad97efdebcb1709c3b8a62d">serialize()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../dd/d69/struct_transform.html#a7a60da37217348723a8a273fe6e1db5f">init()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a27a95df8b20f1e69fe055a138e7f7e5d">system_manager::person_update_given_new_pos()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#afd1ea546dd69491d4f5a71dbce050700">system_manager::render_manager::render_model_highlighted()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#a623ca4092034e5947a74092c361262cb">system_manager::render_manager::render_model_normal()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#ab516cfffd82eecca31558c6344a21c78">system_manager::render_manager::render_simple_highlighted()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#aa89264dbe8a54e3b35d66e45e7963cd6">system_manager::render_manager::render_simple_normal()</a>, and <a class="el" href="../../dd/d69/struct_transform.html#a2c4a75d18ad97efdebcb1709c3b8a62d">serialize()</a>.</p>
 
 </div>
 </div>

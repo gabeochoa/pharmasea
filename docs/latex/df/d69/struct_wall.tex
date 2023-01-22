@@ -34,8 +34,6 @@ enum \mbox{\hyperlink{struct_wall_ab40f3bd4d498bf9d99dcfa609a432f5d}{Type}} \{ \
 \item 
 virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_wall_ad40659e789808a23de61de57e44a476b}{size}} () const override
 \item 
-virtual void \mbox{\hyperlink{struct_wall_ac04a4cbc1f63bd7ff9d6c09f21307dbb}{render\+\_\+normal}} () const override
-\item 
 virtual bool \mbox{\hyperlink{struct_wall_a57116b94ff452a7adbc015c053495b0e}{can\+\_\+rotate}} () const override
 \item 
 virtual bool \mbox{\hyperlink{struct_wall_afdf939015fd3ae14a2d34eeac8d3fb1b}{can\+\_\+be\+\_\+picked\+\_\+up}} () override
@@ -50,16 +48,6 @@ virtual bool \mbox{\hyperlink{struct_wall_ab2598915696bdc3dd628d9ad91b90b8a}{can
 \mbox{\hyperlink{struct_furniture_a3c289ae66cd307325e46544fa8ca0dfa}{Furniture}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} pos, Color face\+\_\+color\+\_\+in)
 \item 
 \mbox{\hyperlink{struct_furniture_af29143799fcb5ed44cd9d98e88166aa0}{Furniture}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
-\item 
-virtual void \mbox{\hyperlink{struct_furniture_a7c1a46b40616fba11f4ff50b6c34d647}{update\+\_\+held\+\_\+item\+\_\+position}} () override
-\item 
-virtual void \mbox{\hyperlink{struct_furniture_a8a01b16d5257d928fbabfbe8b6bd6798}{render\+\_\+normal}} () const override
-\item 
-void \mbox{\hyperlink{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}{render\+\_\+progress\+\_\+bar}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_furniture_ad47e3e72cefaca891da0d2f9a84c496c}{do\+\_\+work}} (float, \mbox{\hyperlink{struct_person}{Person}} $\ast$)
-\item 
-virtual bool \mbox{\hyperlink{struct_furniture_a382b9fccb7dbeafbb514111639666619}{has\+\_\+work}} () const
 \item 
 virtual bool \mbox{\hyperlink{struct_furniture_a0a970a23706f9c18caa223c4f2716f15}{add\+\_\+to\+\_\+navmesh}} () override
 \item 
@@ -98,8 +86,6 @@ virtual bool \mbox{\hyperlink{struct_entity_af864202a00a448f2b30e7b5634e5c490}{i
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}} (Bounding\+Box b) const
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}{update\+\_\+position}} (const \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&p)
-\item 
 virtual Bounding\+Box \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\+\_\+bounds}} () const
 \item 
 virtual Bounding\+Box \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}} () const
@@ -118,8 +104,6 @@ virtual void \mbox{\hyperlink{struct_entity_a48efb563c821424fd1a97efcc211cfd8}{o
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\+\_\+drop}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} location)
 \item 
-virtual void \mbox{\hyperlink{struct_entity_adab1628044c63c07d189d44b411046a3}{render}} () const final
-\item 
 virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update}} (float dt) final
 \end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
@@ -135,8 +119,6 @@ int \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}
 \mbox{\hyperlink{base__component_8h_a98fb6146960da76455a4eff579874b99}{Component\+Bit\+Set}} \mbox{\hyperlink{struct_entity_a2bfb3cd4a791f32f53365d156e239a54}{component\+Set}}
 \item 
 \mbox{\hyperlink{base__component_8h_a5aff059e5e50c5d4acef6bc563a2a367}{Component\+Array}} \mbox{\hyperlink{struct_entity_a268b34f155900bef861b8b3ce6a5fa60}{component\+Array}}
-\item 
-\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\+\_\+force}} \{0.\+0, 0.\+0, 0.\+0\}
 \item 
 bool \mbox{\hyperlink{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}{cleanup}} = false
 \item 
@@ -157,6 +139,8 @@ static \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \m
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{struct_furniture_ac0e99da147fde76016511e2887b3e9f6}{Furniture}} ()
+\item 
+void \mbox{\hyperlink{struct_furniture_a9712525c986150cbd108c3ae286af43f}{add\+\_\+static\+\_\+components}} ()
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Protected Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
 \begin{DoxyCompactItemize}
@@ -165,30 +149,13 @@ static \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \m
 \item 
 virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}} () const
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a66588b42f69ce15038bd149605a16fc2}{render\+\_\+debug\+\_\+mode}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a4f5def0fc8ea405ab385a65018046168}{render\+\_\+floating\+\_\+name}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{update\+\_\+held\+\_\+item\+\_\+position}} ()
-\item 
 virtual \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading}} ()
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{turn\+\_\+to\+\_\+face\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$target)
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update}} (float)
-\item 
-virtual void \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{planning\+\_\+update}} (float)
-\item 
 virtual void \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\+\_\+round\+\_\+update}} (float)
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}{can\+\_\+place\+\_\+item\+\_\+into}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$=nullptr)
-\end{DoxyCompactItemize}
-\doxysubsubsection*{Protected Attributes inherited from \mbox{\hyperlink{struct_furniture}{Furniture}}}
-\begin{DoxyCompactItemize}
-\item 
-float \mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\+\_\+work\+\_\+complete}} = 0.f
 \end{DoxyCompactItemize}
 
 
@@ -278,16 +245,6 @@ Reimplemented from \mbox{\hyperlink{struct_furniture_a5f0f46310aed2fdc0f8366f55f
 
 
 Reimplemented from \mbox{\hyperlink{struct_furniture_a53ad044be9587be4aec47c105decacf3}{Furniture}}.
-
-\mbox{\Hypertarget{struct_wall_ac04a4cbc1f63bd7ff9d6c09f21307dbb}\label{struct_wall_ac04a4cbc1f63bd7ff9d6c09f21307dbb}} 
-\index{Wall@{Wall}!render\_normal@{render\_normal}}
-\index{render\_normal@{render\_normal}!Wall@{Wall}}
-\doxysubsubsection{\texorpdfstring{render\_normal()}{render\_normal()}}
-{\footnotesize\ttfamily virtual void Wall\+::render\+\_\+normal (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Reimplemented from \mbox{\hyperlink{struct_furniture_a8a01b16d5257d928fbabfbe8b6bd6798}{Furniture}}.
 
 \mbox{\Hypertarget{struct_wall_afee7e30fcd9d856d1700eed1fc582f7e}\label{struct_wall_afee7e30fcd9d856d1700eed1fc582f7e}} 
 \index{Wall@{Wall}!serialize@{serialize}}

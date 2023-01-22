@@ -17,6 +17,19 @@ enum struct \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State
 , \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Completed}}
  \}
 \end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{struct_job_adb7cddf20de91f00e39b6a78c5783679}{path\+\_\+empty}} () const
+\item 
+const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \& \mbox{\hyperlink{struct_job_aed0abfeaa030da3b3b72494a4a191377}{path\+\_\+front}} () const
+\item 
+void \mbox{\hyperlink{struct_job_aa6f77ecb10351ff5336d27b6a07292f5}{path\+\_\+pop\+\_\+front}} ()
+\item 
+void \mbox{\hyperlink{struct_job_a866c096b6000b68a9cf4ee09bcf6b352}{update\+\_\+path}} (const std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \&new\+\_\+path)
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -32,15 +45,15 @@ float \mbox{\hyperlink{struct_job_a939fa3d2e9453d89b608b277853bee39}{time\+To\+C
 \item 
 \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_job_aa03693e1a7ac65c2b7327a39f176bbf7}{end}}
 \item 
-std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}
-\item 
 std\+::optional$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{struct_job_a6ca83b17472c1915ec5ed8668793e716}{local}}
+\item 
+int \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\+\_\+size}} = 0
+\item 
+std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}
 \item 
 std\+::function$<$ void(\mbox{\hyperlink{struct_a_i_person}{AIPerson}} $\ast$, \mbox{\hyperlink{struct_job}{Job}} $\ast$)$>$ \mbox{\hyperlink{struct_job_a2fd96529bde0648dd5e5ce630e9d7fe7}{on\+\_\+cleanup}} = nullptr
 \item 
 std\+::map$<$ std\+::string, void $\ast$ $>$ \mbox{\hyperlink{struct_job_a22eb4726b3b3fca6dd8d4b706167adc7}{data}}
-\item 
-bool \mbox{\hyperlink{struct_job_a78c1c02b77fa0f6dfa8f6e96a88d97a1}{initialized}} = false
 \item 
 int \mbox{\hyperlink{struct_job_ad4460fb88641f4f56aca942770e1316d}{spot\+\_\+in\+\_\+line}} = -\/1
 \end{DoxyCompactItemize}
@@ -81,6 +94,60 @@ Completed&\\
 \end{DoxyEnumFields}
 
 
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_job_adb7cddf20de91f00e39b6a78c5783679}\label{struct_job_adb7cddf20de91f00e39b6a78c5783679}} 
+\index{Job@{Job}!path\_empty@{path\_empty}}
+\index{path\_empty@{path\_empty}!Job@{Job}}
+\doxysubsubsection{\texorpdfstring{path\_empty()}{path\_empty()}}
+{\footnotesize\ttfamily bool Job\+::path\+\_\+empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.
+
+\mbox{\Hypertarget{struct_job_aed0abfeaa030da3b3b72494a4a191377}\label{struct_job_aed0abfeaa030da3b3b72494a4a191377}} 
+\index{Job@{Job}!path\_front@{path\_front}}
+\index{path\_front@{path\_front}!Job@{Job}}
+\doxysubsubsection{\texorpdfstring{path\_front()}{path\_front()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \& Job\+::path\+\_\+front (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.
+
+\mbox{\Hypertarget{struct_job_aa6f77ecb10351ff5336d27b6a07292f5}\label{struct_job_aa6f77ecb10351ff5336d27b6a07292f5}} 
+\index{Job@{Job}!path\_pop\_front@{path\_pop\_front}}
+\index{path\_pop\_front@{path\_pop\_front}!Job@{Job}}
+\doxysubsubsection{\texorpdfstring{path\_pop\_front()}{path\_pop\_front()}}
+{\footnotesize\ttfamily void Job\+::path\+\_\+pop\+\_\+front (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}, and \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\+\_\+size}}.
+
+\mbox{\Hypertarget{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}\label{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}} 
+\index{Job@{Job}!serialize@{serialize}}
+\index{serialize@{serialize}!Job@{Job}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void Job\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_job_aa03693e1a7ac65c2b7327a39f176bbf7}{end}}, \mbox{\hyperlink{struct_job_a6ca83b17472c1915ec5ed8668793e716}{local}}, \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}, \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\+\_\+size}}, \mbox{\hyperlink{struct_job_ad4460fb88641f4f56aca942770e1316d}{spot\+\_\+in\+\_\+line}}, \mbox{\hyperlink{struct_job_a36d7ce8c8419b6a196d0069a3ca53dc0}{start}}, \mbox{\hyperlink{struct_job_a5f001c363f99db97dc40cccbed8cbf26}{state}}, \mbox{\hyperlink{struct_job_a7ffd2fbd60665c938405f4b807ecf0b5}{time\+Passed\+In\+Current\+State}}, \mbox{\hyperlink{struct_job_a939fa3d2e9453d89b608b277853bee39}{time\+To\+Complete}}, and \mbox{\hyperlink{struct_job_a54b5041220d32132698962f324d7ac04}{type}}.
+
+\mbox{\Hypertarget{struct_job_a866c096b6000b68a9cf4ee09bcf6b352}\label{struct_job_a866c096b6000b68a9cf4ee09bcf6b352}} 
+\index{Job@{Job}!update\_path@{update\_path}}
+\index{update\_path@{update\_path}!Job@{Job}}
+\doxysubsubsection{\texorpdfstring{update\_path()}{update\_path()}}
+{\footnotesize\ttfamily void Job\+::update\+\_\+path (\begin{DoxyParamCaption}\item[{const std\+::deque$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \&}]{new\+\_\+path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}, and \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\+\_\+size}}.
+
+
+
 \doxysubsection{Member Data Documentation}
 \mbox{\Hypertarget{struct_job_a22eb4726b3b3fca6dd8d4b706167adc7}\label{struct_job_a22eb4726b3b3fca6dd8d4b706167adc7}} 
 \index{Job@{Job}!data@{data}}
@@ -94,17 +161,19 @@ Completed&\\
 \doxysubsubsection{\texorpdfstring{end}{end}}
 {\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} Job\+::end}
 
-\mbox{\Hypertarget{struct_job_a78c1c02b77fa0f6dfa8f6e96a88d97a1}\label{struct_job_a78c1c02b77fa0f6dfa8f6e96a88d97a1}} 
-\index{Job@{Job}!initialized@{initialized}}
-\index{initialized@{initialized}!Job@{Job}}
-\doxysubsubsection{\texorpdfstring{initialized}{initialized}}
-{\footnotesize\ttfamily bool Job\+::initialized = false}
+
+
+Referenced by \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize()}}.
 
 \mbox{\Hypertarget{struct_job_a6ca83b17472c1915ec5ed8668793e716}\label{struct_job_a6ca83b17472c1915ec5ed8668793e716}} 
 \index{Job@{Job}!local@{local}}
 \index{local@{local}!Job@{Job}}
 \doxysubsubsection{\texorpdfstring{local}{local}}
 {\footnotesize\ttfamily std\+::optional$<$\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}$>$ Job\+::local}
+
+
+
+Referenced by \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize()}}.
 
 \mbox{\Hypertarget{struct_job_a2fd96529bde0648dd5e5ce630e9d7fe7}\label{struct_job_a2fd96529bde0648dd5e5ce630e9d7fe7}} 
 \index{Job@{Job}!on\_cleanup@{on\_cleanup}}
@@ -118,11 +187,29 @@ Completed&\\
 \doxysubsubsection{\texorpdfstring{path}{path}}
 {\footnotesize\ttfamily std\+::deque$<$\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}$>$ Job\+::path}
 
+
+
+Referenced by \mbox{\hyperlink{struct_job_adb7cddf20de91f00e39b6a78c5783679}{path\+\_\+empty()}}, \mbox{\hyperlink{struct_job_aed0abfeaa030da3b3b72494a4a191377}{path\+\_\+front()}}, \mbox{\hyperlink{struct_job_aa6f77ecb10351ff5336d27b6a07292f5}{path\+\_\+pop\+\_\+front()}}, \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize()}}, and \mbox{\hyperlink{struct_job_a866c096b6000b68a9cf4ee09bcf6b352}{update\+\_\+path()}}.
+
+\mbox{\Hypertarget{struct_job_a89e96ec1238197ae28fa63bcfba2c150}\label{struct_job_a89e96ec1238197ae28fa63bcfba2c150}} 
+\index{Job@{Job}!path\_size@{path\_size}}
+\index{path\_size@{path\_size}!Job@{Job}}
+\doxysubsubsection{\texorpdfstring{path\_size}{path\_size}}
+{\footnotesize\ttfamily int Job\+::path\+\_\+size = 0}
+
+
+
+Referenced by \mbox{\hyperlink{struct_job_aa6f77ecb10351ff5336d27b6a07292f5}{path\+\_\+pop\+\_\+front()}}, \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize()}}, and \mbox{\hyperlink{struct_job_a866c096b6000b68a9cf4ee09bcf6b352}{update\+\_\+path()}}.
+
 \mbox{\Hypertarget{struct_job_ad4460fb88641f4f56aca942770e1316d}\label{struct_job_ad4460fb88641f4f56aca942770e1316d}} 
 \index{Job@{Job}!spot\_in\_line@{spot\_in\_line}}
 \index{spot\_in\_line@{spot\_in\_line}!Job@{Job}}
 \doxysubsubsection{\texorpdfstring{spot\_in\_line}{spot\_in\_line}}
 {\footnotesize\ttfamily int Job\+::spot\+\_\+in\+\_\+line = -\/1}
+
+
+
+Referenced by \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize()}}.
 
 \mbox{\Hypertarget{struct_job_a36d7ce8c8419b6a196d0069a3ca53dc0}\label{struct_job_a36d7ce8c8419b6a196d0069a3ca53dc0}} 
 \index{Job@{Job}!start@{start}}
@@ -130,11 +217,19 @@ Completed&\\
 \doxysubsubsection{\texorpdfstring{start}{start}}
 {\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} Job\+::start}
 
+
+
+Referenced by \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize()}}.
+
 \mbox{\Hypertarget{struct_job_a5f001c363f99db97dc40cccbed8cbf26}\label{struct_job_a5f001c363f99db97dc40cccbed8cbf26}} 
 \index{Job@{Job}!state@{state}}
 \index{state@{state}!Job@{Job}}
 \doxysubsubsection{\texorpdfstring{state}{state}}
 {\footnotesize\ttfamily enum \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{Job\+::\+State}} Job\+::state}
+
+
+
+Referenced by \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize()}}.
 
 \mbox{\Hypertarget{struct_job_a7ffd2fbd60665c938405f4b807ecf0b5}\label{struct_job_a7ffd2fbd60665c938405f4b807ecf0b5}} 
 \index{Job@{Job}!timePassedInCurrentState@{timePassedInCurrentState}}
@@ -142,17 +237,29 @@ Completed&\\
 \doxysubsubsection{\texorpdfstring{timePassedInCurrentState}{timePassedInCurrentState}}
 {\footnotesize\ttfamily float Job\+::time\+Passed\+In\+Current\+State = 0.f}
 
+
+
+Referenced by \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize()}}.
+
 \mbox{\Hypertarget{struct_job_a939fa3d2e9453d89b608b277853bee39}\label{struct_job_a939fa3d2e9453d89b608b277853bee39}} 
 \index{Job@{Job}!timeToComplete@{timeToComplete}}
 \index{timeToComplete@{timeToComplete}!Job@{Job}}
 \doxysubsubsection{\texorpdfstring{timeToComplete}{timeToComplete}}
 {\footnotesize\ttfamily float Job\+::time\+To\+Complete = 1.f}
 
+
+
+Referenced by \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize()}}.
+
 \mbox{\Hypertarget{struct_job_a54b5041220d32132698962f324d7ac04}\label{struct_job_a54b5041220d32132698962f324d7ac04}} 
 \index{Job@{Job}!type@{type}}
 \index{type@{type}!Job@{Job}}
 \doxysubsubsection{\texorpdfstring{type}{type}}
 {\footnotesize\ttfamily \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{Job\+Type}} Job\+::type}
+
+
+
+Referenced by \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize()}}.
 
 
 

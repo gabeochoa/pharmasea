@@ -1,0 +1,191 @@
+\hypertarget{rendering__system_8h_source}{}\doxysection{rendering\+\_\+system.\+h}
+\label{rendering__system_8h_source}\index{src/system/rendering\_system.h@{src/system/rendering\_system.h}}
+\mbox{\hyperlink{rendering__system_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../engine/log.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{job__system_8h}{job\_system.h}}"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacesystem__manager}{system\_manager}}\ \{}
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }render\_manager\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_ab516cfffd82eecca31558c6344a21c78}{render\_simple\_highlighted}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_transform}{Transform}}>())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}>())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}\&\ renderer\ =}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ entity-\/>get<\mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}>();}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ Color\ f\ =\ \mbox{\hyperlink{namespaceui_1_1color_aa3929909129eee15df5510aecd83bb2b}{ui::color::getHighlighted}}(renderer.\mbox{\hyperlink{struct_simple_colored_box_renderer_a650f216dd8ad2c3503c3ce7567f9129f}{face\_color}});}
+\DoxyCodeLine{00019\ \ \ \ \ Color\ b\ =\ \mbox{\hyperlink{namespaceui_1_1color_aa3929909129eee15df5510aecd83bb2b}{ui::color::getHighlighted}}(renderer.\mbox{\hyperlink{struct_simple_colored_box_renderer_a43652e104eb689779619fa4780bbc54e}{base\_color}});}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{comment}{//\ TODO\ replace\ size\ with\ Bounds\ component\ when\ it\ exists}}
+\DoxyCodeLine{00021\ \ \ \ \ DrawCubeCustom(transform.\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}},\ transform.\mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{size}}.x,\ transform.\mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{size}}.y,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{size}}.z,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_a8710b3a85857144e16ec98af663f9681}{FrontFaceDirectionMap}}.at(transform.\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}}),}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f,\ b);}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00026\ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_aa89264dbe8a54e3b35d66e45e7963cd6}{render\_simple\_normal}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_transform}{Transform}}>())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}>())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}\&\ renderer\ =}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ entity-\/>get<\mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}>();}
+\DoxyCodeLine{00034\ \ \ \ \ DrawCubeCustom(transform.\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}},\ transform.\mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{size}}.x,\ transform.\mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{size}}.y,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{size}}.z,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_a8710b3a85857144e16ec98af663f9681}{FrontFaceDirectionMap}}.at(transform.\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}}),}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ renderer.\mbox{\hyperlink{struct_simple_colored_box_renderer_a650f216dd8ad2c3503c3ce7567f9129f}{face\_color}},\ renderer.\mbox{\hyperlink{struct_simple_colored_box_renderer_a43652e104eb689779619fa4780bbc54e}{base\_color}});}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00039\ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a96dc2039762efb4a2886fee1925b8a98}{render\_bounding\_box}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_transform}{Transform}}>())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ DrawBoundingBox(transform.\mbox{\hyperlink{struct_transform_a73449bd3661ec2561a31fb1cf40759c8}{bounds}}(),\ MAROON);}
+\DoxyCodeLine{00046\ \ \ \ \ DrawFloatingText(transform.\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}},\ Preload::get().font,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}\{\}"{}},\ entity-\/>id).c\_str());}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00049\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a15c50cbca5bbf8b31cadca1dff6f6dbe}{render\_debug}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_adc930a9721c3daf854c661ec1905d357}{job\_system::render\_job\_visual}}(entity,\ dt);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{//\ Ghost\ player\ only\ render\ during\ debug\ mode}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>has<\mbox{\hyperlink{struct_can_be_ghost_player}{CanBeGhostPlayer}}>()\ \&\&}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ entity-\/>get<\mbox{\hyperlink{struct_can_be_ghost_player}{CanBeGhostPlayer}}>().\mbox{\hyperlink{struct_can_be_ghost_player_ad4572f68bf5a8824b88f0792da4771a0}{is\_ghost}}())\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_aa89264dbe8a54e3b35d66e45e7963cd6}{render\_simple\_normal}}(entity,\ dt);}
+\DoxyCodeLine{00058\ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a96dc2039762efb4a2886fee1925b8a98}{render\_bounding\_box}}(entity,\ dt);}
+\DoxyCodeLine{00060\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_afd1ea546dd69491d4f5a71dbce050700}{render\_model\_highlighted}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_model_renderer}{ModelRenderer}}>())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_can_be_highlighted}{CanBeHighlighted}}>())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \mbox{\hyperlink{struct_model_renderer}{ModelRenderer}}\&\ renderer\ =\ entity-\/>get<\mbox{\hyperlink{struct_model_renderer}{ModelRenderer}}>();}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordflow}{if}\ (!renderer.\mbox{\hyperlink{struct_model_renderer_a0f2f87afba472e9cf9dbac1ca7bcbd46}{has\_model}}())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_transform}{Transform}}>())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00070\ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \mbox{\hyperlink{struct_model_info}{ModelInfo}}\ model\_info\ =\ renderer.\mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{model\_info}}().value();}
+\DoxyCodeLine{00073\ \ \ \ \ Color\ base\ =\ \mbox{\hyperlink{namespaceui_1_1color_aa3929909129eee15df5510aecd83bb2b}{ui::color::getHighlighted}}(WHITE\ \textcolor{comment}{/*this-\/>base\_color*/});}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{float}\ rotation\_angle\ =}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ make\ this\ api\ better}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ 180.f\ +\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(transform.\mbox{\hyperlink{struct_transform_a8710b3a85857144e16ec98af663f9681}{FrontFaceDirectionMap}}.at(}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}}));}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ DrawModelEx(renderer.\mbox{\hyperlink{struct_model_renderer_a5eb913b5b12c1ac3c40f8cb625761b78}{model}}(),}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ transform.position.x\ +\ model\_info.position\_offset.x,}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ transform.position.y\ +\ model\_info.position\_offset.y,}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ transform.position.z\ +\ model\_info.position\_offset.z,}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0.f,\ 1.f,\ 0.f\},\ rotation\_angle,}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{size}}\ *\ model\_info.size\_scale,\ base);}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00090\ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a623ca4092034e5947a74092c361262cb}{render\_model\_normal}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_model_renderer}{ModelRenderer}}>())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \mbox{\hyperlink{struct_model_renderer}{ModelRenderer}}\&\ renderer\ =\ entity-\/>get<\mbox{\hyperlink{struct_model_renderer}{ModelRenderer}}>();}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordflow}{if}\ (!renderer.\mbox{\hyperlink{struct_model_renderer_a0f2f87afba472e9cf9dbac1ca7bcbd46}{has\_model}}())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_transform}{Transform}}>())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00099\ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \mbox{\hyperlink{struct_model_info}{ModelInfo}}\ model\_info\ =\ renderer.\mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{model\_info}}().value();}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{float}\ rotation\_angle\ =}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ make\ this\ api\ better}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ 180.f\ +\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(transform.\mbox{\hyperlink{struct_transform_a8710b3a85857144e16ec98af663f9681}{FrontFaceDirectionMap}}.at(}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}}));}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ raylib::DrawModelEx(}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ renderer.\mbox{\hyperlink{struct_model_renderer_a5eb913b5b12c1ac3c40f8cb625761b78}{model}}(),}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ transform.position.x\ +\ model\_info.position\_offset.x,}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ transform.position.y\ +\ model\_info.position\_offset.y,}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ transform.position.z\ +\ model\_info.position\_offset.z,}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0,\ 1,\ 0\},\ model\_info.rotation\_angle\ +\ rotation\_angle,}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{size}}\ *\ model\_info.size\_scale,\ WHITE\ \textcolor{comment}{/*this-\/>base\_color*/});}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00119\ \}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a2a9d86d37afa68c8461604ce70cfd612}{render\_normal}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{comment}{//\ Ghost\ player\ cant\ render\ during\ normal\ mode}}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>has<\mbox{\hyperlink{struct_can_be_ghost_player}{CanBeGhostPlayer}}>()\ \&\&}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ entity-\/>get<\mbox{\hyperlink{struct_can_be_ghost_player}{CanBeGhostPlayer}}>().\mbox{\hyperlink{struct_can_be_ghost_player_ad4572f68bf5a8824b88f0792da4771a0}{is\_ghost}}())\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00126\ \ \ \ \ \}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>has<\mbox{\hyperlink{struct_can_be_highlighted}{CanBeHighlighted}}>()\ \&\&}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ entity-\/>get<\mbox{\hyperlink{struct_can_be_highlighted}{CanBeHighlighted}}>().\mbox{\hyperlink{struct_can_be_highlighted_ae4bec42750b2d7b321d4ab40275ee7e7}{is\_highlighted}})\ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ used\ =\ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_afd1ea546dd69491d4f5a71dbce050700}{render\_model\_highlighted}}(entity,\ dt);}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!used)\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_ab516cfffd82eecca31558c6344a21c78}{render\_simple\_highlighted}}(entity,\ dt);}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00135\ \ \ \ \ \}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordtype}{bool}\ used\ =\ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a623ca4092034e5947a74092c361262cb}{render\_model\_normal}}(entity,\ dt);}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordflow}{if}\ (!used)\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_aa89264dbe8a54e3b35d66e45e7963cd6}{render\_simple\_normal}}(entity,\ dt);}
+\DoxyCodeLine{00140\ \ \ \ \ \}}
+\DoxyCodeLine{00141\ \}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_af1f746a942f74088a5a2eac0fc0b51d0}{render\_floating\_name}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_has_name}{HasName}}>())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00145\ \ \ \ \ \mbox{\hyperlink{struct_has_name}{HasName}}\&\ hasName\ =\ entity-\/>get<\mbox{\hyperlink{struct_has_name}{HasName}}>();}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_transform}{Transform}}>())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \mbox{\hyperlink{namespaceraylib_afdb4c3efe6c13dc14bfce3761b4bab50}{raylib::DrawFloatingText}}(}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}}\ +\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0,\ 0.5f\ *\ TILESIZE,\ 0\},}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ Preload::get().font,\ hasName.\mbox{\hyperlink{struct_has_name_a9b8c5e7a1ca7671ebaa1948c7492a424}{name}}.c\_str());}
+\DoxyCodeLine{00153\ \}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_abc7e8a0a6363013bf0a0776751ce06d1}{render\_progress\_bar}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_has_work}{HasWork}}>())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00157\ \ \ \ \ \mbox{\hyperlink{struct_has_work}{HasWork}}\&\ hasWork\ =\ entity-\/>get<\mbox{\hyperlink{struct_has_work}{HasWork}}>();}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{comment}{//\ TODO\ why\ do\ we\ crash\ on\ pct\_work\_complete}}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasWork.\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ <=\ 0.01f\ ||\ !hasWork.\mbox{\hyperlink{struct_has_work_abb83ec430bea41e16fa458c3bc9a60a0}{has\_work}}())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_transform}{Transform}}>())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ length\ =\ 20;}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ full\ =\ (int)\ (hasWork.\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ *\ length);}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ empty\ =\ length\ -\/\ full;}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keyword}{auto}\ progress\ =\ fmt::format(\textcolor{stringliteral}{"{}[\{:=>\{\}\}\{:\ >\{\}\}]"{}},\ \textcolor{stringliteral}{"{}"{}},\ full,\ \textcolor{stringliteral}{"{}"{}},\ empty\ *\ 2);}
+\DoxyCodeLine{00171\ \ \ \ \ DrawFloatingText(transform.\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}}\ +\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}(\{0,\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ 0\}),}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Preload::get().\mbox{\hyperlink{namespacefont}{font}},\ progress.c\_str());}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{comment}{//\ TODO\ eventually\ add\ real\ rectangle\ progress\ bar}}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{comment}{//\ auto\ game\_cam\ =\ GLOBALS.get<GameCam>("{}game\_cam"{});}}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{comment}{//\ DrawBillboardRec(game\_cam.camera,\ TextureLibrary::get().get("{}face"{}),}}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{comment}{//\ Rectangle(\{0,\ 0,\ 260,\ 260\}),}}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{comment}{//\ this-\/>raw\_position\ +\ vec3(\{-\/(pct\_complete\ *\ TILESIZE),}}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{comment}{//\ TILESIZE\ *\ 2,\ 0\}),}}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{comment}{//\ \{pct\_complete\ *\ TILESIZE,\ TILESIZE\},\ WHITE);}}
+\DoxyCodeLine{00181\ \}}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \}\ \ \textcolor{comment}{//\ namespace\ render\_manager}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \}\ \ \textcolor{comment}{//\ namespace\ system\_manager}}
+
+\end{DoxyCode}

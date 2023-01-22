@@ -13,6 +13,8 @@ Inheritance diagram for Conveyer\+:\begin{figure}[H]
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+void \mbox{\hyperlink{struct_conveyer_a47f8f31438b58f276f0a96cf3c349c53}{add\+\_\+static\+\_\+components}} ()
+\item 
 \mbox{\hyperlink{struct_conveyer_a39ec7cc80b09f555e380514965bbf5f4}{Conveyer}} ()
 \item 
 \mbox{\hyperlink{struct_conveyer_af7418484a9a0f4a9a976833efb9cc6b4}{Conveyer}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos)
@@ -22,8 +24,6 @@ Inheritance diagram for Conveyer\+:\begin{figure}[H]
 void \mbox{\hyperlink{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}{update\+\_\+model}} ()
 \item 
 bool \mbox{\hyperlink{struct_conveyer_ad463cf410c86390bf7f7ec7bcf9823b3}{can\+\_\+take\+\_\+item\+\_\+from}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_conveyer_af073b867bbdf32206c8a279c51bbdbcb}{update\+\_\+held\+\_\+item\+\_\+position}} () override
 \item 
 virtual void \mbox{\hyperlink{struct_conveyer_a1ab235f62b991959290eab61ebbcf1f1}{in\+\_\+round\+\_\+update}} (float dt) override
 \end{DoxyCompactItemize}
@@ -35,16 +35,6 @@ virtual void \mbox{\hyperlink{struct_conveyer_a1ab235f62b991959290eab61ebbcf1f1}
 \mbox{\hyperlink{struct_furniture_a3c289ae66cd307325e46544fa8ca0dfa}{Furniture}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} pos, Color face\+\_\+color\+\_\+in)
 \item 
 \mbox{\hyperlink{struct_furniture_af29143799fcb5ed44cd9d98e88166aa0}{Furniture}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
-\item 
-virtual void \mbox{\hyperlink{struct_furniture_a7c1a46b40616fba11f4ff50b6c34d647}{update\+\_\+held\+\_\+item\+\_\+position}} () override
-\item 
-virtual void \mbox{\hyperlink{struct_furniture_a8a01b16d5257d928fbabfbe8b6bd6798}{render\+\_\+normal}} () const override
-\item 
-void \mbox{\hyperlink{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}{render\+\_\+progress\+\_\+bar}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_furniture_ad47e3e72cefaca891da0d2f9a84c496c}{do\+\_\+work}} (float, \mbox{\hyperlink{struct_person}{Person}} $\ast$)
-\item 
-virtual bool \mbox{\hyperlink{struct_furniture_a382b9fccb7dbeafbb514111639666619}{has\+\_\+work}} () const
 \item 
 virtual bool \mbox{\hyperlink{struct_furniture_a0a970a23706f9c18caa223c4f2716f15}{add\+\_\+to\+\_\+navmesh}} () override
 \item 
@@ -83,8 +73,6 @@ virtual bool \mbox{\hyperlink{struct_entity_af864202a00a448f2b30e7b5634e5c490}{i
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}} (Bounding\+Box b) const
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}{update\+\_\+position}} (const \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&p)
-\item 
 virtual Bounding\+Box \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\+\_\+bounds}} () const
 \item 
 virtual Bounding\+Box \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}} () const
@@ -102,8 +90,6 @@ virtual bool \mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{i
 virtual void \mbox{\hyperlink{struct_entity_a48efb563c821424fd1a97efcc211cfd8}{on\+\_\+pickup}} ()
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\+\_\+drop}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} location)
-\item 
-virtual void \mbox{\hyperlink{struct_entity_adab1628044c63c07d189d44b411046a3}{render}} () const final
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update}} (float dt) final
 \end{DoxyCompactItemize}
@@ -124,8 +110,6 @@ int \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}
 \mbox{\hyperlink{base__component_8h_a98fb6146960da76455a4eff579874b99}{Component\+Bit\+Set}} \mbox{\hyperlink{struct_entity_a2bfb3cd4a791f32f53365d156e239a54}{component\+Set}}
 \item 
 \mbox{\hyperlink{base__component_8h_a5aff059e5e50c5d4acef6bc563a2a367}{Component\+Array}} \mbox{\hyperlink{struct_entity_a268b34f155900bef861b8b3ce6a5fa60}{component\+Array}}
-\item 
-\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\+\_\+force}} \{0.\+0, 0.\+0, 0.\+0\}
 \item 
 bool \mbox{\hyperlink{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}{cleanup}} = false
 \item 
@@ -153,6 +137,8 @@ static \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \m
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{struct_furniture_ac0e99da147fde76016511e2887b3e9f6}{Furniture}} ()
+\item 
+void \mbox{\hyperlink{struct_furniture_a9712525c986150cbd108c3ae286af43f}{add\+\_\+static\+\_\+components}} ()
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Protected Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
 \begin{DoxyCompactItemize}
@@ -161,30 +147,13 @@ static \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \m
 \item 
 virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}} () const
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a66588b42f69ce15038bd149605a16fc2}{render\+\_\+debug\+\_\+mode}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a4f5def0fc8ea405ab385a65018046168}{render\+\_\+floating\+\_\+name}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{update\+\_\+held\+\_\+item\+\_\+position}} ()
-\item 
 virtual \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading}} ()
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{turn\+\_\+to\+\_\+face\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$target)
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update}} (float)
-\item 
-virtual void \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{planning\+\_\+update}} (float)
-\item 
 virtual void \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\+\_\+round\+\_\+update}} (float)
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}{can\+\_\+place\+\_\+item\+\_\+into}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$=nullptr)
-\end{DoxyCompactItemize}
-\doxysubsubsection*{Protected Attributes inherited from \mbox{\hyperlink{struct_furniture}{Furniture}}}
-\begin{DoxyCompactItemize}
-\item 
-float \mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\+\_\+work\+\_\+complete}} = 0.f
 \end{DoxyCompactItemize}
 
 
@@ -203,7 +172,7 @@ float \mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\+
 
 
 
-References \mbox{\hyperlink{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}{update\+\_\+model()}}.
+References \mbox{\hyperlink{struct_conveyer_a47f8f31438b58f276f0a96cf3c349c53}{add\+\_\+static\+\_\+components()}}, and \mbox{\hyperlink{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}{update\+\_\+model()}}.
 
 \mbox{\Hypertarget{struct_conveyer_a7cfd934c28821a38e40da7d630dcbff9}\label{struct_conveyer_a7cfd934c28821a38e40da7d630dcbff9}} 
 \index{Conveyer@{Conveyer}!Conveyer@{Conveyer}}
@@ -213,11 +182,25 @@ References \mbox{\hyperlink{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}{u
 
 
 
-References \mbox{\hyperlink{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}{update\+\_\+model()}}.
+References \mbox{\hyperlink{struct_conveyer_a47f8f31438b58f276f0a96cf3c349c53}{add\+\_\+static\+\_\+components()}}, and \mbox{\hyperlink{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}{update\+\_\+model()}}.
 
 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_conveyer_a47f8f31438b58f276f0a96cf3c349c53}\label{struct_conveyer_a47f8f31438b58f276f0a96cf3c349c53}} 
+\index{Conveyer@{Conveyer}!add\_static\_components@{add\_static\_components}}
+\index{add\_static\_components@{add\_static\_components}!Conveyer@{Conveyer}}
+\doxysubsubsection{\texorpdfstring{add\_static\_components()}{add\_static\_components()}}
+{\footnotesize\ttfamily void Conveyer\+::add\+\_\+static\+\_\+components (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform\+::\+BACK}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform\+::\+FORWARD}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform\+::\+LEFT}}, \mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{Transform\+::position}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform\+::\+RIGHT}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_conveyer_af7418484a9a0f4a9a976833efb9cc6b4}{Conveyer()}}.
+
 \mbox{\Hypertarget{struct_conveyer_ad463cf410c86390bf7f7ec7bcf9823b3}\label{struct_conveyer_ad463cf410c86390bf7f7ec7bcf9823b3}} 
 \index{Conveyer@{Conveyer}!can\_take\_item\_from@{can\_take\_item\_from}}
 \index{can\_take\_item\_from@{can\_take\_item\_from}!Conveyer@{Conveyer}}
@@ -248,7 +231,7 @@ Reimplemented in \mbox{\hyperlink{struct_grabber_abc26dd0534580dd686d5c2c09b6df6
 
 
 
-References \mbox{\hyperlink{struct_conveyer_a761bd908806aaf517f685a9deb039160}{can\+\_\+take\+\_\+from}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5}{Item\+::\+FURNITURE}}, \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{Entity\+::in\+\_\+round\+\_\+update()}}, \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{Can\+Hold\+Item\+::item()}}, \mbox{\hyperlink{struct_conveyer_a3d8397d6d1477d871603d12990f14acb}{ITEM\+\_\+\+END}}, \mbox{\hyperlink{struct_conveyer_a66269a633e63a83eb0dba6fc5f2cce89}{ITEM\+\_\+\+START}}, \mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\+\_\+item\+\_\+pos}}, and \mbox{\hyperlink{struct_conveyer_a981ad6c98d9b5e6d4e859f247eee6af5}{SPEED}}.
+References \mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{Transform\+::as2()}}, \mbox{\hyperlink{struct_conveyer_a761bd908806aaf517f685a9deb039160}{can\+\_\+take\+\_\+from}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5}{Item\+::\+FURNITURE}}, \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{Entity\+::in\+\_\+round\+\_\+update()}}, \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{Can\+Hold\+Item\+::item()}}, \mbox{\hyperlink{struct_conveyer_a3d8397d6d1477d871603d12990f14acb}{ITEM\+\_\+\+END}}, \mbox{\hyperlink{struct_conveyer_a66269a633e63a83eb0dba6fc5f2cce89}{ITEM\+\_\+\+START}}, \mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\+\_\+item\+\_\+pos}}, and \mbox{\hyperlink{struct_conveyer_a981ad6c98d9b5e6d4e859f247eee6af5}{SPEED}}.
 
 
 
@@ -264,16 +247,6 @@ void Conveyer\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyPa
 
 
 References \mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\+\_\+item\+\_\+pos}}.
-
-\mbox{\Hypertarget{struct_conveyer_af073b867bbdf32206c8a279c51bbdbcb}\label{struct_conveyer_af073b867bbdf32206c8a279c51bbdbcb}} 
-\index{Conveyer@{Conveyer}!update\_held\_item\_position@{update\_held\_item\_position}}
-\index{update\_held\_item\_position@{update\_held\_item\_position}!Conveyer@{Conveyer}}
-\doxysubsubsection{\texorpdfstring{update\_held\_item\_position()}{update\_held\_item\_position()}}
-{\footnotesize\ttfamily virtual void Conveyer\+::update\+\_\+held\+\_\+item\+\_\+position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Reimplemented from \mbox{\hyperlink{struct_furniture_a7c1a46b40616fba11f4ff50b6c34d647}{Furniture}}.
 
 \mbox{\Hypertarget{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}\label{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}} 
 \index{Conveyer@{Conveyer}!update\_model@{update\_model}}

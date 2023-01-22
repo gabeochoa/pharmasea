@@ -27,20 +27,6 @@ virtual float \mbox{\hyperlink{struct_a_i_person_a1d93482a63f44830687cf01f9368dc
 \item 
 virtual float \mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\+\_\+mult}} ()
 \item 
-virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_a_i_person_a8a4a8251c55347bcf5e6d29a00d4d49a}{update\+\_\+xaxis\+\_\+position}} (float dt) override
-\item 
-virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_a_i_person_a91edda78370012b664a50dc752dbf058}{update\+\_\+zaxis\+\_\+position}} (float dt) override
-\item 
-virtual \mbox{\hyperlink{struct_job}{Job}} $\ast$ \mbox{\hyperlink{struct_a_i_person_a3eb3356c4eabfa9a01173eab3218637f}{get\+\_\+wandering\+\_\+job}} ()
-\item 
-virtual void \mbox{\hyperlink{struct_a_i_person_a5710c2532f9031cd86c986a8ffef2aab}{get\+\_\+starting\+\_\+job}} ()
-\item 
-virtual void \mbox{\hyperlink{struct_a_i_person_ad1c946a4db57102d0aaf2dfac4a0f16c}{get\+\_\+idle\+\_\+job}} ()
-\item 
-virtual void \mbox{\hyperlink{struct_a_i_person_a90cc4372573d28217c13b36ffed70a75}{find\+\_\+new\+\_\+job}} ()
-\item 
-virtual void \mbox{\hyperlink{struct_a_i_person_a96ac966279b3fae533fb2cfb9533e820}{in\+\_\+round\+\_\+update}} (float dt) override
-\item 
 virtual bool \mbox{\hyperlink{struct_a_i_person_a7a34eb065642bd59056aa0ea727fed7e}{is\+\_\+snappable}} () override
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_person}{Person}}}
@@ -54,10 +40,6 @@ virtual bool \mbox{\hyperlink{struct_a_i_person_a7a34eb065642bd59056aa0ea727fed7
 \item 
 \mbox{\hyperlink{struct_person_a96012bcb85ddaa7c6f290db275bcd86d}{Person}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color c)
 \item 
-virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_person_a0fefe392ef54377872ea4270202b0ecb}{update\+\_\+xaxis\+\_\+position}} (float dt)=0
-\item 
-virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_person_a134feac9c4147ecb2411ff7a4a51a100}{update\+\_\+zaxis\+\_\+position}} (float dt)=0
-\item 
 void \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\+\_\+model}} ()
 \item 
 virtual float \mbox{\hyperlink{struct_person_a3ece53b2b9de0628514cb3cc14efa112}{base\+\_\+speed}} ()
@@ -65,14 +47,6 @@ virtual float \mbox{\hyperlink{struct_person_a3ece53b2b9de0628514cb3cc14efa112}{
 virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}} () const override
 \item 
 void \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\+\_\+next\+\_\+character\+\_\+model}} ()
-\item 
-void \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{handle\+\_\+collision}} (int facedir\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+x, int facedir\+\_\+z, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+z)
-\item 
-std\+::tuple$<$ int, int $>$ \mbox{\hyperlink{struct_person_a0438d8fd551998f95723320ede130f44}{get\+\_\+face\+\_\+direction}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+z)
-\item 
-void \mbox{\hyperlink{struct_person_a5037af23d2d1d1e710a9418ecc1207d8}{update\+\_\+facing\+\_\+direction}} (int facedir\+\_\+x, int facedir\+\_\+z)
-\item 
-virtual void \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{always\+\_\+update}} (float dt) override
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
 \begin{DoxyCompactItemize}
@@ -101,8 +75,6 @@ virtual bool \mbox{\hyperlink{struct_entity_af864202a00a448f2b30e7b5634e5c490}{i
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}} (Bounding\+Box b) const
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}{update\+\_\+position}} (const \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&p)
-\item 
 virtual Bounding\+Box \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\+\_\+bounds}} () const
 \item 
 virtual Bounding\+Box \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}} () const
@@ -120,8 +92,6 @@ virtual bool \mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{i
 virtual void \mbox{\hyperlink{struct_entity_a48efb563c821424fd1a97efcc211cfd8}{on\+\_\+pickup}} ()
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\+\_\+drop}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} location)
-\item 
-virtual void \mbox{\hyperlink{struct_entity_adab1628044c63c07d189d44b411046a3}{render}} () const final
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update}} (float dt) final
 \end{DoxyCompactItemize}
@@ -147,8 +117,6 @@ int \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}
 \item 
 \mbox{\hyperlink{base__component_8h_a5aff059e5e50c5d4acef6bc563a2a367}{Component\+Array}} \mbox{\hyperlink{struct_entity_a268b34f155900bef861b8b3ce6a5fa60}{component\+Array}}
 \item 
-\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\+\_\+force}} \{0.\+0, 0.\+0, 0.\+0\}
-\item 
 bool \mbox{\hyperlink{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}{cleanup}} = false
 \item 
 bool \mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\+\_\+held}} = false
@@ -165,21 +133,9 @@ bool \mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\+\_\+h
 \item 
 virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}} () const
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a66588b42f69ce15038bd149605a16fc2}{render\+\_\+debug\+\_\+mode}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a4f5def0fc8ea405ab385a65018046168}{render\+\_\+floating\+\_\+name}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{update\+\_\+held\+\_\+item\+\_\+position}} ()
-\item 
 virtual \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading}} ()
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{turn\+\_\+to\+\_\+face\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$target)
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update}} (float)
-\item 
-virtual void \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{planning\+\_\+update}} (float)
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\+\_\+round\+\_\+update}} (float)
 \item 
@@ -249,6 +205,10 @@ References \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}
 
 
 
+References \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}}.
+
+
+
 Referenced by \mbox{\hyperlink{struct_a_i_person_a6da62a57316320187312b91e8c6fa4f0}{AIPerson()}}.
 
 \mbox{\Hypertarget{struct_a_i_person_a1d93482a63f44830687cf01f9368dccb}\label{struct_a_i_person_a1d93482a63f44830687cf01f9368dccb}} 
@@ -260,96 +220,6 @@ Referenced by \mbox{\hyperlink{struct_a_i_person_a6da62a57316320187312b91e8c6fa4
 
 
 Reimplemented from \mbox{\hyperlink{struct_person_a3ece53b2b9de0628514cb3cc14efa112}{Person}}.
-
-
-
-Reimplemented in \mbox{\hyperlink{struct_customer_a84cef2e0bf39c3bdb649e5cbb13e0560}{Customer}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_a_i_person_a8a4a8251c55347bcf5e6d29a00d4d49a}{update\+\_\+xaxis\+\_\+position()}}, and \mbox{\hyperlink{struct_a_i_person_a91edda78370012b664a50dc752dbf058}{update\+\_\+zaxis\+\_\+position()}}.
-
-\mbox{\Hypertarget{struct_a_i_person_a90cc4372573d28217c13b36ffed70a75}\label{struct_a_i_person_a90cc4372573d28217c13b36ffed70a75}} 
-\index{AIPerson@{AIPerson}!find\_new\_job@{find\_new\_job}}
-\index{find\_new\_job@{find\_new\_job}!AIPerson@{AIPerson}}
-\doxysubsubsection{\texorpdfstring{find\_new\_job()}{find\_new\_job()}}
-{\footnotesize\ttfamily virtual void AIPerson\+::find\+\_\+new\+\_\+job (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
-
-
-
-References \mbox{\hyperlink{struct_a_i_person_ad1c946a4db57102d0aaf2dfac4a0f16c}{get\+\_\+idle\+\_\+job()}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_a_i_person_a96ac966279b3fae533fb2cfb9533e820}{in\+\_\+round\+\_\+update()}}.
-
-\mbox{\Hypertarget{struct_a_i_person_ad1c946a4db57102d0aaf2dfac4a0f16c}\label{struct_a_i_person_ad1c946a4db57102d0aaf2dfac4a0f16c}} 
-\index{AIPerson@{AIPerson}!get\_idle\_job@{get\_idle\_job}}
-\index{get\_idle\_job@{get\_idle\_job}!AIPerson@{AIPerson}}
-\doxysubsubsection{\texorpdfstring{get\_idle\_job()}{get\_idle\_job()}}
-{\footnotesize\ttfamily virtual void AIPerson\+::get\+\_\+idle\+\_\+job (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
-
-
-
-References \mbox{\hyperlink{struct_a_i_person_a3eb3356c4eabfa9a01173eab3218637f}{get\+\_\+wandering\+\_\+job()}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_a_i_person_a90cc4372573d28217c13b36ffed70a75}{find\+\_\+new\+\_\+job()}}.
-
-\mbox{\Hypertarget{struct_a_i_person_a5710c2532f9031cd86c986a8ffef2aab}\label{struct_a_i_person_a5710c2532f9031cd86c986a8ffef2aab}} 
-\index{AIPerson@{AIPerson}!get\_starting\_job@{get\_starting\_job}}
-\index{get\_starting\_job@{get\_starting\_job}!AIPerson@{AIPerson}}
-\doxysubsubsection{\texorpdfstring{get\_starting\_job()}{get\_starting\_job()}}
-{\footnotesize\ttfamily virtual void AIPerson\+::get\+\_\+starting\+\_\+job (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
-
-
-
-Reimplemented in \mbox{\hyperlink{struct_customer_a2b8f91ddb3eb9edd48a21dc2e35bf021}{Customer}}.
-
-
-
-References \mbox{\hyperlink{struct_a_i_person_a3eb3356c4eabfa9a01173eab3218637f}{get\+\_\+wandering\+\_\+job()}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_a_i_person_a96ac966279b3fae533fb2cfb9533e820}{in\+\_\+round\+\_\+update()}}.
-
-\mbox{\Hypertarget{struct_a_i_person_a3eb3356c4eabfa9a01173eab3218637f}\label{struct_a_i_person_a3eb3356c4eabfa9a01173eab3218637f}} 
-\index{AIPerson@{AIPerson}!get\_wandering\_job@{get\_wandering\_job}}
-\index{get\_wandering\_job@{get\_wandering\_job}!AIPerson@{AIPerson}}
-\doxysubsubsection{\texorpdfstring{get\_wandering\_job()}{get\_wandering\_job()}}
-{\footnotesize\ttfamily virtual \mbox{\hyperlink{struct_job}{Job}} $\ast$ AIPerson\+::get\+\_\+wandering\+\_\+job (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
-
-
-
-References \mbox{\hyperlink{struct_entity_helper_a4d01c0a143c62ae572e5d4e9eb5711f0}{Entity\+Helper\+::is\+Walkable()}}, \mbox{\hyperlink{random_8h_ac595cabd40bee1b9e1c604ea389dc528}{rand\+In()}}, and \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_a_i_person_ad1c946a4db57102d0aaf2dfac4a0f16c}{get\+\_\+idle\+\_\+job()}}, and \mbox{\hyperlink{struct_a_i_person_a5710c2532f9031cd86c986a8ffef2aab}{get\+\_\+starting\+\_\+job()}}.
-
-\mbox{\Hypertarget{struct_a_i_person_a96ac966279b3fae533fb2cfb9533e820}\label{struct_a_i_person_a96ac966279b3fae533fb2cfb9533e820}} 
-\index{AIPerson@{AIPerson}!in\_round\_update@{in\_round\_update}}
-\index{in\_round\_update@{in\_round\_update}!AIPerson@{AIPerson}}
-\doxysubsubsection{\texorpdfstring{in\_round\_update()}{in\_round\_update()}}
-{\footnotesize\ttfamily virtual void AIPerson\+::in\+\_\+round\+\_\+update (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Reimplemented from \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{Entity}}.
-
-
-
-Reimplemented in \mbox{\hyperlink{struct_customer_a648cd551e96ad1d075660d1227c53f63}{Customer}}.
-
-
-
-References \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job\+::\+Completed}}, \mbox{\hyperlink{struct_a_i_person_a90cc4372573d28217c13b36ffed70a75}{find\+\_\+new\+\_\+job()}}, \mbox{\hyperlink{struct_sound_library_ad2573d3420d3934755b903116c48acd6}{Sound\+Library\+::get()}}, \mbox{\hyperlink{struct_a_i_person_a5710c2532f9031cd86c986a8ffef2aab}{get\+\_\+starting\+\_\+job()}}, \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{Entity\+::in\+\_\+round\+\_\+update()}}, and \mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{Entity\+::pushed\+\_\+force}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_customer_a648cd551e96ad1d075660d1227c53f63}{Customer\+::in\+\_\+round\+\_\+update()}}.
 
 \mbox{\Hypertarget{struct_a_i_person_a7a34eb065642bd59056aa0ea727fed7e}\label{struct_a_i_person_a7a34eb065642bd59056aa0ea727fed7e}} 
 \index{AIPerson@{AIPerson}!is\_snappable@{is\_snappable}}
@@ -373,42 +243,6 @@ void AIPerson\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyPa
 \index{stagger\_mult@{stagger\_mult}!AIPerson@{AIPerson}}
 \doxysubsubsection{\texorpdfstring{stagger\_mult()}{stagger\_mult()}}
 {\footnotesize\ttfamily virtual float AIPerson\+::stagger\+\_\+mult (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
-
-
-
-Reimplemented in \mbox{\hyperlink{struct_customer_a0b72962003cde7a6392c23b6bde2426c}{Customer}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_a_i_person_a8a4a8251c55347bcf5e6d29a00d4d49a}{update\+\_\+xaxis\+\_\+position()}}, and \mbox{\hyperlink{struct_a_i_person_a91edda78370012b664a50dc752dbf058}{update\+\_\+zaxis\+\_\+position()}}.
-
-\mbox{\Hypertarget{struct_a_i_person_a8a4a8251c55347bcf5e6d29a00d4d49a}\label{struct_a_i_person_a8a4a8251c55347bcf5e6d29a00d4d49a}} 
-\index{AIPerson@{AIPerson}!update\_xaxis\_position@{update\_xaxis\_position}}
-\index{update\_xaxis\_position@{update\_xaxis\_position}!AIPerson@{AIPerson}}
-\doxysubsubsection{\texorpdfstring{update\_xaxis\_position()}{update\_xaxis\_position()}}
-{\footnotesize\ttfamily virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} AIPerson\+::update\+\_\+xaxis\+\_\+position (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Implements \mbox{\hyperlink{struct_person_a0fefe392ef54377872ea4270202b0ecb}{Person}}.
-
-
-
-References \mbox{\hyperlink{struct_a_i_person_a1d93482a63f44830687cf01f9368dccb}{base\+\_\+speed()}}, \mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{Transform\+::raw\+\_\+position}}, and \mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\+\_\+mult()}}.
-
-\mbox{\Hypertarget{struct_a_i_person_a91edda78370012b664a50dc752dbf058}\label{struct_a_i_person_a91edda78370012b664a50dc752dbf058}} 
-\index{AIPerson@{AIPerson}!update\_zaxis\_position@{update\_zaxis\_position}}
-\index{update\_zaxis\_position@{update\_zaxis\_position}!AIPerson@{AIPerson}}
-\doxysubsubsection{\texorpdfstring{update\_zaxis\_position()}{update\_zaxis\_position()}}
-{\footnotesize\ttfamily virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} AIPerson\+::update\+\_\+zaxis\+\_\+position (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Implements \mbox{\hyperlink{struct_person_a134feac9c4147ecb2411ff7a4a51a100}{Person}}.
-
-
-
-References \mbox{\hyperlink{struct_a_i_person_a1d93482a63f44830687cf01f9368dccb}{base\+\_\+speed()}}, \mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{Transform\+::raw\+\_\+position}}, and \mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\+\_\+mult()}}.
 
 
 

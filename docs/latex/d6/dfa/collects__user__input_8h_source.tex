@@ -1,0 +1,25 @@
+\hypertarget{collects__user__input_8h_source}{}\doxysection{collects\+\_\+user\+\_\+input.\+h}
+\label{collects__user__input_8h_source}\index{src/components/collects\_user\_input.h@{src/components/collects\_user\_input.h}}
+\mbox{\hyperlink{collects__user__input_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../item.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_collects_user_input}{CollectsUserInput}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_collects_user_input_adf37ec3e0b8a6de8b13a0c058d3f960f}{\string~CollectsUserInput}}()\ \{\}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{comment}{//\ TODO\ make\ private\ at\ some\ point}}
+\DoxyCodeLine{00011\ \ \ \ \ std::vector<UserInput>\ \mbox{\hyperlink{struct_collects_user_input_ae26828ac6664046de53089e8da7b9762}{inputs}};}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_collects_user_input_a6a3075130b80da9115cc9447e7f983b1}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ \};}
+
+\end{DoxyCode}

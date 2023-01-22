@@ -1,0 +1,28 @@
+\hypertarget{container__cast_8h_source}{}\doxysection{container\+\_\+cast.\+h}
+\label{container__cast_8h_source}\index{src/engine/container\_cast.h@{src/engine/container\_cast.h}}
+\mbox{\hyperlink{container__cast_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ SourceContainer>}
+\DoxyCodeLine{00005\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_container_converter}{ContainerConverter}}\ \{}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keyword}{const}\ SourceContainer\&\ \mbox{\hyperlink{class_container_converter_a350bfda3e360287b92172924e694bbce}{s\_}};}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_container_converter_aba834245a47eafd01e7e26b15ad6dfaf}{ContainerConverter}}(\textcolor{keyword}{const}\ SourceContainer\&\ s)\ :\ \mbox{\hyperlink{class_container_converter_a350bfda3e360287b92172924e694bbce}{s\_}}(s)\ \{\}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ TargetContainer>}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{operator}\ TargetContainer()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ TargetContainer(\mbox{\hyperlink{class_container_converter_a350bfda3e360287b92172924e694bbce}{s\_}}.begin(),\ \mbox{\hyperlink{class_container_converter_a350bfda3e360287b92172924e694bbce}{s\_}}.end());}
+\DoxyCodeLine{00014\ \ \ \ \ \}}
+\DoxyCodeLine{00015\ \};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ C>}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ This\ function\ takes\ a\ string,\ so\ that\ you\ as\ the\ developer\ can\ write\ why\ you}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ need\ to\ do\ this\ please\ dont\ ignore\ thx}}
+\DoxyCodeLine{00020\ \mbox{\hyperlink{class_container_converter}{ContainerConverter<C>}}\ \mbox{\hyperlink{container__cast_8h_a7b70b5916f605fbbf65bcb67b9679c76}{container\_cast}}(\textcolor{keyword}{const}\ C\&\ c,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*)\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_container_converter}{ContainerConverter<C>}}(c);}
+\DoxyCodeLine{00022\ \}}
+
+\end{DoxyCode}

@@ -13,6 +13,8 @@ Inheritance diagram for Player\+:\begin{figure}[H]
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+void \mbox{\hyperlink{struct_player_aca4162f041a00a8339968db3570bda31}{add\+\_\+static\+\_\+components}} ()
+\item 
 \mbox{\hyperlink{struct_player_affe0cc3cb714f6deb4e62f0c0d3f1fd8}{Player}} ()
 \item 
 \mbox{\hyperlink{struct_player_ac3db341557aa6e7a7087e767b555cb1d}{Player}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
@@ -22,24 +24,6 @@ Inheritance diagram for Player\+:\begin{figure}[H]
 \mbox{\hyperlink{struct_player_a38b451618f39a22d1752b1603e6cdbca}{Player}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} location)
 \item 
 virtual bool \mbox{\hyperlink{struct_player_a587fe74993a7068ac261ef6bfd93b999}{is\+\_\+collidable}} () override
-\item 
-virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_player_a754673edaad609f0dc3ea8d8383339e6}{update\+\_\+xaxis\+\_\+position}} (float dt) override
-\item 
-virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_player_aaae0a725ba6431cb4e7534b460e8a593}{update\+\_\+zaxis\+\_\+position}} (float dt) override
-\item 
-virtual void \mbox{\hyperlink{struct_player_aa61138623d84040a973dd22da01ec2d3}{always\+\_\+update}} (float dt) override
-\item 
-virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_player_a5bcdf490604929a7ba3b018c8556228b}{get\+\_\+position\+\_\+after\+\_\+input}} (\mbox{\hyperlink{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}{User\+Inputs}} inpts)
-\item 
-void \mbox{\hyperlink{struct_player_ab4cc812de3c497ba1e8699376379dcef}{rotate\+\_\+furniture}} ()
-\item 
-void \mbox{\hyperlink{struct_player_ac1318fd5b7ce7c808a09ef95611280b5}{work\+\_\+furniture}} (float frame\+\_\+dt)
-\item 
-void \mbox{\hyperlink{struct_player_a12f2b3445a9b57a5f5b0bdb84d2d14b2}{handle\+\_\+in\+\_\+game\+\_\+grab\+\_\+or\+\_\+drop}} ()
-\item 
-void \mbox{\hyperlink{struct_player_aed722c64fe7a62d9abeb8673f539a443}{handle\+\_\+in\+\_\+planning\+\_\+grab\+\_\+or\+\_\+drop}} ()
-\item 
-virtual void \mbox{\hyperlink{struct_player_a2b4d2c3ea68f6154a211c8a5a7e8a395}{grab\+\_\+or\+\_\+drop}} ()
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_player}{Base\+Player}}}
 \begin{DoxyCompactItemize}
@@ -55,10 +39,6 @@ void \mbox{\hyperlink{struct_base_player_a2082cf1cf2b96f1c940c9bb74b0bebd3}{add\
 \mbox{\hyperlink{struct_base_player_a685a37d11666ee2f2b6a320c84fcdaef}{Base\+Player}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} location)
 \item 
 virtual float \mbox{\hyperlink{struct_base_player_a74f4c25ae6b77e6c29626eaeb63b6b69}{base\+\_\+speed}} () override
-\item 
-virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_base_player_ac7cc5d9ce27914df418176b5593ecdac}{update\+\_\+xaxis\+\_\+position}} (float dt) override=0
-\item 
-virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_base_player_ab3fcf3cbe32d97ef9fa465c4d69a50aa}{update\+\_\+zaxis\+\_\+position}} (float dt) override=0
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_person}{Person}}}
 \begin{DoxyCompactItemize}
@@ -71,10 +51,6 @@ virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \
 \item 
 \mbox{\hyperlink{struct_person_a96012bcb85ddaa7c6f290db275bcd86d}{Person}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color c)
 \item 
-virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_person_a0fefe392ef54377872ea4270202b0ecb}{update\+\_\+xaxis\+\_\+position}} (float dt)=0
-\item 
-virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_person_a134feac9c4147ecb2411ff7a4a51a100}{update\+\_\+zaxis\+\_\+position}} (float dt)=0
-\item 
 void \mbox{\hyperlink{struct_person_a7900c9a80b6bcf04378c291ad7737f6d}{update\+\_\+model}} ()
 \item 
 virtual float \mbox{\hyperlink{struct_person_a3ece53b2b9de0628514cb3cc14efa112}{base\+\_\+speed}} ()
@@ -82,14 +58,6 @@ virtual float \mbox{\hyperlink{struct_person_a3ece53b2b9de0628514cb3cc14efa112}{
 virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}} () const override
 \item 
 void \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\+\_\+next\+\_\+character\+\_\+model}} ()
-\item 
-void \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{handle\+\_\+collision}} (int facedir\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+x, int facedir\+\_\+z, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+z)
-\item 
-std\+::tuple$<$ int, int $>$ \mbox{\hyperlink{struct_person_a0438d8fd551998f95723320ede130f44}{get\+\_\+face\+\_\+direction}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+z)
-\item 
-void \mbox{\hyperlink{struct_person_a5037af23d2d1d1e710a9418ecc1207d8}{update\+\_\+facing\+\_\+direction}} (int facedir\+\_\+x, int facedir\+\_\+z)
-\item 
-virtual void \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{always\+\_\+update}} (float dt) override
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
 \begin{DoxyCompactItemize}
@@ -118,8 +86,6 @@ virtual bool \mbox{\hyperlink{struct_entity_af864202a00a448f2b30e7b5634e5c490}{i
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}} (Bounding\+Box b) const
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}{update\+\_\+position}} (const \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&p)
-\item 
 virtual Bounding\+Box \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\+\_\+bounds}} () const
 \item 
 virtual Bounding\+Box \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}} () const
@@ -138,8 +104,6 @@ virtual void \mbox{\hyperlink{struct_entity_a48efb563c821424fd1a97efcc211cfd8}{o
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\+\_\+drop}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} location)
 \item 
-virtual void \mbox{\hyperlink{struct_entity_adab1628044c63c07d189d44b411046a3}{render}} () const final
-\item 
 virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update}} (float dt) final
 \end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
@@ -148,8 +112,6 @@ virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{u
 const \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_player_aeff32fff0439d7ae2480ef92bc8962a2}{state}} = \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+State\+::\+Game}}
 \item 
 std\+::string \mbox{\hyperlink{struct_player_af6823e27c17ba6ed5d2b4713abbe4d5a}{username}}
-\item 
-std\+::vector$<$ \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}} $>$ \mbox{\hyperlink{struct_player_a546f224e39125a14cafad8a27b212e49}{inputs}}
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
 \begin{DoxyCompactItemize}
@@ -159,8 +121,6 @@ int \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}
 \mbox{\hyperlink{base__component_8h_a98fb6146960da76455a4eff579874b99}{Component\+Bit\+Set}} \mbox{\hyperlink{struct_entity_a2bfb3cd4a791f32f53365d156e239a54}{component\+Set}}
 \item 
 \mbox{\hyperlink{base__component_8h_a5aff059e5e50c5d4acef6bc563a2a367}{Component\+Array}} \mbox{\hyperlink{struct_entity_a268b34f155900bef861b8b3ce6a5fa60}{component\+Array}}
-\item 
-\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\+\_\+force}} \{0.\+0, 0.\+0, 0.\+0\}
 \item 
 bool \mbox{\hyperlink{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}{cleanup}} = false
 \item 
@@ -184,21 +144,9 @@ static \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \m
 \item 
 virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}} () const
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a66588b42f69ce15038bd149605a16fc2}{render\+\_\+debug\+\_\+mode}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a4f5def0fc8ea405ab385a65018046168}{render\+\_\+floating\+\_\+name}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{update\+\_\+held\+\_\+item\+\_\+position}} ()
-\item 
 virtual \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading}} ()
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{turn\+\_\+to\+\_\+face\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$target)
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update}} (float)
-\item 
-virtual void \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{planning\+\_\+update}} (float)
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\+\_\+round\+\_\+update}} (float)
 \item 
@@ -219,11 +167,19 @@ virtual bool \mbox{\hyperlink{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}{c
 \doxysubsubsection{\texorpdfstring{Player()}{Player()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
 {\footnotesize\ttfamily Player\+::\+Player (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{p,  }\item[{Color}]{face\+\_\+color\+\_\+in,  }\item[{Color}]{base\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+References \mbox{\hyperlink{struct_player_aca4162f041a00a8339968db3570bda31}{add\+\_\+static\+\_\+components()}}.
+
 \mbox{\Hypertarget{struct_player_a3082ae1c3b97e6eafcb8b1849f5df2b4}\label{struct_player_a3082ae1c3b97e6eafcb8b1849f5df2b4}} 
 \index{Player@{Player}!Player@{Player}}
 \index{Player@{Player}!Player@{Player}}
 \doxysubsubsection{\texorpdfstring{Player()}{Player()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
 {\footnotesize\ttfamily Player\+::\+Player (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{p,  }\item[{Color}]{face\+\_\+color\+\_\+in,  }\item[{Color}]{base\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_player_aca4162f041a00a8339968db3570bda31}{add\+\_\+static\+\_\+components()}}.
 
 \mbox{\Hypertarget{struct_player_a38b451618f39a22d1752b1603e6cdbca}\label{struct_player_a38b451618f39a22d1752b1603e6cdbca}} 
 \index{Player@{Player}!Player@{Player}}
@@ -234,71 +190,15 @@ virtual bool \mbox{\hyperlink{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}{c
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{struct_player_aa61138623d84040a973dd22da01ec2d3}\label{struct_player_aa61138623d84040a973dd22da01ec2d3}} 
-\index{Player@{Player}!always\_update@{always\_update}}
-\index{always\_update@{always\_update}!Player@{Player}}
-\doxysubsubsection{\texorpdfstring{always\_update()}{always\_update()}}
-{\footnotesize\ttfamily virtual void Player\+::always\+\_\+update (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+\mbox{\Hypertarget{struct_player_aca4162f041a00a8339968db3570bda31}\label{struct_player_aca4162f041a00a8339968db3570bda31}} 
+\index{Player@{Player}!add\_static\_components@{add\_static\_components}}
+\index{add\_static\_components@{add\_static\_components}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{add\_static\_components()}{add\_static\_components()}}
+{\footnotesize\ttfamily void Player\+::add\+\_\+static\+\_\+components (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-Reimplemented from \mbox{\hyperlink{struct_person_a2fb3e493dfb72d616295eb894bba3a1c}{Person}}.
-
-
-
-References \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{Entity\+::always\+\_\+update()}}, \mbox{\hyperlink{struct_player_a546f224e39125a14cafad8a27b212e49}{inputs}}, \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{Key\+Map\+::is\+\_\+event()}}, \mbox{\hyperlink{struct_key_map_adf7362c05a1fcee3062a1cae3c83703c}{Key\+Map\+::is\+\_\+event\+\_\+once\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE()}}, \mbox{\hyperlink{struct_player_aeff32fff0439d7ae2480ef92bc8962a2}{state}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
-
-\mbox{\Hypertarget{struct_player_a5bcdf490604929a7ba3b018c8556228b}\label{struct_player_a5bcdf490604929a7ba3b018c8556228b}} 
-\index{Player@{Player}!get\_position\_after\_input@{get\_position\_after\_input}}
-\index{get\_position\_after\_input@{get\_position\_after\_input}!Player@{Player}}
-\doxysubsubsection{\texorpdfstring{get\_position\_after\_input()}{get\_position\_after\_input()}}
-{\footnotesize\ttfamily virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} Player\+::get\+\_\+position\+\_\+after\+\_\+input (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}{User\+Inputs}}}]{inpts }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
-
-
-
-References \mbox{\hyperlink{struct_base_player_a74f4c25ae6b77e6c29626eaeb63b6b69}{Base\+Player\+::base\+\_\+speed()}}, \mbox{\hyperlink{struct_person_a0438d8fd551998f95723320ede130f44}{Person\+::get\+\_\+face\+\_\+direction()}}, \mbox{\hyperlink{struct_player_a2b4d2c3ea68f6154a211c8a5a7e8a395}{grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{struct_person_a2eb487cf551f12ab32ca71273f560b4f}{Person\+::handle\+\_\+collision()}}, \mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{Transform\+::position}}, \mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{Transform\+::raw\+\_\+position}}, \mbox{\hyperlink{struct_player_ab4cc812de3c497ba1e8699376379dcef}{rotate\+\_\+furniture()}}, \mbox{\hyperlink{struct_player_aeff32fff0439d7ae2480ef92bc8962a2}{state}}, \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}, \mbox{\hyperlink{struct_person_a5037af23d2d1d1e710a9418ecc1207d8}{Person\+::update\+\_\+facing\+\_\+direction()}}, and \mbox{\hyperlink{struct_player_ac1318fd5b7ce7c808a09ef95611280b5}{work\+\_\+furniture()}}.
-
-\mbox{\Hypertarget{struct_player_a2b4d2c3ea68f6154a211c8a5a7e8a395}\label{struct_player_a2b4d2c3ea68f6154a211c8a5a7e8a395}} 
-\index{Player@{Player}!grab\_or\_drop@{grab\_or\_drop}}
-\index{grab\_or\_drop@{grab\_or\_drop}!Player@{Player}}
-\doxysubsubsection{\texorpdfstring{grab\_or\_drop()}{grab\_or\_drop()}}
-{\footnotesize\ttfamily virtual void Player\+::grab\+\_\+or\+\_\+drop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
-
-
-
-References \mbox{\hyperlink{struct_player_a12f2b3445a9b57a5f5b0bdb84d2d14b2}{handle\+\_\+in\+\_\+game\+\_\+grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{struct_player_aed722c64fe7a62d9abeb8673f539a443}{handle\+\_\+in\+\_\+planning\+\_\+grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game\+::\+Planning}}, and \mbox{\hyperlink{struct_game_state_abbfb101b96ae617d2b67acbf58f50693}{Game\+State\+::s\+\_\+in\+\_\+round()}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_player_a5bcdf490604929a7ba3b018c8556228b}{get\+\_\+position\+\_\+after\+\_\+input()}}.
-
-\mbox{\Hypertarget{struct_player_a12f2b3445a9b57a5f5b0bdb84d2d14b2}\label{struct_player_a12f2b3445a9b57a5f5b0bdb84d2d14b2}} 
-\index{Player@{Player}!handle\_in\_game\_grab\_or\_drop@{handle\_in\_game\_grab\_or\_drop}}
-\index{handle\_in\_game\_grab\_or\_drop@{handle\_in\_game\_grab\_or\_drop}!Player@{Player}}
-\doxysubsubsection{\texorpdfstring{handle\_in\_game\_grab\_or\_drop()}{handle\_in\_game\_grab\_or\_drop()}}
-{\footnotesize\ttfamily void Player\+::handle\+\_\+in\+\_\+game\+\_\+grab\+\_\+or\+\_\+drop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5}{Item\+::\+FURNITURE}}, \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{Can\+Hold\+Item\+::item()}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313aaca7714ebc132e0fb559664bbe96c552}{Item\+::\+PLAYER}}, \mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{Can\+Highlight\+Others\+::reach()}}, \mbox{\hyperlink{struct_transform_a64ba3d05bc47f05d2ef60fab5a5957fa}{Transform\+::snap\+\_\+position()}}, \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_player_a2b4d2c3ea68f6154a211c8a5a7e8a395}{grab\+\_\+or\+\_\+drop()}}.
-
-\mbox{\Hypertarget{struct_player_aed722c64fe7a62d9abeb8673f539a443}\label{struct_player_aed722c64fe7a62d9abeb8673f539a443}} 
-\index{Player@{Player}!handle\_in\_planning\_grab\_or\_drop@{handle\_in\_planning\_grab\_or\_drop}}
-\index{handle\_in\_planning\_grab\_or\_drop@{handle\_in\_planning\_grab\_or\_drop}!Player@{Player}}
-\doxysubsubsection{\texorpdfstring{handle\_in\_planning\_grab\_or\_drop()}{handle\_in\_planning\_grab\_or\_drop()}}
-{\footnotesize\ttfamily void Player\+::handle\+\_\+in\+\_\+planning\+\_\+grab\+\_\+or\+\_\+drop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_can_hold_furniture_afabf28b24c6cb48e36d746daf03db5df}{Can\+Hold\+Furniture\+::furniture()}}, \mbox{\hyperlink{struct_can_hold_furniture_a8cc0cd805b15e39cf60855c65df04823}{Can\+Hold\+Furniture\+::is\+\_\+holding\+\_\+furniture()}}, \mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{Can\+Highlight\+Others\+::reach()}}, \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{Entity\+::tile\+\_\+infront()}}, \mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec\+::to3()}}, \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}, and \mbox{\hyperlink{struct_can_hold_furniture_acfb889c7dc41d5e1b10ecbbf4c26f2c4}{Can\+Hold\+Furniture\+::update()}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_player_a2b4d2c3ea68f6154a211c8a5a7e8a395}{grab\+\_\+or\+\_\+drop()}}.
+Referenced by \mbox{\hyperlink{struct_player_ac3db341557aa6e7a7087e767b555cb1d}{Player()}}.
 
 \mbox{\Hypertarget{struct_player_a587fe74993a7068ac261ef6bfd93b999}\label{struct_player_a587fe74993a7068ac261ef6bfd93b999}} 
 \index{Player@{Player}!is\_collidable@{is\_collidable}}
@@ -310,84 +210,14 @@ Referenced by \mbox{\hyperlink{struct_player_a2b4d2c3ea68f6154a211c8a5a7e8a395}{
 
 Reimplemented from \mbox{\hyperlink{struct_entity_ab6480ae7d19afc9a951ce1b001aebb77}{Entity}}.
 
-\mbox{\Hypertarget{struct_player_ab4cc812de3c497ba1e8699376379dcef}\label{struct_player_ab4cc812de3c497ba1e8699376379dcef}} 
-\index{Player@{Player}!rotate\_furniture@{rotate\_furniture}}
-\index{rotate\_furniture@{rotate\_furniture}!Player@{Player}}
-\doxysubsubsection{\texorpdfstring{rotate\_furniture()}{rotate\_furniture()}}
-{\footnotesize\ttfamily void Player\+::rotate\+\_\+furniture (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game\+::\+Planning}}, \mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{Can\+Highlight\+Others\+::reach()}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_player_a5bcdf490604929a7ba3b018c8556228b}{get\+\_\+position\+\_\+after\+\_\+input()}}.
-
-\mbox{\Hypertarget{struct_player_a754673edaad609f0dc3ea8d8383339e6}\label{struct_player_a754673edaad609f0dc3ea8d8383339e6}} 
-\index{Player@{Player}!update\_xaxis\_position@{update\_xaxis\_position}}
-\index{update\_xaxis\_position@{update\_xaxis\_position}!Player@{Player}}
-\doxysubsubsection{\texorpdfstring{update\_xaxis\_position()}{update\_xaxis\_position()}}
-{\footnotesize\ttfamily virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} Player\+::update\+\_\+xaxis\+\_\+position (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Implements \mbox{\hyperlink{struct_base_player_ac7cc5d9ce27914df418176b5593ecdac}{Base\+Player}}.
-
-
-
-References \mbox{\hyperlink{struct_player_a546f224e39125a14cafad8a27b212e49}{inputs}}, \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{Key\+Map\+::is\+\_\+event()}}, and \mbox{\hyperlink{struct_player_aeff32fff0439d7ae2480ef92bc8962a2}{state}}.
-
-\mbox{\Hypertarget{struct_player_aaae0a725ba6431cb4e7534b460e8a593}\label{struct_player_aaae0a725ba6431cb4e7534b460e8a593}} 
-\index{Player@{Player}!update\_zaxis\_position@{update\_zaxis\_position}}
-\index{update\_zaxis\_position@{update\_zaxis\_position}!Player@{Player}}
-\doxysubsubsection{\texorpdfstring{update\_zaxis\_position()}{update\_zaxis\_position()}}
-{\footnotesize\ttfamily virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} Player\+::update\+\_\+zaxis\+\_\+position (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Implements \mbox{\hyperlink{struct_base_player_ab3fcf3cbe32d97ef9fa465c4d69a50aa}{Base\+Player}}.
-
-
-
-References \mbox{\hyperlink{struct_player_a546f224e39125a14cafad8a27b212e49}{inputs}}, \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{Key\+Map\+::is\+\_\+event()}}, and \mbox{\hyperlink{struct_player_aeff32fff0439d7ae2480ef92bc8962a2}{state}}.
-
-\mbox{\Hypertarget{struct_player_ac1318fd5b7ce7c808a09ef95611280b5}\label{struct_player_ac1318fd5b7ce7c808a09ef95611280b5}} 
-\index{Player@{Player}!work\_furniture@{work\_furniture}}
-\index{work\_furniture@{work\_furniture}!Player@{Player}}
-\doxysubsubsection{\texorpdfstring{work\_furniture()}{work\_furniture()}}
-{\footnotesize\ttfamily void Player\+::work\+\_\+furniture (\begin{DoxyParamCaption}\item[{float}]{frame\+\_\+dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game\+::\+Planning}}, \mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{Can\+Highlight\+Others\+::reach()}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_player_a5bcdf490604929a7ba3b018c8556228b}{get\+\_\+position\+\_\+after\+\_\+input()}}.
-
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_player_a546f224e39125a14cafad8a27b212e49}\label{struct_player_a546f224e39125a14cafad8a27b212e49}} 
-\index{Player@{Player}!inputs@{inputs}}
-\index{inputs@{inputs}!Player@{Player}}
-\doxysubsubsection{\texorpdfstring{inputs}{inputs}}
-{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}}$>$ Player\+::inputs}
-
-
-
-Referenced by \mbox{\hyperlink{struct_player_aa61138623d84040a973dd22da01ec2d3}{always\+\_\+update()}}, \mbox{\hyperlink{structnetwork_1_1_client_ae502815c0740bf18bc4bff3a92ee5bba}{network\+::\+Client\+::send\+\_\+player\+\_\+input\+\_\+packet()}}, \mbox{\hyperlink{struct_player_a754673edaad609f0dc3ea8d8383339e6}{update\+\_\+xaxis\+\_\+position()}}, and \mbox{\hyperlink{struct_player_aaae0a725ba6431cb4e7534b460e8a593}{update\+\_\+zaxis\+\_\+position()}}.
-
 \mbox{\Hypertarget{struct_player_aeff32fff0439d7ae2480ef92bc8962a2}\label{struct_player_aeff32fff0439d7ae2480ef92bc8962a2}} 
 \index{Player@{Player}!state@{state}}
 \index{state@{state}!Player@{Player}}
 \doxysubsubsection{\texorpdfstring{state}{state}}
 {\footnotesize\ttfamily const \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} Player\+::state = \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+State\+::\+Game}}}
-
-
-
-Referenced by \mbox{\hyperlink{struct_player_aa61138623d84040a973dd22da01ec2d3}{always\+\_\+update()}}, \mbox{\hyperlink{struct_player_a5bcdf490604929a7ba3b018c8556228b}{get\+\_\+position\+\_\+after\+\_\+input()}}, \mbox{\hyperlink{struct_player_a754673edaad609f0dc3ea8d8383339e6}{update\+\_\+xaxis\+\_\+position()}}, and \mbox{\hyperlink{struct_player_aaae0a725ba6431cb4e7534b460e8a593}{update\+\_\+zaxis\+\_\+position()}}.
 
 \mbox{\Hypertarget{struct_player_af6823e27c17ba6ed5d2b4713abbe4d5a}\label{struct_player_af6823e27c17ba6ed5d2b4713abbe4d5a}} 
 \index{Player@{Player}!username@{username}}

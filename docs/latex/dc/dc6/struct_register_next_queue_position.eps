@@ -5,7 +5,7 @@
 %%For: 
 %Magnification: 1.00
 %%Orientation: Portrait
-%%BoundingBox: 0 0 500 462.427734
+%%BoundingBox: 0 0 500 346.820801
 %%Pages: 0
 %%BeginSetup
 %%EndSetup
@@ -19,12 +19,12 @@
 /marginwidth 10 def
 /distx 20 def
 /disty 40 def
-/boundaspect 1.081250 def  % aspect ratio of the BoundingBox (width/height)
+/boundaspect 1.441667 def  % aspect ratio of the BoundingBox (width/height)
 /boundx 500 def
 /boundy boundx boundaspect div def
 /xspacing 0 def
 /yspacing 0 def
-/rows 4 def
+/rows 3 def
 /cols 1 def
 /scalefactor 0 def
 /boxfont /Times-Roman findfont fontheight scalefont def
@@ -174,7 +174,6 @@
 boxfont setfont
 1 boundaspect scale
 (RegisterNextQueuePosition) cw
-(TargetCube) cw
 (Person) cw
 (Entity) cw
 /boxwidth boxwidth marginwidth 2 mul add def
@@ -189,9 +188,8 @@ boundx scalefactor div boundy scalefactor div scale
 % ----- classes -----
 
  (RegisterNextQueuePosition) 0.000000 0.000000 box
- (TargetCube) 0.000000 1.000000 box
- (Person) 0.000000 2.000000 box
- (Entity) 0.000000 3.000000 box
+ (Person) 0.000000 1.000000 box
+ (Entity) 0.000000 2.000000 box
 
 % ----- relations -----
 
@@ -203,7 +201,3 @@ solid
 0 0.000000 1.000000 out
 solid
 1 0.000000 2.000000 in
-solid
-0 0.000000 2.000000 out
-solid
-1 0.000000 3.000000 in

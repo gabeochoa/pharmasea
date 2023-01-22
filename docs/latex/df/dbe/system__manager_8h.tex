@@ -1,16 +1,22 @@
 \hypertarget{system__manager_8h}{}\doxysection{src/system/system\+\_\+manager.h File Reference}
 \label{system__manager_8h}\index{src/system/system\_manager.h@{src/system/system\_manager.h}}
+{\ttfamily \#include \char`\"{}../base\+\_\+player.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/can\+\_\+be\+\_\+ghost\+\_\+player.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/can\+\_\+highlight\+\_\+others.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/can\+\_\+hold\+\_\+furniture.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/can\+\_\+perform\+\_\+job.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/collects\+\_\+user\+\_\+input.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/custom\+\_\+item\+\_\+position.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/responds\+\_\+to\+\_\+user\+\_\+input.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/transform.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../customer.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../entity.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../entityhelper.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../furniture.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../furniture/register.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../player.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}job\+\_\+system.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rendering\+\_\+system.\+h\char`\"{}}\newline
 \doxysubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
@@ -30,23 +36,17 @@ void \mbox{\hyperlink{namespacesystem__manager_a83ed24ae5e1d1c24133a535d653b172f
 \item 
 void \mbox{\hyperlink{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}{system\+\_\+manager\+::update\+\_\+held\+\_\+item\+\_\+position}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
 \item 
-void \mbox{\hyperlink{namespacesystem__manager_ad37dd2580fac8e15a7d95784327e63b9}{system\+\_\+manager\+::update\+\_\+job\+\_\+information}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
-\item 
-void \mbox{\hyperlink{namespacesystem__manager_a88899e9d93d6b94303f9f42998f6c268}{system\+\_\+manager\+::render\+\_\+simple\+\_\+highlighted}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
-\item 
-void \mbox{\hyperlink{namespacesystem__manager_acb2b04d1008e658796308df346b50525}{system\+\_\+manager\+::render\+\_\+simple\+\_\+normal}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
-\item 
-void \mbox{\hyperlink{namespacesystem__manager_adba12593f9411a7caa0cedb2ed812877}{system\+\_\+manager\+::render\+\_\+job\+\_\+visual}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
-\item 
-void \mbox{\hyperlink{namespacesystem__manager_aa69dd786a6109ddeaf28deccc41b0cdc}{system\+\_\+manager\+::render\+\_\+debug}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
-\item 
-bool \mbox{\hyperlink{namespacesystem__manager_afb81f15da9531f6cb852d76a72a09ecf}{system\+\_\+manager\+::render\+\_\+model\+\_\+highlighted}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
-\item 
-bool \mbox{\hyperlink{namespacesystem__manager_ade2c1588cbfffd59ab73884f9b48cef1}{system\+\_\+manager\+::render\+\_\+model\+\_\+normal}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
-\item 
-void \mbox{\hyperlink{namespacesystem__manager_a3ac55df2a02efd6903e1546e09601523}{system\+\_\+manager\+::render\+\_\+normal}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
-\item 
 void \mbox{\hyperlink{namespacesystem__manager_afe9f22e9aaf5690dda2fa12e579ddcb1}{system\+\_\+manager\+::reset\+\_\+highlighted}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
 \item 
 void \mbox{\hyperlink{namespacesystem__manager_a59f2cc661fe66e73806e73eaab658a6d}{system\+\_\+manager\+::highlight\+\_\+facing\+\_\+furniture}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a23e2737adee52e940c7942a7e312cb90}{system\+\_\+manager\+::move\+\_\+entity\+\_\+based\+\_\+on\+\_\+push\+\_\+force}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&new\+\_\+pos\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&new\+\_\+pos\+\_\+z)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a27a95df8b20f1e69fe055a138e7f7e5d}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos}} (int id, \mbox{\hyperlink{struct_transform}{Transform}} \&transform, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_person}{Person}} $>$ person, float dt, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+z)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a659184773c10c97c2fae2ef1f542e0c6}{system\+\_\+manager\+::collect\+\_\+user\+\_\+input}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a3e8126dd8986710c90900c8230f55c8d}{system\+\_\+manager\+::process\+\_\+player\+\_\+movement\+\_\+input}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}} input\+\_\+name, float input\+\_\+amount)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{system\+\_\+manager\+::process\+\_\+input}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, const \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}} \&input)
 \end{DoxyCompactItemize}

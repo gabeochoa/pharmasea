@@ -8,133 +8,136 @@
 \DoxyCodeLine{00004\ }
 \DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../external\_include.h"{}}}
 \DoxyCodeLine{00006\ \textcolor{comment}{//}}
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}../entities.h"{}}}
-\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}../furniture.h"{}}}
-\DoxyCodeLine{00009\ }
-\DoxyCodeLine{00010\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_conveyer}{Conveyer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_furniture}{Furniture}}\ \{}
-\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_conveyer_a66269a633e63a83eb0dba6fc5f2cce89}{ITEM\_START}}\ =\ -\/0.5f;}
-\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_conveyer_a3d8397d6d1477d871603d12990f14acb}{ITEM\_END}}\ =\ 0.5f;}
-\DoxyCodeLine{00013\ }
-\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}}\ =\ \mbox{\hyperlink{struct_conveyer_a66269a633e63a83eb0dba6fc5f2cce89}{Conveyer::ITEM\_START}};}
-\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_conveyer_a981ad6c98d9b5e6d4e859f247eee6af5}{SPEED}}\ =\ 0.5f;}
-\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_conveyer_a761bd908806aaf517f685a9deb039160}{can\_take\_from}}\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00017\ }
-\DoxyCodeLine{00018\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_conveyer_a9f2458cb3c8b51bc4203988e41922b29}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Furniture>\{\});}
-\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ need\ to\ serialize\ things\ that\ are\ needed\ for\ render}}
-\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}});}
-\DoxyCodeLine{00025\ \ \ \ \ \}}
-\DoxyCodeLine{00026\ }
-\DoxyCodeLine{00027\ \ \ \ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00028\ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a39ec7cc80b09f555e380514965bbf5f4}{Conveyer}}()\ \{\}}
-\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{struct_conveyer_af7418484a9a0f4a9a976833efb9cc6b4}{Conveyer}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)}
-\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_furniture}{Furniture}}(pos,\ \mbox{\hyperlink{namespaceui}{ui}}::color::blue,\ \mbox{\hyperlink{namespaceui}{ui}}::color::blue)\ \{}
-\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}{update\_model}}();}
-\DoxyCodeLine{00032\ \ \ \ \ \}}
-\DoxyCodeLine{00033\ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a7cfd934c28821a38e40da7d630dcbff9}{Conveyer}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos,\ Color\ face\_color,\ Color\ base\_color)}
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_furniture}{Furniture}}(pos,\ face\_color,\ base\_color)\ \{}
-\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}{update\_model}}();}
-\DoxyCodeLine{00036\ \ \ \ \ \}}
-\DoxyCodeLine{00037\ }
-\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}{update\_model}}()\ \{}
-\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ a\ component\ for\ this}}
-\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ get<ModelRenderer>().update(\mbox{\hyperlink{struct_model_info}{ModelInfo}}\{}
-\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}}\ =\ \textcolor{stringliteral}{"{}conveyer"{}},}
-\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ .size\_scale\ =\ 0.5f,}
-\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ .position\_offset\ =\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0,\ 0,\ 0\},}
-\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00045\ \ \ \ \ \}}
-\DoxyCodeLine{00046\ }
-\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ TODO\ fix}}
-\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_conveyer_ad463cf410c86390bf7f7ec7bcf9823b3}{can\_take\_item\_from}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (get<CanHoldItem>().is\_holding\_item()\ \&\&\ \mbox{\hyperlink{struct_conveyer_a761bd908806aaf517f685a9deb039160}{can\_take\_from}});}
-\DoxyCodeLine{00050\ \ \ \ \ \}}
-\DoxyCodeLine{00051\ }
-\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_conveyer_af073b867bbdf32206c8a279c51bbdbcb}{update\_held\_item\_position}}()\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (held\_item()\ !=\ nullptr)\ \{}}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ auto\ new\_pos\ =\ this-\/>position;}}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (this-\/>get<Transform>().face\_direction\ \&}}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ FrontFaceDirection::FORWARD)\ \{\ new\_pos.z\ +=\ TILESIZE\ *}}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ relative\_item\_pos;}}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (this-\/>get<Transform>().face\_direction\ \&}}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ FrontFaceDirection::RIGHT)\ \{\ new\_pos.x\ +=\ TILESIZE\ *}}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ relative\_item\_pos;}}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (this-\/>get<Transform>().face\_direction\ \&}}
-\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ FrontFaceDirection::BACK)\ \{\ new\_pos.z\ -\/=\ TILESIZE\ *}}
-\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ relative\_item\_pos;}}
-\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (this-\/>get<Transform>().face\_direction\ \&}}
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ FrontFaceDirection::LEFT)\ \{\ new\_pos.x\ -\/=\ TILESIZE\ *}}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ relative\_item\_pos;}}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ new\_pos.y\ +=\ TILESIZE\ /\ 4;}}
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ held\_item-\/>update\_position(new\_pos);}}
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00075\ \ \ \ \ \}}
-\DoxyCodeLine{00076\ }
-\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_conveyer_a1ab235f62b991959290eab61ebbcf1f1}{in\_round\_update}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{Furniture::in\_round\_update}}(dt);}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}../components/custom\_item\_position.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}../entities.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}../furniture.h"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_conveyer}{Conveyer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_furniture}{Furniture}}\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_conveyer_a66269a633e63a83eb0dba6fc5f2cce89}{ITEM\_START}}\ =\ -\/0.5f;}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_conveyer_a3d8397d6d1477d871603d12990f14acb}{ITEM\_END}}\ =\ 0.5f;}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}}\ =\ \mbox{\hyperlink{struct_conveyer_a66269a633e63a83eb0dba6fc5f2cce89}{Conveyer::ITEM\_START}};}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_conveyer_a981ad6c98d9b5e6d4e859f247eee6af5}{SPEED}}\ =\ 0.5f;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_conveyer_a761bd908806aaf517f685a9deb039160}{can\_take\_from}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_conveyer_a47f8f31438b58f276f0a96cf3c349c53}{add\_static\_components}}()\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ addComponent<CustomHeldItemPosition>().init(}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{keyword}{this}](\mbox{\hyperlink{struct_transform}{Transform}}\&\ transform)\ -\/>\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\ =\ transform.\mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{position}};}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (transform.\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}}\ \&}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform::FrontFaceDirection::FORWARD}})\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_pos.z\ +=\ TILESIZE\ *\ relative\_item\_pos;}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (transform.\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}}\ \&}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform::FrontFaceDirection::RIGHT}})\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_pos.x\ +=\ TILESIZE\ *\ relative\_item\_pos;}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (transform.\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}}\ \&}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform::FrontFaceDirection::BACK}})\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_pos.z\ -\/=\ TILESIZE\ *\ relative\_item\_pos;}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (transform.\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}}\ \&}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform::FrontFaceDirection::LEFT}})\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_pos.x\ -\/=\ TILESIZE\ *\ relative\_item\_pos;}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_pos.y\ +=\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 4;}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_pos;}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00042\ \ \ \ \ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_conveyer_a9f2458cb3c8b51bc4203988e41922b29}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Furniture>\{\});}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ need\ to\ serialize\ things\ that\ are\ needed\ for\ render}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}});}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00054\ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a39ec7cc80b09f555e380514965bbf5f4}{Conveyer}}()\ \{\}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{struct_conveyer_af7418484a9a0f4a9a976833efb9cc6b4}{Conveyer}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_furniture}{Furniture}}(pos,\ \mbox{\hyperlink{namespaceui}{ui}}::color::blue,\ \mbox{\hyperlink{namespaceui}{ui}}::color::blue)\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a47f8f31438b58f276f0a96cf3c349c53}{add\_static\_components}}();}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}{update\_model}}();}
+\DoxyCodeLine{00059\ \ \ \ \ \}}
+\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a7cfd934c28821a38e40da7d630dcbff9}{Conveyer}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos,\ Color\ face\_color,\ Color\ base\_color)}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_furniture}{Furniture}}(pos,\ face\_color,\ base\_color)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a47f8f31438b58f276f0a96cf3c349c53}{add\_static\_components}}();}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}{update\_model}}();}
+\DoxyCodeLine{00064\ \ \ \ \ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_conveyer_ad4215347a46419825e6155fa7d34ac84}{update\_model}}()\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ a\ component\ for\ this}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ get<ModelRenderer>().update(\mbox{\hyperlink{struct_model_info}{ModelInfo}}\{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}}\ =\ \textcolor{stringliteral}{"{}conveyer"{}},}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ .size\_scale\ =\ 0.5f,}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ .position\_offset\ =\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0,\ 0,\ 0\},}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00073\ \ \ \ \ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ TODO\ fix}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_conveyer_ad463cf410c86390bf7f7ec7bcf9823b3}{can\_take\_item\_from}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (get<CanHoldItem>().is\_holding\_item()\ \&\&\ \mbox{\hyperlink{struct_conveyer_a761bd908806aaf517f685a9deb039160}{can\_take\_from}});}
+\DoxyCodeLine{00078\ \ \ \ \ \}}
 \DoxyCodeLine{00079\ }
-\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a761bd908806aaf517f685a9deb039160}{can\_take\_from}}\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00081\ }
-\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ are\ not\ holding\ anything}}
-\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (get<CanHoldItem>().empty())\ \{}
-\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00086\ }
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ the\ item\ is\ less\ than\ halfway,\ just\ keep\ moving\ it\ along}}
-\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}}\ <=\ 0.f)\ \{}
-\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}}\ +=\ \mbox{\hyperlink{struct_conveyer_a981ad6c98d9b5e6d4e859f247eee6af5}{SPEED}}\ *\ dt;}
-\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00092\ }
-\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ match\ =\ EntityHelper::getMatchingEntityInFront<Furniture>(}
-\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().as2(),\ 1.f,}
-\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction,}
-\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{keyword}{this}](std::shared\_ptr<Furniture>\ furn)\ \{}
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\textcolor{keywordtype}{id}\ !=\ furn-\/>id\ \&\&\ furn-\/>can\_place\_item\_into();}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ no\ match\ means\ we\ cant\ continue,\ stay\ in\ the\ middle}}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!match)\ \{}
-\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}}\ =\ 0.f;}
-\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a761bd908806aaf517f685a9deb039160}{can\_take\_from}}\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00105\ }
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ got\ something\ that\ will\ take\ from\ us,}}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ but\ only\ once\ we\ get\ close\ enough}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_conveyer_a1ab235f62b991959290eab61ebbcf1f1}{in\_round\_update}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{Furniture::in\_round\_update}}(dt);}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ this-\/>get<Transform>();}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a761bd908806aaf517f685a9deb039160}{can\_take\_from}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ are\ not\ holding\ anything}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (get<CanHoldItem>().empty())\ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ the\ item\ is\ less\ than\ halfway,\ just\ keep\ moving\ it\ along}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}}\ <=\ 0.f)\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}}\ +=\ \mbox{\hyperlink{struct_conveyer_a981ad6c98d9b5e6d4e859f247eee6af5}{SPEED}}\ *\ dt;}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ match\ =\ EntityHelper::getMatchingEntityInFront<Furniture>(}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{as2}}(),\ 1.f,\ transform.\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}},}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{keyword}{this}](std::shared\_ptr<Furniture>\ furn)\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ this-\/>id\ !=\ furn-\/>id\ \&\&\ furn-\/>can\_place\_item\_into();}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ no\ match\ means\ we\ cant\ continue,\ stay\ in\ the\ middle}}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!match)\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}}\ =\ 0.f;}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a761bd908806aaf517f685a9deb039160}{can\_take\_from}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00108\ }
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ so\ keep\ moving\ forward}}
-\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}}\ <=\ \mbox{\hyperlink{struct_conveyer_a3d8397d6d1477d871603d12990f14acb}{Conveyer::ITEM\_END}})\ \{}
-\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}}\ +=\ \mbox{\hyperlink{struct_conveyer_a981ad6c98d9b5e6d4e859f247eee6af5}{SPEED}}\ *\ dt;}
-\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00114\ }
-\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a761bd908806aaf517f685a9deb039160}{can\_take\_from}}\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ reached\ the\ end,\ pass\ ownership}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ got\ something\ that\ will\ take\ from\ us,}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ but\ only\ once\ we\ get\ close\ enough}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ so\ keep\ moving\ forward}}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}}\ <=\ \mbox{\hyperlink{struct_conveyer_a3d8397d6d1477d871603d12990f14acb}{Conveyer::ITEM\_END}})\ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a0fa7eb461a8296b3fd1ac89157e86272}{relative\_item\_pos}}\ +=\ \mbox{\hyperlink{struct_conveyer_a981ad6c98d9b5e6d4e859f247eee6af5}{SPEED}}\ *\ dt;}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00117\ }
-\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}\&\ matchCHI\ =\ match-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>();}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}\&\ ourCHI\ =\ this-\/>get<CanHoldItem>();}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_conveyer_a761bd908806aaf517f685a9deb039160}{can\_take\_from}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ reached\ the\ end,\ pass\ ownership}}
 \DoxyCodeLine{00120\ }
-\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ matchCHI.\mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{item}}()\ =\ ourCHI.item();}
-\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ matchCHI.\mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{item}}()-\/>held\_by\ =\ \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5}{Item::HeldBy::FURNITURE}};}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ ourCHI.item()\ =\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ this-\/>relative\_item\_pos\ =\ \mbox{\hyperlink{struct_conveyer_a66269a633e63a83eb0dba6fc5f2cce89}{Conveyer::ITEM\_START}};}
-\DoxyCodeLine{00125\ }
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ if\ we\ are\ pushing\ onto\ a\ conveyer,\ we\ need\ to\ make\ sure}}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ are\ keeping\ track\ of\ the\ orientations}}
-\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ -\/-\/>\ -\/-\/>\ in\ this\ case\ we\ want\ to\ place\ at\ 0.f}}
-\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \string^}}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ -\/-\/>-\/>\ |\ \ \ \ \ in\ this\ we\ want\ to\ place\ at\ 0.f\ instead\ of\ -\/0.5}}
-\DoxyCodeLine{00133\ \ \ \ \ \}}
-\DoxyCodeLine{00134\ \};}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}\&\ matchCHI\ =\ match-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>();}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}\&\ ourCHI\ =\ this-\/>get<CanHoldItem>();}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ matchCHI.\mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{item}}()\ =\ ourCHI.item();}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ matchCHI.\mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{item}}()-\/>held\_by\ =\ \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5}{Item::HeldBy::FURNITURE}};}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ ourCHI.item()\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ this-\/>relative\_item\_pos\ =\ \mbox{\hyperlink{struct_conveyer_a66269a633e63a83eb0dba6fc5f2cce89}{Conveyer::ITEM\_START}};}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ if\ we\ are\ pushing\ onto\ a\ conveyer,\ we\ need\ to\ make\ sure}}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ are\ keeping\ track\ of\ the\ orientations}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ -\/-\/>\ -\/-\/>\ in\ this\ case\ we\ want\ to\ place\ at\ 0.f}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \string^}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ -\/-\/>-\/>\ |\ \ \ \ \ in\ this\ we\ want\ to\ place\ at\ 0.f\ instead\ of\ -\/0.5}}
+\DoxyCodeLine{00136\ \ \ \ \ \}}
+\DoxyCodeLine{00137\ \};}
 
 \end{DoxyCode}

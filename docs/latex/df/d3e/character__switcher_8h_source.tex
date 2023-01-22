@@ -24,27 +24,17 @@
 \DoxyCodeLine{00020\ \ \ \ \textcolor{keyword}{public}:}
 \DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{struct_character_switcher_a00b6e54ed0b65fa5d4eaee04979c0570}{CharacterSwitcher}}()\ \{\}}
 \DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{struct_character_switcher_abb99507472b0ea5cb48970cffbe90732}{CharacterSwitcher}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)}
-\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_furniture}{Furniture}}(pos,\ \mbox{\hyperlink{namespaceui}{ui}}::color::brown,\ \mbox{\hyperlink{namespaceui}{ui}}::color::brown)\ \{\}}
-\DoxyCodeLine{00024\ }
-\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_character_switcher_a663fe4562ed789ffef1bf241cc26f452}{do\_work}}(\textcolor{keywordtype}{float}\ dt,\ \mbox{\hyperlink{struct_person}{Person}}*\ person)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ amt\ =\ 2.f;}
-\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\_work\_complete}}\ +=\ amt\ *\ dt;}
-\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\_work\_complete}}\ >=\ 1.f)\ \{}
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\_work\_complete}}\ =\ 0.f;}
-\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ person-\/>\mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\_next\_character\_model}}();}
-\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00032\ \ \ \ \ \}}
-\DoxyCodeLine{00033\ }
-\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ Does\ this\ piece\ of\ furniture\ have\ work\ to\ be\ done?}}
-\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_character_switcher_a095f00d2c3bb7eba6dce745495b3fe2a}{has\_work}}()\textcolor{keyword}{\ const\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
-\DoxyCodeLine{00036\ }
-\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_character_switcher_a16b51bd6119e80d082481136264dbbaa}{update\_held\_item\_position}}()\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (held\_item()\ !=\ nullptr)\ \{}}
-\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ auto\ new\_pos\ =\ this-\/>get<Transform>().position;}}
-\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ new\_pos.y\ +=\ TILESIZE\ /\ 2;}}
-\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ held\_item()-\/>update\_position(new\_pos);}}
-\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00043\ \ \ \ \ \}}
-\DoxyCodeLine{00044\ \};}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_furniture}{Furniture}}(pos,\ \mbox{\hyperlink{namespaceui}{ui}}::color::brown,\ \mbox{\hyperlink{namespaceui}{ui}}::color::brown)\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ get<HasWork>().init([\textcolor{keyword}{this}](std::shared\_ptr<Person>\ person,\ \textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ amt\ =\ 2.f;}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_work}{HasWork}}\&\ hasWork\ =\ this-\/>get<HasWork>();}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ hasWork.\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ +=\ amt\ *\ dt;}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasWork.\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ >=\ 1.f)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasWork.\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ =\ 0.f;}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ person-\/>select\_next\_character\_model();}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ \};}
 
 \end{DoxyCode}

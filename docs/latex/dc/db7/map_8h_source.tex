@@ -7,100 +7,106 @@
 \DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00004\ }
 \DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{engine_8h}{engine.h}}"{}}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{log_8h}{engine/log.h}}"{}}}
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
-\DoxyCodeLine{00008\ \textcolor{comment}{//}}
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{entityhelper_8h}{entityhelper.h}}"{}}}
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{level__info_8h}{level\_info.h}}"{}}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{remote__player_8h}{remote\_player.h}}"{}}}
-\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
-\DoxyCodeLine{00013\ }
-\DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_map}{Map}}\ \{}
-\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{struct_lobby_map_info}{LobbyMapInfo}}\ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}};}
-\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{struct_game_map_info}{GameMapInfo}}\ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}};}
-\DoxyCodeLine{00017\ }
-\DoxyCodeLine{00018\ \ \ \ \ std::vector<std::shared\_ptr<RemotePlayer>>\ \mbox{\hyperlink{struct_map_af01ceb7d11591c11566e7b8d0138b0c6}{remote\_players\_NOT\_SERIALIZED}};}
-\DoxyCodeLine{00019\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}};}
-\DoxyCodeLine{00020\ }
-\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{struct_map_a6c12f320da33483abab1e7133152ef3b}{Map}}(\textcolor{keyword}{const}\ std::string\&\ \_seed\ =\ \textcolor{stringliteral}{"{}default\_seed"{}})\ :\ \mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}}(\_seed)\ \{}
-\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ is\ needed\ for\ the\ items\ to\ be\ regenerated}}
-\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_a4e98fd60043de56a87546304f6ac1f01}{update\_seed}}(\mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}});}
-\DoxyCodeLine{00024\ \ \ \ \ \}}
-\DoxyCodeLine{00025\ }
-\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_a4e98fd60043de56a87546304f6ac1f01}{update\_seed}}(\textcolor{keyword}{const}\ std::string\&\ s)\ \{\ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_game_map_info_a3e6cb1b5e1429089bb8d3498562854b3}{update\_seed}}(s);\ \}}
-\DoxyCodeLine{00027\ }
-\DoxyCodeLine{00028\ \ \ \ \ \mbox{\hyperlink{item__helper_8h_a175a25f0a9aa01587d97b5daefa2db13}{Items}}\ \mbox{\hyperlink{struct_map_a020eac8bc34cb0da6f978b410913f82f}{items}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}()\ ?\ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}}\ :\ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}};}
-\DoxyCodeLine{00030\ \ \ \ \ \}}
-\DoxyCodeLine{00031\ }
-\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}}\ \mbox{\hyperlink{struct_map_ab6633a39aa81ed9161458051d0b0e662}{entities}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}()\ ?\ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}}\ :\ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}};}
-\DoxyCodeLine{00034\ \ \ \ \ \}}
-\DoxyCodeLine{00035\ }
-\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_a0d162dc968a2d18848e241c8c7f9e865}{onUpdate}}(\textcolor{keywordtype}{float}\ dt)\ \{}
-\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
-\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ rp\ :\ \mbox{\hyperlink{struct_map_af01ceb7d11591c11566e7b8d0138b0c6}{remote\_players\_NOT\_SERIALIZED}})\ \{}
-\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ rp-\/>update(dt);}
-\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}())\ \{}
-\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_level_info_ad3f119e5329f5c5f62537ff53fe3b932}{ensure\_generated\_map}}(\mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}});}
-\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_level_info_a69320651f4975db03abfcf8979341cb4}{onUpdate}}(dt);}
-\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_level_info_ad3f119e5329f5c5f62537ff53fe3b932}{ensure\_generated\_map}}(\mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}});}
-\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_game_map_info_aac456532748e47e912f90269ab54e216}{onUpdate}}(dt);}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00048\ \ \ \ \ \}}
-\DoxyCodeLine{00049\ }
-\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_a3a0e8d65b69ebda41b8a46516c6ca941}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
-\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ rp\ :\ \mbox{\hyperlink{struct_map_af01ceb7d11591c11566e7b8d0138b0c6}{remote\_players\_NOT\_SERIALIZED}})\ \{}
-\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ we\ call\ the\ render\ directly\ ehre\ because\ level\_info\ doesnt}}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ own\ players}}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ why\ is\ he\ so\ large\ ..}}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rp)\ \mbox{\hyperlink{namespacesystem__manager_a3ac55df2a02efd6903e1546e09601523}{system\_manager::render\_normal}}(rp,\ dt);}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!rp)\ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}we\ have\ invalid\ remote\ players"{}});}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}())\ \{}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}{onDraw}}(dt);}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_level_info_a7c2985c6599e2a7d5e051cc7f835fc6d}{onDraw}}(dt);}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00064\ \ \ \ \ \}}
-\DoxyCodeLine{00065\ }
-\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_a51c107a92c3dcfcbfd39d1e688e80ad3}{onDrawUI}}(\textcolor{keywordtype}{float}\ dt)\ \{}
-\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}())\ \{}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_level_info_a29c9081e7343c8fb18e46104f73b957b}{onDrawUI}}(dt);}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_game_map_info_a6f7aefa1a79a33f4ef973f1ef0a4cc87}{onDrawUI}}(dt);}
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00073\ \ \ \ \ \}}
-\DoxyCodeLine{00074\ }
-\DoxyCodeLine{00075\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ GameState::get().is(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game::State::Lobby}})\ ||}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GameState::get().is\_paused\_in(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game::State::Lobby}});}
-\DoxyCodeLine{00078\ \ \ \ \ \}}
-\DoxyCodeLine{00079\ }
-\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//\ These\ are\ called\ before\ every\ "{}send\_map\_state"{}\ when\ server}}
-\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{//\ sends\ everything\ over\ to\ clients}}
-\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_ab7fed84f8d2c66b12a77c7e8a1584125}{ensure\_generated\_map}}()\ \{}
-\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ game\_info.ensure\_generated\_map(seed);}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{container__cast_8h}{engine/container\_cast.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{log_8h}{engine/log.h}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{entityhelper_8h}{entityhelper.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{level__info_8h}{level\_info.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{remote__player_8h}{remote\_player.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_map}{Map}}\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{struct_lobby_map_info}{LobbyMapInfo}}\ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}};}
+\DoxyCodeLine{00017\ \ \ \ \ \mbox{\hyperlink{struct_game_map_info}{GameMapInfo}}\ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ std::vector<std::shared\_ptr<RemotePlayer>>\ \mbox{\hyperlink{struct_map_af01ceb7d11591c11566e7b8d0138b0c6}{remote\_players\_NOT\_SERIALIZED}};}
+\DoxyCodeLine{00020\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \mbox{\hyperlink{struct_map_a6c12f320da33483abab1e7133152ef3b}{Map}}(\textcolor{keyword}{const}\ std::string\&\ \_seed\ =\ \textcolor{stringliteral}{"{}default\_seed"{}})\ :\ \mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}}(\_seed)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ is\ needed\ for\ the\ items\ to\ be\ regenerated}}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_a4e98fd60043de56a87546304f6ac1f01}{update\_seed}}(\mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}});}
+\DoxyCodeLine{00025\ \ \ \ \ \}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_a4e98fd60043de56a87546304f6ac1f01}{update\_seed}}(\textcolor{keyword}{const}\ std::string\&\ s)\ \{\ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_game_map_info_a3e6cb1b5e1429089bb8d3498562854b3}{update\_seed}}(s);\ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{item__helper_8h_a175a25f0a9aa01587d97b5daefa2db13}{Items}}\ \mbox{\hyperlink{struct_map_a020eac8bc34cb0da6f978b410913f82f}{items}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}()\ ?\ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}}\ :\ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_level_info_acf7cf891676017e69d101bc6c164fa45}{items}};}
+\DoxyCodeLine{00031\ \ \ \ \ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}}\ \mbox{\hyperlink{struct_map_ab6633a39aa81ed9161458051d0b0e662}{entities}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}()\ ?\ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}}\ :\ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}};}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_a0d162dc968a2d18848e241c8c7f9e865}{onUpdate}}(\textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ rp\ :\ \mbox{\hyperlink{struct_map_af01ceb7d11591c11566e7b8d0138b0c6}{remote\_players\_NOT\_SERIALIZED}})\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ rp-\/>update(dt);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ i\ didnt\ switch\ cause\ this\ cause\ pikachu\ double\ vision}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SystemManager::get().update(}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ container\_cast(remote\_players\_NOT\_SERIALIZED,}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ "{}converting\ sp<RemotePlayer>\ to\ sp<Entity>\ as\ these\ "{}}}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ "{}are\ not\ serialized\ and\ so\ not\ part\ of\ level\ info"{}),}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dt);}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}())\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_level_info_ad3f119e5329f5c5f62537ff53fe3b932}{ensure\_generated\_map}}(\mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}});}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_level_info_a69320651f4975db03abfcf8979341cb4}{onUpdate}}(dt);}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_level_info_ad3f119e5329f5c5f62537ff53fe3b932}{ensure\_generated\_map}}(\mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}});}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_game_map_info_aac456532748e47e912f90269ab54e216}{onUpdate}}(dt);}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00055\ \ \ \ \ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_a3a0e8d65b69ebda41b8a46516c6ca941}{onDraw}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ SystemManager::get().render(}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{container__cast_8h_a7b70b5916f605fbbf65bcb67b9679c76}{container\_cast}}(\mbox{\hyperlink{struct_map_af01ceb7d11591c11566e7b8d0138b0c6}{remote\_players\_NOT\_SERIALIZED}},}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}converting\ sp<RemotePlayer>\ to\ sp<Entity>\ as\ these\ "{}}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}are\ not\ serialized\ and\ so\ not\ part\ of\ level\ info"{}}),}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ dt);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}())\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}{onDraw}}(dt);}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_level_info_a7c2985c6599e2a7d5e051cc7f835fc6d}{onDraw}}(dt);}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00070\ \ \ \ \ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_a51c107a92c3dcfcbfd39d1e688e80ad3}{onDrawUI}}(\textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}())\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_level_info_a29c9081e7343c8fb18e46104f73b957b}{onDrawUI}}(dt);}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_game_map_info_a6f7aefa1a79a33f4ef973f1ef0a4cc87}{onDrawUI}}(dt);}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ GameState::get().is(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game::State::Lobby}})\ ||}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GameState::get().is\_paused\_in(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042abf743ed5406110c31e9c40969748}{game::State::Lobby}});}
 \DoxyCodeLine{00084\ \ \ \ \ \}}
-\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\_things}}()\ \{}
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}())\ \{}
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c45e}{grab\_things}}();}
-\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c45e}{grab\_things}}();}
-\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00091\ \ \ \ \ \}}
-\DoxyCodeLine{00092\ }
-\DoxyCodeLine{00093\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_a55250a0fffd3f2d82afd309055cfbc37}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}});}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}});}
-\DoxyCodeLine{00099\ \ \ \ \ \}}
-\DoxyCodeLine{00100\ \};}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{comment}{//\ These\ are\ called\ before\ every\ "{}send\_map\_state"{}\ when\ server}}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//\ sends\ everything\ over\ to\ clients}}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_ab7fed84f8d2c66b12a77c7e8a1584125}{ensure\_generated\_map}}()\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ game\_info.ensure\_generated\_map(seed);}}
+\DoxyCodeLine{00090\ \ \ \ \ \}}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\_things}}()\ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\_lobby\_state}}())\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}}.\mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c45e}{grab\_things}}();}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}}.\mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c45e}{grab\_things}}();}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_map_a55250a0fffd3f2d82afd309055cfbc37}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\_info}});}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\_info}});}
+\DoxyCodeLine{00105\ \ \ \ \ \}}
+\DoxyCodeLine{00106\ \};}
 
 \end{DoxyCode}

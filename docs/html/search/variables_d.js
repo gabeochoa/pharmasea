@@ -80,5 +80,6 @@ var searchData=
   ['muted_5fgreen_77',['muted_green',['../d9/db4/namespaceui_1_1color.html#a78e78285bdd8e7edffca9de83476ba2f',1,'ui::color']]],
   ['muted_5fpink_78',['muted_pink',['../d9/db4/namespaceui_1_1color.html#a9c0cc896ef79def72aceee297296dc4b',1,'ui::color']]],
   ['muted_5fpurple_79',['muted_purple',['../d9/db4/namespaceui_1_1color.html#a2df87bf96a118ce3a356a10a6ea5788e',1,'ui::color']]],
-  ['my_5fip_5faddress_80',['my_ip_address',['../d8/dcc/struct_network_layer.html#ac35d32c4c42e71a69fced5efec74f9c6',1,'NetworkLayer']]]
+  ['my_5failment_80',['my_ailment',['../d1/d57/struct_can_have_ailment.html#a5f64136196bdd0d9337c8244149a4752',1,'CanHaveAilment']]],
+  ['my_5fip_5faddress_81',['my_ip_address',['../d8/dcc/struct_network_layer.html#ac35d32c4c42e71a69fced5efec74f9c6',1,'NetworkLayer']]]
 ];

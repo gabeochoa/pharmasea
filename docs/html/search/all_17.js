@@ -59,7 +59,7 @@ var searchData=
   ['wintergreen_56',['wintergreen',['../d9/db4/namespaceui_1_1color.html#a07dbd7bec531b03e3e862501e47fb7d3',1,'ui::color']]],
   ['wisteria_57',['wisteria',['../d9/db4/namespaceui_1_1color.html#af2848864bf5fb7ad325597bdb1bd44e9',1,'ui::color']]],
   ['words_5fin_5fstring_58',['words_in_string',['../d6/d72/namespaceutil.html#af5b41133c9803397e0ac6ceae24431b2',1,'util']]],
-  ['work_5ffurniture_59',['work_furniture',['../d3/db1/struct_player.html#ac1318fd5b7ce7c808a09ef95611280b5',1,'Player']]],
+  ['worked_5fbefore_59',['worked_before',['../db/dc2/struct_can_perform_job.html#a338c76bf911828e92bbc14b00932a722',1,'CanPerformJob']]],
   ['workingatend_60',['WorkingAtEnd',['../d2/d63/struct_job.html#a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7',1,'Job']]],
   ['workingatstart_61',['WorkingAtStart',['../d2/d63/struct_job.html#a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c',1,'Job']]],
   ['worsen_62',['worsen',['../d5/d34/struct_symptom.html#ac060f5e5b54fae5de7e4f3930cf5326b',1,'Symptom']]],

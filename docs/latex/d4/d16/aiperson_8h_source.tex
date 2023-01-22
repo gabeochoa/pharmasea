@@ -27,129 +27,28 @@
 \DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ things\ that\ need\ to\ be\ rendered,\ need\ to\ be\ serialized\ :)}}
 \DoxyCodeLine{00024\ \ \ \ \ \}}
 \DoxyCodeLine{00025\ }
-\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}{add\_static\_components}}()\ \{\ addComponent<CanPerformJob>();\ \}}
-\DoxyCodeLine{00027\ }
-\DoxyCodeLine{00028\ \ \ \ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a6da62a57316320187312b91e8c6fa4f0}{AIPerson}}()\ :\ \mbox{\hyperlink{struct_person}{Person}}()\ \{\ \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}{add\_static\_components}}();\ \}}
-\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a55792e3979b5b2f3813690444c6adbe1}{AIPerson}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
-\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
-\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}{add\_static\_components}}();}
-\DoxyCodeLine{00033\ \ \ \ \ \}}
-\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a79530f19bf2eb3d90984b6046156d4ec}{AIPerson}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
-\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
-\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}{add\_static\_components}}();}
-\DoxyCodeLine{00037\ \ \ \ \ \}}
-\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a4c6c945ea61dfb3c98cb722d3766558e}{AIPerson}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}{add\_static\_components}}();\ \}}
-\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_ae4e13bbbe41ad3113211f87762d8d0ab}{AIPerson}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}{add\_static\_components}}();\ \}}
-\DoxyCodeLine{00040\ }
-\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_a_i_person_a1d93482a63f44830687cf01f9368dccb}{base\_speed}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ 10.f;\ \}}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}{add\_static\_components}}()\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ addComponent<CanPerformJob>().update(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}},\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}});}
+\DoxyCodeLine{00028\ \ \ \ \ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a6da62a57316320187312b91e8c6fa4f0}{AIPerson}}()\ :\ \mbox{\hyperlink{struct_person}{Person}}()\ \{\ \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}{add\_static\_components}}();\ \}}
+\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a55792e3979b5b2f3813690444c6adbe1}{AIPerson}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}{add\_static\_components}}();}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a79530f19bf2eb3d90984b6046156d4ec}{AIPerson}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}{add\_static\_components}}();}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a4c6c945ea61dfb3c98cb722d3766558e}{AIPerson}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}{add\_static\_components}}();\ \}}
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_ae4e13bbbe41ad3113211f87762d8d0ab}{AIPerson}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_person}{Person}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_a_i_person_adf326003923b12cb39086776a254a047}{add\_static\_components}}();\ \}}
 \DoxyCodeLine{00042\ }
-\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\_mult}}()\ \{\ \textcolor{keywordflow}{return}\ 0.f;\ \}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_a_i_person_a1d93482a63f44830687cf01f9368dccb}{base\_speed}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ 10.f;\ \}}
 \DoxyCodeLine{00044\ }
-\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ are\ seeing\ issues\ where\ customers\ are\ getting\ stuck\ on\ corners}}
-\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{//\ when\ turning.\ Before\ I\ feel\ like\ they\ were\ able\ to\ slide\ but\ it\ seems}}
-\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ like\ not\ anymore?}}
-\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_a_i_person_a8a4a8251c55347bcf5e6d29a00d4d49a}{update\_xaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ job\ =\ get<CanPerformJob>().job();}
-\DoxyCodeLine{00050\ }
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!job\ ||\ !job-\/>local.has\_value())\ \{}
-\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>get<Transform>().raw\_position;}
-\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00054\ }
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ tar\ =\ job-\/>local.value();}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ speed\ =\ this-\/>\mbox{\hyperlink{struct_a_i_person_a1d93482a63f44830687cf01f9368dccb}{base\_speed}}()\ *\ dt;}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\_mult}}()\ !=\ 0)\ speed\ *=\ \mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\_mult}}();}
-\DoxyCodeLine{00058\ }
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_x\ =\ this-\/>get<Transform>().raw\_position;}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tar.x\ >\ this-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}}.x)\ new\_pos\_x.x\ +=\ speed;}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tar.x\ <\ this-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}}.x)\ new\_pos\_x.x\ -\/=\ speed;}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_pos\_x;}
-\DoxyCodeLine{00063\ \ \ \ \ \}}
-\DoxyCodeLine{00064\ }
-\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_a_i_person_a91edda78370012b664a50dc752dbf058}{update\_zaxis\_position}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ job\ =\ get<CanPerformJob>().job();}
-\DoxyCodeLine{00067\ }
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!job\ ||\ !job-\/>local.has\_value())\ \{}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>get<Transform>().raw\_position;}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00071\ }
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ tar\ =\ job-\/>local.value();}
-\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ speed\ =\ this-\/>\mbox{\hyperlink{struct_a_i_person_a1d93482a63f44830687cf01f9368dccb}{base\_speed}}()\ *\ dt;}
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\_mult}}()\ !=\ 0)\ speed\ *=\ \mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\_mult}}();}
-\DoxyCodeLine{00075\ }
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_z\ =\ this-\/>get<Transform>().raw\_position;}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tar.y\ >\ this-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}}.z)\ new\_pos\_z.z\ +=\ speed;}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tar.y\ <\ this-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}}.z)\ new\_pos\_z.z\ -\/=\ speed;}
-\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_pos\_z;}
-\DoxyCodeLine{00080\ \ \ \ \ \}}
-\DoxyCodeLine{00081\ }
-\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job}{Job}}*\ \mbox{\hyperlink{struct_a_i_person_a3eb3356c4eabfa9a01173eab3218637f}{get\_wandering\_job}}()\ \{}
-\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ cooldown\ so\ that\ not\ all\ time\ is\ spent\ here}}
-\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\_tries\ =\ 10;}
-\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ range\ =\ 20;}
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ walkable\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 0;}
-\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ target;}
-\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (!walkable)\ \{}
-\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ target\ =\ (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}})\{1.f\ *\ \mbox{\hyperlink{random_8h_ac595cabd40bee1b9e1c604ea389dc528}{randIn}}(-\/range,\ range),}
-\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1.f\ *\ \mbox{\hyperlink{random_8h_ac595cabd40bee1b9e1c604ea389dc528}{randIn}}(-\/range,\ range)\};}
-\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ walkable\ =\ \mbox{\hyperlink{struct_entity_helper_a4d01c0a143c62ae572e5d4e9eb5711f0}{EntityHelper::isWalkable}}(target);}
-\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ i++;}
-\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ >\ max\_tries)\ \{}
-\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ \mbox{\hyperlink{struct_job}{Job}}(\{.type\ =\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}},}
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .start\ =\ this-\/>get<Transform>().as2(),}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .end\ =\ target\});}
-\DoxyCodeLine{00101\ \ \ \ \ \}}
-\DoxyCodeLine{00102\ }
-\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_a5710c2532f9031cd86c986a8ffef2aab}{get\_starting\_job}}()\ \{}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ job\ =\ get<CanPerformJob>().job();}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ job.reset(\mbox{\hyperlink{struct_a_i_person_a3eb3356c4eabfa9a01173eab3218637f}{get\_wandering\_job}}());}
-\DoxyCodeLine{00106\ \ \ \ \ \}}
-\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_ad1c946a4db57102d0aaf2dfac4a0f16c}{get\_idle\_job}}()\ \{}
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ job\ =\ get<CanPerformJob>().job();}
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ job.reset(\mbox{\hyperlink{struct_a_i_person_a3eb3356c4eabfa9a01173eab3218637f}{get\_wandering\_job}}());}
-\DoxyCodeLine{00110\ \ \ \ \ \}}
-\DoxyCodeLine{00111\ }
-\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_a90cc4372573d28217c13b36ffed70a75}{find\_new\_job}}()\ \{}
-\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ job\ =\ get<CanPerformJob>().job();}
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ personal\_queue\ =\ get<CanPerformJob>().job\_queue();}
-\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (personal\_queue.empty())\ \{}
-\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_ad1c946a4db57102d0aaf2dfac4a0f16c}{get\_idle\_job}}();}
-\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ job\ =\ personal\_queue.top();}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ personal\_queue.pop();}
-\DoxyCodeLine{00121\ \ \ \ \ \}}
-\DoxyCodeLine{00122\ }
-\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_a_i_person_a96ac966279b3fae533fb2cfb9533e820}{in\_round\_update}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ job\ =\ get<CanPerformJob>().job();}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((this-\/>\mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\_force}}.x\ !=\ 0.0f\ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ this-\/>pushed\_force.z\ !=\ 0.0f)\ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \&\&\ job\ !=\ \textcolor{keyword}{nullptr})\ \{}
-\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>path.clear();}
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>local\ =\ \{\};}
-\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_sound_library_ad2573d3420d3934755b903116c48acd6}{SoundLibrary::get}}().play(\textcolor{stringliteral}{"{}roblox"{}});}
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00132\ }
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{Person::in\_round\_update}}(dt);}
-\DoxyCodeLine{00134\ }
-\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!job)\ \{}
-\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a5710c2532f9031cd86c986a8ffef2aab}{get\_starting\_job}}();}
-\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00139\ }
-\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (job-\/>state\ ==\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}})\ \{}
-\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (job-\/>on\_cleanup)\ job-\/>on\_cleanup(\textcolor{keyword}{this},\ job.get());}
-\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ job.reset();}
-\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_i_person_a90cc4372573d28217c13b36ffed70a75}{find\_new\_job}}();}
-\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00146\ \ \ \ \ \}}
-\DoxyCodeLine{00147\ }
-\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_a_i_person_a7a34eb065642bd59056aa0ea727fed7e}{is\_snappable}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
-\DoxyCodeLine{00149\ \};}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_a_i_person_aef91d3206831938ad4b4500114d2676a}{stagger\_mult}}()\ \{\ \textcolor{keywordflow}{return}\ 0.f;\ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_a_i_person_a7a34eb065642bd59056aa0ea727fed7e}{is\_snappable}}()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00048\ \};}
 
 \end{DoxyCode}

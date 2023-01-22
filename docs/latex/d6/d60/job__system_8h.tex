@@ -1,0 +1,39 @@
+\hypertarget{job__system_8h}{}\doxysection{src/system/job\+\_\+system.h File Reference}
+\label{job__system_8h}\index{src/system/job\_system.h@{src/system/job\_system.h}}
+{\ttfamily \#include \char`\"{}../components/can\+\_\+be\+\_\+ghost\+\_\+player.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+highlight\+\_\+others.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+hold\+\_\+furniture.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+perform\+\_\+job.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/custom\+\_\+item\+\_\+position.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/transform.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../customer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../entity.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../entityhelper.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../furniture.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../furniture/register.\+h\char`\"{}}\newline
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacesystem__manager}{system\+\_\+manager}}
+\item 
+namespace \mbox{\hyperlink{namespacesystem__manager_1_1job__system}{system\+\_\+manager\+::job\+\_\+system}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_job}{Job}} $\ast$ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_ad8b7405a3b746fdefb863fb70601b9aa}{system\+\_\+manager\+::job\+\_\+system\+::create\+\_\+wandering\+\_\+job}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1job__system_ac1cc7991207375ca3ef4a6a6173a120a}{system\+\_\+manager\+::job\+\_\+system\+::replace\+\_\+job\+\_\+with\+\_\+job\+\_\+type}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float, \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{Job\+Type}} job\+\_\+type)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a91c5cf4ebb0183ac60e693b92ad56932}{system\+\_\+manager\+::job\+\_\+system\+::find\+\_\+new\+\_\+job}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a63d25ed47ef475a3342147cfab6b7bd6}{system\+\_\+manager\+::job\+\_\+system\+::replace\+\_\+finished\+\_\+job}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a57fb5a88688ab6b19595bd8fe63d936e}{system\+\_\+manager\+::job\+\_\+system\+::handle\+\_\+job\+\_\+holder\+\_\+pushed}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a80b48eb7354e4827e21605e41577269f}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+position\+\_\+from\+\_\+job}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1job__system_adc930a9721c3daf854c661ec1905d357}{system\+\_\+manager\+::job\+\_\+system\+::render\+\_\+job\+\_\+visual}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
+\end{DoxyCompactItemize}

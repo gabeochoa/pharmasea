@@ -68,92 +68,90 @@
 \DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ raylib::SetCameraMode(this-\/>camera,\ raylib::CAMERA\_CUSTOM);}
 \DoxyCodeLine{00065\ \ \ \ \ \}}
 \DoxyCodeLine{00066\ }
-\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_cam_a211e1b0b5a8a727732d2fcdbcd1f2f43}{updateToTarget}}(\mbox{\hyperlink{struct_entity}{Entity}}\ entity)\ \{}
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target\ =\ entity.\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_transform}{Transform}}>().position;}
-\DoxyCodeLine{00069\ \ \ \ \ \}}
-\DoxyCodeLine{00070\ }
-\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_cam_a905ee6006b9a65d8d4d1506121a9fd7d}{updateCamera}}()\ \{}
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ mouseWheelMove\ =\ \mbox{\hyperlink{namespaceext_a1dfbf6c64678594d99434869366ce2c8}{ext::get\_mouse\_wheel\_move}}();}
-\DoxyCodeLine{00073\ }
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Camera\ zoom}}
-\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mouseWheelMove\ <\ 0)\ \{}
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ -\/=\ (mouseWheelMove\ *\ \mbox{\hyperlink{struct_game_cam_a573b28aaf2e92591fb0dbd34c1ddbc74}{scroll\_sensitivity}});}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (mouseWheelMove\ >\ 0)\ \{}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ +=\ (-\/mouseWheelMove\ *\ \mbox{\hyperlink{struct_game_cam_a573b28aaf2e92591fb0dbd34c1ddbc74}{scroll\_sensitivity}});}
-\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00080\ }
-\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ <\ \mbox{\hyperlink{struct_game_cam_ab5fc2184426fa9484519de2b947267b2}{free\_distance\_min\_clamp}})}
-\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ =\ \mbox{\hyperlink{struct_game_cam_ab5fc2184426fa9484519de2b947267b2}{free\_distance\_min\_clamp}};}
-\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ >\ \mbox{\hyperlink{struct_game_cam_acfb64855e59b2278ec1cf0d85f767a1a}{free\_distance\_max\_clamp}})}
-\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ =\ \mbox{\hyperlink{struct_game_cam_acfb64855e59b2278ec1cf0d85f767a1a}{free\_distance\_max\_clamp}};}
-\DoxyCodeLine{00085\ }
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ camera\ position\ with\ changes}}
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.position.x\ =}
-\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ -\/sinf(\mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.x)\ *\ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ *\ cosf(\mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.y)\ +\ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target.x;}
-\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.position.y\ =\ -\/sinf(\mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.y)\ *\ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ +\ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target.y;}
-\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.position.z\ =}
-\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ -\/cosf(\mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.x)\ *\ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ *\ cosf(\mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.y)\ +\ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target.z;}
-\DoxyCodeLine{00092\ }
-\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ angle\ is\ there\ is\ a\ mouse\ delta}}
-\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (IsMouseButtonDown(raylib::MOUSE\_BUTTON\_LEFT))\ \{}
-\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ mouseDelta\ =\ raylib::GetMouseDelta();}
-\DoxyCodeLine{00096\ }
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.x\ -\/=\ mouseDelta.x\ /\ 100.0f;}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.y\ -\/=\ mouseDelta.y\ /\ 100.0f;}
-\DoxyCodeLine{00099\ }
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a519ca48bdd700ba0ef0cfa85e753dcd0}{angleMinMaxClamp}}();}
-\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00102\ }
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ right\_x\_axis\ =}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ GetGamepadAxisMovement(0,\ raylib::GAMEPAD\_AXIS\_RIGHT\_X);}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ right\_y\_axis\ =}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ GetGamepadAxisMovement(0,\ raylib::GAMEPAD\_AXIS\_RIGHT\_Y);}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (abs(right\_x\_axis)\ >\ \mbox{\hyperlink{vec__util_8h_a002b2f4894492820fe708b1b7e7c5e70}{EPSILON}}\ ||\ abs(right\_y\_axis)\ >\ \mbox{\hyperlink{vec__util_8h_a002b2f4894492820fe708b1b7e7c5e70}{EPSILON}})\ \{}
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.x\ -\/=\ right\_x\_axis\ /\ 50.f;}
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.y\ -\/=\ right\_y\_axis\ /\ 50.f;}
-\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a519ca48bdd700ba0ef0cfa85e753dcd0}{angleMinMaxClamp}}();}
-\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_cam_a5f5934ca1835dfee5ecb6d0f2dc402f0}{updateToTarget}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\&\ position)\ \{\ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target\ =\ position;\ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_cam_a905ee6006b9a65d8d4d1506121a9fd7d}{updateCamera}}()\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ mouseWheelMove\ =\ \mbox{\hyperlink{namespaceext_a1dfbf6c64678594d99434869366ce2c8}{ext::get\_mouse\_wheel\_move}}();}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Camera\ zoom}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mouseWheelMove\ <\ 0)\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ -\/=\ (mouseWheelMove\ *\ \mbox{\hyperlink{struct_game_cam_a573b28aaf2e92591fb0dbd34c1ddbc74}{scroll\_sensitivity}});}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (mouseWheelMove\ >\ 0)\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ +=\ (-\/mouseWheelMove\ *\ \mbox{\hyperlink{struct_game_cam_a573b28aaf2e92591fb0dbd34c1ddbc74}{scroll\_sensitivity}});}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ <\ \mbox{\hyperlink{struct_game_cam_ab5fc2184426fa9484519de2b947267b2}{free\_distance\_min\_clamp}})}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ =\ \mbox{\hyperlink{struct_game_cam_ab5fc2184426fa9484519de2b947267b2}{free\_distance\_min\_clamp}};}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ >\ \mbox{\hyperlink{struct_game_cam_acfb64855e59b2278ec1cf0d85f767a1a}{free\_distance\_max\_clamp}})}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ =\ \mbox{\hyperlink{struct_game_cam_acfb64855e59b2278ec1cf0d85f767a1a}{free\_distance\_max\_clamp}};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ camera\ position\ with\ changes}}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.position.x\ =}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ -\/sinf(\mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.x)\ *\ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ *\ cosf(\mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.y)\ +\ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target.x;}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.position.y\ =\ -\/sinf(\mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.y)\ *\ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ +\ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target.y;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.position.z\ =}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ -\/cosf(\mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.x)\ *\ \mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ *\ cosf(\mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.y)\ +\ \mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target.z;}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ angle\ is\ there\ is\ a\ mouse\ delta}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (IsMouseButtonDown(raylib::MOUSE\_BUTTON\_LEFT))\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ mouseDelta\ =\ raylib::GetMouseDelta();}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.x\ -\/=\ mouseDelta.x\ /\ 100.0f;}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.y\ -\/=\ mouseDelta.y\ /\ 100.0f;}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a519ca48bdd700ba0ef0cfa85e753dcd0}{angleMinMaxClamp}}();}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ right\_x\_axis\ =}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ GetGamepadAxisMovement(0,\ raylib::GAMEPAD\_AXIS\_RIGHT\_X);}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ right\_y\_axis\ =}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ GetGamepadAxisMovement(0,\ raylib::GAMEPAD\_AXIS\_RIGHT\_Y);}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (abs(right\_x\_axis)\ >\ \mbox{\hyperlink{vec__util_8h_a002b2f4894492820fe708b1b7e7c5e70}{EPSILON}}\ ||\ abs(right\_y\_axis)\ >\ \mbox{\hyperlink{vec__util_8h_a002b2f4894492820fe708b1b7e7c5e70}{EPSILON}})\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.x\ -\/=\ right\_x\_axis\ /\ 50.f;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a5e02bfa5726e3dd3badad99bf27ff371}{angle}}.y\ -\/=\ right\_y\_axis\ /\ 50.f;}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam_a519ca48bdd700ba0ef0cfa85e753dcd0}{angleMinMaxClamp}}();}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00110\ \ \ \ \ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_cam_a550f34dec8d09884af95514ec85841b5}{debugCamera}}()\ \{\ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}\{\}"{}},\ *\textcolor{keyword}{this});\ \}}
 \DoxyCodeLine{00113\ }
-\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_game_cam_a550f34dec8d09884af95514ec85841b5}{debugCamera}}()\ \{\ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}\{\}"{}},\ *\textcolor{keyword}{this});\ \}}
-\DoxyCodeLine{00115\ }
-\DoxyCodeLine{00116\ \ \ \ \ raylib::Camera3D\ \mbox{\hyperlink{struct_game_cam_a1ecdc6bb888736f76eb86a6c24fcc95c}{get}}()\ \{\ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}};\ \}}
-\DoxyCodeLine{00117\ \ \ \ \ raylib::Camera3D*\ \mbox{\hyperlink{struct_game_cam_a544c61acc1f33735f48e6e9269a5b3dd}{get\_ptr}}()\ \{\ \textcolor{keywordflow}{return}\ \&(this-\/>\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}});\ \}}
-\DoxyCodeLine{00118\ \};}
-\DoxyCodeLine{00119\ }
-\DoxyCodeLine{00120\ \textcolor{keyword}{inline}\ std::ostream\&\ \mbox{\hyperlink{camera_8h_aa8a0cdcca3b2d7a864afadd2f1eb51ee}{operator<<}}(std::ostream\&\ os,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_game_cam}{GameCam}}\&\ gc)\ \{}
-\DoxyCodeLine{00121\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}Cam("{}}\ <<\ \&gc\ <<\ \textcolor{stringliteral}{"{}):"{}}\ <<\ std::endl;}
-\DoxyCodeLine{00122\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tGetMouseWheelMove:"{}}\ <<\ \mbox{\hyperlink{namespaceext_a1dfbf6c64678594d99434869366ce2c8}{ext::get\_mouse\_wheel\_move}}()\ <<\ std::endl;}
-\DoxyCodeLine{00123\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tposition:("{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.position.x\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.position.y}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.position.z\ <<\ \textcolor{stringliteral}{"{})"{}}\ <<\ std::endl;}
-\DoxyCodeLine{00125\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)target:("{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target.x\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target.y}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target.z\ <<\ \textcolor{stringliteral}{"{})"{}}\ <<\ std::endl;}
-\DoxyCodeLine{00127\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tup:("{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.up.x\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.up.y\ <<\ \textcolor{stringliteral}{"{},\ "{}}}
-\DoxyCodeLine{00128\ \ \ \ \ \ \ \ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.up.z\ <<\ \textcolor{stringliteral}{"{})"{}}\ <<\ std::endl;}
-\DoxyCodeLine{00129\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tfovy:"{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.fovy\ <<\ std::endl;}
-\DoxyCodeLine{00130\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tprojection:"{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.projection\ <<\ std::endl;}
-\DoxyCodeLine{00131\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)ttarget\_distance:"{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ <<\ std::endl\ <<\ std::endl;}
-\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
-\DoxyCodeLine{00133\ \}}
-\DoxyCodeLine{00134\ }
-\DoxyCodeLine{00135\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_menu_cam}{MenuCam}}\ \{}
-\DoxyCodeLine{00136\ \ \ \ \ raylib::Camera3D\ \mbox{\hyperlink{struct_menu_cam_abe991ca3af848ed46eff917b28957105}{camera}};}
-\DoxyCodeLine{00137\ }
-\DoxyCodeLine{00138\ \ \ \ \ \mbox{\hyperlink{struct_menu_cam_a5800a1641531e42fede0bc9de693fe25}{MenuCam}}()\ \{}
-\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ this-\/>camera\ =\ \{\};}
-\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ this-\/>camera.position\ =\ (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{0.0f,\ 10.0f,\ 10.0f\};}
-\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ this-\/>camera.target\ =\ (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{0.f\};}
-\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ this-\/>camera.up\ =\ (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{0.0f,\ 1.0f,\ 0.0f\};}
-\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ this-\/>camera.fovy\ =\ 45.0f;}
-\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ this-\/>camera.projection\ =\ raylib::CAMERA\_PERSPECTIVE;}
-\DoxyCodeLine{00145\ }
-\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ SetCameraMode(this-\/>camera,\ raylib::CAMERA\_FREE);}
-\DoxyCodeLine{00147\ \ \ \ \ \}}
+\DoxyCodeLine{00114\ \ \ \ \ raylib::Camera3D\ \mbox{\hyperlink{struct_game_cam_a1ecdc6bb888736f76eb86a6c24fcc95c}{get}}()\ \{\ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}};\ \}}
+\DoxyCodeLine{00115\ \ \ \ \ raylib::Camera3D*\ \mbox{\hyperlink{struct_game_cam_a544c61acc1f33735f48e6e9269a5b3dd}{get\_ptr}}()\ \{\ \textcolor{keywordflow}{return}\ \&(this-\/>\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}});\ \}}
+\DoxyCodeLine{00116\ \};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{keyword}{inline}\ std::ostream\&\ \mbox{\hyperlink{camera_8h_aa8a0cdcca3b2d7a864afadd2f1eb51ee}{operator<<}}(std::ostream\&\ os,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_game_cam}{GameCam}}\&\ gc)\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}Cam("{}}\ <<\ \&gc\ <<\ \textcolor{stringliteral}{"{}):"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00120\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tGetMouseWheelMove:"{}}\ <<\ \mbox{\hyperlink{namespaceext_a1dfbf6c64678594d99434869366ce2c8}{ext::get\_mouse\_wheel\_move}}()\ <<\ std::endl;}
+\DoxyCodeLine{00121\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tposition:("{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.position.x\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.position.y}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.position.z\ <<\ \textcolor{stringliteral}{"{})"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00123\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)target:("{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target.x\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target.y}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.target.z\ <<\ \textcolor{stringliteral}{"{})"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00125\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tup:("{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.up.x\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.up.y\ <<\ \textcolor{stringliteral}{"{},\ "{}}}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.up.z\ <<\ \textcolor{stringliteral}{"{})"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00127\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tfovy:"{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.fovy\ <<\ std::endl;}
+\DoxyCodeLine{00128\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tprojection:"{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}}.projection\ <<\ std::endl;}
+\DoxyCodeLine{00129\ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)ttarget\_distance:"{}}\ <<\ gc.\mbox{\hyperlink{struct_game_cam_a9981076c577fea7b1a90df0ef74aadfc}{target\_distance}}\ <<\ std::endl\ <<\ std::endl;}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00131\ \}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_menu_cam}{MenuCam}}\ \{}
+\DoxyCodeLine{00134\ \ \ \ \ raylib::Camera3D\ \mbox{\hyperlink{struct_menu_cam_abe991ca3af848ed46eff917b28957105}{camera}};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \mbox{\hyperlink{struct_menu_cam_a5800a1641531e42fede0bc9de693fe25}{MenuCam}}()\ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ this-\/>camera\ =\ \{\};}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ this-\/>camera.position\ =\ (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{0.0f,\ 10.0f,\ 10.0f\};}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ this-\/>camera.target\ =\ (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{0.f\};}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ this-\/>camera.up\ =\ (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{0.0f,\ 1.0f,\ 0.0f\};}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ this-\/>camera.fovy\ =\ 45.0f;}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ this-\/>camera.projection\ =\ raylib::CAMERA\_PERSPECTIVE;}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ SetCameraMode(this-\/>camera,\ raylib::CAMERA\_FREE);}
+\DoxyCodeLine{00145\ \ \ \ \ \}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_menu_cam_a649c54212e2cc1bc98b8da51a4c0e306}{updateCamera}}()\ \{\}}
 \DoxyCodeLine{00148\ }
-\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_menu_cam_a649c54212e2cc1bc98b8da51a4c0e306}{updateCamera}}()\ \{\}}
-\DoxyCodeLine{00150\ }
-\DoxyCodeLine{00151\ \ \ \ \ raylib::Camera3D\ \mbox{\hyperlink{struct_menu_cam_a79eb9210b9c6733afb45f06972b88e24}{get}}()\ \{\ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{struct_menu_cam_abe991ca3af848ed46eff917b28957105}{camera}};\ \}}
-\DoxyCodeLine{00152\ \ \ \ \ raylib::Camera3D*\ \mbox{\hyperlink{struct_menu_cam_a802664d0ba62d6fcca6baa245001f7c4}{get\_ptr}}()\ \{\ \textcolor{keywordflow}{return}\ \&(this-\/>\mbox{\hyperlink{struct_menu_cam_abe991ca3af848ed46eff917b28957105}{camera}});\ \}}
-\DoxyCodeLine{00153\ \};}
+\DoxyCodeLine{00149\ \ \ \ \ raylib::Camera3D\ \mbox{\hyperlink{struct_menu_cam_a79eb9210b9c6733afb45f06972b88e24}{get}}()\ \{\ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{struct_menu_cam_abe991ca3af848ed46eff917b28957105}{camera}};\ \}}
+\DoxyCodeLine{00150\ \ \ \ \ raylib::Camera3D*\ \mbox{\hyperlink{struct_menu_cam_a802664d0ba62d6fcca6baa245001f7c4}{get\_ptr}}()\ \{\ \textcolor{keywordflow}{return}\ \&(this-\/>\mbox{\hyperlink{struct_menu_cam_abe991ca3af848ed46eff917b28957105}{camera}});\ \}}
+\DoxyCodeLine{00151\ \};}
 
 \end{DoxyCode}

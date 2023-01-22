@@ -80,17 +80,23 @@ $(function() {
   <div class="headertitle"><div class="title">system_manager.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d1/d8a/can__be__ghost__player_8h_source.html">../components/can_be_ghost_player.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d7/dc6/base__player_8h_source.html">../base_player.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d1/d8a/can__be__ghost__player_8h_source.html">../components/can_be_ghost_player.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../dd/dad/can__highlight__others_8h_source.html">../components/can_highlight_others.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d6/d76/can__hold__furniture_8h_source.html">../components/can_hold_furniture.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/df1/can__perform__job_8h_source.html">../components/can_perform_job.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d6/dfa/collects__user__input_8h_source.html">../components/collects_user_input.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../df/de8/custom__item__position_8h_source.html">../components/custom_item_position.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../db/d08/responds__to__user__input_8h_source.html">../components/responds_to_user_input.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d2/d80/transform_8h_source.html">../components/transform.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d3/d35/customer_8h_source.html">../customer.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/d83/entity_8h_source.html">../entity.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d9/d3c/entityhelper_8h_source.html">../entityhelper.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d1/d57/furniture_8h_source.html">../furniture.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../df/d80/register_8h_source.html">../furniture/register.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d3/d62/player_8h_source.html">../player.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d6/d60/job__system_8h_source.html">job_system.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d9/d97/rendering__system_8h_source.html">rendering_system.h</a>&quot;</code><br />
 </div>
 <p><a href="../../df/dbe/system__manager_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -112,26 +118,20 @@ Functions</h2></td></tr>
 <tr class="separator:a83ed24ae5e1d1c24133a535d653b172f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf4c71db1de570e1fa2b96cd420ba642"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#aaf4c71db1de570e1fa2b96cd420ba642">system_manager::update_held_item_position</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
 <tr class="separator:aaf4c71db1de570e1fa2b96cd420ba642"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad37dd2580fac8e15a7d95784327e63b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#ad37dd2580fac8e15a7d95784327e63b9">system_manager::update_job_information</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
-<tr class="separator:ad37dd2580fac8e15a7d95784327e63b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88899e9d93d6b94303f9f42998f6c268"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a88899e9d93d6b94303f9f42998f6c268">system_manager::render_simple_highlighted</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
-<tr class="separator:a88899e9d93d6b94303f9f42998f6c268"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb2b04d1008e658796308df346b50525"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#acb2b04d1008e658796308df346b50525">system_manager::render_simple_normal</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
-<tr class="separator:acb2b04d1008e658796308df346b50525"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adba12593f9411a7caa0cedb2ed812877"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#adba12593f9411a7caa0cedb2ed812877">system_manager::render_job_visual</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
-<tr class="separator:adba12593f9411a7caa0cedb2ed812877"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa69dd786a6109ddeaf28deccc41b0cdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#aa69dd786a6109ddeaf28deccc41b0cdc">system_manager::render_debug</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
-<tr class="separator:aa69dd786a6109ddeaf28deccc41b0cdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb81f15da9531f6cb852d76a72a09ecf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#afb81f15da9531f6cb852d76a72a09ecf">system_manager::render_model_highlighted</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
-<tr class="separator:afb81f15da9531f6cb852d76a72a09ecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade2c1588cbfffd59ab73884f9b48cef1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#ade2c1588cbfffd59ab73884f9b48cef1">system_manager::render_model_normal</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
-<tr class="separator:ade2c1588cbfffd59ab73884f9b48cef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ac55df2a02efd6903e1546e09601523"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a3ac55df2a02efd6903e1546e09601523">system_manager::render_normal</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
-<tr class="separator:a3ac55df2a02efd6903e1546e09601523"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe9f22e9aaf5690dda2fa12e579ddcb1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#afe9f22e9aaf5690dda2fa12e579ddcb1">system_manager::reset_highlighted</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
 <tr class="separator:afe9f22e9aaf5690dda2fa12e579ddcb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59f2cc661fe66e73806e73eaab658a6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a59f2cc661fe66e73806e73eaab658a6d">system_manager::highlight_facing_furniture</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
 <tr class="separator:a59f2cc661fe66e73806e73eaab658a6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23e2737adee52e940c7942a7e312cb90"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a23e2737adee52e940c7942a7e312cb90">system_manager::move_entity_based_on_push_force</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float, <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> &amp;new_pos_x, <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> &amp;new_pos_z)</td></tr>
+<tr class="separator:a23e2737adee52e940c7942a7e312cb90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27a95df8b20f1e69fe055a138e7f7e5d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a27a95df8b20f1e69fe055a138e7f7e5d">system_manager::person_update_given_new_pos</a> (int id, <a class="el" href="../../dd/d69/struct_transform.html">Transform</a> &amp;transform, std::shared_ptr&lt; <a class="el" href="../../d3/de1/struct_person.html">Person</a> &gt; person, float dt, <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> new_pos_x, <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> new_pos_z)</td></tr>
+<tr class="separator:a27a95df8b20f1e69fe055a138e7f7e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a659184773c10c97c2fae2ef1f542e0c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a659184773c10c97c2fae2ef1f542e0c6">system_manager::collect_user_input</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
+<tr class="separator:a659184773c10c97c2fae2ef1f542e0c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e8126dd8986710c90900c8230f55c8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a3e8126dd8986710c90900c8230f55c8d">system_manager::process_player_movement_input</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt, <a class="el" href="../../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706">InputName</a> input_name, float input_amount)</td></tr>
+<tr class="separator:a3e8126dd8986710c90900c8230f55c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a947c5a65ae1a78b3c4e46fdf76e2f86b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a947c5a65ae1a78b3c4e46fdf76e2f86b">system_manager::process_input</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, const <a class="el" href="../../da/d9a/keymap_8h.html#ace92b9e658d8e6b1535c88a5da6e8453">UserInput</a> &amp;input)</td></tr>
+<tr class="separator:a947c5a65ae1a78b3c4e46fdf76e2f86b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

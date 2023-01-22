@@ -1,5 +1,12 @@
 \hypertarget{namespacesystem__manager}{}\doxysection{system\+\_\+manager Namespace Reference}
 \label{namespacesystem__manager}\index{system\_manager@{system\_manager}}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacesystem__manager_1_1job__system}{job\+\_\+system}}
+\item 
+namespace \mbox{\hyperlink{namespacesystem__manager_1_1render__manager}{render\+\_\+manager}}
+\end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -9,29 +16,37 @@ void \mbox{\hyperlink{namespacesystem__manager_a83ed24ae5e1d1c24133a535d653b172f
 \item 
 void \mbox{\hyperlink{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}{update\+\_\+held\+\_\+item\+\_\+position}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
 \item 
-void \mbox{\hyperlink{namespacesystem__manager_ad37dd2580fac8e15a7d95784327e63b9}{update\+\_\+job\+\_\+information}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
-\item 
-void \mbox{\hyperlink{namespacesystem__manager_a88899e9d93d6b94303f9f42998f6c268}{render\+\_\+simple\+\_\+highlighted}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
-\item 
-void \mbox{\hyperlink{namespacesystem__manager_acb2b04d1008e658796308df346b50525}{render\+\_\+simple\+\_\+normal}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
-\item 
-void \mbox{\hyperlink{namespacesystem__manager_adba12593f9411a7caa0cedb2ed812877}{render\+\_\+job\+\_\+visual}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
-\item 
-void \mbox{\hyperlink{namespacesystem__manager_aa69dd786a6109ddeaf28deccc41b0cdc}{render\+\_\+debug}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
-\item 
-bool \mbox{\hyperlink{namespacesystem__manager_afb81f15da9531f6cb852d76a72a09ecf}{render\+\_\+model\+\_\+highlighted}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
-\item 
-bool \mbox{\hyperlink{namespacesystem__manager_ade2c1588cbfffd59ab73884f9b48cef1}{render\+\_\+model\+\_\+normal}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
-\item 
-void \mbox{\hyperlink{namespacesystem__manager_a3ac55df2a02efd6903e1546e09601523}{render\+\_\+normal}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
-\item 
 void \mbox{\hyperlink{namespacesystem__manager_afe9f22e9aaf5690dda2fa12e579ddcb1}{reset\+\_\+highlighted}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
 \item 
 void \mbox{\hyperlink{namespacesystem__manager_a59f2cc661fe66e73806e73eaab658a6d}{highlight\+\_\+facing\+\_\+furniture}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a23e2737adee52e940c7942a7e312cb90}{move\+\_\+entity\+\_\+based\+\_\+on\+\_\+push\+\_\+force}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&new\+\_\+pos\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&new\+\_\+pos\+\_\+z)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a27a95df8b20f1e69fe055a138e7f7e5d}{person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos}} (int id, \mbox{\hyperlink{struct_transform}{Transform}} \&transform, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_person}{Person}} $>$ person, float dt, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+z)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a659184773c10c97c2fae2ef1f542e0c6}{collect\+\_\+user\+\_\+input}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a3e8126dd8986710c90900c8230f55c8d}{process\+\_\+player\+\_\+movement\+\_\+input}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}} input\+\_\+name, float input\+\_\+amount)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{process\+\_\+input}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, const \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}} \&input)
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacesystem__manager_a659184773c10c97c2fae2ef1f542e0c6}\label{namespacesystem__manager_a659184773c10c97c2fae2ef1f542e0c6}} 
+\index{system\_manager@{system\_manager}!collect\_user\_input@{collect\_user\_input}}
+\index{collect\_user\_input@{collect\_user\_input}!system\_manager@{system\_manager}}
+\doxysubsubsection{\texorpdfstring{collect\_user\_input()}{collect\_user\_input()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::collect\+\_\+user\+\_\+input (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, \mbox{\hyperlink{struct_collects_user_input_ae26828ac6664046de53089e8da7b9762}{Collects\+User\+Input\+::inputs}}, \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{Key\+Map\+::is\+\_\+event()}}, and \mbox{\hyperlink{struct_key_map_adf7362c05a1fcee3062a1cae3c83703c}{Key\+Map\+::is\+\_\+event\+\_\+once\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_system_manager_a7d651e258dd9c85c47f364e7ac0d6e60}{System\+Manager\+::always\+\_\+update()}}.
+
 \mbox{\Hypertarget{namespacesystem__manager_a59f2cc661fe66e73806e73eaab658a6d}\label{namespacesystem__manager_a59f2cc661fe66e73806e73eaab658a6d}} 
 \index{system\_manager@{system\_manager}!highlight\_facing\_furniture@{highlight\_facing\_furniture}}
 \index{highlight\_facing\_furniture@{highlight\_facing\_furniture}!system\_manager@{system\_manager}}
@@ -44,105 +59,59 @@ References \mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be
 
 
 
-Referenced by \mbox{\hyperlink{struct_system_manager_a43d2b23bbc45389756f2f158ca877b40}{System\+Manager\+::planning\+\_\+update()}}.
+Referenced by \mbox{\hyperlink{struct_system_manager_afddca06ae50a70f958147590350a3043}{System\+Manager\+::planning\+\_\+update()}}.
 
-\mbox{\Hypertarget{namespacesystem__manager_aa69dd786a6109ddeaf28deccc41b0cdc}\label{namespacesystem__manager_aa69dd786a6109ddeaf28deccc41b0cdc}} 
-\index{system\_manager@{system\_manager}!render\_debug@{render\_debug}}
-\index{render\_debug@{render\_debug}!system\_manager@{system\_manager}}
-\doxysubsubsection{\texorpdfstring{render\_debug()}{render\_debug()}}
-{\footnotesize\ttfamily void system\+\_\+manager\+::render\+\_\+debug (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{struct_can_be_highlighted_ae4bec42750b2d7b321d4ab40275ee7e7}{Can\+Be\+Highlighted\+::is\+\_\+highlighted}}, \mbox{\hyperlink{struct_can_be_ghost_player_a1558a2b3105e0c72b0f33b433a8f66da}{Can\+Be\+Ghost\+Player\+::is\+\_\+not\+\_\+ghost()}}, \mbox{\hyperlink{namespacesystem__manager_adba12593f9411a7caa0cedb2ed812877}{render\+\_\+job\+\_\+visual()}}, \mbox{\hyperlink{namespacesystem__manager_a88899e9d93d6b94303f9f42998f6c268}{render\+\_\+simple\+\_\+highlighted()}}, and \mbox{\hyperlink{namespacesystem__manager_acb2b04d1008e658796308df346b50525}{render\+\_\+simple\+\_\+normal()}}.
+\mbox{\Hypertarget{namespacesystem__manager_a23e2737adee52e940c7942a7e312cb90}\label{namespacesystem__manager_a23e2737adee52e940c7942a7e312cb90}} 
+\index{system\_manager@{system\_manager}!move\_entity\_based\_on\_push\_force@{move\_entity\_based\_on\_push\_force}}
+\index{move\_entity\_based\_on\_push\_force@{move\_entity\_based\_on\_push\_force}!system\_manager@{system\_manager}}
+\doxysubsubsection{\texorpdfstring{move\_entity\_based\_on\_push\_force()}{move\_entity\_based\_on\_push\_force()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::move\+\_\+entity\+\_\+based\+\_\+on\+\_\+push\+\_\+force (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{,  }\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&}]{new\+\_\+pos\+\_\+x,  }\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&}]{new\+\_\+pos\+\_\+z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-Referenced by \mbox{\hyperlink{struct_system_manager_a48d2ba02a8115629e6b2066465f33d8a}{System\+Manager\+::render\+\_\+debug()}}.
+References \mbox{\hyperlink{struct_can_be_pushed_aae536d30c8542ddfe445a74fce29c84c}{Can\+Be\+Pushed\+::pushed\+\_\+force}}.
 
-\mbox{\Hypertarget{namespacesystem__manager_adba12593f9411a7caa0cedb2ed812877}\label{namespacesystem__manager_adba12593f9411a7caa0cedb2ed812877}} 
-\index{system\_manager@{system\_manager}!render\_job\_visual@{render\_job\_visual}}
-\index{render\_job\_visual@{render\_job\_visual}!system\_manager@{system\_manager}}
-\doxysubsubsection{\texorpdfstring{render\_job\_visual()}{render\_job\_visual()}}
-{\footnotesize\ttfamily void system\+\_\+manager\+::render\+\_\+job\+\_\+visual (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{struct_can_perform_job_ab8a1d36d36914317d620f3059e3a42de}{Can\+Perform\+Job\+::has\+\_\+job()}}, \mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{Can\+Perform\+Job\+::job()}}, \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}, and \mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec\+::to3()}}.
+\mbox{\Hypertarget{namespacesystem__manager_a27a95df8b20f1e69fe055a138e7f7e5d}\label{namespacesystem__manager_a27a95df8b20f1e69fe055a138e7f7e5d}} 
+\index{system\_manager@{system\_manager}!person\_update\_given\_new\_pos@{person\_update\_given\_new\_pos}}
+\index{person\_update\_given\_new\_pos@{person\_update\_given\_new\_pos}!system\_manager@{system\_manager}}
+\doxysubsubsection{\texorpdfstring{person\_update\_given\_new\_pos()}{person\_update\_given\_new\_pos()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos (\begin{DoxyParamCaption}\item[{int}]{id,  }\item[{\mbox{\hyperlink{struct_transform}{Transform}} \&}]{transform,  }\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_person}{Person}} $>$}]{person,  }\item[{float}]{dt,  }\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{new\+\_\+pos\+\_\+x,  }\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{new\+\_\+pos\+\_\+z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-Referenced by \mbox{\hyperlink{namespacesystem__manager_aa69dd786a6109ddeaf28deccc41b0cdc}{render\+\_\+debug()}}.
-
-\mbox{\Hypertarget{namespacesystem__manager_afb81f15da9531f6cb852d76a72a09ecf}\label{namespacesystem__manager_afb81f15da9531f6cb852d76a72a09ecf}} 
-\index{system\_manager@{system\_manager}!render\_model\_highlighted@{render\_model\_highlighted}}
-\index{render\_model\_highlighted@{render\_model\_highlighted}!system\_manager@{system\_manager}}
-\doxysubsubsection{\texorpdfstring{render\_model\_highlighted()}{render\_model\_highlighted()}}
-{\footnotesize\ttfamily bool system\+\_\+manager\+::render\+\_\+model\+\_\+highlighted (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+References \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform\+::\+BACK}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610a0f3fbeaa77bb603279229e91ec5df0bb}{Entity\+Helper\+::\+Break}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_entity_helper_a61f26ee4774876d30248574c28ba63eb}{Entity\+Helper\+::for\+Each\+Entity()}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform\+::\+FORWARD}}, \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\+\_\+bounds()}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform\+::\+LEFT}}, \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610ade35d6cc11c2732bc98475566a7fffe9}{Entity\+Helper\+::\+None}}, \mbox{\hyperlink{struct_can_be_pushed_aae536d30c8542ddfe445a74fce29c84c}{Can\+Be\+Pushed\+::pushed\+\_\+force}}, \mbox{\hyperlink{random_8h_aad2eabec61848c202dd8cf2a800d3398}{rand\+Sign()}}, \mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{Transform\+::raw\+\_\+position}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform\+::\+RIGHT}}, \mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{Transform\+::size}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
 
 
 
-References \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_transform_a8710b3a85857144e16ec98af663f9681}{Transform\+::\+Front\+Face\+Direction\+Map}}, \mbox{\hyperlink{namespaceui_1_1color_aa3929909129eee15df5510aecd83bb2b}{ui\+::color\+::get\+Highlighted()}}, \mbox{\hyperlink{struct_model_renderer_a0f2f87afba472e9cf9dbac1ca7bcbd46}{Model\+Renderer\+::has\+\_\+model()}}, \mbox{\hyperlink{struct_model_renderer_a5eb913b5b12c1ac3c40f8cb625761b78}{Model\+Renderer\+::model()}}, \mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{Model\+Renderer\+::model\+\_\+info()}}, and \mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{Transform\+::size}}.
+Referenced by \mbox{\hyperlink{namespacesystem__manager_a3e8126dd8986710c90900c8230f55c8d}{process\+\_\+player\+\_\+movement\+\_\+input()}}.
+
+\mbox{\Hypertarget{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}\label{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}} 
+\index{system\_manager@{system\_manager}!process\_input@{process\_input}}
+\index{process\_input@{process\_input}!system\_manager@{system\_manager}}
+\doxysubsubsection{\texorpdfstring{process\_input()}{process\_input()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::process\+\_\+input (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{const \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}} \&}]{input }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-Referenced by \mbox{\hyperlink{namespacesystem__manager_a3ac55df2a02efd6903e1546e09601523}{render\+\_\+normal()}}.
-
-\mbox{\Hypertarget{namespacesystem__manager_ade2c1588cbfffd59ab73884f9b48cef1}\label{namespacesystem__manager_ade2c1588cbfffd59ab73884f9b48cef1}} 
-\index{system\_manager@{system\_manager}!render\_model\_normal@{render\_model\_normal}}
-\index{render\_model\_normal@{render\_model\_normal}!system\_manager@{system\_manager}}
-\doxysubsubsection{\texorpdfstring{render\_model\_normal()}{render\_model\_normal()}}
-{\footnotesize\ttfamily bool system\+\_\+manager\+::render\+\_\+model\+\_\+normal (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+References \mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{Transform\+::as2()}}, \mbox{\hyperlink{struct_has_work_a442b29677ecb1a29bac2ea1a97f4b968}{Has\+Work\+::do\+\_\+work}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}{Can\+Hold\+Furniture\+::furniture()}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5}{Item\+::\+FURNITURE}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, \mbox{\hyperlink{struct_can_hold_item_ae846dc6de7e3b22454114d68f9449581}{Can\+Hold\+Item\+::is\+\_\+holding\+\_\+item()}}, \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{Can\+Hold\+Item\+::item()}}, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game\+::\+Planning}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313aaca7714ebc132e0fb559664bbe96c552}{Item\+::\+PLAYER}}, \mbox{\hyperlink{namespacesystem__manager_a3e8126dd8986710c90900c8230f55c8d}{process\+\_\+player\+\_\+movement\+\_\+input()}}, \mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{Can\+Highlight\+Others\+::reach()}}, \mbox{\hyperlink{struct_game_state_abbfb101b96ae617d2b67acbf58f50693}{Game\+State\+::s\+\_\+in\+\_\+round()}}, \mbox{\hyperlink{struct_transform_a64ba3d05bc47f05d2ef60fab5a5957fa}{Transform\+::snap\+\_\+position()}}, \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}, \mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec\+::to3()}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
 
 
 
-References \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_transform_a8710b3a85857144e16ec98af663f9681}{Transform\+::\+Front\+Face\+Direction\+Map}}, \mbox{\hyperlink{struct_model_renderer_a0f2f87afba472e9cf9dbac1ca7bcbd46}{Model\+Renderer\+::has\+\_\+model()}}, \mbox{\hyperlink{struct_model_renderer_a5eb913b5b12c1ac3c40f8cb625761b78}{Model\+Renderer\+::model()}}, \mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{Model\+Renderer\+::model\+\_\+info()}}, and \mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{Transform\+::size}}.
+Referenced by \mbox{\hyperlink{struct_system_manager_a1baea93697d0863ef17547955f94c4b9}{System\+Manager\+::process\+\_\+inputs()}}.
+
+\mbox{\Hypertarget{namespacesystem__manager_a3e8126dd8986710c90900c8230f55c8d}\label{namespacesystem__manager_a3e8126dd8986710c90900c8230f55c8d}} 
+\index{system\_manager@{system\_manager}!process\_player\_movement\_input@{process\_player\_movement\_input}}
+\index{process\_player\_movement\_input@{process\_player\_movement\_input}!system\_manager@{system\_manager}}
+\doxysubsubsection{\texorpdfstring{process\_player\_movement\_input()}{process\_player\_movement\_input()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::process\+\_\+player\+\_\+movement\+\_\+input (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{dt,  }\item[{\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}}}]{input\+\_\+name,  }\item[{float}]{input\+\_\+amount }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-Referenced by \mbox{\hyperlink{namespacesystem__manager_a3ac55df2a02efd6903e1546e09601523}{render\+\_\+normal()}}.
-
-\mbox{\Hypertarget{namespacesystem__manager_a3ac55df2a02efd6903e1546e09601523}\label{namespacesystem__manager_a3ac55df2a02efd6903e1546e09601523}} 
-\index{system\_manager@{system\_manager}!render\_normal@{render\_normal}}
-\index{render\_normal@{render\_normal}!system\_manager@{system\_manager}}
-\doxysubsubsection{\texorpdfstring{render\_normal()}{render\_normal()}}
-{\footnotesize\ttfamily void system\+\_\+manager\+::render\+\_\+normal (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+References \mbox{\hyperlink{namespacesystem__manager_a27a95df8b20f1e69fe055a138e7f7e5d}{person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos()}}, \mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{Transform\+::position}}, and \mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{Transform\+::raw\+\_\+position}}.
 
 
 
-References \mbox{\hyperlink{struct_can_be_ghost_player_ad4572f68bf5a8824b88f0792da4771a0}{Can\+Be\+Ghost\+Player\+::is\+\_\+ghost()}}, \mbox{\hyperlink{struct_can_be_highlighted_ae4bec42750b2d7b321d4ab40275ee7e7}{Can\+Be\+Highlighted\+::is\+\_\+highlighted}}, \mbox{\hyperlink{namespacesystem__manager_afb81f15da9531f6cb852d76a72a09ecf}{render\+\_\+model\+\_\+highlighted()}}, \mbox{\hyperlink{namespacesystem__manager_ade2c1588cbfffd59ab73884f9b48cef1}{render\+\_\+model\+\_\+normal()}}, \mbox{\hyperlink{namespacesystem__manager_a88899e9d93d6b94303f9f42998f6c268}{render\+\_\+simple\+\_\+highlighted()}}, and \mbox{\hyperlink{namespacesystem__manager_acb2b04d1008e658796308df346b50525}{render\+\_\+simple\+\_\+normal()}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_map_a3a0e8d65b69ebda41b8a46516c6ca941}{Map\+::on\+Draw()}}, and \mbox{\hyperlink{struct_system_manager_ae88caf9a5775b7c04110e4c820ec17c3}{System\+Manager\+::render\+\_\+normal()}}.
-
-\mbox{\Hypertarget{namespacesystem__manager_a88899e9d93d6b94303f9f42998f6c268}\label{namespacesystem__manager_a88899e9d93d6b94303f9f42998f6c268}} 
-\index{system\_manager@{system\_manager}!render\_simple\_highlighted@{render\_simple\_highlighted}}
-\index{render\_simple\_highlighted@{render\_simple\_highlighted}!system\_manager@{system\_manager}}
-\doxysubsubsection{\texorpdfstring{render\_simple\_highlighted()}{render\_simple\_highlighted()}}
-{\footnotesize\ttfamily void system\+\_\+manager\+::render\+\_\+simple\+\_\+highlighted (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{struct_simple_colored_box_renderer_a43652e104eb689779619fa4780bbc54e}{Simple\+Colored\+Box\+Renderer\+::base\+\_\+color}}, \mbox{\hyperlink{struct_simple_colored_box_renderer_a650f216dd8ad2c3503c3ce7567f9129f}{Simple\+Colored\+Box\+Renderer\+::face\+\_\+color}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_transform_a8710b3a85857144e16ec98af663f9681}{Transform\+::\+Front\+Face\+Direction\+Map}}, \mbox{\hyperlink{namespaceui_1_1color_aa3929909129eee15df5510aecd83bb2b}{ui\+::color\+::get\+Highlighted()}}, \mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{Transform\+::raw\+\_\+position}}, and \mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{Transform\+::size}}.
-
-
-
-Referenced by \mbox{\hyperlink{namespacesystem__manager_aa69dd786a6109ddeaf28deccc41b0cdc}{render\+\_\+debug()}}, and \mbox{\hyperlink{namespacesystem__manager_a3ac55df2a02efd6903e1546e09601523}{render\+\_\+normal()}}.
-
-\mbox{\Hypertarget{namespacesystem__manager_acb2b04d1008e658796308df346b50525}\label{namespacesystem__manager_acb2b04d1008e658796308df346b50525}} 
-\index{system\_manager@{system\_manager}!render\_simple\_normal@{render\_simple\_normal}}
-\index{render\_simple\_normal@{render\_simple\_normal}!system\_manager@{system\_manager}}
-\doxysubsubsection{\texorpdfstring{render\_simple\_normal()}{render\_simple\_normal()}}
-{\footnotesize\ttfamily void system\+\_\+manager\+::render\+\_\+simple\+\_\+normal (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{struct_simple_colored_box_renderer_a43652e104eb689779619fa4780bbc54e}{Simple\+Colored\+Box\+Renderer\+::base\+\_\+color}}, \mbox{\hyperlink{struct_simple_colored_box_renderer_a650f216dd8ad2c3503c3ce7567f9129f}{Simple\+Colored\+Box\+Renderer\+::face\+\_\+color}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_transform_a8710b3a85857144e16ec98af663f9681}{Transform\+::\+Front\+Face\+Direction\+Map}}, \mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{Transform\+::raw\+\_\+position}}, and \mbox{\hyperlink{struct_transform_af70d9be692ae03e6aa8a819f2d31fa07}{Transform\+::size}}.
-
-
-
-Referenced by \mbox{\hyperlink{namespacesystem__manager_aa69dd786a6109ddeaf28deccc41b0cdc}{render\+\_\+debug()}}, and \mbox{\hyperlink{namespacesystem__manager_a3ac55df2a02efd6903e1546e09601523}{render\+\_\+normal()}}.
+Referenced by \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{process\+\_\+input()}}.
 
 \mbox{\Hypertarget{namespacesystem__manager_afe9f22e9aaf5690dda2fa12e579ddcb1}\label{namespacesystem__manager_afe9f22e9aaf5690dda2fa12e579ddcb1}} 
 \index{system\_manager@{system\_manager}!reset\_highlighted@{reset\_highlighted}}
@@ -156,7 +125,7 @@ References \mbox{\hyperlink{struct_can_be_highlighted_ae4bec42750b2d7b321d4ab402
 
 
 
-Referenced by \mbox{\hyperlink{struct_system_manager_ad233621dcb6767fde1ebd0f1cdca1ae1}{System\+Manager\+::always\+\_\+update()}}.
+Referenced by \mbox{\hyperlink{struct_system_manager_a7d651e258dd9c85c47f364e7ac0d6e60}{System\+Manager\+::always\+\_\+update()}}.
 
 \mbox{\Hypertarget{namespacesystem__manager_a6cf678bc2a6cdee9b0646d1a744d01f2}\label{namespacesystem__manager_a6cf678bc2a6cdee9b0646d1a744d01f2}} 
 \index{system\_manager@{system\_manager}!transform\_snapper@{transform\_snapper}}
@@ -170,7 +139,7 @@ References \mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{
 
 
 
-Referenced by \mbox{\hyperlink{struct_system_manager_ad233621dcb6767fde1ebd0f1cdca1ae1}{System\+Manager\+::always\+\_\+update()}}.
+Referenced by \mbox{\hyperlink{struct_system_manager_a7d651e258dd9c85c47f364e7ac0d6e60}{System\+Manager\+::always\+\_\+update()}}.
 
 \mbox{\Hypertarget{namespacesystem__manager_a83ed24ae5e1d1c24133a535d653b172f}\label{namespacesystem__manager_a83ed24ae5e1d1c24133a535d653b172f}} 
 \index{system\_manager@{system\_manager}!update\_held\_furniture\_position@{update\_held\_furniture\_position}}
@@ -180,11 +149,11 @@ Referenced by \mbox{\hyperlink{struct_system_manager_ad233621dcb6767fde1ebd0f1cd
 
 
 
-References \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform\+::\+BACK}}, \mbox{\hyperlink{struct_can_hold_furniture_a03f8a785e985deb76f53684f279048f6}{Can\+Hold\+Furniture\+::empty()}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform\+::\+FORWARD}}, \mbox{\hyperlink{struct_can_hold_furniture_afabf28b24c6cb48e36d746daf03db5df}{Can\+Hold\+Furniture\+::furniture()}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform\+::\+LEFT}}, \mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{Transform\+::position}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform\+::\+RIGHT}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+References \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform\+::\+BACK}}, \mbox{\hyperlink{struct_can_hold_furniture_a03f8a785e985deb76f53684f279048f6}{Can\+Hold\+Furniture\+::empty()}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform\+::\+FORWARD}}, \mbox{\hyperlink{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}{Can\+Hold\+Furniture\+::furniture()}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform\+::\+LEFT}}, \mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{Transform\+::position}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform\+::\+RIGHT}}, \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}, and \mbox{\hyperlink{struct_transform_a3c85c012d52bec3f8297cd480c6711b9}{Transform\+::update()}}.
 
 
 
-Referenced by \mbox{\hyperlink{struct_system_manager_a43d2b23bbc45389756f2f158ca877b40}{System\+Manager\+::planning\+\_\+update()}}.
+Referenced by \mbox{\hyperlink{struct_system_manager_afddca06ae50a70f958147590350a3043}{System\+Manager\+::planning\+\_\+update()}}.
 
 \mbox{\Hypertarget{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}\label{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}} 
 \index{system\_manager@{system\_manager}!update\_held\_item\_position@{update\_held\_item\_position}}
@@ -198,19 +167,5 @@ References \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0
 
 
 
-Referenced by \mbox{\hyperlink{struct_system_manager_ad233621dcb6767fde1ebd0f1cdca1ae1}{System\+Manager\+::always\+\_\+update()}}.
-
-\mbox{\Hypertarget{namespacesystem__manager_ad37dd2580fac8e15a7d95784327e63b9}\label{namespacesystem__manager_ad37dd2580fac8e15a7d95784327e63b9}} 
-\index{system\_manager@{system\_manager}!update\_job\_information@{update\_job\_information}}
-\index{update\_job\_information@{update\_job\_information}!system\_manager@{system\_manager}}
-\doxysubsubsection{\texorpdfstring{update\_job\_information()}{update\_job\_information()}}
-{\footnotesize\ttfamily void system\+\_\+manager\+::update\+\_\+job\+\_\+information (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{Transform\+::as2()}}, \mbox{\hyperlink{struct_register_ac6e47c902ad42f108f2a2aef41c16026}{Register\+::can\+\_\+move\+\_\+up()}}, \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job\+::\+Completed}}, \mbox{\hyperlink{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}{astar\+::find\+\_\+path()}}, \mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{Entity\+::get()}}, \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job\+::\+Heading\+To\+End}}, \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job\+::\+Heading\+To\+Start}}, \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea223e06f5cb15fc701ea1e686f7934f4f}{Job\+::\+Initialize}}, \mbox{\hyperlink{struct_entity_helper_a4d01c0a143c62ae572e5d4e9eb5711f0}{Entity\+Helper\+::is\+Walkable()}}, \mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{Can\+Perform\+Job\+::job()}}, \mbox{\hyperlink{struct_register_a81d82daec8200089b62c1a97288c7938}{Register\+::leave\+\_\+line()}}, \mbox{\hyperlink{struct_register_a52675c14bbf0f4a3d02035c16ee0546f}{Register\+::position\+\_\+in\+\_\+line()}}, \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{Entity\+::tile\+\_\+infront()}}, \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}, \mbox{\hyperlink{struct_can_hold_item_a1859b1b208d938ed63a5eea0d7a5fd47}{Can\+Hold\+Item\+::update()}}, \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a9779a7e9f14b8a5b1d7640a1ff0dab26}{Wait}}, \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411}{Wait\+In\+Queue}}, \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}}, \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7}{Job\+::\+Working\+At\+End}}, and \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{Job\+::\+Working\+At\+Start}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_system_manager_a8711c4d2e2126274060b8e606f09d887}{System\+Manager\+::in\+\_\+round\+\_\+update()}}.
+Referenced by \mbox{\hyperlink{struct_system_manager_a7d651e258dd9c85c47f364e7ac0d6e60}{System\+Manager\+::always\+\_\+update()}}.
 

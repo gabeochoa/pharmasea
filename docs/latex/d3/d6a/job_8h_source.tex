@@ -41,16 +41,46 @@
 \DoxyCodeLine{00037\ }
 \DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_job_a36d7ce8c8419b6a196d0069a3ca53dc0}{start}};}
 \DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_job_aa03693e1a7ac65c2b7327a39f176bbf7}{end}};}
-\DoxyCodeLine{00040\ \ \ \ \ std::deque<vec2>\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}};}
-\DoxyCodeLine{00041\ \ \ \ \ std::optional<vec2>\ \mbox{\hyperlink{struct_job_a6ca83b17472c1915ec5ed8668793e716}{local}};}
-\DoxyCodeLine{00042\ }
-\DoxyCodeLine{00043\ \ \ \ \ std::function<void(\mbox{\hyperlink{struct_a_i_person}{AIPerson}}*,\ \mbox{\hyperlink{struct_job}{Job}}*)>\ \mbox{\hyperlink{struct_job_a2fd96529bde0648dd5e5ce630e9d7fe7}{on\_cleanup}}\ =\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00044\ }
-\DoxyCodeLine{00045\ \ \ \ \ std::map<std::string,\ void*>\ \mbox{\hyperlink{struct_job_a22eb4726b3b3fca6dd8d4b706167adc7}{data}};}
-\DoxyCodeLine{00046\ }
-\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ WaitInQueue\ Job}}
-\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_job_a78c1c02b77fa0f6dfa8f6e96a88d97a1}{initialized}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00040\ \ \ \ \ std::optional<vec2>\ \mbox{\hyperlink{struct_job_a6ca83b17472c1915ec5ed8668793e716}{local}};}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}}\ =\ 0;}
+\DoxyCodeLine{00042\ \ \ \ \ std::deque<vec2>\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ std::function<void(\mbox{\hyperlink{struct_a_i_person}{AIPerson}}*,\ \mbox{\hyperlink{struct_job}{Job}}*)>\ \mbox{\hyperlink{struct_job_a2fd96529bde0648dd5e5ce630e9d7fe7}{on\_cleanup}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ std::map<std::string,\ void*>\ \mbox{\hyperlink{struct_job_a22eb4726b3b3fca6dd8d4b706167adc7}{data}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//\ WaitInQueue\ Job}}
 \DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_job_ad4460fb88641f4f56aca942770e1316d}{spot\_in\_line}}\ =\ -\/1;}
-\DoxyCodeLine{00050\ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_job_adb7cddf20de91f00e39b6a78c5783679}{path\_empty}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.empty();\ \}}
+\DoxyCodeLine{00052\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\&\ \mbox{\hyperlink{struct_job_aed0abfeaa030da3b3b72494a4a191377}{path\_front}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.front();\ \}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_aa6f77ecb10351ff5336d27b6a07292f5}{path\_pop\_front}}()\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.pop\_front();}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}}\ =\ (int)\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.size();}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_a866c096b6000b68a9cf4ee09bcf6b352}{update\_path}}(\textcolor{keyword}{const}\ std::deque<vec2>\&\ new\_path)\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}\ =\ new\_path;}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}}\ =\ (int)\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.size();}
+\DoxyCodeLine{00061\ \ \ \ \ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a54b5041220d32132698962f324d7ac04}{type}});}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a5f001c363f99db97dc40cccbed8cbf26}{state}});}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a7ffd2fbd60665c938405f4b807ecf0b5}{timePassedInCurrentState}});}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a939fa3d2e9453d89b608b277853bee39}{timeToComplete}});}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_ad4460fb88641f4f56aca942770e1316d}{spot\_in\_line}});}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_job_a36d7ce8c8419b6a196d0069a3ca53dc0}{start}});}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_job_aa03693e1a7ac65c2b7327a39f176bbf7}{end}});}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}});}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ s.ext(\mbox{\hyperlink{struct_job_a6ca83b17472c1915ec5ed8668793e716}{local}},\ bitsery::ext::StdOptional\{\});}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ s.container(\mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}},\ \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}},\ [](S\&\ sv,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)\ \{\ sv.object(pos);\ \});}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ \};}
 
 \end{DoxyCode}

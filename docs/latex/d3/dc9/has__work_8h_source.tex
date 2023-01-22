@@ -1,0 +1,39 @@
+\hypertarget{has__work_8h_source}{}\doxysection{has\+\_\+work.\+h}
+\label{has__work_8h_source}\index{src/components/has\_work.h@{src/components/has\_work.h}}
+\mbox{\hyperlink{has__work_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../person.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_has_work}{HasWork}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_has_work_a224b1220c7d6da5365b54a62e2927755}{\string~HasWork}}()\ \{\}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{comment}{//\ Does\ this\ have\ work\ to\ be\ done?}}
+\DoxyCodeLine{00012\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_has_work_abb83ec430bea41e16fa458c3bc9a60a0}{has\_work}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_has_work_a495276e17df053445a48bbd73611824c}{update\_pct}}(\textcolor{keywordtype}{float}\ pct)\ \{\ \mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ =\ pct;\ \}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{comment}{//\ TODO\ make\ private}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ =\ 0.f;}
+\DoxyCodeLine{00018\ \ \ \ \ std::function<void(std::shared\_ptr<Person>\ person,\ \textcolor{keywordtype}{float}\ dt)>\ \mbox{\hyperlink{struct_has_work_a442b29677ecb1a29bac2ea1a97f4b968}{do\_work}};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_has_work_aa338472a335d7ba2a4c5d97aa45af2b2}{init}}(}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ std::function<\textcolor{keywordtype}{void}(std::shared\_ptr<Person>\ person,\ \textcolor{keywordtype}{float}\ dt)>\ worker)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_work_a442b29677ecb1a29bac2ea1a97f4b968}{do\_work}}\ =\ worker;}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_has_work_a12a29927ddaafa2476d5a4c2cca661f3}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}});}
+\DoxyCodeLine{00032\ \ \ \ \ \}}
+\DoxyCodeLine{00033\ \};}
+
+\end{DoxyCode}

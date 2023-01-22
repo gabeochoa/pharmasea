@@ -10,8 +10,7 @@ var searchData=
   ['win_5fwf_7',['WIN_WF',['../d4/df4/engine_2globals_8h.html#a1368a126ad97b64d5180e1cc8b0fac61',1,'globals.h']]],
   ['windowresizeevent_8',['WindowResizeEvent',['../d0/d57/struct_window_resize_event.html#a0057aa90378ead03d9adeed7c1dcfde5',1,'WindowResizeEvent']]],
   ['words_5fin_5fstring_9',['words_in_string',['../d6/d72/namespaceutil.html#af5b41133c9803397e0ac6ceae24431b2',1,'util']]],
-  ['work_5ffurniture_10',['work_furniture',['../d3/db1/struct_player.html#ac1318fd5b7ce7c808a09ef95611280b5',1,'Player']]],
-  ['worsen_11',['worsen',['../d5/d34/struct_symptom.html#ac060f5e5b54fae5de7e4f3930cf5326b',1,'Symptom']]],
-  ['write_5flast_5fframe_12',['write_last_frame',['../d9/d9d/structui_1_1_i_u_i_context_last_frame.html#a5ea3f7bba5392c26e9fc8ad08bff0688',1,'ui::IUIContextLastFrame']]],
-  ['write_5fsave_5ffile_13',['write_save_file',['../d0/d62/struct_settings.html#a73563822b1ac037e5b80ec2f62352bbe',1,'Settings']]]
+  ['worsen_10',['worsen',['../d5/d34/struct_symptom.html#ac060f5e5b54fae5de7e4f3930cf5326b',1,'Symptom']]],
+  ['write_5flast_5fframe_11',['write_last_frame',['../d9/d9d/structui_1_1_i_u_i_context_last_frame.html#a5ea3f7bba5392c26e9fc8ad08bff0688',1,'ui::IUIContextLastFrame']]],
+  ['write_5fsave_5ffile_12',['write_save_file',['../d0/d62/struct_settings.html#a73563822b1ac037e5b80ec2f62352bbe',1,'Settings']]]
 ];

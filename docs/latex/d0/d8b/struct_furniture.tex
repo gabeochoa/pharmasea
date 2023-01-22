@@ -19,16 +19,6 @@ Inheritance diagram for Furniture\+:\begin{figure}[H]
 \item 
 \mbox{\hyperlink{struct_furniture_af29143799fcb5ed44cd9d98e88166aa0}{Furniture}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
 \item 
-virtual void \mbox{\hyperlink{struct_furniture_a7c1a46b40616fba11f4ff50b6c34d647}{update\+\_\+held\+\_\+item\+\_\+position}} () override
-\item 
-virtual void \mbox{\hyperlink{struct_furniture_a8a01b16d5257d928fbabfbe8b6bd6798}{render\+\_\+normal}} () const override
-\item 
-void \mbox{\hyperlink{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}{render\+\_\+progress\+\_\+bar}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_furniture_ad47e3e72cefaca891da0d2f9a84c496c}{do\+\_\+work}} (float, \mbox{\hyperlink{struct_person}{Person}} $\ast$)
-\item 
-virtual bool \mbox{\hyperlink{struct_furniture_a382b9fccb7dbeafbb514111639666619}{has\+\_\+work}} () const
-\item 
 virtual bool \mbox{\hyperlink{struct_furniture_a0a970a23706f9c18caa223c4f2716f15}{add\+\_\+to\+\_\+navmesh}} () override
 \item 
 virtual bool \mbox{\hyperlink{struct_furniture_a53ad044be9587be4aec47c105decacf3}{can\+\_\+rotate}} () const
@@ -66,8 +56,6 @@ virtual bool \mbox{\hyperlink{struct_entity_af864202a00a448f2b30e7b5634e5c490}{i
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}} (Bounding\+Box b) const
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a8d6faea7df1d4508fe9aa317c6c7ac7e}{update\+\_\+position}} (const \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&p)
-\item 
 virtual Bounding\+Box \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\+\_\+bounds}} () const
 \item 
 virtual Bounding\+Box \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}} () const
@@ -86,14 +74,14 @@ virtual void \mbox{\hyperlink{struct_entity_a48efb563c821424fd1a97efcc211cfd8}{o
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\+\_\+drop}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} location)
 \item 
-virtual void \mbox{\hyperlink{struct_entity_adab1628044c63c07d189d44b411046a3}{render}} () const final
-\item 
 virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update}} (float dt) final
 \end{DoxyCompactItemize}
 \doxysubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{struct_furniture_ac0e99da147fde76016511e2887b3e9f6}{Furniture}} ()
+\item 
+void \mbox{\hyperlink{struct_furniture_a9712525c986150cbd108c3ae286af43f}{add\+\_\+static\+\_\+components}} ()
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Protected Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
 \begin{DoxyCompactItemize}
@@ -102,30 +90,13 @@ virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{u
 \item 
 virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}} () const
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a66588b42f69ce15038bd149605a16fc2}{render\+\_\+debug\+\_\+mode}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{render\+\_\+normal}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a4f5def0fc8ea405ab385a65018046168}{render\+\_\+floating\+\_\+name}} () const
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{update\+\_\+held\+\_\+item\+\_\+position}} ()
-\item 
 virtual \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\+\_\+heading}} ()
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{turn\+\_\+to\+\_\+face\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$target)
 \item 
-virtual void \mbox{\hyperlink{struct_entity_a5818b221f4df3eed692b5394a0a0c804}{always\+\_\+update}} (float)
-\item 
-virtual void \mbox{\hyperlink{struct_entity_ab1754f9ef37144a8999f11c11d923c95}{planning\+\_\+update}} (float)
-\item 
 virtual void \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\+\_\+round\+\_\+update}} (float)
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}{can\+\_\+place\+\_\+item\+\_\+into}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$=nullptr)
-\end{DoxyCompactItemize}
-\doxysubsection*{Protected Attributes}
-\begin{DoxyCompactItemize}
-\item 
-float \mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\+\_\+work\+\_\+complete}} = 0.f
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
@@ -147,8 +118,6 @@ int \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}
 \item 
 \mbox{\hyperlink{base__component_8h_a5aff059e5e50c5d4acef6bc563a2a367}{Component\+Array}} \mbox{\hyperlink{struct_entity_a268b34f155900bef861b8b3ce6a5fa60}{component\+Array}}
 \item 
-\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_a912b85998f1c61035aa11c293a8ed99b}{pushed\+\_\+force}} \{0.\+0, 0.\+0, 0.\+0\}
-\item 
 bool \mbox{\hyperlink{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}{cleanup}} = false
 \item 
 bool \mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\+\_\+held}} = false
@@ -168,11 +137,19 @@ bool \mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\+\_\+h
 \doxysubsubsection{\texorpdfstring{Furniture()}{Furniture()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
 {\footnotesize\ttfamily Furniture\+::\+Furniture (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{pos,  }\item[{Color}]{face\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+References \mbox{\hyperlink{struct_furniture_a9712525c986150cbd108c3ae286af43f}{add\+\_\+static\+\_\+components()}}.
+
 \mbox{\Hypertarget{struct_furniture_a3c289ae66cd307325e46544fa8ca0dfa}\label{struct_furniture_a3c289ae66cd307325e46544fa8ca0dfa}} 
 \index{Furniture@{Furniture}!Furniture@{Furniture}}
 \index{Furniture@{Furniture}!Furniture@{Furniture}}
 \doxysubsubsection{\texorpdfstring{Furniture()}{Furniture()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
 {\footnotesize\ttfamily Furniture\+::\+Furniture (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{pos,  }\item[{Color}]{face\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_furniture_a9712525c986150cbd108c3ae286af43f}{add\+\_\+static\+\_\+components()}}.
 
 \mbox{\Hypertarget{struct_furniture_af29143799fcb5ed44cd9d98e88166aa0}\label{struct_furniture_af29143799fcb5ed44cd9d98e88166aa0}} 
 \index{Furniture@{Furniture}!Furniture@{Furniture}}
@@ -182,7 +159,21 @@ bool \mbox{\hyperlink{struct_entity_afc0a5ca6a38b1e80c24337beae1082e4}{is\+\_\+h
 
 
 
+References \mbox{\hyperlink{struct_furniture_a9712525c986150cbd108c3ae286af43f}{add\+\_\+static\+\_\+components()}}.
+
+
+
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_furniture_a9712525c986150cbd108c3ae286af43f}\label{struct_furniture_a9712525c986150cbd108c3ae286af43f}} 
+\index{Furniture@{Furniture}!add\_static\_components@{add\_static\_components}}
+\index{add\_static\_components@{add\_static\_components}!Furniture@{Furniture}}
+\doxysubsubsection{\texorpdfstring{add\_static\_components()}{add\_static\_components()}}
+{\footnotesize\ttfamily void Furniture\+::add\+\_\+static\+\_\+components (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_furniture_ae15aba996a3ad4b7b73bb941e9289dcd}{Furniture()}}.
+
 \mbox{\Hypertarget{struct_furniture_a0a970a23706f9c18caa223c4f2716f15}\label{struct_furniture_a0a970a23706f9c18caa223c4f2716f15}} 
 \index{Furniture@{Furniture}!add\_to\_navmesh@{add\_to\_navmesh}}
 \index{add\_to\_navmesh@{add\_to\_navmesh}!Furniture@{Furniture}}
@@ -231,67 +222,11 @@ Reimplemented in \mbox{\hyperlink{struct_item_container_a106798ce5a2d319302fb36e
 
 Reimplemented in \mbox{\hyperlink{struct_wall_a57116b94ff452a7adbc015c053495b0e}{Wall}}.
 
-\mbox{\Hypertarget{struct_furniture_ad47e3e72cefaca891da0d2f9a84c496c}\label{struct_furniture_ad47e3e72cefaca891da0d2f9a84c496c}} 
-\index{Furniture@{Furniture}!do\_work@{do\_work}}
-\index{do\_work@{do\_work}!Furniture@{Furniture}}
-\doxysubsubsection{\texorpdfstring{do\_work()}{do\_work()}}
-{\footnotesize\ttfamily virtual void Furniture\+::do\+\_\+work (\begin{DoxyParamCaption}\item[{float}]{,  }\item[{\mbox{\hyperlink{struct_person}{Person}} $\ast$}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
-
-
-
-Reimplemented in \mbox{\hyperlink{struct_table_a7c7a11d1376400b958787369593c7b31}{Table}}, and \mbox{\hyperlink{struct_character_switcher_a663fe4562ed789ffef1bf241cc26f452}{Character\+Switcher}}.
-
 \mbox{\Hypertarget{struct_furniture_a4972c4d7131e21a0954164846cae3682}\label{struct_furniture_a4972c4d7131e21a0954164846cae3682}} 
 \index{Furniture@{Furniture}!has\_held\_item@{has\_held\_item}}
 \index{has\_held\_item@{has\_held\_item}!Furniture@{Furniture}}
 \doxysubsubsection{\texorpdfstring{has\_held\_item()}{has\_held\_item()}}
 {\footnotesize\ttfamily virtual bool Furniture\+::has\+\_\+held\+\_\+item (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
-
-\mbox{\Hypertarget{struct_furniture_a382b9fccb7dbeafbb514111639666619}\label{struct_furniture_a382b9fccb7dbeafbb514111639666619}} 
-\index{Furniture@{Furniture}!has\_work@{has\_work}}
-\index{has\_work@{has\_work}!Furniture@{Furniture}}
-\doxysubsubsection{\texorpdfstring{has\_work()}{has\_work()}}
-{\footnotesize\ttfamily virtual bool Furniture\+::has\+\_\+work (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
-
-
-
-Reimplemented in \mbox{\hyperlink{struct_character_switcher_a095f00d2c3bb7eba6dce745495b3fe2a}{Character\+Switcher}}, and \mbox{\hyperlink{struct_table_a93b7f2ae56d2aeee3f14786000ea569f}{Table}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}{render\+\_\+progress\+\_\+bar()}}.
-
-\mbox{\Hypertarget{struct_furniture_a8a01b16d5257d928fbabfbe8b6bd6798}\label{struct_furniture_a8a01b16d5257d928fbabfbe8b6bd6798}} 
-\index{Furniture@{Furniture}!render\_normal@{render\_normal}}
-\index{render\_normal@{render\_normal}!Furniture@{Furniture}}
-\doxysubsubsection{\texorpdfstring{render\_normal()}{render\_normal()}}
-{\footnotesize\ttfamily virtual void Furniture\+::render\+\_\+normal (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Reimplemented from \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{Entity}}.
-
-
-
-Reimplemented in \mbox{\hyperlink{struct_wall_ac04a4cbc1f63bd7ff9d6c09f21307dbb}{Wall}}.
-
-
-
-References \mbox{\hyperlink{struct_entity_a5e5aaa60e281a1b805c9d544a47b7ae5}{Entity\+::render\+\_\+normal()}}, and \mbox{\hyperlink{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}{render\+\_\+progress\+\_\+bar()}}.
-
-\mbox{\Hypertarget{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}\label{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}} 
-\index{Furniture@{Furniture}!render\_progress\_bar@{render\_progress\_bar}}
-\index{render\_progress\_bar@{render\_progress\_bar}!Furniture@{Furniture}}
-\doxysubsubsection{\texorpdfstring{render\_progress\_bar()}{render\_progress\_bar()}}
-{\footnotesize\ttfamily void Furniture\+::render\+\_\+progress\+\_\+bar (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{struct_furniture_a382b9fccb7dbeafbb514111639666619}{has\+\_\+work()}}, \mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\+\_\+work\+\_\+complete}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_furniture_a8a01b16d5257d928fbabfbe8b6bd6798}{render\+\_\+normal()}}.
 
 \mbox{\Hypertarget{struct_furniture_a22c922b542ca8ef62f3383363535b96b}\label{struct_furniture_a22c922b542ca8ef62f3383363535b96b}} 
 \index{Furniture@{Furniture}!serialize@{serialize}}
@@ -299,37 +234,6 @@ Referenced by \mbox{\hyperlink{struct_furniture_a8a01b16d5257d928fbabfbe8b6bd679
 \doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
 {\footnotesize\ttfamily template$<$typename S $>$ \\
 void Furniture\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
-
-
-
-References \mbox{\hyperlink{struct_furniture_a66b08d16c02ad26579e8b3216a956352}{pct\+\_\+work\+\_\+complete}}.
-
-\mbox{\Hypertarget{struct_furniture_a7c1a46b40616fba11f4ff50b6c34d647}\label{struct_furniture_a7c1a46b40616fba11f4ff50b6c34d647}} 
-\index{Furniture@{Furniture}!update\_held\_item\_position@{update\_held\_item\_position}}
-\index{update\_held\_item\_position@{update\_held\_item\_position}!Furniture@{Furniture}}
-\doxysubsubsection{\texorpdfstring{update\_held\_item\_position()}{update\_held\_item\_position()}}
-{\footnotesize\ttfamily virtual void Furniture\+::update\+\_\+held\+\_\+item\+\_\+position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Reimplemented from \mbox{\hyperlink{struct_entity_a8652719eab721d6546c7066ebbdc2c49}{Entity}}.
-
-
-
-Reimplemented in \mbox{\hyperlink{struct_character_switcher_a16b51bd6119e80d082481136264dbbaa}{Character\+Switcher}}, \mbox{\hyperlink{struct_conveyer_af073b867bbdf32206c8a279c51bbdbcb}{Conveyer}}, and \mbox{\hyperlink{struct_table_a091d1fd2291212c3b9bb083493ca2ae2}{Table}}.
-
-
-
-\doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_furniture_a66b08d16c02ad26579e8b3216a956352}\label{struct_furniture_a66b08d16c02ad26579e8b3216a956352}} 
-\index{Furniture@{Furniture}!pct\_work\_complete@{pct\_work\_complete}}
-\index{pct\_work\_complete@{pct\_work\_complete}!Furniture@{Furniture}}
-\doxysubsubsection{\texorpdfstring{pct\_work\_complete}{pct\_work\_complete}}
-{\footnotesize\ttfamily float Furniture\+::pct\+\_\+work\+\_\+complete = 0.f\hspace{0.3cm}{\ttfamily [protected]}}
-
-
-
-Referenced by \mbox{\hyperlink{struct_table_a7c7a11d1376400b958787369593c7b31}{Table\+::do\+\_\+work()}}, \mbox{\hyperlink{struct_character_switcher_a663fe4562ed789ffef1bf241cc26f452}{Character\+Switcher\+::do\+\_\+work()}}, \mbox{\hyperlink{struct_furniture_aa67c65d77366b0e01f99f3852ec08fca}{render\+\_\+progress\+\_\+bar()}}, and \mbox{\hyperlink{struct_furniture_a22c922b542ca8ef62f3383363535b96b}{serialize()}}.
 
 
 
