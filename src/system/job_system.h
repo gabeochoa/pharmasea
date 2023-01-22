@@ -406,7 +406,7 @@ inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
     }
 }
 
-inline void update_position_from_job(std::shared_ptr<Entity> entity, float) {
+inline void update_position_from_job(std::shared_ptr<Entity> entity, float dt) {
     if (!entity->has<Transform>()) return;
     Transform& transform = entity->get<Transform>();
 
@@ -420,8 +420,18 @@ inline void update_position_from_job(std::shared_ptr<Entity> entity, float) {
     }
 
     vec2 tar = job->local.value();
-    float speed = 3.f;  // entity->base_speed() * dt;
-    // if (entity->stagger_mult() != 0) speed *= stagger_mult();
+    float speed = 3.f * dt;  // entity->base_speed() * dt;
+
+    float speed_multiplier = 1.f;
+    float stagger_multiplier = 0.f;
+    if (entity->has<CanHaveAilment>()) {
+        CanHaveAilment& cha = entity->get<CanHaveAilment>();
+        stagger_multiplier = cha.ailment()->stagger();
+        speed_multiplier = cha.ailment()->speed_multiplier();
+    }
+
+    if (speed_multiplier != 0) speed *= speed_multiplier;
+    if (stagger_multiplier != 0) speed *= stagger_multiplier;
 
     // this was moved when doing ecs, idk if its still true anymore
     // TODO we are seeing issues where customers are getting stuck on corners

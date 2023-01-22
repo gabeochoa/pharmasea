@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "components/can_have_ailment.h"
 #include "components/can_hold_item.h"
 #include "components/can_perform_job.h"
 #include "drawing_util.h"
@@ -42,7 +43,6 @@ struct SpeechBubble {
 
 struct Customer : public AIPerson {
     std::optional<SpeechBubble> bubble;
-    std::shared_ptr<Ailment> ailment;
 
    private:
     friend bitsery::Access;
@@ -66,24 +66,16 @@ struct Customer : public AIPerson {
     Customer(vec2 p, Color c) : AIPerson(p, c) { init(); }
 
     void init() {
+        addComponent<CanHaveAilment>().update(std::make_shared<Insomnia>());
+
         get<HasName>().update(get_random_name());
         get<CanPerformJob>().update(WaitInQueue, Wandering);
 
-        // TODO turn back on ailments
-        // ailment.reset(new Insomnia());
+        // TODO turn back on bubbles
         // bubble = SpeechBubble(ailment->icon_name());
     }
 
-    virtual float base_speed() override {
-        float base_speed = 4.f;
-        if (ailment) base_speed *= ailment->speed_multiplier();
-        return base_speed;
-    }
-
-    virtual float stagger_mult() override {
-        return ailment ? ailment->stagger() : 0.f;
-    }
-
+    // TODO support this
     // virtual void in_round_update(float dt) override {
     // AIPerson::in_round_update(dt);
 

@@ -460,10 +460,7 @@ struct SystemManager {
             system_manager::reset_highlighted(entity, dt);
             system_manager::transform_snapper(entity, dt);
             system_manager::update_held_item_position(entity, dt);
-
             system_manager::collect_user_input(entity, dt);
-            // TODO obv this should be more component based
-            // system_manager::person_update(entity, dt);
         }
     }
 
