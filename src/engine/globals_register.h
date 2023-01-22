@@ -12,6 +12,7 @@ struct GlobalValueRegister {
         return (T*) (globals.at(name));
     }
 
+    // TODO better error message here please
     template<typename T>
     [[nodiscard]] T get(const std::string& name) const {
         return *(get_ptr<T>(name));
