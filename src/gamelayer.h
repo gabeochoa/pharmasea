@@ -137,9 +137,7 @@ struct GameLayer : public Layer {
                         GLOBALS.get_or_default<
                             std::map<int, std::shared_ptr<Player>>>(
                             "server_players", {}));
-                for (auto p : network_players) {
-                    if (p.second) p.second->render();
-                }
+                SystemManager::get().render(Entities{player}, dt);
             }
             // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
             // if (nav) {

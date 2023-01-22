@@ -360,8 +360,6 @@ struct Entity {
         this->get<Transform>().update(vec::snap(location));
     }
 
-    virtual void render() const final { TRACY_ZONE_SCOPED; }
-
     virtual void update(float dt) final {
         TRACY_ZONE_SCOPED;
         if (GameState::get().is(game::State::InRound)) {

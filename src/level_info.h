@@ -55,11 +55,6 @@ struct LevelInfo {
 
         system_manager.render(dt);
 
-        for (auto e : entities) {
-            if (e) e->render();
-            if (!e) log_warn("We have invalid entities");
-        }
-
         for (auto i : items) {
             if (i) i->render();
             if (!i) log_warn("we have invalid items");
