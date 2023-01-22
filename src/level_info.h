@@ -5,7 +5,6 @@
 #include "engine/ui_color.h"
 #include "entity.h"
 #include "entityhelper.h"
-#include "furniture/character_switcher.h"
 #include "furnitures.h"
 #include "item.h"
 #include "item_helper.h"
@@ -111,9 +110,9 @@ struct LevelInfo {
 struct LobbyMapInfo : public LevelInfo {
     virtual void generate_map() override {
         {
-            std::shared_ptr<CharacterSwitcher> charSwitch;
+            std::shared_ptr<Furniture> charSwitch;
             const auto location = vec2{5, 5};
-            charSwitch.reset(new CharacterSwitcher(location));
+            charSwitch.reset(Furniture::make_character_switcher(location));
             EntityHelper::addEntity(charSwitch);
         }
     }

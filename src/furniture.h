@@ -74,4 +74,20 @@ struct Furniture : public Entity {
             });
         return table;
     }
+
+    static Furniture* make_character_switcher(vec2 pos) {
+        Furniture* character_switcher =
+            new Furniture(pos, ui::color::brown, ui::color::brown);
+
+        character_switcher->get<HasWork>().init(
+            [](HasWork& hasWork, std::shared_ptr<Person> person, float dt) {
+                const float amt = 2.f;
+                hasWork.pct_work_complete += amt * dt;
+                if (hasWork.pct_work_complete >= 1.f) {
+                    hasWork.pct_work_complete = 0.f;
+                    person->select_next_character_model();
+                }
+            });
+        return character_switcher;
+    }
 };
