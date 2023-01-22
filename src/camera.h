@@ -64,8 +64,8 @@ struct GameCam {
         raylib::SetCameraMode(this->camera, raylib::CAMERA_CUSTOM);
     }
 
-    void updateToTarget(Entity entity) {
-        camera.target = entity.get<Transform>().position;
+    void updateToTarget(Transform& transform) {
+        camera.target = transform.position;
     }
 
     void updateCamera() {

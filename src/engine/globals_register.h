@@ -6,6 +6,7 @@
 
 struct GlobalValueRegister {
     std::map<std::string, void*> globals;
+    // TODO we need a better error message when the key doesnt exist
 
     template<typename T>
     [[nodiscard]] T* get_ptr(const std::string& name) const {

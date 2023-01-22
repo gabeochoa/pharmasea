@@ -3,6 +3,7 @@
 #pragma once
 
 #include "engine.h"
+#include "engine/container_cast.h"
 #include "engine/log.h"
 #include "external_include.h"
 //
