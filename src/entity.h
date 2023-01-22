@@ -52,11 +52,16 @@ struct Entity {
 
     template<typename T, typename... TArgs>
     T& addComponent(TArgs&&... args) {
-        M_ASSERT(!this->has<T>(),
-                 "This entity already has this component attached");
-
         log_trace("adding component {} {} to entity {}",
                   components::get_type_id<T>(), type_name<T>(), id);
+
+        // TODO eventually enforce this
+        if (this->has<T>()) {
+            log_warn("This entity already has this component attached");
+            return this->get<T>();
+        }
+        // M_ASSERT(!this->has<T>(),
+        // "This entity already has this component attached");
 
         std::shared_ptr<T> component;
         component.reset(new T(std::forward<TArgs>(args)...));
