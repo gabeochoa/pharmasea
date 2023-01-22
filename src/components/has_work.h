@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "../person.h"
 #include "base_component.h"
 
 struct HasWork : public BaseComponent {
@@ -14,6 +15,12 @@ struct HasWork : public BaseComponent {
 
     // TODO make private
     float pct_work_complete = 0.f;
+    std::function<void(std::shared_ptr<Person> person, float dt)> do_work;
+
+    void init(
+        std::function<void(std::shared_ptr<Person> person, float dt)> worker) {
+        do_work = worker;
+    }
 
    private:
     friend bitsery::Access;

@@ -401,7 +401,8 @@ inline void process_input(const std::shared_ptr<Entity> entity,
 
         if (!match) return;
 
-        match->do_work(frame_dt, player);
+        HasWork& hasWork = match->get<HasWork>();
+        if (hasWork.do_work) hasWork.do_work(player, frame_dt);
     };
 
     switch (input_name) {

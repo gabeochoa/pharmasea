@@ -32,14 +32,14 @@ struct Table : public Furniture {
     explicit Table(vec2 pos)
         : Furniture(pos, ui::color::brown, ui::color::brown) {
         add_static_components();
-    }
-
-    // TODO eventually we need it to decide whether it has work based on the
-    // current held item
-    virtual void do_work(float dt, std::shared_ptr<Person>) override {
-        const float amt = 0.5f;
-        HasWork& hasWork = this->get<HasWork>();
-        hasWork.pct_work_complete += amt * dt;
-        if (hasWork.pct_work_complete >= 1.f) hasWork.pct_work_complete = 0.f;
+        get<HasWork>().init([this](std::shared_ptr<Person>, float dt) {
+            // TODO eventually we need it to decide whether it has work based on
+            // the current held item
+            const float amt = 0.5f;
+            HasWork& hasWork = this->get<HasWork>();
+            hasWork.pct_work_complete += amt * dt;
+            if (hasWork.pct_work_complete >= 1.f)
+                hasWork.pct_work_complete = 0.f;
+        });
     }
 };
