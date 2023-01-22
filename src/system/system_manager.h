@@ -382,9 +382,27 @@ inline void process_input(const std::shared_ptr<Entity> entity,
     std::shared_ptr<Player> player = dynamic_pointer_cast<Player>(entity);
     if (!player) return;
 
+    const auto rotate_furniture = [player]() {
+        TRACY_ZONE_SCOPED;
+        // Cant rotate outside planning mode
+        if (GameState::get().is_not(game::State::Planning)) return;
+
+        // TODO need to figure out if this should be separate from highlighting
+        CanHighlightOthers& cho = player->get<CanHighlightOthers>();
+
+        std::shared_ptr<Furniture> match =
+            // TODO have this just take a transform
+            EntityHelper::getClosestMatchingEntity<Furniture>(
+                player->get<Transform>().as2(), cho.reach(),
+                [](auto&& furniture) { return furniture->can_rotate(); });
+
+        if (!match) return;
+        match->rotate_facing_clockwise();
+    };
+
     switch (input_name) {
         case InputName::PlayerRotateFurniture:
-            player->rotate_furniture();
+            rotate_furniture();
             break;
         case InputName::PlayerPickup:
             player->grab_or_drop();

@@ -80,42 +80,6 @@ struct Player : public BasePlayer {
         }
     }
 
-    // TODO interpolate our old position and new position so its smoother
-    virtual vec3 get_position_after_input(UserInputs inpts) {
-        TRACY_ZONE_SCOPED;
-        Transform& transform = get<Transform>();
-        // log_info("old position {}", transform.position);
-        // log_info("get_position_after_input {}", inpts.size());
-        for (const UserInput& ui : inpts) {
-            const auto menu_state = std::get<0>(ui);
-            if (menu_state != state) continue;
-
-            const InputName input_name = std::get<1>(ui);
-            const float input_amount = std::get<2>(ui);
-            const float frame_dt = std::get<3>(ui);
-        }
-        return transform.position;
-    }
-
-    virtual void rotate_furniture() override {
-        TRACY_ZONE_SCOPED;
-        // Cant rotate outside planning mode
-        if (GameState::get().is_not(game::State::Planning)) return;
-
-        // TODO need to figure out if this should be separate from highlighting
-        CanHighlightOthers& cho = this->get<CanHighlightOthers>();
-
-        std::shared_ptr<Furniture> match =
-            // TODO have this just take a transform
-            EntityHelper::getClosestMatchingEntity<Furniture>(
-                this->get<Transform>().as2(), cho.reach(),
-                [](auto&& furniture) { return furniture->can_rotate(); });
-
-        if (!match) return;
-
-        match->rotate_facing_clockwise();
-    }
-
     void work_furniture(float frame_dt) {
         TRACY_ZONE_SCOPED;
         // Cant do work during planning

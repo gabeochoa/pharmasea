@@ -196,8 +196,7 @@ struct Server {
 
         if (!player) return;
 
-        player->get_position_after_input(info.inputs);
-
+        // TODO interpolate our old position and new position so its smoother
         SystemManager::get().process_inputs(Entities{player}, info.inputs);
         auto updated_position = player->get<Transform>().position;
 
