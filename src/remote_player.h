@@ -25,14 +25,6 @@ struct RemotePlayer : public BasePlayer {
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
                      {255, 0, 0, 255}) {}
 
-    virtual vec3 update_xaxis_position(float) override {
-        return this->get<Transform>().position;
-    }
-
-    virtual vec3 update_zaxis_position(float) override {
-        return this->get<Transform>().position;
-    }
-
     virtual void update_remotely(float* location, std::string username,
                                  int facing_direction) {
         HasName& hasname = this->get<HasName>();

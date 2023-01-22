@@ -40,7 +40,4 @@ struct BasePlayer : public Person {
     }
 
     virtual float base_speed() override { return 7.5f; }
-
-    virtual vec3 update_xaxis_position(float dt) override {}
-    virtual vec3 update_zaxis_position(float dt) override {}
 };
