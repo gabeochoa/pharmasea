@@ -7,6 +7,7 @@
 #include "external_include.h"
 //
 #include "components/can_be_ghost_player.h"
+#include "components/can_be_held.h"
 #include "components/is_solid.h"
 #include "engine/globals_register.h"
 #include "engine/is_server.h"
@@ -24,7 +25,9 @@
 [[nodiscard]] inline bool is_collidable(std::shared_ptr<Entity> entity) {
     // by default we disable collisions when you are holding something
     // since its generally inside your bounding box
-    if (entity->is_held) return false;
+    if (entity->has<CanBeHeld>()) {
+        return !entity->get<CanBeHeld>().is_held();
+    }
 
     if (entity->has<IsSolid>()) {
         return true;

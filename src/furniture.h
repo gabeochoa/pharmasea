@@ -54,7 +54,9 @@ struct Furniture : public Entity {
     virtual bool add_to_navmesh() override { return true; }
     virtual bool can_rotate() const { return true; }
     // TODO this should be const
-    virtual bool can_be_picked_up() { return !this->is_held; }
+    virtual bool can_be_picked_up() {
+        return this->get<CanBeHeld>().is_not_held();
+    }
     // TODO this should be const
     virtual bool can_place_item_into(std::shared_ptr<Item> = nullptr) override {
         // TODO this should be a separate component

@@ -3,6 +3,7 @@
 
 #include "bitsery/ext/std_smart_ptr.h"
 #include "components/base_component.h"
+#include "components/can_be_held.h"
 #include "components/can_be_highlighted.h"
 #include "components/can_be_pushed.h"
 #include "components/can_hold_item.h"
@@ -38,7 +39,6 @@ struct Entity {
     ComponentArray componentArray;
 
     bool cleanup = false;
-    bool is_held = false;
 
     template<typename T>
     bool has() const {
@@ -92,6 +92,7 @@ struct Entity {
         addComponent<SimpleColoredBoxRenderer>();
         addComponent<ModelRenderer>();
         addComponent<CanBePushed>();
+        addComponent<CanBeHeld>();
     }
 
     virtual ~Entity() {}
@@ -107,7 +108,6 @@ struct Entity {
                     });
         s.ext(componentSet, bitsery::ext::StdBitset{});
         s.value1b(cleanup);
-        s.value1b(is_held);
     }
 
    protected:
@@ -297,11 +297,11 @@ struct Entity {
     // TODO not currently used as we disabled navmesh
     virtual bool add_to_navmesh() { return false; }
     // Used to tell an entity its been picked up
-    virtual void on_pickup() { this->is_held = true; }
+    virtual void on_pickup() { this->get<CanBeHeld>().update(true); }
 
     // Used to tell and entity its been dropped and where to go next
     virtual void on_drop(vec3 location) {
-        this->is_held = false;
+        this->get<CanBeHeld>().update(false);
         this->get<Transform>().update(vec::snap(location));
     }
 
