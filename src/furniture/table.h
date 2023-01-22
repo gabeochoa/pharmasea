@@ -7,6 +7,7 @@
 #include "../globals.h"
 //
 #include "../aiperson.h"
+#include "../components/custom_item_position.h"
 #include "../furniture.h"
 
 struct Table : public Furniture {
@@ -17,10 +18,21 @@ struct Table : public Furniture {
         s.ext(*this, bitsery::ext::BaseClass<Furniture>{});
     }
 
+    void add_static_components() {
+        addComponent<CustomHeldItemPosition>().init(
+            [](Transform& transform) -> vec3 {
+                auto new_pos = transform.position;
+                new_pos.y += TILESIZE / 2;
+                return new_pos;
+            });
+    }
+
    public:
-    Table() {}
+    Table() { add_static_components(); }
     explicit Table(vec2 pos)
-        : Furniture(pos, ui::color::brown, ui::color::brown) {}
+        : Furniture(pos, ui::color::brown, ui::color::brown) {
+        add_static_components();
+    }
 
     // TODO eventually we need it to decide whether it has work based on the
     // current held item
@@ -32,12 +44,4 @@ struct Table : public Furniture {
 
     // Does this piece of furniture have work to be done?
     virtual bool has_work() const override { return true; }
-
-    virtual void update_held_item_position() override {
-        // if (held_item() != nullptr) {
-        // auto new_pos = this->get<Transform>().position;
-        // new_pos.y += TILESIZE / 2;
-        // held_item()->update_position(new_pos);
-        // }
-    }
 };

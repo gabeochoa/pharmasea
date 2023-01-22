@@ -37,8 +37,7 @@ inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
     if (!entity->has<CanHoldFurniture>()) return;
     CanHoldFurniture& can_hold_furniture = entity->get<CanHoldFurniture>();
 
-    // TODO explicity commenting this out so that we get an error
-    // if (!entity->has<Transform>()) return;
+    if (!entity->has<Transform>()) return;
     const Transform& transform = entity->get<Transform>();
 
     // TODO if cannot be placed in this spot make it obvious to the user

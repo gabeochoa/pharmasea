@@ -4,6 +4,7 @@
 
 #include "../external_include.h"
 //
+#include "../components/custom_item_position.h"
 #include "../entities.h"
 #include "../furniture.h"
 
@@ -14,6 +15,31 @@ struct Conveyer : public Furniture {
     float relative_item_pos = Conveyer::ITEM_START;
     float SPEED = 0.5f;
     bool can_take_from = false;
+
+    void add_static_components() {
+        addComponent<CustomHeldItemPosition>().init(
+            [this](Transform& transform) -> vec3 {
+                auto new_pos = transform.position;
+                if (transform.face_direction &
+                    Transform::FrontFaceDirection::FORWARD) {
+                    new_pos.z += TILESIZE * relative_item_pos;
+                }
+                if (transform.face_direction &
+                    Transform::FrontFaceDirection::RIGHT) {
+                    new_pos.x += TILESIZE * relative_item_pos;
+                }
+                if (transform.face_direction &
+                    Transform::FrontFaceDirection::BACK) {
+                    new_pos.z -= TILESIZE * relative_item_pos;
+                }
+                if (transform.face_direction &
+                    Transform::FrontFaceDirection::LEFT) {
+                    new_pos.x -= TILESIZE * relative_item_pos;
+                }
+                new_pos.y += TILESIZE / 4;
+                return new_pos;
+            });
+    }
 
    private:
     friend bitsery::Access;
@@ -28,10 +54,12 @@ struct Conveyer : public Furniture {
     Conveyer() {}
     explicit Conveyer(vec2 pos)
         : Furniture(pos, ui::color::blue, ui::color::blue) {
+        add_static_components();
         update_model();
     }
     Conveyer(vec2 pos, Color face_color, Color base_color)
         : Furniture(pos, face_color, base_color) {
+        add_static_components();
         update_model();
     }
 
@@ -49,33 +77,9 @@ struct Conveyer : public Furniture {
         return (get<CanHoldItem>().is_holding_item() && can_take_from);
     }
 
-    virtual void update_held_item_position() override {
-        // if (held_item() != nullptr) {
-        // auto new_pos = this->position;
-        // if (this->get<Transform>().face_direction &
-        // FrontFaceDirection::FORWARD) { new_pos.z += TILESIZE *
-        // relative_item_pos;
-        // }
-        // if (this->get<Transform>().face_direction &
-        // FrontFaceDirection::RIGHT) { new_pos.x += TILESIZE *
-        // relative_item_pos;
-        // }
-        // if (this->get<Transform>().face_direction &
-        // FrontFaceDirection::BACK) { new_pos.z -= TILESIZE *
-        // relative_item_pos;
-        // }
-        // if (this->get<Transform>().face_direction &
-        // FrontFaceDirection::LEFT) { new_pos.x -= TILESIZE *
-        // relative_item_pos;
-        // }
-        // new_pos.y += TILESIZE / 4;
-        //
-        // held_item->update_position(new_pos);
-        // }
-    }
-
     virtual void in_round_update(float dt) override {
         Furniture::in_round_update(dt);
+        Transform& transform = this->get<Transform>();
 
         can_take_from = false;
 
@@ -91,8 +95,7 @@ struct Conveyer : public Furniture {
         }
 
         auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
-            this->get<Transform>().as2(), 1.f,
-            this->get<Transform>().face_direction,
+            transform.as2(), 1.f, transform.face_direction,
             [this](std::shared_ptr<Furniture> furn) {
                 return this->id != furn->id && furn->can_place_item_into();
             });
