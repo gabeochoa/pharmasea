@@ -65,11 +65,6 @@ struct Person : public Entity {
     Person(vec3 p, Color c) : Entity(p, c) {}
     Person(vec2 p, Color c) : Entity(p, c) {}
 
-    virtual vec3 size() const override {
-        const float sz = TILESIZE * 0.75f;
-        return (vec3){sz, sz, sz};
-    }
-
    public:
     static Person* create_person(vec3 pos, Color face_color, Color base_color) {
         // TODO move into component
@@ -87,6 +82,10 @@ struct Person : public Entity {
         Person* person = new Person(pos, face_color, base_color);
 
         person->addComponent<HasBaseSpeed>().update(10.f);
+
+        const float sz = TILESIZE * 0.75f;
+        person->get<Transform>().init(pos, {sz, sz, sz});
+
         // log_info("model index: {}", model_index);
         // TODO add a component for this
         person->get<ModelRenderer>().update(ModelInfo{
