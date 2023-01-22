@@ -19,8 +19,6 @@ struct BasePlayer : public Person {
     void add_static_components() {
         addComponent<CanHighlightOthers>();
         addComponent<CanHoldFurniture>();
-        // TODO this should be in Player but putting it here for now
-        addComponent<CanBeGhostPlayer>();
     }
 
     BasePlayer(vec3 p, Color face_color_in, Color base_color_in)
