@@ -19,7 +19,8 @@ struct CanHoldFurniture : public BaseComponent {
     void update(std::shared_ptr<Furniture> furniture) {
         held_furniture = furniture;
     }
-    [[nodiscard]] std::shared_ptr<Furniture> furniture() const {
+
+    [[nodiscard]] std::shared_ptr<Furniture> furniture() {
         return held_furniture;
     }
 

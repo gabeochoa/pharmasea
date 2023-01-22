@@ -43,18 +43,45 @@ inline void replace_job_with_job_type(std::shared_ptr<Entity> entity, float,
                                       JobType job_type) {
     if (!entity->has<CanPerformJob>()) return;
     CanPerformJob& cpj = entity->get<CanPerformJob>();
-    std::shared_ptr<Job> job = cpj.job();
+
+    Job* job = nullptr;
     switch (job_type) {
         case Wandering:
-            job.reset(create_wandering_job(entity));
+            job = create_wandering_job(entity);
             break;
         case WaitInQueue:
+            job = new Job({
+                .type = WaitInQueue,
+            });
             break;
         case Wait:
+            job = new Job({
+                .type = Wait,
+                .timeToComplete = 1.f,
+                .start = entity->get<Transform>().as2(),
+                .end = entity->get<Transform>().as2(),
+            });
             break;
         default:
+            log_warn("Trying to replace job with type {} but doesnt have it",
+                     job_type);
             break;
     }
+
+    cpj.update(job);
+}
+
+inline void find_new_job(std::shared_ptr<Entity> entity, float dt) {
+    if (!entity->has<CanPerformJob>()) return;
+    CanPerformJob& cpj = entity->get<CanPerformJob>();
+
+    auto personal_queue = cpj.job_queue();
+    if (personal_queue.empty()) {
+        replace_job_with_job_type(entity, dt, cpj.get_next_job_type());
+        return;
+    }
+    cpj.job() = personal_queue.top();
+    personal_queue.pop();
 }
 
 inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
@@ -67,47 +94,26 @@ inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
             job->on_cleanup(dynamic_pointer_cast<AIPerson>(entity).get(),
                             job.get());
         job.reset();
-
-        // find new job
-        {
-            auto personal_queue = cpj.job_queue();
-            if (personal_queue.empty()) {
-                replace_job_with_job_type(entity, dt, cpj.idle_job_type);
-                return;
-            }
-            job = personal_queue.top();
-            personal_queue.pop();
-        }
+        find_new_job(entity, dt);
         return;
     }
 }
 
 inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
-    if (!entity->has<CanPerformJob>()) return;
-
-    CanPerformJob& cpj = entity->get<CanPerformJob>();
-    std::shared_ptr<Job> job = cpj.job();
-
-    // User has no active job
-    if (!job) {
-        replace_job_with_job_type(entity, dt, cpj.starting_job_type);
-        return;
-    };
-
     const auto travel_on_path = [entity](vec2 me) {
         auto job = entity->get<CanPerformJob>().job();
         // did not arrive
-        if (job->path.empty()) return;
+        if (job->path_empty()) return;
         // Grab next local point to go to
         if (!job->local.has_value()) {
-            job->local = job->path.front();
-            job->path.pop_front();
+            job->local = job->path_front();
+            job->path_pop_front();
         }
         // Go to local point
         if (job->local.value() == me) {
             job->local.reset();
-            // announce(fmt::format("reached local point {} : {} ", me,
-            // job->path.size()));
+            entity->announce(fmt::format("reached local point {} : {} ", me,
+                                         job->path_size));
         }
         return;
     };
@@ -121,12 +127,13 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
             // announce("reached goal");
             return true;
         }
-        if (job->path.empty()) {
-            job->path = astar::find_path(
+        if (job->path_empty()) {
+            job->update_path(astar::find_path(
                 me, goal,
-                std::bind(EntityHelper::isWalkable, std::placeholders::_1));
-            // announce(fmt::format("generated path from {} to {} with {}
-            // steps", me, goal, job->path.size()));
+                std::bind(EntityHelper::isWalkable, std::placeholders::_1)));
+            entity->announce(
+                fmt::format("generated path from {} to {} with {} steps", me,
+                            goal, job->path_size));
         }
         travel_on_path(me);
         return false;
@@ -149,7 +156,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 // one this foot-gun might be solvable by passing in the global
                 // job to the job processing function, then it wont change until
                 // the next call
-                if (job->path.size() == 0) {
+                if (job->path_size == 0) {
                     personal_queue.push(job);
                     job.reset(new Job({
                         .type = Wandering,
@@ -224,14 +231,14 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
     };
 
     const auto wait_in_queue = [entity, navigate_to](float) {
+        CanPerformJob& cpj = entity->get<CanPerformJob>();
         auto job = entity->get<CanPerformJob>().job();
         auto personal_queue = entity->get<CanPerformJob>().job_queue();
 
         auto wait_and_return = [&]() {
             // Add the current job to the queue,
             // and then add the waiting job
-            personal_queue.push(job);
-            job.reset(new Job({
+            cpj.push_and_reset(new Job({
                 .type = Wait,
                 .timeToComplete = 1.f,
                 .start = job->start,
@@ -374,6 +381,18 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 return;
             }
         }
+    };
+
+    if (!entity->has<CanPerformJob>()) return;
+
+    CanPerformJob& cpj = entity->get<CanPerformJob>();
+    std::shared_ptr<Job> job = cpj.job();
+
+    // User has no active job
+    if (cpj.needs_job()) {
+        log_info("getting new job");
+        find_new_job(entity, dt);
+        return;
     };
 
     switch (job->type) {

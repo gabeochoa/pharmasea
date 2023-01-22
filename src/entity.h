@@ -251,7 +251,7 @@ struct Entity {
         if (is_server()) {
             log_info("server: {}: {}", this->id, text);
         } else {
-            log_info("client: {}: {}", this->id, text);
+            // log_info("client: {}: {}", this->id, text);
         }
     }
 
@@ -267,19 +267,9 @@ struct Entity {
         return CheckCollisionBoxes(this->get<Transform>().bounds(), b);
     }
 
-    /*
-     * Move the entity to the given position,
-     *
-     * @param vec3 the position to move to
-     * */
-    virtual void update_position(const vec3& p) {
-        // TODO fix
-        this->get<Transform>().raw_position = p;
-    }
-
     [[nodiscard]] virtual BoundingBox raw_bounds() const {
         // TODO fix  size
-        return get_bounds(this->get<Transform>().raw_position, this->size());
+        return this->get<Transform>().raw_bounds();
     }
 
     /*
@@ -367,7 +357,7 @@ struct Entity {
     // Used to tell and entity its been dropped and where to go next
     virtual void on_drop(vec3 location) {
         this->is_held = false;
-        this->update_position(vec::snap(location));
+        this->get<Transform>().update(vec::snap(location));
     }
 
     virtual void render() const final { TRACY_ZONE_SCOPED; }

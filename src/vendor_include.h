@@ -39,10 +39,17 @@
 #include <bitsery/ext/std_tuple.h>
 #include <bitsery/ext/std_variant.h>
 #include <bitsery/traits/array.h>
+#include <bitsery/traits/deque.h>
 #include <bitsery/traits/string.h>
 #include <bitsery/traits/vector.h>
 
 namespace bitsery {
+template<typename S>
+void serialize(S& s, vec2& data) {
+    s.value4b(data.x);
+    s.value4b(data.y);
+}
+
 template<typename S>
 void serialize(S& s, vec3& data) {
     s.value4b(data.x);

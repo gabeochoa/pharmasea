@@ -49,6 +49,8 @@ struct Transform : public BaseComponent {
         size = sz;
     }
 
+    void update(vec3 npos) { raw_position = npos; }
+
     [[nodiscard]] vec2 as2() const { return vec::to2(this->position); }
 
     [[nodiscard]] virtual BoundingBox raw_bounds() const {

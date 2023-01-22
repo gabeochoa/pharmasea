@@ -35,8 +35,7 @@ inline void transform_snapper(std::shared_ptr<Entity> entity, float) {
 inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
                                            float) {
     if (!entity->has<CanHoldFurniture>()) return;
-    const CanHoldFurniture& can_hold_furniture =
-        entity->get<CanHoldFurniture>();
+    CanHoldFurniture& can_hold_furniture = entity->get<CanHoldFurniture>();
 
     // TODO explicity commenting this out so that we get an error
     // if (!entity->has<Transform>()) return;
@@ -60,7 +59,9 @@ inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
         new_pos.x -= TILESIZE;
     }
 
-    can_hold_furniture.furniture()->update_position(new_pos);
+    Transform& furn_transform =
+        can_hold_furniture.furniture()->get<Transform>();
+    furn_transform.update(new_pos);
 }
 
 inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
