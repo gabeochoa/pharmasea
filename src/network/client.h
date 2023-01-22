@@ -4,10 +4,10 @@
 
 #include "internal/client.h"
 //
+#include "../base_player.h"
 #include "../engine/globals_register.h"
 #include "../engine/log.h"
 #include "../player.h"
-#include "../remote_player.h"
 
 namespace network {
 

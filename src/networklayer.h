@@ -13,11 +13,11 @@
 #include "engine/layer.h"
 #include "engine/settings.h"  // Used for username
 //
+#include "base_player.h"
 #include "engine.h"
 #include "engine/network/webrequest.h"
 #include "network/network.h"
 #include "player.h"
-#include "remote_player.h"
 #include "statemanager.h"
 #include "toastmanager.h"
 
