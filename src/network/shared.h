@@ -20,7 +20,8 @@ struct PolymorphicBaseClass<BaseComponent>
           CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
           CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
           CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed,
-          IsSolid, CanBeHeld, IsRotatable> {};
+          IsSolid, CanBeHeld, IsRotatable, CanGrabFromOtherFurniture,
+          ConveysHeldItem> {};
 
 template<>
 struct PolymorphicBaseClass<Entity>
@@ -28,8 +29,7 @@ struct PolymorphicBaseClass<Entity>
 
 template<>
 struct PolymorphicBaseClass<Furniture>
-    : PolymorphicDerivedClasses<Register, Conveyer, Grabber, BagBox,
-                                MedicineCabinet> {};
+    : PolymorphicDerivedClasses<Register, Conveyer, BagBox, MedicineCabinet> {};
 
 template<>
 struct PolymorphicBaseClass<Person>

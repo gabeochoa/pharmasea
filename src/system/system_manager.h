@@ -3,10 +3,12 @@
 
 #include "../base_player.h"
 #include "../components/can_be_ghost_player.h"
+#include "../components/can_grab_from_other_furniture.h"
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/can_perform_job.h"
 #include "../components/collects_user_input.h"
+#include "../components/conveys_held_item.h"
 #include "../components/custom_item_position.h"
 #include "../components/is_snappable.h"
 #include "../components/responds_to_user_input.h"
@@ -88,26 +90,28 @@ inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
                 new_pos.y += TILESIZE / 2;
                 break;
             case CustomHeldItemPosition::Positioner::Conveyer:
-                auto conveyer = dynamic_pointer_cast<Conveyer>(entity);
-                if (!conveyer) {
-                    log_warn("Using custom held conveyer but not a conveyer");
+                if (!entity->has<ConveysHeldItem>()) {
+                    log_warn(
+                        "A conveyer positioned item needs ConveysHeldItem");
                     break;
                 }
+                ConveysHeldItem& conveysHeldItem =
+                    entity->get<ConveysHeldItem>();
                 if (transform.face_direction &
                     Transform::FrontFaceDirection::FORWARD) {
-                    new_pos.z += TILESIZE * conveyer->relative_item_pos;
+                    new_pos.z += TILESIZE * conveysHeldItem.relative_item_pos;
                 }
                 if (transform.face_direction &
                     Transform::FrontFaceDirection::RIGHT) {
-                    new_pos.x += TILESIZE * conveyer->relative_item_pos;
+                    new_pos.x += TILESIZE * conveysHeldItem.relative_item_pos;
                 }
                 if (transform.face_direction &
                     Transform::FrontFaceDirection::BACK) {
-                    new_pos.z -= TILESIZE * conveyer->relative_item_pos;
+                    new_pos.z -= TILESIZE * conveysHeldItem.relative_item_pos;
                 }
                 if (transform.face_direction &
                     Transform::FrontFaceDirection::LEFT) {
-                    new_pos.x -= TILESIZE * conveyer->relative_item_pos;
+                    new_pos.x -= TILESIZE * conveysHeldItem.relative_item_pos;
                 }
                 new_pos.y += TILESIZE / 4;
                 break;
@@ -681,6 +685,109 @@ inline void process_input(const std::shared_ptr<Entity> entity,
     }
 }
 
+void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
+    if (!entity->has<CanHoldItem>()) return;
+    CanHoldItem& canHold = entity->get<CanHoldItem>();
+    // we are not holding anything
+    if (canHold.empty()) return;
+
+    if (!entity->has<ConveysHeldItem>()) return;
+    ConveysHeldItem& conveysHeldItem = entity->get<ConveysHeldItem>();
+
+    if (!entity->has<Transform>()) return;
+    Transform& transform = entity->get<Transform>();
+
+    entity->can_take_from = false;
+
+    // if the item is less than halfway, just keep moving it along
+    if (conveysHeldItem.relative_item_pos <= 0.f) {
+        conveysHeldItem.relative_item_pos += conveysHeldItem.SPEED * dt;
+        return;
+    }
+
+    auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
+        transform.as2(), 1.f, transform.face_direction,
+        [entity](std::shared_ptr<Furniture> furn) {
+            return entity->id != furn->id &&
+                   // TODO need to merge this into the system manager one
+                   // but cant yet
+                   furn->get<CanHoldItem>().empty();
+        });
+    // no match means we cant continue, stay in the middle
+    if (!match) {
+        conveysHeldItem.relative_item_pos = 0.f;
+        entity->can_take_from = true;
+        return;
+    }
+
+    // we got something that will take from us,
+    // but only once we get close enough
+
+    // so keep moving forward
+    if (conveysHeldItem.relative_item_pos <= ConveysHeldItem::ITEM_END) {
+        conveysHeldItem.relative_item_pos += conveysHeldItem.SPEED * dt;
+        return;
+    }
+
+    entity->can_take_from = true;
+    // we reached the end, pass ownership
+
+    CanHoldItem& matchCHI = match->get<CanHoldItem>();
+    CanHoldItem& ourCHI = entity->get<CanHoldItem>();
+
+    matchCHI.item() = ourCHI.item();
+    matchCHI.item()->held_by = Item::HeldBy::FURNITURE;
+    ourCHI.item() = nullptr;
+    conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
+
+    // TODO if we are pushing onto a conveyer, we need to make sure
+    // we are keeping track of the orientations
+    //
+    //  --> --> in this case we want to place at 0.f
+    //
+    //          ^
+    //    -->-> |     in this we want to place at 0.f instead of -0.5
+}
+
+void process_grabber_items(std::shared_ptr<Entity> entity, float dt) {
+    // Should only run this for conveyers
+    if (!entity->has<ConveysHeldItem>()) return;
+    ConveysHeldItem& conveysHeldItem = entity->get<ConveysHeldItem>();
+
+    // Should only run for grabbers
+    if (!entity->has<CanGrabFromOtherFurniture>()) return;
+
+    if (!entity->has<CanHoldItem>()) return;
+    CanHoldItem& canHold = entity->get<CanHoldItem>();
+    // we are already holding something so
+    if (canHold.is_holding_item()) return;
+
+    if (!entity->has<Transform>()) return;
+    Transform& transform = entity->get<Transform>();
+
+    auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
+        transform.as2(), 1.f,
+        // Behind
+        transform.offsetFaceDirection(transform.face_direction, 180),
+        [entity](std::shared_ptr<Furniture> furn) {
+            return entity->id != furn->id &&
+                   furn->get<CanHoldItem>().can_take_item_from();
+        });
+
+    // No furniture behind us
+    if (!match) return;
+
+    // Grab from the furniture match
+    CanHoldItem& matchCHI = match->get<CanHoldItem>();
+    CanHoldItem& ourCHI = entity->get<CanHoldItem>();
+
+    ourCHI.update(matchCHI.item());
+    ourCHI.item()->held_by = Item::HeldBy::FURNITURE;
+    conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
+
+    matchCHI.update(nullptr);
+}
+
 }  // namespace system_manager
 
 SINGLETON_FWD(SystemManager)
@@ -736,6 +843,8 @@ struct SystemManager {
         for (auto& entity : entity_list) {
             system_manager::job_system::handle_job_holder_pushed(entity, dt);
             system_manager::job_system::update_job_information(entity, dt);
+            system_manager::process_conveyer_items(entity, dt);
+            system_manager::process_grabber_items(entity, dt);
         }
     }
 

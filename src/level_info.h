@@ -256,7 +256,7 @@ struct GameMapInfo : public LevelInfo {
                 if (i == 0)
                     conveyer.reset(new Conveyer(location));
                 else
-                    conveyer.reset(new Grabber(location));
+                    conveyer.reset(Conveyer::make_grabber(location));
 
                 EntityHelper::addEntity(conveyer);
             }

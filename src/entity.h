@@ -40,6 +40,9 @@ struct Entity {
 
     bool cleanup = false;
 
+    // from conveyer
+    bool can_take_from = false;
+
     template<typename T>
     bool has() const {
         log_trace("checking component {} {} on entity {}",
