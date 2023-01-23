@@ -68,9 +68,9 @@
 \DoxyCodeLine{00064\ }
 \DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{addEntity}}(std::shared\_ptr<Entity>\ e)\ \{}
 \DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a704ecc99728bb6635523ff9b8e46cd95}{get\_entities}}().push\_back(e);}
-\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!e-\/>add\_to\_navmesh())\ \{}
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (!e-\/>add\_to\_navmesh())\ \{}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ return;}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
 \DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ auto\ nav\ =\ GLOBALS.get\_ptr<NavMesh>("{}navmesh"{});}}
 \DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note:\ addShape\ merges\ shapes\ next\ to\ each\ other}}
 \DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ this\ reduces\ the\ amount\ of\ loops\ overall}}

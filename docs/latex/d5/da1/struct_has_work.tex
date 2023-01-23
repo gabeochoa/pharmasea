@@ -19,7 +19,7 @@ bool \mbox{\hyperlink{struct_has_work_abb83ec430bea41e16fa458c3bc9a60a0}{has\+\_
 \item 
 void \mbox{\hyperlink{struct_has_work_a495276e17df053445a48bbd73611824c}{update\+\_\+pct}} (float pct)
 \item 
-void \mbox{\hyperlink{struct_has_work_aa338472a335d7ba2a4c5d97aa45af2b2}{init}} (std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_person}{Person}} $>$ person, float dt)$>$ worker)
+void \mbox{\hyperlink{struct_has_work_ae63d3446af6aa7c5fae6f0c20e6e5b11}{init}} (std\+::function$<$ void(\mbox{\hyperlink{struct_has_work}{Has\+Work}} \&, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_person}{Person}} $>$ person, float dt)$>$ worker)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
 \begin{DoxyCompactItemize}
@@ -35,7 +35,7 @@ virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f
 \item 
 float \mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\+\_\+work\+\_\+complete}} = 0.f
 \item 
-std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_person}{Person}} $>$ person, float dt)$>$ \mbox{\hyperlink{struct_has_work_a442b29677ecb1a29bac2ea1a97f4b968}{do\+\_\+work}}
+std\+::function$<$ void(\mbox{\hyperlink{struct_has_work}{Has\+Work}} \&, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_person}{Person}} $>$ person, float dt)$>$ \mbox{\hyperlink{struct_has_work_ad660f8476be1978b5f1714b2cc4aa6ff}{do\+\_\+work}}
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
@@ -64,15 +64,15 @@ std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_person
 
 Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_abc7e8a0a6363013bf0a0776751ce06d1}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+progress\+\_\+bar()}}.
 
-\mbox{\Hypertarget{struct_has_work_aa338472a335d7ba2a4c5d97aa45af2b2}\label{struct_has_work_aa338472a335d7ba2a4c5d97aa45af2b2}} 
+\mbox{\Hypertarget{struct_has_work_ae63d3446af6aa7c5fae6f0c20e6e5b11}\label{struct_has_work_ae63d3446af6aa7c5fae6f0c20e6e5b11}} 
 \index{HasWork@{HasWork}!init@{init}}
 \index{init@{init}!HasWork@{HasWork}}
 \doxysubsubsection{\texorpdfstring{init()}{init()}}
-{\footnotesize\ttfamily void Has\+Work\+::init (\begin{DoxyParamCaption}\item[{std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_person}{Person}} $>$ person, float dt)$>$}]{worker }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily void Has\+Work\+::init (\begin{DoxyParamCaption}\item[{std\+::function$<$ void(\mbox{\hyperlink{struct_has_work}{Has\+Work}} \&, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_person}{Person}} $>$ person, float dt)$>$}]{worker }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{struct_has_work_a442b29677ecb1a29bac2ea1a97f4b968}{do\+\_\+work}}.
+References \mbox{\hyperlink{struct_has_work_ad660f8476be1978b5f1714b2cc4aa6ff}{do\+\_\+work}}.
 
 \mbox{\Hypertarget{struct_has_work_a12a29927ddaafa2476d5a4c2cca661f3}\label{struct_has_work_a12a29927ddaafa2476d5a4c2cca661f3}} 
 \index{HasWork@{HasWork}!serialize@{serialize}}
@@ -98,15 +98,15 @@ References \mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{p
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_has_work_a442b29677ecb1a29bac2ea1a97f4b968}\label{struct_has_work_a442b29677ecb1a29bac2ea1a97f4b968}} 
+\mbox{\Hypertarget{struct_has_work_ad660f8476be1978b5f1714b2cc4aa6ff}\label{struct_has_work_ad660f8476be1978b5f1714b2cc4aa6ff}} 
 \index{HasWork@{HasWork}!do\_work@{do\_work}}
 \index{do\_work@{do\_work}!HasWork@{HasWork}}
 \doxysubsubsection{\texorpdfstring{do\_work}{do\_work}}
-{\footnotesize\ttfamily std\+::function$<$void(std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_person}{Person}}$>$ person, float dt)$>$ Has\+Work\+::do\+\_\+work}
+{\footnotesize\ttfamily std\+::function$<$void(\mbox{\hyperlink{struct_has_work}{Has\+Work}}\&, std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_person}{Person}}$>$ person, float dt)$>$ Has\+Work\+::do\+\_\+work}
 
 
 
-Referenced by \mbox{\hyperlink{struct_has_work_aa338472a335d7ba2a4c5d97aa45af2b2}{init()}}, and \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{system\+\_\+manager\+::process\+\_\+input()}}.
+Referenced by \mbox{\hyperlink{struct_has_work_ae63d3446af6aa7c5fae6f0c20e6e5b11}{init()}}, and \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{system\+\_\+manager\+::process\+\_\+input()}}.
 
 \mbox{\Hypertarget{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}\label{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}} 
 \index{HasWork@{HasWork}!pct\_work\_complete@{pct\_work\_complete}}
@@ -116,7 +116,7 @@ Referenced by \mbox{\hyperlink{struct_has_work_aa338472a335d7ba2a4c5d97aa45af2b2
 
 
 
-Referenced by \mbox{\hyperlink{struct_character_switcher_abb99507472b0ea5cb48970cffbe90732}{Character\+Switcher\+::\+Character\+Switcher()}}, \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_abc7e8a0a6363013bf0a0776751ce06d1}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+progress\+\_\+bar()}}, \mbox{\hyperlink{struct_has_work_a12a29927ddaafa2476d5a4c2cca661f3}{serialize()}}, \mbox{\hyperlink{struct_table_a193dc95c10a06a8d163f9825384c0a26}{Table\+::\+Table()}}, and \mbox{\hyperlink{struct_has_work_a495276e17df053445a48bbd73611824c}{update\+\_\+pct()}}.
+Referenced by \mbox{\hyperlink{struct_furniture_a358f91902463b0bb9d57f8b92c35d65c}{Furniture\+::make\+\_\+character\+\_\+switcher()}}, \mbox{\hyperlink{struct_furniture_a51c9d8d1768b4561bf0f2a0ea7132f6e}{Furniture\+::make\+\_\+table()}}, \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_abc7e8a0a6363013bf0a0776751ce06d1}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+progress\+\_\+bar()}}, \mbox{\hyperlink{struct_has_work_a12a29927ddaafa2476d5a4c2cca661f3}{serialize()}}, and \mbox{\hyperlink{struct_has_work_a495276e17df053445a48bbd73611824c}{update\+\_\+pct()}}.
 
 
 

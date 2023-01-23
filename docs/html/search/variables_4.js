@@ -108,7 +108,7 @@ var searchData=
   ['dirty_5fpurple_105',['dirty_purple',['../d9/db4/namespaceui_1_1color.html#af43f9d68f134e2c3c8596d3b8fda02c6',1,'ui::color']]],
   ['dirty_5fyellow_106',['dirty_yellow',['../d9/db4/namespaceui_1_1color.html#a248320564e707cd6e0fdea103ae40796',1,'ui::color']]],
   ['dist_107',['dist',['../da/d05/struct_game_map_info.html#afcab4192a82f3790641aa7726309adb7',1,'GameMapInfo']]],
-  ['do_5fwork_108',['do_work',['../d5/da1/struct_has_work.html#a442b29677ecb1a29bac2ea1a97f4b968',1,'HasWork']]],
+  ['do_5fwork_108',['do_work',['../d5/da1/struct_has_work.html#ad660f8476be1978b5f1714b2cc4aa6ff',1,'HasWork']]],
   ['dodger_5fblue_109',['dodger_blue',['../d9/db4/namespaceui_1_1color.html#a5feb6942b6e7ab8de1861e55c6350732',1,'ui::color']]],
   ['drab_110',['drab',['../d9/db4/namespaceui_1_1color.html#a087c1936b4949dc8ec95e508f84cac9b',1,'ui::color']]],
   ['drab_5fgreen_111',['drab_green',['../d9/db4/namespaceui_1_1color.html#abcb6850ab1e280708a4d40106fb1269d',1,'ui::color']]],

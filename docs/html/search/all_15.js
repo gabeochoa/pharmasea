@@ -41,7 +41,7 @@ var searchData=
   ['update_5fjob_5finformation_38',['update_job_information',['../df/d3b/namespacesystem__manager_1_1job__system.html#a77e67ff8d61329379931c6d03ea68708',1,'system_manager::job_system']]],
   ['update_5flast_5fused_5fip_5faddress_39',['update_last_used_ip_address',['../d0/d62/struct_settings.html#a029d448e184b4afac15426dd5a7c17c9',1,'Settings']]],
   ['update_5fmaster_5fvolume_40',['update_master_volume',['../d0/d62/struct_settings.html#ab2a70e409439312ffb45c9e0d13dedcf',1,'Settings']]],
-  ['update_5fmodel_41',['update_model',['../d0/d74/struct_register.html#a2306726654fefe617d10d36bfdff8749',1,'Register::update_model()'],['../d3/dee/struct_medicine_cabinet.html#a0d44a8c81945b14e883c89c73e79900f',1,'MedicineCabinet::update_model()'],['../dd/de4/struct_conveyer.html#ad4215347a46419825e6155fa7d34ac84',1,'Conveyer::update_model()'],['../d9/dec/struct_bag_box.html#aab757683c1965a23555d0c5d7af8c74d',1,'BagBox::update_model()']]],
+  ['update_5fmodel_41',['update_model',['../d0/d74/struct_register.html#a2306726654fefe617d10d36bfdff8749',1,'Register::update_model()'],['../d3/dee/struct_medicine_cabinet.html#a0d44a8c81945b14e883c89c73e79900f',1,'MedicineCabinet::update_model()'],['../d9/dec/struct_bag_box.html#aab757683c1965a23555d0c5d7af8c74d',1,'BagBox::update_model()']]],
   ['update_5fmusic_5fvolume_42',['update_music_volume',['../d0/d62/struct_settings.html#a50426b179c7be84c0364c65c39f8d40a',1,'Settings']]],
   ['update_5fpath_43',['update_path',['../d2/d63/struct_job.html#a866c096b6000b68a9cf4ee09bcf6b352',1,'Job']]],
   ['update_5fpct_44',['update_pct',['../d5/da1/struct_has_work.html#a495276e17df053445a48bbd73611824c',1,'HasWork']]],

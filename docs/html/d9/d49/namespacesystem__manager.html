@@ -105,6 +105,10 @@ Functions</h2></td></tr>
 <tr class="separator:a3e8126dd8986710c90900c8230f55c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a947c5a65ae1a78b3c4e46fdf76e2f86b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a947c5a65ae1a78b3c4e46fdf76e2f86b">process_input</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, const <a class="el" href="../../da/d9a/keymap_8h.html#ace92b9e658d8e6b1535c88a5da6e8453">UserInput</a> &amp;input)</td></tr>
 <tr class="separator:a947c5a65ae1a78b3c4e46fdf76e2f86b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04abec43eee11830c4261b9b4831a1f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a04abec43eee11830c4261b9b4831a1f1">process_conveyer_items</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
+<tr class="separator:a04abec43eee11830c4261b9b4831a1f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a925981f732982288e8ca5bd2874b4413"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a925981f732982288e8ca5bd2874b4413">process_grabber_items</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
+<tr class="separator:a925981f732982288e8ca5bd2874b4413"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a659184773c10c97c2fae2ef1f542e0c6" name="a659184773c10c97c2fae2ef1f542e0c6"></a>
@@ -301,6 +305,70 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a04abec43eee11830c4261b9b4831a1f1" name="a04abec43eee11830c4261b9b4831a1f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04abec43eee11830c4261b9b4831a1f1">&#9670;&#160;</a></span>process_conveyer_items()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void system_manager::process_conveyer_items </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt;&#160;</td>
+          <td class="paramname"><em>entity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>dt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../dd/d69/struct_transform.html#aeb1c3da9267cef25c5ece078dbceb849">Transform::as2()</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#a0fb8e72bb3f5e14c60ce0a3991bf0ef8">CanHoldItem::empty()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a85795012bea44b28efe7606af7d7362d">Transform::face_direction</a>, <a class="el" href="../../db/d66/struct_item.html#a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5">Item::FURNITURE</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#a628f6a73fc0348efcc31e1b19a95097d">CanHoldItem::item()</a>, <a class="el" href="../../da/d4a/struct_conveys_held_item.html#a4de889210f5a807bac751dcafbb4248b">ConveysHeldItem::ITEM_END</a>, <a class="el" href="../../da/d4a/struct_conveys_held_item.html#abf25d199ea91a1eeef7b8651e7aa8a49">ConveysHeldItem::ITEM_START</a>, <a class="el" href="../../da/d4a/struct_conveys_held_item.html#a9e969e7c8da0c21d63340c0ec14b0401">ConveysHeldItem::relative_item_pos</a>, and <a class="el" href="../../da/d4a/struct_conveys_held_item.html#a5f1d992f9c9f7c6f50f8b17de26d820b">ConveysHeldItem::SPEED</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d8/d4f/struct_system_manager.html#aad649b7a2bc4134d8f3795b1cd4ddba7">SystemManager::in_round_update()</a>.</p>
+
+</div>
+</div>
+<a id="a925981f732982288e8ca5bd2874b4413" name="a925981f732982288e8ca5bd2874b4413"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a925981f732982288e8ca5bd2874b4413">&#9670;&#160;</a></span>process_grabber_items()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void system_manager::process_grabber_items </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt;&#160;</td>
+          <td class="paramname"><em>entity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>dt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../dd/d69/struct_transform.html#aeb1c3da9267cef25c5ece078dbceb849">Transform::as2()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a85795012bea44b28efe7606af7d7362d">Transform::face_direction</a>, <a class="el" href="../../db/d66/struct_item.html#a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5">Item::FURNITURE</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#ae846dc6de7e3b22454114d68f9449581">CanHoldItem::is_holding_item()</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#a628f6a73fc0348efcc31e1b19a95097d">CanHoldItem::item()</a>, <a class="el" href="../../da/d4a/struct_conveys_held_item.html#abf25d199ea91a1eeef7b8651e7aa8a49">ConveysHeldItem::ITEM_START</a>, <a class="el" href="../../dd/d69/struct_transform.html#a8fce7c1e6ebe62c45d465ab949fbd20a">Transform::offsetFaceDirection()</a>, <a class="el" href="../../da/d4a/struct_conveys_held_item.html#a9e969e7c8da0c21d63340c0ec14b0401">ConveysHeldItem::relative_item_pos</a>, and <a class="el" href="../../da/d55/struct_can_hold_item.html#a1859b1b208d938ed63a5eea0d7a5fd47">CanHoldItem::update()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d8/d4f/struct_system_manager.html#aad649b7a2bc4134d8f3795b1cd4ddba7">SystemManager::in_round_update()</a>.</p>
+
+</div>
+</div>
 <a id="a947c5a65ae1a78b3c4e46fdf76e2f86b" name="a947c5a65ae1a78b3c4e46fdf76e2f86b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a947c5a65ae1a78b3c4e46fdf76e2f86b">&#9670;&#160;</a></span>process_input()</h2>
 
@@ -335,7 +403,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../dd/d69/struct_transform.html#aeb1c3da9267cef25c5ece078dbceb849">Transform::as2()</a>, <a class="el" href="../../d5/da1/struct_has_work.html#a442b29677ecb1a29bac2ea1a97f4b968">HasWork::do_work</a>, <a class="el" href="../../dd/d69/struct_transform.html#a85795012bea44b28efe7606af7d7362d">Transform::face_direction</a>, <a class="el" href="../../d6/dad/struct_can_hold_furniture.html#a831f3fd4c2384009a940700a433cfc20">CanHoldFurniture::furniture()</a>, <a class="el" href="../../db/d66/struct_item.html#a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5">Item::FURNITURE</a>, <a class="el" href="../../d8/d10/namespacemenu.html#a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb">menu::Game</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#ae846dc6de7e3b22454114d68f9449581">CanHoldItem::is_holding_item()</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#a628f6a73fc0348efcc31e1b19a95097d">CanHoldItem::item()</a>, <a class="el" href="../../d3/d2c/namespacegame.html#ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23">game::Planning</a>, <a class="el" href="../../db/d66/struct_item.html#a7bbff5c89eda76d407fda7acbb7e2313aaca7714ebc132e0fb559664bbe96c552">Item::PLAYER</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a3e8126dd8986710c90900c8230f55c8d">process_player_movement_input()</a>, <a class="el" href="../../d9/d6b/struct_can_highlight_others.html#abf240b68e008f58ba76d5be7bc905183">CanHighlightOthers::reach()</a>, <a class="el" href="../../d3/d9b/struct_game_state.html#abbfb101b96ae617d2b67acbf58f50693">GameState::s_in_round()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a64ba3d05bc47f05d2ef60fab5a5957fa">Transform::snap_position()</a>, <a class="el" href="../../d5/d87/globals_8h.html#af3c09b249c48587aba215cce49091fa0">TILESIZE</a>, <a class="el" href="../../d4/d9a/namespacevec.html#a234aab197b01eb9b8f9163149e410399">vec::to3()</a>, and <a class="el" href="../../d6/d15/tracy_8h.html#af0966b1b117a1e09190aaee5d5175e27">TRACY_ZONE_SCOPED</a>.</p>
+<p class="reference">References <a class="el" href="../../dd/d69/struct_transform.html#aeb1c3da9267cef25c5ece078dbceb849">Transform::as2()</a>, <a class="el" href="../../d5/da1/struct_has_work.html#ad660f8476be1978b5f1714b2cc4aa6ff">HasWork::do_work</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#a0fb8e72bb3f5e14c60ce0a3991bf0ef8">CanHoldItem::empty()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a85795012bea44b28efe7606af7d7362d">Transform::face_direction</a>, <a class="el" href="../../d6/dad/struct_can_hold_furniture.html#a831f3fd4c2384009a940700a433cfc20">CanHoldFurniture::furniture()</a>, <a class="el" href="../../db/d66/struct_item.html#a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5">Item::FURNITURE</a>, <a class="el" href="../../d8/d10/namespacemenu.html#a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb">menu::Game</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#ae846dc6de7e3b22454114d68f9449581">CanHoldItem::is_holding_item()</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#a628f6a73fc0348efcc31e1b19a95097d">CanHoldItem::item()</a>, <a class="el" href="../../d3/d2c/namespacegame.html#ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23">game::Planning</a>, <a class="el" href="../../db/d66/struct_item.html#a7bbff5c89eda76d407fda7acbb7e2313aaca7714ebc132e0fb559664bbe96c552">Item::PLAYER</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a3e8126dd8986710c90900c8230f55c8d">process_player_movement_input()</a>, <a class="el" href="../../d9/d6b/struct_can_highlight_others.html#abf240b68e008f58ba76d5be7bc905183">CanHighlightOthers::reach()</a>, <a class="el" href="../../d3/d9b/struct_game_state.html#abbfb101b96ae617d2b67acbf58f50693">GameState::s_in_round()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a64ba3d05bc47f05d2ef60fab5a5957fa">Transform::snap_position()</a>, <a class="el" href="../../d5/d87/globals_8h.html#af3c09b249c48587aba215cce49091fa0">TILESIZE</a>, <a class="el" href="../../d4/d9a/namespacevec.html#a234aab197b01eb9b8f9163149e410399">vec::to3()</a>, and <a class="el" href="../../d6/d15/tracy_8h.html#af0966b1b117a1e09190aaee5d5175e27">TRACY_ZONE_SCOPED</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d8/d4f/struct_system_manager.html#a1baea93697d0863ef17547955f94c4b9">SystemManager::process_inputs()</a>.</p>
 
@@ -547,7 +615,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f">Transform::BACK</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#a0fb8e72bb3f5e14c60ce0a3991bf0ef8">CanHoldItem::empty()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a85795012bea44b28efe7606af7d7362d">Transform::face_direction</a>, <a class="el" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f">Transform::FORWARD</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#a628f6a73fc0348efcc31e1b19a95097d">CanHoldItem::item()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d">Transform::LEFT</a>, <a class="el" href="../../d7/d7f/log_8h.html#a04af09851c431d178f16b24fa1aac1e9">log_warn</a>, <a class="el" href="../../db/d9c/struct_custom_held_item_position.html#aaf39ca6256db891c2020cbfaeee1f476">CustomHeldItemPosition::mutator</a>, <a class="el" href="../../dd/d69/struct_transform.html#aa3e740901d4e8a1b57ebbf06d8fab13e">Transform::position</a>, <a class="el" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e">Transform::RIGHT</a>, and <a class="el" href="../../d5/d87/globals_8h.html#af3c09b249c48587aba215cce49091fa0">TILESIZE</a>.</p>
+<p class="reference">References <a class="el" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f">Transform::BACK</a>, <a class="el" href="../../db/d9c/struct_custom_held_item_position.html#a0d570a3cb204febffb7eb39b36af86eeaa7486b485300c482153dc4883e1a175d">CustomHeldItemPosition::Conveyer</a>, <a class="el" href="../../db/d9c/struct_custom_held_item_position.html#a0d570a3cb204febffb7eb39b36af86eea7a1920d61156abc05a60135aefe8bc67">CustomHeldItemPosition::Default</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#a0fb8e72bb3f5e14c60ce0a3991bf0ef8">CanHoldItem::empty()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a85795012bea44b28efe7606af7d7362d">Transform::face_direction</a>, <a class="el" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f">Transform::FORWARD</a>, <a class="el" href="../../da/d55/struct_can_hold_item.html#a628f6a73fc0348efcc31e1b19a95097d">CanHoldItem::item()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d">Transform::LEFT</a>, <a class="el" href="../../d7/d7f/log_8h.html#a04af09851c431d178f16b24fa1aac1e9">log_warn</a>, <a class="el" href="../../dd/d69/struct_transform.html#aa3e740901d4e8a1b57ebbf06d8fab13e">Transform::position</a>, <a class="el" href="../../db/d9c/struct_custom_held_item_position.html#a15a481f3cf056571fb085bcda5a6a01a">CustomHeldItemPosition::positioner</a>, <a class="el" href="../../da/d4a/struct_conveys_held_item.html#a9e969e7c8da0c21d63340c0ec14b0401">ConveysHeldItem::relative_item_pos</a>, <a class="el" href="../../dd/d69/struct_transform.html#a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e">Transform::RIGHT</a>, <a class="el" href="../../db/d9c/struct_custom_held_item_position.html#a0d570a3cb204febffb7eb39b36af86eea51c45b795d5d18a3e4e0c37e8b20a141">CustomHeldItemPosition::Table</a>, and <a class="el" href="../../d5/d87/globals_8h.html#af3c09b249c48587aba215cce49091fa0">TILESIZE</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d8/d4f/struct_system_manager.html#a7d651e258dd9c85c47f364e7ac0d6e60">SystemManager::always_update()</a>.</p>
 

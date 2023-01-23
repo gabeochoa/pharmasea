@@ -60,6 +60,5 @@ var searchData=
   ['getrepeatcount_57',['getRepeatCount',['../dd/d5b/struct_char_pressed_event.html#a3dd96b0c9c419da9a07763e453259c0e',1,'CharPressedEvent::getRepeatCount()'],['../d4/deb/struct_key_pressed_event.html#a9744c518a7d2dca8d00a82e79eb457f9',1,'KeyPressedEvent::getRepeatCount()']]],
   ['go_5fback_58',['go_back',['../da/dbf/struct_state_manager.html#a893d07632226a05e8c959d9d47ef171c',1,'StateManager']]],
   ['grab_5fthings_59',['grab_things',['../df/d91/struct_map.html#a654d7b033c2104b2edecfcf73ffcf887',1,'Map::grab_things()'],['../d6/d9d/struct_level_info.html#a66f640142946bce849c3b1e73884c45e',1,'LevelInfo::grab_things()']]],
-  ['grabber_60',['Grabber',['../d2/d19/struct_grabber.html#ad213f745228d583ad59557c50f0cc265',1,'Grabber::Grabber(vec2 pos)'],['../d2/d19/struct_grabber.html#a8f3f18e701f8244b3b200135c6f4c566',1,'Grabber::Grabber()']]],
-  ['grahamscan_61',['grahamScan',['../d4/dd7/struct_polygon.html#a47930329e03d22893bf0cf9e7ccc54bd',1,'Polygon']]]
+  ['grahamscan_60',['grahamScan',['../d4/dd7/struct_polygon.html#a47930329e03d22893bf0cf9e7ccc54bd',1,'Polygon']]]
 ];

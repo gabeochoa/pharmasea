@@ -29,6 +29,10 @@ void \mbox{\hyperlink{namespacesystem__manager_a659184773c10c97c2fae2ef1f542e0c6
 void \mbox{\hyperlink{namespacesystem__manager_a3e8126dd8986710c90900c8230f55c8d}{process\+\_\+player\+\_\+movement\+\_\+input}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}} input\+\_\+name, float input\+\_\+amount)
 \item 
 void \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{process\+\_\+input}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, const \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}} \&input)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a04abec43eee11830c4261b9b4831a1f1}{process\+\_\+conveyer\+\_\+items}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a925981f732982288e8ca5bd2874b4413}{process\+\_\+grabber\+\_\+items}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
 \end{DoxyCompactItemize}
 
 
@@ -85,6 +89,34 @@ References \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0
 
 Referenced by \mbox{\hyperlink{namespacesystem__manager_a3e8126dd8986710c90900c8230f55c8d}{process\+\_\+player\+\_\+movement\+\_\+input()}}.
 
+\mbox{\Hypertarget{namespacesystem__manager_a04abec43eee11830c4261b9b4831a1f1}\label{namespacesystem__manager_a04abec43eee11830c4261b9b4831a1f1}} 
+\index{system\_manager@{system\_manager}!process\_conveyer\_items@{process\_conveyer\_items}}
+\index{process\_conveyer\_items@{process\_conveyer\_items}!system\_manager@{system\_manager}}
+\doxysubsubsection{\texorpdfstring{process\_conveyer\_items()}{process\_conveyer\_items()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::process\+\_\+conveyer\+\_\+items (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{dt }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{Transform\+::as2()}}, \mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{Can\+Hold\+Item\+::empty()}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5}{Item\+::\+FURNITURE}}, \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{Can\+Hold\+Item\+::item()}}, \mbox{\hyperlink{struct_conveys_held_item_a4de889210f5a807bac751dcafbb4248b}{Conveys\+Held\+Item\+::\+ITEM\+\_\+\+END}}, \mbox{\hyperlink{struct_conveys_held_item_abf25d199ea91a1eeef7b8651e7aa8a49}{Conveys\+Held\+Item\+::\+ITEM\+\_\+\+START}}, \mbox{\hyperlink{struct_conveys_held_item_a9e969e7c8da0c21d63340c0ec14b0401}{Conveys\+Held\+Item\+::relative\+\_\+item\+\_\+pos}}, and \mbox{\hyperlink{struct_conveys_held_item_a5f1d992f9c9f7c6f50f8b17de26d820b}{Conveys\+Held\+Item\+::\+SPEED}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_system_manager_aad649b7a2bc4134d8f3795b1cd4ddba7}{System\+Manager\+::in\+\_\+round\+\_\+update()}}.
+
+\mbox{\Hypertarget{namespacesystem__manager_a925981f732982288e8ca5bd2874b4413}\label{namespacesystem__manager_a925981f732982288e8ca5bd2874b4413}} 
+\index{system\_manager@{system\_manager}!process\_grabber\_items@{process\_grabber\_items}}
+\index{process\_grabber\_items@{process\_grabber\_items}!system\_manager@{system\_manager}}
+\doxysubsubsection{\texorpdfstring{process\_grabber\_items()}{process\_grabber\_items()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::process\+\_\+grabber\+\_\+items (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{dt }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{Transform\+::as2()}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5}{Item\+::\+FURNITURE}}, \mbox{\hyperlink{struct_can_hold_item_ae846dc6de7e3b22454114d68f9449581}{Can\+Hold\+Item\+::is\+\_\+holding\+\_\+item()}}, \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{Can\+Hold\+Item\+::item()}}, \mbox{\hyperlink{struct_conveys_held_item_abf25d199ea91a1eeef7b8651e7aa8a49}{Conveys\+Held\+Item\+::\+ITEM\+\_\+\+START}}, \mbox{\hyperlink{struct_transform_a8fce7c1e6ebe62c45d465ab949fbd20a}{Transform\+::offset\+Face\+Direction()}}, \mbox{\hyperlink{struct_conveys_held_item_a9e969e7c8da0c21d63340c0ec14b0401}{Conveys\+Held\+Item\+::relative\+\_\+item\+\_\+pos}}, and \mbox{\hyperlink{struct_can_hold_item_a1859b1b208d938ed63a5eea0d7a5fd47}{Can\+Hold\+Item\+::update()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_system_manager_aad649b7a2bc4134d8f3795b1cd4ddba7}{System\+Manager\+::in\+\_\+round\+\_\+update()}}.
+
 \mbox{\Hypertarget{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}\label{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}} 
 \index{system\_manager@{system\_manager}!process\_input@{process\_input}}
 \index{process\_input@{process\_input}!system\_manager@{system\_manager}}
@@ -93,7 +125,7 @@ Referenced by \mbox{\hyperlink{namespacesystem__manager_a3e8126dd8986710c90900c8
 
 
 
-References \mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{Transform\+::as2()}}, \mbox{\hyperlink{struct_has_work_a442b29677ecb1a29bac2ea1a97f4b968}{Has\+Work\+::do\+\_\+work}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}{Can\+Hold\+Furniture\+::furniture()}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5}{Item\+::\+FURNITURE}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, \mbox{\hyperlink{struct_can_hold_item_ae846dc6de7e3b22454114d68f9449581}{Can\+Hold\+Item\+::is\+\_\+holding\+\_\+item()}}, \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{Can\+Hold\+Item\+::item()}}, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game\+::\+Planning}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313aaca7714ebc132e0fb559664bbe96c552}{Item\+::\+PLAYER}}, \mbox{\hyperlink{namespacesystem__manager_a3e8126dd8986710c90900c8230f55c8d}{process\+\_\+player\+\_\+movement\+\_\+input()}}, \mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{Can\+Highlight\+Others\+::reach()}}, \mbox{\hyperlink{struct_game_state_abbfb101b96ae617d2b67acbf58f50693}{Game\+State\+::s\+\_\+in\+\_\+round()}}, \mbox{\hyperlink{struct_transform_a64ba3d05bc47f05d2ef60fab5a5957fa}{Transform\+::snap\+\_\+position()}}, \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}, \mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec\+::to3()}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
+References \mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{Transform\+::as2()}}, \mbox{\hyperlink{struct_has_work_ad660f8476be1978b5f1714b2cc4aa6ff}{Has\+Work\+::do\+\_\+work}}, \mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{Can\+Hold\+Item\+::empty()}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}{Can\+Hold\+Furniture\+::furniture()}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5}{Item\+::\+FURNITURE}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, \mbox{\hyperlink{struct_can_hold_item_ae846dc6de7e3b22454114d68f9449581}{Can\+Hold\+Item\+::is\+\_\+holding\+\_\+item()}}, \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{Can\+Hold\+Item\+::item()}}, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game\+::\+Planning}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313aaca7714ebc132e0fb559664bbe96c552}{Item\+::\+PLAYER}}, \mbox{\hyperlink{namespacesystem__manager_a3e8126dd8986710c90900c8230f55c8d}{process\+\_\+player\+\_\+movement\+\_\+input()}}, \mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{Can\+Highlight\+Others\+::reach()}}, \mbox{\hyperlink{struct_game_state_abbfb101b96ae617d2b67acbf58f50693}{Game\+State\+::s\+\_\+in\+\_\+round()}}, \mbox{\hyperlink{struct_transform_a64ba3d05bc47f05d2ef60fab5a5957fa}{Transform\+::snap\+\_\+position()}}, \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}, \mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec\+::to3()}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
 
 
 
@@ -163,7 +195,7 @@ Referenced by \mbox{\hyperlink{struct_system_manager_afddca06ae50a70f95814759035
 
 
 
-References \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform\+::\+BACK}}, \mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{Can\+Hold\+Item\+::empty()}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform\+::\+FORWARD}}, \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{Can\+Hold\+Item\+::item()}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform\+::\+LEFT}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, \mbox{\hyperlink{struct_custom_held_item_position_aaf39ca6256db891c2020cbfaeee1f476}{Custom\+Held\+Item\+Position\+::mutator}}, \mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{Transform\+::position}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform\+::\+RIGHT}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+References \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform\+::\+BACK}}, \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eeaa7486b485300c482153dc4883e1a175d}{Custom\+Held\+Item\+Position\+::\+Conveyer}}, \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea7a1920d61156abc05a60135aefe8bc67}{Custom\+Held\+Item\+Position\+::\+Default}}, \mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{Can\+Hold\+Item\+::empty()}}, \mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{Transform\+::face\+\_\+direction}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform\+::\+FORWARD}}, \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{Can\+Hold\+Item\+::item()}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform\+::\+LEFT}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, \mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{Transform\+::position}}, \mbox{\hyperlink{struct_custom_held_item_position_a15a481f3cf056571fb085bcda5a6a01a}{Custom\+Held\+Item\+Position\+::positioner}}, \mbox{\hyperlink{struct_conveys_held_item_a9e969e7c8da0c21d63340c0ec14b0401}{Conveys\+Held\+Item\+::relative\+\_\+item\+\_\+pos}}, \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform\+::\+RIGHT}}, \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea51c45b795d5d18a3e4e0c37e8b20a141}{Custom\+Held\+Item\+Position\+::\+Table}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
 
 
 

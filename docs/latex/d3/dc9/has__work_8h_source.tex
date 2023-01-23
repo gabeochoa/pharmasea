@@ -19,21 +19,23 @@
 \DoxyCodeLine{00015\ }
 \DoxyCodeLine{00016\ \ \ \ \ \textcolor{comment}{//\ TODO\ make\ private}}
 \DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}}\ =\ 0.f;}
-\DoxyCodeLine{00018\ \ \ \ \ std::function<void(std::shared\_ptr<Person>\ person,\ \textcolor{keywordtype}{float}\ dt)>\ \mbox{\hyperlink{struct_has_work_a442b29677ecb1a29bac2ea1a97f4b968}{do\_work}};}
-\DoxyCodeLine{00019\ }
-\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_has_work_aa338472a335d7ba2a4c5d97aa45af2b2}{init}}(}
-\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ std::function<\textcolor{keywordtype}{void}(std::shared\_ptr<Person>\ person,\ \textcolor{keywordtype}{float}\ dt)>\ worker)\ \{}
-\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_work_a442b29677ecb1a29bac2ea1a97f4b968}{do\_work}}\ =\ worker;}
-\DoxyCodeLine{00023\ \ \ \ \ \}}
-\DoxyCodeLine{00024\ }
-\DoxyCodeLine{00025\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_has_work_a12a29927ddaafa2476d5a4c2cca661f3}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
-\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}});}
-\DoxyCodeLine{00032\ \ \ \ \ \}}
-\DoxyCodeLine{00033\ \};}
+\DoxyCodeLine{00018\ \ \ \ \ std::function<void(\mbox{\hyperlink{struct_has_work}{HasWork}}\&,\ std::shared\_ptr<Person>\ person,\ \textcolor{keywordtype}{float}\ dt)>}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_work_ad660f8476be1978b5f1714b2cc4aa6ff}{do\_work}};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_has_work_ae63d3446af6aa7c5fae6f0c20e6e5b11}{init}}(}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ std::function<\textcolor{keywordtype}{void}(\mbox{\hyperlink{struct_has_work}{HasWork}}\&,\ std::shared\_ptr<Person>\ person,\ \textcolor{keywordtype}{float}\ dt)>}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ worker)\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_work_ad660f8476be1978b5f1714b2cc4aa6ff}{do\_work}}\ =\ worker;}
+\DoxyCodeLine{00025\ \ \ \ \ \}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_has_work_a12a29927ddaafa2476d5a4c2cca661f3}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_has_work_aaf23f2be1f43804e8389159d7aae46e0}{pct\_work\_complete}});}
+\DoxyCodeLine{00034\ \ \ \ \ \}}
+\DoxyCodeLine{00035\ \};}
 
 \end{DoxyCode}

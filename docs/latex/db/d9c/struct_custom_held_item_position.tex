@@ -10,10 +10,18 @@ Inheritance diagram for Custom\+Held\+Item\+Position\+:\begin{figure}[H]
 \includegraphics[height=2.000000cm]{db/d9c/struct_custom_held_item_position}
 \end{center}
 \end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum struct \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}{Positioner}} \{ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea7a1920d61156abc05a60135aefe8bc67}{Default}}
+, \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea51c45b795d5d18a3e4e0c37e8b20a141}{Table}}
+, \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eeaa7486b485300c482153dc4883e1a175d}{Conveyer}}
+ \}
+\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{struct_custom_held_item_position_acffc587edfb66f6d656ab86faf658cf6}{init}} (std\+::function$<$ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}(\mbox{\hyperlink{struct_transform}{Transform}} \&)$>$ mut)
+void \mbox{\hyperlink{struct_custom_held_item_position_a037a962ba974a040372b094a59258a0c}{init}} (\mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}{Positioner}} p)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
 \begin{DoxyCompactItemize}
@@ -27,7 +35,7 @@ virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-std\+::function$<$ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}(\mbox{\hyperlink{struct_transform}{Transform}} \&)$>$ \mbox{\hyperlink{struct_custom_held_item_position_aaf39ca6256db891c2020cbfaeee1f476}{mutator}}
+enum \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}{Custom\+Held\+Item\+Position\+::\+Positioner}} \mbox{\hyperlink{struct_custom_held_item_position_a15a481f3cf056571fb085bcda5a6a01a}{positioner}} = \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea7a1920d61156abc05a60135aefe8bc67}{Positioner\+::\+Default}}
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
@@ -36,16 +44,39 @@ std\+::function$<$ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9ce
 \end{DoxyCompactItemize}
 
 
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}\label{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}} 
+\index{CustomHeldItemPosition@{CustomHeldItemPosition}!Positioner@{Positioner}}
+\index{Positioner@{Positioner}!CustomHeldItemPosition@{CustomHeldItemPosition}}
+\doxysubsubsection{\texorpdfstring{Positioner}{Positioner}}
+{\footnotesize\ttfamily enum struct \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}{Custom\+Held\+Item\+Position\+::\+Positioner}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Default@{Default}!CustomHeldItemPosition@{CustomHeldItemPosition}}\index{CustomHeldItemPosition@{CustomHeldItemPosition}!Default@{Default}}}\mbox{\Hypertarget{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea7a1920d61156abc05a60135aefe8bc67}\label{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea7a1920d61156abc05a60135aefe8bc67}} 
+Default&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Table@{Table}!CustomHeldItemPosition@{CustomHeldItemPosition}}\index{CustomHeldItemPosition@{CustomHeldItemPosition}!Table@{Table}}}\mbox{\Hypertarget{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea51c45b795d5d18a3e4e0c37e8b20a141}\label{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea51c45b795d5d18a3e4e0c37e8b20a141}} 
+Table&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Conveyer@{Conveyer}!CustomHeldItemPosition@{CustomHeldItemPosition}}\index{CustomHeldItemPosition@{CustomHeldItemPosition}!Conveyer@{Conveyer}}}\mbox{\Hypertarget{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eeaa7486b485300c482153dc4883e1a175d}\label{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eeaa7486b485300c482153dc4883e1a175d}} 
+Conveyer&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{struct_custom_held_item_position_acffc587edfb66f6d656ab86faf658cf6}\label{struct_custom_held_item_position_acffc587edfb66f6d656ab86faf658cf6}} 
+\mbox{\Hypertarget{struct_custom_held_item_position_a037a962ba974a040372b094a59258a0c}\label{struct_custom_held_item_position_a037a962ba974a040372b094a59258a0c}} 
 \index{CustomHeldItemPosition@{CustomHeldItemPosition}!init@{init}}
 \index{init@{init}!CustomHeldItemPosition@{CustomHeldItemPosition}}
 \doxysubsubsection{\texorpdfstring{init()}{init()}}
-{\footnotesize\ttfamily void Custom\+Held\+Item\+Position\+::init (\begin{DoxyParamCaption}\item[{std\+::function$<$ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}(\mbox{\hyperlink{struct_transform}{Transform}} \&)$>$}]{mut }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily void Custom\+Held\+Item\+Position\+::init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}{Positioner}}}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{struct_custom_held_item_position_aaf39ca6256db891c2020cbfaeee1f476}{mutator}}.
+References \mbox{\hyperlink{struct_custom_held_item_position_a15a481f3cf056571fb085bcda5a6a01a}{positioner}}.
 
 \mbox{\Hypertarget{struct_custom_held_item_position_a75be4a58fbef982df1c14edecd1100d6}\label{struct_custom_held_item_position_a75be4a58fbef982df1c14edecd1100d6}} 
 \index{CustomHeldItemPosition@{CustomHeldItemPosition}!serialize@{serialize}}
@@ -56,16 +87,20 @@ void Custom\+Held\+Item\+Position\+::serialize (\begin{DoxyParamCaption}\item[{S
 
 
 
+References \mbox{\hyperlink{struct_custom_held_item_position_a15a481f3cf056571fb085bcda5a6a01a}{positioner}}.
+
+
+
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_custom_held_item_position_aaf39ca6256db891c2020cbfaeee1f476}\label{struct_custom_held_item_position_aaf39ca6256db891c2020cbfaeee1f476}} 
-\index{CustomHeldItemPosition@{CustomHeldItemPosition}!mutator@{mutator}}
-\index{mutator@{mutator}!CustomHeldItemPosition@{CustomHeldItemPosition}}
-\doxysubsubsection{\texorpdfstring{mutator}{mutator}}
-{\footnotesize\ttfamily std\+::function$<$\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}(\mbox{\hyperlink{struct_transform}{Transform}}\&)$>$ Custom\+Held\+Item\+Position\+::mutator}
+\mbox{\Hypertarget{struct_custom_held_item_position_a15a481f3cf056571fb085bcda5a6a01a}\label{struct_custom_held_item_position_a15a481f3cf056571fb085bcda5a6a01a}} 
+\index{CustomHeldItemPosition@{CustomHeldItemPosition}!positioner@{positioner}}
+\index{positioner@{positioner}!CustomHeldItemPosition@{CustomHeldItemPosition}}
+\doxysubsubsection{\texorpdfstring{positioner}{positioner}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}{Custom\+Held\+Item\+Position\+::\+Positioner}} Custom\+Held\+Item\+Position\+::positioner = \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea7a1920d61156abc05a60135aefe8bc67}{Positioner\+::\+Default}}}
 
 
 
-Referenced by \mbox{\hyperlink{struct_custom_held_item_position_acffc587edfb66f6d656ab86faf658cf6}{init()}}, and \mbox{\hyperlink{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}{system\+\_\+manager\+::update\+\_\+held\+\_\+item\+\_\+position()}}.
+Referenced by \mbox{\hyperlink{struct_custom_held_item_position_a037a962ba974a040372b094a59258a0c}{init()}}, \mbox{\hyperlink{struct_custom_held_item_position_a75be4a58fbef982df1c14edecd1100d6}{serialize()}}, and \mbox{\hyperlink{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}{system\+\_\+manager\+::update\+\_\+held\+\_\+item\+\_\+position()}}.
 
 
 

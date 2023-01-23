@@ -1,11 +1,15 @@
 var searchData=
 [
-  ['s_5fclient_0',['s_Client',['../d3/d65/structnetwork_1_1_info.html#ab7c682c85a2ca9c353e7069beb33c994ac29bd98fe47d716cd571eef8499043f7',1,'network::Info']]],
-  ['s_5fhost_1',['s_Host',['../d3/d65/structnetwork_1_1_info.html#ab7c682c85a2ca9c353e7069beb33c994a5795cf7bf923ad4f113076102e530875',1,'network::Info']]],
-  ['s_5fnone_2',['s_None',['../d3/d65/structnetwork_1_1_info.html#ab7c682c85a2ca9c353e7069beb33c994ae10321bdd2ffe904d485458b56187dbf',1,'network::Info']]],
-  ['secondary_3',['Secondary',['../d8/db4/namespaceui_1_1theme.html#ad772b79b5bf1517a4a3f0567c9b03b74a4f5291f27fa788a54759585b9127a7ff',1,'ui::theme']]],
-  ['settings_4',['Settings',['../d8/d10/namespacemenu.html#a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c',1,'menu']]],
-  ['slow_5',['Slow',['../db/d42/struct_ailment.html#a923b4c92939e9246bf4bf9054e4ae59faefa5397985b8609a5dbeb430a4bcadd3',1,'Ailment']]],
-  ['some_6',['Some',['../db/d42/struct_ailment.html#a06aabd2aa556044b2cad74f084dfb9f9a695c6ae413c00446733d926ccadefd8b',1,'Ailment']]],
-  ['stopnewinput_7',['StopNewInput',['../d3/df6/namespaceui.html#a67ddc6f198d6548e36b9b488e600ce7ba3218c9ded441061dd2e1bc7bca15743d',1,'ui']]]
+  ['table_0',['Table',['../db/d9c/struct_custom_held_item_position.html#a0d570a3cb204febffb7eb39b36af86eea51c45b795d5d18a3e4e0c37e8b20a141',1,'CustomHeldItemPosition']]],
+  ['targetback_1',['TargetBack',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706ac4a7d418a3f8ea0cb0e1cf59c52f92ba',1,'keymap.h']]],
+  ['targetforward_2',['TargetForward',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706a9147d61f3ee1828bd8af6992133c90ed',1,'keymap.h']]],
+  ['targetleft_3',['TargetLeft',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706aadcf4813d9324f48ab53ede2dee51bf1',1,'keymap.h']]],
+  ['targetright_4',['TargetRight',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706aa3ae835727e67e8e6f494c29c0a40633',1,'keymap.h']]],
+  ['test_5',['Test',['../db/d42/struct_ailment.html#a6212e85ba6e6f9e5e9fe148e92125965a0cbc6611f5540bd0809a388dc95a615b',1,'Ailment']]],
+  ['text_6',['Text',['../d3/df6/namespaceui.html#a1c30c660bb20fd21b0871d9a212ee4f9a63e6eeb436e0169b87103f339878a663',1,'ui']]],
+  ['toggledebug_7',['ToggleDebug',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706aa1f5f5cc43ed0f342a89f7a40185b1a2',1,'keymap.h']]],
+  ['togglelobby_8',['ToggleLobby',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706ac54a06308208deba09fee2d3b04a228e',1,'keymap.h']]],
+  ['togglenetworkview_9',['ToggleNetworkView',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706a33626f04f68a27fd6677d799de3624f5',1,'keymap.h']]],
+  ['toggleplanning_10',['TogglePlanning',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706a2502969dfc0e0b7caa17d00a7a2e050f',1,'keymap.h']]],
+  ['trace_11',['TRACE',['../d7/d7f/log_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a2d3e4144aa384b18849ab9a8abad74d6',1,'log.h']]]
 ];

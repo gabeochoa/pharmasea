@@ -2,10 +2,12 @@
 \label{system__manager_8h}\index{src/system/system\_manager.h@{src/system/system\_manager.h}}
 {\ttfamily \#include \char`\"{}../base\+\_\+player.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/can\+\_\+be\+\_\+ghost\+\_\+player.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+grab\+\_\+from\+\_\+other\+\_\+furniture.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/can\+\_\+highlight\+\_\+others.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/can\+\_\+hold\+\_\+furniture.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/can\+\_\+perform\+\_\+job.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/collects\+\_\+user\+\_\+input.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/conveys\+\_\+held\+\_\+item.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/custom\+\_\+item\+\_\+position.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/is\+\_\+snappable.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../components/responds\+\_\+to\+\_\+user\+\_\+input.\+h\char`\"{}}\newline
@@ -49,4 +51,8 @@ void \mbox{\hyperlink{namespacesystem__manager_a659184773c10c97c2fae2ef1f542e0c6
 void \mbox{\hyperlink{namespacesystem__manager_a3e8126dd8986710c90900c8230f55c8d}{system\+\_\+manager\+::process\+\_\+player\+\_\+movement\+\_\+input}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}} input\+\_\+name, float input\+\_\+amount)
 \item 
 void \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{system\+\_\+manager\+::process\+\_\+input}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, const \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}} \&input)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a04abec43eee11830c4261b9b4831a1f1}{system\+\_\+manager\+::process\+\_\+conveyer\+\_\+items}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a925981f732982288e8ca5bd2874b4413}{system\+\_\+manager\+::process\+\_\+grabber\+\_\+items}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
 \end{DoxyCompactItemize}

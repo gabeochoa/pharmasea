@@ -7,7 +7,7 @@
 Inheritance diagram for Entity\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[height=6.473989cm]{dc/dc4/struct_entity}
+\includegraphics[height=3.884393cm]{dc/dc4/struct_entity}
 \end{center}
 \end{figure}
 \doxysubsection*{Public Member Functions}
@@ -31,13 +31,9 @@ virtual Bounding\+Box \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d309
 \item 
 virtual Bounding\+Box \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}} () const
 \item 
-\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}{snap\+\_\+position}} () const
-\item 
 void \mbox{\hyperlink{struct_entity_ad0bf9cef410758f173d4b376b1df631f}{rotate\+\_\+facing\+\_\+clockwise}} ()
 \item 
 virtual \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\+\_\+infront}} (int distance)
-\item 
-virtual bool \mbox{\hyperlink{struct_entity_a489fd7ead99634ebb6c707263598df81}{add\+\_\+to\+\_\+navmesh}} ()
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a48efb563c821424fd1a97efcc211cfd8}{on\+\_\+pickup}} ()
 \item 
@@ -60,6 +56,8 @@ int \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}
 \mbox{\hyperlink{base__component_8h_a5aff059e5e50c5d4acef6bc563a2a367}{Component\+Array}} \mbox{\hyperlink{struct_entity_a268b34f155900bef861b8b3ce6a5fa60}{component\+Array}}
 \item 
 bool \mbox{\hyperlink{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}{cleanup}} = false
+\item 
+bool \mbox{\hyperlink{struct_entity_acd0c62fa990720c72f0087eb72062099}{can\+\_\+take\+\_\+from}} = false
 \end{DoxyCompactItemize}
 \doxysubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
@@ -161,16 +159,6 @@ References \mbox{\hyperlink{struct_entity_a9c0606708fe8805c8e90c9510466d618}{add
 
 Referenced by \mbox{\hyperlink{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}{Entity()}}.
 
-\mbox{\Hypertarget{struct_entity_a489fd7ead99634ebb6c707263598df81}\label{struct_entity_a489fd7ead99634ebb6c707263598df81}} 
-\index{Entity@{Entity}!add\_to\_navmesh@{add\_to\_navmesh}}
-\index{add\_to\_navmesh@{add\_to\_navmesh}!Entity@{Entity}}
-\doxysubsubsection{\texorpdfstring{add\_to\_navmesh()}{add\_to\_navmesh()}}
-{\footnotesize\ttfamily virtual bool Entity\+::add\+\_\+to\+\_\+navmesh (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
-
-
-
-Reimplemented in \mbox{\hyperlink{struct_furniture_a0a970a23706f9c18caa223c4f2716f15}{Furniture}}.
-
 \mbox{\Hypertarget{struct_entity_a54ee9d838c0d24c24b2faf1ea05bbd0b}\label{struct_entity_a54ee9d838c0d24c24b2faf1ea05bbd0b}} 
 \index{Entity@{Entity}!addComponent@{addComponent}}
 \index{addComponent@{addComponent}!Entity@{Entity}}
@@ -181,6 +169,10 @@ T \& Entity\+::add\+Component (\begin{DoxyParamCaption}\item[{TArgs \&\&...}]{ar
 
 
 References \mbox{\hyperlink{struct_entity_a268b34f155900bef861b8b3ce6a5fa60}{component\+Array}}, \mbox{\hyperlink{struct_entity_a2bfb3cd4a791f32f53365d156e239a54}{component\+Set}}, \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\+\_\+trace}}, and \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_furniture_acc07fd758c1778c86774ce1c68c1ce67}{Furniture\+::make\+\_\+conveyer()}}, \mbox{\hyperlink{struct_furniture_a5220ffda3699fce66fd2480393320998}{Furniture\+::make\+\_\+grabber()}}, and \mbox{\hyperlink{struct_furniture_a51c9d8d1768b4561bf0f2a0ea7132f6e}{Furniture\+::make\+\_\+table()}}.
 
 \mbox{\Hypertarget{struct_entity_a053c1e45dd6f1752acb7db6e75f48dab}\label{struct_entity_a053c1e45dd6f1752acb7db6e75f48dab}} 
 \index{Entity@{Entity}!announce@{announce}}
@@ -214,7 +206,7 @@ Referenced by \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{
 
 
 
-Reimplemented in \mbox{\hyperlink{struct_item_container_a106798ce5a2d319302fb36e314a558fe}{Item\+Container$<$ I $>$}}, \mbox{\hyperlink{struct_item_container_a106798ce5a2d319302fb36e314a558fe}{Item\+Container$<$ Bag $>$}}, \mbox{\hyperlink{struct_item_container_a106798ce5a2d319302fb36e314a558fe}{Item\+Container$<$ Pill\+Bottle $>$}}, \mbox{\hyperlink{struct_wall_ab2598915696bdc3dd628d9ad91b90b8a}{Wall}}, and \mbox{\hyperlink{struct_furniture_a5f0f46310aed2fdc0f8366f55f42e4d3}{Furniture}}.
+Reimplemented in \mbox{\hyperlink{struct_item_container_a106798ce5a2d319302fb36e314a558fe}{Item\+Container$<$ I $>$}}, \mbox{\hyperlink{struct_item_container_a106798ce5a2d319302fb36e314a558fe}{Item\+Container$<$ Bag $>$}}, and \mbox{\hyperlink{struct_item_container_a106798ce5a2d319302fb36e314a558fe}{Item\+Container$<$ Pill\+Bottle $>$}}.
 
 \mbox{\Hypertarget{struct_entity_a565b5f806268523149cff7eeda2f7091}\label{struct_entity_a565b5f806268523149cff7eeda2f7091}} 
 \index{Entity@{Entity}!collides@{collides}}
@@ -239,7 +231,7 @@ References \mbox{\hyperlink{struct_entity_a268b34f155900bef861b8b3ce6a5fa60}{com
 
 
 
-Referenced by \mbox{\hyperlink{structnetwork_1_1_client_ae502815c0740bf18bc4bff3a92ee5bba}{network\+::\+Client\+::send\+\_\+player\+\_\+input\+\_\+packet()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information()}}.
+Referenced by \mbox{\hyperlink{struct_furniture_a358f91902463b0bb9d57f8b92c35d65c}{Furniture\+::make\+\_\+character\+\_\+switcher()}}, \mbox{\hyperlink{struct_furniture_acc07fd758c1778c86774ce1c68c1ce67}{Furniture\+::make\+\_\+conveyer()}}, \mbox{\hyperlink{struct_furniture_a5220ffda3699fce66fd2480393320998}{Furniture\+::make\+\_\+grabber()}}, \mbox{\hyperlink{struct_furniture_a51c9d8d1768b4561bf0f2a0ea7132f6e}{Furniture\+::make\+\_\+table()}}, \mbox{\hyperlink{structnetwork_1_1_client_ae502815c0740bf18bc4bff3a92ee5bba}{network\+::\+Client\+::send\+\_\+player\+\_\+input\+\_\+packet()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information()}}.
 
 \mbox{\Hypertarget{struct_entity_ae32aa83d8bae67c396468b025675ee74}\label{struct_entity_ae32aa83d8bae67c396468b025675ee74}} 
 \index{Entity@{Entity}!get\_heading@{get\_heading}}
@@ -274,11 +266,11 @@ References \mbox{\hyperlink{struct_entity_a2bfb3cd4a791f32f53365d156e239a54}{com
 
 
 
-Reimplemented in \mbox{\hyperlink{struct_conveyer_a1ab235f62b991959290eab61ebbcf1f1}{Conveyer}}, \mbox{\hyperlink{struct_grabber_abc26dd0534580dd686d5c2c09b6df655}{Grabber}}, \mbox{\hyperlink{struct_item_container_a7522f088f3cda5726ad38ddbb706f1f9}{Item\+Container$<$ I $>$}}, \mbox{\hyperlink{struct_item_container_a7522f088f3cda5726ad38ddbb706f1f9}{Item\+Container$<$ Bag $>$}}, and \mbox{\hyperlink{struct_item_container_a7522f088f3cda5726ad38ddbb706f1f9}{Item\+Container$<$ Pill\+Bottle $>$}}.
+Reimplemented in \mbox{\hyperlink{struct_item_container_a7522f088f3cda5726ad38ddbb706f1f9}{Item\+Container$<$ I $>$}}, \mbox{\hyperlink{struct_item_container_a7522f088f3cda5726ad38ddbb706f1f9}{Item\+Container$<$ Bag $>$}}, and \mbox{\hyperlink{struct_item_container_a7522f088f3cda5726ad38ddbb706f1f9}{Item\+Container$<$ Pill\+Bottle $>$}}.
 
 
 
-Referenced by \mbox{\hyperlink{struct_conveyer_a1ab235f62b991959290eab61ebbcf1f1}{Conveyer\+::in\+\_\+round\+\_\+update()}}, \mbox{\hyperlink{struct_item_container_a7522f088f3cda5726ad38ddbb706f1f9}{Item\+Container$<$ I $>$\+::in\+\_\+round\+\_\+update()}}, and \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update()}}.
+Referenced by \mbox{\hyperlink{struct_item_container_a7522f088f3cda5726ad38ddbb706f1f9}{Item\+Container$<$ I $>$\+::in\+\_\+round\+\_\+update()}}, and \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update()}}.
 
 \mbox{\Hypertarget{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}\label{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}} 
 \index{Entity@{Entity}!on\_drop@{on\_drop}}
@@ -327,7 +319,7 @@ References \mbox{\hyperlink{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}{cle
 
 
 
-Reimplemented in \mbox{\hyperlink{struct_wall_ad40659e789808a23de61de57e44a476b}{Wall}}, and \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{Person}}.
+Reimplemented in \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{Person}}.
 
 
 
@@ -337,16 +329,6 @@ References \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESI
 
 Referenced by \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds()}}, and \mbox{\hyperlink{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}{Entity()}}.
 
-\mbox{\Hypertarget{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}\label{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}} 
-\index{Entity@{Entity}!snap\_position@{snap\_position}}
-\index{snap\_position@{snap\_position}!Entity@{Entity}}
-\doxysubsubsection{\texorpdfstring{snap\_position()}{snap\_position()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} Entity\+::snap\+\_\+position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-Referenced by \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\+\_\+infront()}}.
-
 \mbox{\Hypertarget{struct_entity_a5ccbde35c86805a9450faa4da52f414d}\label{struct_entity_a5ccbde35c86805a9450faa4da52f414d}} 
 \index{Entity@{Entity}!tile\_infront@{tile\_infront}}
 \index{tile\_infront@{tile\_infront}!Entity@{Entity}}
@@ -355,7 +337,7 @@ Referenced by \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{
 
 
 
-References \mbox{\hyperlink{struct_entity_ac8b76a970b1bb8e9f0ebbf393ba87798}{snap\+\_\+position()}}, \mbox{\hyperlink{struct_entity_a3267ca1897b60de8c1543e3846056145}{tile\+\_\+infront\+\_\+given\+\_\+pos()}}, and \mbox{\hyperlink{namespacevec_aa79cdef251ee2f487b55dba93ad63ea0}{vec\+::to2()}}.
+References \mbox{\hyperlink{struct_entity_a3267ca1897b60de8c1543e3846056145}{tile\+\_\+infront\+\_\+given\+\_\+pos()}}, and \mbox{\hyperlink{namespacevec_aa79cdef251ee2f487b55dba93ad63ea0}{vec\+::to2()}}.
 
 
 
@@ -397,7 +379,17 @@ References \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\
 
 
 
+Referenced by \mbox{\hyperlink{struct_furniture_acc07fd758c1778c86774ce1c68c1ce67}{Furniture\+::make\+\_\+conveyer()}}, and \mbox{\hyperlink{struct_furniture_a5220ffda3699fce66fd2480393320998}{Furniture\+::make\+\_\+grabber()}}.
+
+
+
 \doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_entity_acd0c62fa990720c72f0087eb72062099}\label{struct_entity_acd0c62fa990720c72f0087eb72062099}} 
+\index{Entity@{Entity}!can\_take\_from@{can\_take\_from}}
+\index{can\_take\_from@{can\_take\_from}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{can\_take\_from}{can\_take\_from}}
+{\footnotesize\ttfamily bool Entity\+::can\+\_\+take\+\_\+from = false}
+
 \mbox{\Hypertarget{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}\label{struct_entity_a0ea38bb8c270ef014600427c99a56ec8}} 
 \index{Entity@{Entity}!cleanup@{cleanup}}
 \index{cleanup@{cleanup}!Entity@{Entity}}
