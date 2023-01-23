@@ -517,15 +517,27 @@ inline void process_input(const std::shared_ptr<Entity> entity,
                 return true;
             };
 
+            const auto can_place_item_into = [](std::shared_ptr<Entity> entity,
+                                                std::shared_ptr<Item> item) {
+                if (!entity->has<CanHoldItem>()) return false;
+                CanHoldItem& furnCanHold = entity->get<CanHoldItem>();
+
+                // TODO add support for item containter..
+
+                // If we are empty and can hold we good..
+                return furnCanHold.empty();
+            };
+
             const auto _place_item_onto_furniture = [&]() {
                 TRACY_ZONE(tracy_place_item_onto_furniture);
                 std::shared_ptr<Furniture> closest_furniture =
                     EntityHelper::getMatchingEntityInFront<Furniture>(
                         player->get<Transform>().as2(), cho.reach(),
                         player->get<Transform>().face_direction,
-                        [player](std::shared_ptr<Furniture> f) {
-                            return f->can_place_item_into(
-                                player->get<CanHoldItem>().item());
+                        [player,
+                         can_place_item_into](std::shared_ptr<Furniture> f) {
+                            return can_place_item_into(
+                                f, player->get<CanHoldItem>().item());
                         });
                 if (!closest_furniture) {
                     return false;

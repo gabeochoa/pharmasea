@@ -45,16 +45,6 @@ struct Furniture : public Entity {
         : Furniture(pos, face_color_in, face_color_in) {}
 
    public:
-    // TODO this should be const
-    virtual bool can_place_item_into(std::shared_ptr<Item> = nullptr) override {
-        // TODO this should be a separate component
-        return get<CanHoldItem>().empty();
-    }
-
-    virtual bool has_held_item() const {
-        return get<CanHoldItem>().is_holding_item();
-    }
-
     static Furniture* make_table(vec2 pos) {
         Furniture* table =
             new Furniture(pos, ui::color::brown, ui::color::brown);

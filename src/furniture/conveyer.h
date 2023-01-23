@@ -77,7 +77,10 @@ struct Conveyer : public Furniture {
         auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
             transform.as2(), 1.f, transform.face_direction,
             [this](std::shared_ptr<Furniture> furn) {
-                return this->id != furn->id && furn->can_place_item_into();
+                return this->id != furn->id &&
+                       // TODO need to merge this into the system manager one
+                       // but cant yet
+                       furn->get<CanHoldItem>().empty();
             });
         // no match means we cant continue, stay in the middle
         if (!match) {
