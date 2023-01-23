@@ -29,7 +29,7 @@ struct PolymorphicBaseClass<Entity>
 
 template<>
 struct PolymorphicBaseClass<Furniture>
-    : PolymorphicDerivedClasses<Register, Conveyer, BagBox, MedicineCabinet> {};
+    : PolymorphicDerivedClasses<Register, BagBox, MedicineCabinet> {};
 
 template<>
 struct PolymorphicBaseClass<Person>

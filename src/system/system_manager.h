@@ -17,7 +17,6 @@
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../furniture.h"
-#include "../furniture/conveyer.h"
 #include "../furniture/register.h"
 #include "job_system.h"
 #include "rendering_system.h"

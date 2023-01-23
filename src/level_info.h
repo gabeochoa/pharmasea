@@ -251,12 +251,12 @@ struct GameMapInfo : public LevelInfo {
         auto generate_test = [this]() {
             for (int i = 0; i < 5; i++) {
                 const auto location = get_rand_walkable();
-                std::shared_ptr<Conveyer> conveyer;
+                std::shared_ptr<Furniture> conveyer;
 
                 if (i == 0)
-                    conveyer.reset(new Conveyer(location));
+                    conveyer.reset(Furniture::make_conveyer(location));
                 else
-                    conveyer.reset(Conveyer::make_grabber(location));
+                    conveyer.reset(Furniture::make_grabber(location));
 
                 EntityHelper::addEntity(conveyer);
             }
