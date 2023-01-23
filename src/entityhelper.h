@@ -64,9 +64,9 @@ struct EntityHelper {
 
     static void addEntity(std::shared_ptr<Entity> e) {
         get_entities().push_back(e);
-        if (!e->add_to_navmesh()) {
-            return;
-        }
+        // if (!e->add_to_navmesh()) {
+        // return;
+        // }
         // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
         // Note: addShape merges shapes next to each other
         //      this reduces the amount of loops overall

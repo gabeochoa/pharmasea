@@ -232,11 +232,6 @@ struct Entity {
         return get_bounds(this->get<Transform>().position, this->size());
     }
 
-    [[nodiscard]] vec3 snap_position() const {
-        // TODO have callers go direct
-        return this->get<Transform>().snap_position();
-    }
-
     /*
      * Rotate the facing direction of this entity, clockwise 90 degrees
      * */
@@ -256,7 +251,7 @@ struct Entity {
      * */
     virtual vec2 tile_infront(int distance) {
         // TODO fix snap
-        vec2 tile = vec::to2(this->snap_position());
+        vec2 tile = vec::to2(this->get<Transform>().snap_position());
         return tile_infront_given_pos(tile, distance,
                                       this->get<Transform>().face_direction);
     }
@@ -294,8 +289,6 @@ struct Entity {
         return tile;
     }
 
-    // TODO not currently used as we disabled navmesh
-    virtual bool add_to_navmesh() { return false; }
     // Used to tell an entity its been picked up
     virtual void on_pickup() { this->get<CanBeHeld>().update(true); }
 
