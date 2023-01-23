@@ -43,6 +43,8 @@ struct Person : public Entity {
    public:
     void update_component() {
         addComponent<HasBaseSpeed>().update(10.f);
+        get<Transform>().size =
+            vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
         // log_info("model index: {}", model_index);
         // TODO add a component for this
         get<ModelRenderer>().update(ModelInfo{
