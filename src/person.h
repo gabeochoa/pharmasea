@@ -56,11 +56,6 @@ struct Person : public Entity {
         });
     }
 
-    virtual vec3 size() const override {
-        const float sz = TILESIZE * 0.75f;
-        return (vec3){sz, sz, sz};
-    }
-
     void select_next_character_model() {
         model_index = (model_index + 1) % character_models.size();
     }
