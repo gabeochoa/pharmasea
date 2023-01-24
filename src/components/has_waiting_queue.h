@@ -16,6 +16,10 @@ struct HasWaitingQueue : public BaseComponent {
     int max_queue_size = 3;
     int next_line_position = 0;
 
+    void add_customer(std::shared_ptr<Entity> customer) {
+        ppl_in_line.push_back(customer);
+    }
+
    private:
     friend bitsery::Access;
     template<typename S>

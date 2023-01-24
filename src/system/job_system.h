@@ -259,7 +259,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                      "Trying to get-next-queue-pos for entity which doesnt "
                      "have a waiting queue ");
             HasWaitingQueue& hasWaitingQueue = reg->get<HasWaitingQueue>();
-            hasWaitingQueue.ppl_in_line.push_back(customer);
+            hasWaitingQueue.add_customer(customer);
             // the place the customers stand is 1 tile infront of the register
             auto front =
                 reg->tile_infront((hasWaitingQueue.next_line_position + 1) * 2);
