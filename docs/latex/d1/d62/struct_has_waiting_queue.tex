@@ -1,0 +1,101 @@
+\hypertarget{struct_has_waiting_queue}{}\doxysection{Has\+Waiting\+Queue Struct Reference}
+\label{struct_has_waiting_queue}\index{HasWaitingQueue@{HasWaitingQueue}}
+
+
+{\ttfamily \#include $<$has\+\_\+waiting\+\_\+queue.\+h$>$}
+
+Inheritance diagram for Has\+Waiting\+Queue\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d1/d62/struct_has_waiting_queue}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{struct_has_waiting_queue_a02852855e0aeccf49ed5c46e0e9960a4}{$\sim$\+Has\+Waiting\+Queue}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_base_component_ac74326a615877f3c1a17bc47787ad91e}{Base\+Component}} ()
+\item 
+\mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
+\item 
+virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::deque$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ $>$ \mbox{\hyperlink{struct_has_waiting_queue_adfe4df51f6527bc08928933b024d695b}{ppl\+\_\+in\+\_\+line}}
+\item 
+int \mbox{\hyperlink{struct_has_waiting_queue_a9ce7c8331a127396958546304beb343e}{max\+\_\+queue\+\_\+size}} = 3
+\item 
+int \mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\+\_\+line\+\_\+position}} = 0
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_has_waiting_queue_a37e29a7048b8a58aec05277cf94dcd98}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_has_waiting_queue_a02852855e0aeccf49ed5c46e0e9960a4}\label{struct_has_waiting_queue_a02852855e0aeccf49ed5c46e0e9960a4}} 
+\index{HasWaitingQueue@{HasWaitingQueue}!````~HasWaitingQueue@{$\sim$HasWaitingQueue}}
+\index{````~HasWaitingQueue@{$\sim$HasWaitingQueue}!HasWaitingQueue@{HasWaitingQueue}}
+\doxysubsubsection{\texorpdfstring{$\sim$HasWaitingQueue()}{~HasWaitingQueue()}}
+{\footnotesize\ttfamily virtual Has\+Waiting\+Queue\+::$\sim$\+Has\+Waiting\+Queue (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_has_waiting_queue_a37e29a7048b8a58aec05277cf94dcd98}\label{struct_has_waiting_queue_a37e29a7048b8a58aec05277cf94dcd98}} 
+\index{HasWaitingQueue@{HasWaitingQueue}!serialize@{serialize}}
+\index{serialize@{serialize}!HasWaitingQueue@{HasWaitingQueue}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void Has\+Waiting\+Queue\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_has_waiting_queue_a9ce7c8331a127396958546304beb343e}{max\+\_\+queue\+\_\+size}}, \mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\+\_\+line\+\_\+position}}, and \mbox{\hyperlink{struct_has_waiting_queue_adfe4df51f6527bc08928933b024d695b}{ppl\+\_\+in\+\_\+line}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_has_waiting_queue_a9ce7c8331a127396958546304beb343e}\label{struct_has_waiting_queue_a9ce7c8331a127396958546304beb343e}} 
+\index{HasWaitingQueue@{HasWaitingQueue}!max\_queue\_size@{max\_queue\_size}}
+\index{max\_queue\_size@{max\_queue\_size}!HasWaitingQueue@{HasWaitingQueue}}
+\doxysubsubsection{\texorpdfstring{max\_queue\_size}{max\_queue\_size}}
+{\footnotesize\ttfamily int Has\+Waiting\+Queue\+::max\+\_\+queue\+\_\+size = 3}
+
+
+
+Referenced by \mbox{\hyperlink{struct_has_waiting_queue_a37e29a7048b8a58aec05277cf94dcd98}{serialize()}}.
+
+\mbox{\Hypertarget{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}\label{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}} 
+\index{HasWaitingQueue@{HasWaitingQueue}!next\_line\_position@{next\_line\_position}}
+\index{next\_line\_position@{next\_line\_position}!HasWaitingQueue@{HasWaitingQueue}}
+\doxysubsubsection{\texorpdfstring{next\_line\_position}{next\_line\_position}}
+{\footnotesize\ttfamily int Has\+Waiting\+Queue\+::next\+\_\+line\+\_\+position = 0}
+
+
+
+Referenced by \mbox{\hyperlink{struct_has_waiting_queue_a37e29a7048b8a58aec05277cf94dcd98}{serialize()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information()}}.
+
+\mbox{\Hypertarget{struct_has_waiting_queue_adfe4df51f6527bc08928933b024d695b}\label{struct_has_waiting_queue_adfe4df51f6527bc08928933b024d695b}} 
+\index{HasWaitingQueue@{HasWaitingQueue}!ppl\_in\_line@{ppl\_in\_line}}
+\index{ppl\_in\_line@{ppl\_in\_line}!HasWaitingQueue@{HasWaitingQueue}}
+\doxysubsubsection{\texorpdfstring{ppl\_in\_line}{ppl\_in\_line}}
+{\footnotesize\ttfamily std\+::deque$<$std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_entity}{Entity}}$>$ $>$ Has\+Waiting\+Queue\+::ppl\+\_\+in\+\_\+line}
+
+
+
+Referenced by \mbox{\hyperlink{struct_has_waiting_queue_a37e29a7048b8a58aec05277cf94dcd98}{serialize()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/components/\mbox{\hyperlink{has__waiting__queue_8h}{has\+\_\+waiting\+\_\+queue.\+h}}\end{DoxyCompactItemize}

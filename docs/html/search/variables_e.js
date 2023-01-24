@@ -16,7 +16,7 @@ var searchData=
   ['neon_5fyellow_13',['neon_yellow',['../d9/db4/namespaceui_1_1color.html#a7a016f26df59f197e0d6122fcb633b30',1,'ui::color']]],
   ['network_5finfo_14',['network_info',['../d8/dcc/struct_network_layer.html#af16fa4f196cf775253ff4a0ced7e304e',1,'NetworkLayer']]],
   ['network_5fui_5fenabled_15',['network_ui_enabled',['../db/dfb/struct_game_debug_layer.html#afda40fb4a858e0f32670f53836a2b6d5',1,'GameDebugLayer']]],
-  ['next_5fline_5fposition_16',['next_line_position',['../d0/d74/struct_register.html#ab2df0027c3bcd21e0e9356f79b014482',1,'Register']]],
+  ['next_5fline_5fposition_16',['next_line_position',['../d1/d62/struct_has_waiting_queue.html#ade57371d36118f2a39d767ec6de68b96',1,'HasWaitingQueue']]],
   ['next_5fmap_5ftick_17',['next_map_tick',['../d3/da7/structnetwork_1_1_server.html#a0aea3fd24cb104c7121150893227e759',1,'network::Server']]],
   ['next_5fmap_5ftick_5freset_18',['next_map_tick_reset',['../d3/da7/structnetwork_1_1_server.html#a2012c042977f3715da1619fe4c44354a',1,'network::Server']]],
   ['next_5ftick_19',['next_tick',['../d4/d35/structnetwork_1_1_client.html#af6ca04ac14d46fa679e48c52ee6af215',1,'network::Client']]],

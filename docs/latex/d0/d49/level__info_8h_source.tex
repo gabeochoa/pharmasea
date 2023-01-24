@@ -238,9 +238,9 @@
 \DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \};}
 \DoxyCodeLine{00235\ }
 \DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ generate\_register\ =\ [\textcolor{keyword}{this}]()\ \{}
-\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Register>\ reg;}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Furniture>\ reg;}
 \DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{get\_rand\_walkable}}();}
-\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ reg.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_register}{Register}}(location));}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ reg.reset(\mbox{\hyperlink{struct_furniture_a8d39e9110afcb62048879a3b3e7697ea}{Furniture::make\_register}}(location));}
 \DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(reg);}
 \DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \};}
 \DoxyCodeLine{00242\ }
@@ -249,7 +249,7 @@
 \DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ location\ =\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{-\/10\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ -\/10\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\};}
 \DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Customer>\ customer;}
 \DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ customer.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_customer}{Customer}}(location,\ RED));}
-\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(customer);}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{EntityHelper::addEntity}}(dynamic\_pointer\_cast<Entity>(customer));}
 \DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \};}
 \DoxyCodeLine{00250\ }
 \DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ generate\_test\ =\ [\textcolor{keyword}{this}]()\ \{}

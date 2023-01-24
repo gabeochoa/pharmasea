@@ -18,88 +18,87 @@
 \DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ailment_8h}{ailment.h}}"{}}}
 \DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{camera_8h}{camera.h}}"{}}}
 \DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{texture__library_8h}{engine/texture\_library.h}}"{}}}
-\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{register_8h}{furniture/register.h}}"{}}}
-\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
-\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{job_8h}{job.h}}"{}}}
-\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{names_8h}{names.h}}"{}}}
-\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{text__util_8h}{text\_util.h}}"{}}}
-\DoxyCodeLine{00022\ }
-\DoxyCodeLine{00023\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_speech_bubble}{SpeechBubble}}\ \{}
-\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_speech_bubble_aa963b08cdcc6c8da8eab5239746bce96}{position}};}
-\DoxyCodeLine{00025\ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ arent\ using\ any\ string\ functionality\ can\ we\ swap\ to\ const\ char*?}}
-\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ perhaps\ in\ a\ typedef?}}
-\DoxyCodeLine{00027\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_speech_bubble_aaff6762366a39bd51c48ab372376a83a}{icon\_tex\_name}};}
-\DoxyCodeLine{00028\ }
-\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{struct_speech_bubble_a2bef5af96b7c4f3bb09e9179edd780b5}{SpeechBubble}}(std::string\ icon)\ :\ \mbox{\hyperlink{struct_speech_bubble_aaff6762366a39bd51c48ab372376a83a}{icon\_tex\_name}}(icon)\ \{\}}
-\DoxyCodeLine{00030\ }
-\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_speech_bubble_a5da6210e1246e7a5b843a10c92ae1d1d}{update}}(\textcolor{keywordtype}{float},\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ pos)\ \{\ this-\/>position\ =\ pos;\ \}}
-\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_speech_bubble_adf10ca265a146477fa237f6bf66d5660}{render}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam}{GameCam}}\ cam\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a3b9be0a61ed2ad8c1d1bb97e8c09fe43}{get}}<\mbox{\hyperlink{struct_game_cam}{GameCam}}>(\textcolor{stringliteral}{"{}game\_cam"{}});}
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ raylib::Texture\ texture\ =\ \mbox{\hyperlink{struct_texture_library_a485f4bc29c5437bb7b0b9698b4ddf898}{TextureLibrary::get}}().get(\mbox{\hyperlink{struct_speech_bubble_aaff6762366a39bd51c48ab372376a83a}{icon\_tex\_name}});}
-\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ raylib::DrawBillboard(cam.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}},\ texture,}
-\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{position.x,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position.y\ +\ (TILESIZE\ *\ 1.5f),\ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position.z\},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ raylib::WHITE);}
-\DoxyCodeLine{00041\ \ \ \ \ \}}
-\DoxyCodeLine{00042\ \};}
-\DoxyCodeLine{00043\ }
-\DoxyCodeLine{00044\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_customer}{Customer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}\ \{}
-\DoxyCodeLine{00045\ \ \ \ \ std::optional<SpeechBubble>\ \mbox{\hyperlink{struct_customer_a88402aa5e01c20ecddf1ec3b1dbaa6a7}{bubble}};}
-\DoxyCodeLine{00046\ }
-\DoxyCodeLine{00047\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_customer_a9c63de3641cf9f65cde9ebdd525c38fd}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ things\ that\ need\ to\ be\ rendered,\ need\ to\ be\ serialized\ :)}}
-\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<AIPerson>\{\});}
-\DoxyCodeLine{00053\ \ \ \ \ \}}
-\DoxyCodeLine{00054\ }
-\DoxyCodeLine{00055\ \ \ \ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00056\ \ \ \ \ \mbox{\hyperlink{struct_customer_abcc8fae9701e5ba9d7d6fe44498b34e3}{Customer}}()\ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}()\ \{\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();\ \}}
-\DoxyCodeLine{00057\ \ \ \ \ \mbox{\hyperlink{struct_customer_a65f55dc3c8b0df8a14d5e68528afc389}{Customer}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();}
-\DoxyCodeLine{00060\ \ \ \ \ \}}
-\DoxyCodeLine{00061\ \ \ \ \ \mbox{\hyperlink{struct_customer_a3d3b0d47fbfe130714b4383c62fee010}{Customer}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();}
-\DoxyCodeLine{00064\ \ \ \ \ \}}
-\DoxyCodeLine{00065\ \ \ \ \ \mbox{\hyperlink{struct_customer_a7bc735a9ff8f4d6909217fbf07ed7b61}{Customer}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();\ \}}
-\DoxyCodeLine{00066\ \ \ \ \ \mbox{\hyperlink{struct_customer_a5c86a6748b1d87955e5c55d3b9bfec41}{Customer}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();\ \}}
-\DoxyCodeLine{00067\ }
-\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}()\ \{}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ addComponent<CanHaveAilment>().update(std::make\_shared<Insomnia>());}
-\DoxyCodeLine{00070\ }
-\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ get<HasName>().update(\mbox{\hyperlink{names_8h_a167c58458649f7e55a9f415bc16e8686}{get\_random\_name}}());}
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ get<CanPerformJob>().update(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411}{WaitInQueue}},\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}});}
-\DoxyCodeLine{00073\ }
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ turn\ back\ on\ bubbles}}
-\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ bubble\ =\ SpeechBubble(ailment-\/>icon\_name());}}
-\DoxyCodeLine{00076\ \ \ \ \ \}}
-\DoxyCodeLine{00077\ }
-\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{//\ TODO\ support\ this}}
-\DoxyCodeLine{00079\ \ \ \ \ \textcolor{comment}{//\ virtual\ void\ in\_round\_update(float\ dt)\ override\ \{}}
-\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//\ AIPerson::in\_round\_update(dt);}}
-\DoxyCodeLine{00081\ }
-\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{//\ Register*\ reg\ =\ get\_target\_register();}}
-\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ if\ (reg)\ \{}}
-\DoxyCodeLine{00084\ \ \ \ \ \textcolor{comment}{//\ this-\/>turn\_to\_face\_entity(reg);}}
-\DoxyCodeLine{00085\ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00086\ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//\ if\ (bubble.has\_value())}}
-\DoxyCodeLine{00088\ \ \ \ \ \textcolor{comment}{//\ bubble.value().update(dt,\ this-\/>get<Transform>().raw\_position);}}
-\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00090\ }
-\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{//\ virtual\ void\ render\_normal()\ const\ override\ \{}}
-\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ auto\ render\_speech\_bubble\ =\ [\&]()\ \{}}
-\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{//\ if\ (!this-\/>bubble.has\_value())\ return;}}
-\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{//\ this-\/>bubble.value().render();}}
-\DoxyCodeLine{00095\ \ \ \ \ \textcolor{comment}{//\ \};}}
-\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{//\ AIPerson::render\_normal();}}
-\DoxyCodeLine{00097\ \ \ \ \ \textcolor{comment}{//\ render\_speech\_bubble();}}
-\DoxyCodeLine{00098\ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00099\ \};}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{job_8h}{job.h}}"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{names_8h}{names.h}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{text__util_8h}{text\_util.h}}"{}}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_speech_bubble}{SpeechBubble}}\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_speech_bubble_aa963b08cdcc6c8da8eab5239746bce96}{position}};}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ arent\ using\ any\ string\ functionality\ can\ we\ swap\ to\ const\ char*?}}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{comment}{//\ perhaps\ in\ a\ typedef?}}
+\DoxyCodeLine{00026\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_speech_bubble_aaff6762366a39bd51c48ab372376a83a}{icon\_tex\_name}};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{struct_speech_bubble_a2bef5af96b7c4f3bb09e9179edd780b5}{SpeechBubble}}(std::string\ icon)\ :\ \mbox{\hyperlink{struct_speech_bubble_aaff6762366a39bd51c48ab372376a83a}{icon\_tex\_name}}(icon)\ \{\}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_speech_bubble_a5da6210e1246e7a5b843a10c92ae1d1d}{update}}(\textcolor{keywordtype}{float},\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ pos)\ \{\ this-\/>position\ =\ pos;\ \}}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_speech_bubble_adf10ca265a146477fa237f6bf66d5660}{render}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_game_cam}{GameCam}}\ cam\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a3b9be0a61ed2ad8c1d1bb97e8c09fe43}{get}}<\mbox{\hyperlink{struct_game_cam}{GameCam}}>(\textcolor{stringliteral}{"{}game\_cam"{}});}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ raylib::Texture\ texture\ =\ \mbox{\hyperlink{struct_texture_library_a485f4bc29c5437bb7b0b9698b4ddf898}{TextureLibrary::get}}().get(\mbox{\hyperlink{struct_speech_bubble_aaff6762366a39bd51c48ab372376a83a}{icon\_tex\_name}});}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ raylib::DrawBillboard(cam.\mbox{\hyperlink{struct_game_cam_a42af36465edc5c70a53034b79fb55020}{camera}},\ texture,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{position.x,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position.y\ +\ (TILESIZE\ *\ 1.5f),\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position.z\},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ raylib::WHITE);}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_customer}{Customer}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ std::optional<SpeechBubble>\ \mbox{\hyperlink{struct_customer_a88402aa5e01c20ecddf1ec3b1dbaa6a7}{bubble}};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_customer_a9c63de3641cf9f65cde9ebdd525c38fd}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ things\ that\ need\ to\ be\ rendered,\ need\ to\ be\ serialized\ :)}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<AIPerson>\{\});}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{struct_customer_abcc8fae9701e5ba9d7d6fe44498b34e3}{Customer}}()\ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}()\ \{\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();\ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \mbox{\hyperlink{struct_customer_a65f55dc3c8b0df8a14d5e68528afc389}{Customer}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();}
+\DoxyCodeLine{00059\ \ \ \ \ \}}
+\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{struct_customer_a3d3b0d47fbfe130714b4383c62fee010}{Customer}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();}
+\DoxyCodeLine{00063\ \ \ \ \ \}}
+\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{struct_customer_a7bc735a9ff8f4d6909217fbf07ed7b61}{Customer}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();\ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \mbox{\hyperlink{struct_customer_a5c86a6748b1d87955e5c55d3b9bfec41}{Customer}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();\ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}()\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ addComponent<CanHaveAilment>().update(std::make\_shared<Insomnia>());}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ get<HasName>().update(\mbox{\hyperlink{names_8h_a167c58458649f7e55a9f415bc16e8686}{get\_random\_name}}());}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ get<CanPerformJob>().update(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411}{WaitInQueue}},\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}});}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ turn\ back\ on\ bubbles}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ bubble\ =\ SpeechBubble(ailment-\/>icon\_name());}}
+\DoxyCodeLine{00075\ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ TODO\ support\ this}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{//\ virtual\ void\ in\_round\_update(float\ dt)\ override\ \{}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{comment}{//\ AIPerson::in\_round\_update(dt);}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{//\ Register*\ reg\ =\ get\_target\_register();}}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{//\ if\ (reg)\ \{}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ this-\/>turn\_to\_face\_entity(reg);}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{comment}{//\ if\ (bubble.has\_value())}}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//\ bubble.value().update(dt,\ this-\/>get<Transform>().raw\_position);}}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{comment}{//\ virtual\ void\ render\_normal()\ const\ override\ \{}}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{//\ auto\ render\_speech\_bubble\ =\ [\&]()\ \{}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ if\ (!this-\/>bubble.has\_value())\ return;}}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{//\ this-\/>bubble.value().render();}}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{//\ \};}}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{comment}{//\ AIPerson::render\_normal();}}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{//\ render\_speech\_bubble();}}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00098\ \};}
 
 \end{DoxyCode}

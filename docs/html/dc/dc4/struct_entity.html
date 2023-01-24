@@ -87,17 +87,20 @@ Inheritance diagram for Entity:</div>
  <div class="center">
   <img src="../../dc/dc4/struct_entity.png" usemap="#Entity_map" alt=""/>
   <map id="Entity_map" name="Entity_map">
-<area href="../../d0/d8b/struct_furniture.html" alt="Furniture" shape="rect" coords="0,56,165,80"/>
-<area href="../../d3/de1/struct_person.html" alt="Person" shape="rect" coords="350,56,515,80"/>
-<area href="../../d0/d2d/struct_spawner.html" alt="Spawner" shape="rect" coords="700,56,865,80"/>
-<area href="../../dd/d8c/struct_item_container.html" alt="ItemContainer&lt; Bag &gt;" shape="rect" coords="175,112,340,136"/>
-<area href="../../dd/d8c/struct_item_container.html" alt="ItemContainer&lt; PillBottle &gt;" shape="rect" coords="175,168,340,192"/>
-<area href="../../dd/d8c/struct_item_container.html" alt="ItemContainer&lt; I &gt;" shape="rect" coords="175,224,340,248"/>
-<area href="../../d0/d74/struct_register.html" alt="Register" shape="rect" coords="175,280,340,304"/>
-<area href="../../d0/d3e/struct_a_i_person.html" alt="AIPerson" shape="rect" coords="525,112,690,136"/>
-<area href="../../d1/d73/struct_base_player.html" alt="BasePlayer" shape="rect" coords="525,168,690,192"/>
-<area href="../../dc/dc6/struct_register_next_queue_position.html" alt="RegisterNextQueuePosition" shape="rect" coords="525,224,690,248"/>
-<area href="../../d2/d99/struct_customer_spawner.html" alt="CustomerSpawner" shape="rect" coords="700,112,865,136"/>
+<area href="../../d0/d8b/struct_furniture.html" alt="Furniture" shape="rect" coords="171,56,332,80"/>
+<area href="../../d3/de1/struct_person.html" alt="Person" shape="rect" coords="641,56,802,80"/>
+<area href="../../d0/d2d/struct_spawner.html" alt="Spawner" shape="rect" coords="940,56,1101,80"/>
+<area href="../../dd/d8c/struct_item_container.html" alt="ItemContainer&lt; Bag &gt;" shape="rect" coords="0,112,161,136"/>
+<area href="../../dd/d8c/struct_item_container.html" alt="ItemContainer&lt; PillBottle &gt;" shape="rect" coords="171,112,332,136"/>
+<area href="../../dd/d8c/struct_item_container.html" alt="ItemContainer&lt; I &gt;" shape="rect" coords="342,112,503,136"/>
+<area href="../../d0/d3e/struct_a_i_person.html" alt="AIPerson" shape="rect" coords="513,112,674,136"/>
+<area href="../../d1/d73/struct_base_player.html" alt="BasePlayer" shape="rect" coords="769,112,930,136"/>
+<area href="../../d2/d99/struct_customer_spawner.html" alt="CustomerSpawner" shape="rect" coords="940,112,1101,136"/>
+<area href="../../d9/dec/struct_bag_box.html" alt="BagBox" shape="rect" coords="0,168,161,192"/>
+<area href="../../d3/dee/struct_medicine_cabinet.html" alt="MedicineCabinet" shape="rect" coords="171,168,332,192"/>
+<area href="../../d9/d68/struct_customer.html" alt="Customer" shape="rect" coords="513,168,674,192"/>
+<area href="../../d3/db1/struct_player.html" alt="Player" shape="rect" coords="684,168,845,192"/>
+<area href="../../d8/dd0/struct_remote_player.html" alt="RemotePlayer" shape="rect" coords="855,168,1016,192"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -150,8 +153,6 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a268b34f155900bef861b8b3ce6a5fa60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ea38bb8c270ef014600427c99a56ec8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dc4/struct_entity.html#a0ea38bb8c270ef014600427c99a56ec8">cleanup</a> = false</td></tr>
 <tr class="separator:a0ea38bb8c270ef014600427c99a56ec8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd0c62fa990720c72f0087eb72062099"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dc4/struct_entity.html#acd0c62fa990720c72f0087eb72062099">can_take_from</a> = false</td></tr>
-<tr class="separator:acd0c62fa990720c72f0087eb72062099"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -455,7 +456,7 @@ template&lt;typename T , typename... TArgs&gt; </div>
 
 <p class="reference">References <a class="el" href="../../dc/dc4/struct_entity.html#a268b34f155900bef861b8b3ce6a5fa60">componentArray</a>, <a class="el" href="../../dc/dc4/struct_entity.html#a2bfb3cd4a791f32f53365d156e239a54">componentSet</a>, <a class="el" href="../../d7/d7f/log_8h.html#af89cb876e6e1d43cfeacdd58a7c9b78c">log_trace</a>, and <a class="el" href="../../d7/d7f/log_8h.html#a04af09851c431d178f16b24fa1aac1e9">log_warn</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../d0/d8b/struct_furniture.html#acc07fd758c1778c86774ce1c68c1ce67">Furniture::make_conveyer()</a>, <a class="el" href="../../d0/d8b/struct_furniture.html#a5220ffda3699fce66fd2480393320998">Furniture::make_grabber()</a>, and <a class="el" href="../../d0/d8b/struct_furniture.html#a51c9d8d1768b4561bf0f2a0ea7132f6e">Furniture::make_table()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d0/d8b/struct_furniture.html#acc07fd758c1778c86774ce1c68c1ce67">Furniture::make_conveyer()</a>, <a class="el" href="../../d0/d8b/struct_furniture.html#a5220ffda3699fce66fd2480393320998">Furniture::make_grabber()</a>, <a class="el" href="../../d0/d8b/struct_furniture.html#a8d39e9110afcb62048879a3b3e7697ea">Furniture::make_register()</a>, and <a class="el" href="../../d0/d8b/struct_furniture.html#a51c9d8d1768b4561bf0f2a0ea7132f6e">Furniture::make_table()</a>.</p>
 
 </div>
 </div>
@@ -599,7 +600,7 @@ template&lt;typename T &gt; </div>
 
 <p class="reference">References <a class="el" href="../../dc/dc4/struct_entity.html#a268b34f155900bef861b8b3ce6a5fa60">componentArray</a>, and <a class="el" href="../../d7/d7f/log_8h.html#a6ae72553ea9805dd87a463d6f710364d">log_error</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../d0/d8b/struct_furniture.html#a358f91902463b0bb9d57f8b92c35d65c">Furniture::make_character_switcher()</a>, <a class="el" href="../../d0/d8b/struct_furniture.html#acc07fd758c1778c86774ce1c68c1ce67">Furniture::make_conveyer()</a>, <a class="el" href="../../d0/d8b/struct_furniture.html#a5220ffda3699fce66fd2480393320998">Furniture::make_grabber()</a>, <a class="el" href="../../d0/d8b/struct_furniture.html#a51c9d8d1768b4561bf0f2a0ea7132f6e">Furniture::make_table()</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#ae502815c0740bf18bc4bff3a92ee5bba">network::Client::send_player_input_packet()</a>, and <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a77e67ff8d61329379931c6d03ea68708">system_manager::job_system::update_job_information()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d0/d8b/struct_furniture.html#a358f91902463b0bb9d57f8b92c35d65c">Furniture::make_character_switcher()</a>, <a class="el" href="../../d0/d8b/struct_furniture.html#acc07fd758c1778c86774ce1c68c1ce67">Furniture::make_conveyer()</a>, <a class="el" href="../../d0/d8b/struct_furniture.html#a5220ffda3699fce66fd2480393320998">Furniture::make_grabber()</a>, <a class="el" href="../../d0/d8b/struct_furniture.html#a8d39e9110afcb62048879a3b3e7697ea">Furniture::make_register()</a>, <a class="el" href="../../d0/d8b/struct_furniture.html#a51c9d8d1768b4561bf0f2a0ea7132f6e">Furniture::make_table()</a>, and <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#ae502815c0740bf18bc4bff3a92ee5bba">network::Client::send_player_input_packet()</a>.</p>
 
 </div>
 </div>
@@ -879,8 +880,6 @@ template&lt;typename S &gt; </div>
 
 <p class="reference">References <a class="el" href="../../dc/dc4/struct_entity.html#a3267ca1897b60de8c1543e3846056145">tile_infront_given_pos()</a>, and <a class="el" href="../../d4/d9a/namespacevec.html#aa79cdef251ee2f487b55dba93ad63ea0">vec::to2()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../d0/d74/struct_register.html#a674bdeb8aa6413236b266f45d2973b57">Register::get_next_queue_position()</a>, and <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a77e67ff8d61329379931c6d03ea68708">system_manager::job_system::update_job_information()</a>.</p>
-
 </div>
 </div>
 <a id="a3267ca1897b60de8c1543e3846056145" name="a3267ca1897b60de8c1543e3846056145"></a>
@@ -983,25 +982,11 @@ template&lt;typename S &gt; </div>
 
 <p class="reference">References <a class="el" href="../../dc/dc4/struct_entity.html#a239a50f1568a668ebf5c0285d0b0e9c9">in_round_update()</a>, <a class="el" href="../../d3/d2c/namespacegame.html#ae87aa40decbe65eaf21f2d039e7375d6aa959d7125a25f89281f6d3d3f0170475">game::InRound</a>, and <a class="el" href="../../d6/d15/tracy_8h.html#af0966b1b117a1e09190aaee5d5175e27">TRACY_ZONE_SCOPED</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../d0/d8b/struct_furniture.html#acc07fd758c1778c86774ce1c68c1ce67">Furniture::make_conveyer()</a>, and <a class="el" href="../../d0/d8b/struct_furniture.html#a5220ffda3699fce66fd2480393320998">Furniture::make_grabber()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d0/d8b/struct_furniture.html#acc07fd758c1778c86774ce1c68c1ce67">Furniture::make_conveyer()</a>, <a class="el" href="../../d0/d8b/struct_furniture.html#a5220ffda3699fce66fd2480393320998">Furniture::make_grabber()</a>, and <a class="el" href="../../d0/d8b/struct_furniture.html#a8d39e9110afcb62048879a3b3e7697ea">Furniture::make_register()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="acd0c62fa990720c72f0087eb72062099" name="acd0c62fa990720c72f0087eb72062099"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd0c62fa990720c72f0087eb72062099">&#9670;&#160;</a></span>can_take_from</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Entity::can_take_from = false</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a0ea38bb8c270ef014600427c99a56ec8" name="a0ea38bb8c270ef014600427c99a56ec8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0ea38bb8c270ef014600427c99a56ec8">&#9670;&#160;</a></span>cleanup</h2>
 
@@ -1061,8 +1046,6 @@ template&lt;typename S &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="../../d0/d74/struct_register.html#ac6e47c902ad42f108f2a2aef41c16026">Register::can_move_up()</a>, and <a class="el" href="../../d0/d74/struct_register.html#a52675c14bbf0f4a3d02035c16ee0546f">Register::position_in_line()</a>.</p>
 
 </div>
 </div>

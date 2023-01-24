@@ -1,0 +1,29 @@
+\hypertarget{can__be__taken__from_8h_source}{}\doxysection{can\+\_\+be\+\_\+taken\+\_\+from.\+h}
+\label{can__be__taken__from_8h_source}\index{src/components/can\_be\_taken\_from.h@{src/components/can\_be\_taken\_from.h}}
+\mbox{\hyperlink{can__be__taken__from_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_can_be_taken_from}{CanBeTakenFrom}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00007\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_can_be_taken_from_a4bea8e0ffaabfbf5544b6f35f4128214}{\string~CanBeTakenFrom}}()\ \{\}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_be_taken_from_a1b1c124e24841ae2351ddc7c2e4e0a8e}{can\_take\_from}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_can_be_taken_from_aa4776ae337c3f955bc28233fc9774d59}{allowed}};\ \}}
+\DoxyCodeLine{00010\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_be_taken_from_a24576f788a7f95c76dd964f3d2d6051e}{cannot\_take\_from}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !\mbox{\hyperlink{struct_can_be_taken_from_a1b1c124e24841ae2351ddc7c2e4e0a8e}{can\_take\_from}}();\ \}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_be_taken_from_a6cc032af69a660d71e0b0c1c8cf479d5}{update}}(\textcolor{keywordtype}{bool}\ g)\ \{\ \mbox{\hyperlink{struct_can_be_taken_from_aa4776ae337c3f955bc28233fc9774d59}{allowed}}\ =\ g;\ \}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_be_taken_from_aa4776ae337c3f955bc28233fc9774d59}{allowed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_be_taken_from_aa409cb9b2c04219300f6bafc509722e0}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ s.value1b(\mbox{\hyperlink{struct_can_be_taken_from_aa4776ae337c3f955bc28233fc9774d59}{allowed}});}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ \};}
+
+\end{DoxyCode}

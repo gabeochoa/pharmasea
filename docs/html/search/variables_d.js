@@ -24,7 +24,7 @@ var searchData=
   ['max_5fmap_5fsize_21',['MAX_MAP_SIZE',['../d0/d49/level__info_8h.html#a0dfad442b5c2ecae4de70a16543ec5db',1,'level_info.h']]],
   ['max_5fname_5flength_22',['MAX_NAME_LENGTH',['../db/d3f/namespacenetwork.html#ab21ff1d434d3028a68dc8e97cbfa62fd',1,'network']]],
   ['max_5fnum_5fcomponents_23',['max_num_components',['../d5/dbb/base__component_8h.html#a94f76e23195dbdeee169cc932589d8c2',1,'base_component.h']]],
-  ['max_5fqueue_5fsize_24',['max_queue_size',['../d0/d74/struct_register.html#acf7d318a1555dd41124082c19bfdcb0b',1,'Register']]],
+  ['max_5fqueue_5fsize_24',['max_queue_size',['../d1/d62/struct_has_waiting_queue.html#a9ce7c8331a127396958546304beb343e',1,'HasWaitingQueue']]],
   ['max_5fseed_5flength_25',['MAX_SEED_LENGTH',['../d0/d49/level__info_8h.html#ade8d3a51c249c747df1dbe7eef587729',1,'level_info.h']]],
   ['me_26',['me',['../d1/d00/structui_1_1_widget.html#ad577b0323ef967168f14ab156ee5d32f',1,'ui::Widget']]],
   ['medium_5fblue_27',['medium_blue',['../d9/db4/namespaceui_1_1color.html#ac14a9b3462662887b597e3928b9a7e9b',1,'ui::color']]],

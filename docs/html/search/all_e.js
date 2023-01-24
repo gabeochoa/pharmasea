@@ -29,7 +29,7 @@ var searchData=
   ['networkrequesterror_26',['NetworkRequestError',['../db/d3f/namespacenetwork.html#a5fbe1c266036b15a1e603ec0cd2d6691',1,'network']]],
   ['never_27',['Never',['../d4/d87/struct_symptom_1_1_config.html#aaf7a38845b7195cc4d9b83d36743f6eba6e7b34fa59e1bd229b207892956dc41c',1,'Symptom::Config']]],
   ['newton_5fraphson_28',['newton_raphson',['../d4/d9a/namespacevec.html#a3e18f73ec09c3b1c14c15a0a42c8405a',1,'vec']]],
-  ['next_5fline_5fposition_29',['next_line_position',['../d0/d74/struct_register.html#ab2df0027c3bcd21e0e9356f79b014482',1,'Register']]],
+  ['next_5fline_5fposition_29',['next_line_position',['../d1/d62/struct_has_waiting_queue.html#ade57371d36118f2a39d767ec6de68b96',1,'HasWaitingQueue']]],
   ['next_5fmap_5ftick_30',['next_map_tick',['../d3/da7/structnetwork_1_1_server.html#a0aea3fd24cb104c7121150893227e759',1,'network::Server']]],
   ['next_5fmap_5ftick_5freset_31',['next_map_tick_reset',['../d3/da7/structnetwork_1_1_server.html#a2012c042977f3715da1619fe4c44354a',1,'network::Server']]],
   ['next_5ftick_32',['next_tick',['../d4/d35/structnetwork_1_1_client.html#af6ca04ac14d46fa679e48c52ee6af215',1,'network::Client']]],

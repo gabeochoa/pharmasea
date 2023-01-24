@@ -1,0 +1,37 @@
+\hypertarget{has__waiting__queue_8h_source}{}\doxysection{has\+\_\+waiting\+\_\+queue.\+h}
+\label{has__waiting__queue_8h_source}\index{src/components/has\_waiting\_queue.h@{src/components/has\_waiting\_queue.h}}
+\mbox{\hyperlink{has__waiting__queue_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <bitsery/traits/deque.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <deque>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}../entity.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_has_waiting_queue_a02852855e0aeccf49ed5c46e0e9960a4}{\string~HasWaitingQueue}}()\ \{\}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ std::deque<std::shared\_ptr<Entity>>\ \mbox{\hyperlink{struct_has_waiting_queue_adfe4df51f6527bc08928933b024d695b}{ppl\_in\_line}};}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_has_waiting_queue_a9ce7c8331a127396958546304beb343e}{max\_queue\_size}}\ =\ 3;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\_line\_position}}\ =\ 0;}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_has_waiting_queue_a37e29a7048b8a58aec05277cf94dcd98}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_has_waiting_queue_a9ce7c8331a127396958546304beb343e}{max\_queue\_size}});}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\_line\_position}});}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ s.container(}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_waiting_queue_adfe4df51f6527bc08928933b024d695b}{ppl\_in\_line}},\ \mbox{\hyperlink{struct_has_waiting_queue_a9ce7c8331a127396958546304beb343e}{max\_queue\_size}},}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ [](S\&\ sv,\ std::shared\_ptr<Entity>\ entity)\ \{\ sv.object(entity);\ \});}
+\DoxyCodeLine{00030\ \ \ \ \ \}}
+\DoxyCodeLine{00031\ \};}
+
+\end{DoxyCode}
