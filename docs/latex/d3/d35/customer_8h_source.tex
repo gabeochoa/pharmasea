@@ -61,44 +61,39 @@
 \DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
 \DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();}
 \DoxyCodeLine{00059\ \ \ \ \ \}}
-\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{struct_customer_a3d3b0d47fbfe130714b4383c62fee010}{Customer}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}(p,\ face\_color\_in,\ base\_color\_in)\ \{}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();}
-\DoxyCodeLine{00063\ \ \ \ \ \}}
-\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{struct_customer_a7bc735a9ff8f4d6909217fbf07ed7b61}{Customer}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();\ \}}
-\DoxyCodeLine{00065\ \ \ \ \ \mbox{\hyperlink{struct_customer_a5c86a6748b1d87955e5c55d3b9bfec41}{Customer}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_a_i_person}{AIPerson}}(p,\ c)\ \{\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();\ \}}
-\DoxyCodeLine{00066\ }
-\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}()\ \{}
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ addComponent<CanHaveAilment>().update(std::make\_shared<Insomnia>());}
-\DoxyCodeLine{00069\ }
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ get<HasName>().update(\mbox{\hyperlink{names_8h_a167c58458649f7e55a9f415bc16e8686}{get\_random\_name}}());}
-\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ get<CanPerformJob>().update(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411}{WaitInQueue}},\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}});}
-\DoxyCodeLine{00072\ }
-\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ turn\ back\ on\ bubbles}}
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ bubble\ =\ SpeechBubble(ailment-\/>icon\_name());}}
-\DoxyCodeLine{00075\ \ \ \ \ \}}
-\DoxyCodeLine{00076\ }
-\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ TODO\ support\ this}}
-\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{//\ virtual\ void\ in\_round\_update(float\ dt)\ override\ \{}}
-\DoxyCodeLine{00079\ \ \ \ \ \textcolor{comment}{//\ AIPerson::in\_round\_update(dt);}}
-\DoxyCodeLine{00080\ }
-\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{//\ Register*\ reg\ =\ get\_target\_register();}}
-\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{//\ if\ (reg)\ \{}}
-\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ this-\/>turn\_to\_face\_entity(reg);}}
-\DoxyCodeLine{00084\ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00085\ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00086\ \ \ \ \ \textcolor{comment}{//\ if\ (bubble.has\_value())}}
-\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//\ bubble.value().update(dt,\ this-\/>get<Transform>().raw\_position);}}
-\DoxyCodeLine{00088\ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00089\ }
-\DoxyCodeLine{00090\ \ \ \ \ \textcolor{comment}{//\ virtual\ void\ render\_normal()\ const\ override\ \{}}
-\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{//\ auto\ render\_speech\_bubble\ =\ [\&]()\ \{}}
-\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ if\ (!this-\/>bubble.has\_value())\ return;}}
-\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{//\ this-\/>bubble.value().render();}}
-\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{//\ \};}}
-\DoxyCodeLine{00095\ \ \ \ \ \textcolor{comment}{//\ AIPerson::render\_normal();}}
-\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{//\ render\_speech\_bubble();}}
-\DoxyCodeLine{00097\ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00098\ \};}
+\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{struct_customer_a7bc735a9ff8f4d6909217fbf07ed7b61}{Customer}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_customer}{Customer}}(p,\ c,\ c)\ \{\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}();\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}}()\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ addComponent<CanHaveAilment>().update(std::make\_shared<Insomnia>());}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ get<HasName>().update(\mbox{\hyperlink{names_8h_a167c58458649f7e55a9f415bc16e8686}{get\_random\_name}}());}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ get<CanPerformJob>().update(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411}{WaitInQueue}},\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}});}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ turn\ back\ on\ bubbles}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ bubble\ =\ SpeechBubble(ailment-\/>icon\_name());}}
+\DoxyCodeLine{00070\ \ \ \ \ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{comment}{//\ TODO\ support\ this}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{//\ virtual\ void\ in\_round\_update(float\ dt)\ override\ \{}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ AIPerson::in\_round\_update(dt);}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{comment}{//\ Register*\ reg\ =\ get\_target\_register();}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ if\ (reg)\ \{}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{//\ this-\/>turn\_to\_face\_entity(reg);}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{//\ if\ (bubble.has\_value())}}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{//\ bubble.value().update(dt,\ this-\/>get<Transform>().raw\_position);}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{comment}{//\ virtual\ void\ render\_normal()\ const\ override\ \{}}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{comment}{//\ auto\ render\_speech\_bubble\ =\ [\&]()\ \{}}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//\ if\ (!this-\/>bubble.has\_value())\ return;}}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{comment}{//\ this-\/>bubble.value().render();}}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{//\ \};}}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{comment}{//\ AIPerson::render\_normal();}}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{//\ render\_speech\_bubble();}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00093\ \};}
 
 \end{DoxyCode}

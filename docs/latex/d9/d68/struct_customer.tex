@@ -17,11 +17,7 @@ Inheritance diagram for Customer\+:\begin{figure}[H]
 \item 
 \mbox{\hyperlink{struct_customer_a65f55dc3c8b0df8a14d5e68528afc389}{Customer}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
 \item 
-\mbox{\hyperlink{struct_customer_a3d3b0d47fbfe130714b4383c62fee010}{Customer}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
-\item 
 \mbox{\hyperlink{struct_customer_a7bc735a9ff8f4d6909217fbf07ed7b61}{Customer}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color c)
-\item 
-\mbox{\hyperlink{struct_customer_a5c86a6748b1d87955e5c55d3b9bfec41}{Customer}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color c)
 \item 
 void \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}} ()
 \end{DoxyCompactItemize}
@@ -32,11 +28,7 @@ void \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init}} 
 \item 
 \mbox{\hyperlink{struct_a_i_person_a55792e3979b5b2f3813690444c6adbe1}{AIPerson}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
 \item 
-\mbox{\hyperlink{struct_a_i_person_a79530f19bf2eb3d90984b6046156d4ec}{AIPerson}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
-\item 
 \mbox{\hyperlink{struct_a_i_person_a4c6c945ea61dfb3c98cb722d3766558e}{AIPerson}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color c)
-\item 
-\mbox{\hyperlink{struct_a_i_person_ae4e13bbbe41ad3113211f87762d8d0ab}{AIPerson}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color c)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_person}{Person}}}
 \begin{DoxyCompactItemize}
@@ -54,11 +46,9 @@ void \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\+\
 \item 
 {\footnotesize template$<$typename T $>$ }\\T \& \mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}} () const
 \item 
-void \mbox{\hyperlink{struct_entity_a9c0606708fe8805c8e90c9510466d618}{add\+\_\+static\+\_\+components}} ()
+void \mbox{\hyperlink{struct_entity_a8dee542591261639d434a190f5cbc5cb}{add\+\_\+static\+\_\+components}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} pos)
 \item 
 virtual \mbox{\hyperlink{struct_entity_a588098978eea6a3486b7361605ff3f0f}{$\sim$\+Entity}} ()
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a053c1e45dd6f1752acb7db6e75f48dab}{announce}} (std\+::string text)
 \item 
 virtual bool \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}} (Bounding\+Box b) const
 \item 
@@ -69,10 +59,6 @@ virtual Bounding\+Box \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb87546607269
 void \mbox{\hyperlink{struct_entity_ad0bf9cef410758f173d4b376b1df631f}{rotate\+\_\+facing\+\_\+clockwise}} ()
 \item 
 virtual \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\+\_\+infront}} (int distance)
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a48efb563c821424fd1a97efcc211cfd8}{on\+\_\+pickup}} ()
-\item 
-virtual void \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\+\_\+drop}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} location)
 \item 
 virtual void \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update}} (float dt) final
 \end{DoxyCompactItemize}
@@ -109,23 +95,13 @@ static \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \m
 \mbox{\hyperlink{struct_person_a0397c6f89fafc12e738923f612bc41a3}{Person}} ()
 \item 
 \mbox{\hyperlink{struct_person_aff739251b706191cb573969740a43e67}{Person}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
-\item 
-\mbox{\hyperlink{struct_person_a9ff519f2d28ed9ca8674b1a1e3540577}{Person}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
-\item 
-\mbox{\hyperlink{struct_person_a598162c372fd3703cd456ce2d31ced11}{Person}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color c)
-\item 
-\mbox{\hyperlink{struct_person_a96012bcb85ddaa7c6f290db275bcd86d}{Person}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color c)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Protected Member Functions inherited from \mbox{\hyperlink{struct_entity}{Entity}}}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}{Entity}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
 \item 
-\mbox{\hyperlink{struct_entity_a69970748dae094cbca81f77a82c1ae66}{Entity}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color face\+\_\+color\+\_\+in, Color base\+\_\+color\+\_\+in)
-\item 
 \mbox{\hyperlink{struct_entity_abed77744bbc522e364be6fc2ab1792ac}{Entity}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} p, Color c)
-\item 
-\mbox{\hyperlink{struct_entity_add145c7ad5ec1aca28429a337ca48304}{Entity}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p, Color c)
 \item 
 \mbox{\hyperlink{struct_entity_a980f368aa07ce358583982821533a54a}{Entity}} ()
 \item 
@@ -145,7 +121,7 @@ virtual bool \mbox{\hyperlink{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}{c
 \mbox{\Hypertarget{struct_customer_abcc8fae9701e5ba9d7d6fe44498b34e3}\label{struct_customer_abcc8fae9701e5ba9d7d6fe44498b34e3}} 
 \index{Customer@{Customer}!Customer@{Customer}}
 \index{Customer@{Customer}!Customer@{Customer}}
-\doxysubsubsection{\texorpdfstring{Customer()}{Customer()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
+\doxysubsubsection{\texorpdfstring{Customer()}{Customer()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
 {\footnotesize\ttfamily Customer\+::\+Customer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
@@ -155,18 +131,8 @@ References \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{i
 \mbox{\Hypertarget{struct_customer_a65f55dc3c8b0df8a14d5e68528afc389}\label{struct_customer_a65f55dc3c8b0df8a14d5e68528afc389}} 
 \index{Customer@{Customer}!Customer@{Customer}}
 \index{Customer@{Customer}!Customer@{Customer}}
-\doxysubsubsection{\texorpdfstring{Customer()}{Customer()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
+\doxysubsubsection{\texorpdfstring{Customer()}{Customer()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
 {\footnotesize\ttfamily Customer\+::\+Customer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{p,  }\item[{Color}]{face\+\_\+color\+\_\+in,  }\item[{Color}]{base\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init()}}.
-
-\mbox{\Hypertarget{struct_customer_a3d3b0d47fbfe130714b4383c62fee010}\label{struct_customer_a3d3b0d47fbfe130714b4383c62fee010}} 
-\index{Customer@{Customer}!Customer@{Customer}}
-\index{Customer@{Customer}!Customer@{Customer}}
-\doxysubsubsection{\texorpdfstring{Customer()}{Customer()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
-{\footnotesize\ttfamily Customer\+::\+Customer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{p,  }\item[{Color}]{face\+\_\+color\+\_\+in,  }\item[{Color}]{base\+\_\+color\+\_\+in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -175,18 +141,8 @@ References \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{i
 \mbox{\Hypertarget{struct_customer_a7bc735a9ff8f4d6909217fbf07ed7b61}\label{struct_customer_a7bc735a9ff8f4d6909217fbf07ed7b61}} 
 \index{Customer@{Customer}!Customer@{Customer}}
 \index{Customer@{Customer}!Customer@{Customer}}
-\doxysubsubsection{\texorpdfstring{Customer()}{Customer()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+\doxysubsubsection{\texorpdfstring{Customer()}{Customer()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
 {\footnotesize\ttfamily Customer\+::\+Customer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{p,  }\item[{Color}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{struct_customer_ac4913899d1e5dcdabd8580b55583d0be}{init()}}.
-
-\mbox{\Hypertarget{struct_customer_a5c86a6748b1d87955e5c55d3b9bfec41}\label{struct_customer_a5c86a6748b1d87955e5c55d3b9bfec41}} 
-\index{Customer@{Customer}!Customer@{Customer}}
-\index{Customer@{Customer}!Customer@{Customer}}
-\doxysubsubsection{\texorpdfstring{Customer()}{Customer()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
-{\footnotesize\ttfamily Customer\+::\+Customer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{p,  }\item[{Color}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 

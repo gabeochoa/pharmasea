@@ -25,8 +25,8 @@ var searchData=
   ['terra_5fcotta_22',['terra_cotta',['../d9/db4/namespaceui_1_1color.html#ab99e39c4423882af8c7370936717261e',1,'ui::color']]],
   ['terracota_23',['terracota',['../d9/db4/namespaceui_1_1color.html#afd28e45070649876e63add2fab5a7b65',1,'ui::color']]],
   ['terracotta_24',['terracotta',['../d9/db4/namespaceui_1_1color.html#ae1c3f01096ddfe317e8d48a8a84ef3eb',1,'ui::color']]],
-  ['test_25',['Test',['../db/d42/struct_ailment.html#a6212e85ba6e6f9e5e9fe148e92125965a0cbc6611f5540bd0809a388dc95a615b',1,'Ailment']]],
-  ['test_26',['test',['../da/d7e/struct_trigger_on_dt.html#a82591d0168d54307d344a5935220ec26',1,'TriggerOnDt']]],
+  ['test_25',['test',['../da/d7e/struct_trigger_on_dt.html#a82591d0168d54307d344a5935220ec26',1,'TriggerOnDt']]],
+  ['test_26',['Test',['../db/d42/struct_ailment.html#a6212e85ba6e6f9e5e9fe148e92125965a0cbc6611f5540bd0809a388dc95a615b',1,'Ailment']]],
   ['test_5fadd_5fchild_27',['test_add_child',['../d9/df4/namespacetests.html#a6c89df90e18364d2a7bfad532d8c423d',1,'tests']]],
   ['test_5fadd_5fchild_5fagain_28',['test_add_child_again',['../d9/df4/namespacetests.html#a9c485f0835d20bd713661d9006ef8f74',1,'tests']]],
   ['test_5fautolayout_5fwrap_5fcolumn_29',['test_autolayout_wrap_column',['../d9/df4/namespacetests.html#ac09ca02e5f6f00207ded957b6d8ef5f6',1,'tests']]],
@@ -136,8 +136,8 @@ var searchData=
   ['turtle_5fgreen_133',['turtle_green',['../d9/db4/namespaceui_1_1color.html#a5799a55ee6bcf7ef919bc681c69059d2',1,'ui::color']]],
   ['twilight_134',['twilight',['../d9/db4/namespaceui_1_1color.html#a1f7c7344f97fd0560c98c4c6eb7c58bd',1,'ui::color']]],
   ['twilight_5fblue_135',['twilight_blue',['../d9/db4/namespaceui_1_1color.html#ad75f67b3b733771c6142121689e21dda',1,'ui::color']]],
-  ['type_136',['Type',['../db/d42/struct_ailment.html#a6212e85ba6e6f9e5e9fe148e92125965',1,'Ailment']]],
-  ['type_137',['type',['../df/d0f/struct_toast_msg.html#a905d95b9722d1d496f752ab99a321845',1,'ToastMsg::type()'],['../d8/dcf/structnetwork_1_1_client_packet_1_1_announcement_info.html#a2c5e4fb56ff4732876f31ffa2d1ffba1',1,'network::ClientPacket::AnnouncementInfo::type()'],['../d2/d63/struct_job.html#a54b5041220d32132698962f324d7ac04',1,'Job::type()'],['../de/d82/struct_pill.html#a85ee79b2713671d19be803d5999250a2',1,'Pill::type()'],['../d9/dce/struct_ailment_1_1_config.html#a9968324828f2eb14e29564e6f8050364',1,'Ailment::Config::type()']]],
+  ['type_136',['type',['../df/d0f/struct_toast_msg.html#a905d95b9722d1d496f752ab99a321845',1,'ToastMsg::type()'],['../d8/dcf/structnetwork_1_1_client_packet_1_1_announcement_info.html#a2c5e4fb56ff4732876f31ffa2d1ffba1',1,'network::ClientPacket::AnnouncementInfo::type()'],['../d2/d63/struct_job.html#a54b5041220d32132698962f324d7ac04',1,'Job::type()'],['../de/d82/struct_pill.html#a85ee79b2713671d19be803d5999250a2',1,'Pill::type()'],['../d9/dce/struct_ailment_1_1_config.html#a9968324828f2eb14e29564e6f8050364',1,'Ailment::Config::type()']]],
+  ['type_137',['Type',['../db/d42/struct_ailment.html#a6212e85ba6e6f9e5e9fe148e92125965',1,'Ailment']]],
   ['type_5fname_138',['type_name',['../d3/d31/type__name_8h.html#a9588db268376dfa73d101458aeb1f9ad',1,'type_name.h']]],
   ['type_5fname_2eh_139',['type_name.h',['../d3/d31/type__name_8h.html',1,'']]]
 ];

@@ -90,8 +90,8 @@
 \DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *dynamic\_pointer\_cast<T>(ptr);}
 \DoxyCodeLine{00087\ \ \ \ \ \}}
 \DoxyCodeLine{00088\ }
-\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_a9c0606708fe8805c8e90c9510466d618}{add\_static\_components}}()\ \{}
-\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ addComponent<Transform>();}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_a8dee542591261639d434a190f5cbc5cb}{add\_static\_components}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ pos)\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ addComponent<Transform>().init(pos,\ \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}}());}
 \DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ addComponent<HasName>();}
 \DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ addComponent<CanHoldItem>();}
 \DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ addComponent<SimpleColoredBoxRenderer>();}
@@ -119,206 +119,168 @@
 \DoxyCodeLine{00115\ \ \ \ \textcolor{keyword}{protected}:}
 \DoxyCodeLine{00116\ \ \ \ \ \mbox{\hyperlink{struct_entity_a67ac2af1c4fb382e7481361aa1b5b94f}{Entity}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
 \DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}(\mbox{\hyperlink{entity_8h_a4b85326fceb9eab14680c700319d8ecc}{ENTITY\_ID\_GEN}}++)\ \{}
-\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a9c0606708fe8805c8e90c9510466d618}{add\_static\_components}}();}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ get<Transform>().init(p,\ \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}}());}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ get<SimpleColoredBoxRenderer>().init(face\_color\_in,\ base\_color\_in);}
-\DoxyCodeLine{00121\ \ \ \ \ \}}
-\DoxyCodeLine{00122\ }
-\DoxyCodeLine{00123\ \ \ \ \ \mbox{\hyperlink{struct_entity_a69970748dae094cbca81f77a82c1ae66}{Entity}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ face\_color\_in,\ Color\ base\_color\_in)}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}(\mbox{\hyperlink{entity_8h_a4b85326fceb9eab14680c700319d8ecc}{ENTITY\_ID\_GEN}}++)\ \{}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a9c0606708fe8805c8e90c9510466d618}{add\_static\_components}}();}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ get<Transform>().init(\{p.x,\ 0,\ p.y\},\ \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}}());}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ get<SimpleColoredBoxRenderer>().init(face\_color\_in,\ base\_color\_in);}
-\DoxyCodeLine{00128\ \ \ \ \ \}}
-\DoxyCodeLine{00129\ }
-\DoxyCodeLine{00130\ \ \ \ \ \mbox{\hyperlink{struct_entity_abed77744bbc522e364be6fc2ab1792ac}{Entity}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}(\mbox{\hyperlink{entity_8h_a4b85326fceb9eab14680c700319d8ecc}{ENTITY\_ID\_GEN}}++)\ \{}
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a9c0606708fe8805c8e90c9510466d618}{add\_static\_components}}();}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ get<Transform>().init(p,\ \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}}());}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ get<SimpleColoredBoxRenderer>().init(c,\ c);}
-\DoxyCodeLine{00134\ \ \ \ \ \}}
-\DoxyCodeLine{00135\ }
-\DoxyCodeLine{00136\ \ \ \ \ \mbox{\hyperlink{struct_entity_add145c7ad5ec1aca28429a337ca48304}{Entity}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_entity_aa4425a59c337b4d3b71c217ccaf511bc}{id}}(\mbox{\hyperlink{entity_8h_a4b85326fceb9eab14680c700319d8ecc}{ENTITY\_ID\_GEN}}++)\ \{}
-\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a9c0606708fe8805c8e90c9510466d618}{add\_static\_components}}();}
-\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ get<Transform>().init(\{p.x,\ 0,\ p.y\},\ \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}}());}
-\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ get<SimpleColoredBoxRenderer>().init(c,\ c);}
-\DoxyCodeLine{00140\ \ \ \ \ \}}
-\DoxyCodeLine{00141\ }
-\DoxyCodeLine{00142\ \ \ \ \ \mbox{\hyperlink{struct_entity_a980f368aa07ce358583982821533a54a}{Entity}}()\ \{}
-\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a9c0606708fe8805c8e90c9510466d618}{add\_static\_components}}();}
-\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ get<Transform>().init(\{0,\ 0,\ 0\},\ \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}}());}
-\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ get<SimpleColoredBoxRenderer>().init(BLACK,\ BLACK);}
-\DoxyCodeLine{00146\ \ \ \ \ \}}
-\DoxyCodeLine{00147\ }
-\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{\mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\};\ \}}
-\DoxyCodeLine{00149\ }
-\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\_heading}}()\ \{}
-\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ target\_facing\_ang\ =}
-\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceutil_a754507833912be9c3f11ad02c3ea05f9}{util::deg2rad}}(this-\/>get<Transform>().FrontFaceDirectionMap.at(}
-\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}}));}
-\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{}
-\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ cosf(target\_facing\_ang),}
-\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ sinf(target\_facing\_ang),}
-\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00158\ \ \ \ \ \}}
-\DoxyCodeLine{00159\ }
-\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{turn\_to\_face\_entity}}(\mbox{\hyperlink{struct_entity}{Entity}}*\ target)\ \{}
-\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!target)\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00162\ }
-\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dot\ product\ visualizer\ https://www.falstad.com/dotproduct/}}
-\DoxyCodeLine{00164\ }
-\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ angle\ between\ two\ vecs\ is}}
-\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ @\ =\ arccos(\ \ (a\ dot\ b)\ /\ (\ |a|\ *\ |b|\ )\ )}}
-\DoxyCodeLine{00167\ }
-\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ first\ get\ the\ headings\ and\ normalise\ so\ |x|\ =\ 1}}
-\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ my\_heading\ =\ \mbox{\hyperlink{namespacevec_a2b336372bfe6c8bd752922c357866a24}{vec::norm}}(this-\/>\mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\_heading}}());}
-\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ tar\_heading\ =\ \mbox{\hyperlink{namespacevec_a2b336372bfe6c8bd752922c357866a24}{vec::norm}}(target-\/>\mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\_heading}}());}
-\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dp\ =\ (\ (a\ dot\ b\ )/\ 1)}}
-\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ dot\_product\ =\ \mbox{\hyperlink{namespacevec_aabd3fc26e0da594069a9f344c48beb8d}{vec::dot2}}(my\_heading,\ tar\_heading);}
-\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ arccos(dp)}}
-\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ theta\_rad\ =\ acosf(dot\_product);}
-\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ theta\_deg\ =\ \mbox{\hyperlink{namespaceutil_a9305e21ff6411929f92f427a318cea17}{util::rad2deg}}(theta\_rad);}
-\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ turn\_degrees\ =\ (180\ -\/\ (int)\ theta\_deg)\ \%\ 360;}
-\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ this}}
-\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ (void)\ turn\_degrees;}
-\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (turn\_degrees\ >\ 0\ \&\&\ turn\_degrees\ <=\ 45)\ \{}
-\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
-\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(0);}
-\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (turn\_degrees\ >\ 45\ \&\&\ turn\_degrees\ <=\ 135)\ \{}
-\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
-\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(90);}
-\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (turn\_degrees\ >\ 135\ \&\&\ turn\_degrees\ <=\ 225)\ \{}
-\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
-\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(180);}
-\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (turn\_degrees\ >\ 225)\ \{}
-\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
-\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(270);}
-\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a8dee542591261639d434a190f5cbc5cb}{add\_static\_components}}(p);}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ get<SimpleColoredBoxRenderer>().init(face\_color\_in,\ base\_color\_in);}
+\DoxyCodeLine{00120\ \ \ \ \ \}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \mbox{\hyperlink{struct_entity_abed77744bbc522e364be6fc2ab1792ac}{Entity}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ p,\ Color\ c)\ :\ \mbox{\hyperlink{struct_entity}{Entity}}(p,\ c,\ c)\ \{\}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \mbox{\hyperlink{struct_entity_a980f368aa07ce358583982821533a54a}{Entity}}()\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a8dee542591261639d434a190f5cbc5cb}{add\_static\_components}}(\{0,\ 0,\ 0\});}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ get<SimpleColoredBoxRenderer>().init(BLACK,\ BLACK);}
+\DoxyCodeLine{00127\ \ \ \ \ \}}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{\mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}},\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\};\ \}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\_heading}}()\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ target\_facing\_ang\ =}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceutil_a754507833912be9c3f11ad02c3ea05f9}{util::deg2rad}}(this-\/>get<Transform>().FrontFaceDirectionMap.at(}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().\mbox{\hyperlink{struct_transform_a85795012bea44b28efe7606af7d7362d}{face\_direction}}));}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ cosf(target\_facing\_ang),}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ sinf(target\_facing\_ang),}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00139\ \ \ \ \ \}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{turn\_to\_face\_entity}}(\mbox{\hyperlink{struct_entity}{Entity}}*\ target)\ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!target)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dot\ product\ visualizer\ https://www.falstad.com/dotproduct/}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ angle\ between\ two\ vecs\ is}}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ @\ =\ arccos(\ \ (a\ dot\ b)\ /\ (\ |a|\ *\ |b|\ )\ )}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ first\ get\ the\ headings\ and\ normalise\ so\ |x|\ =\ 1}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ my\_heading\ =\ \mbox{\hyperlink{namespacevec_a2b336372bfe6c8bd752922c357866a24}{vec::norm}}(this-\/>\mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\_heading}}());}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ tar\_heading\ =\ \mbox{\hyperlink{namespacevec_a2b336372bfe6c8bd752922c357866a24}{vec::norm}}(target-\/>\mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{get\_heading}}());}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dp\ =\ (\ (a\ dot\ b\ )/\ 1)}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ dot\_product\ =\ \mbox{\hyperlink{namespacevec_aabd3fc26e0da594069a9f344c48beb8d}{vec::dot2}}(my\_heading,\ tar\_heading);}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ arccos(dp)}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ theta\_rad\ =\ acosf(dot\_product);}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ theta\_deg\ =\ \mbox{\hyperlink{namespaceutil_a9305e21ff6411929f92f427a318cea17}{util::rad2deg}}(theta\_rad);}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ turn\_degrees\ =\ (180\ -\/\ (int)\ theta\_deg)\ \%\ 360;}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ this}}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ (void)\ turn\_degrees;}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (turn\_degrees\ >\ 0\ \&\&\ turn\_degrees\ <=\ 45)\ \{}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (turn\_degrees\ >\ 45\ \&\&\ turn\_degrees\ <=\ 135)\ \{}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(90);}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (turn\_degrees\ >\ 135\ \&\&\ turn\_degrees\ <=\ 225)\ \{}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(180);}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (turn\_degrees\ >\ 225)\ \{}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(270);}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00173\ \ \ \ \ \}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\_round\_update}}(\textcolor{keywordtype}{float})\ \{\}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{comment}{//\ Whether\ or\ not\ this\ entity\ can\ hold\ items\ at\ the\ moment}}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ doesnt\ need\ to\ be\ static,\ can\ dynamically\ change\ values}}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}{can\_place\_item\_into}}(std::shared\_ptr<Item>\ =\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00181\ \ \ \ \ \}}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00185\ \textcolor{comment}{\ \ \ \ \ *\ Given\ another\ bounding\ box,\ check\ if\ it\ collides\ with\ this\ entity}}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ \ \ \ \ *}}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ \ \ \ \ *\ @param\ BoundingBox\ the\ box\ to\ test}}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ \ \ \ \ *\ */}}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}}(BoundingBox\ b)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ move\ to\ collision\ component}}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ CheckCollisionBoxes(this-\/>get<Transform>().\mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}}(),\ b);}
 \DoxyCodeLine{00192\ \ \ \ \ \}}
 \DoxyCodeLine{00193\ }
-\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\_round\_update}}(\textcolor{keywordtype}{float})\ \{\}}
-\DoxyCodeLine{00195\ }
-\DoxyCodeLine{00196\ \ \ \ \ \textcolor{comment}{//\ Whether\ or\ not\ this\ entity\ can\ hold\ items\ at\ the\ moment}}
-\DoxyCodeLine{00197\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ doesnt\ need\ to\ be\ static,\ can\ dynamically\ change\ values}}
-\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_entity_a2c7be68ad342bec3a1972f2b9ca00a40}{can\_place\_item\_into}}(std::shared\_ptr<Item>\ =\ \textcolor{keyword}{nullptr})\ \{}
-\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00200\ \ \ \ \ \}}
-\DoxyCodeLine{00201\ }
-\DoxyCodeLine{00202\ \ \ \ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_a053c1e45dd6f1752acb7db6e75f48dab}{announce}}(std::string\ text)\ \{}
-\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ have\ some\ way\ of\ distinguishing\ between\ server\ logs\ and\ regular}}
-\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ client\ logs}}
-\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{is__server_8h_aa9b37672e835e000097b7b8c69868672}{is\_server}}())\ \{}
-\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}server:\ \{\}:\ \{\}"{}},\ this-\/>\textcolor{keywordtype}{id},\ text);}
-\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\_info("{}client:\ \{\}:\ \{\}"{},\ this-\/>id,\ text);}}
-\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00211\ \ \ \ \ \}}
-\DoxyCodeLine{00212\ }
-\DoxyCodeLine{00213\ \ \ \ \ \textcolor{comment}{/*}}
-\DoxyCodeLine{00214\ \textcolor{comment}{\ \ \ \ \ *\ Given\ another\ bounding\ box,\ check\ if\ it\ collides\ with\ this\ entity}}
-\DoxyCodeLine{00215\ \textcolor{comment}{\ \ \ \ \ *}}
-\DoxyCodeLine{00216\ \textcolor{comment}{\ \ \ \ \ *\ @param\ BoundingBox\ the\ box\ to\ test}}
-\DoxyCodeLine{00217\ \textcolor{comment}{\ \ \ \ \ *\ */}}
-\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_entity_a565b5f806268523149cff7eeda2f7091}{collides}}(BoundingBox\ b)\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ move\ to\ collision\ component}}
-\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ CheckCollisionBoxes(this-\/>get<Transform>().\mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}}(),\ b);}
-\DoxyCodeLine{00221\ \ \ \ \ \}}
-\DoxyCodeLine{00222\ }
-\DoxyCodeLine{00223\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{virtual}\ BoundingBox\ \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\_bounds}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ \ size}}
-\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>get<Transform>().raw\_bounds();}
-\DoxyCodeLine{00226\ \ \ \ \ \}}
-\DoxyCodeLine{00227\ }
-\DoxyCodeLine{00228\ \ \ \ \ \textcolor{comment}{/*}}
-\DoxyCodeLine{00229\ \textcolor{comment}{\ \ \ \ \ *\ Get\ the\ bounding\ box\ for\ this\ entity}}
-\DoxyCodeLine{00230\ \textcolor{comment}{\ \ \ \ \ *\ @returns\ BoundingBox\ the\ box}}
-\DoxyCodeLine{00231\ \textcolor{comment}{\ \ \ \ \ *\ */}}
-\DoxyCodeLine{00232\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{virtual}\ BoundingBox\ \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ \ size}}
-\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\_bounds}}(this-\/>get<Transform>().position,\ this-\/>\mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}}());}
-\DoxyCodeLine{00235\ \ \ \ \ \}}
-\DoxyCodeLine{00236\ }
-\DoxyCodeLine{00237\ \ \ \ \ \textcolor{comment}{/*}}
-\DoxyCodeLine{00238\ \textcolor{comment}{\ \ \ \ \ *\ Rotate\ the\ facing\ direction\ of\ this\ entity,\ clockwise\ 90\ degrees}}
-\DoxyCodeLine{00239\ \textcolor{comment}{\ \ \ \ \ *\ */}}
-\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_ad0bf9cef410758f173d4b376b1df631f}{rotate\_facing\_clockwise}}()\ \{}
-\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
-\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().offsetFaceDirection(}
-\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction,\ 90);}
-\DoxyCodeLine{00244\ \ \ \ \ \}}
-\DoxyCodeLine{00245\ }
-\DoxyCodeLine{00246\ \ \ \ \ \textcolor{comment}{/*}}
-\DoxyCodeLine{00247\ \textcolor{comment}{\ \ \ \ \ *\ Returns\ the\ location\ of\ the\ tile\ `distance`\ distance\ in\ front\ of\ the}}
-\DoxyCodeLine{00248\ \textcolor{comment}{\ \ \ \ \ *\ entity}}
-\DoxyCodeLine{00249\ \textcolor{comment}{\ \ \ \ \ *}}
-\DoxyCodeLine{00250\ \textcolor{comment}{\ \ \ \ \ *\ @param\ int,\ how\ far\ in\ front\ to\ go}}
-\DoxyCodeLine{00251\ \textcolor{comment}{\ \ \ \ \ *}}
-\DoxyCodeLine{00252\ \textcolor{comment}{\ \ \ \ \ *\ @returns\ vec2\ the\ location\ `distance`\ tiles\ ahead}}
-\DoxyCodeLine{00253\ \textcolor{comment}{\ \ \ \ \ *\ */}}
-\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\_infront}}(\textcolor{keywordtype}{int}\ distance)\ \{}
-\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ snap}}
-\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ tile\ =\ \mbox{\hyperlink{namespacevec_aa79cdef251ee2f487b55dba93ad63ea0}{vec::to2}}(this-\/>get<Transform>().snap\_position());}
-\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_entity_a3267ca1897b60de8c1543e3846056145}{tile\_infront\_given\_pos}}(tile,\ distance,}
-\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction);}
-\DoxyCodeLine{00259\ \ \ \ \ \}}
-\DoxyCodeLine{00260\ }
-\DoxyCodeLine{00261\ \ \ \ \ \textcolor{comment}{/*}}
-\DoxyCodeLine{00262\ \textcolor{comment}{\ \ \ \ \ *\ Given\ a\ tile,\ distance,\ and\ direction,\ returns\ the\ location\ of\ the}}
-\DoxyCodeLine{00263\ \textcolor{comment}{\ \ \ \ \ *\ tile\ `distance`\ distance\ in\ front\ of\ the\ tile}}
-\DoxyCodeLine{00264\ \textcolor{comment}{\ \ \ \ \ *}}
-\DoxyCodeLine{00265\ \textcolor{comment}{\ \ \ \ \ *\ @param\ vec2,\ the\ starting\ location}}
-\DoxyCodeLine{00266\ \textcolor{comment}{\ \ \ \ \ *\ @param\ int,\ how\ far\ in\ front\ to\ go}}
-\DoxyCodeLine{00267\ \textcolor{comment}{\ \ \ \ \ *\ @param\ Transform::FrontFaceDirection,\ which\ direction\ to\ go}}
-\DoxyCodeLine{00268\ \textcolor{comment}{\ \ \ \ \ *}}
-\DoxyCodeLine{00269\ \textcolor{comment}{\ \ \ \ \ *\ @returns\ vec2\ the\ location\ `distance`\ tiles\ ahead}}
-\DoxyCodeLine{00270\ \textcolor{comment}{\ \ \ \ \ *\ */}}
-\DoxyCodeLine{00271\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_entity_a3267ca1897b60de8c1543e3846056145}{tile\_infront\_given\_pos}}(}
-\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ tile,\ \textcolor{keywordtype}{int}\ distance,}
-\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ Transform::Transform::FrontFaceDirection\ direction)\ \{}
-\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (direction\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform::FORWARD}})\ \{}
-\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ tile.y\ +=\ distance\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}};}
-\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ tile.y\ =\ ceil(tile.y);}
-\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (direction\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform::BACK}})\ \{}
-\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ tile.y\ -\/=\ distance\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}};}
-\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ tile.y\ =\ floor(tile.y);}
-\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00282\ }
-\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (direction\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform::RIGHT}})\ \{}
-\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ tile.x\ +=\ distance\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}};}
-\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ tile.x\ =\ ceil(tile.x);}
-\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (direction\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform::LEFT}})\ \{}
-\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ tile.x\ -\/=\ distance\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}};}
-\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ tile.x\ =\ floor(tile.x);}
-\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tile;}
-\DoxyCodeLine{00292\ \ \ \ \ \}}
-\DoxyCodeLine{00293\ }
-\DoxyCodeLine{00294\ \ \ \ \ \textcolor{comment}{//\ Used\ to\ tell\ an\ entity\ its\ been\ picked\ up}}
-\DoxyCodeLine{00295\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_a48efb563c821424fd1a97efcc211cfd8}{on\_pickup}}()\ \{\ this-\/>get<CanBeHeld>().update(\textcolor{keyword}{true});\ \}}
-\DoxyCodeLine{00296\ }
-\DoxyCodeLine{00297\ \ \ \ \ \textcolor{comment}{//\ Used\ to\ tell\ and\ entity\ its\ been\ dropped\ and\ where\ to\ go\ next}}
-\DoxyCodeLine{00298\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_a022f3b004d41c9302ee47fd8d83a583f}{on\_drop}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ location)\ \{}
-\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ this-\/>get<CanBeHeld>().update(\textcolor{keyword}{false});}
-\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ this-\/>get<Transform>().update(\mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{vec::snap}}(location));}
-\DoxyCodeLine{00301\ \ \ \ \ \}}
-\DoxyCodeLine{00302\ }
-\DoxyCodeLine{00303\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update}}(\textcolor{keywordtype}{float}\ dt)\ \textcolor{keyword}{final}\ \{}
-\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
-\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (GameState::get().is(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6aa959d7125a25f89281f6d3d3f0170475}{game::State::InRound}}))\ \{}
-\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\_round\_update}}(dt);}
-\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00308\ \ \ \ \ \}}
-\DoxyCodeLine{00309\ \};}
-\DoxyCodeLine{00310\ }
-\DoxyCodeLine{00311\ \textcolor{keyword}{typedef}\ Transform::Transform::FrontFaceDirection\ \mbox{\hyperlink{entity_8h_ad26590fb3eb6e9012c4a7db85a6f1251}{EntityDir}};}
-\DoxyCodeLine{00312\ }
-\DoxyCodeLine{00313\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacebitsery}{bitsery}}\ \{}
-\DoxyCodeLine{00314\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00315\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacebitsery_a1090e6e410c14fa09ef29c2eb6b1f3af}{serialize}}(S\&\ s,\ std::shared\_ptr<Entity>\&\ entity)\ \{}
-\DoxyCodeLine{00316\ \ \ \ \ s.ext(entity,\ bitsery::ext::StdSmartPtr\{\});}
-\DoxyCodeLine{00317\ \}}
-\DoxyCodeLine{00318\ \}\ \ \textcolor{comment}{//\ namespace\ bitsery}}
+\DoxyCodeLine{00194\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{virtual}\ BoundingBox\ \mbox{\hyperlink{struct_entity_aac5f7cefbb03699f655094d3098e5c0f}{raw\_bounds}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ \ size}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>get<Transform>().raw\_bounds();}
+\DoxyCodeLine{00197\ \ \ \ \ \}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00200\ \textcolor{comment}{\ \ \ \ \ *\ Get\ the\ bounding\ box\ for\ this\ entity}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ \ \ \ \ *\ @returns\ BoundingBox\ the\ box}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ \ \ \ \ *\ */}}
+\DoxyCodeLine{00203\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{virtual}\ BoundingBox\ \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{bounds}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ \ size}}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\_bounds}}(this-\/>get<Transform>().position,\ this-\/>\mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{size}}());}
+\DoxyCodeLine{00206\ \ \ \ \ \}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ \ \ \ \ *\ Rotate\ the\ facing\ direction\ of\ this\ entity,\ clockwise\ 90\ degrees}}
+\DoxyCodeLine{00210\ \textcolor{comment}{\ \ \ \ \ *\ */}}
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_ad0bf9cef410758f173d4b376b1df631f}{rotate\_facing\_clockwise}}()\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction\ =}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().offsetFaceDirection(}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction,\ 90);}
+\DoxyCodeLine{00215\ \ \ \ \ \}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00218\ \textcolor{comment}{\ \ \ \ \ *\ Returns\ the\ location\ of\ the\ tile\ `distance`\ distance\ in\ front\ of\ the}}
+\DoxyCodeLine{00219\ \textcolor{comment}{\ \ \ \ \ *\ entity}}
+\DoxyCodeLine{00220\ \textcolor{comment}{\ \ \ \ \ *}}
+\DoxyCodeLine{00221\ \textcolor{comment}{\ \ \ \ \ *\ @param\ int,\ how\ far\ in\ front\ to\ go}}
+\DoxyCodeLine{00222\ \textcolor{comment}{\ \ \ \ \ *}}
+\DoxyCodeLine{00223\ \textcolor{comment}{\ \ \ \ \ *\ @returns\ vec2\ the\ location\ `distance`\ tiles\ ahead}}
+\DoxyCodeLine{00224\ \textcolor{comment}{\ \ \ \ \ *\ */}}
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{tile\_infront}}(\textcolor{keywordtype}{int}\ distance)\ \{}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ snap}}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ tile\ =\ \mbox{\hyperlink{namespacevec_aa79cdef251ee2f487b55dba93ad63ea0}{vec::to2}}(this-\/>get<Transform>().snap\_position());}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_entity_a3267ca1897b60de8c1543e3846056145}{tile\_infront\_given\_pos}}(tile,\ distance,}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>get<Transform>().face\_direction);}
+\DoxyCodeLine{00230\ \ \ \ \ \}}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ \ \ \ \ *\ Given\ a\ tile,\ distance,\ and\ direction,\ returns\ the\ location\ of\ the}}
+\DoxyCodeLine{00234\ \textcolor{comment}{\ \ \ \ \ *\ tile\ `distance`\ distance\ in\ front\ of\ the\ tile}}
+\DoxyCodeLine{00235\ \textcolor{comment}{\ \ \ \ \ *}}
+\DoxyCodeLine{00236\ \textcolor{comment}{\ \ \ \ \ *\ @param\ vec2,\ the\ starting\ location}}
+\DoxyCodeLine{00237\ \textcolor{comment}{\ \ \ \ \ *\ @param\ int,\ how\ far\ in\ front\ to\ go}}
+\DoxyCodeLine{00238\ \textcolor{comment}{\ \ \ \ \ *\ @param\ Transform::FrontFaceDirection,\ which\ direction\ to\ go}}
+\DoxyCodeLine{00239\ \textcolor{comment}{\ \ \ \ \ *}}
+\DoxyCodeLine{00240\ \textcolor{comment}{\ \ \ \ \ *\ @returns\ vec2\ the\ location\ `distance`\ tiles\ ahead}}
+\DoxyCodeLine{00241\ \textcolor{comment}{\ \ \ \ \ *\ */}}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_entity_a3267ca1897b60de8c1543e3846056145}{tile\_infront\_given\_pos}}(}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ tile,\ \textcolor{keywordtype}{int}\ distance,}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ Transform::Transform::FrontFaceDirection\ direction)\ \{}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (direction\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform::FORWARD}})\ \{}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ tile.y\ +=\ distance\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}};}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ tile.y\ =\ ceil(tile.y);}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (direction\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform::BACK}})\ \{}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ tile.y\ -\/=\ distance\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}};}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ tile.y\ =\ floor(tile.y);}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (direction\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform::RIGHT}})\ \{}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ tile.x\ +=\ distance\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}};}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ tile.x\ =\ ceil(tile.x);}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (direction\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform::LEFT}})\ \{}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ tile.x\ -\/=\ distance\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}};}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ tile.x\ =\ floor(tile.x);}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tile;}
+\DoxyCodeLine{00263\ \ \ \ \ \}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_entity_a0ae91fa040d2d8ecedf1585e253a2c1f}{update}}(\textcolor{keywordtype}{float}\ dt)\ \textcolor{keyword}{final}\ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\_ZONE\_SCOPED}};}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (GameState::get().is(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6aa959d7125a25f89281f6d3d3f0170475}{game::State::InRound}}))\ \{}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_a239a50f1568a668ebf5c0285d0b0e9c9}{in\_round\_update}}(dt);}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00270\ \ \ \ \ \}}
+\DoxyCodeLine{00271\ \};}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \textcolor{keyword}{typedef}\ Transform::Transform::FrontFaceDirection\ \mbox{\hyperlink{entity_8h_ad26590fb3eb6e9012c4a7db85a6f1251}{EntityDir}};}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacebitsery}{bitsery}}\ \{}
+\DoxyCodeLine{00276\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00277\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacebitsery_a1090e6e410c14fa09ef29c2eb6b1f3af}{serialize}}(S\&\ s,\ std::shared\_ptr<Entity>\&\ entity)\ \{}
+\DoxyCodeLine{00278\ \ \ \ \ s.ext(entity,\ bitsery::ext::StdSmartPtr\{\});}
+\DoxyCodeLine{00279\ \}}
+\DoxyCodeLine{00280\ \}\ \ \textcolor{comment}{//\ namespace\ bitsery}}
 
 \end{DoxyCode}

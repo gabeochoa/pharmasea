@@ -5,6 +5,5 @@ var searchData=
   ['is_5fsnappable_2eh_2',['is_snappable.h',['../d8/dbc/is__snappable_8h.html',1,'']]],
   ['is_5fsolid_2eh_3',['is_solid.h',['../da/d1a/is__solid_8h.html',1,'']]],
   ['item_2eh_4',['item.h',['../df/d1f/item_8h.html',1,'']]],
-  ['item_5fcontainer_2eh_5',['item_container.h',['../d8/d1b/item__container_8h.html',1,'']]],
-  ['item_5fhelper_2eh_6',['item_helper.h',['../d0/d4e/item__helper_8h.html',1,'']]]
+  ['item_5fhelper_2eh_5',['item_helper.h',['../d0/d4e/item__helper_8h.html',1,'']]]
 ];
