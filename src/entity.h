@@ -294,12 +294,6 @@ struct Entity {
     // Used to tell an entity its been picked up
     virtual void on_pickup() { this->get<CanBeHeld>().update(true); }
 
-    // Used to tell and entity its been dropped and where to go next
-    virtual void on_drop(vec3 location) {
-        this->get<CanBeHeld>().update(false);
-        this->get<Transform>().update(vec::snap(location));
-    }
-
     virtual void update(float dt) final {
         TRACY_ZONE_SCOPED;
         if (GameState::get().is(game::State::InRound)) {

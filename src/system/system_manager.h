@@ -628,7 +628,11 @@ inline void process_input(const std::shared_ptr<Entity> entity,
                 // TODO need to make sure it doesnt place ontop of another
                 // one
                 auto hf = ourCHF.furniture();
-                hf->on_drop(vec::to3(player->tile_infront(1)));
+
+                hf->get<CanBeHeld>().update(false);
+                hf->get<Transform>().update(
+                    vec::snap(vec::to3(player->tile_infront(1))));
+
                 ourCHF.update(nullptr);
             };
             _drop_furniture();
