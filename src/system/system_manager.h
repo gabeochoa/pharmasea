@@ -695,7 +695,10 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     if (!entity->has<Transform>()) return;
     Transform& transform = entity->get<Transform>();
 
-    entity->can_take_from = false;
+    if (!entity->has<CanBeTakenFrom>()) return;
+    CanBeTakenFrom& canBeTakenFrom = entity->get<CanBeTakenFrom>();
+
+    canBeTakenFrom.update(false);
 
     // if the item is less than halfway, just keep moving it along
     if (conveysHeldItem.relative_item_pos <= 0.f) {
@@ -714,7 +717,7 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     // no match means we cant continue, stay in the middle
     if (!match) {
         conveysHeldItem.relative_item_pos = 0.f;
-        entity->can_take_from = true;
+        canBeTakenFrom.update(true);
         return;
     }
 
@@ -727,7 +730,7 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
         return;
     }
 
-    entity->can_take_from = true;
+    canBeTakenFrom.update(true);
     // we reached the end, pass ownership
 
     CanHoldItem& matchCHI = match->get<CanHoldItem>();

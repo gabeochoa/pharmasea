@@ -6,6 +6,7 @@
 #include "components/can_be_held.h"
 #include "components/can_be_highlighted.h"
 #include "components/can_be_pushed.h"
+#include "components/can_be_taken_from.h"
 #include "components/can_hold_item.h"
 #include "components/has_name.h"
 #include "components/model_renderer.h"
@@ -39,9 +40,6 @@ struct Entity {
     ComponentArray componentArray;
 
     bool cleanup = false;
-
-    // from conveyer
-    bool can_take_from = false;
 
     template<typename T>
     bool has() const {
@@ -96,6 +94,7 @@ struct Entity {
         addComponent<ModelRenderer>();
         addComponent<CanBePushed>();
         addComponent<CanBeHeld>();
+        addComponent<CanBeTakenFrom>();
     }
 
     virtual ~Entity() {}

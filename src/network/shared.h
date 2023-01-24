@@ -21,7 +21,7 @@ struct PolymorphicBaseClass<BaseComponent>
           CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
           CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed,
           IsSolid, CanBeHeld, IsRotatable, CanGrabFromOtherFurniture,
-          ConveysHeldItem, HasWaitingQueue> {};
+          ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom> {};
 
 template<>
 struct PolymorphicBaseClass<Entity>

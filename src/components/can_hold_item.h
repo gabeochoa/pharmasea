@@ -8,6 +8,11 @@ struct CanHoldItem : public BaseComponent {
 
     [[nodiscard]] bool empty() const { return held_item == nullptr; }
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
+
+    // TODO i feel like this is confusing to have with CanBeTakenFrom
+    // this one means: "i have something you can take"
+    // and the other one means "you are allowed to take things from me"
+
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool can_take_item_from() const { return !empty(); }
 
