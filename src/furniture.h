@@ -7,6 +7,7 @@
 #include "components/custom_item_position.h"
 #include "components/has_waiting_queue.h"
 #include "components/has_work.h"
+#include "components/is_item_container.h"
 #include "components/is_rotatable.h"
 #include "components/is_solid.h"
 #include "drawing_util.h"
@@ -239,14 +240,13 @@ struct ItemContainer : public Furniture {
 
    public:
     ItemContainer() {}
-    explicit ItemContainer(vec2 pos) : Furniture(pos, WHITE, WHITE) {}
+    explicit ItemContainer(vec2 pos) : Furniture(pos, WHITE, WHITE) {
+        this->addComponent<IsItemContainer<I>>();
+    }
 
     virtual bool can_place_item_into(
         std::shared_ptr<Item> item = nullptr) override {
-        auto i = dynamic_pointer_cast<I>(item);
-        if (!i) return false;
-        if (!i->empty()) return false;
-        return true;
+        return this->get<IsItemContainer<I>>().is_matching_item(item);
     }
 
     virtual void in_round_update(float dt) override {

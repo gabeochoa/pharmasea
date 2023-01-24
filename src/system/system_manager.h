@@ -524,7 +524,23 @@ inline void process_input(const std::shared_ptr<Entity> entity,
                 if (!entity->has<CanHoldItem>()) return false;
                 CanHoldItem& furnCanHold = entity->get<CanHoldItem>();
 
-                // TODO add support for item containter..
+                const auto item_container_is_matching_item =
+                    []<typename I>(std::shared_ptr<Entity> entity,
+                                   std::shared_ptr<I> item) {
+                        if (entity->has<IsItemContainer<I>>()) return false;
+                        IsItemContainer<I>& itemContainer =
+                            entity->get<IsItemContainer<I>>();
+                        return itemContainer.is_matching_item(item);
+                    };
+
+                // Handle item containers
+                bool matches_bag = item_container_is_matching_item(
+                    entity, dynamic_pointer_cast<Bag>(item));
+                if (matches_bag) return true;
+
+                bool matches_pill_bottle = item_container_is_matching_item(
+                    entity, dynamic_pointer_cast<PillBottle>(item));
+                if (matches_pill_bottle) return true;
 
                 // If we are empty and can hold we good..
                 return furnCanHold.empty();
