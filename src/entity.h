@@ -292,7 +292,7 @@ struct Entity {
     }
 
     // Used to tell an entity its been picked up
-    virtual void on_pickup() { this->get<CanBeHeld>().update(true); }
+    virtual void on_pickup() final { this->get<CanBeHeld>().update(true); }
 
     virtual void update(float dt) final {
         TRACY_ZONE_SCOPED;

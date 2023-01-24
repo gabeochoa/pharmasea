@@ -650,7 +650,9 @@ inline void process_input(const std::shared_ptr<Entity> entity,
                         return f->get<CanBeHeld>().is_not_held();
                     });
             ourCHF.update(closest_furniture);
-            if (ourCHF.is_holding_furniture()) ourCHF.furniture()->on_pickup();
+            if (ourCHF.is_holding_furniture()) {
+                ourCHF.furniture()->get<CanBeHeld>().update(true);
+            }
             // NOTE: we want to remove the furniture ONLY from the nav mesh
             //       when picked up because then AI can walk through,
             //       this also means we have to add it back when we place it
