@@ -247,6 +247,85 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
             return;
         };
 
+        const auto get_next_queue_position =
+            [](std::shared_ptr<Entity> reg,
+               std::shared_ptr<AIPerson> customer) -> vec2 {
+            M_ASSERT(customer,
+                     "entity passed to register queue should not be null");
+            M_ASSERT(reg->has<HasWaitingQueue>(),
+                     "Trying to get-next-queue-pos for entity which doesnt "
+                     "have a waiting queue ");
+            HasWaitingQueue& hasWaitingQueue = reg->get<HasWaitingQueue>();
+            hasWaitingQueue.ppl_in_line.push_back(customer.get());
+            // the place the customers stand is 1 tile infront of the register
+            auto front =
+                reg->tile_infront((hasWaitingQueue.next_line_position + 1) * 2);
+            hasWaitingQueue.next_line_position++;
+            return front;
+        };
+
+        const auto position_in_line =
+            [](std::shared_ptr<Entity> reg,
+               std::shared_ptr<Entity> customer) -> int {
+            M_ASSERT(customer,
+                     "entity passed to position-in-line should not be null");
+            M_ASSERT(reg->has<HasWaitingQueue>(),
+                     "Trying to pos-in-line for entity which doesnt "
+                     "have a waiting queue ");
+            const auto& ppl_in_line = reg->get<HasWaitingQueue>().ppl_in_line;
+
+            for (int i = 0; i < (int) ppl_in_line.size(); i++) {
+                if (customer->id == ppl_in_line[i]->id) return i;
+            }
+            log_warn("Cannot find customer {}", customer->id);
+            return -1;
+        };
+
+        const auto leave_line = [position_in_line](
+                                    std::shared_ptr<Entity> reg,
+                                    std::shared_ptr<Entity> customer) {
+            M_ASSERT(customer,
+                     "entity passed to leave-line should not be null");
+            M_ASSERT(reg->has<HasWaitingQueue>(),
+                     "Trying to leave-line for entity which doesnt "
+                     "have a waiting queue ");
+            auto& ppl_in_line = reg->get<HasWaitingQueue>().ppl_in_line;
+            int pos = position_in_line(reg, customer);
+            if (pos == -1) return;
+            if (pos == 0) {
+                ppl_in_line.pop_front();
+                return;
+            }
+            ppl_in_line.erase(ppl_in_line.begin() + pos);
+        };
+        const auto is_in_line = [position_in_line](
+                                    std::shared_ptr<Entity> reg,
+                                    std::shared_ptr<Entity> customer) -> bool {
+            return position_in_line(reg, customer) != -1;
+        };
+
+        const auto can_move_up = [](std::shared_ptr<Entity> reg,
+                                    std::shared_ptr<Entity> customer) -> bool {
+            M_ASSERT(customer,
+                     "entity passed to can-move-up should not be null");
+            M_ASSERT(reg->has<HasWaitingQueue>(),
+                     "Trying to can-move-up for entity which doesnt "
+                     "have a waiting queue ");
+            const auto& ppl_in_line = reg->get<HasWaitingQueue>().ppl_in_line;
+            return customer->id == ppl_in_line.front()->id;
+        };
+
+        const auto has_space_in_queue =
+            [](std::shared_ptr<Entity> reg) -> bool {
+            M_ASSERT(reg->has<HasWaitingQueue>(),
+                     "Trying to has-space-in-queue for entity which doesnt "
+                     "have a waiting queue ");
+            const HasWaitingQueue& hasWaitingQueue =
+                reg->get<HasWaitingQueue>();
+            return hasWaitingQueue.next_line_position <
+                   hasWaitingQueue.max_queue_size;
+        };
+
         switch (job->state) {
             case Job::State::Initialize: {
                 entity->announce("starting a new wait in queue job");
@@ -272,10 +351,11 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 }
 
                 job->data["register"] = closest_target.get();
-                Customer* me = (Customer*) entity.get();
-                job->start = closest_target->get_next_queue_position(me);
+                job->start = get_next_queue_position(
+                    dynamic_pointer_cast<Entity>(closest_target),
+                    dynamic_pointer_cast<AIPerson>(entity));
                 job->end = closest_target->tile_infront(1);
-                job->spot_in_line = closest_target->position_in_line(me);
+                job->spot_in_line = position_in_line(closest_target, entity);
                 job->state = Job::State::HeadingToStart;
                 return;
             }
@@ -292,12 +372,12 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 }
 
                 // Check the spot in front of us
-                Register* reg = static_cast<Register*>(job->data["register"]);
-                Customer* me = (Customer*) entity.get();
-                int cur_spot_in_line = reg->position_in_line(me);
+                auto reg = std::shared_ptr<Entity>(
+                    static_cast<Entity*>(job->data["register"]));
+                int cur_spot_in_line = position_in_line(reg, entity);
 
                 if (cur_spot_in_line == job->spot_in_line ||
-                    !reg->can_move_up(me)) {
+                    !can_move_up(reg, entity)) {
                     // We didnt move so just wait a bit before trying again
                     entity->announce(
                         fmt::format("im just going to wait a bit longer"));
@@ -332,7 +412,8 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 return;
             }
             case Job::State::WorkingAtEnd: {
-                Register* reg = (Register*) job->data["register"];
+                auto reg = std::shared_ptr<Entity>(
+                    static_cast<Register*>(job->data["register"]));
 
                 CanHoldItem& regCHI = reg->get<CanHoldItem>();
 
@@ -371,8 +452,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 regCHI.update(nullptr);
 
                 entity->announce("got it");
-                Customer* me = (Customer*) entity.get();
-                reg->leave_line(me);
+                leave_line(reg, entity);
                 job->state = Job::State::Completed;
                 return;
             }
