@@ -1,16 +1,18 @@
 
 #pragma once
 
-#include "drawing_util.h"
-#include "external_include.h"
-//
+#include "aiperson.h"
 #include "components/can_grab_from_other_furniture.h"
 #include "components/conveys_held_item.h"
 #include "components/custom_item_position.h"
+#include "components/has_waiting_queue.h"
 #include "components/has_work.h"
 #include "components/is_rotatable.h"
 #include "components/is_solid.h"
+#include "drawing_util.h"
+#include "engine/assert.h"
 #include "entity.h"
+#include "external_include.h"
 #include "globals.h"
 #include "person.h"
 
@@ -207,5 +209,17 @@ struct Furniture : public Entity {
         grabber->addComponent<ConveysHeldItem>();
         grabber->addComponent<CanGrabFromOtherFurniture>();
         return grabber;
+    }
+
+    [[nodiscard]] static Furniture* make_register(vec2 pos) {
+        Furniture* reg = new Furniture(pos, ui::color::grey, ui::color::grey);
+        reg->addComponent<HasWaitingQueue>();
+
+        reg->get<ModelRenderer>().update(ModelInfo{
+            .model_name = "register",
+            .size_scale = 10.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        });
+        return reg;
     }
 };

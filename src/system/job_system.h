@@ -12,7 +12,6 @@
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../furniture.h"
-#include "../furniture/register.h"
 
 namespace system_manager {
 
@@ -256,7 +255,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                      "Trying to get-next-queue-pos for entity which doesnt "
                      "have a waiting queue ");
             HasWaitingQueue& hasWaitingQueue = reg->get<HasWaitingQueue>();
-            hasWaitingQueue.ppl_in_line.push_back(customer.get());
+            hasWaitingQueue.ppl_in_line.push_back(customer);
             // the place the customers stand is 1 tile infront of the register
             auto front =
                 reg->tile_infront((hasWaitingQueue.next_line_position + 1) * 2);
@@ -298,11 +297,25 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
             }
             ppl_in_line.erase(ppl_in_line.begin() + pos);
         };
-        const auto is_in_line = [position_in_line](
-                                    std::shared_ptr<Entity> reg,
-                                    std::shared_ptr<Entity> customer) -> bool {
-            return position_in_line(reg, customer) != -1;
-        };
+
+        // TODO what was this used for?
+        // const auto is_in_line = [position_in_line](
+        // std::shared_ptr<Entity> reg,
+        // std::shared_ptr<Entity> customer) -> bool {
+        // return position_in_line(reg, customer) != -1;
+        // };
+
+        // TODO what was this used for
+        // const auto has_space_in_queue =
+        // [](std::shared_ptr<Entity> reg) -> bool {
+        // M_ASSERT(reg->has<HasWaitingQueue>(),
+        // "Trying to has-space-in-queue for entity which doesnt "
+        // "have a waiting queue ");
+        // const HasWaitingQueue& hasWaitingQueue =
+        // reg->get<HasWaitingQueue>();
+        // return hasWaitingQueue.next_line_position <
+        // hasWaitingQueue.max_queue_size;
+        // };
 
         const auto can_move_up = [](std::shared_ptr<Entity> reg,
                                     std::shared_ptr<Entity> customer) -> bool {
@@ -315,17 +328,6 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
             return customer->id == ppl_in_line.front()->id;
         };
 
-        const auto has_space_in_queue =
-            [](std::shared_ptr<Entity> reg) -> bool {
-            M_ASSERT(reg->has<HasWaitingQueue>(),
-                     "Trying to has-space-in-queue for entity which doesnt "
-                     "have a waiting queue ");
-            const HasWaitingQueue& hasWaitingQueue =
-                reg->get<HasWaitingQueue>();
-            return hasWaitingQueue.next_line_position <
-                   hasWaitingQueue.max_queue_size;
-        };
-
         switch (job->state) {
             case Job::State::Initialize: {
                 entity->announce("starting a new wait in queue job");
@@ -334,8 +336,8 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
 
                 // TODO replace with finding the one with the least people
                 // in it
-                std::shared_ptr<Register> closest_target =
-                    EntityHelper::getClosestMatchingEntity<Register>(
+                std::shared_ptr<Furniture> closest_target =
+                    EntityHelper::getClosestMatchingEntity<Furniture>(
                         entity->get<Transform>().as2(), TILESIZE * 100.f,
                         [](auto&&) { return true; });
 
@@ -413,7 +415,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
             }
             case Job::State::WorkingAtEnd: {
                 auto reg = std::shared_ptr<Entity>(
-                    static_cast<Register*>(job->data["register"]));
+                    static_cast<Entity*>(job->data["register"]));
 
                 CanHoldItem& regCHI = reg->get<CanHoldItem>();
 

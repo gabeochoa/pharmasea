@@ -14,7 +14,6 @@
 #include "ailment.h"
 #include "camera.h"
 #include "engine/texture_library.h"
-#include "furniture/register.h"
 #include "globals.h"
 #include "job.h"
 #include "names.h"

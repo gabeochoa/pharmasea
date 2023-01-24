@@ -234,9 +234,9 @@ struct GameMapInfo : public LevelInfo {
         };
 
         const auto generate_register = [this]() {
-            std::shared_ptr<Register> reg;
+            std::shared_ptr<Furniture> reg;
             const auto location = get_rand_walkable();
-            reg.reset(new Register(location));
+            reg.reset(Furniture::make_register(location));
             EntityHelper::addEntity(reg);
         };
 
@@ -245,7 +245,7 @@ struct GameMapInfo : public LevelInfo {
             const auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
             std::shared_ptr<Customer> customer;
             customer.reset(new Customer(location, RED));
-            EntityHelper::addEntity(customer);
+            EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
         };
 
         auto generate_test = [this]() {

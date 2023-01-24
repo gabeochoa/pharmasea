@@ -2,15 +2,17 @@
 
 #pragma once
 
+#include <bitsery/traits/deque.h>
+
 #include <deque>
 
-#include "../aiperson.h"
+#include "../entity.h"
 #include "base_component.h"
 
 struct HasWaitingQueue : public BaseComponent {
     virtual ~HasWaitingQueue() {}
 
-    std::deque<AIPerson*> ppl_in_line;
+    std::deque<std::shared_ptr<Entity>> ppl_in_line;
     int max_queue_size = 3;
     int next_line_position = 0;
 
@@ -22,6 +24,8 @@ struct HasWaitingQueue : public BaseComponent {
 
         s.value4b(max_queue_size);
         s.value4b(next_line_position);
-        s.container(ppl_in_line, max_queue_size);
+        s.container(
+            ppl_in_line, max_queue_size,
+            [](S& sv, std::shared_ptr<Entity> entity) { sv.object(entity); });
     }
 };

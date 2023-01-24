@@ -21,7 +21,7 @@ struct PolymorphicBaseClass<BaseComponent>
           CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
           CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed,
           IsSolid, CanBeHeld, IsRotatable, CanGrabFromOtherFurniture,
-          ConveysHeldItem> {};
+          ConveysHeldItem, HasWaitingQueue> {};
 
 template<>
 struct PolymorphicBaseClass<Entity>
@@ -29,7 +29,7 @@ struct PolymorphicBaseClass<Entity>
 
 template<>
 struct PolymorphicBaseClass<Furniture>
-    : PolymorphicDerivedClasses<Register, BagBox, MedicineCabinet> {};
+    : PolymorphicDerivedClasses<BagBox, MedicineCabinet> {};
 
 template<>
 struct PolymorphicBaseClass<Person>
