@@ -47,25 +47,22 @@
 \DoxyCodeLine{00043\ \ \ \ \textcolor{keyword}{public}:}
 \DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_a9ba2212ff043b0e44f9889efc5ce0a87}{update\_component}}()\ \{}
 \DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ addComponent<HasBaseSpeed>().update(10.f);}
-\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\_info("{}model\ index:\ \{\}"{},\ model\_index);}}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ a\ component\ for\ this}}
-\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ get<ModelRenderer>().update(\mbox{\hyperlink{struct_model_info}{ModelInfo}}\{}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ this}}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}}\ =\ \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\_models}}[\mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}],}
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ .size\_scale\ =\ 1.5f,}
-\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ .position\_offset\ =\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0,\ 0,\ 0\},}
-\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ .rotation\_angle\ =\ 180,}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00055\ \ \ \ \ \}}
-\DoxyCodeLine{00056\ }
-\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_person_af5a4cf41f312702a6191246bd496f945}{size}}()\textcolor{keyword}{\ const\ override\ }\{}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ sz\ =\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ 0.75f;}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}})\{sz,\ sz,\ sz\};}
-\DoxyCodeLine{00060\ \ \ \ \ \}}
-\DoxyCodeLine{00061\ }
-\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\_next\_character\_model}}()\ \{}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}\ =\ (\mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}\ +\ 1)\ \%\ \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\_models}}.size();}
-\DoxyCodeLine{00064\ \ \ \ \ \}}
-\DoxyCodeLine{00065\ \};}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ get<Transform>().size\ =}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{\mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ 0.75f,\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ 0.75f,\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ 0.75f\};}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\_info("{}model\ index:\ \{\}"{},\ model\_index);}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ a\ component\ for\ this}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ get<ModelRenderer>().update(\mbox{\hyperlink{struct_model_info}{ModelInfo}}\{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ fix\ this}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}}\ =\ \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\_models}}[\mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}],}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ .size\_scale\ =\ 1.5f,}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ .position\_offset\ =\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0,\ 0,\ 0\},}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ .rotation\_angle\ =\ 180,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00057\ \ \ \ \ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_person_ae5b351bc647cde72be09092c05e67788}{select\_next\_character\_model}}()\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}\ =\ (\mbox{\hyperlink{struct_person_ade5597d3a2ccabed824280cb3c1ad2a1}{model\_index}}\ +\ 1)\ \%\ \mbox{\hyperlink{struct_person_a473ff1edcd43a54dbd198677ff9df7aa}{character\_models}}.size();}
+\DoxyCodeLine{00061\ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \};}
 
 \end{DoxyCode}
