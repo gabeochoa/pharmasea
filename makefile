@@ -54,4 +54,9 @@ todo:
 cppcheck: 
 	cppcheck --enable=all --std=c++20 --language=c++ --output-file=cppcheck_err src/
 
+gendocs:
+	doxygen doxyconfig
+	git add .
+	git commit -m "update docs" 
+
 -include $(OBJ_FILES:.o=.d)
