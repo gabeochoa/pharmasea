@@ -3,6 +3,7 @@
 
 #include "../external_include.h"
 //
+#include "../components/has_waiting_queue.h"
 #include "../engine/assert.h"
 #include "../entity.h"
 #include "../globals.h"
@@ -20,19 +21,12 @@ struct RegisterNextQueuePosition : Person {
 };
 
 struct Register : public Furniture {
-    std::deque<AIPerson*> ppl_in_line;
-    int max_queue_size = 3;
-    int next_line_position = 0;
-
    private:
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<Furniture>{});
         // Only need to serialize things that are needed for render
-        // s.value4b(max_queue_size);
-        // s.value4b(next_line_position);
-        // s.container(ppl_in_line, max_queue_size);
     }
 
    public:
@@ -52,6 +46,8 @@ struct Register : public Furniture {
     }
 
     int position_in_line(AIPerson* entity) {
+        const auto& ppl_in_line = this->get<HasWaitingQueue>().ppl_in_line;
+
         for (int i = 0; i < (int) ppl_in_line.size(); i++) {
             if (entity->id == ppl_in_line[i]->id) return i;
         }
@@ -60,10 +56,12 @@ struct Register : public Furniture {
     }
 
     bool can_move_up(AIPerson* entity) {
+        const auto& ppl_in_line = this->get<HasWaitingQueue>().ppl_in_line;
         return entity->id == ppl_in_line.front()->id;
     }
 
     void leave_line(AIPerson* entity) {
+        auto& ppl_in_line = this->get<HasWaitingQueue>().ppl_in_line;
         int pos = this->position_in_line(entity);
         if (pos == -1) return;
         if (pos == 0) {
@@ -74,14 +72,21 @@ struct Register : public Furniture {
     }
 
     bool is_in_line(AIPerson* entity) { return position_in_line(entity) != -1; }
-    bool has_space_in_queue() { return next_line_position < max_queue_size; }
+    bool has_space_in_queue() {
+        HasWaitingQueue& hasWaitingQueue = this->get<HasWaitingQueue>();
+
+        return hasWaitingQueue.next_line_position <
+               hasWaitingQueue.max_queue_size;
+    }
 
     vec2 get_next_queue_position(AIPerson* entity) {
         M_ASSERT(entity, "entity passed to register queue should not be null");
-        ppl_in_line.push_back(entity);
+        HasWaitingQueue& hasWaitingQueue = this->get<HasWaitingQueue>();
+        hasWaitingQueue.ppl_in_line.push_back(entity);
         // the place the customers stand is 1 tile infront of the register
-        auto front = this->tile_infront((next_line_position + 1) * 2);
-        next_line_position++;
+        auto front =
+            this->tile_infront((hasWaitingQueue.next_line_position + 1) * 2);
+        hasWaitingQueue.next_line_position++;
         return front;
     }
 };

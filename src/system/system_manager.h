@@ -787,6 +787,12 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float dt) {
     matchCHI.update(nullptr);
 }
 
+// void process_register_waiting_queue(std::shared_ptr<Entity> entity, float dt)
+// { if (!entity->has<HasWaitingQueue>()) return; HasWaitingQueue&
+// hasWaitingQueue = entity->get<HasWaitingQueue>();
+// }
+//
+
 }  // namespace system_manager
 
 SINGLETON_FWD(SystemManager)
