@@ -12,6 +12,7 @@
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../furniture.h"
+#include "logging_system.h"
 
 namespace system_manager {
 
@@ -111,8 +112,9 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
         // Go to local point
         if (job->local.value() == me) {
             job->local.reset();
-            entity->announce(fmt::format("reached local point {} : {} ", me,
-                                         job->path_size));
+            logging_manager::announce(
+                entity, fmt::format("reached local point {} : {} ", me,
+                                    job->path_size));
         }
         return;
     };
@@ -130,7 +132,8 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
             job->update_path(astar::find_path(
                 me, goal,
                 std::bind(EntityHelper::isWalkable, std::placeholders::_1)));
-            entity->announce(
+            logging_manager::announce(
+                entity,
                 fmt::format("generated path from {} to {} with {} steps", me,
                             goal, job->path_size));
         }
@@ -144,7 +147,8 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
         auto personal_queue = entity->get<CanPerformJob>().job_queue();
         switch (job->state) {
             case Job::State::Initialize: {
-                entity->announce("starting a new wandering job");
+                logging_manager::announce(entity,
+                                          "starting a new wandering job");
                 job->state = Job::State::HeadingToStart;
                 return;
             }
@@ -192,7 +196,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
         auto personal_queue = entity->get<CanPerformJob>().job_queue();
         switch (job->state) {
             case Job::State::Initialize: {
-                entity->announce("starting a new wait job");
+                logging_manager::announce(entity, "starting a new wait job");
                 job->state = Job::State::HeadingToStart;
                 return;
             }
@@ -330,7 +334,8 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
 
         switch (job->state) {
             case Job::State::Initialize: {
-                entity->announce("starting a new wait in queue job");
+                logging_manager::announce(entity,
+                                          "starting a new wait in queue job");
 
                 // Figure out which register to go to...
 
@@ -346,7 +351,8 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                     // and come back to it later
                     // i think just putting a Job* unfinished in Job is
                     // probably enough
-                    entity->announce("Could not find a valid register");
+                    logging_manager::announce(
+                        entity, "Could not find a valid register");
                     job->state = Job::State::Initialize;
                     wait_and_return();
                     return;
@@ -381,7 +387,8 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 if (cur_spot_in_line == job->spot_in_line ||
                     !can_move_up(reg, entity)) {
                     // We didnt move so just wait a bit before trying again
-                    entity->announce(
+                    logging_manager::announce(
+                        entity,
                         fmt::format("im just going to wait a bit longer"));
 
                     // Add the current job to the queue,
@@ -392,7 +399,8 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 }
 
                 // if our spot did change, then move forward
-                entity->announce(
+                logging_manager::announce(
+                    entity,
                     fmt::format("im moving up to {}", cur_spot_in_line));
 
                 job->spot_in_line = cur_spot_in_line;
@@ -420,20 +428,21 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 CanHoldItem& regCHI = reg->get<CanHoldItem>();
 
                 if (regCHI.empty()) {
-                    entity->announce("my rx isnt ready yet");
+                    logging_manager::announce(entity, "my rx isnt ready yet");
                     wait_and_return();
                     return;
                 }
 
                 auto bag = reg->get<CanHoldItem>().asT<Bag>();
                 if (!bag) {
-                    entity->announce("this isnt my rx (not a bag)");
+                    logging_manager::announce(entity,
+                                              "this isnt my rx (not a bag)");
                     wait_and_return();
                     return;
                 }
 
                 if (bag->empty()) {
-                    entity->announce("this bag is empty...");
+                    logging_manager::announce(entity, "this bag is empty...");
                     wait_and_return();
                     return;
                 }
@@ -444,7 +453,8 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 auto pill_bottle =
                     dynamic_pointer_cast<PillBottle>(bag->held_item);
                 if (!pill_bottle) {
-                    entity->announce("this bag doesnt have my pills");
+                    logging_manager::announce(entity,
+                                              "this bag doesnt have my pills");
                     wait_and_return();
                     return;
                 }
@@ -453,7 +463,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 ourCHI.update(regCHI.item());
                 regCHI.update(nullptr);
 
-                entity->announce("got it");
+                logging_manager::announce(entity, "got it");
                 leave_line(reg, entity);
                 job->state = Job::State::Completed;
                 return;

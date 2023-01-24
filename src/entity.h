@@ -200,16 +200,6 @@ struct Entity {
     }
 
    public:
-    virtual void announce(std::string text) {
-        // TODO have some way of distinguishing between server logs and regular
-        // client logs
-        if (is_server()) {
-            log_info("server: {}: {}", this->id, text);
-        } else {
-            // log_info("client: {}: {}", this->id, text);
-        }
-    }
-
     /*
      * Given another bounding box, check if it collides with this entity
      *
@@ -290,9 +280,6 @@ struct Entity {
         }
         return tile;
     }
-
-    // Used to tell an entity its been picked up
-    virtual void on_pickup() final { this->get<CanBeHeld>().update(true); }
 
     virtual void update(float dt) final {
         TRACY_ZONE_SCOPED;
