@@ -86,8 +86,8 @@ struct Entity {
         return *dynamic_pointer_cast<T>(ptr);
     }
 
-    void add_static_components() {
-        addComponent<Transform>();
+    void add_static_components(vec3 pos) {
+        addComponent<Transform>().init(pos, size());
         addComponent<HasName>();
         addComponent<CanHoldItem>();
         addComponent<SimpleColoredBoxRenderer>();
@@ -115,33 +115,14 @@ struct Entity {
    protected:
     Entity(vec3 p, Color face_color_in, Color base_color_in)
         : id(ENTITY_ID_GEN++) {
-        add_static_components();
-        get<Transform>().init(p, size());
+        add_static_components(p);
         get<SimpleColoredBoxRenderer>().init(face_color_in, base_color_in);
     }
 
-    Entity(vec2 p, Color face_color_in, Color base_color_in)
-        : id(ENTITY_ID_GEN++) {
-        add_static_components();
-        get<Transform>().init({p.x, 0, p.y}, size());
-        get<SimpleColoredBoxRenderer>().init(face_color_in, base_color_in);
-    }
-
-    Entity(vec3 p, Color c) : id(ENTITY_ID_GEN++) {
-        add_static_components();
-        get<Transform>().init(p, size());
-        get<SimpleColoredBoxRenderer>().init(c, c);
-    }
-
-    Entity(vec2 p, Color c) : id(ENTITY_ID_GEN++) {
-        add_static_components();
-        get<Transform>().init({p.x, 0, p.y}, size());
-        get<SimpleColoredBoxRenderer>().init(c, c);
-    }
+    Entity(vec3 p, Color c) : Entity(p, c, c) {}
 
     Entity() {
-        add_static_components();
-        get<Transform>().init({0, 0, 0}, size());
+        add_static_components({0, 0, 0});
         get<SimpleColoredBoxRenderer>().init(BLACK, BLACK);
     }
 

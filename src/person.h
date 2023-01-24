@@ -33,12 +33,6 @@ struct Person : public Entity {
         : Entity(p, face_color_in, base_color_in) {
         update_component();
     }
-    Person(vec2 p, Color face_color_in, Color base_color_in)
-        : Entity(p, face_color_in, base_color_in) {
-        update_component();
-    }
-    Person(vec3 p, Color c) : Entity(p, c) { update_component(); }
-    Person(vec2 p, Color c) : Entity(p, c) { update_component(); }
 
    public:
     void update_component() {

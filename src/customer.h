@@ -57,12 +57,7 @@ struct Customer : public AIPerson {
         : AIPerson(p, face_color_in, base_color_in) {
         init();
     }
-    Customer(vec2 p, Color face_color_in, Color base_color_in)
-        : AIPerson(p, face_color_in, base_color_in) {
-        init();
-    }
-    Customer(vec3 p, Color c) : AIPerson(p, c) { init(); }
-    Customer(vec2 p, Color c) : AIPerson(p, c) { init(); }
+    Customer(vec3 p, Color c) : Customer(p, c, c) { init(); }
 
     void init() {
         addComponent<CanHaveAilment>().update(std::make_shared<Insomnia>());

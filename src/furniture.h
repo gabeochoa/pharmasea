@@ -42,9 +42,10 @@ struct Furniture : public Entity {
         add_static_components();
     }
     Furniture(vec2 pos, Color face_color_in, Color base_color_in)
-        : Entity(pos, face_color_in, base_color_in) {
+        : Entity({pos.x, 0, pos.y}, face_color_in, base_color_in) {
         add_static_components();
     }
+
     Furniture(vec2 pos, Color face_color_in)
         : Furniture(pos, face_color_in, face_color_in) {}
 

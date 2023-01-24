@@ -30,10 +30,6 @@ struct BasePlayer : public Person {
         : Person(p, face_color_in, base_color_in) {
         add_static_components();
     }
-    BasePlayer(vec2 p, Color face_color_in, Color base_color_in)
-        : Person(p, face_color_in, base_color_in) {
-        add_static_components();
-    }
     BasePlayer() : Person({0, 0, 0}, ui::color::white, ui::color::white) {
         add_static_components();
     }
@@ -50,8 +46,6 @@ struct RemotePlayer : public BasePlayer {
     int client_id = -1;
 
     RemotePlayer(vec3 p, Color face_color_in, Color base_color_in)
-        : BasePlayer(p, face_color_in, base_color_in) {}
-    RemotePlayer(vec2 p, Color face_color_in, Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {}
     RemotePlayer() : BasePlayer({0, 0, 0}, WHITE, WHITE) {}
     RemotePlayer(vec2 location)
@@ -89,10 +83,6 @@ struct Player : public BasePlayer {
     Player() : BasePlayer({0, 0, 0}, WHITE, WHITE) { add_static_components(); }
 
     Player(vec3 p, Color face_color_in, Color base_color_in)
-        : BasePlayer(p, face_color_in, base_color_in) {
-        add_static_components();
-    }
-    Player(vec2 p, Color face_color_in, Color base_color_in)
         : BasePlayer(p, face_color_in, base_color_in) {
         add_static_components();
     }
