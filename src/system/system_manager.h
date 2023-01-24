@@ -17,8 +17,15 @@
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../furniture.h"
+#include "../engine/tracy.h"
 #include "job_system.h"
 #include "rendering_system.h"
+
+#define TRACY_FRAME_MARK(x) 0
+#define TRACY_ZONE_SCOPED 0
+#define TRACY_ZONE(x) 0
+#define TRACY_ZONE_NAMED(x, y, z) 0
+#define TRACY_LOG(msg, size) 0
 
 namespace system_manager {
 

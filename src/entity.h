@@ -25,7 +25,6 @@
 #include "globals.h"
 #include "item.h"
 #include "item_helper.h"
-#include "menu.h"
 #include "preload.h"
 #include "raylib.h"
 #include "text_util.h"

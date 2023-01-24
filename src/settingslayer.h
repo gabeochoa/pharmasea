@@ -6,7 +6,6 @@
 #include "engine/layer.h"
 #include "engine/settings.h"
 #include "engine/trie.h"
-#include "menu.h"
 #include "statemanager.h"
 
 using namespace ui;

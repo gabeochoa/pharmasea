@@ -10,7 +10,7 @@
 
 // TODO eventually extract this piece to engine
 template<typename T>
-struct StateManager {
+struct StateManager2 {
     [[nodiscard]] T read() const { return state; }
     [[nodiscard]] T previous() const { return prev.top(); }
 
@@ -54,7 +54,7 @@ struct StateManager {
         set(default_value());
     }
 
-    virtual ~StateManager() {}
+    virtual ~StateManager2() {}
 
    private:
     std::stack<T> prev;
@@ -80,7 +80,7 @@ inline std::ostream& operator<<(std::ostream& os, const State& state) {
 }  // namespace menu
 
 SINGLETON_FWD(MenuState)
-struct MenuState : public StateManager<menu::State> {
+struct MenuState : public StateManager2<menu::State> {
     SINGLETON(MenuState)
 
     virtual menu::State default_value() const override {
@@ -112,7 +112,7 @@ inline std::ostream& operator<<(std::ostream& os, const State& state) {
 }  // namespace game
 
 SINGLETON_FWD(GameState)
-struct GameState : public StateManager<game::State> {
+struct GameState : public StateManager2<game::State> {
     SINGLETON(GameState)
 
     virtual game::State default_value() const override {

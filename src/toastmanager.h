@@ -32,8 +32,8 @@ namespace toasts {
 inline static void remove_complete() {
     auto it = TOASTS.begin();
     while (it != TOASTS.end()) {
-        if ((*it).timeHasShown >= (*it).timeToShow) {
-            TOASTS.erase(it);
+        if (it->timeHasShown >= it->timeToShow) {
+            it = TOASTS.erase(it);
             continue;
         }
         it++;

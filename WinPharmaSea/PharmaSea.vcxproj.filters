@@ -25,6 +25,9 @@
     <Filter Include="Source Files\engine">
       <UniqueIdentifier>{3c405934-bede-45d6-b381-22767cb9cde3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\System">
+      <UniqueIdentifier>{49b68c78-bdad-4e27-9059-656a7f9fc82a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md">
@@ -298,6 +301,27 @@
     </ClInclude>
     <ClInclude Include="..\src\engine\network\webrequest.h">
       <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\statemanager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\system\job_system.h">
+      <Filter>Source Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\system\logging_system.h">
+      <Filter>Source Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\system\rendering_system.h">
+      <Filter>Source Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\system\system_manager.h">
+      <Filter>Source Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\toastlayer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\toastmanager.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

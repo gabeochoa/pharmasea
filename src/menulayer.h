@@ -7,7 +7,6 @@
 #include "engine/music_library.h"
 #include "engine/profile.h"
 #include "external_include.h"
-#include "menu.h"
 #include "statemanager.h"
 
 struct MenuLayer : public Layer {
