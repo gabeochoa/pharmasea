@@ -6,7 +6,6 @@
 #include "entity.h"
 #include "entityhelper.h"
 #include "furniture.h"
-#include "furnitures.h"
 #include "item.h"
 #include "item_helper.h"
 #include "round.h"

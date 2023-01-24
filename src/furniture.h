@@ -13,8 +13,10 @@
 #include "engine/assert.h"
 #include "entity.h"
 #include "external_include.h"
+#include "furniture.h"
 #include "globals.h"
 #include "person.h"
+#include "statemanager.h"
 
 struct Furniture : public Entity {
    private:
@@ -222,5 +224,90 @@ struct Furniture : public Entity {
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
         });
         return reg;
+    }
+};
+
+// TODO we can use concepts here to force this to be an Item
+template<typename I>
+struct ItemContainer : public Furniture {
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Furniture>{});
+    }
+
+   public:
+    ItemContainer() {}
+    explicit ItemContainer(vec2 pos) : Furniture(pos, WHITE, WHITE) {}
+
+    virtual bool can_place_item_into(
+        std::shared_ptr<Item> item = nullptr) override {
+        auto i = dynamic_pointer_cast<I>(item);
+        if (!i) return false;
+        if (!i->empty()) return false;
+        return true;
+    }
+
+    virtual void in_round_update(float dt) override {
+        Furniture::in_round_update(dt);
+        CanHoldItem& ourCHI = get<CanHoldItem>();
+
+        if (ourCHI.is_holding_item()) {
+            // TODO is this the api we one
+            ourCHI.item().reset(
+                // TODO what is this color and what is it for
+                new I(this->get<Transform>().position,
+                      Color({255, 15, 240, 255})));
+            ItemHelper::addItem(ourCHI.item());
+        }
+    }
+};
+
+struct BagBox : public ItemContainer<Bag> {
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Furniture>{});
+    }
+
+   public:
+    BagBox() {}
+    explicit BagBox(vec2 pos) : ItemContainer<Bag>(pos) { update_model(); }
+
+    void update_model() {
+        // log_info("model index: {}", model_index);
+        // TODO add a component for this
+        const bool in_planning = GameState::get().is(game::State::Planning);
+        get<ModelRenderer>().update(ModelInfo{
+            .model_name = in_planning ? "box" : "open_box",
+            .size_scale = 4.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        });
+    }
+};
+
+struct MedicineCabinet : public ItemContainer<PillBottle> {
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<ItemContainer>{});
+    }
+
+   public:
+    MedicineCabinet() {}
+    explicit MedicineCabinet(vec2 pos) : ItemContainer<PillBottle>(pos) {
+        update_model();
+    }
+
+    void update_model() {
+        // TODO add a component for this
+        get<ModelRenderer>().update(ModelInfo{
+            .model_name = "medicine_cabinet",
+            .size_scale = 2.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        });
     }
 };
