@@ -526,7 +526,8 @@ inline void process_input(const std::shared_ptr<Entity> entity,
 
                 const auto item_container_is_matching_item =
                     []<typename I>(std::shared_ptr<Entity> entity,
-                                   std::shared_ptr<I> item) {
+                                   std::shared_ptr<I> item = nullptr) {
+                        if (!item) return false;
                         if (entity->has<IsItemContainer<I>>()) return false;
                         IsItemContainer<I>& itemContainer =
                             entity->get<IsItemContainer<I>>();
@@ -811,6 +812,42 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float dt) {
     matchCHI.update(nullptr);
 }
 
+void process_is_container_and_should_destroy_item(
+    std::shared_ptr<Entity> entity, float dt) {
+    /*
+     * If we are an item container and we are holding an instance
+     * then we should just destroy it
+     * */
+
+    if (!entity->has<CanHoldItem>()) return;
+    CanHoldItem& canHold = entity->get<CanHoldItem>();
+
+    if (canHold.empty()) return;
+
+    const auto item_container_destroy_matching =
+        []<typename I>(std::shared_ptr<Entity> entity,
+                       std::shared_ptr<I> item = nullptr) {
+            if (!item) return;
+            if (entity->has<IsItemContainer<I>>()) return;
+
+            if (!entity->has<CanHoldItem>()) return;
+            CanHoldItem& canHold = entity->get<CanHoldItem>();
+
+            // TODO is this the api we want
+            canHold.item().reset(
+                // TODO what is this color and what is it for
+                new I(entity->get<Transform>().position,
+                      Color({255, 15, 240, 255})));
+            ItemHelper::addItem(canHold.item());
+        };
+
+    item_container_destroy_matching(entity,
+                                    dynamic_pointer_cast<Bag>(canHold.item()));
+    item_container_destroy_matching(
+        entity, dynamic_pointer_cast<PillBottle>(canHold.item()));
+}
+
+// TODO fix this
 // void process_register_waiting_queue(std::shared_ptr<Entity> entity, float dt)
 // { if (!entity->has<HasWaitingQueue>()) return; HasWaitingQueue&
 // hasWaitingQueue = entity->get<HasWaitingQueue>();
@@ -874,6 +911,8 @@ struct SystemManager {
             system_manager::job_system::update_job_information(entity, dt);
             system_manager::process_conveyer_items(entity, dt);
             system_manager::process_grabber_items(entity, dt);
+            system_manager::process_is_container_and_should_destroy_item(entity,
+                                                                         dt);
         }
     }
 

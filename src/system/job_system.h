@@ -344,7 +344,9 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 std::shared_ptr<Furniture> closest_target =
                     EntityHelper::getClosestMatchingEntity<Furniture>(
                         entity->get<Transform>().as2(), TILESIZE * 100.f,
-                        [](auto&&) { return true; });
+                        [](std::shared_ptr<Furniture> furniture) {
+                            return furniture->has<HasWaitingQueue>();
+                        });
 
                 if (!closest_target) {
                     // TODO we need some kinda way to save this job,
