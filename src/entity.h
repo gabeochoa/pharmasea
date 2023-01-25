@@ -283,8 +283,10 @@ struct Entity {
         }
     }
 
-    static Entity* make_entity(vec3) {
+    static Entity* make_entity(vec3 pos) {
         Entity* entity = new Entity();
+        entity->addComponent<Transform>().init(
+            pos, vec3{TILESIZE, TILESIZE, TILESIZE});
         return entity;
     }
 
@@ -306,7 +308,7 @@ static Entity* make_person(vec2 pos) {
 
     constexpr float szm = 0.75f;
     constexpr float sze = TILESIZE * szm;
-    person->addComponent<Transform>().init(vec::to3(pos), vec3{sze, sze, sze});
+    person->get<Transform>().init(vec::to3(pos), vec3{sze, sze, sze});
 
     // TODO why do we need the update() here?
     person->addComponent<ModelRenderer>().update(ModelInfo{
@@ -354,7 +356,7 @@ static Entity* make_aiperson(vec2 pos) {
     Entity* aiperson = make_person(pos);
 
     aiperson->addComponent<CanPerformJob>().update(Wandering, Wandering);
-    aiperson->addComponent<HasBaseSpeed>().update(10.f);
+    aiperson->get<HasBaseSpeed>().update(10.f);
 
     return aiperson;
 }
@@ -383,13 +385,15 @@ static Entity* make_aiperson(vec2 pos) {
 
 static Entity* make_customer(vec2 pos) {
     Entity* customer = make_aiperson(pos);
-    // std::optional<SpeechBubble> bubble;
-    //
+
     customer->addComponent<CanHaveAilment>().update(
         std::make_shared<Insomnia>());
+    customer->addComponent<HasName>().update(get_random_name());
 
-    customer->get<HasName>().update(get_random_name());
     customer->get<CanPerformJob>().update(WaitInQueue, Wandering);
+
+    // std::optional<SpeechBubble> bubble;
+    //
 
     // TODO turn back on bubbles
     // bubble = SpeechBubble(ailment->icon_name());
@@ -487,7 +491,7 @@ static Entity* make_character_switcher(vec2 pos) {
     return character_switcher;
 }
 
-static Entity* make_wall(vec2 pos, Color c) {
+static Entity* make_wall(vec2 pos) {
     Entity* wall = make_furniture(pos, ui::color::brown, ui::color::brown);
 
     return wall;

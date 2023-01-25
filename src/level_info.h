@@ -15,7 +15,6 @@ constexpr int MAX_SEED_LENGTH = 20;
 
 static void generate_and_insert_walls(std::string /* seed */) {
     // TODO generate walls based on seed
-    const auto d_color = (Color){155, 75, 0, 255};
     for (int i = 0; i < MAX_MAP_SIZE; i++) {
         for (int j = 0; j < MAX_MAP_SIZE; j++) {
             if ((i == 0 && j == 0) || (i == 0 && j == 1)) continue;
@@ -23,7 +22,7 @@ static void generate_and_insert_walls(std::string /* seed */) {
                 j == MAX_MAP_SIZE - 1) {
                 vec2 location = vec2{i * TILESIZE, j * TILESIZE};
                 std::shared_ptr<Entity> wall;
-                wall.reset(make_wall(location, d_color));
+                wall.reset(make_wall(location));
                 EntityHelper::addEntity(wall);
             }
         }
