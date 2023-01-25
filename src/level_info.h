@@ -108,6 +108,7 @@ struct LevelInfo {
 
 struct LobbyMapInfo : public LevelInfo {
     virtual void generate_map() override {
+        return;
         {
             std::shared_ptr<Entity> charSwitch;
             const auto location = vec2{5, 5};
@@ -188,6 +189,8 @@ struct GameMapInfo : public LevelInfo {
     virtual void generate_map() override {
         server_entities_DO_NOT_USE.clear();
         server_items_DO_NOT_USE.clear();
+
+        return;
 
         auto generate_tables = [this]() {
             {

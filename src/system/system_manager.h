@@ -900,34 +900,34 @@ struct SystemManager {
     void always_update(const std::vector<std::shared_ptr<Entity>>& entity_list,
                        float dt) {
         for (auto& entity : entity_list) {
-            system_manager::reset_highlighted(entity, dt);
-            system_manager::transform_snapper(entity, dt);
-            system_manager::update_held_item_position(entity, dt);
+            // system_manager::reset_highlighted(entity, dt);
+            // system_manager::transform_snapper(entity, dt);
+            // system_manager::update_held_item_position(entity, dt);
             system_manager::collect_user_input(entity, dt);
-
-            // This could run only in lobby if we wanted to distinguish
-            system_manager::render_manager::update_character_model_from_index(
-                entity, dt);
+            //
+            // // This could run only in lobby if we wanted to distinguish
+            // system_manager::render_manager::update_character_model_from_index(
+            // entity, dt);
         }
     }
 
     void in_round_update(
         const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
         for (auto& entity : entity_list) {
-            system_manager::job_system::handle_job_holder_pushed(entity, dt);
-            system_manager::job_system::update_job_information(entity, dt);
-            system_manager::process_conveyer_items(entity, dt);
-            system_manager::process_grabber_items(entity, dt);
-            system_manager::process_is_container_and_should_destroy_item(entity,
-                                                                         dt);
+            // system_manager::job_system::handle_job_holder_pushed(entity, dt);
+            // system_manager::job_system::update_job_information(entity, dt);
+            // system_manager::process_conveyer_items(entity, dt);
+            // system_manager::process_grabber_items(entity, dt);
+            // system_manager::process_is_container_and_should_destroy_item(entity,
+            // dt);
         }
     }
 
     void planning_update(
         const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
         for (auto& entity : entity_list) {
-            system_manager::highlight_facing_furniture(entity, dt);
-            system_manager::update_held_furniture_position(entity, dt);
+            // system_manager::highlight_facing_furniture(entity, dt);
+            // system_manager::update_held_furniture_position(entity, dt);
         }
     }
 
@@ -935,15 +935,15 @@ struct SystemManager {
                        float dt) const {
         for (auto& entity : entity_list) {
             system_manager::render_manager::render_normal(entity, dt);
-            system_manager::render_manager::render_floating_name(entity, dt);
-            system_manager::render_manager::render_progress_bar(entity, dt);
+            // system_manager::render_manager::render_floating_name(entity, dt);
+            // system_manager::render_manager::render_progress_bar(entity, dt);
         }
     }
 
     void render_debug(const std::vector<std::shared_ptr<Entity>>& entity_list,
                       float dt) const {
         for (auto& entity : entity_list) {
-            system_manager::render_manager::render_debug(entity, dt);
+            // system_manager::render_manager::render_debug(entity, dt);
         }
     }
 };

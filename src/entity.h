@@ -91,13 +91,8 @@ struct Entity {
         log_trace("adding component {} {} to entity {}",
                   components::get_type_id<T>(), type_name<T>(), id);
 
-        // TODO eventually enforce this
-        if (this->has<T>()) {
-            log_warn("This entity already has this component attached");
-            return this->get<T>();
-        }
-        // M_ASSERT(!this->has<T>(),
-        // "This entity already has this component attached");
+        M_ASSERT(!this->has<T>(),
+                 "This entity already has this component attached");
 
         std::shared_ptr<T> component;
         component.reset(new T(std::forward<TArgs>(args)...));
@@ -283,17 +278,8 @@ struct Entity {
         }
     }
 
-    static Entity* make_entity(vec3 pos) {
+    static Entity* make_entity(vec3) {
         Entity* entity = new Entity();
-        entity->addComponent<Transform>().init(pos, entity->size());
-        // entity->addComponent<HasName>();
-        // entity->addComponent<CanHoldItem>();
-        // entity->addComponent<SimpleColoredBoxRenderer>();
-        // entity->addComponent<ModelRenderer>();
-        // entity->addComponent<CanBePushed>();
-        // entity->addComponent<CanBeHeld>();
-        // entity->addComponent<CanBeTakenFrom>();
-        // entity->get<SimpleColoredBoxRenderer>().init(face, base);
         return entity;
     }
 
@@ -302,22 +288,30 @@ struct Entity {
     }
 };
 
+// entity->addComponent<CanHoldItem>();
+// entity->addComponent<SimpleColoredBoxRenderer>();
+// entity->addComponent<ModelRenderer>();
+// entity->addComponent<CanBePushed>();
+// entity->addComponent<CanBeHeld>();
+// entity->addComponent<CanBeTakenFrom>();
+// entity->get<SimpleColoredBoxRenderer>().init(face, base);
+
 static Entity* make_person(vec2 pos) {
     Entity* person = Entity::make_entity(pos);
 
-    person->get<Transform>().size =
-        vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
+    constexpr float szm = 0.75f;
+    constexpr float sze = TILESIZE * szm;
+    person->addComponent<Transform>().init(vec::to3(pos), vec3{sze, sze, sze});
 
-    person->addComponent<HasBaseSpeed>().update(10.f);
-    // TODO why do we need the udpate() here?
+    // TODO why do we need the update() here?
     person->addComponent<ModelRenderer>().update(ModelInfo{
         .model_name = "character_duck",
         .size_scale = 1.5f,
         .position_offset = vec3{0, 0, 0},
         .rotation_angle = 180,
     });
-
     person->addComponent<UsesCharacterModel>();
+    person->addComponent<HasBaseSpeed>().update(10.f);
 
     return person;
 }
@@ -328,7 +322,6 @@ static Entity* make_base_player(vec2 pos) {
     base_player->addComponent<CanHighlightOthers>();
     base_player->addComponent<CanHoldFurniture>();
 
-    // addComponent<HasBaseSpeed>().update(10.f);
     base_player->get<HasBaseSpeed>().update(7.5f);
 
     return base_player;
@@ -336,7 +329,20 @@ static Entity* make_base_player(vec2 pos) {
 
 static Entity* make_remote_player() {
     Entity* remote_player = make_base_player({0, 0});
+
+    remote_player->addComponent<HasName>();
+
     return remote_player;
+}
+
+static Entity* make_player(vec2 pos = {0, 0}) {
+    Entity* player = make_base_player(pos);
+
+    player->addComponent<CanBeGhostPlayer>();
+    player->addComponent<CollectsUserInput>();
+    player->addComponent<RespondsToUserInput>();
+
+    return player;
 }
 
 static Entity* make_aiperson(vec2 pos) {
@@ -419,14 +425,6 @@ static void update_remotely(std::shared_ptr<Entity> entity, float* location,
     transform.position = vec3{location[0], location[1], location[2]};
     transform.face_direction =
         static_cast<Transform::FrontFaceDirection>(facing_direction);
-}
-
-static Entity* make_player(vec2 pos = {0, 0}) {
-    Entity* player = make_base_player(pos);
-    player->addComponent<CanBeGhostPlayer>();
-    player->addComponent<CollectsUserInput>();
-    player->addComponent<RespondsToUserInput>();
-    return player;
 }
 
 static Entity* make_furniture(vec2 pos, Color face, Color base) {

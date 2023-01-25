@@ -123,7 +123,9 @@ struct Client {
                 std::shared_ptr<Entity>(make_remote_player());
             auto rp = remote_players[client_id];
             rp->client_id = client_id;
+            // We want to crash if no hasName so no has<> check here
             rp->get<HasName>().update(username);
+
             // NOTE we add to the map directly because its colocated with
             //      the other entity info
             map->remote_players_NOT_SERIALIZED.push_back(
