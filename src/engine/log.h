@@ -5,11 +5,11 @@
 #include <cassert>
 
 enum LogLevel {
-    LLALL = 0,
-    LLTRACE = 1,
-    LLINFO = 2,
-    LLWARN = 3,
-    LLERROR = 4
+    LOG_ALOG_ = 0,
+    LOG_TRACE = 1,
+    LOG_INFO = 2,
+    LOG_WARN = 3,
+    LOG_ERROR = 4
 };
 
 // TODO log to file
@@ -68,10 +68,13 @@ inline void log_me(LogLevel level, const char* file, int line,
 static void log_me(...) {}
 #endif
 
-#define log_trace(...) log_me(LogLevel::LLTRACE, __FILE__, __LINE__, __VA_ARGS__)
+#define log_trace(...) \
+    log_me(LogLevel::LOG_TRACE, __FILE__, __LINE__, __VA_ARGS__)
 
-#define log_info(...) log_me(LogLevel::LLINFO, __FILE__, __LINE__, __VA_ARGS__)
-#define log_warn(...) log_me(LogLevel::LLWARN, __FILE__, __LINE__, __VA_ARGS__)
-#define log_error(...)                                        \
-    log_me(LogLevel::LLERROR, __FILE__, __LINE__, __VA_ARGS__); \
+#define log_info(...) \
+    log_me(LogLevel::LOG_INFO, __FILE__, __LINE__, __VA_ARGS__)
+#define log_warn(...) \
+    log_me(LogLevel::LOG_WARN, __FILE__, __LINE__, __VA_ARGS__)
+#define log_error(...)                                            \
+    log_me(LogLevel::LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__); \
     assert(false)

@@ -77,11 +77,15 @@ struct Furniture : public Entity {
 
         character_switcher->get<HasWork>().init(
             [](HasWork& hasWork, std::shared_ptr<Person> person, float dt) {
+                if (!person->has<UsesCharacterModel>()) return;
+                UsesCharacterModel& usesCharacterModel =
+                    person->get<UsesCharacterModel>();
+
                 const float amt = 2.f;
                 hasWork.pct_work_complete += amt * dt;
                 if (hasWork.pct_work_complete >= 1.f) {
                     hasWork.pct_work_complete = 0.f;
-                    person->select_next_character_model();
+                    usesCharacterModel.increment();
                 }
             });
         return character_switcher;

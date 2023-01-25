@@ -2,11 +2,32 @@
 
 #pragma once
 
+#include "../components/uses_character_model.h"
 #include "../engine/log.h"
 #include "job_system.h"
 
 namespace system_manager {
 namespace render_manager {
+
+inline void update_character_model_from_index(std::shared_ptr<Entity> entity,
+                                              float) {
+    if (!entity->has<UsesCharacterModel>()) return;
+    UsesCharacterModel& usesCharacterModel = entity->get<UsesCharacterModel>();
+
+    if (!usesCharacterModel.value_same_as_last_render()) return;
+
+    if (!entity->has<ModelRenderer>()) return;
+    ModelRenderer& renderer = entity->get<ModelRenderer>();
+
+    renderer.update(ModelInfo{
+        .model_name = usesCharacterModel.fetch_model(),
+        .size_scale = 1.5f,
+        .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 180,
+    });
+
+    usesCharacterModel.mark_change_completed();
+}
 
 inline bool render_simple_highlighted(std::shared_ptr<Entity> entity, float) {
     if (!entity->has<Transform>()) return false;

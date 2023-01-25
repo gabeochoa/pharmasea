@@ -14,10 +14,10 @@
 #include "../components/responds_to_user_input.h"
 #include "../components/transform.h"
 #include "../customer.h"
+#include "../engine/tracy.h"
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../furniture.h"
-#include "../engine/tracy.h"
 #include "job_system.h"
 #include "rendering_system.h"
 
@@ -908,6 +908,10 @@ struct SystemManager {
             system_manager::transform_snapper(entity, dt);
             system_manager::update_held_item_position(entity, dt);
             system_manager::collect_user_input(entity, dt);
+
+            // This could run only in lobby if we wanted to distinguish
+            system_manager::render_manager::update_character_model_from_index(
+                entity, dt);
         }
     }
 

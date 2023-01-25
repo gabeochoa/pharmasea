@@ -14,7 +14,7 @@ struct ModelRenderer : public BaseComponent {
         return ModelLibrary::get().get(info.value().model_name);
     }
 
-    void update(ModelInfo new_info) { info = new_info; }
+    void update(const ModelInfo& new_info) { info = new_info; }
 
    private:
     std::optional<ModelInfo> info;
