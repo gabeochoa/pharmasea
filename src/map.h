@@ -7,7 +7,6 @@
 #include "engine/log.h"
 #include "external_include.h"
 //
-#include "base_player.h"
 #include "entityhelper.h"
 #include "level_info.h"
 #include "statemanager.h"
@@ -16,7 +15,7 @@ struct Map {
     LobbyMapInfo lobby_info;
     GameMapInfo game_info;
 
-    std::vector<std::shared_ptr<RemotePlayer>> remote_players_NOT_SERIALIZED;
+    std::vector<std::shared_ptr<Entity>> remote_players_NOT_SERIALIZED;
     std::string seed;
 
     Map(const std::string& _seed = "default_seed") : seed(_seed) {

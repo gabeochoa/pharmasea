@@ -8,10 +8,8 @@
 #include "../components/can_perform_job.h"
 #include "../components/custom_item_position.h"
 #include "../components/transform.h"
-#include "../customer.h"
 #include "../entity.h"
 #include "../entityhelper.h"
-#include "../furniture.h"
 #include "logging_system.h"
 
 namespace system_manager {
@@ -90,9 +88,7 @@ inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
     std::shared_ptr<Job> job = cpj.job();
 
     if (job->state == Job::State::Completed) {
-        if (job->on_cleanup)
-            job->on_cleanup(dynamic_pointer_cast<AIPerson>(entity).get(),
-                            job.get());
+        if (job->on_cleanup) job->on_cleanup(entity.get(), job.get());
         job.reset();
         find_new_job(entity, dt);
         return;
@@ -252,7 +248,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
 
         const auto get_next_queue_position =
             [](std::shared_ptr<Entity> reg,
-               std::shared_ptr<AIPerson> customer) -> vec2 {
+               std::shared_ptr<Entity> customer) -> vec2 {
             M_ASSERT(customer,
                      "entity passed to register queue should not be null");
             M_ASSERT(reg->has<HasWaitingQueue>(),
@@ -341,10 +337,10 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
 
                 // TODO replace with finding the one with the least people
                 // in it
-                std::shared_ptr<Furniture> closest_target =
-                    EntityHelper::getClosestMatchingEntity<Furniture>(
+                std::shared_ptr<Entity> closest_target =
+                    EntityHelper::getClosestMatchingEntity<Entity>(
                         entity->get<Transform>().as2(), TILESIZE * 100.f,
-                        [](std::shared_ptr<Furniture> furniture) {
+                        [](std::shared_ptr<Entity> furniture) {
                             return furniture->has<HasWaitingQueue>();
                         });
 
@@ -363,7 +359,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 job->data["register"] = closest_target.get();
                 job->start = get_next_queue_position(
                     dynamic_pointer_cast<Entity>(closest_target),
-                    dynamic_pointer_cast<AIPerson>(entity));
+                    dynamic_pointer_cast<Entity>(entity));
                 job->end = closest_target->tile_infront(1);
                 job->spot_in_line = position_in_line(closest_target, entity);
                 job->state = Job::State::HeadingToStart;

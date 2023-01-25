@@ -3,7 +3,6 @@
 #include "external_include.h"
 //
 #include "engine/log.h"
-#include "entity.h"
 #include "globals.h"
 #include "raylib.h"
 

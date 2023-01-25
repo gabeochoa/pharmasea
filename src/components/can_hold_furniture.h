@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "../furniture.h"
 #include "base_component.h"
+
+struct Entity;
 
 struct CanHoldFurniture : public BaseComponent {
     virtual ~CanHoldFurniture() {}
@@ -16,16 +17,14 @@ struct CanHoldFurniture : public BaseComponent {
         return dynamic_pointer_cast<T>(held_furniture);
     }
 
-    void update(std::shared_ptr<Furniture> furniture) {
+    void update(std::shared_ptr<Entity> furniture) {
         held_furniture = furniture;
     }
 
-    [[nodiscard]] std::shared_ptr<Furniture> furniture() {
-        return held_furniture;
-    }
+    [[nodiscard]] std::shared_ptr<Entity> furniture() { return held_furniture; }
 
    private:
-    std::shared_ptr<Furniture> held_furniture = nullptr;
+    std::shared_ptr<Entity> held_furniture = nullptr;
 
     friend bitsery::Access;
     template<typename S>

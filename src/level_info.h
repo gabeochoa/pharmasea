@@ -5,7 +5,6 @@
 #include "engine/ui_color.h"
 #include "entity.h"
 #include "entityhelper.h"
-#include "furniture.h"
 #include "item.h"
 #include "item_helper.h"
 #include "round.h"
@@ -23,8 +22,8 @@ static void generate_and_insert_walls(std::string /* seed */) {
             if (i == 0 || j == 0 || i == MAX_MAP_SIZE - 1 ||
                 j == MAX_MAP_SIZE - 1) {
                 vec2 location = vec2{i * TILESIZE, j * TILESIZE};
-                std::shared_ptr<Furniture> wall;
-                wall.reset(Furniture::make_wall(location, d_color));
+                std::shared_ptr<Entity> wall;
+                wall.reset(make_wall(location, d_color));
                 EntityHelper::addEntity(wall);
             }
         }
@@ -110,9 +109,9 @@ struct LevelInfo {
 struct LobbyMapInfo : public LevelInfo {
     virtual void generate_map() override {
         {
-            std::shared_ptr<Furniture> charSwitch;
+            std::shared_ptr<Entity> charSwitch;
             const auto location = vec2{5, 5};
-            charSwitch.reset(Furniture::make_character_switcher(location));
+            charSwitch.reset(make_character_switcher(location));
             EntityHelper::addEntity(charSwitch);
         }
     }
@@ -194,8 +193,8 @@ struct GameMapInfo : public LevelInfo {
             {
                 const auto location = get_rand_walkable();
 
-                std::shared_ptr<Furniture> table;
-                table.reset(Furniture::make_table(location));
+                std::shared_ptr<Entity> table;
+                table.reset(make_table(location));
                 EntityHelper::addEntity(table);
 
                 std::shared_ptr<Pill> item;
@@ -207,8 +206,8 @@ struct GameMapInfo : public LevelInfo {
             {
                 const auto location = get_rand_walkable();
 
-                std::shared_ptr<Furniture> table;
-                table.reset(Furniture::make_table(location));
+                std::shared_ptr<Entity> table;
+                table.reset(make_table(location));
                 EntityHelper::addEntity(table);
 
                 std::shared_ptr<PillBottle> item;
@@ -219,43 +218,43 @@ struct GameMapInfo : public LevelInfo {
         };
 
         const auto generate_medicine_cabinet = [this]() {
-            std::shared_ptr<Furniture> medicineCab;
+            std::shared_ptr<Entity> medicineCab;
             const auto location = get_rand_walkable();
-            medicineCab.reset(Furniture::make_medicine_cabinet(location));
+            medicineCab.reset(make_medicine_cabinet(location));
             EntityHelper::addEntity(medicineCab);
         };
 
         const auto generate_bag_box = [this]() {
-            std::shared_ptr<Furniture> bagbox;
+            std::shared_ptr<Entity> bagbox;
             const auto location = get_rand_walkable();
-            bagbox.reset(Furniture::make_bagbox(location));
+            bagbox.reset(make_bagbox(location));
             EntityHelper::addEntity(bagbox);
         };
 
         const auto generate_register = [this]() {
-            std::shared_ptr<Furniture> reg;
+            std::shared_ptr<Entity> reg;
             const auto location = get_rand_walkable();
-            reg.reset(Furniture::make_register(location));
+            reg.reset(make_register(location));
             EntityHelper::addEntity(reg);
         };
 
         // TODO replace with a CustomerSpawner eventually
         const auto generate_customer = []() {
             const auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
-            std::shared_ptr<Customer> customer;
-            customer.reset(new Customer(vec::to3(location), RED));
+            std::shared_ptr<Entity> customer;
+            customer.reset(make_customer(location, RED));
             EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
         };
 
         auto generate_test = [this]() {
             for (int i = 0; i < 5; i++) {
                 const auto location = get_rand_walkable();
-                std::shared_ptr<Furniture> conveyer;
+                std::shared_ptr<Entity> conveyer;
 
                 if (i == 0)
-                    conveyer.reset(Furniture::make_conveyer(location));
+                    conveyer.reset(make_conveyer(location));
                 else
-                    conveyer.reset(Furniture::make_grabber(location));
+                    conveyer.reset(make_grabber(location));
 
                 EntityHelper::addEntity(conveyer);
             }

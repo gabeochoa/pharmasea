@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "../base_player.h"
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_grab_from_other_furniture.h"
 #include "../components/can_highlight_others.h"
@@ -13,11 +12,9 @@
 #include "../components/is_snappable.h"
 #include "../components/responds_to_user_input.h"
 #include "../components/transform.h"
-#include "../customer.h"
 #include "../engine/tracy.h"
 #include "../entity.h"
 #include "../entityhelper.h"
-#include "../furniture.h"
 #include "job_system.h"
 #include "rendering_system.h"
 
@@ -157,10 +154,10 @@ inline void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
 
     // TODO this is impossible to read, what can we do to fix this while
     // keeping it configurable
-    auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
+    auto match = EntityHelper::getMatchingEntityInFront<Entity>(
         // TODO add a player reach component
         transform.as2(), cho.reach(), transform.face_direction,
-        [](std::shared_ptr<Furniture>) { return true; });
+        [](std::shared_ptr<Entity>) { return true; });
     if (!match) return;
     if (!match->has<CanBeHighlighted>()) return;
     match->get<CanBeHighlighted>().is_highlighted = true;
@@ -180,7 +177,7 @@ inline void move_entity_based_on_push_force(std::shared_ptr<Entity> entity,
 }
 
 inline void person_update_given_new_pos(int id, Transform& transform,
-                                        std::shared_ptr<Person> person,
+                                        std::shared_ptr<Entity> person,
                                         float dt, vec3 new_pos_x,
                                         vec3 new_pos_z) {
     int facedir_x = -1;
@@ -275,7 +272,7 @@ inline void person_update_given_new_pos(int id, Transform& transform,
             if (auto entity_x = collided_entity_x.lock()) {
                 // TODO remove this check since we can just put CanBePushed
                 // on the person entity and replace with a has<> check
-                if (auto person_ptr_x = dynamic_cast<Person*>(entity_x.get())) {
+                if (auto person_ptr_x = entity_x.get()) {
                     CanBePushed& cbp = entity_x->get<CanBePushed>();
                     const float random_jitter = randSign() * TILESIZE / 2.0f;
                     if (facedir_x & Transform::FrontFaceDirection::LEFT) {
@@ -291,7 +288,7 @@ inline void person_update_given_new_pos(int id, Transform& transform,
             if (auto entity_z = collided_entity_z.lock()) {
                 // TODO remove this check since we can just put CanBePushed
                 // on the person entity and replace with a has<> check
-                if (auto person_ptr_z = dynamic_cast<Person*>(entity_z.get())) {
+                if (auto person_ptr_z = entity_z.get()) {
                     CanBePushed& cbp = entity_z->get<CanBePushed>();
                     const float random_jitter = randSign() * TILESIZE / 2.0f;
                     if (facedir_z & Transform::FrontFaceDirection::FORWARD) {
@@ -352,7 +349,6 @@ inline void process_player_movement_input(std::shared_ptr<Entity> entity,
                                           float input_amount) {
     if (!entity->has<Transform>()) return;
     Transform& transform = entity->get<Transform>();
-    std::shared_ptr<Player> player = dynamic_pointer_cast<Player>(entity);
 
     if (!entity->has<HasBaseSpeed>()) return;
     HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
@@ -370,7 +366,7 @@ inline void process_player_movement_input(std::shared_ptr<Entity> entity,
         new_position.z += input_amount * speed;
     }
 
-    person_update_given_new_pos(entity->id, transform, player, dt, new_position,
+    person_update_given_new_pos(entity->id, transform, entity, dt, new_position,
                                 new_position);
     transform.position = transform.raw_position;
 };
@@ -401,7 +397,7 @@ inline void process_input(const std::shared_ptr<Entity> entity,
         return;
     }
 
-    std::shared_ptr<Player> player = dynamic_pointer_cast<Player>(entity);
+    std::shared_ptr<Entity> player = entity;
     if (!player) return;
 
     const auto rotate_furniture = [player]() {
@@ -412,9 +408,9 @@ inline void process_input(const std::shared_ptr<Entity> entity,
         // TODO need to figure out if this should be separate from highlighting
         CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
-        std::shared_ptr<Furniture> match =
+        std::shared_ptr<Entity> match =
             // TODO have this just take a transform
-            EntityHelper::getClosestMatchingEntity<Furniture>(
+            EntityHelper::getClosestMatchingEntity<Entity>(
                 player->get<Transform>().as2(), cho.reach(),
                 [](auto&& furniture) {
                     return furniture->template has<IsRotatable>();
@@ -432,10 +428,10 @@ inline void process_input(const std::shared_ptr<Entity> entity,
         // TODO need to figure out if this should be separate from highlighting
         CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
-        std::shared_ptr<Furniture> match =
-            EntityHelper::getClosestMatchingEntity<Furniture>(
+        std::shared_ptr<Entity> match =
+            EntityHelper::getClosestMatchingEntity<Entity>(
                 player->get<Transform>().as2(), cho.reach(),
-                [](std::shared_ptr<Furniture> furniture) {
+                [](std::shared_ptr<Entity> furniture) {
                     if (!furniture->has<HasWork>()) return false;
                     HasWork& hasWork = furniture->get<HasWork>();
                     return hasWork.has_work();
@@ -466,11 +462,11 @@ inline void process_input(const std::shared_ptr<Entity> entity,
                     return false;
                 }
 
-                std::shared_ptr<Furniture> closest_furniture =
-                    EntityHelper::getMatchingEntityInFront<Furniture>(
+                std::shared_ptr<Entity> closest_furniture =
+                    EntityHelper::getMatchingEntityInFront<Entity>(
                         player->get<Transform>().as2(), cho.reach(),
                         player->get<Transform>().face_direction,
-                        [](std::shared_ptr<Furniture> f) {
+                        [](std::shared_ptr<Entity> f) {
                             return f->get<CanHoldItem>().is_holding_item();
                         });
 
@@ -489,11 +485,11 @@ inline void process_input(const std::shared_ptr<Entity> entity,
 
             const auto _merge_item_in_hand_into_furniture_item = [&]() {
                 TRACY_ZONE(tracy_merge_item_in_hand_into_furniture);
-                std::shared_ptr<Furniture> closest_furniture =
-                    EntityHelper::getMatchingEntityInFront<Furniture>(
+                std::shared_ptr<Entity> closest_furniture =
+                    EntityHelper::getMatchingEntityInFront<Entity>(
                         player->get<Transform>().as2(), cho.reach(),
                         player->get<Transform>().face_direction,
-                        [&](std::shared_ptr<Furniture> f) {
+                        [&](std::shared_ptr<Entity> f) {
                             return
                                 // is there something there to merge into?
                                 f->get<CanHoldItem>().is_holding_item() &&
@@ -556,12 +552,12 @@ inline void process_input(const std::shared_ptr<Entity> entity,
 
             const auto _place_item_onto_furniture = [&]() {
                 TRACY_ZONE(tracy_place_item_onto_furniture);
-                std::shared_ptr<Furniture> closest_furniture =
-                    EntityHelper::getMatchingEntityInFront<Furniture>(
+                std::shared_ptr<Entity> closest_furniture =
+                    EntityHelper::getMatchingEntityInFront<Entity>(
                         player->get<Transform>().as2(), cho.reach(),
                         player->get<Transform>().face_direction,
                         [player,
-                         can_place_item_into](std::shared_ptr<Furniture> f) {
+                         can_place_item_into](std::shared_ptr<Entity> f) {
                             return can_place_item_into(
                                 f, player->get<CanHoldItem>().item());
                         });
@@ -594,11 +590,11 @@ inline void process_input(const std::shared_ptr<Entity> entity,
 
         } else {
             const auto _pickup_item_from_furniture = [&]() {
-                std::shared_ptr<Furniture> closest_furniture =
-                    EntityHelper::getMatchingEntityInFront<Furniture>(
+                std::shared_ptr<Entity> closest_furniture =
+                    EntityHelper::getMatchingEntityInFront<Entity>(
                         player->get<Transform>().as2(), cho.reach(),
                         player->get<Transform>().face_direction,
-                        [](std::shared_ptr<Furniture> furn) {
+                        [](std::shared_ptr<Entity> furn) {
                             // TODO fix
                             return (furn->get<CanHoldItem>().item() != nullptr);
                         });
@@ -664,11 +660,11 @@ inline void process_input(const std::shared_ptr<Entity> entity,
         } else {
             // TODO support finding things in the direction the player is
             // facing, instead of in a box around him
-            std::shared_ptr<Furniture> closest_furniture =
-                EntityHelper::getMatchingEntityInFront<Furniture>(
+            std::shared_ptr<Entity> closest_furniture =
+                EntityHelper::getMatchingEntityInFront<Entity>(
                     player->get<Transform>().as2(), cho.reach(),
                     player->get<Transform>().face_direction,
-                    [](std::shared_ptr<Furniture> f) {
+                    [](std::shared_ptr<Entity> f) {
                         // TODO right now walls inherit this from furniture but
                         // eventually that should not be the case
                         return f->get<CanBeHeld>().is_not_held();
@@ -736,9 +732,9 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
         return;
     }
 
-    auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
+    auto match = EntityHelper::getMatchingEntityInFront<Entity>(
         transform.as2(), 1.f, transform.face_direction,
-        [entity](std::shared_ptr<Furniture> furn) {
+        [entity](std::shared_ptr<Entity> furn) {
             return entity->id != furn->id &&
                    // TODO need to merge this into the system manager one
                    // but cant yet
@@ -796,11 +792,11 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float dt) {
     if (!entity->has<Transform>()) return;
     Transform& transform = entity->get<Transform>();
 
-    auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
+    auto match = EntityHelper::getMatchingEntityInFront<Entity>(
         transform.as2(), 1.f,
         // Behind
         transform.offsetFaceDirection(transform.face_direction, 180),
-        [entity](std::shared_ptr<Furniture> furn) {
+        [entity](std::shared_ptr<Entity> furn) {
             return entity->id != furn->id &&
                    furn->get<CanHoldItem>().can_take_item_from();
         });
