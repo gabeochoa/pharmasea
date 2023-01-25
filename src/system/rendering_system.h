@@ -174,23 +174,25 @@ inline void render_floating_name(std::shared_ptr<Entity> entity, float) {
 }
 
 inline void render_progress_bar(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<HasWork>()) return;
-    HasWork& hasWork = entity->get<HasWork>();
-
-    // TODO why do we crash on pct_work_complete
-    return;
-
-    if (hasWork.pct_work_complete <= 0.01f || !hasWork.has_work()) return;
-
     if (!entity->has<Transform>()) return;
     const Transform& transform = entity->get<Transform>();
 
+    if (!entity->has<ShowsProgressBar>()) return;
+
+    if (!entity->has<HasWork>()) return;
+    HasWork& hasWork = entity->get<HasWork>();
+    if (hasWork.dont_show_progres_bar()) return;
+
     const int length = 20;
-    const int full = (int) (hasWork.pct_work_complete * length);
+    const int full = hasWork.scale_length(length);
     const int empty = length - full;
-    auto progress = fmt::format("[{:=>{}}{: >{}}]", "", full, "", empty * 2);
-    DrawFloatingText(transform.raw_position + vec3({0, TILESIZE, 0}),
-                     Preload::get().font, progress.c_str());
+    const auto progress =
+        fmt::format("[{:=>{}}{: >{}}]", "", full, "", empty * 2);
+
+    DrawFloatingText(                                     //
+        transform.raw_position + vec3({0, TILESIZE, 0}),  //
+        Preload::get().font,                              //
+        progress.c_str());
 
     // TODO eventually add real rectangle progress bar
     // auto game_cam = GLOBALS.get<GameCam>("game_cam");

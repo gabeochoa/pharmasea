@@ -10,6 +10,7 @@
 #include "components/is_item_container.h"
 #include "components/is_rotatable.h"
 #include "components/is_solid.h"
+#include "components/shows_progress_bar.h"
 #include "drawing_util.h"
 #include "engine/assert.h"
 #include "entity.h"
@@ -59,15 +60,15 @@ struct Furniture : public Entity {
 
         table->addComponent<CustomHeldItemPosition>().init(
             CustomHeldItemPosition::Positioner::Table);
-        table->get<HasWork>().init(
+        table->addComponent<HasWork>().init(
             [](HasWork& hasWork, std::shared_ptr<Person>, float dt) {
                 // TODO eventually we need it to decide whether it has work
                 // based on the current held item
                 const float amt = 0.5f;
-                hasWork.pct_work_complete += amt * dt;
-                if (hasWork.pct_work_complete >= 1.f)
-                    hasWork.pct_work_complete = 0.f;
+                hasWork.increase_pct(amt * dt);
+                if (hasWork.is_work_complete()) hasWork.reset_pct();
             });
+        table->addComponent<ShowsProgressBar>();
         return table;
     }
 
@@ -82,12 +83,13 @@ struct Furniture : public Entity {
                     person->get<UsesCharacterModel>();
 
                 const float amt = 2.f;
-                hasWork.pct_work_complete += amt * dt;
-                if (hasWork.pct_work_complete >= 1.f) {
-                    hasWork.pct_work_complete = 0.f;
+                hasWork.increase_pct(amt * dt);
+                if (hasWork.is_work_complete()) {
+                    hasWork.reset_pct();
                     usesCharacterModel.increment();
                 }
             });
+        character_switcher->addComponent<ShowsProgressBar>();
         return character_switcher;
     }
 
