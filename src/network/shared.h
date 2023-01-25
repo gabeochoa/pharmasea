@@ -30,10 +30,6 @@ struct PolymorphicBaseClass<Entity>
     : PolymorphicDerivedClasses<Furniture, Person> {};
 
 template<>
-struct PolymorphicBaseClass<Furniture>
-    : PolymorphicDerivedClasses<BagBox, MedicineCabinet> {};
-
-template<>
 struct PolymorphicBaseClass<Person>
     : PolymorphicDerivedClasses<BasePlayer, AIPerson> {};
 

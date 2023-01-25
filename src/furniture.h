@@ -32,35 +32,37 @@ struct Furniture : public Entity {
    protected:
     Furniture() : Entity() {}
 
-    void add_static_components() {
-        addComponent<HasWork>();
-        addComponent<IsSolid>();
-        addComponent<IsRotatable>();
-        addComponent<CustomHeldItemPosition>().init(
-            CustomHeldItemPosition::Positioner::Default);
-        get<HasWork>().init([](HasWork&, std::shared_ptr<Person>, float) {});
-    }
-
     Furniture(vec3 pos, Color face_color_in)
-        : Entity(pos, face_color_in, face_color_in) {
-        add_static_components();
-    }
+        : Entity(pos, face_color_in, face_color_in) {}
     Furniture(vec2 pos, Color face_color_in, Color base_color_in)
-        : Entity({pos.x, 0, pos.y}, face_color_in, base_color_in) {
-        add_static_components();
-    }
+        : Entity({pos.x, 0, pos.y}, face_color_in, base_color_in) {}
 
     Furniture(vec2 pos, Color face_color_in)
         : Furniture(pos, face_color_in, face_color_in) {}
 
    public:
+    static Furniture* make_furniture(vec2 pos, Color face, Color base) {
+        Furniture* furniture = new Furniture(pos, face, base);
+
+        furniture->addComponent<IsSolid>();
+        furniture->addComponent<IsRotatable>();
+
+        furniture->addComponent<HasWork>().init(
+            [](HasWork&, std::shared_ptr<Person>, float) {});
+        furniture->addComponent<CustomHeldItemPosition>().init(
+            CustomHeldItemPosition::Positioner::Default);
+
+        return furniture;
+    }
+
     static Furniture* make_table(vec2 pos) {
         Furniture* table =
-            new Furniture(pos, ui::color::brown, ui::color::brown);
+            Furniture::make_furniture(pos, ui::color::brown, ui::color::brown);
 
-        table->addComponent<CustomHeldItemPosition>().init(
+        table->get<CustomHeldItemPosition>().init(
             CustomHeldItemPosition::Positioner::Table);
-        table->addComponent<HasWork>().init(
+
+        table->get<HasWork>().init(
             [](HasWork& hasWork, std::shared_ptr<Person>, float dt) {
                 // TODO eventually we need it to decide whether it has work
                 // based on the current held item
@@ -74,7 +76,7 @@ struct Furniture : public Entity {
 
     static Furniture* make_character_switcher(vec2 pos) {
         Furniture* character_switcher =
-            new Furniture(pos, ui::color::brown, ui::color::brown);
+            Furniture::make_furniture(pos, ui::color::brown, ui::color::brown);
 
         character_switcher->get<HasWork>().init(
             [](HasWork& hasWork, std::shared_ptr<Person> person, float dt) {
@@ -94,7 +96,8 @@ struct Furniture : public Entity {
     }
 
     static Furniture* make_wall(vec2 pos, Color c) {
-        Furniture* wall = new Furniture(pos, c, c);
+        Furniture* wall =
+            Furniture::make_furniture(pos, ui::color::brown, ui::color::brown);
 
         return wall;
         // enum Type {
@@ -184,7 +187,7 @@ struct Furniture : public Entity {
 
     [[nodiscard]] static Furniture* make_conveyer(vec2 pos) {
         Furniture* conveyer =
-            new Furniture(pos, ui::color::blue, ui::color::blue);
+            Furniture::make_furniture(pos, ui::color::blue, ui::color::blue);
         // TODO fix
         // bool can_take_item_from() const {
         // return (get<CanHoldItem>().is_holding_item() && can_take_from);
@@ -205,8 +208,8 @@ struct Furniture : public Entity {
     }
 
     [[nodiscard]] static Furniture* make_grabber(vec2 pos) {
-        Furniture* grabber =
-            new Furniture(pos, ui::color::yellow, ui::color::yellow);
+        Furniture* grabber = Furniture::make_furniture(pos, ui::color::yellow,
+                                                       ui::color::yellow);
         // TODO fix
         // bool can_take_item_from() const {
         // return (get<CanHoldItem>().is_holding_item() && can_take_from);
@@ -222,7 +225,8 @@ struct Furniture : public Entity {
     }
 
     [[nodiscard]] static Furniture* make_register(vec2 pos) {
-        Furniture* reg = new Furniture(pos, ui::color::grey, ui::color::grey);
+        Furniture* reg =
+            Furniture::make_furniture(pos, ui::color::grey, ui::color::grey);
         reg->addComponent<HasWaitingQueue>();
 
         reg->get<ModelRenderer>().update(ModelInfo{
@@ -232,74 +236,38 @@ struct Furniture : public Entity {
         });
         return reg;
     }
-};
 
-// TODO we can use concepts here to force this to be an Item
-template<typename I>
-struct ItemContainer : public Furniture {
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<Furniture>{});
+    template<typename I>
+    [[nodiscard]] static Furniture* make_itemcontainer(vec2 pos) {
+        Furniture* container =
+            Furniture::make_furniture(pos, ui::color::white, ui::color::white);
+        container->addComponent<IsItemContainer<I>>();
+        return container;
+        // virtual bool can_place_item_into(
+        // std::shared_ptr<Item> item = nullptr) override {
+        // return this->get<IsItemContainer<I>>().is_matching_item(item);
+        // }
     }
 
-   public:
-    ItemContainer() {}
-    explicit ItemContainer(vec2 pos) : Furniture(pos, WHITE, WHITE) {
-        this->addComponent<IsItemContainer<I>>();
-    }
+    [[nodiscard]] static Furniture* make_bagbox(vec2 pos) {
+        Furniture* container = Furniture::make_itemcontainer<Bag>(pos);
 
-    virtual bool can_place_item_into(
-        std::shared_ptr<Item> item = nullptr) override {
-        return this->get<IsItemContainer<I>>().is_matching_item(item);
-    }
-};
-
-struct BagBox : public ItemContainer<Bag> {
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<Furniture>{});
-    }
-
-   public:
-    BagBox() {}
-    explicit BagBox(vec2 pos) : ItemContainer<Bag>(pos) { update_model(); }
-
-    void update_model() {
-        // log_info("model index: {}", model_index);
-        // TODO add a component for this
         const bool in_planning = GameState::get().is(game::State::Planning);
-        get<ModelRenderer>().update(ModelInfo{
+        container->get<ModelRenderer>().update(ModelInfo{
             .model_name = in_planning ? "box" : "open_box",
             .size_scale = 4.f,
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
         });
-    }
-};
-
-struct MedicineCabinet : public ItemContainer<PillBottle> {
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<ItemContainer>{});
+        return container;
     }
 
-   public:
-    MedicineCabinet() {}
-    explicit MedicineCabinet(vec2 pos) : ItemContainer<PillBottle>(pos) {
-        update_model();
-    }
-
-    void update_model() {
-        // TODO add a component for this
-        get<ModelRenderer>().update(ModelInfo{
+    [[nodiscard]] static Furniture* make_medicine_cabinet(vec2 pos) {
+        Furniture* container = Furniture::make_itemcontainer<PillBottle>(pos);
+        container->get<ModelRenderer>().update(ModelInfo{
             .model_name = "medicine_cabinet",
             .size_scale = 2.f,
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
         });
+        return container;
     }
 };

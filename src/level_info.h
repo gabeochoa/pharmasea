@@ -219,16 +219,16 @@ struct GameMapInfo : public LevelInfo {
         };
 
         const auto generate_medicine_cabinet = [this]() {
-            std::shared_ptr<MedicineCabinet> medicineCab;
+            std::shared_ptr<Furniture> medicineCab;
             const auto location = get_rand_walkable();
-            medicineCab.reset(new MedicineCabinet(location));
+            medicineCab.reset(Furniture::make_medicine_cabinet(location));
             EntityHelper::addEntity(medicineCab);
         };
 
         const auto generate_bag_box = [this]() {
-            std::shared_ptr<BagBox> bagbox;
+            std::shared_ptr<Furniture> bagbox;
             const auto location = get_rand_walkable();
-            bagbox.reset(new BagBox(location));
+            bagbox.reset(Furniture::make_bagbox(location));
             EntityHelper::addEntity(bagbox);
         };
 

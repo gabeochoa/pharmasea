@@ -174,25 +174,26 @@ inline void render_floating_name(std::shared_ptr<Entity> entity, float) {
 }
 
 inline void render_progress_bar(std::shared_ptr<Entity> entity, float) {
+    if (!entity->has<ShowsProgressBar>()) return;
+
     if (!entity->has<Transform>()) return;
     const Transform& transform = entity->get<Transform>();
 
-    if (!entity->has<ShowsProgressBar>()) return;
-
     if (!entity->has<HasWork>()) return;
+
+    // TODO Why does this crash?
+    return;
     HasWork& hasWork = entity->get<HasWork>();
     if (hasWork.dont_show_progres_bar()) return;
 
     const int length = 20;
     const int full = hasWork.scale_length(length);
     const int empty = length - full;
-    const auto progress =
-        fmt::format("[{:=>{}}{: >{}}]", "", full, "", empty * 2);
-
-    DrawFloatingText(                                     //
-        transform.raw_position + vec3({0, TILESIZE, 0}),  //
-        Preload::get().font,                              //
-        progress.c_str());
+    DrawFloatingText(                                                     //
+        transform.raw_position + vec3({0, TILESIZE, 0}),                  //
+        Preload::get().font,                                              //
+        fmt::format("[{:=>{}}{: >{}}]", "", full, "", empty * 2).c_str()  //
+    );
 
     // TODO eventually add real rectangle progress bar
     // auto game_cam = GLOBALS.get<GameCam>("game_cam");
