@@ -29,20 +29,13 @@ struct Furniture : public Entity {
         // Only need to serialize things that are needed for render
     }
 
-   protected:
     Furniture() : Entity() {}
-
-    Furniture(vec3 pos, Color face_color_in)
-        : Entity(pos, face_color_in, face_color_in) {}
-    Furniture(vec2 pos, Color face_color_in, Color base_color_in)
-        : Entity({pos.x, 0, pos.y}, face_color_in, base_color_in) {}
-
-    Furniture(vec2 pos, Color face_color_in)
-        : Furniture(pos, face_color_in, face_color_in) {}
+    Furniture(vec3 pos, Color face_color_in, Color base_color_in)
+        : Entity(pos, face_color_in, base_color_in) {}
 
    public:
     static Furniture* make_furniture(vec2 pos, Color face, Color base) {
-        Furniture* furniture = new Furniture(pos, face, base);
+        Furniture* furniture = new Furniture({pos.x, 0, pos.y}, face, base);
 
         furniture->addComponent<IsSolid>();
         furniture->addComponent<IsRotatable>();
