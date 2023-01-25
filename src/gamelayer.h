@@ -23,7 +23,7 @@ struct GameLayer : public Layer {
     raylib::Model bag_model;
 
     GameLayer() : Layer("Game") {
-        player.reset(make_player(vec2{-3, -3}, WHITE, WHITE));
+        player.reset(make_player(vec2{-3, -3}));
         GLOBALS.set("player", player.get());
 
         // TODO do we need this still?

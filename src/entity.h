@@ -283,27 +283,27 @@ struct Entity {
         }
     }
 
-    static Entity* make_entity(vec3 pos, Color face, Color base) {
+    static Entity* make_entity(vec3 pos) {
         Entity* entity = new Entity();
         entity->addComponent<Transform>().init(pos, entity->size());
-        entity->addComponent<HasName>();
-        entity->addComponent<CanHoldItem>();
-        entity->addComponent<SimpleColoredBoxRenderer>();
-        entity->addComponent<ModelRenderer>();
-        entity->addComponent<CanBePushed>();
-        entity->addComponent<CanBeHeld>();
-        entity->addComponent<CanBeTakenFrom>();
-        entity->get<SimpleColoredBoxRenderer>().init(face, base);
+        // entity->addComponent<HasName>();
+        // entity->addComponent<CanHoldItem>();
+        // entity->addComponent<SimpleColoredBoxRenderer>();
+        // entity->addComponent<ModelRenderer>();
+        // entity->addComponent<CanBePushed>();
+        // entity->addComponent<CanBeHeld>();
+        // entity->addComponent<CanBeTakenFrom>();
+        // entity->get<SimpleColoredBoxRenderer>().init(face, base);
         return entity;
     }
 
-    static Entity* make_entity(vec2 pos, Color face, Color base) {
-        return Entity::make_entity({pos.x, 0, pos.y}, face, base);
+    static Entity* make_entity(vec2 pos) {
+        return Entity::make_entity({pos.x, 0, pos.y});
     }
 };
 
-static Entity* make_person(vec2 pos, Color face, Color base) {
-    Entity* person = Entity::make_entity(pos, face, base);
+static Entity* make_person(vec2 pos) {
+    Entity* person = Entity::make_entity(pos);
 
     person->get<Transform>().size =
         vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
@@ -322,8 +322,8 @@ static Entity* make_person(vec2 pos, Color face, Color base) {
     return person;
 }
 
-static Entity* make_base_player(vec2 pos, Color face, Color base) {
-    Entity* base_player = make_person(pos, face, base);
+static Entity* make_base_player(vec2 pos) {
+    Entity* base_player = make_person(pos);
 
     base_player->addComponent<CanHighlightOthers>();
     base_player->addComponent<CanHoldFurniture>();
@@ -335,12 +335,12 @@ static Entity* make_base_player(vec2 pos, Color face, Color base) {
 }
 
 static Entity* make_remote_player() {
-    Entity* remote_player = make_base_player({0, 0}, WHITE, WHITE);
+    Entity* remote_player = make_base_player({0, 0});
     return remote_player;
 }
 
-static Entity* make_aiperson(vec2 pos, Color face, Color base) {
-    Entity* aiperson = make_person(pos, face, base);
+static Entity* make_aiperson(vec2 pos) {
+    Entity* aiperson = make_person(pos);
 
     aiperson->addComponent<CanPerformJob>().update(Wandering, Wandering);
     aiperson->addComponent<HasBaseSpeed>().update(10.f);
@@ -370,8 +370,8 @@ static Entity* make_aiperson(vec2 pos, Color face, Color base) {
 // }
 // };
 
-static Entity* make_customer(vec2 pos, Color face) {
-    Entity* customer = make_aiperson(pos, face, face);
+static Entity* make_customer(vec2 pos) {
+    Entity* customer = make_aiperson(pos);
     // std::optional<SpeechBubble> bubble;
     //
     customer->addComponent<CanHaveAilment>().update(
@@ -421,9 +421,8 @@ static void update_remotely(std::shared_ptr<Entity> entity, float* location,
         static_cast<Transform::FrontFaceDirection>(facing_direction);
 }
 
-static Entity* make_player(vec2 pos = {0, 0}, Color face = WHITE,
-                           Color base = WHITE) {
-    Entity* player = make_base_player(pos, face, base);
+static Entity* make_player(vec2 pos = {0, 0}) {
+    Entity* player = make_base_player(pos);
     player->addComponent<CanBeGhostPlayer>();
     player->addComponent<CollectsUserInput>();
     player->addComponent<RespondsToUserInput>();
@@ -431,7 +430,9 @@ static Entity* make_player(vec2 pos = {0, 0}, Color face = WHITE,
 }
 
 static Entity* make_furniture(vec2 pos, Color face, Color base) {
-    Entity* furniture = Entity::make_entity({pos.x, 0, pos.y}, face, base);
+    Entity* furniture = Entity::make_entity({pos.x, 0, pos.y});
+
+    furniture->addComponent<SimpleColoredBoxRenderer>().init(face, base);
 
     furniture->addComponent<IsSolid>();
     furniture->addComponent<IsRotatable>();

@@ -242,7 +242,7 @@ struct GameMapInfo : public LevelInfo {
         const auto generate_customer = []() {
             const auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
             std::shared_ptr<Entity> customer;
-            customer.reset(make_customer(location, RED));
+            customer.reset(make_customer(location));
             EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
         };
 
