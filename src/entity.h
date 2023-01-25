@@ -122,26 +122,11 @@ struct Entity {
         return *dynamic_pointer_cast<T>(ptr);
     }
 
-    void add_static_components(vec3 pos) {
-        addComponent<Transform>().init(pos, size());
-        addComponent<HasName>();
-        addComponent<CanHoldItem>();
-        addComponent<SimpleColoredBoxRenderer>();
-        addComponent<ModelRenderer>();
-        addComponent<CanBePushed>();
-        addComponent<CanBeHeld>();
-        addComponent<CanBeTakenFrom>();
-    }
-
     virtual ~Entity() {}
 
-    Entity(vec3 p, Color face_color_in, Color base_color_in)
-        : id(ENTITY_ID_GEN++) {
-        add_static_components(p);
-        get<SimpleColoredBoxRenderer>().init(face_color_in, base_color_in);
-    }
-
    private:
+    Entity() : id(ENTITY_ID_GEN++) {}
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
@@ -155,13 +140,6 @@ struct Entity {
     }
 
    protected:
-    Entity(vec3 p, Color c) : Entity(p, c, c) {}
-
-    Entity() {
-        add_static_components({0, 0, 0});
-        get<SimpleColoredBoxRenderer>().init(BLACK, BLACK);
-    }
-
     virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
 
     virtual vec2 get_heading() {
@@ -304,10 +282,28 @@ struct Entity {
             in_round_update(dt);
         }
     }
+
+    static Entity* make_entity(vec3 pos, Color face, Color base) {
+        Entity* entity = new Entity();
+        entity->addComponent<Transform>().init(pos, entity->size());
+        entity->addComponent<HasName>();
+        entity->addComponent<CanHoldItem>();
+        entity->addComponent<SimpleColoredBoxRenderer>();
+        entity->addComponent<ModelRenderer>();
+        entity->addComponent<CanBePushed>();
+        entity->addComponent<CanBeHeld>();
+        entity->addComponent<CanBeTakenFrom>();
+        entity->get<SimpleColoredBoxRenderer>().init(face, base);
+        return entity;
+    }
+
+    static Entity* make_entity(vec2 pos, Color face, Color base) {
+        return Entity::make_entity({pos.x, 0, pos.y}, face, base);
+    }
 };
 
 static Entity* make_person(vec2 pos, Color face, Color base) {
-    Entity* person = new Entity({pos.x, 0, pos.y}, face, base);
+    Entity* person = Entity::make_entity(pos, face, base);
 
     person->get<Transform>().size =
         vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
@@ -435,7 +431,7 @@ static Entity* make_player(vec2 pos = {0, 0}, Color face = WHITE,
 }
 
 static Entity* make_furniture(vec2 pos, Color face, Color base) {
-    Entity* furniture = new Entity({pos.x, 0, pos.y}, face, base);
+    Entity* furniture = Entity::make_entity({pos.x, 0, pos.y}, face, base);
 
     furniture->addComponent<IsSolid>();
     furniture->addComponent<IsRotatable>();
