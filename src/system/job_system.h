@@ -8,7 +8,6 @@
 #include "../components/can_perform_job.h"
 #include "../components/custom_item_position.h"
 #include "../components/transform.h"
-#include "../customer.h"
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../furniture.h"
