@@ -21,10 +21,7 @@ struct Person : public Entity {
    protected:
     Person() : Entity() { update_component(); }
 
-    Person(vec3 p, Color face_color_in, Color base_color_in)
-        : Entity(p, face_color_in, base_color_in) {
-        update_component();
-    }
+    Person(vec3 p) : Entity(p, WHITE, WHITE) { update_component(); }
 
    public:
     void update_component() {

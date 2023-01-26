@@ -26,18 +26,9 @@ struct BasePlayer : public Person {
         get<HasBaseSpeed>().update(7.5f);
     }
 
-    BasePlayer(vec3 p, Color face_color_in, Color base_color_in)
-        : Person(p, face_color_in, base_color_in) {
-        add_static_components();
-    }
-    BasePlayer() : Person({0, 0, 0}, ui::color::white, ui::color::white) {
-        add_static_components();
-    }
-    BasePlayer(vec2 location)
-        : Person({location.x, 0, location.y}, {0, 255, 0, 255},
-                 {255, 0, 0, 255}) {
-        add_static_components();
-    }
+    BasePlayer(vec3 p) : Person(p) { add_static_components(); }
+    BasePlayer() : BasePlayer({0, 0, 0}) {}
+    BasePlayer(vec2 location) : BasePlayer({location.x, 0, location.y}) {}
 };
 
 struct RemotePlayer : public BasePlayer {
@@ -45,12 +36,9 @@ struct RemotePlayer : public BasePlayer {
     // TODO who sets this value?
     int client_id = -1;
 
-    RemotePlayer(vec3 p, Color face_color_in, Color base_color_in)
-        : BasePlayer(p, face_color_in, base_color_in) {}
-    RemotePlayer() : BasePlayer({0, 0, 0}, WHITE, WHITE) {}
-    RemotePlayer(vec2 location)
-        : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
-                     {255, 0, 0, 255}) {}
+    RemotePlayer(vec3 p) : BasePlayer(p) {}
+    RemotePlayer() : BasePlayer({0, 0, 0}) {}
+    RemotePlayer(vec2 location) : BasePlayer({location.x, 0, location.y}) {}
 
     static void update_remotely(std::shared_ptr<Entity> entity, float* location,
                                 std::string username, int facing_direction) {
@@ -80,15 +68,8 @@ struct Player : public BasePlayer {
 
     // NOTE: this is kept public because we use it in the network when prepping
     // server players
-    Player() : BasePlayer({0, 0, 0}, WHITE, WHITE) { add_static_components(); }
+    Player() : BasePlayer({0, 0, 0}) { add_static_components(); }
 
-    Player(vec3 p, Color face_color_in, Color base_color_in)
-        : BasePlayer(p, face_color_in, base_color_in) {
-        add_static_components();
-    }
-    Player(vec2 location)
-        : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
-                     {255, 0, 0, 255}) {
-        add_static_components();
-    }
+    Player(vec3 p) : BasePlayer(p) { add_static_components(); }
+    Player(vec2 location) : Player({location.x, 0, location.y}) {}
 };
