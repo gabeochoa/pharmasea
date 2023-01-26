@@ -12,6 +12,7 @@ libraries used:
 - tl::expected https://github.com/TartanLlama/expected
 - magic enum https://github.com/Neargye/magic_enum.git
 - tracy https://github.com/wolfpld/tracy
+- backward https://github.com/bombela/backward-cpp
 
 
 Models from 
