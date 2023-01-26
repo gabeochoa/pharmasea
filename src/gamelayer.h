@@ -7,7 +7,6 @@
 //
 #include "globals.h"
 //
-#include "base_player.h"
 #include "camera.h"
 #include "engine.h"
 #include "engine/layer.h"
@@ -18,13 +17,13 @@
 #include "statemanager.h"
 
 struct GameLayer : public Layer {
-    std::shared_ptr<Player> player;
-    std::shared_ptr<BasePlayer> active_player;
+    std::shared_ptr<Entity> player;
+    std::shared_ptr<Entity> active_player;
     std::shared_ptr<GameCam> cam;
     raylib::Model bag_model;
 
     GameLayer() : Layer("Game") {
-        player.reset(new Player(vec2{-3, -3}));
+        player.reset(make_player(vec2{-3, -3}));
         GLOBALS.set("player", player.get());
 
         // TODO do we need this still?
@@ -133,9 +132,9 @@ struct GameLayer : public Layer {
                 const auto network_players =
                     // Forcing a copy to avoid the data changing from underneath
                     // us
-                    std::map<int, std::shared_ptr<Player>>(
+                    std::map<int, std::shared_ptr<Entity>>(
                         GLOBALS.get_or_default<
-                            std::map<int, std::shared_ptr<Player>>>(
+                            std::map<int, std::shared_ptr<Entity>>>(
                             "server_players", {}));
                 SystemManager::get().render(Entities{player}, dt);
             }

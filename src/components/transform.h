@@ -81,3 +81,8 @@ struct Transform : public BaseComponent {
         s.object(size);
     }
 };
+
+std::ostream& operator<<(std::ostream& os, const Transform& t) {
+    os << "Transform<> " << t.position << " " << t.size;
+    return os;
+}

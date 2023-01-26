@@ -66,6 +66,10 @@ void serialize(S& s, Color& data) {
 }
 }  // namespace bitsery
 
+#include <StaticTypeInfo/static_type_info.h>
+
+#include <backward/backward.hpp>
+
 #include "engine/tracy.h"
 
 #ifdef __APPLE__

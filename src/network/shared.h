@@ -26,20 +26,6 @@ struct PolymorphicBaseClass<BaseComponent>
           ShowsProgressBar> {};
 
 template<>
-struct PolymorphicBaseClass<Entity>
-    : PolymorphicDerivedClasses<Furniture, Person> {};
-
-template<>
-struct PolymorphicBaseClass<Person>
-    : PolymorphicDerivedClasses<BasePlayer, AIPerson> {};
-
-template<>
-struct PolymorphicBaseClass<BasePlayer> : PolymorphicDerivedClasses<Player> {};
-
-template<>
-struct PolymorphicBaseClass<AIPerson> : PolymorphicDerivedClasses<Customer> {};
-
-template<>
 struct PolymorphicBaseClass<Item>
     : PolymorphicDerivedClasses<Bag, PillBottle, Pill> {};
 
@@ -51,7 +37,7 @@ struct PolymorphicBaseClass<LevelInfo>
 }  // namespace bitsery
 
 using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<Entity, Item, BaseComponent>;
+    bitsery::ext::PolymorphicClassesList<Item, BaseComponent>;
 
 namespace network {
 

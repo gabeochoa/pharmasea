@@ -5,7 +5,7 @@
 #include "../globals.h"
 //
 #include "../engine/settings.h"
-#include "../entities.h"
+#include "../entity.h"
 //
 #include "../engine/trigger_on_dt.h"
 #include "../statemanager.h"

@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "../person.h"
 #include "base_component.h"
+
+struct Entity;
 
 struct HasWork : public BaseComponent {
     HasWork() : pct_work_complete(0.f), more_to_do(false) {}
@@ -32,11 +33,11 @@ struct HasWork : public BaseComponent {
     }
 
     // TODO make private
-    std::function<void(HasWork&, std::shared_ptr<Person> person, float dt)>
+    std::function<void(HasWork&, std::shared_ptr<Entity> person, float dt)>
         do_work;
 
     void init(
-        std::function<void(HasWork&, std::shared_ptr<Person> person, float dt)>
+        std::function<void(HasWork&, std::shared_ptr<Entity> person, float dt)>
             worker) {
         do_work = worker;
     }

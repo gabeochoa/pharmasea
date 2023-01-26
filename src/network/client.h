@@ -4,9 +4,9 @@
 
 #include "internal/client.h"
 //
-#include "../base_player.h"
 #include "../engine/globals_register.h"
 #include "../engine/log.h"
+#include "../entity.h"
 
 namespace network {
 
@@ -18,7 +18,7 @@ struct Client {
 
     int id = 0;
     std::shared_ptr<internal::Client> client_p;
-    std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
+    std::map<int, std::shared_ptr<Entity>> remote_players;
     std::shared_ptr<Map> map;
     std::vector<ClientPacket::AnnouncementInfo> announcements;
 
@@ -95,7 +95,7 @@ struct Client {
     // }
 
     void send_player_input_packet(int my_id) {
-        Player* me = GLOBALS.get_ptr<Player>("player");
+        Entity* me = GLOBALS.get_ptr<Entity>("player");
         CollectsUserInput& cui = me->get<CollectsUserInput>();
 
         if (cui.inputs.empty()) return;
@@ -119,10 +119,13 @@ struct Client {
                 return;
             };
 
-            remote_players[client_id] = std::make_shared<RemotePlayer>();
+            remote_players[client_id] =
+                std::shared_ptr<Entity>(make_remote_player());
             auto rp = remote_players[client_id];
             rp->client_id = client_id;
+            // We want to crash if no hasName so no has<> check here
             rp->get<HasName>().update(username);
+
             // NOTE we add to the map directly because its colocated with
             //      the other entity info
             map->remote_players_NOT_SERIALIZED.push_back(
@@ -169,7 +172,7 @@ struct Client {
             }
             auto rp = remote_players[client_id];
             if (!rp) return;
-            rp->update_remotely(location, username, facing);
+            update_remotely(rp, location, username, facing);
         };
 
         ClientPacket packet = client_p->deserialize_to_packet(msg);

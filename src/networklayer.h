@@ -13,9 +13,9 @@
 #include "engine/layer.h"
 #include "engine/settings.h"  // Used for username
 //
-#include "base_player.h"
 #include "engine.h"
 #include "engine/network/webrequest.h"
+#include "entity.h"
 #include "network/network.h"
 #include "statemanager.h"
 #include "toastmanager.h"
