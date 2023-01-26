@@ -20,24 +20,11 @@
 #include "person.h"
 #include "statemanager.h"
 
-struct Furniture : public Entity {
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<Entity>{});
-        // Only need to serialize things that are needed for render
-    }
-
-   public:
-    Furniture() : Entity() {}
-    Furniture(vec3 pos, Color face_color_in, Color base_color_in)
-        : Entity(pos, face_color_in, base_color_in) {}
-};
+typedef Entity Furniture;
 
 namespace entities {
-static Furniture* make_furniture(vec2 pos, Color face, Color base) {
-    Furniture* furniture = new Furniture({pos.x, 0, pos.y}, face, base);
+static Entity* make_furniture(vec2 pos, Color face, Color base) {
+    Entity* furniture = new Entity({pos.x, 0, pos.y}, face, base);
 
     furniture->addComponent<IsSolid>();
     furniture->addComponent<IsRotatable>();
@@ -50,8 +37,8 @@ static Furniture* make_furniture(vec2 pos, Color face, Color base) {
     return furniture;
 }
 
-static Furniture* make_table(vec2 pos) {
-    Furniture* table =
+static Entity* make_table(vec2 pos) {
+    Entity* table =
         entities::make_furniture(pos, ui::color::brown, ui::color::brown);
 
     table->get<CustomHeldItemPosition>().init(
@@ -69,8 +56,8 @@ static Furniture* make_table(vec2 pos) {
     return table;
 }
 
-static Furniture* make_character_switcher(vec2 pos) {
-    Furniture* character_switcher =
+static Entity* make_character_switcher(vec2 pos) {
+    Entity* character_switcher =
         entities::make_furniture(pos, ui::color::brown, ui::color::brown);
 
     character_switcher->get<HasWork>().init(
@@ -90,8 +77,8 @@ static Furniture* make_character_switcher(vec2 pos) {
     return character_switcher;
 }
 
-static Furniture* make_wall(vec2 pos, Color c) {
-    Furniture* wall =
+static Entity* make_wall(vec2 pos, Color c) {
+    Entity* wall =
         entities::make_furniture(pos, ui::color::brown, ui::color::brown);
 
     return wall;
@@ -180,8 +167,8 @@ static Furniture* make_wall(vec2 pos, Color c) {
     // }
 }
 
-[[nodiscard]] static Furniture* make_conveyer(vec2 pos) {
-    Furniture* conveyer =
+[[nodiscard]] static Entity* make_conveyer(vec2 pos) {
+    Entity* conveyer =
         entities::make_furniture(pos, ui::color::blue, ui::color::blue);
     // TODO fix
     // bool can_take_item_from() const {
@@ -202,8 +189,8 @@ static Furniture* make_wall(vec2 pos, Color c) {
     return conveyer;
 }
 
-[[nodiscard]] static Furniture* make_grabber(vec2 pos) {
-    Furniture* grabber =
+[[nodiscard]] static Entity* make_grabber(vec2 pos) {
+    Entity* grabber =
         entities::make_furniture(pos, ui::color::yellow, ui::color::yellow);
     // TODO fix
     // bool can_take_item_from() const {
@@ -219,8 +206,8 @@ static Furniture* make_wall(vec2 pos, Color c) {
     return grabber;
 }
 
-[[nodiscard]] static Furniture* make_register(vec2 pos) {
-    Furniture* reg =
+[[nodiscard]] static Entity* make_register(vec2 pos) {
+    Entity* reg =
         entities::make_furniture(pos, ui::color::grey, ui::color::grey);
     reg->addComponent<HasWaitingQueue>();
 
@@ -233,8 +220,8 @@ static Furniture* make_wall(vec2 pos, Color c) {
 }
 
 template<typename I>
-[[nodiscard]] static Furniture* make_itemcontainer(vec2 pos) {
-    Furniture* container =
+[[nodiscard]] static Entity* make_itemcontainer(vec2 pos) {
+    Entity* container =
         entities::make_furniture(pos, ui::color::white, ui::color::white);
     container->addComponent<IsItemContainer<I>>();
     return container;
@@ -244,8 +231,8 @@ template<typename I>
     // }
 }
 
-[[nodiscard]] static Furniture* make_bagbox(vec2 pos) {
-    Furniture* container = entities::make_itemcontainer<Bag>(pos);
+[[nodiscard]] static Entity* make_bagbox(vec2 pos) {
+    Entity* container = entities::make_itemcontainer<Bag>(pos);
 
     const bool in_planning = GameState::get().is(game::State::Planning);
     container->get<ModelRenderer>().update(ModelInfo{
@@ -256,8 +243,8 @@ template<typename I>
     return container;
 }
 
-[[nodiscard]] static Furniture* make_medicine_cabinet(vec2 pos) {
-    Furniture* container = entities::make_itemcontainer<PillBottle>(pos);
+[[nodiscard]] static Entity* make_medicine_cabinet(vec2 pos) {
+    Entity* container = entities::make_itemcontainer<PillBottle>(pos);
     container->get<ModelRenderer>().update(ModelInfo{
         .model_name = "medicine_cabinet",
         .size_scale = 2.f,

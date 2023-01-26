@@ -103,6 +103,19 @@ struct Entity {
 
     virtual ~Entity() {}
 
+    Entity(vec3 p, Color face_color_in, Color base_color_in)
+        : id(ENTITY_ID_GEN++) {
+        add_static_components(p);
+        get<SimpleColoredBoxRenderer>().init(face_color_in, base_color_in);
+    }
+
+    Entity(vec3 p, Color c) : Entity(p, c, c) {}
+
+    Entity() {
+        add_static_components({0, 0, 0});
+        get<SimpleColoredBoxRenderer>().init(BLACK, BLACK);
+    }
+
    private:
     friend bitsery::Access;
     template<typename S>
@@ -117,19 +130,6 @@ struct Entity {
     }
 
    protected:
-    Entity(vec3 p, Color face_color_in, Color base_color_in)
-        : id(ENTITY_ID_GEN++) {
-        add_static_components(p);
-        get<SimpleColoredBoxRenderer>().init(face_color_in, base_color_in);
-    }
-
-    Entity(vec3 p, Color c) : Entity(p, c, c) {}
-
-    Entity() {
-        add_static_components({0, 0, 0});
-        get<SimpleColoredBoxRenderer>().init(BLACK, BLACK);
-    }
-
     virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
 
     virtual vec2 get_heading() {
