@@ -121,7 +121,7 @@ struct Client {
 
             remote_players[client_id] = std::make_shared<RemotePlayer>();
             auto rp = remote_players[client_id];
-            rp->client_id = client_id;
+            rp->get<HasClientID>().client_id = client_id;
             // We want to crash if no hasName so no has<> check here
             rp->get<HasName>().update(username);
             // NOTE we add to the map directly because its colocated with
@@ -134,7 +134,7 @@ struct Client {
         auto remove_player = [&](int client_id) {
             for (auto it = map->remote_players_NOT_SERIALIZED.begin();
                  it != map->remote_players_NOT_SERIALIZED.end(); it++) {
-                if ((*it)->client_id == client_id) {
+                if ((*it)->get<HasClientID>().client_id == client_id) {
                     map->remote_players_NOT_SERIALIZED.erase(it);
                     break;
                 }

@@ -52,6 +52,8 @@ struct Person : public Entity {
     }
 };
 
+#include "components/has_client_id.h"
+
 // TODO add more information on what the difference is between Person and
 // BasePlayer and Player
 struct BasePlayer : public Person {
@@ -61,6 +63,11 @@ struct BasePlayer : public Person {
 
         // addComponent<HasBaseSpeed>().update(10.f);
         get<HasBaseSpeed>().update(7.5f);
+
+        // TODO what is a reasonable default value here?
+        // TODO who sets this value?
+        // this comes from remote player and probably should only be there
+        addComponent<HasClientID>();
     }
 
     BasePlayer(vec3 p) : Person(p) { add_static_components(); }
@@ -69,10 +76,6 @@ struct BasePlayer : public Person {
 };
 
 struct RemotePlayer : public BasePlayer {
-    // TODO what is a reasonable default value here?
-    // TODO who sets this value?
-    int client_id = -1;
-
     RemotePlayer(vec3 p) : BasePlayer(p) {}
     RemotePlayer() : BasePlayer({0, 0, 0}) {}
     RemotePlayer(vec2 location) : BasePlayer({location.x, 0, location.y}) {}
@@ -92,11 +95,6 @@ struct RemotePlayer : public BasePlayer {
 };
 
 struct Player : public BasePlayer {
-    // Theres no players not in game menu state,
-    const menu::State state = menu::State::Game;
-
-    std::string username;
-
     void add_static_components() {
         addComponent<CanBeGhostPlayer>();
         addComponent<CollectsUserInput>();
