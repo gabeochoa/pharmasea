@@ -24,7 +24,7 @@ static void generate_and_insert_walls(std::string /* seed */) {
                 j == MAX_MAP_SIZE - 1) {
                 vec2 location = vec2{i * TILESIZE, j * TILESIZE};
                 std::shared_ptr<Furniture> wall;
-                wall.reset(Furniture::make_wall(location, d_color));
+                wall.reset(entities::make_wall(location, d_color));
                 EntityHelper::addEntity(wall);
             }
         }
@@ -112,7 +112,7 @@ struct LobbyMapInfo : public LevelInfo {
         {
             std::shared_ptr<Furniture> charSwitch;
             const auto location = vec2{5, 5};
-            charSwitch.reset(Furniture::make_character_switcher(location));
+            charSwitch.reset(entities::make_character_switcher(location));
             EntityHelper::addEntity(charSwitch);
         }
     }
@@ -195,7 +195,7 @@ struct GameMapInfo : public LevelInfo {
                 const auto location = get_rand_walkable();
 
                 std::shared_ptr<Furniture> table;
-                table.reset(Furniture::make_table(location));
+                table.reset(entities::make_table(location));
                 EntityHelper::addEntity(table);
 
                 std::shared_ptr<Pill> item;
@@ -208,7 +208,7 @@ struct GameMapInfo : public LevelInfo {
                 const auto location = get_rand_walkable();
 
                 std::shared_ptr<Furniture> table;
-                table.reset(Furniture::make_table(location));
+                table.reset(entities::make_table(location));
                 EntityHelper::addEntity(table);
 
                 std::shared_ptr<PillBottle> item;
@@ -221,21 +221,21 @@ struct GameMapInfo : public LevelInfo {
         const auto generate_medicine_cabinet = [this]() {
             std::shared_ptr<Furniture> medicineCab;
             const auto location = get_rand_walkable();
-            medicineCab.reset(Furniture::make_medicine_cabinet(location));
+            medicineCab.reset(entities::make_medicine_cabinet(location));
             EntityHelper::addEntity(medicineCab);
         };
 
         const auto generate_bag_box = [this]() {
             std::shared_ptr<Furniture> bagbox;
             const auto location = get_rand_walkable();
-            bagbox.reset(Furniture::make_bagbox(location));
+            bagbox.reset(entities::make_bagbox(location));
             EntityHelper::addEntity(bagbox);
         };
 
         const auto generate_register = [this]() {
             std::shared_ptr<Furniture> reg;
             const auto location = get_rand_walkable();
-            reg.reset(Furniture::make_register(location));
+            reg.reset(entities::make_register(location));
             EntityHelper::addEntity(reg);
         };
 
@@ -253,9 +253,9 @@ struct GameMapInfo : public LevelInfo {
                 std::shared_ptr<Furniture> conveyer;
 
                 if (i == 0)
-                    conveyer.reset(Furniture::make_conveyer(location));
+                    conveyer.reset(entities::make_conveyer(location));
                 else
-                    conveyer.reset(Furniture::make_grabber(location));
+                    conveyer.reset(entities::make_grabber(location));
 
                 EntityHelper::addEntity(conveyer);
             }
