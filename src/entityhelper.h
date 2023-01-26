@@ -172,15 +172,19 @@ struct EntityHelper {
                 if (!current_entity) continue;
                 if (!filter(current_entity)) continue;
 
-                float cur_dist = vec::distance(
-                    current_entity->template get<Transform>().as2(), tile);
+                // all entitites should have transforms but just in case
+                if (current_entity->template is_missing<Transform>()) continue;
+                Transform& transform =
+                    current_entity->template get<Transform>();
+
+                float cur_dist = vec::distance(transform.as2(), tile);
                 // outside reach
                 if (abs(cur_dist) > 1) continue;
                 // this is behind us
                 if (cur_dist < 0) continue;
 
-                if (vec::to2(current_entity->template get<Transform>()
-                                 .snap_position()) == vec::snap(tile)) {
+                // TODO add a snap_as2() function to transform
+                if (vec::to2(transform.snap_position()) == vec::snap(tile)) {
                     return current_entity;
                 }
             }

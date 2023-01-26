@@ -4089,17 +4089,19 @@ class Printer {
     int trace_context_size;
     bool reverse;
 
+    // PHARMASEA
+    // idk how to actually use this so imma just change the library to fit
+    // my needs
+
     Printer()
         : snippet(true),
           color_mode(ColorMode::always),
-          address(false),
-          object(false),
+          address(true),  // PHARMASEA false => true
+          object(true),   // PHARMASEA false => true
           inliner_context_size(5),
           trace_context_size(7),
-          // PHARMASEA
-          // idk how to actually use this so imma just change the library to fit
-          // my needs true => false
-          reverse(false) {}
+          reverse(false)  // PHARMASEA true => false
+    {}
 
     template<typename ST>
     FILE *print(ST &st, FILE *fp = stderr) {
