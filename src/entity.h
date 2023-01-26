@@ -41,13 +41,18 @@ struct Entity {
     bool cleanup = false;
 
     template<typename T>
-    bool has() const {
+    [[nodiscard]] bool has() const {
         log_trace("checking component {} {} on entity {}",
                   components::get_type_id<T>(), type_name<T>(), id);
         log_trace("your set is now {}", componentSet);
         bool result = componentSet[components::get_type_id<T>()];
         log_trace("and the result was {}", result);
         return result;
+    }
+
+    template<typename T>
+    [[nodiscard]] bool is_missing() const {
+        return !has<T>();
     }
 
     template<typename T, typename... TArgs>
@@ -76,7 +81,7 @@ struct Entity {
     }
 
     template<typename T>
-    T& get() const {
+    [[nodiscard]] T& get() const {
         if (!has<T>()) {
             log_error("Entity {} did not have component {} requested", id,
                       type_name<T>());

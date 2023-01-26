@@ -52,13 +52,13 @@ struct RemotePlayer : public BasePlayer {
         : BasePlayer({location.x, 0, location.y}, {0, 255, 0, 255},
                      {255, 0, 0, 255}) {}
 
-    virtual void update_remotely(float* location, std::string username,
-                                 int facing_direction) {
-        HasName& hasname = this->get<HasName>();
+    static void update_remotely(std::shared_ptr<Entity> entity, float* location,
+                                std::string username, int facing_direction) {
+        HasName& hasname = entity->get<HasName>();
         hasname.name = username;
 
-        this->get<HasName>().name = username;
-        Transform& transform = this->get<Transform>();
+        entity->get<HasName>().name = username;
+        Transform& transform = entity->get<Transform>();
         // TODO add setters
         transform.position = vec3{location[0], location[1], location[2]};
         transform.face_direction =

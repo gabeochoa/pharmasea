@@ -122,6 +122,7 @@ struct Client {
             remote_players[client_id] = std::make_shared<RemotePlayer>();
             auto rp = remote_players[client_id];
             rp->client_id = client_id;
+            // We want to crash if no hasName so no has<> check here
             rp->get<HasName>().update(username);
             // NOTE we add to the map directly because its colocated with
             //      the other entity info
@@ -169,7 +170,7 @@ struct Client {
             }
             auto rp = remote_players[client_id];
             if (!rp) return;
-            rp->update_remotely(location, username, facing);
+            RemotePlayer::update_remotely(rp, location, username, facing);
         };
 
         ClientPacket packet = client_p->deserialize_to_packet(msg);
