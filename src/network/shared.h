@@ -37,7 +37,7 @@ struct PolymorphicBaseClass<LevelInfo>
 }  // namespace bitsery
 
 using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<Entity, Item, BaseComponent>;
+    bitsery::ext::PolymorphicClassesList<Item, BaseComponent>;
 
 namespace network {
 

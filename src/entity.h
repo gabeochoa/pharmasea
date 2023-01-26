@@ -122,7 +122,7 @@ struct Entity {
         return *dynamic_pointer_cast<T>(ptr);
     }
 
-    virtual ~Entity() {}
+    ~Entity() {}
 
    private:
     Entity() : id(ENTITY_ID_GEN++) {}
@@ -140,9 +140,9 @@ struct Entity {
     }
 
    protected:
-    virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
+    vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
 
-    virtual vec2 get_heading() {
+    vec2 get_heading() {
         const float target_facing_ang =
             util::deg2rad(this->get<Transform>().FrontFaceDirectionMap.at(
                 this->get<Transform>().face_direction));
@@ -152,7 +152,7 @@ struct Entity {
         };
     }
 
-    virtual void turn_to_face_entity(Entity* target) {
+    void turn_to_face_entity(Entity* target) {
         if (!target) return;
 
         // dot product visualizer https://www.falstad.com/dotproduct/
@@ -186,13 +186,11 @@ struct Entity {
         }
     }
 
-    virtual void in_round_update(float) {}
+    void in_round_update(float) {}
 
     // Whether or not this entity can hold items at the moment
     // -- doesnt need to be static, can dynamically change values
-    virtual bool can_place_item_into(std::shared_ptr<Item> = nullptr) {
-        return false;
-    }
+    bool can_place_item_into(std::shared_ptr<Item> = nullptr) { return false; }
 
    public:
     /*
@@ -200,12 +198,12 @@ struct Entity {
      *
      * @param BoundingBox the box to test
      * */
-    virtual bool collides(BoundingBox b) const {
+    bool collides(BoundingBox b) const {
         // TODO fix move to collision component
         return CheckCollisionBoxes(this->get<Transform>().bounds(), b);
     }
 
-    [[nodiscard]] virtual BoundingBox raw_bounds() const {
+    [[nodiscard]] BoundingBox raw_bounds() const {
         // TODO fix  size
         return this->get<Transform>().raw_bounds();
     }
@@ -214,7 +212,7 @@ struct Entity {
      * Get the bounding box for this entity
      * @returns BoundingBox the box
      * */
-    [[nodiscard]] virtual BoundingBox bounds() const {
+    [[nodiscard]] BoundingBox bounds() const {
         // TODO fix  size
         return get_bounds(this->get<Transform>().position, this->size());
     }
@@ -236,7 +234,7 @@ struct Entity {
      *
      * @returns vec2 the location `distance` tiles ahead
      * */
-    virtual vec2 tile_infront(int distance) {
+    vec2 tile_infront(int distance) {
         // TODO fix snap
         vec2 tile = vec::to2(this->get<Transform>().snap_position());
         return tile_infront_given_pos(tile, distance,
@@ -276,7 +274,7 @@ struct Entity {
         return tile;
     }
 
-    virtual void update(float dt) final {
+    void update(float dt) {
         TRACY_ZONE_SCOPED;
         if (GameState::get().is(game::State::InRound)) {
             in_round_update(dt);
@@ -399,7 +397,7 @@ static Entity* make_customer(vec2 pos) {
     // bubble = SpeechBubble(ailment->icon_name());
 
     // TODO support this
-    // virtual void in_round_update(float dt) override {
+    // void in_round_update(float dt) override {
     // AIPerson::in_round_update(dt);
 
     // Register* reg = get_target_register();
@@ -411,7 +409,7 @@ static Entity* make_customer(vec2 pos) {
     // bubble.value().update(dt, this->get<Transform>().raw_position);
     // }
 
-    // virtual void render_normal() const override {
+    // void render_normal() const override {
     // auto render_speech_bubble = [&]() {
     // if (!this->bubble.has_value()) return;
     // this->bubble.value().render();
@@ -509,11 +507,11 @@ static Entity* make_wall(vec2 pos) {
     // TODO need to make sure we dont have this
     // its inherited from entity...
     // addComponent<CanHoldItem>();
-    // virtual bool can_place_item_into(std::shared_ptr<Item>) override {
+    // bool can_place_item_into(std::shared_ptr<Item>) override {
     // return false;
     // }
 
-    // virtual void render_normal() const override {
+    // void render_normal() const override {
     // TODO fix
     // switch (this->type) {
     // case Type::DOUBLE_TEE: {
@@ -634,7 +632,7 @@ template<typename I>
     Entity* container = make_furniture(pos, ui::color::white, ui::color::white);
     container->addComponent<IsItemContainer<I>>();
     return container;
-    // virtual bool can_place_item_into(
+    // bool can_place_item_into(
     // std::shared_ptr<Item> item = nullptr) override {
     // return this->get<IsItemContainer<I>>().is_matching_item(item);
     // }
