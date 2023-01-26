@@ -13,6 +13,7 @@ libraries used:
 - magic enum https://github.com/Neargye/magic_enum.git
 - tracy https://github.com/wolfpld/tracy
 - backward https://github.com/bombela/backward-cpp
+- StaticTypeInfo https://github.com/TheLartians/StaticTypeInfo
 
 
 Models from 
