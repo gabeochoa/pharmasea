@@ -66,6 +66,8 @@ void serialize(S& s, Color& data) {
 }
 }  // namespace bitsery
 
+#include <backward/backward.hpp>
+
 #include "engine/tracy.h"
 
 #ifdef __APPLE__

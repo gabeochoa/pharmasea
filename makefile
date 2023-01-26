@@ -10,7 +10,7 @@ NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 INCLUDES = -Ivendor/ 
 LIBS = -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
-SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/tracy/TracyClient.cpp )
+SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/tracy/TracyClient.cpp vendor/backward/backward.cpp )
 H_FILES := $(wildcard src/**/*.h src/engine/**/*.h) 
 OBJ_DIR := ./output
 OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
@@ -38,6 +38,7 @@ clean:
 	mkdir -p $(OBJ_DIR)/src/engine/
 	mkdir -p $(OBJ_DIR)/src/engine/network/
 	mkdir -p $(OBJ_DIR)/vendor/tracy/
+	mkdir -p $(OBJ_DIR)/vendor/backward/
 
 profile: 
 	xctrace record --output . --template "Time Profiler" --time-limit 10s --attach `ps -ef | grep "\./pharmasea" | grep -v "grep"  | cut -d' ' -f4`
