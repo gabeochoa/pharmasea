@@ -4,9 +4,9 @@
 
 #include "internal/client.h"
 //
-#include "../base_player.h"
 #include "../engine/globals_register.h"
 #include "../engine/log.h"
+#include "../person.h"
 
 namespace network {
 

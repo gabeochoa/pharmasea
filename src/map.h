@@ -7,9 +7,9 @@
 #include "engine/log.h"
 #include "external_include.h"
 //
-#include "base_player.h"
 #include "entityhelper.h"
 #include "level_info.h"
+#include "person.h"
 #include "statemanager.h"
 
 struct Map {

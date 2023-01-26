@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "../base_player.h"
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_grab_from_other_furniture.h"
 #include "../components/can_highlight_others.h"

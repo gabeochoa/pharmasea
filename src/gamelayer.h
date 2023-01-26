@@ -7,7 +7,6 @@
 //
 #include "globals.h"
 //
-#include "base_player.h"
 #include "camera.h"
 #include "engine.h"
 #include "engine/layer.h"
@@ -15,6 +14,7 @@
 #include "engine/music_library.h"
 #include "engine/texture_library.h"
 #include "map.h"
+#include "person.h"
 #include "statemanager.h"
 
 struct GameLayer : public Layer {
