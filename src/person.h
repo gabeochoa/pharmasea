@@ -149,51 +149,18 @@ struct AIPerson : public Person {
     AIPerson(vec3 p) : Person(p) { add_static_components(); }
 };
 
-struct SpeechBubble {
-    vec3 position;
-    // TODO we arent using any string functionality can we swap to const char*?
-    // perhaps in a typedef?
-    std::string icon_tex_name;
+static Entity* make_customer(vec3 p) {
+    Entity* customer = new AIPerson(p);
 
-    explicit SpeechBubble(std::string icon) : icon_tex_name(icon) {}
+    customer->addComponent<CanHaveAilment>().update(
+        std::make_shared<Insomnia>());
+    customer->get<HasName>().update(get_random_name());
+    customer->get<CanPerformJob>().update(WaitInQueue, Wandering);
 
-    void update(float, vec3 pos) { this->position = pos; }
-    void render() const {
-        GameCam cam = GLOBALS.get<GameCam>("game_cam");
-        raylib::Texture texture = TextureLibrary::get().get(icon_tex_name);
-        raylib::DrawBillboard(cam.camera, texture,
-                              vec3{position.x,                      //
-                                   position.y + (TILESIZE * 1.5f),  //
-                                   position.z},                     //
-                              TILESIZE,                             //
-                              raylib::WHITE);
-    }
-};
+    return customer;
 
-struct Customer : public AIPerson {
-    std::optional<SpeechBubble> bubble;
-
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        // Only things that need to be rendered, need to be serialized :)
-        s.ext(*this, bitsery::ext::BaseClass<AIPerson>{});
-    }
-
-   public:
-    Customer() : Customer({0, 0, 0}) { init(); }
-    Customer(vec3 p) : AIPerson(p) { init(); }
-
-    void init() {
-        addComponent<CanHaveAilment>().update(std::make_shared<Insomnia>());
-
-        get<HasName>().update(get_random_name());
-        get<CanPerformJob>().update(WaitInQueue, Wandering);
-
-        // TODO turn back on bubbles
-        // bubble = SpeechBubble(ailment->icon_name());
-    }
+    // TODO turn back on bubbles
+    // bubble = SpeechBubble(ailment->icon_name());
 
     // TODO support this
     // virtual void in_round_update(float dt) override {
@@ -216,4 +183,4 @@ struct Customer : public AIPerson {
     // AIPerson::render_normal();
     // render_speech_bubble();
     // }
-};
+}

@@ -61,7 +61,7 @@ static Entity* make_character_switcher(vec2 pos) {
 
     character_switcher->get<HasWork>().init(
         [](HasWork& hasWork, std::shared_ptr<Person> person, float dt) {
-            if (!person->has<UsesCharacterModel>()) return;
+            if (person->is_missing<UsesCharacterModel>()) return;
             UsesCharacterModel& usesCharacterModel =
                 person->get<UsesCharacterModel>();
 

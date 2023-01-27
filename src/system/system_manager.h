@@ -28,7 +28,7 @@
 namespace system_manager {
 
 inline void transform_snapper(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<Transform>()) return;
+    if (entity->is_missing<Transform>()) return;
     Transform& transform = entity->get<Transform>();
 
     if (entity->has<IsSnappable>()) {
@@ -40,10 +40,10 @@ inline void transform_snapper(std::shared_ptr<Entity> entity, float) {
 
 inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
                                            float) {
-    if (!entity->has<CanHoldFurniture>()) return;
+    if (entity->is_missing<CanHoldFurniture>()) return;
     CanHoldFurniture& can_hold_furniture = entity->get<CanHoldFurniture>();
 
-    if (!entity->has<Transform>()) return;
+    if (entity->is_missing<Transform>()) return;
     const Transform& transform = entity->get<Transform>();
 
     // TODO if cannot be placed in this spot make it obvious to the user
@@ -70,11 +70,11 @@ inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
 }
 
 inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<CanHoldItem>()) return;
+    if (entity->is_missing<CanHoldItem>()) return;
     const CanHoldItem& can_hold_item = entity->get<CanHoldItem>();
     if (can_hold_item.empty()) return;
 
-    if (!entity->has<Transform>()) return;
+    if (entity->is_missing<Transform>()) return;
     const Transform& transform = entity->get<Transform>();
 
     vec3 new_pos = transform.position;
@@ -93,7 +93,7 @@ inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
                 new_pos.y += TILESIZE / 2;
                 break;
             case CustomHeldItemPosition::Positioner::Conveyer:
-                if (!entity->has<ConveysHeldItem>()) {
+                if (entity->is_missing<ConveysHeldItem>()) {
                     log_warn(
                         "A conveyer positioned item needs ConveysHeldItem");
                     break;
@@ -140,17 +140,17 @@ inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
 }
 
 inline void reset_highlighted(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<CanBeHighlighted>()) return;
+    if (entity->is_missing<CanBeHighlighted>()) return;
     CanBeHighlighted& cbh = entity->get<CanBeHighlighted>();
     cbh.is_highlighted = false;
 }
 
 inline void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<CanHighlightOthers>()) return;
+    if (entity->is_missing<CanHighlightOthers>()) return;
     CanHighlightOthers& cho = entity->get<CanHighlightOthers>();
 
     // TODO explicity commenting this out so that we get an error
-    // if (!entity->has<Transform>()) return;
+    // if (entity->is_missing<Transform>()) return;
     Transform& transform = entity->get<Transform>();
 
     // TODO this is impossible to read, what can we do to fix this while
@@ -307,7 +307,7 @@ inline void person_update_given_new_pos(int id, Transform& transform,
 }
 
 inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
-    if (!entity->has<CollectsUserInput>()) return;
+    if (entity->is_missing<CollectsUserInput>()) return;
     CollectsUserInput& cui = entity->get<CollectsUserInput>();
 
     // Theres no players not in game menu state,
@@ -348,11 +348,11 @@ inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
 inline void process_player_movement_input(std::shared_ptr<Entity> entity,
                                           float dt, InputName input_name,
                                           float input_amount) {
-    if (!entity->has<Transform>()) return;
+    if (entity->is_missing<Transform>()) return;
     Transform& transform = entity->get<Transform>();
     std::shared_ptr<Player> player = dynamic_pointer_cast<Player>(entity);
 
-    if (!entity->has<HasBaseSpeed>()) return;
+    if (entity->is_missing<HasBaseSpeed>()) return;
     HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
 
     const float speed = hasBaseSpeed.speed() * dt;
@@ -526,7 +526,7 @@ inline void process_input(const std::shared_ptr<Entity> entity,
 
             const auto can_place_item_into = [](std::shared_ptr<Entity> entity,
                                                 std::shared_ptr<Item> item) {
-                if (!entity->has<CanHoldItem>()) return false;
+                if (entity->is_missing<CanHoldItem>()) return false;
                 CanHoldItem& furnCanHold = entity->get<CanHoldItem>();
 
                 const auto item_container_is_matching_item =
@@ -712,18 +712,18 @@ inline void process_input(const std::shared_ptr<Entity> entity,
 }
 
 void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
-    if (!entity->has<CanHoldItem>()) return;
+    if (entity->is_missing<CanHoldItem>()) return;
     CanHoldItem& canHold = entity->get<CanHoldItem>();
     // we are not holding anything
     if (canHold.empty()) return;
 
-    if (!entity->has<ConveysHeldItem>()) return;
+    if (entity->is_missing<ConveysHeldItem>()) return;
     ConveysHeldItem& conveysHeldItem = entity->get<ConveysHeldItem>();
 
-    if (!entity->has<Transform>()) return;
+    if (entity->is_missing<Transform>()) return;
     Transform& transform = entity->get<Transform>();
 
-    if (!entity->has<CanBeTakenFrom>()) return;
+    if (entity->is_missing<CanBeTakenFrom>()) return;
     CanBeTakenFrom& canBeTakenFrom = entity->get<CanBeTakenFrom>();
 
     canBeTakenFrom.update(false);
@@ -780,18 +780,18 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
 
 void process_grabber_items(std::shared_ptr<Entity> entity, float dt) {
     // Should only run this for conveyers
-    if (!entity->has<ConveysHeldItem>()) return;
+    if (entity->is_missing<ConveysHeldItem>()) return;
     ConveysHeldItem& conveysHeldItem = entity->get<ConveysHeldItem>();
 
     // Should only run for grabbers
-    if (!entity->has<CanGrabFromOtherFurniture>()) return;
+    if (entity->is_missing<CanGrabFromOtherFurniture>()) return;
 
-    if (!entity->has<CanHoldItem>()) return;
+    if (entity->is_missing<CanHoldItem>()) return;
     CanHoldItem& canHold = entity->get<CanHoldItem>();
     // we are already holding something so
     if (canHold.is_holding_item()) return;
 
-    if (!entity->has<Transform>()) return;
+    if (entity->is_missing<Transform>()) return;
     Transform& transform = entity->get<Transform>();
 
     auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
@@ -824,7 +824,7 @@ void process_is_container_and_should_destroy_item(
      * then we should just destroy it
      * */
 
-    if (!entity->has<CanHoldItem>()) return;
+    if (entity->is_missing<CanHoldItem>()) return;
     CanHoldItem& canHold = entity->get<CanHoldItem>();
 
     if (canHold.empty()) return;
@@ -835,7 +835,7 @@ void process_is_container_and_should_destroy_item(
             if (!item) return;
             if (entity->has<IsItemContainer<I>>()) return;
 
-            if (!entity->has<CanHoldItem>()) return;
+            if (entity->is_missing<CanHoldItem>()) return;
             CanHoldItem& canHold = entity->get<CanHoldItem>();
 
             // TODO is this the api we want
@@ -854,7 +854,7 @@ void process_is_container_and_should_destroy_item(
 
 // TODO fix this
 // void process_register_waiting_queue(std::shared_ptr<Entity> entity, float dt)
-// { if (!entity->has<HasWaitingQueue>()) return; HasWaitingQueue&
+// { if (entity->is_missing<HasWaitingQueue>()) return; HasWaitingQueue&
 // hasWaitingQueue = entity->get<HasWaitingQueue>();
 // }
 //
@@ -879,7 +879,7 @@ struct SystemManager {
 
     void process_inputs(const Entities& entities, const UserInputs& inputs) {
         for (auto& entity : entities) {
-            if (!entity->has<RespondsToUserInput>()) continue;
+            if (entity->is_missing<RespondsToUserInput>()) continue;
             for (auto input : inputs) {
                 system_manager::process_input(entity, input);
             }

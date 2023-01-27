@@ -282,3 +282,28 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
     s.ext(entity, bitsery::ext::StdSmartPtr{});
 }
 }  // namespace bitsery
+
+// TODO from customer
+// std::optional<SpeechBubble> bubble;
+// struct SpeechBubble {
+// vec3 position;
+// // TODO we arent using any string functionality can we swap to const
+// char*?
+// // perhaps in a typedef?
+// std::string icon_tex_name;
+//
+// explicit SpeechBubble(std::string icon) : icon_tex_name(icon) {}
+//
+// void update(float, vec3 pos) { this->position = pos; }
+// void render() const {
+// GameCam cam = GLOBALS.get<GameCam>("game_cam");
+// raylib::Texture texture = TextureLibrary::get().get(icon_tex_name);
+// raylib::DrawBillboard(cam.camera, texture,
+// vec3{position.x,                      //
+// position.y + (TILESIZE * 1.5f),  //
+// position.z},                     //
+// TILESIZE,                             //
+// raylib::WHITE);
+// }
+// };
+//
