@@ -40,7 +40,7 @@ inline Job* create_wandering_job(std::shared_ptr<Entity> entity) {
 
 inline void replace_job_with_job_type(std::shared_ptr<Entity> entity, float,
                                       JobType job_type) {
-    if (!entity->has<CanPerformJob>()) return;
+    if (entity->is_missing<CanPerformJob>()) return;
     CanPerformJob& cpj = entity->get<CanPerformJob>();
 
     Job* job = nullptr;
@@ -71,7 +71,7 @@ inline void replace_job_with_job_type(std::shared_ptr<Entity> entity, float,
 }
 
 inline void find_new_job(std::shared_ptr<Entity> entity, float dt) {
-    if (!entity->has<CanPerformJob>()) return;
+    if (entity->is_missing<CanPerformJob>()) return;
     CanPerformJob& cpj = entity->get<CanPerformJob>();
 
     auto personal_queue = cpj.job_queue();
@@ -84,14 +84,12 @@ inline void find_new_job(std::shared_ptr<Entity> entity, float dt) {
 }
 
 inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
-    if (!entity->has<CanPerformJob>()) return;
+    if (entity->is_missing<CanPerformJob>()) return;
     CanPerformJob& cpj = entity->get<CanPerformJob>();
     std::shared_ptr<Job> job = cpj.job();
 
     if (job->state == Job::State::Completed) {
-        if (job->on_cleanup)
-            job->on_cleanup(dynamic_pointer_cast<AIPerson>(entity).get(),
-                            job.get());
+        if (job->on_cleanup) job->on_cleanup(entity.get(), job.get());
         job.reset();
         find_new_job(entity, dt);
         return;
@@ -120,7 +118,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
 
     const auto navigate_to = [entity, travel_on_path](vec2 goal) -> bool {
         auto job = entity->get<CanPerformJob>().job();
-        // if (!entity->has<Transform>()) return;
+        // if (entity->is_missing<Transform>()) return;
         Transform& transform = entity->get<Transform>();
         vec2 me = transform.as2();
         if (me == goal) {
@@ -251,7 +249,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
 
         const auto get_next_queue_position =
             [](std::shared_ptr<Entity> reg,
-               std::shared_ptr<AIPerson> customer) -> vec2 {
+               std::shared_ptr<Entity> customer) -> vec2 {
             M_ASSERT(customer,
                      "entity passed to register queue should not be null");
             M_ASSERT(reg->has<HasWaitingQueue>(),
@@ -362,7 +360,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 job->data["register"] = closest_target.get();
                 job->start = get_next_queue_position(
                     dynamic_pointer_cast<Entity>(closest_target),
-                    dynamic_pointer_cast<AIPerson>(entity));
+                    dynamic_pointer_cast<Entity>(entity));
                 job->end = closest_target->tile_infront(1);
                 job->spot_in_line = position_in_line(closest_target, entity);
                 job->state = Job::State::HeadingToStart;
@@ -476,7 +474,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
         }
     };
 
-    if (!entity->has<CanPerformJob>()) return;
+    if (entity->is_missing<CanPerformJob>()) return;
 
     CanPerformJob& cpj = entity->get<CanPerformJob>();
     std::shared_ptr<Job> job = cpj.job();
@@ -504,12 +502,12 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
 }
 
 inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<CanPerformJob>()) return;
+    if (entity->is_missing<CanPerformJob>()) return;
     CanPerformJob& cpf = entity->get<CanPerformJob>();
     if (!cpf.has_job()) return;
     auto job = cpf.job();
 
-    CanBePushed& cbp = entity->get<CanBePushed>();
+    const CanBePushed& cbp = entity->get<CanBePushed>();
 
     if (cbp.pushed_force.x != 0.0f || cbp.pushed_force.z != 0.0f) {
         job->path.clear();
@@ -519,10 +517,10 @@ inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
 }
 
 inline void update_position_from_job(std::shared_ptr<Entity> entity, float dt) {
-    if (!entity->has<Transform>()) return;
+    if (entity->is_missing<Transform>()) return;
     Transform& transform = entity->get<Transform>();
 
-    if (!entity->has<CanPerformJob>()) return;
+    if (entity->is_missing<CanPerformJob>()) return;
     CanPerformJob& cpf = entity->get<CanPerformJob>();
     if (!cpf.has_job()) return;
     auto job = cpf.job();
@@ -533,7 +531,7 @@ inline void update_position_from_job(std::shared_ptr<Entity> entity, float dt) {
 
     vec2 tar = job->local.value();
 
-    if (!entity->has<HasBaseSpeed>()) return;
+    if (entity->is_missing<HasBaseSpeed>()) return;
     const HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
 
     float speed = hasBaseSpeed.speed() * dt;
@@ -570,7 +568,7 @@ inline void update_position_from_job(std::shared_ptr<Entity> entity, float dt) {
 }
 
 inline void render_job_visual(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<CanPerformJob>()) return;
+    if (entity->is_missing<CanPerformJob>()) return;
     CanPerformJob& cpf = entity->get<CanPerformJob>();
     if (!cpf.has_job()) return;
 
