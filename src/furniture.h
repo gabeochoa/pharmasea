@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "aiperson.h"
 #include "components/can_grab_from_other_furniture.h"
 #include "components/conveys_held_item.h"
 #include "components/custom_item_position.h"
