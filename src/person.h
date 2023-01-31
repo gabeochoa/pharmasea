@@ -53,29 +53,18 @@ struct Person : public Entity {
 
 #include "components/has_client_id.h"
 
-// TODO add more information on what the difference is between Person and
-// BasePlayer and Player
-struct BasePlayer : public Person {
-    void add_static_components() {
-        addComponent<CanHighlightOthers>();
-        addComponent<CanHoldFurniture>();
-
-        // addComponent<HasBaseSpeed>().update(10.f);
-        get<HasBaseSpeed>().update(7.5f);
-
-        // TODO what is a reasonable default value here?
-        // TODO who sets this value?
-        // this comes from remote player and probably should only be there
-        addComponent<HasClientID>();
-    }
-
-    BasePlayer(vec3 p) : Person(p) { add_static_components(); }
-    BasePlayer() : BasePlayer({0, 0, 0}) {}
-    BasePlayer(vec2 location) : BasePlayer({location.x, 0, location.y}) {}
-};
-
 static Person* make_remote_player(vec3 pos) {
-    Person* remote_player = new BasePlayer(pos);
+    Person* remote_player = new Person(pos);
+    remote_player->addComponent<CanHighlightOthers>();
+    remote_player->addComponent<CanHoldFurniture>();
+
+    // addComponent<HasBaseSpeed>().update(10.f);
+    remote_player->get<HasBaseSpeed>().update(7.5f);
+
+    // TODO what is a reasonable default value here?
+    // TODO who sets this value?
+    // this comes from remote player and probably should only be there
+    remote_player->addComponent<HasClientID>();
     return remote_player;
 }
 
@@ -94,7 +83,18 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
 }
 
 static Person* make_player(vec3 p) {
-    Person* player = new BasePlayer(p);
+    Person* player = new Person(p);
+
+    player->addComponent<CanHighlightOthers>();
+    player->addComponent<CanHoldFurniture>();
+
+    // addComponent<HasBaseSpeed>().update(10.f);
+    player->get<HasBaseSpeed>().update(7.5f);
+
+    // TODO what is a reasonable default value here?
+    // TODO who sets this value?
+    // this comes from remote player and probably should only be there
+    player->addComponent<HasClientID>();
 
     player->addComponent<CanBeGhostPlayer>();
     player->addComponent<CollectsUserInput>();
