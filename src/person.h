@@ -78,20 +78,21 @@ struct RemotePlayer : public BasePlayer {
     RemotePlayer(vec3 p) : BasePlayer(p) {}
     RemotePlayer() : BasePlayer({0, 0, 0}) {}
     RemotePlayer(vec2 location) : BasePlayer({location.x, 0, location.y}) {}
-
-    static void update_remotely(std::shared_ptr<Entity> entity, float* location,
-                                std::string username, int facing_direction) {
-        HasName& hasname = entity->get<HasName>();
-        hasname.name = username;
-
-        entity->get<HasName>().name = username;
-        Transform& transform = entity->get<Transform>();
-        // TODO add setters
-        transform.position = vec3{location[0], location[1], location[2]};
-        transform.face_direction =
-            static_cast<Transform::FrontFaceDirection>(facing_direction);
-    }
 };
+
+static void update_player_remotely(std::shared_ptr<Entity> entity,
+                                   float* location, std::string username,
+                                   int facing_direction) {
+    HasName& hasname = entity->get<HasName>();
+    hasname.name = username;
+
+    entity->get<HasName>().name = username;
+    Transform& transform = entity->get<Transform>();
+    // TODO add setters
+    transform.position = vec3{location[0], location[1], location[2]};
+    transform.face_direction =
+        static_cast<Transform::FrontFaceDirection>(facing_direction);
+}
 
 static Person* make_player(vec3 p) {
     Person* player = new BasePlayer();

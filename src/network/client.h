@@ -170,7 +170,7 @@ struct Client {
             }
             auto rp = remote_players[client_id];
             if (!rp) return;
-            RemotePlayer::update_remotely(rp, location, username, facing);
+            update_player_remotely(rp, location, username, facing);
         };
 
         ClientPacket packet = client_p->deserialize_to_packet(msg);
