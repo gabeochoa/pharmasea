@@ -74,11 +74,10 @@ struct BasePlayer : public Person {
     BasePlayer(vec2 location) : BasePlayer({location.x, 0, location.y}) {}
 };
 
-struct RemotePlayer : public BasePlayer {
-    RemotePlayer(vec3 p) : BasePlayer(p) {}
-    RemotePlayer() : BasePlayer({0, 0, 0}) {}
-    RemotePlayer(vec2 location) : BasePlayer({location.x, 0, location.y}) {}
-};
+static Person* make_remote_player(vec3 pos) {
+    Person* remote_player = new BasePlayer(pos);
+    return remote_player;
+}
 
 static void update_player_remotely(std::shared_ptr<Entity> entity,
                                    float* location, std::string username,
@@ -95,7 +94,7 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
 }
 
 static Person* make_player(vec3 p) {
-    Person* player = new BasePlayer();
+    Person* player = new BasePlayer(p);
 
     player->addComponent<CanBeGhostPlayer>();
     player->addComponent<CollectsUserInput>();

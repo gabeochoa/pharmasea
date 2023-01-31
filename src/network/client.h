@@ -18,7 +18,7 @@ struct Client {
 
     int id = 0;
     std::shared_ptr<internal::Client> client_p;
-    std::map<int, std::shared_ptr<RemotePlayer>> remote_players;
+    std::map<int, std::shared_ptr<Person>> remote_players;
     std::shared_ptr<Map> map;
     std::vector<ClientPacket::AnnouncementInfo> announcements;
 
@@ -119,7 +119,8 @@ struct Client {
                 return;
             };
 
-            remote_players[client_id] = std::make_shared<RemotePlayer>();
+            remote_players[client_id] =
+                std::shared_ptr<Person>(make_remote_player({0, 0, 0}));
             auto rp = remote_players[client_id];
             rp->get<HasClientID>().client_id = client_id;
             // We want to crash if no hasName so no has<> check here
