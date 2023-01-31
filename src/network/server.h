@@ -41,7 +41,7 @@ struct Server {
     AtomicQueue<ClientMessage> incoming_message_queue;
     AtomicQueue<ClientPacket> packet_queue;
     std::shared_ptr<internal::Server> server_p;
-    std::map<int, std::shared_ptr<Player> > players;
+    std::map<int, std::shared_ptr<Person> > players;
     std::shared_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
     std::thread::id thread_id;
@@ -311,7 +311,8 @@ struct Server {
 
         // create the player if they dont already exist
         if (!players.contains(packet.client_id)) {
-            players[packet.client_id] = std::make_shared<Player>();
+            players[packet.client_id] =
+                std::shared_ptr<Person>(make_player({0, 0, 0}));
         }
 
         // update the username

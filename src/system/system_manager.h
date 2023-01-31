@@ -350,7 +350,7 @@ inline void process_player_movement_input(std::shared_ptr<Entity> entity,
                                           float input_amount) {
     if (entity->is_missing<Transform>()) return;
     Transform& transform = entity->get<Transform>();
-    std::shared_ptr<Player> player = dynamic_pointer_cast<Player>(entity);
+    std::shared_ptr<Person> player = dynamic_pointer_cast<Person>(entity);
 
     if (entity->is_missing<HasBaseSpeed>()) return;
     HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
@@ -399,7 +399,7 @@ inline void process_input(const std::shared_ptr<Entity> entity,
         return;
     }
 
-    std::shared_ptr<Player> player = dynamic_pointer_cast<Player>(entity);
+    std::shared_ptr<Person> player = dynamic_pointer_cast<Person>(entity);
     if (!player) return;
 
     const auto rotate_furniture = [player]() {

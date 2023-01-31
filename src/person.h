@@ -29,12 +29,11 @@ struct Person : public Entity {
         s.ext(*this, bitsery::ext::BaseClass<Entity>{});
     }
 
-   protected:
+   public:
     Person() : Person({0, 0, 0}) {}
 
     Person(vec3 p) : Entity(p, WHITE, WHITE) { update_component(); }
 
-   public:
     void update_component() {
         get<Transform>().size =
             vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
@@ -94,20 +93,15 @@ struct RemotePlayer : public BasePlayer {
     }
 };
 
-struct Player : public BasePlayer {
-    void add_static_components() {
-        addComponent<CanBeGhostPlayer>();
-        addComponent<CollectsUserInput>();
-        addComponent<RespondsToUserInput>();
-    }
+static Person* make_player(vec3 p) {
+    Person* player = new BasePlayer();
 
-    // NOTE: this is kept public because we use it in the network when prepping
-    // server players
-    Player() : BasePlayer({0, 0, 0}) { add_static_components(); }
+    player->addComponent<CanBeGhostPlayer>();
+    player->addComponent<CollectsUserInput>();
+    player->addComponent<RespondsToUserInput>();
 
-    Player(vec3 p) : BasePlayer(p) { add_static_components(); }
-    Player(vec2 location) : Player({location.x, 0, location.y}) {}
-};
+    return player;
+}
 
 #include "ailment.h"
 #include "camera.h"
@@ -149,8 +143,21 @@ struct AIPerson : public Person {
     AIPerson(vec3 p) : Person(p) { add_static_components(); }
 };
 
+static Entity* make_aiperson(vec3 p) {
+    Entity* person = new Person(p);
+
+    person->addComponent<CanPerformJob>().update(Wandering, Wandering);
+    person->addComponent<HasBaseSpeed>().update(10.f);
+
+    return person;
+}
+
 static Entity* make_customer(vec3 p) {
+    // TODO This cannot be make_aiperson or new Person and i have no idea why
     Entity* customer = new AIPerson(p);
+
+    customer->addComponent<CanPerformJob>().update(Wandering, Wandering);
+    customer->addComponent<HasBaseSpeed>().update(10.f);
 
     customer->addComponent<CanHaveAilment>().update(
         std::make_shared<Insomnia>());

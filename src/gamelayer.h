@@ -18,13 +18,13 @@
 #include "statemanager.h"
 
 struct GameLayer : public Layer {
-    std::shared_ptr<Player> player;
+    std::shared_ptr<Person> player;
     std::shared_ptr<BasePlayer> active_player;
     std::shared_ptr<GameCam> cam;
     raylib::Model bag_model;
 
     GameLayer() : Layer("Game") {
-        player.reset(new Player(vec2{-3, -3}));
+        player.reset(make_player(vec3{-3, 0, -3}));
         GLOBALS.set("player", player.get());
 
         // TODO do we need this still?
@@ -133,9 +133,9 @@ struct GameLayer : public Layer {
                 const auto network_players =
                     // Forcing a copy to avoid the data changing from underneath
                     // us
-                    std::map<int, std::shared_ptr<Player>>(
+                    std::map<int, std::shared_ptr<Person>>(
                         GLOBALS.get_or_default<
-                            std::map<int, std::shared_ptr<Player>>>(
+                            std::map<int, std::shared_ptr<Person>>>(
                             "server_players", {}));
                 SystemManager::get().render(Entities{player}, dt);
             }
