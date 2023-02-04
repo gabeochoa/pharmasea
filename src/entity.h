@@ -142,7 +142,8 @@ struct Entity {
         };
     }
 
-    virtual void turn_to_face_entity(Entity* target) {
+    static void turn_to_face_entity(std::shared_ptr<Entity> entity,
+                                    Entity* target) {
         if (!target) return;
 
         // dot product visualizer https://www.falstad.com/dotproduct/
@@ -151,7 +152,7 @@ struct Entity {
         // @ = arccos(  (a dot b) / ( |a| * |b| ) )
 
         // first get the headings and normalise so |x| = 1
-        const vec2 my_heading = vec::norm(this->get_heading());
+        const vec2 my_heading = vec::norm(entity->get_heading());
         const vec2 tar_heading = vec::norm(target->get_heading());
         // dp = ( (a dot b )/ 1)
         float dot_product = vec::dot2(my_heading, tar_heading);
@@ -159,19 +160,19 @@ struct Entity {
         float theta_rad = acosf(dot_product);
         float theta_deg = util::rad2deg(theta_rad);
         int turn_degrees = (180 - (int) theta_deg) % 360;
-        // TODO fix this
+        // TODO fix entity
         (void) turn_degrees;
         if (turn_degrees > 0 && turn_degrees <= 45) {
-            this->get<Transform>().face_direction =
+            entity->get<Transform>().face_direction =
                 static_cast<Transform::FrontFaceDirection>(0);
         } else if (turn_degrees > 45 && turn_degrees <= 135) {
-            this->get<Transform>().face_direction =
+            entity->get<Transform>().face_direction =
                 static_cast<Transform::FrontFaceDirection>(90);
         } else if (turn_degrees > 135 && turn_degrees <= 225) {
-            this->get<Transform>().face_direction =
+            entity->get<Transform>().face_direction =
                 static_cast<Transform::FrontFaceDirection>(180);
         } else if (turn_degrees > 225) {
-            this->get<Transform>().face_direction =
+            entity->get<Transform>().face_direction =
                 static_cast<Transform::FrontFaceDirection>(270);
         }
     }
