@@ -8,18 +8,37 @@
 #include "entity.h"
 #include "entityhelper.h"
 //
+#include "ailment.h"
+#include "camera.h"
 #include "components/can_be_ghost_player.h"
+#include "components/can_have_ailment.h"
 #include "components/can_highlight_others.h"
 #include "components/can_hold_furniture.h"
+#include "components/can_hold_item.h"
+#include "components/can_perform_job.h"
 #include "components/collects_user_input.h"
 #include "components/has_base_speed.h"
+#include "components/has_client_id.h"
+#include "components/is_snappable.h"
 #include "components/responds_to_user_input.h"
 #include "components/uses_character_model.h"
+#include "drawing_util.h"
+#include "engine/astar.h"
+#include "engine/globals_register.h"
+#include "engine/is_server.h"
+#include "engine/log.h"
+#include "engine/sound_library.h"
+#include "engine/texture_library.h"
+#include "entityhelper.h"
+#include "external_include.h"
 #include "furniture.h"
 #include "globals.h"
+#include "job.h"
+#include "names.h"
 #include "person.h"
 #include "raylib.h"
 #include "statemanager.h"
+#include "text_util.h"
 
 struct Person : public Entity {
    private:
@@ -50,8 +69,6 @@ struct Person : public Entity {
         addComponent<UsesCharacterModel>();
     }
 };
-
-#include "components/has_client_id.h"
 
 static Person* make_remote_player(vec3 pos) {
     Person* remote_player = new Person(pos);
@@ -102,27 +119,6 @@ static Person* make_player(vec3 p) {
 
     return player;
 }
-
-#include "ailment.h"
-#include "camera.h"
-#include "components/can_have_ailment.h"
-#include "components/can_hold_item.h"
-#include "components/can_perform_job.h"
-#include "components/has_base_speed.h"
-#include "components/is_snappable.h"
-#include "drawing_util.h"
-#include "engine/astar.h"
-#include "engine/globals_register.h"
-#include "engine/is_server.h"
-#include "engine/log.h"
-#include "engine/sound_library.h"
-#include "engine/texture_library.h"
-#include "entityhelper.h"
-#include "external_include.h"
-#include "globals.h"
-#include "job.h"
-#include "names.h"
-#include "text_util.h"
 
 struct AIPerson : public Person {
    private:
