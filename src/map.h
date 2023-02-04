@@ -16,7 +16,7 @@ struct Map {
     LobbyMapInfo lobby_info;
     GameMapInfo game_info;
 
-    std::vector<std::shared_ptr<Person>> remote_players_NOT_SERIALIZED;
+    std::vector<std::shared_ptr<Entity>> remote_players_NOT_SERIALIZED;
     std::string seed;
 
     Map(const std::string& _seed = "default_seed") : seed(_seed) {

@@ -90,8 +90,8 @@ static Entity* make_person(vec3 pos) {
     return person;
 }
 
-static Person* make_remote_player(vec3 pos) {
-    Person* remote_player = new Person(pos);
+static Entity* make_remote_player(vec3 pos) {
+    Entity* remote_player = make_person(pos);
     remote_player->addComponent<CanHighlightOthers>();
     remote_player->addComponent<CanHoldFurniture>();
 
