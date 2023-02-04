@@ -220,15 +220,15 @@ struct Entity {
      * Returns the location of the tile `distance` distance in front of the
      * entity
      *
+     * @param entity, the entity to get the spot in front of
      * @param int, how far in front to go
      *
      * @returns vec2 the location `distance` tiles ahead
      * */
-    virtual vec2 tile_infront(int distance) {
-        // TODO fix snap
-        vec2 tile = vec::to2(this->get<Transform>().snap_position());
+    static vec2 tile_infront_given_player(Entity* entity, int distance) {
+        vec2 tile = vec::to2(entity->get<Transform>().snap_position());
         return tile_infront_given_pos(tile, distance,
-                                      this->get<Transform>().face_direction);
+                                      entity->get<Transform>().face_direction);
     }
 
     /*

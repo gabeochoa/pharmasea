@@ -652,8 +652,8 @@ inline void process_input(const std::shared_ptr<Entity> entity,
                 auto hf = ourCHF.furniture();
 
                 hf->get<CanBeHeld>().update(false);
-                hf->get<Transform>().update(
-                    vec::snap(vec::to3(player->tile_infront(1))));
+                hf->get<Transform>().update(vec::snap(vec::to3(
+                    Entity::tile_infront_given_player(player.get(), 1))));
 
                 ourCHF.update(nullptr);
             };
