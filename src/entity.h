@@ -68,8 +68,8 @@ struct Entity {
         // M_ASSERT(!this->has<T>(),
         // "This entity already has this component attached");
 
-        std::shared_ptr<T> component;
-        component.reset(new T(std::forward<TArgs>(args)...));
+        std::shared_ptr<T> component =
+            std::make_shared<T>(std::forward<TArgs>(args)...);
         // TODO figure out why this causes double free
         // component->entity = std::shared_ptr<Entity>(this);
         componentArray[components::get_type_id<T>()] = component;
