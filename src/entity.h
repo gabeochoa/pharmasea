@@ -176,8 +176,6 @@ struct Entity {
         }
     }
 
-    virtual void in_round_update(float) {}
-
     // Whether or not this entity can hold items at the moment
     // -- doesnt need to be static, can dynamically change values
     virtual bool can_place_item_into(std::shared_ptr<Item> = nullptr) {
@@ -266,12 +264,7 @@ struct Entity {
         return tile;
     }
 
-    virtual void update(float dt) final {
-        TRACY_ZONE_SCOPED;
-        if (GameState::get().is(game::State::InRound)) {
-            in_round_update(dt);
-        }
-    }
+    virtual void update(float) final {}
 };
 
 typedef Transform::Transform::FrontFaceDirection EntityDir;
