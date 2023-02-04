@@ -119,8 +119,8 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
         static_cast<Transform::FrontFaceDirection>(facing_direction);
 }
 
-static Person* make_player(vec3 p) {
-    Person* player = new Person(p);
+static Entity* make_player(vec3 p) {
+    Entity* player = new Person(p);
 
     player->addComponent<CanHighlightOthers>();
     player->addComponent<CanHoldFurniture>();

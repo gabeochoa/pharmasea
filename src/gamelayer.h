@@ -18,7 +18,7 @@
 #include "statemanager.h"
 
 struct GameLayer : public Layer {
-    std::shared_ptr<Person> player;
+    std::shared_ptr<Entity> player;
     std::shared_ptr<Person> active_player;
     std::shared_ptr<GameCam> cam;
     raylib::Model bag_model;
