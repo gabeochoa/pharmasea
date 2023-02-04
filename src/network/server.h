@@ -119,7 +119,7 @@ struct Server {
     float next_map_tick_reset = 50;  // 2fps
     float next_map_tick = 0;
 
-    TriggerOnDt next_update_timer = TriggerOnDt(1.f);
+    TriggerOnDt next_update_timer = TriggerOnDt(2.f);
 
     void tick(float dt) {
         TRACY_ZONE_SCOPED;
@@ -164,10 +164,6 @@ struct Server {
         if (MenuState::s_is_game(current_menu_state)) {
             TRACY_ZONE(tracy_server_gametick);
             if (next_update_timer.test(dt)) {
-                for (auto p : players) {
-                    p.second->update(next_update_timer / 1000.f);
-                }
-
                 pharmacy_map->onUpdate(next_update_timer / 1000.f);
             }
         }

@@ -36,15 +36,13 @@ struct Map {
 
     void onUpdate(float dt) {
         TRACY_ZONE_SCOPED;
-        for (auto rp : remote_players_NOT_SERIALIZED) {
-            rp->update(dt);
-        }
         // TODO i didnt switch cause this cause pikachu double vision
         // SystemManager::get().update(
         // container_cast(remote_players_NOT_SERIALIZED,
         // "converting sp<RemotePlayer> to sp<Entity> as these "
         // "are not serialized and so not part of level info"),
         // dt);
+
         if (in_lobby_state()) {
             lobby_info.ensure_generated_map(seed);
             lobby_info.onUpdate(dt);

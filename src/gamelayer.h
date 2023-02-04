@@ -95,7 +95,6 @@ struct GameLayer : public Layer {
         cam->updateCamera();
 
         SystemManager::get().update(Entities{player}, dt);
-        player->update(dt);
 
         // NOTE: gabe: i dont think we need to do this
         //         because the local map never should need to grab things

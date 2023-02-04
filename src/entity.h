@@ -263,8 +263,6 @@ struct Entity {
         }
         return tile;
     }
-
-    virtual void update(float) final {}
 };
 
 typedef Transform::Transform::FrontFaceDirection EntityDir;
