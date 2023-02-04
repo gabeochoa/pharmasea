@@ -132,10 +132,10 @@ struct Entity {
    protected:
     virtual vec3 size() const { return (vec3){TILESIZE, TILESIZE, TILESIZE}; }
 
-    virtual vec2 get_heading() {
+    static vec2 get_heading(std::shared_ptr<Entity> entity) {
         const float target_facing_ang =
-            util::deg2rad(this->get<Transform>().FrontFaceDirectionMap.at(
-                this->get<Transform>().face_direction));
+            util::deg2rad(entity->get<Transform>().FrontFaceDirectionMap.at(
+                entity->get<Transform>().face_direction));
         return vec2{
             cosf(target_facing_ang),
             sinf(target_facing_ang),
@@ -143,7 +143,7 @@ struct Entity {
     }
 
     static void turn_to_face_entity(std::shared_ptr<Entity> entity,
-                                    Entity* target) {
+                                    std::shared_ptr<Entity> target) {
         if (!target) return;
 
         // dot product visualizer https://www.falstad.com/dotproduct/
@@ -152,8 +152,8 @@ struct Entity {
         // @ = arccos(  (a dot b) / ( |a| * |b| ) )
 
         // first get the headings and normalise so |x| = 1
-        const vec2 my_heading = vec::norm(entity->get_heading());
-        const vec2 tar_heading = vec::norm(target->get_heading());
+        const vec2 my_heading = vec::norm(Entity::get_heading(entity));
+        const vec2 tar_heading = vec::norm(Entity::get_heading(target));
         // dp = ( (a dot b )/ 1)
         float dot_product = vec::dot2(my_heading, tar_heading);
         // arccos(dp)
