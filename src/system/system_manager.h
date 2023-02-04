@@ -419,7 +419,7 @@ inline void process_input(const std::shared_ptr<Entity> entity,
                 });
 
         if (!match) return;
-        match->rotate_facing_clockwise();
+        Entity::rotate_facing_clockwise(match);
     };
 
     const auto work_furniture = [player, frame_dt]() {
@@ -652,8 +652,8 @@ inline void process_input(const std::shared_ptr<Entity> entity,
                 auto hf = ourCHF.furniture();
 
                 hf->get<CanBeHeld>().update(false);
-                hf->get<Transform>().update(vec::snap(vec::to3(
-                    Entity::tile_infront_given_player(player.get(), 1))));
+                hf->get<Transform>().update(vec::snap(
+                    vec::to3(Entity::tile_infront_given_player(player, 1))));
 
                 ourCHF.update(nullptr);
             };

@@ -210,10 +210,10 @@ struct Entity {
     /*
      * Rotate the facing direction of this entity, clockwise 90 degrees
      * */
-    void rotate_facing_clockwise() {
-        this->get<Transform>().face_direction =
-            this->get<Transform>().offsetFaceDirection(
-                this->get<Transform>().face_direction, 90);
+    static void rotate_facing_clockwise(std::shared_ptr<Entity> entity) {
+        entity->get<Transform>().face_direction =
+            entity->get<Transform>().offsetFaceDirection(
+                entity->get<Transform>().face_direction, 90);
     }
 
     /*
@@ -225,7 +225,8 @@ struct Entity {
      *
      * @returns vec2 the location `distance` tiles ahead
      * */
-    static vec2 tile_infront_given_player(Entity* entity, int distance) {
+    static vec2 tile_infront_given_player(std::shared_ptr<Entity> entity,
+                                          int distance) {
         vec2 tile = vec::to2(entity->get<Transform>().snap_position());
         return tile_infront_given_pos(tile, distance,
                                       entity->get<Transform>().face_direction);
