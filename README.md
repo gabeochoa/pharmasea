@@ -50,6 +50,93 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+### alpha_0.23.02.06
+
+better eng
+- Add tons of components and systems to handle them
+soon
+- finish migration to ent component system 
+
+
+### week of 1 30 (no new version) 
+
+bug fixes
+- fix issue where master volume setting wasnt being respected 
+- fix issue where pause screen showed game instead of lobby 
+- fix bug in pause layer state manager 
+- only allow putting things back in the supply if they arent holding something else inside 
+impact 
+- add character switcher to lobby 
+- add character switcher furniture 
+- send users to lobby on join 
+- lower time to wait before kicking someone who disconnected/crashed
+- detect host disconnect and return to main menu 
+- add different toast background color based on the message type 
+- add round with timer and UI element 
+- janky render item inside other item 
+- make it so you can drop_merge items 
+- add barrel holding pill bottles 
+better eng 
+- allow host to render server view for debugging
+- add new debug keys 
+- move all library loading logging into Library<> so we can turn it into trace -> info as needed 
+- remove back from pauselayer now that we can use go_back
+- rename entity update methods to be more accurate to gamestate logic 
+- add new state manager system with separate states for menu and game 
+- add basic tracing support and add more trace points 
+- make library impls private 
+- add player models and better model library api 
+- allow scaling items over all axes 
+- quicker missing-value path for globals register.get_default 
+- new job system that is hopefully more readable and more resilient 
+soon 
+- :) 
+
+
+
+### week of 1 30 (no new version)
+
+bug fixes
+- Fix bug where sounds loaded after settings load would use wrong volume setting 
+- Fix file loading for windows 
+- Fix issue where we called cleanup on null sharedptr 
+- dont allow bags to go into bags 
+impact 
+- Add new music (supermarket, menu)
+- Bunch of pa announcement sounds 
+- make the key holding feel nicer 
+- make people a little smaller 
+- add the ability to do work on a furniture during game hours 
+- hook up announcment messages to toasts 
+- remove player when the disconnect :) 
+- hopefully better feeling backspace 
+- Add ugly button to load last used api (stored in settings file) 
+- box model now responds to planning vs game 
+- add a 'pill bottle' item 
+better eng
+- Add Log library (remove most couts) 
+- Add nodiscard to everything 
+- Add magic_enum library 
+- Add expected library (though not using it as much as we should) 
+- Onboard all File uses into File:: api 
+- Support for focus ring to take another color 
+- better sound play api 
+- add for-each in folder to files api 
+- Cleanup UIContext a bit 
+- Extract components into its own file" 
+- Show how many things are in the library on close
+- Ability for sound library to play a random sound given a prefix 
+- Add menu system in settingslayer which loads and prepares us for keybinding settings 
+- Add basic trie header
+- add held_down debouncer for UI for better backspace 
+- introduce delay for small packets to remove overhead and reduce map update speed by 2x 
+- add message queue so we can separate process and deserialize later on 
+- increase packet buffer size to 1mb 
+- Move set clipboard to ext 
+- Move raylib into a namespace, and expose through graphics.h 
+soon
+- more models :) 
+
 ### alpha_0.23.01.16
 
 bug fixes

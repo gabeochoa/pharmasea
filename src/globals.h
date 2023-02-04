@@ -4,7 +4,7 @@
 #include "engine/globals.h"
 
 // YY / MM / DD (Monday of week)
-constexpr std::string_view VERSION = "alpha_0.23.01.16";
+constexpr std::string_view VERSION = "alpha_0.23.02.07";
 constexpr size_t HASHED_VERSION = hashString(VERSION);
 
 constexpr std::string_view GAME_FOLDER = "pharmasea";
