@@ -70,6 +70,26 @@ struct Person : public Entity {
     }
 };
 
+static Entity* make_person(vec3 pos) {
+    Entity* person = new Entity(pos, WHITE, WHITE);
+
+    person->get<Transform>().size =
+        vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
+
+    person->addComponent<HasBaseSpeed>().update(10.f);
+    // TODO why do we need the udpate() here?
+    person->addComponent<ModelRenderer>().update(ModelInfo{
+        .model_name = "character_duck",
+        .size_scale = 1.5f,
+        .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 180,
+    });
+
+    person->addComponent<UsesCharacterModel>();
+
+    return person;
+}
+
 static Person* make_remote_player(vec3 pos) {
     Person* remote_player = new Person(pos);
     remote_player->addComponent<CanHighlightOthers>();

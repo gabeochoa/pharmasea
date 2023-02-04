@@ -111,12 +111,12 @@ struct Entity {
 
     Entity(vec3 p, Color c) : Entity(p, c, c) {}
 
+   private:
     Entity() {
         add_static_components({0, 0, 0});
         get<SimpleColoredBoxRenderer>().init(BLACK, BLACK);
     }
 
-   private:
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
