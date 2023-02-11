@@ -67,6 +67,11 @@ struct Person : public Entity {
         });
 
         addComponent<UsesCharacterModel>();
+
+        // TODO this came from AIPersons and even though all AI People are
+        // adding it themselves we have to thave this here for the time being
+        // ... otherwise the game just crashes
+        addComponent<CanPerformJob>().update(Wandering, Wandering);
     }
 };
 
@@ -140,25 +145,6 @@ static Entity* make_player(vec3 p) {
     return player;
 }
 
-struct AIPerson : public Person {
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<Person>{});
-        // Only things that need to be rendered, need to be serialized :)
-    }
-
-    void add_static_components() {
-        addComponent<CanPerformJob>().update(Wandering, Wandering);
-        addComponent<HasBaseSpeed>().update(10.f);
-    }
-
-   public:
-    AIPerson() : AIPerson({0, 0, 0}) {}
-    AIPerson(vec3 p) : Person(p) { add_static_components(); }
-};
-
 static Entity* make_aiperson(vec3 p) {
     Entity* person = new Person(p);
 
@@ -169,8 +155,7 @@ static Entity* make_aiperson(vec3 p) {
 }
 
 static Entity* make_customer(vec3 p) {
-    // TODO This cannot be make_aiperson or new Person and i have no idea why
-    Entity* customer = new AIPerson(p);
+    Entity* customer = new Person(p);
 
     customer->addComponent<CanPerformJob>().update(Wandering, Wandering);
     customer->addComponent<HasBaseSpeed>().update(10.f);

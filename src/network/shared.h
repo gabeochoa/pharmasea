@@ -29,9 +29,6 @@ template<>
 struct PolymorphicBaseClass<Entity> : PolymorphicDerivedClasses<Person> {};
 
 template<>
-struct PolymorphicBaseClass<Person> : PolymorphicDerivedClasses<AIPerson> {};
-
-template<>
 struct PolymorphicBaseClass<Item>
     : PolymorphicDerivedClasses<Bag, PillBottle, Pill> {};
 
