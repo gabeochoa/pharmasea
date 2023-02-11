@@ -89,7 +89,6 @@ inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
     std::shared_ptr<Job> job = cpj.job();
 
     if (job->state == Job::State::Completed) {
-        if (job->on_cleanup) job->on_cleanup(entity.get(), job.get());
         job.reset();
         find_new_job(entity, dt);
         return;

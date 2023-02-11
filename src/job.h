@@ -18,8 +18,6 @@ enum JobType {
     MAX_JOB_TYPE,
 };
 
-struct Entity;
-
 struct Job {
     JobType type;
 
@@ -40,8 +38,6 @@ struct Job {
     std::optional<vec2> local;
     int path_size = 0;
     std::deque<vec2> path;
-
-    std::function<void(Entity*, Job*)> on_cleanup = nullptr;
 
     std::map<std::string, void*> data;
 
