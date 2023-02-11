@@ -16,7 +16,7 @@ inline void update_character_model_from_index(std::shared_ptr<Entity> entity,
     if (entity->is_missing<UsesCharacterModel>()) return;
     UsesCharacterModel& usesCharacterModel = entity->get<UsesCharacterModel>();
 
-    if (!usesCharacterModel.value_same_as_last_render()) return;
+    if (usesCharacterModel.value_same_as_last_render()) return;
 
     if (entity->is_missing<ModelRenderer>()) return;
     ModelRenderer& renderer = entity->get<ModelRenderer>();
