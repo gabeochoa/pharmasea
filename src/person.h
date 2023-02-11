@@ -40,6 +40,27 @@
 #include "statemanager.h"
 #include "text_util.h"
 
+static void person_update_component(Entity* person) {
+    person->get<Transform>().size =
+        vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
+
+    person->addComponent<HasBaseSpeed>().update(10.f);
+    // TODO why do we need the udpate() here?
+    person->addComponent<ModelRenderer>().update(ModelInfo{
+        .model_name = "character_duck",
+        .size_scale = 1.5f,
+        .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 180,
+    });
+
+    person->addComponent<UsesCharacterModel>();
+
+    // TODO this came from AIPersons and even though all AI People are
+    // adding it themselves we have to thave this here for the time being
+    // ... otherwise the game just crashes
+    person->addComponent<CanPerformJob>().update(Wandering, Wandering);
+}
+
 struct Person : public Entity {
    private:
     friend bitsery::Access;
@@ -51,34 +72,13 @@ struct Person : public Entity {
    public:
     Person() : Person({0, 0, 0}) {}
 
-    Person(vec3 p) : Entity(p, WHITE, WHITE) { Person::update_component(this); }
-
-    static void update_component(Entity* person) {
-        person->get<Transform>().size =
-            vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
-
-        person->addComponent<HasBaseSpeed>().update(10.f);
-        // TODO why do we need the udpate() here?
-        person->addComponent<ModelRenderer>().update(ModelInfo{
-            .model_name = "character_duck",
-            .size_scale = 1.5f,
-            .position_offset = vec3{0, 0, 0},
-            .rotation_angle = 180,
-        });
-
-        person->addComponent<UsesCharacterModel>();
-
-        // TODO this came from AIPersons and even though all AI People are
-        // adding it themselves we have to thave this here for the time being
-        // ... otherwise the game just crashes
-        person->addComponent<CanPerformJob>().update(Wandering, Wandering);
-    }
+    Person(vec3 p) : Entity(p, WHITE, WHITE) { person_update_component(this); }
 };
 
 static Entity* make_person(vec3 pos) {
     Entity* person = new Entity(pos, WHITE, WHITE);
 
-    Person::update_component(person);
+    person_update_component(person);
 
     return person;
 }
