@@ -11,12 +11,14 @@ namespace render_manager {
 
 inline void update_character_model_from_index(std::shared_ptr<Entity> entity,
                                               float) {
-    if (!entity->has<UsesCharacterModel>()) return;
+    if (!entity) return;
+
+    if (entity->is_missing<UsesCharacterModel>()) return;
     UsesCharacterModel& usesCharacterModel = entity->get<UsesCharacterModel>();
 
     if (!usesCharacterModel.value_same_as_last_render()) return;
 
-    if (!entity->has<ModelRenderer>()) return;
+    if (entity->is_missing<ModelRenderer>()) return;
     ModelRenderer& renderer = entity->get<ModelRenderer>();
 
     renderer.update(ModelInfo{
@@ -30,9 +32,9 @@ inline void update_character_model_from_index(std::shared_ptr<Entity> entity,
 }
 
 inline bool render_simple_highlighted(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<Transform>()) return false;
+    if (entity->is_missing<Transform>()) return false;
     Transform& transform = entity->get<Transform>();
-    if (!entity->has<SimpleColoredBoxRenderer>()) return false;
+    if (entity->is_missing<SimpleColoredBoxRenderer>()) return false;
     SimpleColoredBoxRenderer& renderer =
         entity->get<SimpleColoredBoxRenderer>();
 
@@ -47,9 +49,9 @@ inline bool render_simple_highlighted(std::shared_ptr<Entity> entity, float) {
 }
 
 inline bool render_simple_normal(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<Transform>()) return false;
+    if (entity->is_missing<Transform>()) return false;
     Transform& transform = entity->get<Transform>();
-    if (!entity->has<SimpleColoredBoxRenderer>()) return false;
+    if (entity->is_missing<SimpleColoredBoxRenderer>()) return false;
     SimpleColoredBoxRenderer& renderer =
         entity->get<SimpleColoredBoxRenderer>();
     DrawCubeCustom(transform.raw_position, transform.size.x, transform.size.y,
@@ -60,7 +62,7 @@ inline bool render_simple_normal(std::shared_ptr<Entity> entity, float) {
 }
 
 inline bool render_bounding_box(std::shared_ptr<Entity> entity, float dt) {
-    if (!entity->has<Transform>()) return false;
+    if (entity->is_missing<Transform>()) return false;
     Transform& transform = entity->get<Transform>();
 
     DrawBoundingBox(transform.bounds(), MAROON);
@@ -81,13 +83,13 @@ inline bool render_debug(std::shared_ptr<Entity> entity, float dt) {
 }
 
 inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<ModelRenderer>()) return false;
-    if (!entity->has<CanBeHighlighted>()) return false;
+    if (entity->is_missing<ModelRenderer>()) return false;
+    if (entity->is_missing<CanBeHighlighted>()) return false;
 
     ModelRenderer& renderer = entity->get<ModelRenderer>();
     if (!renderer.has_model()) return false;
 
-    if (!entity->has<Transform>()) return false;
+    if (entity->is_missing<Transform>()) return false;
     Transform& transform = entity->get<Transform>();
 
     ModelInfo model_info = renderer.model_info().value();
@@ -111,12 +113,12 @@ inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
 }
 
 inline bool render_model_normal(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<ModelRenderer>()) return false;
+    if (entity->is_missing<ModelRenderer>()) return false;
 
     ModelRenderer& renderer = entity->get<ModelRenderer>();
     if (!renderer.has_model()) return false;
 
-    if (!entity->has<Transform>()) return false;
+    if (entity->is_missing<Transform>()) return false;
     Transform& transform = entity->get<Transform>();
 
     ModelInfo model_info = renderer.model_info().value();
@@ -162,10 +164,10 @@ inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
 }
 
 inline void render_floating_name(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<HasName>()) return;
+    if (entity->is_missing<HasName>()) return;
     HasName& hasName = entity->get<HasName>();
 
-    if (!entity->has<Transform>()) return;
+    if (entity->is_missing<Transform>()) return;
     const Transform& transform = entity->get<Transform>();
 
     raylib::DrawFloatingText(
@@ -174,12 +176,12 @@ inline void render_floating_name(std::shared_ptr<Entity> entity, float) {
 }
 
 inline void render_progress_bar(std::shared_ptr<Entity> entity, float) {
-    if (!entity->has<ShowsProgressBar>()) return;
+    if (entity->is_missing<ShowsProgressBar>()) return;
 
-    if (!entity->has<Transform>()) return;
+    if (entity->is_missing<Transform>()) return;
     const Transform& transform = entity->get<Transform>();
 
-    if (!entity->has<HasWork>()) return;
+    if (entity->is_missing<HasWork>()) return;
 
     // TODO Why does this crash?
     return;
