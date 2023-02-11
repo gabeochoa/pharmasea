@@ -23,6 +23,8 @@
 
 // return true if the item has collision and is currently collidable
 [[nodiscard]] inline bool is_collidable(std::shared_ptr<Entity> entity) {
+    if (!entity) return false;
+
     // by default we disable collisions when you are holding something
     // since its generally inside your bounding box
     if (entity->has<CanBeHeld>()) {

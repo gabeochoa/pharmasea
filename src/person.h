@@ -40,7 +40,7 @@
 #include "statemanager.h"
 #include "text_util.h"
 
-static void person_update_component(Entity* person) {
+static void add_person_components(Entity* person) {
     person->get<Transform>().size =
         vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
 
@@ -72,19 +72,14 @@ struct Person : public Entity {
    public:
     Person() : Person({0, 0, 0}) {}
 
-    Person(vec3 p) : Entity(p, WHITE, WHITE) { person_update_component(this); }
+    Person(vec3 p) : Entity(p, WHITE, WHITE) { add_person_components(this); }
 };
 
-static Entity* make_person(vec3 pos) {
-    Entity* person = new Entity(pos, WHITE, WHITE);
-
-    person_update_component(person);
-
-    return person;
-}
-
 static Entity* make_remote_player(vec3 pos) {
-    Entity* remote_player = make_person(pos);
+    Entity* remote_player = new Entity(pos, WHITE, WHITE);
+
+    add_person_components(remote_player);
+
     remote_player->addComponent<CanHighlightOthers>();
     remote_player->addComponent<CanHoldFurniture>();
 
@@ -110,7 +105,8 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
 }
 
 static Entity* make_player(vec3 p) {
-    Entity* player = new Person(p);
+    Entity* player = new Entity(p, WHITE, WHITE);
+    add_person_components(player);
 
     player->addComponent<CanHighlightOthers>();
     player->addComponent<CanHoldFurniture>();
@@ -131,6 +127,7 @@ static Entity* make_player(vec3 p) {
 }
 
 static Entity* make_aiperson(vec3 p) {
+    // TODO This cant use make_person due to segfault in render model
     Entity* person = new Person(p);
 
     person->addComponent<CanPerformJob>().update(Wandering, Wandering);
