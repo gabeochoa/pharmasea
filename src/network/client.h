@@ -95,7 +95,7 @@ struct Client {
     // }
 
     void send_player_input_packet(int my_id) {
-        Person* me = GLOBALS.get_ptr<Person>("player");
+        Entity* me = GLOBALS.get_ptr<Entity>("player");
         CollectsUserInput& cui = me->get<CollectsUserInput>();
 
         if (cui.inputs.empty()) return;

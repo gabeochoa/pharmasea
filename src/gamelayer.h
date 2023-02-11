@@ -19,7 +19,7 @@
 
 struct GameLayer : public Layer {
     std::shared_ptr<Entity> player;
-    std::shared_ptr<Person> active_player;
+    std::shared_ptr<Entity> active_player;
     std::shared_ptr<GameCam> cam;
     raylib::Model bag_model;
 
@@ -132,9 +132,9 @@ struct GameLayer : public Layer {
                 const auto network_players =
                     // Forcing a copy to avoid the data changing from underneath
                     // us
-                    std::map<int, std::shared_ptr<Person>>(
+                    std::map<int, std::shared_ptr<Entity>>(
                         GLOBALS.get_or_default<
-                            std::map<int, std::shared_ptr<Person>>>(
+                            std::map<int, std::shared_ptr<Entity>>>(
                             "server_players", {}));
                 SystemManager::get().render(Entities{player}, dt);
             }

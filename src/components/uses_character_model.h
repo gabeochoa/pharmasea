@@ -18,7 +18,13 @@ struct UsesCharacterModel : public BaseComponent {
         return character_models[index];
     }
 
-    [[nodiscard]] bool value_same_as_last_render() const { return !changed; }
+    [[nodiscard]] bool value_same_as_last_render() const {
+        return !value_changed_since_last_render();
+    }
+    [[nodiscard]] bool value_changed_since_last_render() const {
+        return changed;
+    }
+
     void mark_change_completed() { changed = false; }
 
    private:

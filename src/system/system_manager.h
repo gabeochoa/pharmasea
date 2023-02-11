@@ -178,7 +178,7 @@ inline void move_entity_based_on_push_force(std::shared_ptr<Entity> entity,
 }
 
 inline void person_update_given_new_pos(int id, Transform& transform,
-                                        std::shared_ptr<Person> person,
+                                        std::shared_ptr<Entity> person,
                                         float dt, vec3 new_pos_x,
                                         vec3 new_pos_z) {
     int facedir_x = -1;
@@ -273,7 +273,7 @@ inline void person_update_given_new_pos(int id, Transform& transform,
             if (auto entity_x = collided_entity_x.lock()) {
                 // TODO remove this check since we can just put CanBePushed
                 // on the person entity and replace with a has<> check
-                if (auto person_ptr_x = dynamic_cast<Person*>(entity_x.get())) {
+                if (auto person_ptr_x = dynamic_cast<Entity*>(entity_x.get())) {
                     CanBePushed& cbp = entity_x->get<CanBePushed>();
                     const float random_jitter = randSign() * TILESIZE / 2.0f;
                     if (facedir_x & Transform::FrontFaceDirection::LEFT) {
@@ -289,7 +289,7 @@ inline void person_update_given_new_pos(int id, Transform& transform,
             if (auto entity_z = collided_entity_z.lock()) {
                 // TODO remove this check since we can just put CanBePushed
                 // on the person entity and replace with a has<> check
-                if (auto person_ptr_z = dynamic_cast<Person*>(entity_z.get())) {
+                if (auto person_ptr_z = dynamic_cast<Entity*>(entity_z.get())) {
                     CanBePushed& cbp = entity_z->get<CanBePushed>();
                     const float random_jitter = randSign() * TILESIZE / 2.0f;
                     if (facedir_z & Transform::FrontFaceDirection::FORWARD) {
@@ -350,7 +350,7 @@ inline void process_player_movement_input(std::shared_ptr<Entity> entity,
                                           float input_amount) {
     if (entity->is_missing<Transform>()) return;
     Transform& transform = entity->get<Transform>();
-    std::shared_ptr<Person> player = dynamic_pointer_cast<Person>(entity);
+    std::shared_ptr<Entity> player = dynamic_pointer_cast<Entity>(entity);
 
     if (entity->is_missing<HasBaseSpeed>()) return;
     HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
@@ -399,7 +399,7 @@ inline void process_input(const std::shared_ptr<Entity> entity,
         return;
     }
 
-    std::shared_ptr<Person> player = dynamic_pointer_cast<Person>(entity);
+    std::shared_ptr<Entity> player = dynamic_pointer_cast<Entity>(entity);
     if (!player) return;
 
     const auto rotate_furniture = [player]() {

@@ -29,7 +29,7 @@ static Entity* make_furniture(vec2 pos, Color face, Color base) {
     furniture->addComponent<IsRotatable>();
 
     furniture->addComponent<HasWork>().init(
-        [](HasWork&, std::shared_ptr<Person>, float) {});
+        [](HasWork&, std::shared_ptr<Entity>, float) {});
     furniture->addComponent<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Default);
 
@@ -44,7 +44,7 @@ static Entity* make_table(vec2 pos) {
         CustomHeldItemPosition::Positioner::Table);
 
     table->get<HasWork>().init(
-        [](HasWork& hasWork, std::shared_ptr<Person>, float dt) {
+        [](HasWork& hasWork, std::shared_ptr<Entity>, float dt) {
             // TODO eventually we need it to decide whether it has work
             // based on the current held item
             const float amt = 0.5f;
@@ -60,7 +60,7 @@ static Entity* make_character_switcher(vec2 pos) {
         entities::make_furniture(pos, ui::color::brown, ui::color::brown);
 
     character_switcher->get<HasWork>().init(
-        [](HasWork& hasWork, std::shared_ptr<Person> person, float dt) {
+        [](HasWork& hasWork, std::shared_ptr<Entity> person, float dt) {
             if (person->is_missing<UsesCharacterModel>()) return;
             UsesCharacterModel& usesCharacterModel =
                 person->get<UsesCharacterModel>();
