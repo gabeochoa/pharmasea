@@ -51,46 +51,34 @@ struct Person : public Entity {
    public:
     Person() : Person({0, 0, 0}) {}
 
-    Person(vec3 p) : Entity(p, WHITE, WHITE) { update_component(); }
+    Person(vec3 p) : Entity(p, WHITE, WHITE) { Person::update_component(this); }
 
-    void update_component() {
-        get<Transform>().size =
+    static void update_component(Entity* person) {
+        person->get<Transform>().size =
             vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
 
-        addComponent<HasBaseSpeed>().update(10.f);
+        person->addComponent<HasBaseSpeed>().update(10.f);
         // TODO why do we need the udpate() here?
-        addComponent<ModelRenderer>().update(ModelInfo{
+        person->addComponent<ModelRenderer>().update(ModelInfo{
             .model_name = "character_duck",
             .size_scale = 1.5f,
             .position_offset = vec3{0, 0, 0},
             .rotation_angle = 180,
         });
 
-        addComponent<UsesCharacterModel>();
+        person->addComponent<UsesCharacterModel>();
 
         // TODO this came from AIPersons and even though all AI People are
         // adding it themselves we have to thave this here for the time being
         // ... otherwise the game just crashes
-        addComponent<CanPerformJob>().update(Wandering, Wandering);
+        person->addComponent<CanPerformJob>().update(Wandering, Wandering);
     }
 };
 
 static Entity* make_person(vec3 pos) {
     Entity* person = new Entity(pos, WHITE, WHITE);
 
-    person->get<Transform>().size =
-        vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
-
-    person->addComponent<HasBaseSpeed>().update(10.f);
-    // TODO why do we need the udpate() here?
-    person->addComponent<ModelRenderer>().update(ModelInfo{
-        .model_name = "character_duck",
-        .size_scale = 1.5f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 180,
-    });
-
-    person->addComponent<UsesCharacterModel>();
+    Person::update_component(person);
 
     return person;
 }
@@ -103,9 +91,6 @@ static Entity* make_remote_player(vec3 pos) {
     // addComponent<HasBaseSpeed>().update(10.f);
     remote_player->get<HasBaseSpeed>().update(7.5f);
 
-    // TODO what is a reasonable default value here?
-    // TODO who sets this value?
-    // this comes from remote player and probably should only be there
     remote_player->addComponent<HasClientID>();
     return remote_player;
 }
@@ -155,7 +140,7 @@ static Entity* make_aiperson(vec3 p) {
 }
 
 static Entity* make_customer(vec3 p) {
-    Entity* customer = new Person(p);
+    Entity* customer = make_aiperson(p);
 
     customer->addComponent<CanPerformJob>().update(Wandering, Wandering);
     customer->addComponent<HasBaseSpeed>().update(10.f);
