@@ -83,7 +83,6 @@ static Entity* make_remote_player(vec3 pos) {
     remote_player->addComponent<CanHighlightOthers>();
     remote_player->addComponent<CanHoldFurniture>();
 
-    // addComponent<HasBaseSpeed>().update(10.f);
     remote_player->get<HasBaseSpeed>().update(7.5f);
 
     remote_player->addComponent<HasClientID>();
@@ -129,6 +128,8 @@ static Entity* make_player(vec3 p) {
 static Entity* make_aiperson(vec3 p) {
     // TODO This cant use make_person due to segfault in render model
     Entity* person = new Person(p);
+    // Entity* person = new Entity(p, WHITE, WHITE);
+    // add_person_components(person);
 
     person->addComponent<CanPerformJob>().update(Wandering, Wandering);
     person->addComponent<HasBaseSpeed>().update(10.f);
