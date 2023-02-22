@@ -10,12 +10,14 @@
    Please dont print during tests as these run on startup
 */
 
+#include "component.h"
 #include "test_ui_widget.h"
 
 namespace tests {
 
 void run_all() {
     test_ui_widget();
+    all_tests();
 }
 
 }  // namespace tests
