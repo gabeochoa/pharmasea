@@ -41,6 +41,8 @@ struct BaseComponent {
     // BaseComponent(const BaseComponent& other) : entity(other.entity) {}
     BaseComponent(BaseComponent&&) = default;
 
+    virtual void onAttach() {}
+
     virtual ~BaseComponent() {}
 
    private:
