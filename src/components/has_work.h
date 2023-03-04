@@ -7,7 +7,7 @@
 struct Entity;
 
 struct HasWork : public BaseComponent {
-    HasWork() : pct_work_complete(0.f), more_to_do(false) {}
+    HasWork() : pct_work_complete(0.f), more_to_do(true) {}
     virtual ~HasWork() {}
 
     // Does this have work to be done?

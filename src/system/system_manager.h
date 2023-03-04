@@ -434,7 +434,7 @@ inline void process_input(const std::shared_ptr<Entity> entity,
             EntityHelper::getClosestMatchingEntity<Furniture>(
                 player->get<Transform>().as2(), cho.reach(),
                 [](std::shared_ptr<Furniture> furniture) {
-                    if (!furniture->has<HasWork>()) return false;
+                    if (furniture->is_missing<HasWork>()) return false;
                     HasWork& hasWork = furniture->get<HasWork>();
                     return hasWork.has_work();
                 });
