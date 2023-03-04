@@ -77,17 +77,24 @@ struct Entity {
 
         log_trace("your set is now {}", componentSet);
 
+        component->onAttach();
+
         return *component;
     }
 
     template<typename T>
-    [[nodiscard]] T& get() const {
+    [[nodiscard]] std::shared_ptr<T> get_p() const {
         if (!has<T>()) {
             log_error("Entity {} did not have component {} requested", id,
                       type_name<T>());
         }
         auto ptr(componentArray[components::get_type_id<T>()]);
-        return *dynamic_pointer_cast<T>(ptr);
+        return dynamic_pointer_cast<T>(ptr);
+    }
+
+    template<typename T>
+    [[nodiscard]] T& get() const {
+        return *get_p<T>();
     }
 
     void add_static_components(vec3 pos) {
