@@ -1,12 +1,10 @@
 
 #pragma once
 
-#include "external_include.h"
+#include "../external_include.h"
 #include "raylib.h"
 //
-#include "engine.h"
-//
-#include "statemanager.h"
+#include "../engine.h"
 
 struct AboutLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;

@@ -14,9 +14,9 @@
 #include "globals.h"
 
 //
+#include "engine/statemanager.h"
 #include "entity.h"
 #include "item.h"
-#include "statemanager.h"
 
 // TODO eventually move to system manager but for now has to be in here
 // to prevent circular includes

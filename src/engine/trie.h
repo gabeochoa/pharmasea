@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-#include "../util.h"  // for split
 #include "assert.h"
+#include "util.h"  // for split
 
 struct Trie {
     struct Node {

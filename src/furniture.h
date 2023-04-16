@@ -12,12 +12,12 @@
 #include "components/shows_progress_bar.h"
 #include "drawing_util.h"
 #include "engine/assert.h"
+#include "engine/statemanager.h"
 #include "entity.h"
 #include "external_include.h"
 #include "furniture.h"
 #include "globals.h"
 #include "person.h"
-#include "statemanager.h"
 
 typedef Entity Furniture;
 

@@ -4,9 +4,8 @@
 #include <iostream>
 #include <stack>
 
-#include "engine/log.h"
-//
-#include "engine/singleton.h"
+#include "log.h"
+#include "singleton.h"
 
 // TODO eventually extract this piece to engine
 template<typename T>

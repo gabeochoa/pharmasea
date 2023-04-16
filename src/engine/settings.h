@@ -10,7 +10,6 @@
 #include "../external_include.h"
 //
 
-#include "../util.h"
 #include "app.h"
 #include "event.h"
 #include "files.h"
@@ -19,6 +18,7 @@
 #include "music_library.h"
 #include "resolution.h"
 #include "singleton.h"
+#include "util.h"
 
 namespace settings {
 

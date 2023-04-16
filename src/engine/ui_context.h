@@ -2,7 +2,6 @@
 #pragma once
 
 #include "../preload.h"
-#include "../statemanager.h"
 #include "../vec_util.h"
 #include "assert.h"
 #include "event.h"
@@ -10,6 +9,7 @@
 #include "keymap.h"
 #include "log.h"
 #include "raylib.h"
+#include "statemanager.h"
 #include "type_name.h"
 //
 #include "font_sizer.h"

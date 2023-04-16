@@ -5,9 +5,9 @@
 
 #include "../external_include.h"
 #include "../globals.h"
-#include "../util.h"
 #include "../vec_util.h"
 #include "log.h"
+#include "util.h"
 
 namespace astar {
 

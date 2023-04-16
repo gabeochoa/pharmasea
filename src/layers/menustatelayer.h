@@ -1,10 +1,9 @@
 
 #pragma once
 
-#include "engine/layer.h"
-#include "external_include.h"
-#include "preload.h"
-#include "statemanager.h"
+#include "../engine.h"
+#include "../external_include.h"
+#include "../preload.h"
 
 struct MenuStateLayer : public Layer {
     MenuStateLayer() : Layer("MenuState") {}

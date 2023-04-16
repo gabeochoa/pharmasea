@@ -1,11 +1,8 @@
 
 #pragma once
 
-#include "engine.h"
-#include "engine/globals_register.h"
-#include "engine/layer.h"
-#include "external_include.h"
-#include "statemanager.h"
+#include "../engine.h"
+#include "../external_include.h"
 
 using namespace ui;
 

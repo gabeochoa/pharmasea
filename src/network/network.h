@@ -6,8 +6,8 @@
 //
 #include "../engine/settings.h"
 //
+#include "../engine/statemanager.h"
 #include "../engine/trigger_on_dt.h"
-#include "../statemanager.h"
 #include "shared.h"
 //
 #include "client.h"

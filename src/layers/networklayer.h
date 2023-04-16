@@ -3,21 +3,14 @@
 
 #include <regex>
 
-#include "engine/graphics.h"
-#include "engine/ui.h"
-#include "external_include.h"
+#include "../engine.h"
+#include "../engine/network/webrequest.h"
+#include "../external_include.h"
 //
-#include "globals.h"
+#include "../globals.h"
 //
-#include "engine.h"
-#include "engine/layer.h"
-#include "engine/settings.h"  // Used for username
-//
-#include "engine.h"
-#include "engine/network/webrequest.h"
-#include "network/network.h"
-#include "statemanager.h"
-#include "toastmanager.h"
+#include "../network/network.h"
+#include "../toastmanager.h"
 
 using namespace ui;
 

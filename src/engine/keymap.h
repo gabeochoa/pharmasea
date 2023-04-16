@@ -5,9 +5,9 @@
 
 #include "raylib.h"
 //
-#include "../statemanager.h"
-#include "../util.h"
 #include "files.h"
+#include "statemanager.h"
+#include "util.h"
 //
 #include "event.h"
 #include "gamepad_axis_with_dir.h"

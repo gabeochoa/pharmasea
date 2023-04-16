@@ -9,5 +9,7 @@
 #include "engine/is_server.h"
 #include "engine/keymap.h"
 #include "engine/layer.h"
+#include "engine/statemanager.h"
 #include "engine/timer.h"
+#include "engine/trie.h"
 #include "engine/ui.h"

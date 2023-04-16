@@ -28,6 +28,7 @@
 #include "engine/is_server.h"
 #include "engine/log.h"
 #include "engine/sound_library.h"
+#include "engine/statemanager.h"
 #include "engine/texture_library.h"
 #include "entityhelper.h"
 #include "external_include.h"
@@ -37,7 +38,6 @@
 #include "names.h"
 #include "person.h"
 #include "raylib.h"
-#include "statemanager.h"
 #include "text_util.h"
 
 static void add_person_components(Entity* person) {

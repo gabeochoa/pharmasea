@@ -1,13 +1,8 @@
 #pragma once
 
-#include "engine.h"
-#include "engine/app.h"
-#include "engine/graphics.h"
-#include "engine/layer.h"
-#include "engine/music_library.h"
-#include "engine/profile.h"
-#include "external_include.h"
-#include "statemanager.h"
+#include "../engine.h"
+#include "../engine/app.h"
+#include "../external_include.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;

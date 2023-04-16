@@ -1,12 +1,7 @@
 #pragma once
 
-#include "external_include.h"
-//
-#include "engine.h"
-#include "engine/layer.h"
-#include "engine/settings.h"
-#include "engine/trie.h"
-#include "statemanager.h"
+#include "../engine.h"
+#include "../external_include.h"
 
 using namespace ui;
 

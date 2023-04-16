@@ -1,17 +1,17 @@
 #pragma once
 
-#include "drawing_util.h"
-#include "engine/event.h"
-#include "external_include.h"
+#include "../drawing_util.h"
+#include "../engine/event.h"
+#include "../external_include.h"
 //
-#include "engine.h"
-#include "globals.h"
-#include "preload.h"
+#include "../engine.h"
+#include "../globals.h"
+#include "../preload.h"
 //
-#include "camera.h"
-#include "engine/layer.h"
-#include "entityhelper.h"
-#include "statemanager.h"
+#include "../camera.h"
+#include "../engine/layer.h"
+#include "../engine/statemanager.h"
+#include "../entityhelper.h"
 
 struct GameDebugLayer : public Layer {
     bool debug_ui_enabled = false;

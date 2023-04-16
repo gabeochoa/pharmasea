@@ -1,9 +1,9 @@
 #pragma once
 
-#include "external_include.h"
-#include "globals.h"
-#include "engine/layer.h"
-#include "preload.h"
+#include "../engine.h"
+#include "../external_include.h"
+#include "../globals.h"
+#include "../preload.h"
 
 struct VersionLayer : public Layer {
     VersionLayer() : Layer("Version") {}

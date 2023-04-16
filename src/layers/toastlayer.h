@@ -1,13 +1,9 @@
 
 #pragma once
 
-#include "external_include.h"
-//
-#include "engine/font_sizer.h"
-#include "engine/layer.h"
-#include "engine/ui_theme.h"
-//
-#include "toastmanager.h"
+#include "../engine.h"
+#include "../external_include.h"
+#include "../toastmanager.h"
 
 struct ToastLayer : public Layer, public FontSizeCache {
     ToastLayer() : Layer("Toasts") { FontSizeCache::init(); }

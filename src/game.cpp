@@ -21,24 +21,22 @@
 #include "globals.h"
 ///
 
-#include "engine/app.h"
-#include "engine/defer.h"
-#include "engine/settings.h"
-#include "statemanager.h"
+#include "engine.h"
 //
-#include "aboutlayer.h"
-#include "fpslayer.h"
-#include "gamedebuglayer.h"
-#include "gamelayer.h"
-#include "menulayer.h"
-#include "menustatelayer.h"
-#include "networklayer.h"
-#include "pauselayer.h"
-#include "settingslayer.h"
-#include "streamersafelayer.h"
-#include "toastlayer.h"
+#include "layers/aboutlayer.h"
+#include "layers/fpslayer.h"
+#include "layers/gamedebuglayer.h"
+#include "layers/gamelayer.h"
+#include "layers/menulayer.h"
+#include "layers/menustatelayer.h"
+#include "layers/networklayer.h"
+#include "layers/pauselayer.h"
+#include "layers/settingslayer.h"
+#include "layers/streamersafelayer.h"
+#include "layers/toastlayer.h"
+#include "layers/versionlayer.h"
 #include "toastmanager.h"
-#include "versionlayer.h"
+
 //
 // This one should be last
 #include "./tests/all_tests.h"

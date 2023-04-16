@@ -1,21 +1,16 @@
 #pragma once
 
-#include "components/can_be_ghost_player.h"
-#include "drawing_util.h"
-#include "engine/ui_color.h"
-#include "external_include.h"
+#include "../components/can_be_ghost_player.h"
+#include "../drawing_util.h"
+#include "../engine/ui_color.h"
+#include "../external_include.h"
 //
-#include "globals.h"
+#include "../globals.h"
 //
-#include "camera.h"
-#include "engine.h"
-#include "engine/layer.h"
-#include "engine/model_library.h"
-#include "engine/music_library.h"
-#include "engine/texture_library.h"
-#include "map.h"
-#include "person.h"
-#include "statemanager.h"
+#include "../camera.h"
+#include "../engine.h"
+#include "../map.h"
+#include "../person.h"
 
 struct GameLayer : public Layer {
     std::shared_ptr<Entity> player;
