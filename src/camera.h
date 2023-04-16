@@ -56,12 +56,13 @@ struct GameCam {
         this->camera.target = (vec3){0, 0, 0};
         this->camera.up = (vec3){0.0f, 1.0f, 0.0f};
         this->camera.fovy = 45.0f;
-        this->camera.projection = raylib::CAMERA_PERSPECTIVE;
+        this->camera.projection = raylib::CameraProjection::CAMERA_PERSPECTIVE;
 
         updateTargetDistanceAndAngle();
         angle.y = default_angle_y;
 
-        raylib::SetCameraMode(this->camera, raylib::CAMERA_CUSTOM);
+        raylib::UpdateCamera(&(this->camera),
+                             raylib::CameraMode::CAMERA_CUSTOM);
     }
 
     void updateToTarget(const vec3& position) { camera.target = position; }
@@ -141,7 +142,7 @@ struct MenuCam {
         this->camera.fovy = 45.0f;
         this->camera.projection = raylib::CAMERA_PERSPECTIVE;
 
-        SetCameraMode(this->camera, raylib::CAMERA_FREE);
+        raylib::UpdateCamera(&(this->camera), raylib::CAMERA_FREE);
     }
 
     void updateCamera() {}

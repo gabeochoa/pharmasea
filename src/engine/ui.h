@@ -412,7 +412,7 @@ bool button_list(const Widget& widget, const std::vector<std::string>& options,
         // then we will just make you selected
         if (has_kb_focus(children[i]->id))
             state->selected = static_cast<int>(i);
-        state->hasFocus = state->hasFocus | has_kb_focus(children[i]->id);
+        state->hasFocus = state->hasFocus || has_kb_focus(children[i]->id);
     }
 
     if (state->hasFocus) get().kb_focus_id = children[state->selected]->id;
