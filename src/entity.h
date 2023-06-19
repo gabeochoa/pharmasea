@@ -76,8 +76,8 @@ struct Entity {
 
     template<typename T, typename... TArgs>
     T& addComponent(TArgs&&... args) {
-        log_trace("adding component {} {} to entity {}",
-                  components::get_type_id<T>(), type_name<T>(), id);
+        log_warn("adding component {} {} to entity {}",
+                 components::get_type_id<T>(), type_name<T>(), id);
 
         // TODO eventually enforce this
         if (this->has<T>()) {
@@ -116,32 +116,25 @@ struct Entity {
         return *get_p<T>();
     }
 
-    void add_static_components(vec3 pos) {
-        addComponent<Transform>().init(pos, size());
-        addComponent<HasName>();
-        addComponent<CanHoldItem>();
-        addComponent<SimpleColoredBoxRenderer>();
-        addComponent<ModelRenderer>();
-        addComponent<CanBePushed>();
-        addComponent<CanBeHeld>();
-        addComponent<CanBeTakenFrom>();
+    void add_static_components(vec3) {
+        // addComponent<Transform>().init(pos, size());
+        // addComponent<SimpleColoredBoxRenderer>();
+        // addComponent<HasName>();
+        // addComponent<CanHoldItem>();
+        // addComponent<ModelRenderer>();
+        // addComponent<CanBePushed>();
+        // addComponent<CanBeHeld>();
+        // addComponent<CanBeTakenFrom>();
     }
 
     virtual ~Entity() {}
 
-    Entity(vec3 p, Color face_color_in, Color base_color_in)
-        : id(ENTITY_ID_GEN++) {
-        add_static_components(p);
-        get<SimpleColoredBoxRenderer>().init(face_color_in, base_color_in);
-    }
+    Entity(vec3 p, Color, Color) : id(ENTITY_ID_GEN++) {}
 
     Entity(vec3 p, Color c) : Entity(p, c, c) {}
 
    private:
-    Entity() {
-        add_static_components({0, 0, 0});
-        get<SimpleColoredBoxRenderer>().init(BLACK, BLACK);
-    }
+    Entity() {}
 
     friend bitsery::Access;
     template<typename S>
@@ -328,6 +321,9 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 //
 
 static void add_person_components(Entity* person) {
+    person->addComponent<Transform>();
+
+    person->get<Transform>().position = {0, 0, 0};
     person->get<Transform>().size =
         vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
 
@@ -372,6 +368,7 @@ static Entity* make_remote_player(vec3 pos) {
 
     remote_player->get<HasBaseSpeed>().update(7.5f);
 
+    remote_player->addComponent<HasName>();
     remote_player->addComponent<HasClientID>();
     return remote_player;
 }
@@ -394,6 +391,7 @@ static Entity* make_player(vec3 p) {
     Entity* player = new Entity(p, WHITE, WHITE);
     add_person_components(player);
 
+    player->addComponent<HasName>();
     player->addComponent<CanHighlightOthers>();
     player->addComponent<CanHoldFurniture>();
 
@@ -429,10 +427,10 @@ static Entity* make_customer(vec3 p) {
 
     customer->addComponent<CanPerformJob>().update(Wandering, Wandering);
     customer->addComponent<HasBaseSpeed>().update(10.f);
+    customer->addComponent<HasName>().update(get_random_name());
 
     customer->addComponent<CanHaveAilment>().update(
         std::make_shared<Insomnia>());
-    customer->get<HasName>().update(get_random_name());
     customer->get<CanPerformJob>().update(WaitInQueue, Wandering);
 
     return customer;
@@ -469,6 +467,7 @@ namespace entities {
 static Entity* make_furniture(vec2 pos, Color face, Color base) {
     Entity* furniture = new Entity({pos.x, 0, pos.y}, face, base);
 
+    furniture->addComponent<Transform>();
     furniture->addComponent<IsSolid>();
     furniture->addComponent<IsRotatable>();
 

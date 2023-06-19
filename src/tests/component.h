@@ -56,12 +56,21 @@ void compare_and_validate_components(Entity* a, Entity* b) {
     }
 }
 
-void entity_components() {
+Entity* make_test_entity() {
     Entity* entity = new Entity({0, 0, 0}, WHITE, WHITE);
+    vec3 pos = {0, 0, 0};
+    vec3 size = {TILESIZE, TILESIZE, TILESIZE};
+    entity->addComponent<Transform>().init(pos, size);
+    entity->addComponent<SimpleColoredBoxRenderer>();
+    entity->get<SimpleColoredBoxRenderer>().init(WHITE, WHITE);
+    return entity;
+}
 
+void entity_components() {
+    Entity* entity = make_test_entity();
     network::Buffer buff = network::serialize(entity);
 
-    Entity* entity2 = new Entity({0, 0, 0}, WHITE, WHITE);
+    Entity* entity2 = make_test_entity();
     network::deserialize(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
