@@ -34,8 +34,15 @@
 #include "engine/assert.h"
 #include "external_include.h"
 //
+#include <bitsery/ext/pointer.h>
+#include <bitsery/ext/std_map.h>
+
 #include <array>
 #include <map>
+
+using bitsery::ext::PointerOwner;
+using bitsery::ext::PointerType;
+using StdMap = bitsery::ext::StdMap;
 
 #include "dataclass/names.h"
 #include "drawing_util.h"
@@ -100,13 +107,14 @@ struct Entity {
                 id, type_name<T>());
             return this->get<T>();
         }
-        // M_ASSERT(!this->has<T>(),
-        // "This entity already has this component attached");
 
-        std::shared_ptr<T> component =
-            std::make_shared<T>(std::forward<TArgs>(args)...);
-        // TODO figure out why this causes double free
-        // component->entity = std::shared_ptr<Entity>(this);
+        T* component(new T(std::forward<TArgs>(args)...));
+        // component->entity = this;
+
+        // std::unique_ptr<BaseComponent> uptr{component};
+        // components.emplace_back(std::move(uptr));
+
+        // componentArray[components::get_type_id<T>()] = component;
         componentArray[components::get_type_id<T>()] = component;
         componentSet[components::get_type_id<T>()] = true;
 
@@ -118,26 +126,14 @@ struct Entity {
     }
 
     template<typename T>
-    [[nodiscard]] std::shared_ptr<T> get_p() const {
-        if (!has<T>()) {
-            log_error("Entity {} did not have component {} requested", id,
-                      type_name<T>());
-        }
-        auto ptr(componentArray[components::get_type_id<T>()]);
-        if (!ptr) {
-            log_info("requesting component {} ", type_name<T>());
-        }
-        M_ASSERT(ptr, "tried to get_p, components:: returned null");
-        auto dynamicptr = dynamic_pointer_cast<T>(ptr);
-        M_ASSERT(dynamicptr, "tried to cast get_p but dynamic is null");
-        return dynamicptr;
-    }
-
-    template<typename T>
     [[nodiscard]] T& get() const {
-        auto pointer = get_p<T>();
-        M_ASSERT(pointer, "tried to get, but get<p> returned null");
-        return *pointer;
+        try {
+            BaseComponent* comp =
+                componentArray.at(components::get_type_id<T>());
+            return *static_cast<T*>(comp);
+        } catch (const std::exception& e) {
+            log_warn("tried to get, {} ", type_name<T>());
+        }
     }
 
     void add_static_components(vec3) {
@@ -164,12 +160,14 @@ struct Entity {
     template<typename S>
     void serialize(S& s) {
         s.value4b(id);
-        s.container(componentArray,
-                    [](S& sv, std::shared_ptr<BaseComponent> bc) {
-                        sv.ext(bc, bitsery::ext::StdSmartPtr{});
-                    });
         s.ext(componentSet, bitsery::ext::StdBitset{});
         s.value1b(cleanup);
+
+        s.ext(componentArray, StdMap{max_num_components},
+              [](S& sv, int& key, BaseComponent*(&value)) {
+                  sv.value4b(key);
+                  sv.ext(value, PointerOwner{PointerType::Nullable});
+              });
     }
 
    protected:
@@ -346,6 +344,10 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 
 static void add_entity_components(Entity* entity) {
     entity->addComponent<Transform>();
+
+    // TODO figure out which entities need these
+    // entity->addComponent<CanHoldItem>();
+    // entity->addComponent<ModelRenderer>();
 }
 
 static Entity* make_entity() {
@@ -502,8 +504,11 @@ static Entity* make_furniture(vec2 pos, Color face, Color base) {
     // TODO set simple renderer sides
     // , face, base);
 
+    // TODO does all furniture have this?
+    furniture->addComponent<CanHoldItem>();
     furniture->addComponent<IsSolid>();
     furniture->addComponent<IsRotatable>();
+    furniture->addComponent<ModelRenderer>();
 
     furniture->addComponent<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Default);
@@ -670,6 +675,7 @@ static Entity* make_wall(vec2 pos, Color c) {
     // bool can_take_item_from() const {
     // return (get<CanHoldItem>().is_holding_item() && can_take_from);
     // }
+
     grabber->get<ModelRenderer>().update(ModelInfo{
         .model_name = "conveyer",
         .size_scale = 0.5f,

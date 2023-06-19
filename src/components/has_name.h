@@ -7,7 +7,6 @@ struct HasName : public BaseComponent {
     virtual ~HasName() {}
 
     void update(const std::string& new_name) {
-        log_warn("updated name from '{}' to '{}' ", _name, new_name);
         _name = new_name;
         name_length = (int) _name.size();
     }

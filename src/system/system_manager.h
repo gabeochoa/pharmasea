@@ -273,15 +273,18 @@ inline void person_update_given_new_pos(int id, Transform& transform,
                 // TODO remove this check since we can just put CanBePushed
                 // on the person entity and replace with a has<> check
                 if (auto person_ptr_x = dynamic_cast<Entity*>(entity_x.get())) {
-                    CanBePushed& cbp = entity_x->get<CanBePushed>();
-                    const float random_jitter = randSign() * TILESIZE / 2.0f;
-                    if (facedir_x & Transform::FrontFaceDirection::LEFT) {
-                        cbp.pushed_force.x += tile_div_push_mod;
-                        cbp.pushed_force.z += random_jitter;
-                    }
-                    if (facedir_x & Transform::FrontFaceDirection::RIGHT) {
-                        cbp.pushed_force.x -= tile_div_push_mod;
-                        cbp.pushed_force.z += random_jitter;
+                    if (entity_x->has<CanBePushed>()) {
+                        CanBePushed& cbp = entity_x->get<CanBePushed>();
+                        const float random_jitter =
+                            randSign() * TILESIZE / 2.0f;
+                        if (facedir_x & Transform::FrontFaceDirection::LEFT) {
+                            cbp.pushed_force.x += tile_div_push_mod;
+                            cbp.pushed_force.z += random_jitter;
+                        }
+                        if (facedir_x & Transform::FrontFaceDirection::RIGHT) {
+                            cbp.pushed_force.x -= tile_div_push_mod;
+                            cbp.pushed_force.z += random_jitter;
+                        }
                     }
                 }
             }
@@ -289,15 +292,19 @@ inline void person_update_given_new_pos(int id, Transform& transform,
                 // TODO remove this check since we can just put CanBePushed
                 // on the person entity and replace with a has<> check
                 if (auto person_ptr_z = dynamic_cast<Entity*>(entity_z.get())) {
-                    CanBePushed& cbp = entity_z->get<CanBePushed>();
-                    const float random_jitter = randSign() * TILESIZE / 2.0f;
-                    if (facedir_z & Transform::FrontFaceDirection::FORWARD) {
-                        cbp.pushed_force.x += random_jitter;
-                        cbp.pushed_force.z += tile_div_push_mod;
-                    }
-                    if (facedir_z & Transform::FrontFaceDirection::BACK) {
-                        cbp.pushed_force.x += random_jitter;
-                        cbp.pushed_force.z -= tile_div_push_mod;
+                    if (entity_z->has<CanBePushed>()) {
+                        CanBePushed& cbp = entity_z->get<CanBePushed>();
+                        const float random_jitter =
+                            randSign() * TILESIZE / 2.0f;
+                        if (facedir_z &
+                            Transform::FrontFaceDirection::FORWARD) {
+                            cbp.pushed_force.x += random_jitter;
+                            cbp.pushed_force.z += tile_div_push_mod;
+                        }
+                        if (facedir_z & Transform::FrontFaceDirection::BACK) {
+                            cbp.pushed_force.x += random_jitter;
+                            cbp.pushed_force.z -= tile_div_push_mod;
+                        }
                     }
                 }
             }
@@ -451,6 +458,11 @@ inline void process_input(const std::shared_ptr<Entity> entity,
         // TODO add has<> checks
         // TODO need to figure out if this should be separate from highlighting
         CanHighlightOthers& cho = player->get<CanHighlightOthers>();
+
+        if (player->is_missing<CanHoldItem>()) {
+            log_warn("Player trying to grab/drop but missing CanHoldItem");
+            return;
+        }
 
         // Do we already have something in our hands?
         // We must be trying to drop it
