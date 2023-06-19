@@ -932,8 +932,6 @@ struct SystemManager {
 
     void in_round_update(
         const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
-        // TODO turn back on all in round updates
-        return;
         for (auto& entity : entity_list) {
             system_manager::job_system::handle_job_holder_pushed(entity, dt);
             system_manager::job_system::update_job_information(entity, dt);
@@ -946,8 +944,6 @@ struct SystemManager {
 
     void planning_update(
         const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
-        // TODO turn back on all planning updates
-        return;
         for (auto& entity : entity_list) {
             system_manager::highlight_facing_furniture(entity, dt);
             system_manager::update_held_furniture_position(entity, dt);

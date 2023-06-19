@@ -84,15 +84,15 @@ struct Entity {
 
     template<typename T, typename... TArgs>
     T& addComponent(TArgs&&... args) {
-        log_trace("adding component {} {} to entity {}",
-                  components::get_type_id<T>(), type_name<T>(), id);
+        log_warn("adding component_id:{} {} to entity_id: {}",
+                 components::get_type_id<T>(), type_name<T>(), id);
 
         // TODO eventually enforce this
         if (this->has<T>()) {
             log_warn(
-                "This entity already has this component attached id: {}, "
+                "This entity {} already has this component attached id: {}, "
                 "component {}",
-                id, type_name<T>());
+                id, components::get_type_id<T>(), type_name<T>());
             return this->get<T>();
         }
 
@@ -111,9 +111,9 @@ struct Entity {
     [[nodiscard]] T& get() const {
         if (this->is_missing<T>()) {
             log_warn(
-                "This entity is missing id: {}, "
+                "This entity {} is missing id: {}, "
                 "component {}",
-                id, type_name<T>());
+                id, components::get_type_id<T>(), type_name<T>());
         }
         BaseComponent* comp = componentArray.at(components::get_type_id<T>());
         return *static_cast<T*>(comp);
@@ -315,8 +315,6 @@ static void add_entity_components(Entity* entity) {
 
     // TODO figure out which entities need these
     entity->addComponent<CanBeHeld>();
-    // entity->addComponent<CanHoldItem>();
-    // entity->addComponent<ModelRenderer>();
 }
 
 static Entity* make_entity() {
@@ -360,17 +358,20 @@ static Entity* make_remote_player(vec3 pos) {
 
     remote_player->addComponent<HasName>();
     remote_player->addComponent<HasClientID>();
+
+    // TODO REMOVE this isnt needed
+    remote_player->addComponent<SimpleColoredBoxRenderer>().init(
+        ui::color::pink, ui::color::pink);
     return remote_player;
 }
 
 static void update_player_remotely(std::shared_ptr<Entity> entity,
                                    float* location, std::string username,
                                    int facing_direction) {
-    HasName& hasname = entity->get<HasName>();
-    hasname.update(username);
-
     entity->get<HasName>().update(username);
+
     Transform& transform = entity->get<Transform>();
+
     // TODO add setters
     transform.position = vec3{location[0], location[1], location[2]};
     transform.face_direction =
@@ -454,8 +455,6 @@ static Entity* make_furniture(vec2 pos, Color face, Color base) {
     Entity* furniture = make_entity();
 
     furniture->get<Transform>().position = {pos.x, 0, pos.y};
-    // TODO set simple renderer sides
-    // , face, base);
 
     // TODO does all furniture have this?
     furniture->addComponent<CanHoldItem>();
@@ -473,6 +472,9 @@ static Entity* make_furniture(vec2 pos, Color face, Color base) {
 static Entity* make_table(vec2 pos) {
     Entity* table =
         entities::make_furniture(pos, ui::color::brown, ui::color::brown);
+
+    table->addComponent<SimpleColoredBoxRenderer>().init(ui::color::brown,
+                                                         ui::color::brown);
 
     table->get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);

@@ -158,6 +158,8 @@ inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
     }
 
     bool used = render_model_normal(entity, dt);
+    // TODO turn back on
+    used = false;
     if (!used) {
         render_simple_normal(entity, dt);
     }

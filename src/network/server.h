@@ -307,7 +307,7 @@ struct Server {
         // create the player if they dont already exist
         if (!players.contains(packet.client_id)) {
             players[packet.client_id] =
-                std::shared_ptr<Entity>(make_player({0, 0, 0}));
+                std::shared_ptr<Entity>(make_player({2, 2, 2}));
         }
 
         // update the username

@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "components/transform.h"
 #include "engine/globals_register.h"
 #include "engine/ui_color.h"
 #include "entity.h"
@@ -109,10 +110,16 @@ struct LevelInfo {
 struct LobbyMapInfo : public LevelInfo {
     virtual void generate_map() override {
         {
-            std::shared_ptr<Furniture> charSwitch;
-            const auto location = vec2{5, 5};
-            charSwitch.reset(entities::make_character_switcher(location));
-            EntityHelper::addEntity(charSwitch);
+            // std::shared_ptr<Furniture> charSwitch;
+            // const auto location = vec2{5, 5};
+            // charSwitch.reset(entities::make_character_switcher(location));
+            // EntityHelper::addEntity(charSwitch);
+            //
+            std::shared_ptr<Furniture> table;
+            table.reset(entities::make_table(vec2{3, 3}));
+            EntityHelper::addEntity(table);
+            log_warn("adding a new table with {} @ {}", table->id,
+                     table->get<Transform>().position);
         }
     }
 
