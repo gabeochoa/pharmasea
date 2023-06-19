@@ -40,7 +40,7 @@ struct PolymorphicBaseClass<LevelInfo>
 }  // namespace bitsery
 
 using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<Entity, Item, BaseComponent>;
+    bitsery::ext::PolymorphicClassesList<BaseComponent, Entity, Item>;
 
 namespace network {
 
@@ -234,6 +234,24 @@ static void deserialize_to_entity(Entity* entity, const std::string& msg) {
 
     BitseryDeserializer des{ctx, msg.begin(), msg.size()};
     des.object(*entity);
+
+    switch (des.adapter().error()) {
+        case bitsery::ReaderError::NoError:
+            break;
+        case bitsery::ReaderError::ReadingError:
+            log_error("reading error");
+            break;
+        case bitsery::ReaderError::DataOverflow:
+            log_error("data overflow error");
+            break;
+        case bitsery::ReaderError::InvalidData:
+            log_error("invalid data error");
+            break;
+        case bitsery::ReaderError::InvalidPointer:
+            log_error("invalid pointer error");
+            break;
+    }
+    assert(des.adapter().error() == bitsery::ReaderError::NoError);
 }
 
 // ClientPacket is in shared.h which is specific to the game,
