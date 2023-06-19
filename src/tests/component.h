@@ -35,6 +35,23 @@ void entity_components() {
     delete entity2;
 }
 
+void test_adding_single_component_serialdeserial() {
+    // If this test fails, then we know that the components arent being
+    // serialized correctly across the network
+    Entity* entity = make_entity();
+    entity->addComponent<HasName>();
+
+    network::Buffer buff = network::serialize_to_entity(entity);
+
+    Entity* entity2 = make_entity();
+    network::deserialize_to_entity(entity2, buff);
+
+    compare_and_validate_components(entity, entity2);
+
+    delete entity;
+    delete entity2;
+}
+
 void customer_components() {
     Entity* entity = make_customer({0, 0, 0});
 
@@ -100,7 +117,8 @@ void remote_player_components() {
 
 void all_tests() {
     entity_components();
-    validate_name_change_persisits();
+    test_adding_single_component_serialdeserial();
+    // validate_name_change_persisits();
     // customer_components();
     // remote_player_components();
 }
