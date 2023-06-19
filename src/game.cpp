@@ -35,7 +35,6 @@
 #include "layers/streamersafelayer.h"
 #include "layers/toastlayer.h"
 #include "layers/versionlayer.h"
-#include "toastmanager.h"
 
 //
 // This one should be last

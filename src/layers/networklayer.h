@@ -9,8 +9,8 @@
 //
 #include "../globals.h"
 //
+#include "../engine/toastmanager.h"
 #include "../network/network.h"
-#include "../toastmanager.h"
 
 using namespace ui;
 

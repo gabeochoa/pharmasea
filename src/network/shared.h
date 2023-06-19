@@ -3,10 +3,10 @@
 #include "../external_include.h"
 //
 #include "../engine/keymap.h"
+#include "../engine/toastmanager.h"
 #include "../engine/util.h"
 #include "../globals.h"
 #include "../map.h"
-#include "../toastmanager.h"
 #include "internal/channel.h"
 #include "steam/steamnetworkingtypes.h"
 
