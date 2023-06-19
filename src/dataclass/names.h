@@ -1,8 +1,8 @@
 #pragma once
 // a list of names to pull from name generator
 
-#include "engine/random.h"
-#include "external_include.h"
+#include "../engine/random.h"
+#include "../external_include.h"
 
 const std::array<const char*, 19> first_names = {
     "Buck", "Bark",  "Cleef", "Tuck", "Jack", "Sal",  "Clove",

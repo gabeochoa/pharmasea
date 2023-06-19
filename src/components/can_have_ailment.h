@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../ailment.h"
+#include "../dataclass/ailment.h"
 #include "base_component.h"
 
 struct CanHaveAilment : public BaseComponent {
