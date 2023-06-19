@@ -12,7 +12,6 @@
 #include "internal/server.h"
 //
 #include "../map.h"
-#include "../person.h"
 #include "steam/steamnetworkingtypes.h"
 
 namespace network {

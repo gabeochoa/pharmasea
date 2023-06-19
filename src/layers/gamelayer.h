@@ -10,7 +10,6 @@
 #include "../camera.h"
 #include "../engine.h"
 #include "../map.h"
-#include "../person.h"
 
 struct GameLayer : public Layer {
     std::shared_ptr<Entity> player;

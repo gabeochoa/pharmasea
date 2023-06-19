@@ -6,7 +6,6 @@
 //
 #include "../engine/globals_register.h"
 #include "../engine/log.h"
-#include "../person.h"
 
 namespace network {
 

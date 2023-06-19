@@ -9,7 +9,6 @@
 //
 #include "entityhelper.h"
 #include "level_info.h"
-#include "person.h"
 
 struct Map {
     LobbyMapInfo lobby_info;
