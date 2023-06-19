@@ -44,20 +44,7 @@ void test_adding_single_component_serialdeserial() {
     network::Buffer buff = network::serialize_to_entity(entity);
 
     Entity* entity2 = make_entity();
-    network::deserialize_to_entity(entity2, buff);
-
-    compare_and_validate_components(entity, entity2);
-
-    delete entity;
-    delete entity2;
-}
-
-void customer_components() {
-    Entity* entity = make_customer({0, 0, 0});
-
-    network::Buffer buff = network::serialize_to_entity(entity);
-
-    Entity* entity2 = make_customer({0, 0, 0});
+    entity2->addComponent<HasName>();
     network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
@@ -119,6 +106,5 @@ void all_tests() {
     entity_components();
     test_adding_single_component_serialdeserial();
     // validate_name_change_persisits();
-    // customer_components();
     // remote_player_components();
 }
