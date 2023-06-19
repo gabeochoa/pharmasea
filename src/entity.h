@@ -50,6 +50,18 @@
 #include "util.h"
 #include "vec_util.h"
 
+static void force_type_id_order() {
+    // For now just to make sure each component is always the same number
+    components::get_type_id<Transform>();
+    components::get_type_id<SimpleColoredBoxRenderer>();
+    components::get_type_id<HasName>();
+    components::get_type_id<CanHoldItem>();
+    components::get_type_id<ModelRenderer>();
+    components::get_type_id<CanBePushed>();
+    components::get_type_id<CanBeHeld>();
+    components::get_type_id<CanBeTakenFrom>();
+}
+
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
     int id;

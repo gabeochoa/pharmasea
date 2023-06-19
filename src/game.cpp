@@ -41,6 +41,9 @@
 #include "./tests/all_tests.h"
 
 void startup() {
+    // TODO forcing for now just to make debugging easier
+    force_type_id_order();
+
     // TODO need to test on lower framerates, there seems to be issues with
     // network initlization
 
