@@ -58,18 +58,6 @@ using StdMap = bitsery::ext::StdMap;
 #include "util.h"
 #include "vec_util.h"
 
-static void force_type_id_order() {
-    // For now just to make sure each component is always the same number
-    components::get_type_id<Transform>();
-    components::get_type_id<SimpleColoredBoxRenderer>();
-    components::get_type_id<HasName>();
-    components::get_type_id<CanHoldItem>();
-    components::get_type_id<ModelRenderer>();
-    components::get_type_id<CanBePushed>();
-    components::get_type_id<CanBeHeld>();
-    components::get_type_id<CanBeTakenFrom>();
-}
-
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
     int id;
@@ -109,12 +97,6 @@ struct Entity {
         }
 
         T* component(new T(std::forward<TArgs>(args)...));
-        // component->entity = this;
-
-        // std::unique_ptr<BaseComponent> uptr{component};
-        // components.emplace_back(std::move(uptr));
-
-        // componentArray[components::get_type_id<T>()] = component;
         componentArray[components::get_type_id<T>()] = component;
         componentSet[components::get_type_id<T>()] = true;
 
@@ -137,26 +119,11 @@ struct Entity {
         return *static_cast<T*>(comp);
     }
 
-    void add_static_components(vec3) {
-        // addComponent<Transform>().init(pos, size());
-        // addComponent<SimpleColoredBoxRenderer>();
-        // addComponent<HasName>();
-        // addComponent<CanHoldItem>();
-        // addComponent<ModelRenderer>();
-        // addComponent<CanBePushed>();
-        // addComponent<CanBeHeld>();
-        // addComponent<CanBeTakenFrom>();
-    }
-
     virtual ~Entity() {}
 
-    Entity(vec3 p, Color, Color) : id(ENTITY_ID_GEN++) {}
-
-    Entity(vec3 p, Color c) : Entity(p, c, c) {}
+    Entity() : id(ENTITY_ID_GEN++) {}
 
    private:
-    Entity() {}
-
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
@@ -353,7 +320,7 @@ static void add_entity_components(Entity* entity) {
 }
 
 static Entity* make_entity() {
-    Entity* entity = new Entity({0, 0, 0}, WHITE, WHITE);
+    Entity* entity = new Entity();
     add_entity_components(entity);
     return entity;
 }
@@ -494,6 +461,7 @@ static Entity* make_furniture(vec2 pos, Color face, Color base) {
     furniture->addComponent<CanHoldItem>();
     furniture->addComponent<IsSolid>();
     furniture->addComponent<IsRotatable>();
+    furniture->addComponent<SimpleColoredBoxRenderer>().init(face, base);
     furniture->addComponent<ModelRenderer>();
 
     furniture->addComponent<CustomHeldItemPosition>().init(

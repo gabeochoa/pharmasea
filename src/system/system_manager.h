@@ -919,15 +919,14 @@ struct SystemManager {
     void always_update(const std::vector<std::shared_ptr<Entity>>& entity_list,
                        float dt) {
         for (auto& entity : entity_list) {
-            // system_manager::reset_highlighted(entity, dt);
+            system_manager::reset_highlighted(entity, dt);
             system_manager::transform_snapper(entity, dt);
             system_manager::collect_user_input(entity, dt);
-            // system_manager::update_held_item_position(entity, dt);
+            system_manager::update_held_item_position(entity, dt);
 
-            // TODO uncomment
             // This could run only in lobby if we wanted to distinguish
-            // system_manager::render_manager::update_character_model_from_index(
-            // entity, dt);
+            system_manager::render_manager::update_character_model_from_index(
+                entity, dt);
         }
     }
 
