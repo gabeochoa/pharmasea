@@ -12,12 +12,23 @@ void compare_and_validate_components(Entity* a, Entity* b) {
     while (i < max_num_components) {
         auto eC = a->componentArray[i];
         auto e2C = b->componentArray[i];
-
-        if ((eC == nullptr && e2C != nullptr) ||
-            (eC != nullptr && e2C == nullptr)) {
-            M_ASSERT(false, "one was null but other wasnt");
+        if (eC == nullptr && e2C == nullptr) {
+            i++;
+            continue;
         }
 
+        if (eC != nullptr && e2C != nullptr) {
+            i++;
+            continue;
+        }
+
+        if (eC == nullptr) {
+            M_ASSERT(false, "a missing component that b has");
+        }
+
+        if (e2C == nullptr) {
+            M_ASSERT(false, "b missing component that a has");
+        }
         i++;
     }
 }
@@ -47,7 +58,7 @@ void test_adding_single_component_serialdeserial() {
     // VVVVV if you dont have this, then it doesnt correctly serialize
     // but once you have it then the names do get copied over correctly
     // figure out why bitsery isnt serializing this over
-    // entity2->addComponent<HasName>();
+    entity2->addComponent<HasName>();
     network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
@@ -60,8 +71,6 @@ void validate_name_change_persisits() {
     Entity* entity = make_entity();
     entity->addComponent<HasName>();
 
-    network::Buffer buff = network::serialize_to_entity(entity);
-
     auto starting_name = entity->get<HasName>().name();
     auto first_name = "newname";
     entity->get<HasName>().update(first_name);
@@ -73,7 +82,9 @@ void validate_name_change_persisits() {
     M_TEST_EQ(first_name, middle_name,
               "component should have correctly set name");
 
+    network::Buffer buff = network::serialize_to_entity(entity);
     Entity* entity2 = make_entity();
+    entity2->addComponent<HasName>();
     network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
@@ -108,6 +119,6 @@ void remote_player_components() {
 void all_tests() {
     entity_components();
     test_adding_single_component_serialdeserial();
-    // validate_name_change_persisits();
+    validate_name_change_persisits();
     // remote_player_components();
 }

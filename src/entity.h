@@ -80,12 +80,15 @@ struct Entity {
                   components::get_type_id<T>(), type_name<T>(), id);
 
         // TODO eventually enforce this
-        // if (this->has<T>()) {
-        // log_warn("This entity already has this component attached");
-        // return this->get<T>();
-        // }
-        M_ASSERT(!this->has<T>(),
-                 "This entity already has this component attached");
+        if (this->has<T>()) {
+            log_warn(
+                "This entity already has this component attached id: {}, "
+                "component {}",
+                id, type_name<T>());
+            return this->get<T>();
+        }
+        // M_ASSERT(!this->has<T>(),
+        // "This entity already has this component attached");
 
         std::shared_ptr<T> component =
             std::make_shared<T>(std::forward<TArgs>(args)...);
@@ -107,6 +110,7 @@ struct Entity {
             log_error("Entity {} did not have component {} requested", id,
                       type_name<T>());
         }
+        log_info("requesting component {} ", type_name<T>());
         auto ptr(componentArray[components::get_type_id<T>()]);
         M_ASSERT(ptr, "tried to get_p, components:: returned null");
         auto dynamicptr = dynamic_pointer_cast<T>(ptr);
