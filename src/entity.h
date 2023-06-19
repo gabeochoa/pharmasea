@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "components/base_component.h"
 #include "components/can_be_ghost_player.h"
 #include "components/can_be_held.h"
 #include "components/can_be_highlighted.h"
@@ -122,8 +123,10 @@ struct Entity {
             log_error("Entity {} did not have component {} requested", id,
                       type_name<T>());
         }
-        log_info("requesting component {} ", type_name<T>());
         auto ptr(componentArray[components::get_type_id<T>()]);
+        if (!ptr) {
+            log_info("requesting component {} ", type_name<T>());
+        }
         M_ASSERT(ptr, "tried to get_p, components:: returned null");
         auto dynamicptr = dynamic_pointer_cast<T>(ptr);
         M_ASSERT(dynamicptr, "tried to cast get_p but dynamic is null");

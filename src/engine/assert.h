@@ -24,6 +24,7 @@
             std::cout << __VA_ARGS__ << "\n";                          \
             std::cout << x << op_string << y << "\n";                  \
             std::cout << "------ \n ";                                 \
+            assert(x op y);                                            \
         }                                                              \
     }
 
