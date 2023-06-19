@@ -382,20 +382,6 @@ static void add_person_components(Entity* person) {
     person->addComponent<CanPerformJob>().update(Wandering, Wandering);
 }
 
-struct Person : public Entity {
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<Entity>{});
-    }
-
-   public:
-    Person() : Person({0, 0, 0}) {}
-
-    Person(vec3 p) : Entity(p, WHITE, WHITE) { add_person_components(this); }
-};
-
 static Entity* make_remote_player(vec3 pos) {
     Entity* remote_player = make_entity();
     add_person_components(remote_player);
@@ -448,10 +434,8 @@ static Entity* make_player(vec3 p) {
 }
 
 static Entity* make_aiperson(vec3 p) {
-    // TODO This cant use make_person due to segfault in render model
-    Entity* person = new Person(p);
-    // Entity* person = make_entity();
-    // add_person_components(person);
+    Entity* person = make_entity();
+    add_person_components(person);
 
     person->get<CanPerformJob>().update(Wandering, Wandering);
 

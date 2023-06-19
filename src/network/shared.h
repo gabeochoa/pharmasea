@@ -26,9 +26,6 @@ struct PolymorphicBaseClass<BaseComponent>
           ShowsProgressBar> {};
 
 template<>
-struct PolymorphicBaseClass<Entity> : PolymorphicDerivedClasses<Person> {};
-
-template<>
 struct PolymorphicBaseClass<Item>
     : PolymorphicDerivedClasses<Bag, PillBottle, Pill> {};
 
