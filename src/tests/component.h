@@ -47,7 +47,7 @@ void test_adding_single_component_serialdeserial() {
     // VVVVV if you dont have this, then it doesnt correctly serialize
     // but once you have it then the names do get copied over correctly
     // figure out why bitsery isnt serializing this over
-    // entity2->addComponent<HasName>();
+    entity2->addComponent<HasName>();
     network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
