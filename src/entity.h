@@ -127,13 +127,14 @@ struct Entity {
 
     template<typename T>
     [[nodiscard]] T& get() const {
-        try {
-            BaseComponent* comp =
-                componentArray.at(components::get_type_id<T>());
-            return *static_cast<T*>(comp);
-        } catch (const std::exception& e) {
-            log_warn("tried to get, {} ", type_name<T>());
+        if (this->is_missing<T>()) {
+            log_warn(
+                "This entity is missing id: {}, "
+                "component {}",
+                id, type_name<T>());
         }
+        BaseComponent* comp = componentArray.at(components::get_type_id<T>());
+        return *static_cast<T*>(comp);
     }
 
     void add_static_components(vec3) {
@@ -346,6 +347,7 @@ static void add_entity_components(Entity* entity) {
     entity->addComponent<Transform>();
 
     // TODO figure out which entities need these
+    entity->addComponent<CanBeHeld>();
     // entity->addComponent<CanHoldItem>();
     // entity->addComponent<ModelRenderer>();
 }
