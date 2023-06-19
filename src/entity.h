@@ -76,16 +76,16 @@ struct Entity {
 
     template<typename T, typename... TArgs>
     T& addComponent(TArgs&&... args) {
-        log_warn("adding component {} {} to entity {}",
-                 components::get_type_id<T>(), type_name<T>(), id);
+        log_trace("adding component {} {} to entity {}",
+                  components::get_type_id<T>(), type_name<T>(), id);
 
         // TODO eventually enforce this
-        if (this->has<T>()) {
-            log_warn("This entity already has this component attached");
-            return this->get<T>();
-        }
-        // M_ASSERT(!this->has<T>(),
-        // "This entity already has this component attached");
+        // if (this->has<T>()) {
+        // log_warn("This entity already has this component attached");
+        // return this->get<T>();
+        // }
+        M_ASSERT(!this->has<T>(),
+                 "This entity already has this component attached");
 
         std::shared_ptr<T> component =
             std::make_shared<T>(std::forward<TArgs>(args)...);
@@ -391,9 +391,9 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
                                    float* location, std::string username,
                                    int facing_direction) {
     HasName& hasname = entity->get<HasName>();
-    hasname.name = username;
+    hasname.update(username);
 
-    entity->get<HasName>().name = username;
+    entity->get<HasName>().update(username);
     Transform& transform = entity->get<Transform>();
     // TODO add setters
     transform.position = vec3{location[0], location[1], location[2]};
@@ -430,8 +430,7 @@ static Entity* make_aiperson(vec3 p) {
     // Entity* person = make_entity();
     // add_person_components(person);
 
-    person->addComponent<CanPerformJob>().update(Wandering, Wandering);
-    person->addComponent<HasBaseSpeed>().update(10.f);
+    person->get<CanPerformJob>().update(Wandering, Wandering);
 
     return person;
 }
@@ -439,12 +438,11 @@ static Entity* make_aiperson(vec3 p) {
 static Entity* make_customer(vec3 p) {
     Entity* customer = make_aiperson(p);
 
-    customer->addComponent<CanPerformJob>().update(Wandering, Wandering);
-    customer->addComponent<HasBaseSpeed>().update(10.f);
     customer->addComponent<HasName>().update(get_random_name());
-
     customer->addComponent<CanHaveAilment>().update(
         std::make_shared<Insomnia>());
+
+    customer->get<HasBaseSpeed>().update(10.f);
     customer->get<CanPerformJob>().update(WaitInQueue, Wandering);
 
     return customer;

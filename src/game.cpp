@@ -41,6 +41,10 @@
 #include "./tests/all_tests.h"
 
 void startup() {
+    tests::run_all();
+    std::cout << "All tests ran " << std::endl;
+    return;
+
     // TODO need to test on lower framerates, there seems to be issues with
     // network initlization
 
@@ -79,9 +83,6 @@ void startup() {
     //
     // Having this line here fixes that
     Settings::get().refresh_settings();
-
-    tests::run_all();
-    std::cout << "All tests ran successfully" << std::endl;
 
     MenuState::get().reset();
     GameState::get().reset();

@@ -214,6 +214,28 @@ void serialize(S& s, ClientPacket& packet) {
           });
 }
 
+static Buffer serialize_to_entity(Entity* entity) {
+    Buffer buffer;
+    TContext ctx{};
+
+    std::get<1>(ctx).registerBasesList<BitserySerializer>(
+        MyPolymorphicClasses{});
+    BitserySerializer ser{ctx, buffer};
+    ser.object(*entity);
+    ser.adapter().flush();
+
+    return buffer;
+}
+
+static void deserialize_to_entity(Entity* entity, const std::string& msg) {
+    TContext ctx{};
+    std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
+        MyPolymorphicClasses{});
+
+    BitseryDeserializer des{ctx, msg.begin(), msg.size()};
+    des.object(*entity);
+}
+
 // ClientPacket is in shared.h which is specific to the game,
 // TODO how can we support both abstract while also configuration
 static ClientPacket deserialize_to_packet(const std::string& msg) {

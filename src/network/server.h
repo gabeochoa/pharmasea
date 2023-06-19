@@ -215,7 +215,7 @@ struct Server {
                         updated_position.y,
                         updated_position.z,
                     },
-                .username = player->get<HasName>().name,
+                .username = player->get<HasName>().name(),
             }),
         });
 
@@ -311,7 +311,7 @@ struct Server {
         }
 
         // update the username
-        players[packet.client_id]->get<HasName>().name = info.username;
+        players[packet.client_id]->get<HasName>().update(info.username);
 
         // TODO i looked into std::transform but kept getting std::out of range
         // errors
