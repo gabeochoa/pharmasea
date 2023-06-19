@@ -41,10 +41,6 @@
 #include "./tests/all_tests.h"
 
 void startup() {
-    tests::run_all();
-    std::cout << "All tests ran " << std::endl;
-    return;
-
     // TODO need to test on lower framerates, there seems to be issues with
     // network initlization
 
@@ -108,6 +104,9 @@ void startup() {
 }
 
 int main(void) {
+    tests::run_all();
+    std::cout << "All tests ran " << std::endl;
+
     startup();
     defer(Settings::get().write_save_file());
     App::get().run();
