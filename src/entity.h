@@ -1,23 +1,42 @@
 
 #pragma once
 
-#include "bitsery/ext/std_smart_ptr.h"
-#include "components/base_component.h"
+#include "components/can_be_ghost_player.h"
 #include "components/can_be_held.h"
 #include "components/can_be_highlighted.h"
 #include "components/can_be_pushed.h"
 #include "components/can_be_taken_from.h"
+#include "components/can_grab_from_other_furniture.h"
+#include "components/can_have_ailment.h"
+#include "components/can_highlight_others.h"
+#include "components/can_hold_furniture.h"
 #include "components/can_hold_item.h"
+#include "components/can_perform_job.h"
+#include "components/collects_user_input.h"
+#include "components/conveys_held_item.h"
+#include "components/custom_item_position.h"
+#include "components/has_base_speed.h"
+#include "components/has_client_id.h"
 #include "components/has_name.h"
+#include "components/has_waiting_queue.h"
+#include "components/has_work.h"
+#include "components/is_item_container.h"
+#include "components/is_rotatable.h"
+#include "components/is_snappable.h"
+#include "components/is_solid.h"
 #include "components/model_renderer.h"
+#include "components/responds_to_user_input.h"
+#include "components/shows_progress_bar.h"
 #include "components/simple_colored_box_renderer.h"
 #include "components/transform.h"
+#include "components/uses_character_model.h"
 #include "engine/assert.h"
 #include "external_include.h"
 //
 #include <array>
 #include <map>
 
+#include "dataclass/names.h"
 #include "drawing_util.h"
 #include "engine/astar.h"
 #include "engine/is_server.h"
@@ -308,43 +327,6 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 // };
 //
 
-#include "external_include.h"
-//
-#include "engine/globals_register.h"
-#include "engine/keymap.h"
-#include "entity.h"
-#include "entityhelper.h"
-//
-#include "camera.h"
-#include "components/can_be_ghost_player.h"
-#include "components/can_have_ailment.h"
-#include "components/can_highlight_others.h"
-#include "components/can_hold_furniture.h"
-#include "components/can_hold_item.h"
-#include "components/can_perform_job.h"
-#include "components/collects_user_input.h"
-#include "components/has_base_speed.h"
-#include "components/has_client_id.h"
-#include "components/is_snappable.h"
-#include "components/responds_to_user_input.h"
-#include "components/uses_character_model.h"
-#include "dataclass/ailment.h"
-#include "dataclass/names.h"
-#include "drawing_util.h"
-#include "engine/astar.h"
-#include "engine/globals_register.h"
-#include "engine/is_server.h"
-#include "engine/log.h"
-#include "engine/sound_library.h"
-#include "engine/statemanager.h"
-#include "engine/texture_library.h"
-#include "entityhelper.h"
-#include "external_include.h"
-#include "globals.h"
-#include "job.h"
-#include "raylib.h"
-#include "text_util.h"
-
 static void add_person_components(Entity* person) {
     person->get<Transform>().size =
         vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
@@ -480,22 +462,6 @@ static Entity* make_customer(vec3 p) {
     // render_speech_bubble();
     // }
 }
-
-#include "components/can_grab_from_other_furniture.h"
-#include "components/conveys_held_item.h"
-#include "components/custom_item_position.h"
-#include "components/has_waiting_queue.h"
-#include "components/has_work.h"
-#include "components/is_item_container.h"
-#include "components/is_rotatable.h"
-#include "components/is_solid.h"
-#include "components/shows_progress_bar.h"
-#include "drawing_util.h"
-#include "engine/assert.h"
-#include "engine/statemanager.h"
-#include "entity.h"
-#include "external_include.h"
-#include "globals.h"
 
 typedef Entity Furniture;
 
