@@ -320,8 +320,12 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 // };
 //
 
+static void add_entity_components(Entity* entity) {
+    entity->addComponent<Transform>();
+}
+
 static void add_person_components(Entity* person) {
-    person->addComponent<Transform>();
+    add_entity_components(person);
 
     person->get<Transform>().position = {0, 0, 0};
     person->get<Transform>().size =
@@ -360,7 +364,6 @@ struct Person : public Entity {
 
 static Entity* make_remote_player(vec3 pos) {
     Entity* remote_player = new Entity(pos, WHITE, WHITE);
-
     add_person_components(remote_player);
 
     remote_player->addComponent<CanHighlightOthers>();
@@ -466,8 +469,8 @@ typedef Entity Furniture;
 namespace entities {
 static Entity* make_furniture(vec2 pos, Color face, Color base) {
     Entity* furniture = new Entity({pos.x, 0, pos.y}, face, base);
+    add_entity_components(furniture);
 
-    furniture->addComponent<Transform>();
     furniture->addComponent<IsSolid>();
     furniture->addComponent<IsRotatable>();
 
