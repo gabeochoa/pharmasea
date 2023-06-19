@@ -253,6 +253,12 @@ inline void person_update_given_new_pos(int id, Transform& transform,
             return EntityHelper::ForEachFlow::None;
         });
 
+        // TODO turn this back on
+        // had to turn it off because evryone is spawning together
+        would_collide_x = false;
+        would_collide_z = false;
+        // ---------------------
+
         if (!would_collide_x) {
             transform.raw_position.x = new_pos_x.x;
         }
@@ -913,19 +919,22 @@ struct SystemManager {
     void always_update(const std::vector<std::shared_ptr<Entity>>& entity_list,
                        float dt) {
         for (auto& entity : entity_list) {
-            system_manager::reset_highlighted(entity, dt);
+            // system_manager::reset_highlighted(entity, dt);
             system_manager::transform_snapper(entity, dt);
-            system_manager::update_held_item_position(entity, dt);
             system_manager::collect_user_input(entity, dt);
+            // system_manager::update_held_item_position(entity, dt);
 
+            // TODO uncomment
             // This could run only in lobby if we wanted to distinguish
-            system_manager::render_manager::update_character_model_from_index(
-                entity, dt);
+            // system_manager::render_manager::update_character_model_from_index(
+            // entity, dt);
         }
     }
 
     void in_round_update(
         const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
+        // TODO turn back on all in round updates
+        return;
         for (auto& entity : entity_list) {
             system_manager::job_system::handle_job_holder_pushed(entity, dt);
             system_manager::job_system::update_job_information(entity, dt);
@@ -938,6 +947,8 @@ struct SystemManager {
 
     void planning_update(
         const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
+        // TODO turn back on all planning updates
+        return;
         for (auto& entity : entity_list) {
             system_manager::highlight_facing_furniture(entity, dt);
             system_manager::update_held_furniture_position(entity, dt);
