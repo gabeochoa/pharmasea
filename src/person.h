@@ -33,7 +33,6 @@
 #include "engine/texture_library.h"
 #include "entityhelper.h"
 #include "external_include.h"
-#include "furniture.h"
 #include "globals.h"
 #include "job.h"
 #include "person.h"

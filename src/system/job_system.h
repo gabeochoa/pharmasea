@@ -10,7 +10,6 @@
 #include "../components/transform.h"
 #include "../entity.h"
 #include "../entityhelper.h"
-#include "../furniture.h"
 #include "logging_system.h"
 
 namespace system_manager {

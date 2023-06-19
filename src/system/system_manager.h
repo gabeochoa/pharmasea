@@ -15,7 +15,6 @@
 #include "../engine/tracy.h"
 #include "../entity.h"
 #include "../entityhelper.h"
-#include "../furniture.h"
 #include "job_system.h"
 #include "rendering_system.h"
 

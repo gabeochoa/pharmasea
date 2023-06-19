@@ -5,7 +5,6 @@
 #include "engine/ui_color.h"
 #include "entity.h"
 #include "entityhelper.h"
-#include "furniture.h"
 #include "item.h"
 #include "item_helper.h"
 #include "round.h"
