@@ -108,12 +108,17 @@ struct Entity {
                       type_name<T>());
         }
         auto ptr(componentArray[components::get_type_id<T>()]);
-        return dynamic_pointer_cast<T>(ptr);
+        M_ASSERT(ptr, "tried to get_p, components:: returned null");
+        auto dynamicptr = dynamic_pointer_cast<T>(ptr);
+        M_ASSERT(dynamicptr, "tried to cast get_p but dynamic is null");
+        return dynamicptr;
     }
 
     template<typename T>
     [[nodiscard]] T& get() const {
-        return *get_p<T>();
+        auto pointer = get_p<T>();
+        M_ASSERT(pointer, "tried to get, but get<p> returned null");
+        return *pointer;
     }
 
     void add_static_components(vec3) {
@@ -324,6 +329,12 @@ static void add_entity_components(Entity* entity) {
     entity->addComponent<Transform>();
 }
 
+static Entity* make_entity() {
+    Entity* entity = new Entity({0, 0, 0}, WHITE, WHITE);
+    add_entity_components(entity);
+    return entity;
+}
+
 static void add_person_components(Entity* person) {
     add_entity_components(person);
 
@@ -363,7 +374,7 @@ struct Person : public Entity {
 };
 
 static Entity* make_remote_player(vec3 pos) {
-    Entity* remote_player = new Entity(pos, WHITE, WHITE);
+    Entity* remote_player = make_entity();
     add_person_components(remote_player);
 
     remote_player->addComponent<CanHighlightOthers>();
@@ -391,7 +402,7 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
 }
 
 static Entity* make_player(vec3 p) {
-    Entity* player = new Entity(p, WHITE, WHITE);
+    Entity* player = make_entity();
     add_person_components(player);
 
     player->addComponent<HasName>();
@@ -416,7 +427,7 @@ static Entity* make_player(vec3 p) {
 static Entity* make_aiperson(vec3 p) {
     // TODO This cant use make_person due to segfault in render model
     Entity* person = new Person(p);
-    // Entity* person = new Entity(p, WHITE, WHITE);
+    // Entity* person = make_entity();
     // add_person_components(person);
 
     person->addComponent<CanPerformJob>().update(Wandering, Wandering);
@@ -468,8 +479,11 @@ typedef Entity Furniture;
 
 namespace entities {
 static Entity* make_furniture(vec2 pos, Color face, Color base) {
-    Entity* furniture = new Entity({pos.x, 0, pos.y}, face, base);
-    add_entity_components(furniture);
+    Entity* furniture = make_entity();
+
+    furniture->get<Transform>().position = {pos.x, 0, pos.y};
+    // TODO set simple renderer sides
+    // , face, base);
 
     furniture->addComponent<IsSolid>();
     furniture->addComponent<IsRotatable>();

@@ -175,7 +175,12 @@ struct EntityHelper {
                 if (!filter(current_entity)) continue;
 
                 // all entitites should have transforms but just in case
-                if (current_entity->template is_missing<Transform>()) continue;
+                if (current_entity->template is_missing<Transform>()) {
+                    log_warn("component {} is missing transform",
+                             current_entity->id);
+                    continue;
+                }
+
                 Transform& transform =
                     current_entity->template get<Transform>();
 
