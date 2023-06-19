@@ -84,7 +84,7 @@ void validate_name_change_persisits() {
 
     network::Buffer buff = network::serialize_to_entity(entity);
     Entity* entity2 = make_entity();
-    entity2->addComponent<HasName>();
+    // entity2->addComponent<HasName>();
     network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
