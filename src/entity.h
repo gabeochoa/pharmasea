@@ -317,16 +317,20 @@ static void add_entity_components(Entity* entity) {
     entity->addComponent<CanBeHeld>();
 }
 
-static Entity* make_entity() {
+static Entity* make_entity(vec3 p = {-2, -2, -2}) {
     Entity* entity = new Entity();
     add_entity_components(entity);
+
+    entity->get<Transform>().update(p);
     return entity;
 }
 
 static void add_person_components(Entity* person) {
     add_entity_components(person);
 
-    person->get<Transform>().update({0, 0, 0});
+    // TODO idk why but you spawn under the ground without this
+    person->get<Transform>().update_y(0);
+
     person->get<Transform>().update_size(
         vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f});
 
@@ -348,7 +352,7 @@ static void add_person_components(Entity* person) {
 }
 
 static Entity* make_remote_player(vec3 pos) {
-    Entity* remote_player = make_entity();
+    Entity* remote_player = make_entity(pos);
     add_person_components(remote_player);
 
     remote_player->addComponent<CanHighlightOthers>();
@@ -384,7 +388,7 @@ static void update_player_rare_remotely(std::shared_ptr<Entity> entity,
 }
 
 static Entity* make_player(vec3 p) {
-    Entity* player = make_entity();
+    Entity* player = make_entity(p);
     add_person_components(player);
 
     player->addComponent<HasName>();
@@ -407,7 +411,7 @@ static Entity* make_player(vec3 p) {
 }
 
 static Entity* make_aiperson(vec3 p) {
-    Entity* person = make_entity();
+    Entity* person = make_entity(p);
     add_person_components(person);
 
     person->get<CanPerformJob>().update(Wandering, Wandering);
