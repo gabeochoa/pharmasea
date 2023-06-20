@@ -9,7 +9,8 @@ enum LogLevel {
     LOG_TRACE = 1,
     LOG_INFO = 2,
     LOG_WARN = 3,
-    LOG_ERROR = 4
+    LOG_ERROR = 4,
+    LOG_IF = 5,
 };
 
 // TODO log to file
@@ -78,3 +79,13 @@ static void log_me(...) {}
 #define log_error(...)                                            \
     log_me(LogLevel::LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__); \
     assert(false)
+
+#define log_if(x, ...)                                                    \
+    {                                                                     \
+        if (x) log_me(LogLevel::LOG_IF, __FILE__, __LINE__, __VA_ARGS__); \
+    }
+
+#define log_ifx(x, level, ...)                                 \
+    {                                                          \
+        if (x) log_me(level, __FILE__, __LINE__, __VA_ARGS__); \
+    }
