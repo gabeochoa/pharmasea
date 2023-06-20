@@ -114,10 +114,6 @@ struct LobbyMapInfo : public LevelInfo {
             const auto location = vec2{5, 5};
             charSwitch.reset(entities::make_character_switcher(location));
             EntityHelper::addEntity(charSwitch);
-
-            std::shared_ptr<Furniture> table;
-            table.reset(entities::make_table(vec2{3, 3}));
-            EntityHelper::addEntity(table);
         }
     }
 

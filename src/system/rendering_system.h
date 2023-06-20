@@ -195,8 +195,6 @@ inline void render_progress_bar(std::shared_ptr<Entity> entity, float) {
 
     if (entity->is_missing<HasWork>()) return;
 
-    // TODO Why does this crash?
-    return;
     HasWork& hasWork = entity->get<HasWork>();
     if (hasWork.dont_show_progres_bar()) return;
 
