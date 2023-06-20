@@ -360,7 +360,7 @@ static Entity* make_remote_player(vec3 pos) {
     remote_player->addComponent<HasClientID>();
 
     // TODO REMOVE this isnt needed
-    remote_player->addComponent<SimpleColoredBoxRenderer>().init(
+    remote_player->addComponent<SimpleColoredBoxRenderer>().update(
         ui::color::pink, ui::color::pink);
     return remote_player;
 }
@@ -460,7 +460,7 @@ static Entity* make_furniture(vec2 pos, Color face, Color base) {
     furniture->addComponent<CanHoldItem>();
     furniture->addComponent<IsSolid>();
     furniture->addComponent<IsRotatable>();
-    furniture->addComponent<SimpleColoredBoxRenderer>().init(face, base);
+    furniture->addComponent<SimpleColoredBoxRenderer>().update(face, base);
     furniture->addComponent<ModelRenderer>();
 
     furniture->addComponent<CustomHeldItemPosition>().init(
@@ -473,8 +473,8 @@ static Entity* make_table(vec2 pos) {
     Entity* table =
         entities::make_furniture(pos, ui::color::brown, ui::color::brown);
 
-    table->addComponent<SimpleColoredBoxRenderer>().init(ui::color::brown,
-                                                         ui::color::brown);
+    table->addComponent<SimpleColoredBoxRenderer>().update(ui::color::brown,
+                                                           ui::color::brown);
 
     table->get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);

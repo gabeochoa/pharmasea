@@ -38,8 +38,8 @@ inline bool render_simple_highlighted(std::shared_ptr<Entity> entity, float) {
     SimpleColoredBoxRenderer& renderer =
         entity->get<SimpleColoredBoxRenderer>();
 
-    Color f = ui::color::getHighlighted(renderer.face_color);
-    Color b = ui::color::getHighlighted(renderer.base_color);
+    Color f = ui::color::getHighlighted(renderer.face());
+    Color b = ui::color::getHighlighted(renderer.base());
     // TODO replace size with Bounds component when it exists
     DrawCubeCustom(
         transform.raw(), transform.size.x, transform.size.y, transform.size.z,
@@ -56,7 +56,7 @@ inline bool render_simple_normal(std::shared_ptr<Entity> entity, float) {
     DrawCubeCustom(transform.raw(), transform.size.x, transform.size.y,
                    transform.size.z,
                    transform.FrontFaceDirectionMap.at(transform.face_direction),
-                   renderer.face_color, renderer.base_color);
+                   renderer.face(), renderer.base());
     return true;
 }
 

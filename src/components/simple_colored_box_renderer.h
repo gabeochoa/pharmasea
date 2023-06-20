@@ -7,15 +7,21 @@
 struct SimpleColoredBoxRenderer : public BaseComponent {
     virtual ~SimpleColoredBoxRenderer() {}
 
-    Color face_color;
-    Color base_color;
-
-    void init(Color face, Color base) {
+    void update(Color face, Color base) {
         face_color = face;
         base_color = base;
     }
 
+    void update_face(Color face) { face_color = face; }
+    void update_base(Color base) { base_color = base; }
+
+    [[nodiscard]] Color face() { return face_color; }
+    [[nodiscard]] Color base() { return base_color; }
+
    private:
+    Color face_color;
+    Color base_color;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
