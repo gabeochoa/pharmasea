@@ -81,6 +81,22 @@ struct Server {
         send_client_packet_to_all(map_packet);
     }
 
+    void send_player_rare_data() {
+        for (const auto& player : players) {
+            ClientPacket player_rare_updated({
+                .channel = Channel::UNRELIABLE,
+                .client_id = SERVER_CLIENT_ID,
+                .msg_type = network::ClientPacket::MsgType::PlayerRare,
+                .msg = network::ClientPacket::PlayerRareInfo({
+                    .client_id = player.first,
+                    .model_index = player.second->get<UsesCharacterModel>()
+                                       .index_server_only(),
+                }),
+            });
+            send_client_packet_to_all(player_rare_updated);
+        }
+    }
+
     void run() {
         TRACY_ZONE_SCOPED;
         thread_id = std::this_thread::get_id();
@@ -117,6 +133,9 @@ struct Server {
     // NOTE: server time things are in s
     float next_map_tick_reset = 50;  // 2fps
     float next_map_tick = 0;
+
+    float next_player_rare_tick_reset = 50;  // 0.2fps
+    float next_player_rare_tick = 0;
 
     TriggerOnDt next_update_timer = TriggerOnDt(2.f);
 
@@ -171,6 +190,13 @@ struct Server {
         if (next_map_tick <= 0) {
             send_map_state();
             next_map_tick = next_map_tick_reset;
+        }
+
+        next_player_rare_tick -= dt;
+        if (next_player_rare_tick <= 0) {
+            // TODO decide if this needs to be more / less often
+            send_player_rare_data();
+            next_player_rare_tick = next_player_rare_tick_reset;
         }
         TRACY_FRAME_MARK("server::tick");
     }
@@ -377,6 +403,9 @@ struct Server {
             case ClientPacket::MsgType::PlayerLeave: {
                 return process_player_leave_packet(incoming_client, packet);
             } break;
+            // case ClientPacket::MsgType::PlayerRare: {
+            // return process_player_rare_packet(incoming_client, packet);
+            // } break;
             default:
                 // No clue so lets just send it to everyone except the guy that
                 // sent it to us

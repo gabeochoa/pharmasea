@@ -173,6 +173,17 @@ struct Client {
             update_player_remotely(rp, location, username, facing);
         };
 
+        auto update_remote_player_rare = [&](int client_id, int model_index) {
+            if (!remote_players.contains(client_id)) {
+                log_warn("(rare) Remote player doesnt exist but should: {}",
+                         client_id);
+                return;
+            }
+            auto rp = remote_players[client_id];
+            if (!rp) return;
+            update_player_rare_remotely(rp, model_index);
+        };
+
         ClientPacket packet = client_p->deserialize_to_packet(msg);
 
         switch (packet.msg_type) {
@@ -226,6 +237,12 @@ struct Client {
                     std::get<ClientPacket::MapInfo>(packet.msg);
                 client_entities_DO_NOT_USE = info.map.entities();
                 client_items_DO_NOT_USE = info.map.items();
+            } break;
+
+            case ClientPacket::MsgType::PlayerRare: {
+                ClientPacket::PlayerRareInfo info =
+                    std::get<ClientPacket::PlayerRareInfo>(packet.msg);
+                update_remote_player_rare(info.client_id, info.model_index);
             } break;
 
             default:

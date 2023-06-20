@@ -19,6 +19,7 @@ inline void update_character_model_from_index(std::shared_ptr<Entity> entity,
     if (usesCharacterModel.value_same_as_last_render()) return;
 
     if (entity->is_missing<ModelRenderer>()) return;
+
     ModelRenderer& renderer = entity->get<ModelRenderer>();
 
     renderer.update(ModelInfo{

@@ -27,6 +27,13 @@ struct UsesCharacterModel : public BaseComponent {
 
     void mark_change_completed() { changed = false; }
 
+    [[nodiscard]] int index_server_only() const { return index; }
+
+    void update_index_CLIENT_ONLY(int newind) {
+        index = newind % character_models.size();
+        changed = true;
+    }
+
    private:
     std::array<std::string, 3> character_models = {
         "character_duck",

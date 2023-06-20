@@ -84,8 +84,8 @@ struct Entity {
 
     template<typename T, typename... TArgs>
     T& addComponent(TArgs&&... args) {
-        log_warn("adding component_id:{} {} to entity_id: {}",
-                 components::get_type_id<T>(), type_name<T>(), id);
+        log_trace("adding component_id:{} {} to entity_id: {}",
+                  components::get_type_id<T>(), type_name<T>(), id);
 
         // TODO eventually enforce this
         if (this->has<T>()) {
@@ -378,6 +378,11 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
         static_cast<Transform::FrontFaceDirection>(facing_direction));
 }
 
+static void update_player_rare_remotely(std::shared_ptr<Entity> entity,
+                                        int model_index) {
+    entity->get<UsesCharacterModel>().update_index_CLIENT_ONLY(model_index);
+}
+
 static Entity* make_player(vec3 p) {
     Entity* player = make_entity();
     add_person_components(player);
@@ -494,7 +499,7 @@ static Entity* make_table(vec2 pos) {
 
 static Entity* make_character_switcher(vec2 pos) {
     Entity* character_switcher =
-        entities::make_furniture(pos, ui::color::brown, ui::color::brown);
+        entities::make_furniture(pos, ui::color::green, ui::color::yellow);
 
     character_switcher->addComponent<HasWork>().init(
         [](HasWork& hasWork, std::shared_ptr<Entity> person, float dt) {

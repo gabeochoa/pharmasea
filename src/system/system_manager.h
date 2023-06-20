@@ -412,6 +412,7 @@ inline void process_input(const std::shared_ptr<Entity> entity,
         return;
     }
 
+    // TODO eventually clean this up
     std::shared_ptr<Entity> player = dynamic_pointer_cast<Entity>(entity);
     if (!player) return;
 
@@ -925,7 +926,9 @@ struct SystemManager {
             system_manager::collect_user_input(entity, dt);
             system_manager::update_held_item_position(entity, dt);
 
-            // This could run only in lobby if we wanted to distinguish
+            // TODO this is in the render manager but its not really a render
+            // thing but at the same time it kinda is idk This could run only in
+            // lobby if we wanted to distinguish
             system_manager::render_manager::update_character_model_from_index(
                 entity, dt);
         }

@@ -62,6 +62,7 @@ struct ClientPacket {
         PlayerJoin,
         PlayerLeave,
         PlayerLocation,
+        PlayerRare,
     } msg_type;
 
     struct AnnouncementInfo {
@@ -108,11 +109,16 @@ struct ClientPacket {
         std::string username{};
     };
 
+    struct PlayerRareInfo {
+        int client_id = -1;
+        int model_index;
+    };
+
     typedef std::variant<
         ClientPacket::AnnouncementInfo, ClientPacket::PlayerControlInfo,
         ClientPacket::PlayerJoinInfo, ClientPacket::GameStateInfo,
         ClientPacket::MapInfo, ClientPacket::PlayerInfo,
-        ClientPacket::PlayerLeaveInfo>
+        ClientPacket::PlayerLeaveInfo, ClientPacket::PlayerRareInfo>
         Msg;
 
     Msg msg;
@@ -144,6 +150,9 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
             },
             [&](ClientPacket::PlayerLeaveInfo info) {
                 return fmt::format("PlayerLeave({})", info.client_id);
+            },
+            [&](ClientPacket::PlayerRareInfo info) {
+                return fmt::format("PlayerRare({})", info.client_id);
             },
             [&](auto) { return std::string(" -- invalid operator<< --"); }},
         msgtype);
@@ -207,6 +216,10 @@ void serialize(S& s, ClientPacket& packet) {
                   s.value4b(info.location[1]);
                   s.value4b(info.location[2]);
                   s.value4b(info.facing_direction);
+              },
+              [](S& s, ClientPacket::PlayerRareInfo& info) {
+                  s.value4b(info.client_id);
+                  s.value4b(info.model_index);
               },
           });
 }
