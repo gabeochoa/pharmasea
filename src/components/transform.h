@@ -33,9 +33,7 @@ struct Transform : public BaseComponent {
         return DirectionToFrontFaceMap.at(degreesOffset % 360);
     }
 
-    vec3 raw_position;
     vec3 prev_position;
-    vec3 position;
     FrontFaceDirection face_direction = FrontFaceDirection::FORWARD;
     vec3 size;
 
@@ -49,9 +47,27 @@ struct Transform : public BaseComponent {
         size = sz;
     }
 
-    void update(vec3 npos) { raw_position = npos; }
+    void update(vec3 npos) {
+        this->raw_position = npos;
+        sync();
+    }
+    void update_x(float x) {
+        this->raw_position.x = x;
+        sync();
+    }
+    void update_y(float y) {
+        this->raw_position.y = y;
+        sync();
+    }
+    void update_z(float z) {
+        this->raw_position.z = z;
+        sync();
+    }
 
     [[nodiscard]] vec2 as2() const { return vec::to2(this->position); }
+
+    [[nodiscard]] vec3 raw() const { return this->raw_position; }
+    [[nodiscard]] vec3 pos() const { return this->position; }
 
     [[nodiscard]] virtual BoundingBox raw_bounds() const {
         return get_bounds(this->raw_position, this->size);
@@ -70,6 +86,15 @@ struct Transform : public BaseComponent {
     }
 
    private:
+    void sync() {
+        // TODO is there a way for us to figure out if this
+        // is a snappable entity?
+        this->position = this->raw_position;
+    }
+
+    vec3 position;
+    vec3 raw_position;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
@@ -83,6 +108,6 @@ struct Transform : public BaseComponent {
 };
 
 std::ostream& operator<<(std::ostream& os, const Transform& t) {
-    os << "Transform<> " << t.position << " " << t.size;
+    os << "Transform<> " << t.pos() << " " << t.size;
     return os;
 }

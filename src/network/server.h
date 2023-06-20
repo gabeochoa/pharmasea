@@ -193,7 +193,7 @@ struct Server {
 
         // TODO interpolate our old position and new position so its smoother
         SystemManager::get().process_inputs(Entities{player}, info.inputs);
-        auto updated_position = player->get<Transform>().position;
+        auto updated_position = player->get<Transform>().pos();
 
         // TODO if the position and face direction didnt change
         //      then we can early return

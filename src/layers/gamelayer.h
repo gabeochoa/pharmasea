@@ -84,7 +84,7 @@ struct GameLayer : public Layer {
 
         auto act = GLOBALS.get_ptr<Entity>("active_camera_target");
         if (act) {
-            cam->updateToTarget(act->get<Transform>().position);
+            cam->updateToTarget(act->get<Transform>().pos());
         }
         cam->updateCamera();
 

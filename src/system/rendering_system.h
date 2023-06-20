@@ -41,10 +41,9 @@ inline bool render_simple_highlighted(std::shared_ptr<Entity> entity, float) {
     Color f = ui::color::getHighlighted(renderer.face_color);
     Color b = ui::color::getHighlighted(renderer.base_color);
     // TODO replace size with Bounds component when it exists
-    DrawCubeCustom(transform.raw_position, transform.size.x, transform.size.y,
-                   transform.size.z,
-                   transform.FrontFaceDirectionMap.at(transform.face_direction),
-                   f, b);
+    DrawCubeCustom(
+        transform.raw(), transform.size.x, transform.size.y, transform.size.z,
+        transform.FrontFaceDirectionMap.at(transform.face_direction), f, b);
     return true;
 }
 
@@ -54,7 +53,7 @@ inline bool render_simple_normal(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<SimpleColoredBoxRenderer>()) return false;
     SimpleColoredBoxRenderer& renderer =
         entity->get<SimpleColoredBoxRenderer>();
-    DrawCubeCustom(transform.raw_position, transform.size.x, transform.size.y,
+    DrawCubeCustom(transform.raw(), transform.size.x, transform.size.y,
                    transform.size.z,
                    transform.FrontFaceDirectionMap.at(transform.face_direction),
                    renderer.face_color, renderer.base_color);
@@ -66,7 +65,7 @@ inline bool render_bounding_box(std::shared_ptr<Entity> entity, float dt) {
     Transform& transform = entity->get<Transform>();
 
     DrawBoundingBox(transform.bounds(), MAROON);
-    DrawFloatingText(transform.raw_position, Preload::get().font,
+    DrawFloatingText(transform.raw(), Preload::get().font,
                      fmt::format("{}", entity->id).c_str());
     return true;
 }
@@ -102,9 +101,9 @@ inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
 
     DrawModelEx(renderer.model(),
                 {
-                    transform.position.x + model_info.position_offset.x,
-                    transform.position.y + model_info.position_offset.y,
-                    transform.position.z + model_info.position_offset.z,
+                    transform.pos().x + model_info.position_offset.x,
+                    transform.pos().y + model_info.position_offset.y,
+                    transform.pos().z + model_info.position_offset.z,
                 },
                 vec3{0.f, 1.f, 0.f}, rotation_angle,
                 transform.size * model_info.size_scale, base);
@@ -131,9 +130,9 @@ inline bool render_model_normal(std::shared_ptr<Entity> entity, float) {
     raylib::DrawModelEx(
         renderer.model(),
         {
-            transform.position.x + model_info.position_offset.x,
-            transform.position.y + model_info.position_offset.y,
-            transform.position.z + model_info.position_offset.z,
+            transform.pos().x + model_info.position_offset.x,
+            transform.pos().y + model_info.position_offset.y,
+            transform.pos().z + model_info.position_offset.z,
         },
         vec3{0, 1, 0}, model_info.rotation_angle + rotation_angle,
         transform.size * model_info.size_scale, WHITE /*this->base_color*/);
@@ -172,9 +171,11 @@ inline void render_floating_name(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<Transform>()) return;
     const Transform& transform = entity->get<Transform>();
 
-    raylib::DrawFloatingText(
-        transform.raw_position + vec3{0, 0.5f * TILESIZE, 0},
-        Preload::get().font, hasName.name().c_str());
+    // log_warn("drawing floating name {} for {} @ {} ({})", hasName.name(),
+    // entity->id, transform.position, transform.raw_position);
+
+    raylib::DrawFloatingText(transform.raw() + vec3{0, 0.5f * TILESIZE, 0},
+                             Preload::get().font, hasName.name().c_str());
 }
 
 inline void render_progress_bar(std::shared_ptr<Entity> entity, float) {
@@ -194,7 +195,7 @@ inline void render_progress_bar(std::shared_ptr<Entity> entity, float) {
     const int full = hasWork.scale_length(length);
     const int empty = length - full;
     DrawFloatingText(                                                     //
-        transform.raw_position + vec3({0, TILESIZE, 0}),                  //
+        transform.raw() + vec3({0, TILESIZE, 0}),                         //
         Preload::get().font,                                              //
         fmt::format("[{:=>{}}{: >{}}]", "", full, "", empty * 2).c_str()  //
     );

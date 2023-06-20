@@ -18,11 +18,11 @@
 #include "job_system.h"
 #include "rendering_system.h"
 
-#define TRACY_FRAME_MARK(x) 0
-#define TRACY_ZONE_SCOPED 0
-#define TRACY_ZONE(x) 0
-#define TRACY_ZONE_NAMED(x, y, z) 0
-#define TRACY_LOG(msg, size) 0
+// #define TRACY_FRAME_MARK(x) 0
+// #define TRACY_ZONE_SCOPED 0
+// #define TRACY_ZONE(x) 0
+// #define TRACY_ZONE_NAMED(x, y, z) 0
+// #define TRACY_LOG(msg, size) 0
 
 namespace system_manager {
 
@@ -31,9 +31,9 @@ inline void transform_snapper(std::shared_ptr<Entity> entity, float) {
     Transform& transform = entity->get<Transform>();
 
     if (entity->has<IsSnappable>()) {
-        transform.position = transform.snap_position();
+        transform.update(transform.snap_position());
     } else {
-        transform.position = transform.raw_position;
+        transform.update(transform.raw());
     }
 }
 
@@ -49,7 +49,7 @@ inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
 
     if (can_hold_furniture.empty()) return;
 
-    auto new_pos = transform.position;
+    auto new_pos = transform.pos();
     if (transform.face_direction & Transform::FrontFaceDirection::FORWARD) {
         new_pos.z += TILESIZE;
     }
@@ -76,7 +76,7 @@ inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<Transform>()) return;
     const Transform& transform = entity->get<Transform>();
 
-    vec3 new_pos = transform.position;
+    vec3 new_pos = transform.pos();
 
     // TODO disabling custom positions for now until i can figure out the seg
     // fault
@@ -183,14 +183,14 @@ inline void person_update_given_new_pos(int id, Transform& transform,
     int facedir_x = -1;
     int facedir_z = -1;
 
-    vec3 delta_distance_x = new_pos_x - transform.raw_position;
+    vec3 delta_distance_x = new_pos_x - transform.raw();
     if (delta_distance_x.x > 0) {
         facedir_x = Transform::FrontFaceDirection::RIGHT;
     } else if (delta_distance_x.x < 0) {
         facedir_x = Transform::FrontFaceDirection::LEFT;
     }
 
-    vec3 delta_distance_z = new_pos_z - transform.raw_position;
+    vec3 delta_distance_z = new_pos_z - transform.raw();
     if (delta_distance_z.z > 0) {
         facedir_z = Transform::FrontFaceDirection::FORWARD;
     } else if (delta_distance_z.z < 0) {
@@ -260,10 +260,10 @@ inline void person_update_given_new_pos(int id, Transform& transform,
         // ---------------------
 
         if (!would_collide_x) {
-            transform.raw_position.x = new_pos_x.x;
+            transform.update_x(new_pos_x.x);
         }
         if (!would_collide_z) {
-            transform.raw_position.z = new_pos_z.z;
+            transform.update_z(new_pos_z.z);
         }
 
         // This value determines how "far" to impart a push force on the
@@ -368,7 +368,7 @@ inline void process_player_movement_input(std::shared_ptr<Entity> entity,
     HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
 
     const float speed = hasBaseSpeed.speed() * dt;
-    auto new_position = transform.position;
+    auto new_position = transform.pos();
 
     if (input_name == InputName::PlayerLeft) {
         new_position.x -= input_amount * speed;
@@ -382,7 +382,7 @@ inline void process_player_movement_input(std::shared_ptr<Entity> entity,
 
     person_update_given_new_pos(entity->id, transform, player, dt, new_position,
                                 new_position);
-    transform.position = transform.raw_position;
+    transform.update(transform.raw());
 };
 
 inline void process_input(const std::shared_ptr<Entity> entity,
@@ -858,7 +858,7 @@ void process_is_container_and_should_destroy_item(
             // TODO is this the api we want
             canHold.item().reset(
                 // TODO what is this color and what is it for
-                new I(entity->get<Transform>().position,
+                new I(entity->get<Transform>().pos(),
                       Color({255, 15, 240, 255})));
             ItemHelper::addItem(canHold.item());
         };

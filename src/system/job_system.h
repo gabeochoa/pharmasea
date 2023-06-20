@@ -552,19 +552,19 @@ inline void update_position_from_job(std::shared_ptr<Entity> entity, float dt) {
     // when turning. Before I feel like they were able to slide but it seems
     // like not anymore?
 
-    auto new_pos_x = transform.raw_position;
-    if (tar.x > transform.raw_position.x) new_pos_x.x += speed;
-    if (tar.x < transform.raw_position.x) new_pos_x.x -= speed;
+    auto new_pos_x = transform.raw();
+    if (tar.x > transform.raw().x) new_pos_x.x += speed;
+    if (tar.x < transform.raw().x) new_pos_x.x -= speed;
 
-    auto new_pos_z = transform.raw_position;
-    if (tar.y > transform.raw_position.z) new_pos_z.z += speed;
-    if (tar.y < transform.raw_position.z) new_pos_z.z -= speed;
+    auto new_pos_z = transform.raw();
+    if (tar.y > transform.raw().z) new_pos_z.z += speed;
+    if (tar.y < transform.raw().z) new_pos_z.z -= speed;
 
     // TODO do we need to unr the whole person_update...() function with
     // collision?
 
-    transform.position.x = new_pos_x.x;
-    transform.position.z = new_pos_z.z;
+    transform.update_x(new_pos_x.x);
+    transform.update_z(new_pos_z.z);
 }
 
 inline void render_job_visual(std::shared_ptr<Entity> entity, float) {

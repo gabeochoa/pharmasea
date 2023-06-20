@@ -214,7 +214,7 @@ struct Entity {
      * */
     [[nodiscard]] virtual BoundingBox bounds() const {
         // TODO fix  size
-        return get_bounds(this->get<Transform>().position, this->size());
+        return get_bounds(this->get<Transform>().pos(), this->size());
     }
 
     /*
@@ -326,7 +326,7 @@ static Entity* make_entity() {
 static void add_person_components(Entity* person) {
     add_entity_components(person);
 
-    person->get<Transform>().position = {0, 0, 0};
+    person->get<Transform>().update({0, 0, 0});
     person->get<Transform>().size =
         vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
 
@@ -373,7 +373,7 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
     Transform& transform = entity->get<Transform>();
 
     // TODO add setters
-    transform.position = vec3{location[0], location[1], location[2]};
+    transform.update(vec3{location[0], location[1], location[2]});
     transform.face_direction =
         static_cast<Transform::FrontFaceDirection>(facing_direction);
 }
@@ -454,7 +454,7 @@ namespace entities {
 static Entity* make_furniture(vec2 pos, Color face, Color base) {
     Entity* furniture = make_entity();
 
-    furniture->get<Transform>().position = {pos.x, 0, pos.y};
+    furniture->get<Transform>().update({pos.x, 0, pos.y});
 
     // TODO does all furniture have this?
     furniture->addComponent<CanHoldItem>();

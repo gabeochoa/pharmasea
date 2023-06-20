@@ -119,7 +119,7 @@ struct LobbyMapInfo : public LevelInfo {
             table.reset(entities::make_table(vec2{3, 3}));
             EntityHelper::addEntity(table);
             log_warn("adding a new table with {} @ {}", table->id,
-                     table->get<Transform>().position);
+                     table->get<Transform>().pos());
         }
     }
 
