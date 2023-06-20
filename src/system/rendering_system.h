@@ -54,6 +54,15 @@ inline bool render_simple_normal(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<SimpleColoredBoxRenderer>()) return false;
     SimpleColoredBoxRenderer& renderer =
         entity->get<SimpleColoredBoxRenderer>();
+
+    // This logif exists because i had a problem where all furniture was
+    // size(0,0,0) and took me a while to figure it out.
+    log_ifx((transform.sizex() == 0 || transform.sizey() == 0 ||
+             transform.sizez() == 0),
+            LOG_WARN, "Trying to render entity {} that has size {}", entity->id,
+            transform.size());
+    //
+
     DrawCubeCustom(
         transform.raw(), transform.sizex(), transform.sizey(),
         transform.sizez(),
