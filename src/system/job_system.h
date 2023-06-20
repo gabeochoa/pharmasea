@@ -509,7 +509,7 @@ inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
 
     const CanBePushed& cbp = entity->get<CanBePushed>();
 
-    if (cbp.pushed_force.x != 0.0f || cbp.pushed_force.z != 0.0f) {
+    if (cbp.pushed_force().x != 0.0f || cbp.pushed_force().z != 0.0f) {
         job->path.clear();
         job->local = {};
         SoundLibrary::get().play("roblox");

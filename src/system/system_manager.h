@@ -163,11 +163,11 @@ inline void move_entity_based_on_push_force(std::shared_ptr<Entity> entity,
                                             vec3& new_pos_z) {
     CanBePushed& cbp = entity->get<CanBePushed>();
 
-    new_pos_x.x += cbp.pushed_force.x;
-    cbp.pushed_force.x = 0.0f;
+    new_pos_x.x += cbp.pushed_force().x;
+    cbp.update_x(0.0f);
 
-    new_pos_z.z += cbp.pushed_force.z;
-    cbp.pushed_force.z = 0.0f;
+    new_pos_z.z += cbp.pushed_force().z;
+    cbp.update_z(0.0f);
 }
 
 inline void person_update_given_new_pos(int id, Transform& transform,
@@ -278,12 +278,18 @@ inline void person_update_given_new_pos(int id, Transform& transform,
                         const float random_jitter =
                             randSign() * TILESIZE / 2.0f;
                         if (facedir_x & Transform::FrontFaceDirection::LEFT) {
-                            cbp.pushed_force.x += tile_div_push_mod;
-                            cbp.pushed_force.z += random_jitter;
+                            cbp.update({
+                                cbp.pushed_force().x + tile_div_push_mod,
+                                cbp.pushed_force().y,
+                                cbp.pushed_force().z + random_jitter,
+                            });
                         }
                         if (facedir_x & Transform::FrontFaceDirection::RIGHT) {
-                            cbp.pushed_force.x -= tile_div_push_mod;
-                            cbp.pushed_force.z += random_jitter;
+                            cbp.update({
+                                cbp.pushed_force().x - tile_div_push_mod,
+                                cbp.pushed_force().y,
+                                cbp.pushed_force().z + random_jitter,
+                            });
                         }
                     }
                 }
@@ -298,12 +304,18 @@ inline void person_update_given_new_pos(int id, Transform& transform,
                             randSign() * TILESIZE / 2.0f;
                         if (facedir_z &
                             Transform::FrontFaceDirection::FORWARD) {
-                            cbp.pushed_force.x += random_jitter;
-                            cbp.pushed_force.z += tile_div_push_mod;
+                            cbp.update({
+                                cbp.pushed_force().x + random_jitter,
+                                cbp.pushed_force().y,
+                                cbp.pushed_force().z + tile_div_push_mod,
+                            });
                         }
                         if (facedir_z & Transform::FrontFaceDirection::BACK) {
-                            cbp.pushed_force.x += random_jitter;
-                            cbp.pushed_force.z -= tile_div_push_mod;
+                            cbp.update({
+                                cbp.pushed_force().x + random_jitter,
+                                cbp.pushed_force().y,
+                                cbp.pushed_force().z - tile_div_push_mod,
+                            });
                         }
                     }
                 }
