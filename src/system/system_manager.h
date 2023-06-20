@@ -246,6 +246,8 @@ inline void person_update_given_new_pos(int id, Transform& transform,
             return EntityHelper::ForEachFlow::None;
         });
 
+        // TODO add debug mode that turns on noclip
+
         if (!would_collide_x) {
             transform.update_x(new_pos_x.x);
         }
