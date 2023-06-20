@@ -72,9 +72,7 @@ inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
 
     vec3 new_pos = transform.pos();
 
-    // TODO disabling custom positions for now until i can figure out the seg
-    // fault
-    if (false && entity->has<CustomHeldItemPosition>()) {
+    if (entity->has<CustomHeldItemPosition>()) {
         CustomHeldItemPosition& custom_item_position =
             entity->get<CustomHeldItemPosition>();
 
