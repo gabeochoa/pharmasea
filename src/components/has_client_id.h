@@ -5,13 +5,15 @@
 #include "base_component.h"
 
 struct HasClientID : public BaseComponent {
-    int client_id = -1;
-
     virtual ~HasClientID() {}
 
     void update(int new_client_id) { client_id = new_client_id; }
 
+    [[nodiscard]] int id() const { return client_id; }
+
    private:
+    int client_id = -1;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
