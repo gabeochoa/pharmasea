@@ -454,7 +454,8 @@ namespace entities {
 static Entity* make_furniture(vec2 pos, Color face, Color base) {
     Entity* furniture = make_entity();
 
-    furniture->get<Transform>().update({pos.x, 0, pos.y});
+    furniture->get<Transform>().init({pos.x, 0, pos.y},
+                                     {TILESIZE, TILESIZE, TILESIZE});
 
     // TODO does all furniture have this?
     furniture->addComponent<CanHoldItem>();
