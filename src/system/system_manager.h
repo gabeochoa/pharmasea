@@ -246,12 +246,6 @@ inline void person_update_given_new_pos(int id, Transform& transform,
             return EntityHelper::ForEachFlow::None;
         });
 
-        // TODO turn this back on
-        // had to turn it off because evryone is spawning together
-        would_collide_x = false;
-        would_collide_z = false;
-        // ---------------------
-
         if (!would_collide_x) {
             transform.update_x(new_pos_x.x);
         }
