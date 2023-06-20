@@ -148,7 +148,7 @@ inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
     }
 
     if (entity->has<CanBeHighlighted>() &&
-        entity->get<CanBeHighlighted>().is_highlighted) {
+        entity->get<CanBeHighlighted>().is_highlighted()) {
         bool used = render_model_highlighted(entity, dt);
         if (!used) {
             render_simple_highlighted(entity, dt);

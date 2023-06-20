@@ -18,12 +18,6 @@
 #include "job_system.h"
 #include "rendering_system.h"
 
-// #define TRACY_FRAME_MARK(x) 0
-// #define TRACY_ZONE_SCOPED 0
-// #define TRACY_ZONE(x) 0
-// #define TRACY_ZONE_NAMED(x, y, z) 0
-// #define TRACY_LOG(msg, size) 0
-
 namespace system_manager {
 
 inline void transform_snapper(std::shared_ptr<Entity> entity, float) {
@@ -141,7 +135,7 @@ inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
 inline void reset_highlighted(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanBeHighlighted>()) return;
     CanBeHighlighted& cbh = entity->get<CanBeHighlighted>();
-    cbh.is_highlighted = false;
+    cbh.update(false);
 }
 
 inline void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
@@ -160,7 +154,7 @@ inline void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
         [](std::shared_ptr<Furniture>) { return true; });
     if (!match) return;
     if (!match->has<CanBeHighlighted>()) return;
-    match->get<CanBeHighlighted>().is_highlighted = true;
+    match->get<CanBeHighlighted>().update(true);
 }
 
 // TODO We need like a temporary storage for this
