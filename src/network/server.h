@@ -208,7 +208,7 @@ struct Server {
             .msg_type = network::ClientPacket::MsgType::PlayerLocation,
             .msg = network::ClientPacket::PlayerInfo({
                 .facing_direction =
-                    static_cast<int>(player->get<Transform>().face_direction),
+                    static_cast<int>(player->get<Transform>().face_direction()),
                 .location =
                     {
                         updated_position.x,

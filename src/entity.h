@@ -144,7 +144,7 @@ struct Entity {
     static vec2 get_heading(std::shared_ptr<Entity> entity) {
         const float target_facing_ang =
             util::deg2rad(entity->get<Transform>().FrontFaceDirectionMap.at(
-                entity->get<Transform>().face_direction));
+                entity->get<Transform>().face_direction()));
         return vec2{
             cosf(target_facing_ang),
             sinf(target_facing_ang),
@@ -172,17 +172,17 @@ struct Entity {
         // TODO fix entity
         (void) turn_degrees;
         if (turn_degrees > 0 && turn_degrees <= 45) {
-            entity->get<Transform>().face_direction =
-                static_cast<Transform::FrontFaceDirection>(0);
+            entity->get<Transform>().update_face_direction(
+                static_cast<Transform::FrontFaceDirection>(0));
         } else if (turn_degrees > 45 && turn_degrees <= 135) {
-            entity->get<Transform>().face_direction =
-                static_cast<Transform::FrontFaceDirection>(90);
+            entity->get<Transform>().update_face_direction(
+                static_cast<Transform::FrontFaceDirection>(90));
         } else if (turn_degrees > 135 && turn_degrees <= 225) {
-            entity->get<Transform>().face_direction =
-                static_cast<Transform::FrontFaceDirection>(180);
+            entity->get<Transform>().update_face_direction(
+                static_cast<Transform::FrontFaceDirection>(180));
         } else if (turn_degrees > 225) {
-            entity->get<Transform>().face_direction =
-                static_cast<Transform::FrontFaceDirection>(270);
+            entity->get<Transform>().update_face_direction(
+                static_cast<Transform::FrontFaceDirection>(270));
         }
     }
 
@@ -221,9 +221,9 @@ struct Entity {
      * Rotate the facing direction of this entity, clockwise 90 degrees
      * */
     static void rotate_facing_clockwise(std::shared_ptr<Entity> entity) {
-        entity->get<Transform>().face_direction =
+        entity->get<Transform>().update_face_direction(
             entity->get<Transform>().offsetFaceDirection(
-                entity->get<Transform>().face_direction, 90);
+                entity->get<Transform>().face_direction(), 90));
     }
 
     /*
@@ -238,8 +238,8 @@ struct Entity {
     static vec2 tile_infront_given_player(std::shared_ptr<Entity> entity,
                                           int distance) {
         vec2 tile = vec::to2(entity->get<Transform>().snap_position());
-        return tile_infront_given_pos(tile, distance,
-                                      entity->get<Transform>().face_direction);
+        return tile_infront_given_pos(
+            tile, distance, entity->get<Transform>().face_direction());
     }
 
     /*
@@ -327,8 +327,8 @@ static void add_person_components(Entity* person) {
     add_entity_components(person);
 
     person->get<Transform>().update({0, 0, 0});
-    person->get<Transform>().size =
-        vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f};
+    person->get<Transform>().update_size(
+        vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f});
 
     person->addComponent<HasBaseSpeed>().update(10.f);
     // TODO why do we need the udpate() here?
@@ -374,8 +374,8 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
 
     // TODO add setters
     transform.update(vec3{location[0], location[1], location[2]});
-    transform.face_direction =
-        static_cast<Transform::FrontFaceDirection>(facing_direction);
+    transform.update_face_direction(
+        static_cast<Transform::FrontFaceDirection>(facing_direction));
 }
 
 static Entity* make_player(vec3 p) {

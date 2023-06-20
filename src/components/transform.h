@@ -33,18 +33,13 @@ struct Transform : public BaseComponent {
         return DirectionToFrontFaceMap.at(degreesOffset % 360);
     }
 
-    vec3 prev_position;
-    FrontFaceDirection face_direction = FrontFaceDirection::FORWARD;
-    vec3 size;
-
     virtual ~Transform() {}
 
     void init(vec3 pos, vec3 sz) {
         raw_position = pos;
-        prev_position = pos;
         position = pos;
 
-        size = sz;
+        _size = sz;
     }
 
     void update(vec3 npos) {
@@ -64,13 +59,25 @@ struct Transform : public BaseComponent {
         sync();
     }
 
+    void update_face_direction(FrontFaceDirection dir) { this->face = dir; }
+
+    [[nodiscard]] FrontFaceDirection face_direction() const {
+        return this->face;
+    }
     [[nodiscard]] vec2 as2() const { return vec::to2(this->position); }
 
     [[nodiscard]] vec3 raw() const { return this->raw_position; }
     [[nodiscard]] vec3 pos() const { return this->position; }
 
+    [[nodiscard]] vec3 size() const { return this->_size; }
+    [[nodiscard]] float sizex() const { return this->size().x; }
+    [[nodiscard]] float sizey() const { return this->size().y; }
+    [[nodiscard]] float sizez() const { return this->size().z; }
+
+    void update_size(vec3 sze) { this->_size = sze; }
+
     [[nodiscard]] virtual BoundingBox raw_bounds() const {
-        return get_bounds(this->raw_position, this->size);
+        return get_bounds(this->raw_position, this->size());
     }
 
     /*
@@ -78,7 +85,7 @@ struct Transform : public BaseComponent {
      * @returns BoundingBox the box
      * */
     [[nodiscard]] virtual BoundingBox bounds() const {
-        return get_bounds(this->position, this->size / 2.0f);
+        return get_bounds(this->position, this->size() / 2.0f);
     }
 
     [[nodiscard]] vec3 snap_position() const {
@@ -92,6 +99,8 @@ struct Transform : public BaseComponent {
         this->position = this->raw_position;
     }
 
+    FrontFaceDirection face = FrontFaceDirection::FORWARD;
+    vec3 _size;
     vec3 position;
     vec3 raw_position;
 
@@ -100,14 +109,13 @@ struct Transform : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
         s.object(raw_position);
-        s.object(prev_position);
         s.object(position);
-        s.value4b(face_direction);
-        s.object(size);
+        s.value4b(face);
+        s.object(_size);
     }
 };
 
 std::ostream& operator<<(std::ostream& os, const Transform& t) {
-    os << "Transform<> " << t.pos() << " " << t.size;
+    os << "Transform<> " << t.pos() << " " << t.size();
     return os;
 }

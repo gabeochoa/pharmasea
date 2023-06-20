@@ -42,8 +42,9 @@ inline bool render_simple_highlighted(std::shared_ptr<Entity> entity, float) {
     Color b = ui::color::getHighlighted(renderer.base());
     // TODO replace size with Bounds component when it exists
     DrawCubeCustom(
-        transform.raw(), transform.size.x, transform.size.y, transform.size.z,
-        transform.FrontFaceDirectionMap.at(transform.face_direction), f, b);
+        transform.raw(), transform.sizex(), transform.sizey(),
+        transform.sizez(),
+        transform.FrontFaceDirectionMap.at(transform.face_direction()), f, b);
     return true;
 }
 
@@ -53,10 +54,11 @@ inline bool render_simple_normal(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<SimpleColoredBoxRenderer>()) return false;
     SimpleColoredBoxRenderer& renderer =
         entity->get<SimpleColoredBoxRenderer>();
-    DrawCubeCustom(transform.raw(), transform.size.x, transform.size.y,
-                   transform.size.z,
-                   transform.FrontFaceDirectionMap.at(transform.face_direction),
-                   renderer.face(), renderer.base());
+    DrawCubeCustom(
+        transform.raw(), transform.sizex(), transform.sizey(),
+        transform.sizez(),
+        transform.FrontFaceDirectionMap.at(transform.face_direction()),
+        renderer.face(), renderer.base());
     return true;
 }
 
@@ -97,7 +99,7 @@ inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
     float rotation_angle =
         // TODO make this api better
         180.f + static_cast<int>(transform.FrontFaceDirectionMap.at(
-                    transform.face_direction));
+                    transform.face_direction()));
 
     DrawModelEx(renderer.model(),
                 {
@@ -106,7 +108,7 @@ inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
                     transform.pos().z + model_info.position_offset.z,
                 },
                 vec3{0.f, 1.f, 0.f}, rotation_angle,
-                transform.size * model_info.size_scale, base);
+                transform.size() * model_info.size_scale, base);
 
     return true;
 }
@@ -125,7 +127,7 @@ inline bool render_model_normal(std::shared_ptr<Entity> entity, float) {
     float rotation_angle =
         // TODO make this api better
         180.f + static_cast<int>(transform.FrontFaceDirectionMap.at(
-                    transform.face_direction));
+                    transform.face_direction()));
 
     raylib::DrawModelEx(
         renderer.model(),
@@ -135,7 +137,7 @@ inline bool render_model_normal(std::shared_ptr<Entity> entity, float) {
             transform.pos().z + model_info.position_offset.z,
         },
         vec3{0, 1, 0}, model_info.rotation_angle + rotation_angle,
-        transform.size * model_info.size_scale, WHITE /*this->base_color*/);
+        transform.size() * model_info.size_scale, WHITE /*this->base_color*/);
 
     return true;
 }
