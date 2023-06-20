@@ -12,6 +12,7 @@
 struct HasWaitingQueue : public BaseComponent {
     virtual ~HasWaitingQueue() {}
 
+    // TODO privatize this stuff :0
     std::deque<std::shared_ptr<Entity>> ppl_in_line;
     int max_queue_size = 3;
     int next_line_position = 0;
