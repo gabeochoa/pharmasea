@@ -21,7 +21,11 @@ struct CanHoldItem : public BaseComponent {
         return dynamic_pointer_cast<T>(held_item);
     }
 
-    void update(std::shared_ptr<Item> item) { held_item = item; }
+    void update(std::shared_ptr<Item> item,
+                Item::HeldBy newHB = Item::HeldBy::NONE) {
+        held_item = item;
+        held_item->held_by = newHB;
+    }
 
     // TODO this isnt const because we want to write to the item
     // we could make this const and then expose certain things that we want to
