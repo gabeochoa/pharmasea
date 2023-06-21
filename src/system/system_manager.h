@@ -64,7 +64,7 @@ inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
 
 inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanHoldItem>()) return;
-    const CanHoldItem& can_hold_item = entity->get<CanHoldItem>();
+    CanHoldItem& can_hold_item = entity->get<CanHoldItem>();
     if (can_hold_item.empty()) return;
 
     if (entity->is_missing<Transform>()) return;
@@ -610,29 +610,34 @@ inline void process_input(const std::shared_ptr<Entity> entity,
             return;
 
         } else {
-            const auto _pickup_item_from_furniture = [&]() {
+            const auto _try_to_pickup_item_from_furniture = [&]() {
+                Transform& playerT = player->get<Transform>();
+
                 std::shared_ptr<Furniture> closest_furniture =
-                    EntityHelper::getMatchingEntityInFront<Furniture>(
-                        player->get<Transform>().as2(), cho.reach(),
-                        player->get<Transform>().face_direction(),
+                    EntityHelper::getClosestMatchingFurniture(
+                        playerT, cho.reach(),
                         [](std::shared_ptr<Furniture> furn) {
-                            // TODO fix
+                            if (furn->is_missing<CanHoldItem>()) return false;
                             return (furn->get<CanHoldItem>().item() != nullptr);
                         });
+
                 if (!closest_furniture) {
+                    // No matching furniture that also can hold item
                     return;
                 }
+
                 CanHoldItem& furnCanHold =
                     closest_furniture->get<CanHoldItem>();
+                std::shared_ptr<Item> item = furnCanHold.item();
 
-                player->get<CanHoldItem>().item() = furnCanHold.item();
-                player->get<CanHoldItem>().item()->held_by =
-                    Item::HeldBy::PLAYER;
+                CanHoldItem& playerCHI = player->get<CanHoldItem>();
+                playerCHI.item() = item;
+                playerCHI.item()->held_by = Item::HeldBy::PLAYER;
 
                 furnCanHold.item() = nullptr;
             };
 
-            _pickup_item_from_furniture();
+            _try_to_pickup_item_from_furniture();
 
             if (player->get<CanHoldItem>().is_holding_item()) return;
 

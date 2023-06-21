@@ -4,6 +4,7 @@
 #include <thread>
 
 #include "assert.h"
+#include "components/transform.h"
 #include "external_include.h"
 //
 #include "components/can_be_ghost_player.h"
@@ -217,6 +218,13 @@ struct EntityHelper {
             }
         }
         return best_so_far;
+    }
+
+    static std::shared_ptr<Entity> getClosestMatchingFurniture(
+        const Transform& transform, float range,
+        std::function<bool(std::shared_ptr<Furniture>)> filter) {
+        return EntityHelper::getMatchingEntityInFront<Furniture>(
+            transform.as2(), range, transform.face_direction(), filter);
     }
 
     // TODO i think this is slower because we are doing "outside mesh" as
