@@ -48,6 +48,9 @@ void person_update_given_new_pos(int id, Transform& transform,
         transform.update_face_direction(
             static_cast<Transform::FrontFaceDirection>(facedir_x | facedir_z));
     }
+    // TODO if anything spawns in anything else then it cant move,
+    // we need some way to handle popping people back to spawn or something if
+    // they get stuck
 
     // TODO what is this for
     // this->get<Transform>().face_direction =
