@@ -24,12 +24,13 @@ struct CanHoldItem : public BaseComponent {
     void update(std::shared_ptr<Item> item,
                 Item::HeldBy newHB = Item::HeldBy::NONE) {
         held_item = item;
-        held_item->held_by = newHB;
+        if (held_item) held_item->held_by = newHB;
     }
 
     // TODO this isnt const because we want to write to the item
     // we could make this const and then expose certain things that we want to
     // change separately like 'held_by'
+    // (change to use update instead and make this const)
     [[nodiscard]] std::shared_ptr<Item>& item() { return held_item; }
 
    private:
