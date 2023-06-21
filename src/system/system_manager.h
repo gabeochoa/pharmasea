@@ -915,7 +915,7 @@ struct SystemManager {
         }
     }
 
-    void render(const Entities& entities, float dt) const {
+    void render_entities(const Entities& entities, float dt) const {
         const auto debug_mode_on =
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
         if (debug_mode_on) {
@@ -925,7 +925,17 @@ struct SystemManager {
         }
     }
 
-    void render(float dt) const { render(EntityHelper::get_entities(), dt); }
+    void render(Items items, float dt) const {
+        render_entities(EntityHelper::get_entities(), dt);
+        render_items(items, dt);
+    }
+
+    void render_items(Items items, float) const {
+        for (auto i : items) {
+            if (i) i->render();
+            if (!i) log_warn("we have invalid items");
+        }
+    }
 
    private:
     void always_update(const std::vector<std::shared_ptr<Entity>>& entity_list,

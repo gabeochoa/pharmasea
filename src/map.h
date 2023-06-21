@@ -54,7 +54,7 @@ struct Map {
 
     void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
-        SystemManager::get().render(
+        SystemManager::get().render_entities(
             container_cast(remote_players_NOT_SERIALIZED,
                            "converting sp<RemotePlayer> to sp<Entity> as these "
                            "are not serialized and so not part of level info"),

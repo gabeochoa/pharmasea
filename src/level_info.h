@@ -51,13 +51,7 @@ struct LevelInfo {
 
     virtual void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
-
-        system_manager.render(dt);
-
-        for (auto i : items) {
-            if (i) i->render();
-            if (!i) log_warn("we have invalid items");
-        }
+        system_manager.render(items, dt);
     }
 
     virtual void onDrawUI(float) {}
