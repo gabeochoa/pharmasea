@@ -40,7 +40,7 @@ struct Server {
     AtomicQueue<ClientMessage> incoming_message_queue;
     AtomicQueue<ClientPacket> packet_queue;
     std::shared_ptr<internal::Server> server_p;
-    std::map<int, std::shared_ptr<Entity> > players;
+    std::map<int, std::shared_ptr<Entity>> players;
     std::shared_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
     std::thread::id thread_id;
@@ -179,10 +179,22 @@ struct Server {
             packet_queue.pop_front();
         }
 
+        // TODO right now we have the run update on all the server players
+        // this kinda makes sense but most of the game doesnt need this.
+        //
+        // the big ones are held item/furniture position updates
+        // without this the position doesnt change until you drop it
+        //
+        // TODO idk the perf implications of this (map->vec)
+        std::vector<std::shared_ptr<Entity>> value;
+        for (auto it = players.begin(); it != players.end(); ++it) {
+            value.push_back(it->second);
+        }
+
         if (MenuState::s_is_game(current_menu_state)) {
             TRACY_ZONE(tracy_server_gametick);
             if (next_update_timer.test(dt)) {
-                pharmacy_map->onUpdate(next_update_timer / 1000.f);
+                pharmacy_map->_onUpdate(value, next_update_timer / 1000.f);
             }
         }
 
