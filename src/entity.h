@@ -88,7 +88,6 @@ struct Entity {
         log_trace("adding component_id:{} {} to entity_id: {}",
                   components::get_type_id<T>(), type_name<T>(), id);
 
-        // TODO eventually enforce this
         if (this->has<T>()) {
             log_warn(
                 "This entity {}, {} already has this component attached id: "
@@ -96,7 +95,9 @@ struct Entity {
                 "component {}",
                 this->get<DebugName>().name(), id, components::get_type_id<T>(),
                 type_name<T>());
-            return this->get<T>();
+
+            M_ASSERT(false, "duplicate component");
+            // return this->get<T>();
         }
 
         T* component(new T(std::forward<TArgs>(args)...));
@@ -182,16 +183,15 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 // };
 //
 
-static void add_entity_components(Entity* entity) {
-    entity->addComponent<Transform>();
-
-    // TODO figure out which entities need these
-    entity->addComponent<CanBeHeld>();
-}
-
 struct DebugOptions {
     std::string name;
 };
+
+static void add_entity_components(Entity* entity) {
+    entity->addComponent<Transform>();
+    // TODO figure out which entities need these
+    entity->addComponent<CanBeHeld>();
+}
 
 static Entity* make_entity(const DebugOptions& options, vec3 p = {-2, -2, -2}) {
     Entity* entity = new Entity();
@@ -205,8 +205,6 @@ static Entity* make_entity(const DebugOptions& options, vec3 p = {-2, -2, -2}) {
 }
 
 static void add_person_components(Entity* person) {
-    add_entity_components(person);
-
     // TODO idk why but you spawn under the ground without this
     person->get<Transform>().update_y(0);
 
@@ -366,9 +364,6 @@ static Entity* make_table(vec2 pos) {
     Entity* table = entities::make_furniture(
         DebugOptions{.name = "table"}, pos, ui::color::brown, ui::color::brown);
 
-    table->addComponent<SimpleColoredBoxRenderer>().update(ui::color::brown,
-                                                           ui::color::brown);
-
     table->get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);
 
@@ -505,7 +500,7 @@ static Entity* make_wall(vec2 pos, Color c) {
     // return (get<CanHoldItem>().is_holding_item() && can_take_from);
     // }
 
-    conveyer->addComponent<CustomHeldItemPosition>().init(
+    conveyer->get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Conveyer);
     conveyer->addComponent<ConveysHeldItem>();
 
