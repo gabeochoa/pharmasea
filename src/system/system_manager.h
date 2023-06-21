@@ -32,17 +32,13 @@ inline void transform_snapper(std::shared_ptr<Entity> entity, float) {
     }
 }
 
-inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
-                                           float) {
-    const Transform& transform = entity->get<Transform>();
+void update_held_furniture_position(std::shared_ptr<Entity> entity, float) {
+    if (entity->is_missing<CanHoldFurniture>()) return;
 
+    const Transform& transform = entity->get<Transform>();
     // TODO if cannot be placed in this spot make it obvious to the user
 
-    if (entity->is_missing<CanHoldFurniture>()) return;
     CanHoldFurniture& can_hold_furniture = entity->get<CanHoldFurniture>();
-
-    log_if(!can_hold_furniture.empty(), "entity {} {}", entity->id,
-           entity->get<DebugName>().name());
 
     if (can_hold_furniture.empty()) return;
 
@@ -66,9 +62,16 @@ inline void update_held_furniture_position(std::shared_ptr<Entity> entity,
 inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanHoldItem>()) return;
     CanHoldItem& can_hold_item = entity->get<CanHoldItem>();
+
+    // auto name = entity->get<DebugName>().name();
+    // if (name != "table" && name != "register" && name != "aiperson" &&
+    // name != "wall" && name != "grabber" && name != "conveyer" &&
+    // name != "character switcher" && name != "item container") {
+    // log_warn("entity {} {} {}", name, entity->id, can_hold_item.empty());
+    // }
+
     if (can_hold_item.empty()) return;
 
-    if (entity->is_missing<Transform>()) return;
     const Transform& transform = entity->get<Transform>();
 
     vec3 new_pos = transform.pos();
