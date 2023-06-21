@@ -58,7 +58,9 @@ struct Item {
 
     virtual vec3 model_scale() const { return {0.5f, 0.5f, 0.5f}; }
 
-    virtual void render(bool render_held_item = true) const {
+    virtual void render(
+        /* callers outside this function should not set this value*/
+        bool render_held_item = true) const {
         // Dont render when held by another item
         // but do render if we are being rendered by our parent
         if (held_by == HeldBy::ITEM && !render_held_item) {
