@@ -925,11 +925,6 @@ struct SystemManager {
         }
     }
 
-    void render(Items items, float dt) const {
-        render_entities(EntityHelper::get_entities(), dt);
-        render_items(items, dt);
-    }
-
     void render_items(Items items, float) const {
         for (auto i : items) {
             if (i) i->render();

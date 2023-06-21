@@ -51,7 +51,8 @@ struct LevelInfo {
 
     virtual void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
-        system_manager.render(items, dt);
+        system_manager.render_entities(entities, dt);
+        system_manager.render_items(items, dt);
     }
 
     virtual void onDrawUI(float) {}
