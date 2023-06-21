@@ -210,6 +210,9 @@ static void add_person_components(Entity* person) {
     // TODO idk why but you spawn under the ground without this
     person->get<Transform>().update_y(0);
 
+    person->addComponent<CanHoldItem>();
+    person->addComponent<CanBePushed>();
+
     person->get<Transform>().update_size(
         vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f});
 
