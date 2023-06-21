@@ -167,7 +167,7 @@ struct EntityHelper {
         int cur_step = 0;
         while (cur_step <= range) {
             auto tile =
-                Entity::tile_infront_given_pos(pos, cur_step, direction);
+                Transform::tile_infront_given_pos(pos, cur_step, direction);
 
             for (auto& e : get_entities()) {
                 auto current_entity = dynamic_pointer_cast<T>(e);
@@ -262,7 +262,8 @@ struct EntityHelper {
         auto bounds = get_bounds({pos.x, 0.f, pos.y}, {TILESIZE});
         bool hit_impassible_entity = false;
         forEachEntity([&](auto entity) {
-            if (is_collidable(entity) && entity->collides(bounds)) {
+            if (is_collidable(entity) &&
+                entity->template get<Transform>().collides(bounds)) {
                 hit_impassible_entity = true;
                 return ForEachFlow::Break;
             }

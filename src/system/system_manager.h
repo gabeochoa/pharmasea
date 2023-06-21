@@ -227,11 +227,13 @@ inline void person_update_given_new_pos(int id, Transform& transform,
             if (!is_collidable(person)) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if (CheckCollisionBoxes(new_bounds_x, entity->bounds())) {
+            if (CheckCollisionBoxes(
+                    new_bounds_x, entity->template get<Transform>().bounds())) {
                 would_collide_x = true;
                 collided_entity_x = entity;
             }
-            if (CheckCollisionBoxes(new_bounds_y, entity->bounds())) {
+            if (CheckCollisionBoxes(
+                    new_bounds_y, entity->template get<Transform>().bounds())) {
                 would_collide_z = true;
                 collided_entity_z = entity;
             }
@@ -431,7 +433,7 @@ inline void process_input(const std::shared_ptr<Entity> entity,
                 });
 
         if (!match) return;
-        Entity::rotate_facing_clockwise(match);
+        match->get<Transform>().rotate_facing_clockwise();
     };
 
     const auto work_furniture = [player, frame_dt]() {
@@ -669,8 +671,8 @@ inline void process_input(const std::shared_ptr<Entity> entity,
                 auto hf = ourCHF.furniture();
 
                 hf->get<CanBeHeld>().update(false);
-                hf->get<Transform>().update(vec::snap(
-                    vec::to3(Entity::tile_infront_given_player(player, 1))));
+                hf->get<Transform>().update(vec::snap(vec::to3(
+                    player->get<Transform>().tile_infront_given_player(1))));
 
                 ourCHF.update(nullptr);
             };

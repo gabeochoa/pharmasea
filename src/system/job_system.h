@@ -256,8 +256,8 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
             HasWaitingQueue& hasWaitingQueue = reg->get<HasWaitingQueue>();
             hasWaitingQueue.add_customer(customer);
             // the place the customers stand is 1 tile infront of the register
-            auto front = Entity::tile_infront_given_player(
-                reg, (hasWaitingQueue.next_line_position + 1) * 2);
+            auto front = reg->get<Transform>().tile_infront_given_player(
+                (hasWaitingQueue.next_line_position + 1) * 2);
             hasWaitingQueue.next_line_position++;
             return front;
         };
@@ -360,7 +360,9 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                     dynamic_pointer_cast<Entity>(closest_target),
                     dynamic_pointer_cast<Entity>(entity));
 
-                job->end = Entity::tile_infront_given_player(closest_target, 1);
+                job->end =
+                    closest_target->get<Transform>().tile_infront_given_player(
+                        1);
                 job->spot_in_line = position_in_line(closest_target, entity);
                 job->state = Job::State::HeadingToStart;
                 return;
@@ -409,8 +411,8 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
                 }
 
                 // otherwise walk up one spot
-                job->start =
-                    Entity::tile_infront_given_player(reg, job->spot_in_line);
+                job->start = reg->get<Transform>().tile_infront_given_player(
+                    job->spot_in_line);
                 job->state = Job::State::WorkingAtStart;
                 return;
             }

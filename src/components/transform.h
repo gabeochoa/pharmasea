@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../engine/util.h"
 #include "../std_include.h"
 #include "../vec_util.h"
 #include "../vendor_include.h"
@@ -85,14 +86,119 @@ struct Transform : public BaseComponent {
      * @returns BoundingBox the box
      * */
     [[nodiscard]] virtual BoundingBox bounds() const {
-        return get_bounds(this->position, this->size() / 2.0f);
+        return get_bounds(this->position, this->size());
     }
 
     [[nodiscard]] vec3 snap_position() const {
         return vec::snap(this->raw_position);
     }
 
+    /*
+     * Given another bounding box, check if it collides with this entity
+     *
+     * @param BoundingBox the box to test
+     * */
+    bool collides(BoundingBox b) const {
+        // TODO fix move to collision component
+        return CheckCollisionBoxes(bounds(), b);
+    }
+
+    /*
+     * Rotate the facing direction of this entity, clockwise 90 degrees
+     * */
+    void rotate_facing_clockwise() {
+        update_face_direction(offsetFaceDirection(face_direction(), 90));
+    }
+
+    /*
+     * Returns the location of the tile `distance` distance in front of the
+     * entity
+     *
+     * @param entity, the entity to get the spot in front of
+     * @param int, how far in front to go
+     *
+     * @returns vec2 the location `distance` tiles ahead
+     * */
+    vec2 tile_infront_given_player(int distance) {
+        vec2 tile = vec::to2(snap_position());
+        return tile_infront_given_pos(tile, distance, face_direction());
+    }
+
+    /*
+     * Given a tile, distance, and direction, returns the location of the
+     * tile `distance` distance in front of the tile
+     *
+     * @param vec2, the starting location
+     * @param int, how far in front to go
+     * @param Transform::FrontFaceDirection, which direction to go
+     *
+     * @returns vec2 the location `distance` tiles ahead
+     * */
+    static vec2 tile_infront_given_pos(
+        vec2 tile, int distance,
+        Transform::Transform::FrontFaceDirection direction) {
+        if (direction & Transform::FORWARD) {
+            tile.y += distance * TILESIZE;
+            tile.y = ceil(tile.y);
+        }
+        if (direction & Transform::BACK) {
+            tile.y -= distance * TILESIZE;
+            tile.y = floor(tile.y);
+        }
+
+        if (direction & Transform::RIGHT) {
+            tile.x += distance * TILESIZE;
+            tile.x = ceil(tile.x);
+        }
+        if (direction & Transform::LEFT) {
+            tile.x -= distance * TILESIZE;
+            tile.x = floor(tile.x);
+        }
+        return tile;
+    }
+
+    void turn_to_face_entity(Transform target) {
+        // dot product visualizer https://www.falstad.com/dotproduct/
+
+        // the angle between two vecs is
+        // @ = arccos(  (a dot b) / ( |a| * |b| ) )
+
+        // first get the headings and normalise so |x| = 1
+        const vec2 my_heading = vec::norm(this->get_heading());
+        const vec2 tar_heading = vec::norm(target.get_heading());
+        // dp = ( (a dot b )/ 1)
+        float dot_product = vec::dot2(my_heading, tar_heading);
+        // arccos(dp)
+        float theta_rad = acosf(dot_product);
+        float theta_deg = util::rad2deg(theta_rad);
+        int turn_degrees = (180 - (int) theta_deg) % 360;
+        // TODO fix entity
+        (void) turn_degrees;
+        if (turn_degrees > 0 && turn_degrees <= 45) {
+            update_face_direction(
+                static_cast<Transform::FrontFaceDirection>(0));
+        } else if (turn_degrees > 45 && turn_degrees <= 135) {
+            update_face_direction(
+                static_cast<Transform::FrontFaceDirection>(90));
+        } else if (turn_degrees > 135 && turn_degrees <= 225) {
+            update_face_direction(
+                static_cast<Transform::FrontFaceDirection>(180));
+        } else if (turn_degrees > 225) {
+            update_face_direction(
+                static_cast<Transform::FrontFaceDirection>(270));
+        }
+    }
+
    private:
+    vec2 get_heading() {
+        const float target_facing_ang =
+            util::deg2rad(FrontFaceDirectionMap.at(face_direction()));
+        return vec2{
+            cosf(target_facing_ang),
+            sinf(target_facing_ang),
+        };
+    }
+
     void sync() {
         // TODO is there a way for us to figure out if this
         // is a snappable entity?
@@ -100,7 +206,7 @@ struct Transform : public BaseComponent {
     }
 
     FrontFaceDirection face = FrontFaceDirection::FORWARD;
-    vec3 _size;
+    vec3 _size = {TILESIZE, TILESIZE, TILESIZE};
     vec3 position;
     vec3 raw_position;
 
