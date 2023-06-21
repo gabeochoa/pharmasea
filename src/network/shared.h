@@ -23,7 +23,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsSolid, CanBeHeld, IsRotatable, CanGrabFromOtherFurniture,
           ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom,
           IsItemContainer<Bag>, IsItemContainer<PillBottle>, UsesCharacterModel,
-          ShowsProgressBar> {};
+          ShowsProgressBar, DebugName> {};
 
 template<>
 struct PolymorphicBaseClass<Item>

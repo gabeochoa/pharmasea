@@ -16,6 +16,7 @@
 #include "components/collects_user_input.h"
 #include "components/conveys_held_item.h"
 #include "components/custom_item_position.h"
+#include "components/debug_name.h"
 #include "components/has_base_speed.h"
 #include "components/has_client_id.h"
 #include "components/has_name.h"
@@ -90,9 +91,11 @@ struct Entity {
         // TODO eventually enforce this
         if (this->has<T>()) {
             log_warn(
-                "This entity {} already has this component attached id: {}, "
+                "This entity {}, {} already has this component attached id: "
+                "{}, "
                 "component {}",
-                id, components::get_type_id<T>(), type_name<T>());
+                this->get<DebugName>().name(), id, components::get_type_id<T>(),
+                type_name<T>());
             return this->get<T>();
         }
 
@@ -109,11 +112,17 @@ struct Entity {
 
     template<typename T>
     [[nodiscard]] T& get() const {
+        if (this->is_missing<DebugName>()) {
+            log_error(
+                "This entity is missing debugname which will cause issues for "
+                "if the get<> is missing");
+        }
         if (this->is_missing<T>()) {
             log_warn(
-                "This entity {} is missing id: {}, "
+                "This entity {} {} is missing id: {}, "
                 "component {}",
-                id, components::get_type_id<T>(), type_name<T>());
+                this->get<DebugName>().name(), id, components::get_type_id<T>(),
+                type_name<T>());
         }
         BaseComponent* comp = componentArray.at(components::get_type_id<T>());
         return *static_cast<T*>(comp);
@@ -317,8 +326,15 @@ static void add_entity_components(Entity* entity) {
     entity->addComponent<CanBeHeld>();
 }
 
-static Entity* make_entity(vec3 p = {-2, -2, -2}) {
+struct DebugOptions {
+    std::string name;
+};
+
+static Entity* make_entity(const DebugOptions& options, vec3 p = {-2, -2, -2}) {
     Entity* entity = new Entity();
+
+    entity->addComponent<DebugName>().update(options.name);
+
     add_entity_components(entity);
 
     entity->get<Transform>().update(p);
@@ -352,7 +368,7 @@ static void add_person_components(Entity* person) {
 }
 
 static Entity* make_remote_player(vec3 pos) {
-    Entity* remote_player = make_entity(pos);
+    Entity* remote_player = make_entity({.name = "remote player"}, pos);
     add_person_components(remote_player);
 
     remote_player->addComponent<CanHighlightOthers>();
@@ -388,7 +404,7 @@ static void update_player_rare_remotely(std::shared_ptr<Entity> entity,
 }
 
 static Entity* make_player(vec3 p) {
-    Entity* player = make_entity(p);
+    Entity* player = make_entity({.name = "player"}, p);
     add_person_components(player);
 
     player->addComponent<HasName>();
@@ -411,7 +427,7 @@ static Entity* make_player(vec3 p) {
 }
 
 static Entity* make_aiperson(vec3 p) {
-    Entity* person = make_entity(p);
+    Entity* person = make_entity(DebugOptions{.name = "aiperson"}, p);
     add_person_components(person);
 
     person->get<CanPerformJob>().update(Wandering, Wandering);
@@ -460,8 +476,9 @@ static Entity* make_customer(vec3 p) {
 typedef Entity Furniture;
 
 namespace entities {
-static Entity* make_furniture(vec2 pos, Color face, Color base) {
-    Entity* furniture = make_entity();
+static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
+                              Color base) {
+    Entity* furniture = make_entity(options);
 
     furniture->get<Transform>().init({pos.x, 0, pos.y},
                                      {TILESIZE, TILESIZE, TILESIZE});
@@ -480,8 +497,8 @@ static Entity* make_furniture(vec2 pos, Color face, Color base) {
 }
 
 static Entity* make_table(vec2 pos) {
-    Entity* table =
-        entities::make_furniture(pos, ui::color::brown, ui::color::brown);
+    Entity* table = entities::make_furniture(
+        DebugOptions{.name = "table"}, pos, ui::color::brown, ui::color::brown);
 
     table->addComponent<SimpleColoredBoxRenderer>().update(ui::color::brown,
                                                            ui::color::brown);
@@ -503,7 +520,8 @@ static Entity* make_table(vec2 pos) {
 
 static Entity* make_character_switcher(vec2 pos) {
     Entity* character_switcher =
-        entities::make_furniture(pos, ui::color::green, ui::color::yellow);
+        entities::make_furniture(DebugOptions{.name = "character switcher"},
+                                 pos, ui::color::green, ui::color::yellow);
 
     character_switcher->addComponent<HasWork>().init(
         [](HasWork& hasWork, std::shared_ptr<Entity> person, float dt) {
@@ -523,8 +541,8 @@ static Entity* make_character_switcher(vec2 pos) {
 }
 
 static Entity* make_wall(vec2 pos, Color c) {
-    Entity* wall =
-        entities::make_furniture(pos, ui::color::brown, ui::color::brown);
+    Entity* wall = entities::make_furniture(DebugOptions{.name = "wall"}, pos,
+                                            ui::color::brown, ui::color::brown);
 
     return wall;
     // enum Type {
@@ -614,7 +632,8 @@ static Entity* make_wall(vec2 pos, Color c) {
 
 [[nodiscard]] static Entity* make_conveyer(vec2 pos) {
     Entity* conveyer =
-        entities::make_furniture(pos, ui::color::blue, ui::color::blue);
+        entities::make_furniture(DebugOptions{.name = "conveyer"}, pos,
+                                 ui::color::blue, ui::color::blue);
     // TODO fix
     // bool can_take_item_from() const {
     // return (get<CanHoldItem>().is_holding_item() && can_take_from);
@@ -636,7 +655,8 @@ static Entity* make_wall(vec2 pos, Color c) {
 
 [[nodiscard]] static Entity* make_grabber(vec2 pos) {
     Entity* grabber =
-        entities::make_furniture(pos, ui::color::yellow, ui::color::yellow);
+        entities::make_furniture(DebugOptions{.name = "grabber"}, pos,
+                                 ui::color::yellow, ui::color::yellow);
     // TODO fix
     // bool can_take_item_from() const {
     // return (get<CanHoldItem>().is_holding_item() && can_take_from);
@@ -654,7 +674,8 @@ static Entity* make_wall(vec2 pos, Color c) {
 
 [[nodiscard]] static Entity* make_register(vec2 pos) {
     Entity* reg =
-        entities::make_furniture(pos, ui::color::grey, ui::color::grey);
+        entities::make_furniture(DebugOptions{.name = "register"}, pos,
+                                 ui::color::grey, ui::color::grey);
     reg->addComponent<HasWaitingQueue>();
 
     reg->get<ModelRenderer>().update(ModelInfo{
@@ -668,7 +689,8 @@ static Entity* make_wall(vec2 pos, Color c) {
 template<typename I>
 [[nodiscard]] static Entity* make_itemcontainer(vec2 pos) {
     Entity* container =
-        entities::make_furniture(pos, ui::color::white, ui::color::white);
+        entities::make_furniture(DebugOptions{.name = "item container"}, pos,
+                                 ui::color::white, ui::color::white);
     container->addComponent<IsItemContainer<I>>();
     return container;
     // virtual bool can_place_item_into(

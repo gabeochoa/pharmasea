@@ -12,7 +12,7 @@ struct DebugName : public BaseComponent {
         name_length = (int) _name.size();
     }
 
-    const std::string name() const { return _name; }
+    const std::string& name() const { return _name; }
 
    private:
     int name_length = 1;

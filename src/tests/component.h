@@ -33,11 +33,13 @@ void compare_and_validate_components(Entity* a, Entity* b) {
     }
 }
 
+Entity* mk_entity() { return make_entity(DebugOptions{.name = "test"}); }
+
 void entity_components() {
-    Entity* entity = make_entity();
+    Entity* entity = mk_entity();
     network::Buffer buff = network::serialize_to_entity(entity);
 
-    Entity* entity2 = make_entity();
+    Entity* entity2 = mk_entity();
     network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
@@ -49,12 +51,12 @@ void entity_components() {
 void test_adding_single_component_serialdeserial() {
     // If this test fails, then we know that the components arent being
     // serialized correctly across the network
-    Entity* entity = make_entity();
+    Entity* entity = mk_entity();
     entity->addComponent<HasName>();
 
     network::Buffer buff = network::serialize_to_entity(entity);
 
-    Entity* entity2 = make_entity();
+    Entity* entity2 = mk_entity();
     // VVVVV if you dont have this, then it doesnt correctly serialize
     // but once you have it then the names do get copied over correctly
     // figure out why bitsery isnt serializing this over
@@ -68,7 +70,7 @@ void test_adding_single_component_serialdeserial() {
 }
 
 void validate_name_change_persisits() {
-    Entity* entity = make_entity();
+    Entity* entity = mk_entity();
     entity->addComponent<HasName>();
 
     auto starting_name = entity->get<HasName>().name();
@@ -83,7 +85,7 @@ void validate_name_change_persisits() {
               "component should have correctly set name");
 
     network::Buffer buff = network::serialize_to_entity(entity);
-    Entity* entity2 = make_entity();
+    Entity* entity2 = mk_entity();
     // entity2->addComponent<HasName>();
     network::deserialize_to_entity(entity2, buff);
 
