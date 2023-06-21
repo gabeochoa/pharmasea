@@ -272,6 +272,7 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
     CanHoldFurniture& ourCHF = player->get<CanHoldFurniture>();
 
     if (ourCHF.is_holding_furniture()) {
+        log_info("dropping furniture");
         const auto _drop_furniture = [&]() {
             // TODO need to make sure it doesnt place ontop of another
             // one
@@ -286,6 +287,7 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
         _drop_furniture();
         return;
     } else {
+        log_info("grabbing furniture");
         // TODO support finding things in the direction the player is
         // facing, instead of in a box around him
 
@@ -295,12 +297,15 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
                 [](std::shared_ptr<Furniture> f) {
                     // TODO right now walls inherit this from furniture but
                     // eventually that should not be the case
+                    if (f->is_missing<CanBeHeld>()) return false;
                     return f->get<CanBeHeld>().is_not_held();
                 });
+        // no match
+        if (!closest_furniture) return;
+
         ourCHF.update(closest_furniture);
-        if (ourCHF.is_holding_furniture()) {
-            ourCHF.furniture()->get<CanBeHeld>().update(true);
-        }
+        ourCHF.furniture()->get<CanBeHeld>().update(true);
+
         // TODO
         // NOTE: we want to remove the furniture ONLY from the nav mesh
         //       when picked up because then AI can walk through,

@@ -32,13 +32,15 @@ struct Map {
         return in_lobby_state() ? lobby_info.entities : game_info.entities;
     }
 
-    void onUpdate(float dt) {
+    void onUpdate(float dt) { _onUpdate(remote_players_NOT_SERIALIZED, dt); }
+
+    void _onUpdate(std::vector<std::shared_ptr<Entity>> players, float dt) {
         TRACY_ZONE_SCOPED;
         // TODO add to debug overlay
         // log_info("num items {}", items().size());
 
         SystemManager::get().update(
-            container_cast(remote_players_NOT_SERIALIZED,
+            container_cast(players,
                            "converting sp<RemotePlayer> to sp<Entity> as these "
                            "are not serialized and so not part of level info"),
             dt);
