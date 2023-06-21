@@ -131,13 +131,13 @@ struct Server {
     // TODO verify that these numbers make sense, i have a feeling
     // its not 2fps but 1/50 seconds which woudl be 0.5fps
     // NOTE: server time things are in s
-    float next_map_tick_reset = 50;  // 2fps
+    float next_map_tick_reset = 100;  // 1fps
     float next_map_tick = 0;
 
-    float next_player_rare_tick_reset = 50;  // 0.2fps
+    float next_player_rare_tick_reset = 100;
     float next_player_rare_tick = 0;
 
-    TriggerOnDt next_update_timer = TriggerOnDt(2.f);
+    TriggerOnDt next_update_timer = TriggerOnDt(5.f);
 
     void tick(float dt) {
         TRACY_ZONE_SCOPED;
@@ -389,6 +389,8 @@ struct Server {
         const std::string& msg = client_message.second;
 
         const ClientPacket packet = network::deserialize_to_packet(msg);
+
+        // log_info("Server: recieved packet {}", packet.msg_type);
 
         switch (packet.msg_type) {
             case ClientPacket::MsgType::Announcement: {

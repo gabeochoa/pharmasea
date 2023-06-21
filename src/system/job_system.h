@@ -10,6 +10,7 @@
 #include "../components/transform.h"
 #include "../entity.h"
 #include "../entityhelper.h"
+#include "../vendor_include.h"
 #include "logging_system.h"
 
 namespace system_manager {
@@ -60,9 +61,18 @@ inline void replace_job_with_job_type(std::shared_ptr<Entity> entity, float,
                 .end = entity->get<Transform>().as2(),
             });
             break;
+        case None:
+            job = new Job({
+                .type = None,
+                .timeToComplete = 1.f,
+                .start = entity->get<Transform>().as2(),
+                .end = entity->get<Transform>().as2(),
+            });
+            break;
         default:
-            log_warn("Trying to replace job with type {} but doesnt have it",
-                     job_type);
+            log_warn(
+                "Trying to replace job with type {}({}) but doesnt have it",
+                magic_enum::enum_name(job_type), job_type);
             break;
     }
 
@@ -95,6 +105,7 @@ inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
 }
 
 inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
+    return;
     const auto travel_on_path = [entity](vec2 me) {
         auto job = entity->get<CanPerformJob>().job();
         // did not arrive
@@ -567,6 +578,7 @@ inline void update_position_from_job(std::shared_ptr<Entity> entity, float dt) {
 
     transform.update_x(new_pos_x.x);
     transform.update_z(new_pos_z.z);
+    // TODO do we need to write back the transform?
 }
 
 inline void render_job_visual(std::shared_ptr<Entity> entity, float) {
@@ -574,7 +586,6 @@ inline void render_job_visual(std::shared_ptr<Entity> entity, float) {
     CanPerformJob& cpf = entity->get<CanPerformJob>();
     if (!cpf.has_job()) return;
 
-    // TODO this doesnt work yet because job->path is not serialized
     const float box_size = TILESIZE / 10.f;
     if (cpf.job() && !cpf.job()->path.empty()) {
         for (auto location : cpf.job()->path) {

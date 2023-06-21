@@ -34,6 +34,9 @@ struct Map {
 
     void onUpdate(float dt) {
         TRACY_ZONE_SCOPED;
+        // TODO add to debug overlay
+        // log_info("num items {}", items().size());
+
         SystemManager::get().update(
             container_cast(remote_players_NOT_SERIALIZED,
                            "converting sp<RemotePlayer> to sp<Entity> as these "

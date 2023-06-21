@@ -837,7 +837,7 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
 }
 
 void process_is_container_and_should_destroy_item(
-    std::shared_ptr<Entity> entity, float dt) {
+    std::shared_ptr<Entity> entity, float) {
     /*
      * If we are an item container and we are holding an instance
      * then we should just destroy it
@@ -855,14 +855,17 @@ void process_is_container_and_should_destroy_item(
             if (entity->has<IsItemContainer<I>>()) return;
 
             if (entity->is_missing<CanHoldItem>()) return;
-            CanHoldItem& canHold = entity->get<CanHoldItem>();
 
+            // TODO disabling the code below because it is just generating tons
+            // of items per frame and causing slowdowns
+            return;
+            // CanHoldItem& canHold = entity->get<CanHoldItem>();
             // TODO is this the api we want
-            canHold.item().reset(
-                // TODO what is this color and what is it for
-                new I(entity->get<Transform>().pos(),
-                      Color({255, 15, 240, 255})));
-            ItemHelper::addItem(canHold.item());
+            // canHold.item().reset(
+            // // TODO what is this color and what is it for
+            // new I(entity->get<Transform>().pos(),
+            // Color({255, 15, 240, 255})));
+            // ItemHelper::addItem(canHold.item());
         };
 
     item_container_destroy_matching(entity,
@@ -885,6 +888,8 @@ struct SystemManager {
     SINGLETON(SystemManager)
 
     void update(const Entities& entities, float dt) {
+        // TODO add num entities to debug overlay
+        // log_info("num entities {}", entities.size());
         always_update(entities, dt);
         // TODO do we run game updates during paused?
         if (GameState::get().is(game::State::InRound)) {
