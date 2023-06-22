@@ -63,19 +63,13 @@ inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanHoldItem>()) return;
     CanHoldItem& can_hold_item = entity->get<CanHoldItem>();
 
-    // auto name = entity->get<DebugName>().name();
-    // if (name != "table" && name != "register" && name != "aiperson" &&
-    // name != "wall" && name != "grabber" && name != "conveyer" &&
-    // name != "character switcher" && name != "item container") {
-    // log_warn("entity {} {} {}", name, entity->id, can_hold_item.empty());
-    // }
-
     if (can_hold_item.empty()) return;
 
     const Transform& transform = entity->get<Transform>();
 
     vec3 new_pos = transform.pos();
 
+    // TODO only seems to work for the host
     if (entity->has<CustomHeldItemPosition>()) {
         CustomHeldItemPosition& custom_item_position =
             entity->get<CustomHeldItemPosition>();

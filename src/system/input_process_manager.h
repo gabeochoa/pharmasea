@@ -275,7 +275,6 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
     CanHoldFurniture& ourCHF = player->get<CanHoldFurniture>();
 
     if (ourCHF.is_holding_furniture()) {
-        log_info("dropping furniture");
         const auto _drop_furniture = [&]() {
             // TODO need to make sure it doesnt place ontop of another
             // one
@@ -290,7 +289,6 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
         _drop_furniture();
         return;
     } else {
-        log_info("grabbing furniture");
         // TODO support finding things in the direction the player is
         // facing, instead of in a box around him
 
@@ -428,7 +426,8 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
                 []<typename I>(std::shared_ptr<Entity> entity,
                                std::shared_ptr<I> item = nullptr) {
                     if (!item) return false;
-                    if (entity->has<IsItemContainer<I>>()) return false;
+                    if (!entity) return false;
+                    if (entity->is_missing<IsItemContainer<I>>()) return false;
                     IsItemContainer<I>& itemContainer =
                         entity->get<IsItemContainer<I>>();
                     return itemContainer.is_matching_item(item);

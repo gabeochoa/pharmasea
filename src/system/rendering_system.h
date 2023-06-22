@@ -189,6 +189,8 @@ inline void render_floating_name(std::shared_ptr<Entity> entity, float) {
 }
 
 inline void render_progress_bar(std::shared_ptr<Entity> entity, float) {
+    // TODO only renders for the host...
+
     if (entity->is_missing<ShowsProgressBar>()) return;
 
     if (entity->is_missing<Transform>()) return;
