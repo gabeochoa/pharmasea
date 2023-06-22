@@ -306,16 +306,16 @@ struct GameMapInfo : public LevelInfo {
             }
         };
 
-        // generate_and_insert_walls(this->seed);
-        // generate_tables();
-        // generate_tables();
-        // generate_medicine_cabinet();
-        // generate_bag_box();
-        //
-        // generate_register();
-        // generate_customer();
-        // generate_test();
-        //
+        generate_and_insert_walls(this->seed);
+        generate_tables();
+        generate_tables();
+        generate_medicine_cabinet();
+        generate_bag_box();
+
+        generate_register();
+        generate_customer();
+        generate_test();
+
         EntityHelper::invalidatePathCache();
     }
 
