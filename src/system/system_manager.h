@@ -102,7 +102,7 @@ inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
                 new_pos.y += TILESIZE / 4;
                 break;
         }
-        can_hold_item.item()->update_position(new_pos);
+        entity->get<CanHoldItem>().item()->update_position(new_pos);
         return;
     }
 
@@ -159,37 +159,39 @@ inline void move_entity_based_on_push_force(std::shared_ptr<Entity> entity,
 }
 
 void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
+    Transform& transform = entity->get<Transform>();
     if (entity->is_missing<CanHoldItem>()) return;
+    if (entity->is_missing<ConveysHeldItem>()) return;
+    if (entity->is_missing<CanBeTakenFrom>()) return;
+
     CanHoldItem& canHold = entity->get<CanHoldItem>();
+    CanBeTakenFrom& canBeTakenFrom = entity->get<CanBeTakenFrom>();
+    ConveysHeldItem& conveysHeldItem = entity->get<ConveysHeldItem>();
+
     // we are not holding anything
     if (canHold.empty()) return;
 
-    if (entity->is_missing<ConveysHeldItem>()) return;
-    ConveysHeldItem& conveysHeldItem = entity->get<ConveysHeldItem>();
-
-    if (entity->is_missing<Transform>()) return;
-    Transform& transform = entity->get<Transform>();
-
-    if (entity->is_missing<CanBeTakenFrom>()) return;
-    CanBeTakenFrom& canBeTakenFrom = entity->get<CanBeTakenFrom>();
-
+    // make sure no one can insta-grab from us
     canBeTakenFrom.update(false);
 
     // if the item is less than halfway, just keep moving it along
+    // 0 is halfway btw
     if (conveysHeldItem.relative_item_pos <= 0.f) {
         conveysHeldItem.relative_item_pos += conveysHeldItem.SPEED * dt;
         return;
     }
 
-    auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
-        transform.as2(), 1.f, transform.face_direction(),
-        [entity](std::shared_ptr<Furniture> furn) {
-            return entity->id != furn->id &&
-                   // TODO need to merge this into the system manager one
-                   // but cant yet
-                   furn->get<CanHoldItem>().empty();
+    auto match = EntityHelper::getClosestMatchingFurniture(
+        transform, 1.f, [entity](std::shared_ptr<Furniture> furn) {
+            // cant be us
+            if (entity->id == furn->id) return false;
+            // needs to be able to hold something
+            if (furn->is_missing<CanHoldItem>()) return false;
+            // has to be empty
+            return furn->get<CanHoldItem>().empty();
         });
-    // no match means we cant continue, stay in the middle
+
+    // no match means we can't continue, stay in the middle
     if (!match) {
         conveysHeldItem.relative_item_pos = 0.f;
         canBeTakenFrom.update(true);
@@ -205,15 +207,17 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
         return;
     }
 
-    canBeTakenFrom.update(true);
     // we reached the end, pass ownership
 
-    CanHoldItem& matchCHI = match->get<CanHoldItem>();
     CanHoldItem& ourCHI = entity->get<CanHoldItem>();
 
-    matchCHI.item() = ourCHI.item();
-    matchCHI.item()->held_by = Item::HeldBy::FURNITURE;
-    ourCHI.item() = nullptr;
+    CanHoldItem& matchCHI = match->get<CanHoldItem>();
+    matchCHI.update(ourCHI.item(), Item::HeldBy::FURNITURE);
+
+    ourCHI.update(nullptr);
+
+    canBeTakenFrom.update(true);  // we are ready to have someone grab from us
+    // reset so that the next item we get starts from beginning
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
 
     // TODO if we are pushing onto a conveyer, we need to make sure
@@ -226,28 +230,34 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
 }
 
 void process_grabber_items(std::shared_ptr<Entity> entity, float) {
-    // Should only run this for conveyers
-    if (entity->is_missing<ConveysHeldItem>()) return;
-    ConveysHeldItem& conveysHeldItem = entity->get<ConveysHeldItem>();
-
-    // Should only run for grabbers
-    if (entity->is_missing<CanGrabFromOtherFurniture>()) return;
+    Transform& transform = entity->get<Transform>();
 
     if (entity->is_missing<CanHoldItem>()) return;
     CanHoldItem& canHold = entity->get<CanHoldItem>();
     // we are already holding something so
     if (canHold.is_holding_item()) return;
 
-    if (entity->is_missing<Transform>()) return;
-    Transform& transform = entity->get<Transform>();
+    // Should only run this for conveyers
+    if (entity->is_missing<ConveysHeldItem>()) return;
+    // Should only run for grabbers
+    if (entity->is_missing<CanGrabFromOtherFurniture>()) return;
 
+    ConveysHeldItem& conveysHeldItem = entity->get<ConveysHeldItem>();
+
+    auto behind =
+        transform.offsetFaceDirection(transform.face_direction(), 180);
     auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
-        transform.as2(), 1.f,
-        // Behind
-        transform.offsetFaceDirection(transform.face_direction(), 180),
+        transform.as2(), 1.f, behind,
         [entity](std::shared_ptr<Furniture> furn) {
-            return entity->id != furn->id &&
-                   furn->get<CanHoldItem>().can_take_item_from();
+            // cant be us
+            if (entity->id == furn->id) return false;
+            // needs to be able to hold something
+            if (furn->is_missing<CanHoldItem>()) return false;
+            // doesnt have anything
+            if (furn->get<CanHoldItem>().empty()) return false;
+            //
+            if (furn->is_missing<CanBeTakenFrom>()) return true;
+            return furn->get<CanBeTakenFrom>().can_take_from();
         });
 
     // No furniture behind us
@@ -257,12 +267,10 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
     CanHoldItem& ourCHI = entity->get<CanHoldItem>();
 
-    ourCHI.update(matchCHI.item());
-    ourCHI.item()->held_by = Item::HeldBy::FURNITURE;
-    conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
-
-    // TODO nullptr?
+    ourCHI.update(matchCHI.item(), Item::HeldBy::FURNITURE);
     matchCHI.update(nullptr);
+
+    conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
 }
 
 void process_is_container_and_should_destroy_item(
@@ -380,8 +388,8 @@ struct SystemManager {
         for (auto& entity : entity_list) {
             system_manager::job_system::handle_job_holder_pushed(entity, dt);
             system_manager::job_system::update_job_information(entity, dt);
-            system_manager::process_conveyer_items(entity, dt);
             system_manager::process_grabber_items(entity, dt);
+            system_manager::process_conveyer_items(entity, dt);
             system_manager::process_is_container_and_should_destroy_item(entity,
                                                                          dt);
         }

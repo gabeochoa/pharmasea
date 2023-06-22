@@ -495,6 +495,7 @@ static Entity* make_wall(vec2 pos, Color c) {
     conveyer->get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Conveyer);
     conveyer->addComponent<ConveysHeldItem>();
+    conveyer->addComponent<CanBeTakenFrom>();
 
     // TODO add a component for this
     conveyer->get<ModelRenderer>().update(ModelInfo{
@@ -514,6 +515,10 @@ static Entity* make_wall(vec2 pos, Color c) {
     // bool can_take_item_from() const {
     // return (get<CanHoldItem>().is_holding_item() && can_take_from);
     // }
+
+    grabber->get<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::Conveyer);
+    grabber->addComponent<CanBeTakenFrom>();
 
     grabber->get<ModelRenderer>().update(ModelInfo{
         .model_name = "conveyer",
