@@ -195,7 +195,6 @@ struct GameMapInfo : public LevelInfo {
             }
 
             {
-                // location.x -= 1;
                 location.y += 1;
                 std::shared_ptr<Furniture> conveyer;
                 conveyer.reset(entities::make_grabber(location));
@@ -205,7 +204,6 @@ struct GameMapInfo : public LevelInfo {
 
             {
                 location.x -= 1;
-                // location.y += 1;
                 std::shared_ptr<Furniture> conveyer;
                 conveyer.reset(entities::make_grabber(location));
                 conveyer->get<Transform>().rotate_facing_clockwise(180);
