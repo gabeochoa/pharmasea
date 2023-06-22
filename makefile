@@ -51,10 +51,10 @@ countall:
 	git ls-files | xargs wc -l | sort -rn
 
 todo: 
-	git grep -niE '(FIXME|TODO)' src/
+	{ git grep -niE '(FIXME|TODO)' src/; cat todo.md | grep -e "- \[\s";} 
 
 todor:
-	git grep -niE '(FIXME|TODO)' src/ | shuf -n1
+	{ git grep -niE '(FIXME|TODO)' src/; cat todo.md | grep -e "- \[\s";} | shuf -n1
 
 cppcheck: 
 	cppcheck --enable=all --std=c++20 --language=c++ --output-file=cppcheck_err src/
