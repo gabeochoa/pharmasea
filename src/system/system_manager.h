@@ -24,22 +24,17 @@ namespace system_manager {
 inline void transform_snapper(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<Transform>()) return;
     Transform& transform = entity->get<Transform>();
-
-    if (entity->has<IsSnappable>()) {
-        transform.update(transform.snap_position());
-    } else {
-        transform.update(transform.raw());
-    }
+    transform.update(entity->has<IsSnappable>() ? transform.snap_position()
+                                                : transform.raw());
 }
 
+// TODO if cannot be placed in this spot make it obvious to the user
 void update_held_furniture_position(std::shared_ptr<Entity> entity, float) {
+    const Transform& transform = entity->get<Transform>();
+
     if (entity->is_missing<CanHoldFurniture>()) return;
 
-    const Transform& transform = entity->get<Transform>();
-    // TODO if cannot be placed in this spot make it obvious to the user
-
     CanHoldFurniture& can_hold_furniture = entity->get<CanHoldFurniture>();
-
     if (can_hold_furniture.empty()) return;
 
     auto new_pos = transform.pos();
@@ -62,7 +57,6 @@ void update_held_furniture_position(std::shared_ptr<Entity> entity, float) {
 inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanHoldItem>()) return;
     CanHoldItem& can_hold_item = entity->get<CanHoldItem>();
-
     if (can_hold_item.empty()) return;
 
     const Transform& transform = entity->get<Transform>();

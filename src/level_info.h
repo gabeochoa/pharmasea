@@ -185,6 +185,56 @@ struct GameMapInfo : public LevelInfo {
         server_entities_DO_NOT_USE.clear();
         server_items_DO_NOT_USE.clear();
 
+        auto generate_conveyer_test = []() {
+            auto location = vec2{-5, 0};
+            for (int i = 0; i < 5; i++) {
+                location.y++;
+                std::shared_ptr<Furniture> conveyer;
+                conveyer.reset(entities::make_grabber(location));
+                EntityHelper::addEntity(conveyer);
+            }
+
+            {
+                // location.x -= 1;
+                location.y += 1;
+                std::shared_ptr<Furniture> conveyer;
+                conveyer.reset(entities::make_grabber(location));
+                conveyer->get<Transform>().rotate_facing_clockwise(270);
+                EntityHelper::addEntity(conveyer);
+            }
+
+            {
+                location.x -= 1;
+                // location.y += 1;
+                std::shared_ptr<Furniture> conveyer;
+                conveyer.reset(entities::make_grabber(location));
+                conveyer->get<Transform>().rotate_facing_clockwise(180);
+                EntityHelper::addEntity(conveyer);
+            }
+
+            for (int i = 0; i < 4; i++) {
+                location.y--;
+                std::shared_ptr<Furniture> conveyer;
+                conveyer.reset(entities::make_grabber(location));
+                conveyer->get<Transform>().rotate_facing_clockwise(180);
+                EntityHelper::addEntity(conveyer);
+            }
+
+            {
+                location.y--;
+                std::shared_ptr<Furniture> conveyer;
+                conveyer.reset(entities::make_grabber(location));
+                conveyer->get<Transform>().rotate_facing_clockwise();
+                EntityHelper::addEntity(conveyer);
+
+                std::shared_ptr<Pill> item;
+                item.reset(new Pill(location, Color{255, 15, 240, 255}));
+                ItemHelper::addItem(item);
+                conveyer->get<CanHoldItem>().update(item);
+            }
+        };
+        generate_conveyer_test();
+
         auto generate_tables = [this]() {
             {
                 const auto location = get_rand_walkable();

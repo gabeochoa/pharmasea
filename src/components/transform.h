@@ -106,8 +106,8 @@ struct Transform : public BaseComponent {
     /*
      * Rotate the facing direction of this entity, clockwise 90 degrees
      * */
-    void rotate_facing_clockwise() {
-        update_face_direction(offsetFaceDirection(face_direction(), 90));
+    void rotate_facing_clockwise(int angle = 90) {
+        update_face_direction(offsetFaceDirection(face_direction(), angle));
     }
 
     /*

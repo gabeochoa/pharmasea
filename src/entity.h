@@ -97,6 +97,10 @@ struct Entity {
                 type_name<T>());
 
             M_ASSERT(false, "duplicate component");
+            // Commented out on purpose because the assert is gonna kill the
+            // program anyway at some point we should stop enforcing it to avoid
+            // crashing the game when people are playing
+            //
             // return this->get<T>();
         }
 
@@ -224,10 +228,6 @@ static void add_person_components(Entity* person) {
     });
 
     person->addComponent<UsesCharacterModel>();
-
-    // TODO this came from AIPersons and even though all AI People are
-    // adding it themselves we have to thave this here for the time being
-    // ... otherwise the game just crashes
     person->addComponent<CanPerformJob>().update(Wandering, Wandering);
 }
 
@@ -256,7 +256,6 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
 
     Transform& transform = entity->get<Transform>();
 
-    // TODO add setters
     transform.update(vec3{location[0], location[1], location[2]});
     transform.update_face_direction(
         static_cast<Transform::FrontFaceDirection>(facing_direction));
@@ -271,18 +270,11 @@ static Entity* make_player(vec3 p) {
     Entity* player = make_entity({.name = "player"}, p);
     add_person_components(player);
 
+    player->get<HasBaseSpeed>().update(7.5f);
+
     player->addComponent<HasName>();
     player->addComponent<CanHighlightOthers>();
     player->addComponent<CanHoldFurniture>();
-
-    // addComponent<HasBaseSpeed>().update(10.f);
-    player->get<HasBaseSpeed>().update(7.5f);
-
-    // TODO what is a reasonable default value here?
-    // TODO who sets this value?
-    // this comes from remote player and probably should only be there
-    player->addComponent<HasClientID>();
-
     player->addComponent<CanBeGhostPlayer>();
     player->addComponent<CollectsUserInput>();
     player->addComponent<RespondsToUserInput>();
