@@ -243,9 +243,6 @@ static Entity* make_remote_player(vec3 pos) {
     remote_player->addComponent<HasName>();
     remote_player->addComponent<HasClientID>();
 
-    // TODO REMOVE this isnt needed
-    remote_player->addComponent<SimpleColoredBoxRenderer>().update(
-        ui::color::pink, ui::color::pink);
     return remote_player;
 }
 
@@ -338,16 +335,20 @@ static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
 
     furniture->get<Transform>().init({pos.x, 0, pos.y},
                                      {TILESIZE, TILESIZE, TILESIZE});
-
-    // TODO does all furniture have this?
-    furniture->addComponent<CanHoldItem>();
     furniture->addComponent<IsSolid>();
     furniture->addComponent<IsRotatable>();
+
+    // For renderers we prioritize the ModelRenderer and will fall back if we
+    // need
     furniture->addComponent<SimpleColoredBoxRenderer>().update(face, base);
     furniture->addComponent<ModelRenderer>();
 
+    // we need to add it to set a default, so its here
     furniture->addComponent<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Default);
+
+    // TODO does all furniture have this?
+    furniture->addComponent<CanHoldItem>();
 
     return furniture;
 }

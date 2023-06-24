@@ -124,7 +124,7 @@ struct EntityHelper {
     }
 
     enum ForEachFlow {
-        None = 0,
+        NormalFlow = 0,
         Continue = 1,
         Break = 2,
     };

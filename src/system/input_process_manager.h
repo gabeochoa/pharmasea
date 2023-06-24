@@ -94,7 +94,7 @@ void person_update_given_new_pos(int id, Transform& transform,
             if (would_collide_x && would_collide_z) {
                 return EntityHelper::ForEachFlow::Break;
             }
-            return EntityHelper::ForEachFlow::None;
+            return EntityHelper::ForEachFlow::NormalFlow;
         });
 
         // TODO add debug mode that turns on noclip
