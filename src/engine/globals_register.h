@@ -9,7 +9,12 @@ struct GlobalValueRegister {
 
     template<typename T>
     [[nodiscard]] T* get_ptr(const std::string& name) const {
-        return (T*) (globals.at(name));
+        // TODO do we want to catch the exception here?
+        try {
+            return (T*) (globals.at(name));
+        } catch (std::exception e) {
+            return nullptr;
+        }
     }
 
     // TODO better error message here please
