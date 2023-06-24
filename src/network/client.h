@@ -54,10 +54,6 @@ struct Client {
 
         next_tick = next_tick_reset;
         if (id > 0) {
-            // TODO figure out why this code was commented out
-            // auto player = get_player_packet(my_client_id);
-            // client_p->send_packet_to_server(player);
-
             send_player_input_packet(id);
         }
 
