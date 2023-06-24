@@ -312,7 +312,7 @@ void handle_autodrop_furniture_when_exiting_planning(
     if (entity->is_missing<CanHoldFurniture>()) return;
 
     CanHoldFurniture& ourCHF = entity->get<CanHoldFurniture>();
-    if (!ourCHF.empty()) return;
+    if (ourCHF.empty()) return;
 
     // TODO need to find a spot it can go in using EntityHelper::isWalkable
     input_process_manager::planning::drop_held_furniture(entity);
