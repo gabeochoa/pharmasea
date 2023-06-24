@@ -19,7 +19,8 @@ namespace job_system {
 
 [[nodiscard]] inline bool is_at_position(const std::shared_ptr<Entity>& entity,
                                          vec2 position) {
-    return entity->get<Transform>().as2() == position;
+    return vec::distance(entity->get<Transform>().as2(), position) <
+           (TILESIZE / 2.f);
 }
 
 // TODO M_ASSERT should be renamed to "VALIDATE" since i always get the
@@ -30,9 +31,9 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
     // we just call this again cause its fun, be we could merge the two in the
     // future
     if (is_at_position(entity, goal)) {
-        // logging_manager::announce(
-        // entity,
-        // fmt::format("no need to travel we are already at the goal {}", 1));
+        logging_manager::announce(
+            entity,
+            fmt::format("no need to travel we are already at the goal {}", 1));
         return;
     }
 
@@ -59,14 +60,17 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
         // Either we dont yet have a local target
         // or we already reached the one we had
 
-        if (cpj.has_local_target() &&
-            is_at_position(entity, cpj.local_target())) {
-            // have one and got there already
-            cpj.mutable_job()->local.reset();
-        }
+        // TODO why dont we need this?
+        // if (cpj.has_local_target() &&
+        // is_at_position(entity, cpj.local_target())) {
+        // logging_manager::announce(
+        // entity, fmt::format(" we reached the local! lt{} ps{}",
+        // cpj.local_target(), cpj.job().path_size));
+        // // have one and got there already
+        // cpj.mutable_job()->local.reset();
+        // }
 
         cpj.grab_job_local_target();
-        // logging_manager::announce(entity, " we reached the local!");
 
         M_ASSERT(cpj.has_local_target(), "job should have a local target");
     };
@@ -102,8 +106,6 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
 
         // TODO do we need to unr the whole person_update...() function with
         // collision?
-
-        // TODO do we need to write back the transform?
 
         transform.update(vec::to3(new_pos));
     };
@@ -556,6 +558,7 @@ inline void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
             return;
         }
         case Job::State::WorkingAtEnd: {
+            log_warn("working at end state");
             cpj.update_job_state(Job::State::Completed);
             return;
         }
