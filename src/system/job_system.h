@@ -16,81 +16,8 @@
 namespace system_manager {
 
 namespace job_system {
+/*
 
-inline Job* create_wandering_job(std::shared_ptr<Entity> entity) {
-    // TODO add cooldown so that not all time is spent here
-    int max_tries = 10;
-    int range = 20;
-    bool walkable = false;
-    int i = 0;
-    vec2 target;
-    while (!walkable) {
-        target =
-            (vec2){1.f * randIn(-range, range), 1.f * randIn(-range, range)};
-        walkable = EntityHelper::isWalkable(target);
-        i++;
-        if (i > max_tries) {
-            return nullptr;
-        }
-    }
-    return new Job({.type = Wandering,
-                    .start = entity->get<Transform>().as2(),
-                    .end = target});
-}
-
-inline void replace_job_with_job_type(std::shared_ptr<Entity> entity, float,
-                                      JobType job_type) {
-    if (entity->is_missing<CanPerformJob>()) return;
-    CanPerformJob& cpj = entity->get<CanPerformJob>();
-
-    Job* job = nullptr;
-    switch (job_type) {
-        case Wandering:
-            job = create_wandering_job(entity);
-            break;
-        case WaitInQueue:
-            job = new Job({
-                .type = WaitInQueue,
-            });
-            break;
-        case Wait:
-            job = new Job({
-                .type = Wait,
-                .timeToComplete = 1.f,
-                .start = entity->get<Transform>().as2(),
-                .end = entity->get<Transform>().as2(),
-            });
-            break;
-        case None:
-            job = new Job({
-                .type = None,
-                .timeToComplete = 1.f,
-                .start = entity->get<Transform>().as2(),
-                .end = entity->get<Transform>().as2(),
-            });
-            break;
-        default:
-            log_warn(
-                "Trying to replace job with type {}({}) but doesnt have it",
-                magic_enum::enum_name(job_type), job_type);
-            break;
-    }
-
-    cpj.update(job);
-}
-
-inline void find_new_job(std::shared_ptr<Entity> entity, float dt) {
-    if (entity->is_missing<CanPerformJob>()) return;
-    CanPerformJob& cpj = entity->get<CanPerformJob>();
-
-    auto personal_queue = cpj.job_queue();
-    if (personal_queue.empty()) {
-        replace_job_with_job_type(entity, dt, cpj.get_next_job_type());
-        return;
-    }
-    cpj.job() = personal_queue.top();
-    personal_queue.pop();
-}
 
 inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
     if (entity->is_missing<CanPerformJob>()) return;
@@ -105,7 +32,7 @@ inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
 }
 
 bool navigate_to(const std::shared_ptr<Entity>& entity, float dt, vec2 goal) {
-    const auto travel_on_path = [entity, dt](vec2 me) {
+    const auto travel_on_path = [entity](vec2 me) {
         // logging_manager::announce(entity, "start travel");
         auto& job = entity->get<CanPerformJob>().job();
         // did not arrive
@@ -535,24 +462,114 @@ inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
     }
 }
 
-inline void update_position_from_job(std::shared_ptr<Entity> entity, float dt) {
+*/
+
+inline void render_job_visual(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanPerformJob>()) return;
     CanPerformJob& cpf = entity->get<CanPerformJob>();
     if (!cpf.has_job()) return;
-    auto job = cpf.job();
 
-    if (!job || !job->local.has_value()) {
+    const float box_size = TILESIZE / 10.f;
+    if (!cpf.job().path.empty()) {
+        for (auto location : cpf.job().path) {
+            DrawCube(vec::to3(location), box_size, box_size, box_size, BLUE);
+        }
+    }
+}
+
+inline Job* create_wandering_job(std::shared_ptr<Entity> entity) {
+    // TODO add cooldown so that not all time is spent here
+    int max_tries = 10;
+    int range = 20;
+    bool walkable = false;
+    int i = 0;
+    vec2 target;
+    while (!walkable) {
+        target =
+            (vec2){1.f * randIn(-range, range), 1.f * randIn(-range, range)};
+        walkable = EntityHelper::isWalkable(target);
+        i++;
+        if (i > max_tries) {
+            return nullptr;
+        }
+    }
+    return new Job({.type = Wandering,
+                    .start = entity->get<Transform>().as2(),
+                    .end = target});
+}
+
+inline Job* create_job_of_type(std::shared_ptr<Entity> entity, float,
+                               JobType job_type) {
+    Job* job = nullptr;
+    switch (job_type) {
+        case Wandering:
+            job = create_wandering_job(entity);
+            break;
+        case WaitInQueue:
+            job = new Job({
+                .type = WaitInQueue,
+            });
+            break;
+        case Wait:
+            job = new Job({
+                .type = Wait,
+                .timeToComplete = 1.f,
+                .start = entity->get<Transform>().as2(),
+                .end = entity->get<Transform>().as2(),
+            });
+            break;
+        case None:
+            job = new Job({
+                .type = None,
+                .timeToComplete = 1.f,
+                .start = entity->get<Transform>().as2(),
+                .end = entity->get<Transform>().as2(),
+            });
+            break;
+        default:
+            log_warn(
+                "Trying to replace job with type {}({}) but doesnt have it",
+                magic_enum::enum_name(job_type), job_type);
+            break;
+    }
+    return job;
+}
+
+inline void ensure_has_job(std::shared_ptr<Entity> entity, float dt) {
+    if (entity->is_missing<CanPerformJob>()) return;
+    CanPerformJob& cpj = entity->get<CanPerformJob>();
+    if (cpj.has_job()) return;
+
+    auto& personal_queue = cpj.job_queue();
+    if (personal_queue.empty()) {
+        // No job and nothing in the queue? grab the next default one then
+        std::shared_ptr<Job> njob;
+        cpj.update(create_job_of_type(entity, dt, cpj.get_next_job_type()));
+
+        // TODO i really want to not return right here but the job is nullptr if
+        // i do
         return;
     }
 
-    vec2 tar = job->local.value();
+    M_ASSERT(!personal_queue.empty(),
+             "no way personal job queue should be empty");
+    // queue should definitely have something by now
+    // add the thing from the queue as our job :)
+    cpj.update(personal_queue.top().get());
+    personal_queue.pop();
+}
 
+inline void move_toward_local_job_target(std::shared_ptr<Entity> entity,
+                                         float dt) {
+    if (entity->is_missing<CanPerformJob>()) return;
     if (entity->is_missing<HasBaseSpeed>()) return;
-    const HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
 
-    float speed = hasBaseSpeed.speed() * dt;
+    const CanPerformJob& cpf = entity->get<CanPerformJob>();
+    if (!cpf.has_job()) return;
+    if (!cpf.has_local_target()) return;
 
     // TODO handle these once normal movement is working
+    float speed = entity->get<HasBaseSpeed>().speed() * dt;
     {
         // float speed_multiplier = 1.f;
         // float stagger_multiplier = 0.f;
@@ -568,10 +585,9 @@ inline void update_position_from_job(std::shared_ptr<Entity> entity, float dt) {
 
     Transform& transform = entity->get<Transform>();
 
-    logging_manager::announce(
-        entity, fmt::format("me{} j{}", transform.pos(), job->local.value()));
-
     vec2 new_pos = transform.as2();
+
+    vec2 tar = cpf.local_target();
     if (tar.x > transform.raw().x) new_pos.x += speed;
     if (tar.x < transform.raw().x) new_pos.x -= speed;
 
@@ -586,17 +602,12 @@ inline void update_position_from_job(std::shared_ptr<Entity> entity, float dt) {
     transform.update(vec::to3(new_pos));
 }
 
-inline void render_job_visual(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<CanPerformJob>()) return;
-    CanPerformJob& cpf = entity->get<CanPerformJob>();
-    if (!cpf.has_job()) return;
+inline void in_round_update(const std::shared_ptr<Entity>& entity, float dt) {
+    ensure_has_job(entity, dt);
+    move_toward_local_job_target(entity, dt);
 
-    const float box_size = TILESIZE / 10.f;
-    if (cpf.job() && !cpf.job()->path.empty()) {
-        for (auto location : cpf.job()->path) {
-            DrawCube(vec::to3(location), box_size, box_size, box_size, BLUE);
-        }
-    }
+    // handle_job_holder_pushed(entity, dt);
+    // update_job_information(entity, dt);
 }
 
 }  // namespace job_system

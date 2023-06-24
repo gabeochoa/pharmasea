@@ -465,9 +465,7 @@ struct SystemManager {
     void in_round_update(
         const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
         for (auto& entity : entity_list) {
-            system_manager::job_system::handle_job_holder_pushed(entity, dt);
-            system_manager::job_system::update_job_information(entity, dt);
-            system_manager::job_system::update_position_from_job(entity, dt);
+            system_manager::job_system::in_round_update(entity, dt);
             system_manager::process_grabber_items(entity, dt);
             system_manager::process_conveyer_items(entity, dt);
             system_manager::process_is_container_and_should_destroy_item(entity,
