@@ -131,14 +131,11 @@ inline void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
     Transform& transform = entity->get<Transform>();
 
     if (entity->is_missing<CanHighlightOthers>()) return;
+    // TODO add a player reach component
     CanHighlightOthers& cho = entity->get<CanHighlightOthers>();
 
-    // TODO this is impossible to read, what can we do to fix this while
-    // keeping it configurable
-    auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
-        // TODO add a player reach component
-        transform.as2(), cho.reach(), transform.face_direction(),
-        [](std::shared_ptr<Furniture>) { return true; });
+    auto match = EntityHelper::getClosestMatchingFurniture(
+        transform, cho.reach(), [](auto&&) { return true; });
     if (!match) return;
     if (!match->has<CanBeHighlighted>()) return;
     match->get<CanBeHighlighted>().update(true);
