@@ -25,9 +25,6 @@ namespace job_system {
 // TODO M_ASSERT should be renamed to "VALIDATE" since i always get the
 // conditional backwards
 
-// TODO delete
-int g = 0;
-
 inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
                                vec2 goal) {
     // we just call this again cause its fun, be we could merge the two in the
@@ -129,56 +126,6 @@ inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
         find_new_job(entity, dt);
         return;
     }
-}
-
-bool navigate_to(const std::shared_ptr<Entity>& entity, float dt, vec2 goal)
-{ const auto travel_on_path = [entity](vec2 me) {
-        // logging_manager::announce(entity, "start travel");
-        auto& job = entity->get<CanPerformJob>().job();
-        // did not arrive
-        if (job->path_empty()) {
-            // logging_manager::announce(entity, "path empty");
-            return;
-        }
-
-        if (job->local.has_value() && job->local.value() == vec::snap(me)) {
-            job->local.reset();
-            // logging_manager::announce(
-            // entity, fmt::format("reached local point {} : {} ", me,
-            // job->path_size));
-        }
-
-        if (!job->local.has_value()) {
-            // Grab next local point to go to
-            job->local = job->path_front();
-            job->path_pop_front();
-            // logging_manager::announce(entity, "update local ");
-            return;
-        }
-        return;
-    };
-
-    Transform& transform = entity->get<Transform>();
-    vec2 me = transform.as2();
-    if (me == goal) {
-        return true;
-    }
-
-    // logging_manager::announce(entity, fmt::format("me: {} goal: {}", me,
-    // goal));
-
-    auto& job = entity->get<CanPerformJob>().job();
-    if (job->path_empty()) {
-        job->update_path(astar::find_path(
-            me, goal,
-            std::bind(EntityHelper::isWalkable, std::placeholders::_1)));
-        logging_manager::announce(
-            entity, fmt::format("generated path from {} to {} with {}
-steps", me, goal, job->path_size));
-    }
-
-    travel_on_path(me);
-    return false;
 }
 
 void run_job_wait(const std::shared_ptr<Entity>& entity, float dt) {
@@ -582,6 +529,11 @@ void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
                       magic_enum::enum_name(job.state));
             return;
         case Job::State::Initialize: {
+            logging_manager::announce(
+                entity,
+                fmt::format("starting wandering job: me {} start {} end {}",
+                            entity->get<Transform>().pos(), job.start,
+                            job.end));
             cpj.update_job_state(Job::State::HeadingToStart);
             return;
         }
@@ -618,7 +570,7 @@ inline void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
     if (entity->is_missing<CanPerformJob>()) return;
     switch (entity->get<CanPerformJob>().job().type) {
         case None:
-            log_warn("you have a guy {} that is doing a none job", entity->id);
+            log_info("you have a guy {} that is doing a none job", entity->id);
             break;
         case Wandering:
             run_job_wandering(entity, dt);
@@ -635,7 +587,19 @@ inline void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
     }
 }
 
+inline void cleanup_completed_job(const std::shared_ptr<Entity>& entity,
+                                  float) {
+    if (entity->is_missing<CanPerformJob>()) return;
+    CanPerformJob& cpj = entity->get<CanPerformJob>();
+    if (cpj.needs_job()) return;
+    if (cpj.job().state == Job::State::Completed) {
+        cpj.update(nullptr);
+        log_warn("cpj, job complete");
+    }
+}
+
 inline void in_round_update(const std::shared_ptr<Entity>& entity, float dt) {
+    cleanup_completed_job(entity, dt);
     ensure_has_job(entity, dt);
     run_job_tick(entity, dt);
 }
