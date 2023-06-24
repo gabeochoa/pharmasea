@@ -24,9 +24,9 @@
       "output/src/game.o",
       "src/game.cpp"
     ],
-    "directory": "/Users/gabeochoa/Dropbox/P/pharmasea",
-    "file": "/Users/gabeochoa/Dropbox/P/pharmasea/src/game.cpp",
-    "output": "/Users/gabeochoa/Dropbox/P/pharmasea/output/src/game.o"
+    "directory": "/Users/gabeochoa/p/pharmasea",
+    "file": "/Users/gabeochoa/p/pharmasea/src/game.cpp",
+    "output": "/Users/gabeochoa/p/pharmasea/output/src/game.o"
   },
   {
     "arguments": [
@@ -53,124 +53,8 @@
       "output/src/engine/app.o",
       "src/engine/app.cpp"
     ],
-    "directory": "/Users/gabeochoa/Dropbox/P/pharmasea",
-    "file": "/Users/gabeochoa/Dropbox/P/pharmasea/src/engine/app.cpp",
-    "output": "/Users/gabeochoa/Dropbox/P/pharmasea/output/src/engine/app.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-std=c++2a",
-      "-Wall",
-      "-Wextra",
-      "-Wpedantic",
-      "-Wuninitialized",
-      "-Wshadow",
-      "-Wmost",
-      "-Wconversion",
-      "-g",
-      "-fsanitize=address",
-      "-I/Users/gabeochoa/homebrew/Cellar/raylib/4.5.0/include",
-      "-Wno-deprecated-volatile",
-      "-Wno-missing-field-initializers",
-      "-Wno-c99-extensions",
-      "-Wno-unused-function",
-      "-Wno-sign-conversion",
-      "-Ivendor/",
-      "-c",
-      "-o",
-      "output/src/engine/files.o",
-      "src/engine/files.cpp"
-    ],
-    "directory": "/Users/gabeochoa/Dropbox/P/pharmasea",
-    "file": "/Users/gabeochoa/Dropbox/P/pharmasea/src/engine/files.cpp",
-    "output": "/Users/gabeochoa/Dropbox/P/pharmasea/output/src/engine/files.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-std=c++2a",
-      "-Wall",
-      "-Wextra",
-      "-Wpedantic",
-      "-Wuninitialized",
-      "-Wshadow",
-      "-Wmost",
-      "-Wconversion",
-      "-g",
-      "-fsanitize=address",
-      "-I/Users/gabeochoa/homebrew/Cellar/raylib/4.5.0/include",
-      "-Wno-deprecated-volatile",
-      "-Wno-missing-field-initializers",
-      "-Wno-c99-extensions",
-      "-Wno-unused-function",
-      "-Wno-sign-conversion",
-      "-Ivendor/",
-      "-c",
-      "-o",
-      "output/src/engine/network/webrequest.o",
-      "src/engine/network/webrequest.cpp"
-    ],
-    "directory": "/Users/gabeochoa/Dropbox/P/pharmasea",
-    "file": "/Users/gabeochoa/Dropbox/P/pharmasea/src/engine/network/webrequest.cpp",
-    "output": "/Users/gabeochoa/Dropbox/P/pharmasea/output/src/engine/network/webrequest.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-std=c++2a",
-      "-Wall",
-      "-Wextra",
-      "-Wpedantic",
-      "-Wuninitialized",
-      "-Wshadow",
-      "-Wmost",
-      "-Wconversion",
-      "-g",
-      "-fsanitize=address",
-      "-I/Users/gabeochoa/homebrew/Cellar/raylib/4.5.0/include",
-      "-Wno-deprecated-volatile",
-      "-Wno-missing-field-initializers",
-      "-Wno-c99-extensions",
-      "-Wno-unused-function",
-      "-Wno-sign-conversion",
-      "-Ivendor/",
-      "-c",
-      "-o",
-      "output/vendor/tracy/TracyClient.o",
-      "vendor/tracy/TracyClient.cpp"
-    ],
-    "directory": "/Users/gabeochoa/Dropbox/P/pharmasea",
-    "file": "/Users/gabeochoa/Dropbox/P/pharmasea/vendor/tracy/TracyClient.cpp",
-    "output": "/Users/gabeochoa/Dropbox/P/pharmasea/output/vendor/tracy/TracyClient.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-std=c++2a",
-      "-Wall",
-      "-Wextra",
-      "-Wpedantic",
-      "-Wuninitialized",
-      "-Wshadow",
-      "-Wmost",
-      "-Wconversion",
-      "-g",
-      "-fsanitize=address",
-      "-I/Users/gabeochoa/homebrew/Cellar/raylib/4.5.0/include",
-      "-Wno-deprecated-volatile",
-      "-Wno-missing-field-initializers",
-      "-Wno-c99-extensions",
-      "-Wno-unused-function",
-      "-Wno-sign-conversion",
-      "-Ivendor/",
-      "-c",
-      "-o",
-      "output/vendor/backward/backward.o",
-      "vendor/backward/backward.cpp"
-    ],
-    "directory": "/Users/gabeochoa/Dropbox/P/pharmasea",
-    "file": "/Users/gabeochoa/Dropbox/P/pharmasea/vendor/backward/backward.cpp",
-    "output": "/Users/gabeochoa/Dropbox/P/pharmasea/output/vendor/backward/backward.o"
+    "directory": "/Users/gabeochoa/p/pharmasea",
+    "file": "/Users/gabeochoa/p/pharmasea/src/engine/app.cpp",
+    "output": "/Users/gabeochoa/p/pharmasea/output/src/engine/app.o"
   }
 ]
