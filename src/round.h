@@ -17,7 +17,6 @@ struct Round {
 
     void onUpdate(float dt) {
         if (!GameState::s_in_round()) return;
-
         if (currentRoundTime >= 0) currentRoundTime -= dt;
     }
 
@@ -28,11 +27,13 @@ struct Round {
 
    private:
     friend bitsery::Access;
+
     // Note: this exists just for the serializer,
     Round() {
         totalRoundTime = 1.f;
         currentRoundTime = 1.f;
     }
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {

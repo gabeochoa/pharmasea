@@ -79,12 +79,12 @@ static void DrawTextCodepoint3D(Font font, int codepoint, vec3 position,
         // Front Face
         rlNormal3f(0.0f, 1.0f, 0.0f);  // Normal Pointing Up
         rlTexCoord2f(tx, ty);
-        rlVertex3f(x, y, z);  // Top Left Of The Texture and Quad
+        rlVertex3f(x, y, z);           // Top Left Of The Texture and Quad
         rlTexCoord2f(tx, th);
         rlVertex3f(x, y, z + height);  // Bottom Left Of The Texture and Quad
         rlTexCoord2f(tw, th);
         rlVertex3f(x + width, y,
-                   z + height);  // Bottom Right Of The Texture and Quad
+                   z + height);       // Bottom Right Of The Texture and Quad
         rlTexCoord2f(tw, ty);
         rlVertex3f(x + width, y, z);  // Top Right Of The Texture and Quad
 
@@ -92,9 +92,9 @@ static void DrawTextCodepoint3D(Font font, int codepoint, vec3 position,
             // Back Face
             rlNormal3f(0.0f, -1.0f, 0.0f);  // Normal Pointing Down
             rlTexCoord2f(tx, ty);
-            rlVertex3f(x, y, z);  // Top Right Of The Texture and Quad
+            rlVertex3f(x, y, z);            // Top Right Of The Texture and Quad
             rlTexCoord2f(tw, ty);
-            rlVertex3f(x + width, y, z);  // Top Left Of The Texture and Quad
+            rlVertex3f(x + width, y, z);    // Top Left Of The Texture and Quad
             rlTexCoord2f(tw, th);
             rlVertex3f(x + width, y,
                        z + height);  // Bottom Left Of The Texture and Quad
@@ -114,8 +114,8 @@ static void DrawText3D(Font font, const char* text, vec3 position,
                        float fontSize, float fontSpacing, float lineSpacing,
                        bool backface, Color tint) {
     unsigned int length =
-        TextLength(text);  // Total length in bytes of the text,
-                           // scanned by codepoints in loop
+        TextLength(text);      // Total length in bytes of the text,
+                               // scanned by codepoints in loop
 
     float textOffsetY = 0.0f;  // Offset between lines (on line break '\n')
     float textOffsetX = 0.0f;  // Offset X to next character to draw
@@ -229,8 +229,8 @@ static void DrawTextWave3D(Font font, const char* text, vec3 position,
     int length = TextLength(text);  // Total length in bytes of the text,
                                     // scanned by codepoints in loop
 
-    float textOffsetY = 0.0f;  // Offset between lines (on line break '\n')
-    float textOffsetX = 0.0f;  // Offset X to next character to draw
+    float textOffsetY = 0.0f;       // Offset between lines (on line break '\n')
+    float textOffsetX = 0.0f;       // Offset X to next character to draw
 
     float scale = fontSize / (float) font.baseSize;
 
