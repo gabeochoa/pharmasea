@@ -259,12 +259,23 @@ void rotate_furniture(const std::shared_ptr<Entity> player) {
     match->get<Transform>().rotate_facing_clockwise();
 }
 
+void drop_held_furniture(const std::shared_ptr<Entity>& player) {
+    CanHoldFurniture& ourCHF = player->get<CanHoldFurniture>();
+    // TODO need to make sure it doesnt place ontop of another
+    // one
+    auto hf = ourCHF.furniture();
+
+    hf->get<CanBeHeld>().update(false);
+    hf->get<Transform>().update(vec::snap(
+        vec::to3(player->get<Transform>().tile_infront_given_player(1))));
+
+    ourCHF.update(nullptr);
+}
+
 void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
     TRACY_ZONE_SCOPED;
     // TODO: Need to delete any held items when switching from game ->
     // planning
-
-    // TODO need to auto drop when "in_planning" changes
 
     // TODO add transform request / has checks
 
@@ -275,18 +286,7 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
     CanHoldFurniture& ourCHF = player->get<CanHoldFurniture>();
 
     if (ourCHF.is_holding_furniture()) {
-        const auto _drop_furniture = [&]() {
-            // TODO need to make sure it doesnt place ontop of another
-            // one
-            auto hf = ourCHF.furniture();
-
-            hf->get<CanBeHeld>().update(false);
-            hf->get<Transform>().update(vec::snap(vec::to3(
-                player->get<Transform>().tile_infront_given_player(1))));
-
-            ourCHF.update(nullptr);
-        };
-        _drop_furniture();
+        drop_held_furniture(player);
         return;
     } else {
         // TODO support finding things in the direction the player is

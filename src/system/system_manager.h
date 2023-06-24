@@ -307,6 +307,17 @@ void process_is_container_and_should_destroy_item(
         entity, dynamic_pointer_cast<PillBottle>(canHold.item()));
 }
 
+void handle_autodrop_furniture_when_exiting_planning(
+    const std::shared_ptr<Entity>& entity) {
+    if (entity->is_missing<CanHoldFurniture>()) return;
+
+    CanHoldFurniture& ourCHF = entity->get<CanHoldFurniture>();
+    if (!ourCHF.empty()) return;
+
+    // TODO need to find a spot it can go in using EntityHelper::isWalkable
+    input_process_manager::planning::drop_held_furniture(entity);
+}
+
 // TODO fix this
 // void process_register_waiting_queue(std::shared_ptr<Entity> entity, float dt)
 // { if (entity->is_missing<HasWaitingQueue>()) return; HasWaitingQueue&
@@ -384,6 +395,11 @@ struct SystemManager {
     void in_round_update(
         const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
         for (auto& entity : entity_list) {
+            // TODO Only needs to run during the transition from
+            // planning->inround
+            system_manager::handle_autodrop_furniture_when_exiting_planning(
+                entity);
+            // Runs every in-round update
             system_manager::job_system::handle_job_holder_pushed(entity, dt);
             system_manager::job_system::update_job_information(entity, dt);
             system_manager::process_grabber_items(entity, dt);
