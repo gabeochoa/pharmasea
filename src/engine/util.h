@@ -18,6 +18,9 @@
 
 namespace util {
 
+// Legit what it says
+inline void force_segfault() { *(int*) 0 = 0; }
+
 template<class... Ts>
 struct overloaded : Ts... {
     using Ts::operator()...;
