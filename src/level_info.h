@@ -34,8 +34,6 @@ static void generate_and_insert_walls(std::string /* seed */) {
 struct LevelInfo {
     bool was_generated = false;
 
-    SystemManager system_manager;
-
     Entities entities;
     Entities::size_type num_entities;
 
@@ -46,13 +44,13 @@ struct LevelInfo {
 
     virtual void onUpdate(float dt) {
         TRACY_ZONE_SCOPED;
-        system_manager.update(dt);
+        SystemManager::get().update(dt);
     }
 
     virtual void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
-        system_manager.render_entities(entities, dt);
-        system_manager.render_items(items, dt);
+        SystemManager::get().render_entities(entities, dt);
+        SystemManager::get().render_items(items, dt);
     }
 
     virtual void onDrawUI(float) {}
