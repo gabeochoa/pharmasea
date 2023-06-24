@@ -586,23 +586,6 @@ void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
             return;
         }
         case Job::State::HeadingToStart: {
-            // bool arrived = navigate_to(entity, dt, job->start);
-            // // TODO we cannot mutate this->job inside navigate because
-            // the
-            // // `job->state` below will change the new job and not the old
-            // // one this foot-gun might be solvable by passing in the
-            // global
-            // // job to the job processing function, then it wont change
-            // until
-            // // the next call
-            // if (job->path_size == 0) {
-            // personal_queue.push(job);
-            // job.reset(new Job({
-            // .type = Wandering,
-            // }));
-            // return;
-            // }
-
             travel_to_position(entity, dt, job.start);
             cpj.update_job_state(is_at_position(entity, job.start)
                                      ? Job::State::WorkingAtStart
