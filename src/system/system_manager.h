@@ -331,10 +331,39 @@ SINGLETON_FWD(SystemManager)
 struct SystemManager {
     SINGLETON(SystemManager)
 
+    SystemManager() {
+        log_info("register sate");
+        // Register state manager
+        GameState::get().register_on_change(
+            std::bind(&SystemManager::on_game_state_change, this,
+                      std::placeholders::_1, std::placeholders::_2));
+    }
+
+    bool state_transitioned_round_planning = false;
+    bool state_transitioned_planning_round = false;
+
+    void on_game_state_change(game::State new_state, game::State old_state) {
+        log_warn("system manager on game state change from {} to {}", old_state,
+                 new_state);
+
+        if (old_state == game::State::InRound &&
+            new_state == game::State::Planning) {
+            state_transitioned_round_planning = true;
+        }
+
+        if (old_state == game::State::Planning &&
+            new_state == game::State::InRound) {
+            state_transitioned_planning_round = true;
+        }
+    }
+
     void update(const Entities& entities, float dt) {
         // TODO add num entities to debug overlay
         // log_info("num entities {}", entities.size());
         // TODO do we run game updates during paused?
+
+        // Process State Change Boiz
+        process_state_change(entities, dt);
 
         if (GameState::get().is(game::State::InRound)) {
             in_round_update(entities, dt);
@@ -375,6 +404,23 @@ struct SystemManager {
     }
 
    private:
+    void process_state_change(
+        const std::vector<std::shared_ptr<Entity>>& entities, float) {
+        if (state_transitioned_round_planning) {
+            state_transitioned_round_planning = false;
+            // for (auto& entity : entities) {
+            // system_manager::delete_held_items_when_leaving_inround(entity);
+            // }
+        }
+
+        if (state_transitioned_planning_round) {
+            state_transitioned_planning_round = false;
+            for (auto& entity : entities) {
+                system_manager::handle_autodrop_furniture_when_exiting_planning(
+                    entity);
+            }
+        }
+    }
     void always_update(const std::vector<std::shared_ptr<Entity>>& entity_list,
                        float dt) {
         for (auto& entity : entity_list) {
@@ -395,11 +441,6 @@ struct SystemManager {
     void in_round_update(
         const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
         for (auto& entity : entity_list) {
-            // TODO Only needs to run during the transition from
-            // planning->inround
-            system_manager::handle_autodrop_furniture_when_exiting_planning(
-                entity);
-            // Runs every in-round update
             system_manager::job_system::handle_job_holder_pushed(entity, dt);
             system_manager::job_system::update_job_information(entity, dt);
             system_manager::process_grabber_items(entity, dt);

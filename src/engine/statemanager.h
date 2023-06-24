@@ -30,7 +30,7 @@ struct StateManager2 {
         return magic_enum::enum_name(state);
     }
 
-    void register_on_change(const std::function<void(T)>& nfunc) {
+    void register_on_change(const std::function<void(T, T)>& nfunc) {
         on_change_action_list.push_back(nfunc);
     }
 
@@ -48,7 +48,7 @@ struct StateManager2 {
             // loop
         }
 
-        call_on_change(ns);
+        call_on_change(ns, prev.top());
     }
 
     virtual T default_value() const = 0;
@@ -61,14 +61,14 @@ struct StateManager2 {
     virtual ~StateManager2() {}
 
    private:
-    void call_on_change(T ns) {
+    void call_on_change(T ns, T os) {
         for (auto& func : on_change_action_list) {
-            if (func) func(ns);
+            if (func) func(ns, os);
         }
     }
 
     std::stack<T> prev;
-    std::vector<std::function<void(T)>> on_change_action_list;
+    std::vector<std::function<void(T, T)>> on_change_action_list;
     T state;
 };
 
