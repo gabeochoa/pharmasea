@@ -67,27 +67,6 @@ struct Client {
         }
     }
 
-    // TODO figure out why this code was commented out
-    // ClientPacket get_player_packet(int my_id) {
-    // Player me = GLOBALS.get<Player>("player");
-    // ClientPacket player({
-    // .channel = Channel::UNRELIABLE_NO_DELAY,
-    // .client_id = my_id,
-    // .msg_type = network::ClientPacket::MsgType::PlayerLocation,
-    // .msg = network::ClientPacket::PlayerInfo({
-    // .facing_direction = static_cast<int>(me.face_direction),
-    // .location =
-    // {
-    // me.position.x,
-    // me.position.y,
-    // me.position.z,
-    // },
-    // .name = Settings::get().data.username,
-    // }),
-    // });
-    // return player;
-    // }
-
     void send_player_input_packet(int my_id) {
         Entity* me = GLOBALS.get_ptr<Entity>("player");
         CollectsUserInput& cui = me->get<CollectsUserInput>();
