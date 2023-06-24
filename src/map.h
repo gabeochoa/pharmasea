@@ -17,7 +17,11 @@ struct Map {
     std::vector<std::shared_ptr<Entity>> remote_players_NOT_SERIALIZED;
     std::string seed;
 
-    Map(const std::string& _seed = "default_seed") : seed(_seed) {
+    // This gets called on every network frame because
+    // the serializer uses the default contructor
+    Map() {}
+
+    Map(const std::string& _seed) : seed(_seed) {
         // TODO this is needed for the items to be regenerated
         update_seed(seed);
     }

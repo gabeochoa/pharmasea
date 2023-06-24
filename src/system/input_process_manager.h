@@ -277,10 +277,6 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
     // TODO: Need to delete any held items when switching from game ->
     // planning
 
-    // TODO add transform request / has checks
-
-    // TODO add has<> checks here
-
     // TODO need to figure out if this should be separate from highlighting
     CanHighlightOthers& cho = player->get<CanHighlightOthers>();
     CanHoldFurniture& ourCHF = player->get<CanHoldFurniture>();

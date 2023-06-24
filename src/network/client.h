@@ -30,8 +30,7 @@ struct Client {
             std::bind(&Client::client_process_message_string, this,
                       std::placeholders::_1));
 
-        map.reset(new Map());
-        map->update_seed("default_seed");
+        map.reset(new Map("default_seed"));
         GLOBALS.set("map", map.get());
     }
 
