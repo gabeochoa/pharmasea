@@ -50,13 +50,13 @@ using StdMap = bitsery::ext::StdMap;
 #include "engine/astar.h"
 #include "engine/is_server.h"
 #include "engine/model_library.h"
+#include "engine/util.h"
 #include "globals.h"
 #include "item.h"
 #include "item_helper.h"
 #include "preload.h"
 #include "raylib.h"
 #include "text_util.h"
-#include "engine/util.h"
 #include "vec_util.h"
 
 static std::atomic_int ENTITY_ID_GEN = 0;
@@ -295,7 +295,8 @@ static Entity* make_customer(vec3 p) {
         std::make_shared<Insomnia>());
 
     customer->get<HasBaseSpeed>().update(10.f);
-    customer->get<CanPerformJob>().update(WaitInQueue, Wandering);
+    // TODO turn back on normal customer ai
+    // customer->get<CanPerformJob>().update(WaitInQueue, Wandering);
 
     return customer;
 

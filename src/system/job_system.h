@@ -140,14 +140,16 @@ bool navigate_to(const std::shared_ptr<Entity>& entity, vec2 goal) {
             entity, fmt::format("generated path from {} to {} with {} steps",
                                 me, goal, job->path_size));
     }
+
     travel_on_path(me);
     return false;
 }
 
-void run_job_wandering(const std::shared_ptr<Entity>& entity) {
+void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
     CanPerformJob& cpj = entity->get<CanPerformJob>();
-    std::shared_ptr<Job> job = cpj.job();
-    auto personal_queue = entity->get<CanPerformJob>().job_queue();
+    std::shared_ptr<Job>& job = cpj.job();
+    auto& personal_queue = entity->get<CanPerformJob>().job_queue();
+
     switch (job->state) {
         case Job::State::Initialize: {
             logging_manager::announce(entity, "starting a new wandering job");
