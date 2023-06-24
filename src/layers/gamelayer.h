@@ -12,17 +12,17 @@
 #include "../map.h"
 
 struct GameLayer : public Layer {
-    std::shared_ptr<Entity> player;
+    // std::shared_ptr<Entity> player;
     std::shared_ptr<Entity> active_player;
     std::shared_ptr<GameCam> cam;
     raylib::Model bag_model;
 
     GameLayer() : Layer("Game") {
-        player.reset(make_player(vec3{-3, 0, -3}));
-        GLOBALS.set("player", player.get());
+        // player.reset(make_player(vec3{-3, 0, -3}));
+        // GLOBALS.set("player", player.get());
 
         // TODO do we need this still?
-        player->get<CanBeGhostPlayer>().update(true);
+        // player->get<CanBeGhostPlayer>().update(true);
 
         cam.reset(new GameCam());
         GLOBALS.set("game_cam", cam.get());
@@ -88,7 +88,7 @@ struct GameLayer : public Layer {
         }
         cam->updateCamera();
 
-        SystemManager::get().update(Entities{player}, dt);
+        // SystemManager::get().update(Entities{player}, dt);
 
         // NOTE: gabe: i dont think we need to do this
         //         because the local map never should need to grab things
@@ -130,7 +130,7 @@ struct GameLayer : public Layer {
                         GLOBALS.get_or_default<
                             std::map<int, std::shared_ptr<Entity>>>(
                             "server_players", {}));
-                SystemManager::get().render_entities(Entities{player}, dt);
+                // SystemManager::get().render_entities(Entities{player}, dt);
             }
             // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
             // if (nav) {
