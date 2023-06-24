@@ -34,6 +34,6 @@ struct CanHoldItem : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.object(held_item);
+        s.ext(held_item, bitsery::ext::StdSmartPtr{});
     }
 };

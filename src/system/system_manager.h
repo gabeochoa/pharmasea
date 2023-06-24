@@ -318,6 +318,30 @@ void handle_autodrop_furniture_when_exiting_planning(
     input_process_manager::planning::drop_held_furniture(entity);
 }
 
+void delete_held_items_when_leaving_inround(
+    const std::shared_ptr<Entity>& entity) {
+    // TODO this doesnt seem to work
+    // you keep holding it even after the transition
+
+    log_warn("delete_held_items_when_leaving_inround");
+    if (entity->is_missing<CanHoldItem>()) return;
+    log_warn("delete_ canhold {} {}", entity->get<DebugName>().name(),
+             entity->id);
+
+    CanHoldItem& canHold = entity->get<CanHoldItem>();
+    if (canHold.empty()) return;
+    log_warn("delete_ notempty");
+
+    // Mark it as deletable
+    std::shared_ptr<Item>& item = canHold.item();
+    item->cleanup = true;
+
+    // let go of the item
+    canHold.update(nullptr);
+
+    log_error("deleting item :");
+}
+
 // TODO fix this
 // void process_register_waiting_queue(std::shared_ptr<Entity> entity, float dt)
 // { if (entity->is_missing<HasWaitingQueue>()) return; HasWaitingQueue&
@@ -343,8 +367,8 @@ struct SystemManager {
     bool state_transitioned_planning_round = false;
 
     void on_game_state_change(game::State new_state, game::State old_state) {
-        log_warn("system manager on game state change from {} to {}", old_state,
-                 new_state);
+        // log_warn("system manager on game state change from {} to {}",
+        // old_state, new_state);
 
         if (old_state == game::State::InRound &&
             new_state == game::State::Planning) {
@@ -408,9 +432,9 @@ struct SystemManager {
         const std::vector<std::shared_ptr<Entity>>& entities, float) {
         if (state_transitioned_round_planning) {
             state_transitioned_round_planning = false;
-            // for (auto& entity : entities) {
-            // system_manager::delete_held_items_when_leaving_inround(entity);
-            // }
+            for (auto& entity : entities) {
+                system_manager::delete_held_items_when_leaving_inround(entity);
+            }
         }
 
         if (state_transitioned_planning_round) {

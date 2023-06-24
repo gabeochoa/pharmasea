@@ -48,7 +48,8 @@ enum InputName {
     TargetLeft,
     TargetRight,
     //
-    TogglePlanning,     // DEBUG ONLY
+    ToggleToPlanning,   // DEBUG ONLY
+    ToggleToInRound,    // DEBUG ONLY
     ToggleDebug,        // DEBUG ONLY
     ToggleNetworkView,  // DEBUG ONLY
     ToggleLobby,        // DEBUG ONLY
@@ -431,8 +432,13 @@ struct KeyMap {
         game_map[InputName::TargetLeft] = {raylib::KEY_LEFT};
         game_map[InputName::TargetRight] = {raylib::KEY_RIGHT};
 
-        game_map[InputName::TogglePlanning] = {
+        game_map[InputName::ToggleToPlanning] = {
             raylib::KEY_P,
+            raylib::GAMEPAD_BUTTON_MIDDLE_LEFT,
+        };
+
+        game_map[InputName::ToggleToInRound] = {
+            raylib::KEY_O,
             raylib::GAMEPAD_BUTTON_MIDDLE_LEFT,
         };
 

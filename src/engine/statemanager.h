@@ -199,4 +199,12 @@ struct GameState : public StateManager2<game::State> {
     static game::State s_toggle_planning() {
         return GameState::get().toggle_planning();
     }
+
+    static void s_toggle_to_planning() {
+        return GameState::get().set(game::State::Planning);
+    }
+
+    static void s_toggle_to_inround() {
+        return GameState::get().set(game::State::InRound);
+    }
 };

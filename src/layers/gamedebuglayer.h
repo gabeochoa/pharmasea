@@ -39,15 +39,25 @@ struct GameDebugLayer : public Layer {
 
     bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
 
-    void toggle_planning() {
-        GameState::s_toggle_planning();
+    void toggle_to_planning() {
+        GameState::s_toggle_to_planning();
+        EntityHelper::invalidatePathCache();
+    }
+
+    void toggle_to_inround() {
+        GameState::s_toggle_to_inround();
         EntityHelper::invalidatePathCache();
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-        if (KeyMap::get_button(menu::State::Game, InputName::TogglePlanning) ==
+        if (KeyMap::get_button(menu::State::Game,
+                               InputName::ToggleToPlanning) == event.button) {
+            toggle_to_planning();
+            return true;
+        }
+        if (KeyMap::get_button(menu::State::Game, InputName::ToggleToInRound) ==
             event.button) {
-            toggle_planning();
+            toggle_to_inround();
             return true;
         }
         if (KeyMap::get_button(menu::State::Game, InputName::ToggleDebug) ==
@@ -65,8 +75,14 @@ struct GameDebugLayer : public Layer {
 
     bool onKeyPressed(KeyPressedEvent& event) {
         if (KeyMap::get_key_code(menu::State::Game,
-                                 InputName::TogglePlanning) == event.keycode) {
-            toggle_planning();
+                                 InputName::ToggleToPlanning) ==
+            event.keycode) {
+            toggle_to_planning();
+            return true;
+        }
+        if (KeyMap::get_key_code(menu::State::Game,
+                                 InputName::ToggleToInRound) == event.keycode) {
+            toggle_to_inround();
             return true;
         }
         if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleLobby) ==
