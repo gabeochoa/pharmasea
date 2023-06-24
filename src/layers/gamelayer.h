@@ -102,6 +102,7 @@ struct GameLayer : public Layer {
         // NOTE: gabe: i dont think we need to do this
         //         because the local map never should need to grab things
         //         TODO do we?
+        //         jun 24-23 we need this so furniture shows up
         auto map_ptr = GLOBALS.get_ptr<Map>("map");
         if (map_ptr) {
             // NOTE: today we need to grab things so that the client renders
