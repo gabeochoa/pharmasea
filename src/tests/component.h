@@ -104,6 +104,36 @@ void validate_name_change_persisits() {
     delete entity2;
 }
 
+void validate_custom_hold_position_persisits() {
+    Entity* entity = mk_entity();
+    entity->addComponent<CustomHeldItemPosition>();
+
+    auto position = CustomHeldItemPosition::Positioner::Conveyer;
+
+    entity->get<CustomHeldItemPosition>().init(position);
+
+    auto newpos = entity->get<CustomHeldItemPosition>().positioner;
+
+    M_TEST_EQ(position, newpos, "component should have correctly set position");
+
+    network::Buffer buff = network::serialize_to_entity(entity);
+    Entity* entity2 = mk_entity();
+    network::deserialize_to_entity(entity2, buff);
+
+    compare_and_validate_components(entity, entity2);
+
+    auto post_serialize_position =
+        entity2->get<CustomHeldItemPosition>().positioner;
+
+    M_TEST_EQ(position, post_serialize_position,
+              "component should have starting position");
+    M_TEST_EQ(newpos, post_serialize_position,
+              "component before serialize should match deserialize");
+
+    delete entity;
+    delete entity2;
+}
+
 void remote_player_components() {
     Entity* entity = make_remote_player({0, 0, 0});
 
@@ -121,6 +151,7 @@ void remote_player_components() {
 void all_tests() {
     entity_components();
     test_adding_single_component_serialdeserial();
+    validate_custom_hold_position_persisits();
     validate_name_change_persisits();
     // remote_player_components();
 }

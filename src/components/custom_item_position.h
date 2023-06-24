@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../item.h"
+#include "../vendor_include.h"
 #include "base_component.h"
 #include "transform.h"
 
@@ -22,3 +23,9 @@ struct CustomHeldItemPosition : public BaseComponent {
         s.value4b(positioner);
     }
 };
+
+std::ostream& operator<<(std::ostream& os,
+                         const CustomHeldItemPosition::Positioner& p) {
+    os << magic_enum::enum_name(p);
+    return os;
+}

@@ -63,7 +63,6 @@ inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
 
     vec3 new_pos = transform.pos();
 
-    // TODO only seems to work for the host
     if (entity->has<CustomHeldItemPosition>()) {
         CustomHeldItemPosition& custom_item_position =
             entity->get<CustomHeldItemPosition>();
@@ -102,7 +101,7 @@ inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
                 new_pos.y += TILESIZE / 4;
                 break;
         }
-        entity->get<CanHoldItem>().item()->update_position(new_pos);
+        can_hold_item.item()->update_position(new_pos);
         return;
     }
 
@@ -327,13 +326,15 @@ struct SystemManager {
     void update(const Entities& entities, float dt) {
         // TODO add num entities to debug overlay
         // log_info("num entities {}", entities.size());
-        always_update(entities, dt);
         // TODO do we run game updates during paused?
+
         if (GameState::get().is(game::State::InRound)) {
             in_round_update(entities, dt);
         } else {
             planning_update(entities, dt);
         }
+
+        always_update(entities, dt);
     }
 
     void update(float dt) { update(EntityHelper::get_entities(), dt); }
@@ -360,6 +361,7 @@ struct SystemManager {
 
     void render_items(Items items, float) const {
         for (auto i : items) {
+            log_warn("position {}", i->position);
             if (i) i->render();
             if (!i) log_warn("we have invalid items");
         }
