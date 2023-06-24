@@ -358,7 +358,6 @@ struct SystemManager {
 
     void render_items(Items items, float) const {
         for (auto i : items) {
-            log_warn("position {}", i->position);
             if (i) i->render();
             if (!i) log_warn("we have invalid items");
         }
