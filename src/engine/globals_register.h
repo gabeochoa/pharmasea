@@ -13,6 +13,8 @@ struct GlobalValueRegister {
         try {
             return (T*) (globals.at(name));
         } catch (std::exception e) {
+            log_warn("Trying to fetch global of name: {} but it doesnt exist",
+                     name);
             return nullptr;
         }
     }
