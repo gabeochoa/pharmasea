@@ -9,8 +9,6 @@
 
 enum AnnouncementType { Message, Error, Warning };
 
-// TODO maybe this should live in the engine
-//
 struct ToastMsg {
     std::string msg;
     AnnouncementType type;
