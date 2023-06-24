@@ -77,4 +77,11 @@ vec3 snap(vec3 position) {
             TILESIZE * round(position.z / TILESIZE)};
 }
 
+vec2 lerp(vec2 a, vec2 b, float pct) {
+    return vec2{
+        (a.x * (1 - pct)) + (b.x * pct),
+        (a.y * (1 - pct)) + (b.y * pct),
+    };
+}
+
 }  // namespace vec

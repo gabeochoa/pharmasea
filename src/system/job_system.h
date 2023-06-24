@@ -104,34 +104,43 @@ inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
     }
 }
 
-bool navigate_to(const std::shared_ptr<Entity>& entity, vec2 goal) {
-    const auto travel_on_path = [entity](vec2 me) {
-        auto job = entity->get<CanPerformJob>().job();
+bool navigate_to(const std::shared_ptr<Entity>& entity, float dt, vec2 goal) {
+    const auto travel_on_path = [entity, dt](vec2 me) {
+        // logging_manager::announce(entity, "start travel");
+        auto& job = entity->get<CanPerformJob>().job();
         // did not arrive
-        if (job->path_empty()) return;
-        // Grab next local point to go to
+        if (job->path_empty()) {
+            // logging_manager::announce(entity, "path empty");
+            return;
+        }
+
+        if (job->local.has_value() && job->local.value() == vec::snap(me)) {
+            job->local.reset();
+            // logging_manager::announce(
+            // entity, fmt::format("reached local point {} : {} ", me,
+            // job->path_size));
+        }
+
         if (!job->local.has_value()) {
+            // Grab next local point to go to
             job->local = job->path_front();
             job->path_pop_front();
-        }
-        // Go to local point
-        if (job->local.value() == me) {
-            job->local.reset();
-            logging_manager::announce(
-                entity, fmt::format("reached local point {} : {} ", me,
-                                    job->path_size));
+            // logging_manager::announce(entity, "update local ");
+            return;
         }
         return;
     };
 
-    auto job = entity->get<CanPerformJob>().job();
-    // if (entity->is_missing<Transform>()) return;
     Transform& transform = entity->get<Transform>();
     vec2 me = transform.as2();
     if (me == goal) {
-        // announce("reached goal");
         return true;
     }
+
+    // logging_manager::announce(entity, fmt::format("me: {} goal: {}", me,
+    // goal));
+
+    auto& job = entity->get<CanPerformJob>().job();
     if (job->path_empty()) {
         job->update_path(astar::find_path(
             me, goal,
@@ -157,7 +166,8 @@ void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
             return;
         }
         case Job::State::HeadingToStart: {
-            bool arrived = navigate_to(entity, job->start);
+            logging_manager::announce(entity, "wandering heading to start");
+            bool arrived = navigate_to(entity, dt, job->start);
             // TODO we cannot mutate this->job inside navigate because the
             // `job->state` below will change the new job and not the old
             // one this foot-gun might be solvable by passing in the global
@@ -175,20 +185,24 @@ void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
             return;
         }
         case Job::State::WorkingAtStart: {
+            logging_manager::announce(entity, "wandering working at start");
             job->state = Job::State::HeadingToEnd;
             return;
         }
         case Job::State::HeadingToEnd: {
-            bool arrived = navigate_to(entity, job->end);
+            logging_manager::announce(entity, "wandering heading to end ");
+            bool arrived = navigate_to(entity, dt, job->end);
             job->state =
                 arrived ? Job::State::WorkingAtEnd : Job::State::HeadingToEnd;
             return;
         }
         case Job::State::WorkingAtEnd: {
+            logging_manager::announce(entity, "wandering working at end ");
             job->state = Job::State::Completed;
             return;
         }
         case Job::State::Completed: {
+            logging_manager::announce(entity, "wandering completed");
             job->state = Job::State::Completed;
             return;
         }
@@ -213,7 +227,7 @@ void run_job_wait(const std::shared_ptr<Entity>& entity, float dt) {
             return;
         }
         case Job::State::HeadingToEnd: {
-            bool arrived = navigate_to(entity, job->end);
+            bool arrived = navigate_to(entity, dt, job->end);
             job->state =
                 arrived ? Job::State::WorkingAtEnd : Job::State::HeadingToEnd;
             return;
@@ -237,7 +251,7 @@ void run_job_wait(const std::shared_ptr<Entity>& entity, float dt) {
     }
 }
 
-void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float) {
+void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt) {
     CanPerformJob& cpj = entity->get<CanPerformJob>();
     auto job = entity->get<CanPerformJob>().job();
     auto personal_queue = entity->get<CanPerformJob>().job_queue();
@@ -373,7 +387,7 @@ void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float) {
             return;
         }
         case Job::State::HeadingToStart: {
-            bool arrived = navigate_to(entity, job->start);
+            bool arrived = navigate_to(entity, dt, job->start);
             job->state = arrived ? Job::State::WorkingAtStart
                                  : Job::State::HeadingToStart;
             return;
@@ -420,7 +434,7 @@ void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float) {
             return;
         }
         case Job::State::HeadingToEnd: {
-            bool arrived = navigate_to(entity, job->end);
+            bool arrived = navigate_to(entity, dt, job->end);
             job->state =
                 arrived ? Job::State::WorkingAtEnd : Job::State::HeadingToEnd;
             return;
@@ -493,7 +507,7 @@ inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
 
     switch (job->type) {
         case Wandering:
-            run_job_wandering(entity);
+            run_job_wandering(entity, dt);
             break;
         case WaitInQueue:
             run_job_wait_in_queue(entity, dt);
@@ -522,9 +536,6 @@ inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
 }
 
 inline void update_position_from_job(std::shared_ptr<Entity> entity, float dt) {
-    if (entity->is_missing<Transform>()) return;
-    Transform& transform = entity->get<Transform>();
-
     if (entity->is_missing<CanPerformJob>()) return;
     CanPerformJob& cpf = entity->get<CanPerformJob>();
     if (!cpf.has_job()) return;
@@ -541,36 +552,38 @@ inline void update_position_from_job(std::shared_ptr<Entity> entity, float dt) {
 
     float speed = hasBaseSpeed.speed() * dt;
 
-    float speed_multiplier = 1.f;
-    float stagger_multiplier = 0.f;
-    if (entity->has<CanHaveAilment>()) {
-        const CanHaveAilment& cha = entity->get<CanHaveAilment>();
-        stagger_multiplier = cha.ailment()->stagger();
-        speed_multiplier = cha.ailment()->speed_multiplier();
+    // TODO handle these once normal movement is working
+    {
+        // float speed_multiplier = 1.f;
+        // float stagger_multiplier = 0.f;
+        // if (entity->has<CanHaveAilment>()) {
+        // const CanHaveAilment& cha = entity->get<CanHaveAilment>();
+        // stagger_multiplier = cha.ailment()->stagger();
+        // speed_multiplier = cha.ailment()->speed_multiplier();
+        // }
+        //
+        // if (speed_multiplier != 0) speed *= speed_multiplier;
+        // if (stagger_multiplier != 0) speed *= stagger_multiplier;
     }
 
-    if (speed_multiplier != 0) speed *= speed_multiplier;
-    if (stagger_multiplier != 0) speed *= stagger_multiplier;
+    Transform& transform = entity->get<Transform>();
 
-    // this was moved when doing ecs, idk if its still true anymore
-    // TODO we are seeing issues where customers are getting stuck on corners
-    // when turning. Before I feel like they were able to slide but it seems
-    // like not anymore?
+    logging_manager::announce(
+        entity, fmt::format("me{} j{}", transform.pos(), job->local.value()));
 
-    auto new_pos_x = transform.raw();
-    if (tar.x > transform.raw().x) new_pos_x.x += speed;
-    if (tar.x < transform.raw().x) new_pos_x.x -= speed;
+    vec2 new_pos = transform.as2();
+    if (tar.x > transform.raw().x) new_pos.x += speed;
+    if (tar.x < transform.raw().x) new_pos.x -= speed;
 
-    auto new_pos_z = transform.raw();
-    if (tar.y > transform.raw().z) new_pos_z.z += speed;
-    if (tar.y < transform.raw().z) new_pos_z.z -= speed;
+    if (tar.y > transform.raw().z) new_pos.y += speed;
+    if (tar.y < transform.raw().z) new_pos.y -= speed;
 
     // TODO do we need to unr the whole person_update...() function with
     // collision?
 
-    transform.update_x(new_pos_x.x);
-    transform.update_z(new_pos_z.z);
     // TODO do we need to write back the transform?
+
+    transform.update(vec::to3(new_pos));
 }
 
 inline void render_job_visual(std::shared_ptr<Entity> entity, float) {

@@ -11,6 +11,7 @@
 */
 
 #include "component.h"
+#include "lerp_test.h"
 #include "test_ui_widget.h"
 
 namespace tests {
@@ -18,6 +19,8 @@ namespace tests {
 void run_all() {
     test_ui_widget();
     all_tests();
+
+    lerp_test();
 }
 
 }  // namespace tests
