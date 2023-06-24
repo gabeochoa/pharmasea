@@ -242,7 +242,6 @@ inline void process_player_movement_input(std::shared_ptr<Entity> entity,
 namespace planning {
 
 void rotate_furniture(const std::shared_ptr<Entity> player) {
-    TRACY_ZONE_SCOPED;
     // Cant rotate outside planning mode
     if (GameState::get().is_not(game::State::Planning)) return;
 
@@ -273,7 +272,6 @@ void drop_held_furniture(const std::shared_ptr<Entity>& player) {
 }
 
 void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
-    TRACY_ZONE_SCOPED;
     // TODO: Need to delete any held items when switching from game ->
     // planning
 
@@ -320,7 +318,6 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
 namespace inround {
 
 void work_furniture(const std::shared_ptr<Entity> player, float frame_dt) {
-    TRACY_ZONE_SCOPED;
     // Cant do work during planning
     if (GameState::get().is(game::State::Planning)) return;
 
@@ -345,7 +342,6 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
     CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
     const auto _merge_item_from_furniture_into_hand = [player] {
-        TRACY_ZONE(tracy_merge_item_from_furniture);
         CanHighlightOthers& cho = player->get<CanHighlightOthers>();
         // our item cant hold anything or is already full
         if (!player->get<CanHoldItem>().item()->empty()) {
@@ -372,7 +368,6 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
     };
 
     const auto _merge_item_in_hand_into_furniture_item = [&]() {
-        TRACY_ZONE(tracy_merge_item_in_hand_into_furniture);
         std::shared_ptr<Furniture> closest_furniture =
             EntityHelper::getClosestMatchingFurniture(
                 player->get<Transform>(), cho.reach(),
@@ -411,7 +406,6 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
     };
 
     const auto _place_item_onto_furniture = [&]() {
-        TRACY_ZONE(tracy_place_item_onto_furniture);
 
         const auto can_place_item_into = [](std::shared_ptr<Entity> entity,
                                             std::shared_ptr<Item> item) {
@@ -524,7 +518,6 @@ void handle_grab(const std::shared_ptr<Entity>& player) {
 }
 
 void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
-    TRACY_ZONE_SCOPED;
     // TODO Need to auto drop any held furniture
 
     // Do we already have something in our hands?

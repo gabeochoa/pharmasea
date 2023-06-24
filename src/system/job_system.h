@@ -105,7 +105,7 @@ inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
 }
 
 inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
-    return;
+
     const auto travel_on_path = [entity](vec2 me) {
         auto job = entity->get<CanPerformJob>().job();
         // did not arrive

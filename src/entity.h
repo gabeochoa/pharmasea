@@ -56,7 +56,7 @@ using StdMap = bitsery::ext::StdMap;
 #include "preload.h"
 #include "raylib.h"
 #include "text_util.h"
-#include "util.h"
+#include "engine/util.h"
 #include "vec_util.h"
 
 static std::atomic_int ENTITY_ID_GEN = 0;
@@ -228,7 +228,6 @@ static void add_person_components(Entity* person) {
     });
 
     person->addComponent<UsesCharacterModel>();
-    person->addComponent<CanPerformJob>().update(Wandering, Wandering);
 }
 
 static Entity* make_remote_player(vec3 pos) {
@@ -283,8 +282,7 @@ static Entity* make_aiperson(vec3 p) {
     Entity* person = make_entity(DebugOptions{.name = "aiperson"}, p);
     add_person_components(person);
 
-    person->get<CanPerformJob>().update(Wandering, Wandering);
-
+    person->addComponent<CanPerformJob>().update(Wandering, Wandering);
     return person;
 }
 
@@ -292,6 +290,7 @@ static Entity* make_customer(vec3 p) {
     Entity* customer = make_aiperson(p);
 
     customer->addComponent<HasName>().update(get_random_name());
+
     customer->addComponent<CanHaveAilment>().update(
         std::make_shared<Insomnia>());
 
