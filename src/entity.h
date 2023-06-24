@@ -394,9 +394,9 @@ static Entity* make_character_switcher(vec2 pos) {
     return character_switcher;
 }
 
-static Entity* make_wall(vec2 pos, Color c) {
-    Entity* wall = entities::make_furniture(DebugOptions{.name = "wall"}, pos,
-                                            ui::color::brown, ui::color::brown);
+static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
+    Entity* wall =
+        entities::make_furniture(DebugOptions{.name = "wall"}, pos, c, c);
 
     return wall;
     // enum Type {
