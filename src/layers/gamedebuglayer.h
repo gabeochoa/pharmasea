@@ -128,9 +128,6 @@ struct GameDebugLayer : public Layer {
     }
 
    private:
-    // TODO implement or remove
-    void draw_all_debug_ui() {}
-
     void debug_ui(float dt) {
         if (!debug_ui_enabled) return;
         using namespace ui;
@@ -156,7 +153,7 @@ struct GameDebugLayer : public Layer {
                     Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f)));
                 padding(*top_padding);
                 {  //
-                    draw_all_debug_ui();
+                   // draw_all_debug_ui();
                 }
                 padding(*ui_context->own(
                     Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f))));
