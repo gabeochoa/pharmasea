@@ -134,6 +134,37 @@ void validate_custom_hold_position_persisits() {
     delete entity2;
 }
 
+void validate_held_item_serialized() {
+    Entity* entity = mk_entity();
+    entity->addComponent<CanHoldItem>();
+
+    M_TEST_EQ(entity->get<CanHoldItem>().item(), nullptr,
+              "default should be nullptr");
+
+    std::shared_ptr<Item> item = std::make_shared<Item>(vec2{0, 0}, WHITE);
+    entity->get<CanHoldItem>().update(item);
+
+    M_TEST_NEQ(entity->get<CanHoldItem>().item(), nullptr,
+               "component should not have null item");
+
+    network::Buffer buff = network::serialize_to_entity(entity);
+    Entity* entity2 = mk_entity();
+    network::deserialize_to_entity(entity2, buff);
+
+    compare_and_validate_components(entity, entity2);
+
+    auto& post_serialize_item = entity2->get<CanHoldItem>().item();
+
+    M_TEST_NEQ(post_serialize_item, nullptr,
+               "component should not have null item");
+
+    M_TEST_EQ(item->color, post_serialize_item->color,
+              "component should have item with the same color");
+
+    delete entity;
+    delete entity2;
+}
+
 void remote_player_components() {
     Entity* entity = make_remote_player({0, 0, 0});
 
@@ -153,5 +184,6 @@ void all_tests() {
     test_adding_single_component_serialdeserial();
     validate_custom_hold_position_persisits();
     validate_name_change_persisits();
+    validate_held_item_serialized();
     // remote_player_components();
 }
