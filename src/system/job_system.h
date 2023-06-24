@@ -16,6 +16,106 @@
 namespace system_manager {
 
 namespace job_system {
+
+[[nodiscard]] inline bool is_at_position(const std::shared_ptr<Entity>& entity,
+                                         vec2 position) {
+    return entity->get<Transform>().as2() == position;
+}
+
+// TODO M_ASSERT should be renamed to "VALIDATE" since i always get the
+// conditional backwards
+
+// TODO delete
+int g = 0;
+
+inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
+                               vec2 goal) {
+    // we just call this again cause its fun, be we could merge the two in the
+    // future
+    if (is_at_position(entity, goal)) {
+        // logging_manager::announce(
+        // entity,
+        // fmt::format("no need to travel we are already at the goal {}", 1));
+        return;
+    }
+
+    const auto _grab_path_to_goal = [goal, entity]() {
+        CanPerformJob& cpj = entity->get<CanPerformJob>();
+        if (!cpj.job().path_empty()) return;
+
+        vec2 me = entity->get<Transform>().as2();
+        cpj.mutable_job()->update_path(astar::find_path(
+            me, goal,
+            std::bind(EntityHelper::isWalkable, std::placeholders::_1)));
+
+        // logging_manager::announce(
+        // entity, fmt::format("gen path from {} to {} with {} steps", me,
+        // goal, cpj.job().path_size));
+
+        // what happens if we get here and the path is still empty?
+        M_ASSERT(!cpj.job().path_empty(), "path should no longer be empty");
+    };
+
+    const auto _grab_local_target = [entity]() {
+        CanPerformJob& cpj = entity->get<CanPerformJob>();
+
+        // Either we dont yet have a local target
+        // or we already reached the one we had
+
+        if (cpj.has_local_target() &&
+            is_at_position(entity, cpj.local_target())) {
+            // have one and got there already
+            cpj.mutable_job()->local.reset();
+        }
+
+        cpj.grab_job_local_target();
+        // logging_manager::announce(entity, " we reached the local!");
+
+        M_ASSERT(cpj.has_local_target(), "job should have a local target");
+    };
+
+    const auto _move_toward_local_target = [entity, dt]() {
+        CanPerformJob& cpj = entity->get<CanPerformJob>();
+        // TODO forcing get<HasBaseSpeed> to crash here
+        // TODO handle these once normal movement is working
+        float speed = entity->get<HasBaseSpeed>().speed() * dt;
+        {
+            // float speed_multiplier = 1.f;
+            // float stagger_multiplier = 0.f;
+            // if (entity->has<CanHaveAilment>()) {
+            // const CanHaveAilment& cha = entity->get<CanHaveAilment>();
+            // stagger_multiplier = cha.ailment()->stagger();
+            // speed_multiplier = cha.ailment()->speed_multiplier();
+            // }
+            //
+            // if (speed_multiplier != 0) speed *= speed_multiplier;
+            // if (stagger_multiplier != 0) speed *= stagger_multiplier;
+        }
+
+        Transform& transform = entity->get<Transform>();
+
+        vec2 new_pos = transform.as2();
+
+        vec2 tar = cpj.local_target();
+        if (tar.x > transform.raw().x) new_pos.x += speed;
+        if (tar.x < transform.raw().x) new_pos.x -= speed;
+
+        if (tar.y > transform.raw().z) new_pos.y += speed;
+        if (tar.y < transform.raw().z) new_pos.y -= speed;
+
+        // TODO do we need to unr the whole person_update...() function with
+        // collision?
+
+        // TODO do we need to write back the transform?
+
+        transform.update(vec::to3(new_pos));
+    };
+
+    _grab_path_to_goal();
+    _grab_local_target();
+    _move_toward_local_target();
+}
+
 /*
 
 
@@ -31,8 +131,8 @@ inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
     }
 }
 
-bool navigate_to(const std::shared_ptr<Entity>& entity, float dt, vec2 goal) {
-    const auto travel_on_path = [entity](vec2 me) {
+bool navigate_to(const std::shared_ptr<Entity>& entity, float dt, vec2 goal)
+{ const auto travel_on_path = [entity](vec2 me) {
         // logging_manager::announce(entity, "start travel");
         auto& job = entity->get<CanPerformJob>().job();
         // did not arrive
@@ -73,67 +173,12 @@ bool navigate_to(const std::shared_ptr<Entity>& entity, float dt, vec2 goal) {
             me, goal,
             std::bind(EntityHelper::isWalkable, std::placeholders::_1)));
         logging_manager::announce(
-            entity, fmt::format("generated path from {} to {} with {} steps",
-                                me, goal, job->path_size));
+            entity, fmt::format("generated path from {} to {} with {}
+steps", me, goal, job->path_size));
     }
 
     travel_on_path(me);
     return false;
-}
-
-void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
-    CanPerformJob& cpj = entity->get<CanPerformJob>();
-    std::shared_ptr<Job>& job = cpj.job();
-    auto& personal_queue = entity->get<CanPerformJob>().job_queue();
-
-    switch (job->state) {
-        case Job::State::Initialize: {
-            logging_manager::announce(entity, "starting a new wandering job");
-            job->state = Job::State::HeadingToStart;
-            return;
-        }
-        case Job::State::HeadingToStart: {
-            logging_manager::announce(entity, "wandering heading to start");
-            bool arrived = navigate_to(entity, dt, job->start);
-            // TODO we cannot mutate this->job inside navigate because the
-            // `job->state` below will change the new job and not the old
-            // one this foot-gun might be solvable by passing in the global
-            // job to the job processing function, then it wont change until
-            // the next call
-            if (job->path_size == 0) {
-                personal_queue.push(job);
-                job.reset(new Job({
-                    .type = Wandering,
-                }));
-                return;
-            }
-            job->state = arrived ? Job::State::WorkingAtStart
-                                 : Job::State::HeadingToStart;
-            return;
-        }
-        case Job::State::WorkingAtStart: {
-            logging_manager::announce(entity, "wandering working at start");
-            job->state = Job::State::HeadingToEnd;
-            return;
-        }
-        case Job::State::HeadingToEnd: {
-            logging_manager::announce(entity, "wandering heading to end ");
-            bool arrived = navigate_to(entity, dt, job->end);
-            job->state =
-                arrived ? Job::State::WorkingAtEnd : Job::State::HeadingToEnd;
-            return;
-        }
-        case Job::State::WorkingAtEnd: {
-            logging_manager::announce(entity, "wandering working at end ");
-            job->state = Job::State::Completed;
-            return;
-        }
-        case Job::State::Completed: {
-            logging_manager::announce(entity, "wandering completed");
-            job->state = Job::State::Completed;
-            return;
-        }
-    }
 }
 
 void run_job_wait(const std::shared_ptr<Entity>& entity, float dt) {
@@ -156,8 +201,8 @@ void run_job_wait(const std::shared_ptr<Entity>& entity, float dt) {
         case Job::State::HeadingToEnd: {
             bool arrived = navigate_to(entity, dt, job->end);
             job->state =
-                arrived ? Job::State::WorkingAtEnd : Job::State::HeadingToEnd;
-            return;
+                arrived ? Job::State::WorkingAtEnd :
+Job::State::HeadingToEnd; return;
         }
         case Job::State::WorkingAtEnd: {
             job->timePassedInCurrentState += dt;
@@ -178,10 +223,10 @@ void run_job_wait(const std::shared_ptr<Entity>& entity, float dt) {
     }
 }
 
-void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt) {
-    CanPerformJob& cpj = entity->get<CanPerformJob>();
-    auto job = entity->get<CanPerformJob>().job();
-    auto personal_queue = entity->get<CanPerformJob>().job_queue();
+void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt)
+{ CanPerformJob& cpj = entity->get<CanPerformJob>(); auto job =
+entity->get<CanPerformJob>().job(); auto personal_queue =
+entity->get<CanPerformJob>().job_queue();
 
     auto wait_and_return = [&]() {
         // Add the current job to the queue,
@@ -213,13 +258,11 @@ void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt) {
     };
 
     const auto position_in_line = [](std::shared_ptr<Entity> reg,
-                                     std::shared_ptr<Entity> customer) -> int {
-        M_ASSERT(customer,
-                 "entity passed to position-in-line should not be null");
-        M_ASSERT(reg->has<HasWaitingQueue>(),
-                 "Trying to pos-in-line for entity which doesnt "
-                 "have a waiting queue ");
-        const auto& ppl_in_line = reg->get<HasWaitingQueue>().ppl_in_line;
+                                     std::shared_ptr<Entity> customer) ->
+int { M_ASSERT(customer, "entity passed to position-in-line should not be
+null"); M_ASSERT(reg->has<HasWaitingQueue>(), "Trying to pos-in-line for
+entity which doesnt " "have a waiting queue "); const auto& ppl_in_line =
+reg->get<HasWaitingQueue>().ppl_in_line;
 
         for (int i = 0; i < (int) ppl_in_line.size(); i++) {
             if (customer->id == ppl_in_line[i]->id) return i;
@@ -231,15 +274,11 @@ void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt) {
     const auto leave_line = [position_in_line](
                                 std::shared_ptr<Entity> reg,
                                 std::shared_ptr<Entity> customer) {
-        M_ASSERT(customer, "entity passed to leave-line should not be null");
-        M_ASSERT(reg->has<HasWaitingQueue>(),
-                 "Trying to leave-line for entity which doesnt "
-                 "have a waiting queue ");
-        auto& ppl_in_line = reg->get<HasWaitingQueue>().ppl_in_line;
-        int pos = position_in_line(reg, customer);
-        if (pos == -1) return;
-        if (pos == 0) {
-            ppl_in_line.pop_front();
+        M_ASSERT(customer, "entity passed to leave-line should not be
+null"); M_ASSERT(reg->has<HasWaitingQueue>(), "Trying to leave-line for
+entity which doesnt " "have a waiting queue "); auto& ppl_in_line =
+reg->get<HasWaitingQueue>().ppl_in_line; int pos = position_in_line(reg,
+customer); if (pos == -1) return; if (pos == 0) { ppl_in_line.pop_front();
             return;
         }
         ppl_in_line.erase(ppl_in_line.begin() + pos);
@@ -266,12 +305,11 @@ void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt) {
 
     const auto can_move_up = [](std::shared_ptr<Entity> reg,
                                 std::shared_ptr<Entity> customer) -> bool {
-        M_ASSERT(customer, "entity passed to can-move-up should not be null");
-        M_ASSERT(reg->has<HasWaitingQueue>(),
-                 "Trying to can-move-up for entity which doesnt "
-                 "have a waiting queue ");
-        const auto& ppl_in_line = reg->get<HasWaitingQueue>().ppl_in_line;
-        return customer->id == ppl_in_line.front()->id;
+        M_ASSERT(customer, "entity passed to can-move-up should not be
+null"); M_ASSERT(reg->has<HasWaitingQueue>(), "Trying to can-move-up for
+entity which doesnt " "have a waiting queue "); const auto& ppl_in_line =
+reg->get<HasWaitingQueue>().ppl_in_line; return customer->id ==
+ppl_in_line.front()->id;
     };
 
     switch (job->state) {
@@ -296,10 +334,8 @@ void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt) {
                 // i think just putting a Job* unfinished in Job is
                 // probably enough
                 logging_manager::announce(entity,
-                                          "Could not find a valid register");
-                job->state = Job::State::Initialize;
-                wait_and_return();
-                return;
+                                          "Could not find a valid
+register"); job->state = Job::State::Initialize; wait_and_return(); return;
             }
 
             job->data["register"] = closest_target.get();
@@ -334,7 +370,8 @@ void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt) {
                 !can_move_up(reg, entity)) {
                 // We didnt move so just wait a bit before trying again
                 logging_manager::announce(
-                    entity, fmt::format("im just going to wait a bit longer"));
+                    entity, fmt::format("im just going to wait a bit
+longer"));
 
                 // Add the current job to the queue,
                 // and then add the waiting job
@@ -345,7 +382,8 @@ void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt) {
 
             // if our spot did change, then move forward
             logging_manager::announce(
-                entity, fmt::format("im moving up to {}", cur_spot_in_line));
+                entity, fmt::format("im moving up to {}",
+cur_spot_in_line));
 
             job->spot_in_line = cur_spot_in_line;
 
@@ -363,8 +401,8 @@ void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt) {
         case Job::State::HeadingToEnd: {
             bool arrived = navigate_to(entity, dt, job->end);
             job->state =
-                arrived ? Job::State::WorkingAtEnd : Job::State::HeadingToEnd;
-            return;
+                arrived ? Job::State::WorkingAtEnd :
+Job::State::HeadingToEnd; return;
         }
         case Job::State::WorkingAtEnd: {
             auto reg = std::shared_ptr<Entity>(
@@ -395,8 +433,8 @@ void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt) {
             // TODO eventually migrate item to ECS
             // auto pill_bottle =
             // bag->get<CanHoldItem>().asT<PillBottle>();
-            auto pill_bottle = dynamic_pointer_cast<PillBottle>(bag->held_item);
-            if (!pill_bottle) {
+            auto pill_bottle =
+dynamic_pointer_cast<PillBottle>(bag->held_item); if (!pill_bottle) {
                 logging_manager::announce(entity,
                                           "this bag doesnt have my pills");
                 wait_and_return();
@@ -419,39 +457,10 @@ void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt) {
     }
 }
 
-inline void update_job_information(std::shared_ptr<Entity> entity, float dt) {
-    if (entity->is_missing<CanPerformJob>()) return;
-
-    CanPerformJob& cpj = entity->get<CanPerformJob>();
-    std::shared_ptr<Job> job = cpj.job();
-
-    // User has no active job
-    if (cpj.needs_job()) {
-        log_info("getting new job");
-        find_new_job(entity, dt);
-        return;
-    };
-
-    switch (job->type) {
-        case Wandering:
-            run_job_wandering(entity, dt);
-            break;
-        case WaitInQueue:
-            run_job_wait_in_queue(entity, dt);
-            break;
-        case Wait:
-            run_job_wait(entity, dt);
-            break;
-        default:
-            break;
-    }
-}
-
-inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<CanPerformJob>()) return;
-    CanPerformJob& cpf = entity->get<CanPerformJob>();
-    if (!cpf.has_job()) return;
-    auto job = cpf.job();
+inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float)
+{ if (entity->is_missing<CanPerformJob>()) return; CanPerformJob& cpf =
+entity->get<CanPerformJob>(); if (!cpf.has_job()) return; auto job =
+cpf.job();
 
     const CanBePushed& cbp = entity->get<CanBePushed>();
 
@@ -546,8 +555,8 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float dt) {
         std::shared_ptr<Job> njob;
         cpj.update(create_job_of_type(entity, dt, cpj.get_next_job_type()));
 
-        // TODO i really want to not return right here but the job is nullptr if
-        // i do
+        // TODO i really want to not return right here but the job is
+        // nullptr if i do
         return;
     }
 
@@ -559,55 +568,93 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float dt) {
     personal_queue.pop();
 }
 
-inline void move_toward_local_job_target(std::shared_ptr<Entity> entity,
-                                         float dt) {
-    if (entity->is_missing<CanPerformJob>()) return;
-    if (entity->is_missing<HasBaseSpeed>()) return;
+void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
+    CanPerformJob& cpj = entity->get<CanPerformJob>();
+    const Job& job = cpj.job();
 
-    const CanPerformJob& cpf = entity->get<CanPerformJob>();
-    if (!cpf.has_job()) return;
-    if (!cpf.has_local_target()) return;
+    // logging_manager::announce(entity,
+    // fmt::format("wandering job: state {} ",
+    // magic_enum::enum_name(job.state)));
 
-    // TODO handle these once normal movement is working
-    float speed = entity->get<HasBaseSpeed>().speed() * dt;
-    {
-        // float speed_multiplier = 1.f;
-        // float stagger_multiplier = 0.f;
-        // if (entity->has<CanHaveAilment>()) {
-        // const CanHaveAilment& cha = entity->get<CanHaveAilment>();
-        // stagger_multiplier = cha.ailment()->stagger();
-        // speed_multiplier = cha.ailment()->speed_multiplier();
-        // }
-        //
-        // if (speed_multiplier != 0) speed *= speed_multiplier;
-        // if (stagger_multiplier != 0) speed *= stagger_multiplier;
+    switch (job.state) {
+        default:
+            log_error("Wandering did not handle state {}",
+                      magic_enum::enum_name(job.state));
+            return;
+        case Job::State::Initialize: {
+            cpj.update_job_state(Job::State::HeadingToStart);
+            return;
+        }
+        case Job::State::HeadingToStart: {
+            // bool arrived = navigate_to(entity, dt, job->start);
+            // // TODO we cannot mutate this->job inside navigate because
+            // the
+            // // `job->state` below will change the new job and not the old
+            // // one this foot-gun might be solvable by passing in the
+            // global
+            // // job to the job processing function, then it wont change
+            // until
+            // // the next call
+            // if (job->path_size == 0) {
+            // personal_queue.push(job);
+            // job.reset(new Job({
+            // .type = Wandering,
+            // }));
+            // return;
+            // }
+
+            travel_to_position(entity, dt, job.start);
+            cpj.update_job_state(is_at_position(entity, job.start)
+                                     ? Job::State::WorkingAtStart
+                                     : Job::State::HeadingToStart);
+            return;
+        }
+        case Job::State::WorkingAtStart: {
+            cpj.update_job_state(Job::State::HeadingToEnd);
+            return;
+        }
+        case Job::State::HeadingToEnd: {
+            travel_to_position(entity, dt, job.end);
+            cpj.update_job_state(is_at_position(entity, job.end)
+                                     ? Job::State::WorkingAtEnd
+                                     : Job::State::HeadingToEnd);
+            return;
+        }
+        case Job::State::WorkingAtEnd: {
+            cpj.update_job_state(Job::State::Completed);
+            return;
+        }
+        case Job::State::Completed: {
+            cpj.update_job_state(Job::State::Completed);
+            return;
+        }
     }
+}
 
-    Transform& transform = entity->get<Transform>();
-
-    vec2 new_pos = transform.as2();
-
-    vec2 tar = cpf.local_target();
-    if (tar.x > transform.raw().x) new_pos.x += speed;
-    if (tar.x < transform.raw().x) new_pos.x -= speed;
-
-    if (tar.y > transform.raw().z) new_pos.y += speed;
-    if (tar.y < transform.raw().z) new_pos.y -= speed;
-
-    // TODO do we need to unr the whole person_update...() function with
-    // collision?
-
-    // TODO do we need to write back the transform?
-
-    transform.update(vec::to3(new_pos));
+inline void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
+    if (entity->is_missing<CanPerformJob>()) return;
+    switch (entity->get<CanPerformJob>().job().type) {
+        case None:
+            log_warn("you have a guy {} that is doing a none job", entity->id);
+            break;
+        case Wandering:
+            run_job_wandering(entity, dt);
+            break;
+        case WaitInQueue:
+            // run_job_wait_in_queue(entity, dt);
+        case Wait:
+            // run_job_wait(entity, dt);
+        default:
+            log_error(
+                "you arent handling one of the job types {}",
+                magic_enum::enum_name(entity->get<CanPerformJob>().job().type));
+            break;
+    }
 }
 
 inline void in_round_update(const std::shared_ptr<Entity>& entity, float dt) {
     ensure_has_job(entity, dt);
-    move_toward_local_job_target(entity, dt);
-
-    // handle_job_holder_pushed(entity, dt);
-    // update_job_information(entity, dt);
+    run_job_tick(entity, dt);
 }
 
 }  // namespace job_system

@@ -16,14 +16,6 @@ struct CanPerformJob : public BaseComponent {
         return personal_queue;
     }
 
-    [[nodiscard]] bool has_local_target() const {
-        return has_job() && job().local.has_value();
-    }
-
-    [[nodiscard]] vec2 local_target() const {
-        return current_job->local.value();
-    }
-
     void update(JobType starting_jt, JobType idle_jt) {
         starting_job_type = starting_jt;
         idle_job_type = idle_jt;
@@ -43,6 +35,25 @@ struct CanPerformJob : public BaseComponent {
     }
 
     void push_onto_queue(std::shared_ptr<Job> job) { personal_queue.push(job); }
+
+    // Job stuff
+    [[nodiscard]] bool has_local_target() const {
+        return has_job() && job().local.has_value();
+    }
+    [[nodiscard]] vec2 local_target() const {
+        return current_job->local.value();
+    }
+
+    void update_job_state(Job::State new_state) {
+        current_job->state = new_state;
+    }
+
+    void grab_job_local_target() {
+        // Grab next local point to go to
+        current_job->local = current_job->path_front();
+        current_job->path_pop_front();
+        return;
+    }
 
    private:
     JobType starting_job_type;
