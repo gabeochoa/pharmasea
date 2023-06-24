@@ -12,6 +12,14 @@
 #include "../map.h"
 
 struct GameLayer : public Layer {
+    // TODO eventually we should not have this
+    // this can be done by adding the input components to remote_player
+    // and then setting GLOBALS on the PlayerJoin.is_you packet
+    //
+    // The issue with this is that the non-host player no longer sees
+    // any furniture for some reason. Though they can still collide against it
+    // (since its server side)
+    //
     std::shared_ptr<Entity> player;
     std::shared_ptr<Entity> active_player;
     std::shared_ptr<GameCam> cam;
@@ -22,6 +30,7 @@ struct GameLayer : public Layer {
         GLOBALS.set("player", player.get());
 
         // TODO do we need this still?
+        // -> jun24-23 it seems like we do need it for debug view only
         player->get<CanBeGhostPlayer>().update(true);
 
         cam.reset(new GameCam());
