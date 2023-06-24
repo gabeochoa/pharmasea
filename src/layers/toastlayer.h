@@ -12,7 +12,6 @@ struct ToastLayer : public Layer, public FontSizeCache {
     const float toastPctWidth = 0.25f;
     const float toastPctBottomPadding = 0.01f;
 
-    virtual void onEvent(Event&) override {}
     virtual void onUpdate(float dt) override { toasts::update(dt); }
 
     virtual void onDraw(float) override {

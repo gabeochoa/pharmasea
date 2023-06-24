@@ -19,13 +19,7 @@ A game by:
     AboutLayer() : Layer("About") { ui_context.reset(new ui::UIContext()); }
     virtual ~AboutLayer() {}
 
-    virtual void onEvent(Event& event) override {
-        EventDispatcher dispatcher(event);
-        dispatcher.dispatch<KeyPressedEvent>(
-            std::bind(&AboutLayer::onKeyPressed, this, std::placeholders::_1));
-    }
-
-    bool onKeyPressed(KeyPressedEvent& event) {
+    bool onKeyPressed(KeyPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::About)) return false;
         if (event.keycode == raylib::KEY_ESCAPE) {
             MenuState::get().go_back();

@@ -8,7 +8,6 @@
 struct MenuStateLayer : public Layer {
     MenuStateLayer() : Layer("MenuState") {}
     virtual ~MenuStateLayer() {}
-    virtual void onEvent(Event&) override {}
     virtual void onUpdate(float) override {}
 
     // TODO better system for handling this kind of stuff

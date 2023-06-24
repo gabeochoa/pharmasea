@@ -47,16 +47,7 @@ struct SettingsLayer : public Layer {
 
     virtual ~SettingsLayer() {}
 
-    virtual void onEvent(Event& event) override {
-        EventDispatcher dispatcher(event);
-        dispatcher.dispatch<KeyPressedEvent>(std::bind(
-            &SettingsLayer::onKeyPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<GamepadButtonPressedEvent>(
-            std::bind(&SettingsLayer::onGamepadButtonPressed, this,
-                      std::placeholders::_1));
-    }
-
-    bool onKeyPressed(KeyPressedEvent& event) {
+    bool onKeyPressed(KeyPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Settings)) return false;
 
         //
@@ -73,7 +64,7 @@ struct SettingsLayer : public Layer {
         return ui_context.get()->process_keyevent(event);
     }
 
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
+    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Settings)) return false;
         return ui_context.get()->process_gamepad_button_event(event);
     }

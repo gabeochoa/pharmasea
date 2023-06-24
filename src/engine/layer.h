@@ -18,7 +18,23 @@ struct Layer {
     virtual void onDetach() {}
     virtual void onUpdate(float elapsed) = 0;
     virtual void onDraw(float elapsed) = 0;
-    virtual void onEvent(Event&) = 0;
+
+    void onEvent(Event& event) {
+        EventDispatcher dispatcher(event);
+        dispatcher.dispatch<KeyPressedEvent>(
+            std::bind(&Layer::onKeyPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(
+            &Layer::onGamepadButtonPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<GamepadAxisMovedEvent>(
+            std::bind(&Layer::onGamepadAxisMoved, this, std::placeholders::_1));
+        dispatcher.dispatch<CharPressedEvent>(
+            std::bind(&Layer::onCharPressedEvent, this, std::placeholders::_1));
+    }
+
+    virtual bool onKeyPressed(KeyPressedEvent&) {}
+    virtual bool onGamepadButtonPressed(GamepadButtonPressedEvent&) {}
+    virtual bool onGamepadAxisMoved(GamepadAxisMovedEvent&) {}
+    virtual bool onCharPressedEvent(CharPressedEvent&) {}
 
     [[nodiscard]] const std::string& getname() const { return name; }
 };

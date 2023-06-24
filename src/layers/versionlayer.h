@@ -7,7 +7,6 @@
 
 struct VersionLayer : public Layer {
     VersionLayer() : Layer("Version") {}
-    virtual void onEvent(Event&) override {}
     virtual void onUpdate(float) override {}
 
     virtual void onDraw(float) override {

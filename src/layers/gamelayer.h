@@ -39,20 +39,10 @@ struct GameLayer : public Layer {
 
     virtual ~GameLayer() {}
 
-    virtual void onEvent(Event& event) override {
-        if (!MenuState::s_in_game()) return;
-        EventDispatcher dispatcher(event);
-        dispatcher.dispatch<KeyPressedEvent>(
-            std::bind(&GameLayer::onKeyPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(
-            &GameLayer::onGamepadButtonPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<GamepadAxisMovedEvent>(std::bind(
-            &GameLayer::onGamepadAxisMoved, this, std::placeholders::_1));
-    }
+    bool onGamepadAxisMoved(GamepadAxisMovedEvent&) override { return false; }
 
-    bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
-
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
+    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
+        if (!MenuState::s_in_game()) return false;
         if (KeyMap::get_button(menu::State::Game, InputName::Pause) ==
             event.button) {
             GameState::s_pause();
@@ -61,7 +51,8 @@ struct GameLayer : public Layer {
         return false;
     }
 
-    bool onKeyPressed(KeyPressedEvent& event) {
+    bool onKeyPressed(KeyPressedEvent& event) override {
+        if (!MenuState::s_in_game()) return false;
         // Note: You can only pause in game state, in planning no pause
         if (KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
             event.keycode) {

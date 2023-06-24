@@ -11,27 +11,17 @@ struct MenuLayer : public Layer {
 
     virtual ~MenuLayer() {}
 
-    virtual void onEvent(Event& event) override {
-        EventDispatcher dispatcher(event);
-        dispatcher.dispatch<KeyPressedEvent>(
-            std::bind(&MenuLayer::onKeyPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(
-            &MenuLayer::onGamepadButtonPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<GamepadAxisMovedEvent>(std::bind(
-            &MenuLayer::onGamepadAxisMoved, this, std::placeholders::_1));
-    }
-
-    bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) {
+    bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Root)) return false;
         return ui_context.get()->process_gamepad_axis_event(event);
     }
 
-    bool onKeyPressed(KeyPressedEvent& event) {
+    bool onKeyPressed(KeyPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Root)) return false;
         return ui_context.get()->process_keyevent(event);
     }
 
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
+    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Root)) return false;
         return ui_context.get()->process_gamepad_button_event(event);
     }

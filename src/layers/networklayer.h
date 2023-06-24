@@ -43,35 +43,22 @@ struct NetworkLayer : public Layer {
 
     virtual ~NetworkLayer() { network::Info::shutdown_connections(); }
 
-    virtual void onEvent(Event& event) override {
-        EventDispatcher dispatcher(event);
-        dispatcher.dispatch<KeyPressedEvent>(std::bind(
-            &NetworkLayer::onKeyPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<GamepadButtonPressedEvent>(
-            std::bind(&NetworkLayer::onGamepadButtonPressed, this,
-                      std::placeholders::_1));
-        dispatcher.dispatch<GamepadAxisMovedEvent>(std::bind(
-            &NetworkLayer::onGamepadAxisMoved, this, std::placeholders::_1));
-        dispatcher.dispatch<CharPressedEvent>(std::bind(
-            &NetworkLayer::onCharPressedEvent, this, std::placeholders::_1));
-    }
-
-    bool onCharPressedEvent(CharPressedEvent& event) {
+    bool onCharPressedEvent(CharPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Network)) return false;
         return ui_context.get()->process_char_press_event(event);
     }
 
-    bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) {
+    bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Network)) return false;
         return ui_context.get()->process_gamepad_axis_event(event);
     }
 
-    bool onKeyPressed(KeyPressedEvent& event) {
+    bool onKeyPressed(KeyPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Network)) return false;
         return ui_context.get()->process_keyevent(event);
     }
 
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
+    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Network)) return false;
         return ui_context.get()->process_gamepad_button_event(event);
     }

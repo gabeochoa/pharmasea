@@ -16,17 +16,8 @@ struct BasePauseLayer : public Layer {
     }
     virtual ~BasePauseLayer() {}
 
-    virtual void onEvent(Event& event) override {
-        if (GameState::get().is_not(enabled_state)) return;
-        EventDispatcher dispatcher(event);
-        dispatcher.dispatch<KeyPressedEvent>(std::bind(
-            &BasePauseLayer::onKeyPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<GamepadButtonPressedEvent>(
-            std::bind(&BasePauseLayer::onGamepadButtonPressed, this,
-                      std::placeholders::_1));
-    }
-
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
+    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
+        if (GameState::get().is_not(enabled_state)) return false;
         if (KeyMap::get_button(menu::State::Game, InputName::Pause) ==
             event.button) {
             GameState::get().go_back();
@@ -35,7 +26,8 @@ struct BasePauseLayer : public Layer {
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
-    bool onKeyPressed(KeyPressedEvent& event) {
+    bool onKeyPressed(KeyPressedEvent& event) override {
+        if (GameState::get().is_not(enabled_state)) return false;
         if (KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
             event.keycode) {
             GameState::get().go_back();

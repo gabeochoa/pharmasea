@@ -11,7 +11,6 @@ using namespace profile;
 struct FPSLayer : public Layer {
     FPSLayer() : Layer("FPS") { Profiler::clear(); }
 
-    virtual void onEvent(Event&) override {}
     virtual void onUpdate(float) override {}
 
     virtual void onDraw(float) override {

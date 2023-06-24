@@ -25,20 +25,6 @@ struct GameDebugLayer : public Layer {
     }
     virtual ~GameDebugLayer() {}
 
-    virtual void onEvent(Event& event) override {
-        if (!MenuState::s_in_game()) return;
-        EventDispatcher dispatcher(event);
-        dispatcher.dispatch<KeyPressedEvent>(std::bind(
-            &GameDebugLayer::onKeyPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<GamepadButtonPressedEvent>(
-            std::bind(&GameDebugLayer::onGamepadButtonPressed, this,
-                      std::placeholders::_1));
-        dispatcher.dispatch<GamepadAxisMovedEvent>(std::bind(
-            &GameDebugLayer::onGamepadAxisMoved, this, std::placeholders::_1));
-    }
-
-    bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
-
     void toggle_to_planning() {
         GameState::s_toggle_to_planning();
         EntityHelper::invalidatePathCache();
@@ -49,7 +35,10 @@ struct GameDebugLayer : public Layer {
         EntityHelper::invalidatePathCache();
     }
 
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
+    bool onGamepadAxisMoved(GamepadAxisMovedEvent&) override { return false; }
+
+    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
+        if (!MenuState::s_in_game()) return false;
         if (KeyMap::get_button(menu::State::Game,
                                InputName::ToggleToPlanning) == event.button) {
             toggle_to_planning();
@@ -73,7 +62,8 @@ struct GameDebugLayer : public Layer {
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
-    bool onKeyPressed(KeyPressedEvent& event) {
+    bool onKeyPressed(KeyPressedEvent& event) override {
+        if (!MenuState::s_in_game()) return false;
         if (KeyMap::get_key_code(menu::State::Game,
                                  InputName::ToggleToPlanning) ==
             event.keycode) {

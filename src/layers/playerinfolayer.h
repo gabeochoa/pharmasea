@@ -12,7 +12,6 @@ struct PlayerInfoLayer : public Layer {
     int y_pos = 0;
 
     virtual ~PlayerInfoLayer() {}
-    virtual void onEvent(Event&) override {}
     virtual void onUpdate(float) override {}
 
     void draw_text(const std::string& str) {
