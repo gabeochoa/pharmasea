@@ -415,6 +415,7 @@ struct SystemManager {
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
         if (debug_mode_on) {
             render_debug(entities, dt);
+            render_normal(entities, dt);
         } else {
             render_normal(entities, dt);
         }

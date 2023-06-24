@@ -515,7 +515,7 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float dt) {
     personal_queue.pop();
 }
 
-void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
+inline void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
     CanPerformJob& cpj = entity->get<CanPerformJob>();
     const Job& job = cpj.job();
 
