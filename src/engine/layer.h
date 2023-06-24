@@ -31,10 +31,12 @@ struct Layer {
             std::bind(&Layer::onCharPressedEvent, this, std::placeholders::_1));
     }
 
-    virtual bool onKeyPressed(KeyPressedEvent&) {}
-    virtual bool onGamepadButtonPressed(GamepadButtonPressedEvent&) {}
-    virtual bool onGamepadAxisMoved(GamepadAxisMovedEvent&) {}
-    virtual bool onCharPressedEvent(CharPressedEvent&) {}
+    virtual bool onKeyPressed(KeyPressedEvent&) { return false; }
+    virtual bool onGamepadButtonPressed(GamepadButtonPressedEvent&) {
+        return false;
+    }
+    virtual bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
+    virtual bool onCharPressedEvent(CharPressedEvent&) { return false; }
 
     [[nodiscard]] const std::string& getname() const { return name; }
 };
