@@ -4,11 +4,12 @@ RAYLIB_FLAGS := `pkg-config --cflags raylib`
 RAYLIB_LIB := `pkg-config --libs raylib` 
 
 FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
-		-Wmost -Wconversion -g -fsanitize=address $(RAYLIB_FLAGS)
+		-Wmost -Wconversion -g $(RAYLIB_FLAGS)
+# -Wmost -Wconversion -g -fsanitize=address $(RAYLIB_FLAGS)
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion
 INCLUDES = -Ivendor/ 
-LIBS = -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
+LIBS = -L. -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
 # SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/tracy/TracyClient.cpp)
 SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/tracy/TracyClient.cpp vendor/backward/backward.cpp)
