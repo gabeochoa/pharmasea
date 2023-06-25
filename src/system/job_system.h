@@ -184,9 +184,8 @@ inline bool WIQ_can_move_up(const std::shared_ptr<Entity>& reg,
 inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
                                   float dt) {
     CanPerformJob& cpj = entity->get<CanPerformJob>();
-    const Job& job = entity->get<CanPerformJob>().job();
 
-    switch (job.state) {
+    switch (cpj.job().state) {
         case Job::State::Initialize: {
             logging_manager::announce(entity,
                                       "starting a new wait in queue job");
@@ -219,6 +218,8 @@ inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
             std::shared_ptr<Job> mutable_job = cpj.mutable_job();
 
             mutable_job->data.insert({"register", closest_target.get()});
+            VALIDATE(cpj.job().data.contains("register"),
+                     "underlying job should contain a register now");
             mutable_job->start =
                 WIQ_get_next_queue_position(closest_target, entity);
             mutable_job->end =
@@ -229,24 +230,26 @@ inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
             return;
         }
         case Job::State::HeadingToStart: {
-            travel_to_position(entity, dt, job.start);
-            cpj.update_job_state(is_at_position(entity, job.start)
+            travel_to_position(entity, dt, cpj.job().start);
+            cpj.update_job_state(is_at_position(entity, cpj.job().start)
                                      ? Job::State::WorkingAtStart
                                      : Job::State::HeadingToStart);
             return;
         }
         case Job::State::WorkingAtStart: {
-            if (job.spot_in_line == 0) {
+            if (cpj.job().spot_in_line == 0) {
                 cpj.update_job_state(Job::State::HeadingToEnd);
                 return;
             }
 
+            VALIDATE(cpj.job().data.contains("register"),
+                     "workingatstart job should contain register");
             // Check the spot in front of us
             auto reg = std::shared_ptr<Entity>(
-                static_cast<Entity*>(job.data.at("register")));
+                static_cast<Entity*>(cpj.job().data.at("register")));
             int cur_spot_in_line = WIQ_position_in_line(reg, entity);
 
-            if (cur_spot_in_line == job.spot_in_line ||
+            if (cur_spot_in_line == cpj.job().spot_in_line ||
                 !WIQ_can_move_up(reg, entity)) {
                 // We didnt move so just wait a bit before trying again
                 logging_manager::announce(
@@ -265,7 +268,7 @@ inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
 
             cpj.mutable_job()->spot_in_line = cur_spot_in_line;
 
-            if (job.spot_in_line == 0) {
+            if (cpj.job().spot_in_line == 0) {
                 cpj.update_job_state(Job::State::HeadingToEnd);
                 return;
             }
@@ -273,21 +276,23 @@ inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
             // otherwise walk up one spot
             cpj.mutable_job()->start =
                 reg->get<Transform>().tile_infront_given_player(
-                    job.spot_in_line);
+                    cpj.job().spot_in_line);
             cpj.update_job_state(Job::State::WorkingAtStart);
 
             return;
         }
         case Job::State::HeadingToEnd: {
-            travel_to_position(entity, dt, job.end);
-            cpj.update_job_state(is_at_position(entity, job.end)
+            travel_to_position(entity, dt, cpj.job().end);
+            cpj.update_job_state(is_at_position(entity, cpj.job().end)
                                      ? Job::State::WorkingAtEnd
                                      : Job::State::HeadingToEnd);
             return;
         }
         case Job::State::WorkingAtEnd: {
+            VALIDATE(cpj.job().data.contains("register"),
+                     "workingatend job should contain register");
             auto reg = std::shared_ptr<Entity>(
-                static_cast<Entity*>(job.data.at("register")));
+                static_cast<Entity*>(cpj.job().data.at("register")));
 
             CanHoldItem& regCHI = reg->get<CanHoldItem>();
 
