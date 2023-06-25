@@ -101,9 +101,7 @@ std::deque<vec2> find_path_impl(vec2 start, vec2 end,
                 ++it;
         }
 
-        // TODO add utils for comparing these
-        if (cur.x == end.x && cur.y == end.y) {
-            // TODO
+        if (vec::distance(cur, end) < (TILESIZE / 2.f)) {
             auto path = reconstruct_path({}, parent_map, cur);
             path.push_back(end);
             return path;
