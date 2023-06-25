@@ -49,7 +49,8 @@ void startup() {
     // This unlocks GPU access so we can load textures
     App::create(AppSettings{
         //
-        120,
+        120,  // TODO setting this to any other number seems ot break the camera
+              // entity global?
         //
         WIN_W(),
         WIN_H(),

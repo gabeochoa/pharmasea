@@ -26,6 +26,9 @@ namespace job_system {
 // TODO M_ASSERT should be renamed to "VALIDATE" since i always get the
 // conditional backwards
 
+// TODO delete
+static int tt = 0;
+
 inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
                                vec2 goal) {
     // we just call this again cause its fun, be we could merge the two in the
@@ -75,7 +78,8 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
         CanPerformJob& cpj = entity->get<CanPerformJob>();
         // TODO forcing get<HasBaseSpeed> to crash here
         // TODO handle these once normal movement is working
-        float speed = entity->get<HasBaseSpeed>().speed() * dt;
+        float speed = entity->get<HasBaseSpeed>().speed() * dt * 2.f;
+        // TODO remove the * 2.f
         {
             // float speed_multiplier = 1.f;
             // float stagger_multiplier = 0.f;
@@ -109,9 +113,16 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
     _grab_path_to_goal();
     _grab_local_target();
     _move_toward_local_target();
+
+    tt++;
+    if (tt % 10 == 0) {
+        log_info("doing my job and currently at {}",
+                 entity->get<Transform>().pos());
+    }
 }
 
-void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt) {
+inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
+                                  float dt) {
     CanPerformJob& cpj = entity->get<CanPerformJob>();
     const Job& job = entity->get<CanPerformJob>().job();
 
