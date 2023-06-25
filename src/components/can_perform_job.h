@@ -11,7 +11,7 @@ struct CanPerformJob : public BaseComponent {
     [[nodiscard]] bool has_job() const { return current_job != nullptr; }
     [[nodiscard]] bool needs_job() const { return !has_job(); }
     [[nodiscard]] const Job& job() const { return *current_job; }
-    [[nodiscard]] std::shared_ptr<Job> mutable_job() { return current_job; }
+    [[nodiscard]] std::shared_ptr<Job>& mutable_job() { return current_job; }
     [[nodiscard]] std::stack<std::shared_ptr<Job>>& job_queue() {
         return personal_queue;
     }
