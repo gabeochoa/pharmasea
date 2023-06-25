@@ -121,22 +121,81 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
     }
 }
 
+inline void WIQ_wait_and_return(const std::shared_ptr<Entity>& entity) {
+    CanPerformJob& cpj = entity->get<CanPerformJob>();
+    const Job& job = entity->get<CanPerformJob>().job();
+    // Add the current job to the queue,
+    // and then add the waiting job
+    cpj.push_and_reset(new Job({
+        .type = Wait,
+        .timeToComplete = 1.f,
+        .start = job.start,
+        .end = job.start,
+    }));
+    return;
+}
+
+inline vec2 WIQ_get_next_queue_position(
+    const std::shared_ptr<Entity>& reg,
+    const std::shared_ptr<Entity>& customer) {
+    M_ASSERT(customer, "entity passed to register queue should not be null");
+    M_ASSERT(reg->has<HasWaitingQueue>(),
+             "Trying to get-next-queue-pos for entity which doesnt have a "
+             "waiting queue ");
+    HasWaitingQueue& hasWaitingQueue = reg->get<HasWaitingQueue>();
+    hasWaitingQueue.add_customer(customer);
+    // the place the customers stand is 1 tile infront of the register
+    auto front = reg->get<Transform>().tile_infront_given_player(
+        (hasWaitingQueue.next_line_position + 1) * 2);
+    hasWaitingQueue.next_line_position++;
+    return front;
+}
+
+inline int WIQ_position_in_line(const std::shared_ptr<Entity>& reg,
+                                const std::shared_ptr<Entity>& customer) {
+    M_ASSERT(customer, "entity passed to position-in-line should not be null");
+    M_ASSERT(
+        reg->has<HasWaitingQueue>(),
+        "Trying to pos-in-line for entity which doesnt have a waiting queue ");
+    const auto& ppl_in_line = reg->get<HasWaitingQueue>().ppl_in_line;
+
+    for (int i = 0; i < (int) ppl_in_line.size(); i++) {
+        if (customer->id == ppl_in_line[i]->id) return i;
+    }
+    log_warn("Cannot find customer {}", customer->id);
+    return -1;
+}
+
+inline void WIQ_leave_line(const std::shared_ptr<Entity>& reg,
+                           const std::shared_ptr<Entity>& customer) {
+    M_ASSERT(customer, "entity passed to leave-line should not be null");
+    M_ASSERT(
+        reg->has<HasWaitingQueue>(),
+        "Trying to leave-line for entity which doesnt have a waiting queue ");
+    auto& ppl_in_line = reg->get<HasWaitingQueue>().ppl_in_line;
+    int pos = WIQ_position_in_line(reg, customer);
+    if (pos == -1) return;
+    if (pos == 0) {
+        ppl_in_line.pop_front();
+        return;
+    }
+    ppl_in_line.erase(ppl_in_line.begin() + pos);
+}
+
+bool WIQ_can_move_up(const std::shared_ptr<Entity>& reg,
+                     const std::shared_ptr<Entity>& customer) {
+    M_ASSERT(customer, "entity passed to can-move-up should not be null");
+    M_ASSERT(reg->has<HasWaitingQueue>(),
+             "Trying to can-move-up for entity which doesnt "
+             "have a waiting queue ");
+    const auto& ppl_in_line = reg->get<HasWaitingQueue>().ppl_in_line;
+    return customer->id == ppl_in_line.front()->id;
+}
+
 inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
                                   float dt) {
     CanPerformJob& cpj = entity->get<CanPerformJob>();
     const Job& job = entity->get<CanPerformJob>().job();
-
-    const auto _wait_and_return = []() {};
-    const auto _get_next_queue_position =
-        [](const std::shared_ptr<Entity>&,
-           const std::shared_ptr<Entity>&) -> vec2 {
-
-    };
-
-    const auto _position_in_line = [](const std::shared_ptr<Entity>&,
-                                      const std::shared_ptr<Entity>&) -> int {
-
-    };
 
     switch (job.state) {
         case Job::State::Initialize: {
@@ -161,7 +220,7 @@ inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
                 logging_manager::announce(entity,
                                           "Could not find a valid register");
                 cpj.update_job_state(Job::State::Initialize);
-                _wait_and_return();
+                WIQ_wait_and_return(entity);
                 return;
             }
 
@@ -169,24 +228,115 @@ inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
 
             mutable_job->data["register"] = closest_target.get();
             mutable_job->start =
-                _get_next_queue_position(closest_target, entity);
+                WIQ_get_next_queue_position(closest_target, entity);
             mutable_job->end =
                 closest_target->get<Transform>().tile_infront_given_player(1);
             mutable_job->spot_in_line =
-                _position_in_line(closest_target, entity);
+                WIQ_position_in_line(closest_target, entity);
             cpj.update_job_state(Job::State::HeadingToStart);
             return;
         }
         case Job::State::HeadingToStart: {
+            travel_to_position(entity, dt, job.start);
+            cpj.update_job_state(is_at_position(entity, job.start)
+                                     ? Job::State::WorkingAtStart
+                                     : Job::State::HeadingToStart);
             return;
         }
         case Job::State::WorkingAtStart: {
+            if (job.spot_in_line == 0) {
+                cpj.update_job_state(Job::State::HeadingToEnd);
+                return;
+            }
+
+            // Check the spot in front of us
+            auto reg = std::shared_ptr<Entity>(
+                static_cast<Entity*>(job.data.at("register")));
+            int cur_spot_in_line = WIQ_position_in_line(reg, entity);
+
+            if (cur_spot_in_line == job.spot_in_line ||
+                !WIQ_can_move_up(reg, entity)) {
+                // We didnt move so just wait a bit before trying again
+                logging_manager::announce(
+                    entity, fmt::format("im just going to wait a bit longer"));
+
+                // Add the current job to the queue,
+                // and then add the waiting job
+                cpj.update_job_state(Job::State::WorkingAtStart);
+                WIQ_wait_and_return(entity);
+                return;
+            }
+
+            // if our spot did change, then move forward
+            logging_manager::announce(
+                entity, fmt::format("im moving up to {}", cur_spot_in_line));
+
+            cpj.mutable_job()->spot_in_line = cur_spot_in_line;
+
+            if (job.spot_in_line == 0) {
+                cpj.update_job_state(Job::State::HeadingToEnd);
+                return;
+            }
+
+            // otherwise walk up one spot
+            cpj.mutable_job()->start =
+                reg->get<Transform>().tile_infront_given_player(
+                    job.spot_in_line);
+            cpj.update_job_state(Job::State::WorkingAtStart);
+
             return;
         }
         case Job::State::HeadingToEnd: {
+            travel_to_position(entity, dt, job.end);
+            cpj.update_job_state(is_at_position(entity, job.end)
+                                     ? Job::State::WorkingAtEnd
+                                     : Job::State::HeadingToEnd);
             return;
         }
         case Job::State::WorkingAtEnd: {
+            auto reg = std::shared_ptr<Entity>(
+                static_cast<Entity*>(job.data.at("register")));
+
+            CanHoldItem& regCHI = reg->get<CanHoldItem>();
+
+            if (regCHI.empty()) {
+                logging_manager::announce(entity, "my rx isnt ready yet");
+                WIQ_wait_and_return(entity);
+                return;
+            }
+
+            auto bag = reg->get<CanHoldItem>().asT<Bag>();
+            if (!bag) {
+                logging_manager::announce(entity,
+                                          "this isnt my rx (not a bag)");
+                WIQ_wait_and_return(entity);
+                return;
+            }
+
+            if (bag->empty()) {
+                logging_manager::announce(entity, "this bag is empty...");
+                WIQ_wait_and_return(entity);
+                return;
+            }
+
+            // TODO eventually migrate item to ECS
+            // auto pill_bottle =
+            // bag->get<CanHoldItem>().asT<PillBottle>();
+            auto pill_bottle = dynamic_pointer_cast<PillBottle>(bag->held_item);
+            if (!pill_bottle) {
+                logging_manager::announce(entity,
+                                          "this bag doesnt have my pills");
+                WIQ_wait_and_return(entity);
+                return;
+            }
+
+            CanHoldItem& ourCHI = entity->get<CanHoldItem>();
+            ourCHI.update(regCHI.item());
+            regCHI.update(nullptr);
+
+            logging_manager::announce(entity, "got it");
+            WIQ_leave_line(reg, entity);
+            cpj.update_job_state(Job::State::Completed);
             return;
         }
         case Job::State::Completed: {
@@ -323,12 +473,6 @@ register"); job->state = Job::State::Initialize; wait_and_return(); return;
         job->state = Job::State::HeadingToStart;
         return;
     }
-    case Job::State::HeadingToStart: {
-        bool arrived = navigate_to(entity, dt, job->start);
-        job->state = arrived ? Job::State::WorkingAtStart
-                             : Job::State::HeadingToStart;
-        return;
-    }
     case Job::State::WorkingAtStart: {
         if (job->spot_in_line == 0) {
             job->state = Job::State::HeadingToEnd;
@@ -369,12 +513,6 @@ longer"));
         job->start = reg->get<Transform>().tile_infront_given_player(
             job->spot_in_line);
         job->state = Job::State::WorkingAtStart;
-        return;
-    }
-    case Job::State::HeadingToEnd: {
-        bool arrived = navigate_to(entity, dt, job->end);
-        job->state =
-            arrived ? Job::State::WorkingAtEnd : Job::State::HeadingToEnd;
         return;
     }
     case Job::State::WorkingAtEnd: {
