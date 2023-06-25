@@ -68,6 +68,8 @@ struct Entity {
 
     bool cleanup = false;
 
+    // These two functions can be used to validate than an entity has all of the
+    // matching components that are needed for this system to run
     template<typename T>
     [[nodiscard]] bool has() const {
         log_trace("checking component {} {} on entity {}",
@@ -78,9 +80,19 @@ struct Entity {
         return result;
     }
 
+    template<typename A, typename B, typename... Rest>
+    bool has() const {
+        return has<A>() && has<B, Rest...>();
+    }
+
     template<typename T>
     [[nodiscard]] bool is_missing() const {
         return !has<T>();
+    }
+
+    template<typename A, typename B, typename... Rest>
+    bool is_missing_any() const {
+        return is_missing<A>() || is_missing_any<B, Rest...>();
     }
 
     template<typename T, typename... TArgs>
