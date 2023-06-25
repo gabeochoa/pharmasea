@@ -90,6 +90,11 @@ struct Entity {
         return !has<T>();
     }
 
+    template<typename A>
+    bool is_missing_any() const {
+        return is_missing<A>();
+    }
+
     template<typename A, typename B, typename... Rest>
     bool is_missing_any() const {
         return is_missing<A>() || is_missing_any<B, Rest...>();

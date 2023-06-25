@@ -30,9 +30,9 @@ inline void transform_snapper(std::shared_ptr<Entity> entity, float) {
 
 // TODO if cannot be placed in this spot make it obvious to the user
 void update_held_furniture_position(std::shared_ptr<Entity> entity, float) {
-    const Transform& transform = entity->get<Transform>();
+    if (entity->is_missing_any<Transform, CanHoldFurniture>()) return;
 
-    if (entity->is_missing<CanHoldFurniture>()) return;
+    const Transform& transform = entity->get<Transform>();
 
     CanHoldFurniture& can_hold_furniture = entity->get<CanHoldFurniture>();
     if (can_hold_furniture.empty()) return;
@@ -56,6 +56,7 @@ void update_held_furniture_position(std::shared_ptr<Entity> entity, float) {
 
 inline void update_held_item_position(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanHoldItem>()) return;
+
     CanHoldItem& can_hold_item = entity->get<CanHoldItem>();
     if (can_hold_item.empty()) return;
 
@@ -226,6 +227,12 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
 }
 
 void process_grabber_items(std::shared_ptr<Entity> entity, float) {
+    if (entity->is_missing<Transform>()) {
+        log_warn("process grabber missing transform {}", entity->id);
+        log_warn("process grabber missing transform {}",
+                 entity->get<DebugName>().name());
+    }
+
     Transform& transform = entity->get<Transform>();
 
     if (entity->is_missing<CanHoldItem>()) return;
