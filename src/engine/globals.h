@@ -37,4 +37,7 @@ static int LOG_LEVEL = 2;  // LogLevel::INFO;
 namespace network {
 // TODO add note for max name length in ui
 constexpr int MAX_NAME_LENGTH = 25;
+static long total_ping = 0;
+static long there_ping = 0;
+static long return_ping = 0;
 }  // namespace network

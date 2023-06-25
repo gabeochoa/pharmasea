@@ -3,6 +3,7 @@
 #include "../external_include.h"
 //
 #include "../engine/keymap.h"
+#include "../engine/time.h"
 #include "../engine/toastmanager.h"
 #include "../engine/util.h"
 #include "../globals.h"
@@ -63,7 +64,13 @@ struct ClientPacket {
         PlayerLeave,
         PlayerLocation,
         PlayerRare,
+        Ping,
     } msg_type;
+
+    struct PingInfo {
+        long ping;
+        long pong;
+    };
 
     struct AnnouncementInfo {
         std::string message;
@@ -118,7 +125,8 @@ struct ClientPacket {
         ClientPacket::AnnouncementInfo, ClientPacket::PlayerControlInfo,
         ClientPacket::PlayerJoinInfo, ClientPacket::GameStateInfo,
         ClientPacket::MapInfo, ClientPacket::PlayerInfo,
-        ClientPacket::PlayerLeaveInfo, ClientPacket::PlayerRareInfo>
+        ClientPacket::PlayerLeaveInfo, ClientPacket::PlayerRareInfo,
+        ClientPacket::PingInfo>
         Msg;
 
     Msg msg;
@@ -153,6 +161,9 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
             },
             [&](ClientPacket::PlayerRareInfo info) {
                 return fmt::format("PlayerRare({})", info.client_id);
+            },
+            [&](ClientPacket::PingInfo info) {
+                return fmt::format("Ping({}, {})", info.ping, info.pong);
             },
             [&](auto) { return std::string(" -- invalid operator<< --"); }},
         msgtype);
@@ -220,6 +231,10 @@ void serialize(S& s, ClientPacket& packet) {
               [](S& s, ClientPacket::PlayerRareInfo& info) {
                   s.value4b(info.client_id);
                   s.value4b(info.model_index);
+              },
+              [](S& s, ClientPacket::PingInfo& info) {
+                  s.value8b(info.ping);
+                  s.value8b(info.pong);
               },
           });
 }

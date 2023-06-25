@@ -387,6 +387,25 @@ struct Server {
             });
     }
 
+    void process_ping_message(const internal::Client_t& incoming_client,
+                              const ClientPacket& orig_packet) {
+        ClientPacket::PingInfo info =
+            std::get<ClientPacket::PingInfo>(orig_packet.msg);
+
+        ClientPacket packet({
+            .channel = Channel::UNRELIABLE_NO_DELAY,
+            .client_id = SERVER_CLIENT_ID,
+            .msg_type = network::ClientPacket::MsgType::Ping,
+            .msg = network::ClientPacket::PingInfo({
+                .ping = info.ping,
+                .pong = now::current_ms(),
+            }),
+        });
+        send_client_packet_to_all(packet, [&](internal::Client_t& client) {
+            return client.client_id != incoming_client.client_id;
+        });
+    }
+
     void server_enqueue_message_string(
         const internal::Client_t& incoming_client, const std::string& msg) {
         incoming_message_queue.push_back(std::make_pair(incoming_client, msg));
@@ -415,6 +434,9 @@ struct Server {
             } break;
             case ClientPacket::MsgType::PlayerLeave: {
                 return process_player_leave_packet(incoming_client, packet);
+            } break;
+            case ClientPacket::MsgType::Ping: {
+                return process_ping_message(incoming_client, packet);
             } break;
             // case ClientPacket::MsgType::PlayerRare: {
             // return process_player_rare_packet(incoming_client, packet);

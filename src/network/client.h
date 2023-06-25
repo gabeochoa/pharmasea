@@ -24,6 +24,9 @@ struct Client {
     float next_tick_reset = 0.02f;
     float next_tick = 0.0f;
 
+    float next_ping_reset = 0.2f;
+    float next_ping = 0.0f;
+
     Client() {
         client_p.reset(new internal::Client());
         client_p->set_process_message(
@@ -48,12 +51,13 @@ struct Client {
         next_tick = next_tick - dt;
 
         client_p->run();
-        if (next_tick > 0) {
-            return;
-        }
-
+        if (next_tick > 0) return;
         next_tick = next_tick_reset;
+
+        //
+
         if (id > 0) {
+            send_ping_packet(id, dt);
             send_player_input_packet(id);
         }
 
@@ -65,6 +69,22 @@ struct Client {
             MenuState::get().reset();
             GameState::get().reset();
         }
+    }
+
+    void send_ping_packet(int my_id, float dt) {
+        next_ping = next_ping - dt;
+        if (next_ping > 0) return;
+        next_ping = next_ping_reset;
+
+        ClientPacket packet({
+            .channel = Channel::UNRELIABLE_NO_DELAY,
+            .client_id = my_id,
+            .msg_type = network::ClientPacket::MsgType::Ping,
+            .msg = network::ClientPacket::PingInfo({
+                .ping = now::current_ms(),
+            }),
+        });
+        client_p->send_packet_to_server(packet);
     }
 
     void send_player_input_packet(int my_id) {
@@ -217,6 +237,17 @@ struct Client {
                 ClientPacket::PlayerRareInfo info =
                     std::get<ClientPacket::PlayerRareInfo>(packet.msg);
                 update_remote_player_rare(info.client_id, info.model_index);
+            } break;
+
+            case ClientPacket::MsgType::Ping: {
+                ClientPacket::PingInfo info =
+                    std::get<ClientPacket::PingInfo>(packet.msg);
+
+                auto pong = now::current_ms();
+
+                there_ping = info.pong - info.ping;
+                return_ping = pong - info.pong;
+                total_ping = pong - info.ping;
             } break;
 
             default:
