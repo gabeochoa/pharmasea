@@ -227,6 +227,16 @@ struct EntityHelper {
             transform.as2(), range, transform.face_direction(), filter);
     }
 
+    template<typename T>
+    static std::shared_ptr<Entity> getClosestWithComponent(
+        const std::shared_ptr<Entity>& entity, float range) {
+        const Transform& transform = entity->get<Transform>();
+        return EntityHelper::getClosestMatchingEntity<Furniture>(
+            transform.as2(), range, [](const std::shared_ptr<Entity> entity) {
+                return entity->has<T>();
+            });
+    }
+
     // TODO i think this is slower because we are doing "outside mesh" as
     // outside we should probably have just make some tiles for inside the map
     // ('.' on map for example) and use those to mark where people can walk and

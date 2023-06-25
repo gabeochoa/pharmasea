@@ -195,11 +195,8 @@ inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
 
             // TODO replace with finding the one with the least people in it
             std::shared_ptr<Furniture> closest_target =
-                EntityHelper::getClosestMatchingFurniture(
-                    entity->get<Transform>(), TILESIZE * 100.f,
-                    [](std::shared_ptr<Furniture> furniture) {
-                        return furniture->has<HasWaitingQueue>();
-                    });
+                EntityHelper::getClosestWithComponent<HasWaitingQueue>(
+                    entity, TILESIZE * 100.f);
 
             if (!closest_target) {
                 // TODO we need some kinda way to save this job,
@@ -218,7 +215,7 @@ inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
 
             std::shared_ptr<Job> mutable_job = cpj.mutable_job();
 
-            mutable_job->data["register"] = closest_target.get();
+            mutable_job->data.insert({"register", closest_target.get()});
             mutable_job->start =
                 WIQ_get_next_queue_position(closest_target, entity);
             mutable_job->end =

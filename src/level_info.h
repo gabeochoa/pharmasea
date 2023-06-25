@@ -179,6 +179,17 @@ struct GameMapInfo : public LevelInfo {
         return location;
     }
 
+    auto get_rand_walkable_register() {
+        vec2 location;
+        do {
+            location =
+                vec2{dist(generator) * TILESIZE, dist(generator) * TILESIZE};
+        } while (!EntityHelper::isWalkable(location) &&
+                 !EntityHelper::isWalkable(
+                     vec2{location.x, location.y + 1 * TILESIZE}));
+        return location;
+    }
+
     virtual void generate_map() override {
         server_entities_DO_NOT_USE.clear();
         server_items_DO_NOT_USE.clear();
