@@ -253,11 +253,8 @@ struct EntityHelper {
 
     static inline bool isWalkable(vec2 pos) {
         TRACY_ZONE_SCOPED;
-        // TODO this keeps crashing on operator< vec2 for segv on zero page
-
         if (!cache_is_walkable.contains(pos)) {
-            // TODO crashing still
-            bool walkable = true;  // isWalkableRawEntities(pos);
+            bool walkable = isWalkableRawEntities(pos);
             cache_is_walkable[pos] = walkable;
         }
         return cache_is_walkable[pos];

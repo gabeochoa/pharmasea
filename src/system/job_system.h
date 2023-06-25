@@ -46,9 +46,9 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
             me, goal,
             std::bind(EntityHelper::isWalkable, std::placeholders::_1)));
 
-        // logging_manager::announce(
-        // entity, fmt::format("gen path from {} to {} with {} steps", me,
-        // goal, cpj.job().path_size));
+        logging_manager::announce(
+            entity, fmt::format("gen path from {} to {} with {} steps", me,
+                                goal, cpj.job().path_size));
 
         // what happens if we get here and the path is still empty?
         M_ASSERT(!cpj.job().path_empty(), "path should no longer be empty");
@@ -60,15 +60,11 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
         // Either we dont yet have a local target
         // or we already reached the one we had
 
-        // TODO why dont we need this?
-        // if (cpj.has_local_target() &&
-        // is_at_position(entity, cpj.local_target())) {
-        // logging_manager::announce(
-        // entity, fmt::format(" we reached the local! lt{} ps{}",
-        // cpj.local_target(), cpj.job().path_size));
-        // // have one and got there already
-        // cpj.mutable_job()->local.reset();
-        // }
+        if (cpj.has_local_target()) {
+            if (!is_at_position(entity, cpj.local_target())) {
+                return;
+            }
+        }
 
         cpj.grab_job_local_target();
 
@@ -117,48 +113,6 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
 
 /*
 
-
-void run_job_wait(const std::shared_ptr<Entity>& entity, float dt) {
-    auto job = entity->get<CanPerformJob>().job();
-    auto personal_queue = entity->get<CanPerformJob>().job_queue();
-    switch (job->state) {
-        case Job::State::Initialize: {
-            logging_manager::announce(entity, "starting a new wait job");
-            job->state = Job::State::HeadingToStart;
-            return;
-        }
-        case Job::State::HeadingToStart: {
-            job->state = Job::State::WorkingAtStart;
-            return;
-        }
-        case Job::State::WorkingAtStart: {
-            job->state = Job::State::HeadingToEnd;
-            return;
-        }
-        case Job::State::HeadingToEnd: {
-            bool arrived = navigate_to(entity, dt, job->end);
-            job->state =
-                arrived ? Job::State::WorkingAtEnd :
-Job::State::HeadingToEnd; return;
-        }
-        case Job::State::WorkingAtEnd: {
-            job->timePassedInCurrentState += dt;
-            if (job->timePassedInCurrentState >= job->timeToComplete) {
-                job->state = Job::State::Completed;
-                return;
-            }
-            // announce(fmt::format("waiting a little longer: {} => {} ",
-            // job->timePassedInCurrentState,
-            // job->timeToComplete));
-            job->state = Job::State::WorkingAtEnd;
-            return;
-        }
-        case Job::State::Completed: {
-            job->state = Job::State::Completed;
-            return;
-        }
-    }
-}
 
 void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity, float dt)
 { CanPerformJob& cpj = entity->get<CanPerformJob>(); auto job =
@@ -410,6 +364,51 @@ cpf.job();
 
 */
 
+inline void run_job_wait(const std::shared_ptr<Entity>& entity, float dt) {
+    CanPerformJob& cpj = entity->get<CanPerformJob>();
+    const Job& job = cpj.job();
+
+    switch (job.state) {
+        case Job::State::Initialize: {
+            logging_manager::announce(entity, "starting a new wait job");
+            cpj.update_job_state(Job::State::HeadingToStart);
+            return;
+        }
+        case Job::State::HeadingToStart: {
+            cpj.update_job_state(Job::State::WorkingAtStart);
+            return;
+        }
+        case Job::State::WorkingAtStart: {
+            cpj.update_job_state(Job::State::HeadingToEnd);
+            return;
+        }
+        case Job::State::HeadingToEnd: {
+            travel_to_position(entity, dt, job.end);
+            cpj.update_job_state(is_at_position(entity, job.end)
+                                     ? Job::State::WorkingAtEnd
+                                     : Job::State::HeadingToEnd);
+            return;
+        }
+        case Job::State::WorkingAtEnd: {
+            cpj.mutable_job()->timePassedInCurrentState += dt;
+            if (cpj.mutable_job()->timePassedInCurrentState >=
+                cpj.mutable_job()->timeToComplete) {
+                cpj.update_job_state(Job::State::Completed);
+                return;
+            }
+            // announce(fmt::format("waiting a little longer: {} => {} ",
+            // job->timePassedInCurrentState,
+            // job->timeToComplete));
+            cpj.update_job_state(Job::State::WorkingAtEnd);
+            return;
+        }
+        case Job::State::Completed: {
+            cpj.update_job_state(Job::State::Completed);
+            return;
+        }
+    }
+}
+
 inline void render_job_visual(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanPerformJob>()) return;
     CanPerformJob& cpf = entity->get<CanPerformJob>();
@@ -525,6 +524,7 @@ inline void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
                             entity->get<Transform>().pos(), job.start,
                             job.end));
             cpj.update_job_state(Job::State::HeadingToStart);
+
             return;
         }
         case Job::State::HeadingToStart: {
@@ -554,11 +554,24 @@ inline void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
             return;
         }
     }
+
+    // TODO need to test wait
+    // i dont think cpj push works yet
+    // cpj.push_and_reset(new Job({
+    // .type = Wait,
+    // .timeToComplete = 1.f,
+    // .start = job.start,
+    // .end = job.start,
+    // }));
 }
 
 inline void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
     if (entity->is_missing<CanPerformJob>()) return;
-    switch (entity->get<CanPerformJob>().job().type) {
+
+    const CanPerformJob& cpj = entity->get<CanPerformJob>();
+    if (cpj.needs_job()) return;
+
+    switch (cpj.job().type) {
         case None:
             // TODO eventually handle this
             // log_info("you have a guy {} that is doing a none job",
@@ -567,10 +580,11 @@ inline void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
         case Wandering:
             run_job_wandering(entity, dt);
             break;
+        case Wait:
+            run_job_wait(entity, dt);
+            break;
         case WaitInQueue:
             // run_job_wait_in_queue(entity, dt);
-        case Wait:
-            // run_job_wait(entity, dt);
         default:
             log_error(
                 "you arent handling one of the job types {}",
