@@ -56,7 +56,7 @@ struct Server {
     std::map<HSteamNetConnection, Client_t> clients;
 
     Server(int port) {
-        M_ASSERT(port > 0 && port < 65535, "invalid port");
+        VALIDATE(port > 0 && port < 65535, "invalid port");
         address.Clear();
         address.m_port = (unsigned short) port;
     }
@@ -120,7 +120,7 @@ struct Server {
                 poll_group, &incoming_msg, 1 /* num max messages*/);
             if (num_msgs == 0) return;
             if (num_msgs == -1) {
-                M_ASSERT(false, "Failed checking for messages");
+                VALIDATE(false, "Failed checking for messages");
                 return;
             }
 
@@ -239,7 +239,7 @@ struct Server {
                     send_announcement_to_all(temp, annoucement_type);
 
                 } else {
-                    M_ASSERT(
+                    VALIDATE(
                         info->m_eOldState ==
                             k_ESteamNetworkingConnectionState_Connecting,
                         "We expected them not to be connected but they were");
@@ -257,7 +257,7 @@ struct Server {
 
             case k_ESteamNetworkingConnectionState_Connecting: {
                 // This must be a new connection
-                M_ASSERT(clients.find(info->m_hConn) == clients.end(),
+                VALIDATE(clients.find(info->m_hConn) == clients.end(),
                          "Client already connected but shouldnt be");
 
                 log_info("Connection request from {}",

@@ -103,13 +103,13 @@ inline void test_trie_insert_once() {
 inline void test_trie_insert_once_and_found() {
     Trie trie;
     trie.add("hello");
-    M_ASSERT(trie.contains("hello"), "trie should contain hello");
+    VALIDATE(trie.contains("hello"), "trie should contain hello");
 }
 
 inline void test_trie_insert_once_missing() {
     Trie trie;
     trie.add("hello");
-    M_ASSERT(!trie.contains("hellp"),
+    VALIDATE(!trie.contains("hellp"),
              "trie should contain hello and not hellp");
 }
 
@@ -120,8 +120,8 @@ inline void test_trie_insert_once_and_dump() {
 
     std::vector<std::string> results = trie.dump();
 
-    M_ASSERT(results.size() == 1, "Should have a single string in results");
-    M_ASSERT(results[0] == hello, "and results should have hello ");
+    VALIDATE(results.size() == 1, "Should have a single string in results");
+    VALIDATE(results[0] == hello, "and results should have hello ");
 }
 
 inline void test_trie_insert_ten() {
@@ -142,9 +142,9 @@ inline void test_trie_insert_ten_and_found() {
     trie.add("a lot");
 
     for (auto word : words) {
-        M_ASSERT(trie.contains(word), "Tree should contain all the words");
+        VALIDATE(trie.contains(word), "Tree should contain all the words");
     }
-    M_ASSERT(trie.contains("a lot"), "Tree should contain the last word");
+    VALIDATE(trie.contains("a lot"), "Tree should contain the last word");
 }
 
 inline void test_trie_insert_ten_and_dump() {
@@ -157,7 +157,7 @@ inline void test_trie_insert_ten_and_dump() {
 
     auto results = trie.dump();
 
-    M_ASSERT(results.size() == 10, "Tree dump should contain all the words");
+    VALIDATE(results.size() == 10, "Tree dump should contain all the words");
 }
 
 inline void test_trie_insert_ten_similar_and_dump_prefix() {
@@ -169,14 +169,14 @@ inline void test_trie_insert_ten_similar_and_dump_prefix() {
     for (auto word : words) trie.add(word);
 
     auto results = trie.dump();
-    M_ASSERT(results.size() == 10, "Tree dump should contain all the words");
+    VALIDATE(results.size() == 10, "Tree dump should contain all the words");
 
     results = trie.dump("ang");
-    M_ASSERT(results.size() == 6,
+    VALIDATE(results.size() == 6,
              "Tree dump should contain all the words starting with ang ");
 
     results = trie.dump("angl");
-    M_ASSERT(results.size() == 2,
+    VALIDATE(results.size() == 2,
              "Tree dump should contain all the words starting with ang ");
 }
 

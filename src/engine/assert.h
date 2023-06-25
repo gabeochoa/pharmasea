@@ -5,7 +5,7 @@
 
 #include <cassert>
 
-#define M_ASSERT(x, ...)                       \
+#define VALIDATE(x, ...)                       \
     {                                          \
         if (!(x)) {                            \
             std::cout << "Assertion failed: "; \
@@ -14,6 +14,8 @@
             assert(x);                         \
         }                                      \
     }
+
+#define M_ASSERT(x, ...) VALIDATE(x, __VA__ARGS__)
 
 #define M_TEST_IMPL(x, y, op, op_string, ...)                          \
     {                                                                  \

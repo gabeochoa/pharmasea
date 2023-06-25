@@ -23,12 +23,6 @@ namespace job_system {
            (TILESIZE / 2.f);
 }
 
-// TODO M_ASSERT should be renamed to "VALIDATE" since i always get the
-// conditional backwards
-
-// TODO delete
-static int tt = 0;
-
 inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
                                vec2 goal) {
     // we just call this again cause its fun, be we could merge the two in the
@@ -54,7 +48,7 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
                                 goal, cpj.job().path_size));
 
         // what happens if we get here and the path is still empty?
-        M_ASSERT(!cpj.job().path_empty(), "path should no longer be empty");
+        VALIDATE(!cpj.job().path_empty(), "path should no longer be empty");
     };
 
     const auto _grab_local_target = [entity]() {
@@ -71,7 +65,7 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
 
         cpj.grab_job_local_target();
 
-        M_ASSERT(cpj.has_local_target(), "job should have a local target");
+        VALIDATE(cpj.has_local_target(), "job should have a local target");
     };
 
     const auto _move_toward_local_target = [entity, dt]() {
@@ -114,12 +108,6 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
     _grab_path_to_goal();
     _grab_local_target();
     _move_toward_local_target();
-
-    tt++;
-    if (tt % 10 == 0) {
-        log_info("doing my job and currently at {}",
-                 entity->get<Transform>().pos());
-    }
 }
 
 inline void WIQ_wait_and_return(const std::shared_ptr<Entity>& entity) {
@@ -139,8 +127,8 @@ inline void WIQ_wait_and_return(const std::shared_ptr<Entity>& entity) {
 inline vec2 WIQ_get_next_queue_position(
     const std::shared_ptr<Entity>& reg,
     const std::shared_ptr<Entity>& customer) {
-    M_ASSERT(customer, "entity passed to register queue should not be null");
-    M_ASSERT(reg->has<HasWaitingQueue>(),
+    VALIDATE(customer, "entity passed to register queue should not be null");
+    VALIDATE(reg->has<HasWaitingQueue>(),
              "Trying to get-next-queue-pos for entity which doesnt have a "
              "waiting queue ");
     HasWaitingQueue& hasWaitingQueue = reg->get<HasWaitingQueue>();
@@ -154,8 +142,8 @@ inline vec2 WIQ_get_next_queue_position(
 
 inline int WIQ_position_in_line(const std::shared_ptr<Entity>& reg,
                                 const std::shared_ptr<Entity>& customer) {
-    M_ASSERT(customer, "entity passed to position-in-line should not be null");
-    M_ASSERT(
+    VALIDATE(customer, "entity passed to position-in-line should not be null");
+    VALIDATE(
         reg->has<HasWaitingQueue>(),
         "Trying to pos-in-line for entity which doesnt have a waiting queue ");
     const auto& ppl_in_line = reg->get<HasWaitingQueue>().ppl_in_line;
@@ -169,8 +157,8 @@ inline int WIQ_position_in_line(const std::shared_ptr<Entity>& reg,
 
 inline void WIQ_leave_line(const std::shared_ptr<Entity>& reg,
                            const std::shared_ptr<Entity>& customer) {
-    M_ASSERT(customer, "entity passed to leave-line should not be null");
-    M_ASSERT(
+    VALIDATE(customer, "entity passed to leave-line should not be null");
+    VALIDATE(
         reg->has<HasWaitingQueue>(),
         "Trying to leave-line for entity which doesnt have a waiting queue ");
     auto& ppl_in_line = reg->get<HasWaitingQueue>().ppl_in_line;
@@ -185,8 +173,8 @@ inline void WIQ_leave_line(const std::shared_ptr<Entity>& reg,
 
 inline bool WIQ_can_move_up(const std::shared_ptr<Entity>& reg,
                             const std::shared_ptr<Entity>& customer) {
-    M_ASSERT(customer, "entity passed to can-move-up should not be null");
-    M_ASSERT(reg->has<HasWaitingQueue>(),
+    VALIDATE(customer, "entity passed to can-move-up should not be null");
+    VALIDATE(reg->has<HasWaitingQueue>(),
              "Trying to can-move-up for entity which doesnt "
              "have a waiting queue ");
     const auto& ppl_in_line = reg->get<HasWaitingQueue>().ppl_in_line;
@@ -499,7 +487,7 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float dt) {
         return;
     }
 
-    M_ASSERT(!personal_queue.empty(),
+    VALIDATE(!personal_queue.empty(),
              "no way personal job queue should be empty");
     // queue should definitely have something by now
     // add the thing from the queue as our job :)
@@ -557,15 +545,6 @@ inline void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
             return;
         }
     }
-
-    // TODO need to test wait
-    // i dont think cpj push works yet
-    // cpj.push_and_reset(new Job({
-    // .type = Wait,
-    // .timeToComplete = 1.f,
-    // .start = job.start,
-    // .end = job.start,
-    // }));
 }
 
 inline void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {

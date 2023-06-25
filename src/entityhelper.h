@@ -162,7 +162,7 @@ struct EntityHelper {
         std::function<bool(std::shared_ptr<T>)> filter  //
     ) {
         TRACY_ZONE_SCOPED;
-        M_ASSERT(range > 0,
+        VALIDATE(range > 0,
                  fmt::format("range has to be positive but was {}", range));
 
         int cur_step = 0;

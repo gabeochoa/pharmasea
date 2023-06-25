@@ -105,7 +105,7 @@ struct Client {
                 connection, &incoming_msg, 1);
             if (num_msgs == 0) return;
             if (num_msgs == -1) {
-                M_ASSERT(false, "Failed checking for messages");
+                VALIDATE(false, "Failed checking for messages");
                 return;
             }
 
@@ -185,7 +185,7 @@ struct Client {
     void on_steam_network_connection_status_changed(
         SteamNetConnectionStatusChangedCallback_t *info) {
         log_info("client on stream network connection status changed");
-        M_ASSERT(info->m_hConn == connection ||
+        VALIDATE(info->m_hConn == connection ||
                      connection == k_HSteamNetConnection_Invalid,
                  "Connection Status Error");
 

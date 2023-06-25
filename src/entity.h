@@ -96,7 +96,7 @@ struct Entity {
                 this->get<DebugName>().name(), id, components::get_type_id<T>(),
                 type_name<T>());
 
-            M_ASSERT(false, "duplicate component");
+            VALIDATE(false, "duplicate component");
             // Commented out on purpose because the assert is gonna kill the
             // program anyway at some point we should stop enforcing it to avoid
             // crashing the game when people are playing
@@ -512,10 +512,6 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
     Entity* grabber =
         entities::make_furniture(DebugOptions{.name = "grabber"}, pos,
                                  ui::color::yellow, ui::color::yellow);
-    // TODO fix
-    // bool can_take_item_from() const {
-    // return (get<CanHoldItem>().is_holding_item() && can_take_from);
-    // }
 
     grabber->get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Conveyer);

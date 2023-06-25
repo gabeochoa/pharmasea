@@ -6,7 +6,7 @@
 #include "../network/shared.h"
 
 void compare_and_validate_components(Entity* a, Entity* b) {
-    M_ASSERT(a->componentSet == b->componentSet, "component sets should match");
+    VALIDATE(a->componentSet == b->componentSet, "component sets should match");
 
     int i = 0;
     while (i < max_num_components) {
@@ -23,11 +23,11 @@ void compare_and_validate_components(Entity* a, Entity* b) {
         }
 
         if (eC == nullptr) {
-            M_ASSERT(false, "a missing component that b has");
+            VALIDATE(false, "a missing component that b has");
         }
 
         if (e2C == nullptr) {
-            M_ASSERT(false, "b missing component that a has");
+            VALIDATE(false, "b missing component that a has");
         }
         i++;
     }

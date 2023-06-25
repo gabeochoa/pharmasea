@@ -72,7 +72,7 @@ inline bool render_simple_normal(std::shared_ptr<Entity> entity, float) {
     return true;
 }
 
-inline bool render_bounding_box(std::shared_ptr<Entity> entity, float dt) {
+inline bool render_bounding_box(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<Transform>()) return false;
     Transform& transform = entity->get<Transform>();
 

@@ -50,7 +50,7 @@ float compute_size_for_parent_expectation(Widget* widget, int exp_index) {
     if (widget->absolute &&
         widget->size_expected[exp_index].mode == SizeMode::Percent) {
         widget->print_tree();
-        M_ASSERT(false, "Absolute widgets should not use Percent");
+        VALIDATE(false, "Absolute widgets should not use Percent");
     }
 
     float no_change = widget->computed_size[exp_index];
@@ -76,13 +76,13 @@ float _sum_children_axis_for_child_exp(Widget* widget, int exp_index) {
         if (cs == -1) {
             if (child->size_expected[exp_index].mode == SizeMode::Percent &&
                 widget->size_expected[exp_index].mode == SizeMode::Children) {
-                M_ASSERT(false,
+                VALIDATE(false,
                          "Parents sized with mode 'children' cannot have "
                          "children sized with mode 'percent'.");
             }
             widget->print_tree();
             // Instead of silently ignoring this, check the cases above
-            M_ASSERT(false, "expect that all children have been solved by now");
+            VALIDATE(false, "expect that all children have been solved by now");
         }
         total_child_size += cs;
     }
@@ -99,12 +99,12 @@ float _max_child_size(Widget* widget, int exp_index) {
         if (cs == -1) {
             if (child->size_expected[exp_index].mode == SizeMode::Percent &&
                 widget->size_expected[exp_index].mode == SizeMode::Children) {
-                M_ASSERT(false,
+                VALIDATE(false,
                          "Parents sized with mode 'children' cannot have "
                          "children sized with mode 'percent'.");
             }
             // Instead of silently ignoring this, check the cases above
-            M_ASSERT(false, "expect that all children have been solved by now");
+            VALIDATE(false, "expect that all children have been solved by now");
         }
         max_child_size = fmaxf(max_child_size, cs);
     }
@@ -225,7 +225,7 @@ void _solve_error_with_optional(Widget* widget, int exp_index, float* error) {
 
 void fix_violating_children(Widget* widget, int exp_index, float error,
                             int num_children) {
-    M_ASSERT(num_children != 0, "Should never have zero children");
+    VALIDATE(num_children != 0, "Should never have zero children");
 
     int num_strict_children = 0;
     int num_ignorable_children = 0;
@@ -255,7 +255,7 @@ void fix_violating_children(Widget* widget, int exp_index, float error,
     ) {
         widget->print_tree();
         log_warn("Error was {}", error);
-        M_ASSERT(
+        VALIDATE(
             num_resizeable_children > 0,
             "Cannot fit all children inside parent and unable to resize any of "
             "the children");
@@ -347,7 +347,7 @@ void solve_violations(Widget* widget) {
         error_x = all_children_x - my_size_x;
         if (i_x > 100) {
             log_warn("Hit X-axis iteration limit trying to solve violations");
-            // M_ASSERT(false, "hit x iteration limit trying to solve
+            // VALIDATE(false, "hit x iteration limit trying to solve
             // violations");
             break;
         }
@@ -370,7 +370,7 @@ void solve_violations(Widget* widget) {
         error_y = all_children_y - my_size_y;
         if (i_y > 100) {
             log_warn("Hit Y-axis iteration limit trying to solve violations");
-            // M_ASSERT(false, "hit y iteration limit trying to solve
+            // VALIDATE(false, "hit y iteration limit trying to solve
             // violations");
             break;
         }

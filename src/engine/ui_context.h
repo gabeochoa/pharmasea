@@ -365,7 +365,7 @@ struct UIContext : public IUIContextInputManager,
     }
 
     virtual void begin(float dt) override {
-        M_ASSERT(!began_and_not_ended,
+        VALIDATE(!began_and_not_ended,
                  "You should call end() every frame before calling begin() "
                  "again ");
         began_and_not_ended = true;
