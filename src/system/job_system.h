@@ -118,18 +118,6 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
 /*
 
 
-inline void replace_finished_job(std::shared_ptr<Entity> entity, float dt) {
-    if (entity->is_missing<CanPerformJob>()) return;
-    CanPerformJob& cpj = entity->get<CanPerformJob>();
-    std::shared_ptr<Job> job = cpj.job();
-
-    if (job->state == Job::State::Completed) {
-        job.reset();
-        find_new_job(entity, dt);
-        return;
-    }
-}
-
 void run_job_wait(const std::shared_ptr<Entity>& entity, float dt) {
     auto job = entity->get<CanPerformJob>().job();
     auto personal_queue = entity->get<CanPerformJob>().job_queue();
@@ -558,7 +546,6 @@ inline void run_job_wandering(const std::shared_ptr<Entity>& entity, float dt) {
             return;
         }
         case Job::State::WorkingAtEnd: {
-            log_warn("working at end state");
             cpj.update_job_state(Job::State::Completed);
             return;
         }
@@ -573,7 +560,9 @@ inline void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
     if (entity->is_missing<CanPerformJob>()) return;
     switch (entity->get<CanPerformJob>().job().type) {
         case None:
-            log_info("you have a guy {} that is doing a none job", entity->id);
+            // TODO eventually handle this
+            // log_info("you have a guy {} that is doing a none job",
+            // entity->id);
             break;
         case Wandering:
             run_job_wandering(entity, dt);
