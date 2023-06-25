@@ -198,6 +198,9 @@ inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
                 EntityHelper::getClosestWithComponent<HasWaitingQueue>(
                     entity, TILESIZE * 100.f);
 
+            // TODO when you place a register we need to make sure you cant
+            // start the game until it has an empty spot infront of it
+            //
             if (!closest_target) {
                 // TODO we need some kinda way to save this job,
                 // and come back to it later
