@@ -77,20 +77,21 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
     const auto _move_toward_local_target = [entity, dt]() {
         CanPerformJob& cpj = entity->get<CanPerformJob>();
         // TODO forcing get<HasBaseSpeed> to crash here
-        // TODO handle these once normal movement is working
-        float speed = entity->get<HasBaseSpeed>().speed() * dt * 2.f;
-        // TODO remove the * 2.f
-        {
-            // float speed_multiplier = 1.f;
-            // float stagger_multiplier = 0.f;
-            // if (entity->has<CanHaveAilment>()) {
-            // const CanHaveAilment& cha = entity->get<CanHaveAilment>();
-            // stagger_multiplier = cha.ailment()->stagger();
-            // speed_multiplier = cha.ailment()->speed_multiplier();
-            // }
-            //
-            // if (speed_multiplier != 0) speed *= speed_multiplier;
-            // if (stagger_multiplier != 0) speed *= stagger_multiplier;
+        float speed = entity->get<HasBaseSpeed>().speed() * dt;
+
+        // TODO Turning off stagger stuff for easier development
+        // handle these once normal movement is working
+        if (0) {
+            float speed_multiplier = 1.f;
+            float stagger_multiplier = 0.f;
+            if (entity->has<CanHaveAilment>()) {
+                const CanHaveAilment& cha = entity->get<CanHaveAilment>();
+                stagger_multiplier = cha.ailment()->stagger();
+                speed_multiplier = cha.ailment()->speed_multiplier();
+            }
+
+            if (speed_multiplier != 0) speed *= speed_multiplier;
+            if (stagger_multiplier != 0) speed *= stagger_multiplier;
         }
 
         Transform& transform = entity->get<Transform>();
@@ -182,8 +183,8 @@ inline void WIQ_leave_line(const std::shared_ptr<Entity>& reg,
     ppl_in_line.erase(ppl_in_line.begin() + pos);
 }
 
-bool WIQ_can_move_up(const std::shared_ptr<Entity>& reg,
-                     const std::shared_ptr<Entity>& customer) {
+inline bool WIQ_can_move_up(const std::shared_ptr<Entity>& reg,
+                            const std::shared_ptr<Entity>& customer) {
     M_ASSERT(customer, "entity passed to can-move-up should not be null");
     M_ASSERT(reg->has<HasWaitingQueue>(),
              "Trying to can-move-up for entity which doesnt "
@@ -219,8 +220,11 @@ inline void run_job_wait_in_queue(const std::shared_ptr<Entity>& entity,
                 // probably enough
                 logging_manager::announce(entity,
                                           "Could not find a valid register");
-                cpj.update_job_state(Job::State::Initialize);
-                WIQ_wait_and_return(entity);
+
+                cpj.update_job_state(Job::State::Completed);
+                // TODO right now this doesnt work, the job queue sucks
+                // cpj.update_job_state(Job::State::Initialize);
+                // WIQ_wait_and_return(entity);
                 return;
             }
 
@@ -584,10 +588,11 @@ inline void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
             break;
         case WaitInQueue:
             run_job_wait_in_queue(entity, dt);
+            break;
         default:
-            log_error(
-                "you arent handling one of the job types {}",
-                magic_enum::enum_name(entity->get<CanPerformJob>().job().type));
+            log_error("you arent handling one of the job types {} {}",
+                      ((int) cpj.job().type),
+                      magic_enum::enum_name(cpj.job().type));
             break;
     }
 }
