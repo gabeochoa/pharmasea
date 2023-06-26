@@ -32,8 +32,8 @@ struct PolymorphicBaseClass<Item>
 
 template<>
 struct PolymorphicBaseClass<Job>
-    : PolymorphicDerivedClasses<struct Wait, struct Wandering,
-                                struct WaitInQueue> {};
+    : PolymorphicDerivedClasses<WaitJob, WanderingJob,
+                                WaitInQueueJob> {};
 
 template<>
 struct PolymorphicBaseClass<LevelInfo>

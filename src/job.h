@@ -143,9 +143,9 @@ struct Job {
                                    float dt, vec2 goal);
 };
 
-struct Wandering : public Job {
-    Wandering() : Job(JobType::Wandering, vec2{0, 0}, vec2{0, 0}) {}
-    Wandering(vec2 _start, vec2 _end) : Job(JobType::Wandering, _start, _end) {}
+struct WanderingJob : public Job {
+    WanderingJob() : Job(JobType::Wandering, vec2{0, 0}, vec2{0, 0}) {}
+    WanderingJob(vec2 _start, vec2 _end) : Job(JobType::Wandering, _start, _end) {}
 
     friend bitsery::Access;
     template<typename S>
@@ -154,12 +154,12 @@ struct Wandering : public Job {
     }
 };
 
-struct Wait : public Job {
+struct WaitJob : public Job {
     float timePassedInCurrentState = 0.f;
     float timeToComplete = 1.f;
 
-    Wait() : Job(JobType::Wait, vec2{0, 0}, vec2{0, 0}), timeToComplete(1.f) {}
-    Wait(vec2 _start, vec2 _end, float _timeToComplete)
+    WaitJob() : Job(JobType::Wait, vec2{0, 0}, vec2{0, 0}), timeToComplete(1.f) {}
+    WaitJob(vec2 _start, vec2 _end, float _timeToComplete)
         : Job(JobType::Wait, _start, _end), timeToComplete(_timeToComplete) {}
 
     virtual State run_state_working_at_end(
@@ -175,8 +175,8 @@ struct Wait : public Job {
     }
 };
 
-struct WaitInQueue : public Job {
-    WaitInQueue() : Job(JobType::WaitInQueue, vec2{0, 0}, vec2{0, 0}) {}
+struct WaitInQueueJob : public Job {
+    WaitInQueueJob() : Job(JobType::WaitInQueue, vec2{0, 0}, vec2{0, 0}) {}
 
     std::shared_ptr<Entity> reg;
     int spot_in_line = -1;
@@ -194,6 +194,6 @@ struct WaitInQueue : public Job {
         s.ext(*this, bitsery::ext::BaseClass<Job>{});
 
         s.value4b(spot_in_line);
-        s.ext(reg, bitsery::ext::StdSmartPtr{});
+        s.object(reg);
     }
 };

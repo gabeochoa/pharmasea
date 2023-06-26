@@ -37,7 +37,7 @@ inline Job* create_wandering_job(std::shared_ptr<Entity> entity) {
             return nullptr;
         }
     }
-    return new struct Wandering(entity->get<Transform>().as2(), target);
+    return new WanderingJob(entity->get<Transform>().as2(), target);
 }
 
 Job* Job::create_job_of_type(const std::shared_ptr<Entity>& entity, float dt,
@@ -48,14 +48,14 @@ Job* Job::create_job_of_type(const std::shared_ptr<Entity>& entity, float dt,
             job = create_wandering_job(entity);
             break;
         case WaitInQueue:
-            job = new struct WaitInQueue();
+            job = new WaitInQueueJob();
             break;
         case Wait:
-            job = new struct Wait(entity->get<Transform>().as2(),
+            job = new WaitJob(entity->get<Transform>().as2(),
                                   entity->get<Transform>().as2(), 1.f);
             break;
         case None:
-            job = new struct Wait(entity->get<Transform>().as2(),
+            job = new WaitJob(entity->get<Transform>().as2(),
                                   entity->get<Transform>().as2(), 1.f);
             break;
         default:
@@ -178,7 +178,7 @@ inline void WIQ_wait_and_return(const std::shared_ptr<Entity>& entity) {
     const Job& job = entity->get<CanPerformJob>().job();
     // Add the current job to the queue,
     // and then add the waiting job
-    cpj.push_and_reset(new struct Wait(job.start, job.start, 1.f));
+    cpj.push_and_reset(new WaitJob(job.start, job.start, 1.f));
     return;
 }
 
@@ -239,7 +239,7 @@ inline bool WIQ_can_move_up(const std::shared_ptr<Entity>& reg,
     return reg->get<HasWaitingQueue>().matching_person(customer->id, 0);
 }
 
-Job::State WaitInQueue::run_state_initialize(
+Job::State WaitInQueueJob::run_state_initialize(
     const std::shared_ptr<Entity>& entity, float) {
     log_warn("starting a new wait in queue job");
 
@@ -280,7 +280,7 @@ Job::State WaitInQueue::run_state_initialize(
     return Job::State::HeadingToStart;
 }
 
-Job::State WaitInQueue::run_state_working_at_start(
+Job::State WaitInQueueJob::run_state_working_at_start(
     const std::shared_ptr<Entity>& entity, float) {
     if (spot_in_line == 0) {
         return (Job::State::HeadingToEnd);
@@ -316,7 +316,7 @@ Job::State WaitInQueue::run_state_working_at_start(
     return (Job::State::WorkingAtStart);
 }
 
-Job::State WaitInQueue::run_state_working_at_end(
+Job::State WaitInQueueJob::run_state_working_at_end(
     const std::shared_ptr<Entity>& entity, float dt) {
     VALIDATE(reg, "workingatend job should contain register");
 
@@ -364,7 +364,7 @@ Job::State WaitInQueue::run_state_working_at_end(
     return (Job::State::Completed);
 }
 
-Job::State Wait::run_state_working_at_end(const std::shared_ptr<Entity>& entity,
+Job::State WaitJob::run_state_working_at_end(const std::shared_ptr<Entity>& entity,
                                           float dt) {
     timePassedInCurrentState += dt;
     if (timePassedInCurrentState >= timeToComplete) {
