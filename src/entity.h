@@ -315,7 +315,6 @@ static Entity* make_customer(vec3 p) {
         std::make_shared<Insomnia>());
 
     customer->get<HasBaseSpeed>().update(10.f);
-    // TODO turn back on normal customer ai
     customer->get<CanPerformJob>().update(WaitInQueue, Wandering);
 
     return customer;

@@ -281,7 +281,7 @@ Job::State WaitInQueue::run_state_initialize(
 }
 
 Job::State WaitInQueue::run_state_working_at_start(
-    const std::shared_ptr<Entity>& entity, float dt) {
+    const std::shared_ptr<Entity>& entity, float) {
     if (spot_in_line == 0) {
         return (Job::State::HeadingToEnd);
     }
