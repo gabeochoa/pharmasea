@@ -180,6 +180,8 @@ struct Client {
 
         ClientPacket packet = client_p->deserialize_to_packet(msg);
 
+        // log_info("Client: recieved packet {}", packet.msg_type);
+
         switch (packet.msg_type) {
             case ClientPacket::MsgType::Announcement: {
                 ClientPacket::AnnouncementInfo info =

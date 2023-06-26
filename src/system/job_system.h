@@ -39,13 +39,16 @@ inline void travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
         if (!cpj.job().path_empty()) return;
 
         vec2 me = entity->get<Transform>().as2();
-        cpj.mutable_job()->update_path(astar::find_path(
+
+        auto path = astar::find_path(
             me, goal,
-            std::bind(EntityHelper::isWalkable, std::placeholders::_1)));
+            std::bind(EntityHelper::isWalkable, std::placeholders::_1));
 
         logging_manager::announce(
             entity, fmt::format("gen path from {} to {} with {} steps", me,
-                                goal, cpj.job().path_size));
+                                goal, path.size()));
+
+        cpj.mutable_job()->update_path(path);
 
         // what happens if we get here and the path is still empty?
         VALIDATE(!cpj.job().path_empty(), "path should no longer be empty");
