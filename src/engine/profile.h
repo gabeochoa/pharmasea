@@ -69,7 +69,7 @@ struct function_raii {
     ~function_raii() {
         auto end = std::chrono::high_resolution_clock::now();
         float duration =
-            std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
+            (float) std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
                 .count();
         Profiler::get().add_sample(name, filename, duration);
     }

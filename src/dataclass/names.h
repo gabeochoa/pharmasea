@@ -14,8 +14,8 @@ const std::array<const char*, 8> last_names = {"Buckle", "Chuckle", "Stedman",
                                                "Amore",  "Fishman"};
 
 static std::string get_random_name() {
-    int first = randIn(0, first_names.size() - 1);
-    int last = randIn(0, last_names.size() - 1);
+    int first = randIn(0, (int)first_names.size() - 1);
+    int last = randIn(0, (int)last_names.size() - 1);
     return fmt::format("{} {}", first_names[first], last_names[last]);
 }
 

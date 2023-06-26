@@ -27,10 +27,10 @@ struct Transform : public BaseComponent {
         {270, LEFT},         {315, FORWARD | LEFT}};
 
     FrontFaceDirection offsetFaceDirection(FrontFaceDirection startingDirection,
-                                           float offset) const {
+                                           int offset) const {
         const auto degreesOffset =
             static_cast<int>(FrontFaceDirectionMap.at(startingDirection) +
-                             static_cast<int>(offset));
+                             offset);
         return DirectionToFrontFaceMap.at(degreesOffset % 360);
     }
 

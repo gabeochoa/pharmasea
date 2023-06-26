@@ -15,7 +15,7 @@ struct PlayerInfoLayer : public Layer {
     virtual void onUpdate(float) override {}
 
     void draw_text(const std::string& str) {
-        float y = 200 + y_pos;
+        float y = 200.f + y_pos;
         DrawTextEx(Preload::get().font, str.c_str(), vec2{5, y}, 20, 0, WHITE);
         y_pos += 15;
     }

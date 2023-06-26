@@ -94,10 +94,10 @@ struct Settings {
         data.resolution = rez;
 
         data.resolution.width = static_cast<int>(
-            fminf(3860.f, fmaxf(data.resolution.width, 1280.f)));
+            fminf(3860.f, fmaxf((float)data.resolution.width, 1280.f)));
 
         data.resolution.height = static_cast<int>(
-            fminf(2160.f, fmaxf(data.resolution.height, 720.f)));
+            fminf(2160.f, fmaxf((float)data.resolution.height, 720.f)));
 
         //
         WindowResizeEvent* event = new WindowResizeEvent(

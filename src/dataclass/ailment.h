@@ -97,6 +97,7 @@ struct Ailment {
                 case Speed::Fast:
                     return 1.5f;
             }
+            return 1.f;
         }();
         for (int i = 0; i < num_comorbids; i++) {
             value *= comorbids[i].speed_multiplier();
@@ -116,6 +117,7 @@ struct Ailment {
                 case Stagger::Lots:
                     return 1.0f;
             }
+            return 0.f;
         }();
 
         for (int i = 0; i < num_comorbids; i++) {
@@ -123,7 +125,7 @@ struct Ailment {
         }
 
         float clamped = clamp(overall() * value);
-        float mult = stagger_dir ? 1.5 : 0.5;
+        float mult = stagger_dir ? 1.5f : 0.5f;
         stagger_dir = !stagger_dir;
         return mult * clamped;
     }
