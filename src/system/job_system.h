@@ -83,12 +83,8 @@ inline void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
 inline void cleanup_completed_job(const std::shared_ptr<Entity>& entity,
                                   float) {
     if (entity->is_missing<CanPerformJob>()) return;
-    CanPerformJob& cpj = entity->get<CanPerformJob>();
-    if (cpj.needs_job()) return;
-    if (cpj.job().state == Job::State::Completed) {
-        cpj.update(nullptr);
-        log_warn("cpj, job complete");
-    }
+    entity->get<CanPerformJob>().cleanup_if_completed();
+    log_warn("cpj, job complete");
 }
 
 inline void in_round_update(const std::shared_ptr<Entity>& entity, float dt) {

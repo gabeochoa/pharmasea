@@ -48,6 +48,13 @@ struct CanPerformJob : public BaseComponent {
         current_job->state = new_state;
     }
 
+    void cleanup_if_completed() {
+        if (needs_job()) return;
+        if (job().state != Job::State::Completed) return;
+
+        update(nullptr);
+    }
+
    private:
     JobType starting_job_type;
     JobType idle_job_type;
