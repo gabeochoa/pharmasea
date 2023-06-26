@@ -238,8 +238,15 @@ void serialize(S& s, ClientPacket& packet) {
                   s.value4b(info.model_index);
               },
               [](S& s, ClientPacket::PingInfo& info) {
+                  // Im not sure if this will cause issues with networked clients, 
+                  // but this allows it to complile for now 
+#ifdef __APPLE__ 
                   s.value8b(info.ping);
                   s.value8b(info.pong);
+#else
+                  s.value4b(info.ping);
+                  s.value4b(info.pong);
+#endif
               },
           });
 }
