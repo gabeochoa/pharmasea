@@ -81,6 +81,7 @@
     <ClInclude Include="..\src\item.h" />
     <ClInclude Include="..\src\item_helper.h" />
     <ClInclude Include="..\src\job.h" />
+    <ClInclude Include="..\src\level_info.h" />
     <ClInclude Include="..\src\map.h" />
     <ClInclude Include="..\src\medicine.h" />
     <ClInclude Include="..\src\menu.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="..\src\player.h" />
     <ClInclude Include="..\src\preload.h" />
     <ClInclude Include="..\src\remote_player.h" />
+    <ClInclude Include="..\src\round.h" />
     <ClInclude Include="..\src\settings.h" />
     <ClInclude Include="..\src\settingslayer.h" />
     <ClInclude Include="..\src\spawner.h" />
@@ -124,6 +126,7 @@
     <ClCompile Include="..\src\engine\files.cpp" />
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
     <ClCompile Include="..\src\game.cpp" />
+    <ClCompile Include="..\src\job.cpp" />
     <ClCompile Include="..\vendor\tracy\TracyClient.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

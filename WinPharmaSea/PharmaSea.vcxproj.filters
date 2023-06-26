@@ -323,6 +323,12 @@
     <ClInclude Include="..\src\toastmanager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\level_info.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\round.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\game.cpp">
@@ -338,6 +344,9 @@
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\vendor\tracy\TracyClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\job.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
