@@ -6,7 +6,7 @@
 
 namespace system_manager {
 namespace logging_manager {
-void announce(std::shared_ptr<Entity> entity, const std::string& text) {
+inline void announce(std::shared_ptr<Entity> entity, const std::string& text) {
     // TODO have some way of distinguishing between server logs and regular
     // client logs
     if (is_server()) {

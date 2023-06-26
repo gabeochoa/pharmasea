@@ -53,7 +53,7 @@ struct std::hash<FZInfo> {
 
 }  // namespace std
 
-bool operator==(const FZInfo& info, const FZInfo& other) {
+inline bool operator==(const FZInfo& info, const FZInfo& other) {
     return std::hash<FZInfo>()(info) == std::hash<FZInfo>()(other);
 }
 

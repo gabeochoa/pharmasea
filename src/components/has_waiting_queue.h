@@ -6,31 +6,42 @@
 
 #include <deque>
 
-#include "../entity.h"
 #include "base_component.h"
+
+constexpr int max_queue_size = 3;
 
 struct HasWaitingQueue : public BaseComponent {
     virtual ~HasWaitingQueue() {}
 
-    // TODO privatize this stuff :0
-    std::deque<std::shared_ptr<Entity>> ppl_in_line;
-    int max_queue_size = 3;
-    int next_line_position = 0;
-
-    void add_customer(std::shared_ptr<Entity> customer) {
-        ppl_in_line.push_back(customer);
+    [[nodiscard]] std::shared_ptr<Entity> person(int i) {
+        return ppl_in_line[i];
     }
 
+    void erase(int index) {
+        for (int i = index; i < max_queue_size; i++) {
+            ppl_in_line[i] = ppl_in_line[i + 1];
+        }
+    }
+
+    [[nodiscard]] int get_next_pos() const { return next_line_position; }
+
+    // These impl are in job.cpp
+    [[nodiscard]] bool matching_person(int id, int i) const;
+    HasWaitingQueue& add_customer(const std::shared_ptr<Entity>& customer);
+
    private:
+    std::array<std::shared_ptr<Entity>, max_queue_size> ppl_in_line;
+    int next_line_position = 0;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
-        s.value4b(max_queue_size);
         s.value4b(next_line_position);
-        s.container(
-            ppl_in_line, max_queue_size,
-            [](S& sv, std::shared_ptr<Entity> entity) { sv.object(entity); });
+
+        s.container(ppl_in_line, [](S& sv, std::shared_ptr<Entity> entity) {
+            sv.object(entity);
+        });
     }
 };

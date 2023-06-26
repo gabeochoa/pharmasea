@@ -74,7 +74,7 @@ struct uuid {
     }
 };
 
-std::ostream& operator<<(std::ostream& os, const uuid& obj) {
+inline std::ostream& operator<<(std::ostream& os, const uuid& obj) {
     os << std::string(obj);
     return os;
 }

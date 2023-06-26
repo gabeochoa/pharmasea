@@ -31,6 +31,11 @@ struct PolymorphicBaseClass<Item>
     : PolymorphicDerivedClasses<Bag, PillBottle, Pill> {};
 
 template<>
+struct PolymorphicBaseClass<Job>
+    : PolymorphicDerivedClasses<struct Wait, struct Wandering,
+                                struct WaitInQueue> {};
+
+template<>
 struct PolymorphicBaseClass<LevelInfo>
     : PolymorphicDerivedClasses<LobbyMapInfo, GameMapInfo> {};
 
@@ -38,7 +43,7 @@ struct PolymorphicBaseClass<LevelInfo>
 }  // namespace bitsery
 
 using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<BaseComponent, Entity, Item>;
+    bitsery::ext::PolymorphicClassesList<BaseComponent, Entity, Item, Job>;
 
 namespace network {
 

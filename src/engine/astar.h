@@ -26,8 +26,8 @@ inline float distance_between(const vec2& a, const vec2& b) {
     return vec::distance(a, b);
 }
 
-vec2 get_lowest_f(const std::set<vec2>& set,
-                  std::map<vec2, ScoreValue>& fscore) {
+inline vec2 get_lowest_f(const std::set<vec2>& set,
+                         std::map<vec2, ScoreValue>& fscore) {
     float bestscore = std::numeric_limits<float>::max();
     vec2 loc = *(set.begin());
     for (const vec2 location : set) {
@@ -40,8 +40,8 @@ vec2 get_lowest_f(const std::set<vec2>& set,
     return loc;
 }
 
-std::vector<vec2> get_neighbors(vec2 start,
-                                std::function<bool(vec2 pos)> is_walkable) {
+inline std::vector<vec2> get_neighbors(
+    vec2 start, std::function<bool(vec2 pos)> is_walkable) {
     std::vector<vec2> output;
     int step = static_cast<int>(floor(TILESIZE));
     forEachNeighbor(
@@ -56,9 +56,9 @@ std::vector<vec2> get_neighbors(vec2 start,
     return output;
 }
 
-std::deque<vec2> reconstruct_path(std::deque<vec2> path,
-                                  std::map<vec2, vec2>& parent_map,
-                                  vec2 current) {
+inline std::deque<vec2> reconstruct_path(std::deque<vec2> path,
+                                         std::map<vec2, vec2>& parent_map,
+                                         vec2 current) {
     if (!parent_map.contains(current)) {
         return path;
     }
@@ -67,8 +67,8 @@ std::deque<vec2> reconstruct_path(std::deque<vec2> path,
     return reconstruct_path(path, parent_map, parent);
 }
 
-std::deque<vec2> find_path_impl(vec2 start, vec2 end,
-                                std::function<bool(vec2 pos)> is_walkable) {
+inline std::deque<vec2> find_path_impl(
+    vec2 start, vec2 end, std::function<bool(vec2 pos)> is_walkable) {
     if (!is_walkable(end)) {
         return std::deque<vec2>{};
     }

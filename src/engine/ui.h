@@ -237,7 +237,8 @@ inline void _draw_focus_ring(const Widget& widget,
 //////
 //////
 
-UIContext::LastFrame init_widget(const Widget& widget, const char* func) {
+inline UIContext::LastFrame init_widget(const Widget& widget,
+                                        const char* func) {
     // TODO today because of the layer check we cant use this
     // which means no good error reports on this issue
     // you will just segfault
@@ -269,18 +270,18 @@ UIContext::LastFrame init_widget(const Widget& widget, const char* func) {
     return lf;
 }
 
-bool padding(const Widget& widget) {
+inline bool padding(const Widget& widget) {
     init_widget(widget, __FUNCTION__);
     return true;
 }
 
-bool div(const Widget& widget) {
+inline bool div(const Widget& widget) {
     init_widget(widget, __FUNCTION__);
     return true;
 }
 
-bool text(const Widget& widget, const std::string& content,
-          theme::Usage color_usage) {
+inline bool text(const Widget& widget, const std::string& content,
+                 theme::Usage color_usage) {
     init_widget(widget, __FUNCTION__);
     // No need to render if text is empty
     if (content.empty()) return false;
@@ -288,7 +289,7 @@ bool text(const Widget& widget, const std::string& content,
     return true;
 }
 
-bool button(const Widget& widget, const std::string& content) {
+inline bool button(const Widget& widget, const std::string& content) {
     const auto _button_pressed = [](const uuid id) {
         // check click
         if (has_kb_focus(id) && get().pressed(InputName::WidgetPress)) {
@@ -321,8 +322,9 @@ bool button(const Widget& widget, const std::string& content) {
     return _button_pressed(widget.id);
 }
 
-bool button_list(const Widget& widget, const std::vector<std::string>& options,
-                 int* selectedIndex, bool* hasFocus) {
+inline bool button_list(const Widget& widget,
+                        const std::vector<std::string>& options,
+                        int* selectedIndex, bool* hasFocus) {
     init_widget(widget, __FUNCTION__);
     auto state = get().widget_init<ButtonListState>(widget.id);
     if (selectedIndex) state->selected.set(*selectedIndex);
@@ -421,8 +423,9 @@ bool button_list(const Widget& widget, const std::vector<std::string>& options,
     return pressed;
 }
 
-bool dropdown(const Widget& widget, const std::vector<std::string>& options,
-              bool* dropdownState, int* selectedIndex) {
+inline bool dropdown(const Widget& widget,
+                     const std::vector<std::string>& options,
+                     bool* dropdownState, int* selectedIndex) {
     init_widget(widget, __FUNCTION__);
     auto state = get().widget_init<DropdownState>(widget.id);
     if (dropdownState) state->on.set(*dropdownState);
@@ -519,8 +522,8 @@ bool dropdown(const Widget& widget, const std::vector<std::string>& options,
     return return_value;
 }
 
-bool slider(const Widget& widget, bool vertical, float* value, float mnf,
-            float mxf) {
+inline bool slider(const Widget& widget, bool vertical, float* value, float mnf,
+                   float mxf) {
     const auto _slider_render = [](Widget* widget_ptr, const bool vertical,
                                    const float value) {
         Widget& widget = *widget_ptr;
@@ -609,8 +612,8 @@ bool slider(const Widget& widget, bool vertical, float* value, float mnf,
 
 // TODO add support for validating the actual input so you could pass a regex to
 // not allow text or no numbers or something
-bool textfield(const Widget& widget, std::string& content,
-               TextFieldValidationFn validation) {
+inline bool textfield(const Widget& widget, std::string& content,
+                      TextFieldValidationFn validation) {
     auto _textfield_render = [](Widget* widget_ptr,
                                 TextFieldValidationFn validation) {
         auto state = get().get_widget_state<TextfieldState>(widget_ptr->id);
@@ -729,7 +732,7 @@ bool textfield(const Widget& widget, std::string& content,
     return changed_previous_frame;
 }
 
-bool checkbox(const Widget& widget, bool* cbState, std::string* label) {
+inline bool checkbox(const Widget& widget, bool* cbState, std::string* label) {
     init_widget(widget, __FUNCTION__);
     auto state = get().widget_init<CheckboxState>(widget.id);
     if (cbState) state->on = *cbState;
@@ -745,8 +748,8 @@ bool checkbox(const Widget& widget, bool* cbState, std::string* label) {
     return state->on.changed_since;
 }
 
-bool scroll_view(const Widget& widget, std::function<void()> children,
-                 float* startingLocation = nullptr) {
+inline bool scroll_view(const Widget& widget, std::function<void()> children,
+                        float* startingLocation = nullptr) {
     UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
 
     // TODO can this move into init_widget?

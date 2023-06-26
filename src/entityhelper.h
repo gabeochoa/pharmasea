@@ -277,8 +277,9 @@ struct EntityHelper {
         auto bounds = get_bounds({pos.x, 0.f, pos.y}, {TILESIZE});
         bool hit_impassible_entity = false;
         forEachEntity([&](auto entity) {
-            if (is_collidable(entity) &&
-                entity->template get<Transform>().collides(bounds)) {
+            if (!is_collidable(entity)) return ForEachFlow::Continue;
+
+            if (entity->template get<Transform>().collides(bounds)) {
                 hit_impassible_entity = true;
                 return ForEachFlow::Break;
             }

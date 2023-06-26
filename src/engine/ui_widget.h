@@ -30,7 +30,7 @@ struct SizeExpectation {
 
 #define Size_FullH(s) Size_Px(WIN_HF(), s)
 
-std::ostream& operator<<(std::ostream& os, const SizeExpectation& exp) {
+inline std::ostream& operator<<(std::ostream& os, const SizeExpectation& exp) {
     switch (exp.mode) {
         case Null:
             os << "Null";
@@ -202,7 +202,7 @@ struct DropdownConfig : public Widget {
     bool vertical;
 };
 
-std::ostream& operator<<(std::ostream& os, const Widget& w) {
+inline std::ostream& operator<<(std::ostream& os, const Widget& w) {
     os << w.print();
     return os;
 }

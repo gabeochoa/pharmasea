@@ -221,7 +221,7 @@ struct Transform : public BaseComponent {
     }
 };
 
-std::ostream& operator<<(std::ostream& os, const Transform& t) {
+inline std::ostream& operator<<(std::ostream& os, const Transform& t) {
     os << "Transform<> " << t.pos() << " " << t.size();
     return os;
 }

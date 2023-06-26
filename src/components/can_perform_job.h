@@ -48,13 +48,6 @@ struct CanPerformJob : public BaseComponent {
         current_job->state = new_state;
     }
 
-    void grab_job_local_target() {
-        // Grab next local point to go to
-        current_job->local = current_job->path_front();
-        current_job->path_pop_front();
-        return;
-    }
-
    private:
     JobType starting_job_type;
     JobType idle_job_type;

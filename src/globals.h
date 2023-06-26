@@ -28,9 +28,3 @@ constexpr int MAX_ANNOUNCEMENT_LENGTH = 200;
 constexpr int SERVER_CLIENT_ID = -1;
 constexpr int MAX_INPUTS = 100;
 }  // namespace network
-
-////// TODO remove all of these boiz before shipping
-///
-
-// used for marking specific entities so we can log_if when they match
-int marked_id = -1;

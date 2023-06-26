@@ -316,7 +316,7 @@ static std::shared_ptr<UIContext> _uicontext;
 // if not we can switch to using the SINGLETON macro
 // NOTE: Jan2-23, I tried but it seems to immediately crash on startup, what is
 // using this?
-UIContext* globalContext;
+static UIContext* globalContext;
 struct UIContext : public IUIContextInputManager,
                    public IUIContextLastFrame,
                    public IUIContextRenderTextures,

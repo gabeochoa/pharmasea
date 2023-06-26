@@ -24,8 +24,8 @@ struct CustomHeldItemPosition : public BaseComponent {
     }
 };
 
-std::ostream& operator<<(std::ostream& os,
-                         const CustomHeldItemPosition::Positioner& p) {
+inline std::ostream& operator<<(std::ostream& os,
+                                const CustomHeldItemPosition::Positioner& p) {
     os << magic_enum::enum_name(p);
     return os;
 }

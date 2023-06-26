@@ -228,12 +228,15 @@ static Entity* make_entity(const DebugOptions& options, vec3 p = {-2, -2, -2}) {
 static void add_person_components(Entity* person) {
     // TODO idk why but you spawn under the ground without this
     person->get<Transform>().update_y(0);
+    float size_multiplier = 0.75f;
+    person->get<Transform>().update_size(vec3{
+        TILESIZE * size_multiplier,
+        TILESIZE * size_multiplier,
+        TILESIZE * size_multiplier,
+    });
 
     person->addComponent<CanHoldItem>();
     person->addComponent<CanBePushed>();
-
-    person->get<Transform>().update_size(
-        vec3{TILESIZE * 0.75f, TILESIZE * 0.75f, TILESIZE * 0.75f});
 
     person->addComponent<HasBaseSpeed>().update(10.f);
     // TODO why do we need the udpate() here?

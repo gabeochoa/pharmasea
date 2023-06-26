@@ -56,9 +56,11 @@ constexpr float distance(vec2 a, vec2 b) {
     return ce_sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
 
-float dot2(const vec2& a, const vec2& b) { return (a.x * b.x + a.y * b.y); }
+inline float dot2(const vec2& a, const vec2& b) {
+    return (a.x * b.x + a.y * b.y);
+}
 
-vec2 norm(const vec2& a) {
+inline vec2 norm(const vec2& a) {
     float mag = dot2(a, a);
     return (a / mag);
 }
@@ -67,17 +69,18 @@ constexpr vec3 to3(vec2 position) { return {position.x, 0, position.y}; }
 
 constexpr vec2 to2(vec3 position) { return {position.x, position.z}; }
 
-vec2 snap(vec2 position) {
+inline vec2 snap(vec2 position) {
     return {TILESIZE * round(position.x / TILESIZE),  //
             TILESIZE * round(position.y / TILESIZE)};
 }
-vec3 snap(vec3 position) {
+
+inline vec3 snap(vec3 position) {
     return {TILESIZE * round(position.x / TILESIZE),  //
             position.y,                               //
             TILESIZE * round(position.z / TILESIZE)};
 }
 
-vec2 lerp(vec2 a, vec2 b, float pct) {
+inline vec2 lerp(vec2 a, vec2 b, float pct) {
     return vec2{
         (a.x * (1 - pct)) + (b.x * pct),
         (a.y * (1 - pct)) + (b.y * pct),

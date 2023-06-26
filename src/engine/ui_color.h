@@ -22,7 +22,7 @@ inline unsigned char comp_max(const Color& a) {
     return (unsigned char) std::max({a.r, a.g, a.b});
 }
 
-vec3 toHSL(const Color color) {
+inline vec3 toHSL(const Color color) {
     const auto cmax = comp_max(color);
     const auto cmin = comp_min(color);
     const auto delta = cmax - cmin;
@@ -47,7 +47,7 @@ vec3 toHSL(const Color color) {
     return hsl;
 }
 
-Color toRGB(const vec3& hsl) {
+inline Color toRGB(const vec3& hsl) {
     const float k = hsl.x * 6.f;
     const float c = (1.f - std::abs(2.f * hsl.z - 1.f)) * hsl.y;
     const float x = c * (1.f - std::abs(std::fmod(k, 2.f) - 1.f));
