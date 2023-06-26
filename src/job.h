@@ -80,29 +80,6 @@ struct Job {
         return;
     }
 
-    State _run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
-        switch (state) {
-            case Job::State::Initialize: {
-                return run_state_initialize(entity, dt);
-            }
-            case Job::State::HeadingToStart: {
-                return run_state_heading_to_start(entity, dt);
-            }
-            case Job::State::WorkingAtStart: {
-                return run_state_working_at_start(entity, dt);
-            }
-            case Job::State::HeadingToEnd: {
-                return run_state_heading_to_end(entity, dt);
-            }
-            case Job::State::WorkingAtEnd: {
-                return run_state_working_at_end(entity, dt);
-            }
-            case Job::State::Completed: {
-                return run_state_completed(entity, dt);
-            }
-        }
-    }
-
     Job() {}
 
     Job(JobType _type, vec2 _start, vec2 _end)
@@ -134,6 +111,29 @@ struct Job {
     }
 
    private:
+    State _run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
+        switch (state) {
+            case Job::State::Initialize: {
+                return run_state_initialize(entity, dt);
+            }
+            case Job::State::HeadingToStart: {
+                return run_state_heading_to_start(entity, dt);
+            }
+            case Job::State::WorkingAtStart: {
+                return run_state_working_at_start(entity, dt);
+            }
+            case Job::State::HeadingToEnd: {
+                return run_state_heading_to_end(entity, dt);
+            }
+            case Job::State::WorkingAtEnd: {
+                return run_state_working_at_end(entity, dt);
+            }
+            case Job::State::Completed: {
+                return run_state_completed(entity, dt);
+            }
+        }
+    }
+
     bool has_local_target() const { return local.has_value(); }
 
     [[nodiscard]] inline bool is_at_position(
