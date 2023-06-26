@@ -73,18 +73,14 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float dt) {
 
 inline void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
     if (entity->is_missing<CanPerformJob>()) return;
-
-    CanPerformJob& cpj = entity->get<CanPerformJob>();
-    if (cpj.needs_job()) return;
-
-    cpj.mutable_job()->run_job_tick(entity, dt);
+    entity->get<CanPerformJob>().run_tick(entity, dt);
 }
 
 inline void cleanup_completed_job(const std::shared_ptr<Entity>& entity,
                                   float) {
+    // TODO probably can just live in 'in_round_update'?
     if (entity->is_missing<CanPerformJob>()) return;
     entity->get<CanPerformJob>().cleanup_if_completed();
-    log_warn("cpj, job complete");
 }
 
 inline void in_round_update(const std::shared_ptr<Entity>& entity, float dt) {

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "../engine/log.h"
 #include "../job.h"
 #include "base_component.h"
 
@@ -50,9 +51,14 @@ struct CanPerformJob : public BaseComponent {
 
     void cleanup_if_completed() {
         if (needs_job()) return;
-        if (job().state != Job::State::Completed) return;
+        if (current_job->state != Job::State::Completed) return;
+        log_info("job completed");
+        current_job = nullptr;
+    }
 
-        update(nullptr);
+    void run_tick(const std::shared_ptr<Entity>& entity, float dt) {
+        if (needs_job()) return;
+        current_job->run_job_tick(entity, dt);
     }
 
    private:
