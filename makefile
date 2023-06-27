@@ -24,6 +24,7 @@ CXX := clang++
 
 # For tracing you have to run the game, and then connect from Tracy-release
 
+
 all: $(H_FILES) $(OBJ_FILES) 
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -DTRACY_ENABLE -o pharmasea && ./pharmasea
 
@@ -64,5 +65,17 @@ gendocs:
 	doxygen doxyconfig
 	git add .
 	git commit -m "update docs" 
+
+# When using lldb, you have to run these commands:
+# 	settings set platform.plugin.darwin.ignored-exceptions EXC_BAD_INSTRUCTION
+# 	c
+# 	c
+# 	c
+# and then itll work fine :) 
+# from: https://stackoverflow.com/questions/74059978/why-is-lldb-generating-exc-bad-instruction-with-user-compiled-library-on-macos
+# You can also do: 
+# 	lldb ./pharmasea
+# 	command source lldbcommands 
+# and thatll handle it for you
 
 -include $(OBJ_FILES:.o=.d)
