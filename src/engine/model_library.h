@@ -7,6 +7,9 @@
 #include "library.h"
 #include "singleton.h"
 
+// TODO enforce it on object creation?
+constexpr int MAX_MODEL_NAME_LENGTH = 100;
+
 struct ModelInfo {
     // Note this has to be a string because the string_view isnt serializable in
     // bitsery
@@ -23,8 +26,7 @@ struct ModelInfo {
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
-        // TODO make a const or something
-        s.text1b(model_name, 100);
+        s.text1b(model_name, MAX_MODEL_NAME_LENGTH);
         s.value4b(size_scale);
         s.object(position_offset);
         s.value4b(rotation_angle);

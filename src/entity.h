@@ -19,6 +19,7 @@
 #include "components/debug_name.h"
 #include "components/has_base_speed.h"
 #include "components/has_client_id.h"
+#include "components/has_dynamic_model_name.h"
 #include "components/has_name.h"
 #include "components/has_waiting_queue.h"
 #include "components/has_work.h"
@@ -570,12 +571,15 @@ template<typename I>
 [[nodiscard]] static Entity* make_bagbox(vec2 pos) {
     Entity* container = entities::make_itemcontainer<Bag>(pos);
 
-    const bool in_planning = GameState::get().is(game::State::Planning);
     container->get<ModelRenderer>().update(ModelInfo{
-        .model_name = in_planning ? "box" : "open_box",
+        .model_name = "box",
         .size_scale = 4.f,
         .position_offset = vec3{0, -TILESIZE / 2.f, 0},
     });
+
+    container->addComponent<HasDynamicModelName>().init(
+        "box", HasDynamicModelName::DynamicType::OpenClosed);
+
     return container;
 }
 

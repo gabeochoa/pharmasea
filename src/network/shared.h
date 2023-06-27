@@ -24,7 +24,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsSolid, CanBeHeld, IsRotatable, CanGrabFromOtherFurniture,
           ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom,
           IsItemContainer<Bag>, IsItemContainer<PillBottle>, UsesCharacterModel,
-          ShowsProgressBar, DebugName> {};
+          ShowsProgressBar, DebugName, HasDynamicModelName> {};
 
 template<>
 struct PolymorphicBaseClass<Item>
@@ -32,8 +32,7 @@ struct PolymorphicBaseClass<Item>
 
 template<>
 struct PolymorphicBaseClass<Job>
-    : PolymorphicDerivedClasses<WaitJob, WanderingJob,
-                                WaitInQueueJob> {};
+    : PolymorphicDerivedClasses<WaitJob, WanderingJob, WaitInQueueJob> {};
 
 template<>
 struct PolymorphicBaseClass<LevelInfo>
@@ -238,9 +237,9 @@ void serialize(S& s, ClientPacket& packet) {
                   s.value4b(info.model_index);
               },
               [](S& s, ClientPacket::PingInfo& info) {
-                  // Im not sure if this will cause issues with networked clients, 
-                  // but this allows it to complile for now 
-#ifdef __APPLE__ 
+    // Im not sure if this will cause issues with networked clients,
+    // but this allows it to complile for now
+#ifdef __APPLE__
                   s.value8b(info.ping);
                   s.value8b(info.pong);
 #else

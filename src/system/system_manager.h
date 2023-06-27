@@ -349,12 +349,15 @@ void delete_held_items_when_leaving_inround(
     log_error("deleting item :");
 }
 
-// TODO fix this
-// void process_register_waiting_queue(std::shared_ptr<Entity> entity, float dt)
-// { if (entity->is_missing<HasWaitingQueue>()) return; HasWaitingQueue&
-// hasWaitingQueue = entity->get<HasWaitingQueue>();
-// }
-//
+inline void refetch_dynamic_model_names(const std::shared_ptr<Entity>& entity,
+                                        float) {
+    if (entity->is_missing<ModelRenderer>()) return;
+    if (entity->is_missing<HasDynamicModelName>()) return;
+
+    HasDynamicModelName& hDMN = entity->get<HasDynamicModelName>();
+    ModelRenderer& renderer = entity->get<ModelRenderer>();
+    renderer.update_model_name(hDMN.fetch());
+}
 
 }  // namespace system_manager
 
@@ -363,7 +366,6 @@ struct SystemManager {
     SINGLETON(SystemManager)
 
     SystemManager() {
-        log_info("register sate");
         // Register state manager
         GameState::get().register_on_change(
             std::bind(&SystemManager::on_game_state_change, this,
@@ -374,7 +376,7 @@ struct SystemManager {
     bool state_transitioned_planning_round = false;
 
     void on_game_state_change(game::State new_state, game::State old_state) {
-        // log_warn("system manager on game state change from {} to {}",
+        // log_warn("system manager on gamestate change from {} to {}",
         // old_state, new_state);
 
         if (old_state == game::State::InRound &&
@@ -392,9 +394,6 @@ struct SystemManager {
         // TODO add num entities to debug overlay
         // log_info("num entities {}", entities.size());
         // TODO do we run game updates during paused?
-
-        // Process State Change Boiz
-        process_state_change(entities, dt);
 
         if (GameState::get().is(game::State::InRound)) {
             in_round_update(entities, dt);
@@ -437,7 +436,7 @@ struct SystemManager {
 
    private:
     void process_state_change(
-        const std::vector<std::shared_ptr<Entity>>& entities, float) {
+        const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
         if (state_transitioned_round_planning) {
             state_transitioned_round_planning = false;
             for (auto& entity : entities) {
@@ -453,9 +452,16 @@ struct SystemManager {
             }
         }
     }
+
     void always_update(const std::vector<std::shared_ptr<Entity>>& entity_list,
                        float dt) {
         for (auto& entity : entity_list) {
+            // TODO i wanted to use process_state_change for this but
+            // because its called for the remote_players and then for entities,
+            // we cant guarantee that this is called for the right things
+            // TODO SPEED ^^^^
+            system_manager::refetch_dynamic_model_names(entity, dt);
+
             system_manager::reset_highlighted(entity, dt);
             system_manager::transform_snapper(entity, dt);
             system_manager::input_process_manager::collect_user_input(entity,

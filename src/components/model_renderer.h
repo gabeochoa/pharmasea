@@ -11,10 +11,15 @@ struct ModelRenderer : public BaseComponent {
     [[nodiscard]] bool has_model() const { return model_info().has_value(); }
     [[nodiscard]] std::optional<ModelInfo> model_info() const { return info; }
     [[nodiscard]] raylib::Model model() const {
-        return ModelLibrary::get().get(info.value().model_name);
+        return ModelLibrary::get().get(model_info().value().model_name);
     }
 
     void update(const ModelInfo& new_info) { info = new_info; }
+
+    void update_model_name(const std::string& new_name) {
+        if (!info.has_value()) return;
+        info.value().model_name = new_name;
+    }
 
    private:
     std::optional<ModelInfo> info;
