@@ -261,11 +261,8 @@ Job::State WaitInQueueJob::run_state_initialize(
         // probably enough
         log_warn("Could not find a valid register");
 
-        return Job::State::Completed;
-        // TODO right now this doesnt work, the job queue sucks
-        // cpj.update_job_state(Job::State::Initialize);
-        // WIQ_wait_and_return(entity);
-        // return Job::State::Initialize;
+        WIQ_wait_and_return(entity);
+        return Job::State::Initialize;
     }
 
     reg = closest_target;
