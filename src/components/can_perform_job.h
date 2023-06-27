@@ -51,10 +51,20 @@ struct CanPerformJob : public BaseComponent {
     void cleanup_if_completed() {
         if (needs_job()) return;
         if (current_job->state != Job::State::Completed) return;
-        log_info("job completed");
+        // log_info("{} job completed",
+        // magic_enum::enum_name(current_job->type));
 
-        // TODO this crashes the game
-        // current_job = nullptr;
+        if (personal_queue.empty()) {
+            current_job = nullptr;
+            return;
+        }
+
+        auto& prev_job = personal_queue.top();
+        current_job = prev_job;
+        personal_queue.pop();
+
+        // log_info("going to personal queue next {}",
+        // magic_enum::enum_name(current_job->type));
     }
 
     void run_tick(const std::shared_ptr<Entity>& entity, float dt) {

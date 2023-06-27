@@ -373,8 +373,9 @@ Job::State WaitJob::run_state_working_at_end(
     if (timePassedInCurrentState >= timeToComplete) {
         return (Job::State::Completed);
     }
-    // announce(fmt::format("waiting a little longer: {} => {} ",
-    // job->timePassedInCurrentState,
-    // job->timeToComplete));
+    system_manager::logging_manager::announce(
+        entity, fmt::format("waiting a little longer: {} => {} ",
+                            timePassedInCurrentState, timeToComplete));
+
     return (Job::State::WorkingAtEnd);
 }
