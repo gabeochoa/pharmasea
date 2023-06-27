@@ -40,10 +40,12 @@ struct Info {
     [[nodiscard]] bool is_host() { return desired_role & s_Host; }
     [[nodiscard]] bool is_client() { return desired_role & s_Client; }
     [[nodiscard]] bool has_role() { return is_host() || is_client(); }
+    [[nodiscard]] bool missing_role() { return !has_role(); }
 
     void set_role(Role role) {
         switch (role) {
             case Role::s_Host: {
+                log_info("set user's role to host");
                 desired_role = Role::s_Host;
                 server_thread = Server::start(DEFAULT_PORT);
                 //
@@ -53,6 +55,7 @@ struct Info {
 
             } break;
             case Role::s_Client: {
+                log_info("set user's role to client");
                 desired_role = Role::s_Client;
                 client.reset(new Client());
                 client->update_username(Settings::get().data.username);
@@ -80,6 +83,9 @@ struct Info {
     std::string& host_ip_address() { return client->conn_info.host_ip_address; }
     void lock_in_ip() { client->lock_in_ip(); }
     [[nodiscard]] bool has_set_ip() { return client->conn_info.ip_set; }
+    [[nodiscard]] bool has_not_set_ip() { return !has_set_ip(); }
+    [[nodiscard]] bool has_username() { return username_set; }
+    [[nodiscard]] bool missing_username() { return !has_username(); }
 
     TriggerOnDt menu_state_tick_trigger = TriggerOnDt(0.1f);
 

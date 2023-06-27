@@ -129,6 +129,7 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_ip_input_screen() {
+        log_info("draw ip screen");
         draw_username();
         auto ip_address_input = ui_context->own(Widget(
             MK_UUID(id, ROOT_ID), Size_Px(400.f, 1.f), Size_Px(25.f, 0.5f)));
@@ -258,17 +259,21 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_screen_selector_logic() {
-        if (!network_info->username_set) {
+        if (network_info->missing_username()) {
             draw_username_picker();
-        } else if (network_info->has_role()) {
-            if (!(network_info->has_set_ip())) {
-                draw_ip_input_screen();
-            } else {
-                draw_connected_screen();
-            }
-        } else {
-            draw_base_screen();
+            return;
         }
+
+        if (network_info->missing_role()) {
+            draw_base_screen();
+            return;
+        }
+
+        if (network_info->has_set_ip()) {
+            draw_connected_screen();
+            return;
+        }
+        draw_ip_input_screen();
     }
 
     void handle_announcements() {
