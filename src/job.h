@@ -2,6 +2,7 @@
 #pragma once
 
 #include "engine/assert.h"
+#include "engine/log.h"
 #include "external_include.h"
 //
 

@@ -18,6 +18,8 @@ namespace system_manager {
 namespace job_system {
 
 /*
+ // TODO eventually turn this back on
+
 inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanPerformJob>()) return;
     CanPerformJob& cpf = entity->get<CanPerformJob>();
@@ -37,15 +39,11 @@ inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
 
 inline void render_job_visual(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanPerformJob>()) return;
-    CanPerformJob& cpf = entity->get<CanPerformJob>();
-    if (!cpf.has_job()) return;
-
     const float box_size = TILESIZE / 10.f;
-    if (!cpf.job().path_empty()) {
-        for (auto location : cpf.job().get_path()) {
+    entity->get<CanPerformJob>().for_each_path_location(
+        [box_size](vec2 location) {
             DrawCube(vec::to3(location), box_size, box_size, box_size, BLUE);
-        }
-    }
+        });
 }
 
 inline void ensure_has_job(std::shared_ptr<Entity> entity, float dt) {
@@ -84,8 +82,7 @@ inline void cleanup_completed_job(const std::shared_ptr<Entity>& entity,
 }
 
 inline void in_round_update(const std::shared_ptr<Entity>& entity, float dt) {
-    // TODO this is crashing the game!
-    // cleanup_completed_job(entity, dt);
+    cleanup_completed_job(entity, dt);
     ensure_has_job(entity, dt);
     run_job_tick(entity, dt);
 }

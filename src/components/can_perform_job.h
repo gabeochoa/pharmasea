@@ -11,8 +11,7 @@ struct CanPerformJob : public BaseComponent {
 
     [[nodiscard]] bool has_job() const { return current_job != nullptr; }
     [[nodiscard]] bool needs_job() const { return !has_job(); }
-    [[nodiscard]] const Job& job() const { return *current_job; }
-    [[nodiscard]] std::shared_ptr<Job>& mutable_job() { return current_job; }
+
     [[nodiscard]] std::stack<std::shared_ptr<Job>>& job_queue() {
         return personal_queue;
     }
@@ -53,7 +52,9 @@ struct CanPerformJob : public BaseComponent {
         if (needs_job()) return;
         if (current_job->state != Job::State::Completed) return;
         log_info("job completed");
-        current_job = nullptr;
+
+        // TODO this crashes the game
+        // current_job = nullptr;
     }
 
     void run_tick(const std::shared_ptr<Entity>& entity, float dt) {
@@ -61,7 +62,22 @@ struct CanPerformJob : public BaseComponent {
         current_job->run_job_tick(entity, dt);
     }
 
+    void for_each_path_location(std::function<void(vec2)> cb) {
+        if (needs_job()) return;
+
+        for (auto location : job().get_path()) {
+            cb(location);
+        }
+    }
+
+    vec2 job_start() {
+        if (needs_job()) return vec2{0, 0};
+        return job().start;
+    }
+
    private:
+    [[nodiscard]] const Job& job() const { return *current_job; }
+
     JobType starting_job_type;
     JobType idle_job_type;
     bool worked_before = false;

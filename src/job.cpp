@@ -74,6 +74,7 @@ bool Job::is_at_position(const std::shared_ptr<Entity>& entity, vec2 position) {
 
 Job::State Job::run_state_heading_to_start(
     const std::shared_ptr<Entity>& entity, float dt) {
+    // log_info("heading to start job {}", magic_enum::enum_name(type));
     travel_to_position(entity, dt, start);
     return (is_at_position(entity, start) ? Job::State::WorkingAtStart
                                           : Job::State::HeadingToStart);
@@ -81,6 +82,7 @@ Job::State Job::run_state_heading_to_start(
 
 Job::State Job::run_state_heading_to_end(const std::shared_ptr<Entity>& entity,
                                          float dt) {
+    // log_info("heading to end job {}", magic_enum::enum_name(type));
     travel_to_position(entity, dt, end);
     return (is_at_position(entity, end) ? Job::State::WorkingAtEnd
                                         : Job::State::HeadingToEnd);
@@ -175,10 +177,9 @@ void Job::travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
 
 inline void WIQ_wait_and_return(const std::shared_ptr<Entity>& entity) {
     CanPerformJob& cpj = entity->get<CanPerformJob>();
-    const Job& job = entity->get<CanPerformJob>().job();
     // Add the current job to the queue,
     // and then add the waiting job
-    cpj.push_and_reset(new WaitJob(job.start, job.start, 1.f));
+    cpj.push_and_reset(new WaitJob(cpj.job_start(), cpj.job_start(), 1.f));
     return;
 }
 
@@ -294,6 +295,8 @@ Job::State WaitInQueueJob::run_state_working_at_start(
         // We didnt move so just wait a bit before trying again
         system_manager::logging_manager::announce(
             entity, fmt::format("im just going to wait a bit longer"));
+
+        log_info("wait and return");
 
         // Add the current job to the queue,
         // and then add the waiting job
