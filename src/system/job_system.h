@@ -84,7 +84,8 @@ inline void cleanup_completed_job(const std::shared_ptr<Entity>& entity,
 }
 
 inline void in_round_update(const std::shared_ptr<Entity>& entity, float dt) {
-    cleanup_completed_job(entity, dt);
+    // TODO this is crashing the game!
+    // cleanup_completed_job(entity, dt);
     ensure_has_job(entity, dt);
     run_job_tick(entity, dt);
 }

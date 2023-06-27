@@ -52,11 +52,11 @@ Job* Job::create_job_of_type(const std::shared_ptr<Entity>& entity, float dt,
             break;
         case Wait:
             job = new WaitJob(entity->get<Transform>().as2(),
-                                  entity->get<Transform>().as2(), 1.f);
+                              entity->get<Transform>().as2(), 1.f);
             break;
         case None:
             job = new WaitJob(entity->get<Transform>().as2(),
-                                  entity->get<Transform>().as2(), 1.f);
+                              entity->get<Transform>().as2(), 1.f);
             break;
         default:
             log_warn(
@@ -364,8 +364,8 @@ Job::State WaitInQueueJob::run_state_working_at_end(
     return (Job::State::Completed);
 }
 
-Job::State WaitJob::run_state_working_at_end(const std::shared_ptr<Entity>& entity,
-                                          float dt) {
+Job::State WaitJob::run_state_working_at_end(
+    const std::shared_ptr<Entity>& entity, float dt) {
     timePassedInCurrentState += dt;
     if (timePassedInCurrentState >= timeToComplete) {
         return (Job::State::Completed);

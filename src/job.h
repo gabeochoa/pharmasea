@@ -145,7 +145,8 @@ struct Job {
 
 struct WanderingJob : public Job {
     WanderingJob() : Job(JobType::Wandering, vec2{0, 0}, vec2{0, 0}) {}
-    WanderingJob(vec2 _start, vec2 _end) : Job(JobType::Wandering, _start, _end) {}
+    WanderingJob(vec2 _start, vec2 _end)
+        : Job(JobType::Wandering, _start, _end) {}
 
     friend bitsery::Access;
     template<typename S>
@@ -158,7 +159,8 @@ struct WaitJob : public Job {
     float timePassedInCurrentState = 0.f;
     float timeToComplete = 1.f;
 
-    WaitJob() : Job(JobType::Wait, vec2{0, 0}, vec2{0, 0}), timeToComplete(1.f) {}
+    WaitJob()
+        : Job(JobType::Wait, vec2{0, 0}, vec2{0, 0}), timeToComplete(1.f) {}
     WaitJob(vec2 _start, vec2 _end, float _timeToComplete)
         : Job(JobType::Wait, _start, _end), timeToComplete(_timeToComplete) {}
 

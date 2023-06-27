@@ -113,9 +113,10 @@ struct Server {
                                  "waiting for run loop continue", true);
                 end = std::chrono::high_resolution_clock::now();
                 duration =
-                    (float) std::chrono::duration_cast<std::chrono::milliseconds>(end -
-                                                                          start)
-                        .count();
+                    (float)
+                        std::chrono::duration_cast<std::chrono::milliseconds>(
+                            end - start)
+                            .count();
                 std::this_thread::sleep_for(1ms);
             } while (duration < 4);
 
