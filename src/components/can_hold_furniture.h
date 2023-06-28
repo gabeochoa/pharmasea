@@ -31,6 +31,7 @@ struct CanHoldFurniture : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+
         s.ext(held_furniture, bitsery::ext::StdSmartPtr{});
     }
 };

@@ -186,15 +186,16 @@ struct Server {
         // without this the position doesnt change until you drop it
         //
         // TODO idk the perf implications of this (map->vec)
-        std::vector<std::shared_ptr<Entity>> value;
+        std::vector<std::shared_ptr<Entity>> temp_players;
         for (auto it = players.begin(); it != players.end(); ++it) {
-            value.push_back(it->second);
+            temp_players.push_back(it->second);
         }
 
         if (MenuState::s_is_game(current_menu_state)) {
             TRACY_ZONE(tracy_server_gametick);
             if (next_update_timer.test(dt)) {
-                pharmacy_map->_onUpdate(value, next_update_timer / 1000.f);
+                pharmacy_map->_onUpdate(temp_players,
+                                        next_update_timer / 1000.f);
             }
         }
 
