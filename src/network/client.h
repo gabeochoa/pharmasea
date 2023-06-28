@@ -61,7 +61,7 @@ struct Client {
             send_player_input_packet(id);
         }
 
-        if (!client_p->is_connected()) {
+        if (client_p->is_not_connected()) {
             announcements.push_back({
                 .message = "Lost connection to Host",
                 .type = AnnouncementType::Error,

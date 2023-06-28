@@ -131,7 +131,7 @@ struct Server {
     // TODO verify that these numbers make sense, i have a feeling
     // its not 2fps but 1/50 seconds which woudl be 0.5fps
     // NOTE: server time things are in s
-    float next_map_tick_reset = 100;  // 1fps
+    float next_map_tick_reset = 50;  // 1fps
     float next_map_tick = 0;
 
     float next_player_rare_tick_reset = 100;

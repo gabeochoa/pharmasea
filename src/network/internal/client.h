@@ -32,6 +32,7 @@
 #include <tuple>
 
 #include "../../engine/assert.h"
+#include "../../engine/log.h"
 #include "../../globals.h"
 #include "../shared.h"
 #include "bitsery/serializer.h"
@@ -56,6 +57,8 @@ struct Client {
     [[nodiscard]] bool is_connected() const {
         return connection != k_HSteamNetConnection_Invalid;
     }
+
+    [[nodiscard]] bool is_not_connected() const { return !is_connected(); }
 
     void set_process_message(std::function<void(std::string)> cb) {
         process_message_cb = cb;

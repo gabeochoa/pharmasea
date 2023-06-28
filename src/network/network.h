@@ -138,7 +138,8 @@ struct Info {
     }
 
     void tick(float dt) {
-        if (!has_role()) return;
+        if (missing_role()) return;
+        if (has_not_set_ip()) return;
 
         if (is_host()) {
             send_current_menu_state(dt);
