@@ -42,9 +42,9 @@ struct LevelInfo {
 
     std::string seed;
 
-    virtual void onUpdate(float dt) {
+    virtual void onUpdate(const Entities& players, float dt) {
         TRACY_ZONE_SCOPED;
-        SystemManager::get().update(dt);
+        SystemManager::get().update_all_entities(players, dt);
     }
 
     virtual void onDraw(float dt) const {
@@ -155,9 +155,9 @@ struct GameMapInfo : public LevelInfo {
         // TODO need to regenerate the map and clean up entitiyhelper
     }
 
-    virtual void onUpdate(float dt) override {
+    virtual void onUpdate(const Entities& players, float dt) override {
         // log_info("update game map info");
-        LevelInfo::onUpdate(dt);
+        LevelInfo::onUpdate(players, dt);
         if (active_round.has_value()) {
             active_round->onUpdate(dt);
         }

@@ -43,18 +43,12 @@ struct Map {
         // TODO add to debug overlay
         // log_info("num items {}", items().size());
 
-        SystemManager::get().update(
-            container_cast(players,
-                           "converting sp<RemotePlayer> to sp<Entity> as these "
-                           "are not serialized and so not part of level info"),
-            dt);
-
         if (in_lobby_state()) {
             lobby_info.ensure_generated_map(seed);
-            lobby_info.onUpdate(dt);
+            lobby_info.onUpdate(players, dt);
         } else {
             game_info.ensure_generated_map(seed);
-            game_info.onUpdate(dt);
+            game_info.onUpdate(players, dt);
         }
     }
 

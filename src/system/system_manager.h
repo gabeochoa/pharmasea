@@ -383,9 +383,17 @@ struct SystemManager {
         }
 
         always_update(entities, dt);
+        process_state_change(entities, dt);
     }
 
-    void update(float dt) { update(EntityHelper::get_entities(), dt); }
+    void update_all_entities(const Entities& players, float dt) {
+        // TODO speed?
+        Entities ents = EntityHelper::get_entities();
+        Entities all;
+        all.insert(all.end(), players.begin(), players.end());
+        all.insert(all.end(), ents.begin(), ents.end());
+        update(all, dt);
+    }
 
     void process_inputs(const Entities& entities, const UserInputs& inputs) {
         for (auto& entity : entities) {
