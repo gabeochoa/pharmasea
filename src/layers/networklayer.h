@@ -152,6 +152,7 @@ struct NetworkLayer : public Layer {
 
     void draw_ip_input_screen() {
         draw_username();
+        // TODO add show/hide button for the ip address
         auto ip_address_input = ui_context->own(Widget(
             MK_UUID(id, ROOT_ID), Size_Px(400.f, 1.f), Size_Px(25.f, 0.5f)));
         text(*ui::components::mk_text(), "Enter IP Address");
