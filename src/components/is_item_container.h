@@ -12,7 +12,8 @@ struct IsItemContainer : public BaseComponent {
         std::shared_ptr<Item> item = nullptr) {
         auto i = dynamic_pointer_cast<I>(item);
         if (!i) return false;
-        if (!i->empty()) return false;
+        // TODO idk what this was for
+        // if (!i->empty()) return false;
         return true;
     }
 

@@ -276,42 +276,23 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
 }
 
-void process_is_container_and_should_destroy_item(
-    std::shared_ptr<Entity> entity, float) {
-    /*
-     * If we are an item container and we are holding an instance
-     * then we should just destroy it
-     * */
+template<typename I>
+inline void backfill_empty_container(std::shared_ptr<Entity> entity) {
+    if (entity->is_missing<IsItemContainer<I>>()) return;
+    CanHoldItem& canHold = entity->get<CanHoldItem>();
+    auto newItem = std::make_shared<Bag>(entity->get<Transform>().pos(),
+                                         Color({255, 15, 240, 255}));
+    canHold.update(newItem, Item::HeldBy::FURNITURE);
+    ItemHelper::addItem(canHold.item());
+}
 
+inline void process_is_container_and_should_backfill_item(
+    std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanHoldItem>()) return;
     CanHoldItem& canHold = entity->get<CanHoldItem>();
-
-    if (canHold.empty()) return;
-
-    const auto item_container_destroy_matching =
-        []<typename I>(std::shared_ptr<Entity> entity,
-                       std::shared_ptr<I> item = nullptr) {
-            if (!item) return;
-            if (entity->has<IsItemContainer<I>>()) return;
-
-            if (entity->is_missing<CanHoldItem>()) return;
-
-            // TODO disabling the code below because it is just generating tons
-            // of items per frame and causing slowdowns
-            return;
-            // CanHoldItem& canHold = entity->get<CanHoldItem>();
-            // TODO is this the api we want
-            // canHold.item().reset(
-            // // TODO what is this color and what is it for
-            // new I(entity->get<Transform>().pos(),
-            // Color({255, 15, 240, 255})));
-            // ItemHelper::addItem(canHold.item());
-        };
-
-    item_container_destroy_matching(entity,
-                                    dynamic_pointer_cast<Bag>(canHold.item()));
-    item_container_destroy_matching(
-        entity, dynamic_pointer_cast<PillBottle>(canHold.item()));
+    if (canHold.is_holding_item()) return;
+    backfill_empty_container<Bag>(entity);
+    backfill_empty_container<PillBottle>(entity);
 }
 
 void handle_autodrop_furniture_when_exiting_planning(
@@ -457,8 +438,9 @@ struct SystemManager {
                        float dt) {
         for (auto& entity : entity_list) {
             // TODO i wanted to use process_state_change for this but
-            // because its called for the remote_players and then for entities,
-            // we cant guarantee that this is called for the right things
+            // because its called for the remote_players and then for
+            // entities, we cant guarantee that this is called for the right
+            // things
             // TODO SPEED ^^^^
             system_manager::refetch_dynamic_model_names(entity, dt);
 
@@ -468,9 +450,9 @@ struct SystemManager {
                                                                       dt);
             system_manager::update_held_item_position(entity, dt);
 
-            // TODO this is in the render manager but its not really a render
-            // thing but at the same time it kinda is idk This could run only in
-            // lobby if we wanted to distinguish
+            // TODO this is in the render manager but its not really a
+            // render thing but at the same time it kinda is idk This could
+            // run only in lobby if we wanted to distinguish
             system_manager::render_manager::update_character_model_from_index(
                 entity, dt);
         }
@@ -482,8 +464,8 @@ struct SystemManager {
             system_manager::job_system::in_round_update(entity, dt);
             system_manager::process_grabber_items(entity, dt);
             system_manager::process_conveyer_items(entity, dt);
-            system_manager::process_is_container_and_should_destroy_item(entity,
-                                                                         dt);
+            system_manager::process_is_container_and_should_backfill_item(
+                entity, dt);
         }
     }
 
