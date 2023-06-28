@@ -388,10 +388,14 @@ struct SystemManager {
 
     void update_all_entities(const Entities& players, float dt) {
         // TODO speed?
-        Entities ents = EntityHelper::get_entities();
         Entities all;
+        Entities ents = EntityHelper::get_entities();
+
+        all.reserve(players.size() + ents.size());
+
         all.insert(all.end(), players.begin(), players.end());
         all.insert(all.end(), ents.begin(), ents.end());
+
         update(all, dt);
     }
 
