@@ -241,7 +241,7 @@ inline void process_player_movement_input(std::shared_ptr<Entity> entity,
 
 namespace planning {
 
-void rotate_furniture(const std::shared_ptr<Entity> player) {
+inline void rotate_furniture(const std::shared_ptr<Entity> player) {
     // Cant rotate outside planning mode
     if (GameState::get().is_not(game::State::Planning)) return;
 
@@ -258,20 +258,27 @@ void rotate_furniture(const std::shared_ptr<Entity> player) {
     match->get<Transform>().rotate_facing_clockwise();
 }
 
-void drop_held_furniture(const std::shared_ptr<Entity>& player) {
+inline void drop_held_furniture(const std::shared_ptr<Entity>& player) {
     CanHoldFurniture& ourCHF = player->get<CanHoldFurniture>();
     // TODO need to make sure it doesnt place ontop of another
     // one
     auto hf = ourCHF.furniture();
+    if (!hf) {
+        log_info(" id:{} we'd like to drop but our hands are empty",
+                 player->id);
+        return;
+    }
 
     hf->get<CanBeHeld>().update(false);
     hf->get<Transform>().update(vec::snap(
         vec::to3(player->get<Transform>().tile_infront_given_player(1))));
 
     ourCHF.update(nullptr);
+    log_info("we {} dropped the furniture {} we were holding", player->id,
+             hf->id);
 }
 
-void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
+inline void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
     // TODO: Need to delete any held items when switching from game ->
     // planning
 
