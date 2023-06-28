@@ -30,7 +30,8 @@ struct PlayerInfoLayer : public Layer {
 
         y_pos = 0;
         draw_text("PlayerInfo:");
-        draw_text(fmt::format("position: {}", me->get<Transform>().pos()));
+        draw_text(fmt::format("id: {} position: {}", me->id,
+                              me->get<Transform>().pos()));
         draw_text(
             fmt::format("holding furniture?: {}",
                         me->get<CanHoldFurniture>().is_holding_furniture()));
