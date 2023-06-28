@@ -106,12 +106,31 @@ void startup() {
     for (auto layer : layers) App::get().pushLayer(layer);
 }
 
-int main(void) {
+int setup_multiplayer_test(bool is_host = false) {
+    network::mp_test::enabled = true;
+    network::mp_test::is_host = is_host;
+    MenuState::get().set(menu::State::Network);
+    return 0;
+}
+
+int main(int argc, char* argv[]) {
     tests::run_all();
     std::cout << "All tests ran " << std::endl;
 
     startup();
     defer(Settings::get().write_save_file());
+
+    if (argc > 1) {
+        bool is_test = strcmp(argv[1], "test") == 0;
+        if (is_test) {
+            bool is_host = strcmp(argv[2], "host") == 0;
+            int a = setup_multiplayer_test(is_host);
+            if (a < 0) {
+                return -1;
+            }
+        }
+    }
+
     App::get().run();
     return 0;
 }

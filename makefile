@@ -28,6 +28,9 @@ CXX := clang++
 all: $(H_FILES) $(OBJ_FILES) 
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -DTRACY_ENABLE -o pharmasea && ./pharmasea
 
+mp: $(H_FILES) $(OBJ_FILES) 
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -DTRACY_ENABLE -o pharmasea && ./pharmasea test host > host_log & sleep 5;./pharmasea test client
+
 
 $(OBJ_DIR)/%.o: %.cpp makefile
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -c $< -o $@ -MMD -MF $(@:.o=.d)
