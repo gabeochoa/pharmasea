@@ -353,8 +353,8 @@ struct SystemManager {
                       std::placeholders::_1, std::placeholders::_2));
     }
 
-    bool state_transitioned_round_planning = false;
-    bool state_transitioned_planning_round = false;
+    bool state_transitioned_round_to_planning = false;
+    bool state_transitioned_planning_to_round = false;
 
     void on_game_state_change(game::State new_state, game::State old_state) {
         // log_warn("system manager on gamestate change from {} to {}",
@@ -362,12 +362,12 @@ struct SystemManager {
 
         if (old_state == game::State::InRound &&
             new_state == game::State::Planning) {
-            state_transitioned_round_planning = true;
+            state_transitioned_round_to_planning = true;
         }
 
         if (old_state == game::State::Planning &&
             new_state == game::State::InRound) {
-            state_transitioned_planning_round = true;
+            state_transitioned_planning_to_round = true;
         }
     }
 
@@ -430,32 +430,30 @@ struct SystemManager {
    private:
     void process_state_change(
         const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
-        if (state_transitioned_round_planning) {
-            state_transitioned_round_planning = false;
+        if (state_transitioned_round_to_planning) {
+            state_transitioned_round_to_planning = false;
             for (auto& entity : entities) {
                 system_manager::delete_held_items_when_leaving_inround(entity);
             }
         }
 
-        if (state_transitioned_planning_round) {
-            state_transitioned_planning_round = false;
+        if (state_transitioned_planning_to_round) {
+            state_transitioned_planning_to_round = false;
             for (auto& entity : entities) {
                 system_manager::handle_autodrop_furniture_when_exiting_planning(
                     entity);
             }
+        }
+
+        // All transitions
+        for (auto& entity : entities) {
+            system_manager::refetch_dynamic_model_names(entity, dt);
         }
     }
 
     void always_update(const std::vector<std::shared_ptr<Entity>>& entity_list,
                        float dt) {
         for (auto& entity : entity_list) {
-            // TODO i wanted to use process_state_change for this but
-            // because its called for the remote_players and then for
-            // entities, we cant guarantee that this is called for the right
-            // things
-            // TODO SPEED ^^^^
-            system_manager::refetch_dynamic_model_names(entity, dt);
-
             system_manager::reset_highlighted(entity, dt);
             system_manager::transform_snapper(entity, dt);
             system_manager::input_process_manager::collect_user_input(entity,
