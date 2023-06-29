@@ -278,10 +278,11 @@ inline void drop_held_furniture(const std::shared_ptr<Entity>& player) {
              hf->id);
 }
 
-inline void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
-    // TODO: Need to delete any held items when switching from game ->
-    // planning
+// TODO grabbing reach needs to be better, you should be able to grab in the 8
+// spots around you and just prioritize the one you are facing
+//
 
+inline void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
     // TODO need to figure out if this should be separate from highlighting
     CanHighlightOthers& cho = player->get<CanHighlightOthers>();
     CanHoldFurniture& ourCHF = player->get<CanHoldFurniture>();
