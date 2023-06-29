@@ -29,7 +29,6 @@ kanban-plugin: basic
 
 ## want for mvp
 
-- [ ] diagetic UI to lobby screen
 - [ ] Need a build system to output producuction build
 - [ ] Add system for exporting resources to code for easier binary packaging ([see branch packager](https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html))
 - [ ] Add a pause menu with textual options
@@ -50,21 +49,22 @@ kanban-plugin: basic
 
 ## in progress
 
-- [ ] Support for "windows" or "modals" in ui framework
-- [ ] dropdown needs scrollbar when subwindow goes offscreen
-- [ ] pill bottle barrel
+- [ ] diagetic UI to lobby screen
 - [ ] placeholder bottle pill filler
 - [ ] Ability to do different shaders between gaming and menu
 
 
 ## blocked
 
+- [ ] dropdown needs scrollbar when subwindow goes offscreen
+- [ ] Support for "windows" or "modals" in ui framework
 - [ ] highlight furniture under selection
 
 
 ## done
 
 **Complete**
+- [x] pill bottle barrel
 - [x] Magic Enum? https://github.com/Neargye/magic_enum
 - [x] change UI from in world to render-to-texture
 - [x] Add ailments for customers

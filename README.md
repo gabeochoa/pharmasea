@@ -31,16 +31,16 @@ Info about the todo chart
 
 |needed to play once|in progress|blocked|done|
 |-------------------|-----------|-------|----|
-|In pause menu, remap key bindings in layer for arrows keys to choose options|Support for "windows" or "modals" in ui framework|highlight furniture under selection|Magic Enum? https://github.com/Neargye/magic_enum|
-|BUG: if customer runs into someone you both get stuck|dropdown needs scrollbar when subwindow goes offscreen| |change UI from in world to render-to-texture|
-|WARN: need a way to warn that UI elements are offscreen "purpling"|pill bottle barrel| |Add ailments for customers|
-|BUG: Hide pause buttons from non-host since they dont really do anything anyway|placeholder bottle pill filler| |bag box to get paper bags from|
-|BUG: When host opens settings, probably dont bring everyone else too|Ability to do different shaders between gaming and menu| |Put all things that have to be loaded in a single place|
-|button hover state color change| | |resolution switcher to settings page|
+|In pause menu, remap key bindings in layer for arrows keys to choose options|diagetic UI to lobby screen|dropdown needs scrollbar when subwindow goes offscreen|pill bottle barrel|
+|BUG: if customer runs into someone you both get stuck|placeholder bottle pill filler|Support for "windows" or "modals" in ui framework|Magic Enum? https://github.com/Neargye/magic_enum|
+|WARN: need a way to warn that UI elements are offscreen "purpling"|Ability to do different shaders between gaming and menu|highlight furniture under selection|change UI from in world to render-to-texture|
+|BUG: Hide pause buttons from non-host since they dont really do anything anyway| | |Add ailments for customers|
+|BUG: When host opens settings, probably dont bring everyone else too| | |bag box to get paper bags from|
+|button hover state color change| | |Put all things that have to be loaded in a single place|
+| | | |resolution switcher to settings page|
 | | | |Disallow target cube from going outside of bounds|
 | | | |Refactor Library to be more generic|
 | | | |add diagonal facing direction|
-| | | |Add easy-to-use UI buttons|
 
 ## End TODO 
 
@@ -49,6 +49,39 @@ Info about the todo chart
 
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
+
+### alpha_0.23.06.29
+
+Finally finished the ECS rewrite!! 
+
+What works:
+- (Lobby) character switcher
+- (Planning) can move furniture around
+- (InRound) timer counts down 
+- (IR) customers spawn and find a job
+- (IR) customers correctly wait at register for their prescription 
+- (IR) customers correctly leave when they get it 
+- (IR) customers mostly look where theyre going
+
+What doesnt:
+- (IR) customers dont check whats inside the pill bottle
+- (IR) timer running out doesnt do anything 
+- (IR) customers still have trouble generating valid paths 
+- (All) movement sucks today with analog stick
+- (All) grabbing / dropping is really bad and doesnt work as expected 
+
+bug fixes
+- theres kinda tons, but im sure i also broke a bunch
+impact 
+- add ping overlay so you know what your ping is
+better eng 
+- update raylib to 4.5
+- organize the code a bit better into folders (ie move engine stuff to engine/)
+- no more inheritance for entity
+- added unittest for basic ecs stuff
+- privatize any non-const functionality in components 
+- rename M_ASSERT to VALIDATE so its more obvious what it does/means
+- added information on how to get lldb to work 
 
 ### alpha_0.23.02.06
 
