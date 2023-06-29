@@ -295,7 +295,7 @@ inline void process_is_container_and_should_backfill_item(
     backfill_empty_container<PillBottle>(entity);
 }
 
-void handle_autodrop_furniture_when_exiting_planning(
+inline void handle_autodrop_furniture_when_exiting_planning(
     const std::shared_ptr<Entity>& entity) {
     if (entity->is_missing<CanHoldFurniture>()) return;
 
@@ -306,7 +306,7 @@ void handle_autodrop_furniture_when_exiting_planning(
     input_process_manager::planning::drop_held_furniture(entity);
 }
 
-void delete_held_items_when_leaving_inround(
+inline void delete_held_items_when_leaving_inround(
     const std::shared_ptr<Entity>& entity) {
     // TODO this doesnt seem to work
     // you keep holding it even after the transition

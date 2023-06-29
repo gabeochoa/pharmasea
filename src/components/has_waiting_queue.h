@@ -18,8 +18,8 @@ struct HasWaitingQueue : public BaseComponent {
     }
 
     void erase(int index) {
-        for (int i = index; i < max_queue_size; i++) {
-            ppl_in_line[i] = ppl_in_line[i + 1];
+        for (int i = max_queue_size - 1; i > index; i--) {
+            ppl_in_line[i - 1] = ppl_in_line[i];
         }
     }
 

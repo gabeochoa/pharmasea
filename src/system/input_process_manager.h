@@ -413,7 +413,6 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
     };
 
     const auto _place_item_onto_furniture = [&]() {
-
         const auto can_place_item_into = [](std::shared_ptr<Entity> entity,
                                             std::shared_ptr<Item> item) {
             if (entity->is_missing<CanHoldItem>()) return false;
