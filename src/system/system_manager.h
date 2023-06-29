@@ -259,7 +259,7 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
             // doesnt have anything
             if (furn->get<CanHoldItem>().empty()) return false;
             //
-            if (furn->is_missing<CanBeTakenFrom>()) return true;
+            if (furn->is_missing<CanBeTakenFrom>()) return false;
             return furn->get<CanBeTakenFrom>().can_take_from();
         });
 
