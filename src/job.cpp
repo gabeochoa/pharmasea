@@ -9,16 +9,33 @@
 
 HasWaitingQueue& HasWaitingQueue::add_customer(
     const std::shared_ptr<Entity>& customer) {
-    log_warn("hi we are adding {} {} to the line in position {}", customer->id,
+    log_info("we are adding {} {} to the line in position {}", customer->id,
              customer->get<DebugName>().name(), next_line_position);
-    ppl_in_line[next_line_position++] = customer;
+    ppl_in_line[next_line_position] = customer;
+    next_line_position++;
+
+    VALIDATE(has_matching_person(customer->id) >= 0,
+             "Customer should be in line somewhere");
     return *this;
 }
+void HasWaitingQueue::dump_contents() const {
+    log_info("dumping contents of ppl_in_line");
+    for (int i = 0; i < max_queue_size; i++) {
+        log_info("index: {}, set? {}, id {}", i, !!ppl_in_line[i],
+                 ppl_in_line[i] ? ppl_in_line[i]->id : -1);
+    }
+}
 
-bool HasWaitingQueue::matching_person(int id, int i) const {
-    std::shared_ptr<Entity> person = ppl_in_line[i];
-    VALIDATE(person, "person in line is messed up");
-    return person->id == id;
+bool HasWaitingQueue::matching_id(int id, int i) const {
+    return ppl_in_line[i] ? ppl_in_line[i]->id == id : false;
+}
+
+bool HasWaitingQueue::has_matching_person(int id) const {
+    for (int i = 0; i < max_queue_size; i++) {
+        if (matching_id(id, i)) return i;
+    }
+    log_warn("Cannot find customer {} in line", id);
+    return -1;
 }
 
 inline Job* create_wandering_job(std::shared_ptr<Entity> entity) {
@@ -217,14 +234,8 @@ inline int WIQ_position_in_line(const std::shared_ptr<Entity>& reg,
     VALIDATE(
         reg->has<HasWaitingQueue>(),
         "Trying to pos-in-line for entity which doesnt have a waiting queue ");
-
     const HasWaitingQueue& hwq = reg->get<HasWaitingQueue>();
-
-    for (int i = 0; i < hwq.get_next_pos(); i++) {
-        if (hwq.matching_person(customer->id, i)) return i;
-    }
-    log_warn("Cannot find customer {}", customer->id);
-    return -1;
+    return hwq.has_matching_person(customer->id);
 }
 
 inline void WIQ_leave_line(const std::shared_ptr<Entity>& reg,
@@ -247,7 +258,7 @@ inline bool WIQ_can_move_up(const std::shared_ptr<Entity>& reg,
     VALIDATE(reg->has<HasWaitingQueue>(),
              "Trying to can-move-up for entity which doesnt "
              "have a waiting queue ");
-    return reg->get<HasWaitingQueue>().matching_person(customer->id, 0);
+    return reg->get<HasWaitingQueue>().matching_id(customer->id, 0);
 }
 
 void WaitInQueueJob::before_each_job_tick(const std::shared_ptr<Entity>& entity,

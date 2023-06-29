@@ -293,10 +293,19 @@ struct GameMapInfo : public LevelInfo {
 
         // TODO replace with a CustomerSpawner eventually
         const auto generate_customer = []() {
-            const auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
-            std::shared_ptr<Entity> customer;
-            customer.reset(make_customer(vec::to3(location)));
-            EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
+            {
+                const auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
+                std::shared_ptr<Entity> customer;
+                customer.reset(make_customer(vec::to3(location)));
+                EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
+            }
+
+            {
+                const auto location = vec2{-15 * TILESIZE, -15 * TILESIZE};
+                std::shared_ptr<Entity> customer;
+                customer.reset(make_customer(vec::to3(location)));
+                EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
+            }
         };
 
         auto generate_test = [this]() {

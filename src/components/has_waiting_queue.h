@@ -2,10 +2,6 @@
 
 #pragma once
 
-#include <bitsery/traits/deque.h>
-
-#include <deque>
-
 #include "base_component.h"
 
 constexpr int max_queue_size = 3;
@@ -18,20 +14,27 @@ struct HasWaitingQueue : public BaseComponent {
     }
 
     void erase(int index) {
-        for (int i = max_queue_size - 1; i > index; i--) {
-            ppl_in_line[i - 1] = ppl_in_line[i];
+        for (std::size_t i = index; i < max_queue_size - 1; ++i) {
+            ppl_in_line[i] = ppl_in_line[i + 1];
         }
+        ppl_in_line[max_queue_size - 1] = {};
+
+        next_line_position--;
     }
 
     [[nodiscard]] int get_next_pos() const { return next_line_position; }
 
     // These impl are in job.cpp
-    [[nodiscard]] bool matching_person(int id, int i) const;
+    [[nodiscard]] bool matching_id(int id, int i) const;
+    [[nodiscard]] bool has_matching_person(int id) const;
     HasWaitingQueue& add_customer(const std::shared_ptr<Entity>& customer);
 
    private:
     std::array<std::shared_ptr<Entity>, max_queue_size> ppl_in_line;
     int next_line_position = 0;
+
+    // These impl are in job.cpp
+    void dump_contents() const;
 
     friend bitsery::Access;
     template<typename S>
