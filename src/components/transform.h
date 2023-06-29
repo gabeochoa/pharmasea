@@ -169,22 +169,10 @@ struct Transform : public BaseComponent {
         return tile;
     }
 
-    void turn_to_face_entity(const Transform& target) {
-        // dot product visualizer https://www.falstad.com/dotproduct/
-
-        // the angle between two vecs is
-        // @ = arccos(  (a dot b) / ( |a| * |b| ) )
-
-        // first get the headings and normalise so |x| = 1
-        const vec2 my_heading = vec::norm(this->get_heading());
-        const vec2 tar_heading = vec::norm(target.get_heading());
-        // dp = ( (a dot b )/ 1)
-        float dot_product = vec::dot2(my_heading, tar_heading);
-        // arccos(dp)
-        float theta_rad = acosf(dot_product);
+    void turn_to_face_pos(const vec2 goal) {
+        float theta_rad = atan2(as2().y - goal.y, as2().x - goal.x);
         float theta_deg = util::rad2deg(theta_rad);
         int turn_degrees = (180 - (int) theta_deg) % 360;
-
         rotate_facing_clockwise(turn_degrees);
     }
 

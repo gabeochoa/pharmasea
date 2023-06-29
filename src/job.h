@@ -47,6 +47,7 @@ struct Job {
     [[nodiscard]] const vec2& path_front() const { return path.front(); }
     [[nodiscard]] const std::deque<vec2>& get_path() const { return path; }
     [[nodiscard]] int p_size() const { return (int) path.size(); }
+    [[nodiscard]] vec2 path_index(int index) const { return path[index]; }
 
     void path_pop_front() {
         path.pop_front();
@@ -113,6 +114,8 @@ struct Job {
 
     virtual void before_each_job_tick(const std::shared_ptr<Entity>&, float) {}
 
+    bool has_local_target() const { return local.has_value(); }
+
    private:
     State _run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
         before_each_job_tick(entity, dt);
@@ -137,8 +140,6 @@ struct Job {
             }
         }
     }
-
-    bool has_local_target() const { return local.has_value(); }
 
     [[nodiscard]] inline bool is_at_position(
         const std::shared_ptr<Entity>& entity, vec2 position);
