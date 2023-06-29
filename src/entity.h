@@ -562,10 +562,6 @@ template<typename I>
                                  ui::color::white, ui::color::white);
     container->addComponent<IsItemContainer<I>>();
     return container;
-    // virtual bool can_place_item_into(
-    // std::shared_ptr<Item> item = nullptr) override {
-    // return this->get<IsItemContainer<I>>().is_matching_item(item);
-    // }
 }
 
 [[nodiscard]] static Entity* make_bagbox(vec2 pos) {
