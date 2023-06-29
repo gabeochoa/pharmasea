@@ -18,6 +18,7 @@ HasWaitingQueue& HasWaitingQueue::add_customer(
              "Customer should be in line somewhere");
     return *this;
 }
+
 void HasWaitingQueue::dump_contents() const {
     log_info("dumping contents of ppl_in_line");
     for (int i = 0; i < max_queue_size; i++) {

@@ -280,8 +280,8 @@ template<typename I>
 inline void backfill_empty_container(std::shared_ptr<Entity> entity) {
     if (entity->is_missing<IsItemContainer<I>>()) return;
     CanHoldItem& canHold = entity->get<CanHoldItem>();
-    auto newItem = std::make_shared<Bag>(entity->get<Transform>().pos(),
-                                         Color({255, 15, 240, 255}));
+    auto newItem = std::make_shared<I>(entity->get<Transform>().pos(),
+                                       Color({255, 15, 240, 255}));
     canHold.update(newItem, Item::HeldBy::FURNITURE);
     ItemHelper::addItem(canHold.item());
 }
