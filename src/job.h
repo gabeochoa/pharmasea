@@ -211,6 +211,9 @@ struct LeavingJob : public Job {
     LeavingJob() : Job(JobType::Leaving, vec2{0, 0}, vec2{0, 0}) {}
     LeavingJob(vec2 _start, vec2 _end) : Job(JobType::Leaving, _start, _end) {}
 
+    virtual State run_state_working_at_end(
+        const std::shared_ptr<Entity>& entity, float dt) override;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
