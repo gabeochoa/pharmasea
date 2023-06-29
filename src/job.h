@@ -74,8 +74,7 @@ struct Job {
         s.container(path, path_size, [](S& sv, vec2 pos) { sv.object(pos); });
     }
 
-    static Job* create_job_of_type(const std::shared_ptr<Entity>& entity,
-                                   float dt, JobType type);
+    static Job* create_job_of_type(vec2, vec2, JobType type);
 
     void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
         state = _run_job_tick(entity, dt);
@@ -108,9 +107,7 @@ struct Job {
         return State::Completed;
     }
 
-    virtual State run_state_completed(const std::shared_ptr<Entity>&, float) {
-        return State::Completed;
-    }
+    virtual void on_cleanup() {}
 
     virtual void before_each_job_tick(const std::shared_ptr<Entity>&, float) {}
 
@@ -136,7 +133,9 @@ struct Job {
                 return run_state_working_at_end(entity, dt);
             }
             case Job::State::Completed: {
-                return run_state_completed(entity, dt);
+                // We dont run anything because completed is only used for
+                // marking cleanup
+                return state;
             }
         }
     }
@@ -205,5 +204,16 @@ struct WaitInQueueJob : public Job {
 
         s.value4b(spot_in_line);
         s.object(reg);
+    }
+};
+
+struct LeavingJob : public Job {
+    LeavingJob() : Job(JobType::Leaving, vec2{0, 0}, vec2{0, 0}) {}
+    LeavingJob(vec2 _start, vec2 _end) : Job(JobType::Leaving, _start, _end) {}
+
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Job>{});
     }
 };

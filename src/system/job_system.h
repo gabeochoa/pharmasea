@@ -54,8 +54,8 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float dt) {
     auto& personal_queue = cpj.job_queue();
     if (personal_queue.empty()) {
         // No job and nothing in the queue? grab the next default one then
-        cpj.update(
-            Job::create_job_of_type(entity, dt, cpj.get_next_job_type()));
+        auto pos = entity->get<Transform>().as2();
+        cpj.update(Job::create_job_of_type(pos, pos, cpj.get_next_job_type()));
         // TODO i really want to not return right here but the job is
         // nullptr if i do
         return;

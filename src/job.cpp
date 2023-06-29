@@ -1,6 +1,7 @@
 
 #include "job.h"
 
+#include "components/can_perform_job.h"
 #include "components/has_waiting_queue.h"
 #include "engine/assert.h"
 #include "entity.h"
@@ -39,7 +40,7 @@ bool HasWaitingQueue::has_matching_person(int id) const {
     return -1;
 }
 
-inline Job* create_wandering_job(std::shared_ptr<Entity> entity) {
+inline Job* create_wandering_job(vec2 _start) {
     // TODO add cooldown so that not all time is spent here
     int max_tries = 10;
     int range = 20;
@@ -55,26 +56,26 @@ inline Job* create_wandering_job(std::shared_ptr<Entity> entity) {
             return nullptr;
         }
     }
-    return new WanderingJob(entity->get<Transform>().as2(), target);
+    return new WanderingJob(_start, target);
 }
 
-Job* Job::create_job_of_type(const std::shared_ptr<Entity>& entity, float dt,
-                             JobType job_type) {
+Job* Job::create_job_of_type(vec2 _start, vec2 _end, JobType job_type) {
     Job* job = nullptr;
     switch (job_type) {
         case Wandering:
-            job = create_wandering_job(entity);
+            job = create_wandering_job(_start);
             break;
         case WaitInQueue:
             job = new WaitInQueueJob();
             break;
         case Wait:
-            job = new WaitJob(entity->get<Transform>().as2(),
-                              entity->get<Transform>().as2(), 1.f);
+            job = new WaitJob(_start, _end, 1.f);
             break;
         case None:
-            job = new WaitJob(entity->get<Transform>().as2(),
-                              entity->get<Transform>().as2(), 1.f);
+            job = new WaitJob(_start, _end, 1.f);
+            break;
+        case Leaving:
+            job = new LeavingJob(_start, _end);
             break;
         default:
             log_warn(
@@ -397,6 +398,16 @@ Job::State WaitInQueueJob::run_state_working_at_end(
 
     system_manager::logging_manager::announce(entity, "got it");
     WIQ_leave_line(reg, entity);
+
+    // Now that we are done and got our item, time to leave the store
+    {
+        std::shared_ptr<Job> jshared;
+        jshared.reset(Job::create_job_of_type(
+            entity->get<Transform>().as2(),
+            // TODO create a global so they all leave to the same spot
+            vec2{-20, -20}, JobType::Leaving));
+        entity->get<CanPerformJob>().push_onto_queue(jshared);
+    }
     return (Job::State::Completed);
 }
 

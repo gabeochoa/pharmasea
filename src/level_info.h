@@ -300,14 +300,14 @@ struct GameMapInfo : public LevelInfo {
                 EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
             }
 
-            {
+            if (0) {
                 const auto location = vec2{-11 * TILESIZE, -10 * TILESIZE};
                 std::shared_ptr<Entity> customer;
                 customer.reset(make_customer(vec::to3(location)));
                 EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
             }
 
-            {
+            if (0) {
                 const auto location = vec2{-12 * TILESIZE, -10 * TILESIZE};
                 std::shared_ptr<Entity> customer;
                 customer.reset(make_customer(vec::to3(location)));
