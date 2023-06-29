@@ -26,6 +26,18 @@ struct Transform : public BaseComponent {
         {135, BACK | RIGHT}, {180, BACK},           {225, BACK | LEFT},
         {270, LEFT},         {315, FORWARD | LEFT}};
 
+    int roundToNearest45(int degrees) const {
+        int remainder = degrees % 45;
+        int roundedValue = degrees - remainder;
+
+        if (remainder >= 23)
+            roundedValue += 45;
+        else if (remainder <= -23)
+            roundedValue -= 45;
+
+        return roundedValue;
+    }
+
     FrontFaceDirection offsetFaceDirection(FrontFaceDirection startingDirection,
                                            int offset) const {
         const auto degreesOffset = static_cast<int>(
@@ -156,7 +168,7 @@ struct Transform : public BaseComponent {
         return tile;
     }
 
-    void turn_to_face_entity(Transform target) {
+    void turn_to_face_entity(const Transform& target) {
         // dot product visualizer https://www.falstad.com/dotproduct/
 
         // the angle between two vecs is
@@ -171,25 +183,12 @@ struct Transform : public BaseComponent {
         float theta_rad = acosf(dot_product);
         float theta_deg = util::rad2deg(theta_rad);
         int turn_degrees = (180 - (int) theta_deg) % 360;
-        // TODO fix entity
-        (void) turn_degrees;
-        if (turn_degrees > 0 && turn_degrees <= 45) {
-            update_face_direction(
-                static_cast<Transform::FrontFaceDirection>(0));
-        } else if (turn_degrees > 45 && turn_degrees <= 135) {
-            update_face_direction(
-                static_cast<Transform::FrontFaceDirection>(90));
-        } else if (turn_degrees > 135 && turn_degrees <= 225) {
-            update_face_direction(
-                static_cast<Transform::FrontFaceDirection>(180));
-        } else if (turn_degrees > 225) {
-            update_face_direction(
-                static_cast<Transform::FrontFaceDirection>(270));
-        }
+
+        rotate_facing_clockwise(turn_degrees);
     }
 
    private:
-    vec2 get_heading() {
+    vec2 get_heading() const {
         const float target_facing_ang =
             util::deg2rad(FrontFaceDirectionMap.at(face_direction()));
         return vec2{
