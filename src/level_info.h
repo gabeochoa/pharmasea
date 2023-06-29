@@ -301,14 +301,14 @@ struct GameMapInfo : public LevelInfo {
             }
 
             {
-                const auto location = vec2{-12 * TILESIZE, -12 * TILESIZE};
+                const auto location = vec2{-11 * TILESIZE, -10 * TILESIZE};
                 std::shared_ptr<Entity> customer;
                 customer.reset(make_customer(vec::to3(location)));
                 EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
             }
 
             {
-                const auto location = vec2{-15 * TILESIZE, -15 * TILESIZE};
+                const auto location = vec2{-12 * TILESIZE, -10 * TILESIZE};
                 std::shared_ptr<Entity> customer;
                 customer.reset(make_customer(vec::to3(location)));
                 EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
