@@ -104,16 +104,27 @@ void Job::travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
 
         vec2 me = entity->get<Transform>().as2();
 
-        auto new_path = astar::find_path(
-            me, goal,
-            std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+        {
+            auto new_path = astar::find_path(
+                me, goal,
+                std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+            update_path(new_path);
+            system_manager::logging_manager::announce(
+                entity, fmt::format("gen path from {} to {} with {} steps", me,
+                                    goal, p_size()));
+        }
 
-        update_path(new_path);
-
-        system_manager::logging_manager::announce(
-            entity, fmt::format("gen path from {} to {} with {} steps", me,
-                                goal, p_size()));
-
+        // TODO For now we are just going to let the customer noclip
+        if (path_empty()) {
+            log_warn("Forcing customer {} to noclip in order to get valid path",
+                     entity->id);
+            auto new_path =
+                astar::find_path(me, goal, [](auto&&) { return true; });
+            update_path(new_path);
+            system_manager::logging_manager::announce(
+                entity, fmt::format("gen path from {} to {} with {} steps", me,
+                                    goal, p_size()));
+        }
         // what happens if we get here and the path is still empty?
         VALIDATE(!path_empty(), "path should no longer be empty");
     };
@@ -196,7 +207,7 @@ inline vec2 WIQ_add_to_queue_and_get_position(
                             .get_next_pos();
 
     // the place the customers stand is 1 tile infront of the register
-    return reg->get<Transform>().tile_infront((next_position + 1) * 2);
+    return reg->get<Transform>().tile_infront((next_position + 1));
 }
 
 inline int WIQ_position_in_line(const std::shared_ptr<Entity>& reg,
