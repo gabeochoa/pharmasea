@@ -252,10 +252,10 @@ inline bool WIQ_can_move_up(const std::shared_ptr<Entity>& reg,
 
 void WaitInQueueJob::before_each_job_tick(const std::shared_ptr<Entity>& entity,
                                           float) {
-    if (p_size() > 1) {
-        entity->get<Transform>().turn_to_face_pos(path_index(1));
-        return;
-    }
+    // if (p_size() > 1) {
+    // entity->get<Transform>().turn_to_face_pos(path_index(1));
+    // return;
+    // }
 
     // This runs before init so its possible theres no register at all
     if (reg) {

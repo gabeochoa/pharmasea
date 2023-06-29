@@ -173,7 +173,9 @@ struct Transform : public BaseComponent {
         float theta_rad = atan2(as2().y - goal.y, as2().x - goal.x);
         float theta_deg = util::rad2deg(theta_rad);
         int turn_degrees = (180 - (int) theta_deg) % 360;
-        rotate_facing_clockwise(turn_degrees);
+        float facing = FrontFaceDirectionMap.at(face);
+        int to_rotate = (int) (turn_degrees - facing) + 90;
+        rotate_facing_clockwise(to_rotate);
     }
 
    private:
