@@ -250,6 +250,13 @@ inline bool WIQ_can_move_up(const std::shared_ptr<Entity>& reg,
     return reg->get<HasWaitingQueue>().matching_person(customer->id, 0);
 }
 
+void WaitInQueueJob::before_each_job_tick(const std::shared_ptr<Entity>& entity,
+                                          float) {
+    // This runs before init so its possible theres no register at all
+    if (!reg) return;
+    entity->get<Transform>().turn_to_face_entity(reg->get<Transform>());
+}
+
 Job::State WaitInQueueJob::run_state_initialize(
     const std::shared_ptr<Entity>& entity, float) {
     log_warn("starting a new wait in queue job");

@@ -40,8 +40,9 @@ struct Transform : public BaseComponent {
 
     FrontFaceDirection offsetFaceDirection(FrontFaceDirection startingDirection,
                                            int offset) const {
-        const auto degreesOffset = static_cast<int>(
-            FrontFaceDirectionMap.at(startingDirection) + offset);
+        const auto degreesOffset = roundToNearest45(static_cast<int>(
+            FrontFaceDirectionMap.at(startingDirection) + offset));
+
         return DirectionToFrontFaceMap.at(degreesOffset % 360);
     }
 

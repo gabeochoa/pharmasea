@@ -111,8 +111,11 @@ struct Job {
         return State::Completed;
     }
 
+    virtual void before_each_job_tick(const std::shared_ptr<Entity>&, float) {}
+
    private:
     State _run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
+        before_each_job_tick(entity, dt);
         switch (state) {
             case Job::State::Initialize: {
                 return run_state_initialize(entity, dt);
@@ -190,6 +193,9 @@ struct WaitInQueueJob : public Job {
         const std::shared_ptr<Entity>& entity, float dt) override;
     virtual State run_state_working_at_end(
         const std::shared_ptr<Entity>& entity, float dt) override;
+
+    virtual void before_each_job_tick(const std::shared_ptr<Entity>&,
+                                      float) override;
 
     friend bitsery::Access;
     template<typename S>
