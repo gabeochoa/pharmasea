@@ -270,8 +270,8 @@ inline void drop_held_furniture(const std::shared_ptr<Entity>& player) {
     }
 
     hf->get<CanBeHeld>().update(false);
-    hf->get<Transform>().update(vec::snap(
-        vec::to3(player->get<Transform>().tile_infront_given_player(1))));
+    hf->get<Transform>().update(
+        vec::snap(vec::to3(player->get<Transform>().tile_infront(1))));
 
     ourCHF.update(nullptr);
     log_info("we {} dropped the furniture {} we were holding", player->id,

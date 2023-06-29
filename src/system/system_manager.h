@@ -226,7 +226,7 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     //    -->-> |     in this we want to place at 0.f instead of -0.5
 }
 
-void process_grabber_items(std::shared_ptr<Entity> entity, float) {
+inline void process_grabber_items(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<Transform>()) {
         log_warn("process grabber missing transform {}", entity->id);
         log_warn("process grabber missing transform {}",

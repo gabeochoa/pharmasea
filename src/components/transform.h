@@ -28,9 +28,8 @@ struct Transform : public BaseComponent {
 
     FrontFaceDirection offsetFaceDirection(FrontFaceDirection startingDirection,
                                            int offset) const {
-        const auto degreesOffset =
-            static_cast<int>(FrontFaceDirectionMap.at(startingDirection) +
-                             offset);
+        const auto degreesOffset = static_cast<int>(
+            FrontFaceDirectionMap.at(startingDirection) + offset);
         return DirectionToFrontFaceMap.at(degreesOffset % 360);
     }
 
@@ -119,7 +118,7 @@ struct Transform : public BaseComponent {
      *
      * @returns vec2 the location `distance` tiles ahead
      * */
-    vec2 tile_infront_given_player(int distance) {
+    vec2 tile_infront(int distance) {
         vec2 tile = vec::to2(snap_position());
         return tile_infront_given_pos(tile, distance, face_direction());
     }

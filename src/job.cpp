@@ -196,8 +196,7 @@ inline vec2 WIQ_add_to_queue_and_get_position(
                             .get_next_pos();
 
     // the place the customers stand is 1 tile infront of the register
-    return reg->get<Transform>().tile_infront_given_player((next_position + 1) *
-                                                           2);
+    return reg->get<Transform>().tile_infront((next_position + 1) * 2);
 }
 
 inline int WIQ_position_in_line(const std::shared_ptr<Entity>& reg,
@@ -269,7 +268,7 @@ Job::State WaitInQueueJob::run_state_initialize(
     VALIDATE(reg, "underlying job should contain a register now");
 
     start = WIQ_add_to_queue_and_get_position(closest_target, entity);
-    end = closest_target->get<Transform>().tile_infront_given_player(1);
+    end = closest_target->get<Transform>().tile_infront(1);
 
     spot_in_line = WIQ_position_in_line(closest_target, entity);
 
@@ -312,12 +311,12 @@ Job::State WaitInQueueJob::run_state_working_at_start(
     }
 
     // otherwise walk up one spot
-    start = reg->get<Transform>().tile_infront_given_player(spot_in_line);
+    start = reg->get<Transform>().tile_infront(spot_in_line);
     return (Job::State::WorkingAtStart);
 }
 
 Job::State WaitInQueueJob::run_state_working_at_end(
-    const std::shared_ptr<Entity>& entity, float dt) {
+    const std::shared_ptr<Entity>& entity, float) {
     VALIDATE(reg, "workingatend job should contain register");
 
     CanHoldItem& regCHI = reg->get<CanHoldItem>();
