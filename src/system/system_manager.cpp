@@ -343,22 +343,13 @@ void refetch_dynamic_model_names(const std::shared_ptr<Entity>& entity, float) {
 void count_trigger_area_entrants(const std::shared_ptr<Entity>& entity, float) {
     if (entity->is_missing<IsTriggerArea>()) return;
 
-    // TODO this also isnt visible during debug mode so we should probalby do
-    // the bottom
-    // TODO this doesnt change every tick, store it somewhere?
-    vec3 trigger_size = {
-        entity->get<Transform>().size().x,
-        entity->get<Transform>().size().y + TILESIZE,
-        entity->get<Transform>().size().z,
-    };
-    auto trigger_bounds =
-        get_bounds(entity->get<Transform>().pos(), trigger_size);
-
     int count = 0;
     for (auto& e : SystemManager::get().oldAll) {
         // TODO need a better way to match player
         if (e->get<DebugName>().name() != "player") continue;
-        if (CheckCollisionBoxes(e->get<Transform>().bounds(), trigger_bounds)) {
+        if (CheckCollisionBoxes(
+                e->get<Transform>().bounds(),
+                entity->get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
             count++;
         }
     }

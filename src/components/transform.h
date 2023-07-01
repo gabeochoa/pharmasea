@@ -90,8 +90,13 @@ struct Transform : public BaseComponent {
 
     void update_size(vec3 sze) { this->_size = sze; }
 
-    [[nodiscard]] virtual BoundingBox raw_bounds() const {
+    [[nodiscard]] BoundingBox raw_bounds() const {
         return get_bounds(this->raw_position, this->size());
+    }
+
+    // TODO we should draw this during debug
+    [[nodiscard]] BoundingBox expanded_bounds(vec3 inc) const {
+        return get_bounds(this->raw_position, this->size() + inc);
     }
 
     /*

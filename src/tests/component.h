@@ -195,6 +195,29 @@ void validate_wall_color_serialized() {
     delete entity2;
 }
 
+void validate_trigger_area_serialized() {
+    Entity* entity = entities::make_trigger_area(vec3{0, 0, 0}, 10, 20, "test");
+
+    M_TEST_T(entity->has<IsTriggerArea>(), "should have ta component");
+
+    M_TEST_EQ(entity->get<IsTriggerArea>().title(), "test",
+              "component should have right title");
+
+    network::Buffer buff = network::serialize_to_entity(entity);
+    Entity* entity2 = mk_entity();
+    network::deserialize_to_entity(entity2, buff);
+
+    compare_and_validate_components(entity, entity2);
+
+    M_TEST_T(entity2->has<IsTriggerArea>(), "should have ta component");
+
+    M_TEST_EQ(entity2->get<IsTriggerArea>().title(), "test",
+              "component should have right title");
+
+    delete entity;
+    delete entity2;
+}
+
 void all_tests() {
     entity_components();
     test_adding_single_component_serialdeserial();
@@ -202,5 +225,6 @@ void all_tests() {
     validate_name_change_persisits();
     validate_held_item_serialized();
     validate_wall_color_serialized();
+    validate_trigger_area_serialized();
     // remote_player_components();
 }

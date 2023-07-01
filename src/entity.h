@@ -134,6 +134,17 @@ struct Entity {
         return *component;
     }
 
+    template<typename A>
+    void addAll() {
+        addComponent<A>();
+    }
+
+    template<typename A, typename B, typename... Rest>
+    void addAll() {
+        addComponent<A>();
+        addAll<B, Rest...>();
+    }
+
     template<typename T>
     [[nodiscard]] T& get() const {
         if (this->is_missing<DebugName>()) {
@@ -205,6 +216,20 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 // }
 // };
 //
+
+static void register_all_components() {
+    Entity* entity = new Entity();
+    entity->addAll<
+        Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
+        CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
+        CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
+        CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid,
+        CanBeHeld, IsRotatable, CanGrabFromOtherFurniture, ConveysHeldItem,
+        HasWaitingQueue, CanBeTakenFrom, IsItemContainer<Bag>,
+        IsItemContainer<PillBottle>, UsesCharacterModel, ShowsProgressBar,
+        DebugName, HasDynamicModelName, IsTriggerArea>();
+    delete entity;
+}
 
 struct DebugOptions {
     std::string name;

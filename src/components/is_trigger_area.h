@@ -20,13 +20,16 @@ struct IsTriggerArea : public BaseComponent {
     [[nodiscard]] float progress() const {
         return completion_time_passed / completion_time_max;
     }
+
     void increase_progress(float dt) {
         completion_time_passed =
             fminf(completion_time_max, completion_time_passed + dt);
     }
+
     void decrease_progress(float dt) {
         completion_time_passed = fmaxf(0, completion_time_passed - dt);
     }
+
     void update_progress_max(float amt) { completion_time_max = amt; }
 
     auto& update_title(const std::string& nt) {
