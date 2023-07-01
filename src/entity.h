@@ -601,7 +601,9 @@ template<typename I>
     });
 
     trigger_area->addComponent<SimpleColoredBoxRenderer>().update(PINK, PINK);
-    trigger_area->addComponent<IsTriggerArea>().update_title(title);
+    trigger_area->addComponent<IsTriggerArea>()
+        .update_title(title)
+        .update_max_entrants(1);
 
     return trigger_area;
 }
