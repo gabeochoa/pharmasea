@@ -166,21 +166,26 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
 
     vec3 text_position = {pos.x - (size.x / 2.f),     //
                           pos.y + (TILESIZE / 20.f),  //
-                          pos.z - (size.z / 20.f)};
+                          pos.z - (size.z / 5.f)};
     // Top left text position
     // {pos.x - (size.x / 2.f),     //
     // pos.y + (TILESIZE / 20.f),  //
     // pos.z - (size.z / 2.f)};
 
+    auto font = Preload::get().font;
+    // TODO eventually we can detect the size to fit the text correctly
+    // but thats more of an issue for translations since i can manually
+    // place the english
+    auto fsize = 300.f;
+
     if (ita.should_wave()) {
-        raylib::WaveTextConfig waveConfig = {.waveRange = {0, 0, 1.f},
+        raylib::WaveTextConfig waveConfig = {.waveRange = {0, 0, TILESIZE},
                                              .waveSpeed = {0, 0, 0.01f},
-                                             .waveOffset = {0.f, 0.f, 0.4f}};
+                                             .waveOffset = {0.f, 0.f, 0.2f}};
         raylib::DrawTextWave3D(
-            Preload::get().font,
+            font,
             fmt::format("~~{}~~", entity->get<IsTriggerArea>().title()).c_str(),
-            text_position,
-            200.f,              // size
+            text_position, fsize,
             4,                  // font spacing
             4,                  // line spacing
             false,              // backface
@@ -189,10 +194,8 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
             WHITE);
 
     } else {
-        raylib::DrawText3D(Preload::get().font,
-                           entity->get<IsTriggerArea>().title().c_str(),
-                           text_position,
-                           200.f,  // size
+        raylib::DrawText3D(font, entity->get<IsTriggerArea>().title().c_str(),
+                           text_position, fsize,
                            4,      // font spacing
                            4,      // line spacing
                            false,  // backface
