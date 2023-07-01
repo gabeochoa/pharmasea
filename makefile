@@ -6,7 +6,7 @@ RAYLIB_LIB := `pkg-config --libs raylib`
 RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) 
 
 FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
-		-Wmost -Wconversion -pg $(RAYLIB_FLAGS) -DTRACY_ENABLE -fprofile-arcs -ftest-coverage
+		-Wmost -Wconversion -g $(RAYLIB_FLAGS) -DTRACY_ENABLE 
 # -Wmost -Wconversion -g -fsanitize=address $(RAYLIB_FLAGS)
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion
@@ -77,6 +77,10 @@ gendocs:
 	doxygen doxyconfig
 	git add .
 	git commit -m "update docs" 
+
+prof: 
+	rm -rf recording.trace/
+	xctrace record --template 'Game Performance' --output 'recording.trace' --launch pharmasea
 
 # When using lldb, you have to run these commands:
 # 	settings set platform.plugin.darwin.ignored-exceptions EXC_BAD_INSTRUCTION

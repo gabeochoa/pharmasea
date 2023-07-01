@@ -50,11 +50,13 @@ struct GameLayer : public Layer {
     }
 
     void play_music() {
+#if ENABLE_SOUND
         auto m = MusicLibrary::get().get("supermarket");
         if (!IsMusicStreamPlaying(m)) {
             PlayMusicStream(m);
         }
         UpdateMusicStream(m);
+#endif
     }
 
     virtual void onUpdate(float dt) override {
