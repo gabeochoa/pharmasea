@@ -17,6 +17,18 @@ struct IsTriggerArea : public BaseComponent {
         return current_entrants >= wanted_entrants;
     }
 
+    [[nodiscard]] float progress() const {
+        return completion_time_passed / completion_time_max;
+    }
+    void increase_progress(float dt) {
+        completion_time_passed =
+            fminf(completion_time_max, completion_time_passed + dt);
+    }
+    void decrease_progress(float dt) {
+        completion_time_passed = fmaxf(0, completion_time_passed - dt);
+    }
+    void update_progress_max(float amt) { completion_time_max = amt; }
+
     auto& update_title(const std::string& nt) {
         _title = nt;
         if ((int) _title.size() > max_title_length) {
@@ -45,6 +57,9 @@ struct IsTriggerArea : public BaseComponent {
     std::string _title;
     int max_title_length = 20;
 
+    float completion_time_max = 0.f;
+    float completion_time_passed = 0.f;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
@@ -52,6 +67,9 @@ struct IsTriggerArea : public BaseComponent {
 
         s.value4b(wanted_entrants);
         s.value4b(current_entrants);
+
+        s.value4b(completion_time_max);
+        s.value4b(completion_time_passed);
 
         s.value4b(max_title_length);
         s.text1b(_title, max_title_length);

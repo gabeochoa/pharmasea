@@ -161,11 +161,13 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
 
     const IsTriggerArea& ita = entity->get<IsTriggerArea>();
 
-    vec3 pos = entity->get<Transform>().pos();
-    vec3 size = entity->get<Transform>().size();
+    const Transform& transform = entity->get<Transform>();
+
+    vec3 pos = transform.pos();
+    vec3 size = transform.size();
 
     vec3 text_position = {pos.x - (size.x / 2.f),     //
-                          pos.y + (TILESIZE / 20.f),  //
+                          pos.y + (TILESIZE / 10.f),  //
                           pos.z - (size.z / 5.f)};
     // Top left text position
     // {pos.x - (size.x / 2.f),     //
@@ -202,6 +204,11 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
                            WHITE);
     }
 
+    DrawCubeCustom(
+        {pos.x, pos.y + (TILESIZE / 20.f), pos.z}, size.x, size.y,
+        size.z * ita.progress(),
+        transform.FrontFaceDirectionMap.at(transform.face_direction()), RED,
+        RED);
     render_simple_normal(entity, dt);
 }
 

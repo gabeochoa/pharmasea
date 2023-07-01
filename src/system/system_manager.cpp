@@ -362,8 +362,20 @@ void count_trigger_area_entrants(const std::shared_ptr<Entity>& entity, float) {
     entity->get<IsTriggerArea>().update_entrants(count);
 }
 
+void update_trigger_area_percent(const std::shared_ptr<Entity>& entity,
+                                 float dt) {
+    if (entity->is_missing<IsTriggerArea>()) return;
+    IsTriggerArea& ita = entity->get<IsTriggerArea>();
+    if (ita.should_wave()) {
+        ita.increase_progress(dt);
+    } else {
+        ita.decrease_progress(dt);
+    }
+}
+
 void process_trigger_area(const std::shared_ptr<Entity>& entity, float dt) {
     count_trigger_area_entrants(entity, dt);
+    update_trigger_area_percent(entity, dt);
 }
 
 }  // namespace system_manager
