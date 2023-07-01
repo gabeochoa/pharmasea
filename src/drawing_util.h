@@ -2,6 +2,8 @@
 
 #include "external_include.h"
 //
+#include "engine/log.h"
+#include "engine/ui_color.h"
 #include "globals.h"
 #include "raylib.h"
 #include "rlgl.h"
@@ -83,6 +85,12 @@ static void DrawRect2Din3D(Vector3 position, float width, float height,
 static void DrawCubeCustom(Vector3 position, float width, float height,
                            float length, float front_facing_angle,
                            Color face_color, Color base_color) {
+    // This logif exists because i had a problem where all furniture was
+    // size(0,0,0) and took me a while to figure it out.
+    log_ifx((width == 0 || height == 0 || length == 0), LOG_WARN,
+            "Trying to render entity that has size ({}, {}, {})", width, height,
+            length);
+
     float x = 0.0f;
     float y = 0.0f;
     float z = 0.0f;
