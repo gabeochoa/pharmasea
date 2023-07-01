@@ -10,6 +10,40 @@
 namespace system_manager {
 namespace render_manager {
 
+inline void draw_valid_colored_box(const std::shared_ptr<Entity> entity,
+                                   const Transform& transform,
+                                   const SimpleColoredBoxRenderer& renderer,
+                                   bool is_highlighted) {
+    // This logif exists because i had a problem where all furniture was
+    // size(0,0,0) and took me a while to figure it out.
+    log_ifx((transform.sizex() == 0 || transform.sizey() == 0 ||
+             transform.sizez() == 0),
+            LOG_WARN, "Trying to render entity {} that has size {}", entity->id,
+            transform.size());
+
+    Color f = renderer.face();
+    if (ui::color::is_empty(f)) {
+        log_warn("Face color is empty");
+        f = PINK;
+    }
+
+    Color b = renderer.base();
+    if (ui::color::is_empty(b)) {
+        log_warn("Base color is empty");
+        b = PINK;
+    }
+
+    if (is_highlighted) {
+        f = ui::color::getHighlighted(f);
+        b = ui::color::getHighlighted(b);
+    }
+
+    DrawCubeCustom(
+        transform.raw(), transform.sizex(), transform.sizey(),
+        transform.sizez(),
+        transform.FrontFaceDirectionMap.at(transform.face_direction()), f, b);
+}
+
 inline void update_character_model_from_index(std::shared_ptr<Entity> entity,
                                               float) {
     if (!entity) return;
@@ -39,14 +73,8 @@ inline bool render_simple_highlighted(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<SimpleColoredBoxRenderer>()) return false;
     SimpleColoredBoxRenderer& renderer =
         entity->get<SimpleColoredBoxRenderer>();
-
-    Color f = ui::color::getHighlighted(renderer.face());
-    Color b = ui::color::getHighlighted(renderer.base());
     // TODO replace size with Bounds component when it exists
-    DrawCubeCustom(
-        transform.raw(), transform.sizex(), transform.sizey(),
-        transform.sizez(),
-        transform.FrontFaceDirectionMap.at(transform.face_direction()), f, b);
+    draw_valid_colored_box(entity, transform, renderer, true);
     return true;
 }
 
@@ -65,11 +93,7 @@ inline bool render_simple_normal(std::shared_ptr<Entity> entity, float) {
             transform.size());
     //
 
-    DrawCubeCustom(
-        transform.raw(), transform.sizex(), transform.sizey(),
-        transform.sizez(),
-        transform.FrontFaceDirectionMap.at(transform.face_direction()),
-        renderer.face(), renderer.base());
+    draw_valid_colored_box(entity, transform, renderer, false);
     return true;
 }
 
@@ -204,11 +228,13 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
                            WHITE);
     }
 
+    // TODO switch to using a validated draw_cube
     DrawCubeCustom(
         {pos.x, pos.y + (TILESIZE / 20.f), pos.z}, size.x, size.y,
         size.z * ita.progress(),
         transform.FrontFaceDirectionMap.at(transform.face_direction()), RED,
         RED);
+
     render_simple_normal(entity, dt);
 }
 
