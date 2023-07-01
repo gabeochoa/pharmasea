@@ -160,6 +160,9 @@ struct SystemManager {
                        float dt) {
         for (auto& entity : entity_list) {
             system_manager::reset_highlighted(entity, dt);
+            // TODO should be just planning + lobby?
+            // maybe a second one for highlighting items?
+            system_manager::highlight_facing_furniture(entity, dt);
             system_manager::transform_snapper(entity, dt);
             system_manager::input_process_manager::collect_user_input(entity,
                                                                       dt);
@@ -189,7 +192,6 @@ struct SystemManager {
     void planning_update(
         const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
         for (auto& entity : entity_list) {
-            system_manager::highlight_facing_furniture(entity, dt);
             system_manager::update_held_furniture_position(entity, dt);
         }
     }

@@ -357,6 +357,7 @@ static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
     furniture->addComponent<IsSolid>();
     furniture->addComponent<IsRotatable>();
     furniture->addComponent<CanBeHeld>();
+    furniture->addComponent<CanBeHighlighted>();
 
     // For renderers we prioritize the ModelRenderer and will fall back if we
     // need

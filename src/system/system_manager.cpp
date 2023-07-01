@@ -129,15 +129,15 @@ void reset_highlighted(std::shared_ptr<Entity> entity, float) {
 
 void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
     Transform& transform = entity->get<Transform>();
-
     if (entity->is_missing<CanHighlightOthers>()) return;
     // TODO add a player reach component
     CanHighlightOthers& cho = entity->get<CanHighlightOthers>();
 
     auto match = EntityHelper::getClosestMatchingFurniture(
-        transform, cho.reach(), [](auto&&) { return true; });
+        transform, cho.reach(),
+        [](auto e) { return e->template has<CanBeHighlighted>(); });
     if (!match) return;
-    if (!match->has<CanBeHighlighted>()) return;
+
     match->get<CanBeHighlighted>().update(true);
 }
 
