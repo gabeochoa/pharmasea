@@ -72,6 +72,16 @@ static float clamp(float a, float mn, float mx) {
     return std::min(std::max(a, mn), mx);
 }
 
+static float round_up(float value, int decimal_places) {
+    const float multiplier = (float) std::pow(10.0, decimal_places);
+    return std::ceil(value * multiplier) / multiplier;
+}
+
+static float trunc(float value, int decimal_places) {
+    const float multiplier = (float) std::pow(10.0, decimal_places);
+    return std::trunc(value * multiplier) / multiplier;
+}
+
 template<template<typename...> class Container, typename K, typename V,
          typename... Ts>
 inline V map_get_or_default(Container<K, V, Ts...> map, K key, V def_value) {
