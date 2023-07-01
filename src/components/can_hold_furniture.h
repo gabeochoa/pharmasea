@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "../entity.h"
 #include "base_component.h"
+
+struct Entity;
 
 struct CanHoldFurniture : public BaseComponent {
     virtual ~CanHoldFurniture() {}

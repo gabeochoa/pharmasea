@@ -7,8 +7,6 @@ struct IsTriggerArea : public BaseComponent {
 
     [[nodiscard]] const std::string& title() const { return _title; }
     [[nodiscard]] bool should_wave() const {
-        log_info("should wave? cur{} wanted{}", current_entrants,
-                 wanted_entrants);
         return has_min_matching_entrants();
     }
     [[nodiscard]] bool has_matching_entrants() const {

@@ -16,9 +16,9 @@
 
 namespace system_manager {
 
-void person_update_given_new_pos(int id, Transform& transform,
-                                 std::shared_ptr<Entity> person, float,
-                                 vec3 new_pos_x, vec3 new_pos_z) {
+inline void person_update_given_new_pos(int id, Transform& transform,
+                                        std::shared_ptr<Entity> person, float,
+                                        vec3 new_pos_x, vec3 new_pos_z) {
     int facedir_x = -1;
     int facedir_z = -1;
 
@@ -331,7 +331,8 @@ inline void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
 
 namespace inround {
 
-void work_furniture(const std::shared_ptr<Entity> player, float frame_dt) {
+inline void work_furniture(const std::shared_ptr<Entity> player,
+                           float frame_dt) {
     // Cant do work during planning
     if (GameState::get().is(game::State::Planning)) return;
 
@@ -352,7 +353,7 @@ void work_furniture(const std::shared_ptr<Entity> player, float frame_dt) {
     if (hasWork.do_work) hasWork.do_work(hasWork, player, frame_dt);
 }
 
-void handle_drop(const std::shared_ptr<Entity>& player) {
+inline void handle_drop(const std::shared_ptr<Entity>& player) {
     CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
     const auto _merge_item_from_furniture_into_hand = [player] {
@@ -483,7 +484,7 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
     return;
 }
 
-void handle_grab(const std::shared_ptr<Entity>& player) {
+inline void handle_grab(const std::shared_ptr<Entity>& player) {
     const auto _try_to_pickup_item_from_furniture = [player]() {
         CanHighlightOthers& cho = player->get<CanHighlightOthers>();
         Transform& playerT = player->get<Transform>();
@@ -530,7 +531,7 @@ void handle_grab(const std::shared_ptr<Entity>& player) {
     return;
 }
 
-void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
+inline void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
     // TODO Need to auto drop any held furniture
 
     // Do we already have something in our hands?

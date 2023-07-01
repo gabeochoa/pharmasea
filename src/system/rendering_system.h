@@ -4,6 +4,7 @@
 
 #include "../components/uses_character_model.h"
 #include "../engine/log.h"
+#include "../engine/time.h"
 #include "job_system.h"
 
 namespace system_manager {
@@ -158,21 +159,45 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
     // TODO add highlight when you walk in
     // TODO add progress bar when all players are inside
 
+    const IsTriggerArea& ita = entity->get<IsTriggerArea>();
+
     vec3 pos = entity->get<Transform>().pos();
     vec3 size = entity->get<Transform>().size();
 
     vec3 text_position = {pos.x - (size.x / 2.f),     //
                           pos.y + (TILESIZE / 20.f),  //
-                          pos.z - (size.z / 2.f)};
+                          pos.z - (size.z / 20.f)};
+    // Top left text position
+    // {pos.x - (size.x / 2.f),     //
+    // pos.y + (TILESIZE / 20.f),  //
+    // pos.z - (size.z / 2.f)};
 
-    raylib::DrawText3D(Preload::get().font,
-                       entity->get<IsTriggerArea>().title().c_str(),
-                       text_position,
-                       200.f,  // size
-                       4,      // font spacing
-                       4,      // line spacing
-                       false,  // backface
-                       WHITE);
+    if (ita.should_wave()) {
+        raylib::WaveTextConfig waveConfig = {.waveRange = {0, 0, 1.f},
+                                             .waveSpeed = {0, 0, 0.01f},
+                                             .waveOffset = {0.f, 0.f, 0.4f}};
+        raylib::DrawTextWave3D(
+            Preload::get().font,
+            fmt::format("~~{}~~", entity->get<IsTriggerArea>().title()).c_str(),
+            text_position,
+            200.f,              // size
+            4,                  // font spacing
+            4,                  // line spacing
+            false,              // backface
+            &waveConfig,        //
+            now::current_ms(),  //
+            WHITE);
+
+    } else {
+        raylib::DrawText3D(Preload::get().font,
+                           entity->get<IsTriggerArea>().title().c_str(),
+                           text_position,
+                           200.f,  // size
+                           4,      // font spacing
+                           4,      // line spacing
+                           false,  // backface
+                           WHITE);
+    }
 
     render_simple_normal(entity, dt);
 }
