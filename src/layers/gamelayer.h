@@ -12,27 +12,11 @@
 #include "../map.h"
 
 struct GameLayer : public Layer {
-    // TODO eventually we should not have this
-    // this can be done by adding the input components to remote_player
-    // and then setting GLOBALS on the PlayerJoin.is_you packet
-    //
-    // The issue with this is that the non-host player no longer sees
-    // any furniture for some reason. Though they can still collide against it
-    // (since its server side)
-    //
-    std::shared_ptr<Entity> player;
     std::shared_ptr<Entity> active_player;
     std::shared_ptr<GameCam> cam;
     raylib::Model bag_model;
 
     GameLayer() : Layer("Game") {
-        player.reset(make_player(vec3{-3, 0, -3}));
-        GLOBALS.set("player", player.get());
-
-        // TODO do we need this still?
-        // -> jun24-23 it seems like we do need it for debug view only
-        player->get<CanBeGhostPlayer>().update(true);
-
         cam.reset(new GameCam());
         GLOBALS.set("game_cam", cam.get());
     }
@@ -83,9 +67,11 @@ struct GameLayer : public Layer {
         raylib::SetExitKey(raylib::KEY_NULL);
 
         auto act = GLOBALS.get_ptr<Entity>("active_camera_target");
-        if (act) {
-            cam->updateToTarget(act->get<Transform>().pos());
+        if (!act) {
+            return;
         }
+
+        cam->updateToTarget(act->get<Transform>().pos());
         cam->updateCamera();
 
         //         jun 24-23 we need this so furniture shows up
@@ -95,7 +81,7 @@ struct GameLayer : public Layer {
             // what they server has access to
             map_ptr->grab_things();
 
-            SystemManager::get().update(Entities{player}, dt);
+            SystemManager::get().update(Entities{global_player}, dt);
         }
     }
 
@@ -124,7 +110,8 @@ struct GameLayer : public Layer {
                         GLOBALS.get_or_default<
                             std::map<int, std::shared_ptr<Entity>>>(
                             "server_players", {}));
-                SystemManager::get().render_entities(Entities{player}, dt);
+                SystemManager::get().render_entities(Entities{global_player},
+                                                     dt);
             }
             // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
             // if (nav) {

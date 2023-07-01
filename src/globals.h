@@ -18,6 +18,9 @@ constexpr int MAP_H = 33;
 // if you change this here, then go in there and add support as well
 constexpr float TILESIZE = 1.0f;
 
+struct Entity;
+static std::shared_ptr<Entity> global_player;
+
 // TODO is there a way for us to move these to engine
 // and then let the game pass them in or something _while_ staying const?
 // and typed

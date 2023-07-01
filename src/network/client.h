@@ -88,8 +88,7 @@ struct Client {
     }
 
     void send_player_input_packet(int my_id) {
-        Entity* me = GLOBALS.get_ptr<Entity>("player");
-        CollectsUserInput& cui = me->get<CollectsUserInput>();
+        CollectsUserInput& cui = global_player->get<CollectsUserInput>();
 
         if (cui.inputs.empty()) return;
 
@@ -114,7 +113,7 @@ struct Client {
 
             remote_players[client_id] =
                 std::shared_ptr<Entity>(make_remote_player({0, 0, 0}));
-            auto rp = remote_players[client_id];
+            auto& rp = remote_players[client_id];
             rp->get<HasClientID>().update(client_id);
             // We want to crash if no hasName so no has<> check here
             rp->get<HasName>().update(username);
@@ -204,6 +203,11 @@ struct Client {
                     add_new_player(id, client_p->username);
                     GLOBALS.set("active_camera_target",
                                 remote_players[id].get());
+                    global_player.reset(remote_players[id].get());
+                    global_player->addComponent<CollectsUserInput>();
+                    // TODO i dont think we need this anymore
+                    // global_player->addComponent<CanBeGhostPlayer>().update(
+                    // true);
                 }
 
                 for (auto client_id : info.all_clients) {
