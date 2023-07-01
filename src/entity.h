@@ -242,7 +242,7 @@ static void add_person_components(Entity* person) {
     // TODO why do we need the udpate() here?
     person->addComponent<ModelRenderer>().update(ModelInfo{
         .model_name = "character_duck",
-        .size_scale = 1.f,
+        .size_scale = 1.5f,
         .position_offset = vec3{0, 0, 0},
         .rotation_angle = 180,
     });
