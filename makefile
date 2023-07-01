@@ -3,8 +3,10 @@
 RAYLIB_FLAGS := `pkg-config --cflags raylib` 
 RAYLIB_LIB := `pkg-config --libs raylib` 
 
+RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) 
+
 FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
-		-Wmost -Wconversion -g $(RAYLIB_FLAGS)
+		-Wmost -Wconversion -g $(RAYLIB_FLAGS) -DTRACY_ENABLE
 # -Wmost -Wconversion -g -fsanitize=address $(RAYLIB_FLAGS)
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion
@@ -26,10 +28,14 @@ CXX := clang++
 
 
 all: $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -DTRACY_ENABLE -o pharmasea && ./pharmasea
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea && ./pharmasea
 
 mp: $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -DTRACY_ENABLE -o pharmasea && ./pharmasea test host > host_log & sleep 5;./pharmasea test client
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea && ./pharmasea test host > host_log & sleep 5;./pharmasea test client
+
+release: FLAGS=$(RELEASE_FLAGS)
+release: NOFLAGS=
+release: clean all
 
 
 $(OBJ_DIR)/%.o: %.cpp makefile
