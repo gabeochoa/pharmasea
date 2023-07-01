@@ -41,3 +41,8 @@
 
 #define M_TEST_NEQ(x, y, ...) \
     M_TEST_IMPL(x, y, !=, " was equal to ", __VA_ARGS__)
+
+#define M_TEST_T(x, ...) M_TEST_IMPL(x, true, ==, " was not true ", __VA_ARGS__)
+
+#define M_TEST_F(x, ...) \
+    M_TEST_IMPL(x, false, ==, " was not false", __VA_ARGS__)

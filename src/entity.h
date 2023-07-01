@@ -353,9 +353,6 @@ static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
     furniture->get<Transform>().init({pos.x, 0, pos.y},
                                      {TILESIZE, TILESIZE, TILESIZE});
     furniture->addComponent<IsSolid>();
-    furniture->addComponent<IsRotatable>();
-    furniture->addComponent<CanBeHeld>();
-    furniture->addComponent<CanBeHighlighted>();
 
     // For renderers we prioritize the ModelRenderer and will fall back if we
     // need
@@ -367,7 +364,12 @@ static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
         CustomHeldItemPosition::Positioner::Default);
 
     // TODO does all furniture have this?
+    //  - no walls dont
+    furniture->addComponent<IsRotatable>();
     furniture->addComponent<CanHoldItem>();
+    // TODO: Walls should probably not be holdable or highlightable
+    furniture->addComponent<CanBeHeld>();
+    furniture->addComponent<CanBeHighlighted>();
 
     return furniture;
 }

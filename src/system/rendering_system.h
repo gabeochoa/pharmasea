@@ -13,8 +13,8 @@ namespace render_manager {
 inline void draw_valid_colored_box(const Transform& transform,
                                    const SimpleColoredBoxRenderer& renderer,
                                    bool is_highlighted) {
-    // TODO Maybe should move into DrawCubeCustom
     Color f = renderer.face();
+    // TODO Maybe should move into DrawCubeCustom
     if (ui::color::is_empty(f)) {
         log_warn("Face color is empty");
         f = PINK;

@@ -2,6 +2,7 @@
 
 #include "../entity.h"
 //
+#include "../engine/assert.h"
 #include "../engine/defer.h"
 #include "../network/shared.h"
 
@@ -165,15 +166,30 @@ void validate_held_item_serialized() {
     delete entity2;
 }
 
-void remote_player_components() {
-    Entity* entity = make_remote_player({0, 0, 0});
+void validate_wall_color_serialized() {
+    Entity* entity = entities::make_wall(vec2{0, 0}, ui::color::saffron);
+
+    M_TEST_T(entity->has<SimpleColoredBoxRenderer>(), "should have renderer");
+
+    M_TEST_EQ(entity->get<SimpleColoredBoxRenderer>().face(),
+              ui::color::saffron, "component should have right color");
+
+    M_TEST_EQ(entity->get<SimpleColoredBoxRenderer>().base(),
+              ui::color::saffron, "component should have right color");
 
     network::Buffer buff = network::serialize_to_entity(entity);
-
-    Entity* entity2 = make_remote_player({0, 0, 0});
+    Entity* entity2 = mk_entity();
     network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
+
+    M_TEST_T(entity2->has<SimpleColoredBoxRenderer>(), "should have renderer");
+
+    M_TEST_EQ(entity2->get<SimpleColoredBoxRenderer>().face(),
+              ui::color::saffron, "component should have right color");
+
+    M_TEST_EQ(entity2->get<SimpleColoredBoxRenderer>().base(),
+              ui::color::saffron, "component should have right color");
 
     delete entity;
     delete entity2;
@@ -185,5 +201,6 @@ void all_tests() {
     validate_custom_hold_position_persisits();
     validate_name_change_persisits();
     validate_held_item_serialized();
+    validate_wall_color_serialized();
     // remote_player_components();
 }
