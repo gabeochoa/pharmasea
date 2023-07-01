@@ -15,12 +15,12 @@ struct SimpleColoredBoxRenderer : public BaseComponent {
     void update_face(Color face) { face_color = face; }
     void update_base(Color base) { base_color = base; }
 
-    [[nodiscard]] Color face() { return face_color; }
-    [[nodiscard]] Color base() { return base_color; }
+    [[nodiscard]] Color face() const { return face_color; }
+    [[nodiscard]] Color base() const { return base_color; }
 
    private:
-    Color face_color;
-    Color base_color;
+    Color face_color = PINK;
+    Color base_color = PINK;
 
     friend bitsery::Access;
     template<typename S>
