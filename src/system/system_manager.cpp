@@ -340,6 +340,19 @@ void refetch_dynamic_model_names(const std::shared_ptr<Entity>& entity, float) {
     renderer.update_model_name(hDMN.fetch());
 }
 
+void count_max_trigger_area_entrants(const std::shared_ptr<Entity>& entity,
+                                     float) {
+    if (entity->is_missing<IsTriggerArea>()) return;
+
+    int count = 0;
+    for (auto& e : SystemManager::get().oldAll) {
+        // TODO need a better way to match player
+        if (e->get<DebugName>().name() != "player") continue;
+        count++;
+    }
+    entity->get<IsTriggerArea>().update_max_entrants(count);
+}
+
 void count_trigger_area_entrants(const std::shared_ptr<Entity>& entity, float) {
     if (entity->is_missing<IsTriggerArea>()) return;
 
@@ -382,6 +395,7 @@ void trigger_gamestate_change_on_full_progress(
 }
 
 void process_trigger_area(const std::shared_ptr<Entity>& entity, float dt) {
+    count_max_trigger_area_entrants(entity, dt);
     count_trigger_area_entrants(entity, dt);
     update_trigger_area_percent(entity, dt);
     trigger_gamestate_change_on_full_progress(entity, dt);

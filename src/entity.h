@@ -264,7 +264,7 @@ static void add_person_components(Entity* person) {
     person->addComponent<CanBePushed>();
 
     person->addComponent<HasBaseSpeed>().update(10.f);
-    // TODO why do we need the udpate() here?
+    // TODO why do we need the update() here?
     person->addComponent<ModelRenderer>().update(ModelInfo{
         .model_name = "character_duck",
         .size_scale = 1.5f,
