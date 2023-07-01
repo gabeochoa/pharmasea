@@ -27,6 +27,7 @@ struct MenuLayer : public Layer {
     }
 
     void play_music() {
+#if ENABLE_SOUND
         // TODO better music playing wrapper so we can not duplicate this
         // everwhere
         // TODO music stops playing when you grab title bar
@@ -35,6 +36,7 @@ struct MenuLayer : public Layer {
             raylib::PlayMusicStream(m);
         }
         raylib::UpdateMusicStream(m);
+#endif
     }
 
     void draw_menu_buttons() {

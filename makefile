@@ -20,9 +20,9 @@ OBJ_DIR := ./output
 OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
 
 
-CXX := g++
+# CXX := g++
 
-# CXX := clang++
+CXX := clang++
 
 .PHONY: all clean
 
