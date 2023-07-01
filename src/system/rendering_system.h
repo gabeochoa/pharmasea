@@ -78,11 +78,6 @@ inline bool render_simple_normal(std::shared_ptr<Entity> entity, float) {
     SimpleColoredBoxRenderer& renderer =
         entity->get<SimpleColoredBoxRenderer>();
 
-    if (!global_is_host) {
-        log_info("render simple normal {} {} {} {}", transform.pos(),
-                 transform.size(), renderer.face(), renderer.base());
-    }
-
     draw_valid_colored_box(transform, renderer, false);
     return true;
 }

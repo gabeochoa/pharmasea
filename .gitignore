@@ -14,5 +14,7 @@ pharmasea
 *.o
 *.d
 cppcheck_err
+*.gcno
+*.gcov
 # until they are used in the project, hiding the kennynl folder
 kennynl/*

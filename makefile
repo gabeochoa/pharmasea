@@ -6,7 +6,7 @@ RAYLIB_LIB := `pkg-config --libs raylib`
 RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) 
 
 FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
-		-Wmost -Wconversion -g $(RAYLIB_FLAGS) -DTRACY_ENABLE
+		-Wmost -Wconversion -pg $(RAYLIB_FLAGS) -DTRACY_ENABLE -fprofile-arcs -ftest-coverage
 # -Wmost -Wconversion -g -fsanitize=address $(RAYLIB_FLAGS)
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion
@@ -20,7 +20,9 @@ OBJ_DIR := ./output
 OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
 
 
-CXX := clang++
+CXX := g++
+
+# CXX := clang++
 
 .PHONY: all clean
 
