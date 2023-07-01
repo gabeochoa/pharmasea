@@ -11,7 +11,7 @@ struct CanHighlightOthers : public BaseComponent {
     [[nodiscard]] float reach() const { return furniture_reach; }
 
    private:
-    float furniture_reach = 1.25f;
+    float furniture_reach = 1.80f;
 
     friend bitsery::Access;
     template<typename S>
