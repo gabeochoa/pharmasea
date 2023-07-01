@@ -87,9 +87,13 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
                            Color face_color, Color base_color) {
     // This logif exists because i had a problem where all furniture was
     // size(0,0,0) and took me a while to figure it out.
-    log_ifx((width == 0 || height == 0 || length == 0), LOG_WARN,
+    log_ifx((width == 0 || height == 0 || length == 0), LogLevel::LOG_WARN,
             "Trying to render entity that has size ({}, {}, {})", width, height,
             length);
+
+    if (width == 0 || height == 0 || length == 0) {
+        log_error("");
+    }
 
     float x = 0.0f;
     float y = 0.0f;

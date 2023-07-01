@@ -194,36 +194,40 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
     // place the english
     auto fsize = 300.f;
 
+    std::string title = entity->get<IsTriggerArea>().title();
+    log_ifx(title.empty(), LogLevel::LOG_WARN,
+            "Rendering trigger area with empty text string: id{} pos{}",
+            entity->id, pos);
+
     if (ita.should_wave()) {
         raylib::WaveTextConfig waveConfig = {.waveRange = {0, 0, TILESIZE},
                                              .waveSpeed = {0, 0, 0.01f},
                                              .waveOffset = {0.f, 0.f, 0.2f}};
-        raylib::DrawTextWave3D(
-            font,
-            fmt::format("~~{}~~", entity->get<IsTriggerArea>().title()).c_str(),
-            text_position, fsize,
-            4,                  // font spacing
-            4,                  // line spacing
-            false,              // backface
-            &waveConfig,        //
-            now::current_ms(),  //
-            WHITE);
+        raylib::DrawTextWave3D(font, fmt::format("~~{}~~", title).c_str(),
+                               text_position, fsize,
+                               4,                  // font spacing
+                               4,                  // line spacing
+                               false,              // backface
+                               &waveConfig,        //
+                               now::current_ms(),  //
+                               WHITE);
 
     } else {
-        raylib::DrawText3D(font, entity->get<IsTriggerArea>().title().c_str(),
-                           text_position, fsize,
+        raylib::DrawText3D(font, title.c_str(), text_position, fsize,
                            4,      // font spacing
                            4,      // line spacing
                            false,  // backface
                            WHITE);
     }
 
-    // TODO switch to using a validated draw_cube
-    DrawCubeCustom(
-        {pos.x, pos.y + (TILESIZE / 20.f), pos.z}, size.x, size.y,
-        fminf(1.f, size.z * ita.progress()),
-        transform.FrontFaceDirectionMap.at(transform.face_direction()), RED,
-        RED);
+    if (ita.progress() > 0.f) {
+        // TODO switch to using a validated draw_cube
+        DrawCubeCustom(
+            {pos.x, pos.y + (TILESIZE / 20.f), pos.z}, size.x, size.y,
+            size.z * ita.progress(),
+            transform.FrontFaceDirectionMap.at(transform.face_direction()), RED,
+            RED);
+    }
 
     render_simple_normal(entity, dt);
 }

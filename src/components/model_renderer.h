@@ -28,7 +28,7 @@ struct ModelRenderer : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        // Only things that need to be rendered, need to be serialized :)
+
         s.ext(info, bitsery::ext::StdOptional{});
     }
 };
