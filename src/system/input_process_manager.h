@@ -52,11 +52,6 @@ inline void person_update_given_new_pos(int id, Transform& transform,
     // we need some way to handle popping people back to spawn or something if
     // they get stuck
 
-    // TODO what is this for
-    // this->get<Transform>().face_direction =
-    // Transform::FrontFaceDirection::BACK &
-    // Transform::FrontFaceDirection::LEFT;
-
     // TODO this should be a component
     {
         // horizontal check
@@ -236,8 +231,6 @@ inline void process_player_movement_input(std::shared_ptr<Entity> entity,
 
     person_update_given_new_pos(entity->id, transform, player, dt, new_position,
                                 new_position);
-    transform.update(transform.raw());
-
     transform.update({
         util::trunc(transform.raw().x, 2),
         util::trunc(transform.raw().y, 2),
@@ -251,7 +244,7 @@ inline void rotate_furniture(const std::shared_ptr<Entity> player) {
     // Cant rotate outside planning mode
     if (GameState::get().is_not(game::State::Planning)) return;
 
-    // TODO need to figure out if this should be separate from highlighting
+    // TODO need to figure out if reach should be separate from highlighting
     CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
     std::shared_ptr<Furniture> match =

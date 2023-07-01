@@ -8,6 +8,7 @@
 //
 #include "base_component.h"
 
+// TODO at some point id like to support diagonal angles
 struct Transform : public BaseComponent {
     enum FrontFaceDirection {
         FORWARD = 0x1,
