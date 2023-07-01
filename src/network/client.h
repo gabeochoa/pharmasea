@@ -173,7 +173,13 @@ struct Client {
                 return;
             }
             auto rp = remote_players[client_id];
-            if (!rp) return;
+            if (!rp) {
+                log_warn("remote player {} is not valid - rare update",
+                         client_id);
+            }
+
+            // log_info("updating remote player arre {} {} id{}", client_id,
+            // model_index, rp->id);
             update_player_rare_remotely(rp, model_index);
         };
 
