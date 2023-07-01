@@ -250,18 +250,18 @@ static void add_person_components(Entity* person) {
     person->addComponent<UsesCharacterModel>();
 }
 
+static void add_player_components(Entity* player) {
+    player->addComponent<CanHighlightOthers>();
+    player->addComponent<CanHoldFurniture>();
+    player->get<HasBaseSpeed>().update(7.5f);
+    player->addComponent<HasName>();
+    player->addComponent<HasClientID>();
+}
+
 static Entity* make_remote_player(vec3 pos) {
     Entity* remote_player = make_entity({.name = "remote player"}, pos);
     add_person_components(remote_player);
-
-    remote_player->addComponent<CanHighlightOthers>();
-    remote_player->addComponent<CanHoldFurniture>();
-
-    remote_player->get<HasBaseSpeed>().update(7.5f);
-
-    remote_player->addComponent<HasName>();
-    remote_player->addComponent<HasClientID>();
-
+    add_player_components(remote_player);
     return remote_player;
 }
 
@@ -285,16 +285,14 @@ static void update_player_rare_remotely(std::shared_ptr<Entity> entity,
 static Entity* make_player(vec3 p) {
     Entity* player = make_entity({.name = "player"}, p);
     add_person_components(player);
+    add_player_components(player);
 
-    player->get<HasBaseSpeed>().update(7.5f);
-
-    player->addComponent<HasName>();
-    player->addComponent<CanHighlightOthers>();
-    player->addComponent<CanHoldFurniture>();
-    player->addComponent<CanBeGhostPlayer>();
+    // note: these are added to some remote players
+    // ie the one the client is controlling
     player->addComponent<CollectsUserInput>();
-    player->addComponent<RespondsToUserInput>();
+    player->addComponent<CanBeGhostPlayer>();
 
+    player->addComponent<RespondsToUserInput>();
     return player;
 }
 
