@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "../item.h"
 #include "base_component.h"
 
 struct SimpleColoredBoxRenderer : public BaseComponent {
