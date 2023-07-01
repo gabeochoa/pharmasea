@@ -22,6 +22,10 @@ inline unsigned char comp_max(const Color& a) {
     return (unsigned char) std::max({a.r, a.g, a.b});
 }
 
+inline bool is_empty(const Color& c) {
+    return c.r == 0 && c.g == 0 && c.b == 0 && c.a == 0;
+}
+
 inline vec3 toHSL(const Color color) {
     const auto cmax = comp_max(color);
     const auto cmin = comp_min(color);
