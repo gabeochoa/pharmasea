@@ -108,6 +108,13 @@ struct LobbyMapInfo : public LevelInfo {
             charSwitch.reset(entities::make_character_switcher(location));
             EntityHelper::addEntity(charSwitch);
         }
+
+        {
+            std::shared_ptr<Entity> loadGameTriggerArea;
+            loadGameTriggerArea.reset(
+                entities::make_trigger_area({5, TILESIZE / -2.f, 10}, 8, 3));
+            EntityHelper::addEntity(loadGameTriggerArea);
+        }
     }
 
     virtual void onDraw(float dt) const override {

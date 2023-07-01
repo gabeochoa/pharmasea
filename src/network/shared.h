@@ -24,7 +24,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsSolid, CanBeHeld, IsRotatable, CanGrabFromOtherFurniture,
           ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom,
           IsItemContainer<Bag>, IsItemContainer<PillBottle>, UsesCharacterModel,
-          ShowsProgressBar, DebugName, HasDynamicModelName> {};
+          ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea> {};
 
 template<>
 struct PolymorphicBaseClass<Item>

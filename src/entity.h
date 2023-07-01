@@ -27,6 +27,7 @@
 #include "components/is_rotatable.h"
 #include "components/is_snappable.h"
 #include "components/is_solid.h"
+#include "components/is_trigger_area.h"
 #include "components/model_renderer.h"
 #include "components/responds_to_user_input.h"
 #include "components/shows_progress_bar.h"
@@ -211,8 +212,6 @@ struct DebugOptions {
 
 static void add_entity_components(Entity* entity) {
     entity->addComponent<Transform>();
-    // TODO figure out which entities need these
-    entity->addComponent<CanBeHeld>();
 }
 
 static Entity* make_entity(const DebugOptions& options, vec3 p = {-2, -2, -2}) {
@@ -357,6 +356,7 @@ static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
                                      {TILESIZE, TILESIZE, TILESIZE});
     furniture->addComponent<IsSolid>();
     furniture->addComponent<IsRotatable>();
+    furniture->addComponent<CanBeHeld>();
 
     // For renderers we prioritize the ModelRenderer and will fall back if we
     // need
@@ -588,4 +588,22 @@ template<typename I>
     });
     return container;
 }
+
+[[nodiscard]] static Entity* make_trigger_area(
+    vec3 pos, float width, float height,
+    std::string title = "DEFAULT TRIGGER") {
+    Entity* trigger_area = make_entity({.name = "trigger area"}, pos);
+
+    trigger_area->get<Transform>().update_size({
+        width,
+        TILESIZE / 20.f,
+        height,
+    });
+
+    trigger_area->addComponent<SimpleColoredBoxRenderer>().update(PINK, PINK);
+    trigger_area->addComponent<IsTriggerArea>().update_title(title);
+
+    return trigger_area;
+}
+
 }  // namespace entities

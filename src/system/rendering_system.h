@@ -152,10 +152,40 @@ inline bool render_model_normal(std::shared_ptr<Entity> entity, float) {
     return true;
 }
 
+inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
+    if (entity->is_missing<IsTriggerArea>()) return;
+
+    // TODO add highlight when you walk in
+    // TODO add progress bar when all players are inside
+
+    vec3 pos = entity->get<Transform>().pos();
+    vec3 size = entity->get<Transform>().size();
+
+    vec3 text_position = {pos.x - (size.x / 2.f),     //
+                          pos.y + (TILESIZE / 20.f),  //
+                          pos.z - (size.z / 2.f)};
+
+    raylib::DrawText3D(Preload::get().font,
+                       entity->get<IsTriggerArea>().title().c_str(),
+                       text_position,
+                       200.f,  // size
+                       4,      // font spacing
+                       4,      // line spacing
+                       false,  // backface
+                       WHITE);
+
+    render_simple_normal(entity, dt);
+}
+
 inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
     // Ghost player cant render during normal mode
     if (entity->has<CanBeGhostPlayer>() &&
         entity->get<CanBeGhostPlayer>().is_ghost()) {
+        return;
+    }
+
+    if (entity->has<IsTriggerArea>()) {
+        render_trigger_area(entity, dt);
         return;
     }
 
