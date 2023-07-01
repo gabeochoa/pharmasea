@@ -605,7 +605,7 @@ template<typename I>
     trigger_area->addComponent<IsTriggerArea>()
         .update_title(title)
         .update_max_entrants(1)
-        .update_progress_max(3.f);
+        .update_progress_max(2.f);
 
     return trigger_area;
 }

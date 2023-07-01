@@ -373,9 +373,24 @@ void update_trigger_area_percent(const std::shared_ptr<Entity>& entity,
     }
 }
 
+void trigger_gamestate_change_on_full_progress(
+    const std::shared_ptr<Entity>& entity, float) {
+    if (entity->is_missing<IsTriggerArea>()) return;
+    IsTriggerArea& ita = entity->get<IsTriggerArea>();
+    if (ita.progress() < 1.f) return;
+
+    // TODO should be lobby only, and isnt specific for all triggers, its only
+    // for the one we made for this
+
+    // TODO only for host...
+    //
+    GameState::s_toggle_to_planning();
+}
+
 void process_trigger_area(const std::shared_ptr<Entity>& entity, float dt) {
     count_trigger_area_entrants(entity, dt);
     update_trigger_area_percent(entity, dt);
+    trigger_gamestate_change_on_full_progress(entity, dt);
 }
 
 }  // namespace system_manager
