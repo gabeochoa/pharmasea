@@ -337,42 +337,6 @@ void refetch_dynamic_model_names(const std::shared_ptr<Entity>& entity, float) {
     renderer.update_model_name(hDMN.fetch());
 }
 
-void count_trigger_area_entrants2(const std::shared_ptr<Entity>& entity,
-                                  float) {
-    // We have to check is Player in Trigger and not
-    // Does trigger have players
-    // Because we dont have the players in the entity list so we cant iterate
-    // over them so we want to wait until we are run as a player and see if we
-    // are in any trigger areas
-
-    // TODO better player checking please
-    if (entity->get<DebugName>().name() != "player") return;
-
-    // TODO im not sure why forEachEntity doesnt work here
-    // it seems like its not writing to the entity at the end
-    // which we need to update the count
-
-    for (auto& e : EntityHelper::get_entities()) {
-        if (!e) continue;
-        if (entity->id == e->id) continue;
-        if (e->is_missing<IsTriggerArea>()) continue;
-
-        // TODO this doesnt change every tick, store it somewhere?
-        vec3 trigger_size = {
-            e->get<Transform>().size().x,
-            e->get<Transform>().size().y + TILESIZE,
-            e->get<Transform>().size().z,
-        };
-        auto trigger_bounds =
-            get_bounds(e->get<Transform>().pos(), trigger_size);
-
-        if (CheckCollisionBoxes(entity->get<Transform>().bounds(),
-                                trigger_bounds)) {
-            e->get<IsTriggerArea>().increment_entrants();
-        }
-    }
-}
-
 void count_trigger_area_entrants(const std::shared_ptr<Entity>& entity, float) {
     if (entity->is_missing<IsTriggerArea>()) return;
 

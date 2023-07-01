@@ -39,16 +39,6 @@ struct IsTriggerArea : public BaseComponent {
         return *this;
     }
 
-    auto& increment_entrants() {
-        if (current_entrants < wanted_entrants) current_entrants += 100;
-        return *this;
-    }
-
-    auto& decrement_entrants() {
-        if (current_entrants > 0) current_entrants -= 1;
-        return *this;
-    }
-
    private:
     int wanted_entrants;
     int current_entrants;
