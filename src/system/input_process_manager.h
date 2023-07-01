@@ -237,6 +237,12 @@ inline void process_player_movement_input(std::shared_ptr<Entity> entity,
     person_update_given_new_pos(entity->id, transform, player, dt, new_position,
                                 new_position);
     transform.update(transform.raw());
+
+    transform.update({
+        util::trunc(transform.raw().x, 2),
+        util::trunc(transform.raw().y, 2),
+        util::trunc(transform.raw().z, 2),
+    });
 };
 
 namespace planning {

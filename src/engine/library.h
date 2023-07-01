@@ -34,6 +34,7 @@ struct Library {
 
     const tl::expected<std::string, Error> add(const char* name,
                                                const T& item) {
+        log_info("adding {} to the library", name);
         if (storage.find(name) != storage.end()) {
             return tl::unexpected(Error::DUPLICATE_NAME);
         }
