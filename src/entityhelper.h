@@ -130,9 +130,9 @@ struct EntityHelper {
     };
 
     static void forEachEntity(
-        std::function<ForEachFlow(std::shared_ptr<Entity>)> cb) {
+        std::function<ForEachFlow(std::shared_ptr<Entity>&)> cb) {
         TRACY_ZONE_SCOPED;
-        for (auto e : get_entities()) {
+        for (auto& e : get_entities()) {
             if (!e) continue;
             auto fef = cb(e);
             if (fef == 1) continue;

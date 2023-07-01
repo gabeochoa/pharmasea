@@ -88,11 +88,6 @@ struct GameLayer : public Layer {
         }
         cam->updateCamera();
 
-        SystemManager::get().update(Entities{player}, dt);
-
-        // NOTE: gabe: i dont think we need to do this
-        //         because the local map never should need to grab things
-        //         TODO do we?
         //         jun 24-23 we need this so furniture shows up
         auto map_ptr = GLOBALS.get_ptr<Map>("map");
         if (map_ptr) {
@@ -100,9 +95,7 @@ struct GameLayer : public Layer {
             // what they server has access to
             map_ptr->grab_things();
 
-            // TODO we need this so the entity -> floating name moves around
-            // why does that happen
-            map_ptr->onUpdate(dt);
+            SystemManager::get().update(Entities{player}, dt);
         }
     }
 
