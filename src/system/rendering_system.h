@@ -127,7 +127,7 @@ inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
                     transform.pos().y + model_info.position_offset.y,
                     transform.pos().z + model_info.position_offset.z,
                 },
-                vec3{0.f, 1.f, 0.f}, rotation_angle,
+                vec3{0.f, 1.f, 0.f}, model_info.rotation_angle + rotation_angle,
                 transform.size() * model_info.size_scale, base);
 
     return true;

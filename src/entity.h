@@ -541,7 +541,7 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
 
     conveyer->get<ModelRenderer>().update(ModelInfo{
         .model_name = "conveyer",
-        .size_scale = 0.5f,
+        .size_scale = 2.f,
         .position_offset = vec3{0, 0, 0},
     });
 
@@ -559,8 +559,9 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
 
     grabber->get<ModelRenderer>().update(ModelInfo{
         .model_name = "conveyer",
-        .size_scale = 0.5f,
+        .size_scale = 3.f,
         .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 90.f,
     });
     grabber->addComponent<ConveysHeldItem>();
     grabber->addComponent<CanGrabFromOtherFurniture>();
