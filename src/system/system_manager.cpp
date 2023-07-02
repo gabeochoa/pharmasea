@@ -53,6 +53,8 @@ void update_held_furniture_position(std::shared_ptr<Entity> entity, float) {
     can_hold_furniture.furniture()->get<Transform>().update(new_pos);
 }
 
+// TODO should held item position be a physical movement or just visual?
+// does it matter if the reach/pickup is working as expected
 void update_held_item_position(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanHoldItem>()) return;
 
@@ -277,13 +279,15 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
 }
 
-template<typename I>
-void backfill_empty_container(std::shared_ptr<Entity> entity) {
+template<typename I, typename... TArgs>
+void backfill_empty_container(std::shared_ptr<Entity>& entity,
+                              TArgs&&... args) {
     if (entity->is_missing<IsItemContainer<I>>()) return;
     CanHoldItem& canHold = entity->get<CanHoldItem>();
-    auto newItem = std::make_shared<I>(entity->get<Transform>().pos(),
-                                       Color({255, 15, 240, 255}));
-    canHold.update(newItem, Item::HeldBy::FURNITURE);
+    I* newItem(new I(std::forward<TArgs>(args)...));
+    std::shared_ptr<I> container;
+    container.reset(newItem);
+    canHold.update(container, Item::HeldBy::FURNITURE);
     ItemHelper::addItem(canHold.item());
 }
 
@@ -292,8 +296,19 @@ void process_is_container_and_should_backfill_item(
     if (entity->is_missing<CanHoldItem>()) return;
     CanHoldItem& canHold = entity->get<CanHoldItem>();
     if (canHold.is_holding_item()) return;
-    backfill_empty_container<Bag>(entity);
-    backfill_empty_container<PillBottle>(entity);
+
+    // TODO speed have each <> return true/false if it worked
+    //      then can skip the rest, are there any that can hold mixed ?
+
+    auto pos = entity->get<Transform>().as2();
+    auto color = Color({255, 15, 240, 255});
+
+    backfill_empty_container<Bag>(entity, pos, color);
+    backfill_empty_container<PillBottle>(entity, pos, color);
+
+    if (entity->is_missing<Indexer>()) return;
+    backfill_empty_container<Pill>(entity, pos, color,
+                                   entity->get<Indexer>().value());
 }
 
 void handle_autodrop_furniture_when_exiting_planning(

@@ -182,12 +182,12 @@ struct Pill : public Item {
 
    public:
     Pill() { init(); }
-    Pill(vec3 p, Color c) : Item(p, c) { init(); }
     Pill(vec2 p, Color c) : Item(p, c) { init(); }
+    Pill(vec2 p, Color c, int index) : Item(p, c) { init(index); }
 
-    void init() {
+    void init(int index = -1) {
         constexpr std::size_t num_pills = magic_enum::enum_count<PillType>();
-        int index = randIn(0, num_pills - 1);
+        if (index == -1) index = randIn(0, num_pills - 1);
         type = magic_enum::enum_value<PillType>(index);
     }
 
