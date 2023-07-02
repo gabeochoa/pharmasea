@@ -318,31 +318,6 @@ static Entity* make_customer(vec3 p) {
     customer->get<CanPerformJob>().update(WaitInQueue, Wandering);
 
     return customer;
-
-    // TODO turn back on bubbles
-    // bubble = SpeechBubble(ailment->icon_name());
-
-    // TODO support this
-    // virtual void in_round_update(float dt) override {
-    // AIPerson::in_round_update(dt);
-
-    // Register* reg = get_target_register();
-    // if (reg) {
-    // this->turn_to_face_entity(reg);
-    // }
-    //
-    // if (bubble.has_value())
-    // bubble.value().update(dt, this->get<Transform>().raw_position);
-    // }
-
-    // virtual void render_normal() const override {
-    // auto render_speech_bubble = [&]() {
-    // if (!this->bubble.has_value()) return;
-    // this->bubble.value().render();
-    // };
-    // AIPerson::render_normal();
-    // render_speech_bubble();
-    // }
 }
 
 typedef Entity Furniture;

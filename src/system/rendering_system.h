@@ -271,10 +271,10 @@ inline void render_speech_bubble(std::shared_ptr<Entity> entity, float dt) {
     GameCam cam = GLOBALS.get<GameCam>("game_cam");
     raylib::Texture texture = TextureLibrary::get().get(ailment->icon_name());
     raylib::DrawBillboard(cam.camera, texture,
-                          vec3{position.x,                      //
-                               position.y + (TILESIZE * 1.5f),  //
-                               position.z},                     //
-                          TILESIZE,                             //
+                          vec3{position.x,                     //
+                               position.y + (TILESIZE * 2.f),  //
+                               position.z},                    //
+                          TILESIZE,                            //
                           raylib::WHITE);
 }
 
