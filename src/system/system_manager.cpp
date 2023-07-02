@@ -350,23 +350,20 @@ void delete_held_items_when_leaving_inround(
     // TODO this doesnt seem to work
     // you keep holding it even after the transition
 
-    log_warn("delete_held_items_when_leaving_inround");
+    // log_warn("delete_held_items_when_leaving_inround");
     if (entity->is_missing<CanHoldItem>()) return;
-    log_warn("delete_ canhold {} {}", entity->get<DebugName>().name(),
-             entity->id);
+    // log_warn("delete_ canhold {} {}", entity->get<DebugName>().name(),
+    // entity->id);
 
     CanHoldItem& canHold = entity->get<CanHoldItem>();
     if (canHold.empty()) return;
-    log_warn("delete_ notempty");
 
     // Mark it as deletable
     std::shared_ptr<Item>& item = canHold.item();
-    item->cleanup = true;
 
     // let go of the item
+    item->cleanup = true;
     canHold.update(nullptr);
-
-    log_error("deleting item :");
 }
 
 void refetch_dynamic_model_names(const std::shared_ptr<Entity>& entity, float) {
