@@ -16,9 +16,6 @@
 #include "globals.h"
 #include "resources/fonts/Karmina_Regular_256.h"
 
-// TODO turned off to speed up launch time
-#define ENABLE_SOUND 0
-
 inline raylib::Font load_karmina_regular() {
     auto font = font::LoadFont_KarminaRegular256();
     raylib::GenTextureMipmaps(&font.texture);
@@ -41,11 +38,11 @@ struct Preload {
             load_models();
         }
 
-#if ENABLE_SOUND
-        ext::init_audio_device();
-        load_sounds();
-        load_music();
-#endif
+        if (ENABLE_SOUND) {
+            ext::init_audio_device();
+            load_sounds();
+            load_music();
+        }
     }
 
     ~Preload() {

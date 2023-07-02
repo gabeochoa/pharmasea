@@ -27,16 +27,16 @@ struct MenuLayer : public Layer {
     }
 
     void play_music() {
-#if ENABLE_SOUND
-        // TODO better music playing wrapper so we can not duplicate this
-        // everwhere
-        // TODO music stops playing when you grab title bar
-        auto m = MusicLibrary::get().get("theme");
-        if (!raylib::IsMusicStreamPlaying(m)) {
-            raylib::PlayMusicStream(m);
+        if (ENABLE_SOUND) {
+            // TODO better music playing wrapper so we can not duplicate this
+            // everwhere
+            // TODO music stops playing when you grab title bar
+            auto m = MusicLibrary::get().get("theme");
+            if (!raylib::IsMusicStreamPlaying(m)) {
+                raylib::PlayMusicStream(m);
+            }
+            raylib::UpdateMusicStream(m);
         }
-        raylib::UpdateMusicStream(m);
-#endif
     }
 
     void draw_menu_buttons() {

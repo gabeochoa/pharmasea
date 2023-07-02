@@ -22,6 +22,7 @@ struct Entity;
 static std::shared_ptr<Entity> global_player;
 
 static bool ENABLE_MODELS = 0;
+static bool ENABLE_SOUND = 0;
 
 // TODO is there a way for us to move these to engine
 // and then let the game pass them in or something _while_ staying const?

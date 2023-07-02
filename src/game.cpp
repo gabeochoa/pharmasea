@@ -123,6 +123,9 @@ void process_dev_flags(char* argv[]) {
     if (cmdl[{"--models", "-m"}]) {
         ENABLE_MODELS = true;
     }
+    if (cmdl[{"--sound", "-s"}]) {
+        ENABLE_SOUND = true;
+    }
 #endif
 }
 
