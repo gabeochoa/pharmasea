@@ -138,6 +138,11 @@ inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
 }
 
 inline bool render_model_normal(std::shared_ptr<Entity> entity, float) {
+#if ENABLE_MODELS
+#else
+    return false;
+#endif
+
     if (entity->is_missing<ModelRenderer>()) return false;
 
     ModelRenderer& renderer = entity->get<ModelRenderer>();

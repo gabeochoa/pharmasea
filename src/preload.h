@@ -17,6 +17,7 @@
 
 // TODO turned off to speed up launch time
 #define ENABLE_SOUND 0
+#define ENABLE_MODELS 0
 
 inline raylib::Font load_karmina_regular() {
     auto font = font::LoadFont_KarminaRegular256();
@@ -36,7 +37,9 @@ struct Preload {
 
         load_fonts();
         load_textures();
+#if ENABLE_MODELS
         load_models();
+#endif
 
 #if ENABLE_SOUND
         ext::init_audio_device();

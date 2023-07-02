@@ -67,6 +67,7 @@ struct Item {
             return;
         }
 
+#if ENABLE_MODELS
         if (this->model().has_value()) {
             const auto sz = this->size();
             const auto m_sc = this->model_scale();
@@ -82,6 +83,10 @@ struct Item {
             raylib::DrawCube(position, this->size().x, this->size().y,
                              this->size().z, this->color);
         }
+#else
+        raylib::DrawCube(position, this->size().x, this->size().y,
+                         this->size().z, this->color);
+#endif
 
         if (this->held_item != nullptr && render_held_item) {
             this->held_item->render(false);
