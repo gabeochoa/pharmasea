@@ -116,6 +116,9 @@ inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
     ModelInfo model_info = renderer.model_info().value();
     Color base = ui::color::getHighlighted(WHITE /*this->base_color*/);
 
+    // TODO this is the exact same code as render_model_normal
+    // should be able to fix it
+
     float rotation_angle =
         // TODO make this api better
         180.f + static_cast<int>(transform.FrontFaceDirectionMap.at(
