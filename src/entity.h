@@ -605,12 +605,12 @@ template<typename I>
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
         });
     }
-    container->addComponent<Indexer>(2);
+    container->addComponent<Indexer>(magic_enum::enum_count<Pill::PillType>());
 
     container->addComponent<HasWork>().init(
         [](std::shared_ptr<Entity> owner, HasWork& hasWork,
            std::shared_ptr<Entity>, float dt) {
-            const float amt = 0.5f;
+            const float amt = 1.f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
                 owner->get<Indexer>().increment();

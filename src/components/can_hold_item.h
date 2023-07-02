@@ -17,6 +17,13 @@ struct CanHoldItem : public BaseComponent {
 
     void update(std::shared_ptr<Item> item,
                 Item::HeldBy newHB = Item::HeldBy::NONE) {
+        if (held_item != nullptr && !held_item->cleanup) {
+            log_warn(
+                "you are updating the held item to null, but the old one isnt "
+                "marked cleanup, this might be an issue if you are tring to "
+                "delete it");
+        }
+
         held_item = item;
         if (held_item) held_item->held_by = newHB;
     }

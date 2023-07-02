@@ -323,6 +323,7 @@ void process_is_container_and_should_update_item(std::shared_ptr<Entity> entity,
 
     // Delete the currently held item
     if (canHold.is_holding_item()) {
+        canHold.item()->cleanup = true;
         canHold.update(nullptr);
     }
 
