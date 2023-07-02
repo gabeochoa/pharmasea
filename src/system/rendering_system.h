@@ -177,7 +177,11 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
 
     vec3 text_position = {pos.x - (size.x / 2.f),     //
                           pos.y + (TILESIZE / 10.f),  //
-                          pos.z - (size.z / 5.f)};
+                          pos.z - (size.z / 3.f)};
+
+    vec3 number_position = {pos.x + (size.x / 3.f),
+                            pos.y + (TILESIZE / 5.f),  //
+                            pos.z + (size.z / 4.f)};
     // Top left text position
     // {pos.x - (size.x / 2.f),     //
     // pos.y + (TILESIZE / 20.f),  //
@@ -187,7 +191,7 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
     // TODO eventually we can detect the size to fit the text correctly
     // but thats more of an issue for translations since i can manually
     // place the english
-    auto fsize = 300.f;
+    auto fsize = 500.f;
 
     std::string title = entity->get<IsTriggerArea>().title();
     log_ifx(title.empty(), LogLevel::LOG_WARN,
@@ -198,7 +202,11 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
         raylib::WaveTextConfig waveConfig = {.waveRange = {0, 0, TILESIZE},
                                              .waveSpeed = {0, 0, 0.01f},
                                              .waveOffset = {0.f, 0.f, 0.2f}};
-        raylib::DrawTextWave3D(font, fmt::format("~~{}~~", title).c_str(),
+        // TODO we probably should have all of this kind of thing in the config
+        // for the components
+        //
+        raylib::DrawTextWave3D(font,
+                               fmt::format("~~{}~~", "Loading...").c_str(),
                                text_position, fsize,
                                4,                  // font spacing
                                4,                  // line spacing
@@ -213,13 +221,31 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
                            4,      // line spacing
                            false,  // backface
                            WHITE);
+
+        raylib::DrawText3D(
+            font,
+            fmt::format("{}/{}", ita.active_entrants(), ita.max_entrants())
+                .c_str(),
+            number_position,  //
+            fsize / 2.f,
+            4,                // font spacing
+            4,                // line spacing
+            false,            // backface
+            WHITE);
     }
 
     if (ita.progress() > 0.f) {
         // TODO switch to using a validated draw_cube
         DrawCubeCustom(
-            {pos.x, pos.y + (TILESIZE / 20.f), pos.z}, size.x, size.y,
-            size.z * ita.progress(),
+            {
+                (pos.x + ((size.x * ita.progress()) / 2.f)) -
+                    (size.x / 2.f),         //
+                pos.y + (TILESIZE / 20.f),  //
+                pos.z                       //
+            },
+            size.x * ita.progress(),        //
+            size.y,                         //
+            size.z,
             transform.FrontFaceDirectionMap.at(transform.face_direction()), RED,
             RED);
     }

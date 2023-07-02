@@ -168,7 +168,7 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
 }
 
 static void DrawFloatingText(const vec3& position, Font font, const char* text,
-                             Color color = BLACK) {
+                             int size = 96, Color color = BLACK) {
     rlPushMatrix();
     rlTranslatef(    //
         position.x,  //
@@ -186,7 +186,7 @@ static void DrawFloatingText(const vec3& position, Font font, const char* text,
     DrawText3D(      //
         font, text,  //
         {0.f},       //
-        96,          // font size
+        size,        // font size
         4,           // font spacing
         4,           // line spacing
         true,        // backface

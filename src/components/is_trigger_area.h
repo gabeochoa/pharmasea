@@ -9,6 +9,11 @@ struct IsTriggerArea : public BaseComponent {
     [[nodiscard]] bool should_wave() const {
         return has_min_matching_entrants();
     }
+
+    [[nodiscard]] int max_entrants() const { return wanted_entrants; }
+
+    [[nodiscard]] int active_entrants() const { return current_entrants; }
+
     [[nodiscard]] bool has_matching_entrants() const {
         return current_entrants == wanted_entrants;
     }
@@ -55,8 +60,8 @@ struct IsTriggerArea : public BaseComponent {
     }
 
    private:
-    int wanted_entrants;
-    int current_entrants;
+    int wanted_entrants = 1;
+    int current_entrants = 0;
     std::string _title;
     int max_title_length = 20;
 
