@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "../camera.h"
 #include "../components/uses_character_model.h"
 #include "../engine/log.h"
 #include "../engine/time.h"
@@ -256,6 +257,27 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
     render_simple_normal(entity, dt);
 }
 
+inline void render_speech_bubble(std::shared_ptr<Entity> entity, float dt) {
+    // Right now this is the only thing we can put in a bubble
+    if (entity->is_missing<CanHaveAilment>()) return;
+
+    const Transform& transform = entity->get<Transform>();
+    const vec3 position = transform.pos();
+
+    const CanHaveAilment& cha = entity->get<CanHaveAilment>();
+    auto ailment = cha.ailment();
+    if (!ailment) return;
+
+    GameCam cam = GLOBALS.get<GameCam>("game_cam");
+    raylib::Texture texture = TextureLibrary::get().get(ailment->icon_name());
+    raylib::DrawBillboard(cam.camera, texture,
+                          vec3{position.x,                      //
+                               position.y + (TILESIZE * 1.5f),  //
+                               position.z},                     //
+                          TILESIZE,                             //
+                          raylib::WHITE);
+}
+
 inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
     // Ghost player cant render during normal mode
     if (entity->has<CanBeGhostPlayer>() &&
@@ -275,6 +297,10 @@ inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
             render_simple_highlighted(entity, dt);
         }
         return;
+    }
+
+    if (entity->has<HasSpeechBubble>()) {
+        render_speech_bubble(entity, dt);
     }
 
     bool used = render_model_normal(entity, dt);

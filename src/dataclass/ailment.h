@@ -1,8 +1,11 @@
 #pragma once
 
+#include <array>
 #include <cmath>
 #include <set>
 #include <string>
+
+#include "../external_include.h"
 
 // modifies person behavior, applies debuffs/buffs
 // hide from players, but for dev porpoises(haha) having a blip near the person
@@ -61,6 +64,14 @@ struct Symptom {
             return *this;
         }
 
+       private:
+        friend bitsery::Access;
+        template<typename S>
+        void serialize(S& s) {
+            s.value4b(frequency);
+            s.value4b(strength);
+        }
+
     } config;
 
     bool operator<(const Symptom& sym) const { return config < sym.config; }
@@ -72,6 +83,13 @@ struct Symptom {
 
     void worsen() { ++config; }
     void heal() { --config; }
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.object(config);
+    }
 };
 
 struct Sneeze : public Symptom {};
@@ -100,7 +118,7 @@ struct Ailment {
             return 1.f;
         }();
         for (int i = 0; i < num_comorbids; i++) {
-            value *= comorbids[i].speed_multiplier();
+            value *= comorbids[i]->speed_multiplier();
         }
         return clamp(overall() * value);
     }
@@ -121,7 +139,7 @@ struct Ailment {
         }();
 
         for (int i = 0; i < num_comorbids; i++) {
-            value *= comorbids[i].stagger();
+            value *= comorbids[i]->stagger();
         }
 
         float clamped = clamp(overall() * value);
@@ -135,11 +153,11 @@ struct Ailment {
 
    protected:
     // affects all others, bigger than 1.0 is stronger [0.1, 10]
-    virtual float overall_mult() { return 1.0; }
+    float overall_mult() { return 1.0; }
 
    private:
     bool stagger_dir = false;
-    virtual float clamp(float val, float mn = 0.1f, float mx = 1.f) {
+    float clamp(float val, float mn = 0.1f, float mx = 1.f) {
         return fmaxf(mn, fminf(mx, val));
     }
 
@@ -166,22 +184,36 @@ struct Ailment {
     };
 
     struct Config {
-        std::string_view name = "ailment";
+        std::string name = "ailment";
         Type type = Type::None;
         Speed speed = Speed::Default;
         Stagger stagger = Stagger::None;
+
+       private:
+        friend bitsery::Access;
+        template<typename S>
+        void serialize(S& s) {
+            // TODO name constant
+            s.text1b(name, 20);
+            s.value4b(type);
+            s.value4b(speed);
+            s.value4b(stagger);
+        }
     } config;
 
-    std::set<Symptom> symptoms;
+    // TODO make 10 a constant
+    std::array<Symptom, 10> symptoms;
 
     // Note: btw idk why i didnt use a vector
 
     // These are other ailments that are caused by this ailment
-    Ailment* comorbids = nullptr;
+    // TODO make 10 a constant
+    std::array<std::shared_ptr<Ailment>, 10> comorbids;
     int num_comorbids = 0;
 
+    Ailment() {}
     explicit Ailment(const Config& opt) : config(opt) {}
-    virtual ~Ailment() {}
+    ~Ailment() {}
 
     std::string icon_name() const {
         switch (config.type) {
@@ -195,46 +227,57 @@ struct Ailment {
                 return "face";
         }
     }
-};
 
-struct TEST_MAX_AIL : public Ailment {
-    TEST_MAX_AIL()
-        : Ailment({
-              .name = "test_max_ailment",
-              .type = Ailment::Type::Test,
-              .speed = Ailment::Speed::Slow,
-              .stagger = Ailment::Stagger::Lots,
-          }) {}
-};
+    static Ailment* make_max_ailment() {
+        return new Ailment({
+            .name = "test_max_ailment",
+            .type = Ailment::Type::Test,
+            .speed = Ailment::Speed::Slow,
+            .stagger = Ailment::Stagger::Lots,
+        });
+    }
 
-struct Insomnia : public Ailment {
-    Insomnia()
-        : Ailment({
-              .name = "Insomnia",
-              .type = Ailment::Type::Insomnia,
-              .speed = Ailment::Speed::Okay,
-              .stagger = Ailment::Stagger::None,
-          }) {
-        symptoms.insert(Irritable());
-        symptoms.insert(Sleepy());
+    static Ailment* make_insomnia() {
+        auto ailment = new Ailment({
+            .name = "Insomnia",
+            .type = Ailment::Type::Insomnia,
+            .speed = Ailment::Speed::Okay,
+            .stagger = Ailment::Stagger::None,
+        });
+        ailment->symptoms[0] = (Irritable());
+        ailment->symptoms[1] = (Sleepy());
+        return ailment;
+    }
+
+    static Ailment* make_hooked() {
+        auto ailment = new Ailment({
+            .name = "Hooked!",
+            .type = Ailment::Type::Hooked,
+            .speed = Ailment::Speed::Default,
+            .stagger = Ailment::Stagger::Lots,
+        });
+        ailment->symptoms[0] = (Irritable());
+        ailment->symptoms[1] = (Sweaty());
+        ailment->symptoms[2] = (Hallucination());
+
+        ailment->num_comorbids = 1;
+        ailment->comorbids[0].reset(make_insomnia());
+        return ailment;
+    }
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.object(config);
+
+        s.value4b(num_comorbids);
+        s.container(comorbids);
+        s.container(symptoms);
     }
 };
 
-struct Hooked : public Ailment {
-    Hooked()
-        : Ailment({
-              .name = "Hooked!",
-              .type = Ailment::Type::Hooked,
-              .speed = Ailment::Speed::Default,
-              .stagger = Ailment::Stagger::Lots,
-          }) {
-        symptoms.insert(Irritable());
-        symptoms.insert(Sweaty());
-        symptoms.insert(Hallucination());
-
-        num_comorbids = 1;
-        comorbids = new Ailment[1]{Insomnia()};
-    }
-
-    ~Hooked() { delete[] comorbids; }
-};
+template<typename S>
+void serialize(S& s, std::shared_ptr<Ailment>& data) {
+    s.ext(data, bitsery::ext::StdSmartPtr{});
+}

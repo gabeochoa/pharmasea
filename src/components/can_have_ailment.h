@@ -13,9 +13,7 @@ struct CanHaveAilment : public BaseComponent {
     }
     [[nodiscard]] bool has_ailment() const { return ailment() != nullptr; }
 
-    void update(std::shared_ptr<Ailment> new_ailment) {
-        my_ailment = new_ailment;
-    }
+    void update(Ailment* new_ailment) { my_ailment.reset(new_ailment); }
 
    private:
     std::shared_ptr<Ailment> my_ailment;
@@ -24,7 +22,6 @@ struct CanHaveAilment : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        // TODO serialize this
-        // s.object(ailment);
+        s.ext(my_ailment, bitsery::ext::StdSmartPtr{});
     }
 };

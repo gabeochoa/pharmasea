@@ -21,6 +21,7 @@
 #include "components/has_client_id.h"
 #include "components/has_dynamic_model_name.h"
 #include "components/has_name.h"
+#include "components/has_speech_bubble.h"
 #include "components/has_waiting_queue.h"
 #include "components/has_work.h"
 #include "components/is_item_container.h"
@@ -192,31 +193,6 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 }
 }  // namespace bitsery
 
-// TODO from customer
-// std::optional<SpeechBubble> bubble;
-// struct SpeechBubble {
-// vec3 position;
-// // TODO we arent using any string functionality can we swap to const
-// char*?
-// // perhaps in a typedef?
-// std::string icon_tex_name;
-//
-// explicit SpeechBubble(std::string icon) : icon_tex_name(icon) {}
-//
-// void update(float, vec3 pos) { this->position = pos; }
-// void render() const {
-// GameCam cam = GLOBALS.get<GameCam>("game_cam");
-// raylib::Texture texture = TextureLibrary::get().get(icon_tex_name);
-// raylib::DrawBillboard(cam.camera, texture,
-// vec3{position.x,                      //
-// position.y + (TILESIZE * 1.5f),  //
-// position.z},                     //
-// TILESIZE,                             //
-// raylib::WHITE);
-// }
-// };
-//
-
 static void register_all_components() {
     Entity* entity = new Entity();
     entity->addAll<
@@ -227,7 +203,7 @@ static void register_all_components() {
         CanBeHeld, IsRotatable, CanGrabFromOtherFurniture, ConveysHeldItem,
         HasWaitingQueue, CanBeTakenFrom, IsItemContainer<Bag>,
         IsItemContainer<PillBottle>, UsesCharacterModel, ShowsProgressBar,
-        DebugName, HasDynamicModelName, IsTriggerArea>();
+        DebugName, HasDynamicModelName, IsTriggerArea, HasSpeechBubble>();
     delete entity;
 }
 
@@ -334,8 +310,9 @@ static Entity* make_customer(vec3 p) {
 
     customer->addComponent<HasName>().update(get_random_name());
 
-    customer->addComponent<CanHaveAilment>().update(
-        std::make_shared<Insomnia>());
+    customer->addComponent<CanHaveAilment>().update(Ailment::make_insomnia());
+
+    customer->addComponent<HasSpeechBubble>();
 
     customer->get<HasBaseSpeed>().update(10.f);
     customer->get<CanPerformJob>().update(WaitInQueue, Wandering);
@@ -539,6 +516,7 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
     conveyer->addComponent<ConveysHeldItem>();
     conveyer->addComponent<CanBeTakenFrom>();
 
+    // TODO we probably want this and grabber to be 100% the same
     conveyer->get<ModelRenderer>().update(ModelInfo{
         .model_name = "conveyer",
         .size_scale = 3.f,
