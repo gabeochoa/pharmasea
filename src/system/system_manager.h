@@ -129,8 +129,12 @@ struct SystemManager {
 
     void render_items(Items items, float) const {
         for (auto i : items) {
-            if (i) i->render();
-            if (!i) log_warn("we have invalid items");
+            if (!i) {
+                log_warn("we have invalid items");
+                continue;
+            }
+            if (i->cleanup) continue;
+            i->render();
         }
     }
 
