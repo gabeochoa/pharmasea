@@ -32,12 +32,12 @@ Info about the todo chart
 
 |needed to play once|in progress|blocked|done|
 |-------------------|-----------|-------|----|
-|In pause menu, remap key bindings in layer for arrows keys to choose options|diagetic UI to lobby screen|dropdown needs scrollbar when subwindow goes offscreen|pill bottle barrel|
-|BUG: if customer runs into someone you both get stuck|placeholder bottle pill filler|Support for "windows" or "modals" in ui framework|Magic Enum? https://github.com/Neargye/magic_enum|
-|WARN: need a way to warn that UI elements are offscreen "purpling"|Ability to do different shaders between gaming and menu|highlight furniture under selection|change UI from in world to render-to-texture|
-|BUG: Hide pause buttons from non-host since they dont really do anything anyway| | |Add ailments for customers|
-|BUG: When host opens settings, probably dont bring everyone else too| | |bag box to get paper bags from|
-|button hover state color change| | |Put all things that have to be loaded in a single place|
+| |diagetic UI to lobby screen|dropdown needs scrollbar when subwindow goes offscreen|pill bottle barrel|
+| |placeholder bottle pill filler|Support for "windows" or "modals" in ui framework|Magic Enum? https://github.com/Neargye/magic_enum|
+| |Ability to do different shaders between gaming and menu|highlight furniture under selection|change UI from in world to render-to-texture|
+| |Need a build system to output producuction build| |Add ailments for customers|
+| | | |bag box to get paper bags from|
+| | | |Put all things that have to be loaded in a single place|
 | | | |resolution switcher to settings page|
 | | | |Disallow target cube from going outside of bounds|
 | | | |Refactor Library to be more generic|

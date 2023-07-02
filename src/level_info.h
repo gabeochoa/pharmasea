@@ -85,7 +85,7 @@ struct helper {
             } break;
             case CUSTOMER: {
                 std::shared_ptr<Entity> customer;
-                customer.reset(make_customer(vec::to3(location), false));
+                customer.reset(make_customer(vec::to3(location)));
                 EntityHelper::addEntity(customer);
             } break;
             case GRABBERu: {

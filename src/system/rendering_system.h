@@ -259,9 +259,10 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
     render_simple_normal(entity, dt);
 }
 
-inline void render_speech_bubble(std::shared_ptr<Entity> entity, float dt) {
+inline void render_speech_bubble(std::shared_ptr<Entity> entity, float) {
     // Right now this is the only thing we can put in a bubble
     if (entity->is_missing<CanHaveAilment>()) return;
+    if (entity->get<HasSpeechBubble>().disabled()) return;
 
     const Transform& transform = entity->get<Transform>();
     const vec3 position = transform.pos();

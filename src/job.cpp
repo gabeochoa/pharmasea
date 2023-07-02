@@ -2,6 +2,7 @@
 #include "job.h"
 
 #include "components/can_perform_job.h"
+#include "components/has_speech_bubble.h"
 #include "components/has_waiting_queue.h"
 #include "engine/assert.h"
 #include "entity.h"
@@ -362,6 +363,10 @@ Job::State WaitInQueueJob::run_state_working_at_start(
 Job::State WaitInQueueJob::run_state_working_at_end(
     const std::shared_ptr<Entity>& entity, float) {
     VALIDATE(reg, "workingatend job should contain register");
+
+    // TODO safer way to do it?
+    // we are at the front so turn it on
+    entity->get<HasSpeechBubble>().on();
 
     CanHoldItem& regCHI = reg->get<CanHoldItem>();
 

@@ -29,22 +29,20 @@ kanban-plugin: basic
 
 ## want for mvp
 
-- [ ] Need a build system to output producuction build
 - [ ] Add system for exporting resources to code for easier binary packaging ([see branch packager](https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html))
 - [ ] Add a pause menu with textual options
 - [ ] Create Doors
 - [ ] Add "powered by raylib" intro card (and other intro cards) like cat v roomba: https://github.com/raysan5/raylib-games/tree/master/cat_vs_roomba/src
 - [ ] Better settings page
+- [ ] WARN: need a way to warn that UI elements are offscreen "purpling"
+- [ ] button hover state color change
+- [ ] BUG: When host opens settings, probably dont bring everyone else too
+- [ ] BUG: Hide pause buttons from non-host since they dont really do anything anyway
+- [ ] In pause menu, remap key bindings in layer for arrows keys to choose options
 
 
 ## needed to play once
 
-- [ ] In pause menu, remap key bindings in layer for arrows keys to choose options
-- [ ] BUG: if customer runs into someone you both get stuck
-- [ ] WARN: need a way to warn that UI elements are offscreen "purpling"
-- [ ] BUG: Hide pause buttons from non-host since they dont really do anything anyway
-- [ ] BUG: When host opens settings, probably dont bring everyone else too
-- [ ] button hover state color change
 
 
 ## in progress
@@ -52,6 +50,7 @@ kanban-plugin: basic
 - [ ] diagetic UI to lobby screen
 - [ ] placeholder bottle pill filler
 - [ ] Ability to do different shaders between gaming and menu
+- [ ] Need a build system to output producuction build
 
 
 ## blocked

@@ -6,6 +6,7 @@
 #include "drawing_util.h"
 #include "engine/statemanager.h"
 
+// TODO day night cycle
 struct Round {
     float currentRoundTime;
     float totalRoundTime;
