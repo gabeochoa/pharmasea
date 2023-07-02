@@ -610,13 +610,14 @@ template<typename I>
     container->addComponent<HasWork>().init(
         [](std::shared_ptr<Entity> owner, HasWork& hasWork,
            std::shared_ptr<Entity>, float dt) {
-            const float amt = 1.f;
+            const float amt = 2.f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
                 owner->get<Indexer>().increment();
                 hasWork.reset_pct();
             }
         });
+    container->addComponent<ShowsProgressBar>();
     return container;
 }
 
