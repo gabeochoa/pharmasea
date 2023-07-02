@@ -24,6 +24,7 @@
 #include "components/has_speech_bubble.h"
 #include "components/has_waiting_queue.h"
 #include "components/has_work.h"
+#include "components/indexer.h"
 #include "components/is_item_container.h"
 #include "components/is_rotatable.h"
 #include "components/is_snappable.h"
@@ -195,16 +196,16 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 
 static void register_all_components() {
     Entity* entity = new Entity();
-    entity->addAll<Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
-                   CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
-                   CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
-                   CanHaveAilment, CustomHeldItemPosition, HasWork,
-                   HasBaseSpeed, IsSolid, CanBeHeld, IsRotatable,
-                   CanGrabFromOtherFurniture, ConveysHeldItem, HasWaitingQueue,
-                   CanBeTakenFrom, IsItemContainer<Bag>,
-                   IsItemContainer<PillBottle>, IsItemContainer<Pill>,
-                   UsesCharacterModel, ShowsProgressBar, DebugName,
-                   HasDynamicModelName, IsTriggerArea, HasSpeechBubble>();
+    entity->addAll<
+        Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
+        CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
+        CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
+        CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid,
+        CanBeHeld, IsRotatable, CanGrabFromOtherFurniture, ConveysHeldItem,
+        HasWaitingQueue, CanBeTakenFrom, IsItemContainer<Bag>,
+        IsItemContainer<PillBottle>, IsItemContainer<Pill>, UsesCharacterModel,
+        ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
+        HasSpeechBubble, Indexer>();
     delete entity;
 }
 
@@ -604,6 +605,8 @@ template<typename I>
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
         });
     }
+    container->addComponent<Indexer>(2);
+
     container->addComponent<HasWork>().init(
         [](std::shared_ptr<Entity> owner, HasWork& hasWork,
            std::shared_ptr<Entity>, float dt) {
@@ -612,7 +615,7 @@ template<typename I>
             const float amt = 0.5f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
-                // owner->get<Indexer>().increment();
+                owner->get<Indexer>().increment();
                 hasWork.reset_pct();
             }
         });

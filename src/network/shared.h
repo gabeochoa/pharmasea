@@ -25,7 +25,8 @@ struct PolymorphicBaseClass<BaseComponent>
           ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom,
           IsItemContainer<Bag>, IsItemContainer<PillBottle>,
           IsItemContainer<Pill>, UsesCharacterModel, ShowsProgressBar,
-          DebugName, HasDynamicModelName, IsTriggerArea, HasSpeechBubble> {};
+          DebugName, HasDynamicModelName, IsTriggerArea, HasSpeechBubble,
+          Indexer> {};
 // If you add anything here ^^ then you should add that component to
 // register_all_components in entity.h
 
