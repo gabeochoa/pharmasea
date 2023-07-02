@@ -25,8 +25,10 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float);
 template<typename I>
 void backfill_empty_container(std::shared_ptr<Entity> entity);
 
-void process_is_container_and_should_backfill_item(
-    std::shared_ptr<Entity> entity, float);
+void process_is_container_and_should_backfill_item(std::shared_ptr<Entity>,
+                                                   float);
+void process_is_container_and_should_update_item(std::shared_ptr<Entity>,
+                                                 float);
 
 void handle_autodrop_furniture_when_exiting_planning(
     const std::shared_ptr<Entity>& entity);
@@ -186,6 +188,8 @@ struct SystemManager {
             system_manager::process_conveyer_items(entity, dt);
             system_manager::process_is_container_and_should_backfill_item(
                 entity, dt);
+            system_manager::process_is_container_and_should_update_item(entity,
+                                                                        dt);
         }
     }
 

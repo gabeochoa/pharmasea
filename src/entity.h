@@ -610,8 +610,6 @@ template<typename I>
     container->addComponent<HasWork>().init(
         [](std::shared_ptr<Entity> owner, HasWork& hasWork,
            std::shared_ptr<Entity>, float dt) {
-            // TODO eventually we need it to decide whether it has work
-            // based on the current held item
             const float amt = 0.5f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {

@@ -311,6 +311,28 @@ void process_is_container_and_should_backfill_item(
                                    entity->get<Indexer>().value());
 }
 
+void process_is_container_and_should_update_item(std::shared_ptr<Entity> entity,
+                                                 float) {
+    if (entity->is_missing<Indexer>()) return;
+    auto& indexer = entity->get<Indexer>();
+    // user didnt change the index so we are good to wait
+    if (indexer.value_same_as_last_render()) return;
+
+    if (entity->is_missing<CanHoldItem>()) return;
+    CanHoldItem& canHold = entity->get<CanHoldItem>();
+
+    // Delete the currently held item
+    if (canHold.is_holding_item()) {
+        canHold.update(nullptr);
+    }
+
+    auto pos = entity->get<Transform>().as2();
+    auto color = Color({255, 15, 240, 255});
+
+    backfill_empty_container<Pill>(entity, pos, color, indexer.value());
+    indexer.mark_change_completed();
+}
+
 void handle_autodrop_furniture_when_exiting_planning(
     const std::shared_ptr<Entity>& entity) {
     if (entity->is_missing<CanHoldFurniture>()) return;
