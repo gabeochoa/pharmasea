@@ -241,17 +241,17 @@ static void add_person_components(Entity* person) {
 
     person->addComponent<HasBaseSpeed>().update(10.f);
 
-#if ENABLE_MODELS
-    // TODO why do we need the update() here?
-    person->addComponent<ModelRenderer>().update(ModelInfo{
-        .model_name = "character_duck",
-        .size_scale = 1.5f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 180,
-    });
-#else
-    person->addComponent<SimpleColoredBoxRenderer>().update(RED, PINK);
-#endif
+    if (ENABLE_MODELS) {
+        // TODO why do we need the update() here?
+        person->addComponent<ModelRenderer>().update(ModelInfo{
+            .model_name = "character_duck",
+            .size_scale = 1.5f,
+            .position_offset = vec3{0, 0, 0},
+            .rotation_angle = 180,
+        });
+    } else {
+        person->addComponent<SimpleColoredBoxRenderer>().update(RED, PINK);
+    }
 
     person->addComponent<UsesCharacterModel>();
 }
@@ -342,9 +342,9 @@ static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
     // For renderers we prioritize the ModelRenderer and will fall back if we
     // need
     furniture->addComponent<SimpleColoredBoxRenderer>().update(face, base);
-#if ENABLE_MODELS
-    furniture->addComponent<ModelRenderer>();
-#endif
+    if (ENABLE_MODELS) {
+        furniture->addComponent<ModelRenderer>();
+    }
 
     // we need to add it to set a default, so its here
     furniture->addComponent<CustomHeldItemPosition>().init(
@@ -501,15 +501,15 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
     conveyer->addComponent<ConveysHeldItem>();
     conveyer->addComponent<CanBeTakenFrom>();
 
-#if ENABLE_MODELS
-    // TODO we probably want this and grabber to be 100% the same
-    conveyer->get<ModelRenderer>().update(ModelInfo{
-        .model_name = "conveyer",
-        .size_scale = 3.f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 90.f,
-    });
-#endif
+    if (ENABLE_MODELS) {
+        // TODO we probably want this and grabber to be 100% the same
+        conveyer->get<ModelRenderer>().update(ModelInfo{
+            .model_name = "conveyer",
+            .size_scale = 3.f,
+            .position_offset = vec3{0, 0, 0},
+            .rotation_angle = 90.f,
+        });
+    }
 
     return conveyer;
 }
@@ -523,14 +523,14 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
         CustomHeldItemPosition::Positioner::Conveyer);
     grabber->addComponent<CanBeTakenFrom>();
 
-#if ENABLE_MODELS
-    grabber->get<ModelRenderer>().update(ModelInfo{
-        .model_name = "conveyer",
-        .size_scale = 3.f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 90.f,
-    });
-#endif
+    if (ENABLE_MODELS) {
+        grabber->get<ModelRenderer>().update(ModelInfo{
+            .model_name = "conveyer",
+            .size_scale = 3.f,
+            .position_offset = vec3{0, 0, 0},
+            .rotation_angle = 90.f,
+        });
+    }
     grabber->addComponent<ConveysHeldItem>();
     grabber->addComponent<CanGrabFromOtherFurniture>();
     return grabber;
@@ -542,13 +542,13 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
                                  ui::color::grey, ui::color::grey);
     reg->addComponent<HasWaitingQueue>();
 
-#if ENABLE_MODELS
-    reg->get<ModelRenderer>().update(ModelInfo{
-        .model_name = "register",
-        .size_scale = 10.f,
-        .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-    });
-#endif
+    if (ENABLE_MODELS) {
+        reg->get<ModelRenderer>().update(ModelInfo{
+            .model_name = "register",
+            .size_scale = 10.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        });
+    }
     return reg;
 }
 
@@ -564,29 +564,29 @@ template<typename I>
 [[nodiscard]] static Entity* make_bagbox(vec2 pos) {
     Entity* container = entities::make_itemcontainer<Bag>(pos);
 
-#if ENABLE_MODELS
-    container->get<ModelRenderer>().update(ModelInfo{
-        .model_name = "box",
-        .size_scale = 4.f,
-        .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-    });
+    if (ENABLE_MODELS) {
+        container->get<ModelRenderer>().update(ModelInfo{
+            .model_name = "box",
+            .size_scale = 4.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        });
 
-    container->addComponent<HasDynamicModelName>().init(
-        "box", HasDynamicModelName::DynamicType::OpenClosed);
-#endif
+        container->addComponent<HasDynamicModelName>().init(
+            "box", HasDynamicModelName::DynamicType::OpenClosed);
+    }
 
     return container;
 }
 
 [[nodiscard]] static Entity* make_medicine_cabinet(vec2 pos) {
     Entity* container = entities::make_itemcontainer<PillBottle>(pos);
-#if ENABLE_MODELS
-    container->get<ModelRenderer>().update(ModelInfo{
-        .model_name = "medicine_cabinet",
-        .size_scale = 2.f,
-        .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-    });
-#endif
+    if (ENABLE_MODELS) {
+        container->get<ModelRenderer>().update(ModelInfo{
+            .model_name = "medicine_cabinet",
+            .size_scale = 2.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        });
+    }
     return container;
 }
 

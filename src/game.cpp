@@ -13,9 +13,13 @@
 // TODO find a way to enable this in the compiler so we dont have to do this
 #define ENABLE_TRACING 1
 #include "engine/tracy.h"
-//
+
+#define ENABLE_DEV_FLAGS 1
 
 #include "external_include.h"
+#if ENABLE_DEV_FLAGS
+#include <argh.h>
+#endif
 
 ///
 #include "globals.h"
@@ -113,7 +117,18 @@ int setup_multiplayer_test(bool is_host = false) {
     return 0;
 }
 
+void process_dev_flags(char* argv[]) {
+#if ENABLE_DEV_FLAGS
+    argh::parser cmdl(argv);
+    if (cmdl[{"--models", "-m"}]) {
+        ENABLE_MODELS = true;
+    }
+#endif
+}
+
 int main(int argc, char* argv[]) {
+    process_dev_flags(argv);
+
     tests::run_all();
     std::cout << "All tests ran " << std::endl;
 

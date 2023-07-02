@@ -67,26 +67,26 @@ struct Item {
             return;
         }
 
-#if ENABLE_MODELS
-        if (this->model().has_value()) {
-            const auto sz = this->size();
-            const auto m_sc = this->model_scale();
-            const vec3 scale = {
-                sz.x * m_sc.x,
-                sz.y * m_sc.y,
-                sz.z * m_sc.z,
-            };
-            raylib::DrawModelEx(this->model().value(), this->position,
-                                {0, 1.f, 0}, 0 /* rotation angle */, scale,
-                                ui::color::white);
+        if (ENABLE_MODELS) {
+            if (this->model().has_value()) {
+                const auto sz = this->size();
+                const auto m_sc = this->model_scale();
+                const vec3 scale = {
+                    sz.x * m_sc.x,
+                    sz.y * m_sc.y,
+                    sz.z * m_sc.z,
+                };
+                raylib::DrawModelEx(this->model().value(), this->position,
+                                    {0, 1.f, 0}, 0 /* rotation angle */, scale,
+                                    ui::color::white);
+            } else {
+                raylib::DrawCube(position, this->size().x, this->size().y,
+                                 this->size().z, this->color);
+            }
         } else {
             raylib::DrawCube(position, this->size().x, this->size().y,
                              this->size().z, this->color);
         }
-#else
-        raylib::DrawCube(position, this->size().x, this->size().y,
-                         this->size().z, this->color);
-#endif
 
         if (this->held_item != nullptr && render_held_item) {
             this->held_item->render(false);
