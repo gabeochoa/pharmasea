@@ -143,8 +143,8 @@ struct Ailment {
         }
 
         float clamped = clamp(overall() * value);
-        float mult = stagger_dir ? 1.5f : 0.5f;
-        stagger_dir = !stagger_dir;
+        float mult = (stagger_dir % 5 == 0) ? 10.f : 0.f;
+        stagger_dir = (stagger_dir + 1) % 100;
         return mult * clamped;
     }
 
@@ -156,7 +156,7 @@ struct Ailment {
     float overall_mult() { return 1.0; }
 
    private:
-    bool stagger_dir = false;
+    int stagger_dir = 0;
     float clamp(float val, float mn = 0.1f, float mx = 1.f) {
         return fmaxf(mn, fminf(mx, val));
     }

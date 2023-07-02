@@ -166,22 +166,28 @@ void Job::travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
 
     const auto _move_toward_local_target = [this, entity, dt]() {
         // TODO forcing get<HasBaseSpeed> to crash here
-        float speed = entity->get<HasBaseSpeed>().speed() * dt;
+        float base_speed = entity->get<HasBaseSpeed>().speed();
 
-        // TODO Turning off stagger stuff for easier development
-        // handle these once normal movement is working
-        if (0) {
-            float speed_multiplier = 1.f;
-            float stagger_multiplier = 0.f;
-            if (entity->has<CanHaveAilment>()) {
-                const CanHaveAilment& cha = entity->get<CanHaveAilment>();
-                stagger_multiplier = cha.ailment()->stagger();
-                speed_multiplier = cha.ailment()->speed_multiplier();
-            }
+        if (entity->has<CanHaveAilment>()) {
+            const CanHaveAilment& cha = entity->get<CanHaveAilment>();
 
-            if (speed_multiplier != 0) speed *= speed_multiplier;
-            if (stagger_multiplier != 0) speed *= stagger_multiplier;
+            float speed_multiplier = cha.ailment()->speed_multiplier();
+            if (speed_multiplier != 0) base_speed *= speed_multiplier;
+
+            // TODO Turning off stagger; couple problems
+            // - configuration is hard to reason about and mess with
+            // - i really want it to cause them to move more, maybe we place
+            // this in the path generation or something isntead?
+            //
+            // float stagger_multiplier = cha.ailment()->stagger(); if
+            // (stagger_multiplier != 0) base_speed *= stagger_multiplier;
+
+            base_speed = fmaxf(1.f, base_speed);
+            // log_info("multiplier {} {} {}", speed_multiplier,
+            // stagger_multiplier, base_speed);
         }
+
+        float speed = base_speed * dt;
 
         Transform& transform = entity->get<Transform>();
 

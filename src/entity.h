@@ -305,12 +305,15 @@ static Entity* make_aiperson(vec3 p) {
     return person;
 }
 
-static Entity* make_customer(vec3 p) {
+static Entity* make_customer(vec3 p, bool has_ailment = true) {
     Entity* customer = make_aiperson(p);
 
     customer->addComponent<HasName>().update(get_random_name());
 
-    customer->addComponent<CanHaveAilment>().update(Ailment::make_insomnia());
+    // TODO for now, eventually move to customer spawner
+    if (has_ailment)
+        customer->addComponent<CanHaveAilment>().update(
+            Ailment::make_insomnia());
 
     customer->addComponent<HasSpeechBubble>();
 
