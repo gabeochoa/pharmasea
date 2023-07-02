@@ -160,6 +160,11 @@ struct Preload {
                 .filename = "character_duck.gltf",
                 .libraryname = "character_duck",
             },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "crate.obj",
+                .libraryname = "crate",
+            },
         };
 
         for (const auto& m : models) {

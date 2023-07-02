@@ -47,6 +47,7 @@ const char GRABBERd = 'v';
 
 const char BAGBOX = 'B';
 const char MED_CAB = 'M';
+const char PILL_DISP = 'P';
 
 struct helper {
     std::vector<std::string> lines;
@@ -126,6 +127,12 @@ struct helper {
             case MED_CAB: {
                 std::shared_ptr<Entity> e;
                 e.reset(entities::make_medicine_cabinet(location));
+                EntityHelper::addEntity(e);
+                return;
+            } break;
+            case PILL_DISP: {
+                std::shared_ptr<Entity> e;
+                e.reset(entities::make_pill_dispenser(location));
                 EntityHelper::addEntity(e);
                 return;
             } break;
@@ -335,7 +342,7 @@ struct GameMapInfo : public LevelInfo {
 #####################
 #...................#
 #.....t.............#
-#....@R.............#
+#P...@R.............#
 #B....t.............#
 #M....t...0.........#
 #.....t.............#

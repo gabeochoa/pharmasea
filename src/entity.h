@@ -195,15 +195,16 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 
 static void register_all_components() {
     Entity* entity = new Entity();
-    entity->addAll<
-        Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
-        CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
-        CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
-        CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid,
-        CanBeHeld, IsRotatable, CanGrabFromOtherFurniture, ConveysHeldItem,
-        HasWaitingQueue, CanBeTakenFrom, IsItemContainer<Bag>,
-        IsItemContainer<PillBottle>, UsesCharacterModel, ShowsProgressBar,
-        DebugName, HasDynamicModelName, IsTriggerArea, HasSpeechBubble>();
+    entity->addAll<Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
+                   CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
+                   CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
+                   CanHaveAilment, CustomHeldItemPosition, HasWork,
+                   HasBaseSpeed, IsSolid, CanBeHeld, IsRotatable,
+                   CanGrabFromOtherFurniture, ConveysHeldItem, HasWaitingQueue,
+                   CanBeTakenFrom, IsItemContainer<Bag>,
+                   IsItemContainer<PillBottle>, IsItemContainer<Pill>,
+                   UsesCharacterModel, ShowsProgressBar, DebugName,
+                   HasDynamicModelName, IsTriggerArea, HasSpeechBubble>();
     delete entity;
 }
 
@@ -587,6 +588,28 @@ template<typename I>
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
         });
     }
+    return container;
+}
+
+[[nodiscard]] static Entity* make_pill_dispenser(vec2 pos) {
+    // TODO when making a new itemcontainer, it silently creates a new component
+    // and then youll get a polymorphism error, probably need something
+    Entity* container = entities::make_itemcontainer<Pill>(pos);
+    if (ENABLE_MODELS) {
+        container->get<ModelRenderer>().update(ModelInfo{
+            .model_name = "crate",
+            .size_scale = 2.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        });
+    }
+    container->addComponent<HasWork>().init(
+        [](HasWork& hasWork, std::shared_ptr<Entity>, float dt) {
+            // TODO eventually we need it to decide whether it has work
+            // based on the current held item
+            const float amt = 0.5f;
+            hasWork.increase_pct(amt * dt);
+            if (hasWork.is_work_complete()) hasWork.reset_pct();
+        });
     return container;
 }
 
