@@ -369,14 +369,15 @@ static Entity* make_table(vec2 pos) {
     table->get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);
 
-    table->addComponent<HasWork>().init(
-        [](HasWork& hasWork, std::shared_ptr<Entity>, float dt) {
-            // TODO eventually we need it to decide whether it has work
-            // based on the current held item
-            const float amt = 0.5f;
-            hasWork.increase_pct(amt * dt);
-            if (hasWork.is_work_complete()) hasWork.reset_pct();
-        });
+    table->addComponent<HasWork>().init([](std::shared_ptr<Entity>,
+                                           HasWork& hasWork,
+                                           std::shared_ptr<Entity>, float dt) {
+        // TODO eventually we need it to decide whether it has work
+        // based on the current held item
+        const float amt = 0.5f;
+        hasWork.increase_pct(amt * dt);
+        if (hasWork.is_work_complete()) hasWork.reset_pct();
+    });
     table->addComponent<ShowsProgressBar>();
     return table;
 }
@@ -387,7 +388,8 @@ static Entity* make_character_switcher(vec2 pos) {
                                  pos, ui::color::green, ui::color::yellow);
 
     character_switcher->addComponent<HasWork>().init(
-        [](HasWork& hasWork, std::shared_ptr<Entity> person, float dt) {
+        [](std::shared_ptr<Entity>, HasWork& hasWork,
+           std::shared_ptr<Entity> person, float dt) {
             if (person->is_missing<UsesCharacterModel>()) return;
             UsesCharacterModel& usesCharacterModel =
                 person->get<UsesCharacterModel>();
@@ -603,12 +605,16 @@ template<typename I>
         });
     }
     container->addComponent<HasWork>().init(
-        [](HasWork& hasWork, std::shared_ptr<Entity>, float dt) {
+        [](std::shared_ptr<Entity> owner, HasWork& hasWork,
+           std::shared_ptr<Entity>, float dt) {
             // TODO eventually we need it to decide whether it has work
             // based on the current held item
             const float amt = 0.5f;
             hasWork.increase_pct(amt * dt);
-            if (hasWork.is_work_complete()) hasWork.reset_pct();
+            if (hasWork.is_work_complete()) {
+                // owner->get<Indexer>().increment();
+                hasWork.reset_pct();
+            }
         });
     return container;
 }

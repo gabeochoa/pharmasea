@@ -343,7 +343,7 @@ inline void work_furniture(const std::shared_ptr<Entity> player,
     if (!match) return;
 
     HasWork& hasWork = match->get<HasWork>();
-    if (hasWork.do_work) hasWork.do_work(hasWork, player, frame_dt);
+    if (hasWork.do_work) hasWork.do_work(match, hasWork, player, frame_dt);
 }
 
 inline void handle_drop(const std::shared_ptr<Entity>& player) {
