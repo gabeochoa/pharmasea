@@ -115,7 +115,6 @@ inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
     Transform& transform = entity->get<Transform>();
 
     ModelInfo model_info = renderer.model_info().value();
-    Color base = ui::color::getHighlighted(Color{0, 0, 0, 0});
 
     // TODO this is the exact same code as render_model_normal
     // should be able to fix it
