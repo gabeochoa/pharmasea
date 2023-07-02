@@ -30,7 +30,7 @@ CXX := clang++
 
 
 all: $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea && ./pharmasea -d
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea && ./pharmasea -S
 
 mp: $(H_FILES) $(OBJ_FILES) 
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea && ./pharmasea test host > host_log & sleep 5;./pharmasea test client

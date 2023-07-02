@@ -120,17 +120,27 @@ int setup_multiplayer_test(bool is_host = false) {
 void process_dev_flags(char* argv[]) {
 #if ENABLE_DEV_FLAGS
     argh::parser cmdl(argv);
+
+    if (cmdl[{"--disable-all", "-d"}]) {
+        ENABLE_MODELS = false;
+        ENABLE_SOUND = false;
+    }
+
     if (cmdl[{"--models", "-m"}]) {
+        ENABLE_MODELS = true;
+    }
+
+    if (cmdl[{"--disable-models", "-M"}]) {
         ENABLE_MODELS = true;
     }
     if (cmdl[{"--sound", "-s"}]) {
         ENABLE_SOUND = true;
     }
 
-    if (cmdl[{"--disable-all", "-d"}]) {
-        ENABLE_MODELS = false;
+    if (cmdl[{"--disable-sound", "-S"}]) {
         ENABLE_SOUND = false;
     }
+
 #endif
 }
 
