@@ -618,6 +618,8 @@ template<typename I>
             }
         });
     container->addComponent<ShowsProgressBar>();
+    container->get<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::Table);
     return container;
 }
 

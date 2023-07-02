@@ -115,7 +115,7 @@ inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
     Transform& transform = entity->get<Transform>();
 
     ModelInfo model_info = renderer.model_info().value();
-    Color base = ui::color::getHighlighted(WHITE /*this->base_color*/);
+    Color base = ui::color::getHighlighted(Color{0, 0, 0, 0});
 
     // TODO this is the exact same code as render_model_normal
     // should be able to fix it
@@ -132,7 +132,7 @@ inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
                     transform.pos().z + model_info.position_offset.z,
                 },
                 vec3{0.f, 1.f, 0.f}, model_info.rotation_angle + rotation_angle,
-                transform.size() * model_info.size_scale, base);
+                transform.size() * model_info.size_scale, GRAY);
 
     return true;
 }
