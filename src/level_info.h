@@ -31,6 +31,136 @@ static void generate_and_insert_walls(std::string /* seed */) {
     }
 }
 
+namespace generation {
+
+const char WALL = '#';
+const char EMPTY = '.';
+const char ORIGIN = '0';
+const char CUSTOMER = 'C';
+const char REGISTER = 'R';
+const char TABLE = 't';
+
+const char GRABBERu = '^';
+const char GRABBERl = '<';
+const char GRABBERr = '>';
+const char GRABBERd = 'v';
+
+const char BAGBOX = 'B';
+const char MED_CAB = 'M';
+
+struct helper {
+    std::vector<std::string> lines;
+
+    helper(const std::vector<std::string>& l) : lines(l) {}
+
+    void generate() {
+        vec2 origin = find_origin();
+
+        for (int i = 0; i < (int) lines.size(); i++) {
+            auto line = lines[i];
+            for (int j = 0; j < (int) line.size(); j++) {
+                vec2 raw_location = vec2{i * TILESIZE, j * TILESIZE};
+                vec2 location = raw_location - origin;
+                auto ch = get_char(i, j);
+                generate_entity_from_character(ch, location);
+            }
+        }
+    }
+
+    void generate_entity_from_character(char ch, vec2 location) {
+        switch (ch) {
+            case EMPTY:
+                return;
+            case REGISTER: {
+                std::shared_ptr<Furniture> reg;
+                reg.reset(entities::make_register(location));
+                EntityHelper::addEntity(reg);
+            } break;
+            case WALL: {
+                std::shared_ptr<Entity> e;
+                const auto d_color = (Color){155, 75, 0, 255};
+                e.reset(entities::make_wall(location, d_color));
+                EntityHelper::addEntity(e);
+                return;
+            } break;
+            case CUSTOMER: {
+                std::shared_ptr<Entity> customer;
+                customer.reset(make_customer(vec::to3(location), false));
+                EntityHelper::addEntity(customer);
+            } break;
+            case GRABBERu: {
+                std::shared_ptr<Entity> grabber;
+                grabber.reset(entities::make_grabber(location));
+                EntityHelper::addEntity(grabber);
+            } break;
+            case GRABBERl: {
+                std::shared_ptr<Entity> grabber;
+                grabber.reset(entities::make_grabber(location));
+                grabber->get<Transform>().rotate_facing_clockwise(270);
+                EntityHelper::addEntity(grabber);
+            } break;
+            case GRABBERr: {
+                std::shared_ptr<Entity> grabber;
+                grabber.reset(entities::make_grabber(location));
+                grabber->get<Transform>().rotate_facing_clockwise(90);
+                EntityHelper::addEntity(grabber);
+            } break;
+            case GRABBERd: {
+                std::shared_ptr<Entity> grabber;
+                grabber.reset(entities::make_grabber(location));
+                grabber->get<Transform>().rotate_facing_clockwise(180);
+                EntityHelper::addEntity(grabber);
+            } break;
+            case TABLE: {
+                std::shared_ptr<Entity> e;
+                e.reset(entities::make_table(location));
+                EntityHelper::addEntity(e);
+                return;
+            } break;
+            case BAGBOX: {
+                std::shared_ptr<Entity> e;
+                e.reset(entities::make_bagbox(location));
+                EntityHelper::addEntity(e);
+                return;
+            } break;
+            case MED_CAB: {
+                std::shared_ptr<Entity> e;
+                e.reset(entities::make_medicine_cabinet(location));
+                EntityHelper::addEntity(e);
+                return;
+            } break;
+            default: {
+                log_warn("Found character we dont parse in string {}", ch);
+            } break;
+        };
+    }
+
+    inline vec2 find_origin() {
+        vec2 origin{0.0, 0.0};
+        for (int i = 0; i < (int) lines.size(); i++) {
+            auto line = lines[i];
+            for (int j = 0; j < (int) line.size(); j++) {
+                auto ch = line[j];
+                if (ch == '0') {
+                    origin = vec2{j * TILESIZE, i * TILESIZE};
+                    break;
+                }
+            }
+        }
+        return origin;
+    }
+
+    inline char get_char(int i, int j) {
+        if (i < 0) return '.';
+        if (j < 0) return '.';
+        if (i >= (int) lines.size()) return '.';
+        if (j >= (int) lines[i].size()) return '.';
+        return lines[i][j];
+    }
+};
+
+}  // namespace generation
+
 struct LevelInfo {
     bool was_generated = false;
 
@@ -201,6 +331,28 @@ struct GameMapInfo : public LevelInfo {
         server_entities_DO_NOT_USE.clear();
         server_items_DO_NOT_USE.clear();
 
+        const std::string EXAMPLE_MAP = R"(
+#####################
+#...................#
+#.....t.............#
+#....@R.............#
+#B....t.............#
+#M....t...0.........#
+#.....t.............#
+#.....t.............#
+###########.....#####
+#...................#
+#..>v.....#.........#
+#..^v.....#.........#
+#..^v.....#..CC.....#
+#..^<.....#.........#
+#######.#############)";
+
+        auto lines = util::split_string(EXAMPLE_MAP, "\n");
+        generation::helper helper(lines);
+        helper.generate();
+
+        /*
         auto generate_conveyer_test = []() {
             auto location = vec2{-5, 0};
             for (int i = 0; i < 5; i++) {
@@ -345,6 +497,7 @@ struct GameMapInfo : public LevelInfo {
         generate_register();
         generate_customer();
         generate_test();
+        */
 
         EntityHelper::invalidatePathCache();
     }
