@@ -120,7 +120,7 @@ struct Item {
 
     // TODO maybe use tl::expected for this?
     virtual bool eat(std::shared_ptr<Item> item) {
-        if (!can_eat(item)) return false;
+        if (!evaluate_eat_request(item)) return false;
 
         this->held_item = item;
         item->held_by = Item::HeldBy::ITEM;
@@ -128,7 +128,7 @@ struct Item {
         return true;
     }
 
-    virtual bool can_eat(std::shared_ptr<Item> item) {
+    bool evaluate_eat_request(std::shared_ptr<Item> item) {
         if (!has_holding_ability()) {
             log_info("cant eat because we cant hold things");
             return false;
@@ -144,11 +144,12 @@ struct Item {
             log_info("cant put an item into because we are full");
             return false;
         }
-        // TODO we will eventually need a way to validate the kinds of items
-        // this ItemContainer can hold
-        return true;
+        auto can_eat_check = can_eat(item);
+        if (!can_eat_check) log_info("failed can_eat() check");
+        return can_eat_check;
     }
 
+    virtual bool can_eat(std::shared_ptr<Item>) const { return false; }
     virtual bool has_holding_ability() const { return false; }
 
     virtual bool empty() const {
@@ -225,6 +226,13 @@ struct PillBottle : public Item {
 
     virtual vec3 model_scale() const override { return {3.f, 3.0f, 3.f}; }
 
+    virtual bool has_holding_ability() const override { return true; }
+
+    virtual bool can_eat(std::shared_ptr<Item> item) const override {
+        auto pill = dynamic_pointer_cast<Pill>(item);
+        return !!(pill);
+    }
+
     virtual std::optional<raylib::Model> model() const override {
         // TODO handle empty vs full
         return ModelLibrary::get().get("pill_bottle");
@@ -245,6 +253,10 @@ struct Bag : public Item {
     Bag(vec2 p, Color c) : Item(p, c) {}
 
     virtual bool has_holding_ability() const override { return true; }
+    virtual bool can_eat(std::shared_ptr<Item> item) const override {
+        auto bottle = dynamic_pointer_cast<PillBottle>(item);
+        return !!(bottle);
+    }
 
     virtual std::optional<raylib::Model> model() const override {
         if (empty()) {

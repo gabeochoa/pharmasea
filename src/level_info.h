@@ -338,6 +338,7 @@ struct GameMapInfo : public LevelInfo {
         server_entities_DO_NOT_USE.clear();
         server_items_DO_NOT_USE.clear();
 
+        // TODO eventually this would be generated using the seed
         const std::string EXAMPLE_MAP = R"(
 #####################
 #...................#

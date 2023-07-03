@@ -360,6 +360,7 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
             EntityHelper::getClosestMatchingFurniture(
                 player->get<Transform>(), cho.reach(),
                 [](std::shared_ptr<Furniture> f) {
+                    if (f->is_missing<CanHoldItem>()) return false;
                     return f->get<CanHoldItem>().is_holding_item();
                 });
 
