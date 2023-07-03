@@ -598,7 +598,8 @@ template<typename I>
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
         });
     }
-    container->addComponent<Indexer>(magic_enum::enum_count<Pill::PillType>());
+    container->addComponent<Indexer>(
+        (int) magic_enum::enum_count<Pill::PillType>());
 
     container->addComponent<HasWork>().init(
         [](std::shared_ptr<Entity> owner, HasWork& hasWork,
