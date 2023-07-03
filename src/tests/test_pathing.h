@@ -173,6 +173,40 @@ www
     teardown();
 }
 
+inline void test_maze_path_exists() {
+    auto [z, x] = setup(R"(
+wwwwwwwwwwwwwww
+w...w...w...wxw
+w.w.w.w.w.w.w.w
+w.w.w.w.w.w.w.w
+w.w.w.w.w.w.w.w
+wzw...w...w...w
+wwwwwwwwwwwwwww
+    )");
+    //
+    auto path = p(z, x);
+    VALIDATE(path.size(), "path should not be empty");
+    //
+    teardown();
+}
+
+inline void test_maze_path_doesnt_exist() {
+    auto [z, x] = setup(R"(
+wwwwwwwwwwwwwww
+w...w...w...wxw
+w.w.w.w.w.w.w.w
+w.w.w.w.w.w.w.w
+w.w.w.w.w.w.w.w
+wzw...w.w.w...w
+wwwwwwwwwwwwwww
+    )");
+    //
+    auto path = p(z, x);
+    VALIDATE(path.empty(), "path should be empty");
+    //
+    teardown();
+}
+
 }  // namespace test
    //
 inline void test_all_pathing() {
@@ -184,4 +218,6 @@ inline void test_all_pathing() {
     test_surround_one_exit();
     test_clear_path_surround_exit();
     test_clear_path_surround_one_exit();
+    test_maze_path_exists();
+    test_maze_path_doesnt_exist();
 }
