@@ -395,7 +395,7 @@ static Entity* make_character_switcher(vec2 pos) {
             UsesCharacterModel& usesCharacterModel =
                 person->get<UsesCharacterModel>();
 
-            const float amt = 2.f;
+            const float amt = 1.5f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();
@@ -421,13 +421,6 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
     // };
     //
     // Type type = FULL;
-
-    // TODO need to make sure we dont have this
-    // its inherited from entity...
-    // addComponent<CanHoldItem>();
-    // virtual bool can_place_item_into(std::shared_ptr<Item>) override {
-    // return false;
-    // }
 
     // virtual void render_normal() const override {
     // TODO fix
