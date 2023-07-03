@@ -334,7 +334,7 @@ typedef Entity Furniture;
 
 namespace entities {
 static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
-                              Color base) {
+                              Color base, bool is_static = false) {
     Entity* furniture = make_entity(options);
 
     furniture->get<Transform>().init({pos.x, 0, pos.y},
@@ -352,13 +352,13 @@ static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
     furniture->addComponent<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Default);
 
-    // TODO does all furniture have this?
-    //  - no walls dont
-    furniture->addComponent<IsRotatable>();
-    furniture->addComponent<CanHoldItem>();
-    // TODO: Walls should probably not be holdable or highlightable
-    furniture->addComponent<CanBeHeld>();
-    furniture->addComponent<CanBeHighlighted>();
+    // Walls should not have these
+    if (!is_static) {
+        furniture->addComponent<IsRotatable>();
+        furniture->addComponent<CanHoldItem>();
+        furniture->addComponent<CanBeHeld>();
+        furniture->addComponent<CanBeHighlighted>();
+    }
 
     return furniture;
 }
@@ -408,7 +408,7 @@ static Entity* make_character_switcher(vec2 pos) {
 
 static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
     Entity* wall =
-        entities::make_furniture(DebugOptions{.name = "wall"}, pos, c, c);
+        entities::make_furniture(DebugOptions{.name = "wall"}, pos, c, c, true);
 
     return wall;
     // enum Type {
