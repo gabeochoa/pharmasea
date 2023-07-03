@@ -403,6 +403,18 @@ Job::State WaitInQueueJob::run_state_working_at_end(
         return (Job::State::WorkingAtEnd);
     }
 
+    system_manager::logging_manager::announce(entity, "got the pill bottle ");
+
+    auto pill = dynamic_pointer_cast<Pill>(pill_bottle->held_item);
+    if (!pill) {
+        system_manager::logging_manager::announce(
+            entity, "this bottle doesnt have any pills");
+        WIQ_wait_and_return(entity);
+        return (Job::State::WorkingAtEnd);
+    }
+
+    // TODO Validate the actual underlying pill
+
     CanHoldItem& ourCHI = entity->get<CanHoldItem>();
     ourCHI.update(regCHI.item());
     regCHI.update(nullptr);
