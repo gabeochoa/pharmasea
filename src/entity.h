@@ -304,8 +304,8 @@ static Entity* make_player(vec3 p) {
     return player;
 }
 
-static Entity* make_aiperson(vec3 p) {
-    Entity* person = make_entity(DebugOptions{.name = "aiperson"}, p);
+static Entity* make_aiperson(const DebugOptions& options, vec3 p) {
+    Entity* person = make_entity(options, p);
     add_person_components(person);
 
     person->addComponent<CanPerformJob>().update(Wandering, Wandering);
@@ -313,7 +313,7 @@ static Entity* make_aiperson(vec3 p) {
 }
 
 static Entity* make_customer(vec3 p, bool has_ailment = true) {
-    Entity* customer = make_aiperson(p);
+    Entity* customer = make_aiperson(DebugOptions{.name = "customer"}, p);
 
     customer->addComponent<HasName>().update(get_random_name());
 
