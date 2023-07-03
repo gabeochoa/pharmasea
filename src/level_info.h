@@ -193,7 +193,11 @@ struct helper {
         // ensure customers can make it to the register
 
         // TODO need a better way to do this
-        auto reg_pos = reg->get<Transform>().tile_infront((1));
+        // 0 makes sense but is the position of the entity, when its infront?
+        auto reg_pos = reg->get<Transform>().tile_infront(1);
+
+        log_info(" reg{} rep{} c{}", reg->get<Transform>().as2(), reg_pos,
+                 customer->get<Transform>().as2());
 
         auto new_path = astar::find_path(
             customer->get<Transform>().as2(), reg_pos,
@@ -394,6 +398,19 @@ struct GameMapInfo : public LevelInfo {
 #.........#.........#
 #######..############
 ..............CC.....)";
+
+        const std::string MAZE_MAP = R"(
+wwwwwwwwwwwwwww
+w...wwwwwwwwwww
+w.R.wwwwwwwwwww
+w.............w
+wwwwwwwwwwwww.w
+w...w...w...w.w
+w.w.w.w.w.w.w.w
+w.w.w.w.w.w.w.w
+w.w.w.w.w.w.w.w
+wCw...w...w...w
+wwwwwwwwwwwwwww)";
 
         auto lines = util::split_string(EXAMPLE_MAP_, "\n");
         generation::helper helper(lines);

@@ -176,13 +176,15 @@ www
 inline void test_maze_path_exists() {
     auto [z, x] = setup(R"(
 wwwwwwwwwwwwwww
-w...w...w...wxw
-w.w.w.w.w.w.w.w
-w.w.w.w.w.w.w.w
+w...wwwwwwwwwww
+w.x.wwwwwwwwwww
+w.............w
+wwwwwwwwwwwww.w
+w...w...w...w.w
 w.w.w.w.w.w.w.w
 wzw...w...w...w
 wwwwwwwwwwwwwww
-    )");
+)");
     //
     auto path = p(z, x);
     VALIDATE(path.size(), "path should not be empty");
@@ -197,9 +199,10 @@ w...w...w...wxw
 w.w.w.w.w.w.w.w
 w.w.w.w.w.w.w.w
 w.w.w.w.w.w.w.w
-wzw...w.w.w...w
+wzw...w.w.w...w 
 wwwwwwwwwwwwwww
     )");
+    //  ^ the filled in square is that one right there
     //
     auto path = p(z, x);
     VALIDATE(path.empty(), "path should be empty");
