@@ -399,19 +399,6 @@ struct GameMapInfo : public LevelInfo {
 #######..############
 ..............CC.....)";
 
-        const std::string MAZE_MAP = R"(
-wwwwwwwwwwwwwww
-w...wwwwwwwwwww
-w.R.wwwwwwwwwww
-w.............w
-wwwwwwwwwwwww.w
-w...w...w...w.w
-w.w.w.w.w.w.w.w
-w.w.w.w.w.w.w.w
-w.w.w.w.w.w.w.w
-wCw...w...w...w
-wwwwwwwwwwwwwww)";
-
         auto lines = util::split_string(EXAMPLE_MAP_, "\n");
         generation::helper helper(lines);
         helper.generate();
