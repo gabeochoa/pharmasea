@@ -287,12 +287,11 @@ struct EntityHelper {
     // so this will just get slower and slower over time
     static inline bool isWalkableRawEntities(const vec2& pos) {
         TRACY_ZONE_SCOPED;
-        auto bounds = get_bounds({pos.x, 0.f, pos.y}, {TILESIZE});
         bool hit_impassible_entity = false;
         forEachEntity([&](auto entity) {
             if (!is_collidable(entity)) return ForEachFlow::Continue;
-
-            if (entity->template get<Transform>().collides(bounds)) {
+            if (vec::distance(entity->template get<Transform>().as2(), pos) <
+                TILESIZE / 2.f) {
                 hit_impassible_entity = true;
                 return ForEachFlow::Break;
             }

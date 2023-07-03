@@ -149,6 +149,7 @@ int main(int argc, char* argv[]) {
 
     tests::run_all();
     std::cout << "All tests ran " << std::endl;
+    // return 0;
 
     // What i realized is that somehow every time i write a test
     // it fixes the component bug im investigating

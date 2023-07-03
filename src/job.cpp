@@ -395,6 +395,7 @@ Job::State WaitInQueueJob::run_state_working_at_end(
     // TODO eventually migrate item to ECS
     // auto pill_bottle =
     // bag->get<CanHoldItem>().asT<PillBottle>();
+
     auto pill_bottle = dynamic_pointer_cast<PillBottle>(bag->held_item);
     if (!pill_bottle) {
         system_manager::logging_manager::announce(

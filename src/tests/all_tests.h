@@ -12,6 +12,7 @@
 
 #include "component.h"
 #include "lerp_test.h"
+#include "test_pathing.h"
 #include "test_ui_widget.h"
 
 namespace tests {
@@ -21,6 +22,7 @@ void run_all() {
     all_tests();
 
     lerp_test();
+    test_all_pathing();
 }
 
 }  // namespace tests
