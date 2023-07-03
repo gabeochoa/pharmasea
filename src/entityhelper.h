@@ -141,6 +141,19 @@ struct EntityHelper {
     }
 
     template<typename T>
+    static constexpr std::shared_ptr<T> getFirstMatching(
+        std::function<bool(std::shared_ptr<T>)> filter  //
+    ) {
+        for (auto& e : get_entities()) {
+            auto s = dynamic_pointer_cast<T>(e);
+            if (!s) continue;
+            if (!filter(s)) continue;
+            return s;
+        }
+        return nullptr;
+    }
+
+    template<typename T>
     static constexpr std::vector<std::shared_ptr<T>> getEntitiesInRange(
         vec2 pos, float range) {
         std::vector<std::shared_ptr<T>> matching;
