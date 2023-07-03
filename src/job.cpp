@@ -419,6 +419,7 @@ Job::State WaitInQueueJob::run_state_working_at_end(
             vec2{-20, -20}, JobType::Leaving));
         entity->get<CanPerformJob>().push_onto_queue(jshared);
     }
+    entity->get<HasSpeechBubble>().off();
     return (Job::State::Completed);
 }
 
