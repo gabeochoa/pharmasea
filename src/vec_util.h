@@ -7,6 +7,23 @@
 #define EPSILON 0.000001f
 #endif
 
+inline float comp_max(const vec2& a) { return fmax(a.x, a.y); }
+
+constexpr BoundingBox get_bounds(vec3 position, vec3 size) {
+    return {(vec3){
+                position.x - size.x / 2,
+                position.y - size.y / 2,
+                position.z - size.z / 2,
+            },
+            (vec3){
+                position.x + size.x / 2,
+                position.y + size.y / 2,
+                position.z + size.z / 2,
+            }};
+}
+
+namespace vec {
+
 static constexpr int neigh_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
 static constexpr int neigh_y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
@@ -24,23 +41,6 @@ static std::vector<vec2> get_neighbors(int i, int j, int step = 1) {
         i, j, [&](const vec2& v) { ns.push_back(v); }, step);
     return ns;
 }
-
-inline float comp_max(const vec2& a) { return fmax(a.x, a.y); }
-
-constexpr BoundingBox get_bounds(vec3 position, vec3 size) {
-    return {(vec3){
-                position.x - size.x / 2,
-                position.y - size.y / 2,
-                position.z - size.z / 2,
-            },
-            (vec3){
-                position.x + size.x / 2,
-                position.y + size.y / 2,
-                position.z + size.z / 2,
-            }};
-}
-
-namespace vec {
 
 float constexpr newton_raphson(float x, float cur, float prev) {
     return cur == prev ? cur : newton_raphson(x, 0.5f * (cur + x / cur), cur);

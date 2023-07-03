@@ -44,7 +44,7 @@ inline std::vector<vec2> get_neighbors(
     vec2 start, std::function<bool(vec2 pos)> is_walkable) {
     std::vector<vec2> output;
     int step = static_cast<int>(floor(TILESIZE));
-    forEachNeighbor(
+    vec::forEachNeighbor(
         static_cast<int>(start.x), static_cast<int>(start.y),
         [&](const vec2& v) {
             auto neighbor = vec::snap(v);
