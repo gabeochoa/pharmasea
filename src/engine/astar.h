@@ -89,7 +89,7 @@ inline std::deque<vec2> find_path_impl(
     while (!openset.empty()) {
         i++;
         if (i > 1000) {
-            log_error("astar: hit interation limit");
+            log_warn("astar: hit interation limit");
             break;
         }
         vec2 cur = get_lowest_f(openset, fscore);
