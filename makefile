@@ -7,7 +7,7 @@ RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS)
 
 FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
 		-Wmost -Wconversion -g $(RAYLIB_FLAGS) -DTRACY_ENABLE 
-# -Wmost -Wconversion -g -fsanitize=address $(RAYLIB_FLAGS)
+# LEAKFLAGS = -fsanitize=address
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion
 INCLUDES = -Ivendor/ 
@@ -19,9 +19,9 @@ H_FILES := $(wildcard src/**/*.h src/engine/**/*.h)
 OBJ_DIR := ./output
 OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
 
+OUTPUT_EXE := pharmasea.exe
 
 # CXX := g++
-
 CXX := clang++
 
 .PHONY: all clean
@@ -31,18 +31,18 @@ CXX := clang++
 
 
 all: $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea  && ./pharmasea -S
+	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) && ./$(OUTPUT_EXE) -S
 
 
 mp: $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea && ./pharmasea test host > host_log & sleep 5;./pharmasea test client
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) && ./$(OUTPUT_EXE) test host > host_log & sleep 5;./pharmasea test client
 
 release: FLAGS=$(RELEASE_FLAGS)
 release: NOFLAGS=
 release: clean all
 	rm -rf release
 	mkdir release
-	cp pharmasea release/
+	cp $(OUTPUT_EXE) release/
 	cp README.md release/ 
 	cp libGameNetworkingSockets.dylib release/
 	cp -r resources release/
@@ -65,7 +65,7 @@ clean:
 	mkdir -p $(OBJ_DIR)/vendor/backward/
 
 profile: 
-	xctrace record --output . --template "Time Profiler" --time-limit 10s --attach `ps -ef | grep "\./pharmasea" | grep -v "grep"  | cut -d' ' -f4`
+	xctrace record --output . --template "Time Profiler" --time-limit 10s --attach `ps -ef | grep "\./$(OUTPUT_EXE)" | grep -v "grep"  | cut -d' ' -f4`
 
 count: 
 	git ls-files | grep "src" | grep -v "ui_color.h" | grep -v "vendor" | grep -v "resources" | xargs wc -l | sort -rn
@@ -89,7 +89,12 @@ gendocs:
 
 prof: 
 	rm -rf recording.trace/
-	xctrace record --template 'Game Performance' --output 'recording.trace' --launch pharmasea
+	xctrace record --template 'Game Performance' --output 'recording.trace' --launch $(OUTPUT_EXE)
+
+leak: 
+	rm -rf recording.trace/
+	codesign -s - -f --verbose --entitlements ent_pharmasea.plist $(OUTPUT_EXE)
+	xctrace record --template 'Leaks' --output 'recording.trace' --launch $(OUTPUT_EXE)
 
 # When using lldb, you have to run these commands:
 # 	settings set platform.plugin.darwin.ignored-exceptions EXC_BAD_INSTRUCTION

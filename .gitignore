@@ -9,7 +9,7 @@ log
 game.obj
 WinPharmaSea/**/
 pharmasea/WinPharmaSea/**/
-pharmasea
+pharmasea.exe
 .obsidian/
 *.o
 *.d
