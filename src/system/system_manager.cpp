@@ -468,8 +468,14 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
     // Handle some player is holding furniture
     {
         bool all_empty = true;
-        auto players = EntityHelper::getAllWithComponent<CanHoldFurniture>();
-        for (auto e : players) {
+        // TODO i want to to do it this way: but players are not in entities, so
+        // its not possible
+        //
+        // auto players = EntityHelper::getAllWithComponent<CanHoldFurniture>();
+
+        for (auto& e : SystemManager::get().oldAll) {
+            // TODO need a better way to match player
+            if (e->is_missing<CanHoldFurniture>()) continue;
             if (e->get<CanHoldFurniture>().is_holding_furniture()) {
                 all_empty = false;
                 break;
