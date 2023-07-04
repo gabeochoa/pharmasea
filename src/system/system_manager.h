@@ -38,9 +38,6 @@ void delete_held_items_when_leaving_inround(
 
 void refetch_dynamic_model_names(const std::shared_ptr<Entity>& entity, float);
 
-void reset_trigger_area_counts(const std::shared_ptr<Entity>& entity, float);
-void count_trigger_area_entrants(const std::shared_ptr<Entity>& entity, float);
-
 void process_trigger_area(const std::shared_ptr<Entity>& entity, float dt);
 
 // TODO maybe we could pull out all the singleton boiz into their own update

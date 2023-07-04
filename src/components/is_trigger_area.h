@@ -35,7 +35,10 @@ struct IsTriggerArea : public BaseComponent {
         completion_time_passed = fmaxf(0, completion_time_passed - dt);
     }
 
-    void update_progress_max(float amt) { completion_time_max = amt; }
+    auto& update_progress_max(float amt) {
+        completion_time_max = amt;
+        return *this;
+    }
 
     auto& update_title(const std::string& nt) {
         _title = nt;
@@ -59,6 +62,12 @@ struct IsTriggerArea : public BaseComponent {
         return *this;
     }
 
+    auto& on_complete(std::function<void()> cb) {
+        complete_fn = cb;
+        return *this;
+    }
+    [[nodiscard]] auto get_complete_fn() { return complete_fn; }
+
    private:
     int wanted_entrants = 1;
     int current_entrants = 0;
@@ -67,6 +76,8 @@ struct IsTriggerArea : public BaseComponent {
 
     float completion_time_max = 0.f;
     float completion_time_passed = 0.f;
+
+    std::function<void()> complete_fn;
 
     friend bitsery::Access;
     template<typename S>

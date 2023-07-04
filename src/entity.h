@@ -646,7 +646,11 @@ template<typename I>
     trigger_area->addComponent<IsTriggerArea>()
         .update_title(title)
         .update_max_entrants(1)
-        .update_progress_max(2.f);
+        .update_progress_max(2.f)
+        .on_complete([]() {
+            // TODO should be lobby only?
+            GameState::s_toggle_to_planning();
+        });
 
     return trigger_area;
 }
