@@ -206,7 +206,7 @@ static void register_all_components() {
         HasWaitingQueue, CanBeTakenFrom, IsItemContainer<Bag>,
         IsItemContainer<PillBottle>, IsItemContainer<Pill>, UsesCharacterModel,
         ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
-        HasSpeechBubble, Indexer, IsSpawner>();
+        HasSpeechBubble, Indexer, IsSpawner, HasTimer>();
     delete entity;
 }
 
