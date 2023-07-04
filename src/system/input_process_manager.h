@@ -93,7 +93,12 @@ inline void person_update_given_new_pos(int id, Transform& transform,
             return EntityHelper::ForEachFlow::NormalFlow;
         });
 
-        // TODO add debug mode that turns on noclip
+        const auto debug_mode_on =
+            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+        if (debug_mode_on) {
+            would_collide_x = false;
+            would_collide_z = false;
+        }
 
         if (!would_collide_x) {
             transform.update_x(new_pos_x.x);
