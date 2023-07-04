@@ -22,6 +22,7 @@
 #include "components/has_dynamic_model_name.h"
 #include "components/has_name.h"
 #include "components/has_speech_bubble.h"
+#include "components/has_timer.h"
 #include "components/has_waiting_queue.h"
 #include "components/has_work.h"
 #include "components/indexer.h"
@@ -671,6 +672,16 @@ template<typename I>
         .set_time_between(2.f);
 
     return customer_spawner;
+}
+
+// This will be a catch all for anything that just needs to get updated
+[[nodiscard]] static Entity* make_sophie(vec3 pos) {
+    Entity* sophie = make_entity({.name = "sophie"}, pos);
+
+    // TODO how long is a day?
+    sophie->addComponent<HasTimer>(HasTimer::Renderer::Round, 90.f);
+
+    return sophie;
 }
 
 }  // namespace entities

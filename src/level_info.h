@@ -8,7 +8,6 @@
 #include "entityhelper.h"
 #include "item.h"
 #include "item_helper.h"
-#include "round.h"
 #include "system/system_manager.h"
 #include "tests/test_maps.h"
 
@@ -53,6 +52,8 @@ const char BAGBOX = 'B';
 const char MED_CAB = 'M';
 const char PILL_DISP = 'P';
 
+const char SOPHIE = 's';
+
 struct helper {
     std::vector<std::string> lines;
 
@@ -96,6 +97,9 @@ struct helper {
                                    vec::to3(location));
             case EMPTY:
                 return nullptr;
+            case SOPHIE: {
+                return (entities::make_sophie(vec::to3(location)));
+            } break;
             case REGISTER: {
                 return (entities::make_register(location));
             } break;
@@ -178,6 +182,12 @@ struct helper {
     }
 
     void validate() {
+        auto soph = EntityHelper::getFirstMatching<Entity>(
+            [](std::shared_ptr<Entity> e) {
+                return e->get<DebugName>().name() == "sophie";
+            });
+        VALIDATE(soph, "sophie needs to be there ");
+
         // find register,
         auto reg = EntityHelper::getFirstMatching<Entity>(
             [](std::shared_ptr<Entity> e) {
@@ -234,7 +244,9 @@ struct LevelInfo {
         SystemManager::get().render_items(items, dt);
     }
 
-    virtual void onDrawUI(float) {}
+    virtual void onDrawUI(float dt) {
+        SystemManager::get().render_ui(entities, dt);
+    }
 
     void grab_things() {
         {
@@ -329,8 +341,6 @@ struct GameMapInfo : public LevelInfo {
     std::uniform_int_distribution<> dist;
     //
 
-    std::optional<Round> active_round;
-
     void update_seed(const std::string& s) {
         seed = s;
         hashed_seed = hashString(seed);
@@ -338,23 +348,12 @@ struct GameMapInfo : public LevelInfo {
         // TODO leaving at 1 because we dont have a door to block the entrance
         dist = std::uniform_int_distribution<>(1, MAX_MAP_SIZE - 1);
 
-        active_round = Round(120.f);
-
         // TODO need to regenerate the map and clean up entitiyhelper
     }
 
     virtual void onUpdate(const Entities& players, float dt) override {
-        // log_info("update game map info");
+        // log_info("update round");
         LevelInfo::onUpdate(players, dt);
-        if (active_round.has_value()) {
-            active_round->onUpdate(dt);
-        }
-    }
-
-    virtual void onDrawUI(float) override {
-        if (active_round.has_value()) {
-            active_round->onDraw();
-        }
     }
 
    private:
@@ -400,7 +399,7 @@ struct GameMapInfo : public LevelInfo {
 #..^<.....#.........#
 #.........#.........#
 #######..############
-..............C......)";
+..............C.....s)";
 
         auto lines = util::split_string(EXAMPLE_MAP_, "\n");
         generation::helper helper(lines);
@@ -567,7 +566,6 @@ struct GameMapInfo : public LevelInfo {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<LevelInfo>{});
-        s.ext(active_round, bitsery::ext::StdOptional{});
         s.value8b(hashed_seed);
         // TODO these arent serializable...
         // s.object(generator);

@@ -44,6 +44,8 @@ void process_trigger_area(const std::shared_ptr<Entity>& entity, float dt);
 // loop / entity thing or mayeb all the server only ones?
 void process_spawner(const std::shared_ptr<Entity>& entity, float dt);
 
+void run_timer(const std::shared_ptr<Entity>& entity, float dt);
+
 }  // namespace system_manager
 
 SINGLETON_FWD(SystemManager)
@@ -128,6 +130,12 @@ struct SystemManager {
         }
     }
 
+    void render_ui(const Entities& entity_list, float dt) const {
+        for (auto& entity : entity_list) {
+            system_manager::render_manager::render_timer(entity, dt);
+        }
+    }
+
     void render_items(Items items, float) const {
         for (auto i : items) {
             if (!i) {
@@ -182,6 +190,8 @@ struct SystemManager {
             // run only in lobby if we wanted to distinguish
             system_manager::render_manager::update_character_model_from_index(
                 entity, dt);
+
+            system_manager::run_timer(entity, dt);
         }
     }
 
