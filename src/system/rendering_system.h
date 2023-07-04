@@ -367,23 +367,43 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
     auto& ht = entity->get<HasTimer>();
     switch (ht.type) {
         case HasTimer::Renderer::Round: {
-            vec2 pos = {100, 100};
-            raylib::DrawPctFilledCircle(pos, 50, BLACK, RED, ht.pct());
+            const auto ball_color = ht.isopen ? YELLOW : GRAY;
+            const float radius = 10;
 
-            vec2 rect_size = {40, 15};
-            vec2 rect_pos = {pos.x - (rect_size.x / 2.f),
-                             pos.y - (rect_size.y / 2.f)};
+            const float degrees = util::lerp(175, 360, 1 - ht.pct());
+            const float angle = util::deg2rad(degrees);
+
+            const float r5 = radius * 5;
+            const vec2 center = {200.f, 75.f};
+            const vec2 pos = {
+                center.x + std::cos(angle) * (r5),
+                center.y + std::sin(angle) * (r5),
+            };
+
+            const vec2 start = {center.x - r5 - (radius), center.y};
+            const vec2 end = {center.x + r5 + (radius), center.y};
+
+            // Hide it when its below the rect
+            if (degrees >= 180)
+                raylib::DrawCircle((int) pos.x, (int) pos.y, radius,
+                                   ball_color);
+
+            vec2 rect_size = {end.x - start.x, 20};
+            vec2 rect_pos = {start.x, start.y - 10};
+
+            Color bg = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Background);
+            Color primary =
+                ::ui::DEFAULT_THEME.from_usage(::ui::theme::Primary);
+            Color font_color =
+                ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
+
             raylib::DrawRectangleRounded(
                 {rect_pos.x, rect_pos.y, rect_size.x, rect_size.y}, 0.5f, 8,
-                BLACK);
-            raylib::DrawTextEx(Preload::get().font, "OPEN",
-                               {rect_pos.x, rect_pos.y - 2}, 20, 0, GREEN);
+                ht.isopen ? primary : bg);
 
-            raylib::DrawTextEx(
-                Preload::get().font,
-                fmt::format("{} / {}", ht.currentRoundTime, ht.totalRoundTime)
-                    .c_str(),
-                pos, 20, 0, GREEN);
+            raylib::DrawTextEx(Preload::get().font,
+                               ht.isopen ? "OPEN" : "CLOSED",
+                               {rect_pos.x, rect_pos.y - 2}, 20, 0, font_color);
 
         } break;
         default:
