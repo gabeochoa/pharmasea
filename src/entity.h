@@ -654,6 +654,8 @@ template<typename I>
 [[nodiscard]] static Entity* make_customer_spawner(vec3 pos) {
     Entity* customer_spawner = make_entity({.name = "customer spawner"}, pos);
 
+    // TODO maybe one day add some kind of ui that shows when the next person is
+    // coming?
     customer_spawner->addComponent<SimpleColoredBoxRenderer>().update(PINK,
                                                                       PINK);
     const auto sfn = std::bind(&make_customer, std::placeholders::_1, true);
