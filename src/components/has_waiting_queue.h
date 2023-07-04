@@ -9,6 +9,10 @@ constexpr int max_queue_size = 3;
 struct HasWaitingQueue : public BaseComponent {
     virtual ~HasWaitingQueue() {}
 
+    [[nodiscard]] bool is_full() const { return !has_space(); }
+    [[nodiscard]] bool has_space() const {
+        return next_line_position < max_queue_size;
+    }
     [[nodiscard]] std::shared_ptr<Entity> person(int i) {
         return ppl_in_line[i];
     }
