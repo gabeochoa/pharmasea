@@ -441,7 +441,7 @@ void process_spawner(const std::shared_ptr<Entity>& entity, float dt) {
 
 void run_timer(const std::shared_ptr<Entity>& entity, float dt) {
     if (entity->is_missing<HasTimer>()) return;
-    entity->get<HasTimer>().pass_time(dt);
+    entity->get<HasTimer>().pass_time(dt).reset_if_complete();
 }
 
 }  // namespace system_manager

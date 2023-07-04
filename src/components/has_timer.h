@@ -21,10 +21,11 @@ struct HasTimer : public BaseComponent {
         currentRoundTime = totalRoundTime;
     }
 
-    void pass_time(float dt) {
+    auto& pass_time(float dt) {
         // TODO better way to do this?
-        if (!GameState::s_in_round()) return;
+        if (!GameState::s_in_round()) return *this;
         if (currentRoundTime >= 0) currentRoundTime -= dt;
+        return *this;
     }
 
     [[nodiscard]] float pct() const {
@@ -35,11 +36,24 @@ struct HasTimer : public BaseComponent {
     float currentRoundTime;
     float totalRoundTime;
 
+    // TODO move into its own component
+    bool isopen = true;
+    void on_complete() {
+        isopen = !isopen;
+        currentRoundTime = totalRoundTime;
+    }
+    void reset_if_complete() {
+        if (currentRoundTime <= 0.f) on_complete();
+    }
+
    private:
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+
+        //
+        s.value1b(isopen);
 
         s.value4b(type);
         s.value4b(currentRoundTime);
