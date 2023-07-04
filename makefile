@@ -30,20 +30,16 @@ CXX := clang++
 
 
 
-build: $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea 
+all: $(H_FILES) $(OBJ_FILES) 
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea  && ./pharmasea -S
 
-run:
-	./pharmasea -S
 
 mp: $(H_FILES) $(OBJ_FILES) 
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea && ./pharmasea test host > host_log & sleep 5;./pharmasea test client
 
-all: build run
-
 release: FLAGS=$(RELEASE_FLAGS)
 release: NOFLAGS=
-release: clean build
+release: clean all
 	rm -rf release
 	mkdir release
 	cp pharmasea release/
