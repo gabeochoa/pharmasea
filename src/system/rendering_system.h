@@ -394,7 +394,8 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
 }
 
 inline void render_player_info() {
-    if (!MenuState::s_in_game()) return;
+    // TODO eventually switch to using the actual entity instead of global
+    // just need a way to find them
     if (!global_player) return;
 
     int y_pos = 0;
