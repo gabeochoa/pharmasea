@@ -29,15 +29,28 @@ CXX := clang++
 # For tracing you have to run the game, and then connect from Tracy-release
 
 
-all: $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea && ./pharmasea -S
+
+build: $(H_FILES) $(OBJ_FILES) 
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea 
+
+run:
+	./pharmasea -S
 
 mp: $(H_FILES) $(OBJ_FILES) 
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o pharmasea && ./pharmasea test host > host_log & sleep 5;./pharmasea test client
 
+all: build run
+
 release: FLAGS=$(RELEASE_FLAGS)
 release: NOFLAGS=
-release: clean all
+release: clean build
+	rm -rf release
+	mkdir release
+	cp pharmasea release/
+	cp README.md release/ 
+	cp libGameNetworkingSockets.dylib release/
+	cp -r resources release/
+	cp -r vendor release/
 
 
 $(OBJ_DIR)/%.o: %.cpp makefile
