@@ -393,7 +393,36 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
     }
 }
 
-inline void render_debug(const Entities& entities, float dt) {}
+inline void render_player_info() {
+    if (!MenuState::s_in_game()) return;
+    if (!global_player) return;
+
+    int y_pos = 0;
+
+    auto _draw_text = [&](const std::string& str) mutable {
+        float y = 200.f + y_pos;
+        DrawTextEx(Preload::get().font, str.c_str(), vec2{5, y}, 20, 0, WHITE);
+        y_pos += 15;
+    };
+
+    raylib::DrawRectangle(5, 200, 175, 75, (Color){50, 50, 50, 200});
+
+    _draw_text("PlayerInfo:");
+    _draw_text(fmt::format("id: {} position: {}", global_player->id,
+                           global_player->get<Transform>().pos()));
+    _draw_text(fmt::format(
+        "holding furniture?: {}",
+        global_player->get<CanHoldFurniture>().is_holding_furniture()));
+    _draw_text(
+        fmt::format("holding item?: {}",
+                    global_player->get<CanHoldItem>().is_holding_item()));
+}
+
+inline void render_debug(const Entities& entities, float dt) {
+    render_player_info();
+    // for (auto& entity : entities) {
+    // }
+}
 
 inline void render_normal(const Entities& entities, float dt) {
     for (auto& entity : entities) {
