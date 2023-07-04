@@ -281,38 +281,6 @@ inline void render_speech_bubble(std::shared_ptr<Entity> entity, float) {
                           raylib::WHITE);
 }
 
-inline void render_timer(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<HasTimer>()) return;
-
-    auto& ht = entity->get<HasTimer>();
-    switch (ht.type) {
-        case HasTimer::Renderer::Round: {
-            vec2 pos = {100, 100};
-            raylib::DrawPctFilledCircle(pos, 50, BLACK, RED, ht.pct());
-
-            vec2 rect_size = {40, 15};
-            vec2 rect_pos = {pos.x - (rect_size.x / 2.f),
-                             pos.y - (rect_size.y / 2.f)};
-            raylib::DrawRectangleRounded(
-                {rect_pos.x, rect_pos.y, rect_size.x, rect_size.y}, 0.5f, 8,
-                BLACK);
-            raylib::DrawTextEx(Preload::get().font, "OPEN",
-                               {rect_pos.x, rect_pos.y - 2}, 20, 0, GREEN);
-
-            raylib::DrawTextEx(
-                Preload::get().font,
-                fmt::format("{} / {}", ht.currentRoundTime, ht.totalRoundTime)
-                    .c_str(),
-                pos, 20, 0, GREEN);
-
-        } break;
-        default:
-            log_warn("you have a timer that we dont know how to render: {}",
-                     ht.type);
-            break;
-    }
-}
-
 inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
     // Ghost player cant render during normal mode
     if (entity->has<CanBeGhostPlayer>() &&
@@ -390,5 +358,49 @@ inline void render_progress_bar(std::shared_ptr<Entity> entity, float) {
 }
 
 }  // namespace render_manager
+
+namespace ui {
+
+inline void render_timer(std::shared_ptr<Entity> entity, float) {
+    if (entity->is_missing<HasTimer>()) return;
+
+    auto& ht = entity->get<HasTimer>();
+    switch (ht.type) {
+        case HasTimer::Renderer::Round: {
+            vec2 pos = {100, 100};
+            raylib::DrawPctFilledCircle(pos, 50, BLACK, RED, ht.pct());
+
+            vec2 rect_size = {40, 15};
+            vec2 rect_pos = {pos.x - (rect_size.x / 2.f),
+                             pos.y - (rect_size.y / 2.f)};
+            raylib::DrawRectangleRounded(
+                {rect_pos.x, rect_pos.y, rect_size.x, rect_size.y}, 0.5f, 8,
+                BLACK);
+            raylib::DrawTextEx(Preload::get().font, "OPEN",
+                               {rect_pos.x, rect_pos.y - 2}, 20, 0, GREEN);
+
+            raylib::DrawTextEx(
+                Preload::get().font,
+                fmt::format("{} / {}", ht.currentRoundTime, ht.totalRoundTime)
+                    .c_str(),
+                pos, 20, 0, GREEN);
+
+        } break;
+        default:
+            log_warn("you have a timer that we dont know how to render: {}",
+                     ht.type);
+            break;
+    }
+}
+
+inline void render_debug(const Entities& entities, float dt) {}
+
+inline void render_normal(const Entities& entities, float dt) {
+    for (auto& entity : entities) {
+        render_timer(entity, dt);
+    }
+}
+
+}  // namespace ui
 
 }  // namespace system_manager

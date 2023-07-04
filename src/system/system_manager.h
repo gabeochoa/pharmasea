@@ -124,16 +124,17 @@ struct SystemManager {
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
         if (debug_mode_on) {
             render_debug(entities, dt);
-            render_normal(entities, dt);
-        } else {
-            render_normal(entities, dt);
         }
+        render_normal(entities, dt);
     }
 
-    void render_ui(const Entities& entity_list, float dt) const {
-        for (auto& entity : entity_list) {
-            system_manager::render_manager::render_timer(entity, dt);
+    void render_ui(const Entities& entities, float dt) const {
+        const auto debug_mode_on =
+            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+        if (debug_mode_on) {
+            system_manager::ui::render_debug(entities, dt);
         }
+        system_manager::ui::render_normal(entities, dt);
     }
 
     void render_items(Items items, float) const {
