@@ -22,6 +22,7 @@ struct PlayerInfoLayer : public Layer {
 
     virtual void onDraw(float) override {
         if (!MenuState::s_in_game()) return;
+        if (!global_player) return;
 
         DrawRectangle(5, 200, 175, 75, (Color){50, 50, 50, 200});
 

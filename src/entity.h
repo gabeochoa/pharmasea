@@ -287,6 +287,7 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
 
 static void update_player_rare_remotely(std::shared_ptr<Entity> entity,
                                         int model_index) {
+    if (entity->is_missing_any<UsesCharacterModel, ModelRenderer>()) return;
     UsesCharacterModel& ucm = entity->get<UsesCharacterModel>();
     ModelRenderer& renderer = entity->get<ModelRenderer>();
 
