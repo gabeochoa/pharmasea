@@ -367,10 +367,8 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
     auto& ht = entity->get<HasTimer>();
     switch (ht.type) {
         case HasTimer::Renderer::Round: {
-            // TODO id like a better way to expose these so other people can
-            // fetch
-            const bool is_day = ht.isopen;
-            const bool in_round = GameState::s_in_round();
+            const bool is_day =
+                GameState::s_in_round() && !GameState::s_is_closing();
 
             const vec2 center = {200.f, 75.f};
 
@@ -406,7 +404,8 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
                 is_day ? primary : bg);
 
             auto status_text =
-                is_day ? "OPEN" : (in_round ? "CLOSING" : "CLOSED");
+                is_day ? "OPEN"
+                       : (GameState::s_is_closing() ? "CLOSING" : "CLOSED");
 
             raylib::DrawTextEx(Preload::get().font, status_text,
                                {rect_pos.x, rect_pos.y - 2}, 20, 0, font_color);
