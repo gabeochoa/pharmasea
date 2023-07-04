@@ -121,13 +121,14 @@ inline std::ostream& operator<<(std::ostream& os, const GameCam& gc) {
     os << "\tGetMouseWheelMove:" << ext::get_mouse_wheel_move() << std::endl;
     os << "\tposition:(" << gc.camera.position.x << ", " << gc.camera.position.y
        << ", " << gc.camera.position.z << ")" << std::endl;
-    os << "\target:(" << gc.camera.target.x << ", " << gc.camera.target.y
+    os << "\ttarget:(" << gc.camera.target.x << ", " << gc.camera.target.y
        << ", " << gc.camera.target.z << ")" << std::endl;
     os << "\tup:(" << gc.camera.up.x << ", " << gc.camera.up.y << ", "
        << gc.camera.up.z << ")" << std::endl;
     os << "\tfovy:" << gc.camera.fovy << std::endl;
     os << "\tprojection:" << gc.camera.projection << std::endl;
     os << "\ttarget_distance:" << gc.target_distance << std::endl << std::endl;
+    os << "\tangle:" << gc.angle << std::endl << std::endl;
     return os;
 }
 

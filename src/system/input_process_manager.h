@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../camera.h"
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_grab_from_other_furniture.h"
 #include "../components/can_highlight_others.h"
@@ -174,15 +175,51 @@ inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
     // Theres no players not in game menu state,
     const menu::State state = menu::State::Game;
 
-    float left = KeyMap::is_event(state, InputName::PlayerLeft);
-    float right = KeyMap::is_event(state, InputName::PlayerRight);
+    float left, right, up, down;
+
+    float key_left = KeyMap::is_event(state, InputName::PlayerLeft);
+    float key_right = KeyMap::is_event(state, InputName::PlayerRight);
+    float key_up = KeyMap::is_event(state, InputName::PlayerForward);
+    float key_down = KeyMap::is_event(state, InputName::PlayerBack);
+
+    // we need to rotate these controls based on the camera
+    auto cam = GLOBALS.get_ptr<GameCam>("game_cam");
+    int xang = (int) (fmaxf(0, util::rad2deg(cam->angle.x))) % 360;
+
+    if (xang >= 135 && xang < 225) {
+        // Default controls
+        left = key_left;
+        right = key_right;
+        down = key_down;
+        up = key_up;
+    } else if (xang >= 45 && xang < 135) {
+        up = key_left;
+        down = key_right;
+        left = key_down;
+        right = key_up;
+    } else if (xang >= 315 || xang <= 45) {
+        left = key_right;
+        right = key_left;
+        up = key_down;
+        down = key_up;
+    } else if (xang >= 225 && xang < 315) {
+        left = key_up;
+        right = key_down;
+        up = key_right;
+        down = key_left;
+    } else {
+        log_warn("reached a camera angle that has no controls enabled");
+        // Default controls
+        left = 0;
+        right = 0;
+        down = 0;
+        up = 0;
+    }
+
     if (left > 0)
         cui.inputs.push_back({state, InputName::PlayerLeft, left, dt});
     if (right > 0)
         cui.inputs.push_back({state, InputName::PlayerRight, right, dt});
-
-    float up = KeyMap::is_event(state, InputName::PlayerForward);
-    float down = KeyMap::is_event(state, InputName::PlayerBack);
     if (up > 0) cui.inputs.push_back({state, InputName::PlayerForward, up, dt});
     if (down > 0)
         cui.inputs.push_back({state, InputName::PlayerBack, down, dt});
