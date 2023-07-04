@@ -69,15 +69,19 @@ inline void log_me(LogLevel level, const char* file, int line,
 static void log_me(...) {}
 #endif
 
-#define log_trace(...) \
+#define log_trace(...)                    \
+    if (LogLevel::LOG_TRACE >= LOG_LEVEL) \
     log_me(LogLevel::LOG_TRACE, __FILE__, __LINE__, __VA_ARGS__)
 
-#define log_info(...) \
+#define log_info(...)                    \
+    if (LogLevel::LOG_INFO >= LOG_LEVEL) \
     log_me(LogLevel::LOG_INFO, __FILE__, __LINE__, __VA_ARGS__)
-#define log_warn(...) \
+#define log_warn(...)                    \
+    if (LogLevel::LOG_WARN >= LOG_LEVEL) \
     log_me(LogLevel::LOG_WARN, __FILE__, __LINE__, __VA_ARGS__)
-#define log_error(...)                                            \
-    log_me(LogLevel::LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__); \
+#define log_error(...)                                                \
+    if (LogLevel::LOG_ERROR >= LOG_LEVEL)                             \
+        log_me(LogLevel::LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__); \
     assert(false)
 
 #define log_if(x, ...)                                                    \

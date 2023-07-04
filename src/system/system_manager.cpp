@@ -157,9 +157,8 @@ void move_entity_based_on_push_force(std::shared_ptr<Entity> entity, float,
 
 void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     Transform& transform = entity->get<Transform>();
-    if (entity->is_missing<CanHoldItem>()) return;
-    if (entity->is_missing<ConveysHeldItem>()) return;
-    if (entity->is_missing<CanBeTakenFrom>()) return;
+    if (entity->is_missing_any<CanHoldItem, ConveysHeldItem, CanBeTakenFrom>())
+        return;
 
     CanHoldItem& canHold = entity->get<CanHoldItem>();
     CanBeTakenFrom& canBeTakenFrom = entity->get<CanBeTakenFrom>();
