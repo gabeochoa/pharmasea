@@ -217,30 +217,31 @@ inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
         up = 0;
     }
 
-    if (left > 0)
-        cui.inputs.push_back({state, InputName::PlayerLeft, left, dt});
-    if (right > 0)
-        cui.inputs.push_back({state, InputName::PlayerRight, right, dt});
-    if (up > 0) cui.inputs.push_back({state, InputName::PlayerForward, up, dt});
-    if (down > 0)
-        cui.inputs.push_back({state, InputName::PlayerBack, down, dt});
+    if (left > 0) cui.write(InputName::PlayerLeft);
+    if (right > 0) cui.write(InputName::PlayerRight);
+    if (up > 0) cui.write(InputName::PlayerForward);
+    if (down > 0) cui.write(InputName::PlayerBack);
 
     bool pickup =
         KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
     if (pickup) {
-        cui.inputs.push_back({state, InputName::PlayerPickup, 1.f, dt});
+        cui.write(InputName::PlayerPickup);
     }
 
     bool rotate = KeyMap::is_event_once_DO_NOT_USE(
         state, InputName::PlayerRotateFurniture);
     if (rotate) {
-        cui.inputs.push_back(
-            {state, InputName::PlayerRotateFurniture, 1.f, dt});
+        cui.write(InputName::PlayerRotateFurniture);
     }
 
     float do_work = KeyMap::is_event(state, InputName::PlayerDoWork);
     if (do_work > 0) {
-        cui.inputs.push_back({state, InputName::PlayerDoWork, 1.f, dt});
+        cui.write(InputName::PlayerDoWork);
+    }
+
+    if (cui.pressed.any()) {
+        cui.inputs.push_back({cui.pressed, dt});
+        cui.reset();
     }
 }
 
@@ -572,55 +573,55 @@ inline void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
 
 inline void process_input(const std::shared_ptr<Entity> entity,
                           const UserInput& input) {
-    const auto menu_state = std::get<0>(input);
-    if (menu_state != menu::State::Game) return;
-
-    const InputName input_name = std::get<1>(input);
-    const float input_amount = std::get<2>(input);
-    const float frame_dt = std::get<3>(input);
-
-    switch (input_name) {
-        case InputName::PlayerLeft:
-        case InputName::PlayerRight:
-        case InputName::PlayerForward:
-        case InputName::PlayerBack:
-            return process_player_movement_input(entity, frame_dt, input_name,
-                                                 input_amount);
-        default:
-            break;
-    }
-
-    // The inputs below here only trigger when the input amount was enough
-    bool was_pressed = input_amount >= 0.5;
-    if (!was_pressed) {
-        return;
-    }
-
-    // TODO eventually clean this up
-    std::shared_ptr<Entity> player = dynamic_pointer_cast<Entity>(entity);
-    if (!player) return;
-
-    switch (input_name) {
-        case InputName::PlayerRotateFurniture:
-            planning::rotate_furniture(player);
-            break;
-        case InputName::PlayerPickup:
-            // grab_or_drop(player);
-            {
-                if (GameState::s_in_round()) {
-                    inround::handle_grab_or_drop(player);
-                } else if (GameState::get().is(game::State::Planning)) {
-                    planning::handle_grab_or_drop(player);
-                } else {
-                    // TODO we probably want to handle messing around in the
-                    // lobby
-                }
+    const auto _proc_single_input_name =
+        [](const std::shared_ptr<Entity> entity, const InputName& input_name,
+           float frame_dt) {
+            switch (input_name) {
+                case InputName::PlayerLeft:
+                case InputName::PlayerRight:
+                case InputName::PlayerForward:
+                case InputName::PlayerBack:
+                    return process_player_movement_input(entity, frame_dt,
+                                                         input_name, 1.f);
+                default:
+                    break;
             }
-            break;
-        case InputName::PlayerDoWork:
-            inround::work_furniture(player, frame_dt);
-        default:
-            break;
+
+            switch (input_name) {
+                case InputName::PlayerRotateFurniture:
+                    planning::rotate_furniture(entity);
+                    break;
+                case InputName::PlayerPickup:
+                    // grab_or_drop(entity);
+                    {
+                        if (GameState::s_in_round()) {
+                            inround::handle_grab_or_drop(entity);
+                        } else if (GameState::get().is(game::State::Planning)) {
+                            planning::handle_grab_or_drop(entity);
+                        } else {
+                            // TODO we probably want to handle messing around in
+                            // the lobby
+                        }
+                    }
+                    break;
+                case InputName::PlayerDoWork:
+                    inround::work_furniture(entity, frame_dt);
+                default:
+                    break;
+            }
+        };
+
+    const InputSet input_set = std::get<0>(input);
+    const float frame_dt = std::get<1>(input);
+
+    int i = 0;
+    while (i < InputName::Last) {
+        auto input_name = magic_enum::enum_value<InputName>(i);
+        bool was_pressed = input_set.test(i);
+        if (was_pressed) {
+            _proc_single_input_name(entity, input_name, frame_dt);
+        }
+        i++;
     }
 }
 }  // namespace input_process_manager

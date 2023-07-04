@@ -222,6 +222,9 @@ void serialize(S& s, ClientPacket& packet) {
                                   [](auto& s, menu::State& o) { s.value4b(o); },
                                   [](auto& s, game::State& o) { s.value4b(o); },
                                   [](auto& s, InputName& o) { s.value4b(o); },
+                                  [](auto& s, InputSet& o) {
+                                      s.ext(o, bitsery::ext::StdBitset{});
+                                  },
                                   [](auto& s, float& o) { s.value4b(o); }});
                       });
               },
