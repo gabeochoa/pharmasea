@@ -38,7 +38,8 @@ const char WALL = '#';
 const char WALL2 = 'w';
 const char EMPTY = '.';
 const char ORIGIN = '0';
-const char CUSTOMER = 'C';
+const char CUSTOMER = 'c';
+const char CUST_SPAWNER = 'C';
 const char REGISTER = 'R';
 const char TABLE = 't';
 const char PLAYER = '@';
@@ -104,7 +105,10 @@ struct helper {
                 return (entities::make_wall(location, d_color));
             } break;
             case CUSTOMER: {
-                return make_customer(vec::to3(location));
+                return make_customer(location);
+            } break;
+            case CUST_SPAWNER: {
+                return entities::make_customer_spawner(vec::to3(location));
             } break;
             case GRABBERu: {
                 return (entities::make_grabber(location));
@@ -184,8 +188,7 @@ struct helper {
         // find customer
         auto customer = EntityHelper::getFirstMatching<Entity>(
             [](std::shared_ptr<Entity> e) {
-                // TODO replace with customer spawner
-                return e->get<DebugName>().name() == "customer";
+                return e->get<DebugName>().name() == "customer spawner";
             });
         VALIDATE(customer,
                  "map needs to have at least one customer spawn point");
@@ -397,7 +400,7 @@ struct GameMapInfo : public LevelInfo {
 #..^<.....#.........#
 #.........#.........#
 #######..############
-..............CC.....)";
+..............C......)";
 
         auto lines = util::split_string(EXAMPLE_MAP_, "\n");
         generation::helper helper(lines);

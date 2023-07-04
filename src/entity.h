@@ -29,6 +29,7 @@
 #include "components/is_rotatable.h"
 #include "components/is_snappable.h"
 #include "components/is_solid.h"
+#include "components/is_spawner.h"
 #include "components/is_trigger_area.h"
 #include "components/model_renderer.h"
 #include "components/responds_to_user_input.h"
@@ -205,7 +206,7 @@ static void register_all_components() {
         HasWaitingQueue, CanBeTakenFrom, IsItemContainer<Bag>,
         IsItemContainer<PillBottle>, IsItemContainer<Pill>, UsesCharacterModel,
         ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
-        HasSpeechBubble, Indexer>();
+        HasSpeechBubble, Indexer, IsSpawner>();
     delete entity;
 }
 
@@ -324,8 +325,9 @@ static Entity* make_aiperson(const DebugOptions& options, vec3 p) {
     return person;
 }
 
-static Entity* make_customer(vec3 p, bool has_ailment = true) {
-    Entity* customer = make_aiperson(DebugOptions{.name = "customer"}, p);
+static Entity* make_customer(vec2 p, bool has_ailment = true) {
+    Entity* customer =
+        make_aiperson(DebugOptions{.name = "customer"}, vec::to3(p));
 
     customer->addComponent<HasName>().update(get_random_name());
 
@@ -647,6 +649,21 @@ template<typename I>
         .update_progress_max(2.f);
 
     return trigger_area;
+}
+
+[[nodiscard]] static Entity* make_customer_spawner(vec3 pos) {
+    Entity* customer_spawner = make_entity({.name = "customer spawner"}, pos);
+
+    customer_spawner->addComponent<SimpleColoredBoxRenderer>().update(PINK,
+                                                                      PINK);
+    const auto sfn = std::bind(&make_customer, std::placeholders::_1, true);
+    customer_spawner
+        ->addComponent<IsSpawner>()  //
+        .set_fn(sfn)
+        .set_total(3)
+        .set_time_between(2.f);
+
+    return customer_spawner;
 }
 
 }  // namespace entities
