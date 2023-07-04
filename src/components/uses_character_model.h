@@ -14,7 +14,7 @@ struct UsesCharacterModel : public BaseComponent {
         changed = true;
     }
 
-    [[nodiscard]] const std::string& fetch_model() const {
+    [[nodiscard]] const std::string& fetch_model_name() const {
         return character_models[index];
     }
 

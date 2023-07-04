@@ -51,8 +51,9 @@ inline void update_character_model_from_index(std::shared_ptr<Entity> entity,
 
     ModelRenderer& renderer = entity->get<ModelRenderer>();
 
+    // TODO this should be the same as all other rendere updates for players
     renderer.update(ModelInfo{
-        .model_name = usesCharacterModel.fetch_model(),
+        .model_name = usesCharacterModel.fetch_model_name(),
         .size_scale = 1.5f,
         .position_offset = vec3{0, 0, 0},
         .rotation_angle = 180,

@@ -84,7 +84,8 @@ struct Server {
         for (const auto& player : players) {
             ClientPacket player_rare_updated({
                 .channel = Channel::UNRELIABLE,
-                .client_id = SERVER_CLIENT_ID,
+                // Pretend this came from the other client
+                .client_id = player.first,
                 .msg_type = network::ClientPacket::MsgType::PlayerRare,
                 .msg = network::ClientPacket::PlayerRareInfo({
                     .client_id = player.first,

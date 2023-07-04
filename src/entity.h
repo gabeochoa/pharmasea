@@ -287,7 +287,18 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
 
 static void update_player_rare_remotely(std::shared_ptr<Entity> entity,
                                         int model_index) {
-    entity->get<UsesCharacterModel>().update_index_CLIENT_ONLY(model_index);
+    UsesCharacterModel& ucm = entity->get<UsesCharacterModel>();
+    ModelRenderer& renderer = entity->get<ModelRenderer>();
+
+    ucm.update_index_CLIENT_ONLY(model_index);
+
+    // TODO this should be the same as all other rendere updates for players
+    renderer.update(ModelInfo{
+        .model_name = ucm.fetch_model_name(),
+        .size_scale = 1.5f,
+        .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 180,
+    });
 }
 
 static Entity* make_player(vec3 p) {
