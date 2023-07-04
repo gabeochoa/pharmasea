@@ -21,7 +21,7 @@ struct Client {
     std::shared_ptr<Map> map;
     std::vector<ClientPacket::AnnouncementInfo> announcements;
 
-    float next_tick_reset = 0.02f;
+    float next_tick_reset = 0.04f;
     float next_tick = 0.0f;
 
     float next_ping_reset = 0.2f;
