@@ -224,25 +224,17 @@ inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
 
     bool pickup =
         KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
-    if (pickup) {
-        cui.write(InputName::PlayerPickup);
-    }
+    if (pickup) cui.write(InputName::PlayerPickup);
 
     bool rotate = KeyMap::is_event_once_DO_NOT_USE(
         state, InputName::PlayerRotateFurniture);
-    if (rotate) {
-        cui.write(InputName::PlayerRotateFurniture);
-    }
+    if (rotate) cui.write(InputName::PlayerRotateFurniture);
 
     float do_work = KeyMap::is_event(state, InputName::PlayerDoWork);
-    if (do_work > 0) {
-        cui.write(InputName::PlayerDoWork);
-    }
+    if (do_work > 0) cui.write(InputName::PlayerDoWork);
 
-    if (cui.pressed.any()) {
-        cui.inputs.push_back({cui.pressed, dt});
-        cui.reset();
-    }
+    // Actually save the inputs if there were any
+    cui.publish(dt);
 }
 
 inline void process_player_movement_input(std::shared_ptr<Entity> entity,

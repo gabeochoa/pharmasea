@@ -23,6 +23,14 @@ struct CollectsUserInput : public BaseComponent {
         return *this;
     }
 
+    auto& publish(float dt) {
+        if (pressed.any()) {
+            inputs.push_back({pressed, dt});
+            reset();
+        }
+        return *this;
+    }
+
    private:
     friend bitsery::Access;
     template<typename S>
