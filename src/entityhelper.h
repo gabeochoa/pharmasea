@@ -250,6 +250,16 @@ struct EntityHelper {
             });
     }
 
+    template<typename T>
+    static std::vector<std::shared_ptr<Entity>> getAllWithComponent() {
+        std::vector<std::shared_ptr<Entity>> matching;
+        for (auto& e : get_entities()) {
+            if (!e) continue;
+            if (e->has<T>()) matching.push_back(e);
+        }
+        return matching;
+    }
+
     // TODO i think this is slower because we are doing "outside mesh" as
     // outside we should probably have just make some tiles for inside the map
     // ('.' on map for example) and use those to mark where people can walk and
