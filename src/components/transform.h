@@ -184,6 +184,14 @@ struct Transform : public BaseComponent {
         rotate_facing_clockwise(to_rotate);
     }
 
+    void trunc(int places) {
+        update({
+            util::trunc(raw().x, places),
+            util::trunc(raw().y, places),
+            util::trunc(raw().z, places),
+        });
+    }
+
    private:
     vec2 get_heading() const {
         const float target_facing_ang =
