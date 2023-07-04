@@ -51,6 +51,35 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+### alpha_0.23.07.03
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (All) grabbing / dropping is really bad and doesnt work as expected 
+- (IR) timer running out doesnt do anything 
+- (IR) Conveyer belt model is now bread cause it keeps crashing on windows 
+
+impact / gameplay changes
+- customers now check for if the bottle contains pills 
+- change controls based on camera direction 
+- character models are now updated over the internet so you can see who your friends are dressed as 
+- added new character model (rogue) 
+- turn on/off speech bubble when customer is at front of line / leaving
+- you can now pick up pills with the pill bottle
+- added pill selector crate (hold work button to switch)
+- cooler looking default map 
+- Created trigger-area so you can actually load into the game without the devtools! (Also shows number of players needed) 
+bug fixes
+- fixed issue with pathfinding that was causing noclips
+- you cant pick up walls anymore 
+- fixed issue where dead items were being rendered still
+- brought back furniture highlights!
+better eng 
+- pathfinding unittests
+- speed up the gameupdate tick by 40x with this one weird trick (dont compile used logs)
+- i think i may have solved the component desync problem for good (tm) 
+- add dev flags for disabling sound and models to speed up game start during dev
+
 ### alpha_0.23.06.29
 
 Finally finished the ECS rewrite!! 
