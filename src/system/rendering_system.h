@@ -367,7 +367,7 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
     auto& ht = entity->get<HasTimer>();
     switch (ht.type) {
         case HasTimer::Renderer::Round: {
-            const auto ball_color = ht.isopen ? YELLOW : GRAY;
+            const auto ball_color = GameState::s_in_round() ? YELLOW : GRAY;
             const float radius = 10;
 
             const float degrees = util::lerp(175, 360, 1 - ht.pct());
@@ -399,10 +399,10 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
 
             raylib::DrawRectangleRounded(
                 {rect_pos.x, rect_pos.y, rect_size.x, rect_size.y}, 0.5f, 8,
-                ht.isopen ? primary : bg);
+                GameState::s_in_round() ? primary : bg);
 
             raylib::DrawTextEx(Preload::get().font,
-                               ht.isopen ? "OPEN" : "CLOSED",
+                               GameState::s_in_round() ? "OPEN" : "CLOSED",
                                {rect_pos.x, rect_pos.y - 2}, 20, 0, font_color);
 
         } break;
