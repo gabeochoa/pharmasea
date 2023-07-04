@@ -462,13 +462,13 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
             }
         }
         entity->get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::CustomersInStore, all_gone);
+            HasTimer::WaitingReason::CustomersInStore, !all_gone);
     }
 
     // Handle some player is holding furniture
     {
         bool all_empty = true;
-        auto players = EntityHelper::getAllWithName("player");
+        auto players = EntityHelper::getAllWithComponent<CanHoldFurniture>();
         for (auto e : players) {
             if (e->get<CanHoldFurniture>().is_holding_furniture()) {
                 all_empty = false;
@@ -476,7 +476,7 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
             }
         }
         entity->get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::HoldingFurniture, all_empty);
+            HasTimer::WaitingReason::HoldingFurniture, !all_empty);
     }
 }
 
