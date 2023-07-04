@@ -35,8 +35,20 @@ struct HasTimer : public BaseComponent {
     float totalRoundTime;
 
     // TODO move into its own component
+    bool all_customers_out = false;
     void on_complete() {
-        GameState::s_toggle_planning();
+        if (GameState::get().is(game::State::InRoundClosing)) {
+            // For this one, we need to wait until everyone is done leaving
+            if (!all_customers_out) return;
+            GameState::get().set(game::State::Planning);
+        }
+        // For these all we have to do is go to the next state
+        // and reset the timer
+        else if (GameState::get().is(game::State::Planning)) {
+            GameState::get().set(game::State::InRound);
+        } else if (GameState::get().is(game::State::InRound)) {
+            GameState::get().set(game::State::InRoundClosing);
+        }
         currentRoundTime = totalRoundTime;
     }
     void reset_if_complete() {
@@ -48,6 +60,9 @@ struct HasTimer : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+
+        //
+        s.value1b(all_customers_out);
 
         s.value4b(type);
         s.value4b(currentRoundTime);

@@ -45,6 +45,7 @@ void process_trigger_area(const std::shared_ptr<Entity>& entity, float dt);
 void process_spawner(const std::shared_ptr<Entity>& entity, float dt);
 
 void run_timer(const std::shared_ptr<Entity>& entity, float dt);
+void sophie(const std::shared_ptr<Entity>& entity, float dt);
 
 }  // namespace system_manager
 
@@ -68,7 +69,8 @@ struct SystemManager {
         // log_warn("system manager on gamestate change from {} to {}",
         // old_state, new_state);
 
-        if (old_state == game::State::InRound &&
+        if ((old_state == game::State::InRound ||
+             old_state == game::State::InRoundClosing) &&
             new_state == game::State::Planning) {
             state_transitioned_round_to_planning = true;
         }
@@ -84,7 +86,7 @@ struct SystemManager {
         // log_info("num entities {}", entities.size());
         // TODO do we run game updates during paused?
 
-        if (GameState::get().is(game::State::InRound)) {
+        if (GameState::s_in_round()) {
             in_round_update(entities, dt);
         } else {
             planning_update(entities, dt);
@@ -193,6 +195,11 @@ struct SystemManager {
                 entity, dt);
 
             system_manager::run_timer(entity, dt);
+
+            // TODO these eventually should move into their own functions but
+            // for now >:)
+            if (entity->get<DebugName>().name() == "sophie")
+                system_manager::sophie(entity, dt);
         }
     }
 

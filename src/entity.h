@@ -679,7 +679,7 @@ template<typename I>
     Entity* sophie = make_entity({.name = "sophie"}, pos);
 
     // TODO how long is a day?
-    sophie->addComponent<HasTimer>(HasTimer::Renderer::Round, 10.f);
+    sophie->addComponent<HasTimer>(HasTimer::Renderer::Round, 5.f);
 
     return sophie;
 }

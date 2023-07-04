@@ -4,6 +4,7 @@
 #include <thread>
 
 #include "assert.h"
+#include "components/debug_name.h"
 #include "components/transform.h"
 #include "external_include.h"
 //
@@ -256,6 +257,19 @@ struct EntityHelper {
         for (auto& e : get_entities()) {
             if (!e) continue;
             if (e->has<T>()) matching.push_back(e);
+        }
+        return matching;
+    }
+
+    // TODO replace with an enum or something
+    // also doesnt this break the idea of ecs
+    // TODO change other debugname filter guys to this
+    static std::vector<std::shared_ptr<Entity>> getAllWithName(
+        const std::string name) {
+        std::vector<std::shared_ptr<Entity>> matching;
+        for (auto& e : get_entities()) {
+            if (!e) continue;
+            if (e->get<DebugName>().name() == name) matching.push_back(e);
         }
         return matching;
     }
