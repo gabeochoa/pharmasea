@@ -10,7 +10,7 @@ struct CanBeHeld : public BaseComponent {
     [[nodiscard]] bool is_held() const { return held; }
     [[nodiscard]] bool is_not_held() const { return !is_held(); }
 
-    void update(bool g) { held = g; }
+    void set_is_being_held(bool g) { held = g; }
 
    private:
     bool held = false;

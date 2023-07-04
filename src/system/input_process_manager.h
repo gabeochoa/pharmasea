@@ -302,7 +302,7 @@ inline void drop_held_furniture(const std::shared_ptr<Entity>& player) {
         return;
     }
 
-    hf->get<CanBeHeld>().update(false);
+    hf->get<CanBeHeld>().set_is_being_held(false);
     hf->get<Transform>().update(
         vec::snap(vec::to3(player->get<Transform>().tile_infront(1))));
 
@@ -340,7 +340,7 @@ inline void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
         if (!closest_furniture) return;
 
         ourCHF.update(closest_furniture);
-        ourCHF.furniture()->get<CanBeHeld>().update(true);
+        ourCHF.furniture()->get<CanBeHeld>().set_is_being_held(true);
 
         // TODO
         // NOTE: we want to remove the furniture ONLY from the nav mesh
