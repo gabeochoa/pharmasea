@@ -241,6 +241,10 @@ struct Client {
             case ClientPacket::MsgType::Map: {
                 ClientPacket::MapInfo info =
                     std::get<ClientPacket::MapInfo>(packet.msg);
+
+                client_entities_DO_NOT_USE.clear();
+                client_items_DO_NOT_USE.clear();
+
                 client_entities_DO_NOT_USE = info.map.entities();
                 client_items_DO_NOT_USE = info.map.items();
             } break;

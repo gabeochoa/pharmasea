@@ -147,6 +147,8 @@ void process_dev_flags(char* argv[]) {
 int main(int argc, char* argv[]) {
     process_dev_flags(argv);
 
+    // TODO Add flag to run tests only
+    // TODO update makefile to do ./p -t && ./ph -S
     tests::run_all();
     std::cout << "All tests ran " << std::endl;
     // return 0;

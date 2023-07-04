@@ -405,6 +405,12 @@ struct GameMapInfo : public LevelInfo {
         auto lines = util::split_string(EXAMPLE_MAP_, "\n");
         generation::helper helper(lines);
         helper.generate();
+
+        // TODO when you place a register we need to make sure you cant
+        // start the game until it has an empty spot infront of it
+        //
+        // TODO run a lighter version of validate every time the player moves
+        // things around
         helper.validate();
 
         /*

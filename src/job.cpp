@@ -272,15 +272,9 @@ inline bool WIQ_can_move_up(const std::shared_ptr<Entity>& reg,
 
 void WaitInQueueJob::before_each_job_tick(const std::shared_ptr<Entity>& entity,
                                           float) {
-    // if (p_size() > 1) {
-    // entity->get<Transform>().turn_to_face_pos(path_index(1));
-    // return;
-    // }
-
     // This runs before init so its possible theres no register at all
     if (reg) {
         entity->get<Transform>().turn_to_face_pos(reg->get<Transform>().as2());
-        return;
     }
 }
 
@@ -305,9 +299,6 @@ Job::State WaitInQueueJob::run_state_initialize(
         }
     }
 
-    // TODO when you place a register we need to make sure you cant
-    // start the game until it has an empty spot infront of it
-    //
     if (!best_target) {
         log_warn("Could not find a valid register");
         WIQ_wait_and_return(entity);
@@ -433,7 +424,7 @@ Job::State WaitInQueueJob::run_state_working_at_end(
         std::shared_ptr<Job> jshared;
         jshared.reset(Job::create_job_of_type(
             entity->get<Transform>().as2(),
-            // TODO create a global so they all leave to the same spot
+            // TODO just find the customer spawner and go back there...
             vec2{-20, -20}, JobType::Leaving));
         entity->get<CanPerformJob>().push_onto_queue(jshared);
     }
