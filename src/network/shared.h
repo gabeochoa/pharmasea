@@ -100,7 +100,7 @@ struct ClientPacket {
 
     // Packet containing a recent keypress
     struct PlayerControlInfo {
-        UserInputs inputs;
+        InputSet inputs;
     };
 
     // Player Join
@@ -214,16 +214,17 @@ void serialize(S& s, ClientPacket& packet) {
                   s.value4b(info.client_id);
               },
               [](S& s, ClientPacket::PlayerControlInfo& info) {
-                  s.container(
-                      info.inputs, MAX_INPUTS, [](S& sv, UserInput& input) {
-                          sv.ext(
-                              input,
-                              bitsery::ext::StdTuple{
-                                  [](auto& s, menu::State& o) { s.value4b(o); },
-                                  [](auto& s, game::State& o) { s.value4b(o); },
-                                  [](auto& s, InputName& o) { s.value4b(o); },
-                                  [](auto& s, float& o) { s.value4b(o); }});
-                      });
+                  s.ext(info.inputs, bitsery::ext::StdBitset{});
+                  // s.container(
+                  // info.inputs, MAX_INPUTS, [](S& sv, UserInput& input) {
+                  // sv.ext(
+                  // input,
+                  // bitsery::ext::StdTuple{
+                  // [](auto& s, menu::State& o) { s.value4b(o); },
+                  // [](auto& s, game::State& o) { s.value4b(o); },
+                  // [](auto& s, InputName& o) { s.value4b(o); },
+                  // [](auto& s, float& o) { s.value4b(o); }});
+                  // });
               },
               [](S& s, ClientPacket::GameStateInfo& info) {
                   s.value4b(info.host_menu_state);

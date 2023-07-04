@@ -90,17 +90,17 @@ struct Client {
     void send_player_input_packet(int my_id) {
         CollectsUserInput& cui = global_player->get<CollectsUserInput>();
 
-        if (cui.inputs.empty()) return;
+        if (cui.pressed.none()) return;
 
         ClientPacket packet({
             .channel = Channel::UNRELIABLE_NO_DELAY,
             .client_id = my_id,
             .msg_type = network::ClientPacket::MsgType::PlayerControl,
             .msg = network::ClientPacket::PlayerControlInfo({
-                .inputs = cui.inputs,
+                .inputs = cui.pressed,
             }),
         });
-        cui.inputs.clear();
+        cui.pressed.reset();
         client_p->send_packet_to_server(packet);
     }
 

@@ -53,9 +53,12 @@ enum InputName {
     ToggleDebug,        // DEBUG ONLY
     ToggleNetworkView,  // DEBUG ONLY
     ToggleLobby,        // DEBUG ONLY
+
+    Last,
 };
 
-typedef std::tuple<menu::State, InputName, float, float> UserInput;
+typedef std::bitset<InputName::Last> InputSet;
+typedef std::tuple<InputSet, float> UserInput;
 typedef std::vector<UserInput> UserInputs;
 
 // TODO: had a bit of trouble trying to serialize "full map" which

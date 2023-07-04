@@ -217,30 +217,26 @@ inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
         up = 0;
     }
 
-    if (left > 0)
-        cui.inputs.push_back({state, InputName::PlayerLeft, left, dt});
-    if (right > 0)
-        cui.inputs.push_back({state, InputName::PlayerRight, right, dt});
-    if (up > 0) cui.inputs.push_back({state, InputName::PlayerForward, up, dt});
-    if (down > 0)
-        cui.inputs.push_back({state, InputName::PlayerBack, down, dt});
+    if (left > 0) cui.write(InputName::PlayerLeft);
+    if (right > 0) cui.write(InputName::PlayerRight);
+    if (up > 0) cui.write(InputName::PlayerForward);
+    if (down > 0) cui.write(InputName::PlayerBack);
 
     bool pickup =
         KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
     if (pickup) {
-        cui.inputs.push_back({state, InputName::PlayerPickup, 1.f, dt});
+        cui.write(InputName::PlayerPickup);
     }
 
     bool rotate = KeyMap::is_event_once_DO_NOT_USE(
         state, InputName::PlayerRotateFurniture);
     if (rotate) {
-        cui.inputs.push_back(
-            {state, InputName::PlayerRotateFurniture, 1.f, dt});
+        cui.write(InputName::PlayerRotateFurniture);
     }
 
     float do_work = KeyMap::is_event(state, InputName::PlayerDoWork);
     if (do_work > 0) {
-        cui.inputs.push_back({state, InputName::PlayerDoWork, 1.f, dt});
+        cui.write(InputName::PlayerDoWork);
     }
 }
 
