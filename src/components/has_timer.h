@@ -35,8 +35,10 @@ struct HasTimer : public BaseComponent {
     float totalRoundTime;
 
     // TODO move into its own component
+    bool isopen = false;
     void on_complete() {
-        GameState::s_toggle_planning();
+        isopen = !isopen;
+        // GameState::s_toggle_planning();
         currentRoundTime = totalRoundTime;
     }
     void reset_if_complete() {
@@ -48,6 +50,8 @@ struct HasTimer : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+
+        s.value1b(isopen);
 
         s.value4b(type);
         s.value4b(currentRoundTime);

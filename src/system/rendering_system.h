@@ -367,30 +367,34 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
     auto& ht = entity->get<HasTimer>();
     switch (ht.type) {
         case HasTimer::Renderer::Round: {
-            const auto ball_color = GameState::s_in_round() ? YELLOW : GRAY;
-            const float radius = 10;
+            // TODO id like a better way to expose these so other people can
+            // fetch
+            const bool is_day = ht.isopen;
+            const bool in_round = GameState::s_in_round();
 
-            const float degrees = util::lerp(175, 360, 1 - ht.pct());
-            const float angle = util::deg2rad(degrees);
-
-            const float r5 = radius * 5;
             const vec2 center = {200.f, 75.f};
+
+            const float radius = 10;
+            const float r5 = radius * 5;
+            const float angle =
+                util::deg2rad(util::lerp(175, 360, 1 - ht.pct()));
             const vec2 pos = {
                 center.x + std::cos(angle) * (r5),
                 center.y + std::sin(angle) * (r5),
             };
 
+            // Hide it when its below the rect
+            if (angle >= M_PI)
+                raylib::DrawCircle((int) pos.x, (int) pos.y, radius,
+                                   is_day ? YELLOW : GRAY);
+
             const vec2 start = {center.x - r5 - (radius), center.y};
             const vec2 end = {center.x + r5 + (radius), center.y};
-
-            // Hide it when its below the rect
-            if (degrees >= 180)
-                raylib::DrawCircle((int) pos.x, (int) pos.y, radius,
-                                   ball_color);
-
             vec2 rect_size = {end.x - start.x, 20};
             vec2 rect_pos = {start.x, start.y - 10};
 
+            // TODO change to varargs with structured bindings?
+            // or colocate with usage
             Color bg = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Background);
             Color primary =
                 ::ui::DEFAULT_THEME.from_usage(::ui::theme::Primary);
@@ -399,10 +403,12 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
 
             raylib::DrawRectangleRounded(
                 {rect_pos.x, rect_pos.y, rect_size.x, rect_size.y}, 0.5f, 8,
-                GameState::s_in_round() ? primary : bg);
+                is_day ? primary : bg);
 
-            raylib::DrawTextEx(Preload::get().font,
-                               GameState::s_in_round() ? "OPEN" : "CLOSED",
+            auto status_text =
+                is_day ? "OPEN" : (in_round ? "CLOSING" : "CLOSED");
+
+            raylib::DrawTextEx(Preload::get().font, status_text,
                                {rect_pos.x, rect_pos.y - 2}, 20, 0, font_color);
 
         } break;
