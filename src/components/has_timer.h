@@ -35,21 +35,48 @@ struct HasTimer : public BaseComponent {
     float totalRoundTime;
 
     // TODO move into its own component
-    bool all_customers_out = false;
+    enum WaitingReason {
+        None,
+        CustomersInStore,
+        HoldingFurniture,
+        WaitingReasonLast,
+    } waiting_reason = None;
+    std::bitset<WaitingReason::WaitingReasonLast> block_state_change_reasons;
+
+    bool read_reason(WaitingReason wr) {
+        auto i = magic_enum::enum_integer<WaitingReason>(wr);
+        return block_state_change_reasons.test(i);
+    }
+
+    void write_reason(WaitingReason wr, bool value) {
+        auto i = magic_enum::enum_integer<WaitingReason>(wr);
+        block_state_change_reasons[i] = value;
+    }
+
     void on_complete() {
-        if (GameState::get().is(game::State::InRoundClosing)) {
-            // For this one, we need to wait until everyone is done leaving
-            if (!all_customers_out) return;
-            GameState::get().set(game::State::Planning);
+        auto _reset_timer = [&]() { currentRoundTime = totalRoundTime; };
+
+        switch (GameState::get().read()) {
+            case game::State::InRoundClosing: {
+                // For this one, we need to wait until everyone is done leaving
+                if (read_reason(WaitingReason::CustomersInStore)) return;
+                GameState::get().set(game::State::Planning);
+            } break;
+            case game::State::Planning: {
+                // For this one, we need to wait until everyone drops the things
+                if (read_reason(WaitingReason::HoldingFurniture)) return;
+                GameState::get().set(game::State::InRound);
+            } break;
+            case game::State::InRound: {
+                GameState::get().set(game::State::InRoundClosing);
+            } break;
+
+            default:
+                log_warn("Completed timer but no state handler {}",
+                         GameState::get().read());
+                return;
         }
-        // For these all we have to do is go to the next state
-        // and reset the timer
-        else if (GameState::get().is(game::State::Planning)) {
-            GameState::get().set(game::State::InRound);
-        } else if (GameState::get().is(game::State::InRound)) {
-            GameState::get().set(game::State::InRoundClosing);
-        }
-        currentRoundTime = totalRoundTime;
+        _reset_timer();
     }
     void reset_if_complete() {
         if (currentRoundTime <= 0.f) on_complete();
@@ -62,7 +89,7 @@ struct HasTimer : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         //
-        s.value1b(all_customers_out);
+        s.ext(block_state_change_reasons, bitsery::ext::StdBitset{});
 
         s.value4b(type);
         s.value4b(currentRoundTime);

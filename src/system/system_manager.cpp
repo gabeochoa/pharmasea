@@ -461,7 +461,22 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
                 break;
             }
         }
-        entity->get<HasTimer>().all_customers_out = all_gone;
+        entity->get<HasTimer>().write_reason(
+            HasTimer::WaitingReason::CustomersInStore, all_gone);
+    }
+
+    // Handle some player is holding furniture
+    {
+        bool all_empty = true;
+        auto players = EntityHelper::getAllWithName("player");
+        for (auto e : players) {
+            if (e->get<CanHoldFurniture>().is_holding_furniture()) {
+                all_empty = false;
+                break;
+            }
+        }
+        entity->get<HasTimer>().write_reason(
+            HasTimer::WaitingReason::HoldingFurniture, all_empty);
     }
 }
 
