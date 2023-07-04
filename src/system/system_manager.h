@@ -43,6 +43,10 @@ void count_trigger_area_entrants(const std::shared_ptr<Entity>& entity, float);
 
 void process_trigger_area(const std::shared_ptr<Entity>& entity, float dt);
 
+// TODO maybe we could pull out all the singleton boiz into their own update
+// loop / entity thing or mayeb all the server only ones?
+void process_spawner(const std::shared_ptr<Entity>& entity, float dt);
+
 }  // namespace system_manager
 
 SINGLETON_FWD(SystemManager)
@@ -194,6 +198,7 @@ struct SystemManager {
                 entity, dt);
             system_manager::process_is_container_and_should_update_item(entity,
                                                                         dt);
+            system_manager::process_spawner(entity, dt);
         }
     }
 

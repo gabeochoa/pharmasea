@@ -10,6 +10,8 @@ typedef std::function<Entity*(vec2)> SpawnFn;
 struct IsSpawner : public BaseComponent {
     virtual ~IsSpawner() {}
 
+    [[nodiscard]] bool hit_max() const { return num_spawned >= max_spawned; }
+
     auto& set_fn(SpawnFn fn) {
         spawn_fn = fn;
         return *this;
@@ -20,14 +22,35 @@ struct IsSpawner : public BaseComponent {
         return *this;
     }
 
+    // TODO probably need a thing to specify the units
     auto& set_time_between(float s) {
         spread = s;
+        countdown = spread;
         return *this;
+    }
+
+    Entity* pass_time(vec2 pos, float dt) {
+        if (hit_max()) return nullptr;
+        if (!spawn_fn) {
+            log_warn("calling pass_time without a valid spawn function");
+            return nullptr;
+        }
+
+        countdown -= dt;
+        if (countdown <= 0) {
+            countdown = spread;
+            num_spawned++;
+            return spawn_fn(pos);
+        }
+        return nullptr;
     }
 
    private:
     int max_spawned = 0;
     float spread = 0;
+
+    int num_spawned = 0;
+    float countdown = 0;
     SpawnFn spawn_fn;
 
     friend bitsery::Access;

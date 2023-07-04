@@ -435,4 +435,14 @@ void process_trigger_area(const std::shared_ptr<Entity>& entity, float dt) {
     trigger_gamestate_change_on_full_progress(entity, dt);
 }
 
+void process_spawner(const std::shared_ptr<Entity>& entity, float dt) {
+    if (entity->is_missing<IsSpawner>()) return;
+    auto pos = entity->get<Transform>().as2();
+    Entity* e = entity->get<IsSpawner>().pass_time(pos, dt);
+    if (!e) return;
+    std::shared_ptr<Entity> s_e;
+    s_e.reset(e);
+    EntityHelper::addEntity(s_e);
+}
+
 }  // namespace system_manager
