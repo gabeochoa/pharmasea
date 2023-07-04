@@ -418,6 +418,29 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
     }
 }
 
+inline void render_block_state_change_reason(std::shared_ptr<Entity> entity,
+                                             float) {
+    if (entity->is_missing<HasTimer>()) return;
+    auto& ht = entity->get<HasTimer>();
+
+    auto _render_single_reason = [](std::string text, float y) {
+        Color font_color = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
+        raylib::DrawTextEx(Preload::get().font, text.c_str(), {200, y}, 75, 0,
+                           font_color);
+    };
+
+    // TODO handle centering the text better when there are more than one
+    int posy = ht.block_state_change_reasons.count() > 1 ? 200 : 200;
+    for (int i = 1; i < HasTimer::WaitingReason::WaitingReasonLast; i++) {
+        bool enabled = ht.read_reason(i);
+
+        if (enabled) {
+            _render_single_reason(ht.text_reason(i), posy);
+            posy += 75;
+        }
+    }
+}
+
 inline void render_player_info() {
     // TODO eventually switch to using the actual entity instead of global
     // just need a way to find them
@@ -444,7 +467,7 @@ inline void render_player_info() {
                     global_player->get<CanHoldItem>().is_holding_item()));
 }
 
-inline void render_debug(const Entities& entities, float dt) {
+inline void render_debug(const Entities&, float) {
     render_player_info();
     // for (auto& entity : entities) {
     // }
@@ -453,6 +476,7 @@ inline void render_debug(const Entities& entities, float dt) {
 inline void render_normal(const Entities& entities, float dt) {
     for (auto& entity : entities) {
         render_timer(entity, dt);
+        render_block_state_change_reason(entity, dt);
     }
 }
 

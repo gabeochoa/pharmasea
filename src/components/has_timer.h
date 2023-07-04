@@ -41,10 +41,32 @@ struct HasTimer : public BaseComponent {
         HoldingFurniture,
         WaitingReasonLast,
     } waiting_reason = None;
+
     std::bitset<WaitingReason::WaitingReasonLast> block_state_change_reasons;
 
-    bool read_reason(WaitingReason wr) {
-        auto i = magic_enum::enum_integer<WaitingReason>(wr);
+    [[nodiscard]] std::string text_reason(WaitingReason wr) {
+        switch (wr) {
+            case CustomersInStore:
+                return "Can't close until all customers leave";
+            case HoldingFurniture:
+                return "Can't start game until all players drop furniture";
+            default:
+            case WaitingReasonLast:
+            case None:
+                return "";
+        }
+    }
+
+    [[nodiscard]] std::string text_reason(int i) {
+        auto name = magic_enum::enum_value<WaitingReason>(i);
+        return text_reason(name);
+    }
+
+    [[nodiscard]] bool read_reason(WaitingReason wr) const {
+        return read_reason(magic_enum::enum_integer<WaitingReason>(wr));
+    }
+
+    [[nodiscard]] bool read_reason(int i) const {
         return block_state_change_reasons.test(i);
     }
 
