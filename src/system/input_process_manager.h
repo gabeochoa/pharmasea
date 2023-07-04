@@ -208,7 +208,8 @@ inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
         up = key_right;
         down = key_left;
     } else {
-        log_warn("reached a camera angle that has no controls enabled");
+        log_warn("reached a camera angle that has no controls enabled: {}",
+                 xang);
         // Default controls
         left = 0;
         right = 0;
