@@ -138,6 +138,7 @@ struct Job {
                 return state;
             }
         }
+        return state;
     }
 
     [[nodiscard]] inline bool is_at_position(
