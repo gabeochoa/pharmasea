@@ -21,6 +21,8 @@ constexpr float TILESIZE = 1.0f;
 struct Entity;
 static std::shared_ptr<Entity> global_player;
 
+constexpr float GATHER_SPOT = -20.f;
+
 static bool ENABLE_MODELS = true;
 static bool ENABLE_SOUND = true;
 

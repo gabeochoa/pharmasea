@@ -51,6 +51,18 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float dt) {
     CanPerformJob& cpj = entity->get<CanPerformJob>();
     if (cpj.has_job()) return;
 
+    // If you dont have a job and we are closing, the leave please
+    // TODO handle employee ai
+    // TODO handle being angry or something
+    // TODO handle paying for your cart
+
+    if (GameState::get().is(game::State::InRoundClosing)) {
+        auto pos = entity->get<Transform>().as2();
+        cpj.update(Job::create_job_of_type(pos, vec2{GATHER_SPOT, GATHER_SPOT},
+                                           JobType::Leaving));
+        return;
+    }
+
     auto& personal_queue = cpj.job_queue();
     if (personal_queue.empty()) {
         // No job and nothing in the queue? grab the next default one then

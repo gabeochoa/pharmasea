@@ -447,19 +447,22 @@ void run_timer(const std::shared_ptr<Entity>& entity, float dt) {
 void sophie(const std::shared_ptr<Entity>& entity, float) {
     if (entity->is_missing<HasTimer>()) return;
 
-    // TODO with the others siwtch to something else... customer spawner?
-    const auto endpos = vec2{-20, -20};
+    // Handle customers finally leaving the store
+    {
+        // TODO with the others siwtch to something else... customer spawner?
+        const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
 
-    bool all_gone = true;
-    auto customers = EntityHelper::getAllWithName("customer");
-    for (auto e : customers) {
-        if (vec::distance(e->get<Transform>().as2(), endpos) > TILESIZE * 2.f) {
-            all_gone = false;
-            break;
+        bool all_gone = true;
+        auto customers = EntityHelper::getAllWithName("customer");
+        for (auto e : customers) {
+            if (vec::distance(e->get<Transform>().as2(), endpos) >
+                TILESIZE * 2.f) {
+                all_gone = false;
+                break;
+            }
         }
+        entity->get<HasTimer>().all_customers_out = all_gone;
     }
-    log_info("got customers {} {}", customers.size(), all_gone);
-    entity->get<HasTimer>().all_customers_out = all_gone;
 }
 
 }  // namespace system_manager

@@ -7,6 +7,7 @@
 #include "engine/assert.h"
 #include "entity.h"
 #include "entityhelper.h"
+#include "globals.h"
 #include "system/logging_system.h"
 
 HasWaitingQueue& HasWaitingQueue::add_customer(
@@ -425,7 +426,7 @@ Job::State WaitInQueueJob::run_state_working_at_end(
         jshared.reset(Job::create_job_of_type(
             entity->get<Transform>().as2(),
             // TODO just find the customer spawner and go back there...
-            vec2{-20, -20}, JobType::Leaving));
+            vec2{GATHER_SPOT, GATHER_SPOT}, JobType::Leaving));
         entity->get<CanPerformJob>().push_onto_queue(jshared);
     }
     entity->get<HasSpeechBubble>().off();
@@ -454,7 +455,7 @@ Job::State LeavingJob::run_state_working_at_end(
         jshared.reset(new WaitJob(
             start,
             // TODO create a global so they all leave to the same spot
-            vec2{-20, -20},
+            vec2{GATHER_SPOT, GATHER_SPOT},
             // TODO replace with remaining round time so they dont come back
             90.f));
         entity->get<CanPerformJob>().push_onto_queue(jshared);
