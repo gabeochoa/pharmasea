@@ -649,6 +649,7 @@ template<typename I>
         .update_progress_max(2.f)
         .on_complete([]() {
             // TODO should be lobby only?
+            // TODO only for host...
             GameState::s_toggle_to_planning();
         });
 
@@ -659,7 +660,7 @@ template<typename I>
     Entity* customer_spawner = make_entity({.name = "customer spawner"}, pos);
 
     // TODO maybe one day add some kind of ui that shows when the next person is
-    // coming?
+    // coming? that migth be good to be part of the round timer ui?
     customer_spawner->addComponent<SimpleColoredBoxRenderer>().update(PINK,
                                                                       PINK);
     const auto sfn = std::bind(&make_customer, std::placeholders::_1, true);

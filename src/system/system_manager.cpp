@@ -418,7 +418,6 @@ void trigger_cb_on_full_progress(const std::shared_ptr<Entity>& entity, float) {
     if (entity->is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity->get<IsTriggerArea>();
     if (ita.progress() < 1.f) return;
-    // TODO only for host...
     auto cb = ita.get_complete_fn();
     if (cb) cb();
 }
