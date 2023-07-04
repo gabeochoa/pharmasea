@@ -290,32 +290,37 @@ Job::State WaitInQueueJob::run_state_initialize(
 
     // Figure out which register to go to...
 
-    // TODO replace with finding the one with the least people in it
-    std::shared_ptr<Furniture> closest_target =
-        EntityHelper::getClosestWithComponent<HasWaitingQueue>(
-            entity, TILESIZE * 100.f);
+    auto all_registers = EntityHelper::getAllWithComponent<HasWaitingQueue>();
+
+    // Find the register with the least people on it
+    std::shared_ptr<Entity> best_target;
+    int best_pos = -1;
+    for (auto r : all_registers) {
+        auto& hwq = r->get<HasWaitingQueue>();
+        if (hwq.is_full()) continue;
+        auto rpos = hwq.get_next_pos();
+        if (best_pos == -1 || rpos < best_pos) {
+            best_target = r;
+            best_pos = rpos;
+        }
+    }
 
     // TODO when you place a register we need to make sure you cant
     // start the game until it has an empty spot infront of it
     //
-    if (!closest_target) {
-        // TODO we need some kinda way to save this job,
-        // and come back to it later
-        // i think just putting a Job* unfinished in Job is
-        // probably enough
+    if (!best_target) {
         log_warn("Could not find a valid register");
-
         WIQ_wait_and_return(entity);
         return Job::State::Initialize;
     }
 
-    reg = closest_target;
+    reg = best_target;
     VALIDATE(reg, "underlying job should contain a register now");
 
-    start = WIQ_add_to_queue_and_get_position(closest_target, entity);
-    end = closest_target->get<Transform>().tile_infront(1);
+    start = WIQ_add_to_queue_and_get_position(best_target, entity);
+    end = best_target->get<Transform>().tile_infront(1);
 
-    spot_in_line = WIQ_position_in_line(closest_target, entity);
+    spot_in_line = WIQ_position_in_line(best_target, entity);
 
     VALIDATE(spot_in_line >= 0, "customer should be in line right now");
 
