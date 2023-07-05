@@ -1,8 +1,0 @@
-digraph "Files"
-{
- // LATEX_PDF_SIZE
-  bgcolor="transparent";
-  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
-  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
-  Node1 [shape=record,label="{Files\n|+ root\l+ settings_file\l|+ Files()\l+ game_folder()\l+ ensure_game_folder\l_exists()\l+ settings_filepath()\l+ resource_folder()\l+ game_controller_db()\l+ fetch_resource_path()\l+ for_resources_in_folder()\l+ folder_locations()\l}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
-}

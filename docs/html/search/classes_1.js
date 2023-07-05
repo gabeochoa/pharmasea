@@ -1,9 +1,0 @@
-var searchData=
-[
-  ['bag_0',['Bag',['../d3/dbd/struct_bag.html',1,'']]],
-  ['basecomponent_1',['BaseComponent',['../d0/d50/struct_base_component.html',1,'']]],
-  ['basepauselayer_2',['BasePauseLayer',['../d9/de2/struct_base_pause_layer.html',1,'']]],
-  ['bowels_3',['Bowels',['../d3/dbd/struct_bowels.html',1,'']]],
-  ['buttonconfig_4',['ButtonConfig',['../dc/de2/structui_1_1_button_config.html',1,'ui']]],
-  ['buttonliststate_5',['ButtonListState',['../d9/d96/structui_1_1_button_list_state.html',1,'ui']]]
-];

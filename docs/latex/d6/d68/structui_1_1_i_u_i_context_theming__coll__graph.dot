@@ -1,8 +1,0 @@
-digraph "ui::IUIContextTheming"
-{
- // LATEX_PDF_SIZE
-  bgcolor="transparent";
-  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
-  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
-  Node1 [shape=record,label="{ui::IUIContextTheming\n|+ themestack\l|+ init()\l+ push_theme()\l+ pop_theme()\l+ active_theme()\l}",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
-}
