@@ -441,7 +441,7 @@ void process_spawner(const std::shared_ptr<Entity>& entity, float dt) {
 
 void run_timer(const std::shared_ptr<Entity>& entity, float dt) {
     if (entity->is_missing<HasTimer>()) return;
-    entity->get<HasTimer>().pass_time(dt).reset_if_complete();
+    entity->get<HasTimer>().pass_time(dt).reset_if_complete(dt);
 }
 
 void sophie(const std::shared_ptr<Entity>& entity, float) {
@@ -474,7 +474,6 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
         // auto players = EntityHelper::getAllWithComponent<CanHoldFurniture>();
 
         for (auto& e : SystemManager::get().oldAll) {
-            // TODO need a better way to match player
             if (e->is_missing<CanHoldFurniture>()) continue;
             if (e->get<CanHoldFurniture>().is_holding_furniture()) {
                 all_empty = false;

@@ -34,6 +34,26 @@ struct HasTimer : public BaseComponent {
     float currentRoundTime;
     float totalRoundTime;
 
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+
+        s.value4b(type);
+        s.value4b(currentRoundTime);
+        s.value4b(totalRoundTime);
+
+        // other pcomponent
+        s.ext(block_state_change_reasons, bitsery::ext::StdBitset{});
+        s.value4b(roundSwitchCountdown);
+        s.value4b(roundSwitchCountdownReset);
+    }
+
+   public:
+    float roundSwitchCountdownReset = 5.f;
+    float roundSwitchCountdown = 5.f;
+
     // TODO move into its own component
     enum WaitingReason {
         None,
@@ -73,10 +93,17 @@ struct HasTimer : public BaseComponent {
     void write_reason(WaitingReason wr, bool value) {
         auto i = magic_enum::enum_integer<WaitingReason>(wr);
         block_state_change_reasons[i] = value;
+        if (value) roundSwitchCountdown = roundSwitchCountdownReset;
     }
 
-    void on_complete() {
+    void on_complete(float dt) {
         auto _reset_timer = [&]() { currentRoundTime = totalRoundTime; };
+
+        // Countdown timer
+        if (roundSwitchCountdown >= 0) {
+            roundSwitchCountdown -= dt;
+            return;
+        }
 
         switch (GameState::get().read()) {
             case game::State::InRoundClosing: {
@@ -98,23 +125,11 @@ struct HasTimer : public BaseComponent {
                          GameState::get().read());
                 return;
         }
+
+        roundSwitchCountdown = roundSwitchCountdownReset;
         _reset_timer();
     }
-    void reset_if_complete() {
-        if (currentRoundTime <= 0.f) on_complete();
-    }
-
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        //
-        s.ext(block_state_change_reasons, bitsery::ext::StdBitset{});
-
-        s.value4b(type);
-        s.value4b(currentRoundTime);
-        s.value4b(totalRoundTime);
+    void reset_if_complete(float dt) {
+        if (currentRoundTime <= 0.f) on_complete(dt);
     }
 };
