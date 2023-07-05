@@ -219,7 +219,7 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     // TODO if we are pushing onto a conveyer, we need to make sure
     // we are keeping track of the orientations
     //
-    //  --> --> in this case we want to place at 0.f
+    //  --> --> in this case we want to place at 0.5f
     //
     //          ^
     //    -->-> |     in this we want to place at 0.f instead of -0.5
@@ -260,8 +260,9 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
             if (furn->is_missing<CanHoldItem>()) return false;
             // doesnt have anything
             if (furn->get<CanHoldItem>().empty()) return false;
-            //
-            if (furn->is_missing<CanBeTakenFrom>()) return false;
+            // We only check CanBe when it exists because everyone else can
+            // always be taken from with a grabber
+            if (furn->is_missing<CanBeTakenFrom>()) return true;
             return furn->get<CanBeTakenFrom>().can_take_from();
         });
 
