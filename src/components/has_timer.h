@@ -97,7 +97,7 @@ struct HasTimer : public BaseComponent {
     }
 
     [[nodiscard]] bool store_is_closed() const {
-        return roundSwitchCountdown <= 0 && GameState::s_in_round();
+        return currentRoundTime <= 0 && GameState::s_in_round();
     }
 
     void on_complete(float dt) {

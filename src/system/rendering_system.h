@@ -425,15 +425,6 @@ inline void render_block_state_change_reason(std::shared_ptr<Entity> entity,
     // if the round isnt over dont need to show anything
     if (ht.currentRoundTime > 0) return;
 
-    {
-        Color font_color = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
-        auto countdown =
-            fmt::format("Next Round Starts in: {}",
-                        (int) util::trunc(ht.roundSwitchCountdown, 1));
-        raylib::DrawTextEx(Preload::get().font, countdown.c_str(), {200, 150},
-                           75, 0, font_color);
-    }
-
     //
     auto _render_single_reason = [](std::string text, float y) {
         Color font_color = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
@@ -442,7 +433,8 @@ inline void render_block_state_change_reason(std::shared_ptr<Entity> entity,
     };
 
     // TODO handle centering the text better when there are more than one
-    int posy = ht.block_state_change_reasons.count() > 1 ? 200 : 200;
+    bool has_reasons = ht.block_state_change_reasons.count() > 1;
+    int posy = has_reasons ? 200 : 200;
     for (int i = 1; i < HasTimer::WaitingReason::WaitingReasonLast; i++) {
         bool enabled = ht.read_reason(i);
 
@@ -450,6 +442,15 @@ inline void render_block_state_change_reason(std::shared_ptr<Entity> entity,
             _render_single_reason(ht.text_reason(i), posy);
             posy += 75;
         }
+    }
+
+    if (ht.block_state_change_reasons.none()) {
+        Color font_color = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
+        auto countdown =
+            fmt::format("Next Round Starts in: {}",
+                        (int) ceil(util::trunc(ht.roundSwitchCountdown, 1)));
+        raylib::DrawTextEx(Preload::get().font, countdown.c_str(), {200, 100},
+                           75, 0, font_color);
     }
 }
 
