@@ -88,15 +88,15 @@ $(function() {
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;../external_include.h&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">//</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;../util.h&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/d39/app_8h.html">app.h</a>&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../dd/d20/event_8h.html">event.h</a>&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="../../dd/d20/files_8h.html">files.h</a>&quot;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d87/globals_8h.html">globals.h</a>&quot;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/d7f/log_8h.html">log.h</a>&quot;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;<a class="code" href="../../dc/d33/music__library_8h.html">music_library.h</a>&quot;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/d78/resolution_8h.html">resolution.h</a>&quot;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="../../d4/d0b/singleton_8h.html">singleton.h</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/d39/app_8h.html">app.h</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../dd/d20/event_8h.html">event.h</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../dd/d20/files_8h.html">files.h</a>&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d87/globals_8h.html">globals.h</a>&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/d7f/log_8h.html">log.h</a>&quot;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &quot;<a class="code" href="../../dc/d33/music__library_8h.html">music_library.h</a>&quot;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/d78/resolution_8h.html">resolution.h</a>&quot;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="../../d4/d0b/singleton_8h.html">singleton.h</a>&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d3c/util_8h.html">util.h</a>&quot;</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="../../d5/de8/namespacesettings.html">   23</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d5/de8/namespacesettings.html">settings</a> {</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
@@ -172,10 +172,10 @@ $(function() {
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        data.resolution = <a class="code hl_namespace" href="../../de/d14/namespacerez.html">rez</a>;</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        data.resolution.width = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            fminf(3860.f, fmaxf(data.resolution.width, 1280.f)));</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            fminf(3860.f, fmaxf((<span class="keywordtype">float</span>)data.resolution.width, 1280.f)));</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        data.resolution.height = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            fminf(2160.f, fmaxf(data.resolution.height, 720.f)));</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            fminf(2160.f, fmaxf((<span class="keywordtype">float</span>)data.resolution.height, 720.f)));</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="comment">//</span></div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <a class="code hl_struct" href="../../d0/d57/struct_window_resize_event.html">WindowResizeEvent</a>* <span class="keyword">event</span> = <span class="keyword">new</span> <a class="code hl_struct" href="../../d0/d57/struct_window_resize_event.html">WindowResizeEvent</a>(</div>
@@ -298,9 +298,9 @@ $(function() {
 <div class="ttc" id="afiles_8h_html"><div class="ttname"><a href="../../dd/d20/files_8h.html">files.h</a></div></div>
 <div class="ttc" id="aglobals_8h_html"><div class="ttname"><a href="../../d5/d87/globals_8h.html">globals.h</a></div></div>
 <div class="ttc" id="alog_8h_html"><div class="ttname"><a href="../../d7/d7f/log_8h.html">log.h</a></div></div>
-<div class="ttc" id="alog_8h_html_a04af09851c431d178f16b24fa1aac1e9"><div class="ttname"><a href="../../d7/d7f/log_8h.html#a04af09851c431d178f16b24fa1aac1e9">log_warn</a></div><div class="ttdeci">#define log_warn(...)</div><div class="ttdef"><b>Definition:</b> log.h:74</div></div>
-<div class="ttc" id="alog_8h_html_aa1cfe5444875c8eca0ea6f6993977d6d"><div class="ttname"><a href="../../d7/d7f/log_8h.html#aa1cfe5444875c8eca0ea6f6993977d6d">log_info</a></div><div class="ttdeci">#define log_info(...)</div><div class="ttdef"><b>Definition:</b> log.h:73</div></div>
-<div class="ttc" id="alog_8h_html_af89cb876e6e1d43cfeacdd58a7c9b78c"><div class="ttname"><a href="../../d7/d7f/log_8h.html#af89cb876e6e1d43cfeacdd58a7c9b78c">log_trace</a></div><div class="ttdeci">#define log_trace(...)</div><div class="ttdef"><b>Definition:</b> log.h:71</div></div>
+<div class="ttc" id="alog_8h_html_a04af09851c431d178f16b24fa1aac1e9"><div class="ttname"><a href="../../d7/d7f/log_8h.html#a04af09851c431d178f16b24fa1aac1e9">log_warn</a></div><div class="ttdeci">#define log_warn(...)</div><div class="ttdef"><b>Definition:</b> log.h:80</div></div>
+<div class="ttc" id="alog_8h_html_aa1cfe5444875c8eca0ea6f6993977d6d"><div class="ttname"><a href="../../d7/d7f/log_8h.html#aa1cfe5444875c8eca0ea6f6993977d6d">log_info</a></div><div class="ttdeci">#define log_info(...)</div><div class="ttdef"><b>Definition:</b> log.h:77</div></div>
+<div class="ttc" id="alog_8h_html_af89cb876e6e1d43cfeacdd58a7c9b78c"><div class="ttname"><a href="../../d7/d7f/log_8h.html#af89cb876e6e1d43cfeacdd58a7c9b78c">log_trace</a></div><div class="ttdeci">#define log_trace(...)</div><div class="ttdef"><b>Definition:</b> log.h:73</div></div>
 <div class="ttc" id="amusic__library_8h_html"><div class="ttname"><a href="../../dc/d33/music__library_8h.html">music_library.h</a></div></div>
 <div class="ttc" id="anamespacenetwork_html_ab21ff1d434d3028a68dc8e97cbfa62fd"><div class="ttname"><a href="../../db/d3f/namespacenetwork.html#ab21ff1d434d3028a68dc8e97cbfa62fd">network::MAX_NAME_LENGTH</a></div><div class="ttdeci">constexpr int MAX_NAME_LENGTH</div><div class="ttdef"><b>Definition:</b> globals.h:39</div></div>
 <div class="ttc" id="anamespacerez_html"><div class="ttname"><a href="../../de/d14/namespacerez.html">rez</a></div><div class="ttdef"><b>Definition:</b> resolution.h:14</div></div>
@@ -308,7 +308,7 @@ $(function() {
 <div class="ttc" id="anamespacesettings_html_a3befe7e734acf5f9dea45024f3af5c48"><div class="ttname"><a href="../../d5/de8/namespacesettings.html#a3befe7e734acf5f9dea45024f3af5c48">settings::InputAdapter</a></div><div class="ttdeci">bitsery::InputBufferAdapter&lt; Buffer &gt; InputAdapter</div><div class="ttdef"><b>Definition:</b> settings.h:27</div></div>
 <div class="ttc" id="anamespacesettings_html_a5e38b6def8523b2965461f0041030b17"><div class="ttname"><a href="../../d5/de8/namespacesettings.html#a5e38b6def8523b2965461f0041030b17">settings::OutputAdapter</a></div><div class="ttdeci">bitsery::OutputBufferAdapter&lt; Buffer &gt; OutputAdapter</div><div class="ttdef"><b>Definition:</b> settings.h:26</div></div>
 <div class="ttc" id="anamespacesettings_html_ab84fd31c11f0272cea714950e2fd5a96"><div class="ttname"><a href="../../d5/de8/namespacesettings.html#ab84fd31c11f0272cea714950e2fd5a96">settings::Buffer</a></div><div class="ttdeci">std::string Buffer</div><div class="ttdef"><b>Definition:</b> settings.h:25</div></div>
-<div class="ttc" id="anamespaceutil_html_a5020e504940e09639480aed917da6ba1"><div class="ttname"><a href="../../d6/d72/namespaceutil.html#a5020e504940e09639480aed917da6ba1">util::clamp</a></div><div class="ttdeci">static float clamp(float a, float mn, float mx)</div><div class="ttdef"><b>Definition:</b> util.h:68</div></div>
+<div class="ttc" id="anamespaceutil_html_a5020e504940e09639480aed917da6ba1"><div class="ttname"><a href="../../d6/d72/namespaceutil.html#a5020e504940e09639480aed917da6ba1">util::clamp</a></div><div class="ttdeci">static float clamp(float a, float mn, float mx)</div><div class="ttdef"><b>Definition:</b> util.h:71</div></div>
 <div class="ttc" id="aresolution_8h_html"><div class="ttname"><a href="../../d7/d78/resolution_8h.html">resolution.h</a></div></div>
 <div class="ttc" id="asingleton_8h_html"><div class="ttname"><a href="../../d4/d0b/singleton_8h.html">singleton.h</a></div></div>
 <div class="ttc" id="asingleton_8h_html_a2c7d0ae28a9340e96cc64ff071551e31"><div class="ttname"><a href="../../d4/d0b/singleton_8h.html#a2c7d0ae28a9340e96cc64ff071551e31">SINGLETON_FWD</a></div><div class="ttdeci">#define SINGLETON_FWD(type)</div><div class="ttdef"><b>Definition:</b> singleton.h:4</div></div>
@@ -344,6 +344,7 @@ $(function() {
 <div class="ttc" id="astructsettings_1_1_data_html_abeaefee8f69f14dc4c4a5b9c869e1a2f"><div class="ttname"><a href="../../d6/d02/structsettings_1_1_data.html#abeaefee8f69f14dc4c4a5b9c869e1a2f">settings::Data::music_volume</a></div><div class="ttdeci">float music_volume</div><div class="ttdef"><b>Definition:</b> settings.h:42</div></div>
 <div class="ttc" id="astructsettings_1_1_data_html_ac19b15169723064f655217c4bfe60771"><div class="ttname"><a href="../../d6/d02/structsettings_1_1_data.html#ac19b15169723064f655217c4bfe60771">settings::Data::serialize</a></div><div class="ttdeci">void serialize(S &amp;s)</div><div class="ttdef"><b>Definition:</b> settings.h:51</div></div>
 <div class="ttc" id="astructsettings_1_1_data_html_acb3cdcaca8cbd58ff06965caec4ccbc6"><div class="ttname"><a href="../../d6/d02/structsettings_1_1_data.html#acb3cdcaca8cbd58ff06965caec4ccbc6">settings::Data::operator&lt;&lt;</a></div><div class="ttdeci">friend std::ostream &amp; operator&lt;&lt;(std::ostream &amp;os, const Data &amp;data)</div><div class="ttdef"><b>Definition:</b> settings.h:61</div></div>
+<div class="ttc" id="autil_8h_html"><div class="ttname"><a href="../../d8/d3c/util_8h.html">util.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

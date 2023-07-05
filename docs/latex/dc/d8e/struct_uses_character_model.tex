@@ -1,0 +1,229 @@
+\hypertarget{struct_uses_character_model}{}\doxysection{Uses\+Character\+Model Struct Reference}
+\label{struct_uses_character_model}\index{UsesCharacterModel@{UsesCharacterModel}}
+
+
+{\ttfamily \#include $<$uses\+\_\+character\+\_\+model.\+h$>$}
+
+Inheritance diagram for Uses\+Character\+Model\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{dc/d8e/struct_uses_character_model}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_uses_character_model_a2e22f21d2fbd072973ec08ab596b851c}{Uses\+Character\+Model}} ()
+\item 
+virtual \mbox{\hyperlink{struct_uses_character_model_aae2318e547ae166c8176aa3f06128a82}{$\sim$\+Uses\+Character\+Model}} ()
+\item 
+void \mbox{\hyperlink{struct_uses_character_model_a656a981fe6c14f47e8083bf41857f854}{increment}} ()
+\item 
+const std\+::string \& \mbox{\hyperlink{struct_uses_character_model_aefc271a38aaeac1a269968019b7c15d6}{fetch\+\_\+model\+\_\+name}} () const
+\item 
+bool \mbox{\hyperlink{struct_uses_character_model_a7d768a1059dca829e261688a094bc4bc}{value\+\_\+same\+\_\+as\+\_\+last\+\_\+render}} () const
+\item 
+bool \mbox{\hyperlink{struct_uses_character_model_a1499e47e2b119edf1b878418ea74853e}{value\+\_\+changed\+\_\+since\+\_\+last\+\_\+render}} () const
+\item 
+void \mbox{\hyperlink{struct_uses_character_model_a6f0f978897140d68eca6805e7d9253f3}{mark\+\_\+change\+\_\+completed}} ()
+\item 
+int \mbox{\hyperlink{struct_uses_character_model_a62f17985c028e64fba70c7e01d3e33e8}{index\+\_\+server\+\_\+only}} () const
+\item 
+void \mbox{\hyperlink{struct_uses_character_model_a08a96722a042ea964844145ee2787998}{update\+\_\+index\+\_\+\+CLIENT\+\_\+\+ONLY}} (int newind)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_base_component_ac74326a615877f3c1a17bc47787ad91e}{Base\+Component}} ()
+\item 
+\mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
+\item 
+virtual void \mbox{\hyperlink{struct_base_component_ac7389bfd8b903625667e1427ef3cb70b}{on\+Attach}} ()
+\item 
+virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_uses_character_model_a2dd8c86048665d27ff5e27d338194351}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::array$<$ std\+::string, 4 $>$ \mbox{\hyperlink{struct_uses_character_model_a83a520d70f8541899d9294a7a6dbe651}{character\+\_\+models}}
+\item 
+int \mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}}
+\item 
+bool \mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_uses_character_model_a2e22f21d2fbd072973ec08ab596b851c}\label{struct_uses_character_model_a2e22f21d2fbd072973ec08ab596b851c}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!UsesCharacterModel@{UsesCharacterModel}}
+\index{UsesCharacterModel@{UsesCharacterModel}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{UsesCharacterModel()}{UsesCharacterModel()}}
+{\footnotesize\ttfamily Uses\+Character\+Model\+::\+Uses\+Character\+Model (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_uses_character_model_aae2318e547ae166c8176aa3f06128a82}\label{struct_uses_character_model_aae2318e547ae166c8176aa3f06128a82}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!````~UsesCharacterModel@{$\sim$UsesCharacterModel}}
+\index{````~UsesCharacterModel@{$\sim$UsesCharacterModel}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{$\sim$UsesCharacterModel()}{~UsesCharacterModel()}}
+{\footnotesize\ttfamily virtual Uses\+Character\+Model\+::$\sim$\+Uses\+Character\+Model (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_uses_character_model_aefc271a38aaeac1a269968019b7c15d6}\label{struct_uses_character_model_aefc271a38aaeac1a269968019b7c15d6}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!fetch\_model\_name@{fetch\_model\_name}}
+\index{fetch\_model\_name@{fetch\_model\_name}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{fetch\_model\_name()}{fetch\_model\_name()}}
+{\footnotesize\ttfamily const std\+::string \& Uses\+Character\+Model\+::fetch\+\_\+model\+\_\+name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_uses_character_model_a83a520d70f8541899d9294a7a6dbe651}{character\+\_\+models}}, and \mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_affe2a9422fc0f927f98770e2a9d78752}{system\+\_\+manager\+::render\+\_\+manager\+::update\+\_\+character\+\_\+model\+\_\+from\+\_\+index()}}, and \mbox{\hyperlink{entity_8h_a6d13b14e3b7692b3b67b3532abc6f599}{update\+\_\+player\+\_\+rare\+\_\+remotely()}}.
+
+\mbox{\Hypertarget{struct_uses_character_model_a656a981fe6c14f47e8083bf41857f854}\label{struct_uses_character_model_a656a981fe6c14f47e8083bf41857f854}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!increment@{increment}}
+\index{increment@{increment}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{increment()}{increment()}}
+{\footnotesize\ttfamily void Uses\+Character\+Model\+::increment (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}}, \mbox{\hyperlink{struct_uses_character_model_a83a520d70f8541899d9294a7a6dbe651}{character\+\_\+models}}, and \mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceentities_a42ce60037b7f401840b866a2badc65cd}{entities\+::make\+\_\+character\+\_\+switcher()}}.
+
+\mbox{\Hypertarget{struct_uses_character_model_a62f17985c028e64fba70c7e01d3e33e8}\label{struct_uses_character_model_a62f17985c028e64fba70c7e01d3e33e8}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!index\_server\_only@{index\_server\_only}}
+\index{index\_server\_only@{index\_server\_only}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{index\_server\_only()}{index\_server\_only()}}
+{\footnotesize\ttfamily int Uses\+Character\+Model\+::index\+\_\+server\+\_\+only (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}}.
+
+\mbox{\Hypertarget{struct_uses_character_model_a6f0f978897140d68eca6805e7d9253f3}\label{struct_uses_character_model_a6f0f978897140d68eca6805e7d9253f3}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!mark\_change\_completed@{mark\_change\_completed}}
+\index{mark\_change\_completed@{mark\_change\_completed}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{mark\_change\_completed()}{mark\_change\_completed()}}
+{\footnotesize\ttfamily void Uses\+Character\+Model\+::mark\+\_\+change\+\_\+completed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_affe2a9422fc0f927f98770e2a9d78752}{system\+\_\+manager\+::render\+\_\+manager\+::update\+\_\+character\+\_\+model\+\_\+from\+\_\+index()}}.
+
+\mbox{\Hypertarget{struct_uses_character_model_a2dd8c86048665d27ff5e27d338194351}\label{struct_uses_character_model_a2dd8c86048665d27ff5e27d338194351}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!serialize@{serialize}}
+\index{serialize@{serialize}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void Uses\+Character\+Model\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}}, and \mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}}.
+
+\mbox{\Hypertarget{struct_uses_character_model_a08a96722a042ea964844145ee2787998}\label{struct_uses_character_model_a08a96722a042ea964844145ee2787998}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!update\_index\_CLIENT\_ONLY@{update\_index\_CLIENT\_ONLY}}
+\index{update\_index\_CLIENT\_ONLY@{update\_index\_CLIENT\_ONLY}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{update\_index\_CLIENT\_ONLY()}{update\_index\_CLIENT\_ONLY()}}
+{\footnotesize\ttfamily void Uses\+Character\+Model\+::update\+\_\+index\+\_\+\+CLIENT\+\_\+\+ONLY (\begin{DoxyParamCaption}\item[{int}]{newind }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}}, \mbox{\hyperlink{struct_uses_character_model_a83a520d70f8541899d9294a7a6dbe651}{character\+\_\+models}}, and \mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}}.
+
+
+
+Referenced by \mbox{\hyperlink{entity_8h_a6d13b14e3b7692b3b67b3532abc6f599}{update\+\_\+player\+\_\+rare\+\_\+remotely()}}.
+
+\mbox{\Hypertarget{struct_uses_character_model_a1499e47e2b119edf1b878418ea74853e}\label{struct_uses_character_model_a1499e47e2b119edf1b878418ea74853e}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!value\_changed\_since\_last\_render@{value\_changed\_since\_last\_render}}
+\index{value\_changed\_since\_last\_render@{value\_changed\_since\_last\_render}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{value\_changed\_since\_last\_render()}{value\_changed\_since\_last\_render()}}
+{\footnotesize\ttfamily bool Uses\+Character\+Model\+::value\+\_\+changed\+\_\+since\+\_\+last\+\_\+render (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_uses_character_model_a7d768a1059dca829e261688a094bc4bc}{value\+\_\+same\+\_\+as\+\_\+last\+\_\+render()}}.
+
+\mbox{\Hypertarget{struct_uses_character_model_a7d768a1059dca829e261688a094bc4bc}\label{struct_uses_character_model_a7d768a1059dca829e261688a094bc4bc}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!value\_same\_as\_last\_render@{value\_same\_as\_last\_render}}
+\index{value\_same\_as\_last\_render@{value\_same\_as\_last\_render}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{value\_same\_as\_last\_render()}{value\_same\_as\_last\_render()}}
+{\footnotesize\ttfamily bool Uses\+Character\+Model\+::value\+\_\+same\+\_\+as\+\_\+last\+\_\+render (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_uses_character_model_a1499e47e2b119edf1b878418ea74853e}{value\+\_\+changed\+\_\+since\+\_\+last\+\_\+render()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_affe2a9422fc0f927f98770e2a9d78752}{system\+\_\+manager\+::render\+\_\+manager\+::update\+\_\+character\+\_\+model\+\_\+from\+\_\+index()}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}\label{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!changed@{changed}}
+\index{changed@{changed}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{changed}{changed}}
+{\footnotesize\ttfamily bool Uses\+Character\+Model\+::changed\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_uses_character_model_a656a981fe6c14f47e8083bf41857f854}{increment()}}, \mbox{\hyperlink{struct_uses_character_model_a6f0f978897140d68eca6805e7d9253f3}{mark\+\_\+change\+\_\+completed()}}, \mbox{\hyperlink{struct_uses_character_model_a2dd8c86048665d27ff5e27d338194351}{serialize()}}, \mbox{\hyperlink{struct_uses_character_model_a08a96722a042ea964844145ee2787998}{update\+\_\+index\+\_\+\+CLIENT\+\_\+\+ONLY()}}, and \mbox{\hyperlink{struct_uses_character_model_a1499e47e2b119edf1b878418ea74853e}{value\+\_\+changed\+\_\+since\+\_\+last\+\_\+render()}}.
+
+\mbox{\Hypertarget{struct_uses_character_model_a83a520d70f8541899d9294a7a6dbe651}\label{struct_uses_character_model_a83a520d70f8541899d9294a7a6dbe651}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!character\_models@{character\_models}}
+\index{character\_models@{character\_models}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{character\_models}{character\_models}}
+{\footnotesize\ttfamily std\+::array$<$std\+::string, 4$>$ Uses\+Character\+Model\+::character\+\_\+models\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_duck"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_dog"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_bear"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_rogue"{}},}
+\DoxyCodeLine{\ \ \ \ \}}
+
+\end{DoxyCode}
+
+
+Referenced by \mbox{\hyperlink{struct_uses_character_model_aefc271a38aaeac1a269968019b7c15d6}{fetch\+\_\+model\+\_\+name()}}, \mbox{\hyperlink{struct_uses_character_model_a656a981fe6c14f47e8083bf41857f854}{increment()}}, and \mbox{\hyperlink{struct_uses_character_model_a08a96722a042ea964844145ee2787998}{update\+\_\+index\+\_\+\+CLIENT\+\_\+\+ONLY()}}.
+
+\mbox{\Hypertarget{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}\label{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}} 
+\index{UsesCharacterModel@{UsesCharacterModel}!index@{index}}
+\index{index@{index}!UsesCharacterModel@{UsesCharacterModel}}
+\doxysubsubsection{\texorpdfstring{index}{index}}
+{\footnotesize\ttfamily int Uses\+Character\+Model\+::index\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_uses_character_model_aefc271a38aaeac1a269968019b7c15d6}{fetch\+\_\+model\+\_\+name()}}, \mbox{\hyperlink{struct_uses_character_model_a656a981fe6c14f47e8083bf41857f854}{increment()}}, \mbox{\hyperlink{struct_uses_character_model_a62f17985c028e64fba70c7e01d3e33e8}{index\+\_\+server\+\_\+only()}}, \mbox{\hyperlink{struct_uses_character_model_a2dd8c86048665d27ff5e27d338194351}{serialize()}}, and \mbox{\hyperlink{struct_uses_character_model_a08a96722a042ea964844145ee2787998}{update\+\_\+index\+\_\+\+CLIENT\+\_\+\+ONLY()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/components/\mbox{\hyperlink{uses__character__model_8h}{uses\+\_\+character\+\_\+model.\+h}}\end{DoxyCompactItemize}

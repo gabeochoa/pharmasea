@@ -71,8 +71,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="../../dd/de6/struct_has_waiting_queue-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">HasWaitingQueue Struct Reference</div></div>
 </div><!--header-->
@@ -93,28 +93,46 @@ Inheritance diagram for HasWaitingQueue:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a02852855e0aeccf49ed5c46e0e9960a4"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a02852855e0aeccf49ed5c46e0e9960a4">~HasWaitingQueue</a> ()</td></tr>
 <tr class="separator:a02852855e0aeccf49ed5c46e0e9960a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a858f36afb49800539f35be549ceb8a35"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a858f36afb49800539f35be549ceb8a35">is_full</a> () const</td></tr>
+<tr class="separator:a858f36afb49800539f35be549ceb8a35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7edde0bb597faafe14d6bc06c9c3121"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#ad7edde0bb597faafe14d6bc06c9c3121">has_space</a> () const</td></tr>
+<tr class="separator:ad7edde0bb597faafe14d6bc06c9c3121"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5225e7b11e9a7e8c9e79bb63914e5b17"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a5225e7b11e9a7e8c9e79bb63914e5b17">person</a> (int i)</td></tr>
+<tr class="separator:a5225e7b11e9a7e8c9e79bb63914e5b17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2500387034298ec0dcf5b4898c6f80f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a2500387034298ec0dcf5b4898c6f80f3">erase</a> (int index)</td></tr>
+<tr class="separator:a2500387034298ec0dcf5b4898c6f80f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08ff94ba8e01003f092f69de19ca6a5a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a08ff94ba8e01003f092f69de19ca6a5a">get_next_pos</a> () const</td></tr>
+<tr class="separator:a08ff94ba8e01003f092f69de19ca6a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4644c3cfb7f3e8b40ff23bc7efda0259"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a4644c3cfb7f3e8b40ff23bc7efda0259">matching_id</a> (int id, int i) const</td></tr>
+<tr class="separator:a4644c3cfb7f3e8b40ff23bc7efda0259"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1869b68676572ab4aee8de403482a487"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a1869b68676572ab4aee8de403482a487">has_matching_person</a> (int id) const</td></tr>
+<tr class="separator:a1869b68676572ab4aee8de403482a487"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af961eca5022e9ad6b5b88811d612d60f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html">HasWaitingQueue</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#af961eca5022e9ad6b5b88811d612d60f">add_customer</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;customer)</td></tr>
+<tr class="separator:af961eca5022e9ad6b5b88811d612d60f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_struct_base_component"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_struct_base_component')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a></td></tr>
 <tr class="memitem:ac74326a615877f3c1a17bc47787ad91e inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#ac74326a615877f3c1a17bc47787ad91e">BaseComponent</a> ()</td></tr>
 <tr class="separator:ac74326a615877f3c1a17bc47787ad91e inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abec738e46eb8875697d7f9497958543d inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#abec738e46eb8875697d7f9497958543d">BaseComponent</a> (<a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:abec738e46eb8875697d7f9497958543d inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7389bfd8b903625667e1427ef3cb70b inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#ac7389bfd8b903625667e1427ef3cb70b">onAttach</a> ()</td></tr>
+<tr class="separator:ac7389bfd8b903625667e1427ef3cb70b inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab281730e838c4cb33e96ab6d6b7fe15f inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#ab281730e838c4cb33e96ab6d6b7fe15f">~BaseComponent</a> ()</td></tr>
 <tr class="separator:ab281730e838c4cb33e96ab6d6b7fe15f inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:adfe4df51f6527bc08928933b024d695b"><td class="memItemLeft" align="right" valign="top">std::deque&lt; std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#adfe4df51f6527bc08928933b024d695b">ppl_in_line</a></td></tr>
-<tr class="separator:adfe4df51f6527bc08928933b024d695b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ce7c8331a127396958546304beb343e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a9ce7c8331a127396958546304beb343e">max_queue_size</a> = 3</td></tr>
-<tr class="separator:a9ce7c8331a127396958546304beb343e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade57371d36118f2a39d767ec6de68b96"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#ade57371d36118f2a39d767ec6de68b96">next_line_position</a> = 0</td></tr>
-<tr class="separator:ade57371d36118f2a39d767ec6de68b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
+<tr class="memitem:a743b0c9e1c1e21fc1f894e5960e82cf0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a743b0c9e1c1e21fc1f894e5960e82cf0">dump_contents</a> () const</td></tr>
+<tr class="separator:a743b0c9e1c1e21fc1f894e5960e82cf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37e29a7048b8a58aec05277cf94dcd98"><td class="memTemplParams" colspan="2">template&lt;typename S &gt; </td></tr>
 <tr class="memitem:a37e29a7048b8a58aec05277cf94dcd98"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a37e29a7048b8a58aec05277cf94dcd98">serialize</a> (S &amp;s)</td></tr>
 <tr class="separator:a37e29a7048b8a58aec05277cf94dcd98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:aeaefda19f0544b0f7d0c84bc06deac3e"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt;, <a class="el" href="../../d9/dfe/has__waiting__queue_8h.html#a4b76440e2efb034661d8c6fe5bc0e01d">max_queue_size</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#aeaefda19f0544b0f7d0c84bc06deac3e">ppl_in_line</a></td></tr>
+<tr class="separator:aeaefda19f0544b0f7d0c84bc06deac3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade57371d36118f2a39d767ec6de68b96"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html#ade57371d36118f2a39d767ec6de68b96">next_line_position</a> = 0</td></tr>
+<tr class="separator:ade57371d36118f2a39d767ec6de68b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a02852855e0aeccf49ed5c46e0e9960a4" name="a02852855e0aeccf49ed5c46e0e9960a4"></a>
@@ -143,6 +161,248 @@ Private Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="af961eca5022e9ad6b5b88811d612d60f" name="af961eca5022e9ad6b5b88811d612d60f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af961eca5022e9ad6b5b88811d612d60f">&#9670;&#160;</a></span>add_customer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d1/d62/struct_has_waiting_queue.html">HasWaitingQueue</a> &amp; HasWaitingQueue::add_customer </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>customer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a1869b68676572ab4aee8de403482a487">has_matching_person()</a>, <a class="el" href="../../d7/d7f/log_8h.html#aa1cfe5444875c8eca0ea6f6993977d6d">log_info</a>, <a class="el" href="../../d3/def/struct_debug_name.html#a7fd7a2891901b7e334934e360b091480">DebugName::name()</a>, <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#ade57371d36118f2a39d767ec6de68b96">next_line_position</a>, <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#aeaefda19f0544b0f7d0c84bc06deac3e">ppl_in_line</a>, and <a class="el" href="../../dc/da7/assert_8h.html#a265be64fe52e8a92e89a75fe62153aa5">VALIDATE</a>.</p>
+
+</div>
+</div>
+<a id="a743b0c9e1c1e21fc1f894e5960e82cf0" name="a743b0c9e1c1e21fc1f894e5960e82cf0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a743b0c9e1c1e21fc1f894e5960e82cf0">&#9670;&#160;</a></span>dump_contents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HasWaitingQueue::dump_contents </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d7/d7f/log_8h.html#aa1cfe5444875c8eca0ea6f6993977d6d">log_info</a>, <a class="el" href="../../d9/dfe/has__waiting__queue_8h.html#a4b76440e2efb034661d8c6fe5bc0e01d">max_queue_size</a>, and <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#aeaefda19f0544b0f7d0c84bc06deac3e">ppl_in_line</a>.</p>
+
+</div>
+</div>
+<a id="a2500387034298ec0dcf5b4898c6f80f3" name="a2500387034298ec0dcf5b4898c6f80f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2500387034298ec0dcf5b4898c6f80f3">&#9670;&#160;</a></span>erase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HasWaitingQueue::erase </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d9/dfe/has__waiting__queue_8h.html#a4b76440e2efb034661d8c6fe5bc0e01d">max_queue_size</a>, <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#ade57371d36118f2a39d767ec6de68b96">next_line_position</a>, and <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#aeaefda19f0544b0f7d0c84bc06deac3e">ppl_in_line</a>.</p>
+
+</div>
+</div>
+<a id="a08ff94ba8e01003f092f69de19ca6a5a" name="a08ff94ba8e01003f092f69de19ca6a5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08ff94ba8e01003f092f69de19ca6a5a">&#9670;&#160;</a></span>get_next_pos()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int HasWaitingQueue::get_next_pos </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#ade57371d36118f2a39d767ec6de68b96">next_line_position</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../da/d84/struct_wait_in_queue_job.html#a2479fbffbedce22dfb941bddbd3ab1ae">WaitInQueueJob::run_state_initialize()</a>, and <a class="el" href="../../de/d83/job_8cpp.html#ac3a0a3bbcc3d324a4e3afbcadf29f166">WIQ_add_to_queue_and_get_position()</a>.</p>
+
+</div>
+</div>
+<a id="a1869b68676572ab4aee8de403482a487" name="a1869b68676572ab4aee8de403482a487"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1869b68676572ab4aee8de403482a487">&#9670;&#160;</a></span>has_matching_person()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HasWaitingQueue::has_matching_person </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d7/d7f/log_8h.html#a04af09851c431d178f16b24fa1aac1e9">log_warn</a>, <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a4644c3cfb7f3e8b40ff23bc7efda0259">matching_id()</a>, and <a class="el" href="../../d9/dfe/has__waiting__queue_8h.html#a4b76440e2efb034661d8c6fe5bc0e01d">max_queue_size</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#af961eca5022e9ad6b5b88811d612d60f">add_customer()</a>, and <a class="el" href="../../de/d83/job_8cpp.html#a7995823339ee35a9a0b455858cf0a360">WIQ_position_in_line()</a>.</p>
+
+</div>
+</div>
+<a id="ad7edde0bb597faafe14d6bc06c9c3121" name="ad7edde0bb597faafe14d6bc06c9c3121"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7edde0bb597faafe14d6bc06c9c3121">&#9670;&#160;</a></span>has_space()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HasWaitingQueue::has_space </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d9/dfe/has__waiting__queue_8h.html#a4b76440e2efb034661d8c6fe5bc0e01d">max_queue_size</a>, and <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#ade57371d36118f2a39d767ec6de68b96">next_line_position</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a858f36afb49800539f35be549ceb8a35">is_full()</a>.</p>
+
+</div>
+</div>
+<a id="a858f36afb49800539f35be549ceb8a35" name="a858f36afb49800539f35be549ceb8a35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a858f36afb49800539f35be549ceb8a35">&#9670;&#160;</a></span>is_full()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HasWaitingQueue::is_full </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#ad7edde0bb597faafe14d6bc06c9c3121">has_space()</a>.</p>
+
+</div>
+</div>
+<a id="a4644c3cfb7f3e8b40ff23bc7efda0259" name="a4644c3cfb7f3e8b40ff23bc7efda0259"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4644c3cfb7f3e8b40ff23bc7efda0259">&#9670;&#160;</a></span>matching_id()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HasWaitingQueue::matching_id </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#aeaefda19f0544b0f7d0c84bc06deac3e">ppl_in_line</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a1869b68676572ab4aee8de403482a487">has_matching_person()</a>.</p>
+
+</div>
+</div>
+<a id="a5225e7b11e9a7e8c9e79bb63914e5b17" name="a5225e7b11e9a7e8c9e79bb63914e5b17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5225e7b11e9a7e8c9e79bb63914e5b17">&#9670;&#160;</a></span>person()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; HasWaitingQueue::person </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#aeaefda19f0544b0f7d0c84bc06deac3e">ppl_in_line</a>.</p>
+
+</div>
+</div>
 <a id="a37e29a7048b8a58aec05277cf94dcd98" name="a37e29a7048b8a58aec05277cf94dcd98"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a37e29a7048b8a58aec05277cf94dcd98">&#9670;&#160;</a></span>serialize()</h2>
 
@@ -169,61 +429,62 @@ template&lt;typename S &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a9ce7c8331a127396958546304beb343e">max_queue_size</a>, <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#ade57371d36118f2a39d767ec6de68b96">next_line_position</a>, and <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#adfe4df51f6527bc08928933b024d695b">ppl_in_line</a>.</p>
+<p class="reference">References <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#ade57371d36118f2a39d767ec6de68b96">next_line_position</a>, and <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#aeaefda19f0544b0f7d0c84bc06deac3e">ppl_in_line</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a9ce7c8331a127396958546304beb343e" name="a9ce7c8331a127396958546304beb343e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ce7c8331a127396958546304beb343e">&#9670;&#160;</a></span>max_queue_size</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int HasWaitingQueue::max_queue_size = 3</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a37e29a7048b8a58aec05277cf94dcd98">serialize()</a>.</p>
-
-</div>
-</div>
 <a id="ade57371d36118f2a39d767ec6de68b96" name="ade57371d36118f2a39d767ec6de68b96"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ade57371d36118f2a39d767ec6de68b96">&#9670;&#160;</a></span>next_line_position</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">int HasWaitingQueue::next_line_position = 0</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a37e29a7048b8a58aec05277cf94dcd98">serialize()</a>, and <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a77e67ff8d61329379931c6d03ea68708">system_manager::job_system::update_job_information()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#af961eca5022e9ad6b5b88811d612d60f">add_customer()</a>, <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a2500387034298ec0dcf5b4898c6f80f3">erase()</a>, <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a08ff94ba8e01003f092f69de19ca6a5a">get_next_pos()</a>, <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#ad7edde0bb597faafe14d6bc06c9c3121">has_space()</a>, and <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a37e29a7048b8a58aec05277cf94dcd98">serialize()</a>.</p>
 
 </div>
 </div>
-<a id="adfe4df51f6527bc08928933b024d695b" name="adfe4df51f6527bc08928933b024d695b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adfe4df51f6527bc08928933b024d695b">&#9670;&#160;</a></span>ppl_in_line</h2>
+<a id="aeaefda19f0544b0f7d0c84bc06deac3e" name="aeaefda19f0544b0f7d0c84bc06deac3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeaefda19f0544b0f7d0c84bc06deac3e">&#9670;&#160;</a></span>ppl_in_line</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::deque&lt;std::shared_ptr&lt;<a class="el" href="../../dc/dc4/struct_entity.html">Entity</a>&gt; &gt; HasWaitingQueue::ppl_in_line</td>
+          <td class="memname">std::array&lt;std::shared_ptr&lt;<a class="el" href="../../dc/dc4/struct_entity.html">Entity</a>&gt;, <a class="el" href="../../d9/dfe/has__waiting__queue_8h.html#a4b76440e2efb034661d8c6fe5bc0e01d">max_queue_size</a>&gt; HasWaitingQueue::ppl_in_line</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a37e29a7048b8a58aec05277cf94dcd98">serialize()</a>, and <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a77e67ff8d61329379931c6d03ea68708">system_manager::job_system::update_job_information()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#af961eca5022e9ad6b5b88811d612d60f">add_customer()</a>, <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a743b0c9e1c1e21fc1f894e5960e82cf0">dump_contents()</a>, <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a2500387034298ec0dcf5b4898c6f80f3">erase()</a>, <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a4644c3cfb7f3e8b40ff23bc7efda0259">matching_id()</a>, <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a5225e7b11e9a7e8c9e79bb63914e5b17">person()</a>, and <a class="el" href="../../d1/d62/struct_has_waiting_queue.html#a37e29a7048b8a58aec05277cf94dcd98">serialize()</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<hr/>The documentation for this struct was generated from the following files:<ul>
 <li>src/components/<a class="el" href="../../d9/dfe/has__waiting__queue_8h_source.html">has_waiting_queue.h</a></li>
+<li>src/<a class="el" href="../../de/d83/job_8cpp.html">job.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

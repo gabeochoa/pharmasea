@@ -1,27 +1,33 @@
 \hypertarget{log_8h}{}\doxysection{src/engine/log.h File Reference}
 \label{log_8h}\index{src/engine/log.h@{src/engine/log.h}}
 {\ttfamily \#include $<$cassert$>$}\newline
+{\ttfamily \#include \char`\"{}globals.\+h\char`\"{}}\newline
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
-\#define \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\+\_\+trace}}(...)~\mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\+\_\+me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a2d3e4144aa384b18849ab9a8abad74d6}{Log\+Level\+::\+TRACE}}, \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)
+\#define \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\+\_\+trace}}(...)
 \item 
-\#define \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}(...)~\mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\+\_\+me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a551b723eafd6a31d444fcb2f5920fbd3}{Log\+Level\+::\+INFO}}, \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)
+\#define \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}(...)
 \item 
-\#define \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}(...)~\mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\+\_\+me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a32bd8a1db2275458673903bdb84cb277}{Log\+Level\+::\+WARN}}, \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)
+\#define \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}(...)
 \item 
 \#define \mbox{\hyperlink{log_8h_a6ae72553ea9805dd87a463d6f710364d}{log\+\_\+error}}(...)
+\item 
+\#define \mbox{\hyperlink{log_8h_a235604323d134cfc6a196dec817d948c}{log\+\_\+if}}(x, ...)
+\item 
+\#define \mbox{\hyperlink{log_8h_a9329a6875e4f84d9ee66d5ab34911233}{log\+\_\+ifx}}(x,  level, ...)
 \end{DoxyCompactItemize}
 \doxysubsection*{Enumerations}
 \begin{DoxyCompactItemize}
 \item 
-enum class \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{Log\+Level}} \{ \newline
-\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a5fb1f955b45e38e31789286a1790398d}{ALL}} = 0
-, \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a2d3e4144aa384b18849ab9a8abad74d6}{TRACE}} = 1
-, \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a551b723eafd6a31d444fcb2f5920fbd3}{INFO}} = 2
-, \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a32bd8a1db2275458673903bdb84cb277}{WARN}} = 3
+enum \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{Log\+Level}} \{ \newline
+\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9ad527e1d069fb4c6d031cc0db3b011a6c}{LOG\+\_\+\+ALOG\+\_\+}} = 0
+, \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a5b76dd51db62558b1952158ba38b723f}{LOG\+\_\+\+TRACE}} = 1
+, \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a6e98ff471e3ce6c4ef2d75c37ee51837}{LOG\+\_\+\+INFO}} = 2
+, \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9ac8041ffa22bc823d4726701cdb13fc13}{LOG\+\_\+\+WARN}} = 3
 , \newline
-\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9abb1ca97ec761fc37101737ba0aa2e7c5}{ERROR}} = 4
+\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a230506cce5c68c3bac5a821c42ed3473}{LOG\+\_\+\+ERROR}} = 4
+, \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9aac5429584240f2aecc42eaacbbe1ca85}{LOG\+\_\+\+IF}} = 5
  \}
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
@@ -40,28 +46,73 @@ static void \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\+\_\+
 
 {\bfseries Value\+:}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\_me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9abb1ca97ec761fc37101737ba0aa2e7c5}{LogLevel::ERROR}},\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a230506cce5c68c3bac5a821c42ed3473}{LogLevel::LOG\_ERROR}}\ >=\ \mbox{\hyperlink{engine_2globals_8h_a3ecebc9d2fcb9f207a3373191a0ca251}{LOG\_LEVEL}})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ log\_me(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a230506cce5c68c3bac5a821c42ed3473}{LogLevel::LOG\_ERROR}},\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_);\ \(\backslash\)}
 \DoxyCodeLine{\ \ \ \ assert(\textcolor{keyword}{false})}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{log_8h_a235604323d134cfc6a196dec817d948c}\label{log_8h_a235604323d134cfc6a196dec817d948c}} 
+\index{log.h@{log.h}!log\_if@{log\_if}}
+\index{log\_if@{log\_if}!log.h@{log.h}}
+\doxysubsubsection{\texorpdfstring{log\_if}{log\_if}}
+{\footnotesize\ttfamily \#define log\+\_\+if(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (x)\ \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\_me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9aac5429584240f2aecc42eaacbbe1ca85}{LogLevel::LOG\_IF}},\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{log_8h_a9329a6875e4f84d9ee66d5ab34911233}\label{log_8h_a9329a6875e4f84d9ee66d5ab34911233}} 
+\index{log.h@{log.h}!log\_ifx@{log\_ifx}}
+\index{log\_ifx@{log\_ifx}!log.h@{log.h}}
+\doxysubsubsection{\texorpdfstring{log\_ifx}{log\_ifx}}
+{\footnotesize\ttfamily \#define log\+\_\+ifx(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{level,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (x)\ \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\_me}}(level,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}}
 
 \end{DoxyCode}
 \mbox{\Hypertarget{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}\label{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}} 
 \index{log.h@{log.h}!log\_info@{log\_info}}
 \index{log\_info@{log\_info}!log.h@{log.h}}
 \doxysubsubsection{\texorpdfstring{log\_info}{log\_info}}
-{\footnotesize\ttfamily \#define log\+\_\+info(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~\mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\+\_\+me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a551b723eafd6a31d444fcb2f5920fbd3}{Log\+Level\+::\+INFO}}, \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)}
+{\footnotesize\ttfamily \#define log\+\_\+info(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a6e98ff471e3ce6c4ef2d75c37ee51837}{LogLevel::LOG\_INFO}}\ >=\ \mbox{\hyperlink{engine_2globals_8h_a3ecebc9d2fcb9f207a3373191a0ca251}{LOG\_LEVEL}})\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ log\_me(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a6e98ff471e3ce6c4ef2d75c37ee51837}{LogLevel::LOG\_INFO}},\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_)}
+
+\end{DoxyCode}
 \mbox{\Hypertarget{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}\label{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}} 
 \index{log.h@{log.h}!log\_trace@{log\_trace}}
 \index{log\_trace@{log\_trace}!log.h@{log.h}}
 \doxysubsubsection{\texorpdfstring{log\_trace}{log\_trace}}
-{\footnotesize\ttfamily \#define log\+\_\+trace(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~\mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\+\_\+me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a2d3e4144aa384b18849ab9a8abad74d6}{Log\+Level\+::\+TRACE}}, \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)}
+{\footnotesize\ttfamily \#define log\+\_\+trace(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a5b76dd51db62558b1952158ba38b723f}{LogLevel::LOG\_TRACE}}\ >=\ \mbox{\hyperlink{engine_2globals_8h_a3ecebc9d2fcb9f207a3373191a0ca251}{LOG\_LEVEL}})\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ log\_me(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a5b76dd51db62558b1952158ba38b723f}{LogLevel::LOG\_TRACE}},\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_)}
+
+\end{DoxyCode}
 \mbox{\Hypertarget{log_8h_a04af09851c431d178f16b24fa1aac1e9}\label{log_8h_a04af09851c431d178f16b24fa1aac1e9}} 
 \index{log.h@{log.h}!log\_warn@{log\_warn}}
 \index{log\_warn@{log\_warn}!log.h@{log.h}}
 \doxysubsubsection{\texorpdfstring{log\_warn}{log\_warn}}
-{\footnotesize\ttfamily \#define log\+\_\+warn(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~\mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\+\_\+me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a32bd8a1db2275458673903bdb84cb277}{Log\+Level\+::\+WARN}}, \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)}
+{\footnotesize\ttfamily \#define log\+\_\+warn(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9ac8041ffa22bc823d4726701cdb13fc13}{LogLevel::LOG\_WARN}}\ >=\ \mbox{\hyperlink{engine_2globals_8h_a3ecebc9d2fcb9f207a3373191a0ca251}{LOG\_LEVEL}})\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ log\_me(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9ac8041ffa22bc823d4726701cdb13fc13}{LogLevel::LOG\_WARN}},\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_)}
+
+\end{DoxyCode}
 
 
 \doxysubsection{Enumeration Type Documentation}
@@ -69,27 +120,31 @@ static void \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\+\_\+
 \index{log.h@{log.h}!LogLevel@{LogLevel}}
 \index{LogLevel@{LogLevel}!log.h@{log.h}}
 \doxysubsubsection{\texorpdfstring{LogLevel}{LogLevel}}
-{\footnotesize\ttfamily enum class \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{Log\+Level}}\hspace{0.3cm}{\ttfamily [strong]}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{Log\+Level}}}
 
 \begin{DoxyEnumFields}{Enumerator}
-\raisebox{\heightof{T}}[0pt][0pt]{\index{ALL@{ALL}!log.h@{log.h}}\index{log.h@{log.h}!ALL@{ALL}}}\mbox{\Hypertarget{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a5fb1f955b45e38e31789286a1790398d}\label{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a5fb1f955b45e38e31789286a1790398d}} 
-ALL&\\
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LOG\_ALOG\_@{LOG\_ALOG\_}!log.h@{log.h}}\index{log.h@{log.h}!LOG\_ALOG\_@{LOG\_ALOG\_}}}\mbox{\Hypertarget{log_8h_aca1fd1d8935433e6ba2e3918214e07f9ad527e1d069fb4c6d031cc0db3b011a6c}\label{log_8h_aca1fd1d8935433e6ba2e3918214e07f9ad527e1d069fb4c6d031cc0db3b011a6c}} 
+LOG\+\_\+\+ALOG\+\_\+&\\
 \hline
 
-\raisebox{\heightof{T}}[0pt][0pt]{\index{TRACE@{TRACE}!log.h@{log.h}}\index{log.h@{log.h}!TRACE@{TRACE}}}\mbox{\Hypertarget{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a2d3e4144aa384b18849ab9a8abad74d6}\label{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a2d3e4144aa384b18849ab9a8abad74d6}} 
-TRACE&\\
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LOG\_TRACE@{LOG\_TRACE}!log.h@{log.h}}\index{log.h@{log.h}!LOG\_TRACE@{LOG\_TRACE}}}\mbox{\Hypertarget{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a5b76dd51db62558b1952158ba38b723f}\label{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a5b76dd51db62558b1952158ba38b723f}} 
+LOG\+\_\+\+TRACE&\\
 \hline
 
-\raisebox{\heightof{T}}[0pt][0pt]{\index{INFO@{INFO}!log.h@{log.h}}\index{log.h@{log.h}!INFO@{INFO}}}\mbox{\Hypertarget{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a551b723eafd6a31d444fcb2f5920fbd3}\label{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a551b723eafd6a31d444fcb2f5920fbd3}} 
-INFO&\\
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LOG\_INFO@{LOG\_INFO}!log.h@{log.h}}\index{log.h@{log.h}!LOG\_INFO@{LOG\_INFO}}}\mbox{\Hypertarget{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a6e98ff471e3ce6c4ef2d75c37ee51837}\label{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a6e98ff471e3ce6c4ef2d75c37ee51837}} 
+LOG\+\_\+\+INFO&\\
 \hline
 
-\raisebox{\heightof{T}}[0pt][0pt]{\index{WARN@{WARN}!log.h@{log.h}}\index{log.h@{log.h}!WARN@{WARN}}}\mbox{\Hypertarget{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a32bd8a1db2275458673903bdb84cb277}\label{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a32bd8a1db2275458673903bdb84cb277}} 
-WARN&\\
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LOG\_WARN@{LOG\_WARN}!log.h@{log.h}}\index{log.h@{log.h}!LOG\_WARN@{LOG\_WARN}}}\mbox{\Hypertarget{log_8h_aca1fd1d8935433e6ba2e3918214e07f9ac8041ffa22bc823d4726701cdb13fc13}\label{log_8h_aca1fd1d8935433e6ba2e3918214e07f9ac8041ffa22bc823d4726701cdb13fc13}} 
+LOG\+\_\+\+WARN&\\
 \hline
 
-\raisebox{\heightof{T}}[0pt][0pt]{\index{ERROR@{ERROR}!log.h@{log.h}}\index{log.h@{log.h}!ERROR@{ERROR}}}\mbox{\Hypertarget{log_8h_aca1fd1d8935433e6ba2e3918214e07f9abb1ca97ec761fc37101737ba0aa2e7c5}\label{log_8h_aca1fd1d8935433e6ba2e3918214e07f9abb1ca97ec761fc37101737ba0aa2e7c5}} 
-ERROR&\\
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LOG\_ERROR@{LOG\_ERROR}!log.h@{log.h}}\index{log.h@{log.h}!LOG\_ERROR@{LOG\_ERROR}}}\mbox{\Hypertarget{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a230506cce5c68c3bac5a821c42ed3473}\label{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a230506cce5c68c3bac5a821c42ed3473}} 
+LOG\+\_\+\+ERROR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LOG\_IF@{LOG\_IF}!log.h@{log.h}}\index{log.h@{log.h}!LOG\_IF@{LOG\_IF}}}\mbox{\Hypertarget{log_8h_aca1fd1d8935433e6ba2e3918214e07f9aac5429584240f2aecc42eaacbbe1ca85}\label{log_8h_aca1fd1d8935433e6ba2e3918214e07f9aac5429584240f2aecc42eaacbbe1ca85}} 
+LOG\+\_\+\+IF&\\
 \hline
 
 \end{DoxyEnumFields}

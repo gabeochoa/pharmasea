@@ -2,10 +2,11 @@
 \label{shared_8h}\index{src/network/shared.h@{src/network/shared.h}}
 {\ttfamily \#include \char`\"{}../external\+\_\+include.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../engine/keymap.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../engine/time.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../engine/toastmanager.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../engine/util.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../globals.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../map.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}../toastmanager.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}../util.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}internal/channel.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}steam/steamnetworkingtypes.\+h\char`\"{}}\newline
 \doxysubsection*{Classes}
@@ -13,21 +14,15 @@
 \item 
 struct \mbox{\hyperlink{structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_base_component_01_4}{bitsery\+::ext\+::\+Polymorphic\+Base\+Class$<$ Base\+Component $>$}}
 \item 
-struct \mbox{\hyperlink{structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_entity_01_4}{bitsery\+::ext\+::\+Polymorphic\+Base\+Class$<$ Entity $>$}}
-\item 
-struct \mbox{\hyperlink{structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_furniture_01_4}{bitsery\+::ext\+::\+Polymorphic\+Base\+Class$<$ Furniture $>$}}
-\item 
-struct \mbox{\hyperlink{structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_person_01_4}{bitsery\+::ext\+::\+Polymorphic\+Base\+Class$<$ Person $>$}}
-\item 
-struct \mbox{\hyperlink{structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_base_player_01_4}{bitsery\+::ext\+::\+Polymorphic\+Base\+Class$<$ Base\+Player $>$}}
-\item 
-struct \mbox{\hyperlink{structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_a_i_person_01_4}{bitsery\+::ext\+::\+Polymorphic\+Base\+Class$<$ AIPerson $>$}}
-\item 
 struct \mbox{\hyperlink{structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_item_01_4}{bitsery\+::ext\+::\+Polymorphic\+Base\+Class$<$ Item $>$}}
+\item 
+struct \mbox{\hyperlink{structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_job_01_4}{bitsery\+::ext\+::\+Polymorphic\+Base\+Class$<$ Job $>$}}
 \item 
 struct \mbox{\hyperlink{structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_level_info_01_4}{bitsery\+::ext\+::\+Polymorphic\+Base\+Class$<$ Level\+Info $>$}}
 \item 
 struct \mbox{\hyperlink{structnetwork_1_1_client_packet}{network\+::\+Client\+Packet}}
+\item 
+struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_ping_info}{network\+::\+Client\+Packet\+::\+Ping\+Info}}
 \item 
 struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_announcement_info}{network\+::\+Client\+Packet\+::\+Announcement\+Info}}
 \item 
@@ -42,6 +37,8 @@ struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_join_info}{ne
 struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_leave_info}{network\+::\+Client\+Packet\+::\+Player\+Leave\+Info}}
 \item 
 struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_info}{network\+::\+Client\+Packet\+::\+Player\+Info}}
+\item 
+struct \mbox{\hyperlink{structnetwork_1_1_client_packet_1_1_player_rare_info}{network\+::\+Client\+Packet\+::\+Player\+Rare\+Info}}
 \end{DoxyCompactItemize}
 \doxysubsection*{Namespaces}
 \begin{DoxyCompactItemize}
@@ -55,7 +52,7 @@ namespace \mbox{\hyperlink{namespacenetwork}{network}}
 \doxysubsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
-using \mbox{\hyperlink{shared_8h_a81d6bddbdad830eb00a8389649633985}{My\+Polymorphic\+Classes}} = bitsery\+::ext\+::\+Polymorphic\+Classes\+List$<$ \mbox{\hyperlink{struct_entity}{Entity}}, \mbox{\hyperlink{struct_item}{Item}}, \mbox{\hyperlink{struct_base_component}{Base\+Component}} $>$
+using \mbox{\hyperlink{shared_8h_a52e7f8a375df95d4145e6fa530707517}{My\+Polymorphic\+Classes}} = bitsery\+::ext\+::\+Polymorphic\+Classes\+List$<$ \mbox{\hyperlink{struct_base_component}{Base\+Component}}, \mbox{\hyperlink{struct_entity}{Entity}}, \mbox{\hyperlink{struct_item}{Item}}, \mbox{\hyperlink{struct_job}{Job}} $>$
 \item 
 using \mbox{\hyperlink{namespacenetwork_a29be7e2bef152eba6aef822531d97755}{network\+::\+Buffer}} = std\+::string
 \item 
@@ -80,6 +77,10 @@ std\+::ostream \& \mbox{\hyperlink{namespacenetwork_a8f6972f6d0cd4df75a978e0d72e
 \item 
 {\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{namespacenetwork_a1e62ea975ea4c7dcb8a7fb13f347d831}{network\+::serialize}} (S \&s, Client\+Packet \&packet)
 \item 
+static Buffer \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network\+::serialize\+\_\+to\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$entity)
+\item 
+static void \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network\+::deserialize\+\_\+to\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$entity, const std\+::string \&msg)
+\item 
 static Client\+Packet \mbox{\hyperlink{namespacenetwork_ad932db30302c4abac18d38f4e2861ae9}{network\+::deserialize\+\_\+to\+\_\+packet}} (const std\+::string \&msg)
 \item 
 static Buffer \mbox{\hyperlink{namespacenetwork_a1e89934295cdfdc98ecd3a5410acc512}{network\+::serialize\+\_\+to\+\_\+buffer}} (Client\+Packet packet)
@@ -87,9 +88,9 @@ static Buffer \mbox{\hyperlink{namespacenetwork_a1e89934295cdfdc98ecd3a5410acc51
 
 
 \doxysubsection{Typedef Documentation}
-\mbox{\Hypertarget{shared_8h_a81d6bddbdad830eb00a8389649633985}\label{shared_8h_a81d6bddbdad830eb00a8389649633985}} 
+\mbox{\Hypertarget{shared_8h_a52e7f8a375df95d4145e6fa530707517}\label{shared_8h_a52e7f8a375df95d4145e6fa530707517}} 
 \index{shared.h@{shared.h}!MyPolymorphicClasses@{MyPolymorphicClasses}}
 \index{MyPolymorphicClasses@{MyPolymorphicClasses}!shared.h@{shared.h}}
 \doxysubsubsection{\texorpdfstring{MyPolymorphicClasses}{MyPolymorphicClasses}}
-{\footnotesize\ttfamily using \mbox{\hyperlink{shared_8h_a81d6bddbdad830eb00a8389649633985}{My\+Polymorphic\+Classes}} =  bitsery\+::ext\+::\+Polymorphic\+Classes\+List$<$\mbox{\hyperlink{struct_entity}{Entity}}, \mbox{\hyperlink{struct_item}{Item}}, \mbox{\hyperlink{struct_base_component}{Base\+Component}}$>$}
+{\footnotesize\ttfamily using \mbox{\hyperlink{shared_8h_a52e7f8a375df95d4145e6fa530707517}{My\+Polymorphic\+Classes}} =  bitsery\+::ext\+::\+Polymorphic\+Classes\+List$<$\mbox{\hyperlink{struct_base_component}{Base\+Component}}, \mbox{\hyperlink{struct_entity}{Entity}}, \mbox{\hyperlink{struct_item}{Item}}, \mbox{\hyperlink{struct_job}{Job}}$>$}
 

@@ -1,0 +1,52 @@
+\hypertarget{input__process__manager_8h}{}\doxysection{src/system/input\+\_\+process\+\_\+manager.h File Reference}
+\label{input__process__manager_8h}\index{src/system/input\_process\_manager.h@{src/system/input\_process\_manager.h}}
+{\ttfamily \#include \char`\"{}../camera.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+be\+\_\+ghost\+\_\+player.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+grab\+\_\+from\+\_\+other\+\_\+furniture.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+highlight\+\_\+others.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+hold\+\_\+furniture.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+perform\+\_\+job.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/collects\+\_\+user\+\_\+input.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/conveys\+\_\+held\+\_\+item.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/custom\+\_\+item\+\_\+position.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/is\+\_\+snappable.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/responds\+\_\+to\+\_\+user\+\_\+input.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/transform.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../entity.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../entityhelper.\+h\char`\"{}}\newline
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacesystem__manager}{system\+\_\+manager}}
+\begin{DoxyCompactList}\small\item\em probably needed by map and not included in there \end{DoxyCompactList}\item 
+namespace \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager}}
+\item 
+namespace \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning}}
+\item 
+namespace \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::inround}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a0c766a298e1abda388fb8b8795805f58}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos}} (int id, \mbox{\hyperlink{struct_transform}{Transform}} \&transform, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ person, float, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} new\+\_\+pos\+\_\+z)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a55c42792a45958553128b841ccec5cc2}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::collect\+\_\+user\+\_\+input}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a035c4557197042eac734dee082c03877}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::process\+\_\+player\+\_\+movement\+\_\+input}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}} input\+\_\+name, float input\+\_\+amount)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a25a3d525215fa57a429277fa32c0d9c6}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning\+::rotate\+\_\+furniture}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ player)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a86a051e227fe3d76b78b701f01880914}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning\+::drop\+\_\+held\+\_\+furniture}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&player)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a98407cfe6adbdb0e08992e111c9f5fd9}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning\+::handle\+\_\+grab\+\_\+or\+\_\+drop}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&player)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a0cb152e15774f293b74fdb240a12dbf5}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::inround\+::work\+\_\+furniture}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ player, float frame\+\_\+dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a66e29957845883f72afd9ac7a4ff6f07}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::inround\+::handle\+\_\+drop}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&player)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_ab60a89d3fd59ae62ddb5837bce401117}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::inround\+::handle\+\_\+grab}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&player)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a47e7eaf60f723e301c8beaafa526d52a}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::inround\+::handle\+\_\+grab\+\_\+or\+\_\+drop}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&player)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a595ee8c3edadc901e3c643c2970304b0}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::process\+\_\+input}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, const \mbox{\hyperlink{keymap_8h_af73d01ab87ab62b056bd8032af826d55}{User\+Input}} \&input)
+\end{DoxyCompactItemize}

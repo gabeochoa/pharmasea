@@ -14,6 +14,12 @@ Inheritance diagram for Can\+Be\+Highlighted\+:\begin{figure}[H]
 \begin{DoxyCompactItemize}
 \item 
 virtual \mbox{\hyperlink{struct_can_be_highlighted_ac8b1344ce22db8f11233744400813980}{$\sim$\+Can\+Be\+Highlighted}} ()
+\item 
+bool \mbox{\hyperlink{struct_can_be_highlighted_a7031594a74082aeb5cd8af25ad0c8096}{is\+\_\+highlighted}} () const
+\item 
+bool \mbox{\hyperlink{struct_can_be_highlighted_ad6775ff29923686d1fc8b0001910e65f}{is\+\_\+not\+\_\+highlighted}} () const
+\item 
+void \mbox{\hyperlink{struct_can_be_highlighted_a98e366216e742a3e4d74cce2176a6ff3}{update}} (bool is\+\_\+h)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
 \begin{DoxyCompactItemize}
@@ -22,17 +28,19 @@ virtual \mbox{\hyperlink{struct_can_be_highlighted_ac8b1344ce22db8f1123374440081
 \item 
 \mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
 \item 
-virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
-\end{DoxyCompactItemize}
-\doxysubsection*{Public Attributes}
-\begin{DoxyCompactItemize}
+virtual void \mbox{\hyperlink{struct_base_component_ac7389bfd8b903625667e1427ef3cb70b}{on\+Attach}} ()
 \item 
-bool \mbox{\hyperlink{struct_can_be_highlighted_ae4bec42750b2d7b321d4ab40275ee7e7}{is\+\_\+highlighted}}
+virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 {\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_can_be_highlighted_af50fac4e162dcf991fbcd5ca1ea768f4}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{struct_can_be_highlighted_a251b5092a493ebf0b4f2d6958feedb00}{highlighted}}
 \end{DoxyCompactItemize}
 
 
@@ -46,6 +54,30 @@ bool \mbox{\hyperlink{struct_can_be_highlighted_ae4bec42750b2d7b321d4ab40275ee7e
 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_can_be_highlighted_a7031594a74082aeb5cd8af25ad0c8096}\label{struct_can_be_highlighted_a7031594a74082aeb5cd8af25ad0c8096}} 
+\index{CanBeHighlighted@{CanBeHighlighted}!is\_highlighted@{is\_highlighted}}
+\index{is\_highlighted@{is\_highlighted}!CanBeHighlighted@{CanBeHighlighted}}
+\doxysubsubsection{\texorpdfstring{is\_highlighted()}{is\_highlighted()}}
+{\footnotesize\ttfamily bool Can\+Be\+Highlighted\+::is\+\_\+highlighted (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_be_highlighted_a251b5092a493ebf0b4f2d6958feedb00}{highlighted}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_can_be_highlighted_ad6775ff29923686d1fc8b0001910e65f}{is\+\_\+not\+\_\+highlighted()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a2a9d86d37afa68c8461604ce70cfd612}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+normal()}}.
+
+\mbox{\Hypertarget{struct_can_be_highlighted_ad6775ff29923686d1fc8b0001910e65f}\label{struct_can_be_highlighted_ad6775ff29923686d1fc8b0001910e65f}} 
+\index{CanBeHighlighted@{CanBeHighlighted}!is\_not\_highlighted@{is\_not\_highlighted}}
+\index{is\_not\_highlighted@{is\_not\_highlighted}!CanBeHighlighted@{CanBeHighlighted}}
+\doxysubsubsection{\texorpdfstring{is\_not\_highlighted()}{is\_not\_highlighted()}}
+{\footnotesize\ttfamily bool Can\+Be\+Highlighted\+::is\+\_\+not\+\_\+highlighted (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_be_highlighted_a7031594a74082aeb5cd8af25ad0c8096}{is\+\_\+highlighted()}}.
+
 \mbox{\Hypertarget{struct_can_be_highlighted_af50fac4e162dcf991fbcd5ca1ea768f4}\label{struct_can_be_highlighted_af50fac4e162dcf991fbcd5ca1ea768f4}} 
 \index{CanBeHighlighted@{CanBeHighlighted}!serialize@{serialize}}
 \index{serialize@{serialize}!CanBeHighlighted@{CanBeHighlighted}}
@@ -55,20 +87,34 @@ void Can\+Be\+Highlighted\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s 
 
 
 
-References \mbox{\hyperlink{struct_can_be_highlighted_ae4bec42750b2d7b321d4ab40275ee7e7}{is\+\_\+highlighted}}.
+References \mbox{\hyperlink{struct_can_be_highlighted_a251b5092a493ebf0b4f2d6958feedb00}{highlighted}}.
+
+\mbox{\Hypertarget{struct_can_be_highlighted_a98e366216e742a3e4d74cce2176a6ff3}\label{struct_can_be_highlighted_a98e366216e742a3e4d74cce2176a6ff3}} 
+\index{CanBeHighlighted@{CanBeHighlighted}!update@{update}}
+\index{update@{update}!CanBeHighlighted@{CanBeHighlighted}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily void Can\+Be\+Highlighted\+::update (\begin{DoxyParamCaption}\item[{bool}]{is\+\_\+h }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_be_highlighted_a251b5092a493ebf0b4f2d6958feedb00}{highlighted}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_afe9f22e9aaf5690dda2fa12e579ddcb1}{system\+\_\+manager\+::reset\+\_\+highlighted()}}.
 
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_can_be_highlighted_ae4bec42750b2d7b321d4ab40275ee7e7}\label{struct_can_be_highlighted_ae4bec42750b2d7b321d4ab40275ee7e7}} 
-\index{CanBeHighlighted@{CanBeHighlighted}!is\_highlighted@{is\_highlighted}}
-\index{is\_highlighted@{is\_highlighted}!CanBeHighlighted@{CanBeHighlighted}}
-\doxysubsubsection{\texorpdfstring{is\_highlighted}{is\_highlighted}}
-{\footnotesize\ttfamily bool Can\+Be\+Highlighted\+::is\+\_\+highlighted}
+\mbox{\Hypertarget{struct_can_be_highlighted_a251b5092a493ebf0b4f2d6958feedb00}\label{struct_can_be_highlighted_a251b5092a493ebf0b4f2d6958feedb00}} 
+\index{CanBeHighlighted@{CanBeHighlighted}!highlighted@{highlighted}}
+\index{highlighted@{highlighted}!CanBeHighlighted@{CanBeHighlighted}}
+\doxysubsubsection{\texorpdfstring{highlighted}{highlighted}}
+{\footnotesize\ttfamily bool Can\+Be\+Highlighted\+::highlighted\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
-Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a2a9d86d37afa68c8461604ce70cfd612}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+normal()}}, \mbox{\hyperlink{namespacesystem__manager_afe9f22e9aaf5690dda2fa12e579ddcb1}{system\+\_\+manager\+::reset\+\_\+highlighted()}}, and \mbox{\hyperlink{struct_can_be_highlighted_af50fac4e162dcf991fbcd5ca1ea768f4}{serialize()}}.
+Referenced by \mbox{\hyperlink{struct_can_be_highlighted_a7031594a74082aeb5cd8af25ad0c8096}{is\+\_\+highlighted()}}, \mbox{\hyperlink{struct_can_be_highlighted_af50fac4e162dcf991fbcd5ca1ea768f4}{serialize()}}, and \mbox{\hyperlink{struct_can_be_highlighted_a98e366216e742a3e4d74cce2176a6ff3}{update()}}.
 
 
 

@@ -1,0 +1,191 @@
+\hypertarget{struct_is_spawner}{}\doxysection{Is\+Spawner Struct Reference}
+\label{struct_is_spawner}\index{IsSpawner@{IsSpawner}}
+
+
+{\ttfamily \#include $<$is\+\_\+spawner.\+h$>$}
+
+Inheritance diagram for Is\+Spawner\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d7/db1/struct_is_spawner}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{struct_is_spawner_a0cbd7cef7cd64c2dc133cf110143f262}{$\sim$\+Is\+Spawner}} ()
+\item 
+bool \mbox{\hyperlink{struct_is_spawner_a8f2d614b97f7f4e3a8c833b8a328d58e}{hit\+\_\+max}} () const
+\item 
+auto \& \mbox{\hyperlink{struct_is_spawner_a0ad99d96a621f15631f10403a7459821}{set\+\_\+fn}} (\mbox{\hyperlink{is__spawner_8h_a68c4a5737ae70817fb86c1555df0e1e2}{Spawn\+Fn}} fn)
+\item 
+auto \& \mbox{\hyperlink{struct_is_spawner_ad9e0f4f8ec45baf5e44bfeaa2d364e78}{set\+\_\+total}} (int mx)
+\item 
+auto \& \mbox{\hyperlink{struct_is_spawner_a7d9991c014a794ec8858b055b2ad8f64}{set\+\_\+time\+\_\+between}} (float s)
+\item 
+\mbox{\hyperlink{struct_entity}{Entity}} $\ast$ \mbox{\hyperlink{struct_is_spawner_ae37c3108db9c5e83dbb4d70392a016c3}{pass\+\_\+time}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} pos, float dt)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_base_component_ac74326a615877f3c1a17bc47787ad91e}{Base\+Component}} ()
+\item 
+\mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
+\item 
+virtual void \mbox{\hyperlink{struct_base_component_ac7389bfd8b903625667e1427ef3cb70b}{on\+Attach}} ()
+\item 
+virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_is_spawner_abaaad4cf8a52f8336244a0150c101167}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{struct_is_spawner_ab91f786c4384cb3e432d30a528db6fa0}{max\+\_\+spawned}} = 0
+\item 
+float \mbox{\hyperlink{struct_is_spawner_a510dbdc09ba168d97b0a335135f7b787}{spread}} = 0
+\item 
+int \mbox{\hyperlink{struct_is_spawner_abb62053b4b2e023dbcc8b86cbfc91254}{num\+\_\+spawned}} = 0
+\item 
+float \mbox{\hyperlink{struct_is_spawner_a62b3be8696042e575201cb26ba13f25e}{countdown}} = 0
+\item 
+\mbox{\hyperlink{is__spawner_8h_a68c4a5737ae70817fb86c1555df0e1e2}{Spawn\+Fn}} \mbox{\hyperlink{struct_is_spawner_aca0aaf906a2bbf2e259b511c5aaa4fb5}{spawn\+\_\+fn}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_is_spawner_a0cbd7cef7cd64c2dc133cf110143f262}\label{struct_is_spawner_a0cbd7cef7cd64c2dc133cf110143f262}} 
+\index{IsSpawner@{IsSpawner}!````~IsSpawner@{$\sim$IsSpawner}}
+\index{````~IsSpawner@{$\sim$IsSpawner}!IsSpawner@{IsSpawner}}
+\doxysubsubsection{\texorpdfstring{$\sim$IsSpawner()}{~IsSpawner()}}
+{\footnotesize\ttfamily virtual Is\+Spawner\+::$\sim$\+Is\+Spawner (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_is_spawner_a8f2d614b97f7f4e3a8c833b8a328d58e}\label{struct_is_spawner_a8f2d614b97f7f4e3a8c833b8a328d58e}} 
+\index{IsSpawner@{IsSpawner}!hit\_max@{hit\_max}}
+\index{hit\_max@{hit\_max}!IsSpawner@{IsSpawner}}
+\doxysubsubsection{\texorpdfstring{hit\_max()}{hit\_max()}}
+{\footnotesize\ttfamily bool Is\+Spawner\+::hit\+\_\+max (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_is_spawner_ab91f786c4384cb3e432d30a528db6fa0}{max\+\_\+spawned}}, and \mbox{\hyperlink{struct_is_spawner_abb62053b4b2e023dbcc8b86cbfc91254}{num\+\_\+spawned}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_is_spawner_ae37c3108db9c5e83dbb4d70392a016c3}{pass\+\_\+time()}}.
+
+\mbox{\Hypertarget{struct_is_spawner_ae37c3108db9c5e83dbb4d70392a016c3}\label{struct_is_spawner_ae37c3108db9c5e83dbb4d70392a016c3}} 
+\index{IsSpawner@{IsSpawner}!pass\_time@{pass\_time}}
+\index{pass\_time@{pass\_time}!IsSpawner@{IsSpawner}}
+\doxysubsubsection{\texorpdfstring{pass\_time()}{pass\_time()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_entity}{Entity}} $\ast$ Is\+Spawner\+::pass\+\_\+time (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{pos,  }\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_is_spawner_a62b3be8696042e575201cb26ba13f25e}{countdown}}, \mbox{\hyperlink{struct_is_spawner_a8f2d614b97f7f4e3a8c833b8a328d58e}{hit\+\_\+max()}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, \mbox{\hyperlink{struct_is_spawner_abb62053b4b2e023dbcc8b86cbfc91254}{num\+\_\+spawned}}, \mbox{\hyperlink{struct_is_spawner_aca0aaf906a2bbf2e259b511c5aaa4fb5}{spawn\+\_\+fn}}, and \mbox{\hyperlink{struct_is_spawner_a510dbdc09ba168d97b0a335135f7b787}{spread}}.
+
+\mbox{\Hypertarget{struct_is_spawner_abaaad4cf8a52f8336244a0150c101167}\label{struct_is_spawner_abaaad4cf8a52f8336244a0150c101167}} 
+\index{IsSpawner@{IsSpawner}!serialize@{serialize}}
+\index{serialize@{serialize}!IsSpawner@{IsSpawner}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void Is\+Spawner\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\mbox{\Hypertarget{struct_is_spawner_a0ad99d96a621f15631f10403a7459821}\label{struct_is_spawner_a0ad99d96a621f15631f10403a7459821}} 
+\index{IsSpawner@{IsSpawner}!set\_fn@{set\_fn}}
+\index{set\_fn@{set\_fn}!IsSpawner@{IsSpawner}}
+\doxysubsubsection{\texorpdfstring{set\_fn()}{set\_fn()}}
+{\footnotesize\ttfamily auto \& Is\+Spawner\+::set\+\_\+fn (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{is__spawner_8h_a68c4a5737ae70817fb86c1555df0e1e2}{Spawn\+Fn}}}]{fn }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_is_spawner_aca0aaf906a2bbf2e259b511c5aaa4fb5}{spawn\+\_\+fn}}.
+
+\mbox{\Hypertarget{struct_is_spawner_a7d9991c014a794ec8858b055b2ad8f64}\label{struct_is_spawner_a7d9991c014a794ec8858b055b2ad8f64}} 
+\index{IsSpawner@{IsSpawner}!set\_time\_between@{set\_time\_between}}
+\index{set\_time\_between@{set\_time\_between}!IsSpawner@{IsSpawner}}
+\doxysubsubsection{\texorpdfstring{set\_time\_between()}{set\_time\_between()}}
+{\footnotesize\ttfamily auto \& Is\+Spawner\+::set\+\_\+time\+\_\+between (\begin{DoxyParamCaption}\item[{float}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_is_spawner_a62b3be8696042e575201cb26ba13f25e}{countdown}}, and \mbox{\hyperlink{struct_is_spawner_a510dbdc09ba168d97b0a335135f7b787}{spread}}.
+
+\mbox{\Hypertarget{struct_is_spawner_ad9e0f4f8ec45baf5e44bfeaa2d364e78}\label{struct_is_spawner_ad9e0f4f8ec45baf5e44bfeaa2d364e78}} 
+\index{IsSpawner@{IsSpawner}!set\_total@{set\_total}}
+\index{set\_total@{set\_total}!IsSpawner@{IsSpawner}}
+\doxysubsubsection{\texorpdfstring{set\_total()}{set\_total()}}
+{\footnotesize\ttfamily auto \& Is\+Spawner\+::set\+\_\+total (\begin{DoxyParamCaption}\item[{int}]{mx }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_is_spawner_ab91f786c4384cb3e432d30a528db6fa0}{max\+\_\+spawned}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespaceentities_a4679b804b439f93bdb2d9dcf74553f17}{entities\+::make\+\_\+customer\+\_\+spawner()}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_is_spawner_a62b3be8696042e575201cb26ba13f25e}\label{struct_is_spawner_a62b3be8696042e575201cb26ba13f25e}} 
+\index{IsSpawner@{IsSpawner}!countdown@{countdown}}
+\index{countdown@{countdown}!IsSpawner@{IsSpawner}}
+\doxysubsubsection{\texorpdfstring{countdown}{countdown}}
+{\footnotesize\ttfamily float Is\+Spawner\+::countdown = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_is_spawner_ae37c3108db9c5e83dbb4d70392a016c3}{pass\+\_\+time()}}, and \mbox{\hyperlink{struct_is_spawner_a7d9991c014a794ec8858b055b2ad8f64}{set\+\_\+time\+\_\+between()}}.
+
+\mbox{\Hypertarget{struct_is_spawner_ab91f786c4384cb3e432d30a528db6fa0}\label{struct_is_spawner_ab91f786c4384cb3e432d30a528db6fa0}} 
+\index{IsSpawner@{IsSpawner}!max\_spawned@{max\_spawned}}
+\index{max\_spawned@{max\_spawned}!IsSpawner@{IsSpawner}}
+\doxysubsubsection{\texorpdfstring{max\_spawned}{max\_spawned}}
+{\footnotesize\ttfamily int Is\+Spawner\+::max\+\_\+spawned = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_is_spawner_a8f2d614b97f7f4e3a8c833b8a328d58e}{hit\+\_\+max()}}, and \mbox{\hyperlink{struct_is_spawner_ad9e0f4f8ec45baf5e44bfeaa2d364e78}{set\+\_\+total()}}.
+
+\mbox{\Hypertarget{struct_is_spawner_abb62053b4b2e023dbcc8b86cbfc91254}\label{struct_is_spawner_abb62053b4b2e023dbcc8b86cbfc91254}} 
+\index{IsSpawner@{IsSpawner}!num\_spawned@{num\_spawned}}
+\index{num\_spawned@{num\_spawned}!IsSpawner@{IsSpawner}}
+\doxysubsubsection{\texorpdfstring{num\_spawned}{num\_spawned}}
+{\footnotesize\ttfamily int Is\+Spawner\+::num\+\_\+spawned = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_is_spawner_a8f2d614b97f7f4e3a8c833b8a328d58e}{hit\+\_\+max()}}, and \mbox{\hyperlink{struct_is_spawner_ae37c3108db9c5e83dbb4d70392a016c3}{pass\+\_\+time()}}.
+
+\mbox{\Hypertarget{struct_is_spawner_aca0aaf906a2bbf2e259b511c5aaa4fb5}\label{struct_is_spawner_aca0aaf906a2bbf2e259b511c5aaa4fb5}} 
+\index{IsSpawner@{IsSpawner}!spawn\_fn@{spawn\_fn}}
+\index{spawn\_fn@{spawn\_fn}!IsSpawner@{IsSpawner}}
+\doxysubsubsection{\texorpdfstring{spawn\_fn}{spawn\_fn}}
+{\footnotesize\ttfamily \mbox{\hyperlink{is__spawner_8h_a68c4a5737ae70817fb86c1555df0e1e2}{Spawn\+Fn}} Is\+Spawner\+::spawn\+\_\+fn\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_is_spawner_ae37c3108db9c5e83dbb4d70392a016c3}{pass\+\_\+time()}}, and \mbox{\hyperlink{struct_is_spawner_a0ad99d96a621f15631f10403a7459821}{set\+\_\+fn()}}.
+
+\mbox{\Hypertarget{struct_is_spawner_a510dbdc09ba168d97b0a335135f7b787}\label{struct_is_spawner_a510dbdc09ba168d97b0a335135f7b787}} 
+\index{IsSpawner@{IsSpawner}!spread@{spread}}
+\index{spread@{spread}!IsSpawner@{IsSpawner}}
+\doxysubsubsection{\texorpdfstring{spread}{spread}}
+{\footnotesize\ttfamily float Is\+Spawner\+::spread = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_is_spawner_ae37c3108db9c5e83dbb4d70392a016c3}{pass\+\_\+time()}}, and \mbox{\hyperlink{struct_is_spawner_a7d9991c014a794ec8858b055b2ad8f64}{set\+\_\+time\+\_\+between()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/components/\mbox{\hyperlink{is__spawner_8h}{is\+\_\+spawner.\+h}}\end{DoxyCompactItemize}

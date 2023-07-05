@@ -6,25 +6,32 @@
 \DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00003\ }
 \DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../item.h"{}}}
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{transform_8h}{transform.h}}"{}}}
-\DoxyCodeLine{00007\ }
-\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_custom_held_item_position}{CustomHeldItemPosition}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
-\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{enum\ struct}\ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}{Positioner}}\ \{}
-\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea7a1920d61156abc05a60135aefe8bc67}{Default}},}
-\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea51c45b795d5d18a3e4e0c37e8b20a141}{Table}},}
-\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eeaa7486b485300c482153dc4883e1a175d}{Conveyer}}}
-\DoxyCodeLine{00013\ \ \ \ \ \}\ \mbox{\hyperlink{struct_custom_held_item_position_a15a481f3cf056571fb085bcda5a6a01a}{positioner}}\ =\ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea7a1920d61156abc05a60135aefe8bc67}{Positioner::Default}};}
-\DoxyCodeLine{00014\ }
-\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_custom_held_item_position_a037a962ba974a040372b094a59258a0c}{init}}(\mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}{Positioner}}\ p)\ \{\ \mbox{\hyperlink{struct_custom_held_item_position_a15a481f3cf056571fb085bcda5a6a01a}{positioner}}\ =\ p;\ \}}
-\DoxyCodeLine{00016\ }
-\DoxyCodeLine{00017\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_custom_held_item_position_a75be4a58fbef982df1c14edecd1100d6}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
-\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_custom_held_item_position_a15a481f3cf056571fb085bcda5a6a01a}{positioner}});}
-\DoxyCodeLine{00023\ \ \ \ \ \}}
-\DoxyCodeLine{00024\ \};}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../vendor\_include.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{transform_8h}{transform.h}}"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_custom_held_item_position}{CustomHeldItemPosition}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{enum\ struct}\ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}{Positioner}}\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea7a1920d61156abc05a60135aefe8bc67}{Default}},}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea51c45b795d5d18a3e4e0c37e8b20a141}{Table}},}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eeaa7486b485300c482153dc4883e1a175d}{Conveyer}}}
+\DoxyCodeLine{00014\ \ \ \ \ \}\ \mbox{\hyperlink{struct_custom_held_item_position_a15a481f3cf056571fb085bcda5a6a01a}{positioner}}\ =\ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eea7a1920d61156abc05a60135aefe8bc67}{Positioner::Default}};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_custom_held_item_position_a037a962ba974a040372b094a59258a0c}{init}}(\mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}{Positioner}}\ p)\ \{\ \mbox{\hyperlink{struct_custom_held_item_position_a15a481f3cf056571fb085bcda5a6a01a}{positioner}}\ =\ p;\ \}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_custom_held_item_position_a75be4a58fbef982df1c14edecd1100d6}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_custom_held_item_position_a15a481f3cf056571fb085bcda5a6a01a}{positioner}});}
+\DoxyCodeLine{00024\ \ \ \ \ \}}
+\DoxyCodeLine{00025\ \};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{inline}\ std::ostream\&\ \mbox{\hyperlink{custom__item__position_8h_ac9947e80b2507638830409527e51ad70}{operator<<}}(std::ostream\&\ os,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86ee}{CustomHeldItemPosition::Positioner}}\&\ p)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ os\ <<\ magic\_enum::enum\_name(p);}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00031\ \}}
 
 \end{DoxyCode}

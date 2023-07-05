@@ -24,11 +24,9 @@ virtual \mbox{\hyperlink{struct_pause_layer_adc8efa0493d4b644cefee67b7dd78698}{$
 \item 
 virtual \mbox{\hyperlink{struct_base_pause_layer_a98c129f44654debafcc00dd6d7e3493b}{$\sim$\+Base\+Pause\+Layer}} ()
 \item 
-virtual void \mbox{\hyperlink{struct_base_pause_layer_ae0bb9bc25bb38fc892b07b9f85942da1}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event) override
+bool \mbox{\hyperlink{struct_base_pause_layer_adfd353f331e5608012c69d1b126a6ab7}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&event) override
 \item 
-bool \mbox{\hyperlink{struct_base_pause_layer_af81774e738d01c50c60eb021252df5c7}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&event)
-\item 
-bool \mbox{\hyperlink{struct_base_pause_layer_a770bf172af8af3749288f7f7c7117bf4}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&event)
+bool \mbox{\hyperlink{struct_base_pause_layer_af105c676fa5347e4241f1d4a4852bc83}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&event) override
 \item 
 virtual void \mbox{\hyperlink{struct_base_pause_layer_a424d1208f560017a082dc9e2e3bf3893}{on\+Update}} (float) override
 \item 
@@ -49,7 +47,15 @@ virtual void \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{on
 \item 
 virtual void \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{on\+Draw}} (float elapsed)=0
 \item 
-virtual void \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&)=0
+void \mbox{\hyperlink{struct_layer_a753e388bb8e7416a7cc2b338b5566396}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_aaad763977a0828b342ddd6ac0af65aea}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_ad1793a53fff5c6516848d2a1a0c73a10}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_a4410643bde2d400ba6731f48ad5a8727}{on\+Gamepad\+Axis\+Moved}} (\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_affe784562ca969d024bb98866455985d}{on\+Char\+Pressed\+Event}} (\mbox{\hyperlink{struct_char_pressed_event}{Char\+Pressed\+Event}} \&)
 \item 
 const std\+::string \& \mbox{\hyperlink{struct_layer_a592dabab6ae280b7a3a3f4b195c9833b}{getname}} () const
 \end{DoxyCompactItemize}
@@ -87,4 +93,4 @@ std\+::string \mbox{\hyperlink{struct_layer_a2071349b5667273725ae7f05a42db7a6}{n
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/\mbox{\hyperlink{pauselayer_8h}{pauselayer.\+h}}\end{DoxyCompactItemize}
+src/layers/\mbox{\hyperlink{pauselayer_8h}{pauselayer.\+h}}\end{DoxyCompactItemize}

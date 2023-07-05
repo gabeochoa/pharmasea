@@ -98,8 +98,8 @@ Functions</h2></td></tr>
 <tr class="separator:af6ad8e8727ef175dbe4d6c0d8b98cbaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a582e7972929eca76b184705ee1b65a7d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d8c/namespaceraylib.html#a582e7972929eca76b184705ee1b65a7d">DrawCubeCustom</a> (Vector3 position, float width, float height, float length, float front_facing_angle, Color face_color, Color base_color)</td></tr>
 <tr class="separator:a582e7972929eca76b184705ee1b65a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdb4c3efe6c13dc14bfce3761b4bab50"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d8c/namespaceraylib.html#afdb4c3efe6c13dc14bfce3761b4bab50">DrawFloatingText</a> (const <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> &amp;position, Font font, const char *text, Color color=BLACK)</td></tr>
-<tr class="separator:afdb4c3efe6c13dc14bfce3761b4bab50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af23f7c426ad59556054db4d4c2734a0d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d8c/namespaceraylib.html#af23f7c426ad59556054db4d4c2734a0d">DrawFloatingText</a> (const <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> &amp;position, Font font, const char *text, int size=96, Color color=BLACK)</td></tr>
+<tr class="separator:af23f7c426ad59556054db4d4c2734a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0253046e4231c6852baf000f8a009cfd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d8c/namespaceraylib.html#a0253046e4231c6852baf000f8a009cfd">operator&lt;</a> (Vector2 l, Vector2 r)</td></tr>
 <tr class="separator:a0253046e4231c6852baf000f8a009cfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc5a61fc461e160abbf9e9458d38cbf9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d8c/namespaceraylib.html#abc5a61fc461e160abbf9e9458d38cbf9">DrawTextCodepoint3D</a> (Font font, int codepoint, <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> position, float fontSize, bool backface, Color tint)</td></tr>
@@ -200,10 +200,12 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">References <a class="el" href="../../d7/d7f/log_8h.html#a6ae72553ea9805dd87a463d6f710364d">log_error</a>, and <a class="el" href="../../d7/d7f/log_8h.html#a9329a6875e4f84d9ee66d5ab34911233">log_ifx</a>.</p>
+
 </div>
 </div>
-<a id="afdb4c3efe6c13dc14bfce3761b4bab50" name="afdb4c3efe6c13dc14bfce3761b4bab50"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afdb4c3efe6c13dc14bfce3761b4bab50">&#9670;&#160;</a></span>DrawFloatingText()</h2>
+<a id="af23f7c426ad59556054db4d4c2734a0d" name="af23f7c426ad59556054db4d4c2734a0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af23f7c426ad59556054db4d4c2734a0d">&#9670;&#160;</a></span>DrawFloatingText()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -228,6 +230,12 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em> = <code>96</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -349,8 +357,6 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="../../de/d28/struct_round.html#aa9c23b4b9dac6779b416f785302f050d">Round::onDraw()</a>.</p>
 
 </div>
 </div>
@@ -476,7 +482,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="../../dd/d8c/namespaceraylib.html#adc40755b0f82292edf03a57666161342">DrawText3D()</a>, and <a class="el" href="../../dd/d8c/namespaceraylib.html#abc5a61fc461e160abbf9e9458d38cbf9">DrawTextCodepoint3D()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../dd/d8c/namespaceraylib.html#afdb4c3efe6c13dc14bfce3761b4bab50">DrawFloatingText()</a>, and <a class="el" href="../../dd/d8c/namespaceraylib.html#adc40755b0f82292edf03a57666161342">DrawText3D()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../dd/d8c/namespaceraylib.html#af23f7c426ad59556054db4d4c2734a0d">DrawFloatingText()</a>, <a class="el" href="../../dd/d8c/namespaceraylib.html#adc40755b0f82292edf03a57666161342">DrawText3D()</a>, and <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#a7da34a131c86ec8323726dfda86fa24a">system_manager::render_manager::render_trigger_area()</a>.</p>
 
 </div>
 </div>
@@ -626,7 +632,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="../../dd/d8c/namespaceraylib.html#abc5a61fc461e160abbf9e9458d38cbf9">DrawTextCodepoint3D()</a>, <a class="el" href="../../dd/d8c/namespaceraylib.html#aeb18116ce05499755bfce3012bfa0ea1">DrawTextWave3D()</a>, <a class="el" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a774353a50fade03663e6cb07f3cb3a7e">raylib::WaveTextConfig::waveOffset</a>, <a class="el" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a16d8b5ce500204c90bd474ff798a3f9d">raylib::WaveTextConfig::waveRange</a>, and <a class="el" href="../../d5/d75/structraylib_1_1_wave_text_config.html#a3ac36f7f3ee0186d2130188a92409bd5">raylib::WaveTextConfig::waveSpeed</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../dd/d8c/namespaceraylib.html#aeb18116ce05499755bfce3012bfa0ea1">DrawTextWave3D()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../dd/d8c/namespaceraylib.html#aeb18116ce05499755bfce3012bfa0ea1">DrawTextWave3D()</a>, and <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#a7da34a131c86ec8323726dfda86fa24a">system_manager::render_manager::render_trigger_area()</a>.</p>
 
 </div>
 </div>

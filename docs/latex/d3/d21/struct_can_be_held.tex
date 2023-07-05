@@ -19,7 +19,7 @@ bool \mbox{\hyperlink{struct_can_be_held_a826fce2a354051016bde8f83fb4d9741}{is\+
 \item 
 bool \mbox{\hyperlink{struct_can_be_held_a8d6497b3755ca61d4b61a86aa44377b6}{is\+\_\+not\+\_\+held}} () const
 \item 
-void \mbox{\hyperlink{struct_can_be_held_a6dd2062f21af2854541512f920d628d8}{update}} (bool g)
+void \mbox{\hyperlink{struct_can_be_held_a4f7c49a33f531085a0b8ed763a4d2db9}{set\+\_\+is\+\_\+being\+\_\+held}} (bool g)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
 \begin{DoxyCompactItemize}
@@ -27,6 +27,8 @@ void \mbox{\hyperlink{struct_can_be_held_a6dd2062f21af2854541512f920d628d8}{upda
 \mbox{\hyperlink{struct_base_component_ac74326a615877f3c1a17bc47787ad91e}{Base\+Component}} ()
 \item 
 \mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
+\item 
+virtual void \mbox{\hyperlink{struct_base_component_ac7389bfd8b903625667e1427ef3cb70b}{on\+Attach}} ()
 \item 
 virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
 \end{DoxyCompactItemize}
@@ -87,11 +89,11 @@ void Can\+Be\+Held\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{D
 
 References \mbox{\hyperlink{struct_can_be_held_a25c13d7a1415dbf9291c44c89a3e62b1}{held}}.
 
-\mbox{\Hypertarget{struct_can_be_held_a6dd2062f21af2854541512f920d628d8}\label{struct_can_be_held_a6dd2062f21af2854541512f920d628d8}} 
-\index{CanBeHeld@{CanBeHeld}!update@{update}}
-\index{update@{update}!CanBeHeld@{CanBeHeld}}
-\doxysubsubsection{\texorpdfstring{update()}{update()}}
-{\footnotesize\ttfamily void Can\+Be\+Held\+::update (\begin{DoxyParamCaption}\item[{bool}]{g }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+\mbox{\Hypertarget{struct_can_be_held_a4f7c49a33f531085a0b8ed763a4d2db9}\label{struct_can_be_held_a4f7c49a33f531085a0b8ed763a4d2db9}} 
+\index{CanBeHeld@{CanBeHeld}!set\_is\_being\_held@{set\_is\_being\_held}}
+\index{set\_is\_being\_held@{set\_is\_being\_held}!CanBeHeld@{CanBeHeld}}
+\doxysubsubsection{\texorpdfstring{set\_is\_being\_held()}{set\_is\_being\_held()}}
+{\footnotesize\ttfamily void Can\+Be\+Held\+::set\+\_\+is\+\_\+being\+\_\+held (\begin{DoxyParamCaption}\item[{bool}]{g }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -108,7 +110,7 @@ References \mbox{\hyperlink{struct_can_be_held_a25c13d7a1415dbf9291c44c89a3e62b1
 
 
 
-Referenced by \mbox{\hyperlink{struct_can_be_held_a826fce2a354051016bde8f83fb4d9741}{is\+\_\+held()}}, \mbox{\hyperlink{struct_can_be_held_ab79afcd5043d0a0d05c3b356e78ee0a6}{serialize()}}, and \mbox{\hyperlink{struct_can_be_held_a6dd2062f21af2854541512f920d628d8}{update()}}.
+Referenced by \mbox{\hyperlink{struct_can_be_held_a826fce2a354051016bde8f83fb4d9741}{is\+\_\+held()}}, \mbox{\hyperlink{struct_can_be_held_ab79afcd5043d0a0d05c3b356e78ee0a6}{serialize()}}, and \mbox{\hyperlink{struct_can_be_held_a4f7c49a33f531085a0b8ed763a4d2db9}{set\+\_\+is\+\_\+being\+\_\+held()}}.
 
 
 

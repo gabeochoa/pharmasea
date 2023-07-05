@@ -1,0 +1,150 @@
+\hypertarget{structgeneration_1_1helper}{}\doxysection{generation\+::helper Struct Reference}
+\label{structgeneration_1_1helper}\index{generation::helper@{generation::helper}}
+
+
+{\ttfamily \#include $<$level\+\_\+info.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structgeneration_1_1helper_a67d3c7c3157c8ff753bb8080f34ab849}{helper}} (const std\+::vector$<$ std\+::string $>$ \&l)
+\item 
+void \mbox{\hyperlink{structgeneration_1_1helper_a9b1d98c15eacac456fa96e1bce83903c}{generate}} (std\+::function$<$ void(\mbox{\hyperlink{struct_entity}{Entity}} $\ast$)$>$ add\+\_\+to\+\_\+map=nullptr)
+\item 
+\mbox{\hyperlink{struct_entity}{Entity}} $\ast$ \mbox{\hyperlink{structgeneration_1_1helper_a7af3da545dc8fda3263f0bb787cbf423}{generate\+\_\+entity\+\_\+from\+\_\+character}} (char ch, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} location)
+\item 
+\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{structgeneration_1_1helper_aea7daa493b1cb81bfad552e18f003905}{find\+\_\+origin}} ()
+\item 
+char \mbox{\hyperlink{structgeneration_1_1helper_afff9c9f7311f7754fe4a1838403044db}{get\+\_\+char}} (int i, int j)
+\item 
+void \mbox{\hyperlink{structgeneration_1_1helper_ab619b22a2c1a2234a5bb7b5c09dd9b56}{validate}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{structgeneration_1_1helper_a00ccdd49851ce795bd8ec8d9aa5c1c78}{lines}}
+\item 
+\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{structgeneration_1_1helper_aa692cf4187de7b6b162b228d7317999c}{x}} = \{0, 0\}
+\item 
+\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{structgeneration_1_1helper_a429d681cba26f5194a174529c268e6b1}{z}} = \{0, 0\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structgeneration_1_1helper_a67d3c7c3157c8ff753bb8080f34ab849}\label{structgeneration_1_1helper_a67d3c7c3157c8ff753bb8080f34ab849}} 
+\index{generation::helper@{generation::helper}!helper@{helper}}
+\index{helper@{helper}!generation::helper@{generation::helper}}
+\doxysubsubsection{\texorpdfstring{helper()}{helper()}}
+{\footnotesize\ttfamily generation\+::helper\+::helper (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{l }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structgeneration_1_1helper_aea7daa493b1cb81bfad552e18f003905}\label{structgeneration_1_1helper_aea7daa493b1cb81bfad552e18f003905}} 
+\index{generation::helper@{generation::helper}!find\_origin@{find\_origin}}
+\index{find\_origin@{find\_origin}!generation::helper@{generation::helper}}
+\doxysubsubsection{\texorpdfstring{find\_origin()}{find\_origin()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} generation\+::helper\+::find\+\_\+origin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structgeneration_1_1helper_a00ccdd49851ce795bd8ec8d9aa5c1c78}{lines}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+
+
+
+Referenced by \mbox{\hyperlink{structgeneration_1_1helper_a9b1d98c15eacac456fa96e1bce83903c}{generate()}}.
+
+\mbox{\Hypertarget{structgeneration_1_1helper_a9b1d98c15eacac456fa96e1bce83903c}\label{structgeneration_1_1helper_a9b1d98c15eacac456fa96e1bce83903c}} 
+\index{generation::helper@{generation::helper}!generate@{generate}}
+\index{generate@{generate}!generation::helper@{generation::helper}}
+\doxysubsubsection{\texorpdfstring{generate()}{generate()}}
+{\footnotesize\ttfamily void generation\+::helper\+::generate (\begin{DoxyParamCaption}\item[{std\+::function$<$ void(\mbox{\hyperlink{struct_entity}{Entity}} $\ast$)$>$}]{add\+\_\+to\+\_\+map = {\ttfamily nullptr} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{Entity\+Helper\+::add\+Entity()}}, \mbox{\hyperlink{structgeneration_1_1helper_aea7daa493b1cb81bfad552e18f003905}{find\+\_\+origin()}}, \mbox{\hyperlink{structgeneration_1_1helper_a7af3da545dc8fda3263f0bb787cbf423}{generate\+\_\+entity\+\_\+from\+\_\+character()}}, \mbox{\hyperlink{structgeneration_1_1helper_afff9c9f7311f7754fe4a1838403044db}{get\+\_\+char()}}, \mbox{\hyperlink{structgeneration_1_1helper_a00ccdd49851ce795bd8ec8d9aa5c1c78}{lines}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{Game\+Map\+Info\+::generate\+\_\+map()}}, and \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{test\+::setup()}}.
+
+\mbox{\Hypertarget{structgeneration_1_1helper_a7af3da545dc8fda3263f0bb787cbf423}\label{structgeneration_1_1helper_a7af3da545dc8fda3263f0bb787cbf423}} 
+\index{generation::helper@{generation::helper}!generate\_entity\_from\_character@{generate\_entity\_from\_character}}
+\index{generate\_entity\_from\_character@{generate\_entity\_from\_character}!generation::helper@{generation::helper}}
+\doxysubsubsection{\texorpdfstring{generate\_entity\_from\_character()}{generate\_entity\_from\_character()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_entity}{Entity}} $\ast$ generation\+::helper\+::generate\+\_\+entity\+\_\+from\+\_\+character (\begin{DoxyParamCaption}\item[{char}]{ch,  }\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{location }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacegeneration_a6009615954ce2294d19212675d2e649c}{generation\+::\+BAGBOX}}, \mbox{\hyperlink{namespacegeneration_a1d63613490b3faed21fb1a2434e5c0b9}{generation\+::\+CUST\+\_\+\+SPAWNER}}, \mbox{\hyperlink{namespacegeneration_adf6655ab4b5ed7138bd321b35e7f9073}{generation\+::\+CUSTOMER}}, \mbox{\hyperlink{namespacegeneration_aff74fafdd252d73d73e7cfbab4dfb06e}{generation\+::\+EMPTY}}, \mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{Entity\+::get()}}, \mbox{\hyperlink{globals_8h_a9b5348cc15afb030f3257335ce85a09f}{global\+\_\+player}}, \mbox{\hyperlink{namespacegeneration_aea2bad29cf442d3564d5914cd030b880}{generation\+::\+GRABBERd}}, \mbox{\hyperlink{namespacegeneration_ad171ab6d2805242188f0ca6144982716}{generation\+::\+GRABBERl}}, \mbox{\hyperlink{namespacegeneration_ab8ef48f7499c7a84ef179fd3b1a43155}{generation\+::\+GRABBERr}}, \mbox{\hyperlink{namespacegeneration_a0cd5335a2981aee2f1905872a7cc4b70}{generation\+::\+GRABBERu}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, \mbox{\hyperlink{namespaceentities_a7992dfa9096ca50b24ff54522decbae1}{entities\+::make\+\_\+bagbox()}}, \mbox{\hyperlink{entity_8h_ae9b6ff048ccc67a2a6de1877e294edf4}{make\+\_\+customer()}}, \mbox{\hyperlink{namespaceentities_a4679b804b439f93bdb2d9dcf74553f17}{entities\+::make\+\_\+customer\+\_\+spawner()}}, \mbox{\hyperlink{entity_8h_a96875ea4ae53760879d54f4bf58c14e9}{make\+\_\+entity()}}, \mbox{\hyperlink{namespaceentities_aa6de719712a8ed39289db02a6ec761d8}{entities\+::make\+\_\+grabber()}}, \mbox{\hyperlink{namespaceentities_a36e028422e1baa4aefba2aaf94fa65a1}{entities\+::make\+\_\+medicine\+\_\+cabinet()}}, \mbox{\hyperlink{namespaceentities_a5b37b71d0d1f573bc67c8de98c023baa}{entities\+::make\+\_\+pill\+\_\+dispenser()}}, \mbox{\hyperlink{namespaceentities_a6eed7f199266eb0e44cad235fd78ed1f}{entities\+::make\+\_\+register()}}, \mbox{\hyperlink{namespaceentities_aa69c0732b8e21c72173fa742854592e2}{entities\+::make\+\_\+sophie()}}, \mbox{\hyperlink{namespaceentities_abf094d17eb47d98e98fd5ccfec00c1fc}{entities\+::make\+\_\+table()}}, \mbox{\hyperlink{namespaceentities_a15a517f5584e44f17df8a5e28ac6c0f2}{entities\+::make\+\_\+wall()}}, \mbox{\hyperlink{namespacegeneration_aadc5efa99b85b29ef4b59da1b0675ec5}{generation\+::\+MED\+\_\+\+CAB}}, \mbox{\hyperlink{struct_debug_options_a7f43cc65d26d12effa3b19028994de37}{Debug\+Options\+::name}}, \mbox{\hyperlink{namespacegeneration_ad91eeb9a099e55121780afa66dfdaa1b}{generation\+::\+PILL\+\_\+\+DISP}}, \mbox{\hyperlink{namespacegeneration_a631b1a94f5d00804e421b8539f4135f3}{generation\+::\+PLAYER}}, \mbox{\hyperlink{namespacegeneration_a726bd72acc1977dbc97d88a52fc18947}{generation\+::\+REGISTER}}, \mbox{\hyperlink{namespacegeneration_aaaa393486d9e70faf9a37a9e0cc5d011}{generation\+::\+SOPHIE}}, \mbox{\hyperlink{namespacegeneration_aabc593a0212f44749c3600dea81f207b}{generation\+::\+TABLE}}, \mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec\+::to3()}}, \mbox{\hyperlink{namespacegeneration_ad34102741dde4f7946379d4f73c7bc87}{generation\+::\+WALL}}, \mbox{\hyperlink{namespacegeneration_a7c78b5c6c08e9dbd23782feebde4e65b}{generation\+::\+WALL2}}, \mbox{\hyperlink{structgeneration_1_1helper_aa692cf4187de7b6b162b228d7317999c}{x}}, and \mbox{\hyperlink{structgeneration_1_1helper_a429d681cba26f5194a174529c268e6b1}{z}}.
+
+
+
+Referenced by \mbox{\hyperlink{structgeneration_1_1helper_a9b1d98c15eacac456fa96e1bce83903c}{generate()}}.
+
+\mbox{\Hypertarget{structgeneration_1_1helper_afff9c9f7311f7754fe4a1838403044db}\label{structgeneration_1_1helper_afff9c9f7311f7754fe4a1838403044db}} 
+\index{generation::helper@{generation::helper}!get\_char@{get\_char}}
+\index{get\_char@{get\_char}!generation::helper@{generation::helper}}
+\doxysubsubsection{\texorpdfstring{get\_char()}{get\_char()}}
+{\footnotesize\ttfamily char generation\+::helper\+::get\+\_\+char (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{j }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structgeneration_1_1helper_a00ccdd49851ce795bd8ec8d9aa5c1c78}{lines}}.
+
+
+
+Referenced by \mbox{\hyperlink{structgeneration_1_1helper_a9b1d98c15eacac456fa96e1bce83903c}{generate()}}.
+
+\mbox{\Hypertarget{structgeneration_1_1helper_ab619b22a2c1a2234a5bb7b5c09dd9b56}\label{structgeneration_1_1helper_ab619b22a2c1a2234a5bb7b5c09dd9b56}} 
+\index{generation::helper@{generation::helper}!validate@{validate}}
+\index{validate@{validate}!generation::helper@{generation::helper}}
+\doxysubsubsection{\texorpdfstring{validate()}{validate()}}
+{\footnotesize\ttfamily void generation\+::helper\+::validate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{Transform\+::as2()}}, \mbox{\hyperlink{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}{astar\+::find\+\_\+path()}}, \mbox{\hyperlink{struct_entity_helper_a4d01c0a143c62ae572e5d4e9eb5711f0}{Entity\+Helper\+::is\+Walkable()}}, \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{Game\+Map\+Info\+::generate\+\_\+map()}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structgeneration_1_1helper_a00ccdd49851ce795bd8ec8d9aa5c1c78}\label{structgeneration_1_1helper_a00ccdd49851ce795bd8ec8d9aa5c1c78}} 
+\index{generation::helper@{generation::helper}!lines@{lines}}
+\index{lines@{lines}!generation::helper@{generation::helper}}
+\doxysubsubsection{\texorpdfstring{lines}{lines}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::string$>$ generation\+::helper\+::lines}
+
+
+
+Referenced by \mbox{\hyperlink{structgeneration_1_1helper_aea7daa493b1cb81bfad552e18f003905}{find\+\_\+origin()}}, \mbox{\hyperlink{structgeneration_1_1helper_a9b1d98c15eacac456fa96e1bce83903c}{generate()}}, and \mbox{\hyperlink{structgeneration_1_1helper_afff9c9f7311f7754fe4a1838403044db}{get\+\_\+char()}}.
+
+\mbox{\Hypertarget{structgeneration_1_1helper_aa692cf4187de7b6b162b228d7317999c}\label{structgeneration_1_1helper_aa692cf4187de7b6b162b228d7317999c}} 
+\index{generation::helper@{generation::helper}!x@{x}}
+\index{x@{x}!generation::helper@{generation::helper}}
+\doxysubsubsection{\texorpdfstring{x}{x}}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} generation\+::helper\+::x = \{0, 0\}}
+
+
+
+Referenced by \mbox{\hyperlink{structgeneration_1_1helper_a7af3da545dc8fda3263f0bb787cbf423}{generate\+\_\+entity\+\_\+from\+\_\+character()}}, and \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{test\+::setup()}}.
+
+\mbox{\Hypertarget{structgeneration_1_1helper_a429d681cba26f5194a174529c268e6b1}\label{structgeneration_1_1helper_a429d681cba26f5194a174529c268e6b1}} 
+\index{generation::helper@{generation::helper}!z@{z}}
+\index{z@{z}!generation::helper@{generation::helper}}
+\doxysubsubsection{\texorpdfstring{z}{z}}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} generation\+::helper\+::z = \{0, 0\}}
+
+
+
+Referenced by \mbox{\hyperlink{structgeneration_1_1helper_a7af3da545dc8fda3263f0bb787cbf423}{generate\+\_\+entity\+\_\+from\+\_\+character()}}, and \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{test\+::setup()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{level__info_8h}{level\+\_\+info.\+h}}\end{DoxyCompactItemize}

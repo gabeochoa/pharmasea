@@ -8,6 +8,8 @@ struct \mbox{\hyperlink{structutil_1_1overloaded}{overloaded}}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+void \mbox{\hyperlink{namespaceutil_a5bf3abd7929d330a17820e9c653ea94f}{force\+\_\+segfault}} ()
+\item 
 {\footnotesize template$<$class... Ts$>$ }\\\mbox{\hyperlink{namespaceutil_addfd55c03039ca8158e80a71b451eecd}{overloaded}} (Ts...) -\/$>$ \mbox{\hyperlink{structutil_1_1overloaded}{overloaded}}$<$ Ts... $>$
 \item 
 {\footnotesize template$<$typename T $>$ }\\int \mbox{\hyperlink{namespaceutil_a7b683e51af99b005d650280fe168daec}{sgn}} (T val)
@@ -21,6 +23,12 @@ static std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{namespaceutil_a8d6724
 std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{namespaceutil_a5f5caebc89c06dcdd631966f2ba0cb72}{split\+\_\+re}} (const std\+::string \&input, const std\+::string \&regex)
 \item 
 static float \mbox{\hyperlink{namespaceutil_a5020e504940e09639480aed917da6ba1}{clamp}} (float a, float mn, float mx)
+\item 
+static float \mbox{\hyperlink{namespaceutil_a8d8ab89401ce7c1afe474cbe90009042}{round\+\_\+up}} (float value, int decimal\+\_\+places)
+\item 
+static float \mbox{\hyperlink{namespaceutil_a03256e36c20c6257c41c991ff2a4c7d6}{trunc}} (float value, int decimal\+\_\+places)
+\item 
+static float \mbox{\hyperlink{namespaceutil_a992d5bc619ec26409ea75140a3a3087c}{lerp}} (float a, float b, float pct)
 \item 
 {\footnotesize template$<$template$<$ typename... $>$ class Container, typename K , typename V , typename... Ts$>$ }\\V \mbox{\hyperlink{namespaceutil_a5fad71d00f379fced9c845d2387b5304}{map\+\_\+get\+\_\+or\+\_\+default}} (Container$<$ K, V, Ts... $>$ map, K key, V def\+\_\+value)
 \item 
@@ -39,7 +47,7 @@ int \mbox{\hyperlink{namespaceutil_af5b41133c9803397e0ac6ceae24431b2}{words\+\_\
 
 
 
-Referenced by \mbox{\hyperlink{struct_settings_ab2a70e409439312ffb45c9e0d13dedcf}{Settings\+::update\+\_\+master\+\_\+volume()}}, and \mbox{\hyperlink{struct_settings_a50426b179c7be84c0364c65c39f8d40a}{Settings\+::update\+\_\+music\+\_\+volume()}}.
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a55c42792a45958553128b841ccec5cc2}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::collect\+\_\+user\+\_\+input()}}, \mbox{\hyperlink{struct_settings_ab2a70e409439312ffb45c9e0d13dedcf}{Settings\+::update\+\_\+master\+\_\+volume()}}, and \mbox{\hyperlink{struct_settings_a50426b179c7be84c0364c65c39f8d40a}{Settings\+::update\+\_\+music\+\_\+volume()}}.
 
 \mbox{\Hypertarget{namespaceutil_a754507833912be9c3f11ad02c3ea05f9}\label{namespaceutil_a754507833912be9c3f11ad02c3ea05f9}} 
 \index{util@{util}!deg2rad@{deg2rad}}
@@ -49,7 +57,13 @@ Referenced by \mbox{\hyperlink{struct_settings_ab2a70e409439312ffb45c9e0d13dedcf
 
 
 
-Referenced by \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{Entity\+::get\+\_\+heading()}}.
+Referenced by \mbox{\hyperlink{struct_transform_a740dc71b3ade4b457696b284dd4788b7}{Transform\+::get\+\_\+heading()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1ui_ae21ce328b5c0fb98d91314d3340c9ec5}{system\+\_\+manager\+::ui\+::render\+\_\+timer()}}.
+
+\mbox{\Hypertarget{namespaceutil_a5bf3abd7929d330a17820e9c653ea94f}\label{namespaceutil_a5bf3abd7929d330a17820e9c653ea94f}} 
+\index{util@{util}!force\_segfault@{force\_segfault}}
+\index{force\_segfault@{force\_segfault}!util@{util}}
+\doxysubsubsection{\texorpdfstring{force\_segfault()}{force\_segfault()}}
+{\footnotesize\ttfamily void util\+::force\+\_\+segfault (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 \mbox{\Hypertarget{namespaceutil_ad3415a1a5060095ee99c99b3aa7a707f}\label{namespaceutil_ad3415a1a5060095ee99c99b3aa7a707f}} 
 \index{util@{util}!join@{join}}
@@ -57,6 +71,16 @@ Referenced by \mbox{\hyperlink{struct_entity_ae32aa83d8bae67c396468b025675ee74}{
 \doxysubsubsection{\texorpdfstring{join()}{join()}}
 {\footnotesize\ttfamily template$<$typename Range , typename Value  = typename Range\+::value\+\_\+type$>$ \\
 std\+::string util\+::join (\begin{DoxyParamCaption}\item[{Range const \&}]{elements,  }\item[{const char $\ast$const}]{delimiter }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{namespaceutil_a992d5bc619ec26409ea75140a3a3087c}\label{namespaceutil_a992d5bc619ec26409ea75140a3a3087c}} 
+\index{util@{util}!lerp@{lerp}}
+\index{lerp@{lerp}!util@{util}}
+\doxysubsubsection{\texorpdfstring{lerp()}{lerp()}}
+{\footnotesize\ttfamily static float util\+::lerp (\begin{DoxyParamCaption}\item[{float}]{a,  }\item[{float}]{b,  }\item[{float}]{pct }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1ui_ae21ce328b5c0fb98d91314d3340c9ec5}{system\+\_\+manager\+::ui\+::render\+\_\+timer()}}.
 
 \mbox{\Hypertarget{namespaceutil_a5fad71d00f379fced9c845d2387b5304}\label{namespaceutil_a5fad71d00f379fced9c845d2387b5304}} 
 \index{util@{util}!map\_get\_or\_default@{map\_get\_or\_default}}
@@ -80,7 +104,13 @@ V util\+::map\+\_\+get\+\_\+or\+\_\+default (\begin{DoxyParamCaption}\item[{Cont
 
 
 
-Referenced by \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{Entity\+::turn\+\_\+to\+\_\+face\+\_\+entity()}}.
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a55c42792a45958553128b841ccec5cc2}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::collect\+\_\+user\+\_\+input()}}, and \mbox{\hyperlink{struct_transform_aa1fd388b7d77e59bc1dfa967d8d3f3ab}{Transform\+::turn\+\_\+to\+\_\+face\+\_\+pos()}}.
+
+\mbox{\Hypertarget{namespaceutil_a8d8ab89401ce7c1afe474cbe90009042}\label{namespaceutil_a8d8ab89401ce7c1afe474cbe90009042}} 
+\index{util@{util}!round\_up@{round\_up}}
+\index{round\_up@{round\_up}!util@{util}}
+\doxysubsubsection{\texorpdfstring{round\_up()}{round\_up()}}
+{\footnotesize\ttfamily static float util\+::round\+\_\+up (\begin{DoxyParamCaption}\item[{float}]{value,  }\item[{int}]{decimal\+\_\+places }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
 \mbox{\Hypertarget{namespaceutil_a7b683e51af99b005d650280fe168daec}\label{namespaceutil_a7b683e51af99b005d650280fe168daec}} 
 \index{util@{util}!sgn@{sgn}}
@@ -108,6 +138,20 @@ Referenced by \mbox{\hyperlink{trie_8h_abd0541bd743eeab12cca2b0dfc24e1b5}{test\+
 \index{split\_string@{split\_string}!util@{util}}
 \doxysubsubsection{\texorpdfstring{split\_string()}{split\_string()}}
 {\footnotesize\ttfamily static std\+::vector$<$ std\+::string $>$ util\+::split\+\_\+string (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{str,  }\item[{const std\+::string \&}]{delimiter }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{Game\+Map\+Info\+::generate\+\_\+map()}}, and \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{test\+::setup()}}.
+
+\mbox{\Hypertarget{namespaceutil_a03256e36c20c6257c41c991ff2a4c7d6}\label{namespaceutil_a03256e36c20c6257c41c991ff2a4c7d6}} 
+\index{util@{util}!trunc@{trunc}}
+\index{trunc@{trunc}!util@{util}}
+\doxysubsubsection{\texorpdfstring{trunc()}{trunc()}}
+{\footnotesize\ttfamily static float util\+::trunc (\begin{DoxyParamCaption}\item[{float}]{value,  }\item[{int}]{decimal\+\_\+places }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1ui_a0b320b5f83df322af77451487bd4ac61}{system\+\_\+manager\+::ui\+::render\+\_\+block\+\_\+state\+\_\+change\+\_\+reason()}}, and \mbox{\hyperlink{struct_transform_a89b5aae1f418a7a527ce0b5907865f0e}{Transform\+::trunc()}}.
 
 \mbox{\Hypertarget{namespaceutil_af5b41133c9803397e0ac6ceae24431b2}\label{namespaceutil_af5b41133c9803397e0ac6ceae24431b2}} 
 \index{util@{util}!words\_in\_string@{words\_in\_string}}

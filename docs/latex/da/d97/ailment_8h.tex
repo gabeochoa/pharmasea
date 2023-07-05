@@ -1,8 +1,10 @@
-\hypertarget{ailment_8h}{}\doxysection{src/ailment.h File Reference}
-\label{ailment_8h}\index{src/ailment.h@{src/ailment.h}}
+\hypertarget{ailment_8h}{}\doxysection{src/dataclass/ailment.h File Reference}
+\label{ailment_8h}\index{src/dataclass/ailment.h@{src/dataclass/ailment.h}}
+{\ttfamily \#include $<$array$>$}\newline
 {\ttfamily \#include $<$cmath$>$}\newline
 {\ttfamily \#include $<$set$>$}\newline
 {\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include \char`\"{}../external\+\_\+include.\+h\char`\"{}}\newline
 \doxysubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
@@ -27,10 +29,19 @@ struct \mbox{\hyperlink{struct_sleepy}{Sleepy}}
 struct \mbox{\hyperlink{struct_ailment}{Ailment}}
 \item 
 struct \mbox{\hyperlink{struct_ailment_1_1_config}{Ailment\+::\+Config}}
-\item 
-struct \mbox{\hyperlink{struct_t_e_s_t___m_a_x___a_i_l}{TEST\+\_\+\+MAX\+\_\+\+AIL}}
-\item 
-struct \mbox{\hyperlink{struct_insomnia}{Insomnia}}
-\item 
-struct \mbox{\hyperlink{struct_hooked}{Hooked}}
 \end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{ailment_8h_a98f2783bf27302cd748cb1cdbe1d382e}{serialize}} (S \&s, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_ailment}{Ailment}} $>$ \&data)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{ailment_8h_a98f2783bf27302cd748cb1cdbe1d382e}\label{ailment_8h_a98f2783bf27302cd748cb1cdbe1d382e}} 
+\index{ailment.h@{ailment.h}!serialize@{serialize}}
+\index{serialize@{serialize}!ailment.h@{ailment.h}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void serialize (\begin{DoxyParamCaption}\item[{S \&}]{s,  }\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_ailment}{Ailment}} $>$ \&}]{data }\end{DoxyParamCaption})}
+

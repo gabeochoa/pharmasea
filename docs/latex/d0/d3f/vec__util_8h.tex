@@ -15,13 +15,13 @@ namespace \mbox{\hyperlink{namespacevec}{vec}}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-static void \mbox{\hyperlink{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}{for\+Each\+Neighbor}} (int i, int j, std\+::function$<$ void(const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&)$>$ cb, int step=1)
-\item 
-static std\+::vector$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{vec__util_8h_a4a3b66ac1c7427b7059a875740cce0a6}{get\+\_\+neighbors}} (int i, int j, int step=1)
-\item 
 float \mbox{\hyperlink{vec__util_8h_add3dd9e63d43f81591ca9e25b88470d7}{comp\+\_\+max}} (const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&a)
 \item 
 constexpr Bounding\+Box \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\+\_\+bounds}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} position, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} size)
+\item 
+static void \mbox{\hyperlink{namespacevec_abca94cc6b9343e0e4c5c5acf0b80eda2}{vec\+::for\+Each\+Neighbor}} (int i, int j, std\+::function$<$ void(const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&)$>$ cb, int step=1)
+\item 
+static std\+::vector$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{namespacevec_adb9d98389871928fc1495f58786a7336}{vec\+::get\+\_\+neighbors}} (int i, int j, int step=1)
 \item 
 float constexpr \mbox{\hyperlink{namespacevec_a3e18f73ec09c3b1c14c15a0a42c8405a}{vec\+::newton\+\_\+raphson}} (float x, float cur, float prev)
 \item 
@@ -40,13 +40,15 @@ constexpr \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}
 \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{vec\+::snap}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} position)
 \item 
 \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{namespacevec_ade144f304cbabbf68741ea3e19b96f1e}{vec\+::snap}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} position)
+\item 
+\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{namespacevec_a0896021658bc6030ca3348ee3946a0b3}{vec\+::lerp}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} a, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} b, float pct)
 \end{DoxyCompactItemize}
 \doxysubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-static constexpr int \mbox{\hyperlink{vec__util_8h_a39c52fd1116a4c85f6a446768e4b270c}{neigh\+\_\+x}} \mbox{[}8\mbox{]} = \{-\/1, -\/1, -\/1, 0, 0, 1, 1, 1\}
+static constexpr int \mbox{\hyperlink{namespacevec_af3910db49dc587ff25894ab5e8e1fdcc}{vec\+::neigh\+\_\+x}} \mbox{[}8\mbox{]} = \{-\/1, -\/1, -\/1, 0, 0, 1, 1, 1\}
 \item 
-static constexpr int \mbox{\hyperlink{vec__util_8h_ac980e9b912e5a146e732e94a9adb1392}{neigh\+\_\+y}} \mbox{[}8\mbox{]} = \{-\/1, 0, 1, -\/1, 1, -\/1, 0, 1\}
+static constexpr int \mbox{\hyperlink{namespacevec_a35e7b1db3053956001d23cb0dc07e081}{vec\+::neigh\+\_\+y}} \mbox{[}8\mbox{]} = \{-\/1, 0, 1, -\/1, 1, -\/1, 0, 1\}
 \end{DoxyCompactItemize}
 
 
@@ -66,20 +68,6 @@ static constexpr int \mbox{\hyperlink{vec__util_8h_ac980e9b912e5a146e732e94a9adb
 \doxysubsubsection{\texorpdfstring{comp\_max()}{comp\_max()}}
 {\footnotesize\ttfamily float comp\+\_\+max (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&}]{a }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-\mbox{\Hypertarget{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}\label{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}} 
-\index{vec\_util.h@{vec\_util.h}!forEachNeighbor@{forEachNeighbor}}
-\index{forEachNeighbor@{forEachNeighbor}!vec\_util.h@{vec\_util.h}}
-\doxysubsubsection{\texorpdfstring{forEachNeighbor()}{forEachNeighbor()}}
-{\footnotesize\ttfamily static void for\+Each\+Neighbor (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{j,  }\item[{std\+::function$<$ void(const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&)$>$}]{cb,  }\item[{int}]{step = {\ttfamily 1} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
-
-
-
-References \mbox{\hyperlink{vec__util_8h_a39c52fd1116a4c85f6a446768e4b270c}{neigh\+\_\+x}}, and \mbox{\hyperlink{vec__util_8h_ac980e9b912e5a146e732e94a9adb1392}{neigh\+\_\+y}}.
-
-
-
-Referenced by \mbox{\hyperlink{vec__util_8h_a4a3b66ac1c7427b7059a875740cce0a6}{get\+\_\+neighbors()}}, and \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar\+::get\+\_\+neighbors()}}.
-
 \mbox{\Hypertarget{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}\label{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}} 
 \index{vec\_util.h@{vec\_util.h}!get\_bounds@{get\_bounds}}
 \index{get\_bounds@{get\_bounds}!vec\_util.h@{vec\_util.h}}
@@ -88,42 +76,5 @@ Referenced by \mbox{\hyperlink{vec__util_8h_a4a3b66ac1c7427b7059a875740cce0a6}{g
 
 
 
-Referenced by \mbox{\hyperlink{struct_transform_a73449bd3661ec2561a31fb1cf40759c8}{Transform\+::bounds()}}, \mbox{\hyperlink{struct_entity_a1f2fa3adb8f9deb8754660726925dbac}{Entity\+::bounds()}}, \mbox{\hyperlink{struct_item_a6b50c8e2df7d6031f59ead493f544f03}{Item\+::bounds()}}, \mbox{\hyperlink{struct_entity_helper_a3610c9a5865dc6bfa24cdc6f6858a763}{Entity\+Helper\+::is\+Walkable\+Raw\+Entities()}}, \mbox{\hyperlink{namespacesystem__manager_a27a95df8b20f1e69fe055a138e7f7e5d}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos()}}, \mbox{\hyperlink{struct_transform_af3c0d92c8ce1f9c2754f0c512cfd087b}{Transform\+::raw\+\_\+bounds()}}, and \mbox{\hyperlink{struct_item_a3a59ef91c6a7308e3d681740613ad06b}{Item\+::raw\+\_\+bounds()}}.
-
-\mbox{\Hypertarget{vec__util_8h_a4a3b66ac1c7427b7059a875740cce0a6}\label{vec__util_8h_a4a3b66ac1c7427b7059a875740cce0a6}} 
-\index{vec\_util.h@{vec\_util.h}!get\_neighbors@{get\_neighbors}}
-\index{get\_neighbors@{get\_neighbors}!vec\_util.h@{vec\_util.h}}
-\doxysubsubsection{\texorpdfstring{get\_neighbors()}{get\_neighbors()}}
-{\footnotesize\ttfamily static std\+::vector$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ get\+\_\+neighbors (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{j,  }\item[{int}]{step = {\ttfamily 1} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
-
-
-
-References \mbox{\hyperlink{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}{for\+Each\+Neighbor()}}.
-
-
-
-Referenced by \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{astar\+::find\+\_\+path\+\_\+impl()}}.
-
-
-
-\doxysubsection{Variable Documentation}
-\mbox{\Hypertarget{vec__util_8h_a39c52fd1116a4c85f6a446768e4b270c}\label{vec__util_8h_a39c52fd1116a4c85f6a446768e4b270c}} 
-\index{vec\_util.h@{vec\_util.h}!neigh\_x@{neigh\_x}}
-\index{neigh\_x@{neigh\_x}!vec\_util.h@{vec\_util.h}}
-\doxysubsubsection{\texorpdfstring{neigh\_x}{neigh\_x}}
-{\footnotesize\ttfamily constexpr int neigh\+\_\+x\mbox{[}8\mbox{]} = \{-\/1, -\/1, -\/1, 0, 0, 1, 1, 1\}\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
-
-
-
-Referenced by \mbox{\hyperlink{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}{for\+Each\+Neighbor()}}.
-
-\mbox{\Hypertarget{vec__util_8h_ac980e9b912e5a146e732e94a9adb1392}\label{vec__util_8h_ac980e9b912e5a146e732e94a9adb1392}} 
-\index{vec\_util.h@{vec\_util.h}!neigh\_y@{neigh\_y}}
-\index{neigh\_y@{neigh\_y}!vec\_util.h@{vec\_util.h}}
-\doxysubsubsection{\texorpdfstring{neigh\_y}{neigh\_y}}
-{\footnotesize\ttfamily constexpr int neigh\+\_\+y\mbox{[}8\mbox{]} = \{-\/1, 0, 1, -\/1, 1, -\/1, 0, 1\}\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
-
-
-
-Referenced by \mbox{\hyperlink{vec__util_8h_ae07a33106b4919c5da84f5a3ab77e2e4}{for\+Each\+Neighbor()}}.
+Referenced by \mbox{\hyperlink{struct_transform_a73449bd3661ec2561a31fb1cf40759c8}{Transform\+::bounds()}}, \mbox{\hyperlink{struct_item_a6b50c8e2df7d6031f59ead493f544f03}{Item\+::bounds()}}, \mbox{\hyperlink{struct_transform_ab7a472d842ab342f2ce770d166222e8c}{Transform\+::expanded\+\_\+bounds()}}, \mbox{\hyperlink{namespacesystem__manager_a0c766a298e1abda388fb8b8795805f58}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos()}}, \mbox{\hyperlink{struct_transform_ac45768d41d801c89f2f53d44a6904881}{Transform\+::raw\+\_\+bounds()}}, and \mbox{\hyperlink{struct_item_a3a59ef91c6a7308e3d681740613ad06b}{Item\+::raw\+\_\+bounds()}}.
 

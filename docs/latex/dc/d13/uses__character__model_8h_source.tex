@@ -1,0 +1,60 @@
+\hypertarget{uses__character__model_8h_source}{}\doxysection{uses\+\_\+character\+\_\+model.\+h}
+\label{uses__character__model_8h_source}\index{src/components/uses\_character\_model.h@{src/components/uses\_character\_model.h}}
+\mbox{\hyperlink{uses__character__model_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_uses_character_model}{UsesCharacterModel}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \mbox{\hyperlink{struct_uses_character_model_a2e22f21d2fbd072973ec08ab596b851c}{UsesCharacterModel}}()\ :\ \mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}}(0),\ \mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}}(true)\ \{\}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_uses_character_model_aae2318e547ae166c8176aa3f06128a82}{\string~UsesCharacterModel}}()\ \{\}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_uses_character_model_a656a981fe6c14f47e8083bf41857f854}{increment}}()\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}}\ =\ (\mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}}\ +\ 1)\ \%\ \mbox{\hyperlink{struct_uses_character_model_a83a520d70f8541899d9294a7a6dbe651}{character\_models}}.size();}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ std::string\&\ \mbox{\hyperlink{struct_uses_character_model_aefc271a38aaeac1a269968019b7c15d6}{fetch\_model\_name}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_uses_character_model_a83a520d70f8541899d9294a7a6dbe651}{character\_models}}[\mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}}];}
+\DoxyCodeLine{00019\ \ \ \ \ \}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_uses_character_model_a7d768a1059dca829e261688a094bc4bc}{value\_same\_as\_last\_render}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ !\mbox{\hyperlink{struct_uses_character_model_a1499e47e2b119edf1b878418ea74853e}{value\_changed\_since\_last\_render}}();}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_uses_character_model_a1499e47e2b119edf1b878418ea74853e}{value\_changed\_since\_last\_render}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}};}
+\DoxyCodeLine{00026\ \ \ \ \ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_uses_character_model_a6f0f978897140d68eca6805e7d9253f3}{mark\_change\_completed}}()\ \{\ \mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}}\ =\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_uses_character_model_a62f17985c028e64fba70c7e01d3e33e8}{index\_server\_only}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}};\ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_uses_character_model_a08a96722a042ea964844145ee2787998}{update\_index\_CLIENT\_ONLY}}(\textcolor{keywordtype}{int}\ newind)\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}}\ =\ newind\ \%\ \mbox{\hyperlink{struct_uses_character_model_a83a520d70f8541899d9294a7a6dbe651}{character\_models}}.size();}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00038\ \ \ \ \ std::array<std::string,\ 4>\ \mbox{\hyperlink{struct_uses_character_model_a83a520d70f8541899d9294a7a6dbe651}{character\_models}}\ =\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_duck"{}},}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_dog"{}},}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_bear"{}},}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}character\_rogue"{}},}
+\DoxyCodeLine{00043\ \ \ \ \ \};}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}};}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_uses_character_model_a2dd8c86048665d27ff5e27d338194351}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_uses_character_model_a228a8ed63d72a0e512a681a3f62175c9}{index}});}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ s.value1b(\mbox{\hyperlink{struct_uses_character_model_ac3311722d80620057223d5c3b279f063}{changed}});}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ \};}
+
+\end{DoxyCode}

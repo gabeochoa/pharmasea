@@ -21,6 +21,10 @@ Inheritance diagram for Pill\+Bottle\+:\begin{figure}[H]
 \item 
 virtual \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_pill_bottle_a38b4376e4d4994c9ac5728d1cb5fdd1f}{model\+\_\+scale}} () const override
 \item 
+virtual bool \mbox{\hyperlink{struct_pill_bottle_a10f5bea712c990559e1dd7204ef40e65}{has\+\_\+holding\+\_\+ability}} () const override
+\item 
+virtual bool \mbox{\hyperlink{struct_pill_bottle_a90c820101a3f7aadd524689a84dc366e}{can\+\_\+eat}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ item) const override
+\item 
 virtual std\+::optional$<$ raylib\+::\+Model $>$ \mbox{\hyperlink{struct_pill_bottle_af35a71525e73cf47dc4249f6995ba884}{model}} () const override
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_item}{Item}}}
@@ -54,7 +58,9 @@ virtual std\+::optional$<$ raylib\+::\+Model $>$ \mbox{\hyperlink{struct_item_a0
 \item 
 virtual bool \mbox{\hyperlink{struct_item_a041b916a0c1b4feb83b0a55e97d3fded}{eat}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ item)
 \item 
-virtual bool \mbox{\hyperlink{struct_item_a182f7bac8365029d055b04e279981a82}{can\+\_\+eat}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ item)
+bool \mbox{\hyperlink{struct_item_a7caa08865e2193086ba97358f2384875}{evaluate\+\_\+eat\+\_\+request}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ item)
+\item 
+virtual bool \mbox{\hyperlink{struct_item_a4d012a67c73427dd4f2b4fb4bb8d6f68}{can\+\_\+eat}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$) const
 \item 
 virtual bool \mbox{\hyperlink{struct_item_a523767b015090eca0c122605de78c846}{has\+\_\+holding\+\_\+ability}} () const
 \item 
@@ -126,6 +132,26 @@ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \mbox{\hyperl
 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_pill_bottle_a90c820101a3f7aadd524689a84dc366e}\label{struct_pill_bottle_a90c820101a3f7aadd524689a84dc366e}} 
+\index{PillBottle@{PillBottle}!can\_eat@{can\_eat}}
+\index{can\_eat@{can\_eat}!PillBottle@{PillBottle}}
+\doxysubsubsection{\texorpdfstring{can\_eat()}{can\_eat()}}
+{\footnotesize\ttfamily virtual bool Pill\+Bottle\+::can\+\_\+eat (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$}]{item }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_item_a4d012a67c73427dd4f2b4fb4bb8d6f68}{Item}}.
+
+\mbox{\Hypertarget{struct_pill_bottle_a10f5bea712c990559e1dd7204ef40e65}\label{struct_pill_bottle_a10f5bea712c990559e1dd7204ef40e65}} 
+\index{PillBottle@{PillBottle}!has\_holding\_ability@{has\_holding\_ability}}
+\index{has\_holding\_ability@{has\_holding\_ability}!PillBottle@{PillBottle}}
+\doxysubsubsection{\texorpdfstring{has\_holding\_ability()}{has\_holding\_ability()}}
+{\footnotesize\ttfamily virtual bool Pill\+Bottle\+::has\+\_\+holding\+\_\+ability (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_item_a523767b015090eca0c122605de78c846}{Item}}.
+
 \mbox{\Hypertarget{struct_pill_bottle_af35a71525e73cf47dc4249f6995ba884}\label{struct_pill_bottle_af35a71525e73cf47dc4249f6995ba884}} 
 \index{PillBottle@{PillBottle}!model@{model}}
 \index{model@{model}!PillBottle@{PillBottle}}

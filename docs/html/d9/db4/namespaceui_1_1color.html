@@ -88,6 +88,8 @@ Functions</h2></td></tr>
 <tr class="separator:a99aa14ee11ee630598a4f8cfbfc8753b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83efe6f6ae3957d06ccbd2b8c17625bb"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/db4/namespaceui_1_1color.html#a83efe6f6ae3957d06ccbd2b8c17625bb">comp_max</a> (const Color &amp;a)</td></tr>
 <tr class="separator:a83efe6f6ae3957d06ccbd2b8c17625bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb754c8c336a1a9ea2d2f9c291f913c4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/db4/namespaceui_1_1color.html#afb754c8c336a1a9ea2d2f9c291f913c4">is_empty</a> (const Color &amp;c)</td></tr>
+<tr class="separator:afb754c8c336a1a9ea2d2f9c291f913c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac305860c7fc0f4a4ba33c14a815d23b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/db4/namespaceui_1_1color.html#ac305860c7fc0f4a4ba33c14a815d23b8">toHSL</a> (const Color color)</td></tr>
 <tr class="separator:ac305860c7fc0f4a4ba33c14a815d23b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7793b593321b2d5bb375a49426c9b015"><td class="memItemLeft" align="right" valign="top">Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/db4/namespaceui_1_1color.html#a7793b593321b2d5bb375a49426c9b015">toRGB</a> (const <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> &amp;hsl)</td></tr>
@@ -2089,7 +2091,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="../../d9/db4/namespaceui_1_1color.html#ac305860c7fc0f4a4ba33c14a815d23b8">toHSL()</a>, and <a class="el" href="../../d9/db4/namespaceui_1_1color.html#a7793b593321b2d5bb375a49426c9b015">toRGB()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#afd1ea546dd69491d4f5a71dbce050700">system_manager::render_manager::render_model_highlighted()</a>, and <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#ab516cfffd82eecca31558c6344a21c78">system_manager::render_manager::render_simple_highlighted()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#af4cde755a90072d7442abacae529dc5a">system_manager::render_manager::draw_valid_colored_box()</a>.</p>
 
 </div>
 </div>
@@ -2119,11 +2121,42 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="afb754c8c336a1a9ea2d2f9c291f913c4" name="afb754c8c336a1a9ea2d2f9c291f913c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb754c8c336a1a9ea2d2f9c291f913c4">&#9670;&#160;</a></span>is_empty()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ui::color::is_empty </td>
+          <td>(</td>
+          <td class="paramtype">const Color &amp;&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#af4cde755a90072d7442abacae529dc5a">system_manager::render_manager::draw_valid_colored_box()</a>.</p>
+
+</div>
+</div>
 <a id="ac305860c7fc0f4a4ba33c14a815d23b8" name="ac305860c7fc0f4a4ba33c14a815d23b8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac305860c7fc0f4a4ba33c14a815d23b8">&#9670;&#160;</a></span>toHSL()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> ui::color::toHSL </td>
@@ -2133,6 +2166,11 @@ Variables</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="../../d9/db4/namespaceui_1_1color.html#a83efe6f6ae3957d06ccbd2b8c17625bb">comp_max()</a>, <a class="el" href="../../d9/db4/namespaceui_1_1color.html#a99aa14ee11ee630598a4f8cfbfc8753b">comp_min()</a>, and <a class="el" href="../../d0/d3f/vec__util_8h.html#a002b2f4894492820fe708b1b7e7c5e70">EPSILON</a>.</p>
@@ -2146,6 +2184,9 @@ Variables</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">Color ui::color::toRGB </td>
@@ -2155,6 +2196,11 @@ Variables</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="../../d9/db4/namespaceui_1_1color.html#aa3929909129eee15df5510aecd83bb2b">getHighlighted()</a>.</p>
@@ -3238,7 +3284,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d0/d8b/struct_furniture.html#acc07fd758c1778c86774ce1c68c1ce67">Furniture::make_conveyer()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d8/dc6/namespaceentities.html#a0b953fc68d3dbfc32887733298790325">entities::make_conveyer()</a>.</p>
 
 </div>
 </div>
@@ -4472,7 +4518,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d0/d8b/struct_furniture.html#a358f91902463b0bb9d57f8b92c35d65c">Furniture::make_character_switcher()</a>, and <a class="el" href="../../d0/d8b/struct_furniture.html#a51c9d8d1768b4561bf0f2a0ea7132f6e">Furniture::make_table()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d8/dc6/namespaceentities.html#abf094d17eb47d98e98fd5ccfec00c1fc">entities::make_table()</a>.</p>
 
 </div>
 </div>
@@ -10260,6 +10306,8 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="../../d8/dc6/namespaceentities.html#a42ce60037b7f401840b866a2badc65cd">entities::make_character_switcher()</a>.</p>
+
 </div>
 </div>
 <a id="aa610d8822bc4db33ce16facb730fa42d" name="aa610d8822bc4db33ce16facb730fa42d"></a>
@@ -10788,7 +10836,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d0/d8b/struct_furniture.html#a8d39e9110afcb62048879a3b3e7697ea">Furniture::make_register()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d8/dc6/namespaceentities.html#a6eed7f199266eb0e44cad235fd78ed1f">entities::make_register()</a>.</p>
 
 </div>
 </div>
@@ -19524,6 +19572,8 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="../../d6/dcf/component_8h.html#aacd0b061b609752c687b41029538f5f0">validate_wall_color_serialized()</a>.</p>
+
 </div>
 </div>
 <a id="ab2a1433864087bf3d86d142675010ea6" name="ab2a1433864087bf3d86d142675010ea6"></a>
@@ -22714,7 +22764,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../db/d66/struct_item.html#ade8311a0bcadd6d8d30641868f851d8e">Item::render()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d8/dc6/namespaceentities.html#a3710e0f4de6e7c25e292f5d70f5dc514">entities::make_itemcontainer()</a>, and <a class="el" href="../../db/d66/struct_item.html#ade8311a0bcadd6d8d30641868f851d8e">Item::render()</a>.</p>
 
 </div>
 </div>
@@ -22848,7 +22898,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d0/d8b/struct_furniture.html#a5220ffda3699fce66fd2480393320998">Furniture::make_grabber()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d8/dc6/namespaceentities.html#a42ce60037b7f401840b866a2badc65cd">entities::make_character_switcher()</a>, and <a class="el" href="../../d8/dc6/namespaceentities.html#aa6de719712a8ed39289db02a6ec761d8">entities::make_grabber()</a>.</p>
 
 </div>
 </div>

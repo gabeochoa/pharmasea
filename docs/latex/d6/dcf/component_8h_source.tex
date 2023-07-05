@@ -1,0 +1,236 @@
+\hypertarget{component_8h_source}{}\doxysection{component.\+h}
+\label{component_8h_source}\index{src/tests/component.h@{src/tests/component.h}}
+\mbox{\hyperlink{component_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}../entity.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../engine/assert.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}../engine/defer.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}../network/shared.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\_and\_validate\_components}}(\mbox{\hyperlink{struct_entity}{Entity}}*\ a,\ \mbox{\hyperlink{struct_entity}{Entity}}*\ b)\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(a-\/>\mbox{\hyperlink{struct_entity_a2bfb3cd4a791f32f53365d156e239a54}{componentSet}}\ ==\ b-\/>\mbox{\hyperlink{struct_entity_a2bfb3cd4a791f32f53365d156e239a54}{componentSet}},\ \textcolor{stringliteral}{"{}component\ sets\ should\ match"{}});}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 0;}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordflow}{while}\ (i\ <\ \mbox{\hyperlink{base__component_8h_a94f76e23195dbdeee169cc932589d8c2}{max\_num\_components}})\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ eC\ =\ a-\/>\mbox{\hyperlink{struct_entity_a268b34f155900bef861b8b3ce6a5fa60}{componentArray}}[i];}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ e2C\ =\ b-\/>\mbox{\hyperlink{struct_entity_a268b34f155900bef861b8b3ce6a5fa60}{componentArray}}[i];}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eC\ ==\ \textcolor{keyword}{nullptr}\ \&\&\ e2C\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ i++;}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eC\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ e2C\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ i++;}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eC\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}a\ missing\ component\ that\ b\ has"{}});}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (e2C\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}b\ missing\ component\ that\ a\ has"{}});}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ i++;}
+\DoxyCodeLine{00034\ \ \ \ \ \}}
+\DoxyCodeLine{00035\ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \mbox{\hyperlink{struct_entity}{Entity}}*\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}()\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{entity_8h_a96875ea4ae53760879d54f4bf58c14e9}{make\_entity}}(\mbox{\hyperlink{struct_debug_options}{DebugOptions}}\{.\mbox{\hyperlink{struct_debug_options_a7f43cc65d26d12effa3b19028994de37}{name}}\ =\ \textcolor{stringliteral}{"{}test"{}}\});\ \}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{component_8h_ae849fc4515f72b00ee76a0d5fbfb02ec}{entity\_components}}()\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity\ =\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}();}
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_a29be7e2bef152eba6aef822531d97755}{network::Buffer}}\ buff\ =\ \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network::serialize\_to\_entity}}(entity);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity2\ =\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}();}
+\DoxyCodeLine{00044\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network::deserialize\_to\_entity}}(entity2,\ buff);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\_and\_validate\_components}}(entity,\ entity2);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{delete}\ entity;}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{delete}\ entity2;}
+\DoxyCodeLine{00050\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{component_8h_aa2f3205c510a6acf0d03678ca2800086}{test\_adding\_single\_component\_serialdeserial}}()\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ If\ this\ test\ fails,\ then\ we\ know\ that\ the\ components\ arent\ being}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{//\ serialized\ correctly\ across\ the\ network}}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity\ =\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}();}
+\DoxyCodeLine{00056\ \ \ \ \ entity-\/>\mbox{\hyperlink{struct_entity_a54ee9d838c0d24c24b2faf1ea05bbd0b}{addComponent}}<\mbox{\hyperlink{struct_has_name}{HasName}}>();}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_a29be7e2bef152eba6aef822531d97755}{network::Buffer}}\ buff\ =\ \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network::serialize\_to\_entity}}(entity);}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity2\ =\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}();}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//\ VVVVV\ if\ you\ dont\ have\ this,\ then\ it\ doesnt\ correctly\ serialize}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//\ but\ once\ you\ have\ it\ then\ the\ names\ do\ get\ copied\ over\ correctly}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{//\ figure\ out\ why\ bitsery\ isnt\ serializing\ this\ over}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{//\ entity2-\/>addComponent<HasName>();}}
+\DoxyCodeLine{00065\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network::deserialize\_to\_entity}}(entity2,\ buff);}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\_and\_validate\_components}}(entity,\ entity2);}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{delete}\ entity;}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{delete}\ entity2;}
+\DoxyCodeLine{00071\ \}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{component_8h_ac1883554907f35015187763424d89c08}{validate\_name\_change\_persisits}}()\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity\ =\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}();}
+\DoxyCodeLine{00075\ \ \ \ \ entity-\/>\mbox{\hyperlink{struct_entity_a54ee9d838c0d24c24b2faf1ea05bbd0b}{addComponent}}<\mbox{\hyperlink{struct_has_name}{HasName}}>();}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{auto}\ starting\_name\ =\ entity-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_has_name}{HasName}}>().name();}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{auto}\ first\_name\ =\ \textcolor{stringliteral}{"{}newname"{}};}
+\DoxyCodeLine{00079\ \ \ \ \ entity-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_has_name}{HasName}}>().update(first\_name);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \mbox{\hyperlink{assert_8h_ab4623194540dbc3387ba45baf005a101}{M\_TEST\_NEQ}}(starting\_name,\ first\_name,}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}component\ should\ have\ correctly\ set\ name"{}});}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{auto}\ middle\_name\ =\ entity-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_has_name}{HasName}}>().name();}
+\DoxyCodeLine{00085\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(first\_name,\ middle\_name,}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}component\ should\ have\ correctly\ set\ name"{}});}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_a29be7e2bef152eba6aef822531d97755}{network::Buffer}}\ buff\ =\ \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network::serialize\_to\_entity}}(entity);}
+\DoxyCodeLine{00089\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity2\ =\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}();}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{comment}{//\ entity2-\/>addComponent<HasName>();}}
+\DoxyCodeLine{00091\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network::deserialize\_to\_entity}}(entity2,\ buff);}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\_and\_validate\_components}}(entity,\ entity2);}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{auto}\ last\_name\ =\ entity2-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_has_name}{HasName}}>().name();}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \mbox{\hyperlink{assert_8h_ab4623194540dbc3387ba45baf005a101}{M\_TEST\_NEQ}}(starting\_name,\ last\_name,}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}component\ should\ not\ have\ starting\ name"{}});}
+\DoxyCodeLine{00099\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(middle\_name,\ last\_name,}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}component\ before\ serialize\ should\ match\ deserialize"{}});}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(first\_name,\ last\_name,\ \textcolor{stringliteral}{"{}deserialized\ should\ match\ set\ name\ "{}});}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{delete}\ entity;}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{delete}\ entity2;}
+\DoxyCodeLine{00106\ \}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{component_8h_aca88c4ac22f52a4f55af568c002f0ef5}{validate\_custom\_hold\_position\_persisits}}()\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity\ =\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}();}
+\DoxyCodeLine{00110\ \ \ \ \ entity-\/>\mbox{\hyperlink{struct_entity_a54ee9d838c0d24c24b2faf1ea05bbd0b}{addComponent}}<\mbox{\hyperlink{struct_custom_held_item_position}{CustomHeldItemPosition}}>();}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keyword}{auto}\ position\ =\ \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eeaa7486b485300c482153dc4883e1a175d}{CustomHeldItemPosition::Positioner::Conveyer}};}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ entity-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_custom_held_item_position}{CustomHeldItemPosition}}>().init(position);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{auto}\ newpos\ =\ entity-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_custom_held_item_position}{CustomHeldItemPosition}}>().positioner;}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(position,\ newpos,\ \textcolor{stringliteral}{"{}component\ should\ have\ correctly\ set\ position"{}});}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_a29be7e2bef152eba6aef822531d97755}{network::Buffer}}\ buff\ =\ \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network::serialize\_to\_entity}}(entity);}
+\DoxyCodeLine{00121\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity2\ =\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}();}
+\DoxyCodeLine{00122\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network::deserialize\_to\_entity}}(entity2,\ buff);}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\_and\_validate\_components}}(entity,\ entity2);}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{auto}\ post\_serialize\_position\ =}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ entity2-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_custom_held_item_position}{CustomHeldItemPosition}}>().positioner;}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(position,\ post\_serialize\_position,}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}component\ should\ have\ starting\ position"{}});}
+\DoxyCodeLine{00131\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(newpos,\ post\_serialize\_position,}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}component\ before\ serialize\ should\ match\ deserialize"{}});}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{delete}\ entity;}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{delete}\ entity2;}
+\DoxyCodeLine{00136\ \}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{component_8h_a8fa94912ded9b380397752a60234ccc0}{validate\_held\_item\_serialized}}()\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity\ =\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}();}
+\DoxyCodeLine{00140\ \ \ \ \ entity-\/>\mbox{\hyperlink{struct_entity_a54ee9d838c0d24c24b2faf1ea05bbd0b}{addComponent}}<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>();}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(entity-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().\mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{item}}(),\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}default\ should\ be\ nullptr"{}});}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ std::shared\_ptr<Item>\ item\ =\ std::make\_shared<Item>(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{0,\ 0\},\ WHITE);}
+\DoxyCodeLine{00146\ \ \ \ \ entity-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().update(item);}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ \mbox{\hyperlink{assert_8h_ab4623194540dbc3387ba45baf005a101}{M\_TEST\_NEQ}}(entity-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().\mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{item}}(),\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}component\ should\ not\ have\ null\ item"{}});}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_a29be7e2bef152eba6aef822531d97755}{network::Buffer}}\ buff\ =\ \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network::serialize\_to\_entity}}(entity);}
+\DoxyCodeLine{00152\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity2\ =\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}();}
+\DoxyCodeLine{00153\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network::deserialize\_to\_entity}}(entity2,\ buff);}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\_and\_validate\_components}}(entity,\ entity2);}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{auto}\&\ post\_serialize\_item\ =\ entity2-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().item();}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \mbox{\hyperlink{assert_8h_ab4623194540dbc3387ba45baf005a101}{M\_TEST\_NEQ}}(post\_serialize\_item,\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}component\ should\ not\ have\ null\ item"{}});}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(item-\/>color,\ post\_serialize\_item-\/>color,}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}component\ should\ have\ item\ with\ the\ same\ color"{}});}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{delete}\ entity;}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{delete}\ entity2;}
+\DoxyCodeLine{00167\ \}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{component_8h_aacd0b061b609752c687b41029538f5f0}{validate\_wall\_color\_serialized}}()\ \{}
+\DoxyCodeLine{00170\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity\ =\ \mbox{\hyperlink{namespaceentities_a15a517f5584e44f17df8a5e28ac6c0f2}{entities::make\_wall}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{0,\ 0\},\ \mbox{\hyperlink{namespaceui_1_1color_a1f624704628cb756520e52d5af8150a6}{ui::color::saffron}});}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \mbox{\hyperlink{assert_8h_a36f31e4658ef9dfa83e062d4dfa49ab7}{M\_TEST\_T}}(entity-\/>\mbox{\hyperlink{struct_entity_ac82c57e9b1a366f041fca61d9ddd1459}{has}}<\mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}>(),\ \textcolor{stringliteral}{"{}should\ have\ renderer"{}});}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(entity-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}>().\mbox{\hyperlink{struct_simple_colored_box_renderer_a8ab8f160f76f17275b21618c44009773}{face}}(),}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1color_a1f624704628cb756520e52d5af8150a6}{ui::color::saffron}},\ \textcolor{stringliteral}{"{}component\ should\ have\ right\ color"{}});}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(entity-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}>().\mbox{\hyperlink{struct_simple_colored_box_renderer_a8ca4f64546480c8329493b196dc4b1e8}{base}}(),}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1color_a1f624704628cb756520e52d5af8150a6}{ui::color::saffron}},\ \textcolor{stringliteral}{"{}component\ should\ have\ right\ color"{}});}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_a29be7e2bef152eba6aef822531d97755}{network::Buffer}}\ buff\ =\ \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network::serialize\_to\_entity}}(entity);}
+\DoxyCodeLine{00181\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity2\ =\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}();}
+\DoxyCodeLine{00182\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network::deserialize\_to\_entity}}(entity2,\ buff);}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\_and\_validate\_components}}(entity,\ entity2);}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \mbox{\hyperlink{assert_8h_a36f31e4658ef9dfa83e062d4dfa49ab7}{M\_TEST\_T}}(entity2-\/>\mbox{\hyperlink{struct_entity_ac82c57e9b1a366f041fca61d9ddd1459}{has}}<\mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}>(),\ \textcolor{stringliteral}{"{}should\ have\ renderer"{}});}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(entity2-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}>().\mbox{\hyperlink{struct_simple_colored_box_renderer_a8ab8f160f76f17275b21618c44009773}{face}}(),}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1color_a1f624704628cb756520e52d5af8150a6}{ui::color::saffron}},\ \textcolor{stringliteral}{"{}component\ should\ have\ right\ color"{}});}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(entity2-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_simple_colored_box_renderer}{SimpleColoredBoxRenderer}}>().\mbox{\hyperlink{struct_simple_colored_box_renderer_a8ca4f64546480c8329493b196dc4b1e8}{base}}(),}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1color_a1f624704628cb756520e52d5af8150a6}{ui::color::saffron}},\ \textcolor{stringliteral}{"{}component\ should\ have\ right\ color"{}});}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keyword}{delete}\ entity;}
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{keyword}{delete}\ entity2;}
+\DoxyCodeLine{00196\ \}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{component_8h_a9883d8d1817b39592d335dde5b34e0c3}{validate\_trigger\_area\_serialized}}()\ \{}
+\DoxyCodeLine{00199\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity\ =\ \mbox{\hyperlink{namespaceentities_a0d6d07d53d6aacaa5b3547ac03d693b2}{entities::make\_trigger\_area}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\{0,\ 0,\ 0\},\ 10,\ 20,\ \textcolor{stringliteral}{"{}test"{}});}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \ \ \ \ \mbox{\hyperlink{assert_8h_a36f31e4658ef9dfa83e062d4dfa49ab7}{M\_TEST\_T}}(entity-\/>\mbox{\hyperlink{struct_entity_ac82c57e9b1a366f041fca61d9ddd1459}{has}}<\mbox{\hyperlink{struct_is_trigger_area}{IsTriggerArea}}>(),\ \textcolor{stringliteral}{"{}should\ have\ ta\ component"{}});}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(entity-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_is_trigger_area}{IsTriggerArea}}>().\mbox{\hyperlink{struct_is_trigger_area_ac447397557d6d6283cc9bd1f5f8f2d92}{title}}(),\ \textcolor{stringliteral}{"{}test"{}},}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}component\ should\ have\ right\ title"{}});}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_a29be7e2bef152eba6aef822531d97755}{network::Buffer}}\ buff\ =\ \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network::serialize\_to\_entity}}(entity);}
+\DoxyCodeLine{00207\ \ \ \ \ \mbox{\hyperlink{struct_entity}{Entity}}*\ entity2\ =\ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\_entity}}();}
+\DoxyCodeLine{00208\ \ \ \ \ \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network::deserialize\_to\_entity}}(entity2,\ buff);}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\_and\_validate\_components}}(entity,\ entity2);}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \mbox{\hyperlink{assert_8h_a36f31e4658ef9dfa83e062d4dfa49ab7}{M\_TEST\_T}}(entity2-\/>\mbox{\hyperlink{struct_entity_ac82c57e9b1a366f041fca61d9ddd1459}{has}}<\mbox{\hyperlink{struct_is_trigger_area}{IsTriggerArea}}>(),\ \textcolor{stringliteral}{"{}should\ have\ ta\ component"{}});}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \ \ \ \ \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\_TEST\_EQ}}(entity2-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_is_trigger_area}{IsTriggerArea}}>().\mbox{\hyperlink{struct_is_trigger_area_ac447397557d6d6283cc9bd1f5f8f2d92}{title}}(),\ \textcolor{stringliteral}{"{}test"{}},}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}component\ should\ have\ right\ title"{}});}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keyword}{delete}\ entity;}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keyword}{delete}\ entity2;}
+\DoxyCodeLine{00219\ \}}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{component_8h_ae0c6e04a7b99ee25625edba38ee63f91}{all\_tests}}()\ \{}
+\DoxyCodeLine{00222\ \ \ \ \ \mbox{\hyperlink{component_8h_ae849fc4515f72b00ee76a0d5fbfb02ec}{entity\_components}}();}
+\DoxyCodeLine{00223\ \ \ \ \ \mbox{\hyperlink{component_8h_aa2f3205c510a6acf0d03678ca2800086}{test\_adding\_single\_component\_serialdeserial}}();}
+\DoxyCodeLine{00224\ \ \ \ \ \mbox{\hyperlink{component_8h_aca88c4ac22f52a4f55af568c002f0ef5}{validate\_custom\_hold\_position\_persisits}}();}
+\DoxyCodeLine{00225\ \ \ \ \ \mbox{\hyperlink{component_8h_ac1883554907f35015187763424d89c08}{validate\_name\_change\_persisits}}();}
+\DoxyCodeLine{00226\ \ \ \ \ \mbox{\hyperlink{component_8h_a8fa94912ded9b380397752a60234ccc0}{validate\_held\_item\_serialized}}();}
+\DoxyCodeLine{00227\ \ \ \ \ \mbox{\hyperlink{component_8h_aacd0b061b609752c687b41029538f5f0}{validate\_wall\_color\_serialized}}();}
+\DoxyCodeLine{00228\ \ \ \ \ \mbox{\hyperlink{component_8h_a9883d8d1817b39592d335dde5b34e0c3}{validate\_trigger\_area\_serialized}}();}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{comment}{//\ remote\_player\_components();}}
+\DoxyCodeLine{00230\ \}}
+
+\end{DoxyCode}

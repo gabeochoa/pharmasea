@@ -83,6 +83,8 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a5bf3abd7929d330a17820e9c653ea94f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#a5bf3abd7929d330a17820e9c653ea94f">force_segfault</a> ()</td></tr>
+<tr class="separator:a5bf3abd7929d330a17820e9c653ea94f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addfd55c03039ca8158e80a71b451eecd"><td class="memTemplParams" colspan="2">template&lt;class... Ts&gt; </td></tr>
 <tr class="memitem:addfd55c03039ca8158e80a71b451eecd"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#addfd55c03039ca8158e80a71b451eecd">overloaded</a> (Ts...) -&gt; <a class="el" href="../../da/df9/structutil_1_1overloaded.html">overloaded</a>&lt; Ts... &gt;</td></tr>
 <tr class="separator:addfd55c03039ca8158e80a71b451eecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -99,6 +101,12 @@ Functions</h2></td></tr>
 <tr class="separator:a5f5caebc89c06dcdd631966f2ba0cb72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5020e504940e09639480aed917da6ba1"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#a5020e504940e09639480aed917da6ba1">clamp</a> (float a, float mn, float mx)</td></tr>
 <tr class="separator:a5020e504940e09639480aed917da6ba1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d8ab89401ce7c1afe474cbe90009042"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#a8d8ab89401ce7c1afe474cbe90009042">round_up</a> (float value, int decimal_places)</td></tr>
+<tr class="separator:a8d8ab89401ce7c1afe474cbe90009042"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03256e36c20c6257c41c991ff2a4c7d6"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#a03256e36c20c6257c41c991ff2a4c7d6">trunc</a> (float value, int decimal_places)</td></tr>
+<tr class="separator:a03256e36c20c6257c41c991ff2a4c7d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a992d5bc619ec26409ea75140a3a3087c"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#a992d5bc619ec26409ea75140a3a3087c">lerp</a> (float a, float b, float pct)</td></tr>
+<tr class="separator:a992d5bc619ec26409ea75140a3a3087c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fad71d00f379fced9c845d2387b5304"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; class Container, typename K , typename V , typename... Ts&gt; </td></tr>
 <tr class="memitem:a5fad71d00f379fced9c845d2387b5304"><td class="memTemplItemLeft" align="right" valign="top">V&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#a5fad71d00f379fced9c845d2387b5304">map_get_or_default</a> (Container&lt; K, V, Ts... &gt; map, K key, V def_value)</td></tr>
 <tr class="separator:a5fad71d00f379fced9c845d2387b5304"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,7 +157,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d0/d62/struct_settings.html#ab2a70e409439312ffb45c9e0d13dedcf">Settings::update_master_volume()</a>, and <a class="el" href="../../d0/d62/struct_settings.html#a50426b179c7be84c0364c65c39f8d40a">Settings::update_music_volume()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d0/dba/namespacesystem__manager_1_1input__process__manager.html#a55c42792a45958553128b841ccec5cc2">system_manager::input_process_manager::collect_user_input()</a>, <a class="el" href="../../d0/d62/struct_settings.html#ab2a70e409439312ffb45c9e0d13dedcf">Settings::update_master_volume()</a>, and <a class="el" href="../../d0/d62/struct_settings.html#a50426b179c7be84c0364c65c39f8d40a">Settings::update_music_volume()</a>.</p>
 
 </div>
 </div>
@@ -177,7 +185,32 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../dc/dc4/struct_entity.html#ae32aa83d8bae67c396468b025675ee74">Entity::get_heading()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../dd/d69/struct_transform.html#a740dc71b3ade4b457696b284dd4788b7">Transform::get_heading()</a>, and <a class="el" href="../../de/dd3/namespacesystem__manager_1_1ui.html#ae21ce328b5c0fb98d91314d3340c9ec5">system_manager::ui::render_timer()</a>.</p>
+
+</div>
+</div>
+<a id="a5bf3abd7929d330a17820e9c653ea94f" name="a5bf3abd7929d330a17820e9c653ea94f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bf3abd7929d330a17820e9c653ea94f">&#9670;&#160;</a></span>force_segfault()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void util::force_segfault </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -216,6 +249,50 @@ template&lt;typename Range , typename Value  = typename Range::value_type&gt; </
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a992d5bc619ec26409ea75140a3a3087c" name="a992d5bc619ec26409ea75140a3a3087c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a992d5bc619ec26409ea75140a3a3087c">&#9670;&#160;</a></span>lerp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static float util::lerp </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>pct</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="../../de/dd3/namespacesystem__manager_1_1ui.html#ae21ce328b5c0fb98d91314d3340c9ec5">system_manager::ui::render_timer()</a>.</p>
 
 </div>
 </div>
@@ -307,7 +384,43 @@ template&lt;class... Ts&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../dc/dc4/struct_entity.html#a86799bd4754255d67557ff0fe67a67d1">Entity::turn_to_face_entity()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d0/dba/namespacesystem__manager_1_1input__process__manager.html#a55c42792a45958553128b841ccec5cc2">system_manager::input_process_manager::collect_user_input()</a>, and <a class="el" href="../../dd/d69/struct_transform.html#aa1fd388b7d77e59bc1dfa967d8d3f3ab">Transform::turn_to_face_pos()</a>.</p>
+
+</div>
+</div>
+<a id="a8d8ab89401ce7c1afe474cbe90009042" name="a8d8ab89401ce7c1afe474cbe90009042"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d8ab89401ce7c1afe474cbe90009042">&#9670;&#160;</a></span>round_up()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static float util::round_up </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>decimal_places</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -404,6 +517,46 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="../../da/d05/struct_game_map_info.html#a7f8ea036a76651a221c0c18490a4c22d">GameMapInfo::generate_map()</a>, and <a class="el" href="../../df/d04/namespacetest.html#a5313f5b4cbff0578868af3b4f92858e9">test::setup()</a>.</p>
+
+</div>
+</div>
+<a id="a03256e36c20c6257c41c991ff2a4c7d6" name="a03256e36c20c6257c41c991ff2a4c7d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03256e36c20c6257c41c991ff2a4c7d6">&#9670;&#160;</a></span>trunc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static float util::trunc </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>decimal_places</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="../../de/dd3/namespacesystem__manager_1_1ui.html#a0b320b5f83df322af77451487bd4ac61">system_manager::ui::render_block_state_change_reason()</a>, and <a class="el" href="../../dd/d69/struct_transform.html#a89b5aae1f418a7a527ce0b5907865f0e">Transform::trunc()</a>.</p>
 
 </div>
 </div>

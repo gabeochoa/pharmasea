@@ -19,30 +19,32 @@ bool \mbox{\hyperlink{struct_menu_state_aa04dabee8e19296896a98a031f554038}{is\+\
 \item 
 bool \mbox{\hyperlink{struct_menu_state_ab6722382bd51e1e1df704628a7e6081a}{in\+\_\+game}} () const
 \end{DoxyCompactItemize}
-\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_state_manager}{State\+Manager$<$ menu\+::\+State $>$}}}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_state_manager2}{State\+Manager2$<$ menu\+::\+State $>$}}}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_state_manager_a20c79acff1c0a92ea4f753ee2334a1ba}{read}} () const
+\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_state_manager2_a22d3ca214776303d3fd95a525d94a63c}{read}} () const
 \item 
-\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_state_manager_afe880671507f595b73a62debe9878ac1}{previous}} () const
+\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_state_manager2_a112081dda9d4c28b6751dfe7ef764836}{previous}} () const
 \item 
-\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_state_manager_a893d07632226a05e8c959d9d47ef171c}{go\+\_\+back}} ()
+\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_state_manager2_a93d8e7f77c949cf0e4589691fe2abf6e}{go\+\_\+back}} ()
 \item 
-void \mbox{\hyperlink{struct_state_manager_aaf92826799dad41d0799674d66505049}{clear\+\_\+history}} ()
+void \mbox{\hyperlink{struct_state_manager2_a0bbb724b81a46a84fb04ed4838e473b4}{clear\+\_\+history}} ()
 \item 
-bool \mbox{\hyperlink{struct_state_manager_abb2367385952f160c2828340b5051357}{is}} (\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} s) const
+bool \mbox{\hyperlink{struct_state_manager2_a314b4526d78b80e7d115cf40e40f1056}{is}} (\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} s) const
 \item 
-bool \mbox{\hyperlink{struct_state_manager_a2d10fdc9f778421bda192135b38f21f2}{is\+\_\+not}} (\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} s) const
+bool \mbox{\hyperlink{struct_state_manager2_a40b8a89fb14cc759953e4e8070697201}{is\+\_\+not}} (\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} s) const
 \item 
-const std\+::string\+\_\+view \mbox{\hyperlink{struct_state_manager_a27d342e65c27a47dee4a03c8e9f2866e}{tostring}} () const
+const std\+::string\+\_\+view \mbox{\hyperlink{struct_state_manager2_a6143ec3d6207d463dc39c944ff6c0611}{tostring}} () const
 \item 
-void \mbox{\hyperlink{struct_state_manager_aab97f85d1876c98911212c036583d65d}{set}} (\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} ns)
+void \mbox{\hyperlink{struct_state_manager2_adc11454baa82ea6006b624c63aa4bf24}{register\+\_\+on\+\_\+change}} (const std\+::function$<$ void(\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}})$>$ \&nfunc)
 \item 
-virtual \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_state_manager_a0146c68b8b1d6d4d5f8f39e5ba444a05}{default\+\_\+value}} () const=0
+void \mbox{\hyperlink{struct_state_manager2_a7b2a1a265e5b0af4e72f4979f8c7c48f}{set}} (\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} ns)
 \item 
-void \mbox{\hyperlink{struct_state_manager_a2366ee7429004cd58497c957376e39be}{reset}} ()
+virtual \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}} \mbox{\hyperlink{struct_state_manager2_add325292049b5e75c5f99dfc90faffe8}{default\+\_\+value}} () const=0
 \item 
-virtual \mbox{\hyperlink{struct_state_manager_a2d1e64fc776722b52f68d959e036243b}{$\sim$\+State\+Manager}} ()
+void \mbox{\hyperlink{struct_state_manager2_afa84bbcbff7d26f4681640cca0a3718d}{reset}} ()
+\item 
+virtual \mbox{\hyperlink{struct_state_manager2_a57d6775d336af44471c192f3b4b5918c}{$\sim$\+State\+Manager2}} ()
 \end{DoxyCompactItemize}
 \doxysubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
@@ -62,7 +64,7 @@ static bool \mbox{\hyperlink{struct_menu_state_a03b78182ed7f3abc9557b88d12202259
 
 
 
-Implements \mbox{\hyperlink{struct_state_manager_a0146c68b8b1d6d4d5f8f39e5ba444a05}{State\+Manager$<$ menu\+::\+State $>$}}.
+Implements \mbox{\hyperlink{struct_state_manager2_add325292049b5e75c5f99dfc90faffe8}{State\+Manager2$<$ menu\+::\+State $>$}}.
 
 
 
@@ -96,7 +98,7 @@ References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d7
 
 
 
-Referenced by \mbox{\hyperlink{struct_game_debug_layer_a6a9d3570fdea06d94c2bdbc408abe358}{Game\+Debug\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_game_layer_ac93aed3c3aeeb92b41fd322d0ca926c5}{Game\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_base_pause_layer_a4e0a9b326bdf0178083d2c4ed14b89bb}{Base\+Pause\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_game_debug_layer_ab2e80b6c6333f12d5e900e784795e25e}{Game\+Debug\+Layer\+::on\+Event()}}, \mbox{\hyperlink{struct_game_layer_a0cb58f0bb55b154e6236df80fbe0eea0}{Game\+Layer\+::on\+Event()}}, \mbox{\hyperlink{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514cd}{Game\+Layer\+::on\+Update()}}, and \mbox{\hyperlink{struct_game_debug_layer_ad3730437d72b79624bb92d20f2055df3}{Game\+Debug\+Layer\+::on\+Update()}}.
+Referenced by \mbox{\hyperlink{struct_game_debug_layer_a6a9d3570fdea06d94c2bdbc408abe358}{Game\+Debug\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_game_layer_ac93aed3c3aeeb92b41fd322d0ca926c5}{Game\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_base_pause_layer_a4e0a9b326bdf0178083d2c4ed14b89bb}{Base\+Pause\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_game_debug_layer_afad187a0b6c08cd63ee8c9994404eaf3}{Game\+Debug\+Layer\+::on\+Gamepad\+Button\+Pressed()}}, \mbox{\hyperlink{struct_game_layer_ae4df5a2bb4e3174ab40e5da305779d01}{Game\+Layer\+::on\+Gamepad\+Button\+Pressed()}}, \mbox{\hyperlink{struct_game_debug_layer_afc90fd4acbc02478a742d185277a00b3}{Game\+Debug\+Layer\+::on\+Key\+Pressed()}}, \mbox{\hyperlink{struct_game_layer_a2b807062f384c89c984b3f2029a0efd4}{Game\+Layer\+::on\+Key\+Pressed()}}, \mbox{\hyperlink{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514cd}{Game\+Layer\+::on\+Update()}}, and \mbox{\hyperlink{struct_game_debug_layer_ad3730437d72b79624bb92d20f2055df3}{Game\+Debug\+Layer\+::on\+Update()}}.
 
 \mbox{\Hypertarget{struct_menu_state_a03b78182ed7f3abc9557b88d12202259}\label{struct_menu_state_a03b78182ed7f3abc9557b88d12202259}} 
 \index{MenuState@{MenuState}!s\_is\_game@{s\_is\_game}}
@@ -116,4 +118,4 @@ Referenced by \mbox{\hyperlink{structnetwork_1_1_server_a610459eab58499f8396ca92
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/\mbox{\hyperlink{statemanager_8h}{statemanager.\+h}}\end{DoxyCompactItemize}
+src/engine/\mbox{\hyperlink{statemanager_8h}{statemanager.\+h}}\end{DoxyCompactItemize}

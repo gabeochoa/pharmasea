@@ -1,0 +1,113 @@
+\hypertarget{job_8cpp}{}\doxysection{src/job.cpp File Reference}
+\label{job_8cpp}\index{src/job.cpp@{src/job.cpp}}
+{\ttfamily \#include \char`\"{}job.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/can\+\_\+perform\+\_\+job.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/has\+\_\+speech\+\_\+bubble.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}components/has\+\_\+waiting\+\_\+queue.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}engine/assert.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}entity.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}entityhelper.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}globals.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}system/logging\+\_\+system.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_job}{Job}} $\ast$ \mbox{\hyperlink{job_8cpp_a0ae9ff695a7d1037d23e0e5d10aea502}{create\+\_\+wandering\+\_\+job}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \+\_\+start)
+\item 
+void \mbox{\hyperlink{job_8cpp_ac8b75d474734918d7dfcde3eb4941ab0}{WIQ\+\_\+wait\+\_\+and\+\_\+return}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity)
+\item 
+\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{job_8cpp_ac3a0a3bbcc3d324a4e3afbcadf29f166}{WIQ\+\_\+add\+\_\+to\+\_\+queue\+\_\+and\+\_\+get\+\_\+position}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&reg, const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&customer)
+\item 
+int \mbox{\hyperlink{job_8cpp_a7995823339ee35a9a0b455858cf0a360}{WIQ\+\_\+position\+\_\+in\+\_\+line}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&reg, const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&customer)
+\item 
+void \mbox{\hyperlink{job_8cpp_a23f1ef4721ac63a2e7af4eba405ac700}{WIQ\+\_\+leave\+\_\+line}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&reg, const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&customer)
+\item 
+bool \mbox{\hyperlink{job_8cpp_a2bf4dcdb617c2fb2537e03e1b3f15e75}{WIQ\+\_\+can\+\_\+move\+\_\+up}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&reg, const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&customer)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{job_8cpp_a0ae9ff695a7d1037d23e0e5d10aea502}\label{job_8cpp_a0ae9ff695a7d1037d23e0e5d10aea502}} 
+\index{job.cpp@{job.cpp}!create\_wandering\_job@{create\_wandering\_job}}
+\index{create\_wandering\_job@{create\_wandering\_job}!job.cpp@{job.cpp}}
+\doxysubsubsection{\texorpdfstring{create\_wandering\_job()}{create\_wandering\_job()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_job}{Job}} $\ast$ create\+\_\+wandering\+\_\+job (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{\+\_\+start }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_helper_a4d01c0a143c62ae572e5d4e9eb5711f0}{Entity\+Helper\+::is\+Walkable()}}, and \mbox{\hyperlink{random_8h_ac595cabd40bee1b9e1c604ea389dc528}{rand\+In()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_job_a7639db459c16d9e851b1e5dc66b783d8}{Job\+::create\+\_\+job\+\_\+of\+\_\+type()}}.
+
+\mbox{\Hypertarget{job_8cpp_ac3a0a3bbcc3d324a4e3afbcadf29f166}\label{job_8cpp_ac3a0a3bbcc3d324a4e3afbcadf29f166}} 
+\index{job.cpp@{job.cpp}!WIQ\_add\_to\_queue\_and\_get\_position@{WIQ\_add\_to\_queue\_and\_get\_position}}
+\index{WIQ\_add\_to\_queue\_and\_get\_position@{WIQ\_add\_to\_queue\_and\_get\_position}!job.cpp@{job.cpp}}
+\doxysubsubsection{\texorpdfstring{WIQ\_add\_to\_queue\_and\_get\_position()}{WIQ\_add\_to\_queue\_and\_get\_position()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} WIQ\+\_\+add\+\_\+to\+\_\+queue\+\_\+and\+\_\+get\+\_\+position (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&}]{reg,  }\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&}]{customer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_has_waiting_queue_a08ff94ba8e01003f092f69de19ca6a5a}{Has\+Waiting\+Queue\+::get\+\_\+next\+\_\+pos()}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_wait_in_queue_job_a2479fbffbedce22dfb941bddbd3ab1ae}{Wait\+In\+Queue\+Job\+::run\+\_\+state\+\_\+initialize()}}.
+
+\mbox{\Hypertarget{job_8cpp_a2bf4dcdb617c2fb2537e03e1b3f15e75}\label{job_8cpp_a2bf4dcdb617c2fb2537e03e1b3f15e75}} 
+\index{job.cpp@{job.cpp}!WIQ\_can\_move\_up@{WIQ\_can\_move\_up}}
+\index{WIQ\_can\_move\_up@{WIQ\_can\_move\_up}!job.cpp@{job.cpp}}
+\doxysubsubsection{\texorpdfstring{WIQ\_can\_move\_up()}{WIQ\_can\_move\_up()}}
+{\footnotesize\ttfamily bool WIQ\+\_\+can\+\_\+move\+\_\+up (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&}]{reg,  }\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&}]{customer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_wait_in_queue_job_aa5fd4388b65c8dd369677b3686900ff4}{Wait\+In\+Queue\+Job\+::run\+\_\+state\+\_\+working\+\_\+at\+\_\+start()}}.
+
+\mbox{\Hypertarget{job_8cpp_a23f1ef4721ac63a2e7af4eba405ac700}\label{job_8cpp_a23f1ef4721ac63a2e7af4eba405ac700}} 
+\index{job.cpp@{job.cpp}!WIQ\_leave\_line@{WIQ\_leave\_line}}
+\index{WIQ\_leave\_line@{WIQ\_leave\_line}!job.cpp@{job.cpp}}
+\doxysubsubsection{\texorpdfstring{WIQ\_leave\_line()}{WIQ\_leave\_line()}}
+{\footnotesize\ttfamily void WIQ\+\_\+leave\+\_\+line (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&}]{reg,  }\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&}]{customer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}, and \mbox{\hyperlink{job_8cpp_a7995823339ee35a9a0b455858cf0a360}{WIQ\+\_\+position\+\_\+in\+\_\+line()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_wait_in_queue_job_aa90f4ee0465f795acf599bf91c067de0}{Wait\+In\+Queue\+Job\+::run\+\_\+state\+\_\+working\+\_\+at\+\_\+end()}}.
+
+\mbox{\Hypertarget{job_8cpp_a7995823339ee35a9a0b455858cf0a360}\label{job_8cpp_a7995823339ee35a9a0b455858cf0a360}} 
+\index{job.cpp@{job.cpp}!WIQ\_position\_in\_line@{WIQ\_position\_in\_line}}
+\index{WIQ\_position\_in\_line@{WIQ\_position\_in\_line}!job.cpp@{job.cpp}}
+\doxysubsubsection{\texorpdfstring{WIQ\_position\_in\_line()}{WIQ\_position\_in\_line()}}
+{\footnotesize\ttfamily int WIQ\+\_\+position\+\_\+in\+\_\+line (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&}]{reg,  }\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&}]{customer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_has_waiting_queue_a1869b68676572ab4aee8de403482a487}{Has\+Waiting\+Queue\+::has\+\_\+matching\+\_\+person()}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_wait_in_queue_job_a2479fbffbedce22dfb941bddbd3ab1ae}{Wait\+In\+Queue\+Job\+::run\+\_\+state\+\_\+initialize()}}, \mbox{\hyperlink{struct_wait_in_queue_job_aa5fd4388b65c8dd369677b3686900ff4}{Wait\+In\+Queue\+Job\+::run\+\_\+state\+\_\+working\+\_\+at\+\_\+start()}}, and \mbox{\hyperlink{job_8cpp_a23f1ef4721ac63a2e7af4eba405ac700}{WIQ\+\_\+leave\+\_\+line()}}.
+
+\mbox{\Hypertarget{job_8cpp_ac8b75d474734918d7dfcde3eb4941ab0}\label{job_8cpp_ac8b75d474734918d7dfcde3eb4941ab0}} 
+\index{job.cpp@{job.cpp}!WIQ\_wait\_and\_return@{WIQ\_wait\_and\_return}}
+\index{WIQ\_wait\_and\_return@{WIQ\_wait\_and\_return}!job.cpp@{job.cpp}}
+\doxysubsubsection{\texorpdfstring{WIQ\_wait\_and\_return()}{WIQ\_wait\_and\_return()}}
+{\footnotesize\ttfamily void WIQ\+\_\+wait\+\_\+and\+\_\+return (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_perform_job_a8f5d816817292121d1309102f4085e23}{Can\+Perform\+Job\+::job\+\_\+start()}}, and \mbox{\hyperlink{struct_can_perform_job_a963dbe78ad46befb86d1f0f3a3135d25}{Can\+Perform\+Job\+::push\+\_\+and\+\_\+reset()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_wait_in_queue_job_a2479fbffbedce22dfb941bddbd3ab1ae}{Wait\+In\+Queue\+Job\+::run\+\_\+state\+\_\+initialize()}}, \mbox{\hyperlink{struct_wait_in_queue_job_aa90f4ee0465f795acf599bf91c067de0}{Wait\+In\+Queue\+Job\+::run\+\_\+state\+\_\+working\+\_\+at\+\_\+end()}}, and \mbox{\hyperlink{struct_wait_in_queue_job_aa5fd4388b65c8dd369677b3686900ff4}{Wait\+In\+Queue\+Job\+::run\+\_\+state\+\_\+working\+\_\+at\+\_\+start()}}.
+

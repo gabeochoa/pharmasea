@@ -6,32 +6,55 @@
 \DoxyCodeLine{00002\ }
 \DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00004\ }
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <bitsery/traits/deque.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
 \DoxyCodeLine{00006\ }
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <deque>}}
+\DoxyCodeLine{00007\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{has__waiting__queue_8h_a4b76440e2efb034661d8c6fe5bc0e01d}{max\_queue\_size}}\ =\ 3;}
 \DoxyCodeLine{00008\ }
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}../entity.h"{}}}
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_has_waiting_queue_a02852855e0aeccf49ed5c46e0e9960a4}{\string~HasWaitingQueue}}()\ \{\}}
 \DoxyCodeLine{00011\ }
-\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
-\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_has_waiting_queue_a02852855e0aeccf49ed5c46e0e9960a4}{\string~HasWaitingQueue}}()\ \{\}}
-\DoxyCodeLine{00014\ }
-\DoxyCodeLine{00015\ \ \ \ \ std::deque<std::shared\_ptr<Entity>>\ \mbox{\hyperlink{struct_has_waiting_queue_adfe4df51f6527bc08928933b024d695b}{ppl\_in\_line}};}
-\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_has_waiting_queue_a9ce7c8331a127396958546304beb343e}{max\_queue\_size}}\ =\ 3;}
-\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\_line\_position}}\ =\ 0;}
-\DoxyCodeLine{00018\ }
-\DoxyCodeLine{00019\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_has_waiting_queue_a37e29a7048b8a58aec05277cf94dcd98}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
-\DoxyCodeLine{00024\ }
-\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_has_waiting_queue_a9ce7c8331a127396958546304beb343e}{max\_queue\_size}});}
-\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\_line\_position}});}
-\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ s.container(}
-\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_waiting_queue_adfe4df51f6527bc08928933b024d695b}{ppl\_in\_line}},\ \mbox{\hyperlink{struct_has_waiting_queue_a9ce7c8331a127396958546304beb343e}{max\_queue\_size}},}
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ [](S\&\ sv,\ std::shared\_ptr<Entity>\ entity)\ \{\ sv.object(entity);\ \});}
-\DoxyCodeLine{00030\ \ \ \ \ \}}
-\DoxyCodeLine{00031\ \};}
+\DoxyCodeLine{00012\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_has_waiting_queue_a858f36afb49800539f35be549ceb8a35}{is\_full}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !\mbox{\hyperlink{struct_has_waiting_queue_ad7edde0bb597faafe14d6bc06c9c3121}{has\_space}}();\ \}}
+\DoxyCodeLine{00013\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_has_waiting_queue_ad7edde0bb597faafe14d6bc06c9c3121}{has\_space}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\_line\_position}}\ <\ \mbox{\hyperlink{has__waiting__queue_8h_a4b76440e2efb034661d8c6fe5bc0e01d}{max\_queue\_size}};}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ \ \ \ \ [[nodiscard]]\ std::shared\_ptr<Entity>\ \mbox{\hyperlink{struct_has_waiting_queue_a5225e7b11e9a7e8c9e79bb63914e5b17}{person}}(\textcolor{keywordtype}{int}\ i)\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_has_waiting_queue_aeaefda19f0544b0f7d0c84bc06deac3e}{ppl\_in\_line}}[i];}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_has_waiting_queue_a2500387034298ec0dcf5b4898c6f80f3}{erase}}(\textcolor{keywordtype}{int}\ index)\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (std::size\_t\ i\ =\ index;\ i\ <\ \mbox{\hyperlink{has__waiting__queue_8h_a4b76440e2efb034661d8c6fe5bc0e01d}{max\_queue\_size}}\ -\/\ 1;\ ++i)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_waiting_queue_aeaefda19f0544b0f7d0c84bc06deac3e}{ppl\_in\_line}}[i]\ =\ \mbox{\hyperlink{struct_has_waiting_queue_aeaefda19f0544b0f7d0c84bc06deac3e}{ppl\_in\_line}}[i\ +\ 1];}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_waiting_queue_aeaefda19f0544b0f7d0c84bc06deac3e}{ppl\_in\_line}}[\mbox{\hyperlink{has__waiting__queue_8h_a4b76440e2efb034661d8c6fe5bc0e01d}{max\_queue\_size}}\ -\/\ 1]\ =\ \{\};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\_line\_position}}-\/-\/;}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_has_waiting_queue_a08ff94ba8e01003f092f69de19ca6a5a}{get\_next\_pos}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\_line\_position}};\ \}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{comment}{//\ These\ impl\ are\ in\ job.cpp}}
+\DoxyCodeLine{00032\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_has_waiting_queue_a4644c3cfb7f3e8b40ff23bc7efda0259}{matching\_id}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00033\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_has_waiting_queue_a1869b68676572ab4aee8de403482a487}{has\_matching\_person}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}\&\ \mbox{\hyperlink{struct_has_waiting_queue_af961eca5022e9ad6b5b88811d612d60f}{add\_customer}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ customer);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00037\ \ \ \ \ std::array<std::shared\_ptr<Entity>,\ \mbox{\hyperlink{has__waiting__queue_8h_a4b76440e2efb034661d8c6fe5bc0e01d}{max\_queue\_size}}>\ \mbox{\hyperlink{struct_has_waiting_queue_aeaefda19f0544b0f7d0c84bc06deac3e}{ppl\_in\_line}};}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\_line\_position}}\ =\ 0;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ These\ impl\ are\ in\ job.cpp}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_has_waiting_queue_a743b0c9e1c1e21fc1f894e5960e82cf0}{dump\_contents}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_has_waiting_queue_a37e29a7048b8a58aec05277cf94dcd98}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\_line\_position}});}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ s.container(\mbox{\hyperlink{struct_has_waiting_queue_aeaefda19f0544b0f7d0c84bc06deac3e}{ppl\_in\_line}},\ [](S\&\ sv,\ std::shared\_ptr<Entity>\ entity)\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ sv.object(entity);}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ \};}
 
 \end{DoxyCode}

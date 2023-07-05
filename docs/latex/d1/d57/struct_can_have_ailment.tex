@@ -19,7 +19,7 @@ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_ailment}{Ailment}} $>$ \mbox{\
 \item 
 bool \mbox{\hyperlink{struct_can_have_ailment_a83e37920dc7ebf010f82e41fea8bc4d2}{has\+\_\+ailment}} () const
 \item 
-void \mbox{\hyperlink{struct_can_have_ailment_a2ebcceb2ea17f0f169722a3c543d3577}{update}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_ailment}{Ailment}} $>$ new\+\_\+ailment)
+void \mbox{\hyperlink{struct_can_have_ailment_a012719ba11f18d3c288cd23b52e5335e}{update}} (\mbox{\hyperlink{struct_ailment}{Ailment}} $\ast$new\+\_\+ailment)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
 \begin{DoxyCompactItemize}
@@ -27,6 +27,8 @@ void \mbox{\hyperlink{struct_can_have_ailment_a2ebcceb2ea17f0f169722a3c543d3577}
 \mbox{\hyperlink{struct_base_component_ac74326a615877f3c1a17bc47787ad91e}{Base\+Component}} ()
 \item 
 \mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
+\item 
+virtual void \mbox{\hyperlink{struct_base_component_ac7389bfd8b903625667e1427ef3cb70b}{on\+Attach}} ()
 \item 
 virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
 \end{DoxyCompactItemize}
@@ -64,7 +66,7 @@ References \mbox{\hyperlink{struct_can_have_ailment_a5f64136196bdd0d9337c8244149
 
 
 
-Referenced by \mbox{\hyperlink{struct_can_have_ailment_a83e37920dc7ebf010f82e41fea8bc4d2}{has\+\_\+ailment()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a80b48eb7354e4827e21605e41577269f}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+position\+\_\+from\+\_\+job()}}.
+Referenced by \mbox{\hyperlink{struct_can_have_ailment_a83e37920dc7ebf010f82e41fea8bc4d2}{has\+\_\+ailment()}}, \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a7f8075222f9fa83bd59a38386469ea0a}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+speech\+\_\+bubble()}}, and \mbox{\hyperlink{struct_job_a2e875fe84ba07e39c39ca49706917921}{Job\+::travel\+\_\+to\+\_\+position()}}.
 
 \mbox{\Hypertarget{struct_can_have_ailment_a83e37920dc7ebf010f82e41fea8bc4d2}\label{struct_can_have_ailment_a83e37920dc7ebf010f82e41fea8bc4d2}} 
 \index{CanHaveAilment@{CanHaveAilment}!has\_ailment@{has\_ailment}}
@@ -83,11 +85,15 @@ References \mbox{\hyperlink{struct_can_have_ailment_a362b69644c01dc2c04b038c027d
 {\footnotesize\ttfamily template$<$typename S $>$ \\
 void Can\+Have\+Ailment\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
 
-\mbox{\Hypertarget{struct_can_have_ailment_a2ebcceb2ea17f0f169722a3c543d3577}\label{struct_can_have_ailment_a2ebcceb2ea17f0f169722a3c543d3577}} 
+
+
+References \mbox{\hyperlink{struct_can_have_ailment_a5f64136196bdd0d9337c8244149a4752}{my\+\_\+ailment}}.
+
+\mbox{\Hypertarget{struct_can_have_ailment_a012719ba11f18d3c288cd23b52e5335e}\label{struct_can_have_ailment_a012719ba11f18d3c288cd23b52e5335e}} 
 \index{CanHaveAilment@{CanHaveAilment}!update@{update}}
 \index{update@{update}!CanHaveAilment@{CanHaveAilment}}
 \doxysubsubsection{\texorpdfstring{update()}{update()}}
-{\footnotesize\ttfamily void Can\+Have\+Ailment\+::update (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_ailment}{Ailment}} $>$}]{new\+\_\+ailment }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily void Can\+Have\+Ailment\+::update (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_ailment}{Ailment}} $\ast$}]{new\+\_\+ailment }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -104,7 +110,7 @@ References \mbox{\hyperlink{struct_can_have_ailment_a5f64136196bdd0d9337c8244149
 
 
 
-Referenced by \mbox{\hyperlink{struct_can_have_ailment_a362b69644c01dc2c04b038c027d9c9f9}{ailment()}}, and \mbox{\hyperlink{struct_can_have_ailment_a2ebcceb2ea17f0f169722a3c543d3577}{update()}}.
+Referenced by \mbox{\hyperlink{struct_can_have_ailment_a362b69644c01dc2c04b038c027d9c9f9}{ailment()}}, \mbox{\hyperlink{struct_can_have_ailment_a98e8c92d466dc2abd5b640fe1b4e565a}{serialize()}}, and \mbox{\hyperlink{struct_can_have_ailment_a012719ba11f18d3c288cd23b52e5335e}{update()}}.
 
 
 

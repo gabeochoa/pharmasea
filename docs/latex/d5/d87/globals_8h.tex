@@ -5,11 +5,13 @@
 \begin{DoxyCompactItemize}
 \item 
 namespace \mbox{\hyperlink{namespacenetwork}{network}}
+\item 
+namespace \mbox{\hyperlink{namespacenetwork_1_1mp__test}{network\+::mp\+\_\+test}}
 \end{DoxyCompactItemize}
 \doxysubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-constexpr std\+::string\+\_\+view \mbox{\hyperlink{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}{VERSION}} = \char`\"{}alpha\+\_\+0.\+23.\+01.\+16\char`\"{}
+constexpr std\+::string\+\_\+view \mbox{\hyperlink{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}{VERSION}} = \char`\"{}alpha\+\_\+0.\+23.\+07.\+03\char`\"{}
 \item 
 constexpr size\+\_\+t \mbox{\hyperlink{globals_8h_a5d07c476a4df38a957585b4c12bfdf7d}{HASHED\+\_\+\+VERSION}} = \mbox{\hyperlink{engine_2globals_8h_a471e5aa6d16f0fe8c4c131624777603b}{hash\+String}}(\mbox{\hyperlink{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}{VERSION}})
 \item 
@@ -21,6 +23,14 @@ constexpr int \mbox{\hyperlink{globals_8h_aab26d6b4d9a9de693114dc63909ad7cd}{MAP
 \item 
 constexpr float \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}} = 1.\+0f
 \item 
+static std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \mbox{\hyperlink{globals_8h_a9b5348cc15afb030f3257335ce85a09f}{global\+\_\+player}}
+\item 
+constexpr float \mbox{\hyperlink{globals_8h_aa2d79e41fb2085f3903c93093342e293}{GATHER\+\_\+\+SPOT}} = -\/20.f
+\item 
+static bool \mbox{\hyperlink{globals_8h_a2c70132077dcb9781666e37aee6d0de1}{ENABLE\+\_\+\+MODELS}} = true
+\item 
+static bool \mbox{\hyperlink{globals_8h_ae9ba2614abaa79d7b8b4f053a870ba27}{ENABLE\+\_\+\+SOUND}} = true
+\item 
 constexpr int \mbox{\hyperlink{namespacenetwork_a6aeb6825913b9a386a83c59f8c715a35}{network\+::\+DEFAULT\+\_\+\+PORT}} = 770
 \item 
 constexpr int \mbox{\hyperlink{namespacenetwork_acf4bbd66b0d6716ae9e4e5d9390079c2}{network\+::\+MAX\+\_\+\+CLIENTS}} = 4
@@ -30,10 +40,36 @@ constexpr int \mbox{\hyperlink{namespacenetwork_af177a631a8f23b588e2cc5ef90a8d6a
 constexpr int \mbox{\hyperlink{namespacenetwork_ac25927028283483486690041e04cb8c9}{network\+::\+SERVER\+\_\+\+CLIENT\+\_\+\+ID}} = -\/1
 \item 
 constexpr int \mbox{\hyperlink{namespacenetwork_a3855c8561d0a02fbcc26a690abccbac7}{network\+::\+MAX\+\_\+\+INPUTS}} = 100
+\item 
+static int \mbox{\hyperlink{namespacenetwork_1_1mp__test_ab95d293ff6b99c5f77a2096b65afba80}{network\+::mp\+\_\+test\+::run\+\_\+init}} = 0
+\item 
+static bool \mbox{\hyperlink{namespacenetwork_1_1mp__test_aa31b010a38bb1a0b981ae5946dcf4ab2}{network\+::mp\+\_\+test\+::enabled}} = false
+\item 
+static bool \mbox{\hyperlink{namespacenetwork_1_1mp__test_ae862a3e31cb725c2dd9b184f1a149f1c}{network\+::mp\+\_\+test\+::is\+\_\+host}} = false
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{globals_8h_a2c70132077dcb9781666e37aee6d0de1}\label{globals_8h_a2c70132077dcb9781666e37aee6d0de1}} 
+\index{globals.h@{globals.h}!ENABLE\_MODELS@{ENABLE\_MODELS}}
+\index{ENABLE\_MODELS@{ENABLE\_MODELS}!globals.h@{globals.h}}
+\doxysubsubsection{\texorpdfstring{ENABLE\_MODELS}{ENABLE\_MODELS}}
+{\footnotesize\ttfamily bool ENABLE\+\_\+\+MODELS = true\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{entity_8h_ac332634821b23608632413355a213c36}{add\+\_\+person\+\_\+components()}}, \mbox{\hyperlink{namespaceentities_a7992dfa9096ca50b24ff54522decbae1}{entities\+::make\+\_\+bagbox()}}, \mbox{\hyperlink{namespaceentities_a0b953fc68d3dbfc32887733298790325}{entities\+::make\+\_\+conveyer()}}, \mbox{\hyperlink{namespaceentities_ad66d3986b43624ca8b0ac676da371006}{entities\+::make\+\_\+furniture()}}, \mbox{\hyperlink{namespaceentities_aa6de719712a8ed39289db02a6ec761d8}{entities\+::make\+\_\+grabber()}}, \mbox{\hyperlink{namespaceentities_a36e028422e1baa4aefba2aaf94fa65a1}{entities\+::make\+\_\+medicine\+\_\+cabinet()}}, \mbox{\hyperlink{namespaceentities_a5b37b71d0d1f573bc67c8de98c023baa}{entities\+::make\+\_\+pill\+\_\+dispenser()}}, \mbox{\hyperlink{namespaceentities_a6eed7f199266eb0e44cad235fd78ed1f}{entities\+::make\+\_\+register()}}, \mbox{\hyperlink{struct_preload_a417423b659ecdd2f3c3ebafba027e3ca}{Preload\+::\+Preload()}}, \mbox{\hyperlink{game_8cpp_a5587947e5cf5dc1e6cc73244706c651c}{process\+\_\+dev\+\_\+flags()}}, \mbox{\hyperlink{struct_item_ade8311a0bcadd6d8d30641868f851d8e}{Item\+::render()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a623ca4092034e5947a74092c361262cb}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+model\+\_\+normal()}}.
+
+\mbox{\Hypertarget{globals_8h_ae9ba2614abaa79d7b8b4f053a870ba27}\label{globals_8h_ae9ba2614abaa79d7b8b4f053a870ba27}} 
+\index{globals.h@{globals.h}!ENABLE\_SOUND@{ENABLE\_SOUND}}
+\index{ENABLE\_SOUND@{ENABLE\_SOUND}!globals.h@{globals.h}}
+\doxysubsubsection{\texorpdfstring{ENABLE\_SOUND}{ENABLE\_SOUND}}
+{\footnotesize\ttfamily bool ENABLE\+\_\+\+SOUND = true\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_game_layer_acc7d3f410b4c25afd764848638d39c6f}{Game\+Layer\+::play\+\_\+music()}}, \mbox{\hyperlink{struct_menu_layer_a43ffc71d9e6fbb63a4b2ed9c453a7570}{Menu\+Layer\+::play\+\_\+music()}}, \mbox{\hyperlink{struct_preload_a417423b659ecdd2f3c3ebafba027e3ca}{Preload\+::\+Preload()}}, and \mbox{\hyperlink{game_8cpp_a5587947e5cf5dc1e6cc73244706c651c}{process\+\_\+dev\+\_\+flags()}}.
+
 \mbox{\Hypertarget{globals_8h_ae3518c4cf1a0e047e3c4505478b5f15d}\label{globals_8h_ae3518c4cf1a0e047e3c4505478b5f15d}} 
 \index{globals.h@{globals.h}!GAME\_FOLDER@{GAME\_FOLDER}}
 \index{GAME\_FOLDER@{GAME\_FOLDER}!globals.h@{globals.h}}
@@ -43,6 +79,26 @@ constexpr int \mbox{\hyperlink{namespacenetwork_a3855c8561d0a02fbcc26a690abccbac
 
 
 Referenced by \mbox{\hyperlink{game_8cpp_aecc7d8debf54990ffeaaed5bac7d7d81}{startup()}}.
+
+\mbox{\Hypertarget{globals_8h_aa2d79e41fb2085f3903c93093342e293}\label{globals_8h_aa2d79e41fb2085f3903c93093342e293}} 
+\index{globals.h@{globals.h}!GATHER\_SPOT@{GATHER\_SPOT}}
+\index{GATHER\_SPOT@{GATHER\_SPOT}!globals.h@{globals.h}}
+\doxysubsubsection{\texorpdfstring{GATHER\_SPOT}{GATHER\_SPOT}}
+{\footnotesize\ttfamily constexpr float GATHER\+\_\+\+SPOT = -\/20.f\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a4062abda6494564722d1c6b89d8f85c6}{system\+\_\+manager\+::job\+\_\+system\+::ensure\+\_\+has\+\_\+job()}}, \mbox{\hyperlink{struct_leaving_job_afc6c32eb0f8124562f780e592a7b545f}{Leaving\+Job\+::run\+\_\+state\+\_\+working\+\_\+at\+\_\+end()}}, and \mbox{\hyperlink{namespacesystem__manager_aae333b079103d5d1c60cd78e91f20516}{system\+\_\+manager\+::sophie()}}.
+
+\mbox{\Hypertarget{globals_8h_a9b5348cc15afb030f3257335ce85a09f}\label{globals_8h_a9b5348cc15afb030f3257335ce85a09f}} 
+\index{globals.h@{globals.h}!global\_player@{global\_player}}
+\index{global\_player@{global\_player}!globals.h@{globals.h}}
+\doxysubsubsection{\texorpdfstring{global\_player}{global\_player}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_entity}{Entity}}$>$ global\+\_\+player\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_client_acdb127c63e3c7a36575f590cf525e0a9}{network\+::\+Client\+::client\+\_\+process\+\_\+message\+\_\+string()}}, \mbox{\hyperlink{structgeneration_1_1helper_a7af3da545dc8fda3263f0bb787cbf423}{generation\+::helper\+::generate\+\_\+entity\+\_\+from\+\_\+character()}}, \mbox{\hyperlink{struct_game_layer_ac93aed3c3aeeb92b41fd322d0ca926c5}{Game\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514cd}{Game\+Layer\+::on\+Update()}}, \mbox{\hyperlink{namespacesystem__manager_1_1ui_a06bd4ce977baa96f699ef1bb5061833a}{system\+\_\+manager\+::ui\+::render\+\_\+player\+\_\+info()}}, and \mbox{\hyperlink{structnetwork_1_1_client_ae502815c0740bf18bc4bff3a92ee5bba}{network\+::\+Client\+::send\+\_\+player\+\_\+input\+\_\+packet()}}.
 
 \mbox{\Hypertarget{globals_8h_a5d07c476a4df38a957585b4c12bfdf7d}\label{globals_8h_a5d07c476a4df38a957585b4c12bfdf7d}} 
 \index{globals.h@{globals.h}!HASHED\_VERSION@{HASHED\_VERSION}}
@@ -78,13 +134,13 @@ Referenced by \mbox{\hyperlink{game_8cpp_aecc7d8debf54990ffeaaed5bac7d7d81}{star
 
 
 
-Referenced by \mbox{\hyperlink{namespaceraylib_afdb4c3efe6c13dc14bfce3761b4bab50}{raylib\+::\+Draw\+Floating\+Text()}}, \mbox{\hyperlink{namespaceraylib_adf92235c8362e980a25030f08465d209}{raylib\+::\+Draw\+Line\+Strip2\+Din3\+D()}}, \mbox{\hyperlink{namespaceraylib_af6ad8e8727ef175dbe4d6c0d8b98cbaf}{raylib\+::\+Draw\+Rect2\+Din3\+D()}}, \mbox{\hyperlink{level__info_8h_afb3e321d1045c0376dede5b3997579aa}{generate\+\_\+and\+\_\+insert\+\_\+walls()}}, \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{Game\+Map\+Info\+::generate\+\_\+map()}}, \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar\+::get\+\_\+neighbors()}}, \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{Game\+Map\+Info\+::get\+\_\+rand\+\_\+walkable()}}, \mbox{\hyperlink{struct_entity_helper_a3610c9a5865dc6bfa24cdc6f6858a763}{Entity\+Helper\+::is\+Walkable\+Raw\+Entities()}}, \mbox{\hyperlink{struct_furniture_a8d39e9110afcb62048879a3b3e7697ea}{Furniture\+::make\+\_\+register()}}, \mbox{\hyperlink{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}{Lobby\+Map\+Info\+::on\+Draw()}}, \mbox{\hyperlink{struct_game_layer_ac93aed3c3aeeb92b41fd322d0ca926c5}{Game\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{namespacesystem__manager_a27a95df8b20f1e69fe055a138e7f7e5d}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos()}}, \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{system\+\_\+manager\+::process\+\_\+input()}}, \mbox{\hyperlink{struct_speech_bubble_adf10ca265a146477fa237f6bf66d5660}{Speech\+Bubble\+::render()}}, \mbox{\hyperlink{namespacesystem__manager_1_1job__system_adc930a9721c3daf854c661ec1905d357}{system\+\_\+manager\+::job\+\_\+system\+::render\+\_\+job\+\_\+visual()}}, \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_abc7e8a0a6363013bf0a0776751ce06d1}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+progress\+\_\+bar()}}, \mbox{\hyperlink{struct_entity_a5bf4b6d2410b01633b53312465535ee0}{Entity\+::size()}}, \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{vec\+::snap()}}, \mbox{\hyperlink{struct_entity_a3267ca1897b60de8c1543e3846056145}{Entity\+::tile\+\_\+infront\+\_\+given\+\_\+pos()}}, \mbox{\hyperlink{struct_person_a9ba2212ff043b0e44f9889efc5ce0a87}{Person\+::update\+\_\+component()}}, \mbox{\hyperlink{namespacesystem__manager_a83ed24ae5e1d1c24133a535d653b172f}{system\+\_\+manager\+::update\+\_\+held\+\_\+furniture\+\_\+position()}}, \mbox{\hyperlink{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}{system\+\_\+manager\+::update\+\_\+held\+\_\+item\+\_\+position()}}, \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information()}}, \mbox{\hyperlink{struct_bag_box_aab757683c1965a23555d0c5d7af8c74d}{Bag\+Box\+::update\+\_\+model()}}, and \mbox{\hyperlink{struct_medicine_cabinet_a0d44a8c81945b14e883c89c73e79900f}{Medicine\+Cabinet\+::update\+\_\+model()}}.
+Referenced by \mbox{\hyperlink{entity_8h_ac332634821b23608632413355a213c36}{add\+\_\+person\+\_\+components()}}, \mbox{\hyperlink{namespacetest_a44ab8ef8604a87885854abcee9db2963}{test\+::canvisit()}}, \mbox{\hyperlink{namespaceraylib_af23f7c426ad59556054db4d4c2734a0d}{raylib\+::\+Draw\+Floating\+Text()}}, \mbox{\hyperlink{namespaceraylib_adf92235c8362e980a25030f08465d209}{raylib\+::\+Draw\+Line\+Strip2\+Din3\+D()}}, \mbox{\hyperlink{namespaceraylib_af6ad8e8727ef175dbe4d6c0d8b98cbaf}{raylib\+::\+Draw\+Rect2\+Din3\+D()}}, \mbox{\hyperlink{structgeneration_1_1helper_aea7daa493b1cb81bfad552e18f003905}{generation\+::helper\+::find\+\_\+origin()}}, \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{astar\+::find\+\_\+path\+\_\+impl()}}, \mbox{\hyperlink{structgeneration_1_1helper_a9b1d98c15eacac456fa96e1bce83903c}{generation\+::helper\+::generate()}}, \mbox{\hyperlink{level__info_8h_afb3e321d1045c0376dede5b3997579aa}{generate\+\_\+and\+\_\+insert\+\_\+walls()}}, \mbox{\hyperlink{struct_lobby_map_info_a4cab06a8a972519111860fa37e770b41}{Lobby\+Map\+Info\+::generate\+\_\+map()}}, \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar\+::get\+\_\+neighbors()}}, \mbox{\hyperlink{struct_game_map_info_aac290c06befc1a0415d1620f82f86e28}{Game\+Map\+Info\+::get\+\_\+rand\+\_\+walkable()}}, \mbox{\hyperlink{struct_game_map_info_a0d04f7f4685d185f17d95726ca7a3605}{Game\+Map\+Info\+::get\+\_\+rand\+\_\+walkable\+\_\+register()}}, \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_ab60a89d3fd59ae62ddb5837bce401117}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::inround\+::handle\+\_\+grab()}}, \mbox{\hyperlink{struct_job_af52868928945ccf5d593eb404b6aba22}{Job\+::is\+\_\+at\+\_\+position()}}, \mbox{\hyperlink{struct_entity_helper_a3610c9a5865dc6bfa24cdc6f6858a763}{Entity\+Helper\+::is\+Walkable\+Raw\+Entities()}}, \mbox{\hyperlink{namespaceentities_a7992dfa9096ca50b24ff54522decbae1}{entities\+::make\+\_\+bagbox()}}, \mbox{\hyperlink{namespaceentities_ad66d3986b43624ca8b0ac676da371006}{entities\+::make\+\_\+furniture()}}, \mbox{\hyperlink{namespaceentities_a36e028422e1baa4aefba2aaf94fa65a1}{entities\+::make\+\_\+medicine\+\_\+cabinet()}}, \mbox{\hyperlink{namespaceentities_a5b37b71d0d1f573bc67c8de98c023baa}{entities\+::make\+\_\+pill\+\_\+dispenser()}}, \mbox{\hyperlink{namespaceentities_a6eed7f199266eb0e44cad235fd78ed1f}{entities\+::make\+\_\+register()}}, \mbox{\hyperlink{namespaceentities_a0d6d07d53d6aacaa5b3547ac03d693b2}{entities\+::make\+\_\+trigger\+\_\+area()}}, \mbox{\hyperlink{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}{Lobby\+Map\+Info\+::on\+Draw()}}, \mbox{\hyperlink{struct_game_layer_ac93aed3c3aeeb92b41fd322d0ca926c5}{Game\+Layer\+::on\+Draw()}}, \mbox{\hyperlink{namespacesystem__manager_a0c766a298e1abda388fb8b8795805f58}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos()}}, \mbox{\hyperlink{namespacesystem__manager_1_1job__system_adc930a9721c3daf854c661ec1905d357}{system\+\_\+manager\+::job\+\_\+system\+::render\+\_\+job\+\_\+visual()}}, \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_abc7e8a0a6363013bf0a0776751ce06d1}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+progress\+\_\+bar()}}, \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a7f8075222f9fa83bd59a38386469ea0a}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+speech\+\_\+bubble()}}, \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a7da34a131c86ec8323726dfda86fa24a}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+trigger\+\_\+area()}}, \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{vec\+::snap()}}, \mbox{\hyperlink{namespacesystem__manager_aae333b079103d5d1c60cd78e91f20516}{system\+\_\+manager\+::sophie()}}, \mbox{\hyperlink{struct_transform_a95de4201bc94d237c7195c4f9c7ba38f}{Transform\+::tile\+\_\+infront\+\_\+given\+\_\+pos()}}, \mbox{\hyperlink{namespacesystem__manager_a83ed24ae5e1d1c24133a535d653b172f}{system\+\_\+manager\+::update\+\_\+held\+\_\+furniture\+\_\+position()}}, and \mbox{\hyperlink{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}{system\+\_\+manager\+::update\+\_\+held\+\_\+item\+\_\+position()}}.
 
 \mbox{\Hypertarget{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}\label{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}} 
 \index{globals.h@{globals.h}!VERSION@{VERSION}}
 \index{VERSION@{VERSION}!globals.h@{globals.h}}
 \doxysubsubsection{\texorpdfstring{VERSION}{VERSION}}
-{\footnotesize\ttfamily constexpr std\+::string\+\_\+view VERSION = \char`\"{}alpha\+\_\+0.\+23.\+01.\+16\char`\"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+{\footnotesize\ttfamily constexpr std\+::string\+\_\+view VERSION = \char`\"{}alpha\+\_\+0.\+23.\+07.\+03\char`\"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
 
 
 

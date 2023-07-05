@@ -15,8 +15,6 @@ Inheritance diagram for Version\+Layer\+:\begin{figure}[H]
 \item 
 \mbox{\hyperlink{struct_version_layer_a4cdccc7b5ac763c65a87dd917267ded1}{Version\+Layer}} ()
 \item 
-virtual void \mbox{\hyperlink{struct_version_layer_aab8a0be3b8c56e78bd1071fba1abf6d1}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&) override
-\item 
 virtual void \mbox{\hyperlink{struct_version_layer_a044089ef0cbe40f90aaa85f9a3c357a4}{on\+Update}} (float) override
 \item 
 virtual void \mbox{\hyperlink{struct_version_layer_a3457fd07658e388444fb2a7ecb1767bf}{on\+Draw}} (float) override
@@ -36,7 +34,15 @@ virtual void \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{on
 \item 
 virtual void \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{on\+Draw}} (float elapsed)=0
 \item 
-virtual void \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&)=0
+void \mbox{\hyperlink{struct_layer_a753e388bb8e7416a7cc2b338b5566396}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_aaad763977a0828b342ddd6ac0af65aea}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_ad1793a53fff5c6516848d2a1a0c73a10}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_a4410643bde2d400ba6731f48ad5a8727}{on\+Gamepad\+Axis\+Moved}} (\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_affe784562ca969d024bb98866455985d}{on\+Char\+Pressed\+Event}} (\mbox{\hyperlink{struct_char_pressed_event}{Char\+Pressed\+Event}} \&)
 \item 
 const std\+::string \& \mbox{\hyperlink{struct_layer_a592dabab6ae280b7a3a3f4b195c9833b}{getname}} () const
 \end{DoxyCompactItemize}
@@ -74,16 +80,6 @@ Implements \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{Laye
 
 References \mbox{\hyperlink{globals_8h_aaa7af68b11c3d3a4f6374fe35a3a2d67}{VERSION}}.
 
-\mbox{\Hypertarget{struct_version_layer_aab8a0be3b8c56e78bd1071fba1abf6d1}\label{struct_version_layer_aab8a0be3b8c56e78bd1071fba1abf6d1}} 
-\index{VersionLayer@{VersionLayer}!onEvent@{onEvent}}
-\index{onEvent@{onEvent}!VersionLayer@{VersionLayer}}
-\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
-{\footnotesize\ttfamily virtual void Version\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_event}{Event}} \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Implements \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{Layer}}.
-
 \mbox{\Hypertarget{struct_version_layer_a044089ef0cbe40f90aaa85f9a3c357a4}\label{struct_version_layer_a044089ef0cbe40f90aaa85f9a3c357a4}} 
 \index{VersionLayer@{VersionLayer}!onUpdate@{onUpdate}}
 \index{onUpdate@{onUpdate}!VersionLayer@{VersionLayer}}
@@ -98,4 +94,4 @@ Implements \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{Laye
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/\mbox{\hyperlink{versionlayer_8h}{versionlayer.\+h}}\end{DoxyCompactItemize}
+src/layers/\mbox{\hyperlink{versionlayer_8h}{versionlayer.\+h}}\end{DoxyCompactItemize}

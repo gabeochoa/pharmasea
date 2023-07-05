@@ -16,6 +16,8 @@ Inheritance diagram for Has\+Name\+:\begin{figure}[H]
 virtual \mbox{\hyperlink{struct_has_name_a80eb32605176956e9f4065f44cf8b8a6}{$\sim$\+Has\+Name}} ()
 \item 
 void \mbox{\hyperlink{struct_has_name_a23385cc716869fe34d4645423842d11e}{update}} (const std\+::string \&new\+\_\+name)
+\item 
+const std\+::string \mbox{\hyperlink{struct_has_name_a1df7bba6c41d3921723b0ef14bcdf4dd}{name}} () const
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
 \begin{DoxyCompactItemize}
@@ -24,19 +26,21 @@ void \mbox{\hyperlink{struct_has_name_a23385cc716869fe34d4645423842d11e}{update}
 \item 
 \mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
 \item 
+virtual void \mbox{\hyperlink{struct_base_component_ac7389bfd8b903625667e1427ef3cb70b}{on\+Attach}} ()
+\item 
 virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
-\end{DoxyCompactItemize}
-\doxysubsection*{Public Attributes}
-\begin{DoxyCompactItemize}
-\item 
-int \mbox{\hyperlink{struct_has_name_ae11eb28867a0a917ad45f9d67caf1bf8}{name\+\_\+length}} = 1
-\item 
-std\+::string \mbox{\hyperlink{struct_has_name_a9b8c5e7a1ca7671ebaa1948c7492a424}{name}} = \char`\"{}\char`\"{}
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 {\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_has_name_a5c8afd39d5f2a31ad2949d1c11f1b2f4}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{struct_has_name_ae11eb28867a0a917ad45f9d67caf1bf8}{name\+\_\+length}} = 1
+\item 
+std\+::string \mbox{\hyperlink{struct_has_name_a242653a81ae10b3486585d6513c04ccb}{\+\_\+name}} = \char`\"{}\char`\"{}
 \end{DoxyCompactItemize}
 
 
@@ -50,6 +54,20 @@ std\+::string \mbox{\hyperlink{struct_has_name_a9b8c5e7a1ca7671ebaa1948c7492a424
 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_has_name_a1df7bba6c41d3921723b0ef14bcdf4dd}\label{struct_has_name_a1df7bba6c41d3921723b0ef14bcdf4dd}} 
+\index{HasName@{HasName}!name@{name}}
+\index{name@{name}!HasName@{HasName}}
+\doxysubsubsection{\texorpdfstring{name()}{name()}}
+{\footnotesize\ttfamily const std\+::string Has\+Name\+::name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_has_name_a242653a81ae10b3486585d6513c04ccb}{\+\_\+name}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_network_layer_a85337a1e904b99e5786c5535a1316211}{Network\+Layer\+::draw\+\_\+connected\+\_\+screen()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_af1f746a942f74088a5a2eac0fc0b51d0}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+floating\+\_\+name()}}.
+
 \mbox{\Hypertarget{struct_has_name_a5c8afd39d5f2a31ad2949d1c11f1b2f4}\label{struct_has_name_a5c8afd39d5f2a31ad2949d1c11f1b2f4}} 
 \index{HasName@{HasName}!serialize@{serialize}}
 \index{serialize@{serialize}!HasName@{HasName}}
@@ -59,7 +77,7 @@ void Has\+Name\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyP
 
 
 
-References \mbox{\hyperlink{struct_has_name_a9b8c5e7a1ca7671ebaa1948c7492a424}{name}}, and \mbox{\hyperlink{struct_has_name_ae11eb28867a0a917ad45f9d67caf1bf8}{name\+\_\+length}}.
+References \mbox{\hyperlink{struct_has_name_a242653a81ae10b3486585d6513c04ccb}{\+\_\+name}}, and \mbox{\hyperlink{struct_has_name_ae11eb28867a0a917ad45f9d67caf1bf8}{name\+\_\+length}}.
 
 \mbox{\Hypertarget{struct_has_name_a23385cc716869fe34d4645423842d11e}\label{struct_has_name_a23385cc716869fe34d4645423842d11e}} 
 \index{HasName@{HasName}!update@{update}}
@@ -69,26 +87,26 @@ References \mbox{\hyperlink{struct_has_name_a9b8c5e7a1ca7671ebaa1948c7492a424}{n
 
 
 
-References \mbox{\hyperlink{struct_has_name_a9b8c5e7a1ca7671ebaa1948c7492a424}{name}}, and \mbox{\hyperlink{struct_has_name_ae11eb28867a0a917ad45f9d67caf1bf8}{name\+\_\+length}}.
+References \mbox{\hyperlink{struct_has_name_a242653a81ae10b3486585d6513c04ccb}{\+\_\+name}}, and \mbox{\hyperlink{struct_has_name_ae11eb28867a0a917ad45f9d67caf1bf8}{name\+\_\+length}}.
 
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_has_name_a9b8c5e7a1ca7671ebaa1948c7492a424}\label{struct_has_name_a9b8c5e7a1ca7671ebaa1948c7492a424}} 
-\index{HasName@{HasName}!name@{name}}
-\index{name@{name}!HasName@{HasName}}
-\doxysubsubsection{\texorpdfstring{name}{name}}
-{\footnotesize\ttfamily std\+::string Has\+Name\+::name = \char`\"{}\char`\"{}}
+\mbox{\Hypertarget{struct_has_name_a242653a81ae10b3486585d6513c04ccb}\label{struct_has_name_a242653a81ae10b3486585d6513c04ccb}} 
+\index{HasName@{HasName}!\_name@{\_name}}
+\index{\_name@{\_name}!HasName@{HasName}}
+\doxysubsubsection{\texorpdfstring{\_name}{\_name}}
+{\footnotesize\ttfamily std\+::string Has\+Name\+::\+\_\+name = \char`\"{}\char`\"{}\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
-Referenced by \mbox{\hyperlink{struct_network_layer_a85337a1e904b99e5786c5535a1316211}{Network\+Layer\+::draw\+\_\+connected\+\_\+screen()}}, \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_af1f746a942f74088a5a2eac0fc0b51d0}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+floating\+\_\+name()}}, \mbox{\hyperlink{struct_has_name_a5c8afd39d5f2a31ad2949d1c11f1b2f4}{serialize()}}, \mbox{\hyperlink{struct_has_name_a23385cc716869fe34d4645423842d11e}{update()}}, and \mbox{\hyperlink{struct_remote_player_ab1498c129a17b839431fa3ba7a6746e5}{Remote\+Player\+::update\+\_\+remotely()}}.
+Referenced by \mbox{\hyperlink{struct_has_name_a1df7bba6c41d3921723b0ef14bcdf4dd}{name()}}, \mbox{\hyperlink{struct_has_name_a5c8afd39d5f2a31ad2949d1c11f1b2f4}{serialize()}}, and \mbox{\hyperlink{struct_has_name_a23385cc716869fe34d4645423842d11e}{update()}}.
 
 \mbox{\Hypertarget{struct_has_name_ae11eb28867a0a917ad45f9d67caf1bf8}\label{struct_has_name_ae11eb28867a0a917ad45f9d67caf1bf8}} 
 \index{HasName@{HasName}!name\_length@{name\_length}}
 \index{name\_length@{name\_length}!HasName@{HasName}}
 \doxysubsubsection{\texorpdfstring{name\_length}{name\_length}}
-{\footnotesize\ttfamily int Has\+Name\+::name\+\_\+length = 1}
+{\footnotesize\ttfamily int Has\+Name\+::name\+\_\+length = 1\hspace{0.3cm}{\ttfamily [private]}}
 
 
 

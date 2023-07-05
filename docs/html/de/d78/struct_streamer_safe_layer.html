@@ -94,8 +94,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6151d2245233d33997d8ff3bbb860c6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a091cc82880043753f6bf4b30e5198a28"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d78/struct_streamer_safe_layer.html#a091cc82880043753f6bf4b30e5198a28">~StreamerSafeLayer</a> ()</td></tr>
 <tr class="separator:a091cc82880043753f6bf4b30e5198a28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4521aefaa0b666b629ee3c8de640f46"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d78/struct_streamer_safe_layer.html#aa4521aefaa0b666b629ee3c8de640f46">onEvent</a> (<a class="el" href="../../de/d6a/struct_event.html">Event</a> &amp;) override</td></tr>
-<tr class="separator:aa4521aefaa0b666b629ee3c8de640f46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5a21158f507b5dc88a84f73524d0fea"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d78/struct_streamer_safe_layer.html#aa5a21158f507b5dc88a84f73524d0fea">onUpdate</a> (float) override</td></tr>
 <tr class="separator:aa5a21158f507b5dc88a84f73524d0fea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6537fe319ba82606836c3e4e7b6bae19"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d78/struct_streamer_safe_layer.html#a6537fe319ba82606836c3e4e7b6bae19">onDraw</a> (float) override</td></tr>
@@ -113,8 +111,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a48aac9e190e03beef1e02a34e8fefd0f inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e8efa32b1a8749dc24ddc07ea90f29b inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#a2e8efa32b1a8749dc24ddc07ea90f29b">onDraw</a> (float elapsed)=0</td></tr>
 <tr class="separator:a2e8efa32b1a8749dc24ddc07ea90f29b inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa11590c772daca6da696f7b789e16852 inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#aa11590c772daca6da696f7b789e16852">onEvent</a> (<a class="el" href="../../de/d6a/struct_event.html">Event</a> &amp;)=0</td></tr>
-<tr class="separator:aa11590c772daca6da696f7b789e16852 inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a753e388bb8e7416a7cc2b338b5566396 inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#a753e388bb8e7416a7cc2b338b5566396">onEvent</a> (<a class="el" href="../../de/d6a/struct_event.html">Event</a> &amp;event)</td></tr>
+<tr class="separator:a753e388bb8e7416a7cc2b338b5566396 inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaad763977a0828b342ddd6ac0af65aea inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#aaad763977a0828b342ddd6ac0af65aea">onKeyPressed</a> (<a class="el" href="../../d4/deb/struct_key_pressed_event.html">KeyPressedEvent</a> &amp;)</td></tr>
+<tr class="separator:aaad763977a0828b342ddd6ac0af65aea inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1793a53fff5c6516848d2a1a0c73a10 inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#ad1793a53fff5c6516848d2a1a0c73a10">onGamepadButtonPressed</a> (<a class="el" href="../../dd/d36/struct_gamepad_button_pressed_event.html">GamepadButtonPressedEvent</a> &amp;)</td></tr>
+<tr class="separator:ad1793a53fff5c6516848d2a1a0c73a10 inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4410643bde2d400ba6731f48ad5a8727 inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#a4410643bde2d400ba6731f48ad5a8727">onGamepadAxisMoved</a> (<a class="el" href="../../dd/dac/struct_gamepad_axis_moved_event.html">GamepadAxisMovedEvent</a> &amp;)</td></tr>
+<tr class="separator:a4410643bde2d400ba6731f48ad5a8727 inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affe784562ca969d024bb98866455985d inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#affe784562ca969d024bb98866455985d">onCharPressedEvent</a> (<a class="el" href="../../dd/d5b/struct_char_pressed_event.html">CharPressedEvent</a> &amp;)</td></tr>
+<tr class="separator:affe784562ca969d024bb98866455985d inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a592dabab6ae280b7a3a3f4b195c9833b inherit pub_methods_struct_layer"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfc/struct_layer.html#a592dabab6ae280b7a3a3f4b195c9833b">getname</a> () const</td></tr>
 <tr class="separator:a592dabab6ae280b7a3a3f4b195c9833b inherit pub_methods_struct_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -214,34 +220,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa4521aefaa0b666b629ee3c8de640f46" name="aa4521aefaa0b666b629ee3c8de640f46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa4521aefaa0b666b629ee3c8de640f46">&#9670;&#160;</a></span>onEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void StreamerSafeLayer::onEvent </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../de/d6a/struct_event.html">Event</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="../../db/dfc/struct_layer.html#aa11590c772daca6da696f7b789e16852">Layer</a>.</p>
-
-</div>
-</div>
 <a id="aa5a21158f507b5dc88a84f73524d0fea" name="aa5a21158f507b5dc88a84f73524d0fea"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa5a21158f507b5dc88a84f73524d0fea">&#9670;&#160;</a></span>onUpdate()</h2>
 
@@ -304,7 +282,7 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/<a class="el" href="../../d5/d37/streamersafelayer_8h_source.html">streamersafelayer.h</a></li>
+<li>src/layers/<a class="el" href="../../d5/d37/streamersafelayer_8h_source.html">streamersafelayer.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

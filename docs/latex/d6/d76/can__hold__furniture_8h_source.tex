@@ -6,37 +6,39 @@
 \DoxyCodeLine{00002\ }
 \DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00004\ }
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../furniture.h"{}}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
-\DoxyCodeLine{00007\ }
-\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_can_hold_furniture}{CanHoldFurniture}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
-\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_can_hold_furniture_a868d5521390d24cd3fa79e2db295c58a}{\string~CanHoldFurniture}}()\ \{\}}
-\DoxyCodeLine{00010\ }
-\DoxyCodeLine{00011\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_hold_furniture_a03f8a785e985deb76f53684f279048f6}{empty}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}{held\_furniture}}\ ==\ \textcolor{keyword}{nullptr};\ \}}
-\DoxyCodeLine{00012\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_hold_furniture_a8cc0cd805b15e39cf60855c65df04823}{is\_holding\_furniture}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !\mbox{\hyperlink{struct_can_hold_furniture_a03f8a785e985deb76f53684f279048f6}{empty}}();\ \}}
-\DoxyCodeLine{00013\ }
-\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
-\DoxyCodeLine{00015\ \ \ \ \ [[nodiscard]]\ std::shared\_ptr<T>\ \mbox{\hyperlink{struct_can_hold_furniture_a40da08393373a225102a56f7889693fb}{asT}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dynamic\_pointer\_cast<T>(\mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}{held\_furniture}});}
-\DoxyCodeLine{00017\ \ \ \ \ \}}
-\DoxyCodeLine{00018\ }
-\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_hold_furniture_acfb889c7dc41d5e1b10ecbbf4c26f2c4}{update}}(std::shared\_ptr<Furniture>\ \mbox{\hyperlink{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}{furniture}})\ \{}
-\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}{held\_furniture}}\ =\ \mbox{\hyperlink{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}{furniture}};}
-\DoxyCodeLine{00021\ \ \ \ \ \}}
-\DoxyCodeLine{00022\ }
-\DoxyCodeLine{00023\ \ \ \ \ [[nodiscard]]\ std::shared\_ptr<Furniture>\ \mbox{\hyperlink{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}{furniture}}()\ \{}
-\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}{held\_furniture}};}
-\DoxyCodeLine{00025\ \ \ \ \ \}}
-\DoxyCodeLine{00026\ }
-\DoxyCodeLine{00027\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00028\ \ \ \ \ std::shared\_ptr<Furniture>\ \mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}{held\_furniture}}\ =\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00029\ }
-\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_hold_furniture_a73de2a1161740a38a7618408ed65e70e}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ s.ext(\mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}{held\_furniture}},\ bitsery::ext::StdSmartPtr\{\});}
-\DoxyCodeLine{00035\ \ \ \ \ \}}
-\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_entity}{Entity}};}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_can_hold_furniture}{CanHoldFurniture}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_can_hold_furniture_a868d5521390d24cd3fa79e2db295c58a}{\string~CanHoldFurniture}}()\ \{\}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_hold_furniture_a03f8a785e985deb76f53684f279048f6}{empty}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}{held\_furniture}}\ ==\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00013\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_can_hold_furniture_a8cc0cd805b15e39cf60855c65df04823}{is\_holding\_furniture}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !\mbox{\hyperlink{struct_can_hold_furniture_a03f8a785e985deb76f53684f279048f6}{empty}}();\ \}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00016\ \ \ \ \ [[nodiscard]]\ std::shared\_ptr<T>\ \mbox{\hyperlink{struct_can_hold_furniture_a40da08393373a225102a56f7889693fb}{asT}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dynamic\_pointer\_cast<T>(\mbox{\hyperlink{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}{held\_furniture}});}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_hold_furniture_aabb8f2add67c7526177f24fc8afd7b7c}{update}}(std::shared\_ptr<Entity>\ \mbox{\hyperlink{struct_can_hold_furniture_aa855e1a6a60090ccb0c68249354f3c23}{furniture}})\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}{held\_furniture}}\ =\ \mbox{\hyperlink{struct_can_hold_furniture_aa855e1a6a60090ccb0c68249354f3c23}{furniture}};}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ [[nodiscard]]\ std::shared\_ptr<Entity>\ \mbox{\hyperlink{struct_can_hold_furniture_aa855e1a6a60090ccb0c68249354f3c23}{furniture}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}{held\_furniture}};}
+\DoxyCodeLine{00026\ \ \ \ \ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00029\ \ \ \ \ std::shared\_ptr<Entity>\ \mbox{\hyperlink{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}{held\_furniture}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_hold_furniture_a73de2a1161740a38a7618408ed65e70e}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ s.ext(\mbox{\hyperlink{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}{held\_furniture}},\ bitsery::ext::StdSmartPtr\{\});}
+\DoxyCodeLine{00037\ \ \ \ \ \}}
+\DoxyCodeLine{00038\ \};}
 
 \end{DoxyCode}

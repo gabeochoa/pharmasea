@@ -84,6 +84,7 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;array&gt;</code><br />
 <code>#include &lt;bitset&gt;</code><br />
+<code>#include &lt;map&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &quot;<a class="el" href="../../d6/dba/vendor__include_8h_source.html">../vendor_include.h</a>&quot;</code><br />
 </div>
@@ -105,8 +106,8 @@ Namespaces</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:a98fb6146960da76455a4eff579874b99"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbb/base__component_8h.html#a98fb6146960da76455a4eff579874b99">ComponentBitSet</a> = std::bitset&lt; <a class="el" href="../../d5/dbb/base__component_8h.html#a94f76e23195dbdeee169cc932589d8c2">max_num_components</a> &gt;</td></tr>
 <tr class="separator:a98fb6146960da76455a4eff579874b99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5aff059e5e50c5d4acef6bc563a2a367"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbb/base__component_8h.html#a5aff059e5e50c5d4acef6bc563a2a367">ComponentArray</a> = std::array&lt; std::shared_ptr&lt; <a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a> &gt;, <a class="el" href="../../d5/dbb/base__component_8h.html#a94f76e23195dbdeee169cc932589d8c2">max_num_components</a> &gt;</td></tr>
-<tr class="separator:a5aff059e5e50c5d4acef6bc563a2a367"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6590d811f937021135bb1e6d55f05efb"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbb/base__component_8h.html#a6590d811f937021135bb1e6d55f05efb">ComponentArray</a> = std::map&lt; int, <a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a> * &gt;</td></tr>
+<tr class="separator:a6590d811f937021135bb1e6d55f05efb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe9a936bbede2282b4b50d41672650fc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbb/base__component_8h.html#abe9a936bbede2282b4b50d41672650fc">ComponentID</a> = int</td></tr>
 <tr class="separator:abe9a936bbede2282b4b50d41672650fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -124,14 +125,14 @@ Variables</h2></td></tr>
 <tr class="separator:a94f76e23195dbdeee169cc932589d8c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="a5aff059e5e50c5d4acef6bc563a2a367" name="a5aff059e5e50c5d4acef6bc563a2a367"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5aff059e5e50c5d4acef6bc563a2a367">&#9670;&#160;</a></span>ComponentArray</h2>
+<a id="a6590d811f937021135bb1e6d55f05efb" name="a6590d811f937021135bb1e6d55f05efb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6590d811f937021135bb1e6d55f05efb">&#9670;&#160;</a></span>ComponentArray</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="../../d5/dbb/base__component_8h.html#a5aff059e5e50c5d4acef6bc563a2a367">ComponentArray</a> =  std::array&lt;std::shared_ptr&lt;<a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a>&gt;, <a class="el" href="../../d5/dbb/base__component_8h.html#a94f76e23195dbdeee169cc932589d8c2">max_num_components</a>&gt;</td>
+          <td class="memname">using <a class="el" href="../../d5/dbb/base__component_8h.html#a6590d811f937021135bb1e6d55f05efb">ComponentArray</a> =  std::map&lt;int, <a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a>*&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -186,6 +187,8 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="../../d6/dcf/component_8h.html#a3cfd95a0c62485a0528cb5e6a259f145">compare_and_validate_components()</a>, and <a class="el" href="../../dc/dc4/struct_entity.html#a906c2b31c7b4052674edb3a6b709a618">Entity::serialize()</a>.</p>
 
 </div>
 </div>

@@ -17,13 +17,11 @@ Inheritance diagram for Menu\+Layer\+:\begin{figure}[H]
 \item 
 virtual \mbox{\hyperlink{struct_menu_layer_ab644712b97d6f6bf31268dd00895e6c1}{$\sim$\+Menu\+Layer}} ()
 \item 
-virtual void \mbox{\hyperlink{struct_menu_layer_a7ec9ce6cad1c67d136d740c3058772e3}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event) override
+bool \mbox{\hyperlink{struct_menu_layer_ac4bf3d3020a3d6c6af09c8aae92892c8}{on\+Gamepad\+Axis\+Moved}} (\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&event) override
 \item 
-bool \mbox{\hyperlink{struct_menu_layer_ace8bbe23e769a464e8871f6e2c3f0d64}{on\+Gamepad\+Axis\+Moved}} (\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&event)
+bool \mbox{\hyperlink{struct_menu_layer_a64cd37d9ab99f53e41dda2d705f97756}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&event) override
 \item 
-bool \mbox{\hyperlink{struct_menu_layer_aaabdda0fd7af3a9735d2b9f199e7be8f}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&event)
-\item 
-bool \mbox{\hyperlink{struct_menu_layer_a6810e1ad06d05c3c86fa792d5dfc640b}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&event)
+bool \mbox{\hyperlink{struct_menu_layer_ada99047dc80c9e2f7f32bf97b89bbadc}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&event) override
 \item 
 void \mbox{\hyperlink{struct_menu_layer_a43ffc71d9e6fbb63a4b2ed9c453a7570}{play\+\_\+music}} ()
 \item 
@@ -50,7 +48,15 @@ virtual void \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{on
 \item 
 virtual void \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{on\+Draw}} (float elapsed)=0
 \item 
-virtual void \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&)=0
+void \mbox{\hyperlink{struct_layer_a753e388bb8e7416a7cc2b338b5566396}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_aaad763977a0828b342ddd6ac0af65aea}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_ad1793a53fff5c6516848d2a1a0c73a10}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_a4410643bde2d400ba6731f48ad5a8727}{on\+Gamepad\+Axis\+Moved}} (\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_affe784562ca969d024bb98866455985d}{on\+Char\+Pressed\+Event}} (\mbox{\hyperlink{struct_char_pressed_event}{Char\+Pressed\+Event}} \&)
 \item 
 const std\+::string \& \mbox{\hyperlink{struct_layer_a592dabab6ae280b7a3a3f4b195c9833b}{getname}} () const
 \end{DoxyCompactItemize}
@@ -130,61 +136,47 @@ Implements \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{Laye
 
 References \mbox{\hyperlink{namespaceext_a5bb9a44990202857eea129e5b983f183}{ext\+::clear\+\_\+background()}}, \mbox{\hyperlink{struct_menu_layer_a0b7dc7ff2977cc433b5925eab7a0695a}{draw\+\_\+menu\+\_\+buttons()}}, \mbox{\hyperlink{struct_menu_layer_a43861cb26d6b151c00ce7edddeeaef61}{draw\+\_\+title\+\_\+section()}}, \mbox{\hyperlink{namespaceui_1_1components_a5a694fe6b83009441f8e0d47f604bbb7}{ui\+::components\+::mk\+\_\+root()}}, \mbox{\hyperlink{profile_8h_a63464b82fef281acfdd000cc445df363}{PROFILE}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu\+::\+Root}}, and \mbox{\hyperlink{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}{ui\+\_\+context}}.
 
-\mbox{\Hypertarget{struct_menu_layer_a7ec9ce6cad1c67d136d740c3058772e3}\label{struct_menu_layer_a7ec9ce6cad1c67d136d740c3058772e3}} 
-\index{MenuLayer@{MenuLayer}!onEvent@{onEvent}}
-\index{onEvent@{onEvent}!MenuLayer@{MenuLayer}}
-\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
-{\footnotesize\ttfamily virtual void Menu\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_event}{Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Implements \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{Layer}}.
-
-
-
-References \mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{Event\+Dispatcher\+::dispatch()}}, \mbox{\hyperlink{struct_menu_layer_ace8bbe23e769a464e8871f6e2c3f0d64}{on\+Gamepad\+Axis\+Moved()}}, \mbox{\hyperlink{struct_menu_layer_a6810e1ad06d05c3c86fa792d5dfc640b}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_menu_layer_aaabdda0fd7af3a9735d2b9f199e7be8f}{on\+Key\+Pressed()}}.
-
-\mbox{\Hypertarget{struct_menu_layer_ace8bbe23e769a464e8871f6e2c3f0d64}\label{struct_menu_layer_ace8bbe23e769a464e8871f6e2c3f0d64}} 
+\mbox{\Hypertarget{struct_menu_layer_ac4bf3d3020a3d6c6af09c8aae92892c8}\label{struct_menu_layer_ac4bf3d3020a3d6c6af09c8aae92892c8}} 
 \index{MenuLayer@{MenuLayer}!onGamepadAxisMoved@{onGamepadAxisMoved}}
 \index{onGamepadAxisMoved@{onGamepadAxisMoved}!MenuLayer@{MenuLayer}}
 \doxysubsubsection{\texorpdfstring{onGamepadAxisMoved()}{onGamepadAxisMoved()}}
-{\footnotesize\ttfamily bool Menu\+Layer\+::on\+Gamepad\+Axis\+Moved (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily bool Menu\+Layer\+::on\+Gamepad\+Axis\+Moved (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_layer_a4410643bde2d400ba6731f48ad5a8727}{Layer}}.
 
 
 
 References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu\+::\+Root}}, and \mbox{\hyperlink{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}{ui\+\_\+context}}.
 
-
-
-Referenced by \mbox{\hyperlink{struct_menu_layer_a7ec9ce6cad1c67d136d740c3058772e3}{on\+Event()}}.
-
-\mbox{\Hypertarget{struct_menu_layer_a6810e1ad06d05c3c86fa792d5dfc640b}\label{struct_menu_layer_a6810e1ad06d05c3c86fa792d5dfc640b}} 
+\mbox{\Hypertarget{struct_menu_layer_ada99047dc80c9e2f7f32bf97b89bbadc}\label{struct_menu_layer_ada99047dc80c9e2f7f32bf97b89bbadc}} 
 \index{MenuLayer@{MenuLayer}!onGamepadButtonPressed@{onGamepadButtonPressed}}
 \index{onGamepadButtonPressed@{onGamepadButtonPressed}!MenuLayer@{MenuLayer}}
 \doxysubsubsection{\texorpdfstring{onGamepadButtonPressed()}{onGamepadButtonPressed()}}
-{\footnotesize\ttfamily bool Menu\+Layer\+::on\+Gamepad\+Button\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily bool Menu\+Layer\+::on\+Gamepad\+Button\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_layer_ad1793a53fff5c6516848d2a1a0c73a10}{Layer}}.
 
 
 
 References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu\+::\+Root}}, and \mbox{\hyperlink{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}{ui\+\_\+context}}.
 
-
-
-Referenced by \mbox{\hyperlink{struct_menu_layer_a7ec9ce6cad1c67d136d740c3058772e3}{on\+Event()}}.
-
-\mbox{\Hypertarget{struct_menu_layer_aaabdda0fd7af3a9735d2b9f199e7be8f}\label{struct_menu_layer_aaabdda0fd7af3a9735d2b9f199e7be8f}} 
+\mbox{\Hypertarget{struct_menu_layer_a64cd37d9ab99f53e41dda2d705f97756}\label{struct_menu_layer_a64cd37d9ab99f53e41dda2d705f97756}} 
 \index{MenuLayer@{MenuLayer}!onKeyPressed@{onKeyPressed}}
 \index{onKeyPressed@{onKeyPressed}!MenuLayer@{MenuLayer}}
 \doxysubsubsection{\texorpdfstring{onKeyPressed()}{onKeyPressed()}}
-{\footnotesize\ttfamily bool Menu\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily bool Menu\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_layer_aaad763977a0828b342ddd6ac0af65aea}{Layer}}.
 
 
 
 References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6afa03eb688ad8aa1db593d33dabd89bad}{menu\+::\+Root}}, and \mbox{\hyperlink{struct_menu_layer_af0414f85b674df40e8f05554445ffce9}{ui\+\_\+context}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_menu_layer_a7ec9ce6cad1c67d136d740c3058772e3}{on\+Event()}}.
 
 \mbox{\Hypertarget{struct_menu_layer_a36aee5e271312bc77d8c4a0c0e6d62ef}\label{struct_menu_layer_a36aee5e271312bc77d8c4a0c0e6d62ef}} 
 \index{MenuLayer@{MenuLayer}!onUpdate@{onUpdate}}
@@ -208,7 +200,7 @@ References \mbox{\hyperlink{struct_menu_layer_a43ffc71d9e6fbb63a4b2ed9c453a7570}
 
 
 
-References \mbox{\hyperlink{struct_music_library_aa483c444b8a7363bff5973295fe45217}{Music\+Library\+::get()}}.
+References \mbox{\hyperlink{globals_8h_ae9ba2614abaa79d7b8b4f053a870ba27}{ENABLE\+\_\+\+SOUND}}, and \mbox{\hyperlink{struct_music_library_aa483c444b8a7363bff5973295fe45217}{Music\+Library\+::get()}}.
 
 
 
@@ -225,10 +217,10 @@ Referenced by \mbox{\hyperlink{struct_menu_layer_a36aee5e271312bc77d8c4a0c0e6d62
 
 
 
-Referenced by \mbox{\hyperlink{struct_menu_layer_a0b7dc7ff2977cc433b5925eab7a0695a}{draw\+\_\+menu\+\_\+buttons()}}, \mbox{\hyperlink{struct_menu_layer_a43861cb26d6b151c00ce7edddeeaef61}{draw\+\_\+title\+\_\+section()}}, \mbox{\hyperlink{struct_menu_layer_a591228d2ab16b31e241af50e64f05111}{Menu\+Layer()}}, \mbox{\hyperlink{struct_menu_layer_ab855c8ffa24e0df05e3173fbc2579e08}{on\+Draw()}}, \mbox{\hyperlink{struct_menu_layer_ace8bbe23e769a464e8871f6e2c3f0d64}{on\+Gamepad\+Axis\+Moved()}}, \mbox{\hyperlink{struct_menu_layer_a6810e1ad06d05c3c86fa792d5dfc640b}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_menu_layer_aaabdda0fd7af3a9735d2b9f199e7be8f}{on\+Key\+Pressed()}}.
+Referenced by \mbox{\hyperlink{struct_menu_layer_a0b7dc7ff2977cc433b5925eab7a0695a}{draw\+\_\+menu\+\_\+buttons()}}, \mbox{\hyperlink{struct_menu_layer_a43861cb26d6b151c00ce7edddeeaef61}{draw\+\_\+title\+\_\+section()}}, \mbox{\hyperlink{struct_menu_layer_a591228d2ab16b31e241af50e64f05111}{Menu\+Layer()}}, \mbox{\hyperlink{struct_menu_layer_ab855c8ffa24e0df05e3173fbc2579e08}{on\+Draw()}}, \mbox{\hyperlink{struct_menu_layer_ac4bf3d3020a3d6c6af09c8aae92892c8}{on\+Gamepad\+Axis\+Moved()}}, \mbox{\hyperlink{struct_menu_layer_ada99047dc80c9e2f7f32bf97b89bbadc}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_menu_layer_a64cd37d9ab99f53e41dda2d705f97756}{on\+Key\+Pressed()}}.
 
 
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/\mbox{\hyperlink{menulayer_8h}{menulayer.\+h}}\end{DoxyCompactItemize}
+src/layers/\mbox{\hyperlink{menulayer_8h}{menulayer.\+h}}\end{DoxyCompactItemize}

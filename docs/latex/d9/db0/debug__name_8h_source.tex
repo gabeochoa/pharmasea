@@ -1,0 +1,34 @@
+\hypertarget{debug__name_8h_source}{}\doxysection{debug\+\_\+name.\+h}
+\label{debug__name_8h_source}\index{src/components/debug\_name.h@{src/components/debug\_name.h}}
+\mbox{\hyperlink{debug__name_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_debug_name}{DebugName}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_debug_name_ac339603fbea41528ea491004b4e9d634}{\string~DebugName}}()\ \{\}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_debug_name_a1fc0ebcb37aa375a6f4e424196541260}{update}}(\textcolor{keyword}{const}\ std::string\&\ new\_name)\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_debug_name_aeead70ec77d6b41036be31f6650064cb}{\_name}}\ =\ new\_name;}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_debug_name_ad654d1b42fbb6231616343fae777537d}{name\_length}}\ =\ (int)\ \mbox{\hyperlink{struct_debug_name_aeead70ec77d6b41036be31f6650064cb}{\_name}}.size();}
+\DoxyCodeLine{00013\ \ \ \ \ \}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ \mbox{\hyperlink{struct_debug_name_a7fd7a2891901b7e334934e360b091480}{name}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_debug_name_aeead70ec77d6b41036be31f6650064cb}{\_name}};\ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_debug_name_ad654d1b42fbb6231616343fae777537d}{name\_length}}\ =\ 1;}
+\DoxyCodeLine{00019\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_debug_name_aeead70ec77d6b41036be31f6650064cb}{\_name}}\ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_debug_name_aada8f63f3b3780dfdcd18324145e5354}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_debug_name_ad654d1b42fbb6231616343fae777537d}{name\_length}});}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ s.text1b(\mbox{\hyperlink{struct_debug_name_aeead70ec77d6b41036be31f6650064cb}{\_name}},\ \mbox{\hyperlink{struct_debug_name_ad654d1b42fbb6231616343fae777537d}{name\_length}});}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ \};}
+
+\end{DoxyCode}

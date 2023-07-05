@@ -2,9 +2,9 @@
 \label{keymap_8h}\index{src/engine/keymap.h@{src/engine/keymap.h}}
 {\ttfamily \#include $<$tuple$>$}\newline
 {\ttfamily \#include \char`\"{}raylib.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}../statemanager.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}../util.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}files.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}statemanager.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}util.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}event.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}gamepad\+\_\+axis\+\_\+with\+\_\+dir.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}log.\+h\char`\"{}}\newline
@@ -19,9 +19,11 @@ struct \mbox{\hyperlink{struct_key_map}{Key\+Map}}
 \doxysubsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
-typedef std\+::tuple$<$ \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}}, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}}, float, float $>$ \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}}
+typedef std\+::bitset$<$ \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac2a3856002491cf465725e8d1108f796}{Input\+Name\+::\+Last}} $>$ \mbox{\hyperlink{keymap_8h_aee799aa8b14c1cb0f4c8dc024ea4ea74}{Input\+Set}}
 \item 
-typedef std\+::vector$<$ \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}} $>$ \mbox{\hyperlink{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}{User\+Inputs}}
+typedef std\+::tuple$<$ \mbox{\hyperlink{keymap_8h_aee799aa8b14c1cb0f4c8dc024ea4ea74}{Input\+Set}}, float $>$ \mbox{\hyperlink{keymap_8h_af73d01ab87ab62b056bd8032af826d55}{User\+Input}}
+\item 
+typedef std\+::vector$<$ \mbox{\hyperlink{keymap_8h_af73d01ab87ab62b056bd8032af826d55}{User\+Input}} $>$ \mbox{\hyperlink{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}{User\+Inputs}}
 \item 
 typedef std\+::variant$<$ int, \mbox{\hyperlink{struct_gamepad_axis_with_dir}{Gamepad\+Axis\+With\+Dir}}, Gamepad\+Button $>$ \mbox{\hyperlink{keymap_8h_a8a184b37374d8c9878481fc98a88bb04}{Any\+Input}}
 \item 
@@ -63,11 +65,14 @@ enum \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}}
 \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac4a7d418a3f8ea0cb0e1cf59c52f92ba}{Target\+Back}}
 , \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aadcf4813d9324f48ab53ede2dee51bf1}{Target\+Left}}
 , \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa3ae835727e67e8e6f494c29c0a40633}{Target\+Right}}
-, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a2502969dfc0e0b7caa17d00a7a2e050f}{Toggle\+Planning}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706abddd5a4bc84390b8e0ca3d176fc52d31}{Toggle\+To\+Planning}}
 , \newline
-\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa1f5f5cc43ed0f342a89f7a40185b1a2}{Toggle\+Debug}}
+\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706afc0090697435a95aff2286dff47320a2}{Toggle\+To\+In\+Round}}
+, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa1f5f5cc43ed0f342a89f7a40185b1a2}{Toggle\+Debug}}
 , \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a33626f04f68a27fd6677d799de3624f5}{Toggle\+Network\+View}}
 , \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac54a06308208deba09fee2d3b04a228e}{Toggle\+Lobby}}
+, \newline
+\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac2a3856002491cf465725e8d1108f796}{Last}}
  \}
 \item 
 enum class \mbox{\hyperlink{keymap_8h_a39b053f07dff1a301fb9b8a42a1dc466}{Key\+Map\+Input\+Request\+Error}} \{ \mbox{\hyperlink{keymap_8h_a39b053f07dff1a301fb9b8a42a1dc466a56024f54b37533af536c42d78db12252}{NO\+\_\+\+VALID\+\_\+\+INPUT}} = 0
@@ -101,23 +106,29 @@ std\+::ostream \& \mbox{\hyperlink{keymap_8h_a4f8478343868d078a98f6663564b3a0a}{
 \doxysubsubsection{\texorpdfstring{FullMap}{FullMap}}
 {\footnotesize\ttfamily typedef std\+::map$<$\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}}, \mbox{\hyperlink{keymap_8h_a420042914c026eaa83ca56875f95f615}{Layer\+Mapping}}$>$ \mbox{\hyperlink{keymap_8h_a4e24bf07f8f900e7be1e8f70900251fe}{Full\+Map}}}
 
+\mbox{\Hypertarget{keymap_8h_aee799aa8b14c1cb0f4c8dc024ea4ea74}\label{keymap_8h_aee799aa8b14c1cb0f4c8dc024ea4ea74}} 
+\index{keymap.h@{keymap.h}!InputSet@{InputSet}}
+\index{InputSet@{InputSet}!keymap.h@{keymap.h}}
+\doxysubsubsection{\texorpdfstring{InputSet}{InputSet}}
+{\footnotesize\ttfamily typedef std\+::bitset$<$\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac2a3856002491cf465725e8d1108f796}{Input\+Name\+::\+Last}}$>$ \mbox{\hyperlink{keymap_8h_aee799aa8b14c1cb0f4c8dc024ea4ea74}{Input\+Set}}}
+
 \mbox{\Hypertarget{keymap_8h_a420042914c026eaa83ca56875f95f615}\label{keymap_8h_a420042914c026eaa83ca56875f95f615}} 
 \index{keymap.h@{keymap.h}!LayerMapping@{LayerMapping}}
 \index{LayerMapping@{LayerMapping}!keymap.h@{keymap.h}}
 \doxysubsubsection{\texorpdfstring{LayerMapping}{LayerMapping}}
 {\footnotesize\ttfamily typedef std\+::map$<$\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}}, \mbox{\hyperlink{keymap_8h_a06410b0127e2a80fd87236d0eaf124dc}{Any\+Inputs}}$>$ \mbox{\hyperlink{keymap_8h_a420042914c026eaa83ca56875f95f615}{Layer\+Mapping}}}
 
-\mbox{\Hypertarget{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}\label{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}} 
+\mbox{\Hypertarget{keymap_8h_af73d01ab87ab62b056bd8032af826d55}\label{keymap_8h_af73d01ab87ab62b056bd8032af826d55}} 
 \index{keymap.h@{keymap.h}!UserInput@{UserInput}}
 \index{UserInput@{UserInput}!keymap.h@{keymap.h}}
 \doxysubsubsection{\texorpdfstring{UserInput}{UserInput}}
-{\footnotesize\ttfamily typedef std\+::tuple$<$\mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu\+::\+State}}, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}}, float, float$>$ \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}}}
+{\footnotesize\ttfamily typedef std\+::tuple$<$\mbox{\hyperlink{keymap_8h_aee799aa8b14c1cb0f4c8dc024ea4ea74}{Input\+Set}}, float$>$ \mbox{\hyperlink{keymap_8h_af73d01ab87ab62b056bd8032af826d55}{User\+Input}}}
 
 \mbox{\Hypertarget{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}\label{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}} 
 \index{keymap.h@{keymap.h}!UserInputs@{UserInputs}}
 \index{UserInputs@{UserInputs}!keymap.h@{keymap.h}}
 \doxysubsubsection{\texorpdfstring{UserInputs}{UserInputs}}
-{\footnotesize\ttfamily typedef std\+::vector$<$\mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}}$>$ \mbox{\hyperlink{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}{User\+Inputs}}}
+{\footnotesize\ttfamily typedef std\+::vector$<$\mbox{\hyperlink{keymap_8h_af73d01ab87ab62b056bd8032af826d55}{User\+Input}}$>$ \mbox{\hyperlink{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}{User\+Inputs}}}
 
 
 
@@ -221,8 +232,12 @@ Target\+Left&\\
 Target\+Right&\\
 \hline
 
-\raisebox{\heightof{T}}[0pt][0pt]{\index{TogglePlanning@{TogglePlanning}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!TogglePlanning@{TogglePlanning}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a2502969dfc0e0b7caa17d00a7a2e050f}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706a2502969dfc0e0b7caa17d00a7a2e050f}} 
-Toggle\+Planning&\\
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ToggleToPlanning@{ToggleToPlanning}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!ToggleToPlanning@{ToggleToPlanning}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706abddd5a4bc84390b8e0ca3d176fc52d31}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706abddd5a4bc84390b8e0ca3d176fc52d31}} 
+Toggle\+To\+Planning&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ToggleToInRound@{ToggleToInRound}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!ToggleToInRound@{ToggleToInRound}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706afc0090697435a95aff2286dff47320a2}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706afc0090697435a95aff2286dff47320a2}} 
+Toggle\+To\+In\+Round&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{ToggleDebug@{ToggleDebug}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!ToggleDebug@{ToggleDebug}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa1f5f5cc43ed0f342a89f7a40185b1a2}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706aa1f5f5cc43ed0f342a89f7a40185b1a2}} 
@@ -235,6 +250,10 @@ Toggle\+Network\+View&\\
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{ToggleLobby@{ToggleLobby}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!ToggleLobby@{ToggleLobby}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac54a06308208deba09fee2d3b04a228e}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac54a06308208deba09fee2d3b04a228e}} 
 Toggle\+Lobby&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Last@{Last}!keymap.h@{keymap.h}}\index{keymap.h@{keymap.h}!Last@{Last}}}\mbox{\Hypertarget{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac2a3856002491cf465725e8d1108f796}\label{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706ac2a3856002491cf465725e8d1108f796}} 
+Last&\\
 \hline
 
 \end{DoxyEnumFields}

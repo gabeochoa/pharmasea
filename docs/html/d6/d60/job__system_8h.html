@@ -85,10 +85,9 @@ $(function() {
 <code>#include &quot;<a class="el" href="../../de/df1/can__perform__job_8h_source.html">../components/can_perform_job.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../df/de8/custom__item__position_8h_source.html">../components/custom_item_position.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d2/d80/transform_8h_source.html">../components/transform.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d3/d35/customer_8h_source.html">../customer.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/d83/entity_8h_source.html">../entity.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d9/d3c/entityhelper_8h_source.html">../entityhelper.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d1/d57/furniture_8h_source.html">../furniture.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d6/dba/vendor__include_8h_source.html">../vendor_include.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d3/dc4/logging__system_8h_source.html">logging_system.h</a>&quot;</code><br />
 </div>
 <p><a href="../../d6/d60/job__system_8h_source.html">Go to the source code of this file.</a></p>
@@ -96,28 +95,23 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:d9/d49/namespacesystem__manager"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html">system_manager</a></td></tr>
+<tr class="memdesc:d9/d49/namespacesystem__manager"><td class="mdescLeft">&#160;</td><td class="mdescRight">probably needed by map and not included in there <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:df/d3b/namespacesystem__manager_1_1job__system"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html">system_manager::job_system</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad8b7405a3b746fdefb863fb70601b9aa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d2/d63/struct_job.html">Job</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#ad8b7405a3b746fdefb863fb70601b9aa">system_manager::job_system::create_wandering_job</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity)</td></tr>
-<tr class="separator:ad8b7405a3b746fdefb863fb70601b9aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1cc7991207375ca3ef4a6a6173a120a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#ac1cc7991207375ca3ef4a6a6173a120a">system_manager::job_system::replace_job_with_job_type</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float, <a class="el" href="../../d3/d6a/job_8h.html#a60db90059c4f88592cc75a2f39ad3061">JobType</a> job_type)</td></tr>
-<tr class="separator:ac1cc7991207375ca3ef4a6a6173a120a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91c5cf4ebb0183ac60e693b92ad56932"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a91c5cf4ebb0183ac60e693b92ad56932">system_manager::job_system::find_new_job</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
-<tr class="separator:a91c5cf4ebb0183ac60e693b92ad56932"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63d25ed47ef475a3342147cfab6b7bd6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a63d25ed47ef475a3342147cfab6b7bd6">system_manager::job_system::replace_finished_job</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
-<tr class="separator:a63d25ed47ef475a3342147cfab6b7bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77e67ff8d61329379931c6d03ea68708"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a77e67ff8d61329379931c6d03ea68708">system_manager::job_system::update_job_information</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
-<tr class="separator:a77e67ff8d61329379931c6d03ea68708"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57fb5a88688ab6b19595bd8fe63d936e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a57fb5a88688ab6b19595bd8fe63d936e">system_manager::job_system::handle_job_holder_pushed</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
-<tr class="separator:a57fb5a88688ab6b19595bd8fe63d936e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80b48eb7354e4827e21605e41577269f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a80b48eb7354e4827e21605e41577269f">system_manager::job_system::update_position_from_job</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
-<tr class="separator:a80b48eb7354e4827e21605e41577269f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc930a9721c3daf854c661ec1905d357"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#adc930a9721c3daf854c661ec1905d357">system_manager::job_system::render_job_visual</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
 <tr class="separator:adc930a9721c3daf854c661ec1905d357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4062abda6494564722d1c6b89d8f85c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a4062abda6494564722d1c6b89d8f85c6">system_manager::job_system::ensure_has_job</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
+<tr class="separator:a4062abda6494564722d1c6b89d8f85c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2451d64a75f037c4c3446e283f93ed71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a2451d64a75f037c4c3446e283f93ed71">system_manager::job_system::run_job_tick</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;entity, float dt)</td></tr>
+<tr class="separator:a2451d64a75f037c4c3446e283f93ed71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abef3d2f4e1dfb4eae41dbcc0585d358b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#abef3d2f4e1dfb4eae41dbcc0585d358b">system_manager::job_system::cleanup_completed_job</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;entity, float)</td></tr>
+<tr class="separator:abef3d2f4e1dfb4eae41dbcc0585d358b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a683db36d0a63ed50f780384c7060a36b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a683db36d0a63ed50f780384c7060a36b">system_manager::job_system::in_round_update</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;entity, float dt)</td></tr>
+<tr class="separator:a683db36d0a63ed50f780384c7060a36b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

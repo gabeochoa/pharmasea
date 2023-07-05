@@ -13,6 +13,8 @@
 \item 
 bool \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_ab33d663206ac78392bb2752896638e97}{is\+\_\+connected}} () const
 \item 
+bool \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a5feb3b552998af308862cbda0d1023db}{is\+\_\+not\+\_\+connected}} () const
+\item 
 void \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a727738d2fec769da3fdf47ad4390877b}{set\+\_\+process\+\_\+message}} (std\+::function$<$ void(std\+::string)$>$ cb)
 \item 
 void \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_afe5554f1fa9d7c2eb174995fb4f3db73}{set\+\_\+address}} (Steam\+Networking\+IPAddr addy)
@@ -98,6 +100,20 @@ References \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a2c11c946e5eae3
 
 References \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_af3f84fbd7416602f5aa0e591a25c3b5c}{connection}}.
 
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a5feb3b552998af308862cbda0d1023db}{is\+\_\+not\+\_\+connected()}}.
+
+\mbox{\Hypertarget{structnetwork_1_1internal_1_1_client_a5feb3b552998af308862cbda0d1023db}\label{structnetwork_1_1internal_1_1_client_a5feb3b552998af308862cbda0d1023db}} 
+\index{network::internal::Client@{network::internal::Client}!is\_not\_connected@{is\_not\_connected}}
+\index{is\_not\_connected@{is\_not\_connected}!network::internal::Client@{network::internal::Client}}
+\doxysubsubsection{\texorpdfstring{is\_not\_connected()}{is\_not\_connected()}}
+{\footnotesize\ttfamily bool network\+::internal\+::\+Client\+::is\+\_\+not\+\_\+connected (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_ab33d663206ac78392bb2752896638e97}{is\+\_\+connected()}}.
+
 \mbox{\Hypertarget{structnetwork_1_1internal_1_1_client_ab40ca38e2734d0e329d376df2124de3c}\label{structnetwork_1_1internal_1_1_client_ab40ca38e2734d0e329d376df2124de3c}} 
 \index{network::internal::Client@{network::internal::Client}!on\_steam\_network\_connection\_status\_changed@{on\_steam\_network\_connection\_status\_changed}}
 \index{on\_steam\_network\_connection\_status\_changed@{on\_steam\_network\_connection\_status\_changed}!network::internal::Client@{network::internal::Client}}
@@ -106,7 +122,7 @@ References \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_af3f84fbd741660
 
 
 
-References \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_af3f84fbd7416602f5aa0e591a25c3b5c}{connection}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a564ca2b7994dda73e924066753b94616}{interface}}, \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_ac7e07b6fc614895bb0c20c05224387f5}{running}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_acc80b1277b4de601d5bd7d8d84b97da8}{send\+\_\+join\+\_\+info\+\_\+request()}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a2c11c946e5eae38f48bc045c6521103b}{send\+\_\+leave\+\_\+info\+\_\+request()}}.
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_af3f84fbd7416602f5aa0e591a25c3b5c}{connection}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a564ca2b7994dda73e924066753b94616}{interface}}, \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_ac7e07b6fc614895bb0c20c05224387f5}{running}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_acc80b1277b4de601d5bd7d8d84b97da8}{send\+\_\+join\+\_\+info\+\_\+request()}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a2c11c946e5eae38f48bc045c6521103b}{send\+\_\+leave\+\_\+info\+\_\+request()}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
 
 
 
@@ -120,7 +136,7 @@ Referenced by \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a6ff3aa743bf
 
 
 
-References \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a261623f308d2445aa81a8b6a801ed322}{callback\+\_\+instance}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_af3f84fbd7416602f5aa0e591a25c3b5c}{connection}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a564ca2b7994dda73e924066753b94616}{interface}}, \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\+\_\+\+ASSERT}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a78d2966d9c6169637cb6faf241c80f64}{process\+\_\+message\+\_\+cb}}, and \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_ac7e07b6fc614895bb0c20c05224387f5}{running}}.
+References \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a261623f308d2445aa81a8b6a801ed322}{callback\+\_\+instance}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_af3f84fbd7416602f5aa0e591a25c3b5c}{connection}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a564ca2b7994dda73e924066753b94616}{interface}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_a78d2966d9c6169637cb6faf241c80f64}{process\+\_\+message\+\_\+cb}}, \mbox{\hyperlink{structnetwork_1_1internal_1_1_client_ac7e07b6fc614895bb0c20c05224387f5}{running}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
 
 \mbox{\Hypertarget{structnetwork_1_1internal_1_1_client_acc80b1277b4de601d5bd7d8d84b97da8}\label{structnetwork_1_1internal_1_1_client_acc80b1277b4de601d5bd7d8d84b97da8}} 
 \index{network::internal::Client@{network::internal::Client}!send\_join\_info\_request@{send\_join\_info\_request}}

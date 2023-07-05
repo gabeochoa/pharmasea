@@ -93,6 +93,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a850c4e23c88879eb2cf010204b7cbc61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab33d663206ac78392bb2752896638e97"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#ab33d663206ac78392bb2752896638e97">is_connected</a> () const</td></tr>
 <tr class="separator:ab33d663206ac78392bb2752896638e97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5feb3b552998af308862cbda0d1023db"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a5feb3b552998af308862cbda0d1023db">is_not_connected</a> () const</td></tr>
+<tr class="separator:a5feb3b552998af308862cbda0d1023db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a727738d2fec769da3fdf47ad4390877b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a727738d2fec769da3fdf47ad4390877b">set_process_message</a> (std::function&lt; void(std::string)&gt; cb)</td></tr>
 <tr class="separator:a727738d2fec769da3fdf47ad4390877b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe5554f1fa9d7c2eb174995fb4f3db73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#afe5554f1fa9d7c2eb174995fb4f3db73">set_address</a> (SteamNetworkingIPAddr addy)</td></tr>
@@ -246,6 +248,35 @@ Static Public Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#af3f84fbd7416602f5aa0e591a25c3b5c">connection</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a5feb3b552998af308862cbda0d1023db">is_not_connected()</a>.</p>
+
+</div>
+</div>
+<a id="a5feb3b552998af308862cbda0d1023db" name="a5feb3b552998af308862cbda0d1023db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5feb3b552998af308862cbda0d1023db">&#9670;&#160;</a></span>is_not_connected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool network::internal::Client::is_not_connected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#ab33d663206ac78392bb2752896638e97">is_connected()</a>.</p>
+
 </div>
 </div>
 <a id="ab40ca38e2734d0e329d376df2124de3c" name="ab40ca38e2734d0e329d376df2124de3c"></a>
@@ -272,7 +303,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#af3f84fbd7416602f5aa0e591a25c3b5c">connection</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a564ca2b7994dda73e924066753b94616">interface</a>, <a class="el" href="../../d7/d7f/log_8h.html#aa1cfe5444875c8eca0ea6f6993977d6d">log_info</a>, <a class="el" href="../../d7/d7f/log_8h.html#a04af09851c431d178f16b24fa1aac1e9">log_warn</a>, <a class="el" href="../../dc/da7/assert_8h.html#a8e93b0cbf5fbae9c583903d9f31ef315">M_ASSERT</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#ac7e07b6fc614895bb0c20c05224387f5">running</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#acc80b1277b4de601d5bd7d8d84b97da8">send_join_info_request()</a>, and <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a2c11c946e5eae38f48bc045c6521103b">send_leave_info_request()</a>.</p>
+<p class="reference">References <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#af3f84fbd7416602f5aa0e591a25c3b5c">connection</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a564ca2b7994dda73e924066753b94616">interface</a>, <a class="el" href="../../d7/d7f/log_8h.html#aa1cfe5444875c8eca0ea6f6993977d6d">log_info</a>, <a class="el" href="../../d7/d7f/log_8h.html#a04af09851c431d178f16b24fa1aac1e9">log_warn</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#ac7e07b6fc614895bb0c20c05224387f5">running</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#acc80b1277b4de601d5bd7d8d84b97da8">send_join_info_request()</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a2c11c946e5eae38f48bc045c6521103b">send_leave_info_request()</a>, and <a class="el" href="../../dc/da7/assert_8h.html#a265be64fe52e8a92e89a75fe62153aa5">VALIDATE</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a6ff3aa743bff0a0a376cd754aec3a8b8">SteamNetConnectionStatusChangedCallback()</a>.</p>
 
@@ -301,7 +332,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a261623f308d2445aa81a8b6a801ed322">callback_instance</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#af3f84fbd7416602f5aa0e591a25c3b5c">connection</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a564ca2b7994dda73e924066753b94616">interface</a>, <a class="el" href="../../dc/da7/assert_8h.html#a8e93b0cbf5fbae9c583903d9f31ef315">M_ASSERT</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a78d2966d9c6169637cb6faf241c80f64">process_message_cb</a>, and <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#ac7e07b6fc614895bb0c20c05224387f5">running</a>.</p>
+<p class="reference">References <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a261623f308d2445aa81a8b6a801ed322">callback_instance</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#af3f84fbd7416602f5aa0e591a25c3b5c">connection</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a564ca2b7994dda73e924066753b94616">interface</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#a78d2966d9c6169637cb6faf241c80f64">process_message_cb</a>, <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html#ac7e07b6fc614895bb0c20c05224387f5">running</a>, and <a class="el" href="../../dc/da7/assert_8h.html#a265be64fe52e8a92e89a75fe62153aa5">VALIDATE</a>.</p>
 
 </div>
 </div>

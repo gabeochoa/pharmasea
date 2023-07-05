@@ -1,0 +1,163 @@
+\hypertarget{struct_has_dynamic_model_name}{}\doxysection{Has\+Dynamic\+Model\+Name Struct Reference}
+\label{struct_has_dynamic_model_name}\index{HasDynamicModelName@{HasDynamicModelName}}
+
+
+{\ttfamily \#include $<$has\+\_\+dynamic\+\_\+model\+\_\+name.\+h$>$}
+
+Inheritance diagram for Has\+Dynamic\+Model\+Name\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{db/d81/struct_has_dynamic_model_name}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{struct_has_dynamic_model_name_abf465c814a992363f7005715bbafd089}{Dynamic\+Type}} \{ \mbox{\hyperlink{struct_has_dynamic_model_name_abf465c814a992363f7005715bbafd089aa0c3e0ac88cea02c02786afed99fc928}{Open\+Closed}}
+ \}
+\item 
+typedef std\+::function$<$ std\+::string()$>$ \mbox{\hyperlink{struct_has_dynamic_model_name_a202e5f463db1bec31f5884fd908d900c}{Model\+Name\+Fetcher}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{struct_has_dynamic_model_name_a1d06595a3227061fe6ca0df0dbee6b89}{$\sim$\+Has\+Dynamic\+Model\+Name}} ()
+\item 
+std\+::string \mbox{\hyperlink{struct_has_dynamic_model_name_a12036bc16b4e183479101b2a331be03b}{fetch}} () const
+\item 
+void \mbox{\hyperlink{struct_has_dynamic_model_name_a727cc5b73af19d4631b75a53ecc2ee6d}{init}} (const std\+::string \&\+\_\+base\+\_\+name, \mbox{\hyperlink{struct_has_dynamic_model_name_abf465c814a992363f7005715bbafd089}{Dynamic\+Type}} type)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_base_component_ac74326a615877f3c1a17bc47787ad91e}{Base\+Component}} ()
+\item 
+\mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
+\item 
+virtual void \mbox{\hyperlink{struct_base_component_ac7389bfd8b903625667e1427ef3cb70b}{on\+Attach}} ()
+\item 
+virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_has_dynamic_model_name_a563aeb68a4bc20265e4b0eecacdb9e19}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_has_dynamic_model_name_abf465c814a992363f7005715bbafd089}{Dynamic\+Type}} \mbox{\hyperlink{struct_has_dynamic_model_name_ad6f6c51f935a95edf44636500e43db25}{dynamic\+\_\+type}}
+\item 
+std\+::string \mbox{\hyperlink{struct_has_dynamic_model_name_a2e5f932716cb5c883be90376b7baec9a}{base\+\_\+name}}
+\item 
+bool \mbox{\hyperlink{struct_has_dynamic_model_name_aef39bc9c19c1a913976c600200f2bd15}{initialized}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{struct_has_dynamic_model_name_a202e5f463db1bec31f5884fd908d900c}\label{struct_has_dynamic_model_name_a202e5f463db1bec31f5884fd908d900c}} 
+\index{HasDynamicModelName@{HasDynamicModelName}!ModelNameFetcher@{ModelNameFetcher}}
+\index{ModelNameFetcher@{ModelNameFetcher}!HasDynamicModelName@{HasDynamicModelName}}
+\doxysubsubsection{\texorpdfstring{ModelNameFetcher}{ModelNameFetcher}}
+{\footnotesize\ttfamily typedef std\+::function$<$std\+::string()$>$ \mbox{\hyperlink{struct_has_dynamic_model_name_a202e5f463db1bec31f5884fd908d900c}{Has\+Dynamic\+Model\+Name\+::\+Model\+Name\+Fetcher}}}
+
+
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{struct_has_dynamic_model_name_abf465c814a992363f7005715bbafd089}\label{struct_has_dynamic_model_name_abf465c814a992363f7005715bbafd089}} 
+\index{HasDynamicModelName@{HasDynamicModelName}!DynamicType@{DynamicType}}
+\index{DynamicType@{DynamicType}!HasDynamicModelName@{HasDynamicModelName}}
+\doxysubsubsection{\texorpdfstring{DynamicType}{DynamicType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{struct_has_dynamic_model_name_abf465c814a992363f7005715bbafd089}{Has\+Dynamic\+Model\+Name\+::\+Dynamic\+Type}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{OpenClosed@{OpenClosed}!HasDynamicModelName@{HasDynamicModelName}}\index{HasDynamicModelName@{HasDynamicModelName}!OpenClosed@{OpenClosed}}}\mbox{\Hypertarget{struct_has_dynamic_model_name_abf465c814a992363f7005715bbafd089aa0c3e0ac88cea02c02786afed99fc928}\label{struct_has_dynamic_model_name_abf465c814a992363f7005715bbafd089aa0c3e0ac88cea02c02786afed99fc928}} 
+Open\+Closed&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_has_dynamic_model_name_a1d06595a3227061fe6ca0df0dbee6b89}\label{struct_has_dynamic_model_name_a1d06595a3227061fe6ca0df0dbee6b89}} 
+\index{HasDynamicModelName@{HasDynamicModelName}!````~HasDynamicModelName@{$\sim$HasDynamicModelName}}
+\index{````~HasDynamicModelName@{$\sim$HasDynamicModelName}!HasDynamicModelName@{HasDynamicModelName}}
+\doxysubsubsection{\texorpdfstring{$\sim$HasDynamicModelName()}{~HasDynamicModelName()}}
+{\footnotesize\ttfamily virtual Has\+Dynamic\+Model\+Name\+::$\sim$\+Has\+Dynamic\+Model\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_has_dynamic_model_name_a12036bc16b4e183479101b2a331be03b}\label{struct_has_dynamic_model_name_a12036bc16b4e183479101b2a331be03b}} 
+\index{HasDynamicModelName@{HasDynamicModelName}!fetch@{fetch}}
+\index{fetch@{fetch}!HasDynamicModelName@{HasDynamicModelName}}
+\doxysubsubsection{\texorpdfstring{fetch()}{fetch()}}
+{\footnotesize\ttfamily std\+::string Has\+Dynamic\+Model\+Name\+::fetch (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_has_dynamic_model_name_a2e5f932716cb5c883be90376b7baec9a}{base\+\_\+name}}, \mbox{\hyperlink{struct_has_dynamic_model_name_ad6f6c51f935a95edf44636500e43db25}{dynamic\+\_\+type}}, \mbox{\hyperlink{struct_has_dynamic_model_name_aef39bc9c19c1a913976c600200f2bd15}{initialized}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, \mbox{\hyperlink{struct_has_dynamic_model_name_abf465c814a992363f7005715bbafd089aa0c3e0ac88cea02c02786afed99fc928}{Open\+Closed}}, and \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game\+::\+Planning}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_ac8bf560d525c02f0846838bb94db0f69}{system\+\_\+manager\+::refetch\+\_\+dynamic\+\_\+model\+\_\+names()}}.
+
+\mbox{\Hypertarget{struct_has_dynamic_model_name_a727cc5b73af19d4631b75a53ecc2ee6d}\label{struct_has_dynamic_model_name_a727cc5b73af19d4631b75a53ecc2ee6d}} 
+\index{HasDynamicModelName@{HasDynamicModelName}!init@{init}}
+\index{init@{init}!HasDynamicModelName@{HasDynamicModelName}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily void Has\+Dynamic\+Model\+Name\+::init (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{\+\_\+base\+\_\+name,  }\item[{\mbox{\hyperlink{struct_has_dynamic_model_name_abf465c814a992363f7005715bbafd089}{Dynamic\+Type}}}]{type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_has_dynamic_model_name_a2e5f932716cb5c883be90376b7baec9a}{base\+\_\+name}}, \mbox{\hyperlink{struct_has_dynamic_model_name_ad6f6c51f935a95edf44636500e43db25}{dynamic\+\_\+type}}, and \mbox{\hyperlink{struct_has_dynamic_model_name_aef39bc9c19c1a913976c600200f2bd15}{initialized}}.
+
+\mbox{\Hypertarget{struct_has_dynamic_model_name_a563aeb68a4bc20265e4b0eecacdb9e19}\label{struct_has_dynamic_model_name_a563aeb68a4bc20265e4b0eecacdb9e19}} 
+\index{HasDynamicModelName@{HasDynamicModelName}!serialize@{serialize}}
+\index{serialize@{serialize}!HasDynamicModelName@{HasDynamicModelName}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void Has\+Dynamic\+Model\+Name\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_has_dynamic_model_name_a2e5f932716cb5c883be90376b7baec9a}{base\+\_\+name}}, \mbox{\hyperlink{struct_has_dynamic_model_name_aef39bc9c19c1a913976c600200f2bd15}{initialized}}, and \mbox{\hyperlink{model__library_8h_a0627a5d0be397cca448133e3d4ad9e72}{MAX\+\_\+\+MODEL\+\_\+\+NAME\+\_\+\+LENGTH}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_has_dynamic_model_name_a2e5f932716cb5c883be90376b7baec9a}\label{struct_has_dynamic_model_name_a2e5f932716cb5c883be90376b7baec9a}} 
+\index{HasDynamicModelName@{HasDynamicModelName}!base\_name@{base\_name}}
+\index{base\_name@{base\_name}!HasDynamicModelName@{HasDynamicModelName}}
+\doxysubsubsection{\texorpdfstring{base\_name}{base\_name}}
+{\footnotesize\ttfamily std\+::string Has\+Dynamic\+Model\+Name\+::base\+\_\+name\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_has_dynamic_model_name_a12036bc16b4e183479101b2a331be03b}{fetch()}}, \mbox{\hyperlink{struct_has_dynamic_model_name_a727cc5b73af19d4631b75a53ecc2ee6d}{init()}}, and \mbox{\hyperlink{struct_has_dynamic_model_name_a563aeb68a4bc20265e4b0eecacdb9e19}{serialize()}}.
+
+\mbox{\Hypertarget{struct_has_dynamic_model_name_ad6f6c51f935a95edf44636500e43db25}\label{struct_has_dynamic_model_name_ad6f6c51f935a95edf44636500e43db25}} 
+\index{HasDynamicModelName@{HasDynamicModelName}!dynamic\_type@{dynamic\_type}}
+\index{dynamic\_type@{dynamic\_type}!HasDynamicModelName@{HasDynamicModelName}}
+\doxysubsubsection{\texorpdfstring{dynamic\_type}{dynamic\_type}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_has_dynamic_model_name_abf465c814a992363f7005715bbafd089}{Dynamic\+Type}} Has\+Dynamic\+Model\+Name\+::dynamic\+\_\+type\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_has_dynamic_model_name_a12036bc16b4e183479101b2a331be03b}{fetch()}}, and \mbox{\hyperlink{struct_has_dynamic_model_name_a727cc5b73af19d4631b75a53ecc2ee6d}{init()}}.
+
+\mbox{\Hypertarget{struct_has_dynamic_model_name_aef39bc9c19c1a913976c600200f2bd15}\label{struct_has_dynamic_model_name_aef39bc9c19c1a913976c600200f2bd15}} 
+\index{HasDynamicModelName@{HasDynamicModelName}!initialized@{initialized}}
+\index{initialized@{initialized}!HasDynamicModelName@{HasDynamicModelName}}
+\doxysubsubsection{\texorpdfstring{initialized}{initialized}}
+{\footnotesize\ttfamily bool Has\+Dynamic\+Model\+Name\+::initialized = false\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_has_dynamic_model_name_a12036bc16b4e183479101b2a331be03b}{fetch()}}, \mbox{\hyperlink{struct_has_dynamic_model_name_a727cc5b73af19d4631b75a53ecc2ee6d}{init()}}, and \mbox{\hyperlink{struct_has_dynamic_model_name_a563aeb68a4bc20265e4b0eecacdb9e19}{serialize()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/components/\mbox{\hyperlink{has__dynamic__model__name_8h}{has\+\_\+dynamic\+\_\+model\+\_\+name.\+h}}\end{DoxyCompactItemize}

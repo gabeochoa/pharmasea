@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['msgtype_0',['MsgType',['../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989f',1,'network::ClientPacket']]]
+  ['loglevel_0',['LogLevel',['../d7/d7f/log_8h.html#aca1fd1d8935433e6ba2e3918214e07f9',1,'log.h']]]
 ];

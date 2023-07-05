@@ -73,6 +73,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="../../d2/db7/struct_has_work-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">HasWork Struct Reference</div></div>
 </div><!--header-->
@@ -91,36 +92,86 @@ Inheritance diagram for HasWork:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ab0a451df9831640c320a8c5283f17869"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#ab0a451df9831640c320a8c5283f17869">HasWork</a> ()</td></tr>
+<tr class="separator:ab0a451df9831640c320a8c5283f17869"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a224b1220c7d6da5365b54a62e2927755"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#a224b1220c7d6da5365b54a62e2927755">~HasWork</a> ()</td></tr>
 <tr class="separator:a224b1220c7d6da5365b54a62e2927755"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44460cca69d2b81db432c05672381c54"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#a44460cca69d2b81db432c05672381c54">is_work_complete</a> () const</td></tr>
+<tr class="separator:a44460cca69d2b81db432c05672381c54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb83ec430bea41e16fa458c3bc9a60a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#abb83ec430bea41e16fa458c3bc9a60a0">has_work</a> () const</td></tr>
 <tr class="separator:abb83ec430bea41e16fa458c3bc9a60a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09d7df2da5b7913fdb2c36734ab751e0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#a09d7df2da5b7913fdb2c36734ab751e0">doesnt_have_work</a> () const</td></tr>
+<tr class="separator:a09d7df2da5b7913fdb2c36734ab751e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa063e1e210ccb3147fc953ad010d4c07"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#aa063e1e210ccb3147fc953ad010d4c07">can_show_progress_bar</a> () const</td></tr>
+<tr class="separator:aa063e1e210ccb3147fc953ad010d4c07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7934f75b6695b9b8473de975774333b0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#a7934f75b6695b9b8473de975774333b0">dont_show_progres_bar</a> () const</td></tr>
+<tr class="separator:a7934f75b6695b9b8473de975774333b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aede778a358284a4c733ae4286ed70972"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#aede778a358284a4c733ae4286ed70972">increase_pct</a> (float amt)</td></tr>
+<tr class="separator:aede778a358284a4c733ae4286ed70972"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a495276e17df053445a48bbd73611824c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#a495276e17df053445a48bbd73611824c">update_pct</a> (float pct)</td></tr>
 <tr class="separator:a495276e17df053445a48bbd73611824c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae63d3446af6aa7c5fae6f0c20e6e5b11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#ae63d3446af6aa7c5fae6f0c20e6e5b11">init</a> (std::function&lt; void(<a class="el" href="../../d5/da1/struct_has_work.html">HasWork</a> &amp;, std::shared_ptr&lt; <a class="el" href="../../d3/de1/struct_person.html">Person</a> &gt; person, float dt)&gt; worker)</td></tr>
-<tr class="separator:ae63d3446af6aa7c5fae6f0c20e6e5b11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba9533349579cd467529bd512b32c458"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#aba9533349579cd467529bd512b32c458">set_has_more_work</a> ()</td></tr>
+<tr class="separator:aba9533349579cd467529bd512b32c458"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9324672d5a46c629e7be2d3ef617669"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#af9324672d5a46c629e7be2d3ef617669">reset_pct</a> ()</td></tr>
+<tr class="separator:af9324672d5a46c629e7be2d3ef617669"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91ec012c904f10c64fd0b7fa5f5eef2c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#a91ec012c904f10c64fd0b7fa5f5eef2c">scale_length</a> (int length)</td></tr>
+<tr class="separator:a91ec012c904f10c64fd0b7fa5f5eef2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ae7f5409d11e49f045da7ef8c6069e6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#a9ae7f5409d11e49f045da7ef8c6069e6">init</a> (std::function&lt; void(std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; owner, <a class="el" href="../../d5/da1/struct_has_work.html">HasWork</a> &amp;, std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; person, float dt)&gt; worker)</td></tr>
+<tr class="separator:a9ae7f5409d11e49f045da7ef8c6069e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_struct_base_component"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_struct_base_component')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a></td></tr>
 <tr class="memitem:ac74326a615877f3c1a17bc47787ad91e inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#ac74326a615877f3c1a17bc47787ad91e">BaseComponent</a> ()</td></tr>
 <tr class="separator:ac74326a615877f3c1a17bc47787ad91e inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abec738e46eb8875697d7f9497958543d inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#abec738e46eb8875697d7f9497958543d">BaseComponent</a> (<a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:abec738e46eb8875697d7f9497958543d inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7389bfd8b903625667e1427ef3cb70b inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#ac7389bfd8b903625667e1427ef3cb70b">onAttach</a> ()</td></tr>
+<tr class="separator:ac7389bfd8b903625667e1427ef3cb70b inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab281730e838c4cb33e96ab6d6b7fe15f inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#ab281730e838c4cb33e96ab6d6b7fe15f">~BaseComponent</a> ()</td></tr>
 <tr class="separator:ab281730e838c4cb33e96ab6d6b7fe15f inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aaf23f2be1f43804e8389159d7aae46e0"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#aaf23f2be1f43804e8389159d7aae46e0">pct_work_complete</a> = 0.f</td></tr>
-<tr class="separator:aaf23f2be1f43804e8389159d7aae46e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad660f8476be1978b5f1714b2cc4aa6ff"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="../../d5/da1/struct_has_work.html">HasWork</a> &amp;, std::shared_ptr&lt; <a class="el" href="../../d3/de1/struct_person.html">Person</a> &gt; person, float dt)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#ad660f8476be1978b5f1714b2cc4aa6ff">do_work</a></td></tr>
-<tr class="separator:ad660f8476be1978b5f1714b2cc4aa6ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf74192e7ddcffd2ad4f9bd789120693"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; owner, <a class="el" href="../../d5/da1/struct_has_work.html">HasWork</a> &amp;, std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; person, float dt)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#acf74192e7ddcffd2ad4f9bd789120693">do_work</a></td></tr>
+<tr class="separator:acf74192e7ddcffd2ad4f9bd789120693"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:a12a29927ddaafa2476d5a4c2cca661f3"><td class="memTemplParams" colspan="2">template&lt;typename S &gt; </td></tr>
 <tr class="memitem:a12a29927ddaafa2476d5a4c2cca661f3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#a12a29927ddaafa2476d5a4c2cca661f3">serialize</a> (S &amp;s)</td></tr>
 <tr class="separator:a12a29927ddaafa2476d5a4c2cca661f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:aaf23f2be1f43804e8389159d7aae46e0"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#aaf23f2be1f43804e8389159d7aae46e0">pct_work_complete</a></td></tr>
+<tr class="separator:aaf23f2be1f43804e8389159d7aae46e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07ac88e6244e6bf08e80c4373bd3db4d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/struct_has_work.html#a07ac88e6244e6bf08e80c4373bd3db4d">more_to_do</a></td></tr>
+<tr class="separator:a07ac88e6244e6bf08e80c4373bd3db4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ab0a451df9831640c320a8c5283f17869" name="ab0a451df9831640c320a8c5283f17869"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0a451df9831640c320a8c5283f17869">&#9670;&#160;</a></span>HasWork()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">HasWork::HasWork </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a224b1220c7d6da5365b54a62e2927755" name="a224b1220c7d6da5365b54a62e2927755"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a224b1220c7d6da5365b54a62e2927755">&#9670;&#160;</a></span>~HasWork()</h2>
 
@@ -147,6 +198,91 @@ Private Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa063e1e210ccb3147fc953ad010d4c07" name="aa063e1e210ccb3147fc953ad010d4c07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa063e1e210ccb3147fc953ad010d4c07">&#9670;&#160;</a></span>can_show_progress_bar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HasWork::can_show_progress_bar </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#abb83ec430bea41e16fa458c3bc9a60a0">has_work()</a>, and <a class="el" href="../../d5/da1/struct_has_work.html#aaf23f2be1f43804e8389159d7aae46e0">pct_work_complete</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d5/da1/struct_has_work.html#a7934f75b6695b9b8473de975774333b0">dont_show_progres_bar()</a>.</p>
+
+</div>
+</div>
+<a id="a09d7df2da5b7913fdb2c36734ab751e0" name="a09d7df2da5b7913fdb2c36734ab751e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09d7df2da5b7913fdb2c36734ab751e0">&#9670;&#160;</a></span>doesnt_have_work()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HasWork::doesnt_have_work </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#abb83ec430bea41e16fa458c3bc9a60a0">has_work()</a>.</p>
+
+</div>
+</div>
+<a id="a7934f75b6695b9b8473de975774333b0" name="a7934f75b6695b9b8473de975774333b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7934f75b6695b9b8473de975774333b0">&#9670;&#160;</a></span>dont_show_progres_bar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HasWork::dont_show_progres_bar </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#aa063e1e210ccb3147fc953ad010d4c07">can_show_progress_bar()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#abc7e8a0a6363013bf0a0776751ce06d1">system_manager::render_manager::render_progress_bar()</a>.</p>
+
+</div>
+</div>
 <a id="abb83ec430bea41e16fa458c3bc9a60a0" name="abb83ec430bea41e16fa458c3bc9a60a0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abb83ec430bea41e16fa458c3bc9a60a0">&#9670;&#160;</a></span>has_work()</h2>
 
@@ -170,12 +306,44 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#abc7e8a0a6363013bf0a0776751ce06d1">system_manager::render_manager::render_progress_bar()</a>.</p>
+<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#a07ac88e6244e6bf08e80c4373bd3db4d">more_to_do</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d5/da1/struct_has_work.html#aa063e1e210ccb3147fc953ad010d4c07">can_show_progress_bar()</a>, and <a class="el" href="../../d5/da1/struct_has_work.html#a09d7df2da5b7913fdb2c36734ab751e0">doesnt_have_work()</a>.</p>
 
 </div>
 </div>
-<a id="ae63d3446af6aa7c5fae6f0c20e6e5b11" name="ae63d3446af6aa7c5fae6f0c20e6e5b11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae63d3446af6aa7c5fae6f0c20e6e5b11">&#9670;&#160;</a></span>init()</h2>
+<a id="aede778a358284a4c733ae4286ed70972" name="aede778a358284a4c733ae4286ed70972"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aede778a358284a4c733ae4286ed70972">&#9670;&#160;</a></span>increase_pct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HasWork::increase_pct </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>amt</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#aaf23f2be1f43804e8389159d7aae46e0">pct_work_complete</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d8/dc6/namespaceentities.html#a42ce60037b7f401840b866a2badc65cd">entities::make_character_switcher()</a>, <a class="el" href="../../d8/dc6/namespaceentities.html#a5b37b71d0d1f573bc67c8de98c023baa">entities::make_pill_dispenser()</a>, and <a class="el" href="../../d8/dc6/namespaceentities.html#abf094d17eb47d98e98fd5ccfec00c1fc">entities::make_table()</a>.</p>
+
+</div>
+</div>
+<a id="a9ae7f5409d11e49f045da7ef8c6069e6" name="a9ae7f5409d11e49f045da7ef8c6069e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ae7f5409d11e49f045da7ef8c6069e6">&#9670;&#160;</a></span>init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -186,7 +354,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void HasWork::init </td>
           <td>(</td>
-          <td class="paramtype">std::function&lt; void(<a class="el" href="../../d5/da1/struct_has_work.html">HasWork</a> &amp;, std::shared_ptr&lt; <a class="el" href="../../d3/de1/struct_person.html">Person</a> &gt; person, float dt)&gt;&#160;</td>
+          <td class="paramtype">std::function&lt; void(std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; owner, <a class="el" href="../../d5/da1/struct_has_work.html">HasWork</a> &amp;, std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; person, float dt)&gt;&#160;</td>
           <td class="paramname"><em>worker</em></td><td>)</td>
           <td></td>
         </tr>
@@ -198,7 +366,95 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#ad660f8476be1978b5f1714b2cc4aa6ff">do_work</a>.</p>
+<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#acf74192e7ddcffd2ad4f9bd789120693">do_work</a>.</p>
+
+</div>
+</div>
+<a id="a44460cca69d2b81db432c05672381c54" name="a44460cca69d2b81db432c05672381c54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44460cca69d2b81db432c05672381c54">&#9670;&#160;</a></span>is_work_complete()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HasWork::is_work_complete </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#aaf23f2be1f43804e8389159d7aae46e0">pct_work_complete</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d8/dc6/namespaceentities.html#a42ce60037b7f401840b866a2badc65cd">entities::make_character_switcher()</a>, <a class="el" href="../../d8/dc6/namespaceentities.html#a5b37b71d0d1f573bc67c8de98c023baa">entities::make_pill_dispenser()</a>, and <a class="el" href="../../d8/dc6/namespaceentities.html#abf094d17eb47d98e98fd5ccfec00c1fc">entities::make_table()</a>.</p>
+
+</div>
+</div>
+<a id="af9324672d5a46c629e7be2d3ef617669" name="af9324672d5a46c629e7be2d3ef617669"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9324672d5a46c629e7be2d3ef617669">&#9670;&#160;</a></span>reset_pct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HasWork::reset_pct </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#aaf23f2be1f43804e8389159d7aae46e0">pct_work_complete</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d8/dc6/namespaceentities.html#a42ce60037b7f401840b866a2badc65cd">entities::make_character_switcher()</a>, <a class="el" href="../../d8/dc6/namespaceentities.html#a5b37b71d0d1f573bc67c8de98c023baa">entities::make_pill_dispenser()</a>, and <a class="el" href="../../d8/dc6/namespaceentities.html#abf094d17eb47d98e98fd5ccfec00c1fc">entities::make_table()</a>.</p>
+
+</div>
+</div>
+<a id="a91ec012c904f10c64fd0b7fa5f5eef2c" name="a91ec012c904f10c64fd0b7fa5f5eef2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91ec012c904f10c64fd0b7fa5f5eef2c">&#9670;&#160;</a></span>scale_length()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int HasWork::scale_length </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>length</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#aaf23f2be1f43804e8389159d7aae46e0">pct_work_complete</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#abc7e8a0a6363013bf0a0776751ce06d1">system_manager::render_manager::render_progress_bar()</a>.</p>
 
 </div>
 </div>
@@ -228,7 +484,34 @@ template&lt;typename S &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#aaf23f2be1f43804e8389159d7aae46e0">pct_work_complete</a>.</p>
+<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#a07ac88e6244e6bf08e80c4373bd3db4d">more_to_do</a>, and <a class="el" href="../../d5/da1/struct_has_work.html#aaf23f2be1f43804e8389159d7aae46e0">pct_work_complete</a>.</p>
+
+</div>
+</div>
+<a id="aba9533349579cd467529bd512b32c458" name="aba9533349579cd467529bd512b32c458"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba9533349579cd467529bd512b32c458">&#9670;&#160;</a></span>set_has_more_work()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HasWork::set_has_more_work </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d5/da1/struct_has_work.html#a07ac88e6244e6bf08e80c4373bd3db4d">more_to_do</a>.</p>
 
 </div>
 </div>
@@ -261,19 +544,43 @@ template&lt;typename S &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ad660f8476be1978b5f1714b2cc4aa6ff" name="ad660f8476be1978b5f1714b2cc4aa6ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad660f8476be1978b5f1714b2cc4aa6ff">&#9670;&#160;</a></span>do_work</h2>
+<a id="acf74192e7ddcffd2ad4f9bd789120693" name="acf74192e7ddcffd2ad4f9bd789120693"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf74192e7ddcffd2ad4f9bd789120693">&#9670;&#160;</a></span>do_work</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::function&lt;void(<a class="el" href="../../d5/da1/struct_has_work.html">HasWork</a>&amp;, std::shared_ptr&lt;<a class="el" href="../../d3/de1/struct_person.html">Person</a>&gt; person, float dt)&gt; HasWork::do_work</td>
+          <td class="memname">std::function&lt;void(std::shared_ptr&lt;<a class="el" href="../../dc/dc4/struct_entity.html">Entity</a>&gt; owner, <a class="el" href="../../d5/da1/struct_has_work.html">HasWork</a>&amp;, std::shared_ptr&lt;<a class="el" href="../../dc/dc4/struct_entity.html">Entity</a>&gt; person, float dt)&gt; HasWork::do_work</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d5/da1/struct_has_work.html#ae63d3446af6aa7c5fae6f0c20e6e5b11">init()</a>, and <a class="el" href="../../d9/d49/namespacesystem__manager.html#a947c5a65ae1a78b3c4e46fdf76e2f86b">system_manager::process_input()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d5/da1/struct_has_work.html#a9ae7f5409d11e49f045da7ef8c6069e6">init()</a>, and <a class="el" href="../../d5/dea/namespacesystem__manager_1_1input__process__manager_1_1inround.html#a0cb152e15774f293b74fdb240a12dbf5">system_manager::input_process_manager::inround::work_furniture()</a>.</p>
+
+</div>
+</div>
+<a id="a07ac88e6244e6bf08e80c4373bd3db4d" name="a07ac88e6244e6bf08e80c4373bd3db4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07ac88e6244e6bf08e80c4373bd3db4d">&#9670;&#160;</a></span>more_to_do</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HasWork::more_to_do</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="../../d5/da1/struct_has_work.html#abb83ec430bea41e16fa458c3bc9a60a0">has_work()</a>, <a class="el" href="../../d5/da1/struct_has_work.html#a12a29927ddaafa2476d5a4c2cca661f3">serialize()</a>, and <a class="el" href="../../d5/da1/struct_has_work.html#aba9533349579cd467529bd512b32c458">set_has_more_work()</a>.</p>
 
 </div>
 </div>
@@ -282,14 +589,22 @@ template&lt;typename S &gt; </div>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">float HasWork::pct_work_complete = 0.f</td>
+          <td class="memname">float HasWork::pct_work_complete</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d0/d8b/struct_furniture.html#a358f91902463b0bb9d57f8b92c35d65c">Furniture::make_character_switcher()</a>, <a class="el" href="../../d0/d8b/struct_furniture.html#a51c9d8d1768b4561bf0f2a0ea7132f6e">Furniture::make_table()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#abc7e8a0a6363013bf0a0776751ce06d1">system_manager::render_manager::render_progress_bar()</a>, <a class="el" href="../../d5/da1/struct_has_work.html#a12a29927ddaafa2476d5a4c2cca661f3">serialize()</a>, and <a class="el" href="../../d5/da1/struct_has_work.html#a495276e17df053445a48bbd73611824c">update_pct()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d5/da1/struct_has_work.html#aa063e1e210ccb3147fc953ad010d4c07">can_show_progress_bar()</a>, <a class="el" href="../../d5/da1/struct_has_work.html#aede778a358284a4c733ae4286ed70972">increase_pct()</a>, <a class="el" href="../../d5/da1/struct_has_work.html#a44460cca69d2b81db432c05672381c54">is_work_complete()</a>, <a class="el" href="../../d5/da1/struct_has_work.html#af9324672d5a46c629e7be2d3ef617669">reset_pct()</a>, <a class="el" href="../../d5/da1/struct_has_work.html#a91ec012c904f10c64fd0b7fa5f5eef2c">scale_length()</a>, <a class="el" href="../../d5/da1/struct_has_work.html#a12a29927ddaafa2476d5a4c2cca661f3">serialize()</a>, and <a class="el" href="../../d5/da1/struct_has_work.html#a495276e17df053445a48bbd73611824c">update_pct()</a>.</p>
 
 </div>
 </div>

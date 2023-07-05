@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['networkrequesterror_0',['NetworkRequestError',['../db/d3f/namespacenetwork.html#a5fbe1c266036b15a1e603ec0cd2d6691',1,'network']]]
+  ['msgtype_0',['MsgType',['../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989f',1,'network::ClientPacket']]]
 ];

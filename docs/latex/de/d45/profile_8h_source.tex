@@ -68,12 +68,12 @@
 \DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{structprofile_1_1function__raii_a384a7cf55658b31d2b70bd1d2ff42c9b}{function\_raii}}(\textcolor{keyword}{const}\ std::string\&\ fileloc,\ \textcolor{keyword}{const}\ std::string\&\ n)}
 \DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{structprofile_1_1function__raii_a9056c99d83b445fef138f70753301bee}{filename}}(fileloc),}
 \DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structprofile_1_1function__raii_a3c791960a81e1568cbc9bddd2e13f5ba}{name}}(n),}
-\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structprofile_1_1function__raii_a1084a234bc683201581fd8e31deeebfd}{start}}(\mbox{\hyperlink{namespacestd}{std}}::chrono::high\_resolution\_clock::now())\ \{\}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structprofile_1_1function__raii_a1084a234bc683201581fd8e31deeebfd}{start}}(\mbox{\hyperlink{namespacestd}{std}}::chrono::high\_resolution\_clock::\mbox{\hyperlink{namespacenow}{now}}())\ \{\}}
 \DoxyCodeLine{00068\ }
 \DoxyCodeLine{00069\ \ \ \ \ \mbox{\hyperlink{structprofile_1_1function__raii_ae7402f628f594aa9297fc57ad88c060f}{\string~function\_raii}}()\ \{}
 \DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ end\ =\ std::chrono::high\_resolution\_clock::now();}
 \DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ duration\ =}
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ std::chrono::duration\_cast<std::chrono::nanoseconds>(end\ -\/\ \mbox{\hyperlink{structprofile_1_1function__raii_a1084a234bc683201581fd8e31deeebfd}{start}})}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ (float)\ std::chrono::duration\_cast<std::chrono::nanoseconds>(end\ -\/\ \mbox{\hyperlink{structprofile_1_1function__raii_a1084a234bc683201581fd8e31deeebfd}{start}})}
 \DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .count();}
 \DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ Profiler::get().add\_sample(\mbox{\hyperlink{structprofile_1_1function__raii_a3c791960a81e1568cbc9bddd2e13f5ba}{name}},\ \mbox{\hyperlink{structprofile_1_1function__raii_a9056c99d83b445fef138f70753301bee}{filename}},\ duration);}
 \DoxyCodeLine{00075\ \ \ \ \ \}}

@@ -14,6 +14,16 @@ Inheritance diagram for Can\+Be\+Pushed\+:\begin{figure}[H]
 \begin{DoxyCompactItemize}
 \item 
 virtual \mbox{\hyperlink{struct_can_be_pushed_ab94f04265181b163666c40e8a37f3680}{$\sim$\+Can\+Be\+Pushed}} ()
+\item 
+\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\+\_\+force}} () const
+\item 
+void \mbox{\hyperlink{struct_can_be_pushed_a7e7bca88e6385e36f0a3cf38258a4117}{update}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} f)
+\item 
+void \mbox{\hyperlink{struct_can_be_pushed_a48256579ead1ce851b64963321428d9e}{update\+\_\+x}} (float x)
+\item 
+void \mbox{\hyperlink{struct_can_be_pushed_aa3ab7ac93d72b0881c2373ecaf7c91d7}{update\+\_\+y}} (float y)
+\item 
+void \mbox{\hyperlink{struct_can_be_pushed_a4897ebe9d2d4e9fd2963126b993a705f}{update\+\_\+z}} (float z)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
 \begin{DoxyCompactItemize}
@@ -22,17 +32,19 @@ virtual \mbox{\hyperlink{struct_can_be_pushed_ab94f04265181b163666c40e8a37f3680}
 \item 
 \mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
 \item 
-virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
-\end{DoxyCompactItemize}
-\doxysubsection*{Public Attributes}
-\begin{DoxyCompactItemize}
+virtual void \mbox{\hyperlink{struct_base_component_ac7389bfd8b903625667e1427ef3cb70b}{on\+Attach}} ()
 \item 
-\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_can_be_pushed_aae536d30c8542ddfe445a74fce29c84c}{pushed\+\_\+force}} \{0.\+0, 0.\+0, 0.\+0\}
+virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 {\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_can_be_pushed_abd15d245baac56170dfbdb08e3a5df0e}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}} \{0.\+0, 0.\+0, 0.\+0\}
 \end{DoxyCompactItemize}
 
 
@@ -46,6 +58,20 @@ virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f
 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}\label{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}} 
+\index{CanBePushed@{CanBePushed}!pushed\_force@{pushed\_force}}
+\index{pushed\_force@{pushed\_force}!CanBePushed@{CanBePushed}}
+\doxysubsubsection{\texorpdfstring{pushed\_force()}{pushed\_force()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} Can\+Be\+Pushed\+::pushed\+\_\+force (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_a23e2737adee52e940c7942a7e312cb90}{system\+\_\+manager\+::move\+\_\+entity\+\_\+based\+\_\+on\+\_\+push\+\_\+force()}}, and \mbox{\hyperlink{namespacesystem__manager_a0c766a298e1abda388fb8b8795805f58}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos()}}.
+
 \mbox{\Hypertarget{struct_can_be_pushed_abd15d245baac56170dfbdb08e3a5df0e}\label{struct_can_be_pushed_abd15d245baac56170dfbdb08e3a5df0e}} 
 \index{CanBePushed@{CanBePushed}!serialize@{serialize}}
 \index{serialize@{serialize}!CanBePushed@{CanBePushed}}
@@ -55,20 +81,72 @@ void Can\+Be\+Pushed\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end
 
 
 
-References \mbox{\hyperlink{struct_can_be_pushed_aae536d30c8542ddfe445a74fce29c84c}{pushed\+\_\+force}}.
+References \mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}}.
+
+\mbox{\Hypertarget{struct_can_be_pushed_a7e7bca88e6385e36f0a3cf38258a4117}\label{struct_can_be_pushed_a7e7bca88e6385e36f0a3cf38258a4117}} 
+\index{CanBePushed@{CanBePushed}!update@{update}}
+\index{update@{update}!CanBePushed@{CanBePushed}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily void Can\+Be\+Pushed\+::update (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{f }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_a0c766a298e1abda388fb8b8795805f58}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos()}}.
+
+\mbox{\Hypertarget{struct_can_be_pushed_a48256579ead1ce851b64963321428d9e}\label{struct_can_be_pushed_a48256579ead1ce851b64963321428d9e}} 
+\index{CanBePushed@{CanBePushed}!update\_x@{update\_x}}
+\index{update\_x@{update\_x}!CanBePushed@{CanBePushed}}
+\doxysubsubsection{\texorpdfstring{update\_x()}{update\_x()}}
+{\footnotesize\ttfamily void Can\+Be\+Pushed\+::update\+\_\+x (\begin{DoxyParamCaption}\item[{float}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_a23e2737adee52e940c7942a7e312cb90}{system\+\_\+manager\+::move\+\_\+entity\+\_\+based\+\_\+on\+\_\+push\+\_\+force()}}.
+
+\mbox{\Hypertarget{struct_can_be_pushed_aa3ab7ac93d72b0881c2373ecaf7c91d7}\label{struct_can_be_pushed_aa3ab7ac93d72b0881c2373ecaf7c91d7}} 
+\index{CanBePushed@{CanBePushed}!update\_y@{update\_y}}
+\index{update\_y@{update\_y}!CanBePushed@{CanBePushed}}
+\doxysubsubsection{\texorpdfstring{update\_y()}{update\_y()}}
+{\footnotesize\ttfamily void Can\+Be\+Pushed\+::update\+\_\+y (\begin{DoxyParamCaption}\item[{float}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}}.
+
+\mbox{\Hypertarget{struct_can_be_pushed_a4897ebe9d2d4e9fd2963126b993a705f}\label{struct_can_be_pushed_a4897ebe9d2d4e9fd2963126b993a705f}} 
+\index{CanBePushed@{CanBePushed}!update\_z@{update\_z}}
+\index{update\_z@{update\_z}!CanBePushed@{CanBePushed}}
+\doxysubsubsection{\texorpdfstring{update\_z()}{update\_z()}}
+{\footnotesize\ttfamily void Can\+Be\+Pushed\+::update\+\_\+z (\begin{DoxyParamCaption}\item[{float}]{z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_a23e2737adee52e940c7942a7e312cb90}{system\+\_\+manager\+::move\+\_\+entity\+\_\+based\+\_\+on\+\_\+push\+\_\+force()}}.
 
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_can_be_pushed_aae536d30c8542ddfe445a74fce29c84c}\label{struct_can_be_pushed_aae536d30c8542ddfe445a74fce29c84c}} 
-\index{CanBePushed@{CanBePushed}!pushed\_force@{pushed\_force}}
-\index{pushed\_force@{pushed\_force}!CanBePushed@{CanBePushed}}
-\doxysubsubsection{\texorpdfstring{pushed\_force}{pushed\_force}}
-{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} Can\+Be\+Pushed\+::pushed\+\_\+force \{0.\+0, 0.\+0, 0.\+0\}}
+\mbox{\Hypertarget{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}\label{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}} 
+\index{CanBePushed@{CanBePushed}!force@{force}}
+\index{force@{force}!CanBePushed@{CanBePushed}}
+\doxysubsubsection{\texorpdfstring{force}{force}}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} Can\+Be\+Pushed\+::force \{0.\+0, 0.\+0, 0.\+0\}\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
-Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a57fb5a88688ab6b19595bd8fe63d936e}{system\+\_\+manager\+::job\+\_\+system\+::handle\+\_\+job\+\_\+holder\+\_\+pushed()}}, \mbox{\hyperlink{namespacesystem__manager_a23e2737adee52e940c7942a7e312cb90}{system\+\_\+manager\+::move\+\_\+entity\+\_\+based\+\_\+on\+\_\+push\+\_\+force()}}, \mbox{\hyperlink{namespacesystem__manager_a27a95df8b20f1e69fe055a138e7f7e5d}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos()}}, and \mbox{\hyperlink{struct_can_be_pushed_abd15d245baac56170dfbdb08e3a5df0e}{serialize()}}.
+Referenced by \mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\+\_\+force()}}, \mbox{\hyperlink{struct_can_be_pushed_abd15d245baac56170dfbdb08e3a5df0e}{serialize()}}, \mbox{\hyperlink{struct_can_be_pushed_a7e7bca88e6385e36f0a3cf38258a4117}{update()}}, \mbox{\hyperlink{struct_can_be_pushed_a48256579ead1ce851b64963321428d9e}{update\+\_\+x()}}, \mbox{\hyperlink{struct_can_be_pushed_aa3ab7ac93d72b0881c2373ecaf7c91d7}{update\+\_\+y()}}, and \mbox{\hyperlink{struct_can_be_pushed_a4897ebe9d2d4e9fd2963126b993a705f}{update\+\_\+z()}}.
 
 
 

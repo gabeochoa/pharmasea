@@ -1,0 +1,63 @@
+\hypertarget{namespacesystem__manager_1_1input__process__manager}{}\doxysection{system\+\_\+manager\+::input\+\_\+process\+\_\+manager Namespace Reference}
+\label{namespacesystem__manager_1_1input__process__manager}\index{system\_manager::input\_process\_manager@{system\_manager::input\_process\_manager}}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround}{inround}}
+\item 
+namespace \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning}{planning}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a55c42792a45958553128b841ccec5cc2}{collect\+\_\+user\+\_\+input}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a035c4557197042eac734dee082c03877}{process\+\_\+player\+\_\+movement\+\_\+input}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt, \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}} input\+\_\+name, float input\+\_\+amount)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a595ee8c3edadc901e3c643c2970304b0}{process\+\_\+input}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, const \mbox{\hyperlink{keymap_8h_af73d01ab87ab62b056bd8032af826d55}{User\+Input}} \&input)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacesystem__manager_1_1input__process__manager_a55c42792a45958553128b841ccec5cc2}\label{namespacesystem__manager_1_1input__process__manager_a55c42792a45958553128b841ccec5cc2}} 
+\index{system\_manager::input\_process\_manager@{system\_manager::input\_process\_manager}!collect\_user\_input@{collect\_user\_input}}
+\index{collect\_user\_input@{collect\_user\_input}!system\_manager::input\_process\_manager@{system\_manager::input\_process\_manager}}
+\doxysubsubsection{\texorpdfstring{collect\_user\_input()}{collect\_user\_input()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::collect\+\_\+user\+\_\+input (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespaceutil_a5020e504940e09639480aed917da6ba1}{util\+::clamp()}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, \mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{Global\+Value\+Register\+::get\+\_\+ptr()}}, \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}, \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{Key\+Map\+::is\+\_\+event()}}, \mbox{\hyperlink{struct_key_map_adf7362c05a1fcee3062a1cae3c83703c}{Key\+Map\+::is\+\_\+event\+\_\+once\+\_\+\+DO\+\_\+\+NOT\+\_\+\+USE()}}, \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}, \mbox{\hyperlink{struct_collects_user_input_af7691930f262f1dbbef9cb3ee0bd524d}{Collects\+User\+Input\+::publish()}}, \mbox{\hyperlink{namespaceutil_a9305e21ff6411929f92f427a318cea17}{util\+::rad2deg()}}, and \mbox{\hyperlink{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}{Collects\+User\+Input\+::write()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_system_manager_a7d651e258dd9c85c47f364e7ac0d6e60}{System\+Manager\+::always\+\_\+update()}}.
+
+\mbox{\Hypertarget{namespacesystem__manager_1_1input__process__manager_a595ee8c3edadc901e3c643c2970304b0}\label{namespacesystem__manager_1_1input__process__manager_a595ee8c3edadc901e3c643c2970304b0}} 
+\index{system\_manager::input\_process\_manager@{system\_manager::input\_process\_manager}!process\_input@{process\_input}}
+\index{process\_input@{process\_input}!system\_manager::input\_process\_manager@{system\_manager::input\_process\_manager}}
+\doxysubsubsection{\texorpdfstring{process\_input()}{process\_input()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::process\+\_\+input (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{const \mbox{\hyperlink{keymap_8h_af73d01ab87ab62b056bd8032af826d55}{User\+Input}} \&}]{input }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a98407cfe6adbdb0e08992e111c9f5fd9}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning\+::handle\+\_\+grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a47e7eaf60f723e301c8beaafa526d52a}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::inround\+::handle\+\_\+grab\+\_\+or\+\_\+drop()}}, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game\+::\+Planning}}, \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a035c4557197042eac734dee082c03877}{process\+\_\+player\+\_\+movement\+\_\+input()}}, \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a25a3d525215fa57a429277fa32c0d9c6}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning\+::rotate\+\_\+furniture()}}, \mbox{\hyperlink{struct_game_state_abbfb101b96ae617d2b67acbf58f50693}{Game\+State\+::s\+\_\+in\+\_\+round()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a0cb152e15774f293b74fdb240a12dbf5}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::inround\+::work\+\_\+furniture()}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_system_manager_a1baea93697d0863ef17547955f94c4b9}{System\+Manager\+::process\+\_\+inputs()}}.
+
+\mbox{\Hypertarget{namespacesystem__manager_1_1input__process__manager_a035c4557197042eac734dee082c03877}\label{namespacesystem__manager_1_1input__process__manager_a035c4557197042eac734dee082c03877}} 
+\index{system\_manager::input\_process\_manager@{system\_manager::input\_process\_manager}!process\_player\_movement\_input@{process\_player\_movement\_input}}
+\index{process\_player\_movement\_input@{process\_player\_movement\_input}!system\_manager::input\_process\_manager@{system\_manager::input\_process\_manager}}
+\doxysubsubsection{\texorpdfstring{process\_player\_movement\_input()}{process\_player\_movement\_input()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::process\+\_\+player\+\_\+movement\+\_\+input (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{entity,  }\item[{float}]{dt,  }\item[{\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}}}]{input\+\_\+name,  }\item[{float}]{input\+\_\+amount }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacesystem__manager_a0c766a298e1abda388fb8b8795805f58}{system\+\_\+manager\+::person\+\_\+update\+\_\+given\+\_\+new\+\_\+pos()}}, \mbox{\hyperlink{struct_transform_a2d05f8befe3b38c8c29ae679869647cc}{Transform\+::pos()}}, \mbox{\hyperlink{struct_has_base_speed_aa8a5a0bed30cf126086bb79f6a6caeae}{Has\+Base\+Speed\+::speed()}}, and \mbox{\hyperlink{struct_transform_a89b5aae1f418a7a527ce0b5907865f0e}{Transform\+::trunc()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a595ee8c3edadc901e3c643c2970304b0}{process\+\_\+input()}}.
+

@@ -83,10 +83,11 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d7/daf/external__include_8h_source.html">../external_include.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../da/d9a/keymap_8h_source.html">../engine/keymap.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../de/df7/time_8h_source.html">../engine/time.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d9/d60/toastmanager_8h_source.html">../engine/toastmanager.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d8/d3c/util_8h_source.html">../engine/util.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d5/d87/globals_8h_source.html">../globals.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../dc/db7/map_8h_source.html">../map.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d9/d60/toastmanager_8h_source.html">../toastmanager.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/d3c/util_8h_source.html">../util.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d5/d7b/channel_8h_source.html">internal/channel.h</a>&quot;</code><br />
 <code>#include &quot;steam/steamnetworkingtypes.h&quot;</code><br />
 </div>
@@ -96,21 +97,15 @@ $(function() {
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d45/structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_base_component_01_4.html">bitsery::ext::PolymorphicBaseClass&lt; BaseComponent &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d05/structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_entity_01_4.html">bitsery::ext::PolymorphicBaseClass&lt; Entity &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d80/structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_furniture_01_4.html">bitsery::ext::PolymorphicBaseClass&lt; Furniture &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d61/structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_person_01_4.html">bitsery::ext::PolymorphicBaseClass&lt; Person &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_base_player_01_4.html">bitsery::ext::PolymorphicBaseClass&lt; BasePlayer &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d46/structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_a_i_person_01_4.html">bitsery::ext::PolymorphicBaseClass&lt; AIPerson &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d37/structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_item_01_4.html">bitsery::ext::PolymorphicBaseClass&lt; Item &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d01/structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_job_01_4.html">bitsery::ext::PolymorphicBaseClass&lt; Job &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d7c/structbitsery_1_1ext_1_1_polymorphic_base_class_3_01_level_info_01_4.html">bitsery::ext::PolymorphicBaseClass&lt; LevelInfo &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html">network::ClientPacket</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbc/structnetwork_1_1_client_packet_1_1_ping_info.html">network::ClientPacket::PingInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dcf/structnetwork_1_1_client_packet_1_1_announcement_info.html">network::ClientPacket::AnnouncementInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,6 +121,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d7f/structnetwork_1_1_client_packet_1_1_player_info.html">network::ClientPacket::PlayerInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/ddb/structnetwork_1_1_client_packet_1_1_player_rare_info.html">network::ClientPacket::PlayerRareInfo</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -138,8 +135,8 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a81d6bddbdad830eb00a8389649633985"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/db4/shared_8h.html#a81d6bddbdad830eb00a8389649633985">MyPolymorphicClasses</a> = bitsery::ext::PolymorphicClassesList&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a>, <a class="el" href="../../db/d66/struct_item.html">Item</a>, <a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a> &gt;</td></tr>
-<tr class="separator:a81d6bddbdad830eb00a8389649633985"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52e7f8a375df95d4145e6fa530707517"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/db4/shared_8h.html#a52e7f8a375df95d4145e6fa530707517">MyPolymorphicClasses</a> = bitsery::ext::PolymorphicClassesList&lt; <a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a>, <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a>, <a class="el" href="../../db/d66/struct_item.html">Item</a>, <a class="el" href="../../d2/d63/struct_job.html">Job</a> &gt;</td></tr>
+<tr class="separator:a52e7f8a375df95d4145e6fa530707517"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29be7e2bef152eba6aef822531d97755"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d3f/namespacenetwork.html#a29be7e2bef152eba6aef822531d97755">network::Buffer</a> = std::string</td></tr>
 <tr class="separator:a29be7e2bef152eba6aef822531d97755"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c1d8c886ed26a5faaf745b3c3d6f21d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d3f/namespacenetwork.html#a4c1d8c886ed26a5faaf745b3c3d6f21d">network::OutputAdapter</a> = bitsery::OutputBufferAdapter&lt; Buffer &gt;</td></tr>
@@ -164,20 +161,24 @@ Functions</h2></td></tr>
 <tr class="memitem:a1e62ea975ea4c7dcb8a7fb13f347d831"><td class="memTemplParams" colspan="2">template&lt;typename S &gt; </td></tr>
 <tr class="memitem:a1e62ea975ea4c7dcb8a7fb13f347d831"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d3f/namespacenetwork.html#a1e62ea975ea4c7dcb8a7fb13f347d831">network::serialize</a> (S &amp;s, ClientPacket &amp;packet)</td></tr>
 <tr class="separator:a1e62ea975ea4c7dcb8a7fb13f347d831"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3712f2490af7bbbb26a86f8386f53e2d"><td class="memItemLeft" align="right" valign="top">static Buffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d3f/namespacenetwork.html#a3712f2490af7bbbb26a86f8386f53e2d">network::serialize_to_entity</a> (<a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> *entity)</td></tr>
+<tr class="separator:a3712f2490af7bbbb26a86f8386f53e2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab48c5d518addcd26284b31cb5b15b9b4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d3f/namespacenetwork.html#ab48c5d518addcd26284b31cb5b15b9b4">network::deserialize_to_entity</a> (<a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> *entity, const std::string &amp;msg)</td></tr>
+<tr class="separator:ab48c5d518addcd26284b31cb5b15b9b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad932db30302c4abac18d38f4e2861ae9"><td class="memItemLeft" align="right" valign="top">static ClientPacket&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d3f/namespacenetwork.html#ad932db30302c4abac18d38f4e2861ae9">network::deserialize_to_packet</a> (const std::string &amp;msg)</td></tr>
 <tr class="separator:ad932db30302c4abac18d38f4e2861ae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e89934295cdfdc98ecd3a5410acc512"><td class="memItemLeft" align="right" valign="top">static Buffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d3f/namespacenetwork.html#a1e89934295cdfdc98ecd3a5410acc512">network::serialize_to_buffer</a> (ClientPacket packet)</td></tr>
 <tr class="separator:a1e89934295cdfdc98ecd3a5410acc512"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="a81d6bddbdad830eb00a8389649633985" name="a81d6bddbdad830eb00a8389649633985"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81d6bddbdad830eb00a8389649633985">&#9670;&#160;</a></span>MyPolymorphicClasses</h2>
+<a id="a52e7f8a375df95d4145e6fa530707517" name="a52e7f8a375df95d4145e6fa530707517"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52e7f8a375df95d4145e6fa530707517">&#9670;&#160;</a></span>MyPolymorphicClasses</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="../../da/db4/shared_8h.html#a81d6bddbdad830eb00a8389649633985">MyPolymorphicClasses</a> =  bitsery::ext::PolymorphicClassesList&lt;<a class="el" href="../../dc/dc4/struct_entity.html">Entity</a>, <a class="el" href="../../db/d66/struct_item.html">Item</a>, <a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a>&gt;</td>
+          <td class="memname">using <a class="el" href="../../da/db4/shared_8h.html#a52e7f8a375df95d4145e6fa530707517">MyPolymorphicClasses</a> =  bitsery::ext::PolymorphicClassesList&lt;<a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a>, <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a>, <a class="el" href="../../db/d66/struct_item.html">Item</a>, <a class="el" href="../../d2/d63/struct_job.html">Job</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">

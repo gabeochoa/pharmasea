@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Pharmasea: src/versionlayer.h Source File</title>
+<title>Pharmasea: src/layers/versionlayer.h Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -69,7 +69,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="../../dir_46a221571c56bf3fcf15f3c317ca6a89.html">layers</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -78,33 +78,26 @@ $(function() {
 <div class="contents">
 <a href="../../d8/d3c/versionlayer_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/daf/external__include_8h.html">external_include.h</a>&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d87/globals_8h.html">globals.h</a>&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/d3b/layer_8h.html">engine/layer.h</a>&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d34/preload_8h.html">preload.h</a>&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;../engine.h&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;../external_include.h&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;../globals.h&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;../preload.h&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="../../dc/d2d/struct_version_layer.html">    8</a></span><span class="keyword">struct </span><a class="code hl_struct" href="../../dc/d2d/struct_version_layer.html">VersionLayer</a> : <span class="keyword">public</span> <a class="code hl_struct" href="../../db/dfc/struct_layer.html">Layer</a> {</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="../../dc/d2d/struct_version_layer.html#a4cdccc7b5ac763c65a87dd917267ded1">    9</a></span>    <a class="code hl_function" href="../../dc/d2d/struct_version_layer.html#a4cdccc7b5ac763c65a87dd917267ded1">VersionLayer</a>() : <a class="code hl_struct" href="../../db/dfc/struct_layer.html">Layer</a>(<span class="stringliteral">&quot;Version&quot;</span>) {}</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="../../dc/d2d/struct_version_layer.html#aab8a0be3b8c56e78bd1071fba1abf6d1">   10</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dc/d2d/struct_version_layer.html#aab8a0be3b8c56e78bd1071fba1abf6d1">onEvent</a>(<a class="code hl_struct" href="../../de/d6a/struct_event.html">Event</a>&amp;)<span class="keyword"> override </span>{}</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="../../dc/d2d/struct_version_layer.html#a044089ef0cbe40f90aaa85f9a3c357a4">   11</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dc/d2d/struct_version_layer.html#a044089ef0cbe40f90aaa85f9a3c357a4">onUpdate</a>(<span class="keywordtype">float</span>)<span class="keyword"> override </span>{}</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="../../dc/d2d/struct_version_layer.html#a3457fd07658e388444fb2a7ecb1767bf">   13</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dc/d2d/struct_version_layer.html#a3457fd07658e388444fb2a7ecb1767bf">onDraw</a>(<span class="keywordtype">float</span>)<span class="keyword"> override </span>{</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        DrawTextEx(Preload::get().<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, <a class="code hl_variable" href="../../d5/d87/globals_8h.html#aaa7af68b11c3d3a4f6374fe35a3a2d67">VERSION</a>.data(), {5, 30}, 20, 0, WHITE);</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    }</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>};</div>
-<div class="ttc" id="aexternal__include_8h_html"><div class="ttname"><a href="../../d7/daf/external__include_8h.html">external_include.h</a></div></div>
-<div class="ttc" id="aglobals_8h_html"><div class="ttname"><a href="../../d5/d87/globals_8h.html">globals.h</a></div></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="../../dc/d2d/struct_version_layer.html#a044089ef0cbe40f90aaa85f9a3c357a4">   10</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dc/d2d/struct_version_layer.html#a044089ef0cbe40f90aaa85f9a3c357a4">onUpdate</a>(<span class="keywordtype">float</span>)<span class="keyword"> override </span>{}</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="../../dc/d2d/struct_version_layer.html#a3457fd07658e388444fb2a7ecb1767bf">   12</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dc/d2d/struct_version_layer.html#a3457fd07658e388444fb2a7ecb1767bf">onDraw</a>(<span class="keywordtype">float</span>)<span class="keyword"> override </span>{</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        DrawTextEx(Preload::get().<a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>, <a class="code hl_variable" href="../../d5/d87/globals_8h.html#aaa7af68b11c3d3a4f6374fe35a3a2d67">VERSION</a>.data(), {5, 30}, 20, 0, WHITE);</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    }</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>};</div>
 <div class="ttc" id="aglobals_8h_html_aaa7af68b11c3d3a4f6374fe35a3a2d67"><div class="ttname"><a href="../../d5/d87/globals_8h.html#aaa7af68b11c3d3a4f6374fe35a3a2d67">VERSION</a></div><div class="ttdeci">constexpr std::string_view VERSION</div><div class="ttdef"><b>Definition:</b> globals.h:7</div></div>
-<div class="ttc" id="alayer_8h_html"><div class="ttname"><a href="../../d3/d3b/layer_8h.html">layer.h</a></div></div>
 <div class="ttc" id="anamespacefont_html"><div class="ttname"><a href="../../d7/dd4/namespacefont.html">font</a></div><div class="ttdef"><b>Definition:</b> Karmina_Regular_256.h:21</div></div>
-<div class="ttc" id="apreload_8h_html"><div class="ttname"><a href="../../d5/d34/preload_8h.html">preload.h</a></div></div>
-<div class="ttc" id="astruct_event_html"><div class="ttname"><a href="../../de/d6a/struct_event.html">Event</a></div><div class="ttdef"><b>Definition:</b> event.h:50</div></div>
 <div class="ttc" id="astruct_layer_html"><div class="ttname"><a href="../../db/dfc/struct_layer.html">Layer</a></div><div class="ttdef"><b>Definition:</b> layer.h:8</div></div>
 <div class="ttc" id="astruct_version_layer_html"><div class="ttname"><a href="../../dc/d2d/struct_version_layer.html">VersionLayer</a></div><div class="ttdef"><b>Definition:</b> versionlayer.h:8</div></div>
-<div class="ttc" id="astruct_version_layer_html_a044089ef0cbe40f90aaa85f9a3c357a4"><div class="ttname"><a href="../../dc/d2d/struct_version_layer.html#a044089ef0cbe40f90aaa85f9a3c357a4">VersionLayer::onUpdate</a></div><div class="ttdeci">virtual void onUpdate(float) override</div><div class="ttdef"><b>Definition:</b> versionlayer.h:11</div></div>
-<div class="ttc" id="astruct_version_layer_html_a3457fd07658e388444fb2a7ecb1767bf"><div class="ttname"><a href="../../dc/d2d/struct_version_layer.html#a3457fd07658e388444fb2a7ecb1767bf">VersionLayer::onDraw</a></div><div class="ttdeci">virtual void onDraw(float) override</div><div class="ttdef"><b>Definition:</b> versionlayer.h:13</div></div>
+<div class="ttc" id="astruct_version_layer_html_a044089ef0cbe40f90aaa85f9a3c357a4"><div class="ttname"><a href="../../dc/d2d/struct_version_layer.html#a044089ef0cbe40f90aaa85f9a3c357a4">VersionLayer::onUpdate</a></div><div class="ttdeci">virtual void onUpdate(float) override</div><div class="ttdef"><b>Definition:</b> versionlayer.h:10</div></div>
+<div class="ttc" id="astruct_version_layer_html_a3457fd07658e388444fb2a7ecb1767bf"><div class="ttname"><a href="../../dc/d2d/struct_version_layer.html#a3457fd07658e388444fb2a7ecb1767bf">VersionLayer::onDraw</a></div><div class="ttdeci">virtual void onDraw(float) override</div><div class="ttdef"><b>Definition:</b> versionlayer.h:12</div></div>
 <div class="ttc" id="astruct_version_layer_html_a4cdccc7b5ac763c65a87dd917267ded1"><div class="ttname"><a href="../../dc/d2d/struct_version_layer.html#a4cdccc7b5ac763c65a87dd917267ded1">VersionLayer::VersionLayer</a></div><div class="ttdeci">VersionLayer()</div><div class="ttdef"><b>Definition:</b> versionlayer.h:9</div></div>
-<div class="ttc" id="astruct_version_layer_html_aab8a0be3b8c56e78bd1071fba1abf6d1"><div class="ttname"><a href="../../dc/d2d/struct_version_layer.html#aab8a0be3b8c56e78bd1071fba1abf6d1">VersionLayer::onEvent</a></div><div class="ttdeci">virtual void onEvent(Event &amp;) override</div><div class="ttdef"><b>Definition:</b> versionlayer.h:10</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

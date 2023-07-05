@@ -1,0 +1,71 @@
+\hypertarget{system__manager_8cpp}{}\doxysection{src/system/system\+\_\+manager.cpp File Reference}
+\label{system__manager_8cpp}\index{src/system/system\_manager.cpp@{src/system/system\_manager.cpp}}
+{\ttfamily \#include \char`\"{}system\+\_\+manager.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../camera.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+be\+\_\+ghost\+\_\+player.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+grab\+\_\+from\+\_\+other\+\_\+furniture.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+highlight\+\_\+others.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+hold\+\_\+furniture.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/can\+\_\+perform\+\_\+job.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/collects\+\_\+user\+\_\+input.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/conveys\+\_\+held\+\_\+item.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/custom\+\_\+item\+\_\+position.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/is\+\_\+snappable.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/responds\+\_\+to\+\_\+user\+\_\+input.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../components/transform.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../engine/tracy.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../entity.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../entityhelper.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../map.\+h\char`\"{}}\newline
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacesystem__manager}{system\+\_\+manager}}
+\begin{DoxyCompactList}\small\item\em probably needed by map and not included in there \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a6cf678bc2a6cdee9b0646d1a744d01f2}{system\+\_\+manager\+::transform\+\_\+snapper}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a83ed24ae5e1d1c24133a535d653b172f}{system\+\_\+manager\+::update\+\_\+held\+\_\+furniture\+\_\+position}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}{system\+\_\+manager\+::update\+\_\+held\+\_\+item\+\_\+position}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_afe9f22e9aaf5690dda2fa12e579ddcb1}{system\+\_\+manager\+::reset\+\_\+highlighted}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a59f2cc661fe66e73806e73eaab658a6d}{system\+\_\+manager\+::highlight\+\_\+facing\+\_\+furniture}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a23e2737adee52e940c7942a7e312cb90}{system\+\_\+manager\+::move\+\_\+entity\+\_\+based\+\_\+on\+\_\+push\+\_\+force}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&new\+\_\+pos\+\_\+x, \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&new\+\_\+pos\+\_\+z)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a04abec43eee11830c4261b9b4831a1f1}{system\+\_\+manager\+::process\+\_\+conveyer\+\_\+items}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a548590822db8bd9a1d3d72786aa32081}{system\+\_\+manager\+::process\+\_\+grabber\+\_\+items}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
+\item 
+{\footnotesize template$<$typename I , typename... TArgs$>$ }\\void \mbox{\hyperlink{namespacesystem__manager_a769cc2552dc38cf5334128cac189c268}{system\+\_\+manager\+::backfill\+\_\+empty\+\_\+container}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity, TArgs \&\&... args)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a2c6f844647982193ec1786016165804b}{system\+\_\+manager\+::process\+\_\+is\+\_\+container\+\_\+and\+\_\+should\+\_\+backfill\+\_\+item}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a29daf00e663dee1af2a74387579fc512}{system\+\_\+manager\+::process\+\_\+is\+\_\+container\+\_\+and\+\_\+should\+\_\+update\+\_\+item}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a561a93d3b20bcf76f4f9701cc7be2edf}{system\+\_\+manager\+::handle\+\_\+autodrop\+\_\+furniture\+\_\+when\+\_\+exiting\+\_\+planning}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_acc6534b731c1273ed5815c5acb42a201}{system\+\_\+manager\+::delete\+\_\+held\+\_\+items\+\_\+when\+\_\+leaving\+\_\+inround}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_ac8bf560d525c02f0846838bb94db0f69}{system\+\_\+manager\+::refetch\+\_\+dynamic\+\_\+model\+\_\+names}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_ac67812f8fe1e32814f9599325f613ab8}{system\+\_\+manager\+::count\+\_\+max\+\_\+trigger\+\_\+area\+\_\+entrants}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_aab5f30762d7a099c08e7e68789b45fb0}{system\+\_\+manager\+::count\+\_\+trigger\+\_\+area\+\_\+entrants}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_ab02e77a985fe67806d95c4cc92647357}{system\+\_\+manager\+::update\+\_\+trigger\+\_\+area\+\_\+percent}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a93191e38d6607f56f7b2b76aa87f7f52}{system\+\_\+manager\+::trigger\+\_\+cb\+\_\+on\+\_\+full\+\_\+progress}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity, float)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a6e3a2a333caf3171a4bbcd6bd9058176}{system\+\_\+manager\+::process\+\_\+trigger\+\_\+area}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a312b551fedaa36a272c9363a4338e191}{system\+\_\+manager\+::process\+\_\+spawner}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_a2ecf617b3b679259e478d2e5f916b96e}{system\+\_\+manager\+::run\+\_\+timer}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity, float dt)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_aae333b079103d5d1c60cd78e91f20516}{system\+\_\+manager\+::sophie}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&entity, float)
+\end{DoxyCompactItemize}

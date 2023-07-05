@@ -5,28 +5,28 @@
 \DoxyCodeLine{00001\ }
 \DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
-\DoxyCodeLine{00005\ \textcolor{comment}{//}}
-\DoxyCodeLine{00006\ }
-\DoxyCodeLine{00007\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}\ \{}
-\DoxyCodeLine{00008\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ac9d3e887722f2bc482bcca9d41c512af}{None}}\ =\ 0,}
-\DoxyCodeLine{00009\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a9779a7e9f14b8a5b1d7640a1ff0dab26}{Wait}}\ =\ 1,}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{assert_8h}{engine/assert.h}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{log_8h}{engine/log.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{external__include_8h}{external\_include.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_entity}{Entity}};}
 \DoxyCodeLine{00010\ }
-\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}},}
-\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a69a6133adad5dae8091acd3bd803024c}{EnterStore}},}
-\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411}{WaitInQueue}},}
-\DoxyCodeLine{00014\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ad0c49177fc112661d87e4208d35e98e3}{WaitInQueueForPickup}},}
-\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a49e2d1588ae4d37ed14d389306c424fa}{Paying}},}
-\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a10f23da8d8e9f45aa56e0fd602f6363f}{Leaving}},}
-\DoxyCodeLine{00017\ }
-\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a548d02e3faef93e8c6b9645d5ce90994}{MAX\_JOB\_TYPE}},}
-\DoxyCodeLine{00019\ \};}
-\DoxyCodeLine{00020\ }
-\DoxyCodeLine{00021\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_a_i_person}{AIPerson}};}
-\DoxyCodeLine{00022\ }
-\DoxyCodeLine{00023\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_job}{Job}}\ \{}
-\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}\ \mbox{\hyperlink{struct_job_a54b5041220d32132698962f324d7ac04}{type}};}
-\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ac9d3e887722f2bc482bcca9d41c512af}{None}}\ =\ 0,}
+\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a9779a7e9f14b8a5b1d7640a1ff0dab26}{Wait}}\ =\ 1,}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}},}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a69a6133adad5dae8091acd3bd803024c}{EnterStore}},}
+\DoxyCodeLine{00017\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411}{WaitInQueue}},}
+\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ad0c49177fc112661d87e4208d35e98e3}{WaitInQueueForPickup}},}
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a49e2d1588ae4d37ed14d389306c424fa}{Paying}},}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a10f23da8d8e9f45aa56e0fd602f6363f}{Leaving}},}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a548d02e3faef93e8c6b9645d5ce90994}{MAX\_JOB\_TYPE}},}
+\DoxyCodeLine{00023\ \};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_job}{Job}}\ \{}
 \DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{enum\ struct}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State}}\ \{}
 \DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea223e06f5cb15fc701ea1e686f7934f4f}{Initialize}},}
 \DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{HeadingToStart}},}
@@ -34,53 +34,196 @@
 \DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{WorkingAtStart}},}
 \DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7}{WorkingAtEnd}},}
 \DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Completed}}}
-\DoxyCodeLine{00033\ \ \ \ \ \}\ \mbox{\hyperlink{struct_job_a5f001c363f99db97dc40cccbed8cbf26}{state}};}
+\DoxyCodeLine{00033\ \ \ \ \ \}\ \mbox{\hyperlink{struct_job_a5f001c363f99db97dc40cccbed8cbf26}{state}}\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea223e06f5cb15fc701ea1e686f7934f4f}{State::Initialize}};}
 \DoxyCodeLine{00034\ }
-\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_job_a7ffd2fbd60665c938405f4b807ecf0b5}{timePassedInCurrentState}}\ =\ 0.f;}
-\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_job_a939fa3d2e9453d89b608b277853bee39}{timeToComplete}}\ =\ 1.f;}
-\DoxyCodeLine{00037\ }
-\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_job_a36d7ce8c8419b6a196d0069a3ca53dc0}{start}};}
-\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_job_aa03693e1a7ac65c2b7327a39f176bbf7}{end}};}
-\DoxyCodeLine{00040\ \ \ \ \ std::optional<vec2>\ \mbox{\hyperlink{struct_job_a6ca83b17472c1915ec5ed8668793e716}{local}};}
-\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}}\ =\ 0;}
-\DoxyCodeLine{00042\ \ \ \ \ std::deque<vec2>\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}};}
-\DoxyCodeLine{00043\ }
-\DoxyCodeLine{00044\ \ \ \ \ std::function<void(\mbox{\hyperlink{struct_a_i_person}{AIPerson}}*,\ \mbox{\hyperlink{struct_job}{Job}}*)>\ \mbox{\hyperlink{struct_job_a2fd96529bde0648dd5e5ce630e9d7fe7}{on\_cleanup}}\ =\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00045\ }
-\DoxyCodeLine{00046\ \ \ \ \ std::map<std::string,\ void*>\ \mbox{\hyperlink{struct_job_a22eb4726b3b3fca6dd8d4b706167adc7}{data}};}
-\DoxyCodeLine{00047\ }
-\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//\ WaitInQueue\ Job}}
-\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_job_ad4460fb88641f4f56aca942770e1316d}{spot\_in\_line}}\ =\ -\/1;}
-\DoxyCodeLine{00050\ }
-\DoxyCodeLine{00051\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_job_adb7cddf20de91f00e39b6a78c5783679}{path\_empty}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.empty();\ \}}
-\DoxyCodeLine{00052\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\&\ \mbox{\hyperlink{struct_job_aed0abfeaa030da3b3b72494a4a191377}{path\_front}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.front();\ \}}
-\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_aa6f77ecb10351ff5336d27b6a07292f5}{path\_pop\_front}}()\ \{}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.pop\_front();}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}}\ =\ (int)\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.size();}
-\DoxyCodeLine{00056\ \ \ \ \ \}}
-\DoxyCodeLine{00057\ }
-\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_a866c096b6000b68a9cf4ee09bcf6b352}{update\_path}}(\textcolor{keyword}{const}\ std::deque<vec2>\&\ new\_path)\ \{}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}\ =\ new\_path;}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}}\ =\ (int)\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.size();}
-\DoxyCodeLine{00061\ \ \ \ \ \}}
-\DoxyCodeLine{00062\ }
-\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a54b5041220d32132698962f324d7ac04}{type}});}
-\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a5f001c363f99db97dc40cccbed8cbf26}{state}});}
-\DoxyCodeLine{00068\ }
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a7ffd2fbd60665c938405f4b807ecf0b5}{timePassedInCurrentState}});}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a939fa3d2e9453d89b608b277853bee39}{timeToComplete}});}
-\DoxyCodeLine{00071\ }
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_ad4460fb88641f4f56aca942770e1316d}{spot\_in\_line}});}
-\DoxyCodeLine{00073\ }
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_job_a36d7ce8c8419b6a196d0069a3ca53dc0}{start}});}
-\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_job_aa03693e1a7ac65c2b7327a39f176bbf7}{end}});}
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}});}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ s.ext(\mbox{\hyperlink{struct_job_a6ca83b17472c1915ec5ed8668793e716}{local}},\ bitsery::ext::StdOptional\{\});}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ s.container(\mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}},\ \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}},\ [](S\&\ sv,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)\ \{\ sv.object(pos);\ \});}
-\DoxyCodeLine{00079\ \ \ \ \ \}}
-\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}\ \mbox{\hyperlink{struct_job_a54b5041220d32132698962f324d7ac04}{type}};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_job_a36d7ce8c8419b6a196d0069a3ca53dc0}{start}};}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_job_aa03693e1a7ac65c2b7327a39f176bbf7}{end}};}
+\DoxyCodeLine{00039\ \ \ \ \ std::optional<vec2>\ \mbox{\hyperlink{struct_job_a6ca83b17472c1915ec5ed8668793e716}{local}};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}}\ =\ 0;}
+\DoxyCodeLine{00043\ \ \ \ \ std::deque<vec2>\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00046\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_job_adb7cddf20de91f00e39b6a78c5783679}{path\_empty}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.empty();\ \}}
+\DoxyCodeLine{00047\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\&\ \mbox{\hyperlink{struct_job_aed0abfeaa030da3b3b72494a4a191377}{path\_front}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.front();\ \}}
+\DoxyCodeLine{00048\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ std::deque<vec2>\&\ \mbox{\hyperlink{struct_job_afa7c759d41b9ecf3e5eb4a29d97a88b0}{get\_path}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}};\ \}}
+\DoxyCodeLine{00049\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_job_af2f54c2717db0026cfd150f70607979c}{p\_size}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{int})\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.size();\ \}}
+\DoxyCodeLine{00050\ \ \ \ \ [[nodiscard]]\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{struct_job_afc0040c8c2932c99788bbe4bf4dcec54}{path\_index}}(\textcolor{keywordtype}{int}\ index)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}[index];\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_aa6f77ecb10351ff5336d27b6a07292f5}{path\_pop\_front}}()\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.pop\_front();}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}}\ =\ (int)\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.size();}
+\DoxyCodeLine{00055\ \ \ \ \ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_a866c096b6000b68a9cf4ee09bcf6b352}{update\_path}}(\textcolor{keyword}{const}\ std::deque<vec2>\&\ new\_path)\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}\ =\ new\_path;}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}}\ =\ (int)\ \mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}}.size();}
+\DoxyCodeLine{00060\ \ \ \ \ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_adfda704d0875b9c7e1cf9607f55d2c58}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a54b5041220d32132698962f324d7ac04}{type}});}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a5f001c363f99db97dc40cccbed8cbf26}{state}});}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_job_a36d7ce8c8419b6a196d0069a3ca53dc0}{start}});}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_job_aa03693e1a7ac65c2b7327a39f176bbf7}{end}});}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ s.ext(\mbox{\hyperlink{struct_job_a6ca83b17472c1915ec5ed8668793e716}{local}},\ bitsery::ext::StdOptional\{\});}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}});}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ s.container(\mbox{\hyperlink{struct_job_a1da9388afe093c9aa0cd32f05f864713}{path}},\ \mbox{\hyperlink{struct_job_a89e96ec1238197ae28fa63bcfba2c150}{path\_size}},\ [](S\&\ sv,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ pos)\ \{\ sv.object(pos);\ \});}
+\DoxyCodeLine{00075\ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_job}{Job}}*\ \mbox{\hyperlink{struct_job_a7639db459c16d9e851b1e5dc66b783d8}{create\_job\_of\_type}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}},\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}},\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}\ \mbox{\hyperlink{struct_job_a54b5041220d32132698962f324d7ac04}{type}});}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_a9a306b36fe487b9fad617e28e9fea019}{run\_job\_tick}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_a5f001c363f99db97dc40cccbed8cbf26}{state}}\ =\ \mbox{\hyperlink{struct_job_a909db0a017a435ffbe3980112ef6302a}{\_run\_job\_tick}}(entity,\ dt);}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00082\ \ \ \ \ \}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \mbox{\hyperlink{struct_job_a666013a882e328576a340ad37118ccba}{Job}}()\ \{\}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \mbox{\hyperlink{struct_job_a0f7b8ae0717f6f6b76d6023ee64b2187}{Job}}(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}\ \_type,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \_start,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \_end)}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_job_a54b5041220d32132698962f324d7ac04}{type}}(\_type),\ \mbox{\hyperlink{struct_job_a36d7ce8c8419b6a196d0069a3ca53dc0}{start}}(\_start),\ \mbox{\hyperlink{struct_job_aa03693e1a7ac65c2b7327a39f176bbf7}{end}}(\_end)\ \{\}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job_ab1eef87bf28ea5930582e26faea83269}{\string~Job}}()\ \{\}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State}}\ \mbox{\hyperlink{struct_job_a0e6dc8a5da0602774b3cb2c68d5e8c71}{run\_state\_initialize}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&,\ \textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{State::HeadingToStart}};}
+\DoxyCodeLine{00094\ \ \ \ \ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State}}\ \mbox{\hyperlink{struct_job_a6b4b012832fa724de733a28de7a96dd6}{run\_state\_heading\_to\_start}}(}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,\ \textcolor{keywordtype}{float}\ dt);}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State}}\ \mbox{\hyperlink{struct_job_a23cc161a73fa9d964266f19cec1e052e}{run\_state\_heading\_to\_end}}(}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,\ \textcolor{keywordtype}{float}\ dt);}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State}}\ \mbox{\hyperlink{struct_job_a6bf2defb00051d0dc7cd400f637976d2}{run\_state\_working\_at\_start}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&,}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{State::HeadingToEnd}};}
+\DoxyCodeLine{00104\ \ \ \ \ \}}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State}}\ \mbox{\hyperlink{struct_job_afd3fb45289d3ed8cdc41cc9bc88c24e2}{run\_state\_working\_at\_end}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&,}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{State::Completed}};}
+\DoxyCodeLine{00108\ \ \ \ \ \}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_a87389d9185ae4da05ef1c6b11a97d6e2}{on\_cleanup}}()\ \{\}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_aa77c9aa9b7facf272266b93990066b1d}{before\_each\_job\_tick}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&,\ \textcolor{keywordtype}{float})\ \{\}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_job_a25892d607b78ebdcded1291201f7fe84}{has\_local\_target}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a6ca83b17472c1915ec5ed8668793e716}{local}}.has\_value();\ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00117\ \ \ \ \ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State}}\ \mbox{\hyperlink{struct_job_a909db0a017a435ffbe3980112ef6302a}{\_run\_job\_tick}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_job_aa77c9aa9b7facf272266b93990066b1d}{before\_each\_job\_tick}}(entity,\ dt);}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{struct_job_a5f001c363f99db97dc40cccbed8cbf26}{state}})\ \{}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea223e06f5cb15fc701ea1e686f7934f4f}{Job::State::Initialize}}:\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a0e6dc8a5da0602774b3cb2c68d5e8c71}{run\_state\_initialize}}(entity,\ dt);}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job::State::HeadingToStart}}:\ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a6b4b012832fa724de733a28de7a96dd6}{run\_state\_heading\_to\_start}}(entity,\ dt);}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{Job::State::WorkingAtStart}}:\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a6bf2defb00051d0dc7cd400f637976d2}{run\_state\_working\_at\_start}}(entity,\ dt);}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}}:\ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a23cc161a73fa9d964266f19cec1e052e}{run\_state\_heading\_to\_end}}(entity,\ dt);}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7}{Job::State::WorkingAtEnd}}:\ \{}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_afd3fb45289d3ed8cdc41cc9bc88c24e2}{run\_state\_working\_at\_end}}(entity,\ dt);}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}}:\ \{}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ dont\ run\ anything\ because\ completed\ is\ only\ used\ for}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ marking\ cleanup}}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a5f001c363f99db97dc40cccbed8cbf26}{state}};}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_job_a5f001c363f99db97dc40cccbed8cbf26}{state}};}
+\DoxyCodeLine{00142\ \ \ \ \ \}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_job_af52868928945ccf5d593eb404b6aba22}{is\_at\_position}}(}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ position);}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_job_a2e875fe84ba07e39c39ca49706917921}{travel\_to\_position}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ dt,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ goal);}
+\DoxyCodeLine{00149\ \};}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_wandering_job}{WanderingJob}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_job}{Job}}\ \{}
+\DoxyCodeLine{00152\ \ \ \ \ \mbox{\hyperlink{struct_wandering_job_ab55d1f51ea30d5cfaa08378ee87e98ea}{WanderingJob}}()\ :\ \mbox{\hyperlink{struct_job}{Job}}(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}::\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}},\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{0,\ 0\},\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{0,\ 0\})\ \{\}}
+\DoxyCodeLine{00153\ \ \ \ \ \mbox{\hyperlink{struct_wandering_job_af6b6edfac3097770468cd673ab622069}{WanderingJob}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \_start,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \_end)}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_job}{Job}}(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}::\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}},\ \_start,\ \_end)\ \{\}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_wandering_job_a49676c19287f0334fcc1c2286c4f79f1}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Job>\{\});}
+\DoxyCodeLine{00160\ \ \ \ \ \}}
+\DoxyCodeLine{00161\ \};}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_wait_job}{WaitJob}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_job}{Job}}\ \{}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_wait_job_a012e5c79091667aa5b6ffb053a6b471d}{timePassedInCurrentState}}\ =\ 0.f;}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_wait_job_a2f1cfc86ae87268f282e96d456110da3}{timeToComplete}}\ =\ 1.f;}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \mbox{\hyperlink{struct_wait_job_a668260f969111356a3e756fa248e7172}{WaitJob}}()}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_job}{Job}}(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}::\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a9779a7e9f14b8a5b1d7640a1ff0dab26}{Wait}},\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{0,\ 0\},\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{0,\ 0\}),\ \mbox{\hyperlink{struct_wait_job_a2f1cfc86ae87268f282e96d456110da3}{timeToComplete}}(1.f)\ \{\}}
+\DoxyCodeLine{00169\ \ \ \ \ \mbox{\hyperlink{struct_wait_job_a7c3ce2e831c531765cce33fcc449c6f4}{WaitJob}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \_start,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \_end,\ \textcolor{keywordtype}{float}\ \_timeToComplete)}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_job}{Job}}(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}::\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a9779a7e9f14b8a5b1d7640a1ff0dab26}{Wait}},\ \_start,\ \_end),\ \mbox{\hyperlink{struct_wait_job_a2f1cfc86ae87268f282e96d456110da3}{timeToComplete}}(\_timeToComplete)\ \{\}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State}}\ \mbox{\hyperlink{struct_wait_job_a9a47a1f65f2d489997ce2f12f21742d1}{run\_state\_working\_at\_end}}(}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_wait_job_a7161763051f0d7092d2e608540d2f97b}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Job>\{\});}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_wait_job_a012e5c79091667aa5b6ffb053a6b471d}{timePassedInCurrentState}});}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_wait_job_a2f1cfc86ae87268f282e96d456110da3}{timeToComplete}});}
+\DoxyCodeLine{00182\ \ \ \ \ \}}
+\DoxyCodeLine{00183\ \};}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_wait_in_queue_job}{WaitInQueueJob}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_job}{Job}}\ \{}
+\DoxyCodeLine{00186\ \ \ \ \ \mbox{\hyperlink{struct_wait_in_queue_job_af48e4221f3acfac71e5407bb792ea488}{WaitInQueueJob}}()\ :\ \mbox{\hyperlink{struct_job}{Job}}(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}::\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411}{WaitInQueue}},\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{0,\ 0\},\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{0,\ 0\})\ \{\}}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ std::shared\_ptr<Entity>\ \mbox{\hyperlink{struct_wait_in_queue_job_ac567344e9fd847f5484ded1af1abba28}{reg}};}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_wait_in_queue_job_af739a2971b1c9a8e2f12ba3d18a6d1b5}{spot\_in\_line}}\ =\ -\/1;}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State}}\ \mbox{\hyperlink{struct_wait_in_queue_job_a2479fbffbedce22dfb941bddbd3ab1ae}{run\_state\_initialize}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ dt)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State}}\ \mbox{\hyperlink{struct_wait_in_queue_job_aa5fd4388b65c8dd369677b3686900ff4}{run\_state\_working\_at\_start}}(}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State}}\ \mbox{\hyperlink{struct_wait_in_queue_job_aa90f4ee0465f795acf599bf91c067de0}{run\_state\_working\_at\_end}}(}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_wait_in_queue_job_a9e1ee19778be4b5cac82b4084a777ad8}{before\_each\_job\_tick}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&,}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_wait_in_queue_job_ad4ef0afa28db0aebd52934e4b3365d8f}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Job>\{\});}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_wait_in_queue_job_af739a2971b1c9a8e2f12ba3d18a6d1b5}{spot\_in\_line}});}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_wait_in_queue_job_ac567344e9fd847f5484ded1af1abba28}{reg}});}
+\DoxyCodeLine{00208\ \ \ \ \ \}}
+\DoxyCodeLine{00209\ \};}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_leaving_job}{LeavingJob}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_job}{Job}}\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \mbox{\hyperlink{struct_leaving_job_a7299de6aae91c4f788f22f0a4be03517}{LeavingJob}}()\ :\ \mbox{\hyperlink{struct_job}{Job}}(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}::\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a10f23da8d8e9f45aa56e0fd602f6363f}{Leaving}},\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{0,\ 0\},\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{0,\ 0\})\ \{\}}
+\DoxyCodeLine{00213\ \ \ \ \ \mbox{\hyperlink{struct_leaving_job_a1b3af0c99029c1ad15af2d45b8d9f9db}{LeavingJob}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \_start,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \_end)\ :\ \mbox{\hyperlink{struct_job}{Job}}(\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}::\mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a10f23da8d8e9f45aa56e0fd602f6363f}{Leaving}},\ \_start,\ \_end)\ \{\}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dce}{State}}\ \mbox{\hyperlink{struct_leaving_job_afc6c32eb0f8124562f780e592a7b545f}{run\_state\_working\_at\_end}}(}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_leaving_job_ac0830ac20864c3d57782d911ecae7c2a}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<Job>\{\});}
+\DoxyCodeLine{00222\ \ \ \ \ \}}
+\DoxyCodeLine{00223\ \};}
 
 \end{DoxyCode}

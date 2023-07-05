@@ -157,12 +157,12 @@ $(function() {
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="comment">// Front Face</span></div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        rlNormal3f(0.0f, 1.0f, 0.0f);  <span class="comment">// Normal Pointing Up</span></div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        rlTexCoord2f(tx, ty);</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        rlVertex3f(x, y, z);  <span class="comment">// Top Left Of The Texture and Quad</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        rlVertex3f(x, y, z);           <span class="comment">// Top Left Of The Texture and Quad</span></div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        rlTexCoord2f(tx, th);</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        rlVertex3f(x, y, z + height);  <span class="comment">// Bottom Left Of The Texture and Quad</span></div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        rlTexCoord2f(tw, th);</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        rlVertex3f(x + width, y,</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                   z + height);  <span class="comment">// Bottom Right Of The Texture and Quad</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                   z + height);       <span class="comment">// Bottom Right Of The Texture and Quad</span></div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        rlTexCoord2f(tw, ty);</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        rlVertex3f(x + width, y, z);  <span class="comment">// Top Right Of The Texture and Quad</span></div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
@@ -170,9 +170,9 @@ $(function() {
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            <span class="comment">// Back Face</span></div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            rlNormal3f(0.0f, -1.0f, 0.0f);  <span class="comment">// Normal Pointing Down</span></div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            rlTexCoord2f(tx, ty);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            rlVertex3f(x, y, z);  <span class="comment">// Top Right Of The Texture and Quad</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            rlVertex3f(x, y, z);            <span class="comment">// Top Right Of The Texture and Quad</span></div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            rlTexCoord2f(tw, ty);</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            rlVertex3f(x + width, y, z);  <span class="comment">// Top Left Of The Texture and Quad</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            rlVertex3f(x + width, y, z);    <span class="comment">// Top Left Of The Texture and Quad</span></div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            rlTexCoord2f(tw, th);</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            rlVertex3f(x + width, y,</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                       z + height);  <span class="comment">// Bottom Left Of The Texture and Quad</span></div>
@@ -192,8 +192,8 @@ $(function() {
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                       <span class="keywordtype">float</span> fontSize, <span class="keywordtype">float</span> fontSpacing, <span class="keywordtype">float</span> lineSpacing,</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                       <span class="keywordtype">bool</span> backface, Color tint) {</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> length =</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        TextLength(text);  <span class="comment">// Total length in bytes of the text,</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                           <span class="comment">// scanned by codepoints in loop</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        TextLength(text);      <span class="comment">// Total length in bytes of the text,</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                               <span class="comment">// scanned by codepoints in loop</span></div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordtype">float</span> textOffsetY = 0.0f;  <span class="comment">// Offset between lines (on line break &#39;\n&#39;)</span></div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keywordtype">float</span> textOffsetX = 0.0f;  <span class="comment">// Offset X to next character to draw</span></div>
@@ -307,8 +307,8 @@ $(function() {
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <span class="keywordtype">int</span> length = TextLength(text);  <span class="comment">// Total length in bytes of the text,</span></div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                                    <span class="comment">// scanned by codepoints in loop</span></div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="keywordtype">float</span> textOffsetY = 0.0f;  <span class="comment">// Offset between lines (on line break &#39;\n&#39;)</span></div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordtype">float</span> textOffsetX = 0.0f;  <span class="comment">// Offset X to next character to draw</span></div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="keywordtype">float</span> textOffsetY = 0.0f;       <span class="comment">// Offset between lines (on line break &#39;\n&#39;)</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordtype">float</span> textOffsetX = 0.0f;       <span class="comment">// Offset X to next character to draw</span></div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keywordtype">float</span> scale = fontSize / (float) <a class="code hl_namespace" href="../../d7/dd4/namespacefont.html">font</a>.baseSize;</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
@@ -438,7 +438,7 @@ $(function() {
 <div class="ttc" id="aexternal__include_8h_html"><div class="ttname"><a href="../../d7/daf/external__include_8h.html">external_include.h</a></div></div>
 <div class="ttc" id="agraphics_8h_html_a308f9233b868e4e52062de502c3d9cef"><div class="ttname"><a href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a></div><div class="ttdeci">raylib::Vector3 vec3</div><div class="ttdef"><b>Definition:</b> graphics.h:33</div></div>
 <div class="ttc" id="anamespacefont_html"><div class="ttname"><a href="../../d7/dd4/namespacefont.html">font</a></div><div class="ttdef"><b>Definition:</b> Karmina_Regular_256.h:21</div></div>
-<div class="ttc" id="anamespaceraylib_html"><div class="ttname"><a href="../../dd/d8c/namespaceraylib.html">raylib</a></div><div class="ttdef"><b>Definition:</b> drawing_util.h:12</div></div>
+<div class="ttc" id="anamespaceraylib_html"><div class="ttname"><a href="../../dd/d8c/namespaceraylib.html">raylib</a></div><div class="ttdef"><b>Definition:</b> drawing_util.h:14</div></div>
 <div class="ttc" id="anamespaceraylib_html_a201c666d2877d6eabeafa095536c4131"><div class="ttname"><a href="../../dd/d8c/namespaceraylib.html#a201c666d2877d6eabeafa095536c4131">raylib::SHOW_LETTER_BOUNDRY</a></div><div class="ttdeci">const bool SHOW_LETTER_BOUNDRY</div><div class="ttdef"><b>Definition:</b> text_util.h:14</div></div>
 <div class="ttc" id="anamespaceraylib_html_a6aebd1748cab9a1fdcf103e310507b6b"><div class="ttname"><a href="../../dd/d8c/namespaceraylib.html#a6aebd1748cab9a1fdcf103e310507b6b">raylib::MeasureText3D</a></div><div class="ttdeci">static vec3 MeasureText3D(Font font, const char *text, float fontSize, float fontSpacing, float lineSpacing)</div><div class="ttdef"><b>Definition:</b> text_util.h:164</div></div>
 <div class="ttc" id="anamespaceraylib_html_a89c9a7c28380a9b4c6434e1c37f44bdd"><div class="ttname"><a href="../../dd/d8c/namespaceraylib.html#a89c9a7c28380a9b4c6434e1c37f44bdd">raylib::SHOW_TEXT_BOUNDRY</a></div><div class="ttdeci">const bool SHOW_TEXT_BOUNDRY</div><div class="ttdef"><b>Definition:</b> text_util.h:15</div></div>
@@ -446,7 +446,7 @@ $(function() {
 <div class="ttc" id="anamespaceraylib_html_abc5a61fc461e160abbf9e9458d38cbf9"><div class="ttname"><a href="../../dd/d8c/namespaceraylib.html#abc5a61fc461e160abbf9e9458d38cbf9">raylib::DrawTextCodepoint3D</a></div><div class="ttdeci">static void DrawTextCodepoint3D(Font font, int codepoint, vec3 position, float fontSize, bool backface, Color tint)</div><div class="ttdef"><b>Definition:</b> text_util.h:23</div></div>
 <div class="ttc" id="anamespaceraylib_html_adc40755b0f82292edf03a57666161342"><div class="ttname"><a href="../../dd/d8c/namespaceraylib.html#adc40755b0f82292edf03a57666161342">raylib::DrawText3D</a></div><div class="ttdeci">static void DrawText3D(Font font, const char *text, vec3 position, float fontSize, float fontSpacing, float lineSpacing, bool backface, Color tint)</div><div class="ttdef"><b>Definition:</b> text_util.h:113</div></div>
 <div class="ttc" id="anamespaceraylib_html_aeb18116ce05499755bfce3012bfa0ea1"><div class="ttname"><a href="../../dd/d8c/namespaceraylib.html#aeb18116ce05499755bfce3012bfa0ea1">raylib::DrawTextWave3D</a></div><div class="ttdeci">static void DrawTextWave3D(Font font, const char *text, vec3 position, float fontSize, float fontSpacing, float lineSpacing, bool backface, WaveTextConfig *config, float time, Color tint)</div><div class="ttdef"><b>Definition:</b> text_util.h:225</div></div>
-<div class="ttc" id="anamespacevec_html"><div class="ttname"><a href="../../d4/d9a/namespacevec.html">vec</a></div><div class="ttdef"><b>Definition:</b> vec_util.h:43</div></div>
+<div class="ttc" id="anamespacevec_html"><div class="ttname"><a href="../../d4/d9a/namespacevec.html">vec</a></div><div class="ttdef"><b>Definition:</b> vec_util.h:25</div></div>
 <div class="ttc" id="astructraylib_1_1_wave_text_config_html"><div class="ttname"><a href="../../d5/d75/structraylib_1_1_wave_text_config.html">raylib::WaveTextConfig</a></div><div class="ttdef"><b>Definition:</b> text_util.h:17</div></div>
 <div class="ttc" id="astructraylib_1_1_wave_text_config_html_a16d8b5ce500204c90bd474ff798a3f9d"><div class="ttname"><a href="../../d5/d75/structraylib_1_1_wave_text_config.html#a16d8b5ce500204c90bd474ff798a3f9d">raylib::WaveTextConfig::waveRange</a></div><div class="ttdeci">vec3 waveRange</div><div class="ttdef"><b>Definition:</b> text_util.h:18</div></div>
 <div class="ttc" id="astructraylib_1_1_wave_text_config_html_a3ac36f7f3ee0186d2130188a92409bd5"><div class="ttname"><a href="../../d5/d75/structraylib_1_1_wave_text_config.html#a3ac36f7f3ee0186d2130188a92409bd5">raylib::WaveTextConfig::waveSpeed</a></div><div class="ttdeci">vec3 waveSpeed</div><div class="ttdef"><b>Definition:</b> text_util.h:19</div></div>

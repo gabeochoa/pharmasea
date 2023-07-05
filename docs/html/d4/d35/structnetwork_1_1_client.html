@@ -99,6 +99,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:adf85673643552bd197a0e09969a7391a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a149d74fd75b272b65ae536d282bbca2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a149d74fd75b272b65ae536d282bbca2b">tick</a> (float dt)</td></tr>
 <tr class="separator:a149d74fd75b272b65ae536d282bbca2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc66c2fdd48fce78bb88c9bfb4b80a22"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#adc66c2fdd48fce78bb88c9bfb4b80a22">send_ping_packet</a> (int my_id, float dt)</td></tr>
+<tr class="separator:adc66c2fdd48fce78bb88c9bfb4b80a22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae502815c0740bf18bc4bff3a92ee5bba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#ae502815c0740bf18bc4bff3a92ee5bba">send_player_input_packet</a> (int my_id)</td></tr>
 <tr class="separator:ae502815c0740bf18bc4bff3a92ee5bba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdb127c63e3c7a36575f590cf525e0a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#acdb127c63e3c7a36575f590cf525e0a9">client_process_message_string</a> (std::string msg)</td></tr>
@@ -112,16 +114,20 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aedb6bbdd45635734ed118b13c6e682dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accc55a7d376cee3fcb6d1f8783620e4a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="../../d7/d6b/structnetwork_1_1internal_1_1_client.html">internal::Client</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#accc55a7d376cee3fcb6d1f8783620e4a">client_p</a></td></tr>
 <tr class="separator:accc55a7d376cee3fcb6d1f8783620e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af91fc25b966ada4b1e2d014461c98e42"><td class="memItemLeft" align="right" valign="top">std::map&lt; int, std::shared_ptr&lt; <a class="el" href="../../d8/dd0/struct_remote_player.html">RemotePlayer</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#af91fc25b966ada4b1e2d014461c98e42">remote_players</a></td></tr>
-<tr class="separator:af91fc25b966ada4b1e2d014461c98e42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a021d0fb75e5a4f086d3d93f3f9658f34"><td class="memItemLeft" align="right" valign="top">std::map&lt; int, std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a021d0fb75e5a4f086d3d93f3f9658f34">remote_players</a></td></tr>
+<tr class="separator:a021d0fb75e5a4f086d3d93f3f9658f34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6e1dcc6a39f1aa0bb47770f3fcd6e27"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="../../df/d91/struct_map.html">Map</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#af6e1dcc6a39f1aa0bb47770f3fcd6e27">map</a></td></tr>
 <tr class="separator:af6e1dcc6a39f1aa0bb47770f3fcd6e27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e8abb777fd5d6fb31619d298fe21843"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../d8/dcf/structnetwork_1_1_client_packet_1_1_announcement_info.html">ClientPacket::AnnouncementInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a8e8abb777fd5d6fb31619d298fe21843">announcements</a></td></tr>
 <tr class="separator:a8e8abb777fd5d6fb31619d298fe21843"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad552716a0f1393345ca00f8d30701014"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#ad552716a0f1393345ca00f8d30701014">next_tick_reset</a> = 0.02f</td></tr>
+<tr class="memitem:ad552716a0f1393345ca00f8d30701014"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#ad552716a0f1393345ca00f8d30701014">next_tick_reset</a> = 0.04f</td></tr>
 <tr class="separator:ad552716a0f1393345ca00f8d30701014"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6ca04ac14d46fa679e48c52ee6af215"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#af6ca04ac14d46fa679e48c52ee6af215">next_tick</a> = 0.0f</td></tr>
 <tr class="separator:af6ca04ac14d46fa679e48c52ee6af215"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd470b639f7e41c7a3f1a5874241c360"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#abd470b639f7e41c7a3f1a5874241c360">next_ping_reset</a> = 0.2f</td></tr>
+<tr class="separator:abd470b639f7e41c7a3f1a5874241c360"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0240f5ff40e45bd3fdac5427e692a28d"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a0240f5ff40e45bd3fdac5427e692a28d">next_ping</a> = 0.0f</td></tr>
+<tr class="separator:a0240f5ff40e45bd3fdac5427e692a28d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a497a0a1c6e560a87db262f265ee09d3b" name="a497a0a1c6e560a87db262f265ee09d3b"></a>
@@ -176,7 +182,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html#a161a9ab1162e7c192b33e8f5bdcffdc1">network::ClientPacket::PlayerJoinInfo::all_clients</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989faca8862f28ec5f9281f3310089ee1b0a2">network::ClientPacket::Announcement</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a8e8abb777fd5d6fb31619d298fe21843">announcements</a>, <a class="el" href="../../d9/d3c/entityhelper_8h.html#a0615e7b6a0303e4452ecbbaed94def95">client_entities_DO_NOT_USE</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#aac14602a4a11d31626bb53de7a1c8461">network::ClientPacket::client_id</a>, <a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html#a5dd4ddc1456ab2f8f370e110b16cf0a5">network::ClientPacket::PlayerJoinInfo::client_id</a>, <a class="el" href="../../dc/d01/structnetwork_1_1_client_packet_1_1_player_leave_info.html#a6cc9190c08a805752d120c2da4b04360">network::ClientPacket::PlayerLeaveInfo::client_id</a>, <a class="el" href="../../d0/d4e/item__helper_8h.html#abc7723a5962a94ea43ef9b5de0f2ad39">client_items_DO_NOT_USE</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#accc55a7d376cee3fcb6d1f8783620e4a">client_p</a>, <a class="el" href="../../df/d91/struct_map.html#ab6633a39aa81ed9161458051d0b0e662">Map::entities()</a>, <a class="el" href="../../de/d7f/structnetwork_1_1_client_packet_1_1_player_info.html#ae4d2bf6f11c4d17371b63a8fd707064e">network::ClientPacket::PlayerInfo::facing_direction</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa27d768ec34bb2753f2f7ab235d14d57e">network::ClientPacket::GameState</a>, <a class="el" href="../../db/da1/globals__register_8h.html#aac6abbd011709171879036d77206a4aa">GLOBALS</a>, <a class="el" href="../../d0/d33/structnetwork_1_1_client_packet_1_1_game_state_info.html#a5c9f88a7a511ed12da369c6f9c887020">network::ClientPacket::GameStateInfo::host_game_state</a>, <a class="el" href="../../d0/d33/structnetwork_1_1_client_packet_1_1_game_state_info.html#a6259926b186b2a3291dfb422c5ca1836">network::ClientPacket::GameStateInfo::host_menu_state</a>, <a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html#a639b991942d32a9e68ec064ffe6d2cf1">network::ClientPacket::PlayerJoinInfo::is_you</a>, <a class="el" href="../../df/d91/struct_map.html#a020eac8bc34cb0da6f978b410913f82f">Map::items()</a>, <a class="el" href="../../de/d7f/structnetwork_1_1_client_packet_1_1_player_info.html#a85880eaecedbd9cd34572b0d54a24c9e">network::ClientPacket::PlayerInfo::location</a>, <a class="el" href="../../d7/d7f/log_8h.html#aa1cfe5444875c8eca0ea6f6993977d6d">log_info</a>, <a class="el" href="../../d7/d7f/log_8h.html#a04af09851c431d178f16b24fa1aac1e9">log_warn</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#af6e1dcc6a39f1aa0bb47770f3fcd6e27">map</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fadc1689eb51fd7dccbf385b6c258afb23">network::ClientPacket::Map</a>, <a class="el" href="../../d0/da4/structnetwork_1_1_client_packet_1_1_map_info.html#a54deb7c898b4e0ae76f5d307549e52df">network::ClientPacket::MapInfo::map</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a5c08535f0530c222b70c237a08794381">network::ClientPacket::msg</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#aee7665870f2a000055e34b3c6c8aec71">network::ClientPacket::msg_type</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa12e7cf4cc4954a80632c66fa23f2e17a">network::ClientPacket::PlayerJoin</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa1920fa7b0acebea4b0195925abf5bb7f">network::ClientPacket::PlayerLeave</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa320147bb2c8639ba072b32dd21cb1067">network::ClientPacket::PlayerLocation</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#af91fc25b966ada4b1e2d014461c98e42">remote_players</a>, <a class="el" href="../../da/d2a/struct_global_value_register.html#a0020d85a5afb11283c115e425f7e175c">GlobalValueRegister::set()</a>, <a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html#a2c7c7cdfd4fa3e762ba86a92e4cf80db">network::ClientPacket::PlayerJoinInfo::username</a>, and <a class="el" href="../../de/d7f/structnetwork_1_1_client_packet_1_1_player_info.html#aae10affa9960f11f59a2e248ef8dac00">network::ClientPacket::PlayerInfo::username</a>.</p>
+<p class="reference">References <a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html#a161a9ab1162e7c192b33e8f5bdcffdc1">network::ClientPacket::PlayerJoinInfo::all_clients</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989faca8862f28ec5f9281f3310089ee1b0a2">network::ClientPacket::Announcement</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a8e8abb777fd5d6fb31619d298fe21843">announcements</a>, <a class="el" href="../../d9/d3c/entityhelper_8h.html#a0615e7b6a0303e4452ecbbaed94def95">client_entities_DO_NOT_USE</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#aac14602a4a11d31626bb53de7a1c8461">network::ClientPacket::client_id</a>, <a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html#a5dd4ddc1456ab2f8f370e110b16cf0a5">network::ClientPacket::PlayerJoinInfo::client_id</a>, <a class="el" href="../../dc/d01/structnetwork_1_1_client_packet_1_1_player_leave_info.html#a6cc9190c08a805752d120c2da4b04360">network::ClientPacket::PlayerLeaveInfo::client_id</a>, <a class="el" href="../../da/ddb/structnetwork_1_1_client_packet_1_1_player_rare_info.html#a9fa5d316bfd6745605b51c79940e8484">network::ClientPacket::PlayerRareInfo::client_id</a>, <a class="el" href="../../d0/d4e/item__helper_8h.html#abc7723a5962a94ea43ef9b5de0f2ad39">client_items_DO_NOT_USE</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#accc55a7d376cee3fcb6d1f8783620e4a">client_p</a>, <a class="el" href="../../df/d2b/namespacenow.html#a7bf6124a67ae8b60d59e5951c490704d">now::current_ms()</a>, <a class="el" href="../../df/d91/struct_map.html#ab6633a39aa81ed9161458051d0b0e662">Map::entities()</a>, <a class="el" href="../../de/d7f/structnetwork_1_1_client_packet_1_1_player_info.html#ae4d2bf6f11c4d17371b63a8fd707064e">network::ClientPacket::PlayerInfo::facing_direction</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa27d768ec34bb2753f2f7ab235d14d57e">network::ClientPacket::GameState</a>, <a class="el" href="../../d5/d87/globals_8h.html#a9b5348cc15afb030f3257335ce85a09f">global_player</a>, <a class="el" href="../../db/da1/globals__register_8h.html#aac6abbd011709171879036d77206a4aa">GLOBALS</a>, <a class="el" href="../../d0/d33/structnetwork_1_1_client_packet_1_1_game_state_info.html#a5c9f88a7a511ed12da369c6f9c887020">network::ClientPacket::GameStateInfo::host_game_state</a>, <a class="el" href="../../d0/d33/structnetwork_1_1_client_packet_1_1_game_state_info.html#a6259926b186b2a3291dfb422c5ca1836">network::ClientPacket::GameStateInfo::host_menu_state</a>, <a class="el" href="../../d9/dbe/struct_has_client_i_d.html#a0a1b3e9d050d22980c73d0d84396115d">HasClientID::id()</a>, <a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html#a639b991942d32a9e68ec064ffe6d2cf1">network::ClientPacket::PlayerJoinInfo::is_you</a>, <a class="el" href="../../df/d91/struct_map.html#a020eac8bc34cb0da6f978b410913f82f">Map::items()</a>, <a class="el" href="../../de/d7f/structnetwork_1_1_client_packet_1_1_player_info.html#a85880eaecedbd9cd34572b0d54a24c9e">network::ClientPacket::PlayerInfo::location</a>, <a class="el" href="../../d7/d7f/log_8h.html#aa1cfe5444875c8eca0ea6f6993977d6d">log_info</a>, <a class="el" href="../../d7/d7f/log_8h.html#a04af09851c431d178f16b24fa1aac1e9">log_warn</a>, <a class="el" href="../../d8/d83/entity_8h.html#a0be34c7d8a1f2bc10bdc6023cadc11a2">make_remote_player()</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#af6e1dcc6a39f1aa0bb47770f3fcd6e27">map</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fadc1689eb51fd7dccbf385b6c258afb23">network::ClientPacket::Map</a>, <a class="el" href="../../d0/da4/structnetwork_1_1_client_packet_1_1_map_info.html#a54deb7c898b4e0ae76f5d307549e52df">network::ClientPacket::MapInfo::map</a>, <a class="el" href="../../da/ddb/structnetwork_1_1_client_packet_1_1_player_rare_info.html#a30ccf35618282cab8102afd5a3513d24">network::ClientPacket::PlayerRareInfo::model_index</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a5c08535f0530c222b70c237a08794381">network::ClientPacket::msg</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#aee7665870f2a000055e34b3c6c8aec71">network::ClientPacket::msg_type</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fac95db7a89884c975082d6baac81094f0">network::ClientPacket::Ping</a>, <a class="el" href="../../d5/dbc/structnetwork_1_1_client_packet_1_1_ping_info.html#aa4c015c0ebf5bf79a1880ff7a33c7225">network::ClientPacket::PingInfo::ping</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa12e7cf4cc4954a80632c66fa23f2e17a">network::ClientPacket::PlayerJoin</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa1920fa7b0acebea4b0195925abf5bb7f">network::ClientPacket::PlayerLeave</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa320147bb2c8639ba072b32dd21cb1067">network::ClientPacket::PlayerLocation</a>, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa0d109cf255e2f4519253fb30b885adb1">network::ClientPacket::PlayerRare</a>, <a class="el" href="../../d5/dbc/structnetwork_1_1_client_packet_1_1_ping_info.html#a7bf50e2929851e0b937d289fff31b8e0">network::ClientPacket::PingInfo::pong</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a021d0fb75e5a4f086d3d93f3f9658f34">remote_players</a>, <a class="el" href="../../db/d3f/namespacenetwork.html#a93863ca64cbc817459504262e79f32a7">network::return_ping</a>, <a class="el" href="../../da/d2a/struct_global_value_register.html#a0020d85a5afb11283c115e425f7e175c">GlobalValueRegister::set()</a>, <a class="el" href="../../db/d3f/namespacenetwork.html#a18806512b214876590f6c7ad4d9904e2">network::there_ping</a>, <a class="el" href="../../db/d3f/namespacenetwork.html#a7f429ee458bfb440d4a5e252d282c4d3">network::total_ping</a>, <a class="el" href="../../d8/d83/entity_8h.html#a6d13b14e3b7692b3b67b3532abc6f599">update_player_rare_remotely()</a>, <a class="el" href="../../d8/d83/entity_8h.html#acd438b12b5216fca234eb3bf5cc90c50">update_player_remotely()</a>, <a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html#a2c7c7cdfd4fa3e762ba86a92e4cf80db">network::ClientPacket::PlayerJoinInfo::username</a>, and <a class="el" href="../../de/d7f/structnetwork_1_1_client_packet_1_1_player_info.html#aae10affa9960f11f59a2e248ef8dac00">network::ClientPacket::PlayerInfo::username</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a497a0a1c6e560a87db262f265ee09d3b">Client()</a>.</p>
 
@@ -209,6 +215,46 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="adc66c2fdd48fce78bb88c9bfb4b80a22" name="adc66c2fdd48fce78bb88c9bfb4b80a22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc66c2fdd48fce78bb88c9bfb4b80a22">&#9670;&#160;</a></span>send_ping_packet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void network::Client::send_ping_packet </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>my_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>dt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#accc55a7d376cee3fcb6d1f8783620e4a">client_p</a>, <a class="el" href="../../df/d2b/namespacenow.html#a7bf6124a67ae8b60d59e5951c490704d">now::current_ms()</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a0240f5ff40e45bd3fdac5427e692a28d">next_ping</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#abd470b639f7e41c7a3f1a5874241c360">next_ping_reset</a>, and <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fac95db7a89884c975082d6baac81094f0">network::ClientPacket::Ping</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a149d74fd75b272b65ae536d282bbca2b">tick()</a>.</p>
+
+</div>
+</div>
 <a id="ae502815c0740bf18bc4bff3a92ee5bba" name="ae502815c0740bf18bc4bff3a92ee5bba"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae502815c0740bf18bc4bff3a92ee5bba">&#9670;&#160;</a></span>send_player_input_packet()</h2>
 
@@ -233,7 +279,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#accc55a7d376cee3fcb6d1f8783620e4a">client_p</a>, <a class="el" href="../../dc/dc4/struct_entity.html#ac2ecabb8a3889111434375a57bc7dc5a">Entity::get()</a>, <a class="el" href="../../da/d2a/struct_global_value_register.html#af490d6abcf31e2e41b1f0eead7f94f0a">GlobalValueRegister::get_ptr()</a>, <a class="el" href="../../db/da1/globals__register_8h.html#aac6abbd011709171879036d77206a4aa">GLOBALS</a>, and <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989faa79178dcf4b9ce19ac0fff77148d642c">network::ClientPacket::PlayerControl</a>.</p>
+<p class="reference">References <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#accc55a7d376cee3fcb6d1f8783620e4a">client_p</a>, <a class="el" href="../../d5/d87/globals_8h.html#a9b5348cc15afb030f3257335ce85a09f">global_player</a>, <a class="el" href="../../df/dcb/struct_collects_user_input.html#ab8b83c78b23a4b2530977eea00643921">CollectsUserInput::inputs</a>, and <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989faa79178dcf4b9ce19ac0fff77148d642c">network::ClientPacket::PlayerControl</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a149d74fd75b272b65ae536d282bbca2b">tick()</a>.</p>
 
@@ -263,7 +309,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a8e8abb777fd5d6fb31619d298fe21843">announcements</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#accc55a7d376cee3fcb6d1f8783620e4a">client_p</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#af6ca04ac14d46fa679e48c52ee6af215">next_tick</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#ad552716a0f1393345ca00f8d30701014">next_tick_reset</a>, and <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#ae502815c0740bf18bc4bff3a92ee5bba">send_player_input_packet()</a>.</p>
+<p class="reference">References <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a8e8abb777fd5d6fb31619d298fe21843">announcements</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#accc55a7d376cee3fcb6d1f8783620e4a">client_p</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#af6ca04ac14d46fa679e48c52ee6af215">next_tick</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#ad552716a0f1393345ca00f8d30701014">next_tick_reset</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#adc66c2fdd48fce78bb88c9bfb4b80a22">send_ping_packet()</a>, and <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#ae502815c0740bf18bc4bff3a92ee5bba">send_player_input_packet()</a>.</p>
 
 </div>
 </div>
@@ -324,7 +370,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a497a0a1c6e560a87db262f265ee09d3b">Client()</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#acdb127c63e3c7a36575f590cf525e0a9">client_process_message_string()</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#adf85673643552bd197a0e09969a7391a">lock_in_ip()</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#ae502815c0740bf18bc4bff3a92ee5bba">send_player_input_packet()</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a149d74fd75b272b65ae536d282bbca2b">tick()</a>, and <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a723240bcabdae6cfb71226bd84c39715">update_username()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a497a0a1c6e560a87db262f265ee09d3b">Client()</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#acdb127c63e3c7a36575f590cf525e0a9">client_process_message_string()</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#adf85673643552bd197a0e09969a7391a">lock_in_ip()</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#adc66c2fdd48fce78bb88c9bfb4b80a22">send_ping_packet()</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#ae502815c0740bf18bc4bff3a92ee5bba">send_player_input_packet()</a>, <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a149d74fd75b272b65ae536d282bbca2b">tick()</a>, and <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#a723240bcabdae6cfb71226bd84c39715">update_username()</a>.</p>
 
 </div>
 </div>
@@ -374,6 +420,38 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a0240f5ff40e45bd3fdac5427e692a28d" name="a0240f5ff40e45bd3fdac5427e692a28d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0240f5ff40e45bd3fdac5427e692a28d">&#9670;&#160;</a></span>next_ping</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float network::Client::next_ping = 0.0f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#adc66c2fdd48fce78bb88c9bfb4b80a22">send_ping_packet()</a>.</p>
+
+</div>
+</div>
+<a id="abd470b639f7e41c7a3f1a5874241c360" name="abd470b639f7e41c7a3f1a5874241c360"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd470b639f7e41c7a3f1a5874241c360">&#9670;&#160;</a></span>next_ping_reset</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float network::Client::next_ping_reset = 0.2f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#adc66c2fdd48fce78bb88c9bfb4b80a22">send_ping_packet()</a>.</p>
+
+</div>
+</div>
 <a id="af6ca04ac14d46fa679e48c52ee6af215" name="af6ca04ac14d46fa679e48c52ee6af215"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af6ca04ac14d46fa679e48c52ee6af215">&#9670;&#160;</a></span>next_tick</h2>
 
@@ -397,7 +475,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float network::Client::next_tick_reset = 0.02f</td>
+          <td class="memname">float network::Client::next_tick_reset = 0.04f</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -406,14 +484,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="af91fc25b966ada4b1e2d014461c98e42" name="af91fc25b966ada4b1e2d014461c98e42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af91fc25b966ada4b1e2d014461c98e42">&#9670;&#160;</a></span>remote_players</h2>
+<a id="a021d0fb75e5a4f086d3d93f3f9658f34" name="a021d0fb75e5a4f086d3d93f3f9658f34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a021d0fb75e5a4f086d3d93f3f9658f34">&#9670;&#160;</a></span>remote_players</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;int, std::shared_ptr&lt;<a class="el" href="../../d8/dd0/struct_remote_player.html">RemotePlayer</a>&gt; &gt; network::Client::remote_players</td>
+          <td class="memname">std::map&lt;int, std::shared_ptr&lt;<a class="el" href="../../dc/dc4/struct_entity.html">Entity</a>&gt; &gt; network::Client::remote_players</td>
         </tr>
       </table>
 </div><div class="memdoc">

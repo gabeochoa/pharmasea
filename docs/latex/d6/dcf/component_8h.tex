@@ -1,0 +1,172 @@
+\hypertarget{component_8h}{}\doxysection{src/tests/component.h File Reference}
+\label{component_8h}\index{src/tests/component.h@{src/tests/component.h}}
+{\ttfamily \#include \char`\"{}../entity.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../engine/assert.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../engine/defer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../network/shared.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\+\_\+and\+\_\+validate\+\_\+components}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$a, \mbox{\hyperlink{struct_entity}{Entity}} $\ast$b)
+\item 
+\mbox{\hyperlink{struct_entity}{Entity}} $\ast$ \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\+\_\+entity}} ()
+\item 
+void \mbox{\hyperlink{component_8h_ae849fc4515f72b00ee76a0d5fbfb02ec}{entity\+\_\+components}} ()
+\item 
+void \mbox{\hyperlink{component_8h_aa2f3205c510a6acf0d03678ca2800086}{test\+\_\+adding\+\_\+single\+\_\+component\+\_\+serialdeserial}} ()
+\item 
+void \mbox{\hyperlink{component_8h_ac1883554907f35015187763424d89c08}{validate\+\_\+name\+\_\+change\+\_\+persisits}} ()
+\item 
+void \mbox{\hyperlink{component_8h_aca88c4ac22f52a4f55af568c002f0ef5}{validate\+\_\+custom\+\_\+hold\+\_\+position\+\_\+persisits}} ()
+\item 
+void \mbox{\hyperlink{component_8h_a8fa94912ded9b380397752a60234ccc0}{validate\+\_\+held\+\_\+item\+\_\+serialized}} ()
+\item 
+void \mbox{\hyperlink{component_8h_aacd0b061b609752c687b41029538f5f0}{validate\+\_\+wall\+\_\+color\+\_\+serialized}} ()
+\item 
+void \mbox{\hyperlink{component_8h_a9883d8d1817b39592d335dde5b34e0c3}{validate\+\_\+trigger\+\_\+area\+\_\+serialized}} ()
+\item 
+void \mbox{\hyperlink{component_8h_ae0c6e04a7b99ee25625edba38ee63f91}{all\+\_\+tests}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{component_8h_ae0c6e04a7b99ee25625edba38ee63f91}\label{component_8h_ae0c6e04a7b99ee25625edba38ee63f91}} 
+\index{component.h@{component.h}!all\_tests@{all\_tests}}
+\index{all\_tests@{all\_tests}!component.h@{component.h}}
+\doxysubsubsection{\texorpdfstring{all\_tests()}{all\_tests()}}
+{\footnotesize\ttfamily void all\+\_\+tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{component_8h_ae849fc4515f72b00ee76a0d5fbfb02ec}{entity\+\_\+components()}}, \mbox{\hyperlink{component_8h_aa2f3205c510a6acf0d03678ca2800086}{test\+\_\+adding\+\_\+single\+\_\+component\+\_\+serialdeserial()}}, \mbox{\hyperlink{component_8h_aca88c4ac22f52a4f55af568c002f0ef5}{validate\+\_\+custom\+\_\+hold\+\_\+position\+\_\+persisits()}}, \mbox{\hyperlink{component_8h_a8fa94912ded9b380397752a60234ccc0}{validate\+\_\+held\+\_\+item\+\_\+serialized()}}, \mbox{\hyperlink{component_8h_ac1883554907f35015187763424d89c08}{validate\+\_\+name\+\_\+change\+\_\+persisits()}}, \mbox{\hyperlink{component_8h_a9883d8d1817b39592d335dde5b34e0c3}{validate\+\_\+trigger\+\_\+area\+\_\+serialized()}}, and \mbox{\hyperlink{component_8h_aacd0b061b609752c687b41029538f5f0}{validate\+\_\+wall\+\_\+color\+\_\+serialized()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacetests_a201d60bd93fbf0059978ae2e95abcab6}{tests\+::run\+\_\+all()}}.
+
+\mbox{\Hypertarget{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}\label{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}} 
+\index{component.h@{component.h}!compare\_and\_validate\_components@{compare\_and\_validate\_components}}
+\index{compare\_and\_validate\_components@{compare\_and\_validate\_components}!component.h@{component.h}}
+\doxysubsubsection{\texorpdfstring{compare\_and\_validate\_components()}{compare\_and\_validate\_components()}}
+{\footnotesize\ttfamily void compare\+\_\+and\+\_\+validate\+\_\+components (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_entity}{Entity}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{struct_entity}{Entity}} $\ast$}]{b }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_entity_a268b34f155900bef861b8b3ce6a5fa60}{Entity\+::component\+Array}}, \mbox{\hyperlink{struct_entity_a2bfb3cd4a791f32f53365d156e239a54}{Entity\+::component\+Set}}, \mbox{\hyperlink{base__component_8h_a94f76e23195dbdeee169cc932589d8c2}{max\+\_\+num\+\_\+components}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+
+
+Referenced by \mbox{\hyperlink{component_8h_ae849fc4515f72b00ee76a0d5fbfb02ec}{entity\+\_\+components()}}, \mbox{\hyperlink{component_8h_aa2f3205c510a6acf0d03678ca2800086}{test\+\_\+adding\+\_\+single\+\_\+component\+\_\+serialdeserial()}}, \mbox{\hyperlink{component_8h_aca88c4ac22f52a4f55af568c002f0ef5}{validate\+\_\+custom\+\_\+hold\+\_\+position\+\_\+persisits()}}, \mbox{\hyperlink{component_8h_a8fa94912ded9b380397752a60234ccc0}{validate\+\_\+held\+\_\+item\+\_\+serialized()}}, \mbox{\hyperlink{component_8h_ac1883554907f35015187763424d89c08}{validate\+\_\+name\+\_\+change\+\_\+persisits()}}, \mbox{\hyperlink{component_8h_a9883d8d1817b39592d335dde5b34e0c3}{validate\+\_\+trigger\+\_\+area\+\_\+serialized()}}, and \mbox{\hyperlink{component_8h_aacd0b061b609752c687b41029538f5f0}{validate\+\_\+wall\+\_\+color\+\_\+serialized()}}.
+
+\mbox{\Hypertarget{component_8h_ae849fc4515f72b00ee76a0d5fbfb02ec}\label{component_8h_ae849fc4515f72b00ee76a0d5fbfb02ec}} 
+\index{component.h@{component.h}!entity\_components@{entity\_components}}
+\index{entity\_components@{entity\_components}!component.h@{component.h}}
+\doxysubsubsection{\texorpdfstring{entity\_components()}{entity\_components()}}
+{\footnotesize\ttfamily void entity\+\_\+components (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\+\_\+and\+\_\+validate\+\_\+components()}}, \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network\+::deserialize\+\_\+to\+\_\+entity()}}, \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\+\_\+entity()}}, and \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network\+::serialize\+\_\+to\+\_\+entity()}}.
+
+
+
+Referenced by \mbox{\hyperlink{component_8h_ae0c6e04a7b99ee25625edba38ee63f91}{all\+\_\+tests()}}.
+
+\mbox{\Hypertarget{component_8h_aeeb87a511167fdc353269a4a129cc46a}\label{component_8h_aeeb87a511167fdc353269a4a129cc46a}} 
+\index{component.h@{component.h}!mk\_entity@{mk\_entity}}
+\index{mk\_entity@{mk\_entity}!component.h@{component.h}}
+\doxysubsubsection{\texorpdfstring{mk\_entity()}{mk\_entity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_entity}{Entity}} $\ast$ mk\+\_\+entity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{entity_8h_a96875ea4ae53760879d54f4bf58c14e9}{make\+\_\+entity()}}, and \mbox{\hyperlink{struct_debug_options_a7f43cc65d26d12effa3b19028994de37}{Debug\+Options\+::name}}.
+
+
+
+Referenced by \mbox{\hyperlink{component_8h_ae849fc4515f72b00ee76a0d5fbfb02ec}{entity\+\_\+components()}}, \mbox{\hyperlink{component_8h_aa2f3205c510a6acf0d03678ca2800086}{test\+\_\+adding\+\_\+single\+\_\+component\+\_\+serialdeserial()}}, \mbox{\hyperlink{component_8h_aca88c4ac22f52a4f55af568c002f0ef5}{validate\+\_\+custom\+\_\+hold\+\_\+position\+\_\+persisits()}}, \mbox{\hyperlink{component_8h_a8fa94912ded9b380397752a60234ccc0}{validate\+\_\+held\+\_\+item\+\_\+serialized()}}, \mbox{\hyperlink{component_8h_ac1883554907f35015187763424d89c08}{validate\+\_\+name\+\_\+change\+\_\+persisits()}}, \mbox{\hyperlink{component_8h_a9883d8d1817b39592d335dde5b34e0c3}{validate\+\_\+trigger\+\_\+area\+\_\+serialized()}}, and \mbox{\hyperlink{component_8h_aacd0b061b609752c687b41029538f5f0}{validate\+\_\+wall\+\_\+color\+\_\+serialized()}}.
+
+\mbox{\Hypertarget{component_8h_aa2f3205c510a6acf0d03678ca2800086}\label{component_8h_aa2f3205c510a6acf0d03678ca2800086}} 
+\index{component.h@{component.h}!test\_adding\_single\_component\_serialdeserial@{test\_adding\_single\_component\_serialdeserial}}
+\index{test\_adding\_single\_component\_serialdeserial@{test\_adding\_single\_component\_serialdeserial}!component.h@{component.h}}
+\doxysubsubsection{\texorpdfstring{test\_adding\_single\_component\_serialdeserial()}{test\_adding\_single\_component\_serialdeserial()}}
+{\footnotesize\ttfamily void test\+\_\+adding\+\_\+single\+\_\+component\+\_\+serialdeserial (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_entity_a54ee9d838c0d24c24b2faf1ea05bbd0b}{Entity\+::add\+Component()}}, \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\+\_\+and\+\_\+validate\+\_\+components()}}, \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network\+::deserialize\+\_\+to\+\_\+entity()}}, \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\+\_\+entity()}}, and \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network\+::serialize\+\_\+to\+\_\+entity()}}.
+
+
+
+Referenced by \mbox{\hyperlink{component_8h_ae0c6e04a7b99ee25625edba38ee63f91}{all\+\_\+tests()}}.
+
+\mbox{\Hypertarget{component_8h_aca88c4ac22f52a4f55af568c002f0ef5}\label{component_8h_aca88c4ac22f52a4f55af568c002f0ef5}} 
+\index{component.h@{component.h}!validate\_custom\_hold\_position\_persisits@{validate\_custom\_hold\_position\_persisits}}
+\index{validate\_custom\_hold\_position\_persisits@{validate\_custom\_hold\_position\_persisits}!component.h@{component.h}}
+\doxysubsubsection{\texorpdfstring{validate\_custom\_hold\_position\_persisits()}{validate\_custom\_hold\_position\_persisits()}}
+{\footnotesize\ttfamily void validate\+\_\+custom\+\_\+hold\+\_\+position\+\_\+persisits (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_entity_a54ee9d838c0d24c24b2faf1ea05bbd0b}{Entity\+::add\+Component()}}, \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\+\_\+and\+\_\+validate\+\_\+components()}}, \mbox{\hyperlink{struct_custom_held_item_position_a0d570a3cb204febffb7eb39b36af86eeaa7486b485300c482153dc4883e1a175d}{Custom\+Held\+Item\+Position\+::\+Conveyer}}, \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network\+::deserialize\+\_\+to\+\_\+entity()}}, \mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{Entity\+::get()}}, \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\+\_\+\+TEST\+\_\+\+EQ}}, \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\+\_\+entity()}}, and \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network\+::serialize\+\_\+to\+\_\+entity()}}.
+
+
+
+Referenced by \mbox{\hyperlink{component_8h_ae0c6e04a7b99ee25625edba38ee63f91}{all\+\_\+tests()}}.
+
+\mbox{\Hypertarget{component_8h_a8fa94912ded9b380397752a60234ccc0}\label{component_8h_a8fa94912ded9b380397752a60234ccc0}} 
+\index{component.h@{component.h}!validate\_held\_item\_serialized@{validate\_held\_item\_serialized}}
+\index{validate\_held\_item\_serialized@{validate\_held\_item\_serialized}!component.h@{component.h}}
+\doxysubsubsection{\texorpdfstring{validate\_held\_item\_serialized()}{validate\_held\_item\_serialized()}}
+{\footnotesize\ttfamily void validate\+\_\+held\+\_\+item\+\_\+serialized (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_entity_a54ee9d838c0d24c24b2faf1ea05bbd0b}{Entity\+::add\+Component()}}, \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\+\_\+and\+\_\+validate\+\_\+components()}}, \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network\+::deserialize\+\_\+to\+\_\+entity()}}, \mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{Entity\+::get()}}, \mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{Can\+Hold\+Item\+::item()}}, \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\+\_\+\+TEST\+\_\+\+EQ}}, \mbox{\hyperlink{assert_8h_ab4623194540dbc3387ba45baf005a101}{M\+\_\+\+TEST\+\_\+\+NEQ}}, \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\+\_\+entity()}}, and \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network\+::serialize\+\_\+to\+\_\+entity()}}.
+
+
+
+Referenced by \mbox{\hyperlink{component_8h_ae0c6e04a7b99ee25625edba38ee63f91}{all\+\_\+tests()}}.
+
+\mbox{\Hypertarget{component_8h_ac1883554907f35015187763424d89c08}\label{component_8h_ac1883554907f35015187763424d89c08}} 
+\index{component.h@{component.h}!validate\_name\_change\_persisits@{validate\_name\_change\_persisits}}
+\index{validate\_name\_change\_persisits@{validate\_name\_change\_persisits}!component.h@{component.h}}
+\doxysubsubsection{\texorpdfstring{validate\_name\_change\_persisits()}{validate\_name\_change\_persisits()}}
+{\footnotesize\ttfamily void validate\+\_\+name\+\_\+change\+\_\+persisits (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_entity_a54ee9d838c0d24c24b2faf1ea05bbd0b}{Entity\+::add\+Component()}}, \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\+\_\+and\+\_\+validate\+\_\+components()}}, \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network\+::deserialize\+\_\+to\+\_\+entity()}}, \mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{Entity\+::get()}}, \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\+\_\+\+TEST\+\_\+\+EQ}}, \mbox{\hyperlink{assert_8h_ab4623194540dbc3387ba45baf005a101}{M\+\_\+\+TEST\+\_\+\+NEQ}}, \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\+\_\+entity()}}, and \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network\+::serialize\+\_\+to\+\_\+entity()}}.
+
+
+
+Referenced by \mbox{\hyperlink{component_8h_ae0c6e04a7b99ee25625edba38ee63f91}{all\+\_\+tests()}}.
+
+\mbox{\Hypertarget{component_8h_a9883d8d1817b39592d335dde5b34e0c3}\label{component_8h_a9883d8d1817b39592d335dde5b34e0c3}} 
+\index{component.h@{component.h}!validate\_trigger\_area\_serialized@{validate\_trigger\_area\_serialized}}
+\index{validate\_trigger\_area\_serialized@{validate\_trigger\_area\_serialized}!component.h@{component.h}}
+\doxysubsubsection{\texorpdfstring{validate\_trigger\_area\_serialized()}{validate\_trigger\_area\_serialized()}}
+{\footnotesize\ttfamily void validate\+\_\+trigger\+\_\+area\+\_\+serialized (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\+\_\+and\+\_\+validate\+\_\+components()}}, \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network\+::deserialize\+\_\+to\+\_\+entity()}}, \mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{Entity\+::get()}}, \mbox{\hyperlink{struct_entity_ac82c57e9b1a366f041fca61d9ddd1459}{Entity\+::has()}}, \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\+\_\+\+TEST\+\_\+\+EQ}}, \mbox{\hyperlink{assert_8h_a36f31e4658ef9dfa83e062d4dfa49ab7}{M\+\_\+\+TEST\+\_\+T}}, \mbox{\hyperlink{namespaceentities_a0d6d07d53d6aacaa5b3547ac03d693b2}{entities\+::make\+\_\+trigger\+\_\+area()}}, \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\+\_\+entity()}}, \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network\+::serialize\+\_\+to\+\_\+entity()}}, and \mbox{\hyperlink{struct_is_trigger_area_ac447397557d6d6283cc9bd1f5f8f2d92}{Is\+Trigger\+Area\+::title()}}.
+
+
+
+Referenced by \mbox{\hyperlink{component_8h_ae0c6e04a7b99ee25625edba38ee63f91}{all\+\_\+tests()}}.
+
+\mbox{\Hypertarget{component_8h_aacd0b061b609752c687b41029538f5f0}\label{component_8h_aacd0b061b609752c687b41029538f5f0}} 
+\index{component.h@{component.h}!validate\_wall\_color\_serialized@{validate\_wall\_color\_serialized}}
+\index{validate\_wall\_color\_serialized@{validate\_wall\_color\_serialized}!component.h@{component.h}}
+\doxysubsubsection{\texorpdfstring{validate\_wall\_color\_serialized()}{validate\_wall\_color\_serialized()}}
+{\footnotesize\ttfamily void validate\+\_\+wall\+\_\+color\+\_\+serialized (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References \mbox{\hyperlink{struct_simple_colored_box_renderer_a8ca4f64546480c8329493b196dc4b1e8}{Simple\+Colored\+Box\+Renderer\+::base()}}, \mbox{\hyperlink{component_8h_a3cfd95a0c62485a0528cb5e6a259f145}{compare\+\_\+and\+\_\+validate\+\_\+components()}}, \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{network\+::deserialize\+\_\+to\+\_\+entity()}}, \mbox{\hyperlink{struct_simple_colored_box_renderer_a8ab8f160f76f17275b21618c44009773}{Simple\+Colored\+Box\+Renderer\+::face()}}, \mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{Entity\+::get()}}, \mbox{\hyperlink{struct_entity_ac82c57e9b1a366f041fca61d9ddd1459}{Entity\+::has()}}, \mbox{\hyperlink{assert_8h_a650848c7f29e557547baddee84454907}{M\+\_\+\+TEST\+\_\+\+EQ}}, \mbox{\hyperlink{assert_8h_a36f31e4658ef9dfa83e062d4dfa49ab7}{M\+\_\+\+TEST\+\_\+T}}, \mbox{\hyperlink{namespaceentities_a15a517f5584e44f17df8a5e28ac6c0f2}{entities\+::make\+\_\+wall()}}, \mbox{\hyperlink{component_8h_aeeb87a511167fdc353269a4a129cc46a}{mk\+\_\+entity()}}, \mbox{\hyperlink{namespaceui_1_1color_a1f624704628cb756520e52d5af8150a6}{ui\+::color\+::saffron}}, and \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{network\+::serialize\+\_\+to\+\_\+entity()}}.
+
+
+
+Referenced by \mbox{\hyperlink{component_8h_ae0c6e04a7b99ee25625edba38ee63f91}{all\+\_\+tests()}}.
+

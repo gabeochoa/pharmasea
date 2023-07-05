@@ -11,15 +11,21 @@
 \DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_can_be_pushed}{CanBePushed}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
 \DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_can_be_pushed_ab94f04265181b163666c40e8a37f3680}{\string~CanBePushed}}()\ \{\}}
 \DoxyCodeLine{00009\ }
-\DoxyCodeLine{00010\ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_can_be_pushed_aae536d30c8542ddfe445a74fce29c84c}{pushed\_force}}\{0.0,\ 0.0,\ 0.0\};}
-\DoxyCodeLine{00011\ }
-\DoxyCodeLine{00012\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_be_pushed_abd15d245baac56170dfbdb08e3a5df0e}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
-\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_can_be_pushed_aae536d30c8542ddfe445a74fce29c84c}{pushed\_force}});}
-\DoxyCodeLine{00018\ \ \ \ \ \}}
-\DoxyCodeLine{00019\ \};}
+\DoxyCodeLine{00010\ \ \ \ \ [[nodiscard]]\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}};\ \}}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_be_pushed_a7e7bca88e6385e36f0a3cf38258a4117}{update}}(\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ f)\ \{\ this-\/>\mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}}\ =\ f;\ \}}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_be_pushed_a48256579ead1ce851b64963321428d9e}{update\_x}}(\textcolor{keywordtype}{float}\ x)\ \{\ this-\/>\mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}}.x\ =\ x;\ \}}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_be_pushed_aa3ab7ac93d72b0881c2373ecaf7c91d7}{update\_y}}(\textcolor{keywordtype}{float}\ y)\ \{\ this-\/>\mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}}.y\ =\ y;\ \}}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_be_pushed_a4897ebe9d2d4e9fd2963126b993a705f}{update\_z}}(\textcolor{keywordtype}{float}\ z)\ \{\ this-\/>\mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}}.z\ =\ z;\ \}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00017\ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}}\{0.0,\ 0.0,\ 0.0\};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_can_be_pushed_abd15d245baac56170dfbdb08e3a5df0e}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_can_be_pushed_ad943083f838a20e15429a62f36f34317}{force}});}
+\DoxyCodeLine{00024\ \ \ \ \ \}}
+\DoxyCodeLine{00025\ \};}
 
 \end{DoxyCode}

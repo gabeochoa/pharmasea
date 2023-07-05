@@ -15,21 +15,26 @@
 \DoxyCodeLine{00011\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_model_renderer_a0f2f87afba472e9cf9dbac1ca7bcbd46}{has\_model}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{model\_info}}().has\_value();\ \}}
 \DoxyCodeLine{00012\ \ \ \ \ [[nodiscard]]\ std::optional<ModelInfo>\ \mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{model\_info}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}};\ \}}
 \DoxyCodeLine{00013\ \ \ \ \ [[nodiscard]]\ raylib::Model\ \mbox{\hyperlink{struct_model_renderer_a5eb913b5b12c1ac3c40f8cb625761b78}{model}}()\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{ModelLibrary::get}}().get(\mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}.value().model\_name);}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{ModelLibrary::get}}().get(\mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{model\_info}}().value().model\_name);}
 \DoxyCodeLine{00015\ \ \ \ \ \}}
 \DoxyCodeLine{00016\ }
-\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_renderer_a5b690d340b7dc58e4a82739ae857267b}{update}}(\mbox{\hyperlink{struct_model_info}{ModelInfo}}\ new\_info)\ \{\ \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}\ =\ new\_info;\ \}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_renderer_af630c2cd5d7aa11837a1f830f9a5bd2f}{update}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_model_info}{ModelInfo}}\&\ new\_info)\ \{\ \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}\ =\ new\_info;\ \}}
 \DoxyCodeLine{00018\ }
-\DoxyCodeLine{00019\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00020\ \ \ \ \ std::optional<ModelInfo>\ \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}};}
-\DoxyCodeLine{00021\ }
-\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_renderer_a824a8874123dacfc50e0422c7edafddc}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
-\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ things\ that\ need\ to\ be\ rendered,\ need\ to\ be\ serialized\ :)}}
-\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ s.ext(\mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}},\ bitsery::ext::StdOptional\{\});}
-\DoxyCodeLine{00028\ \ \ \ \ \}}
-\DoxyCodeLine{00029\ \};}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_renderer_a5838a39a7a1300d3edf0b0ee294324e0}{update\_model\_name}}(\textcolor{keyword}{const}\ std::string\&\ new\_name)\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}.has\_value())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}.value().model\_name\ =\ new\_name;}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00025\ \ \ \ \ std::optional<ModelInfo>\ \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_renderer_a824a8874123dacfc50e0422c7edafddc}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ s.ext(\mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}},\ bitsery::ext::StdOptional\{\});}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ \};}
 
 \end{DoxyCode}

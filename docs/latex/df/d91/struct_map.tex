@@ -7,7 +7,9 @@
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{struct_map_a6c12f320da33483abab1e7133152ef3b}{Map}} (const std\+::string \&\+\_\+seed=\char`\"{}default\+\_\+seed\char`\"{})
+\mbox{\hyperlink{struct_map_a0f5ad0fd4563497b4214038cbca8b582}{Map}} ()
+\item 
+\mbox{\hyperlink{struct_map_a326419229ba57b9b286c6501c8d659f6}{Map}} (const std\+::string \&\+\_\+seed)
 \item 
 void \mbox{\hyperlink{struct_map_a4e98fd60043de56a87546304f6ac1f01}{update\+\_\+seed}} (const std\+::string \&s)
 \item 
@@ -17,15 +19,17 @@ void \mbox{\hyperlink{struct_map_a4e98fd60043de56a87546304f6ac1f01}{update\+\_\+
 \item 
 void \mbox{\hyperlink{struct_map_a0d162dc968a2d18848e241c8c7f9e865}{on\+Update}} (float dt)
 \item 
+void \mbox{\hyperlink{struct_map_a500db02dd4c45b624ca9c6c50de5f0cd}{\+\_\+on\+Update}} (std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ $>$ players, float dt)
+\item 
 void \mbox{\hyperlink{struct_map_a3a0e8d65b69ebda41b8a46516c6ca941}{on\+Draw}} (float dt) const
 \item 
 void \mbox{\hyperlink{struct_map_a51c107a92c3dcfcbfd39d1e688e80ad3}{on\+Draw\+UI}} (float dt)
 \item 
 bool \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\+\_\+lobby\+\_\+state}} () const
 \item 
-void \mbox{\hyperlink{struct_map_ab7fed84f8d2c66b12a77c7e8a1584125}{ensure\+\_\+generated\+\_\+map}} ()
-\item 
 void \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\+\_\+things}} ()
+\item 
+void \mbox{\hyperlink{struct_map_ab7fed84f8d2c66b12a77c7e8a1584125}{ensure\+\_\+generated\+\_\+map}} ()
 \end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
@@ -34,7 +38,7 @@ void \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\+\_\+th
 \item 
 \mbox{\hyperlink{struct_game_map_info}{Game\+Map\+Info}} \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\+\_\+info}}
 \item 
-std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_remote_player}{Remote\+Player}} $>$ $>$ \mbox{\hyperlink{struct_map_af01ceb7d11591c11566e7b8d0138b0c6}{remote\+\_\+players\+\_\+\+NOT\+\_\+\+SERIALIZED}}
+std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ $>$ \mbox{\hyperlink{struct_map_a2c8d1bde41515d422382cb9eb42eaad0}{remote\+\_\+players\+\_\+\+NOT\+\_\+\+SERIALIZED}}
 \item 
 std\+::string \mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}}
 \end{DoxyCompactItemize}
@@ -46,11 +50,17 @@ std\+::string \mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{see
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{struct_map_a6c12f320da33483abab1e7133152ef3b}\label{struct_map_a6c12f320da33483abab1e7133152ef3b}} 
+\mbox{\Hypertarget{struct_map_a0f5ad0fd4563497b4214038cbca8b582}\label{struct_map_a0f5ad0fd4563497b4214038cbca8b582}} 
 \index{Map@{Map}!Map@{Map}}
 \index{Map@{Map}!Map@{Map}}
-\doxysubsubsection{\texorpdfstring{Map()}{Map()}}
-{\footnotesize\ttfamily Map\+::\+Map (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{\+\_\+seed = {\ttfamily \char`\"{}default\+\_\+seed\char`\"{}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+\doxysubsubsection{\texorpdfstring{Map()}{Map()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Map\+::\+Map (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{struct_map_a326419229ba57b9b286c6501c8d659f6}\label{struct_map_a326419229ba57b9b286c6501c8d659f6}} 
+\index{Map@{Map}!Map@{Map}}
+\index{Map@{Map}!Map@{Map}}
+\doxysubsubsection{\texorpdfstring{Map()}{Map()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Map\+::\+Map (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{\+\_\+seed }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -59,6 +69,20 @@ References \mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}}
 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_map_a500db02dd4c45b624ca9c6c50de5f0cd}\label{struct_map_a500db02dd4c45b624ca9c6c50de5f0cd}} 
+\index{Map@{Map}!\_onUpdate@{\_onUpdate}}
+\index{\_onUpdate@{\_onUpdate}!Map@{Map}}
+\doxysubsubsection{\texorpdfstring{\_onUpdate()}{\_onUpdate()}}
+{\footnotesize\ttfamily void Map\+::\+\_\+on\+Update (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ $>$}]{players,  }\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_level_info_ad3f119e5329f5c5f62537ff53fe3b932}{Level\+Info\+::ensure\+\_\+generated\+\_\+map()}}, \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\+\_\+info}}, \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\+\_\+lobby\+\_\+state()}}, \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\+\_\+info}}, \mbox{\hyperlink{struct_level_info_afc8cbde7e95c3b3a3c58fc0e7ec8dbb3}{Level\+Info\+::on\+Update()}}, \mbox{\hyperlink{struct_game_map_info_a05b1ffcf7ce921a2902e60b7938e942a}{Game\+Map\+Info\+::on\+Update()}}, \mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_map_a0d162dc968a2d18848e241c8c7f9e865}{on\+Update()}}.
+
 \mbox{\Hypertarget{struct_map_ab7fed84f8d2c66b12a77c7e8a1584125}\label{struct_map_ab7fed84f8d2c66b12a77c7e8a1584125}} 
 \index{Map@{Map}!ensure\_generated\_map@{ensure\_generated\_map}}
 \index{ensure\_generated\_map@{ensure\_generated\_map}!Map@{Map}}
@@ -105,7 +129,7 @@ References \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a042a
 
 
 
-Referenced by \mbox{\hyperlink{struct_map_ab6633a39aa81ed9161458051d0b0e662}{entities()}}, \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\+\_\+things()}}, \mbox{\hyperlink{struct_map_a020eac8bc34cb0da6f978b410913f82f}{items()}}, \mbox{\hyperlink{struct_map_a3a0e8d65b69ebda41b8a46516c6ca941}{on\+Draw()}}, \mbox{\hyperlink{struct_map_a51c107a92c3dcfcbfd39d1e688e80ad3}{on\+Draw\+UI()}}, and \mbox{\hyperlink{struct_map_a0d162dc968a2d18848e241c8c7f9e865}{on\+Update()}}.
+Referenced by \mbox{\hyperlink{struct_map_a500db02dd4c45b624ca9c6c50de5f0cd}{\+\_\+on\+Update()}}, \mbox{\hyperlink{struct_map_ab6633a39aa81ed9161458051d0b0e662}{entities()}}, \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\+\_\+things()}}, \mbox{\hyperlink{struct_map_a020eac8bc34cb0da6f978b410913f82f}{items()}}, \mbox{\hyperlink{struct_map_a3a0e8d65b69ebda41b8a46516c6ca941}{on\+Draw()}}, and \mbox{\hyperlink{struct_map_a51c107a92c3dcfcbfd39d1e688e80ad3}{on\+Draw\+UI()}}.
 
 \mbox{\Hypertarget{struct_map_a020eac8bc34cb0da6f978b410913f82f}\label{struct_map_a020eac8bc34cb0da6f978b410913f82f}} 
 \index{Map@{Map}!items@{items}}
@@ -129,7 +153,7 @@ Referenced by \mbox{\hyperlink{structnetwork_1_1_client_acdb127c63e3c7a36575f590
 
 
 
-References \mbox{\hyperlink{container__cast_8h_a7b70b5916f605fbbf65bcb67b9679c76}{container\+\_\+cast()}}, \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\+\_\+info}}, \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\+\_\+lobby\+\_\+state()}}, \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\+\_\+info}}, \mbox{\hyperlink{struct_level_info_a7c2985c6599e2a7d5e051cc7f835fc6d}{Level\+Info\+::on\+Draw()}}, \mbox{\hyperlink{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}{Lobby\+Map\+Info\+::on\+Draw()}}, \mbox{\hyperlink{struct_map_af01ceb7d11591c11566e7b8d0138b0c6}{remote\+\_\+players\+\_\+\+NOT\+\_\+\+SERIALIZED}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
+References \mbox{\hyperlink{container__cast_8h_a7b70b5916f605fbbf65bcb67b9679c76}{container\+\_\+cast()}}, \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\+\_\+info}}, \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\+\_\+lobby\+\_\+state()}}, \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\+\_\+info}}, \mbox{\hyperlink{struct_level_info_a7c2985c6599e2a7d5e051cc7f835fc6d}{Level\+Info\+::on\+Draw()}}, \mbox{\hyperlink{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}{Lobby\+Map\+Info\+::on\+Draw()}}, \mbox{\hyperlink{struct_map_a2c8d1bde41515d422382cb9eb42eaad0}{remote\+\_\+players\+\_\+\+NOT\+\_\+\+SERIALIZED}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
 
 \mbox{\Hypertarget{struct_map_a51c107a92c3dcfcbfd39d1e688e80ad3}\label{struct_map_a51c107a92c3dcfcbfd39d1e688e80ad3}} 
 \index{Map@{Map}!onDrawUI@{onDrawUI}}
@@ -139,7 +163,7 @@ References \mbox{\hyperlink{container__cast_8h_a7b70b5916f605fbbf65bcb67b9679c76
 
 
 
-References \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\+\_\+info}}, \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\+\_\+lobby\+\_\+state()}}, \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\+\_\+info}}, \mbox{\hyperlink{struct_level_info_a29c9081e7343c8fb18e46104f73b957b}{Level\+Info\+::on\+Draw\+UI()}}, \mbox{\hyperlink{struct_game_map_info_a6f7aefa1a79a33f4ef973f1ef0a4cc87}{Game\+Map\+Info\+::on\+Draw\+UI()}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
+References \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\+\_\+info}}, \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\+\_\+lobby\+\_\+state()}}, \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\+\_\+info}}, \mbox{\hyperlink{struct_level_info_a4831864db4d34ecc1e19a1007dac9ba7}{Level\+Info\+::on\+Draw\+UI()}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
 
 \mbox{\Hypertarget{struct_map_a0d162dc968a2d18848e241c8c7f9e865}\label{struct_map_a0d162dc968a2d18848e241c8c7f9e865}} 
 \index{Map@{Map}!onUpdate@{onUpdate}}
@@ -149,7 +173,7 @@ References \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\+
 
 
 
-References \mbox{\hyperlink{struct_level_info_ad3f119e5329f5c5f62537ff53fe3b932}{Level\+Info\+::ensure\+\_\+generated\+\_\+map()}}, \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\+\_\+info}}, \mbox{\hyperlink{struct_map_a9bae0d8ebda54fddd9c2a88dea36f16c}{in\+\_\+lobby\+\_\+state()}}, \mbox{\hyperlink{struct_map_ad834d33ba670ece03682ec45ee9bdd65}{lobby\+\_\+info}}, \mbox{\hyperlink{struct_level_info_a69320651f4975db03abfcf8979341cb4}{Level\+Info\+::on\+Update()}}, \mbox{\hyperlink{struct_game_map_info_aac456532748e47e912f90269ab54e216}{Game\+Map\+Info\+::on\+Update()}}, \mbox{\hyperlink{struct_map_af01ceb7d11591c11566e7b8d0138b0c6}{remote\+\_\+players\+\_\+\+NOT\+\_\+\+SERIALIZED}}, \mbox{\hyperlink{struct_map_a4e91cf446c69dc25097b00eded8e61df}{seed}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
+References \mbox{\hyperlink{struct_map_a500db02dd4c45b624ca9c6c50de5f0cd}{\+\_\+on\+Update()}}, and \mbox{\hyperlink{struct_map_a2c8d1bde41515d422382cb9eb42eaad0}{remote\+\_\+players\+\_\+\+NOT\+\_\+\+SERIALIZED}}.
 
 \mbox{\Hypertarget{struct_map_a55250a0fffd3f2d82afd309055cfbc37}\label{struct_map_a55250a0fffd3f2d82afd309055cfbc37}} 
 \index{Map@{Map}!serialize@{serialize}}
@@ -174,7 +198,7 @@ References \mbox{\hyperlink{struct_map_acdd4795062a0d34623c3afe524b2a150}{game\+
 
 
 
-Referenced by \mbox{\hyperlink{struct_map_a6c12f320da33483abab1e7133152ef3b}{Map()}}.
+Referenced by \mbox{\hyperlink{struct_map_a326419229ba57b9b286c6501c8d659f6}{Map()}}.
 
 
 
@@ -187,7 +211,7 @@ Referenced by \mbox{\hyperlink{struct_map_a6c12f320da33483abab1e7133152ef3b}{Map
 
 
 
-Referenced by \mbox{\hyperlink{struct_map_ab6633a39aa81ed9161458051d0b0e662}{entities()}}, \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\+\_\+things()}}, \mbox{\hyperlink{struct_map_a020eac8bc34cb0da6f978b410913f82f}{items()}}, \mbox{\hyperlink{struct_map_a3a0e8d65b69ebda41b8a46516c6ca941}{on\+Draw()}}, \mbox{\hyperlink{struct_map_a51c107a92c3dcfcbfd39d1e688e80ad3}{on\+Draw\+UI()}}, \mbox{\hyperlink{struct_map_a0d162dc968a2d18848e241c8c7f9e865}{on\+Update()}}, \mbox{\hyperlink{struct_map_a55250a0fffd3f2d82afd309055cfbc37}{serialize()}}, and \mbox{\hyperlink{struct_map_a4e98fd60043de56a87546304f6ac1f01}{update\+\_\+seed()}}.
+Referenced by \mbox{\hyperlink{struct_map_a500db02dd4c45b624ca9c6c50de5f0cd}{\+\_\+on\+Update()}}, \mbox{\hyperlink{struct_map_ab6633a39aa81ed9161458051d0b0e662}{entities()}}, \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\+\_\+things()}}, \mbox{\hyperlink{struct_map_a020eac8bc34cb0da6f978b410913f82f}{items()}}, \mbox{\hyperlink{struct_map_a3a0e8d65b69ebda41b8a46516c6ca941}{on\+Draw()}}, \mbox{\hyperlink{struct_map_a51c107a92c3dcfcbfd39d1e688e80ad3}{on\+Draw\+UI()}}, \mbox{\hyperlink{struct_map_a55250a0fffd3f2d82afd309055cfbc37}{serialize()}}, and \mbox{\hyperlink{struct_map_a4e98fd60043de56a87546304f6ac1f01}{update\+\_\+seed()}}.
 
 \mbox{\Hypertarget{struct_map_ad834d33ba670ece03682ec45ee9bdd65}\label{struct_map_ad834d33ba670ece03682ec45ee9bdd65}} 
 \index{Map@{Map}!lobby\_info@{lobby\_info}}
@@ -197,13 +221,13 @@ Referenced by \mbox{\hyperlink{struct_map_ab6633a39aa81ed9161458051d0b0e662}{ent
 
 
 
-Referenced by \mbox{\hyperlink{struct_map_ab6633a39aa81ed9161458051d0b0e662}{entities()}}, \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\+\_\+things()}}, \mbox{\hyperlink{struct_map_a020eac8bc34cb0da6f978b410913f82f}{items()}}, \mbox{\hyperlink{struct_map_a3a0e8d65b69ebda41b8a46516c6ca941}{on\+Draw()}}, \mbox{\hyperlink{struct_map_a51c107a92c3dcfcbfd39d1e688e80ad3}{on\+Draw\+UI()}}, \mbox{\hyperlink{struct_map_a0d162dc968a2d18848e241c8c7f9e865}{on\+Update()}}, and \mbox{\hyperlink{struct_map_a55250a0fffd3f2d82afd309055cfbc37}{serialize()}}.
+Referenced by \mbox{\hyperlink{struct_map_a500db02dd4c45b624ca9c6c50de5f0cd}{\+\_\+on\+Update()}}, \mbox{\hyperlink{struct_map_ab6633a39aa81ed9161458051d0b0e662}{entities()}}, \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{grab\+\_\+things()}}, \mbox{\hyperlink{struct_map_a020eac8bc34cb0da6f978b410913f82f}{items()}}, \mbox{\hyperlink{struct_map_a3a0e8d65b69ebda41b8a46516c6ca941}{on\+Draw()}}, \mbox{\hyperlink{struct_map_a51c107a92c3dcfcbfd39d1e688e80ad3}{on\+Draw\+UI()}}, and \mbox{\hyperlink{struct_map_a55250a0fffd3f2d82afd309055cfbc37}{serialize()}}.
 
-\mbox{\Hypertarget{struct_map_af01ceb7d11591c11566e7b8d0138b0c6}\label{struct_map_af01ceb7d11591c11566e7b8d0138b0c6}} 
+\mbox{\Hypertarget{struct_map_a2c8d1bde41515d422382cb9eb42eaad0}\label{struct_map_a2c8d1bde41515d422382cb9eb42eaad0}} 
 \index{Map@{Map}!remote\_players\_NOT\_SERIALIZED@{remote\_players\_NOT\_SERIALIZED}}
 \index{remote\_players\_NOT\_SERIALIZED@{remote\_players\_NOT\_SERIALIZED}!Map@{Map}}
 \doxysubsubsection{\texorpdfstring{remote\_players\_NOT\_SERIALIZED}{remote\_players\_NOT\_SERIALIZED}}
-{\footnotesize\ttfamily std\+::vector$<$std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_remote_player}{Remote\+Player}}$>$ $>$ Map\+::remote\+\_\+players\+\_\+\+NOT\+\_\+\+SERIALIZED}
+{\footnotesize\ttfamily std\+::vector$<$std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_entity}{Entity}}$>$ $>$ Map\+::remote\+\_\+players\+\_\+\+NOT\+\_\+\+SERIALIZED}
 
 
 
@@ -217,7 +241,7 @@ Referenced by \mbox{\hyperlink{struct_map_a3a0e8d65b69ebda41b8a46516c6ca941}{on\
 
 
 
-Referenced by \mbox{\hyperlink{struct_map_a6c12f320da33483abab1e7133152ef3b}{Map()}}, and \mbox{\hyperlink{struct_map_a0d162dc968a2d18848e241c8c7f9e865}{on\+Update()}}.
+Referenced by \mbox{\hyperlink{struct_map_a500db02dd4c45b624ca9c6c50de5f0cd}{\+\_\+on\+Update()}}, and \mbox{\hyperlink{struct_map_a326419229ba57b9b286c6501c8d659f6}{Map()}}.
 
 
 

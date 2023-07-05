@@ -97,28 +97,46 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab8a1d36d36914317d620f3059e3a42de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e9c2daa8ba70418fa58d4d48bd2221a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a3e9c2daa8ba70418fa58d4d48bd2221a">needs_job</a> () const</td></tr>
 <tr class="separator:a3e9c2daa8ba70418fa58d4d48bd2221a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a127736b2d8a3d7f0255ff5bc8beb22f5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="../../d2/d63/struct_job.html">Job</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a127736b2d8a3d7f0255ff5bc8beb22f5">job</a> () const</td></tr>
-<tr class="separator:a127736b2d8a3d7f0255ff5bc8beb22f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a3c96f0e78e5a30da8bd46ccc599bda"><td class="memItemLeft" align="right" valign="top">std::stack&lt; std::shared_ptr&lt; <a class="el" href="../../d2/d63/struct_job.html">Job</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a3a3c96f0e78e5a30da8bd46ccc599bda">job_queue</a> () const</td></tr>
-<tr class="separator:a3a3c96f0e78e5a30da8bd46ccc599bda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dd96482c4a5a6b0a97ace0f02962620"><td class="memItemLeft" align="right" valign="top">std::stack&lt; std::shared_ptr&lt; <a class="el" href="../../d2/d63/struct_job.html">Job</a> &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a3dd96482c4a5a6b0a97ace0f02962620">job_queue</a> ()</td></tr>
+<tr class="separator:a3dd96482c4a5a6b0a97ace0f02962620"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64a39b69e16eb6263cd48e8ce1b84d6a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a64a39b69e16eb6263cd48e8ce1b84d6a">update</a> (<a class="el" href="../../d3/d6a/job_8h.html#a60db90059c4f88592cc75a2f39ad3061">JobType</a> starting_jt, <a class="el" href="../../d3/d6a/job_8h.html#a60db90059c4f88592cc75a2f39ad3061">JobType</a> idle_jt)</td></tr>
 <tr class="separator:a64a39b69e16eb6263cd48e8ce1b84d6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4eb32e9575623cb28c55918d17e10401"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a4eb32e9575623cb28c55918d17e10401">update</a> (<a class="el" href="../../d2/d63/struct_job.html">Job</a> *<a class="el" href="../../db/dc2/struct_can_perform_job.html#a127736b2d8a3d7f0255ff5bc8beb22f5">job</a>)</td></tr>
+<tr class="memitem:a4eb32e9575623cb28c55918d17e10401"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a4eb32e9575623cb28c55918d17e10401">update</a> (<a class="el" href="../../d2/d63/struct_job.html">Job</a> *<a class="el" href="../../db/dc2/struct_can_perform_job.html#a8d1671362c8dc15f49763fb949bed264">job</a>)</td></tr>
 <tr class="separator:a4eb32e9575623cb28c55918d17e10401"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a119ca4c6de9f3fc86b3c67da69b3902c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d6a/job_8h.html#a60db90059c4f88592cc75a2f39ad3061">JobType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a119ca4c6de9f3fc86b3c67da69b3902c">get_next_job_type</a> ()</td></tr>
 <tr class="separator:a119ca4c6de9f3fc86b3c67da69b3902c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a963dbe78ad46befb86d1f0f3a3135d25"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a963dbe78ad46befb86d1f0f3a3135d25">push_and_reset</a> (<a class="el" href="../../d2/d63/struct_job.html">Job</a> *<a class="el" href="../../db/dc2/struct_can_perform_job.html#a127736b2d8a3d7f0255ff5bc8beb22f5">job</a>)</td></tr>
+<tr class="memitem:a963dbe78ad46befb86d1f0f3a3135d25"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a963dbe78ad46befb86d1f0f3a3135d25">push_and_reset</a> (<a class="el" href="../../d2/d63/struct_job.html">Job</a> *<a class="el" href="../../db/dc2/struct_can_perform_job.html#a8d1671362c8dc15f49763fb949bed264">job</a>)</td></tr>
 <tr class="separator:a963dbe78ad46befb86d1f0f3a3135d25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0747cad5fbc21bdc03a165d5ebe71ca5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a0747cad5fbc21bdc03a165d5ebe71ca5">push_onto_queue</a> (std::shared_ptr&lt; <a class="el" href="../../d2/d63/struct_job.html">Job</a> &gt; <a class="el" href="../../db/dc2/struct_can_perform_job.html#a8d1671362c8dc15f49763fb949bed264">job</a>)</td></tr>
+<tr class="separator:a0747cad5fbc21bdc03a165d5ebe71ca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe7be0a9e5656f2808a959b23dd66b15"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#afe7be0a9e5656f2808a959b23dd66b15">has_local_target</a> () const</td></tr>
+<tr class="separator:afe7be0a9e5656f2808a959b23dd66b15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa219b32e8e4389557feed9140452702d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#aa219b32e8e4389557feed9140452702d">local_target</a> () const</td></tr>
+<tr class="separator:aa219b32e8e4389557feed9140452702d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a8f946e7529cad0cbc07a2e1f280dca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a7a8f946e7529cad0cbc07a2e1f280dca">update_job_state</a> (<a class="el" href="../../d2/d63/struct_job.html#a1b3469cb1f7c9b23629a576f9b252dce">Job::State</a> new_state)</td></tr>
+<tr class="separator:a7a8f946e7529cad0cbc07a2e1f280dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a6b3f5aec1106ef01e7073e0a8802fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a9a6b3f5aec1106ef01e7073e0a8802fb">cleanup_if_completed</a> ()</td></tr>
+<tr class="separator:a9a6b3f5aec1106ef01e7073e0a8802fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3356f97973d3dd2a556e20197488912b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a3356f97973d3dd2a556e20197488912b">run_tick</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;entity, float dt)</td></tr>
+<tr class="separator:a3356f97973d3dd2a556e20197488912b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa460974b26cd0d276e1055e60d5970b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#aa460974b26cd0d276e1055e60d5970b9">for_each_path_location</a> (std::function&lt; void(<a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a>)&gt; cb)</td></tr>
+<tr class="separator:aa460974b26cd0d276e1055e60d5970b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f5d816817292121d1309102f4085e23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a8f5d816817292121d1309102f4085e23">job_start</a> ()</td></tr>
+<tr class="separator:a8f5d816817292121d1309102f4085e23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_struct_base_component"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_struct_base_component')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a></td></tr>
 <tr class="memitem:ac74326a615877f3c1a17bc47787ad91e inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#ac74326a615877f3c1a17bc47787ad91e">BaseComponent</a> ()</td></tr>
 <tr class="separator:ac74326a615877f3c1a17bc47787ad91e inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abec738e46eb8875697d7f9497958543d inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#abec738e46eb8875697d7f9497958543d">BaseComponent</a> (<a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:abec738e46eb8875697d7f9497958543d inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7389bfd8b903625667e1427ef3cb70b inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#ac7389bfd8b903625667e1427ef3cb70b">onAttach</a> ()</td></tr>
+<tr class="separator:ac7389bfd8b903625667e1427ef3cb70b inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab281730e838c4cb33e96ab6d6b7fe15f inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#ab281730e838c4cb33e96ab6d6b7fe15f">~BaseComponent</a> ()</td></tr>
 <tr class="separator:ab281730e838c4cb33e96ab6d6b7fe15f inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
+<tr class="memitem:a8d1671362c8dc15f49763fb949bed264"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="../../d2/d63/struct_job.html">Job</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a8d1671362c8dc15f49763fb949bed264">job</a> () const</td></tr>
+<tr class="separator:a8d1671362c8dc15f49763fb949bed264"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4de20a3db75ea33b012815c1bb5dd9e6"><td class="memTemplParams" colspan="2">template&lt;typename S &gt; </td></tr>
 <tr class="memitem:a4de20a3db75ea33b012815c1bb5dd9e6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/dc2/struct_can_perform_job.html#a4de20a3db75ea33b012815c1bb5dd9e6">serialize</a> (S &amp;s)</td></tr>
 <tr class="separator:a4de20a3db75ea33b012815c1bb5dd9e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,6 +181,61 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a9a6b3f5aec1106ef01e7073e0a8802fb" name="a9a6b3f5aec1106ef01e7073e0a8802fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a6b3f5aec1106ef01e7073e0a8802fb">&#9670;&#160;</a></span>cleanup_if_completed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CanPerformJob::cleanup_if_completed </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d2/d63/struct_job.html#a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f">Job::Completed</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab6b17841c03be0c79ad12e91e607f94d">current_job</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a3e9c2daa8ba70418fa58d4d48bd2221a">needs_job()</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a00b95dd86b4e9ad4355718096c34b0a3">personal_queue</a>.</p>
+
+</div>
+</div>
+<a id="aa460974b26cd0d276e1055e60d5970b9" name="aa460974b26cd0d276e1055e60d5970b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa460974b26cd0d276e1055e60d5970b9">&#9670;&#160;</a></span>for_each_path_location()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CanPerformJob::for_each_path_location </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(<a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a>)&gt;&#160;</td>
+          <td class="paramname"><em>cb</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#a8d1671362c8dc15f49763fb949bed264">job()</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a3e9c2daa8ba70418fa58d4d48bd2221a">needs_job()</a>.</p>
+
+</div>
+</div>
 <a id="a119ca4c6de9f3fc86b3c67da69b3902c" name="a119ca4c6de9f3fc86b3c67da69b3902c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a119ca4c6de9f3fc86b3c67da69b3902c">&#9670;&#160;</a></span>get_next_job_type()</h2>
 
@@ -188,7 +261,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab2324a714e084b419246bcf96a3d3b63">idle_job_type</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a3be6c1deadd63e3742c4ab7ae86a8b8e">starting_job_type</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a338c76bf911828e92bbc14b00932a722">worked_before</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a91c5cf4ebb0183ac60e693b92ad56932">system_manager::job_system::find_new_job()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a4062abda6494564722d1c6b89d8f85c6">system_manager::job_system::ensure_has_job()</a>.</p>
 
 </div>
 </div>
@@ -217,12 +290,12 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab6b17841c03be0c79ad12e91e607f94d">current_job</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a57fb5a88688ab6b19595bd8fe63d936e">system_manager::job_system::handle_job_holder_pushed()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a3e9c2daa8ba70418fa58d4d48bd2221a">needs_job()</a>, <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#adc930a9721c3daf854c661ec1905d357">system_manager::job_system::render_job_visual()</a>, and <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a80b48eb7354e4827e21605e41577269f">system_manager::job_system::update_position_from_job()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a4062abda6494564722d1c6b89d8f85c6">system_manager::job_system::ensure_has_job()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#afe7be0a9e5656f2808a959b23dd66b15">has_local_target()</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a3e9c2daa8ba70418fa58d4d48bd2221a">needs_job()</a>.</p>
 
 </div>
 </div>
-<a id="a127736b2d8a3d7f0255ff5bc8beb22f5" name="a127736b2d8a3d7f0255ff5bc8beb22f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a127736b2d8a3d7f0255ff5bc8beb22f5">&#9670;&#160;</a></span>job()</h2>
+<a id="afe7be0a9e5656f2808a959b23dd66b15" name="afe7be0a9e5656f2808a959b23dd66b15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe7be0a9e5656f2808a959b23dd66b15">&#9670;&#160;</a></span>has_local_target()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -231,7 +304,121 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt; <a class="el" href="../../d2/d63/struct_job.html">Job</a> &gt; CanPerformJob::job </td>
+          <td class="memname">bool CanPerformJob::has_local_target </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab8a1d36d36914317d620f3059e3a42de">has_job()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a8d1671362c8dc15f49763fb949bed264">job()</a>, and <a class="el" href="../../d2/d63/struct_job.html#a6ca83b17472c1915ec5ed8668793e716">Job::local</a>.</p>
+
+</div>
+</div>
+<a id="a8d1671362c8dc15f49763fb949bed264" name="a8d1671362c8dc15f49763fb949bed264"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d1671362c8dc15f49763fb949bed264">&#9670;&#160;</a></span>job()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="../../d2/d63/struct_job.html">Job</a> &amp; CanPerformJob::job </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab6b17841c03be0c79ad12e91e607f94d">current_job</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../db/dc2/struct_can_perform_job.html#aa460974b26cd0d276e1055e60d5970b9">for_each_path_location()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#afe7be0a9e5656f2808a959b23dd66b15">has_local_target()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a8f5d816817292121d1309102f4085e23">job_start()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a963dbe78ad46befb86d1f0f3a3135d25">push_and_reset()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a0747cad5fbc21bdc03a165d5ebe71ca5">push_onto_queue()</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a4eb32e9575623cb28c55918d17e10401">update()</a>.</p>
+
+</div>
+</div>
+<a id="a3dd96482c4a5a6b0a97ace0f02962620" name="a3dd96482c4a5a6b0a97ace0f02962620"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dd96482c4a5a6b0a97ace0f02962620">&#9670;&#160;</a></span>job_queue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::stack&lt; std::shared_ptr&lt; <a class="el" href="../../d2/d63/struct_job.html">Job</a> &gt; &gt; &amp; CanPerformJob::job_queue </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#a00b95dd86b4e9ad4355718096c34b0a3">personal_queue</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a4062abda6494564722d1c6b89d8f85c6">system_manager::job_system::ensure_has_job()</a>.</p>
+
+</div>
+</div>
+<a id="a8f5d816817292121d1309102f4085e23" name="a8f5d816817292121d1309102f4085e23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f5d816817292121d1309102f4085e23">&#9670;&#160;</a></span>job_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> CanPerformJob::job_start </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#a8d1671362c8dc15f49763fb949bed264">job()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a3e9c2daa8ba70418fa58d4d48bd2221a">needs_job()</a>, and <a class="el" href="../../d2/d63/struct_job.html#a36d7ce8c8419b6a196d0069a3ca53dc0">Job::start</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../de/d83/job_8cpp.html#ac8b75d474734918d7dfcde3eb4941ab0">WIQ_wait_and_return()</a>.</p>
+
+</div>
+</div>
+<a id="aa219b32e8e4389557feed9140452702d" name="aa219b32e8e4389557feed9140452702d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa219b32e8e4389557feed9140452702d">&#9670;&#160;</a></span>local_target()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> CanPerformJob::local_target </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -245,37 +432,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab6b17841c03be0c79ad12e91e607f94d">current_job</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a91c5cf4ebb0183ac60e693b92ad56932">system_manager::job_system::find_new_job()</a>, <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a57fb5a88688ab6b19595bd8fe63d936e">system_manager::job_system::handle_job_holder_pushed()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a963dbe78ad46befb86d1f0f3a3135d25">push_and_reset()</a>, <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#adc930a9721c3daf854c661ec1905d357">system_manager::job_system::render_job_visual()</a>, <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a63d25ed47ef475a3342147cfab6b7bd6">system_manager::job_system::replace_finished_job()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a4eb32e9575623cb28c55918d17e10401">update()</a>, <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a77e67ff8d61329379931c6d03ea68708">system_manager::job_system::update_job_information()</a>, and <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a80b48eb7354e4827e21605e41577269f">system_manager::job_system::update_position_from_job()</a>.</p>
-
-</div>
-</div>
-<a id="a3a3c96f0e78e5a30da8bd46ccc599bda" name="a3a3c96f0e78e5a30da8bd46ccc599bda"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a3c96f0e78e5a30da8bd46ccc599bda">&#9670;&#160;</a></span>job_queue()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::stack&lt; std::shared_ptr&lt; <a class="el" href="../../d2/d63/struct_job.html">Job</a> &gt; &gt; CanPerformJob::job_queue </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#a00b95dd86b4e9ad4355718096c34b0a3">personal_queue</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a91c5cf4ebb0183ac60e693b92ad56932">system_manager::job_system::find_new_job()</a>.</p>
 
 </div>
 </div>
@@ -304,7 +460,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab8a1d36d36914317d620f3059e3a42de">has_job()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a77e67ff8d61329379931c6d03ea68708">system_manager::job_system::update_job_information()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../db/dc2/struct_can_perform_job.html#a9a6b3f5aec1106ef01e7073e0a8802fb">cleanup_if_completed()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#aa460974b26cd0d276e1055e60d5970b9">for_each_path_location()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a8f5d816817292121d1309102f4085e23">job_start()</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a3356f97973d3dd2a556e20197488912b">run_tick()</a>.</p>
 
 </div>
 </div>
@@ -332,9 +488,75 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab6b17841c03be0c79ad12e91e607f94d">current_job</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a127736b2d8a3d7f0255ff5bc8beb22f5">job()</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a00b95dd86b4e9ad4355718096c34b0a3">personal_queue</a>.</p>
+<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab6b17841c03be0c79ad12e91e607f94d">current_job</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a8d1671362c8dc15f49763fb949bed264">job()</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a00b95dd86b4e9ad4355718096c34b0a3">personal_queue</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a77e67ff8d61329379931c6d03ea68708">system_manager::job_system::update_job_information()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../de/d83/job_8cpp.html#ac8b75d474734918d7dfcde3eb4941ab0">WIQ_wait_and_return()</a>.</p>
+
+</div>
+</div>
+<a id="a0747cad5fbc21bdc03a165d5ebe71ca5" name="a0747cad5fbc21bdc03a165d5ebe71ca5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0747cad5fbc21bdc03a165d5ebe71ca5">&#9670;&#160;</a></span>push_onto_queue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CanPerformJob::push_onto_queue </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="../../d2/d63/struct_job.html">Job</a> &gt;&#160;</td>
+          <td class="paramname"><em>job</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#a8d1671362c8dc15f49763fb949bed264">job()</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a00b95dd86b4e9ad4355718096c34b0a3">personal_queue</a>.</p>
+
+</div>
+</div>
+<a id="a3356f97973d3dd2a556e20197488912b" name="a3356f97973d3dd2a556e20197488912b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3356f97973d3dd2a556e20197488912b">&#9670;&#160;</a></span>run_tick()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CanPerformJob::run_tick </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>entity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>dt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab6b17841c03be0c79ad12e91e607f94d">current_job</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a3e9c2daa8ba70418fa58d4d48bd2221a">needs_job()</a>.</p>
 
 </div>
 </div>
@@ -392,7 +614,7 @@ template&lt;typename S &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab6b17841c03be0c79ad12e91e607f94d">current_job</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a127736b2d8a3d7f0255ff5bc8beb22f5">job()</a>.</p>
+<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab6b17841c03be0c79ad12e91e607f94d">current_job</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a8d1671362c8dc15f49763fb949bed264">job()</a>.</p>
 
 </div>
 </div>
@@ -432,7 +654,35 @@ template&lt;typename S &gt; </div>
 
 <p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab2324a714e084b419246bcf96a3d3b63">idle_job_type</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a3be6c1deadd63e3742c4ab7ae86a8b8e">starting_job_type</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#ac1cc7991207375ca3ef4a6a6173a120a">system_manager::job_system::replace_job_with_job_type()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a4062abda6494564722d1c6b89d8f85c6">system_manager::job_system::ensure_has_job()</a>.</p>
+
+</div>
+</div>
+<a id="a7a8f946e7529cad0cbc07a2e1f280dca" name="a7a8f946e7529cad0cbc07a2e1f280dca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a8f946e7529cad0cbc07a2e1f280dca">&#9670;&#160;</a></span>update_job_state()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CanPerformJob::update_job_state </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d2/d63/struct_job.html#a1b3469cb1f7c9b23629a576f9b252dce">Job::State</a>&#160;</td>
+          <td class="paramname"><em>new_state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab6b17841c03be0c79ad12e91e607f94d">current_job</a>.</p>
 
 </div>
 </div>
@@ -457,7 +707,7 @@ template&lt;typename S &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab8a1d36d36914317d620f3059e3a42de">has_job()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a127736b2d8a3d7f0255ff5bc8beb22f5">job()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a963dbe78ad46befb86d1f0f3a3135d25">push_and_reset()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a4de20a3db75ea33b012815c1bb5dd9e6">serialize()</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a4eb32e9575623cb28c55918d17e10401">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../db/dc2/struct_can_perform_job.html#a9a6b3f5aec1106ef01e7073e0a8802fb">cleanup_if_completed()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#ab8a1d36d36914317d620f3059e3a42de">has_job()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a8d1671362c8dc15f49763fb949bed264">job()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#aa219b32e8e4389557feed9140452702d">local_target()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a963dbe78ad46befb86d1f0f3a3135d25">push_and_reset()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a3356f97973d3dd2a556e20197488912b">run_tick()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a4de20a3db75ea33b012815c1bb5dd9e6">serialize()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a4eb32e9575623cb28c55918d17e10401">update()</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a7a8f946e7529cad0cbc07a2e1f280dca">update_job_state()</a>.</p>
 
 </div>
 </div>
@@ -505,7 +755,7 @@ template&lt;typename S &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../db/dc2/struct_can_perform_job.html#a3a3c96f0e78e5a30da8bd46ccc599bda">job_queue()</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a963dbe78ad46befb86d1f0f3a3135d25">push_and_reset()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../db/dc2/struct_can_perform_job.html#a9a6b3f5aec1106ef01e7073e0a8802fb">cleanup_if_completed()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a3dd96482c4a5a6b0a97ace0f02962620">job_queue()</a>, <a class="el" href="../../db/dc2/struct_can_perform_job.html#a963dbe78ad46befb86d1f0f3a3135d25">push_and_reset()</a>, and <a class="el" href="../../db/dc2/struct_can_perform_job.html#a0747cad5fbc21bdc03a165d5ebe71ca5">push_onto_queue()</a>.</p>
 
 </div>
 </div>

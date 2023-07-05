@@ -85,7 +85,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a8e93b0cbf5fbae9c583903d9f31ef315"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da7/assert_8h.html#a8e93b0cbf5fbae9c583903d9f31ef315">M_ASSERT</a>(x, ...)</td></tr>
+<tr class="memitem:a265be64fe52e8a92e89a75fe62153aa5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da7/assert_8h.html#a265be64fe52e8a92e89a75fe62153aa5">VALIDATE</a>(x, ...)</td></tr>
+<tr class="separator:a265be64fe52e8a92e89a75fe62153aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e93b0cbf5fbae9c583903d9f31ef315"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da7/assert_8h.html#a8e93b0cbf5fbae9c583903d9f31ef315">M_ASSERT</a>(x, ...)&#160;&#160;&#160;<a class="el" href="../../dc/da7/assert_8h.html#a265be64fe52e8a92e89a75fe62153aa5">VALIDATE</a>(x, __VA__ARGS__)</td></tr>
 <tr class="separator:a8e93b0cbf5fbae9c583903d9f31ef315"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a233524c2a07a1962e1c88e335a3b0dfc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da7/assert_8h.html#a233524c2a07a1962e1c88e335a3b0dfc">M_TEST_IMPL</a>(x,  y,  op,  op_string, ...)</td></tr>
 <tr class="separator:a233524c2a07a1962e1c88e335a3b0dfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -97,6 +99,10 @@ Macros</h2></td></tr>
 <tr class="separator:a8bef75df53a2c81079afd41246c0575d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4623194540dbc3387ba45baf005a101"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da7/assert_8h.html#ab4623194540dbc3387ba45baf005a101">M_TEST_NEQ</a>(x,  y, ...)&#160;&#160;&#160;    <a class="el" href="../../dc/da7/assert_8h.html#a233524c2a07a1962e1c88e335a3b0dfc">M_TEST_IMPL</a>(x, y, !=, &quot; was equal to &quot;, __VA_ARGS__)</td></tr>
 <tr class="separator:ab4623194540dbc3387ba45baf005a101"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36f31e4658ef9dfa83e062d4dfa49ab7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da7/assert_8h.html#a36f31e4658ef9dfa83e062d4dfa49ab7">M_TEST_T</a>(x, ...)&#160;&#160;&#160;<a class="el" href="../../dc/da7/assert_8h.html#a233524c2a07a1962e1c88e335a3b0dfc">M_TEST_IMPL</a>(x, true, ==, &quot; was not true &quot;, __VA_ARGS__)</td></tr>
+<tr class="separator:a36f31e4658ef9dfa83e062d4dfa49ab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc19b4cec2104aa7b7987bd17f7570e8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da7/assert_8h.html#adc19b4cec2104aa7b7987bd17f7570e8">M_TEST_F</a>(x, ...)&#160;&#160;&#160;    <a class="el" href="../../dc/da7/assert_8h.html#a233524c2a07a1962e1c88e335a3b0dfc">M_TEST_IMPL</a>(x, false, ==, &quot; was not false&quot;, __VA_ARGS__)</td></tr>
+<tr class="separator:adc19b4cec2104aa7b7987bd17f7570e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a8e93b0cbf5fbae9c583903d9f31ef315" name="a8e93b0cbf5fbae9c583903d9f31ef315"></a>
@@ -120,19 +126,11 @@ Macros</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="../../dc/da7/assert_8h.html#a265be64fe52e8a92e89a75fe62153aa5">VALIDATE</a>(x, __VA__ARGS__)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    {                                          \</div>
-<div class="line">        if (!(x)) {                            \</div>
-<div class="line">            std::cout &lt;&lt; <span class="stringliteral">&quot;Assertion failed: &quot;</span>; \</div>
-<div class="line">            std::cout &lt;&lt; __VA_ARGS__;          \</div>
-<div class="line">            std::cout &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;                 \</div>
-<div class="line">            assert(x);                         \</div>
-<div class="line">        }                                      \</div>
-<div class="line">    }</div>
-</div><!-- fragment -->
+
 </div>
 </div>
 <a id="a650848c7f29e557547baddee84454907" name="a650848c7f29e557547baddee84454907"></a>
@@ -163,6 +161,34 @@ Macros</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td>&#160;&#160;&#160;    <a class="el" href="../../dc/da7/assert_8h.html#a233524c2a07a1962e1c88e335a3b0dfc">M_TEST_IMPL</a>(x, y, ==, &quot; did not equal &quot;, __VA_ARGS__)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adc19b4cec2104aa7b7987bd17f7570e8" name="adc19b4cec2104aa7b7987bd17f7570e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc19b4cec2104aa7b7987bd17f7570e8">&#9670;&#160;</a></span>M_TEST_F</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define M_TEST_F</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;    <a class="el" href="../../dc/da7/assert_8h.html#a233524c2a07a1962e1c88e335a3b0dfc">M_TEST_IMPL</a>(x, false, ==, &quot; was not false&quot;, __VA_ARGS__)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -254,6 +280,7 @@ Macros</h2></td></tr>
 <div class="line">            std::cout &lt;&lt; __VA_ARGS__ &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;                          \</div>
 <div class="line">            std::cout &lt;&lt; x &lt;&lt; op_string &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;                  \</div>
 <div class="line">            std::cout &lt;&lt; <span class="stringliteral">&quot;------ \n &quot;</span>;                                 \</div>
+<div class="line">            assert(x op y);                                            \</div>
 <div class="line">        }                                                              \</div>
 <div class="line">    }</div>
 </div><!-- fragment -->
@@ -325,6 +352,70 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+</div>
+</div>
+<a id="a36f31e4658ef9dfa83e062d4dfa49ab7" name="a36f31e4658ef9dfa83e062d4dfa49ab7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36f31e4658ef9dfa83e062d4dfa49ab7">&#9670;&#160;</a></span>M_TEST_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define M_TEST_T</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="../../dc/da7/assert_8h.html#a233524c2a07a1962e1c88e335a3b0dfc">M_TEST_IMPL</a>(x, true, ==, &quot; was not true &quot;, __VA_ARGS__)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a265be64fe52e8a92e89a75fe62153aa5" name="a265be64fe52e8a92e89a75fe62153aa5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a265be64fe52e8a92e89a75fe62153aa5">&#9670;&#160;</a></span>VALIDATE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VALIDATE</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    {                                          \</div>
+<div class="line">        if (!(x)) {                            \</div>
+<div class="line">            std::cout &lt;&lt; <span class="stringliteral">&quot;Assertion failed: &quot;</span>; \</div>
+<div class="line">            std::cout &lt;&lt; __VA_ARGS__;          \</div>
+<div class="line">            std::cout &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;                 \</div>
+<div class="line">            assert(x);                         \</div>
+<div class="line">        }                                      \</div>
+<div class="line">    }</div>
+</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->

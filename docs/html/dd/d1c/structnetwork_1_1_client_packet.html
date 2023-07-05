@@ -92,6 +92,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/da4/structnetwork_1_1_client_packet_1_1_map_info.html">MapInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbc/structnetwork_1_1_client_packet_1_1_ping_info.html">PingInfo</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d72/structnetwork_1_1_client_packet_1_1_player_control_info.html">PlayerControlInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d7f/structnetwork_1_1_client_packet_1_1_player_info.html">PlayerInfo</a></td></tr>
@@ -99,6 +101,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html">PlayerJoinInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d01/structnetwork_1_1_client_packet_1_1_player_leave_info.html">PlayerLeaveInfo</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/ddb/structnetwork_1_1_client_packet_1_1_player_rare_info.html">PlayerRareInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
@@ -112,11 +116,14 @@ Public Types</h2></td></tr>
 &#160;&#160;<a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa12e7cf4cc4954a80632c66fa23f2e17a">PlayerJoin</a>
 , <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa1920fa7b0acebea4b0195925abf5bb7f">PlayerLeave</a>
 , <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa320147bb2c8639ba072b32dd21cb1067">PlayerLocation</a>
+, <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fa0d109cf255e2f4519253fb30b885adb1">PlayerRare</a>
+, <br />
+&#160;&#160;<a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989fac95db7a89884c975082d6baac81094f0">Ping</a>
 <br />
  }</td></tr>
 <tr class="separator:a456cccdbeface82675259d9929db989f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b764c2200658cb2460a824d39418d19"><td class="memItemLeft" align="right" valign="top">typedef std::variant&lt; <a class="el" href="../../d8/dcf/structnetwork_1_1_client_packet_1_1_announcement_info.html">ClientPacket::AnnouncementInfo</a>, <a class="el" href="../../d9/d72/structnetwork_1_1_client_packet_1_1_player_control_info.html">ClientPacket::PlayerControlInfo</a>, <a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html">ClientPacket::PlayerJoinInfo</a>, <a class="el" href="../../d0/d33/structnetwork_1_1_client_packet_1_1_game_state_info.html">ClientPacket::GameStateInfo</a>, <a class="el" href="../../d0/da4/structnetwork_1_1_client_packet_1_1_map_info.html">ClientPacket::MapInfo</a>, <a class="el" href="../../de/d7f/structnetwork_1_1_client_packet_1_1_player_info.html">ClientPacket::PlayerInfo</a>, <a class="el" href="../../dc/d01/structnetwork_1_1_client_packet_1_1_player_leave_info.html">ClientPacket::PlayerLeaveInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a8b764c2200658cb2460a824d39418d19">Msg</a></td></tr>
-<tr class="separator:a8b764c2200658cb2460a824d39418d19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaeca9f49b09a552b6c3d6232624663d5"><td class="memItemLeft" align="right" valign="top">typedef std::variant&lt; <a class="el" href="../../d8/dcf/structnetwork_1_1_client_packet_1_1_announcement_info.html">ClientPacket::AnnouncementInfo</a>, <a class="el" href="../../d9/d72/structnetwork_1_1_client_packet_1_1_player_control_info.html">ClientPacket::PlayerControlInfo</a>, <a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html">ClientPacket::PlayerJoinInfo</a>, <a class="el" href="../../d0/d33/structnetwork_1_1_client_packet_1_1_game_state_info.html">ClientPacket::GameStateInfo</a>, <a class="el" href="../../d0/da4/structnetwork_1_1_client_packet_1_1_map_info.html">ClientPacket::MapInfo</a>, <a class="el" href="../../de/d7f/structnetwork_1_1_client_packet_1_1_player_info.html">ClientPacket::PlayerInfo</a>, <a class="el" href="../../dc/d01/structnetwork_1_1_client_packet_1_1_player_leave_info.html">ClientPacket::PlayerLeaveInfo</a>, <a class="el" href="../../da/ddb/structnetwork_1_1_client_packet_1_1_player_rare_info.html">ClientPacket::PlayerRareInfo</a>, <a class="el" href="../../d5/dbc/structnetwork_1_1_client_packet_1_1_ping_info.html">ClientPacket::PingInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#aaeca9f49b09a552b6c3d6232624663d5">Msg</a></td></tr>
+<tr class="separator:aaeca9f49b09a552b6c3d6232624663d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -126,18 +133,18 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aac14602a4a11d31626bb53de7a1c8461"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee7665870f2a000055e34b3c6c8aec71"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a456cccdbeface82675259d9929db989f">network::ClientPacket::MsgType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#aee7665870f2a000055e34b3c6c8aec71">msg_type</a></td></tr>
 <tr class="separator:aee7665870f2a000055e34b3c6c8aec71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c08535f0530c222b70c237a08794381"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a8b764c2200658cb2460a824d39418d19">Msg</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a5c08535f0530c222b70c237a08794381">msg</a></td></tr>
+<tr class="memitem:a5c08535f0530c222b70c237a08794381"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#aaeca9f49b09a552b6c3d6232624663d5">Msg</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a5c08535f0530c222b70c237a08794381">msg</a></td></tr>
 <tr class="separator:a5c08535f0530c222b70c237a08794381"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a8b764c2200658cb2460a824d39418d19" name="a8b764c2200658cb2460a824d39418d19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b764c2200658cb2460a824d39418d19">&#9670;&#160;</a></span>Msg</h2>
+<a id="aaeca9f49b09a552b6c3d6232624663d5" name="aaeca9f49b09a552b6c3d6232624663d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaeca9f49b09a552b6c3d6232624663d5">&#9670;&#160;</a></span>Msg</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::variant&lt; <a class="el" href="../../d8/dcf/structnetwork_1_1_client_packet_1_1_announcement_info.html">ClientPacket::AnnouncementInfo</a>, <a class="el" href="../../d9/d72/structnetwork_1_1_client_packet_1_1_player_control_info.html">ClientPacket::PlayerControlInfo</a>, <a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html">ClientPacket::PlayerJoinInfo</a>, <a class="el" href="../../d0/d33/structnetwork_1_1_client_packet_1_1_game_state_info.html">ClientPacket::GameStateInfo</a>, <a class="el" href="../../d0/da4/structnetwork_1_1_client_packet_1_1_map_info.html">ClientPacket::MapInfo</a>, <a class="el" href="../../de/d7f/structnetwork_1_1_client_packet_1_1_player_info.html">ClientPacket::PlayerInfo</a>, <a class="el" href="../../dc/d01/structnetwork_1_1_client_packet_1_1_player_leave_info.html">ClientPacket::PlayerLeaveInfo</a>&gt; <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a8b764c2200658cb2460a824d39418d19">network::ClientPacket::Msg</a></td>
+          <td class="memname">typedef std::variant&lt; <a class="el" href="../../d8/dcf/structnetwork_1_1_client_packet_1_1_announcement_info.html">ClientPacket::AnnouncementInfo</a>, <a class="el" href="../../d9/d72/structnetwork_1_1_client_packet_1_1_player_control_info.html">ClientPacket::PlayerControlInfo</a>, <a class="el" href="../../dd/df8/structnetwork_1_1_client_packet_1_1_player_join_info.html">ClientPacket::PlayerJoinInfo</a>, <a class="el" href="../../d0/d33/structnetwork_1_1_client_packet_1_1_game_state_info.html">ClientPacket::GameStateInfo</a>, <a class="el" href="../../d0/da4/structnetwork_1_1_client_packet_1_1_map_info.html">ClientPacket::MapInfo</a>, <a class="el" href="../../de/d7f/structnetwork_1_1_client_packet_1_1_player_info.html">ClientPacket::PlayerInfo</a>, <a class="el" href="../../dc/d01/structnetwork_1_1_client_packet_1_1_player_leave_info.html">ClientPacket::PlayerLeaveInfo</a>, <a class="el" href="../../da/ddb/structnetwork_1_1_client_packet_1_1_player_rare_info.html">ClientPacket::PlayerRareInfo</a>, <a class="el" href="../../d5/dbc/structnetwork_1_1_client_packet_1_1_ping_info.html">ClientPacket::PingInfo</a>&gt; <a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#aaeca9f49b09a552b6c3d6232624663d5">network::ClientPacket::Msg</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -164,6 +171,8 @@ Public Attributes</h2></td></tr>
 <tr><td class="fieldname"><a id="a456cccdbeface82675259d9929db989fa12e7cf4cc4954a80632c66fa23f2e17a" name="a456cccdbeface82675259d9929db989fa12e7cf4cc4954a80632c66fa23f2e17a"></a>PlayerJoin&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a456cccdbeface82675259d9929db989fa1920fa7b0acebea4b0195925abf5bb7f" name="a456cccdbeface82675259d9929db989fa1920fa7b0acebea4b0195925abf5bb7f"></a>PlayerLeave&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a456cccdbeface82675259d9929db989fa320147bb2c8639ba072b32dd21cb1067" name="a456cccdbeface82675259d9929db989fa320147bb2c8639ba072b32dd21cb1067"></a>PlayerLocation&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a456cccdbeface82675259d9929db989fa0d109cf255e2f4519253fb30b885adb1" name="a456cccdbeface82675259d9929db989fa0d109cf255e2f4519253fb30b885adb1"></a>PlayerRare&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a456cccdbeface82675259d9929db989fac95db7a89884c975082d6baac81094f0" name="a456cccdbeface82675259d9929db989fac95db7a89884c975082d6baac81094f0"></a>Ping&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -208,12 +217,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#a8b764c2200658cb2460a824d39418d19">Msg</a> network::ClientPacket::msg</td>
+          <td class="memname"><a class="el" href="../../dd/d1c/structnetwork_1_1_client_packet.html#aaeca9f49b09a552b6c3d6232624663d5">Msg</a> network::ClientPacket::msg</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#acdb127c63e3c7a36575f590cf525e0a9">network::Client::client_process_message_string()</a>, <a class="el" href="../../db/d3f/namespacenetwork.html#a8f6972f6d0cd4df75a978e0d72e2e06f">network::operator&lt;&lt;()</a>, <a class="el" href="../../d3/da7/structnetwork_1_1_server.html#a7f24bbd6b1ad331e28cad274f95344ea">network::Server::process_announcement_packet()</a>, <a class="el" href="../../d3/da7/structnetwork_1_1_server.html#ad4dcb46379c20303561f79d019c169a9">network::Server::process_player_control_packet()</a>, <a class="el" href="../../d3/da7/structnetwork_1_1_server.html#afe2a62abb4fd826cd780bb70daf8bae0">network::Server::process_player_join_packet()</a>, <a class="el" href="../../db/d3f/namespacenetwork.html#a1e62ea975ea4c7dcb8a7fb13f347d831">network::serialize()</a>, and <a class="el" href="../../d3/da7/structnetwork_1_1_server.html#a610459eab58499f8396ca92fcda99296">network::Server::tick()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#acdb127c63e3c7a36575f590cf525e0a9">network::Client::client_process_message_string()</a>, <a class="el" href="../../db/d3f/namespacenetwork.html#a8f6972f6d0cd4df75a978e0d72e2e06f">network::operator&lt;&lt;()</a>, <a class="el" href="../../d3/da7/structnetwork_1_1_server.html#a7f24bbd6b1ad331e28cad274f95344ea">network::Server::process_announcement_packet()</a>, <a class="el" href="../../d3/da7/structnetwork_1_1_server.html#aa652d0c2d5a7dc1f2b19420b4014890d">network::Server::process_ping_message()</a>, <a class="el" href="../../d3/da7/structnetwork_1_1_server.html#ad4dcb46379c20303561f79d019c169a9">network::Server::process_player_control_packet()</a>, <a class="el" href="../../d3/da7/structnetwork_1_1_server.html#afe2a62abb4fd826cd780bb70daf8bae0">network::Server::process_player_join_packet()</a>, and <a class="el" href="../../db/d3f/namespacenetwork.html#a1e62ea975ea4c7dcb8a7fb13f347d831">network::serialize()</a>.</p>
 
 </div>
 </div>
@@ -229,7 +238,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#acdb127c63e3c7a36575f590cf525e0a9">network::Client::client_process_message_string()</a>, <a class="el" href="../../db/d3f/namespacenetwork.html#a8f6972f6d0cd4df75a978e0d72e2e06f">network::operator&lt;&lt;()</a>, <a class="el" href="../../db/d3f/namespacenetwork.html#a1e62ea975ea4c7dcb8a7fb13f347d831">network::serialize()</a>, <a class="el" href="../../d3/da7/structnetwork_1_1_server.html#a514a3fd3663f3984c847b253347ee29c">network::Server::server_process_message_string()</a>, and <a class="el" href="../../d3/da7/structnetwork_1_1_server.html#a610459eab58499f8396ca92fcda99296">network::Server::tick()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d4/d35/structnetwork_1_1_client.html#acdb127c63e3c7a36575f590cf525e0a9">network::Client::client_process_message_string()</a>, <a class="el" href="../../db/d3f/namespacenetwork.html#a8f6972f6d0cd4df75a978e0d72e2e06f">network::operator&lt;&lt;()</a>, <a class="el" href="../../db/d3f/namespacenetwork.html#a1e62ea975ea4c7dcb8a7fb13f347d831">network::serialize()</a>, and <a class="el" href="../../d3/da7/structnetwork_1_1_server.html#a514a3fd3663f3984c847b253347ee29c">network::Server::server_process_message_string()</a>.</p>
 
 </div>
 </div>

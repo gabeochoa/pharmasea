@@ -11,68 +11,70 @@
 \DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{library_8h}{library.h}}"{}}}
 \DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{singleton_8h}{singleton.h}}"{}}}
 \DoxyCodeLine{00009\ }
-\DoxyCodeLine{00010\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_model_info}{ModelInfo}}\ \{}
-\DoxyCodeLine{00011\ \ \ \ \ \textcolor{comment}{//\ Note\ this\ has\ to\ be\ a\ string\ because\ the\ string\_view\ isnt\ serializable\ in}}
-\DoxyCodeLine{00012\ \ \ \ \ \textcolor{comment}{//\ bitsery}}
-\DoxyCodeLine{00013\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}};}
-\DoxyCodeLine{00014\ }
-\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_model_info_a00d90247a61da3459b88ca3dcb7cdf8e}{size\_scale}};}
-\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_model_info_a08f9bbaf15246249195564ac75daf386}{position\_offset}};}
-\DoxyCodeLine{00017\ \ \ \ \ \textcolor{comment}{//\ TODO\ it\ would\ be\ nice\ to\ support\ this,}}
-\DoxyCodeLine{00018\ \ \ \ \ \textcolor{comment}{//\ but\ we\ have\ no\ way\ of\ doing\ a\ double\ rotation\ on\ diff\ axis}}
-\DoxyCodeLine{00019\ \ \ \ \ \textcolor{comment}{//\ vec3\ rotation\_axis\ =\ vec3\{0,\ 1,\ 0\};}}
-\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_model_info_a34515563c35d73428cd506091b86d1d2}{rotation\_angle}}\ =\ 0;}
-\DoxyCodeLine{00021\ }
-\DoxyCodeLine{00022\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_info_a4f75b24c3f59b57ae90ad2fb67a6fb01}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ make\ a\ const\ or\ something}}
-\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ s.text1b(\mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}},\ 100);}
-\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_model_info_a00d90247a61da3459b88ca3dcb7cdf8e}{size\_scale}});}
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_model_info_a08f9bbaf15246249195564ac75daf386}{position\_offset}});}
-\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_model_info_a34515563c35d73428cd506091b86d1d2}{rotation\_angle}});}
-\DoxyCodeLine{00031\ \ \ \ \ \}}
-\DoxyCodeLine{00032\ \};}
-\DoxyCodeLine{00033\ }
-\DoxyCodeLine{00034\ \mbox{\hyperlink{singleton_8h_a2c7d0ae28a9340e96cc64ff071551e31}{SINGLETON\_FWD}}(\mbox{\hyperlink{struct_model_library}{ModelLibrary}})}
-\DoxyCodeLine{00035\ struct\ \mbox{\hyperlink{struct_model_library}{ModelLibrary}}\ \{}
-\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{singleton_8h_ac4940bd51e49be0e873a7bffe9d67ad9}{SINGLETON}}(\mbox{\hyperlink{struct_model_library}{ModelLibrary}})}
-\DoxyCodeLine{00037\ }
-\DoxyCodeLine{00038\ \ \ \ \ struct\ \mbox{\hyperlink{struct_model_library_1_1_model_loading_info}{ModelLoadingInfo}}\ \{}
-\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{struct_model_library_1_1_model_loading_info_a8645e6dd6763d9367b757d7bbbf6d8eb}{folder}};}
-\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{struct_model_library_1_1_model_loading_info_a697562cbf4199ca51304093990c5f9e9}{filename}};}
-\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{struct_model_library_1_1_model_loading_info_a953f9191b34c88b781b2158e9422bea5}{libraryname}};}
-\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{struct_model_library_1_1_model_loading_info_aecc3f6483f854be450018de84285b0d2}{texture}};}
-\DoxyCodeLine{00043\ \ \ \ \ \};}
-\DoxyCodeLine{00044\ }
-\DoxyCodeLine{00045\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ raylib::Model\&\ \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl.get(name);}
-\DoxyCodeLine{00047\ \ \ \ \ \}}
-\DoxyCodeLine{00048\ }
-\DoxyCodeLine{00049\ \ \ \ \ [[nodiscard]]\ raylib::Model\&\ \mbox{\hyperlink{struct_model_library_a85e06de3578b4faaa1818fb3d2d94d07}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl.get(name);}
-\DoxyCodeLine{00051\ \ \ \ \ \}}
-\DoxyCodeLine{00052\ }
-\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_library_a5ea6104cdc9ee5ea10ccefd152f9cde5}{load}}(\mbox{\hyperlink{struct_model_library_1_1_model_loading_info}{ModelLoadingInfo}}\ mli)\ \{}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ full\_filename\ =}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ Files::get().fetch\_resource\_path(mli.\mbox{\hyperlink{struct_model_library_1_1_model_loading_info_a8645e6dd6763d9367b757d7bbbf6d8eb}{folder}},\ mli.\mbox{\hyperlink{struct_model_library_1_1_model_loading_info_a697562cbf4199ca51304093990c5f9e9}{filename}});}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ impl.load(full\_filename.c\_str(),\ mli.\mbox{\hyperlink{struct_model_library_1_1_model_loading_info_a953f9191b34c88b781b2158e9422bea5}{libraryname}});}
-\DoxyCodeLine{00057\ \ \ \ \ \}}
-\DoxyCodeLine{00058\ }
-\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_library_af8cffadad9310dba0ba2a9df9f49f997}{unload\_all}}()\ \{\ impl.unload\_all();\ \}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ TODO\ enforce\ it\ on\ object\ creation?}}
+\DoxyCodeLine{00011\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{model__library_8h_a0627a5d0be397cca448133e3d4ad9e72}{MAX\_MODEL\_NAME\_LENGTH}}\ =\ 100;}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_model_info}{ModelInfo}}\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{comment}{//\ Note\ this\ has\ to\ be\ a\ string\ because\ the\ string\_view\ isnt\ serializable\ in}}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{comment}{//\ bitsery}}
+\DoxyCodeLine{00016\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}};}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_model_info_a00d90247a61da3459b88ca3dcb7cdf8e}{size\_scale}};}
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ \mbox{\hyperlink{struct_model_info_a08f9bbaf15246249195564ac75daf386}{position\_offset}};}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{comment}{//\ TODO\ it\ would\ be\ nice\ to\ support\ this,}}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{comment}{//\ but\ we\ have\ no\ way\ of\ doing\ a\ double\ rotation\ on\ diff\ axis}}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{//\ vec3\ rotation\_axis\ =\ vec3\{0,\ 1,\ 0\};}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_model_info_a34515563c35d73428cd506091b86d1d2}{rotation\_angle}}\ =\ 0;}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_info_a4f75b24c3f59b57ae90ad2fb67a6fb01}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ s.text1b(\mbox{\hyperlink{struct_model_info_a8ff627546f47e5e1ecef2aa93a5fe560}{model\_name}},\ \mbox{\hyperlink{model__library_8h_a0627a5d0be397cca448133e3d4ad9e72}{MAX\_MODEL\_NAME\_LENGTH}});}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_model_info_a00d90247a61da3459b88ca3dcb7cdf8e}{size\_scale}});}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ s.object(\mbox{\hyperlink{struct_model_info_a08f9bbaf15246249195564ac75daf386}{position\_offset}});}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ s.value4b(\mbox{\hyperlink{struct_model_info_a34515563c35d73428cd506091b86d1d2}{rotation\_angle}});}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \mbox{\hyperlink{singleton_8h_a2c7d0ae28a9340e96cc64ff071551e31}{SINGLETON\_FWD}}(\mbox{\hyperlink{struct_model_library}{ModelLibrary}})}
+\DoxyCodeLine{00037\ struct\ \mbox{\hyperlink{struct_model_library}{ModelLibrary}}\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{singleton_8h_ac4940bd51e49be0e873a7bffe9d67ad9}{SINGLETON}}(\mbox{\hyperlink{struct_model_library}{ModelLibrary}})}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ struct\ \mbox{\hyperlink{struct_model_library_1_1_model_loading_info}{ModelLoadingInfo}}\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{struct_model_library_1_1_model_loading_info_a8645e6dd6763d9367b757d7bbbf6d8eb}{folder}};}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{struct_model_library_1_1_model_loading_info_a697562cbf4199ca51304093990c5f9e9}{filename}};}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{struct_model_library_1_1_model_loading_info_a953f9191b34c88b781b2158e9422bea5}{libraryname}};}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{struct_model_library_1_1_model_loading_info_aecc3f6483f854be450018de84285b0d2}{texture}};}
+\DoxyCodeLine{00045\ \ \ \ \ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ raylib::Model\&\ \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl.get(name);}
+\DoxyCodeLine{00049\ \ \ \ \ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ [[nodiscard]]\ raylib::Model\&\ \mbox{\hyperlink{struct_model_library_a85e06de3578b4faaa1818fb3d2d94d07}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ impl.get(name);}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_library_a5ea6104cdc9ee5ea10ccefd152f9cde5}{load}}(\mbox{\hyperlink{struct_model_library_1_1_model_loading_info}{ModelLoadingInfo}}\ mli)\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ full\_filename\ =}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ Files::get().fetch\_resource\_path(mli.\mbox{\hyperlink{struct_model_library_1_1_model_loading_info_a8645e6dd6763d9367b757d7bbbf6d8eb}{folder}},\ mli.\mbox{\hyperlink{struct_model_library_1_1_model_loading_info_a697562cbf4199ca51304093990c5f9e9}{filename}});}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ impl.load(full\_filename.c\_str(),\ mli.\mbox{\hyperlink{struct_model_library_1_1_model_loading_info_a953f9191b34c88b781b2158e9422bea5}{libraryname}});}
+\DoxyCodeLine{00059\ \ \ \ \ \}}
 \DoxyCodeLine{00060\ }
-\DoxyCodeLine{00061\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_model_library_1_1_model_library_impl}{ModelLibraryImpl}}\ :\ \mbox{\hyperlink{struct_library}{Library}}<raylib::Model>\ \{}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ raylib::Model\ \mbox{\hyperlink{struct_model_library_1_1_model_library_impl_a48b93ab27c8109eddbf2ad2fe8f4e6c1}{convert\_filename\_to\_object}}(}
-\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ raylib::LoadModel(filename);}
-\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00067\ }
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_library_1_1_model_library_impl_a290326a97cf1e9d8ce76b3dccaaa9faf}{unload}}(raylib::Model\ model)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::UnloadModel(model);}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00071\ \ \ \ \ \}\ impl;}
-\DoxyCodeLine{00072\ \};}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_library_af8cffadad9310dba0ba2a9df9f49f997}{unload\_all}}()\ \{\ impl.unload\_all();\ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_model_library_1_1_model_library_impl}{ModelLibraryImpl}}\ :\ \mbox{\hyperlink{struct_library}{Library}}<raylib::Model>\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ raylib::Model\ \mbox{\hyperlink{struct_model_library_1_1_model_library_impl_a48b93ab27c8109eddbf2ad2fe8f4e6c1}{convert\_filename\_to\_object}}(}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ raylib::LoadModel(filename);}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_model_library_1_1_model_library_impl_a290326a97cf1e9d8ce76b3dccaaa9faf}{unload}}(raylib::Model\ model)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ raylib::UnloadModel(model);}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00073\ \ \ \ \ \}\ impl;}
+\DoxyCodeLine{00074\ \};}
 
 \end{DoxyCode}

@@ -1,0 +1,203 @@
+\hypertarget{namespacetest}{}\doxysection{test Namespace Reference}
+\label{namespacetest}\index{test@{test}}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacetest_1_1neighbors}{neighbors}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespacetest_a44ab8ef8604a87885854abcee9db2963}{canvisit}} (const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&pos)
+\item 
+auto \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} a, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} b)
+\item 
+auto \mbox{\hyperlink{namespacetest_ac3e1ef91301389454169f405276a3c9e}{p}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$a, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} b)
+\item 
+std\+::pair$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup}} (const std\+::string map)
+\item 
+void \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_aa73fcf3dd3c04f1526235291f51dd34b}{test\+\_\+no\+\_\+obstacles}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_a8c5a6c302add955b1246008159d729af}{test\+\_\+one\+\_\+obstacle}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_ac6d4747a5922d742d13e7d28f7451122}{test\+\_\+surround\+\_\+no\+\_\+path}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_aa0422da837236972d923ac85cebcf3fc}{test\+\_\+surround\+\_\+one\+\_\+exit}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_a6c9e5045e1325bd742db818b9013f497}{test\+\_\+clear\+\_\+path\+\_\+surround\+\_\+exit}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_ac1299110a6c223108393f84d34ad2f4a}{test\+\_\+clear\+\_\+path\+\_\+surround\+\_\+one\+\_\+exit}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_acce4686526042fd582a4bb36f2b78882}{test\+\_\+maze\+\_\+path\+\_\+exists}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_afbb981b5b6413e4ff06a4fbca9af8322}{test\+\_\+maze\+\_\+path\+\_\+doesnt\+\_\+exist}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::vector$<$ \mbox{\hyperlink{struct_entity}{Entity}} $\ast$ $>$ \mbox{\hyperlink{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}{ents}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacetest_a44ab8ef8604a87885854abcee9db2963}\label{namespacetest_a44ab8ef8604a87885854abcee9db2963}} 
+\index{test@{test}!canvisit@{canvisit}}
+\index{canvisit@{canvisit}!test@{test}}
+\doxysubsubsection{\texorpdfstring{canvisit()}{canvisit()}}
+{\footnotesize\ttfamily bool test\+::canvisit (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&}]{pos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacevec_a4780c4cb2388d6299519924ca0a609a1}{vec\+::distance()}}, \mbox{\hyperlink{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}{ents}}, \mbox{\hyperlink{entityhelper_8h_af5fa95f4f8a66aa99b729afba587f746}{is\+\_\+collidable()}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p()}}.
+
+\mbox{\Hypertarget{namespacetest_ac3e1ef91301389454169f405276a3c9e}\label{namespacetest_ac3e1ef91301389454169f405276a3c9e}} 
+\index{test@{test}!p@{p}}
+\index{p@{p}!test@{test}}
+\doxysubsubsection{\texorpdfstring{p()}{p()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily auto test\+::p (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_entity}{Entity}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{Transform\+::as2()}}, \mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{Entity\+::get()}}, and \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p()}}.
+
+\mbox{\Hypertarget{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}\label{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}} 
+\index{test@{test}!p@{p}}
+\index{p@{p}!test@{test}}
+\doxysubsubsection{\texorpdfstring{p()}{p()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily auto test\+::p (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{a,  }\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacetest_a44ab8ef8604a87885854abcee9db2963}{canvisit()}}, and \mbox{\hyperlink{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}{astar\+::find\+\_\+path()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacetest_1_1neighbors_a072ba70e1eea7320078efd078976b5fb}{test\+::neighbors\+::is\+\_\+valid()}}, \mbox{\hyperlink{namespacetest_ac3e1ef91301389454169f405276a3c9e}{p()}}, \mbox{\hyperlink{namespacetest_a6c9e5045e1325bd742db818b9013f497}{test\+\_\+clear\+\_\+path\+\_\+surround\+\_\+exit()}}, \mbox{\hyperlink{namespacetest_ac1299110a6c223108393f84d34ad2f4a}{test\+\_\+clear\+\_\+path\+\_\+surround\+\_\+one\+\_\+exit()}}, \mbox{\hyperlink{namespacetest_afbb981b5b6413e4ff06a4fbca9af8322}{test\+\_\+maze\+\_\+path\+\_\+doesnt\+\_\+exist()}}, \mbox{\hyperlink{namespacetest_acce4686526042fd582a4bb36f2b78882}{test\+\_\+maze\+\_\+path\+\_\+exists()}}, \mbox{\hyperlink{namespacetest_aa73fcf3dd3c04f1526235291f51dd34b}{test\+\_\+no\+\_\+obstacles()}}, \mbox{\hyperlink{namespacetest_a8c5a6c302add955b1246008159d729af}{test\+\_\+one\+\_\+obstacle()}}, \mbox{\hyperlink{namespacetest_ac6d4747a5922d742d13e7d28f7451122}{test\+\_\+surround\+\_\+no\+\_\+path()}}, and \mbox{\hyperlink{namespacetest_aa0422da837236972d923ac85cebcf3fc}{test\+\_\+surround\+\_\+one\+\_\+exit()}}.
+
+\mbox{\Hypertarget{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}\label{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}} 
+\index{test@{test}!setup@{setup}}
+\index{setup@{setup}!test@{test}}
+\doxysubsubsection{\texorpdfstring{setup()}{setup()}}
+{\footnotesize\ttfamily std\+::pair$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ test\+::setup (\begin{DoxyParamCaption}\item[{const std\+::string}]{map }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}{ents}}, \mbox{\hyperlink{structgeneration_1_1helper_a9b1d98c15eacac456fa96e1bce83903c}{generation\+::helper\+::generate()}}, \mbox{\hyperlink{namespaceutil_a8d672475379879339e33f1f9dc6ea961}{util\+::split\+\_\+string()}}, \mbox{\hyperlink{structgeneration_1_1helper_aa692cf4187de7b6b162b228d7317999c}{generation\+::helper\+::x}}, and \mbox{\hyperlink{structgeneration_1_1helper_a429d681cba26f5194a174529c268e6b1}{generation\+::helper\+::z}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacetest_a6c9e5045e1325bd742db818b9013f497}{test\+\_\+clear\+\_\+path\+\_\+surround\+\_\+exit()}}, \mbox{\hyperlink{namespacetest_ac1299110a6c223108393f84d34ad2f4a}{test\+\_\+clear\+\_\+path\+\_\+surround\+\_\+one\+\_\+exit()}}, \mbox{\hyperlink{namespacetest_afbb981b5b6413e4ff06a4fbca9af8322}{test\+\_\+maze\+\_\+path\+\_\+doesnt\+\_\+exist()}}, \mbox{\hyperlink{namespacetest_acce4686526042fd582a4bb36f2b78882}{test\+\_\+maze\+\_\+path\+\_\+exists()}}, \mbox{\hyperlink{namespacetest_aa73fcf3dd3c04f1526235291f51dd34b}{test\+\_\+no\+\_\+obstacles()}}, \mbox{\hyperlink{namespacetest_a8c5a6c302add955b1246008159d729af}{test\+\_\+one\+\_\+obstacle()}}, \mbox{\hyperlink{namespacetest_ac6d4747a5922d742d13e7d28f7451122}{test\+\_\+surround\+\_\+no\+\_\+path()}}, and \mbox{\hyperlink{namespacetest_aa0422da837236972d923ac85cebcf3fc}{test\+\_\+surround\+\_\+one\+\_\+exit()}}.
+
+\mbox{\Hypertarget{namespacetest_adb12094998441a109a92ce71ee423bc6}\label{namespacetest_adb12094998441a109a92ce71ee423bc6}} 
+\index{test@{test}!teardown@{teardown}}
+\index{teardown@{teardown}!test@{test}}
+\doxysubsubsection{\texorpdfstring{teardown()}{teardown()}}
+{\footnotesize\ttfamily void test\+::teardown (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}{ents}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacetest_a6c9e5045e1325bd742db818b9013f497}{test\+\_\+clear\+\_\+path\+\_\+surround\+\_\+exit()}}, \mbox{\hyperlink{namespacetest_ac1299110a6c223108393f84d34ad2f4a}{test\+\_\+clear\+\_\+path\+\_\+surround\+\_\+one\+\_\+exit()}}, \mbox{\hyperlink{namespacetest_afbb981b5b6413e4ff06a4fbca9af8322}{test\+\_\+maze\+\_\+path\+\_\+doesnt\+\_\+exist()}}, \mbox{\hyperlink{namespacetest_acce4686526042fd582a4bb36f2b78882}{test\+\_\+maze\+\_\+path\+\_\+exists()}}, \mbox{\hyperlink{namespacetest_aa73fcf3dd3c04f1526235291f51dd34b}{test\+\_\+no\+\_\+obstacles()}}, \mbox{\hyperlink{namespacetest_a8c5a6c302add955b1246008159d729af}{test\+\_\+one\+\_\+obstacle()}}, \mbox{\hyperlink{namespacetest_ac6d4747a5922d742d13e7d28f7451122}{test\+\_\+surround\+\_\+no\+\_\+path()}}, and \mbox{\hyperlink{namespacetest_aa0422da837236972d923ac85cebcf3fc}{test\+\_\+surround\+\_\+one\+\_\+exit()}}.
+
+\mbox{\Hypertarget{namespacetest_a6c9e5045e1325bd742db818b9013f497}\label{namespacetest_a6c9e5045e1325bd742db818b9013f497}} 
+\index{test@{test}!test\_clear\_path\_surround\_exit@{test\_clear\_path\_surround\_exit}}
+\index{test\_clear\_path\_surround\_exit@{test\_clear\_path\_surround\_exit}!test@{test}}
+\doxysubsubsection{\texorpdfstring{test\_clear\_path\_surround\_exit()}{test\_clear\_path\_surround\_exit()}}
+{\footnotesize\ttfamily void test\+::test\+\_\+clear\+\_\+path\+\_\+surround\+\_\+exit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p()}}, \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup()}}, \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown()}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+\mbox{\Hypertarget{namespacetest_ac1299110a6c223108393f84d34ad2f4a}\label{namespacetest_ac1299110a6c223108393f84d34ad2f4a}} 
+\index{test@{test}!test\_clear\_path\_surround\_one\_exit@{test\_clear\_path\_surround\_one\_exit}}
+\index{test\_clear\_path\_surround\_one\_exit@{test\_clear\_path\_surround\_one\_exit}!test@{test}}
+\doxysubsubsection{\texorpdfstring{test\_clear\_path\_surround\_one\_exit()}{test\_clear\_path\_surround\_one\_exit()}}
+{\footnotesize\ttfamily void test\+::test\+\_\+clear\+\_\+path\+\_\+surround\+\_\+one\+\_\+exit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p()}}, \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup()}}, \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown()}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+\mbox{\Hypertarget{namespacetest_afbb981b5b6413e4ff06a4fbca9af8322}\label{namespacetest_afbb981b5b6413e4ff06a4fbca9af8322}} 
+\index{test@{test}!test\_maze\_path\_doesnt\_exist@{test\_maze\_path\_doesnt\_exist}}
+\index{test\_maze\_path\_doesnt\_exist@{test\_maze\_path\_doesnt\_exist}!test@{test}}
+\doxysubsubsection{\texorpdfstring{test\_maze\_path\_doesnt\_exist()}{test\_maze\_path\_doesnt\_exist()}}
+{\footnotesize\ttfamily void test\+::test\+\_\+maze\+\_\+path\+\_\+doesnt\+\_\+exist (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p()}}, \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup()}}, \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown()}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+\mbox{\Hypertarget{namespacetest_acce4686526042fd582a4bb36f2b78882}\label{namespacetest_acce4686526042fd582a4bb36f2b78882}} 
+\index{test@{test}!test\_maze\_path\_exists@{test\_maze\_path\_exists}}
+\index{test\_maze\_path\_exists@{test\_maze\_path\_exists}!test@{test}}
+\doxysubsubsection{\texorpdfstring{test\_maze\_path\_exists()}{test\_maze\_path\_exists()}}
+{\footnotesize\ttfamily void test\+::test\+\_\+maze\+\_\+path\+\_\+exists (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p()}}, \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup()}}, \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown()}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+\mbox{\Hypertarget{namespacetest_aa73fcf3dd3c04f1526235291f51dd34b}\label{namespacetest_aa73fcf3dd3c04f1526235291f51dd34b}} 
+\index{test@{test}!test\_no\_obstacles@{test\_no\_obstacles}}
+\index{test\_no\_obstacles@{test\_no\_obstacles}!test@{test}}
+\doxysubsubsection{\texorpdfstring{test\_no\_obstacles()}{test\_no\_obstacles()}}
+{\footnotesize\ttfamily void test\+::test\+\_\+no\+\_\+obstacles (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p()}}, \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup()}}, \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown()}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+\mbox{\Hypertarget{namespacetest_a8c5a6c302add955b1246008159d729af}\label{namespacetest_a8c5a6c302add955b1246008159d729af}} 
+\index{test@{test}!test\_one\_obstacle@{test\_one\_obstacle}}
+\index{test\_one\_obstacle@{test\_one\_obstacle}!test@{test}}
+\doxysubsubsection{\texorpdfstring{test\_one\_obstacle()}{test\_one\_obstacle()}}
+{\footnotesize\ttfamily void test\+::test\+\_\+one\+\_\+obstacle (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p()}}, \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup()}}, \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown()}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+\mbox{\Hypertarget{namespacetest_ac6d4747a5922d742d13e7d28f7451122}\label{namespacetest_ac6d4747a5922d742d13e7d28f7451122}} 
+\index{test@{test}!test\_surround\_no\_path@{test\_surround\_no\_path}}
+\index{test\_surround\_no\_path@{test\_surround\_no\_path}!test@{test}}
+\doxysubsubsection{\texorpdfstring{test\_surround\_no\_path()}{test\_surround\_no\_path()}}
+{\footnotesize\ttfamily void test\+::test\+\_\+surround\+\_\+no\+\_\+path (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p()}}, \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup()}}, \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown()}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+\mbox{\Hypertarget{namespacetest_aa0422da837236972d923ac85cebcf3fc}\label{namespacetest_aa0422da837236972d923ac85cebcf3fc}} 
+\index{test@{test}!test\_surround\_one\_exit@{test\_surround\_one\_exit}}
+\index{test\_surround\_one\_exit@{test\_surround\_one\_exit}!test@{test}}
+\doxysubsubsection{\texorpdfstring{test\_surround\_one\_exit()}{test\_surround\_one\_exit()}}
+{\footnotesize\ttfamily void test\+::test\+\_\+surround\+\_\+one\+\_\+exit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p()}}, \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup()}}, \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown()}}, and \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}.
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}\label{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}} 
+\index{test@{test}!ents@{ents}}
+\index{ents@{ents}!test@{test}}
+\doxysubsubsection{\texorpdfstring{ents}{ents}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{struct_entity}{Entity}}$\ast$$>$ test\+::ents\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespacetest_a44ab8ef8604a87885854abcee9db2963}{canvisit()}}, \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup()}}, and \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown()}}.
+

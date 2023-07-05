@@ -14,6 +14,12 @@ Inheritance diagram for Collects\+User\+Input\+:\begin{figure}[H]
 \begin{DoxyCompactItemize}
 \item 
 virtual \mbox{\hyperlink{struct_collects_user_input_adf37ec3e0b8a6de8b13a0c058d3f960f}{$\sim$\+Collects\+User\+Input}} ()
+\item 
+auto \& \mbox{\hyperlink{struct_collects_user_input_a129f8b9118675d20f566f1326a509910}{reset}} ()
+\item 
+auto \& \mbox{\hyperlink{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}{write}} (\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}} input)
+\item 
+auto \& \mbox{\hyperlink{struct_collects_user_input_af7691930f262f1dbbef9cb3ee0bd524d}{publish}} (float dt)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
 \begin{DoxyCompactItemize}
@@ -22,12 +28,16 @@ virtual \mbox{\hyperlink{struct_collects_user_input_adf37ec3e0b8a6de8b13a0c058d3
 \item 
 \mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
 \item 
+virtual void \mbox{\hyperlink{struct_base_component_ac7389bfd8b903625667e1427ef3cb70b}{on\+Attach}} ()
+\item 
 virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
 \end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-std\+::vector$<$ \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}} $>$ \mbox{\hyperlink{struct_collects_user_input_ae26828ac6664046de53089e8da7b9762}{inputs}}
+\mbox{\hyperlink{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}{User\+Inputs}} \mbox{\hyperlink{struct_collects_user_input_ab8b83c78b23a4b2530977eea00643921}{inputs}}
+\item 
+\mbox{\hyperlink{keymap_8h_aee799aa8b14c1cb0f4c8dc024ea4ea74}{Input\+Set}} \mbox{\hyperlink{struct_collects_user_input_adb9593672efdb54e4f883c192b232dbd}{pressed}}
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
@@ -46,6 +56,34 @@ std\+::vector$<$ \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{U
 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_collects_user_input_af7691930f262f1dbbef9cb3ee0bd524d}\label{struct_collects_user_input_af7691930f262f1dbbef9cb3ee0bd524d}} 
+\index{CollectsUserInput@{CollectsUserInput}!publish@{publish}}
+\index{publish@{publish}!CollectsUserInput@{CollectsUserInput}}
+\doxysubsubsection{\texorpdfstring{publish()}{publish()}}
+{\footnotesize\ttfamily auto \& Collects\+User\+Input\+::publish (\begin{DoxyParamCaption}\item[{float}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_collects_user_input_ab8b83c78b23a4b2530977eea00643921}{inputs}}, \mbox{\hyperlink{struct_collects_user_input_adb9593672efdb54e4f883c192b232dbd}{pressed}}, and \mbox{\hyperlink{struct_collects_user_input_a129f8b9118675d20f566f1326a509910}{reset()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a55c42792a45958553128b841ccec5cc2}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::collect\+\_\+user\+\_\+input()}}.
+
+\mbox{\Hypertarget{struct_collects_user_input_a129f8b9118675d20f566f1326a509910}\label{struct_collects_user_input_a129f8b9118675d20f566f1326a509910}} 
+\index{CollectsUserInput@{CollectsUserInput}!reset@{reset}}
+\index{reset@{reset}!CollectsUserInput@{CollectsUserInput}}
+\doxysubsubsection{\texorpdfstring{reset()}{reset()}}
+{\footnotesize\ttfamily auto \& Collects\+User\+Input\+::reset (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_collects_user_input_adb9593672efdb54e4f883c192b232dbd}{pressed}}.
+
+
+
+Referenced by \mbox{\hyperlink{struct_collects_user_input_af7691930f262f1dbbef9cb3ee0bd524d}{publish()}}.
+
 \mbox{\Hypertarget{struct_collects_user_input_a6a3075130b80da9115cc9447e7f983b1}\label{struct_collects_user_input_a6a3075130b80da9115cc9447e7f983b1}} 
 \index{CollectsUserInput@{CollectsUserInput}!serialize@{serialize}}
 \index{serialize@{serialize}!CollectsUserInput@{CollectsUserInput}}
@@ -53,18 +91,42 @@ std\+::vector$<$ \mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{U
 {\footnotesize\ttfamily template$<$typename S $>$ \\
 void Collects\+User\+Input\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
 
+\mbox{\Hypertarget{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}\label{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}} 
+\index{CollectsUserInput@{CollectsUserInput}!write@{write}}
+\index{write@{write}!CollectsUserInput@{CollectsUserInput}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}}
+{\footnotesize\ttfamily auto \& Collects\+User\+Input\+::write (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{Input\+Name}}}]{input }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_collects_user_input_adb9593672efdb54e4f883c192b232dbd}{pressed}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a55c42792a45958553128b841ccec5cc2}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::collect\+\_\+user\+\_\+input()}}.
+
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_collects_user_input_ae26828ac6664046de53089e8da7b9762}\label{struct_collects_user_input_ae26828ac6664046de53089e8da7b9762}} 
+\mbox{\Hypertarget{struct_collects_user_input_ab8b83c78b23a4b2530977eea00643921}\label{struct_collects_user_input_ab8b83c78b23a4b2530977eea00643921}} 
 \index{CollectsUserInput@{CollectsUserInput}!inputs@{inputs}}
 \index{inputs@{inputs}!CollectsUserInput@{CollectsUserInput}}
 \doxysubsubsection{\texorpdfstring{inputs}{inputs}}
-{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{keymap_8h_ace92b9e658d8e6b1535c88a5da6e8453}{User\+Input}}$>$ Collects\+User\+Input\+::inputs}
+{\footnotesize\ttfamily \mbox{\hyperlink{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}{User\+Inputs}} Collects\+User\+Input\+::inputs}
 
 
 
-Referenced by \mbox{\hyperlink{namespacesystem__manager_a659184773c10c97c2fae2ef1f542e0c6}{system\+\_\+manager\+::collect\+\_\+user\+\_\+input()}}.
+Referenced by \mbox{\hyperlink{struct_collects_user_input_af7691930f262f1dbbef9cb3ee0bd524d}{publish()}}, and \mbox{\hyperlink{structnetwork_1_1_client_ae502815c0740bf18bc4bff3a92ee5bba}{network\+::\+Client\+::send\+\_\+player\+\_\+input\+\_\+packet()}}.
+
+\mbox{\Hypertarget{struct_collects_user_input_adb9593672efdb54e4f883c192b232dbd}\label{struct_collects_user_input_adb9593672efdb54e4f883c192b232dbd}} 
+\index{CollectsUserInput@{CollectsUserInput}!pressed@{pressed}}
+\index{pressed@{pressed}!CollectsUserInput@{CollectsUserInput}}
+\doxysubsubsection{\texorpdfstring{pressed}{pressed}}
+{\footnotesize\ttfamily \mbox{\hyperlink{keymap_8h_aee799aa8b14c1cb0f4c8dc024ea4ea74}{Input\+Set}} Collects\+User\+Input\+::pressed}
+
+
+
+Referenced by \mbox{\hyperlink{struct_collects_user_input_af7691930f262f1dbbef9cb3ee0bd524d}{publish()}}, \mbox{\hyperlink{struct_collects_user_input_a129f8b9118675d20f566f1326a509910}{reset()}}, and \mbox{\hyperlink{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}{write()}}.
 
 
 

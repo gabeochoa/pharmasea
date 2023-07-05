@@ -6,14 +6,14 @@
 \DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00003\ }
 \DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../preload.h"{}}}
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../statemanager.h"{}}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}../vec\_util.h"{}}}
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{assert_8h}{assert.h}}"{}}}
-\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{event_8h}{event.h}}"{}}}
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{gamepad__axis__with__dir_8h}{gamepad\_axis\_with\_dir.h}}"{}}}
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{keymap_8h}{keymap.h}}"{}}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{log_8h}{log.h}}"{}}}
-\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}raylib.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../vec\_util.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{assert_8h}{assert.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{event_8h}{event.h}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{gamepad__axis__with__dir_8h}{gamepad\_axis\_with\_dir.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{keymap_8h}{keymap.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{log_8h}{log.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}raylib.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statemanager_8h}{statemanager.h}}"{}}}
 \DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{type__name_8h}{type\_name.h}}"{}}}
 \DoxyCodeLine{00014\ \textcolor{comment}{//}}
 \DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{font__sizer_8h}{font\_sizer.h}}"{}}}
@@ -320,7 +320,7 @@
 \DoxyCodeLine{00316\ \textcolor{comment}{//\ if\ not\ we\ can\ switch\ to\ using\ the\ SINGLETON\ macro}}
 \DoxyCodeLine{00317\ \textcolor{comment}{//\ NOTE:\ Jan2-\/23,\ I\ tried\ but\ it\ seems\ to\ immediately\ crash\ on\ startup,\ what\ is}}
 \DoxyCodeLine{00318\ \textcolor{comment}{//\ using\ this?}}
-\DoxyCodeLine{00319\ \mbox{\hyperlink{structui_1_1_u_i_context}{UIContext}}*\ \mbox{\hyperlink{namespaceui_a29c5f65ba90cc845f4a6fec89c89f475}{globalContext}};}
+\DoxyCodeLine{00319\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structui_1_1_u_i_context}{UIContext}}*\ \mbox{\hyperlink{namespaceui_a29c5f65ba90cc845f4a6fec89c89f475}{globalContext}};}
 \DoxyCodeLine{00320\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structui_1_1_u_i_context}{UIContext}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{structui_1_1_i_u_i_context_input_manager}{IUIContextInputManager}},}
 \DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{structui_1_1_i_u_i_context_last_frame}{IUIContextLastFrame}},}
 \DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{structui_1_1_i_u_i_context_render_textures}{IUIContextRenderTextures}},}
@@ -369,7 +369,7 @@
 \DoxyCodeLine{00365\ \ \ \ \ \}}
 \DoxyCodeLine{00366\ }
 \DoxyCodeLine{00367\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structui_1_1_u_i_context_ad521a68f8be4f3373804eb11306ce62b}{begin}}(\textcolor{keywordtype}{float}\ dt)\textcolor{keyword}{\ override\ }\{}
-\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(!\mbox{\hyperlink{structui_1_1_u_i_context_a39783acdce15cd9c7af9b461f2d3bd1a}{began\_and\_not\_ended}},}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(!\mbox{\hyperlink{structui_1_1_u_i_context_a39783acdce15cd9c7af9b461f2d3bd1a}{began\_and\_not\_ended}},}
 \DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}You\ should\ call\ end()\ every\ frame\ before\ calling\ begin()\ "{}}}
 \DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}again\ "{}});}
 \DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_u_i_context_a39783acdce15cd9c7af9b461f2d3bd1a}{began\_and\_not\_ended}}\ =\ \textcolor{keyword}{true};}

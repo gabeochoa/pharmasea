@@ -1,5 +1,5 @@
-\hypertarget{util_8h}{}\doxysection{src/util.h File Reference}
-\label{util_8h}\index{src/util.h@{src/util.h}}
+\hypertarget{util_8h}{}\doxysection{src/engine/util.h File Reference}
+\label{util_8h}\index{src/engine/util.h@{src/engine/util.h}}
 {\ttfamily \#include $<$math.\+h$>$}\newline
 {\ttfamily \#include $<$algorithm$>$}\newline
 {\ttfamily \#include $<$cmath$>$}\newline
@@ -31,6 +31,8 @@ namespace \mbox{\hyperlink{namespaceutil}{util}}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+void \mbox{\hyperlink{namespaceutil_a5bf3abd7929d330a17820e9c653ea94f}{util\+::force\+\_\+segfault}} ()
+\item 
 {\footnotesize template$<$class... Ts$>$ }\\\mbox{\hyperlink{namespaceutil_addfd55c03039ca8158e80a71b451eecd}{util\+::overloaded}} (Ts...) -\/$>$ overloaded$<$ Ts... $>$
 \item 
 {\footnotesize template$<$typename T $>$ }\\int \mbox{\hyperlink{namespaceutil_a7b683e51af99b005d650280fe168daec}{util\+::sgn}} (T val)
@@ -44,6 +46,12 @@ static std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{namespaceutil_a8d6724
 std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{namespaceutil_a5f5caebc89c06dcdd631966f2ba0cb72}{util\+::split\+\_\+re}} (const std\+::string \&input, const std\+::string \&regex)
 \item 
 static float \mbox{\hyperlink{namespaceutil_a5020e504940e09639480aed917da6ba1}{util\+::clamp}} (float a, float mn, float mx)
+\item 
+static float \mbox{\hyperlink{namespaceutil_a8d8ab89401ce7c1afe474cbe90009042}{util\+::round\+\_\+up}} (float value, int decimal\+\_\+places)
+\item 
+static float \mbox{\hyperlink{namespaceutil_a03256e36c20c6257c41c991ff2a4c7d6}{util\+::trunc}} (float value, int decimal\+\_\+places)
+\item 
+static float \mbox{\hyperlink{namespaceutil_a992d5bc619ec26409ea75140a3a3087c}{util\+::lerp}} (float a, float b, float pct)
 \item 
 {\footnotesize template$<$template$<$ typename... $>$ class Container, typename K , typename V , typename... Ts$>$ }\\V \mbox{\hyperlink{namespaceutil_a5fad71d00f379fced9c845d2387b5304}{util\+::map\+\_\+get\+\_\+or\+\_\+default}} (Container$<$ K, V, Ts... $>$ map, K key, V def\+\_\+value)
 \item 

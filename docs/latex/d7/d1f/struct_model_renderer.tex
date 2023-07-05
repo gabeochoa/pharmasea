@@ -21,7 +21,9 @@ std\+::optional$<$ \mbox{\hyperlink{struct_model_info}{Model\+Info}} $>$ \mbox{\
 \item 
 raylib\+::\+Model \mbox{\hyperlink{struct_model_renderer_a5eb913b5b12c1ac3c40f8cb625761b78}{model}} () const
 \item 
-void \mbox{\hyperlink{struct_model_renderer_a5b690d340b7dc58e4a82739ae857267b}{update}} (\mbox{\hyperlink{struct_model_info}{Model\+Info}} new\+\_\+info)
+void \mbox{\hyperlink{struct_model_renderer_af630c2cd5d7aa11837a1f830f9a5bd2f}{update}} (const \mbox{\hyperlink{struct_model_info}{Model\+Info}} \&new\+\_\+info)
+\item 
+void \mbox{\hyperlink{struct_model_renderer_a5838a39a7a1300d3edf0b0ee294324e0}{update\+\_\+model\+\_\+name}} (const std\+::string \&new\+\_\+name)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
 \begin{DoxyCompactItemize}
@@ -29,6 +31,8 @@ void \mbox{\hyperlink{struct_model_renderer_a5b690d340b7dc58e4a82739ae857267b}{u
 \mbox{\hyperlink{struct_base_component_ac74326a615877f3c1a17bc47787ad91e}{Base\+Component}} ()
 \item 
 \mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
+\item 
+virtual void \mbox{\hyperlink{struct_base_component_ac7389bfd8b903625667e1427ef3cb70b}{on\+Attach}} ()
 \item 
 virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
 \end{DoxyCompactItemize}
@@ -76,7 +80,7 @@ Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_afd1e
 
 
 
-References \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{Model\+Library\+::get()}}, and \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}.
+References \mbox{\hyperlink{struct_model_library_aaddbbb2eda8f0ea544bd1e3d8e5b5eec}{Model\+Library\+::get()}}, and \mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{model\+\_\+info()}}.
 
 
 
@@ -94,7 +98,7 @@ References \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856
 
 
 
-Referenced by \mbox{\hyperlink{struct_model_renderer_a0f2f87afba472e9cf9dbac1ca7bcbd46}{has\+\_\+model()}}, \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_afd1ea546dd69491d4f5a71dbce050700}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+model\+\_\+highlighted()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a623ca4092034e5947a74092c361262cb}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+model\+\_\+normal()}}.
+Referenced by \mbox{\hyperlink{struct_model_renderer_a0f2f87afba472e9cf9dbac1ca7bcbd46}{has\+\_\+model()}}, \mbox{\hyperlink{struct_model_renderer_a5eb913b5b12c1ac3c40f8cb625761b78}{model()}}, \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_afd1ea546dd69491d4f5a71dbce050700}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+model\+\_\+highlighted()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_a623ca4092034e5947a74092c361262cb}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+model\+\_\+normal()}}.
 
 \mbox{\Hypertarget{struct_model_renderer_a824a8874123dacfc50e0422c7edafddc}\label{struct_model_renderer_a824a8874123dacfc50e0422c7edafddc}} 
 \index{ModelRenderer@{ModelRenderer}!serialize@{serialize}}
@@ -107,15 +111,33 @@ void Model\+Renderer\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end
 
 References \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}.
 
-\mbox{\Hypertarget{struct_model_renderer_a5b690d340b7dc58e4a82739ae857267b}\label{struct_model_renderer_a5b690d340b7dc58e4a82739ae857267b}} 
+\mbox{\Hypertarget{struct_model_renderer_af630c2cd5d7aa11837a1f830f9a5bd2f}\label{struct_model_renderer_af630c2cd5d7aa11837a1f830f9a5bd2f}} 
 \index{ModelRenderer@{ModelRenderer}!update@{update}}
 \index{update@{update}!ModelRenderer@{ModelRenderer}}
 \doxysubsubsection{\texorpdfstring{update()}{update()}}
-{\footnotesize\ttfamily void Model\+Renderer\+::update (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_info}{Model\+Info}}}]{new\+\_\+info }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily void Model\+Renderer\+::update (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_model_info}{Model\+Info}} \&}]{new\+\_\+info }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
 References \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_affe2a9422fc0f927f98770e2a9d78752}{system\+\_\+manager\+::render\+\_\+manager\+::update\+\_\+character\+\_\+model\+\_\+from\+\_\+index()}}.
+
+\mbox{\Hypertarget{struct_model_renderer_a5838a39a7a1300d3edf0b0ee294324e0}\label{struct_model_renderer_a5838a39a7a1300d3edf0b0ee294324e0}} 
+\index{ModelRenderer@{ModelRenderer}!update\_model\_name@{update\_model\_name}}
+\index{update\_model\_name@{update\_model\_name}!ModelRenderer@{ModelRenderer}}
+\doxysubsubsection{\texorpdfstring{update\_model\_name()}{update\_model\_name()}}
+{\footnotesize\ttfamily void Model\+Renderer\+::update\+\_\+model\+\_\+name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{new\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856333}{info}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_ac8bf560d525c02f0846838bb94db0f69}{system\+\_\+manager\+::refetch\+\_\+dynamic\+\_\+model\+\_\+names()}}.
 
 
 
@@ -128,7 +150,7 @@ References \mbox{\hyperlink{struct_model_renderer_a504636f70c2e134d4cce8b3b9f856
 
 
 
-Referenced by \mbox{\hyperlink{struct_model_renderer_a5eb913b5b12c1ac3c40f8cb625761b78}{model()}}, \mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{model\+\_\+info()}}, \mbox{\hyperlink{struct_model_renderer_a824a8874123dacfc50e0422c7edafddc}{serialize()}}, and \mbox{\hyperlink{struct_model_renderer_a5b690d340b7dc58e4a82739ae857267b}{update()}}.
+Referenced by \mbox{\hyperlink{struct_model_renderer_a21a12fde53b2de752b5439edaae66e1d}{model\+\_\+info()}}, \mbox{\hyperlink{struct_model_renderer_a824a8874123dacfc50e0422c7edafddc}{serialize()}}, \mbox{\hyperlink{struct_model_renderer_af630c2cd5d7aa11837a1f830f9a5bd2f}{update()}}, and \mbox{\hyperlink{struct_model_renderer_a5838a39a7a1300d3edf0b0ee294324e0}{update\+\_\+model\+\_\+name()}}.
 
 
 

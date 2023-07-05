@@ -1,0 +1,232 @@
+\hypertarget{test__pathing_8h_source}{}\doxysection{test\+\_\+pathing.\+h}
+\label{test__pathing_8h_source}\index{src/tests/test\_pathing.h@{src/tests/test\_pathing.h}}
+\mbox{\hyperlink{test__pathing_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}../engine/astar.h"{}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}../entity.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../entityhelper.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../level\_info.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacetest}{test}}\ \{}
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }neighbors\ \{}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacetest_1_1neighbors_a072ba70e1eea7320078efd078976b5fb}{is\_valid}}(std::vector<vec2>\ v,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}})\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ pos\ :\ v)}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}}\ ==\ pos)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00014\ \};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetest_1_1neighbors_addb0025144f81c3d1ee3021148479881}{test\_all\_neighbors}}()\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ std::vector<vec2>\ invalid;}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{auto}\ n\ =\ \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar::get\_neighbors}}(\{1,\ 1\},\ [](\textcolor{keyword}{auto}\&\&)\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \});}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(n.size()\ ==\ 8,\ \textcolor{stringliteral}{"{}should\ have\ all\ neighbors"{}});}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ invalid.push\_back(\{0,\ 0\});}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{auto}\ f\ =\ std::bind(\&\mbox{\hyperlink{namespacetest_1_1neighbors_a072ba70e1eea7320078efd078976b5fb}{is\_valid}},\ invalid,\ std::placeholders::\_1);}
+\DoxyCodeLine{00024\ \ \ \ \ n\ =\ \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar::get\_neighbors}}(\{1,\ 1\},\ f);}
+\DoxyCodeLine{00025\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(n.size()\ ==\ 7,\ \textcolor{stringliteral}{"{}should\ have\ 7\ neighbors"{}});}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ invalid.push\_back(\{0,\ 1\});}
+\DoxyCodeLine{00028\ \ \ \ \ f\ =\ std::bind(\&\mbox{\hyperlink{namespacetest_1_1neighbors_a072ba70e1eea7320078efd078976b5fb}{is\_valid}},\ invalid,\ std::placeholders::\_1);}
+\DoxyCodeLine{00029\ \ \ \ \ n\ =\ \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar::get\_neighbors}}(\{1,\ 1\},\ f);}
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(n.size()\ ==\ 6,\ \textcolor{stringliteral}{"{}should\ have\ 6\ neighbors"{}});}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ invalid.push\_back(\{0,\ 2\});}
+\DoxyCodeLine{00033\ \ \ \ \ f\ =\ std::bind(\&\mbox{\hyperlink{namespacetest_1_1neighbors_a072ba70e1eea7320078efd078976b5fb}{is\_valid}},\ invalid,\ std::placeholders::\_1);}
+\DoxyCodeLine{00034\ \ \ \ \ n\ =\ \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar::get\_neighbors}}(\{1,\ 1\},\ f);}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(n.size()\ ==\ 5,\ \textcolor{stringliteral}{"{}should\ have\ 5\ neighbors"{}});}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ invalid.push\_back(\{1,\ 0\});}
+\DoxyCodeLine{00038\ \ \ \ \ f\ =\ std::bind(\&\mbox{\hyperlink{namespacetest_1_1neighbors_a072ba70e1eea7320078efd078976b5fb}{is\_valid}},\ invalid,\ std::placeholders::\_1);}
+\DoxyCodeLine{00039\ \ \ \ \ n\ =\ \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar::get\_neighbors}}(\{1,\ 1\},\ f);}
+\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(n.size()\ ==\ 4,\ \textcolor{stringliteral}{"{}should\ have\ 4\ neighbors"{}});}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ invalid.push\_back(\{1,\ 2\});}
+\DoxyCodeLine{00043\ \ \ \ \ f\ =\ std::bind(\&\mbox{\hyperlink{namespacetest_1_1neighbors_a072ba70e1eea7320078efd078976b5fb}{is\_valid}},\ invalid,\ std::placeholders::\_1);}
+\DoxyCodeLine{00044\ \ \ \ \ n\ =\ \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar::get\_neighbors}}(\{1,\ 1\},\ f);}
+\DoxyCodeLine{00045\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(n.size()\ ==\ 3,\ \textcolor{stringliteral}{"{}should\ have\ 3\ neighbors"{}});}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ invalid.push\_back(\{2,\ 0\});}
+\DoxyCodeLine{00048\ \ \ \ \ f\ =\ std::bind(\&\mbox{\hyperlink{namespacetest_1_1neighbors_a072ba70e1eea7320078efd078976b5fb}{is\_valid}},\ invalid,\ std::placeholders::\_1);}
+\DoxyCodeLine{00049\ \ \ \ \ n\ =\ \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar::get\_neighbors}}(\{1,\ 1\},\ f);}
+\DoxyCodeLine{00050\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(n.size()\ ==\ 2,\ \textcolor{stringliteral}{"{}should\ have\ 2\ neighbors"{}});}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ invalid.push\_back(\{2,\ 1\});}
+\DoxyCodeLine{00053\ \ \ \ \ f\ =\ std::bind(\&\mbox{\hyperlink{namespacetest_1_1neighbors_a072ba70e1eea7320078efd078976b5fb}{is\_valid}},\ invalid,\ std::placeholders::\_1);}
+\DoxyCodeLine{00054\ \ \ \ \ n\ =\ \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar::get\_neighbors}}(\{1,\ 1\},\ f);}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(n.size()\ ==\ 1,\ \textcolor{stringliteral}{"{}should\ have\ 1\ neighbors"{}});}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ invalid.push\_back(\{2,\ 2\});}
+\DoxyCodeLine{00058\ \ \ \ \ f\ =\ std::bind(\&\mbox{\hyperlink{namespacetest_1_1neighbors_a072ba70e1eea7320078efd078976b5fb}{is\_valid}},\ invalid,\ std::placeholders::\_1);}
+\DoxyCodeLine{00059\ \ \ \ \ n\ =\ \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar::get\_neighbors}}(\{1,\ 1\},\ f);}
+\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(n.size()\ ==\ 0,\ \textcolor{stringliteral}{"{}should\ have\ 0\ neighbors"{}});}
+\DoxyCodeLine{00061\ \}}
+\DoxyCodeLine{00062\ \}\ \ \textcolor{comment}{//\ namespace\ neighbors}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{static}\ std::vector<Entity*>\ \mbox{\hyperlink{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}{ents}};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacetest_a44ab8ef8604a87885854abcee9db2963}{canvisit}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\&\ pos)\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{entityhelper_8h_af5fa95f4f8a66aa99b729afba587f746}{is\_collidable}}\ =\ [](\mbox{\hyperlink{struct_entity}{Entity}}*\ entity)\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (entity-\/>has<\mbox{\hyperlink{struct_is_solid}{IsSolid}}>());}
+\DoxyCodeLine{00070\ \ \ \ \ \};}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{bool}\ hit\_impassible\_entity\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ entity\ :\ \mbox{\hyperlink{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}{ents}})\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{entityhelper_8h_af5fa95f4f8a66aa99b729afba587f746}{is\_collidable}}(entity))\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespacevec_a4780c4cb2388d6299519924ca0a609a1}{vec::distance}}(entity-\/>template\ get<Transform>().as2(),\ pos)\ <}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2.f)\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ hit\_impassible\_entity\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00081\ \ \ \ \ \}}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordflow}{return}\ !hit\_impassible\_entity;}
+\DoxyCodeLine{00083\ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{keyword}{inline}\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}}(\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ a,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ b)\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}{astar::find\_path}}(a,\ b,\ std::bind(\&\mbox{\hyperlink{namespacetest_a44ab8ef8604a87885854abcee9db2963}{canvisit}},\ std::placeholders::\_1));}
+\DoxyCodeLine{00087\ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{inline}\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}}(\mbox{\hyperlink{struct_entity}{Entity}}*\ a,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ b)\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}}(a-\/>\mbox{\hyperlink{struct_entity_ac2ecabb8a3889111434375a57bc7dc5a}{get}}<\mbox{\hyperlink{struct_transform}{Transform}}>().\mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{as2}}(),\ b);\ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{inline}\ std::pair<vec2,\ vec2>\ \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup}}(\textcolor{keyword}{const}\ std::string\ map)\ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{auto}\ lines\ =\ \mbox{\hyperlink{namespaceutil_a8d672475379879339e33f1f9dc6ea961}{util::split\_string}}(map,\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{00093\ \ \ \ \ \mbox{\hyperlink{structgeneration_1_1helper}{generation::helper}}\ helper(lines);}
+\DoxyCodeLine{00094\ \ \ \ \ helper.\mbox{\hyperlink{structgeneration_1_1helper_a9b1d98c15eacac456fa96e1bce83903c}{generate}}([](\mbox{\hyperlink{struct_entity}{Entity}}*\ e)\ \{\ \mbox{\hyperlink{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}{ents}}.push\_back(e);\ \});}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_pair(helper.\mbox{\hyperlink{structgeneration_1_1helper_a429d681cba26f5194a174529c268e6b1}{z}},\ helper.\mbox{\hyperlink{structgeneration_1_1helper_aa692cf4187de7b6b162b228d7317999c}{x}});}
+\DoxyCodeLine{00097\ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown}}()\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ it\ =\ \mbox{\hyperlink{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}{ents}}.begin();\ it\ !=\ \mbox{\hyperlink{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}{ents}}.end();\ ++it)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ *it;}
+\DoxyCodeLine{00102\ \ \ \ \ \}}
+\DoxyCodeLine{00103\ \ \ \ \ \mbox{\hyperlink{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}{ents}}.clear();}
+\DoxyCodeLine{00104\ \}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetest_aa73fcf3dd3c04f1526235291f51dd34b}{test\_no\_obstacles}}()\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{auto}\ [z,\ x]\ =\ \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup}}(\textcolor{stringliteral}{"{}z............x"{}});}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{auto}\ path\ =\ \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}}(z,\ x);}
+\DoxyCodeLine{00110\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(path.size(),\ \textcolor{stringliteral}{"{}path\ should\ not\ be\ empty"{}});}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00112\ \ \ \ \ \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown}}();}
+\DoxyCodeLine{00113\ \}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetest_a8c5a6c302add955b1246008159d729af}{test\_one\_obstacle}}()\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{auto}\ [z,\ x]\ =\ \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup}}(\textcolor{stringliteral}{"{}z..w..x"{}});}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{auto}\ path\ =\ \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}}(z,\ x);}
+\DoxyCodeLine{00119\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(path.size(),\ \textcolor{stringliteral}{"{}path\ should\ not\ be\ empty"{}});}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00121\ \ \ \ \ \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown}}();}
+\DoxyCodeLine{00122\ \}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetest_ac6d4747a5922d742d13e7d28f7451122}{test\_surround\_no\_path}}()\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{auto}\ [z,\ x]\ =\ \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup}}(R\textcolor{stringliteral}{"{}(}}
+\DoxyCodeLine{00126\ \textcolor{stringliteral}{www}}
+\DoxyCodeLine{00127\ \textcolor{stringliteral}{wzw....x.}}
+\DoxyCodeLine{00128\ \textcolor{stringliteral}{www}}
+\DoxyCodeLine{00129\ \textcolor{stringliteral}{\ \ \ \ )"{});}}
+\DoxyCodeLine{00130\ \textcolor{stringliteral}{\ \ \ \ }\textcolor{comment}{//}}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keyword}{auto}\ path\ =\ \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}}(z,\ x);}
+\DoxyCodeLine{00132\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(path.empty(),\ \textcolor{stringliteral}{"{}path\ should\ be\ empty"{}});}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00134\ \ \ \ \ \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown}}();}
+\DoxyCodeLine{00135\ \}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetest_aa0422da837236972d923ac85cebcf3fc}{test\_surround\_one\_exit}}()\ \{}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keyword}{auto}\ [z,\ x]\ =\ \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup}}(R\textcolor{stringliteral}{"{}(}}
+\DoxyCodeLine{00139\ \textcolor{stringliteral}{www}}
+\DoxyCodeLine{00140\ \textcolor{stringliteral}{wz.....x.}}
+\DoxyCodeLine{00141\ \textcolor{stringliteral}{www}}
+\DoxyCodeLine{00142\ \textcolor{stringliteral}{\ \ \ \ )"{});}}
+\DoxyCodeLine{00143\ \textcolor{stringliteral}{\ \ \ \ }\textcolor{comment}{//}}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{auto}\ path\ =\ \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}}(z,\ x);}
+\DoxyCodeLine{00145\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(path.size(),\ \textcolor{stringliteral}{"{}path\ should\ not\ be\ empty"{}});}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00147\ \ \ \ \ \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown}}();}
+\DoxyCodeLine{00148\ \}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetest_a6c9e5045e1325bd742db818b9013f497}{test\_clear\_path\_surround\_exit}}()\ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{auto}\ [z,\ x]\ =\ \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup}}(R\textcolor{stringliteral}{"{}(}}
+\DoxyCodeLine{00152\ \textcolor{stringliteral}{www}}
+\DoxyCodeLine{00153\ \textcolor{stringliteral}{wxw....z.}}
+\DoxyCodeLine{00154\ \textcolor{stringliteral}{www}}
+\DoxyCodeLine{00155\ \textcolor{stringliteral}{\ \ \ \ )"{});}}
+\DoxyCodeLine{00156\ \textcolor{stringliteral}{\ \ \ \ }\textcolor{comment}{//}}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{auto}\ path\ =\ \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}}(z,\ x);}
+\DoxyCodeLine{00158\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(path.empty(),\ \textcolor{stringliteral}{"{}path\ should\ be\ empty"{}});}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00160\ \ \ \ \ \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown}}();}
+\DoxyCodeLine{00161\ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetest_ac1299110a6c223108393f84d34ad2f4a}{test\_clear\_path\_surround\_one\_exit}}()\ \{}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{auto}\ [z,\ x]\ =\ \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup}}(R\textcolor{stringliteral}{"{}(}}
+\DoxyCodeLine{00165\ \textcolor{stringliteral}{www}}
+\DoxyCodeLine{00166\ \textcolor{stringliteral}{wx.....z.}}
+\DoxyCodeLine{00167\ \textcolor{stringliteral}{www}}
+\DoxyCodeLine{00168\ \textcolor{stringliteral}{\ \ \ \ )"{});}}
+\DoxyCodeLine{00169\ \textcolor{stringliteral}{\ \ \ \ }\textcolor{comment}{//}}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keyword}{auto}\ path\ =\ \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}}(z,\ x);}
+\DoxyCodeLine{00171\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(path.size(),\ \textcolor{stringliteral}{"{}path\ should\ not\ be\ empty"{}});}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00173\ \ \ \ \ \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown}}();}
+\DoxyCodeLine{00174\ \}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetest_acce4686526042fd582a4bb36f2b78882}{test\_maze\_path\_exists}}()\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keyword}{auto}\ [z,\ x]\ =\ \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup}}(R\textcolor{stringliteral}{"{}(}}
+\DoxyCodeLine{00178\ \textcolor{stringliteral}{wwwwwwwwwwwwwww}}
+\DoxyCodeLine{00179\ \textcolor{stringliteral}{w...wwwwwwwwwww}}
+\DoxyCodeLine{00180\ \textcolor{stringliteral}{w.x.wwwwwwwwwww}}
+\DoxyCodeLine{00181\ \textcolor{stringliteral}{w.............w}}
+\DoxyCodeLine{00182\ \textcolor{stringliteral}{wwwwwwwwwwwww.w}}
+\DoxyCodeLine{00183\ \textcolor{stringliteral}{w...w...w...w.w}}
+\DoxyCodeLine{00184\ \textcolor{stringliteral}{w.w.w.w.w.w.w.w}}
+\DoxyCodeLine{00185\ \textcolor{stringliteral}{wzw...w...w...w}}
+\DoxyCodeLine{00186\ \textcolor{stringliteral}{wwwwwwwwwwwwwww}}
+\DoxyCodeLine{00187\ \textcolor{stringliteral}{)"{});}}
+\DoxyCodeLine{00188\ \textcolor{stringliteral}{\ \ \ \ }\textcolor{comment}{//}}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keyword}{auto}\ path\ =\ \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}}(z,\ x);}
+\DoxyCodeLine{00190\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(path.size(),\ \textcolor{stringliteral}{"{}path\ should\ not\ be\ empty"{}});}
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00192\ \ \ \ \ \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown}}();}
+\DoxyCodeLine{00193\ \}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetest_afbb981b5b6413e4ff06a4fbca9af8322}{test\_maze\_path\_doesnt\_exist}}()\ \{}
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{keyword}{auto}\ [z,\ x]\ =\ \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{setup}}(R\textcolor{stringliteral}{"{}(}}
+\DoxyCodeLine{00197\ \textcolor{stringliteral}{wwwwwwwwwwwwwww}}
+\DoxyCodeLine{00198\ \textcolor{stringliteral}{w...w...w...wxw}}
+\DoxyCodeLine{00199\ \textcolor{stringliteral}{w.w.w.w.w.w.w.w}}
+\DoxyCodeLine{00200\ \textcolor{stringliteral}{w.w.w.w.w.w.w.w}}
+\DoxyCodeLine{00201\ \textcolor{stringliteral}{w.w.w.w.w.w.w.w}}
+\DoxyCodeLine{00202\ \textcolor{stringliteral}{wzw...w.w.w...w\ }}
+\DoxyCodeLine{00203\ \textcolor{stringliteral}{wwwwwwwwwwwwwww}}
+\DoxyCodeLine{00204\ \textcolor{stringliteral}{\ \ \ \ )"{});}}
+\DoxyCodeLine{00205\ \textcolor{stringliteral}{\ \ \ \ }\textcolor{comment}{//\ \ \string^\ the\ filled\ in\ square\ is\ that\ one\ right\ there}}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keyword}{auto}\ path\ =\ \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{p}}(z,\ x);}
+\DoxyCodeLine{00208\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(path.empty(),\ \textcolor{stringliteral}{"{}path\ should\ be\ empty"{}});}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00210\ \ \ \ \ \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{teardown}}();}
+\DoxyCodeLine{00211\ \}}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \}\ \ \textcolor{comment}{//\ namespace\ test}}
+\DoxyCodeLine{00214\ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00215\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{test__pathing_8h_af19b29fc948ed72aa9a40cdf11dbfd19}{test\_all\_pathing}}()\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keyword}{using\ namespace\ }\mbox{\hyperlink{namespacetest}{test}};}
+\DoxyCodeLine{00217\ \ \ \ \ neighbors::test\_all\_neighbors();}
+\DoxyCodeLine{00218\ \ \ \ \ test\_no\_obstacles();}
+\DoxyCodeLine{00219\ \ \ \ \ test\_one\_obstacle();}
+\DoxyCodeLine{00220\ \ \ \ \ test\_surround\_no\_path();}
+\DoxyCodeLine{00221\ \ \ \ \ test\_surround\_one\_exit();}
+\DoxyCodeLine{00222\ \ \ \ \ test\_clear\_path\_surround\_exit();}
+\DoxyCodeLine{00223\ \ \ \ \ test\_clear\_path\_surround\_one\_exit();}
+\DoxyCodeLine{00224\ \ \ \ \ test\_maze\_path\_exists();}
+\DoxyCodeLine{00225\ \ \ \ \ test\_maze\_path\_doesnt\_exist();}
+\DoxyCodeLine{00226\ \}}
+
+\end{DoxyCode}

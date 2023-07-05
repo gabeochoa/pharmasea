@@ -15,8 +15,6 @@ Inheritance diagram for Toast\+Layer\+:\begin{figure}[H]
 \item 
 \mbox{\hyperlink{struct_toast_layer_a6e3c2a59f44814845877d7a0d04f78c4}{Toast\+Layer}} ()
 \item 
-virtual void \mbox{\hyperlink{struct_toast_layer_a7f7353602665476177466d4157d4fb16}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&) override
-\item 
 virtual void \mbox{\hyperlink{struct_toast_layer_a87cee46f5e3be4fbfcac99188a5453ef}{on\+Update}} (float dt) override
 \item 
 virtual void \mbox{\hyperlink{struct_toast_layer_af1710e2476d178c69ea9d07895f38d88}{on\+Draw}} (float) override
@@ -36,7 +34,15 @@ virtual void \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{on
 \item 
 virtual void \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{on\+Draw}} (float elapsed)=0
 \item 
-virtual void \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&)=0
+void \mbox{\hyperlink{struct_layer_a753e388bb8e7416a7cc2b338b5566396}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_aaad763977a0828b342ddd6ac0af65aea}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_ad1793a53fff5c6516848d2a1a0c73a10}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_a4410643bde2d400ba6731f48ad5a8727}{on\+Gamepad\+Axis\+Moved}} (\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_affe784562ca969d024bb98866455985d}{on\+Char\+Pressed\+Event}} (\mbox{\hyperlink{struct_char_pressed_event}{Char\+Pressed\+Event}} \&)
 \item 
 const std\+::string \& \mbox{\hyperlink{struct_layer_a592dabab6ae280b7a3a3f4b195c9833b}{getname}} () const
 \end{DoxyCompactItemize}
@@ -104,16 +110,6 @@ Implements \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{Laye
 
 References \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74ad9b1efad2d6b0380f08dc2c1b4382c24}{ui\+::theme\+::\+Accent}}, \mbox{\hyperlink{namespaceui_aaf6427befc8330fedd9aa7d987a3ea62}{ui\+::\+DEFAULT\+\_\+\+THEME}}, \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a09c0ed1271690abcb50cfa0c97a621dd}{ui\+::theme\+::\+Error}}, \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a421c3240bd6c5c4cd47e5249711f90b1}{ui\+::theme\+::\+Font}}, \mbox{\hyperlink{structui_1_1_u_i_theme_a72f7e9d15024b59799009b19fa52f0fd}{ui\+::\+UITheme\+::from\+\_\+usage()}}, \mbox{\hyperlink{struct_font_size_cache_ac06ce873dae318420f9ae2931ba170b5}{Font\+Size\+Cache\+::get\+\_\+font\+\_\+size()}}, \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a8ba193e7a9c49a44e917f7c2ba2b5653}{ui\+::theme\+::\+Primary}}, \mbox{\hyperlink{namespaceui_1_1theme_ad772b79b5bf1517a4a3f0567c9b03b74a4f5291f27fa788a54759585b9127a7ff}{ui\+::theme\+::\+Secondary}}, \mbox{\hyperlink{struct_toast_layer_a5f530e4b014352cbf9d29a51fa602d7e}{toast\+Pct\+Bottom\+Padding}}, \mbox{\hyperlink{struct_toast_layer_a18acec2452ca123828d01515a118dc27}{toast\+Pct\+Height}}, \mbox{\hyperlink{struct_toast_layer_a0b38273a2f7625fcb37e96d332766661}{toast\+Pct\+Width}}, \mbox{\hyperlink{toastmanager_8h_ad435cdf1b1b092994c0d8ca2b0262bab}{TOASTS}}, \mbox{\hyperlink{engine_2globals_8h_ae4ab98e49b98d8948eb15206b05ae4b8}{WIN\+\_\+\+HF()}}, and \mbox{\hyperlink{engine_2globals_8h_a1368a126ad97b64d5180e1cc8b0fac61}{WIN\+\_\+\+WF()}}.
 
-\mbox{\Hypertarget{struct_toast_layer_a7f7353602665476177466d4157d4fb16}\label{struct_toast_layer_a7f7353602665476177466d4157d4fb16}} 
-\index{ToastLayer@{ToastLayer}!onEvent@{onEvent}}
-\index{onEvent@{onEvent}!ToastLayer@{ToastLayer}}
-\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
-{\footnotesize\ttfamily virtual void Toast\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_event}{Event}} \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Implements \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{Layer}}.
-
 \mbox{\Hypertarget{struct_toast_layer_a87cee46f5e3be4fbfcac99188a5453ef}\label{struct_toast_layer_a87cee46f5e3be4fbfcac99188a5453ef}} 
 \index{ToastLayer@{ToastLayer}!onUpdate@{onUpdate}}
 \index{onUpdate@{onUpdate}!ToastLayer@{ToastLayer}}
@@ -165,4 +161,4 @@ Referenced by \mbox{\hyperlink{struct_toast_layer_af1710e2476d178c69ea9d07895f38
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/\mbox{\hyperlink{toastlayer_8h}{toastlayer.\+h}}\end{DoxyCompactItemize}
+src/layers/\mbox{\hyperlink{toastlayer_8h}{toastlayer.\+h}}\end{DoxyCompactItemize}

@@ -14,15 +14,15 @@
 \DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}../external\_include.h"{}}}
 \DoxyCodeLine{00011\ \textcolor{comment}{//}}
 \DoxyCodeLine{00012\ }
-\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}../util.h"{}}}
-\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{app_8h}{app.h}}"{}}}
-\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{event_8h}{event.h}}"{}}}
-\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{files_8h}{files.h}}"{}}}
-\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
-\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{log_8h}{log.h}}"{}}}
-\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{music__library_8h}{music\_library.h}}"{}}}
-\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{resolution_8h}{resolution.h}}"{}}}
-\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{singleton_8h}{singleton.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{app_8h}{app.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{event_8h}{event.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{files_8h}{files.h}}"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{log_8h}{log.h}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{music__library_8h}{music\_library.h}}"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{resolution_8h}{resolution.h}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{singleton_8h}{singleton.h}}"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{util_8h}{util.h}}"{}}}
 \DoxyCodeLine{00022\ }
 \DoxyCodeLine{00023\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacesettings}{settings}}\ \{}
 \DoxyCodeLine{00024\ }
@@ -98,10 +98,10 @@
 \DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ data.resolution\ =\ \mbox{\hyperlink{namespacerez}{rez}};}
 \DoxyCodeLine{00095\ }
 \DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ data.resolution.width\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(}
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ fminf(3860.f,\ fmaxf(data.resolution.width,\ 1280.f)));}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ fminf(3860.f,\ fmaxf((\textcolor{keywordtype}{float})data.resolution.width,\ 1280.f)));}
 \DoxyCodeLine{00098\ }
 \DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ data.resolution.height\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ fminf(2160.f,\ fmaxf(data.resolution.height,\ 720.f)));}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ fminf(2160.f,\ fmaxf((\textcolor{keywordtype}{float})data.resolution.height,\ 720.f)));}
 \DoxyCodeLine{00101\ }
 \DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
 \DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_window_resize_event}{WindowResizeEvent}}*\ \textcolor{keyword}{event}\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{struct_window_resize_event}{WindowResizeEvent}}(}

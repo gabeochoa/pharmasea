@@ -1,0 +1,66 @@
+\hypertarget{test__pathing_8h}{}\doxysection{src/tests/test\+\_\+pathing.h File Reference}
+\label{test__pathing_8h}\index{src/tests/test\_pathing.h@{src/tests/test\_pathing.h}}
+{\ttfamily \#include \char`\"{}../engine/astar.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../entity.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../entityhelper.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../level\+\_\+info.\+h\char`\"{}}\newline
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacetest}{test}}
+\item 
+namespace \mbox{\hyperlink{namespacetest_1_1neighbors}{test\+::neighbors}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespacetest_1_1neighbors_a072ba70e1eea7320078efd078976b5fb}{test\+::neighbors\+::is\+\_\+valid}} (std\+::vector$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ v, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} p)
+\item 
+void \mbox{\hyperlink{namespacetest_1_1neighbors_addb0025144f81c3d1ee3021148479881}{test\+::neighbors\+::test\+\_\+all\+\_\+neighbors}} ()
+\item 
+bool \mbox{\hyperlink{namespacetest_a44ab8ef8604a87885854abcee9db2963}{test\+::canvisit}} (const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&pos)
+\item 
+auto \mbox{\hyperlink{namespacetest_a037ebe73faeec4cd6d6b09594b10b4c6}{test\+::p}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} a, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} b)
+\item 
+auto \mbox{\hyperlink{namespacetest_ac3e1ef91301389454169f405276a3c9e}{test\+::p}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$a, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} b)
+\item 
+std\+::pair$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{namespacetest_a5313f5b4cbff0578868af3b4f92858e9}{test\+::setup}} (const std\+::string map)
+\item 
+void \mbox{\hyperlink{namespacetest_adb12094998441a109a92ce71ee423bc6}{test\+::teardown}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_aa73fcf3dd3c04f1526235291f51dd34b}{test\+::test\+\_\+no\+\_\+obstacles}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_a8c5a6c302add955b1246008159d729af}{test\+::test\+\_\+one\+\_\+obstacle}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_ac6d4747a5922d742d13e7d28f7451122}{test\+::test\+\_\+surround\+\_\+no\+\_\+path}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_aa0422da837236972d923ac85cebcf3fc}{test\+::test\+\_\+surround\+\_\+one\+\_\+exit}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_a6c9e5045e1325bd742db818b9013f497}{test\+::test\+\_\+clear\+\_\+path\+\_\+surround\+\_\+exit}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_ac1299110a6c223108393f84d34ad2f4a}{test\+::test\+\_\+clear\+\_\+path\+\_\+surround\+\_\+one\+\_\+exit}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_acce4686526042fd582a4bb36f2b78882}{test\+::test\+\_\+maze\+\_\+path\+\_\+exists}} ()
+\item 
+void \mbox{\hyperlink{namespacetest_afbb981b5b6413e4ff06a4fbca9af8322}{test\+::test\+\_\+maze\+\_\+path\+\_\+doesnt\+\_\+exist}} ()
+\item 
+void \mbox{\hyperlink{test__pathing_8h_af19b29fc948ed72aa9a40cdf11dbfd19}{test\+\_\+all\+\_\+pathing}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::vector$<$ \mbox{\hyperlink{struct_entity}{Entity}} $\ast$ $>$ \mbox{\hyperlink{namespacetest_a7f4fb984eb5c419fea3edf19dedae522}{test\+::ents}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{test__pathing_8h_af19b29fc948ed72aa9a40cdf11dbfd19}\label{test__pathing_8h_af19b29fc948ed72aa9a40cdf11dbfd19}} 
+\index{test\_pathing.h@{test\_pathing.h}!test\_all\_pathing@{test\_all\_pathing}}
+\index{test\_all\_pathing@{test\_all\_pathing}!test\_pathing.h@{test\_pathing.h}}
+\doxysubsubsection{\texorpdfstring{test\_all\_pathing()}{test\_all\_pathing()}}
+{\footnotesize\ttfamily void test\+\_\+all\+\_\+pathing (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespacetests_a201d60bd93fbf0059978ae2e95abcab6}{tests\+::run\+\_\+all()}}.
+

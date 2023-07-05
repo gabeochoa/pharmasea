@@ -97,13 +97,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a362b69644c01dc2c04b038c027d9c9f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83e37920dc7ebf010f82e41fea8bc4d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d57/struct_can_have_ailment.html#a83e37920dc7ebf010f82e41fea8bc4d2">has_ailment</a> () const</td></tr>
 <tr class="separator:a83e37920dc7ebf010f82e41fea8bc4d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ebcceb2ea17f0f169722a3c543d3577"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d57/struct_can_have_ailment.html#a2ebcceb2ea17f0f169722a3c543d3577">update</a> (std::shared_ptr&lt; <a class="el" href="../../db/d42/struct_ailment.html">Ailment</a> &gt; new_ailment)</td></tr>
-<tr class="separator:a2ebcceb2ea17f0f169722a3c543d3577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a012719ba11f18d3c288cd23b52e5335e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d57/struct_can_have_ailment.html#a012719ba11f18d3c288cd23b52e5335e">update</a> (<a class="el" href="../../db/d42/struct_ailment.html">Ailment</a> *new_ailment)</td></tr>
+<tr class="separator:a012719ba11f18d3c288cd23b52e5335e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_struct_base_component"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_struct_base_component')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a></td></tr>
 <tr class="memitem:ac74326a615877f3c1a17bc47787ad91e inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#ac74326a615877f3c1a17bc47787ad91e">BaseComponent</a> ()</td></tr>
 <tr class="separator:ac74326a615877f3c1a17bc47787ad91e inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abec738e46eb8875697d7f9497958543d inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#abec738e46eb8875697d7f9497958543d">BaseComponent</a> (<a class="el" href="../../d0/d50/struct_base_component.html">BaseComponent</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:abec738e46eb8875697d7f9497958543d inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7389bfd8b903625667e1427ef3cb70b inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#ac7389bfd8b903625667e1427ef3cb70b">onAttach</a> ()</td></tr>
+<tr class="separator:ac7389bfd8b903625667e1427ef3cb70b inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab281730e838c4cb33e96ab6d6b7fe15f inherit pub_methods_struct_base_component"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/struct_base_component.html#ab281730e838c4cb33e96ab6d6b7fe15f">~BaseComponent</a> ()</td></tr>
 <tr class="separator:ab281730e838c4cb33e96ab6d6b7fe15f inherit pub_methods_struct_base_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -170,7 +172,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="../../d1/d57/struct_can_have_ailment.html#a5f64136196bdd0d9337c8244149a4752">my_ailment</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../d1/d57/struct_can_have_ailment.html#a83e37920dc7ebf010f82e41fea8bc4d2">has_ailment()</a>, and <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#a80b48eb7354e4827e21605e41577269f">system_manager::job_system::update_position_from_job()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d1/d57/struct_can_have_ailment.html#a83e37920dc7ebf010f82e41fea8bc4d2">has_ailment()</a>, <a class="el" href="../../dc/d29/namespacesystem__manager_1_1render__manager.html#a7f8075222f9fa83bd59a38386469ea0a">system_manager::render_manager::render_speech_bubble()</a>, and <a class="el" href="../../d2/d63/struct_job.html#a2e875fe84ba07e39c39ca49706917921">Job::travel_to_position()</a>.</p>
 
 </div>
 </div>
@@ -227,10 +229,12 @@ template&lt;typename S &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">References <a class="el" href="../../d1/d57/struct_can_have_ailment.html#a5f64136196bdd0d9337c8244149a4752">my_ailment</a>.</p>
+
 </div>
 </div>
-<a id="a2ebcceb2ea17f0f169722a3c543d3577" name="a2ebcceb2ea17f0f169722a3c543d3577"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ebcceb2ea17f0f169722a3c543d3577">&#9670;&#160;</a></span>update()</h2>
+<a id="a012719ba11f18d3c288cd23b52e5335e" name="a012719ba11f18d3c288cd23b52e5335e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a012719ba11f18d3c288cd23b52e5335e">&#9670;&#160;</a></span>update()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -241,7 +245,7 @@ template&lt;typename S &gt; </div>
         <tr>
           <td class="memname">void CanHaveAilment::update </td>
           <td>(</td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="../../db/d42/struct_ailment.html">Ailment</a> &gt;&#160;</td>
+          <td class="paramtype"><a class="el" href="../../db/d42/struct_ailment.html">Ailment</a> *&#160;</td>
           <td class="paramname"><em>new_ailment</em></td><td>)</td>
           <td></td>
         </tr>
@@ -278,7 +282,7 @@ template&lt;typename S &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d1/d57/struct_can_have_ailment.html#a362b69644c01dc2c04b038c027d9c9f9">ailment()</a>, and <a class="el" href="../../d1/d57/struct_can_have_ailment.html#a2ebcceb2ea17f0f169722a3c543d3577">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d1/d57/struct_can_have_ailment.html#a362b69644c01dc2c04b038c027d9c9f9">ailment()</a>, <a class="el" href="../../d1/d57/struct_can_have_ailment.html#a98e8c92d466dc2abd5b640fe1b4e565a">serialize()</a>, and <a class="el" href="../../d1/d57/struct_can_have_ailment.html#a012719ba11f18d3c288cd23b52e5335e">update()</a>.</p>
 
 </div>
 </div>

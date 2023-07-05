@@ -88,18 +88,31 @@ $(function() {
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">   Please dont print during tests as these run on startup</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../d4/d4f/test__ui__widget_8h.html">test_ui_widget.h</a>&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="../../d9/df4/namespacetests.html">   15</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d9/df4/namespacetests.html">tests</a> {</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="../../d9/df4/namespacetests.html#a201d60bd93fbf0059978ae2e95abcab6">   17</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d9/df4/namespacetests.html#a201d60bd93fbf0059978ae2e95abcab6">run_all</a>() {</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <a class="code hl_function" href="../../d9/df4/namespacetests.html#a6e02245b1acdf17bd51e039022758203">test_ui_widget</a>();</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>}</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>}  <span class="comment">// namespace tests</span></div>
-<div class="ttc" id="anamespacetests_html"><div class="ttname"><a href="../../d9/df4/namespacetests.html">tests</a></div><div class="ttdef"><b>Definition:</b> all_tests.h:15</div></div>
-<div class="ttc" id="anamespacetests_html_a201d60bd93fbf0059978ae2e95abcab6"><div class="ttname"><a href="../../d9/df4/namespacetests.html#a201d60bd93fbf0059978ae2e95abcab6">tests::run_all</a></div><div class="ttdeci">void run_all()</div><div class="ttdef"><b>Definition:</b> all_tests.h:17</div></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/dcf/component_8h.html">component.h</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/d4a/lerp__test_8h.html">lerp_test.h</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../dc/dd3/test__pathing_8h.html">test_pathing.h</a>&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="../../d4/d4f/test__ui__widget_8h.html">test_ui_widget.h</a>&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="../../d9/df4/namespacetests.html">   18</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d9/df4/namespacetests.html">tests</a> {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="../../d9/df4/namespacetests.html#a201d60bd93fbf0059978ae2e95abcab6">   20</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d9/df4/namespacetests.html#a201d60bd93fbf0059978ae2e95abcab6">run_all</a>() {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <a class="code hl_function" href="../../d9/df4/namespacetests.html#a6e02245b1acdf17bd51e039022758203">test_ui_widget</a>();</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <a class="code hl_function" href="../../d6/dcf/component_8h.html#ae0c6e04a7b99ee25625edba38ee63f91">all_tests</a>();</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <a class="code hl_function" href="../../d9/df4/namespacetests.html#ab3f38a6c6d450e94816350b56526f592">lerp_test</a>();</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <a class="code hl_function" href="../../dc/dd3/test__pathing_8h.html#af19b29fc948ed72aa9a40cdf11dbfd19">test_all_pathing</a>();</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>}</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}  <span class="comment">// namespace tests</span></div>
+<div class="ttc" id="acomponent_8h_html"><div class="ttname"><a href="../../d6/dcf/component_8h.html">component.h</a></div></div>
+<div class="ttc" id="acomponent_8h_html_ae0c6e04a7b99ee25625edba38ee63f91"><div class="ttname"><a href="../../d6/dcf/component_8h.html#ae0c6e04a7b99ee25625edba38ee63f91">all_tests</a></div><div class="ttdeci">void all_tests()</div><div class="ttdef"><b>Definition:</b> component.h:221</div></div>
+<div class="ttc" id="alerp__test_8h_html"><div class="ttname"><a href="../../d7/d4a/lerp__test_8h.html">lerp_test.h</a></div></div>
+<div class="ttc" id="anamespacetests_html"><div class="ttname"><a href="../../d9/df4/namespacetests.html">tests</a></div><div class="ttdef"><b>Definition:</b> all_tests.h:18</div></div>
+<div class="ttc" id="anamespacetests_html_a201d60bd93fbf0059978ae2e95abcab6"><div class="ttname"><a href="../../d9/df4/namespacetests.html#a201d60bd93fbf0059978ae2e95abcab6">tests::run_all</a></div><div class="ttdeci">void run_all()</div><div class="ttdef"><b>Definition:</b> all_tests.h:20</div></div>
 <div class="ttc" id="anamespacetests_html_a6e02245b1acdf17bd51e039022758203"><div class="ttname"><a href="../../d9/df4/namespacetests.html#a6e02245b1acdf17bd51e039022758203">tests::test_ui_widget</a></div><div class="ttdeci">void test_ui_widget()</div><div class="ttdef"><b>Definition:</b> test_ui_widget.h:582</div></div>
+<div class="ttc" id="anamespacetests_html_ab3f38a6c6d450e94816350b56526f592"><div class="ttname"><a href="../../d9/df4/namespacetests.html#ab3f38a6c6d450e94816350b56526f592">tests::lerp_test</a></div><div class="ttdeci">void lerp_test()</div><div class="ttdef"><b>Definition:</b> lerp_test.h:27</div></div>
+<div class="ttc" id="atest__pathing_8h_html"><div class="ttname"><a href="../../dc/dd3/test__pathing_8h.html">test_pathing.h</a></div></div>
+<div class="ttc" id="atest__pathing_8h_html_af19b29fc948ed72aa9a40cdf11dbfd19"><div class="ttname"><a href="../../dc/dd3/test__pathing_8h.html#af19b29fc948ed72aa9a40cdf11dbfd19">test_all_pathing</a></div><div class="ttdeci">void test_all_pathing()</div><div class="ttdef"><b>Definition:</b> test_pathing.h:215</div></div>
 <div class="ttc" id="atest__ui__widget_8h_html"><div class="ttname"><a href="../../d4/d4f/test__ui__widget_8h.html">test_ui_widget.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

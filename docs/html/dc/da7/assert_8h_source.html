@@ -83,7 +83,7 @@ $(function() {
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#a8e93b0cbf5fbae9c583903d9f31ef315">    8</a></span><span class="preprocessor">#define M_ASSERT(x, ...)                       \</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#a265be64fe52e8a92e89a75fe62153aa5">    8</a></span><span class="preprocessor">#define VALIDATE(x, ...)                       \</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">    {                                          \</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">        if (!(x)) {                            \</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">            std::cout &lt;&lt; &quot;Assertion failed: &quot;</span>; \</div>
@@ -93,29 +93,37 @@ $(function() {
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        }                                      \</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    }</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#a233524c2a07a1962e1c88e335a3b0dfc">   18</a></span><span class="preprocessor">#define M_TEST_IMPL(x, y, op, op_string, ...)                          \</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">    {                                                                  \</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">        if (!(x op y)) {                                               \</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">            std::cout &lt;&lt; &quot;Test Failed\n&quot;</span>;                              \</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            std::cout &lt;&lt; __PRETTY_FUNCTION__;                          \</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>            std::cout &lt;&lt; &quot; (&quot; &lt;&lt; __FILE__ &lt;&lt; &quot;:&quot; &lt;&lt; __LINE__ &lt;&lt; &quot;)\n&quot;; \</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            std::cout &lt;&lt; __VA_ARGS__ &lt;&lt; &quot;\n&quot;;                          \</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            std::cout &lt;&lt; x &lt;&lt; op_string &lt;&lt; y &lt;&lt; &quot;\n&quot;;                  \</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            std::cout &lt;&lt; &quot;------ \n &quot;;                                 \</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        }                                                              \</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    }</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#a650848c7f29e557547baddee84454907">   30</a></span><span class="preprocessor">#define M_TEST_EQ(x, y, ...) \</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">    M_TEST_IMPL(x, y, ==, &quot; did not equal &quot;</span>, __VA_ARGS__)</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#a8e93b0cbf5fbae9c583903d9f31ef315">   18</a></span><span class="preprocessor">#define M_ASSERT(x, ...) VALIDATE(x, __VA__ARGS__)</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#a233524c2a07a1962e1c88e335a3b0dfc">   20</a></span><span class="preprocessor">#define M_TEST_IMPL(x, y, op, op_string, ...)                          \</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">    {                                                                  \</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">        if (!(x op y)) {                                               \</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">            std::cout &lt;&lt; &quot;Test Failed\n&quot;</span>;                              \</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            std::cout &lt;&lt; __PRETTY_FUNCTION__;                          \</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            std::cout &lt;&lt; &quot; (&quot; &lt;&lt; __FILE__ &lt;&lt; &quot;:&quot; &lt;&lt; __LINE__ &lt;&lt; &quot;)\n&quot;; \</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            std::cout &lt;&lt; __VA_ARGS__ &lt;&lt; &quot;\n&quot;;                          \</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            std::cout &lt;&lt; x &lt;&lt; op_string &lt;&lt; y &lt;&lt; &quot;\n&quot;;                  \</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            std::cout &lt;&lt; &quot;------ \n &quot;;                                 \</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            assert(x op y);                                            \</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        }                                                              \</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    }</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#a4c06fcf9e27cec211272e6a96bfd344d">   33</a></span><span class="preprocessor">#define M_TEST_LEQ(x, y, ...) \</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">    M_TEST_IMPL(x, y, &lt;=, &quot; was not less than &quot;</span>, __VA_ARGS__)</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#a650848c7f29e557547baddee84454907">   33</a></span><span class="preprocessor">#define M_TEST_EQ(x, y, ...) \</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">    M_TEST_IMPL(x, y, ==, &quot; did not equal &quot;</span>, __VA_ARGS__)</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#a8bef75df53a2c81079afd41246c0575d">   36</a></span><span class="preprocessor">#define M_TEST_GEQ(x, y, ...) \</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">    M_TEST_IMPL(x, y, &lt;=, &quot; was not greater than &quot;</span>, __VA_ARGS__)</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#a4c06fcf9e27cec211272e6a96bfd344d">   36</a></span><span class="preprocessor">#define M_TEST_LEQ(x, y, ...) \</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">    M_TEST_IMPL(x, y, &lt;=, &quot; was not less than &quot;</span>, __VA_ARGS__)</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#ab4623194540dbc3387ba45baf005a101">   39</a></span><span class="preprocessor">#define M_TEST_NEQ(x, y, ...) \</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">    M_TEST_IMPL(x, y, !=, &quot; was equal to &quot;</span>, __VA_ARGS__)</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#a8bef75df53a2c81079afd41246c0575d">   39</a></span><span class="preprocessor">#define M_TEST_GEQ(x, y, ...) \</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">    M_TEST_IMPL(x, y, &lt;=, &quot; was not greater than &quot;</span>, __VA_ARGS__)</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#ab4623194540dbc3387ba45baf005a101">   42</a></span><span class="preprocessor">#define M_TEST_NEQ(x, y, ...) \</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">    M_TEST_IMPL(x, y, !=, &quot; was equal to &quot;</span>, __VA_ARGS__)</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#a36f31e4658ef9dfa83e062d4dfa49ab7">   45</a></span><span class="preprocessor">#define M_TEST_T(x, ...) M_TEST_IMPL(x, true, ==, &quot; was not true &quot;</span>, __VA_ARGS__)</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="../../dc/da7/assert_8h.html#adc19b4cec2104aa7b7987bd17f7570e8">   47</a></span><span class="preprocessor">#define M_TEST_F(x, ...) \</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">    M_TEST_IMPL(x, false, ==, &quot; was not false&quot;</span>, __VA_ARGS__)</div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

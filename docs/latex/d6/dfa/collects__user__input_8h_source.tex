@@ -5,21 +5,42 @@
 \DoxyCodeLine{00001\ }
 \DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../item.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../engine/keymap.h"{}}}
 \DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{base__component_8h}{base\_component.h}}"{}}}
 \DoxyCodeLine{00006\ }
 \DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_collects_user_input}{CollectsUserInput}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_base_component}{BaseComponent}}\ \{}
 \DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_collects_user_input_adf37ec3e0b8a6de8b13a0c058d3f960f}{\string~CollectsUserInput}}()\ \{\}}
 \DoxyCodeLine{00009\ }
 \DoxyCodeLine{00010\ \ \ \ \ \textcolor{comment}{//\ TODO\ make\ private\ at\ some\ point}}
-\DoxyCodeLine{00011\ \ \ \ \ std::vector<UserInput>\ \mbox{\hyperlink{struct_collects_user_input_ae26828ac6664046de53089e8da7b9762}{inputs}};}
+\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{keymap_8h_ad1c40a46c4f782024e5b241ac9944d82}{UserInputs}}\ \mbox{\hyperlink{struct_collects_user_input_ab8b83c78b23a4b2530977eea00643921}{inputs}};}
 \DoxyCodeLine{00012\ }
-\DoxyCodeLine{00013\ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
-\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
-\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_collects_user_input_a6a3075130b80da9115cc9447e7f983b1}{serialize}}(S\&\ s)\ \{}
-\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{keymap_8h_aee799aa8b14c1cb0f4c8dc024ea4ea74}{InputSet}}\ \mbox{\hyperlink{struct_collects_user_input_adb9593672efdb54e4f883c192b232dbd}{pressed}};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{auto}\&\ \mbox{\hyperlink{struct_collects_user_input_a129f8b9118675d20f566f1326a509910}{reset}}()\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_collects_user_input_adb9593672efdb54e4f883c192b232dbd}{pressed}}.reset();}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
 \DoxyCodeLine{00018\ \ \ \ \ \}}
-\DoxyCodeLine{00019\ \};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{auto}\&\ \mbox{\hyperlink{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}{write}}(\mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{InputName}}\ input)\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ index\ =\ magic\_enum::enum\_integer<InputName>(input);}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_collects_user_input_adb9593672efdb54e4f883c192b232dbd}{pressed}}[index]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00024\ \ \ \ \ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{auto}\&\ \mbox{\hyperlink{struct_collects_user_input_af7691930f262f1dbbef9cb3ee0bd524d}{publish}}(\textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_collects_user_input_adb9593672efdb54e4f883c192b232dbd}{pressed}}.any())\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_collects_user_input_ab8b83c78b23a4b2530977eea00643921}{inputs}}.push\_back(\{\mbox{\hyperlink{struct_collects_user_input_adb9593672efdb54e4f883c192b232dbd}{pressed}},\ dt\});}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_collects_user_input_a129f8b9118675d20f566f1326a509910}{reset}}();}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00032\ \ \ \ \ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{friend}\ bitsery::Access;}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ S>}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_collects_user_input_a6a3075130b80da9115cc9447e7f983b1}{serialize}}(S\&\ s)\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ s.ext(*\textcolor{keyword}{this},\ bitsery::ext::BaseClass<BaseComponent>\{\});}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ \};}
 
 \end{DoxyCode}

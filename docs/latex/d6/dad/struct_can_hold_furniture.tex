@@ -21,9 +21,9 @@ bool \mbox{\hyperlink{struct_can_hold_furniture_a8cc0cd805b15e39cf60855c65df0482
 \item 
 {\footnotesize template$<$typename T $>$ }\\std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{struct_can_hold_furniture_a40da08393373a225102a56f7889693fb}{asT}} () const
 \item 
-void \mbox{\hyperlink{struct_can_hold_furniture_acfb889c7dc41d5e1b10ecbbf4c26f2c4}{update}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_furniture}{Furniture}} $>$ \mbox{\hyperlink{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}{furniture}})
+void \mbox{\hyperlink{struct_can_hold_furniture_aabb8f2add67c7526177f24fc8afd7b7c}{update}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \mbox{\hyperlink{struct_can_hold_furniture_aa855e1a6a60090ccb0c68249354f3c23}{furniture}})
 \item 
-std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_furniture}{Furniture}} $>$ \mbox{\hyperlink{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}{furniture}} ()
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \mbox{\hyperlink{struct_can_hold_furniture_aa855e1a6a60090ccb0c68249354f3c23}{furniture}} () const
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
 \begin{DoxyCompactItemize}
@@ -31,6 +31,8 @@ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_furniture}{Furniture}} $>$ \mb
 \mbox{\hyperlink{struct_base_component_ac74326a615877f3c1a17bc47787ad91e}{Base\+Component}} ()
 \item 
 \mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
+\item 
+virtual void \mbox{\hyperlink{struct_base_component_ac7389bfd8b903625667e1427ef3cb70b}{on\+Attach}} ()
 \item 
 virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
 \end{DoxyCompactItemize}
@@ -42,7 +44,7 @@ virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
-std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_furniture}{Furniture}} $>$ \mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}{held\+\_\+furniture}} = nullptr
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \mbox{\hyperlink{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}{held\+\_\+furniture}} = nullptr
 \end{DoxyCompactItemize}
 
 
@@ -65,7 +67,7 @@ std\+::shared\+\_\+ptr$<$ T $>$ Can\+Hold\+Furniture\+::asT (\begin{DoxyParamCap
 
 
 
-References \mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}{held\+\_\+furniture}}.
+References \mbox{\hyperlink{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}{held\+\_\+furniture}}.
 
 \mbox{\Hypertarget{struct_can_hold_furniture_a03f8a785e985deb76f53684f279048f6}\label{struct_can_hold_furniture_a03f8a785e985deb76f53684f279048f6}} 
 \index{CanHoldFurniture@{CanHoldFurniture}!empty@{empty}}
@@ -75,25 +77,25 @@ References \mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076
 
 
 
-References \mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}{held\+\_\+furniture}}.
+References \mbox{\hyperlink{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}{held\+\_\+furniture}}.
 
 
 
-Referenced by \mbox{\hyperlink{struct_can_hold_furniture_a8cc0cd805b15e39cf60855c65df04823}{is\+\_\+holding\+\_\+furniture()}}, and \mbox{\hyperlink{namespacesystem__manager_a83ed24ae5e1d1c24133a535d653b172f}{system\+\_\+manager\+::update\+\_\+held\+\_\+furniture\+\_\+position()}}.
+Referenced by \mbox{\hyperlink{namespacesystem__manager_a561a93d3b20bcf76f4f9701cc7be2edf}{system\+\_\+manager\+::handle\+\_\+autodrop\+\_\+furniture\+\_\+when\+\_\+exiting\+\_\+planning()}}, and \mbox{\hyperlink{struct_can_hold_furniture_a8cc0cd805b15e39cf60855c65df04823}{is\+\_\+holding\+\_\+furniture()}}.
 
-\mbox{\Hypertarget{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}\label{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}} 
+\mbox{\Hypertarget{struct_can_hold_furniture_aa855e1a6a60090ccb0c68249354f3c23}\label{struct_can_hold_furniture_aa855e1a6a60090ccb0c68249354f3c23}} 
 \index{CanHoldFurniture@{CanHoldFurniture}!furniture@{furniture}}
 \index{furniture@{furniture}!CanHoldFurniture@{CanHoldFurniture}}
 \doxysubsubsection{\texorpdfstring{furniture()}{furniture()}}
-{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_furniture}{Furniture}} $>$ Can\+Hold\+Furniture\+::furniture (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ Can\+Hold\+Furniture\+::furniture (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}{held\+\_\+furniture}}.
+References \mbox{\hyperlink{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}{held\+\_\+furniture}}.
 
 
 
-Referenced by \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{system\+\_\+manager\+::process\+\_\+input()}}, \mbox{\hyperlink{struct_can_hold_furniture_acfb889c7dc41d5e1b10ecbbf4c26f2c4}{update()}}, and \mbox{\hyperlink{namespacesystem__manager_a83ed24ae5e1d1c24133a535d653b172f}{system\+\_\+manager\+::update\+\_\+held\+\_\+furniture\+\_\+position()}}.
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a86a051e227fe3d76b78b701f01880914}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning\+::drop\+\_\+held\+\_\+furniture()}}, and \mbox{\hyperlink{struct_can_hold_furniture_aabb8f2add67c7526177f24fc8afd7b7c}{update()}}.
 
 \mbox{\Hypertarget{struct_can_hold_furniture_a8cc0cd805b15e39cf60855c65df04823}\label{struct_can_hold_furniture_a8cc0cd805b15e39cf60855c65df04823}} 
 \index{CanHoldFurniture@{CanHoldFurniture}!is\_holding\_furniture@{is\_holding\_furniture}}
@@ -105,6 +107,10 @@ Referenced by \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fd
 
 References \mbox{\hyperlink{struct_can_hold_furniture_a03f8a785e985deb76f53684f279048f6}{empty()}}.
 
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1ui_a06bd4ce977baa96f699ef1bb5061833a}{system\+\_\+manager\+::ui\+::render\+\_\+player\+\_\+info()}}, and \mbox{\hyperlink{namespacesystem__manager_aae333b079103d5d1c60cd78e91f20516}{system\+\_\+manager\+::sophie()}}.
+
 \mbox{\Hypertarget{struct_can_hold_furniture_a73de2a1161740a38a7618408ed65e70e}\label{struct_can_hold_furniture_a73de2a1161740a38a7618408ed65e70e}} 
 \index{CanHoldFurniture@{CanHoldFurniture}!serialize@{serialize}}
 \index{serialize@{serialize}!CanHoldFurniture@{CanHoldFurniture}}
@@ -114,30 +120,34 @@ void Can\+Hold\+Furniture\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s 
 
 
 
-References \mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}{held\+\_\+furniture}}.
+References \mbox{\hyperlink{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}{held\+\_\+furniture}}.
 
-\mbox{\Hypertarget{struct_can_hold_furniture_acfb889c7dc41d5e1b10ecbbf4c26f2c4}\label{struct_can_hold_furniture_acfb889c7dc41d5e1b10ecbbf4c26f2c4}} 
+\mbox{\Hypertarget{struct_can_hold_furniture_aabb8f2add67c7526177f24fc8afd7b7c}\label{struct_can_hold_furniture_aabb8f2add67c7526177f24fc8afd7b7c}} 
 \index{CanHoldFurniture@{CanHoldFurniture}!update@{update}}
 \index{update@{update}!CanHoldFurniture@{CanHoldFurniture}}
 \doxysubsubsection{\texorpdfstring{update()}{update()}}
-{\footnotesize\ttfamily void Can\+Hold\+Furniture\+::update (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_furniture}{Furniture}} $>$}]{furniture }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily void Can\+Hold\+Furniture\+::update (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{furniture }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}{furniture()}}, and \mbox{\hyperlink{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}{held\+\_\+furniture}}.
+References \mbox{\hyperlink{struct_can_hold_furniture_aa855e1a6a60090ccb0c68249354f3c23}{furniture()}}, and \mbox{\hyperlink{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}{held\+\_\+furniture}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a86a051e227fe3d76b78b701f01880914}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning\+::drop\+\_\+held\+\_\+furniture()}}.
 
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}\label{struct_can_hold_furniture_ae1b1ccda2f8d729b4bb1a7076568a1c6}} 
+\mbox{\Hypertarget{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}\label{struct_can_hold_furniture_a255dd3a081b1525146bcc4df8069e139}} 
 \index{CanHoldFurniture@{CanHoldFurniture}!held\_furniture@{held\_furniture}}
 \index{held\_furniture@{held\_furniture}!CanHoldFurniture@{CanHoldFurniture}}
 \doxysubsubsection{\texorpdfstring{held\_furniture}{held\_furniture}}
-{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_furniture}{Furniture}}$>$ Can\+Hold\+Furniture\+::held\+\_\+furniture = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_entity}{Entity}}$>$ Can\+Hold\+Furniture\+::held\+\_\+furniture = nullptr\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
-Referenced by \mbox{\hyperlink{struct_can_hold_furniture_a40da08393373a225102a56f7889693fb}{as\+T()}}, \mbox{\hyperlink{struct_can_hold_furniture_a03f8a785e985deb76f53684f279048f6}{empty()}}, \mbox{\hyperlink{struct_can_hold_furniture_a831f3fd4c2384009a940700a433cfc20}{furniture()}}, \mbox{\hyperlink{struct_can_hold_furniture_a73de2a1161740a38a7618408ed65e70e}{serialize()}}, and \mbox{\hyperlink{struct_can_hold_furniture_acfb889c7dc41d5e1b10ecbbf4c26f2c4}{update()}}.
+Referenced by \mbox{\hyperlink{struct_can_hold_furniture_a40da08393373a225102a56f7889693fb}{as\+T()}}, \mbox{\hyperlink{struct_can_hold_furniture_a03f8a785e985deb76f53684f279048f6}{empty()}}, \mbox{\hyperlink{struct_can_hold_furniture_aa855e1a6a60090ccb0c68249354f3c23}{furniture()}}, \mbox{\hyperlink{struct_can_hold_furniture_a73de2a1161740a38a7618408ed65e70e}{serialize()}}, and \mbox{\hyperlink{struct_can_hold_furniture_aabb8f2add67c7526177f24fc8afd7b7c}{update()}}.
 
 
 

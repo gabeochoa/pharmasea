@@ -4,6 +4,8 @@
 \begin{DoxyCompactItemize}
 \item 
 namespace \mbox{\hyperlink{namespacenetwork_1_1internal}{internal}}
+\item 
+namespace \mbox{\hyperlink{namespacenetwork_1_1mp__test}{mp\+\_\+test}}
 \end{DoxyCompactItemize}
 \doxysubsection*{Classes}
 \begin{DoxyCompactItemize}
@@ -44,13 +46,17 @@ tl\+::expected$<$ std\+::string, \mbox{\hyperlink{namespacenetwork_a5fbe1c266036
 \item 
 static void \mbox{\hyperlink{namespacenetwork_a31a595750c2d6a31ee5b59d623c95c84}{log\+\_\+debug}} (ESteam\+Networking\+Sockets\+Debug\+Output\+Type e\+Type, const char $\ast$psz\+Msg)
 \item 
-std\+::ostream \& \mbox{\hyperlink{namespacenetwork_a02b9b0a0243a952eafed46322f6cc207}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{structnetwork_1_1_client_packet_a8b764c2200658cb2460a824d39418d19}{Client\+Packet\+::\+Msg}} \&msgtype)
+std\+::ostream \& \mbox{\hyperlink{namespacenetwork_a02b9b0a0243a952eafed46322f6cc207}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{structnetwork_1_1_client_packet_aaeca9f49b09a552b6c3d6232624663d5}{Client\+Packet\+::\+Msg}} \&msgtype)
 \item 
 std\+::ostream \& \mbox{\hyperlink{namespacenetwork_a2552b1d47eab813708f0f0446e82f187}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{structnetwork_1_1_client_packet_a456cccdbeface82675259d9929db989f}{Client\+Packet\+::\+Msg\+Type}} \&msgtype)
 \item 
 std\+::ostream \& \mbox{\hyperlink{namespacenetwork_a8f6972f6d0cd4df75a978e0d72e2e06f}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{structnetwork_1_1_client_packet}{Client\+Packet}} \&packet)
 \item 
 {\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{namespacenetwork_a1e62ea975ea4c7dcb8a7fb13f347d831}{serialize}} (S \&s, \mbox{\hyperlink{structnetwork_1_1_client_packet}{Client\+Packet}} \&packet)
+\item 
+static \mbox{\hyperlink{namespacenetwork_a29be7e2bef152eba6aef822531d97755}{Buffer}} \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{serialize\+\_\+to\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$entity)
+\item 
+static void \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{deserialize\+\_\+to\+\_\+entity}} (\mbox{\hyperlink{struct_entity}{Entity}} $\ast$entity, const std\+::string \&msg)
 \item 
 static \mbox{\hyperlink{structnetwork_1_1_client_packet}{Client\+Packet}} \mbox{\hyperlink{namespacenetwork_ad932db30302c4abac18d38f4e2861ae9}{deserialize\+\_\+to\+\_\+packet}} (const std\+::string \&msg)
 \item 
@@ -60,6 +66,12 @@ static \mbox{\hyperlink{namespacenetwork_a29be7e2bef152eba6aef822531d97755}{Buff
 \begin{DoxyCompactItemize}
 \item 
 constexpr int \mbox{\hyperlink{namespacenetwork_ab21ff1d434d3028a68dc8e97cbfa62fd}{MAX\+\_\+\+NAME\+\_\+\+LENGTH}} = 25
+\item 
+static long \mbox{\hyperlink{namespacenetwork_a7f429ee458bfb440d4a5e252d282c4d3}{total\+\_\+ping}} = 0
+\item 
+static long \mbox{\hyperlink{namespacenetwork_a18806512b214876590f6c7ad4d9904e2}{there\+\_\+ping}} = 0
+\item 
+static long \mbox{\hyperlink{namespacenetwork_a93863ca64cbc817459504262e79f32a7}{return\+\_\+ping}} = 0
 \item 
 constexpr int \mbox{\hyperlink{namespacenetwork_a6aeb6825913b9a386a83c59f8c715a35}{DEFAULT\+\_\+\+PORT}} = 770
 \item 
@@ -132,6 +144,20 @@ UNKNOWN\+\_\+\+ERROR&\\
 
 
 \doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}\label{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}} 
+\index{network@{network}!deserialize\_to\_entity@{deserialize\_to\_entity}}
+\index{deserialize\_to\_entity@{deserialize\_to\_entity}!network@{network}}
+\doxysubsubsection{\texorpdfstring{deserialize\_to\_entity()}{deserialize\_to\_entity()}}
+{\footnotesize\ttfamily static void network\+::deserialize\+\_\+to\+\_\+entity (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_entity}{Entity}} $\ast$}]{entity,  }\item[{const std\+::string \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{deserialize\+\_\+to\+\_\+entity()}}, and \mbox{\hyperlink{log_8h_a6ae72553ea9805dd87a463d6f710364d}{log\+\_\+error}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacenetwork_ab48c5d518addcd26284b31cb5b15b9b4}{deserialize\+\_\+to\+\_\+entity()}}, \mbox{\hyperlink{component_8h_ae849fc4515f72b00ee76a0d5fbfb02ec}{entity\+\_\+components()}}, \mbox{\hyperlink{component_8h_aa2f3205c510a6acf0d03678ca2800086}{test\+\_\+adding\+\_\+single\+\_\+component\+\_\+serialdeserial()}}, \mbox{\hyperlink{component_8h_aca88c4ac22f52a4f55af568c002f0ef5}{validate\+\_\+custom\+\_\+hold\+\_\+position\+\_\+persisits()}}, \mbox{\hyperlink{component_8h_a8fa94912ded9b380397752a60234ccc0}{validate\+\_\+held\+\_\+item\+\_\+serialized()}}, \mbox{\hyperlink{component_8h_ac1883554907f35015187763424d89c08}{validate\+\_\+name\+\_\+change\+\_\+persisits()}}, \mbox{\hyperlink{component_8h_a9883d8d1817b39592d335dde5b34e0c3}{validate\+\_\+trigger\+\_\+area\+\_\+serialized()}}, and \mbox{\hyperlink{component_8h_aacd0b061b609752c687b41029538f5f0}{validate\+\_\+wall\+\_\+color\+\_\+serialized()}}.
+
 \mbox{\Hypertarget{namespacenetwork_ad932db30302c4abac18d38f4e2861ae9}\label{namespacenetwork_ad932db30302c4abac18d38f4e2861ae9}} 
 \index{network@{network}!deserialize\_to\_packet@{deserialize\_to\_packet}}
 \index{deserialize\_to\_packet@{deserialize\_to\_packet}!network@{network}}
@@ -188,7 +214,7 @@ References \mbox{\hyperlink{structnetwork_1_1_client_packet_aac14602a4a11d31626b
 \index{network@{network}!operator$<$$<$@{operator$<$$<$}}
 \index{operator$<$$<$@{operator$<$$<$}!network@{network}}
 \doxysubsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
-{\footnotesize\ttfamily std\+::ostream \& network\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{structnetwork_1_1_client_packet_a8b764c2200658cb2460a824d39418d19}{Client\+Packet\+::\+Msg}} \&}]{msgtype }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily std\+::ostream \& network\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{structnetwork_1_1_client_packet_aaeca9f49b09a552b6c3d6232624663d5}{Client\+Packet\+::\+Msg}} \&}]{msgtype }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{namespacenetwork_a2552b1d47eab813708f0f0446e82f187}\label{namespacenetwork_a2552b1d47eab813708f0f0446e82f187}} 
 \index{network@{network}!operator$<$$<$@{operator$<$$<$}}
@@ -220,6 +246,20 @@ References \mbox{\hyperlink{namespacenetwork_a1e89934295cdfdc98ecd3a5410acc512}{
 
 
 Referenced by \mbox{\hyperlink{structnetwork_1_1_server_a36f53dd76eedbad710c8beeadea4a8da}{network\+::\+Server\+::send\+\_\+client\+\_\+packet\+\_\+to\+\_\+all()}}, \mbox{\hyperlink{structnetwork_1_1_server_ad9c448d800525d68c2827d49e3462f11}{network\+::\+Server\+::send\+\_\+client\+\_\+packet\+\_\+to\+\_\+client()}}, and \mbox{\hyperlink{namespacenetwork_a1e89934295cdfdc98ecd3a5410acc512}{serialize\+\_\+to\+\_\+buffer()}}.
+
+\mbox{\Hypertarget{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}\label{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}} 
+\index{network@{network}!serialize\_to\_entity@{serialize\_to\_entity}}
+\index{serialize\_to\_entity@{serialize\_to\_entity}!network@{network}}
+\doxysubsubsection{\texorpdfstring{serialize\_to\_entity()}{serialize\_to\_entity()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{namespacenetwork_a29be7e2bef152eba6aef822531d97755}{Buffer}} network\+::serialize\+\_\+to\+\_\+entity (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_entity}{Entity}} $\ast$}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{serialize\+\_\+to\+\_\+entity()}}.
+
+
+
+Referenced by \mbox{\hyperlink{component_8h_ae849fc4515f72b00ee76a0d5fbfb02ec}{entity\+\_\+components()}}, \mbox{\hyperlink{namespacenetwork_a3712f2490af7bbbb26a86f8386f53e2d}{serialize\+\_\+to\+\_\+entity()}}, \mbox{\hyperlink{component_8h_aa2f3205c510a6acf0d03678ca2800086}{test\+\_\+adding\+\_\+single\+\_\+component\+\_\+serialdeserial()}}, \mbox{\hyperlink{component_8h_aca88c4ac22f52a4f55af568c002f0ef5}{validate\+\_\+custom\+\_\+hold\+\_\+position\+\_\+persisits()}}, \mbox{\hyperlink{component_8h_a8fa94912ded9b380397752a60234ccc0}{validate\+\_\+held\+\_\+item\+\_\+serialized()}}, \mbox{\hyperlink{component_8h_ac1883554907f35015187763424d89c08}{validate\+\_\+name\+\_\+change\+\_\+persisits()}}, \mbox{\hyperlink{component_8h_a9883d8d1817b39592d335dde5b34e0c3}{validate\+\_\+trigger\+\_\+area\+\_\+serialized()}}, and \mbox{\hyperlink{component_8h_aacd0b061b609752c687b41029538f5f0}{validate\+\_\+wall\+\_\+color\+\_\+serialized()}}.
 
 
 
@@ -272,6 +312,16 @@ Referenced by \mbox{\hyperlink{structnetwork_1_1_server_ad2dbf3b633a0ab10535d0ea
 
 Referenced by \mbox{\hyperlink{structsettings_1_1_data_ac19b15169723064f655217c4bfe60771}{settings\+::\+Data\+::serialize()}}.
 
+\mbox{\Hypertarget{namespacenetwork_a93863ca64cbc817459504262e79f32a7}\label{namespacenetwork_a93863ca64cbc817459504262e79f32a7}} 
+\index{network@{network}!return\_ping@{return\_ping}}
+\index{return\_ping@{return\_ping}!network@{network}}
+\doxysubsubsection{\texorpdfstring{return\_ping}{return\_ping}}
+{\footnotesize\ttfamily long network\+::return\+\_\+ping = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_client_acdb127c63e3c7a36575f590cf525e0a9}{network\+::\+Client\+::client\+\_\+process\+\_\+message\+\_\+string()}}, and \mbox{\hyperlink{struct_f_p_s_layer_ac70516fb8100119335686969084d7f0e}{FPSLayer\+::on\+Draw()}}.
+
 \mbox{\Hypertarget{namespacenetwork_ac25927028283483486690041e04cb8c9}\label{namespacenetwork_ac25927028283483486690041e04cb8c9}} 
 \index{network@{network}!SERVER\_CLIENT\_ID@{SERVER\_CLIENT\_ID}}
 \index{SERVER\_CLIENT\_ID@{SERVER\_CLIENT\_ID}!network@{network}}
@@ -280,7 +330,7 @@ Referenced by \mbox{\hyperlink{structsettings_1_1_data_ac19b15169723064f655217c4
 
 
 
-Referenced by \mbox{\hyperlink{structnetwork_1_1_server_afe2a62abb4fd826cd780bb70daf8bae0}{network\+::\+Server\+::process\+\_\+player\+\_\+join\+\_\+packet()}}, \mbox{\hyperlink{structnetwork_1_1_server_a5f5f08f1c951fecf8c421ebc29bc9924}{network\+::\+Server\+::process\+\_\+player\+\_\+leave()}}, \mbox{\hyperlink{structnetwork_1_1_server_a7d11ed4aad3931fcc13c02976f1a46eb}{network\+::\+Server\+::send\+\_\+announcement()}}, \mbox{\hyperlink{structnetwork_1_1_info_aa0fd3bfab8950e15d253a3261c3d6fbe}{network\+::\+Info\+::send\+\_\+current\+\_\+menu\+\_\+state()}}, and \mbox{\hyperlink{structnetwork_1_1_server_a6e28db272238128610e99184cbfe75d1}{network\+::\+Server\+::send\+\_\+map\+\_\+state()}}.
+Referenced by \mbox{\hyperlink{structnetwork_1_1_server_aa652d0c2d5a7dc1f2b19420b4014890d}{network\+::\+Server\+::process\+\_\+ping\+\_\+message()}}, \mbox{\hyperlink{structnetwork_1_1_server_afe2a62abb4fd826cd780bb70daf8bae0}{network\+::\+Server\+::process\+\_\+player\+\_\+join\+\_\+packet()}}, \mbox{\hyperlink{structnetwork_1_1_server_a5f5f08f1c951fecf8c421ebc29bc9924}{network\+::\+Server\+::process\+\_\+player\+\_\+leave()}}, \mbox{\hyperlink{structnetwork_1_1_server_a7d11ed4aad3931fcc13c02976f1a46eb}{network\+::\+Server\+::send\+\_\+announcement()}}, \mbox{\hyperlink{structnetwork_1_1_info_aa0fd3bfab8950e15d253a3261c3d6fbe}{network\+::\+Info\+::send\+\_\+current\+\_\+menu\+\_\+state()}}, and \mbox{\hyperlink{structnetwork_1_1_server_a6e28db272238128610e99184cbfe75d1}{network\+::\+Server\+::send\+\_\+map\+\_\+state()}}.
 
 \mbox{\Hypertarget{namespacenetwork_a0cf71a5c786a7a5c693b0b96b4a32a39}\label{namespacenetwork_a0cf71a5c786a7a5c693b0b96b4a32a39}} 
 \index{network@{network}!START\_TIME@{START\_TIME}}
@@ -291,4 +341,24 @@ Referenced by \mbox{\hyperlink{structnetwork_1_1_server_afe2a62abb4fd826cd780bb7
 
 
 Referenced by \mbox{\hyperlink{structnetwork_1_1_info_a6e71c241a75b76e7bc45e25a7d6cbd79}{network\+::\+Info\+::init\+\_\+connections()}}, and \mbox{\hyperlink{namespacenetwork_a31a595750c2d6a31ee5b59d623c95c84}{log\+\_\+debug()}}.
+
+\mbox{\Hypertarget{namespacenetwork_a18806512b214876590f6c7ad4d9904e2}\label{namespacenetwork_a18806512b214876590f6c7ad4d9904e2}} 
+\index{network@{network}!there\_ping@{there\_ping}}
+\index{there\_ping@{there\_ping}!network@{network}}
+\doxysubsubsection{\texorpdfstring{there\_ping}{there\_ping}}
+{\footnotesize\ttfamily long network\+::there\+\_\+ping = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_client_acdb127c63e3c7a36575f590cf525e0a9}{network\+::\+Client\+::client\+\_\+process\+\_\+message\+\_\+string()}}, and \mbox{\hyperlink{struct_f_p_s_layer_ac70516fb8100119335686969084d7f0e}{FPSLayer\+::on\+Draw()}}.
+
+\mbox{\Hypertarget{namespacenetwork_a7f429ee458bfb440d4a5e252d282c4d3}\label{namespacenetwork_a7f429ee458bfb440d4a5e252d282c4d3}} 
+\index{network@{network}!total\_ping@{total\_ping}}
+\index{total\_ping@{total\_ping}!network@{network}}
+\doxysubsubsection{\texorpdfstring{total\_ping}{total\_ping}}
+{\footnotesize\ttfamily long network\+::total\+\_\+ping = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Referenced by \mbox{\hyperlink{structnetwork_1_1_client_acdb127c63e3c7a36575f590cf525e0a9}{network\+::\+Client\+::client\+\_\+process\+\_\+message\+\_\+string()}}, and \mbox{\hyperlink{struct_f_p_s_layer_ac70516fb8100119335686969084d7f0e}{FPSLayer\+::on\+Draw()}}.
 

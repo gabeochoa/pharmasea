@@ -12,582 +12,101 @@
 \DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}../components/can\_perform\_job.h"{}}}
 \DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}../components/custom\_item\_position.h"{}}}
 \DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}../components/transform.h"{}}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}../customer.h"{}}}
-\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}../entity.h"{}}}
-\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}../entityhelper.h"{}}}
-\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}../furniture.h"{}}}
-\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{logging__system_8h}{logging\_system.h}}"{}}}
-\DoxyCodeLine{00016\ }
-\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacesystem__manager}{system\_manager}}\ \{}
-\DoxyCodeLine{00018\ }
-\DoxyCodeLine{00019\ \textcolor{keyword}{namespace\ }job\_system\ \{}
-\DoxyCodeLine{00020\ }
-\DoxyCodeLine{00021\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{struct_job}{Job}}*\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_ad8b7405a3b746fdefb863fb70601b9aa}{create\_wandering\_job}}(std::shared\_ptr<Entity>\ entity)\ \{}
-\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{//\ TODO\ add\ cooldown\ so\ that\ not\ all\ time\ is\ spent\ here}}
-\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{int}\ max\_tries\ =\ 10;}
-\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{int}\ range\ =\ 20;}
-\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{bool}\ walkable\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 0;}
-\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ target;}
-\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordflow}{while}\ (!walkable)\ \{}
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ target\ =}
-\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}})\{1.f\ *\ \mbox{\hyperlink{random_8h_ac595cabd40bee1b9e1c604ea389dc528}{randIn}}(-\/range,\ range),\ 1.f\ *\ \mbox{\hyperlink{random_8h_ac595cabd40bee1b9e1c604ea389dc528}{randIn}}(-\/range,\ range)\};}
-\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ walkable\ =\ \mbox{\hyperlink{struct_entity_helper_a4d01c0a143c62ae572e5d4e9eb5711f0}{EntityHelper::isWalkable}}(target);}
-\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ i++;}
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ >\ max\_tries)\ \{}
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00036\ \ \ \ \ \}}
-\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ \mbox{\hyperlink{struct_job}{Job}}(\{.type\ =\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}},}
-\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .start\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().as2(),}
-\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .end\ =\ target\});}
-\DoxyCodeLine{00040\ \}}
-\DoxyCodeLine{00041\ }
-\DoxyCodeLine{00042\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_ac1cc7991207375ca3ef4a6a6173a120a}{replace\_job\_with\_job\_type}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float},}
-\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061}{JobType}}\ job\_type)\ \{}
-\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00045\ \ \ \ \ \mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}\&\ cpj\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>();}
-\DoxyCodeLine{00046\ }
-\DoxyCodeLine{00047\ \ \ \ \ \mbox{\hyperlink{struct_job}{Job}}*\ job\ =\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordflow}{switch}\ (job\_type)\ \{}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}}:}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ job\ =\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_ad8b7405a3b746fdefb863fb70601b9aa}{create\_wandering\_job}}(entity);}
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411}{WaitInQueue}}:}
-\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ job\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{struct_job}{Job}}(\{}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411}{WaitInQueue}},}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a9779a7e9f14b8a5b1d7640a1ff0dab26}{Wait}}:}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ job\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{struct_job}{Job}}(\{}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a9779a7e9f14b8a5b1d7640a1ff0dab26}{Wait}},}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .timeToComplete\ =\ 1.f,}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .start\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().as2(),}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .end\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().as2(),}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
-\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Trying\ to\ replace\ job\ with\ type\ \{\}\ but\ doesnt\ have\ it"{}},}
-\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job\_type);}
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00069\ \ \ \ \ \}}
-\DoxyCodeLine{00070\ }
-\DoxyCodeLine{00071\ \ \ \ \ cpj.\mbox{\hyperlink{struct_can_perform_job_a64a39b69e16eb6263cd48e8ce1b84d6a}{update}}(job);}
-\DoxyCodeLine{00072\ \}}
-\DoxyCodeLine{00073\ }
-\DoxyCodeLine{00074\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a91c5cf4ebb0183ac60e693b92ad56932}{find\_new\_job}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
-\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00076\ \ \ \ \ \mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}\&\ cpj\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>();}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}../entity.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}../entityhelper.h"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}../vendor\_include.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{logging__system_8h}{logging\_system.h}}"{}}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacesystem__manager}{system\_manager}}\ \{}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{namespace\ }job\_system\ \{}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ //\ TODO\ eventually\ turn\ this\ back\ on}}
+\DoxyCodeLine{00022\ \textcolor{comment}{}}
+\DoxyCodeLine{00023\ \textcolor{comment}{inline\ void\ handle\_job\_holder\_pushed(std::shared\_ptr<Entity>\ entity,\ float)\ \{}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ \ \ \ if\ (entity-\/>is\_missing<CanPerformJob>())\ return;}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ \ \ \ CanPerformJob\&\ cpf\ =\ entity-\/>get<CanPerformJob>();}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ \ \ \ if\ (!cpf.has\_job())\ return;}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ \ \ \ auto\ job\ =\ cpf.job();}}
+\DoxyCodeLine{00028\ \textcolor{comment}{}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ \ \ \ const\ CanBePushed\&\ cbp\ =\ entity-\/>get<CanBePushed>();}}
+\DoxyCodeLine{00030\ \textcolor{comment}{}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ \ \ \ if\ (cbp.pushed\_force().x\ !=\ 0.0f\ ||\ cbp.pushed\_force().z\ !=\ 0.0f)\ \{}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ \ \ \ \ \ \ \ job-\/>path.clear();}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ \ \ \ \ \ \ \ job-\/>local\ =\ \{\};}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ \ \ \ \ \ \ \ SoundLibrary::get().play("{}roblox"{});}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\}}}
+\DoxyCodeLine{00037\ \textcolor{comment}{}}
+\DoxyCodeLine{00038\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_adc930a9721c3daf854c661ec1905d357}{render\_job\_visual}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>is\_missing<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ box\_size\ =\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 10.f;}
+\DoxyCodeLine{00043\ \ \ \ \ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>().for\_each\_path\_location(}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ [box\_size](\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ location)\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ DrawCube(\mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec::to3}}(location),\ box\_size,\ box\_size,\ box\_size,\ BLUE);}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00047\ \}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a4062abda6494564722d1c6b89d8f85c6}{ensure\_has\_job}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>is\_missing<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}\&\ cpj\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>();}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordflow}{if}\ (cpj.\mbox{\hyperlink{struct_can_perform_job_ab8a1d36d36914317d620f3059e3a42de}{has\_job}}())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{//\ TODO\ handle\ employee\ ai}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//\ TODO\ handle\ being\ angry\ or\ something}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//\ TODO\ handle\ paying\ for\ your\ cart}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//\ IF\ the\ story\ is\ closed\ then\ leave}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{namespacesystem__manager_aae333b079103d5d1c60cd78e91f20516}{sophie}}\ =\ \mbox{\hyperlink{struct_entity_helper_ae413f593eb143db6a670802d43094022}{EntityHelper::getAllWithName}}(\textcolor{stringliteral}{"{}sophie"{}})[0];}
+\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(\mbox{\hyperlink{namespacesystem__manager_aae333b079103d5d1c60cd78e91f20516}{sophie}},\ \textcolor{stringliteral}{"{}there\ should\ always\ be\ a\ sophie"{}});}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespacesystem__manager_aae333b079103d5d1c60cd78e91f20516}{sophie}}-\/>get<\mbox{\hyperlink{struct_has_timer}{HasTimer}}>().\mbox{\hyperlink{struct_has_timer_a81ecd82fdba79dd11d51f9acedfe24f5}{store\_is\_closed}}())\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ pos\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().as2();}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ cpj.\mbox{\hyperlink{struct_can_perform_job_a64a39b69e16eb6263cd48e8ce1b84d6a}{update}}(\mbox{\hyperlink{struct_job_a7639db459c16d9e851b1e5dc66b783d8}{Job::create\_job\_of\_type}}(pos,\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{\mbox{\hyperlink{globals_8h_aa2d79e41fb2085f3903c93093342e293}{GATHER\_SPOT}},\ \mbox{\hyperlink{globals_8h_aa2d79e41fb2085f3903c93093342e293}{GATHER\_SPOT}}\},}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ JobType::Leaving));}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00066\ \ \ \ \ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{auto}\&\ personal\_queue\ =\ cpj.\mbox{\hyperlink{struct_can_perform_job_a3dd96482c4a5a6b0a97ace0f02962620}{job\_queue}}();}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordflow}{if}\ (personal\_queue.empty())\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ No\ job\ and\ nothing\ in\ the\ queue?\ grab\ the\ next\ default\ one\ then}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ pos\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().as2();}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ cpj.\mbox{\hyperlink{struct_can_perform_job_a64a39b69e16eb6263cd48e8ce1b84d6a}{update}}(\mbox{\hyperlink{struct_job_a7639db459c16d9e851b1e5dc66b783d8}{Job::create\_job\_of\_type}}(pos,\ pos,\ cpj.\mbox{\hyperlink{struct_can_perform_job_a119ca4c6de9f3fc86b3c67da69b3902c}{get\_next\_job\_type}}()));}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ i\ really\ want\ to\ not\ return\ right\ here\ but\ the\ job\ is}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ nullptr\ if\ i\ do}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00076\ \ \ \ \ \}}
 \DoxyCodeLine{00077\ }
-\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{auto}\ personal\_queue\ =\ cpj.\mbox{\hyperlink{struct_can_perform_job_a3a3c96f0e78e5a30da8bd46ccc599bda}{job\_queue}}();}
-\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordflow}{if}\ (personal\_queue.empty())\ \{}
-\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_ac1cc7991207375ca3ef4a6a6173a120a}{replace\_job\_with\_job\_type}}(entity,\ dt,\ cpj.\mbox{\hyperlink{struct_can_perform_job_a119ca4c6de9f3fc86b3c67da69b3902c}{get\_next\_job\_type}}());}
-\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00082\ \ \ \ \ \}}
-\DoxyCodeLine{00083\ \ \ \ \ cpj.\mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{job}}()\ =\ personal\_queue.top();}
-\DoxyCodeLine{00084\ \ \ \ \ personal\_queue.pop();}
-\DoxyCodeLine{00085\ \}}
-\DoxyCodeLine{00086\ }
-\DoxyCodeLine{00087\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a63d25ed47ef475a3342147cfab6b7bd6}{replace\_finished\_job}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
-\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00089\ \ \ \ \ \mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}\&\ cpj\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>();}
-\DoxyCodeLine{00090\ \ \ \ \ std::shared\_ptr<Job>\ job\ =\ cpj.\mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{job}}();}
-\DoxyCodeLine{00091\ }
-\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{if}\ (job-\/>state\ ==\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}})\ \{}
-\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (job-\/>on\_cleanup)}
-\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>on\_cleanup(dynamic\_pointer\_cast<AIPerson>(entity).get(),}
-\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job.get());}
-\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ job.reset();}
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a91c5cf4ebb0183ac60e693b92ad56932}{find\_new\_job}}(entity,\ dt);}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00099\ \ \ \ \ \}}
-\DoxyCodeLine{00100\ \}}
-\DoxyCodeLine{00101\ }
-\DoxyCodeLine{00102\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{update\_job\_information}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
-\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ travel\_on\_path\ =\ [entity](\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ me)\ \{}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ job\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>().job();}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ did\ not\ arrive}}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (job-\/>path\_empty())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Grab\ next\ local\ point\ to\ go\ to}}
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!job-\/>local.has\_value())\ \{}
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>local\ =\ job-\/>path\_front();}
-\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>path\_pop\_front();}
-\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Go\ to\ local\ point}}
-\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (job-\/>local.value()\ ==\ me)\ \{}
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>local.reset();}
-\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(}
-\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity,\ fmt::format(\textcolor{stringliteral}{"{}reached\ local\ point\ \{\}\ :\ \{\}\ "{}},\ me,}
-\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>path\_size));}
-\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00120\ \ \ \ \ \};}
-\DoxyCodeLine{00121\ }
-\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ navigate\_to\ =\ [entity,\ travel\_on\_path](\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ goal)\ -\/>\ \textcolor{keywordtype}{bool}\ \{}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ job\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>().job();}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (!entity-\/>has<Transform>())\ return;}}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ me\ =\ transform.\mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{as2}}();}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (me\ ==\ goal)\ \{}
-\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ announce("{}reached\ goal"{});}}
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (job-\/>path\_empty())\ \{}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>update\_path(\mbox{\hyperlink{namespaceastar_afb6163fcfc4f81daf221406ba9adfd1b}{astar::find\_path}}(}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ me,\ goal,}
-\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::bind(\mbox{\hyperlink{struct_entity_helper_a4d01c0a143c62ae572e5d4e9eb5711f0}{EntityHelper::isWalkable}},\ std::placeholders::\_1)));}
-\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(}
-\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity,}
-\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}generated\ path\ from\ \{\}\ to\ \{\}\ with\ \{\}\ steps"{}},\ me,}
-\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ goal,\ job-\/>path\_size));}
-\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ travel\_on\_path(me);}
-\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00142\ \ \ \ \ \};}
-\DoxyCodeLine{00143\ }
-\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ wandering\ =\ [entity,\ navigate\_to]()\ \{}
-\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}\&\ cpj\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>();}
-\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ std::shared\_ptr<Job>\ job\ =\ cpj.\mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{job}}();}
-\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ personal\_queue\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>().job\_queue();}
-\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (job-\/>state)\ \{}
-\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea223e06f5cb15fc701ea1e686f7934f4f}{Job::State::Initialize}}:\ \{}
-\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(entity,}
-\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}starting\ a\ new\ wandering\ job"{}});}
-\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job::State::HeadingToStart}};}
-\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job::State::HeadingToStart}}:\ \{}
-\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ arrived\ =\ navigate\_to(job-\/>start);}
-\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ cannot\ mutate\ this-\/>job\ inside\ navigate\ because\ the}}
-\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ `job-\/>state`\ below\ will\ change\ the\ new\ job\ and\ not\ the\ old}}
-\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ one\ this\ foot-\/gun\ might\ be\ solvable\ by\ passing\ in\ the\ global}}
-\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ job\ to\ the\ job\ processing\ function,\ then\ it\ wont\ change\ until}}
-\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ next\ call}}
-\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (job-\/>path\_size\ ==\ 0)\ \{}
-\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ personal\_queue.push(job);}
-\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job.reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_job}{Job}}(\{}
-\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}},}
-\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}));}
-\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ arrived\ ?\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{Job::State::WorkingAtStart}}}
-\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job::State::HeadingToStart}};}
-\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{Job::State::WorkingAtStart}}:\ \{}
-\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}};}
-\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}}:\ \{}
-\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ arrived\ =\ navigate\_to(job-\/>end);}
-\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ arrived\ ?\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7}{Job::State::WorkingAtEnd}}}
-\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}};}
-\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7}{Job::State::WorkingAtEnd}}:\ \{}
-\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}};}
-\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}}:\ \{}
-\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}};}
-\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00192\ \ \ \ \ \};}
-\DoxyCodeLine{00193\ }
-\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ wait\ =\ [entity,\ navigate\_to](\textcolor{keywordtype}{float}\ dt)\ \{}
-\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ job\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>().job();}
-\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ personal\_queue\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>().job\_queue();}
-\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (job-\/>state)\ \{}
-\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea223e06f5cb15fc701ea1e686f7934f4f}{Job::State::Initialize}}:\ \{}
-\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(entity,\ \textcolor{stringliteral}{"{}starting\ a\ new\ wait\ job"{}});}
-\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job::State::HeadingToStart}};}
-\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job::State::HeadingToStart}}:\ \{}
-\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{Job::State::WorkingAtStart}};}
-\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{Job::State::WorkingAtStart}}:\ \{}
-\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}};}
-\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}}:\ \{}
-\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ arrived\ =\ navigate\_to(job-\/>end);}
-\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ arrived\ ?\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7}{Job::State::WorkingAtEnd}}}
-\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}};}
-\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7}{Job::State::WorkingAtEnd}}:\ \{}
-\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>timePassedInCurrentState\ +=\ dt;}
-\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (job-\/>timePassedInCurrentState\ >=\ job-\/>timeToComplete)\ \{}
-\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}};}
-\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ announce(fmt::format("{}waiting\ a\ little\ longer:\ \{\}\ =>\ \{\}\ "{},}}
-\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ job-\/>timePassedInCurrentState,}}
-\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ job-\/>timeToComplete));}}
-\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7}{Job::State::WorkingAtEnd}};}
-\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}}:\ \{}
-\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}};}
-\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00234\ \ \ \ \ \};}
-\DoxyCodeLine{00235\ }
-\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ wait\_in\_queue\ =\ [entity,\ navigate\_to](float)\ \{}
-\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}\&\ cpj\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>();}
-\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ job\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>().job();}
-\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ personal\_queue\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>().job\_queue();}
-\DoxyCodeLine{00240\ }
-\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ wait\_and\_return\ =\ [\&]()\ \{}
-\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ the\ current\ job\ to\ the\ queue,}}
-\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ and\ then\ add\ the\ waiting\ job}}
-\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ cpj.\mbox{\hyperlink{struct_can_perform_job_a963dbe78ad46befb86d1f0f3a3135d25}{push\_and\_reset}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{struct_job}{Job}}(\{}
-\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a9779a7e9f14b8a5b1d7640a1ff0dab26}{Wait}},}
-\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .timeToComplete\ =\ 1.f,}
-\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .start\ =\ job-\/>start,}
-\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .end\ =\ job-\/>start,}
-\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \}));}
-\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00252\ }
-\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ get\_next\_queue\_position\ =}
-\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ [](std::shared\_ptr<Entity>\ reg,}
-\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<AIPerson>\ customer)\ -\/>\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ \{}
-\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(customer,}
-\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}entity\ passed\ to\ register\ queue\ should\ not\ be\ null"{}});}
-\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(reg-\/>has<\mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}>(),}
-\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Trying\ to\ get-\/next-\/queue-\/pos\ for\ entity\ which\ doesnt\ "{}}}
-\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}have\ a\ waiting\ queue\ "{}});}
-\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}\&\ hasWaitingQueue\ =\ reg-\/>get<\mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}>();}
-\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ hasWaitingQueue.\mbox{\hyperlink{struct_has_waiting_queue_adfe4df51f6527bc08928933b024d695b}{ppl\_in\_line}}.push\_back(customer);}
-\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ place\ the\ customers\ stand\ is\ 1\ tile\ infront\ of\ the\ register}}
-\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ front\ =}
-\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reg-\/>tile\_infront((hasWaitingQueue.\mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\_line\_position}}\ +\ 1)\ *\ 2);}
-\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ hasWaitingQueue.\mbox{\hyperlink{struct_has_waiting_queue_ade57371d36118f2a39d767ec6de68b96}{next\_line\_position}}++;}
-\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ front;}
-\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00269\ }
-\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ position\_in\_line\ =}
-\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ [](std::shared\_ptr<Entity>\ reg,}
-\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Entity>\ customer)\ -\/>\ \textcolor{keywordtype}{int}\ \{}
-\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(customer,}
-\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}entity\ passed\ to\ position-\/in-\/line\ should\ not\ be\ null"{}});}
-\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(reg-\/>has<\mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}>(),}
-\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Trying\ to\ pos-\/in-\/line\ for\ entity\ which\ doesnt\ "{}}}
-\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}have\ a\ waiting\ queue\ "{}});}
-\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ ppl\_in\_line\ =\ reg-\/>get<\mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}>().ppl\_in\_line;}
-\DoxyCodeLine{00279\ }
-\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ (int)\ ppl\_in\_line.size();\ i++)\ \{}
-\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (customer-\/>id\ ==\ ppl\_in\_line[i]-\/>id)\ \textcolor{keywordflow}{return}\ i;}
-\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Cannot\ find\ customer\ \{\}"{}},\ customer-\/>id);}
-\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
-\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00286\ }
-\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ leave\_line\ =\ [position\_in\_line](}
-\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Entity>\ reg,}
-\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Entity>\ customer)\ \{}
-\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(customer,}
-\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}entity\ passed\ to\ leave-\/line\ should\ not\ be\ null"{}});}
-\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(reg-\/>has<\mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}>(),}
-\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Trying\ to\ leave-\/line\ for\ entity\ which\ doesnt\ "{}}}
-\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}have\ a\ waiting\ queue\ "{}});}
-\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\&\ ppl\_in\_line\ =\ reg-\/>get<\mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}>().ppl\_in\_line;}
-\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ pos\ =\ position\_in\_line(reg,\ customer);}
-\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos\ ==\ -\/1)\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos\ ==\ 0)\ \{}
-\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ppl\_in\_line.pop\_front();}
-\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ ppl\_in\_line.erase(ppl\_in\_line.begin()\ +\ pos);}
-\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00304\ }
-\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ what\ was\ this\ used\ for?}}
-\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ const\ auto\ is\_in\_line\ =\ [position\_in\_line](}}
-\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ std::shared\_ptr<Entity>\ reg,}}
-\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ std::shared\_ptr<Entity>\ customer)\ -\/>\ bool\ \{}}
-\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ return\ position\_in\_line(reg,\ customer)\ !=\ -\/1;}}
-\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \};}}
-\DoxyCodeLine{00311\ }
-\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ what\ was\ this\ used\ for}}
-\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ const\ auto\ has\_space\_in\_queue\ =}}
-\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [](std::shared\_ptr<Entity>\ reg)\ -\/>\ bool\ \{}}
-\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ M\_ASSERT(reg-\/>has<HasWaitingQueue>(),}}
-\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ "{}Trying\ to\ has-\/space-\/in-\/queue\ for\ entity\ which\ doesnt\ "{}}}
-\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ "{}have\ a\ waiting\ queue\ "{});}}
-\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ const\ HasWaitingQueue\&\ hasWaitingQueue\ =}}
-\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ reg-\/>get<HasWaitingQueue>();}}
-\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ return\ hasWaitingQueue.next\_line\_position\ <}}
-\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ hasWaitingQueue.max\_queue\_size;}}
-\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \};}}
-\DoxyCodeLine{00323\ }
-\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ can\_move\_up\ =\ [](std::shared\_ptr<Entity>\ reg,}
-\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Entity>\ customer)\ -\/>\ \textcolor{keywordtype}{bool}\ \{}
-\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(customer,}
-\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}entity\ passed\ to\ can-\/move-\/up\ should\ not\ be\ null"{}});}
-\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(reg-\/>has<\mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}>(),}
-\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Trying\ to\ can-\/move-\/up\ for\ entity\ which\ doesnt\ "{}}}
-\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}have\ a\ waiting\ queue\ "{}});}
-\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ ppl\_in\_line\ =\ reg-\/>get<\mbox{\hyperlink{struct_has_waiting_queue}{HasWaitingQueue}}>().ppl\_in\_line;}
-\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ customer-\/>id\ ==\ ppl\_in\_line.front()-\/>id;}
-\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00334\ }
-\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (job-\/>state)\ \{}
-\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea223e06f5cb15fc701ea1e686f7934f4f}{Job::State::Initialize}}:\ \{}
-\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(entity,}
-\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}starting\ a\ new\ wait\ in\ queue\ job"{}});}
-\DoxyCodeLine{00339\ }
-\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Figure\ out\ which\ register\ to\ go\ to...}}
-\DoxyCodeLine{00341\ }
-\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ replace\ with\ finding\ the\ one\ with\ the\ least\ people}}
-\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ in\ it}}
-\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Furniture>\ closest\_target\ =}
-\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EntityHelper::getClosestMatchingEntity<Furniture>(}
-\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().\mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{as2}}(),\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ 100.f,}
-\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{auto}\&\&)\ \{\ return\ true;\ \});}
-\DoxyCodeLine{00348\ }
-\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!closest\_target)\ \{}
-\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ need\ some\ kinda\ way\ to\ save\ this\ job,}}
-\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ and\ come\ back\ to\ it\ later}}
-\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ i\ think\ just\ putting\ a\ Job*\ unfinished\ in\ Job\ is}}
-\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ probably\ enough}}
-\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(}
-\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity,\ \textcolor{stringliteral}{"{}Could\ not\ find\ a\ valid\ register"{}});}
-\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea223e06f5cb15fc701ea1e686f7934f4f}{Job::State::Initialize}};}
-\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wait\_and\_return();}
-\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00360\ }
-\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>data[\textcolor{stringliteral}{"{}register"{}}]\ =\ closest\_target.get();}
-\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>start\ =\ get\_next\_queue\_position(}
-\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dynamic\_pointer\_cast<Entity>(closest\_target),}
-\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dynamic\_pointer\_cast<AIPerson>(entity));}
-\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>end\ =\ closest\_target-\/>tile\_infront(1);}
-\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>spot\_in\_line\ =\ position\_in\_line(closest\_target,\ entity);}
-\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job::State::HeadingToStart}};}
-\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job::State::HeadingToStart}}:\ \{}
-\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ arrived\ =\ navigate\_to(job-\/>start);}
-\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ arrived\ ?\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{Job::State::WorkingAtStart}}}
-\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea47a69eb0158f89e7bb7c728518183cc3}{Job::State::HeadingToStart}};}
-\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{Job::State::WorkingAtStart}}:\ \{}
-\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (job-\/>spot\_in\_line\ ==\ 0)\ \{}
-\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}};}
-\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00381\ }
-\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ the\ spot\ in\ front\ of\ us}}
-\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ reg\ =\ std::shared\_ptr<Entity>(}
-\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_entity}{Entity}}*\textcolor{keyword}{>}(job-\/>data[\textcolor{stringliteral}{"{}register"{}}]));}
-\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ cur\_spot\_in\_line\ =\ position\_in\_line(reg,\ entity);}
-\DoxyCodeLine{00386\ }
-\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cur\_spot\_in\_line\ ==\ job-\/>spot\_in\_line\ ||}
-\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ !can\_move\_up(reg,\ entity))\ \{}
-\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ didnt\ move\ so\ just\ wait\ a\ bit\ before\ trying\ again}}
-\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(}
-\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity,}
-\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}im\ just\ going\ to\ wait\ a\ bit\ longer"{}}));}
-\DoxyCodeLine{00393\ }
-\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ the\ current\ job\ to\ the\ queue,}}
-\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ and\ then\ add\ the\ waiting\ job}}
-\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{Job::State::WorkingAtStart}};}
-\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wait\_and\_return();}
-\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00400\ }
-\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ our\ spot\ did\ change,\ then\ move\ forward}}
-\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(}
-\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity,}
-\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}im\ moving\ up\ to\ \{\}"{}},\ cur\_spot\_in\_line));}
-\DoxyCodeLine{00405\ }
-\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>spot\_in\_line\ =\ cur\_spot\_in\_line;}
-\DoxyCodeLine{00407\ }
-\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (job-\/>spot\_in\_line\ ==\ 0)\ \{}
-\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}};}
-\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00412\ }
-\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ otherwise\ walk\ up\ one\ spot}}
-\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>start\ =\ reg-\/>tile\_infront(job-\/>spot\_in\_line);}
-\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaba9834c4b9985c102eeb06e03d59523c}{Job::State::WorkingAtStart}};}
-\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}}:\ \{}
-\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ arrived\ =\ navigate\_to(job-\/>end);}
-\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ arrived\ ?\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7}{Job::State::WorkingAtEnd}}}
-\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaeb069d24daf55bd5172114eb5c137806}{Job::State::HeadingToEnd}};}
-\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dceaff55c397f2faf73dbd93f45832f659b7}{Job::State::WorkingAtEnd}}:\ \{}
-\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ reg\ =\ std::shared\_ptr<Entity>(}
-\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_entity}{Entity}}*\textcolor{keyword}{>}(job-\/>data[\textcolor{stringliteral}{"{}register"{}}]));}
-\DoxyCodeLine{00427\ }
-\DoxyCodeLine{00428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}\&\ regCHI\ =\ reg-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>();}
-\DoxyCodeLine{00429\ }
-\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (regCHI.\mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{empty}}())\ \{}
-\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(entity,\ \textcolor{stringliteral}{"{}my\ rx\ isnt\ ready\ yet"{}});}
-\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wait\_and\_return();}
-\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00435\ }
-\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ bag\ =\ reg-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().asT<Bag>();}
-\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!bag)\ \{}
-\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(entity,}
-\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}this\ isnt\ my\ rx\ (not\ a\ bag)"{}});}
-\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wait\_and\_return();}
-\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00443\ }
-\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (bag-\/>empty())\ \{}
-\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(entity,\ \textcolor{stringliteral}{"{}this\ bag\ is\ empty..."{}});}
-\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wait\_and\_return();}
-\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00449\ }
-\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ eventually\ migrate\ item\ to\ ECS}}
-\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ auto\ pill\_bottle\ =}}
-\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ bag-\/>get<CanHoldItem>().asT<PillBottle>();}}
-\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ pill\_bottle\ =}
-\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dynamic\_pointer\_cast<PillBottle>(bag-\/>held\_item);}
-\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!pill\_bottle)\ \{}
-\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(entity,}
-\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}this\ bag\ doesnt\ have\ my\ pills"{}});}
-\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wait\_and\_return();}
-\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00461\ }
-\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}\&\ ourCHI\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>();}
-\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ourCHI.\mbox{\hyperlink{struct_can_hold_item_a1859b1b208d938ed63a5eea0d7a5fd47}{update}}(regCHI.\mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{item}}());}
-\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ regCHI.\mbox{\hyperlink{struct_can_hold_item_a1859b1b208d938ed63a5eea0d7a5fd47}{update}}(\textcolor{keyword}{nullptr});}
-\DoxyCodeLine{00465\ }
-\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1logging__manager_a792f2c424589586fb923621fe60fb20a}{logging\_manager::announce}}(entity,\ \textcolor{stringliteral}{"{}got\ it"{}});}
-\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ leave\_line(reg,\ entity);}
-\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}};}
-\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}}:\ \{}
-\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job-\/>state\ =\ \mbox{\hyperlink{struct_job_a1b3469cb1f7c9b23629a576f9b252dcea07ca5050e697392c9ed47e6453f1453f}{Job::State::Completed}};}
-\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00476\ \ \ \ \ \};}
-\DoxyCodeLine{00477\ }
-\DoxyCodeLine{00478\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00479\ }
-\DoxyCodeLine{00480\ \ \ \ \ \mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}\&\ cpj\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>();}
-\DoxyCodeLine{00481\ \ \ \ \ std::shared\_ptr<Job>\ job\ =\ cpj.\mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{job}}();}
-\DoxyCodeLine{00482\ }
-\DoxyCodeLine{00483\ \ \ \ \ \textcolor{comment}{//\ User\ has\ no\ active\ job}}
-\DoxyCodeLine{00484\ \ \ \ \ \textcolor{keywordflow}{if}\ (cpj.\mbox{\hyperlink{struct_can_perform_job_a3e9c2daa8ba70418fa58d4d48bd2221a}{needs\_job}}())\ \{}
-\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}getting\ new\ job"{}});}
-\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a91c5cf4ebb0183ac60e693b92ad56932}{find\_new\_job}}(entity,\ dt);}
-\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00488\ \ \ \ \ \};}
-\DoxyCodeLine{00489\ }
-\DoxyCodeLine{00490\ \ \ \ \ \textcolor{keywordflow}{switch}\ (job-\/>type)\ \{}
-\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05}{Wandering}}:}
-\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \ \ \ \ wandering();}
-\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411}{WaitInQueue}}:}
-\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ \ \ \ \ wait\_in\_queue(dt);}
-\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{job_8h_a60db90059c4f88592cc75a2f39ad3061a9779a7e9f14b8a5b1d7640a1ff0dab26}{Wait}}:}
-\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \ \ \ \ wait(dt);}
-\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
-\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00502\ \ \ \ \ \}}
-\DoxyCodeLine{00503\ \}}
-\DoxyCodeLine{00504\ }
-\DoxyCodeLine{00505\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a57fb5a88688ab6b19595bd8fe63d936e}{handle\_job\_holder\_pushed}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float})\ \{}
-\DoxyCodeLine{00506\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00507\ \ \ \ \ \mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}\&\ cpf\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>();}
-\DoxyCodeLine{00508\ \ \ \ \ \textcolor{keywordflow}{if}\ (!cpf.\mbox{\hyperlink{struct_can_perform_job_ab8a1d36d36914317d620f3059e3a42de}{has\_job}}())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00509\ \ \ \ \ \textcolor{keyword}{auto}\ job\ =\ cpf.\mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{job}}();}
-\DoxyCodeLine{00510\ }
-\DoxyCodeLine{00511\ \ \ \ \ \mbox{\hyperlink{struct_can_be_pushed}{CanBePushed}}\&\ cbp\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_be_pushed}{CanBePushed}}>();}
-\DoxyCodeLine{00512\ }
-\DoxyCodeLine{00513\ \ \ \ \ \textcolor{keywordflow}{if}\ (cbp.\mbox{\hyperlink{struct_can_be_pushed_aae536d30c8542ddfe445a74fce29c84c}{pushed\_force}}.x\ !=\ 0.0f\ ||\ cbp.\mbox{\hyperlink{struct_can_be_pushed_aae536d30c8542ddfe445a74fce29c84c}{pushed\_force}}.z\ !=\ 0.0f)\ \{}
-\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ job-\/>path.clear();}
-\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ job-\/>local\ =\ \{\};}
-\DoxyCodeLine{00516\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_sound_library_ad2573d3420d3934755b903116c48acd6}{SoundLibrary::get}}().play(\textcolor{stringliteral}{"{}roblox"{}});}
-\DoxyCodeLine{00517\ \ \ \ \ \}}
-\DoxyCodeLine{00518\ \}}
-\DoxyCodeLine{00519\ }
-\DoxyCodeLine{00520\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a80b48eb7354e4827e21605e41577269f}{update\_position\_from\_job}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
-\DoxyCodeLine{00521\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_transform}{Transform}}>())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00522\ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
-\DoxyCodeLine{00523\ }
-\DoxyCodeLine{00524\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00525\ \ \ \ \ \mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}\&\ cpf\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>();}
-\DoxyCodeLine{00526\ \ \ \ \ \textcolor{keywordflow}{if}\ (!cpf.\mbox{\hyperlink{struct_can_perform_job_ab8a1d36d36914317d620f3059e3a42de}{has\_job}}())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00527\ \ \ \ \ \textcolor{keyword}{auto}\ job\ =\ cpf.\mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{job}}();}
-\DoxyCodeLine{00528\ }
-\DoxyCodeLine{00529\ \ \ \ \ \textcolor{keywordflow}{if}\ (!job\ ||\ !job-\/>local.has\_value())\ \{}
-\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00531\ \ \ \ \ \}}
-\DoxyCodeLine{00532\ }
-\DoxyCodeLine{00533\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ tar\ =\ job-\/>local.value();}
-\DoxyCodeLine{00534\ }
-\DoxyCodeLine{00535\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_has_base_speed}{HasBaseSpeed}}>())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00536\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_has_base_speed}{HasBaseSpeed}}\&\ hasBaseSpeed\ =\ entity-\/>get<\mbox{\hyperlink{struct_has_base_speed}{HasBaseSpeed}}>();}
-\DoxyCodeLine{00537\ }
-\DoxyCodeLine{00538\ \ \ \ \ \textcolor{keywordtype}{float}\ speed\ =\ hasBaseSpeed.\mbox{\hyperlink{struct_has_base_speed_aa8a5a0bed30cf126086bb79f6a6caeae}{speed}}()\ *\ dt;}
-\DoxyCodeLine{00539\ }
-\DoxyCodeLine{00540\ \ \ \ \ \textcolor{keywordtype}{float}\ speed\_multiplier\ =\ 1.f;}
-\DoxyCodeLine{00541\ \ \ \ \ \textcolor{keywordtype}{float}\ stagger\_multiplier\ =\ 0.f;}
-\DoxyCodeLine{00542\ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>has<\mbox{\hyperlink{struct_can_have_ailment}{CanHaveAilment}}>())\ \{}
-\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_can_have_ailment}{CanHaveAilment}}\&\ cha\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_have_ailment}{CanHaveAilment}}>();}
-\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ stagger\_multiplier\ =\ cha.\mbox{\hyperlink{struct_can_have_ailment_a362b69644c01dc2c04b038c027d9c9f9}{ailment}}()-\/>stagger();}
-\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ speed\_multiplier\ =\ cha.\mbox{\hyperlink{struct_can_have_ailment_a362b69644c01dc2c04b038c027d9c9f9}{ailment}}()-\/>speed\_multiplier();}
-\DoxyCodeLine{00546\ \ \ \ \ \}}
-\DoxyCodeLine{00547\ }
-\DoxyCodeLine{00548\ \ \ \ \ \textcolor{keywordflow}{if}\ (speed\_multiplier\ !=\ 0)\ speed\ *=\ speed\_multiplier;}
-\DoxyCodeLine{00549\ \ \ \ \ \textcolor{keywordflow}{if}\ (stagger\_multiplier\ !=\ 0)\ speed\ *=\ stagger\_multiplier;}
-\DoxyCodeLine{00550\ }
-\DoxyCodeLine{00551\ \ \ \ \ \textcolor{comment}{//\ this\ was\ moved\ when\ doing\ ecs,\ idk\ if\ its\ still\ true\ anymore}}
-\DoxyCodeLine{00552\ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ are\ seeing\ issues\ where\ customers\ are\ getting\ stuck\ on\ corners}}
-\DoxyCodeLine{00553\ \ \ \ \ \textcolor{comment}{//\ when\ turning.\ Before\ I\ feel\ like\ they\ were\ able\ to\ slide\ but\ it\ seems}}
-\DoxyCodeLine{00554\ \ \ \ \ \textcolor{comment}{//\ like\ not\ anymore?}}
-\DoxyCodeLine{00555\ }
-\DoxyCodeLine{00556\ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_x\ =\ transform.\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}};}
-\DoxyCodeLine{00557\ \ \ \ \ \textcolor{keywordflow}{if}\ (tar.x\ >\ transform.\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}}.x)\ new\_pos\_x.x\ +=\ speed;}
-\DoxyCodeLine{00558\ \ \ \ \ \textcolor{keywordflow}{if}\ (tar.x\ <\ transform.\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}}.x)\ new\_pos\_x.x\ -\/=\ speed;}
-\DoxyCodeLine{00559\ }
-\DoxyCodeLine{00560\ \ \ \ \ \textcolor{keyword}{auto}\ new\_pos\_z\ =\ transform.\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}};}
-\DoxyCodeLine{00561\ \ \ \ \ \textcolor{keywordflow}{if}\ (tar.y\ >\ transform.\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}}.z)\ new\_pos\_z.z\ +=\ speed;}
-\DoxyCodeLine{00562\ \ \ \ \ \textcolor{keywordflow}{if}\ (tar.y\ <\ transform.\mbox{\hyperlink{struct_transform_aa2bf3882fe729c29ae1bf2d52612b5dd}{raw\_position}}.z)\ new\_pos\_z.z\ -\/=\ speed;}
-\DoxyCodeLine{00563\ }
-\DoxyCodeLine{00564\ \ \ \ \ \textcolor{comment}{//\ TODO\ do\ we\ need\ to\ unr\ the\ whole\ person\_update...()\ function\ with}}
-\DoxyCodeLine{00565\ \ \ \ \ \textcolor{comment}{//\ collision?}}
-\DoxyCodeLine{00566\ }
-\DoxyCodeLine{00567\ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{position}}.x\ =\ new\_pos\_x.x;}
-\DoxyCodeLine{00568\ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{position}}.z\ =\ new\_pos\_z.z;}
-\DoxyCodeLine{00569\ \}}
-\DoxyCodeLine{00570\ }
-\DoxyCodeLine{00571\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_adc930a9721c3daf854c661ec1905d357}{render\_job\_visual}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float})\ \{}
-\DoxyCodeLine{00572\ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity-\/>has<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00573\ \ \ \ \ \mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}\&\ cpf\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>();}
-\DoxyCodeLine{00574\ \ \ \ \ \textcolor{keywordflow}{if}\ (!cpf.\mbox{\hyperlink{struct_can_perform_job_ab8a1d36d36914317d620f3059e3a42de}{has\_job}}())\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00575\ }
-\DoxyCodeLine{00576\ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ doesnt\ work\ yet\ because\ job-\/>path\ is\ not\ serialized}}
-\DoxyCodeLine{00577\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ box\_size\ =\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 10.f;}
-\DoxyCodeLine{00578\ \ \ \ \ \textcolor{keywordflow}{if}\ (cpf.\mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{job}}()\ \&\&\ !cpf.\mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{job}}()-\/>path.empty())\ \{}
-\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ location\ :\ cpf.\mbox{\hyperlink{struct_can_perform_job_a127736b2d8a3d7f0255ff5bc8beb22f5}{job}}()-\/>path)\ \{}
-\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \ \ \ \ DrawCube(\mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec::to3}}(location),\ box\_size,\ box\_size,\ box\_size,\ BLUE);}
-\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00582\ \ \ \ \ \}}
-\DoxyCodeLine{00583\ \}}
-\DoxyCodeLine{00584\ }
-\DoxyCodeLine{00585\ \}\ \ \textcolor{comment}{//\ namespace\ job\_system}}
-\DoxyCodeLine{00586\ }
-\DoxyCodeLine{00587\ \}\ \ \textcolor{comment}{//\ namespace\ system\_manager}}
+\DoxyCodeLine{00078\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(!personal\_queue.empty(),}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}no\ way\ personal\ job\ queue\ should\ be\ empty"{}});}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//\ queue\ should\ definitely\ have\ something\ by\ now}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{//\ add\ the\ thing\ from\ the\ queue\ as\ our\ job\ :)}}
+\DoxyCodeLine{00082\ \ \ \ \ cpj.\mbox{\hyperlink{struct_can_perform_job_a64a39b69e16eb6263cd48e8ce1b84d6a}{update}}(personal\_queue.top().get());}
+\DoxyCodeLine{00083\ \ \ \ \ personal\_queue.pop();}
+\DoxyCodeLine{00084\ \}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a2451d64a75f037c4c3446e283f93ed71}{run\_job\_tick}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>is\_missing<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00088\ \ \ \ \ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>().run\_tick(entity,\ dt);}
+\DoxyCodeLine{00089\ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_abef3d2f4e1dfb4eae41dbcc0585d358b}{cleanup\_completed\_job}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float})\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{//\ TODO\ probably\ can\ just\ live\ in\ 'in\_round\_update'?}}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>is\_missing<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00095\ \ \ \ \ entity-\/>get<\mbox{\hyperlink{struct_can_perform_job}{CanPerformJob}}>().cleanup\_if\_completed();}
+\DoxyCodeLine{00096\ \}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a683db36d0a63ed50f780384c7060a36b}{in\_round\_update}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_abef3d2f4e1dfb4eae41dbcc0585d358b}{cleanup\_completed\_job}}(entity,\ dt);}
+\DoxyCodeLine{00100\ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a4062abda6494564722d1c6b89d8f85c6}{ensure\_has\_job}}(entity,\ dt);}
+\DoxyCodeLine{00101\ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a2451d64a75f037c4c3446e283f93ed71}{run\_job\_tick}}(entity,\ dt);}
+\DoxyCodeLine{00102\ \}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \}\ \ \textcolor{comment}{//\ namespace\ job\_system}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \}\ \ \textcolor{comment}{//\ namespace\ system\_manager}}
 
 \end{DoxyCode}

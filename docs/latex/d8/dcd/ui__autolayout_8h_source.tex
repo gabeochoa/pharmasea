@@ -34,482 +34,486 @@
 \DoxyCodeLine{00030\ }
 \DoxyCodeLine{00031\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a4f52a8d4bf398b9d43a834041a52b148}{ACCEPTABLE\_ERROR}}\ =\ 0.5f;}
 \DoxyCodeLine{00032\ }
-\DoxyCodeLine{00033\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a567a0cb9b521e51af53a84e79109712c}{compute\_size\_for\_standalone\_expectation}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index)\ \{}
-\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}csfse\ \{\}\ \{\}"{}},\ *widget,\ exp\_index);}
-\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
-\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordflow}{switch}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}})\ \{}
-\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a62654fe258cf0fb3d51337dda982982e}{SizeMode::Pixels}}:}
-\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ exp.\mbox{\hyperlink{structui_1_1_size_expectation_ab7f8f661e874602a85ce82898d155c26}{value}};}
-\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a63e6eeb436e0169b87103f339878a663}{SizeMode::Text}}:}
-\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ figure\ this\ out}}
-\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ So\ we\ can\ use\ MeasureTextEx\ but}}
-\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ need\ to\ know\ the\ font\ and\ spacing}}
-\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 100.f;}
-\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
-\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
-\DoxyCodeLine{00046\ \ \ \ \ \}}
-\DoxyCodeLine{00047\ \}}
-\DoxyCodeLine{00048\ }
-\DoxyCodeLine{00049\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a0092871caad2d74966974bbe9d9eec7c}{compute\_size\_for\_parent\_expectation}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index)\ \{}
-\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}}\ \&\&}
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index].\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}}\ ==\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}{SizeMode::Percent}})\ \{}
-\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}{print\_tree}}();}
-\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}Absolute\ widgets\ should\ not\ use\ Percent"{}});}
-\DoxyCodeLine{00054\ \ \ \ \ \}}
-\DoxyCodeLine{00055\ }
-\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{float}\ no\_change\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
-\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordflow}{if}\ (!widget-\/>\mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}}\ ||\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{return}\ no\_change;}
-\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{float}\ parent\_size\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}}-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
-\DoxyCodeLine{00059\ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
-\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{float}\ new\_size\ =\ exp.\mbox{\hyperlink{structui_1_1_size_expectation_ab7f8f661e874602a85ce82898d155c26}{value}}\ *\ parent\_size;}
-\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordflow}{switch}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}})\ \{}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}{SizeMode::Percent}}:}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ parent\_size\ ==\ -\/1\ ?\ no\_change\ :\ new\_size;}
-\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
-\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ no\_change;}
-\DoxyCodeLine{00066\ \ \ \ \ \}}
-\DoxyCodeLine{00067\ \}}
-\DoxyCodeLine{00068\ }
-\DoxyCodeLine{00069\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_ae91ed2b2dd47ead91ac1050eccf5e715}{\_sum\_children\_axis\_for\_child\_exp}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index)\ \{}
-\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{float}\ total\_child\_size\ =\ 0.f;}
-\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
-\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00074\ }
-\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cs\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cs\ ==\ -\/1)\ \{}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index].\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}}\ ==\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}{SizeMode::Percent}}\ \&\&}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index].\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}}\ ==\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{SizeMode::Children}})\ \{}
-\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(\textcolor{keyword}{false},}
-\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Parents\ sized\ with\ mode\ 'children'\ cannot\ have\ "{}}}
-\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}children\ sized\ with\ mode\ 'percent'."{}});}
-\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}{print\_tree}}();}
-\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Instead\ of\ silently\ ignoring\ this,\ check\ the\ cases\ above}}
-\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}expect\ that\ all\ children\ have\ been\ solved\ by\ now"{}});}
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ total\_child\_size\ +=\ cs;}
-\DoxyCodeLine{00088\ \ \ \ \ \}}
-\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{return}\ total\_child\_size;}
-\DoxyCodeLine{00090\ \}}
-\DoxyCodeLine{00091\ }
-\DoxyCodeLine{00092\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a18510470464391ecc932364a83f8ab96}{\_max\_child\_size}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index)\ \{}
-\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{float}\ max\_child\_size\ =\ 0.f;}
-\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
-\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00097\ }
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cs\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cs\ ==\ -\/1)\ \{}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index].\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}}\ ==\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}{SizeMode::Percent}}\ \&\&}
-\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index].\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}}\ ==\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{SizeMode::Children}})\ \{}
-\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(\textcolor{keyword}{false},}
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Parents\ sized\ with\ mode\ 'children'\ cannot\ have\ "{}}}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}children\ sized\ with\ mode\ 'percent'."{}});}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Instead\ of\ silently\ ignoring\ this,\ check\ the\ cases\ above}}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}expect\ that\ all\ children\ have\ been\ solved\ by\ now"{}});}
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ max\_child\_size\ =\ fmaxf(max\_child\_size,\ cs);}
-\DoxyCodeLine{00110\ \ \ \ \ \}}
-\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordflow}{return}\ max\_child\_size;}
-\DoxyCodeLine{00112\ \}}
-\DoxyCodeLine{00113\ }
-\DoxyCodeLine{00114\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a8eee5d8e9d61273a841f39eac3ecb5cb}{compute\_size\_for\_child\_expectation}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index)\ \{}
-\DoxyCodeLine{00115\ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}csfce\ \{\}\ \{\}"{}},\ *widget,\ exp\_index);}
-\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{float}\ no\_change\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
-\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}}.empty())\ \textcolor{keywordflow}{return}\ no\_change;}
-\DoxyCodeLine{00118\ }
-\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{float}\ total\_child\_size\ =}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_ae91ed2b2dd47ead91ac1050eccf5e715}{\_sum\_children\_axis\_for\_child\_exp}}(widget,\ exp\_index);}
-\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{float}\ max\_child\_size\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a18510470464391ecc932364a83f8ab96}{\_max\_child\_size}}(widget,\ exp\_index);}
-\DoxyCodeLine{00122\ }
-\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{float}\ expectation\ =\ total\_child\_size;}
+\DoxyCodeLine{00033\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a567a0cb9b521e51af53a84e79109712c}{compute\_size\_for\_standalone\_expectation}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ exp\_index)\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}csfse\ \{\}\ \{\}"{}},\ *widget,\ exp\_index);}
+\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{switch}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}})\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a62654fe258cf0fb3d51337dda982982e}{SizeMode::Pixels}}:}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ exp.\mbox{\hyperlink{structui_1_1_size_expectation_ab7f8f661e874602a85ce82898d155c26}{value}};}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a63e6eeb436e0169b87103f339878a663}{SizeMode::Text}}:}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ figure\ this\ out}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ So\ we\ can\ use\ MeasureTextEx\ but}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ need\ to\ know\ the\ font\ and\ spacing}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 100.f;}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
+\DoxyCodeLine{00047\ \ \ \ \ \}}
+\DoxyCodeLine{00048\ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a0092871caad2d74966974bbe9d9eec7c}{compute\_size\_for\_parent\_expectation}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ exp\_index)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}}\ \&\&}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index].\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}}\ ==\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}{SizeMode::Percent}})\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}{print\_tree}}();}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}Absolute\ widgets\ should\ not\ use\ Percent"{}});}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{float}\ no\_change\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordflow}{if}\ (!widget-\/>\mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}}\ ||\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{return}\ no\_change;}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{float}\ parent\_size\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}}-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
+\DoxyCodeLine{00061\ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{float}\ new\_size\ =\ exp.\mbox{\hyperlink{structui_1_1_size_expectation_ab7f8f661e874602a85ce82898d155c26}{value}}\ *\ parent\_size;}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{switch}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}})\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}{SizeMode::Percent}}:}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ parent\_size\ ==\ -\/1\ ?\ no\_change\ :\ new\_size;}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ no\_change;}
+\DoxyCodeLine{00068\ \ \ \ \ \}}
+\DoxyCodeLine{00069\ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_ae91ed2b2dd47ead91ac1050eccf5e715}{\_sum\_children\_axis\_for\_child\_exp}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index)\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{float}\ total\_child\_size\ =\ 0.f;}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cs\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cs\ ==\ -\/1)\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index].\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}}\ ==\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}{SizeMode::Percent}}\ \&\&}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index].\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}}\ ==\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{SizeMode::Children}})\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(\textcolor{keyword}{false},}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Parents\ sized\ with\ mode\ 'children'\ cannot\ have\ "{}}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}children\ sized\ with\ mode\ 'percent'."{}});}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}{print\_tree}}();}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Instead\ of\ silently\ ignoring\ this,\ check\ the\ cases\ above}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}expect\ that\ all\ children\ have\ been\ solved\ by\ now"{}});}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ total\_child\_size\ +=\ cs;}
+\DoxyCodeLine{00090\ \ \ \ \ \}}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordflow}{return}\ total\_child\_size;}
+\DoxyCodeLine{00092\ \}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a18510470464391ecc932364a83f8ab96}{\_max\_child\_size}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index)\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{float}\ max\_child\_size\ =\ 0.f;}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cs\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cs\ ==\ -\/1)\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index].\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}}\ ==\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a2b732b82f69b92cc3beda3f822b0e22a}{SizeMode::Percent}}\ \&\&}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index].\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}}\ ==\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{SizeMode::Children}})\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(\textcolor{keyword}{false},}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Parents\ sized\ with\ mode\ 'children'\ cannot\ have\ "{}}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}children\ sized\ with\ mode\ 'percent'."{}});}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Instead\ of\ silently\ ignoring\ this,\ check\ the\ cases\ above}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}expect\ that\ all\ children\ have\ been\ solved\ by\ now"{}});}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ max\_child\_size\ =\ fmaxf(max\_child\_size,\ cs);}
+\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordflow}{return}\ max\_child\_size;}
+\DoxyCodeLine{00114\ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a8eee5d8e9d61273a841f39eac3ecb5cb}{compute\_size\_for\_child\_expectation}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index)\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}csfce\ \{\}\ \{\}"{}},\ *widget,\ exp\_index);}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{float}\ no\_change\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}}.empty())\ \textcolor{keywordflow}{return}\ no\_change;}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{float}\ total\_child\_size\ =}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_ae91ed2b2dd47ead91ac1050eccf5e715}{\_sum\_children\_axis\_for\_child\_exp}}(widget,\ exp\_index);}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{float}\ max\_child\_size\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a18510470464391ecc932364a83f8ab96}{\_max\_child\_size}}(widget,\ exp\_index);}
 \DoxyCodeLine{00124\ }
-\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{GrowFlags::Column}}\ \&\&\ exp\_index\ ==\ 0)\ \{}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ expectation\ =\ max\_child\_size;}
-\DoxyCodeLine{00127\ \ \ \ \ \}}
-\DoxyCodeLine{00128\ }
-\DoxyCodeLine{00129\ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
-\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keywordflow}{switch}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}})\ \{}
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{SizeMode::Children}}:}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ expectation;}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
-\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ no\_change;}
-\DoxyCodeLine{00135\ \ \ \ \ \}}
-\DoxyCodeLine{00136\ \}}
-\DoxyCodeLine{00137\ }
-\DoxyCodeLine{00138\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a6b10e3b4c705bb1633000eea2d421ae6}{calculate\_standalone}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
-\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00140\ }
-\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{auto}\ size\_x\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a567a0cb9b521e51af53a84e79109712c}{compute\_size\_for\_standalone\_expectation}}(widget,\ 0);}
-\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keyword}{auto}\ size\_y\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a567a0cb9b521e51af53a84e79109712c}{compute\_size\_for\_standalone\_expectation}}(widget,\ 1);}
-\DoxyCodeLine{00143\ }
-\DoxyCodeLine{00144\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0]\ =\ size\_x;}
-\DoxyCodeLine{00145\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1]\ =\ size\_y;}
-\DoxyCodeLine{00146\ }
-\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ specifically\ not\ ignoring\ absolute}}
-\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a6b10e3b4c705bb1633000eea2d421ae6}{calculate\_standalone}}(child);}
-\DoxyCodeLine{00150\ \ \ \ \ \}}
-\DoxyCodeLine{00151\ \}}
-\DoxyCodeLine{00152\ }
-\DoxyCodeLine{00153\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a6aab9728ba4f17593481eb09f2b987a9}{calculate\_those\_with\_parents}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
-\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00155\ }
-\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{auto}\ size\_x\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a0092871caad2d74966974bbe9d9eec7c}{compute\_size\_for\_parent\_expectation}}(widget,\ 0);}
-\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{auto}\ size\_y\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a0092871caad2d74966974bbe9d9eec7c}{compute\_size\_for\_parent\_expectation}}(widget,\ 1);}
-\DoxyCodeLine{00158\ }
-\DoxyCodeLine{00159\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0]\ =\ size\_x;}
-\DoxyCodeLine{00160\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1]\ =\ size\_y;}
-\DoxyCodeLine{00161\ }
-\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a6aab9728ba4f17593481eb09f2b987a9}{calculate\_those\_with\_parents}}(child);}
-\DoxyCodeLine{00164\ \ \ \ \ \}}
-\DoxyCodeLine{00165\ \}}
-\DoxyCodeLine{00166\ }
-\DoxyCodeLine{00167\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a6a1e09a56a2fab2e8766405be175f05a}{calculate\_those\_with\_children}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
-\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00169\ }
-\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a6a1e09a56a2fab2e8766405be175f05a}{calculate\_those\_with\_children}}(child);}
-\DoxyCodeLine{00172\ \ \ \ \ \}}
-\DoxyCodeLine{00173\ }
-\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{auto}\ size\_x\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a8eee5d8e9d61273a841f39eac3ecb5cb}{compute\_size\_for\_child\_expectation}}(widget,\ 0);}
-\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{auto}\ size\_y\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a8eee5d8e9d61273a841f39eac3ecb5cb}{compute\_size\_for\_child\_expectation}}(widget,\ 1);}
-\DoxyCodeLine{00176\ }
-\DoxyCodeLine{00177\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0]\ =\ size\_x;}
-\DoxyCodeLine{00178\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1]\ =\ size\_y;}
-\DoxyCodeLine{00179\ \}}
-\DoxyCodeLine{00180\ }
-\DoxyCodeLine{00181\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{\_get\_total\_child\_size\_for\_violations}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index)\ \{}
-\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keywordtype}{float}\ sum\ =\ 0.f;}
-\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keywordflow}{if}\ (exp\_index\ ==\ 0\ \&\&\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{GrowFlags::Column}}))\ \{}
-\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0];}
-\DoxyCodeLine{00185\ \ \ \ \ \}}
-\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordflow}{if}\ (exp\_index\ ==\ 1\ \&\&\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}{GrowFlags::Row}}))\ \{}
-\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1];}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordtype}{float}\ expectation\ =\ total\_child\_size;}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{GrowFlags::Column}}\ \&\&\ exp\_index\ ==\ 0)\ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ expectation\ =\ max\_child\_size;}
+\DoxyCodeLine{00129\ \ \ \ \ \}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordflow}{switch}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_af98cbe92f5a200b4f10c4199ebb3ad93}{mode}})\ \{}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespaceui_a1c30c660bb20fd21b0871d9a212ee4f9a97811cef92506397635c479b1f567b38}{SizeMode::Children}}:}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ expectation;}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ no\_change;}
+\DoxyCodeLine{00137\ \ \ \ \ \}}
+\DoxyCodeLine{00138\ \}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a6b10e3b4c705bb1633000eea2d421ae6}{calculate\_standalone}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keyword}{auto}\ size\_x\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a567a0cb9b521e51af53a84e79109712c}{compute\_size\_for\_standalone\_expectation}}(widget,\ 0);}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{auto}\ size\_y\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a567a0cb9b521e51af53a84e79109712c}{compute\_size\_for\_standalone\_expectation}}(widget,\ 1);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0]\ =\ size\_x;}
+\DoxyCodeLine{00147\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1]\ =\ size\_y;}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ specifically\ not\ ignoring\ absolute}}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a6b10e3b4c705bb1633000eea2d421ae6}{calculate\_standalone}}(child);}
+\DoxyCodeLine{00152\ \ \ \ \ \}}
+\DoxyCodeLine{00153\ \}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a6aab9728ba4f17593481eb09f2b987a9}{calculate\_those\_with\_parents}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keyword}{auto}\ size\_x\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a0092871caad2d74966974bbe9d9eec7c}{compute\_size\_for\_parent\_expectation}}(widget,\ 0);}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{auto}\ size\_y\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a0092871caad2d74966974bbe9d9eec7c}{compute\_size\_for\_parent\_expectation}}(widget,\ 1);}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0]\ =\ size\_x;}
+\DoxyCodeLine{00162\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1]\ =\ size\_y;}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a6aab9728ba4f17593481eb09f2b987a9}{calculate\_those\_with\_parents}}(child);}
+\DoxyCodeLine{00166\ \ \ \ \ \}}
+\DoxyCodeLine{00167\ \}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a6a1e09a56a2fab2e8766405be175f05a}{calculate\_those\_with\_children}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a6a1e09a56a2fab2e8766405be175f05a}{calculate\_those\_with\_children}}(child);}
+\DoxyCodeLine{00174\ \ \ \ \ \}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{auto}\ size\_x\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a8eee5d8e9d61273a841f39eac3ecb5cb}{compute\_size\_for\_child\_expectation}}(widget,\ 0);}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keyword}{auto}\ size\_y\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a8eee5d8e9d61273a841f39eac3ecb5cb}{compute\_size\_for\_child\_expectation}}(widget,\ 1);}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0]\ =\ size\_x;}
+\DoxyCodeLine{00180\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1]\ =\ size\_y;}
+\DoxyCodeLine{00181\ \}}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{\_get\_total\_child\_size\_for\_violations}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ exp\_index)\ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{float}\ sum\ =\ 0.f;}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordflow}{if}\ (exp\_index\ ==\ 0\ \&\&\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{GrowFlags::Column}}))\ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0];}
 \DoxyCodeLine{00188\ \ \ \ \ \}}
-\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
-\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00192\ }
-\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ sum\ +=\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
-\DoxyCodeLine{00194\ \ \ \ \ \}}
-\DoxyCodeLine{00195\ \ \ \ \ \textcolor{keywordflow}{return}\ sum;}
-\DoxyCodeLine{00196\ \}}
-\DoxyCodeLine{00197\ }
-\DoxyCodeLine{00198\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a5bd15c6386b32294c41dd9e679673289}{\_solve\_error\_with\_optional}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index,\ \textcolor{keywordtype}{float}*\ error)\ \{}
-\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_optional\_children\ =\ 0;}
-\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ absolute\ positioned\ children}}
-\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00203\ }
-\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
-\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ ==\ 0.f)\ \{}
-\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ num\_optional\_children++;}
-\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00208\ \ \ \ \ \}}
-\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_optional\_children\ !=\ 0)\ \{}
-\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ approx\_epc\ =\ *error\ /\ num\_optional\_children;}
-\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ absolute\ positioned\ children}}
-\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00214\ }
-\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
-\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ ==\ 0.f)\ \{}
-\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cur\_size\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
-\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index]\ =}
-\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmaxf(0,\ cur\_size\ -\/\ approx\_epc);}
-\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cur\_size\ >\ approx\_epc)\ *error\ -\/=\ approx\_epc;}
-\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00223\ \ \ \ \ \}}
-\DoxyCodeLine{00224\ \}}
-\DoxyCodeLine{00225\ }
-\DoxyCodeLine{00226\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{fix\_violating\_children}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index,\ \textcolor{keywordtype}{float}\ error,}
-\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ num\_children)\ \{}
-\DoxyCodeLine{00228\ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(num\_children\ !=\ 0,\ \textcolor{stringliteral}{"{}Should\ never\ have\ zero\ children"{}});}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keywordflow}{if}\ (exp\_index\ ==\ 1\ \&\&\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}{GrowFlags::Row}}))\ \{}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1];}
+\DoxyCodeLine{00191\ \ \ \ \ \}}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ sum\ +=\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
+\DoxyCodeLine{00197\ \ \ \ \ \}}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keywordflow}{return}\ sum;}
+\DoxyCodeLine{00199\ \}}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a5bd15c6386b32294c41dd9e679673289}{\_solve\_error\_with\_optional}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index,}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}*\ error)\ \{}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_optional\_children\ =\ 0;}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ absolute\ positioned\ children}}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ ==\ 0.f)\ \{}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ num\_optional\_children++;}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00212\ \ \ \ \ \}}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_optional\_children\ !=\ 0)\ \{}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ approx\_epc\ =\ *error\ /\ num\_optional\_children;}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ absolute\ positioned\ children}}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ ==\ 0.f)\ \{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cur\_size\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index]\ =}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmaxf(0,\ cur\_size\ -\/\ approx\_epc);}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cur\_size\ >\ approx\_epc)\ *error\ -\/=\ approx\_epc;}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00227\ \ \ \ \ \}}
+\DoxyCodeLine{00228\ \}}
 \DoxyCodeLine{00229\ }
-\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_strict\_children\ =\ 0;}
-\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_ignorable\_children\ =\ 0;}
-\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
-\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ ==\ 1.f)\ \{}
-\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ num\_strict\_children++;}
-\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \{}
-\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ num\_ignorable\_children++;}
-\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00240\ \ \ \ \ \}}
-\DoxyCodeLine{00241\ }
-\DoxyCodeLine{00242\ \ \ \ \ \textcolor{comment}{//\ If\ there\ is\ any\ error\ left,}}
-\DoxyCodeLine{00243\ \ \ \ \ \textcolor{comment}{//\ we\ have\ to\ take\ away\ from\ the\ allowed\ children;}}
-\DoxyCodeLine{00244\ }
-\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_resizeable\_children\ =}
-\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ num\_children\ -\/\ num\_strict\_children\ -\/\ num\_ignorable\_children;}
-\DoxyCodeLine{00247\ }
-\DoxyCodeLine{00248\ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ cannot\ enforce\ the\ assert\ below\ in\ the\ case\ of\ wrapping}}
-\DoxyCodeLine{00249\ \ \ \ \ \textcolor{comment}{//\ because\ the\ positioning\ happens\ after\ error\ correction}}
-\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keywordflow}{if}\ (error\ >\ \mbox{\hyperlink{namespaceui_1_1autolayout_a4f52a8d4bf398b9d43a834041a52b148}{ACCEPTABLE\_ERROR}}\ \&\&\ num\_resizeable\_children\ ==\ 0\ \&\&}
-\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ !((widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{GrowFlags::Column}})\ ||}
-\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}{GrowFlags::Row}}))}
-\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
-\DoxyCodeLine{00255\ \ \ \ \ )\ \{}
-\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}{print\_tree}}();}
-\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Error\ was\ \{\}"{}},\ error);}
-\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(}
-\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ num\_resizeable\_children\ >\ 0,}
-\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Cannot\ fit\ all\ children\ inside\ parent\ and\ unable\ to\ resize\ any\ of\ "{}}}
-\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}the\ children"{}});}
-\DoxyCodeLine{00262\ \ \ \ \ \}}
-\DoxyCodeLine{00263\ }
-\DoxyCodeLine{00264\ \ \ \ \ \textcolor{keywordtype}{float}\ approx\_epc\ =\ error\ /\ (1.f\ *\ std::max(1,\ num\_resizeable\_children));}
-\DoxyCodeLine{00265\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
-\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ ==\ 1.f\ ||\ child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \{}
-\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ portion\_of\_error\ =\ (1.f\ -\/\ exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}})\ *\ approx\_epc;}
-\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cur\_size\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
-\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index]\ =\ fmaxf(0,\ cur\_size\ -\/\ portion\_of\_error);}
-\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reduce\ strictness\ every\ round}}
-\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ so\ that\ eventually\ we\ will\ get\ there}}
-\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ =\ fmaxf(0.f,\ exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ -\/\ 0.05f);}
-\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index]\ =\ exp;}
-\DoxyCodeLine{00277\ \ \ \ \ \}}
-\DoxyCodeLine{00278\ \}}
-\DoxyCodeLine{00279\ }
-\DoxyCodeLine{00280\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{tax\_refund}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index,\ \textcolor{keywordtype}{float}\ error)\ \{}
-\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_eligible\_children\ =\ 0;}
-\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
-\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00285\ }
-\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
-\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ ==\ 0.f)\ \{}
-\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ num\_eligible\_children++;}
-\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00290\ \ \ \ \ \}}
-\DoxyCodeLine{00291\ }
-\DoxyCodeLine{00292\ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_eligible\_children\ ==\ 0)\ \{}
-\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}I\ have\ all\ this\ money\ to\ return,\ but\ no\ one\ wants\ it\ :("{}});}
-\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00295\ \ \ \ \ \}}
-\DoxyCodeLine{00296\ }
-\DoxyCodeLine{00297\ \ \ \ \ \textcolor{keywordtype}{float}\ indiv\_refund\ =\ error\ /\ num\_eligible\_children;}
-\DoxyCodeLine{00298\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
-\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00301\ }
-\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
-\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ ==\ 0.f)\ \{}
-\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index]\ +=\ abs(indiv\_refund);}
-\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}Just\ gave\ back,\ time\ for\ trickle\ down"{}});}
-\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{tax\_refund}}(child,\ exp\_index,\ indiv\_refund);}
-\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ idk\ if\ we\ should\ do\ this\ for\ all\ non\ 1.f\ children?}}
-\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (exp.strictness\ ==\ 1.f\ ||\ child-\/>ignore\_size)\ \{}}
-\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ continue;}}
-\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
-\DoxyCodeLine{00312\ \ \ \ \ \}}
-\DoxyCodeLine{00313\ \}}
-\DoxyCodeLine{00314\ }
-\DoxyCodeLine{00315\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespaceui_1_1autolayout_aae45c93638cbec24bcef93863cd86d18}{\_get\_total\_number\_children}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
-\DoxyCodeLine{00316\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ 0;}
-\DoxyCodeLine{00317\ }
-\DoxyCodeLine{00318\ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 0;}
-\DoxyCodeLine{00319\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
-\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00322\ }
-\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ i++;}
-\DoxyCodeLine{00324\ \ \ \ \ \}}
-\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keywordflow}{return}\ i;}
-\DoxyCodeLine{00326\ \}}
-\DoxyCodeLine{00327\ }
-\DoxyCodeLine{00328\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a2b73f854ad31e7230ef2b54ca43edc58}{solve\_violations}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
-\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_children\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_aae45c93638cbec24bcef93863cd86d18}{\_get\_total\_number\_children}}(widget);}
-\DoxyCodeLine{00330\ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_children\ ==\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00230\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{fix\_violating\_children}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index,\ \textcolor{keywordtype}{float}\ error,}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ num\_children)\ \{}
+\DoxyCodeLine{00232\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(num\_children\ !=\ 0,\ \textcolor{stringliteral}{"{}Should\ never\ have\ zero\ children"{}});}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_strict\_children\ =\ 0;}
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_ignorable\_children\ =\ 0;}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ ==\ 1.f)\ \{}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ num\_strict\_children++;}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \{}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ num\_ignorable\_children++;}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00244\ \ \ \ \ \}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{comment}{//\ If\ there\ is\ any\ error\ left,}}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{comment}{//\ we\ have\ to\ take\ away\ from\ the\ allowed\ children;}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_resizeable\_children\ =}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ num\_children\ -\/\ num\_strict\_children\ -\/\ num\_ignorable\_children;}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ cannot\ enforce\ the\ assert\ below\ in\ the\ case\ of\ wrapping}}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{comment}{//\ because\ the\ positioning\ happens\ after\ error\ correction}}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keywordflow}{if}\ (error\ >\ \mbox{\hyperlink{namespaceui_1_1autolayout_a4f52a8d4bf398b9d43a834041a52b148}{ACCEPTABLE\_ERROR}}\ \&\&\ num\_resizeable\_children\ ==\ 0\ \&\&}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ !((widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{GrowFlags::Column}})\ ||}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}{GrowFlags::Row}}))}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00259\ \ \ \ \ )\ \{}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_ac0e1699ed4ccdd5c6bfde83a769fb263}{print\_tree}}();}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Error\ was\ \{\}"{}},\ error);}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ num\_resizeable\_children\ >\ 0,}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Cannot\ fit\ all\ children\ inside\ parent\ and\ unable\ to\ resize\ any\ of\ "{}}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}the\ children"{}});}
+\DoxyCodeLine{00266\ \ \ \ \ \}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \ \ \ \ \textcolor{keywordtype}{float}\ approx\_epc\ =\ error\ /\ (1.f\ *\ std::max(1,\ num\_resizeable\_children));}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ ==\ 1.f\ ||\ child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \{}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ portion\_of\_error\ =\ (1.f\ -\/\ exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}})\ *\ approx\_epc;}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cur\_size\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index];}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index]\ =\ fmaxf(0,\ cur\_size\ -\/\ portion\_of\_error);}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reduce\ strictness\ every\ round}}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ so\ that\ eventually\ we\ will\ get\ there}}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ =\ fmaxf(0.f,\ exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ -\/\ 0.05f);}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index]\ =\ exp;}
+\DoxyCodeLine{00281\ \ \ \ \ \}}
+\DoxyCodeLine{00282\ \}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{tax\_refund}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget,\ \textcolor{keywordtype}{int}\ exp\_index,\ \textcolor{keywordtype}{float}\ error)\ \{}
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_eligible\_children\ =\ 0;}
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ ==\ 0.f)\ \{}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ num\_eligible\_children++;}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00294\ \ \ \ \ \}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_eligible\_children\ ==\ 0)\ \{}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}I\ have\ all\ this\ money\ to\ return,\ but\ no\ one\ wants\ it\ :("{}});}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00299\ \ \ \ \ \}}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keywordtype}{float}\ indiv\_refund\ =\ error\ /\ num\_eligible\_children;}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structui_1_1_size_expectation}{SizeExpectation}}\ exp\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a8344ec16ca8f3c53185624a8bfb2e03b}{size\_expected}}[exp\_index];}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp.\mbox{\hyperlink{structui_1_1_size_expectation_a80fabe29b3b54ea828c09cc2e124349a}{strictness}}\ ==\ 0.f)\ \{}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[exp\_index]\ +=\ abs(indiv\_refund);}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}Just\ gave\ back,\ time\ for\ trickle\ down"{}});}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{tax\_refund}}(child,\ exp\_index,\ indiv\_refund);}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ idk\ if\ we\ should\ do\ this\ for\ all\ non\ 1.f\ children?}}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (exp.strictness\ ==\ 1.f\ ||\ child-\/>ignore\_size)\ \{}}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ continue;}}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00316\ \ \ \ \ \}}
+\DoxyCodeLine{00317\ \}}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespaceui_1_1autolayout_aae45c93638cbec24bcef93863cd86d18}{\_get\_total\_number\_children}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 0;}
+\DoxyCodeLine{00323\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ i++;}
+\DoxyCodeLine{00328\ \ \ \ \ \}}
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keywordflow}{return}\ i;}
+\DoxyCodeLine{00330\ \}}
 \DoxyCodeLine{00331\ }
-\DoxyCodeLine{00332\ \ \ \ \ \textcolor{comment}{//\ me\ -\/>\ left\ -\/>\ right}}
-\DoxyCodeLine{00333\ }
-\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keywordtype}{float}\ my\_size\_x\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0];}
-\DoxyCodeLine{00335\ \ \ \ \ \textcolor{keywordtype}{float}\ my\_size\_y\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1];}
-\DoxyCodeLine{00336\ }
-\DoxyCodeLine{00337\ \ \ \ \ \textcolor{keywordtype}{float}\ all\_children\_x\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{\_get\_total\_child\_size\_for\_violations}}(widget,\ 0);}
-\DoxyCodeLine{00338\ \ \ \ \ \textcolor{keywordtype}{float}\ error\_x\ =\ all\_children\_x\ -\/\ my\_size\_x;}
-\DoxyCodeLine{00339\ \ \ \ \ \textcolor{keywordtype}{int}\ i\_x\ =\ 0;}
-\DoxyCodeLine{00340\ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}preopt\ errorx\ \{\}\ "{}},\ error\_x);}
-\DoxyCodeLine{00341\ \ \ \ \ \textcolor{keywordflow}{while}\ (error\_x\ >\ \mbox{\hyperlink{namespaceui_1_1autolayout_a4f52a8d4bf398b9d43a834041a52b148}{ACCEPTABLE\_ERROR}})\ \{}
-\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a5bd15c6386b32294c41dd9e679673289}{\_solve\_error\_with\_optional}}(widget,\ 0,\ \&error\_x);}
-\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ i\_x++;}
-\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}error\ x\ \{\}"{}},\ error\_x);}
-\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{fix\_violating\_children}}(widget,\ 0,\ error\_x,\ num\_children);}
-\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ all\_children\_x\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{\_get\_total\_child\_size\_for\_violations}}(widget,\ 0);}
-\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ error\_x\ =\ all\_children\_x\ -\/\ my\_size\_x;}
-\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_x\ >\ 100)\ \{}
-\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Hit\ X-\/axis\ iteration\ limit\ trying\ to\ solve\ violations"{}});}
-\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ M\_ASSERT(false,\ "{}hit\ x\ iteration\ limit\ trying\ to\ solve}}
-\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ violations"{});}}
-\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00354\ \ \ \ \ \}}
-\DoxyCodeLine{00355\ }
-\DoxyCodeLine{00356\ \ \ \ \ \textcolor{keywordflow}{if}\ (error\_x\ <\ 0)\ \{}
-\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{tax\_refund}}(widget,\ 0,\ error\_x);}
+\DoxyCodeLine{00332\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a2b73f854ad31e7230ef2b54ca43edc58}{solve\_violations}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
+\DoxyCodeLine{00333\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_children\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_aae45c93638cbec24bcef93863cd86d18}{\_get\_total\_number\_children}}(widget);}
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_children\ ==\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \ \ \ \ \textcolor{comment}{//\ me\ -\/>\ left\ -\/>\ right}}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \ \ \ \ \textcolor{keywordtype}{float}\ my\_size\_x\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0];}
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{keywordtype}{float}\ my\_size\_y\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1];}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{keywordtype}{float}\ all\_children\_x\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{\_get\_total\_child\_size\_for\_violations}}(widget,\ 0);}
+\DoxyCodeLine{00342\ \ \ \ \ \textcolor{keywordtype}{float}\ error\_x\ =\ all\_children\_x\ -\/\ my\_size\_x;}
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{keywordtype}{int}\ i\_x\ =\ 0;}
+\DoxyCodeLine{00344\ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}preopt\ errorx\ \{\}\ "{}},\ error\_x);}
+\DoxyCodeLine{00345\ \ \ \ \ \textcolor{keywordflow}{while}\ (error\_x\ >\ \mbox{\hyperlink{namespaceui_1_1autolayout_a4f52a8d4bf398b9d43a834041a52b148}{ACCEPTABLE\_ERROR}})\ \{}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a5bd15c6386b32294c41dd9e679673289}{\_solve\_error\_with\_optional}}(widget,\ 0,\ \&error\_x);}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ i\_x++;}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}error\ x\ \{\}"{}},\ error\_x);}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{fix\_violating\_children}}(widget,\ 0,\ error\_x,\ num\_children);}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ all\_children\_x\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{\_get\_total\_child\_size\_for\_violations}}(widget,\ 0);}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ error\_x\ =\ all\_children\_x\ -\/\ my\_size\_x;}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_x\ >\ 100)\ \{}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Hit\ X-\/axis\ iteration\ limit\ trying\ to\ solve\ violations"{}});}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ VALIDATE(false,\ "{}hit\ x\ iteration\ limit\ trying\ to\ solve}}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ violations"{});}}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00358\ \ \ \ \ \}}
 \DoxyCodeLine{00359\ }
-\DoxyCodeLine{00360\ \ \ \ \ \textcolor{keywordtype}{float}\ all\_children\_y\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{\_get\_total\_child\_size\_for\_violations}}(widget,\ 1);}
-\DoxyCodeLine{00361\ \ \ \ \ \textcolor{keywordtype}{float}\ error\_y\ =\ all\_children\_y\ -\/\ my\_size\_y;}
-\DoxyCodeLine{00362\ \ \ \ \ \textcolor{keywordtype}{int}\ i\_y\ =\ 0;}
-\DoxyCodeLine{00363\ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}preopt\ errory\ \{\}\ "{}},\ error\_y);}
-\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keywordflow}{while}\ (error\_y\ >\ \mbox{\hyperlink{namespaceui_1_1autolayout_a4f52a8d4bf398b9d43a834041a52b148}{ACCEPTABLE\_ERROR}})\ \{}
-\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a5bd15c6386b32294c41dd9e679673289}{\_solve\_error\_with\_optional}}(widget,\ 1,\ \&error\_y);}
-\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ i\_y++;}
-\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}error\ y\ \{\}"{}},\ error\_y);}
-\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{fix\_violating\_children}}(widget,\ 1,\ error\_y,\ num\_children);}
-\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ all\_children\_y\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{\_get\_total\_child\_size\_for\_violations}}(widget,\ 1);}
-\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ error\_y\ =\ all\_children\_y\ -\/\ my\_size\_y;}
-\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_y\ >\ 100)\ \{}
-\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Hit\ Y-\/axis\ iteration\ limit\ trying\ to\ solve\ violations"{}});}
-\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ M\_ASSERT(false,\ "{}hit\ y\ iteration\ limit\ trying\ to\ solve}}
-\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ violations"{});}}
-\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00377\ \ \ \ \ \}}
-\DoxyCodeLine{00378\ }
-\DoxyCodeLine{00379\ \ \ \ \ \textcolor{keywordflow}{if}\ (error\_y\ <\ 0)\ \{}
-\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{tax\_refund}}(widget,\ 1,\ error\_y);}
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{keywordflow}{if}\ (error\_x\ <\ 0)\ \{}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{tax\_refund}}(widget,\ 0,\ error\_x);}
+\DoxyCodeLine{00362\ \ \ \ \ \}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keywordtype}{float}\ all\_children\_y\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{\_get\_total\_child\_size\_for\_violations}}(widget,\ 1);}
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{keywordtype}{float}\ error\_y\ =\ all\_children\_y\ -\/\ my\_size\_y;}
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keywordtype}{int}\ i\_y\ =\ 0;}
+\DoxyCodeLine{00367\ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}preopt\ errory\ \{\}\ "{}},\ error\_y);}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{keywordflow}{while}\ (error\_y\ >\ \mbox{\hyperlink{namespaceui_1_1autolayout_a4f52a8d4bf398b9d43a834041a52b148}{ACCEPTABLE\_ERROR}})\ \{}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a5bd15c6386b32294c41dd9e679673289}{\_solve\_error\_with\_optional}}(widget,\ 1,\ \&error\_y);}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ i\_y++;}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}error\ y\ \{\}"{}},\ error\_y);}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a2f88ca84fc3243c4bd26e51537e9bd7b}{fix\_violating\_children}}(widget,\ 1,\ error\_y,\ num\_children);}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ all\_children\_y\ =\ \mbox{\hyperlink{namespaceui_1_1autolayout_a80e1a38825ae2c8631e6d95c2c35dddc}{\_get\_total\_child\_size\_for\_violations}}(widget,\ 1);}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ error\_y\ =\ all\_children\_y\ -\/\ my\_size\_y;}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_y\ >\ 100)\ \{}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}Hit\ Y-\/axis\ iteration\ limit\ trying\ to\ solve\ violations"{}});}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ VALIDATE(false,\ "{}hit\ y\ iteration\ limit\ trying\ to\ solve}}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ violations"{});}}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00381\ \ \ \ \ \}}
 \DoxyCodeLine{00382\ }
-\DoxyCodeLine{00383\ \ \ \ \ \textcolor{comment}{//\ Solve\ for\ children}}
-\DoxyCodeLine{00384\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a2b73f854ad31e7230ef2b54ca43edc58}{solve\_violations}}(child);}
-\DoxyCodeLine{00386\ \ \ \ \ \}}
-\DoxyCodeLine{00387\ \}}
-\DoxyCodeLine{00388\ }
-\DoxyCodeLine{00389\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{compute\_relative\_positions}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
-\DoxyCodeLine{00390\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}}\ ==\ \textcolor{keyword}{nullptr})\ \{}
-\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ already\ happens\ by\ default,\ but\ lets\ be\ explicit\ about\ it}}
-\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[0]\ =\ 0.f;}
-\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[1]\ =\ 0.f;}
-\DoxyCodeLine{00394\ \ \ \ \ \}}
-\DoxyCodeLine{00395\ }
-\DoxyCodeLine{00396\ \ \ \ \ \textcolor{comment}{//\ Assuming\ we\ dont\ care\ about\ things\ smaller\ than\ 1\ pixel}}
-\DoxyCodeLine{00397\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0]\ =\ round(widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0]);}
-\DoxyCodeLine{00398\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1]\ =\ round(widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1]);}
-\DoxyCodeLine{00399\ \ \ \ \ \textcolor{keywordtype}{float}\ sx\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0];}
-\DoxyCodeLine{00400\ \ \ \ \ \textcolor{keywordtype}{float}\ sy\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1];}
-\DoxyCodeLine{00401\ }
-\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keywordtype}{float}\ offx\ =\ 0.f;}
-\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keywordtype}{float}\ offy\ =\ 0.f;}
-\DoxyCodeLine{00404\ }
-\DoxyCodeLine{00405\ \ \ \ \ \textcolor{comment}{//\ Represents\ the\ current\ wrap's\ largest}}
-\DoxyCodeLine{00406\ \ \ \ \ \textcolor{comment}{//\ ex.\ on\ Column\ mode\ we\ only\ care\ about\ where\ to\ start\ the\ next\ column}}
-\DoxyCodeLine{00407\ \ \ \ \ \textcolor{keywordtype}{float}\ col\_w\ =\ 0.f;}
-\DoxyCodeLine{00408\ \ \ \ \ \textcolor{keywordtype}{float}\ col\_h\ =\ 0.f;}
-\DoxyCodeLine{00409\ }
-\DoxyCodeLine{00410\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ update\_max\_size\ =\ [\&](\textcolor{keywordtype}{float}\ cx,\ \textcolor{keywordtype}{float}\ cy)\ \{}
-\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ col\_w\ =\ fmax(cx,\ col\_w);}
-\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ col\_h\ =\ fmax(cy,\ col\_h);}
-\DoxyCodeLine{00413\ \ \ \ \ \};}
-\DoxyCodeLine{00414\ }
-\DoxyCodeLine{00415\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
-\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \{}
-\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{compute\_relative\_positions}}(child);}
-\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00421\ }
-\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cx\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0];}
-\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cy\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1];}
-\DoxyCodeLine{00424\ }
-\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ will\_hit\_max\_x\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ will\_hit\_max\_y\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00427\ }
-\DoxyCodeLine{00428\ \ \ \ \ \ \ \ \ will\_hit\_max\_x\ =\ cx\ +\ offx\ >\ sx;}
-\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ will\_hit\_max\_y\ =\ cy\ +\ offy\ >\ sy;}
-\DoxyCodeLine{00430\ }
-\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ cant\ grow\ and\ are\ going\ over\ the\ limit}}
-\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a1a7a5196f987b86773c7d6940253b82d}{GrowFlags::None}}\ \&\&}
-\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \ \ \ \ (will\_hit\_max\_x\ ||\ will\_hit\_max\_y))\ \{}
-\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[0]\ =\ sx;}
-\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[1]\ =\ sy;}
-\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00438\ }
-\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ can\ grow\ vertically\ and\ current\ child\ will\ push\ us\ over\ height}}
-\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ lets\ wrap}}
-\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{GrowFlags::Column}}\ \&\&\ cy\ +\ offy\ >\ sy)\ \{}
-\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ offy\ =\ 0;}
-\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \ \ \ \ offx\ +=\ col\_w;}
-\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \ \ \ \ col\_w\ =\ cx;}
-\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00446\ }
-\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ can\ grow\ horizontally\ and\ current\ child\ will\ push\ us\ over}}
-\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ width\ lets\ wrap}}
-\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}{GrowFlags::Row}}\ \&\&\ cx\ +\ offx\ >\ sx)\ \{}
-\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \ \ \ \ offx\ =\ 0;}
-\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \ \ \ \ offy\ +=\ col\_h;}
-\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \ \ \ \ col\_h\ =\ cy;}
-\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00454\ }
-\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[0]\ =\ offx;}
-\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[1]\ =\ offy;}
-\DoxyCodeLine{00457\ }
-\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Setup\ for\ next\ child\ placement}}
-\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{GrowFlags::Column}})\ \{}
-\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \ \ \ \ offy\ +=\ cy;}
-\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}{GrowFlags::Row}})\ \{}
-\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ offx\ +=\ cx;}
-\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00465\ }
-\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ update\_max\_size(cx,\ cy);}
-\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{compute\_relative\_positions}}(child);}
-\DoxyCodeLine{00468\ \ \ \ \ \}}
-\DoxyCodeLine{00469\ \}}
-\DoxyCodeLine{00470\ }
-\DoxyCodeLine{00471\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_abb4dae5cd1fd325e0a25026f7468c1b5}{compute\_rect\_bounds}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
-\DoxyCodeLine{00472\ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}computing\ rect\ bounds\ for\ \{\}"{}},\ *widget);}
-\DoxyCodeLine{00473\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ offset\ =\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{0.f,\ 0.f\};}
-\DoxyCodeLine{00474\ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ parent\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}};}
-\DoxyCodeLine{00475\ \ \ \ \ \textcolor{keywordflow}{if}\ (parent)\ \{}
-\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ offset\ =\ offset\ +\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{parent-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}.x,\ parent-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}.y\};}
-\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ parent\ =\ parent-\/>parent;}}
-\DoxyCodeLine{00478\ \ \ \ \ \}}
-\DoxyCodeLine{00479\ }
-\DoxyCodeLine{00480\ \ \ \ \ Rectangle\ rect;}
-\DoxyCodeLine{00481\ \ \ \ \ rect.x\ =\ offset.x\ +\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[0];}
-\DoxyCodeLine{00482\ \ \ \ \ rect.y\ =\ offset.y\ +\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[1];}
-\DoxyCodeLine{00483\ \ \ \ \ rect.width\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0];}
-\DoxyCodeLine{00484\ \ \ \ \ rect.height\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1];}
-\DoxyCodeLine{00485\ }
-\DoxyCodeLine{00486\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}\ =\ rect;}
-\DoxyCodeLine{00487\ }
-\DoxyCodeLine{00488\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
-\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_abb4dae5cd1fd325e0a25026f7468c1b5}{compute\_rect\_bounds}}(child);}
-\DoxyCodeLine{00490\ \ \ \ \ \}}
-\DoxyCodeLine{00491\ \}}
-\DoxyCodeLine{00492\ }
-\DoxyCodeLine{00493\ \textcolor{comment}{//\ https://www.rfleury.com/p/ui-\/part-\/2-\/build-\/it-\/every-\/frame-\/immediate}}
-\DoxyCodeLine{00494\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_ae1da33e0d70012c26db6bcc59e81f81d}{process\_widget}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
-\DoxyCodeLine{00495\ \ \ \ \ \textcolor{comment}{//\ -\/\ (any)\ compute\ solos\ (doesnt\ rely\ on\ parent/child\ /\ other\ widgets)}}
-\DoxyCodeLine{00496\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a6b10e3b4c705bb1633000eea2d421ae6}{calculate\_standalone}}(widget);}
-\DoxyCodeLine{00497\ \ \ \ \ \textcolor{comment}{//\ -\/\ (pre)\ parent\ sizes}}
-\DoxyCodeLine{00498\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a6aab9728ba4f17593481eb09f2b987a9}{calculate\_those\_with\_parents}}(widget);}
-\DoxyCodeLine{00499\ \ \ \ \ \textcolor{comment}{//\ -\/\ (post)\ children}}
-\DoxyCodeLine{00500\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a6a1e09a56a2fab2e8766405be175f05a}{calculate\_those\_with\_children}}(widget);}
-\DoxyCodeLine{00501\ \ \ \ \ \textcolor{comment}{//\ -\/\ (pre)\ solve\ violations}}
-\DoxyCodeLine{00502\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a2b73f854ad31e7230ef2b54ca43edc58}{solve\_violations}}(widget);}
-\DoxyCodeLine{00503\ \ \ \ \ \textcolor{comment}{//\ -\/\ (pre)\ compute\ relative\ positions}}
-\DoxyCodeLine{00504\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{compute\_relative\_positions}}(widget);}
-\DoxyCodeLine{00505\ \ \ \ \ \textcolor{comment}{//\ -\/\ (pre)\ compute\ rect\ bounds}}
-\DoxyCodeLine{00506\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_abb4dae5cd1fd325e0a25026f7468c1b5}{compute\_rect\_bounds}}(widget);}
-\DoxyCodeLine{00507\ \}}
-\DoxyCodeLine{00508\ \}\ \ \textcolor{comment}{//\ namespace\ autolayout}}
-\DoxyCodeLine{00509\ \}\ \ \textcolor{comment}{//\ namespace\ ui}}
+\DoxyCodeLine{00383\ \ \ \ \ \textcolor{keywordflow}{if}\ (error\_y\ <\ 0)\ \{}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_abbdd2d31a309ccd7fa9c679f872fee6f}{tax\_refund}}(widget,\ 1,\ error\_y);}
+\DoxyCodeLine{00385\ \ \ \ \ \}}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{comment}{//\ Solve\ for\ children}}
+\DoxyCodeLine{00388\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a2b73f854ad31e7230ef2b54ca43edc58}{solve\_violations}}(child);}
+\DoxyCodeLine{00390\ \ \ \ \ \}}
+\DoxyCodeLine{00391\ \}}
+\DoxyCodeLine{00392\ }
+\DoxyCodeLine{00393\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{compute\_relative\_positions}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
+\DoxyCodeLine{00394\ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}}\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ already\ happens\ by\ default,\ but\ lets\ be\ explicit\ about\ it}}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[0]\ =\ 0.f;}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[1]\ =\ 0.f;}
+\DoxyCodeLine{00398\ \ \ \ \ \}}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{comment}{//\ Assuming\ we\ dont\ care\ about\ things\ smaller\ than\ 1\ pixel}}
+\DoxyCodeLine{00401\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0]\ =\ round(widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0]);}
+\DoxyCodeLine{00402\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1]\ =\ round(widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1]);}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keywordtype}{float}\ sx\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0];}
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{keywordtype}{float}\ sy\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1];}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{keywordtype}{float}\ offx\ =\ 0.f;}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{keywordtype}{float}\ offy\ =\ 0.f;}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00409\ \ \ \ \ \textcolor{comment}{//\ Represents\ the\ current\ wrap's\ largest}}
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{comment}{//\ ex.\ on\ Column\ mode\ we\ only\ care\ about\ where\ to\ start\ the\ next\ column}}
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{keywordtype}{float}\ col\_w\ =\ 0.f;}
+\DoxyCodeLine{00412\ \ \ \ \ \textcolor{keywordtype}{float}\ col\_h\ =\ 0.f;}
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ update\_max\_size\ =\ [\&](\textcolor{keywordtype}{float}\ cx,\ \textcolor{keywordtype}{float}\ cy)\ \{}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ col\_w\ =\ fmax(cx,\ col\_w);}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ col\_h\ =\ fmax(cy,\ col\_h);}
+\DoxyCodeLine{00417\ \ \ \ \ \};}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dont\ worry\ about\ any\ children\ that\ are\ absolutely\ positioned}}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child-\/>\mbox{\hyperlink{structui_1_1_widget_abbcd9f1e5e8ac41b3aa29b5e498388a9}{absolute}})\ \{}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{compute\_relative\_positions}}(child);}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cx\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0];}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cy\ =\ child-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1];}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ will\_hit\_max\_x\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ will\_hit\_max\_y\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ will\_hit\_max\_x\ =\ cx\ +\ offx\ >\ sx;}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ will\_hit\_max\_y\ =\ cy\ +\ offy\ >\ sy;}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ cant\ grow\ and\ are\ going\ over\ the\ limit}}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a1a7a5196f987b86773c7d6940253b82d}{GrowFlags::None}}\ \&\&}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \ \ \ \ (will\_hit\_max\_x\ ||\ will\_hit\_max\_y))\ \{}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[0]\ =\ sx;}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[1]\ =\ sy;}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ can\ grow\ vertically\ and\ current\ child\ will\ push\ us\ over\ height}}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ lets\ wrap}}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{GrowFlags::Column}}\ \&\&\ cy\ +\ offy\ >\ sy)\ \{}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ offy\ =\ 0;}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ offx\ +=\ col\_w;}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ col\_w\ =\ cx;}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00450\ }
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ can\ grow\ horizontally\ and\ current\ child\ will\ push\ us\ over}}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ width\ lets\ wrap}}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}{GrowFlags::Row}}\ \&\&\ cx\ +\ offx\ >\ sx)\ \{}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \ \ \ \ offx\ =\ 0;}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \ \ \ \ offy\ +=\ col\_h;}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \ \ \ \ col\_h\ =\ cy;}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00458\ }
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[0]\ =\ offx;}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ child-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[1]\ =\ offy;}
+\DoxyCodeLine{00461\ }
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Setup\ for\ next\ child\ placement}}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792a41b2664b9e49449fb8653d6d0993e10c}{GrowFlags::Column}})\ \{}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ offy\ +=\ cy;}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (widget-\/>\mbox{\hyperlink{structui_1_1_widget_a49926f600e8081c2ca363d1478bf1a1f}{growflags}}\ \&\ \mbox{\hyperlink{namespaceui_af411c02f7e3e273b94558e6bda1aa792ae5213e696aa6038cafe8e2f14944d451}{GrowFlags::Row}})\ \{}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \ \ \ \ offx\ +=\ cx;}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ update\_max\_size(cx,\ cy);}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{compute\_relative\_positions}}(child);}
+\DoxyCodeLine{00472\ \ \ \ \ \}}
+\DoxyCodeLine{00473\ \}}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_abb4dae5cd1fd325e0a25026f7468c1b5}{compute\_rect\_bounds}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
+\DoxyCodeLine{00476\ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}computing\ rect\ bounds\ for\ \{\}"{}},\ *widget);}
+\DoxyCodeLine{00477\ \ \ \ \ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\ offset\ =\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{0.f,\ 0.f\};}
+\DoxyCodeLine{00478\ \ \ \ \ \mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ parent\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a4f4677b61b70e1a5fad19100510f60a9}{parent}};}
+\DoxyCodeLine{00479\ \ \ \ \ \textcolor{keywordflow}{if}\ (parent)\ \{}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ offset\ =\ offset\ +\ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}\{parent-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}.x,\ parent-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}.y\};}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ parent\ =\ parent-\/>parent;}}
+\DoxyCodeLine{00482\ \ \ \ \ \}}
+\DoxyCodeLine{00483\ }
+\DoxyCodeLine{00484\ \ \ \ \ Rectangle\ rect;}
+\DoxyCodeLine{00485\ \ \ \ \ rect.x\ =\ offset.x\ +\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[0];}
+\DoxyCodeLine{00486\ \ \ \ \ rect.y\ =\ offset.y\ +\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_acd50cbef4faece73d097a5f3a141bfb3}{computed\_relative\_pos}}[1];}
+\DoxyCodeLine{00487\ \ \ \ \ rect.width\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[0];}
+\DoxyCodeLine{00488\ \ \ \ \ rect.height\ =\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a05f163a4566d0cc091cf4d5b0921f314}{computed\_size}}[1];}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00490\ \ \ \ \ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a01f8a785088a663ad7b4e8386b9a66c6}{rect}}\ =\ rect;}
+\DoxyCodeLine{00491\ }
+\DoxyCodeLine{00492\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ child\ :\ widget-\/>\mbox{\hyperlink{structui_1_1_widget_a86a07295ddad49e7ad4ef29c92c89a5f}{children}})\ \{}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_abb4dae5cd1fd325e0a25026f7468c1b5}{compute\_rect\_bounds}}(child);}
+\DoxyCodeLine{00494\ \ \ \ \ \}}
+\DoxyCodeLine{00495\ \}}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ \textcolor{comment}{//\ https://www.rfleury.com/p/ui-\/part-\/2-\/build-\/it-\/every-\/frame-\/immediate}}
+\DoxyCodeLine{00498\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceui_1_1autolayout_ae1da33e0d70012c26db6bcc59e81f81d}{process\_widget}}(\mbox{\hyperlink{structui_1_1_widget}{Widget}}*\ widget)\ \{}
+\DoxyCodeLine{00499\ \ \ \ \ \textcolor{comment}{//\ -\/\ (any)\ compute\ solos\ (doesnt\ rely\ on\ parent/child\ /\ other\ widgets)}}
+\DoxyCodeLine{00500\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a6b10e3b4c705bb1633000eea2d421ae6}{calculate\_standalone}}(widget);}
+\DoxyCodeLine{00501\ \ \ \ \ \textcolor{comment}{//\ -\/\ (pre)\ parent\ sizes}}
+\DoxyCodeLine{00502\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a6aab9728ba4f17593481eb09f2b987a9}{calculate\_those\_with\_parents}}(widget);}
+\DoxyCodeLine{00503\ \ \ \ \ \textcolor{comment}{//\ -\/\ (post)\ children}}
+\DoxyCodeLine{00504\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a6a1e09a56a2fab2e8766405be175f05a}{calculate\_those\_with\_children}}(widget);}
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{comment}{//\ -\/\ (pre)\ solve\ violations}}
+\DoxyCodeLine{00506\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a2b73f854ad31e7230ef2b54ca43edc58}{solve\_violations}}(widget);}
+\DoxyCodeLine{00507\ \ \ \ \ \textcolor{comment}{//\ -\/\ (pre)\ compute\ relative\ positions}}
+\DoxyCodeLine{00508\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_a37e7eff0861fc68ff2147ba3067889fe}{compute\_relative\_positions}}(widget);}
+\DoxyCodeLine{00509\ \ \ \ \ \textcolor{comment}{//\ -\/\ (pre)\ compute\ rect\ bounds}}
+\DoxyCodeLine{00510\ \ \ \ \ \mbox{\hyperlink{namespaceui_1_1autolayout_abb4dae5cd1fd325e0a25026f7468c1b5}{compute\_rect\_bounds}}(widget);}
+\DoxyCodeLine{00511\ \}}
+\DoxyCodeLine{00512\ \}\ \ \textcolor{comment}{//\ namespace\ autolayout}}
+\DoxyCodeLine{00513\ \}\ \ \textcolor{comment}{//\ namespace\ ui}}
 
 \end{DoxyCode}

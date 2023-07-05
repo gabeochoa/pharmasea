@@ -9,6 +9,8 @@ unsigned char \mbox{\hyperlink{namespaceui_1_1color_a99aa14ee11ee630598a4f8cfbfc
 \item 
 unsigned char \mbox{\hyperlink{namespaceui_1_1color_a83efe6f6ae3957d06ccbd2b8c17625bb}{comp\+\_\+max}} (const Color \&a)
 \item 
+bool \mbox{\hyperlink{namespaceui_1_1color_afb754c8c336a1a9ea2d2f9c291f913c4}{is\+\_\+empty}} (const Color \&c)
+\item 
 \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{namespaceui_1_1color_ac305860c7fc0f4a4ba33c14a815d23b8}{to\+HSL}} (const Color color)
 \item 
 Color \mbox{\hyperlink{namespaceui_1_1color_a7793b593321b2d5bb375a49426c9b015}{to\+RGB}} (const \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&hsl)
@@ -1961,7 +1963,7 @@ References \mbox{\hyperlink{namespaceui_1_1color_ac305860c7fc0f4a4ba33c14a815d23
 
 
 
-Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_afd1ea546dd69491d4f5a71dbce050700}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+model\+\_\+highlighted()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_ab516cfffd82eecca31558c6344a21c78}{system\+\_\+manager\+::render\+\_\+manager\+::render\+\_\+simple\+\_\+highlighted()}}.
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_af4cde755a90072d7442abacae529dc5a}{system\+\_\+manager\+::render\+\_\+manager\+::draw\+\_\+valid\+\_\+colored\+\_\+box()}}.
 
 \mbox{\Hypertarget{namespaceui_1_1color_ae8cf4416c8b2bcc796a3e38dee000cbb}\label{namespaceui_1_1color_ae8cf4416c8b2bcc796a3e38dee000cbb}} 
 \index{ui::color@{ui::color}!getOppositeColor@{getOppositeColor}}
@@ -1969,11 +1971,21 @@ Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_afd1e
 \doxysubsubsection{\texorpdfstring{getOppositeColor()}{getOppositeColor()}}
 {\footnotesize\ttfamily Color ui\+::color\+::get\+Opposite\+Color (\begin{DoxyParamCaption}\item[{const Color \&}]{color }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+\mbox{\Hypertarget{namespaceui_1_1color_afb754c8c336a1a9ea2d2f9c291f913c4}\label{namespaceui_1_1color_afb754c8c336a1a9ea2d2f9c291f913c4}} 
+\index{ui::color@{ui::color}!is\_empty@{is\_empty}}
+\index{is\_empty@{is\_empty}!ui::color@{ui::color}}
+\doxysubsubsection{\texorpdfstring{is\_empty()}{is\_empty()}}
+{\footnotesize\ttfamily bool ui\+::color\+::is\+\_\+empty (\begin{DoxyParamCaption}\item[{const Color \&}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1render__manager_af4cde755a90072d7442abacae529dc5a}{system\+\_\+manager\+::render\+\_\+manager\+::draw\+\_\+valid\+\_\+colored\+\_\+box()}}.
+
 \mbox{\Hypertarget{namespaceui_1_1color_ac305860c7fc0f4a4ba33c14a815d23b8}\label{namespaceui_1_1color_ac305860c7fc0f4a4ba33c14a815d23b8}} 
 \index{ui::color@{ui::color}!toHSL@{toHSL}}
 \index{toHSL@{toHSL}!ui::color@{ui::color}}
 \doxysubsubsection{\texorpdfstring{toHSL()}{toHSL()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} ui\+::color\+::to\+HSL (\begin{DoxyParamCaption}\item[{const Color}]{color }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} ui\+::color\+::to\+HSL (\begin{DoxyParamCaption}\item[{const Color}]{color }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -1987,7 +1999,7 @@ Referenced by \mbox{\hyperlink{namespaceui_1_1color_aa3929909129eee15df5510aecd8
 \index{ui::color@{ui::color}!toRGB@{toRGB}}
 \index{toRGB@{toRGB}!ui::color@{ui::color}}
 \doxysubsubsection{\texorpdfstring{toRGB()}{toRGB()}}
-{\footnotesize\ttfamily Color ui\+::color\+::to\+RGB (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&}]{hsl }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Color ui\+::color\+::to\+RGB (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \&}]{hsl }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -2292,7 +2304,7 @@ Referenced by \mbox{\hyperlink{namespaceui_1_1color_aa3929909129eee15df5510aecd8
 
 
 
-Referenced by \mbox{\hyperlink{struct_furniture_acc07fd758c1778c86774ce1c68c1ce67}{Furniture\+::make\+\_\+conveyer()}}.
+Referenced by \mbox{\hyperlink{namespaceentities_a0b953fc68d3dbfc32887733298790325}{entities\+::make\+\_\+conveyer()}}.
 
 \mbox{\Hypertarget{namespaceui_1_1color_a4de80f2d092ae33c82b4a6575359a1e6}\label{namespaceui_1_1color_a4de80f2d092ae33c82b4a6575359a1e6}} 
 \index{ui::color@{ui::color}!blue\_blue@{blue\_blue}}
@@ -2632,7 +2644,7 @@ Referenced by \mbox{\hyperlink{struct_furniture_acc07fd758c1778c86774ce1c68c1ce6
 
 
 
-Referenced by \mbox{\hyperlink{struct_furniture_a358f91902463b0bb9d57f8b92c35d65c}{Furniture\+::make\+\_\+character\+\_\+switcher()}}, and \mbox{\hyperlink{struct_furniture_a51c9d8d1768b4561bf0f2a0ea7132f6e}{Furniture\+::make\+\_\+table()}}.
+Referenced by \mbox{\hyperlink{namespaceentities_abf094d17eb47d98e98fd5ccfec00c1fc}{entities\+::make\+\_\+table()}}.
 
 \mbox{\Hypertarget{namespaceui_1_1color_a72813a55aed6f3b25ce6b54f47c68a9a}\label{namespaceui_1_1color_a72813a55aed6f3b25ce6b54f47c68a9a}} 
 \index{ui::color@{ui::color}!brown\_green@{brown\_green}}
@@ -4212,6 +4224,10 @@ Referenced by \mbox{\hyperlink{struct_furniture_a358f91902463b0bb9d57f8b92c35d65
 \doxysubsubsection{\texorpdfstring{green}{green}}
 {\footnotesize\ttfamily const Color ui\+::color\+::green = Color\{21, 176, 26, 255\}\hspace{0.3cm}{\ttfamily [static]}}
 
+
+
+Referenced by \mbox{\hyperlink{namespaceentities_a42ce60037b7f401840b866a2badc65cd}{entities\+::make\+\_\+character\+\_\+switcher()}}.
+
 \mbox{\Hypertarget{namespaceui_1_1color_aa610d8822bc4db33ce16facb730fa42d}\label{namespaceui_1_1color_aa610d8822bc4db33ce16facb730fa42d}} 
 \index{ui::color@{ui::color}!green\_apple@{green\_apple}}
 \index{green\_apple@{green\_apple}!ui::color@{ui::color}}
@@ -4358,7 +4374,7 @@ Referenced by \mbox{\hyperlink{struct_furniture_a358f91902463b0bb9d57f8b92c35d65
 
 
 
-Referenced by \mbox{\hyperlink{struct_furniture_a8d39e9110afcb62048879a3b3e7697ea}{Furniture\+::make\+\_\+register()}}.
+Referenced by \mbox{\hyperlink{namespaceentities_a6eed7f199266eb0e44cad235fd78ed1f}{entities\+::make\+\_\+register()}}.
 
 \mbox{\Hypertarget{namespaceui_1_1color_ae39aa5a37b260fef85c3291ce10d3ff6}\label{namespaceui_1_1color_ae39aa5a37b260fef85c3291ce10d3ff6}} 
 \index{ui::color@{ui::color}!grey\_blue@{grey\_blue}}
@@ -6742,6 +6758,10 @@ Referenced by \mbox{\hyperlink{struct_furniture_a8d39e9110afcb62048879a3b3e7697e
 \doxysubsubsection{\texorpdfstring{saffron}{saffron}}
 {\footnotesize\ttfamily const Color ui\+::color\+::saffron = Color\{254, 178, 9, 255\}\hspace{0.3cm}{\ttfamily [static]}}
 
+
+
+Referenced by \mbox{\hyperlink{component_8h_aacd0b061b609752c687b41029538f5f0}{validate\+\_\+wall\+\_\+color\+\_\+serialized()}}.
+
 \mbox{\Hypertarget{namespaceui_1_1color_ab2a1433864087bf3d86d142675010ea6}\label{namespaceui_1_1color_ab2a1433864087bf3d86d142675010ea6}} 
 \index{ui::color@{ui::color}!sage@{sage}}
 \index{sage@{sage}!ui::color@{ui::color}}
@@ -7614,7 +7634,7 @@ Referenced by \mbox{\hyperlink{struct_furniture_a8d39e9110afcb62048879a3b3e7697e
 
 
 
-Referenced by \mbox{\hyperlink{struct_item_ade8311a0bcadd6d8d30641868f851d8e}{Item\+::render()}}.
+Referenced by \mbox{\hyperlink{namespaceentities_a3710e0f4de6e7c25e292f5d70f5dc514}{entities\+::make\+\_\+itemcontainer()}}, and \mbox{\hyperlink{struct_item_ade8311a0bcadd6d8d30641868f851d8e}{Item\+::render()}}.
 
 \mbox{\Hypertarget{namespaceui_1_1color_ad71132f1f6b843991fe426fe967cc482}\label{namespaceui_1_1color_ad71132f1f6b843991fe426fe967cc482}} 
 \index{ui::color@{ui::color}!windows\_blue@{windows\_blue}}
@@ -7654,7 +7674,7 @@ Referenced by \mbox{\hyperlink{struct_item_ade8311a0bcadd6d8d30641868f851d8e}{It
 
 
 
-Referenced by \mbox{\hyperlink{struct_furniture_a5220ffda3699fce66fd2480393320998}{Furniture\+::make\+\_\+grabber()}}.
+Referenced by \mbox{\hyperlink{namespaceentities_a42ce60037b7f401840b866a2badc65cd}{entities\+::make\+\_\+character\+\_\+switcher()}}, and \mbox{\hyperlink{namespaceentities_aa6de719712a8ed39289db02a6ec761d8}{entities\+::make\+\_\+grabber()}}.
 
 \mbox{\Hypertarget{namespaceui_1_1color_a5f53a96435548f75b87b4b297e49d3fd}\label{namespaceui_1_1color_a5f53a96435548f75b87b4b297e49d3fd}} 
 \index{ui::color@{ui::color}!yellow\_brown@{yellow\_brown}}

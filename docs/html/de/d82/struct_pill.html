@@ -114,12 +114,12 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a587fedaf245b1bde2fb5fb304eb7a120"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d82/struct_pill.html#a587fedaf245b1bde2fb5fb304eb7a120">Pill</a> ()</td></tr>
 <tr class="separator:a587fedaf245b1bde2fb5fb304eb7a120"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04e66b101b42aafa13f6f91036e3e1d4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d82/struct_pill.html#a04e66b101b42aafa13f6f91036e3e1d4">Pill</a> (<a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> p, Color c)</td></tr>
-<tr class="separator:a04e66b101b42aafa13f6f91036e3e1d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5f4f40b05fb82729a266cbe60fc3fc3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d82/struct_pill.html#ad5f4f40b05fb82729a266cbe60fc3fc3">Pill</a> (<a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> p, Color c)</td></tr>
 <tr class="separator:ad5f4f40b05fb82729a266cbe60fc3fc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6e10e02d49a8df3598a940a12b648d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d82/struct_pill.html#aa6e10e02d49a8df3598a940a12b648d8">init</a> ()</td></tr>
-<tr class="separator:aa6e10e02d49a8df3598a940a12b648d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ab80448cd97f49ba79d45d32169319d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d82/struct_pill.html#a0ab80448cd97f49ba79d45d32169319d">Pill</a> (<a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> p, Color c, int index)</td></tr>
+<tr class="separator:a0ab80448cd97f49ba79d45d32169319d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d15b43dd8189aadd5cf91166904bc7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d82/struct_pill.html#a2d15b43dd8189aadd5cf91166904bc7d">init</a> (int index=-1)</td></tr>
+<tr class="separator:a2d15b43dd8189aadd5cf91166904bc7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab48d7f73a0c8367132397426da37d537"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d82/struct_pill.html#ab48d7f73a0c8367132397426da37d537">model_scale</a> () const override</td></tr>
 <tr class="separator:ab48d7f73a0c8367132397426da37d537"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1845531ad3711bfe9584ca2825979400"><td class="memItemLeft" align="right" valign="top">virtual std::optional&lt; raylib::Model &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d82/struct_pill.html#a1845531ad3711bfe9584ca2825979400">model</a> () const override</td></tr>
@@ -153,8 +153,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0e3e9361df9d2b0071299c51a642c528 inherit pub_methods_struct_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a041b916a0c1b4feb83b0a55e97d3fded inherit pub_methods_struct_item"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d66/struct_item.html#a041b916a0c1b4feb83b0a55e97d3fded">eat</a> (std::shared_ptr&lt; <a class="el" href="../../db/d66/struct_item.html">Item</a> &gt; item)</td></tr>
 <tr class="separator:a041b916a0c1b4feb83b0a55e97d3fded inherit pub_methods_struct_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a182f7bac8365029d055b04e279981a82 inherit pub_methods_struct_item"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d66/struct_item.html#a182f7bac8365029d055b04e279981a82">can_eat</a> (std::shared_ptr&lt; <a class="el" href="../../db/d66/struct_item.html">Item</a> &gt; item)</td></tr>
-<tr class="separator:a182f7bac8365029d055b04e279981a82 inherit pub_methods_struct_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7caa08865e2193086ba97358f2384875 inherit pub_methods_struct_item"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d66/struct_item.html#a7caa08865e2193086ba97358f2384875">evaluate_eat_request</a> (std::shared_ptr&lt; <a class="el" href="../../db/d66/struct_item.html">Item</a> &gt; item)</td></tr>
+<tr class="separator:a7caa08865e2193086ba97358f2384875 inherit pub_methods_struct_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d012a67c73427dd4f2b4fb4bb8d6f68 inherit pub_methods_struct_item"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d66/struct_item.html#a4d012a67c73427dd4f2b4fb4bb8d6f68">can_eat</a> (std::shared_ptr&lt; <a class="el" href="../../db/d66/struct_item.html">Item</a> &gt;) const</td></tr>
+<tr class="separator:a4d012a67c73427dd4f2b4fb4bb8d6f68 inherit pub_methods_struct_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a523767b015090eca0c122605de78c846 inherit pub_methods_struct_item"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d66/struct_item.html#a523767b015090eca0c122605de78c846">has_holding_ability</a> () const</td></tr>
 <tr class="separator:a523767b015090eca0c122605de78c846 inherit pub_methods_struct_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87521e07ad9e083fa892d52880ce67c5 inherit pub_methods_struct_item"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d66/struct_item.html#a87521e07ad9e083fa892d52880ce67c5">empty</a> () const</td></tr>
@@ -247,50 +249,12 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../de/d82/struct_pill.html#aa6e10e02d49a8df3598a940a12b648d8">init()</a>.</p>
-
-</div>
-</div>
-<a id="a04e66b101b42aafa13f6f91036e3e1d4" name="a04e66b101b42aafa13f6f91036e3e1d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a04e66b101b42aafa13f6f91036e3e1d4">&#9670;&#160;</a></span>Pill() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Pill::Pill </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a>&#160;</td>
-          <td class="paramname"><em>p</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Color&#160;</td>
-          <td class="paramname"><em>c</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="../../de/d82/struct_pill.html#aa6e10e02d49a8df3598a940a12b648d8">init()</a>.</p>
+<p class="reference">References <a class="el" href="../../de/d82/struct_pill.html#a2d15b43dd8189aadd5cf91166904bc7d">init()</a>.</p>
 
 </div>
 </div>
 <a id="ad5f4f40b05fb82729a266cbe60fc3fc3" name="ad5f4f40b05fb82729a266cbe60fc3fc3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad5f4f40b05fb82729a266cbe60fc3fc3">&#9670;&#160;</a></span>Pill() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5f4f40b05fb82729a266cbe60fc3fc3">&#9670;&#160;</a></span>Pill() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -323,13 +287,57 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../de/d82/struct_pill.html#aa6e10e02d49a8df3598a940a12b648d8">init()</a>.</p>
+<p class="reference">References <a class="el" href="../../de/d82/struct_pill.html#a2d15b43dd8189aadd5cf91166904bc7d">init()</a>.</p>
+
+</div>
+</div>
+<a id="a0ab80448cd97f49ba79d45d32169319d" name="a0ab80448cd97f49ba79d45d32169319d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ab80448cd97f49ba79d45d32169319d">&#9670;&#160;</a></span>Pill() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Pill::Pill </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a>&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Color&#160;</td>
+          <td class="paramname"><em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../de/d82/struct_pill.html#a2d15b43dd8189aadd5cf91166904bc7d">init()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa6e10e02d49a8df3598a940a12b648d8" name="aa6e10e02d49a8df3598a940a12b648d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6e10e02d49a8df3598a940a12b648d8">&#9670;&#160;</a></span>init()</h2>
+<a id="a2d15b43dd8189aadd5cf91166904bc7d" name="a2d15b43dd8189aadd5cf91166904bc7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d15b43dd8189aadd5cf91166904bc7d">&#9670;&#160;</a></span>init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -340,7 +348,8 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void Pill::init </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em> = <code>-1</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -456,7 +465,7 @@ template&lt;typename S &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../de/d82/struct_pill.html#aa6e10e02d49a8df3598a940a12b648d8">init()</a>, <a class="el" href="../../de/d82/struct_pill.html#a1845531ad3711bfe9584ca2825979400">model()</a>, and <a class="el" href="../../de/d82/struct_pill.html#ae7523079b9c6599723a06760356c0f62">serialize()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../de/d82/struct_pill.html#a2d15b43dd8189aadd5cf91166904bc7d">init()</a>, <a class="el" href="../../de/d82/struct_pill.html#a1845531ad3711bfe9584ca2825979400">model()</a>, and <a class="el" href="../../de/d82/struct_pill.html#ae7523079b9c6599723a06760356c0f62">serialize()</a>.</p>
 
 </div>
 </div>

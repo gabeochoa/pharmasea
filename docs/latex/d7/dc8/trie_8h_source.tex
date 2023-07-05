@@ -11,8 +11,8 @@
 \DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
 \DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <vector>}}
 \DoxyCodeLine{00009\ }
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}../util.h"{}}\ \ \textcolor{comment}{//\ for\ split}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{assert_8h}{assert.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{assert_8h}{assert.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{util_8h}{util.h}}"{}}\ \ \textcolor{comment}{//\ for\ split}}
 \DoxyCodeLine{00012\ }
 \DoxyCodeLine{00013\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_trie}{Trie}}\ \{}
 \DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_trie_1_1_node}{Node}}\ \{}
@@ -107,13 +107,13 @@
 \DoxyCodeLine{00103\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{trie_8h_ab7b09ab2910478eaf016f40e49f044e3}{test\_trie\_insert\_once\_and\_found}}()\ \{}
 \DoxyCodeLine{00104\ \ \ \ \ \mbox{\hyperlink{struct_trie}{Trie}}\ trie;}
 \DoxyCodeLine{00105\ \ \ \ \ trie.\mbox{\hyperlink{struct_trie_a07caffa9a30b60c94c8d3bd7178fd4f7}{add}}(\textcolor{stringliteral}{"{}hello"{}});}
-\DoxyCodeLine{00106\ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(trie.\mbox{\hyperlink{struct_trie_aa991e99ba9e8aec408561f9aa721ab7f}{contains}}(\textcolor{stringliteral}{"{}hello"{}}),\ \textcolor{stringliteral}{"{}trie\ should\ contain\ hello"{}});}
+\DoxyCodeLine{00106\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(trie.\mbox{\hyperlink{struct_trie_aa991e99ba9e8aec408561f9aa721ab7f}{contains}}(\textcolor{stringliteral}{"{}hello"{}}),\ \textcolor{stringliteral}{"{}trie\ should\ contain\ hello"{}});}
 \DoxyCodeLine{00107\ \}}
 \DoxyCodeLine{00108\ }
 \DoxyCodeLine{00109\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{trie_8h_a4209744f95e3439133158d065fa135ce}{test\_trie\_insert\_once\_missing}}()\ \{}
 \DoxyCodeLine{00110\ \ \ \ \ \mbox{\hyperlink{struct_trie}{Trie}}\ trie;}
 \DoxyCodeLine{00111\ \ \ \ \ trie.\mbox{\hyperlink{struct_trie_a07caffa9a30b60c94c8d3bd7178fd4f7}{add}}(\textcolor{stringliteral}{"{}hello"{}});}
-\DoxyCodeLine{00112\ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(!trie.\mbox{\hyperlink{struct_trie_aa991e99ba9e8aec408561f9aa721ab7f}{contains}}(\textcolor{stringliteral}{"{}hellp"{}}),}
+\DoxyCodeLine{00112\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(!trie.\mbox{\hyperlink{struct_trie_aa991e99ba9e8aec408561f9aa721ab7f}{contains}}(\textcolor{stringliteral}{"{}hellp"{}}),}
 \DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}trie\ should\ contain\ hello\ and\ not\ hellp"{}});}
 \DoxyCodeLine{00114\ \}}
 \DoxyCodeLine{00115\ }
@@ -124,8 +124,8 @@
 \DoxyCodeLine{00120\ }
 \DoxyCodeLine{00121\ \ \ \ \ std::vector<std::string>\ results\ =\ trie.\mbox{\hyperlink{struct_trie_a32145e563939d2f722c98ec7d441a55a}{dump}}();}
 \DoxyCodeLine{00122\ }
-\DoxyCodeLine{00123\ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(results.size()\ ==\ 1,\ \textcolor{stringliteral}{"{}Should\ have\ a\ single\ string\ in\ results"{}});}
-\DoxyCodeLine{00124\ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(results[0]\ ==\ hello,\ \textcolor{stringliteral}{"{}and\ results\ should\ have\ hello\ "{}});}
+\DoxyCodeLine{00123\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(results.size()\ ==\ 1,\ \textcolor{stringliteral}{"{}Should\ have\ a\ single\ string\ in\ results"{}});}
+\DoxyCodeLine{00124\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(results[0]\ ==\ hello,\ \textcolor{stringliteral}{"{}and\ results\ should\ have\ hello\ "{}});}
 \DoxyCodeLine{00125\ \}}
 \DoxyCodeLine{00126\ }
 \DoxyCodeLine{00127\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{trie_8h_abd0541bd743eeab12cca2b0dfc24e1b5}{test\_trie\_insert\_ten}}()\ \{}
@@ -146,9 +146,9 @@
 \DoxyCodeLine{00142\ \ \ \ \ trie.\mbox{\hyperlink{struct_trie_a07caffa9a30b60c94c8d3bd7178fd4f7}{add}}(\textcolor{stringliteral}{"{}a\ lot"{}});}
 \DoxyCodeLine{00143\ }
 \DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ word\ :\ words)\ \{}
-\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(trie.\mbox{\hyperlink{struct_trie_aa991e99ba9e8aec408561f9aa721ab7f}{contains}}(word),\ \textcolor{stringliteral}{"{}Tree\ should\ contain\ all\ the\ words"{}});}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(trie.\mbox{\hyperlink{struct_trie_aa991e99ba9e8aec408561f9aa721ab7f}{contains}}(word),\ \textcolor{stringliteral}{"{}Tree\ should\ contain\ all\ the\ words"{}});}
 \DoxyCodeLine{00146\ \ \ \ \ \}}
-\DoxyCodeLine{00147\ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(trie.\mbox{\hyperlink{struct_trie_aa991e99ba9e8aec408561f9aa721ab7f}{contains}}(\textcolor{stringliteral}{"{}a\ lot"{}}),\ \textcolor{stringliteral}{"{}Tree\ should\ contain\ the\ last\ word"{}});}
+\DoxyCodeLine{00147\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(trie.\mbox{\hyperlink{struct_trie_aa991e99ba9e8aec408561f9aa721ab7f}{contains}}(\textcolor{stringliteral}{"{}a\ lot"{}}),\ \textcolor{stringliteral}{"{}Tree\ should\ contain\ the\ last\ word"{}});}
 \DoxyCodeLine{00148\ \}}
 \DoxyCodeLine{00149\ }
 \DoxyCodeLine{00150\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{trie_8h_ac01beef18a56e26e8f2914bc3489cfae}{test\_trie\_insert\_ten\_and\_dump}}()\ \{}
@@ -161,7 +161,7 @@
 \DoxyCodeLine{00157\ }
 \DoxyCodeLine{00158\ \ \ \ \ \textcolor{keyword}{auto}\ results\ =\ trie.\mbox{\hyperlink{struct_trie_a32145e563939d2f722c98ec7d441a55a}{dump}}();}
 \DoxyCodeLine{00159\ }
-\DoxyCodeLine{00160\ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(results.size()\ ==\ 10,\ \textcolor{stringliteral}{"{}Tree\ dump\ should\ contain\ all\ the\ words"{}});}
+\DoxyCodeLine{00160\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(results.size()\ ==\ 10,\ \textcolor{stringliteral}{"{}Tree\ dump\ should\ contain\ all\ the\ words"{}});}
 \DoxyCodeLine{00161\ \}}
 \DoxyCodeLine{00162\ }
 \DoxyCodeLine{00163\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{trie_8h_a57783c9a98e7958ba28de85ac4694a38}{test\_trie\_insert\_ten\_similar\_and\_dump\_prefix}}()\ \{}
@@ -173,14 +173,14 @@
 \DoxyCodeLine{00169\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ word\ :\ words)\ trie.\mbox{\hyperlink{struct_trie_a07caffa9a30b60c94c8d3bd7178fd4f7}{add}}(word);}
 \DoxyCodeLine{00170\ }
 \DoxyCodeLine{00171\ \ \ \ \ \textcolor{keyword}{auto}\ results\ =\ trie.\mbox{\hyperlink{struct_trie_a32145e563939d2f722c98ec7d441a55a}{dump}}();}
-\DoxyCodeLine{00172\ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(results.size()\ ==\ 10,\ \textcolor{stringliteral}{"{}Tree\ dump\ should\ contain\ all\ the\ words"{}});}
+\DoxyCodeLine{00172\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(results.size()\ ==\ 10,\ \textcolor{stringliteral}{"{}Tree\ dump\ should\ contain\ all\ the\ words"{}});}
 \DoxyCodeLine{00173\ }
 \DoxyCodeLine{00174\ \ \ \ \ results\ =\ trie.\mbox{\hyperlink{struct_trie_a32145e563939d2f722c98ec7d441a55a}{dump}}(\textcolor{stringliteral}{"{}ang"{}});}
-\DoxyCodeLine{00175\ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(results.size()\ ==\ 6,}
+\DoxyCodeLine{00175\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(results.size()\ ==\ 6,}
 \DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Tree\ dump\ should\ contain\ all\ the\ words\ starting\ with\ ang\ "{}});}
 \DoxyCodeLine{00177\ }
 \DoxyCodeLine{00178\ \ \ \ \ results\ =\ trie.\mbox{\hyperlink{struct_trie_a32145e563939d2f722c98ec7d441a55a}{dump}}(\textcolor{stringliteral}{"{}angl"{}});}
-\DoxyCodeLine{00179\ \ \ \ \ \mbox{\hyperlink{assert_8h_a8e93b0cbf5fbae9c583903d9f31ef315}{M\_ASSERT}}(results.size()\ ==\ 2,}
+\DoxyCodeLine{00179\ \ \ \ \ \mbox{\hyperlink{assert_8h_a265be64fe52e8a92e89a75fe62153aa5}{VALIDATE}}(results.size()\ ==\ 2,}
 \DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Tree\ dump\ should\ contain\ all\ the\ words\ starting\ with\ ang\ "{}});}
 \DoxyCodeLine{00181\ \}}
 \DoxyCodeLine{00182\ }

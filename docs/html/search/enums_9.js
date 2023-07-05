@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['loglevel_0',['LogLevel',['../d7/d7f/log_8h.html#aca1fd1d8935433e6ba2e3918214e07f9',1,'log.h']]]
+  ['keymapinputrequesterror_0',['KeyMapInputRequestError',['../da/d9a/keymap_8h.html#a39b053f07dff1a301fb9b8a42a1dc466',1,'keymap.h']]]
 ];

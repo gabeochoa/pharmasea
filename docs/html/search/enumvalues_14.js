@@ -1,10 +1,10 @@
 var searchData=
 [
   ['wait_0',['Wait',['../d3/d6a/job_8h.html#a60db90059c4f88592cc75a2f39ad3061a9779a7e9f14b8a5b1d7640a1ff0dab26',1,'job.h']]],
-  ['waitinqueue_1',['WaitInQueue',['../d3/d6a/job_8h.html#a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411',1,'job.h']]],
-  ['waitinqueueforpickup_2',['WaitInQueueForPickup',['../d3/d6a/job_8h.html#a60db90059c4f88592cc75a2f39ad3061ad0c49177fc112661d87e4208d35e98e3',1,'job.h']]],
-  ['wandering_3',['Wandering',['../d3/d6a/job_8h.html#a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05',1,'job.h']]],
-  ['warn_4',['WARN',['../d7/d7f/log_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a32bd8a1db2275458673903bdb84cb277',1,'log.h']]],
+  ['waitingreasonlast_1',['WaitingReasonLast',['../d8/d09/struct_has_timer.html#a63dd25e0ee65bdaccd3952e2a7b18a6eacaad3ee070d6ab748ca4c8a5db54c16d',1,'HasTimer']]],
+  ['waitinqueue_2',['WaitInQueue',['../d3/d6a/job_8h.html#a60db90059c4f88592cc75a2f39ad3061ae08427223ab334cad1c2cfdd91c99411',1,'job.h']]],
+  ['waitinqueueforpickup_3',['WaitInQueueForPickup',['../d3/d6a/job_8h.html#a60db90059c4f88592cc75a2f39ad3061ad0c49177fc112661d87e4208d35e98e3',1,'job.h']]],
+  ['wandering_4',['Wandering',['../d3/d6a/job_8h.html#a60db90059c4f88592cc75a2f39ad3061a09f75d0d98237b83e1c26c971defab05',1,'job.h']]],
   ['warn_5',['Warn',['../d4/dc1/namespacenetwork_1_1internal.html#aa04f495996f850eea952b0225450b322a56525ae64d370c0b448ac0d60710ef17',1,'network::internal']]],
   ['warning_6',['Warning',['../d9/d60/toastmanager_8h.html#ae413786da4913c98cb49e47afdd9645aa48f2bb70fceb692a2dedd8cea496c44b',1,'toastmanager.h']]],
   ['widgetback_7',['WidgetBack',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706a0c66d603c83a7be3c2436260bcc26b92',1,'keymap.h']]],

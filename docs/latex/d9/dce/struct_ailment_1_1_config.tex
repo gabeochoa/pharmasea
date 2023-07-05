@@ -7,7 +7,7 @@
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-std\+::string\+\_\+view \mbox{\hyperlink{struct_ailment_1_1_config_a575a983c6138f5fde00a2d7f1af54f06}{name}} = \char`\"{}ailment\char`\"{}
+std\+::string \mbox{\hyperlink{struct_ailment_1_1_config_ac28e0ca14caa3bddbda481fe53fd5e55}{name}} = \char`\"{}ailment\char`\"{}
 \item 
 \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965}{Type}} \mbox{\hyperlink{struct_ailment_1_1_config_a9968324828f2eb14e29564e6f8050364}{type}} = \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a6adf97f83acf6453d4a6a4b1070f3754}{Type\+::\+None}}
 \item 
@@ -15,14 +15,37 @@ std\+::string\+\_\+view \mbox{\hyperlink{struct_ailment_1_1_config_a575a983c6138
 \item 
 \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9}{Stagger}} \mbox{\hyperlink{struct_ailment_1_1_config_a0c938c0d5e14a2dcba8e0338b0c718a7}{stagger}} = \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a6adf97f83acf6453d4a6a4b1070f3754}{Stagger\+::\+None}}
 \end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_ailment_1_1_config_ad881db3d280c52aa5ea32cd7c18db590}{serialize}} (S \&s)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_ailment_1_1_config_ad881db3d280c52aa5ea32cd7c18db590}\label{struct_ailment_1_1_config_ad881db3d280c52aa5ea32cd7c18db590}} 
+\index{Ailment::Config@{Ailment::Config}!serialize@{serialize}}
+\index{serialize@{serialize}!Ailment::Config@{Ailment::Config}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void Ailment\+::\+Config\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_ailment_1_1_config_ac28e0ca14caa3bddbda481fe53fd5e55}{name}}, \mbox{\hyperlink{struct_ailment_1_1_config_a45b5a2ce80b3d861c94996430bad1c87}{speed}}, \mbox{\hyperlink{struct_ailment_1_1_config_a0c938c0d5e14a2dcba8e0338b0c718a7}{stagger}}, and \mbox{\hyperlink{struct_ailment_1_1_config_a9968324828f2eb14e29564e6f8050364}{type}}.
+
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_ailment_1_1_config_a575a983c6138f5fde00a2d7f1af54f06}\label{struct_ailment_1_1_config_a575a983c6138f5fde00a2d7f1af54f06}} 
+\mbox{\Hypertarget{struct_ailment_1_1_config_ac28e0ca14caa3bddbda481fe53fd5e55}\label{struct_ailment_1_1_config_ac28e0ca14caa3bddbda481fe53fd5e55}} 
 \index{Ailment::Config@{Ailment::Config}!name@{name}}
 \index{name@{name}!Ailment::Config@{Ailment::Config}}
 \doxysubsubsection{\texorpdfstring{name}{name}}
-{\footnotesize\ttfamily std\+::string\+\_\+view Ailment\+::\+Config\+::name = \char`\"{}ailment\char`\"{}}
+{\footnotesize\ttfamily std\+::string Ailment\+::\+Config\+::name = \char`\"{}ailment\char`\"{}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_ailment_1_1_config_ad881db3d280c52aa5ea32cd7c18db590}{serialize()}}.
 
 \mbox{\Hypertarget{struct_ailment_1_1_config_a45b5a2ce80b3d861c94996430bad1c87}\label{struct_ailment_1_1_config_a45b5a2ce80b3d861c94996430bad1c87}} 
 \index{Ailment::Config@{Ailment::Config}!speed@{speed}}
@@ -32,7 +55,7 @@ std\+::string\+\_\+view \mbox{\hyperlink{struct_ailment_1_1_config_a575a983c6138
 
 
 
-Referenced by \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{Ailment\+::speed\+\_\+multiplier()}}.
+Referenced by \mbox{\hyperlink{struct_ailment_1_1_config_ad881db3d280c52aa5ea32cd7c18db590}{serialize()}}, and \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{Ailment\+::speed\+\_\+multiplier()}}.
 
 \mbox{\Hypertarget{struct_ailment_1_1_config_a0c938c0d5e14a2dcba8e0338b0c718a7}\label{struct_ailment_1_1_config_a0c938c0d5e14a2dcba8e0338b0c718a7}} 
 \index{Ailment::Config@{Ailment::Config}!stagger@{stagger}}
@@ -42,7 +65,7 @@ Referenced by \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}
 
 
 
-Referenced by \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{Ailment\+::stagger()}}.
+Referenced by \mbox{\hyperlink{struct_ailment_1_1_config_ad881db3d280c52aa5ea32cd7c18db590}{serialize()}}, and \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{Ailment\+::stagger()}}.
 
 \mbox{\Hypertarget{struct_ailment_1_1_config_a9968324828f2eb14e29564e6f8050364}\label{struct_ailment_1_1_config_a9968324828f2eb14e29564e6f8050364}} 
 \index{Ailment::Config@{Ailment::Config}!type@{type}}
@@ -52,10 +75,10 @@ Referenced by \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}
 
 
 
-Referenced by \mbox{\hyperlink{struct_ailment_a8086cb055fab92c493846a3981268383}{Ailment\+::icon\+\_\+name()}}.
+Referenced by \mbox{\hyperlink{struct_ailment_a8086cb055fab92c493846a3981268383}{Ailment\+::icon\+\_\+name()}}, and \mbox{\hyperlink{struct_ailment_1_1_config_ad881db3d280c52aa5ea32cd7c18db590}{serialize()}}.
 
 
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/\mbox{\hyperlink{ailment_8h}{ailment.\+h}}\end{DoxyCompactItemize}
+src/dataclass/\mbox{\hyperlink{ailment_8h}{ailment.\+h}}\end{DoxyCompactItemize}

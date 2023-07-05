@@ -83,7 +83,7 @@ $(function() {
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;../preload.h&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;../util.h&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d3c/util_8h.html">util.h</a>&quot;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// TODO is there a better way to do this?</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">//</span></div>
@@ -131,7 +131,7 @@ $(function() {
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>}  <span class="comment">// namespace std</span></div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="../../da/dfa/font__sizer_8h.html#adeb63fa2568c6fa164361643b1c61775">   56</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="../../da/dfa/font__sizer_8h.html#adeb63fa2568c6fa164361643b1c61775">operator==</a>(<span class="keyword">const</span> <a class="code hl_struct" href="../../d4/d5d/struct_f_z_info.html">FZInfo</a>&amp; info, <span class="keyword">const</span> <a class="code hl_struct" href="../../d4/d5d/struct_f_z_info.html">FZInfo</a>&amp; other) {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="../../da/dfa/font__sizer_8h.html#adeb63fa2568c6fa164361643b1c61775">   56</a></span><span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="../../da/dfa/font__sizer_8h.html#adeb63fa2568c6fa164361643b1c61775">operator==</a>(<span class="keyword">const</span> <a class="code hl_struct" href="../../d4/d5d/struct_f_z_info.html">FZInfo</a>&amp; info, <span class="keyword">const</span> <a class="code hl_struct" href="../../d4/d5d/struct_f_z_info.html">FZInfo</a>&amp; other) {</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">return</span> std::hash&lt;FZInfo&gt;()(info) == std::hash&lt;FZInfo&gt;()(other);</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
@@ -192,7 +192,7 @@ $(function() {
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>};</div>
 <div class="ttc" id="afont__sizer_8h_html_adeb63fa2568c6fa164361643b1c61775"><div class="ttname"><a href="../../da/dfa/font__sizer_8h.html#adeb63fa2568c6fa164361643b1c61775">operator==</a></div><div class="ttdeci">bool operator==(const FZInfo &amp;info, const FZInfo &amp;other)</div><div class="ttdef"><b>Definition:</b> font_sizer.h:56</div></div>
 <div class="ttc" id="agraphics_8h_html_acf64f2c7361f0fc6883a80cb1d698f28"><div class="ttname"><a href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a></div><div class="ttdeci">raylib::Vector2 vec2</div><div class="ttdef"><b>Definition:</b> graphics.h:32</div></div>
-<div class="ttc" id="alog_8h_html_af89cb876e6e1d43cfeacdd58a7c9b78c"><div class="ttname"><a href="../../d7/d7f/log_8h.html#af89cb876e6e1d43cfeacdd58a7c9b78c">log_trace</a></div><div class="ttdeci">#define log_trace(...)</div><div class="ttdef"><b>Definition:</b> log.h:71</div></div>
+<div class="ttc" id="alog_8h_html_af89cb876e6e1d43cfeacdd58a7c9b78c"><div class="ttname"><a href="../../d7/d7f/log_8h.html#af89cb876e6e1d43cfeacdd58a7c9b78c">log_trace</a></div><div class="ttdeci">#define log_trace(...)</div><div class="ttdef"><b>Definition:</b> log.h:73</div></div>
 <div class="ttc" id="anamespacefont_html"><div class="ttname"><a href="../../d7/dd4/namespacefont.html">font</a></div><div class="ttdef"><b>Definition:</b> Karmina_Regular_256.h:21</div></div>
 <div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="../../d8/dcc/namespacestd.html">std</a></div><div class="ttdef"><b>Definition:</b> font_sizer.h:30</div></div>
 <div class="ttc" id="anamespacestd_html_a7ae1fd26dc47e2fdf73cbe73f59de676"><div class="ttname"><a href="../../d8/dcc/namespacestd.html#a7ae1fd26dc47e2fdf73cbe73f59de676">std::hash_combine</a></div><div class="ttdeci">void hash_combine(std::size_t &amp;s, const T &amp;v)</div><div class="ttdef"><b>Definition:</b> font_sizer.h:33</div></div>
@@ -209,6 +209,7 @@ $(function() {
 <div class="ttc" id="astruct_font_size_cache_html_a93d126242003fb83738d99dc1566858c"><div class="ttname"><a href="../../d3/d9d/struct_font_size_cache.html#a93d126242003fb83738d99dc1566858c">FontSizeCache::get_font_size_impl</a></div><div class="ttdeci">float get_font_size_impl(const std::string &amp;content, float width, float height, float spacing) const</div><div class="ttdef"><b>Definition:</b> font_sizer.h:70</div></div>
 <div class="ttc" id="astruct_font_size_cache_html_ac06ce873dae318420f9ae2931ba170b5"><div class="ttname"><a href="../../d3/d9d/struct_font_size_cache.html#ac06ce873dae318420f9ae2931ba170b5">FontSizeCache::get_font_size</a></div><div class="ttdeci">float get_font_size(const std::string &amp;content, float width, float height, float spacing)</div><div class="ttdef"><b>Definition:</b> font_sizer.h:99</div></div>
 <div class="ttc" id="astructstd_1_1std_1_1hash_3_01_f_z_info_01_4_html_a134549293712d2d2c8fb130ba818ac83"><div class="ttname"><a href="../../dc/d4b/structstd_1_1std_1_1hash_3_01_f_z_info_01_4.html#a134549293712d2d2c8fb130ba818ac83">std::std::hash&lt; FZInfo &gt;::operator()</a></div><div class="ttdeci">std::size_t operator()(const FZInfo &amp;info) const</div><div class="ttdef"><b>Definition:</b> font_sizer.h:40</div></div>
+<div class="ttc" id="autil_8h_html"><div class="ttname"><a href="../../d8/d3c/util_8h.html">util.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

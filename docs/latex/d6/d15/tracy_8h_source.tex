@@ -30,22 +30,23 @@
 \DoxyCodeLine{00026\ \textcolor{preprocessor}{\#else}}
 \DoxyCodeLine{00027\ }
 \DoxyCodeLine{00028\ \textcolor{comment}{//\ TODO\ add\ a\ note\ for\ whether\ we\ need\ these\ voids}}
-\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ TRACY\_FRAME\_MARK(x)\ void}}
-\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ TRACY\_ZONE\_SCOPED\ void}}
-\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ TRACY\_ZONE\_NAMED(x,\ y,\ z)\ void}}
-\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ TRACY\_LOG(msg,\ size)\ void}}
-\DoxyCodeLine{00033\ }
-\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{00035\ }
-\DoxyCodeLine{00037\ }
-\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifdef\ \_\_APPLE\_\_}}
-\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
-\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#pragma\ enable\_warn}}
-\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{00043\ }
-\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#ifdef\ WIN32}}
-\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ pop}}
-\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ TRACY\_FRAME\_MARK(x)\ 0}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ TRACY\_ZONE\_SCOPED\ 0}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ TRACY\_ZONE(x)\ 0}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ TRACY\_ZONE\_NAMED(x,\ y,\ z)\ 0}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ TRACY\_LOG(msg,\ size)\ 0}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#ifdef\ \_\_APPLE\_\_}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#pragma\ enable\_warn}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#ifdef\ WIN32}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ pop}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

@@ -17,9 +17,7 @@ Inheritance diagram for About\+Layer\+:\begin{figure}[H]
 \item 
 virtual \mbox{\hyperlink{struct_about_layer_a94f280489cebc79b2c1074f38e0a37e6}{$\sim$\+About\+Layer}} ()
 \item 
-virtual void \mbox{\hyperlink{struct_about_layer_a2bbdf1eeb5ff20ab73818827f367cceb}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event) override
-\item 
-bool \mbox{\hyperlink{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&event)
+bool \mbox{\hyperlink{struct_about_layer_a59def5cd566e8ccd4ed35df2da1a9859}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&event) override
 \item 
 void \mbox{\hyperlink{struct_about_layer_a83aac603d819bbf4fab40ff1f2ded4b5}{draw\+\_\+ui}} (float dt)
 \item 
@@ -42,7 +40,15 @@ virtual void \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{on
 \item 
 virtual void \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{on\+Draw}} (float elapsed)=0
 \item 
-virtual void \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&)=0
+void \mbox{\hyperlink{struct_layer_a753e388bb8e7416a7cc2b338b5566396}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_aaad763977a0828b342ddd6ac0af65aea}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_ad1793a53fff5c6516848d2a1a0c73a10}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_a4410643bde2d400ba6731f48ad5a8727}{on\+Gamepad\+Axis\+Moved}} (\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_affe784562ca969d024bb98866455985d}{on\+Char\+Pressed\+Event}} (\mbox{\hyperlink{struct_char_pressed_event}{Char\+Pressed\+Event}} \&)
 \item 
 const std\+::string \& \mbox{\hyperlink{struct_layer_a592dabab6ae280b7a3a3f4b195c9833b}{getname}} () const
 \end{DoxyCompactItemize}
@@ -110,33 +116,19 @@ Implements \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{Laye
 
 References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a8f7f4c1ce7a4f933663d10543562b096}{menu\+::\+About}}, \mbox{\hyperlink{namespaceext_a5bb9a44990202857eea129e5b983f183}{ext\+::clear\+\_\+background()}}, \mbox{\hyperlink{struct_about_layer_a83aac603d819bbf4fab40ff1f2ded4b5}{draw\+\_\+ui()}}, and \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\+\_\+context}}.
 
-\mbox{\Hypertarget{struct_about_layer_a2bbdf1eeb5ff20ab73818827f367cceb}\label{struct_about_layer_a2bbdf1eeb5ff20ab73818827f367cceb}} 
-\index{AboutLayer@{AboutLayer}!onEvent@{onEvent}}
-\index{onEvent@{onEvent}!AboutLayer@{AboutLayer}}
-\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
-{\footnotesize\ttfamily virtual void About\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_event}{Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Implements \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{Layer}}.
-
-
-
-References \mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{Event\+Dispatcher\+::dispatch()}}, and \mbox{\hyperlink{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}{on\+Key\+Pressed()}}.
-
-\mbox{\Hypertarget{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}\label{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}} 
+\mbox{\Hypertarget{struct_about_layer_a59def5cd566e8ccd4ed35df2da1a9859}\label{struct_about_layer_a59def5cd566e8ccd4ed35df2da1a9859}} 
 \index{AboutLayer@{AboutLayer}!onKeyPressed@{onKeyPressed}}
 \index{onKeyPressed@{onKeyPressed}!AboutLayer@{AboutLayer}}
 \doxysubsubsection{\texorpdfstring{onKeyPressed()}{onKeyPressed()}}
-{\footnotesize\ttfamily bool About\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily bool About\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_layer_aaad763977a0828b342ddd6ac0af65aea}{Layer}}.
 
 
 
 References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a8f7f4c1ce7a4f933663d10543562b096}{menu\+::\+About}}, \mbox{\hyperlink{struct_key_event_a099e4f3c01870f67baffeba80b5c1860}{Key\+Event\+::keycode}}, and \mbox{\hyperlink{struct_about_layer_ae48e343f2b6694f2a684af98485d4296}{ui\+\_\+context}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_about_layer_a2bbdf1eeb5ff20ab73818827f367cceb}{on\+Event()}}.
 
 \mbox{\Hypertarget{struct_about_layer_a16c2078a04e30de43ed29ad65a26e0a7}\label{struct_about_layer_a16c2078a04e30de43ed29ad65a26e0a7}} 
 \index{AboutLayer@{AboutLayer}!onUpdate@{onUpdate}}
@@ -182,10 +174,10 @@ Referenced by \mbox{\hyperlink{struct_about_layer_a83aac603d819bbf4fab40ff1f2ded
 
 
 
-Referenced by \mbox{\hyperlink{struct_about_layer_a4f1d6b771a181b45509a3b3accee11e2}{About\+Layer()}}, \mbox{\hyperlink{struct_about_layer_a83aac603d819bbf4fab40ff1f2ded4b5}{draw\+\_\+ui()}}, \mbox{\hyperlink{struct_about_layer_adbc71241190550a06e0e943c8e6a40ff}{on\+Draw()}}, and \mbox{\hyperlink{struct_about_layer_acdde32d39444c8de6afda44f4e0de22b}{on\+Key\+Pressed()}}.
+Referenced by \mbox{\hyperlink{struct_about_layer_a4f1d6b771a181b45509a3b3accee11e2}{About\+Layer()}}, \mbox{\hyperlink{struct_about_layer_a83aac603d819bbf4fab40ff1f2ded4b5}{draw\+\_\+ui()}}, \mbox{\hyperlink{struct_about_layer_adbc71241190550a06e0e943c8e6a40ff}{on\+Draw()}}, and \mbox{\hyperlink{struct_about_layer_a59def5cd566e8ccd4ed35df2da1a9859}{on\+Key\+Pressed()}}.
 
 
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/\mbox{\hyperlink{aboutlayer_8h}{aboutlayer.\+h}}\end{DoxyCompactItemize}
+src/layers/\mbox{\hyperlink{aboutlayer_8h}{aboutlayer.\+h}}\end{DoxyCompactItemize}

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['role_0',['Role',['../d3/d65/structnetwork_1_1_info.html#ab7c682c85a2ca9c353e7069beb33c994',1,'network::Info']]]
+  ['pilltype_0',['PillType',['../de/d82/struct_pill.html#a541adada380f2ffdc6aae0636423d114',1,'Pill']]],
+  ['positioner_1',['Positioner',['../db/d9c/struct_custom_held_item_position.html#a0d570a3cb204febffb7eb39b36af86ee',1,'CustomHeldItemPosition']]]
 ];

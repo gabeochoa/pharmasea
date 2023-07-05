@@ -83,13 +83,15 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ac246580cef6dbb3506235a58b6c68644"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d15/tracy_8h.html#ac246580cef6dbb3506235a58b6c68644">TRACY_FRAME_MARK</a>(x)&#160;&#160;&#160;void</td></tr>
+<tr class="memitem:ac246580cef6dbb3506235a58b6c68644"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d15/tracy_8h.html#ac246580cef6dbb3506235a58b6c68644">TRACY_FRAME_MARK</a>(x)&#160;&#160;&#160;0</td></tr>
 <tr class="separator:ac246580cef6dbb3506235a58b6c68644"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0966b1b117a1e09190aaee5d5175e27"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d15/tracy_8h.html#af0966b1b117a1e09190aaee5d5175e27">TRACY_ZONE_SCOPED</a>&#160;&#160;&#160;void</td></tr>
+<tr class="memitem:af0966b1b117a1e09190aaee5d5175e27"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d15/tracy_8h.html#af0966b1b117a1e09190aaee5d5175e27">TRACY_ZONE_SCOPED</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:af0966b1b117a1e09190aaee5d5175e27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cf19b1a6dd4c965d89eebdd7177f5c0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d15/tracy_8h.html#a1cf19b1a6dd4c965d89eebdd7177f5c0">TRACY_ZONE_NAMED</a>(x,  y,  z)&#160;&#160;&#160;void</td></tr>
+<tr class="memitem:a33aeb20002d3f5da8cbd67bcd3ecdc0f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d15/tracy_8h.html#a33aeb20002d3f5da8cbd67bcd3ecdc0f">TRACY_ZONE</a>(x)&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a33aeb20002d3f5da8cbd67bcd3ecdc0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cf19b1a6dd4c965d89eebdd7177f5c0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d15/tracy_8h.html#a1cf19b1a6dd4c965d89eebdd7177f5c0">TRACY_ZONE_NAMED</a>(x,  y,  z)&#160;&#160;&#160;0</td></tr>
 <tr class="separator:a1cf19b1a6dd4c965d89eebdd7177f5c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6054ce68e13e89333eb518c30f7607d8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d15/tracy_8h.html#a6054ce68e13e89333eb518c30f7607d8">TRACY_LOG</a>(msg,  size)&#160;&#160;&#160;void</td></tr>
+<tr class="memitem:a6054ce68e13e89333eb518c30f7607d8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d15/tracy_8h.html#a6054ce68e13e89333eb518c30f7607d8">TRACY_LOG</a>(msg,  size)&#160;&#160;&#160;0</td></tr>
 <tr class="separator:a6054ce68e13e89333eb518c30f7607d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -104,7 +106,7 @@ Macros</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;void</td>
+          <td>&#160;&#160;&#160;0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -132,7 +134,25 @@ Macros</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;void</td>
+          <td></td><td>&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a33aeb20002d3f5da8cbd67bcd3ecdc0f" name="a33aeb20002d3f5da8cbd67bcd3ecdc0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33aeb20002d3f5da8cbd67bcd3ecdc0f">&#9670;&#160;</a></span>TRACY_ZONE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TRACY_ZONE</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x</td><td>)</td>
+          <td>&#160;&#160;&#160;0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -166,7 +186,7 @@ Macros</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;void</td>
+          <td></td><td>&#160;&#160;&#160;0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -180,7 +200,7 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define TRACY_ZONE_SCOPED&#160;&#160;&#160;void</td>
+          <td class="memname">#define TRACY_ZONE_SCOPED&#160;&#160;&#160;0</td>
         </tr>
       </table>
 </div><div class="memdoc">

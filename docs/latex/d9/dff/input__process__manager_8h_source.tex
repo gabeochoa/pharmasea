@@ -1,0 +1,633 @@
+\hypertarget{input__process__manager_8h_source}{}\doxysection{input\+\_\+process\+\_\+manager.\+h}
+\label{input__process__manager_8h_source}\index{src/system/input\_process\_manager.h@{src/system/input\_process\_manager.h}}
+\mbox{\hyperlink{input__process__manager_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}../camera.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../components/can\_be\_ghost\_player.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../components/can\_grab\_from\_other\_furniture.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}../components/can\_highlight\_others.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}../components/can\_hold\_furniture.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}../components/can\_perform\_job.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}../components/collects\_user\_input.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}../components/conveys\_held\_item.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}../components/custom\_item\_position.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}../components/is\_snappable.h"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}../components/responds\_to\_user\_input.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}../components/transform.h"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}../entity.h"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}../entityhelper.h"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacesystem__manager}{system\_manager}}\ \{}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_a0c766a298e1abda388fb8b8795805f58}{person\_update\_given\_new\_pos}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Entity>\ person,\ \textcolor{keywordtype}{float},}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ new\_pos\_x,\ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ new\_pos\_z)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{int}\ facedir\_x\ =\ -\/1;}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{int}\ facedir\_z\ =\ -\/1;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ delta\_distance\_x\ =\ new\_pos\_x\ -\/\ transform.\mbox{\hyperlink{struct_transform_abf20cb827dae97731de3c8cde095c56d}{raw}}();}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{if}\ (delta\_distance\_x.x\ >\ 0)\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ facedir\_x\ =\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform::FrontFaceDirection::RIGHT}};}
+\DoxyCodeLine{00029\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (delta\_distance\_x.x\ <\ 0)\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ facedir\_x\ =\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform::FrontFaceDirection::LEFT}};}
+\DoxyCodeLine{00031\ \ \ \ \ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}\ delta\_distance\_z\ =\ new\_pos\_z\ -\/\ transform.\mbox{\hyperlink{struct_transform_abf20cb827dae97731de3c8cde095c56d}{raw}}();}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordflow}{if}\ (delta\_distance\_z.z\ >\ 0)\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ facedir\_z\ =\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform::FrontFaceDirection::FORWARD}};}
+\DoxyCodeLine{00036\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (delta\_distance\_z.z\ <\ 0)\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ facedir\_z\ =\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform::FrontFaceDirection::BACK}};}
+\DoxyCodeLine{00038\ \ \ \ \ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_x\ ==\ -\/1\ \&\&\ facedir\_z\ ==\ -\/1)\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ do\ nothing}}
+\DoxyCodeLine{00042\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (facedir\_x\ ==\ -\/1)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_af6e9e33150607bbffa558048dcfb773d}{update\_face\_direction}}(}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(facedir\_z));}
+\DoxyCodeLine{00045\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (facedir\_z\ ==\ -\/1)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_af6e9e33150607bbffa558048dcfb773d}{update\_face\_direction}}(}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(facedir\_x));}
+\DoxyCodeLine{00048\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_af6e9e33150607bbffa558048dcfb773d}{update\_face\_direction}}(}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985d}{Transform::FrontFaceDirection}}\textcolor{keyword}{>}(facedir\_x\ |\ facedir\_z));}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{//\ TODO\ if\ anything\ spawns\ in\ anything\ else\ then\ it\ cant\ move,}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ we\ need\ some\ way\ to\ handle\ popping\ people\ back\ to\ spawn\ or\ something\ if}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{//\ they\ get\ stuck}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//\ TODO\ this\ should\ be\ a\ component}}
+\DoxyCodeLine{00057\ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ horizontal\ check}}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_bounds\_x\ =\ \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\_bounds}}(new\_pos\_x,\ transform.\mbox{\hyperlink{struct_transform_aa7f85e2b9464ffae989590072dc989b4}{size}}());}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ vertical\ check}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_bounds\_y\ =\ \mbox{\hyperlink{vec__util_8h_a7bc0ade59022f5ab1ebe03a4d6cee6aa}{get\_bounds}}(new\_pos\_z,\ transform.\mbox{\hyperlink{struct_transform_aa7f85e2b9464ffae989590072dc989b4}{size}}());}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ would\_collide\_x\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ would\_collide\_z\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ std::weak\_ptr<Entity>\ collided\_entity\_x;}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ std::weak\_ptr<Entity>\ collided\_entity\_z;}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_a1ecbdbf8ea284e1ba282c36811e3d72d}{EntityHelper::forEachEntity}}([\&](\textcolor{keyword}{auto}\ entity)\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{id}\ ==\ entity-\/>id)\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ EntityHelper::ForEachFlow::Continue;}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (!\mbox{\hyperlink{entityhelper_8h_af5fa95f4f8a66aa99b729afba587f746}{is\_collidable}}(entity))\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610a3437d4b32aa4696581e8ee4ed2b53af8}{EntityHelper::ForEachFlow::Continue}};}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{entityhelper_8h_af5fa95f4f8a66aa99b729afba587f746}{is\_collidable}}(person))\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610a3437d4b32aa4696581e8ee4ed2b53af8}{EntityHelper::ForEachFlow::Continue}};}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (CheckCollisionBoxes(}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_bounds\_x,\ entity-\/>template\ get<Transform>().bounds()))\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ would\_collide\_x\ =\ true;}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ collided\_entity\_x\ =\ entity;}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (CheckCollisionBoxes(}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_bounds\_y,\ entity-\/>template\ get<Transform>().bounds()))\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ would\_collide\_z\ =\ true;}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ collided\_entity\_z\ =\ entity;}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note:\ if\ these\ are\ both\ true,\ then\ we\ definitely\ dont\ need\ to}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ keep\ going\ and\ can\ break\ early,\ otherwise\ we\ should\ check\ the}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rest\ to\ make\ sure}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (would\_collide\_x\ \&\&\ would\_collide\_z)\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610a0f3fbeaa77bb603279229e91ec5df0bb}{EntityHelper::ForEachFlow::Break}};}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_entity_helper_ac6cd6e5ff2e336093fbf19980ad27610aad802a780a21ec03133901d61899cb91}{EntityHelper::ForEachFlow::NormalFlow}};}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ debug\_mode\_on\ =}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{get\_or\_default}}<\textcolor{keywordtype}{bool}>(\textcolor{stringliteral}{"{}debug\_ui\_enabled"{}},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (debug\_mode\_on)\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ would\_collide\_x\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ would\_collide\_z\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!would\_collide\_x)\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_a4798118cc8c48043e789f8c252e0d2d8}{update\_x}}(new\_pos\_x.x);}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!would\_collide\_z)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_a85644ce8da658239bc822d648865f605}{update\_z}}(new\_pos\_z.z);}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ value\ determines\ how\ "{}far"{}\ to\ impart\ a\ push\ force\ on\ the}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ collided\ entity}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ directional\_push\_modifier\ =\ 1.0f;}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Figure\ out\ if\ there's\ a\ more\ graceful\ way\ to\ "{}jitter"{}\ things}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ around\ each\ other}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ tile\_div\_push\_mod\ =\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ directional\_push\_modifier;}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (would\_collide\_x\ ||\ would\_collide\_z)\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ entity\_x\ =\ collided\_entity\_x.lock())\ \{}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ remove\ this\ check\ since\ we\ can\ just\ put\ CanBePushed}}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ on\ the\ person\ entity\ and\ replace\ with\ a\ has<>\ check}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ person\_ptr\_x\ =\ \textcolor{keyword}{dynamic\_cast<}\mbox{\hyperlink{struct_entity}{Entity}}*\textcolor{keyword}{>}(entity\_x.get()))\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (entity\_x-\/>has<\mbox{\hyperlink{struct_can_be_pushed}{CanBePushed}}>())\ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_be_pushed}{CanBePushed}}\&\ cbp\ =\ entity\_x-\/>get<\mbox{\hyperlink{struct_can_be_pushed}{CanBePushed}}>();}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ random\_jitter\ =}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{random_8h_aad2eabec61848c202dd8cf2a800d3398}{randSign}}()\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2.0f;}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_x\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dadabdfff10fd1e839709e2b76a49eeb6d}{Transform::FrontFaceDirection::LEFT}})\ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a7e7bca88e6385e36f0a3cf38258a4117}{update}}(\{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}().x\ +\ tile\_div\_push\_mod,}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}().y,}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}().z\ +\ random\_jitter,}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_x\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985dad176c3908f5e3d6f7fa8a57e0869179e}{Transform::FrontFaceDirection::RIGHT}})\ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a7e7bca88e6385e36f0a3cf38258a4117}{update}}(\{}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}().x\ -\/\ tile\_div\_push\_mod,}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}().y,}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}().z\ +\ random\_jitter,}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ entity\_z\ =\ collided\_entity\_z.lock())\ \{}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ remove\ this\ check\ since\ we\ can\ just\ put\ CanBePushed}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ on\ the\ person\ entity\ and\ replace\ with\ a\ has<>\ check}}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ person\_ptr\_z\ =\ \textcolor{keyword}{dynamic\_cast<}\mbox{\hyperlink{struct_entity}{Entity}}*\textcolor{keyword}{>}(entity\_z.get()))\ \{}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (entity\_z-\/>has<\mbox{\hyperlink{struct_can_be_pushed}{CanBePushed}}>())\ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_be_pushed}{CanBePushed}}\&\ cbp\ =\ entity\_z-\/>get<\mbox{\hyperlink{struct_can_be_pushed}{CanBePushed}}>();}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ random\_jitter\ =}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{random_8h_aad2eabec61848c202dd8cf2a800d3398}{randSign}}()\ *\ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ /\ 2.0f;}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_z\ \&}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da1bbc0594501182f91effbd996b06c86f}{Transform::FrontFaceDirection::FORWARD}})\ \{}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a7e7bca88e6385e36f0a3cf38258a4117}{update}}(\{}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}().x\ +\ random\_jitter,}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}().y,}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}().z\ +\ tile\_div\_push\_mod,}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (facedir\_z\ \&\ \mbox{\hyperlink{struct_transform_a6afb6367bab2de3b597594c31c2d985da0c10ca31ddb561e0c85ad7f8aa99b05f}{Transform::FrontFaceDirection::BACK}})\ \{}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a7e7bca88e6385e36f0a3cf38258a4117}{update}}(\{}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}().x\ +\ random\_jitter,}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}().y,}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cbp.\mbox{\hyperlink{struct_can_be_pushed_a360b7ce8fa6e20ab9a159a4175e7d621}{pushed\_force}}().z\ -\/\ tile\_div\_push\_mod,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00171\ \ \ \ \ \}}
+\DoxyCodeLine{00172\ \}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{keyword}{namespace\ }input\_process\_manager\ \{}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a55c42792a45958553128b841ccec5cc2}{collect\_user\_input}}(std::shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{float}\ dt)\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>is\_missing<\mbox{\hyperlink{struct_collects_user_input}{CollectsUserInput}}>())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00178\ \ \ \ \ \mbox{\hyperlink{struct_collects_user_input}{CollectsUserInput}}\&\ cui\ =\ entity-\/>get<\mbox{\hyperlink{struct_collects_user_input}{CollectsUserInput}}>();}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{comment}{//\ Theres\ no\ players\ not\ in\ game\ menu\ state,}}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6}{menu::State}}\ state\ =\ \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu::State::Game}};}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keywordtype}{float}\ left,\ right,\ up,\ down;}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{float}\ key\_left\ =\ \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{KeyMap::is\_event}}(state,\ InputName::PlayerLeft);}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordtype}{float}\ key\_right\ =\ \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{KeyMap::is\_event}}(state,\ InputName::PlayerRight);}
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keywordtype}{float}\ key\_up\ =\ \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{KeyMap::is\_event}}(state,\ InputName::PlayerForward);}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keywordtype}{float}\ key\_down\ =\ \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{KeyMap::is\_event}}(state,\ InputName::PlayerBack);}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{comment}{//\ we\ need\ to\ rotate\ these\ controls\ based\ on\ the\ camera}}
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keyword}{auto}\ cam\ =\ \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}.\mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{get\_ptr}}<\mbox{\hyperlink{struct_game_cam}{GameCam}}>(\textcolor{stringliteral}{"{}game\_cam"{}});}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keywordtype}{int}\ xang\ =\ ((int)\ \mbox{\hyperlink{namespaceutil_a5020e504940e09639480aed917da6ba1}{util::clamp}}(\mbox{\hyperlink{namespaceutil_a9305e21ff6411929f92f427a318cea17}{util::rad2deg}}(cam-\/>angle.x),\ 0,\ 370))\ \%\ 360;}
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{comment}{//\ int\ yang\ =\ ((int)\ util::clamp(util::rad2deg(cam-\/>angle.y),\ 0,\ 370))\ \%}}
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{comment}{//\ 360;\ log\_info("{}\ angles\ \{\}\ \{\}"{},\ xang,\ yang);}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{keywordflow}{if}\ (xang\ >=\ 135\ \&\&\ xang\ <\ 225)\ \{}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Default\ controls}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ left\ =\ key\_left;}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ right\ =\ key\_right;}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ down\ =\ key\_down;}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ up\ =\ key\_up;}
+\DoxyCodeLine{00202\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (xang\ >=\ 45\ \&\&\ xang\ <\ 135)\ \{}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ up\ =\ key\_left;}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ down\ =\ key\_right;}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ left\ =\ key\_down;}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ right\ =\ key\_up;}
+\DoxyCodeLine{00207\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (xang\ >=\ 315\ ||\ xang\ <=\ 45)\ \{}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ left\ =\ key\_right;}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ right\ =\ key\_left;}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ up\ =\ key\_down;}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ down\ =\ key\_up;}
+\DoxyCodeLine{00212\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (xang\ >=\ 225\ \&\&\ xang\ <\ 315)\ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ left\ =\ key\_up;}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ right\ =\ key\_down;}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ up\ =\ key\_right;}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ down\ =\ key\_left;}
+\DoxyCodeLine{00217\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}reached\ a\ camera\ angle\ that\ has\ no\ controls\ enabled:\ \{\}"{}},}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xang);}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Default\ controls}}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ left\ =\ 0;}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ right\ =\ 0;}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ down\ =\ 0;}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ up\ =\ 0;}
+\DoxyCodeLine{00225\ \ \ \ \ \}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keywordflow}{if}\ (left\ >\ 0)\ cui.\mbox{\hyperlink{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}{write}}(InputName::PlayerLeft);}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keywordflow}{if}\ (right\ >\ 0)\ cui.\mbox{\hyperlink{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}{write}}(InputName::PlayerRight);}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keywordflow}{if}\ (up\ >\ 0)\ cui.\mbox{\hyperlink{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}{write}}(InputName::PlayerForward);}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keywordflow}{if}\ (down\ >\ 0)\ cui.\mbox{\hyperlink{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}{write}}(InputName::PlayerBack);}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordtype}{bool}\ pickup\ =}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_key_map_adf7362c05a1fcee3062a1cae3c83703c}{KeyMap::is\_event\_once\_DO\_NOT\_USE}}(state,\ InputName::PlayerPickup);}
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{keywordflow}{if}\ (pickup)\ cui.\mbox{\hyperlink{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}{write}}(InputName::PlayerPickup);}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keywordtype}{bool}\ rotate\ =\ \mbox{\hyperlink{struct_key_map_adf7362c05a1fcee3062a1cae3c83703c}{KeyMap::is\_event\_once\_DO\_NOT\_USE}}(}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ state,\ InputName::PlayerRotateFurniture);}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keywordflow}{if}\ (rotate)\ cui.\mbox{\hyperlink{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}{write}}(InputName::PlayerRotateFurniture);}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keywordtype}{float}\ do\_work\ =\ \mbox{\hyperlink{struct_key_map_af35c8741229abfd88ab8f4396d1e2aea}{KeyMap::is\_event}}(state,\ InputName::PlayerDoWork);}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keywordflow}{if}\ (do\_work\ >\ 0)\ cui.\mbox{\hyperlink{struct_collects_user_input_ad487b8db0c15e33ec36b56e30694816d}{write}}(InputName::PlayerDoWork);}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{comment}{//\ Actually\ save\ the\ inputs\ if\ there\ were\ any}}
+\DoxyCodeLine{00244\ \ \ \ \ cui.\mbox{\hyperlink{struct_collects_user_input_af7691930f262f1dbbef9cb3ee0bd524d}{publish}}(dt);}
+\DoxyCodeLine{00245\ \}}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a035c4557197042eac734dee082c03877}{process\_player\_movement\_input}}(std::shared\_ptr<Entity>\ entity,}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ dt,\ \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{InputName}}\ input\_name,}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ input\_amount)\ \{}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>is\_missing<\mbox{\hyperlink{struct_transform}{Transform}}>())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00251\ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ transform\ =\ entity-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
+\DoxyCodeLine{00252\ \ \ \ \ std::shared\_ptr<Entity>\ player\ =\ dynamic\_pointer\_cast<Entity>(entity);}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>is\_missing<\mbox{\hyperlink{struct_has_base_speed}{HasBaseSpeed}}>())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00255\ \ \ \ \ \mbox{\hyperlink{struct_has_base_speed}{HasBaseSpeed}}\&\ hasBaseSpeed\ =\ entity-\/>get<\mbox{\hyperlink{struct_has_base_speed}{HasBaseSpeed}}>();}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ speed\ =\ hasBaseSpeed.\mbox{\hyperlink{struct_has_base_speed_aa8a5a0bed30cf126086bb79f6a6caeae}{speed}}()\ *\ dt;}
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keyword}{auto}\ new\_position\ =\ transform.\mbox{\hyperlink{struct_transform_a2d05f8befe3b38c8c29ae679869647cc}{pos}}();}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keywordflow}{if}\ (input\_name\ ==\ InputName::PlayerLeft)\ \{}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ new\_position.x\ -\/=\ input\_amount\ *\ speed;}
+\DoxyCodeLine{00262\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (input\_name\ ==\ InputName::PlayerRight)\ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ new\_position.x\ +=\ input\_amount\ *\ speed;}
+\DoxyCodeLine{00264\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (input\_name\ ==\ InputName::PlayerForward)\ \{}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ new\_position.z\ -\/=\ input\_amount\ *\ speed;}
+\DoxyCodeLine{00266\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (input\_name\ ==\ InputName::PlayerBack)\ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ new\_position.z\ +=\ input\_amount\ *\ speed;}
+\DoxyCodeLine{00268\ \ \ \ \ \}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_a0c766a298e1abda388fb8b8795805f58}{person\_update\_given\_new\_pos}}(entity-\/>id,\ transform,\ player,\ dt,\ new\_position,}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_position);}
+\DoxyCodeLine{00272\ \ \ \ \ transform.\mbox{\hyperlink{struct_transform_a89b5aae1f418a7a527ce0b5907865f0e}{trunc}}(2);}
+\DoxyCodeLine{00273\ \};}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \textcolor{keyword}{namespace\ }planning\ \{}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a25a3d525215fa57a429277fa32c0d9c6}{rotate\_furniture}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\ player)\ \{}
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{comment}{//\ Cant\ rotate\ outside\ planning\ mode}}
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordflow}{if}\ (GameState::get().is\_not(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game::State::Planning}}))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{comment}{//\ TODO\ need\ to\ figure\ out\ if\ reach\ should\ be\ separate\ from\ highlighting}}
+\DoxyCodeLine{00282\ \ \ \ \ \mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}\&\ cho\ =\ player-\/>get<\mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}>();}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \ \ \ \ std::shared\_ptr<Furniture>\ match\ =}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_aabd55f01e173666f0e5ac17f5bceb394}{EntityHelper::getClosestMatchingFurniture}}(}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>(),\ cho.\mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{reach}}(),\ [](\textcolor{keyword}{auto}\&\&\ furniture)\ \{}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ furniture-\/>template\ has<IsRotatable>();}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keywordflow}{if}\ (!match)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00291\ \ \ \ \ match-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().rotate\_facing\_clockwise();}
+\DoxyCodeLine{00292\ \}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a86a051e227fe3d76b78b701f01880914}{drop\_held\_furniture}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ player)\ \{}
+\DoxyCodeLine{00295\ \ \ \ \ \mbox{\hyperlink{struct_can_hold_furniture}{CanHoldFurniture}}\&\ ourCHF\ =\ player-\/>get<\mbox{\hyperlink{struct_can_hold_furniture}{CanHoldFurniture}}>();}
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{comment}{//\ TODO\ need\ to\ make\ sure\ it\ doesnt\ place\ ontop\ of\ another}}
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{comment}{//\ one}}
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{keyword}{auto}\ hf\ =\ ourCHF.\mbox{\hyperlink{struct_can_hold_furniture_aa855e1a6a60090ccb0c68249354f3c23}{furniture}}();}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keywordflow}{if}\ (!hf)\ \{}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}\ id:\{\}\ we'd\ like\ to\ drop\ but\ our\ hands\ are\ empty"{}},}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>id);}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00303\ \ \ \ \ \}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ hf-\/>get<\mbox{\hyperlink{struct_can_be_held}{CanBeHeld}}>().set\_is\_being\_held(\textcolor{keyword}{false});}
+\DoxyCodeLine{00306\ \ \ \ \ hf-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().update(}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{vec::snap}}(\mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec::to3}}(player-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>().\mbox{\hyperlink{struct_transform_ad831d83c947f2ddcf0357a9404f3f31a}{tile\_infront}}(1))));}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \ \ \ \ ourCHF.\mbox{\hyperlink{struct_can_hold_furniture_aabb8f2add67c7526177f24fc8afd7b7c}{update}}(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00310\ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}we\ \{\}\ dropped\ the\ furniture\ \{\}\ we\ were\ holding"{}},\ player-\/>id,}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ hf-\/>id);}
+\DoxyCodeLine{00312\ \}}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \textcolor{comment}{//\ TODO\ grabbing\ reach\ needs\ to\ be\ better,\ you\ should\ be\ able\ to\ grab\ in\ the\ 8}}
+\DoxyCodeLine{00315\ \textcolor{comment}{//\ spots\ around\ you\ and\ just\ prioritize\ the\ one\ you\ are\ facing}}
+\DoxyCodeLine{00316\ \textcolor{comment}{//}}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a98407cfe6adbdb0e08992e111c9f5fd9}{handle\_grab\_or\_drop}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ player)\ \{}
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{comment}{//\ TODO\ need\ to\ figure\ out\ if\ this\ should\ be\ separate\ from\ highlighting}}
+\DoxyCodeLine{00320\ \ \ \ \ \mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}\&\ cho\ =\ player-\/>get<\mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}>();}
+\DoxyCodeLine{00321\ \ \ \ \ \mbox{\hyperlink{struct_can_hold_furniture}{CanHoldFurniture}}\&\ ourCHF\ =\ player-\/>get<\mbox{\hyperlink{struct_can_hold_furniture}{CanHoldFurniture}}>();}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ \ \ \ \ \textcolor{keywordflow}{if}\ (ourCHF.is\_holding\_furniture())\ \{}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a86a051e227fe3d76b78b701f01880914}{drop\_held\_furniture}}(player);}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00326\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ support\ finding\ things\ in\ the\ direction\ the\ player\ is}}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ facing,\ instead\ of\ in\ a\ box\ around\ him}}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ std::shared\_ptr<Furniture>\ closest\_furniture\ =}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_aabd55f01e173666f0e5ac17f5bceb394}{EntityHelper::getClosestMatchingFurniture}}(}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>(),\ cho.\mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{reach}}(),}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](std::shared\_ptr<Furniture>\ f)\ \{}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ right\ now\ walls\ inherit\ this\ from\ furniture\ but}}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ eventually\ that\ should\ not\ be\ the\ case}}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (f-\/>is\_missing<CanBeHeld>())\ return\ false;}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ f-\/>get<CanBeHeld>().is\_not\_held();}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ no\ match}}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!closest\_furniture)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ ourCHF.update(closest\_furniture);}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ ourCHF.furniture()-\/>get<\mbox{\hyperlink{struct_can_be_held}{CanBeHeld}}>().set\_is\_being\_held(\textcolor{keyword}{true});}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO}}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ we\ want\ to\ remove\ the\ furniture\ ONLY\ from\ the\ nav\ mesh}}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ when\ picked\ up\ because\ then\ AI\ can\ walk\ through,}}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ this\ also\ means\ we\ have\ to\ add\ it\ back\ when\ we\ place\ it}}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (this-\/>held\_furniture)\ \{}}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ auto\ nv\ =\ GLOBALS.get\_ptr<NavMesh>("{}navmesh"{});}}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ nv-\/>removeEntity(this-\/>held\_furniture-\/>id);}}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00354\ \ \ \ \ \}}
+\DoxyCodeLine{00355\ \}}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \}\ \ \textcolor{comment}{//\ namespace\ planning}}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \textcolor{keyword}{namespace\ }inround\ \{}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a0cb152e15774f293b74fdb240a12dbf5}{work\_furniture}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\ player,}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ frame\_dt)\ \{}
+\DoxyCodeLine{00363\ \ \ \ \ \textcolor{comment}{//\ Cant\ do\ work\ during\ planning}}
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keywordflow}{if}\ (GameState::get().is(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game::State::Planning}}))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{comment}{//\ TODO\ need\ to\ figure\ out\ if\ this\ should\ be\ separate\ from\ highlighting}}
+\DoxyCodeLine{00367\ \ \ \ \ \mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}\&\ cho\ =\ player-\/>get<\mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}>();}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \ \ \ \ std::shared\_ptr<Furniture>\ match\ =}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_aabd55f01e173666f0e5ac17f5bceb394}{EntityHelper::getClosestMatchingFurniture}}(}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>(),\ cho.\mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{reach}}(),\ [](\textcolor{keyword}{auto}\&\&\ furniture)\ \{}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (furniture-\/>template\ is\_missing<HasWork>())\ return\ false;}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HasWork\&\ hasWork\ =\ furniture-\/>template\ get<HasWork>();}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ hasWork.has\_work();}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00376\ }
+\DoxyCodeLine{00377\ \ \ \ \ \textcolor{keywordflow}{if}\ (!match)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00378\ }
+\DoxyCodeLine{00379\ \ \ \ \ \mbox{\hyperlink{struct_has_work}{HasWork}}\&\ hasWork\ =\ match-\/>get<\mbox{\hyperlink{struct_has_work}{HasWork}}>();}
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasWork.\mbox{\hyperlink{struct_has_work_acf74192e7ddcffd2ad4f9bd789120693}{do\_work}})\ hasWork.\mbox{\hyperlink{struct_has_work_acf74192e7ddcffd2ad4f9bd789120693}{do\_work}}(match,\ hasWork,\ player,\ frame\_dt);}
+\DoxyCodeLine{00381\ \}}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a66e29957845883f72afd9ac7a4ff6f07}{handle\_drop}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ player)\ \{}
+\DoxyCodeLine{00384\ \ \ \ \ \mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}\&\ cho\ =\ player-\/>get<\mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}>();}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \_merge\_item\_from\_furniture\_into\_hand\ =\ [player]\ \{}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}\&\ cho\ =\ player-\/>get<\mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}>();}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ our\ item\ cant\ hold\ anything\ or\ is\ already\ full}}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!player-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().\mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{item}}()-\/>empty())\ \{}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00392\ }
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ std::shared\_ptr<Furniture>\ closest\_furniture\ =}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_aabd55f01e173666f0e5ac17f5bceb394}{EntityHelper::getClosestMatchingFurniture}}(}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>(),\ cho.\mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{reach}}(),}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](std::shared\_ptr<Furniture>\ f)\ \{}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (f-\/>is\_missing<CanHoldItem>())\ return\ false;}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ f-\/>get<CanHoldItem>().is\_holding\_item();}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!closest\_furniture)\ \{}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00404\ }
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\_to\_merge\ =\ closest\_furniture-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().item();}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ eat\_was\_successful\ =}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().item()-\/>eat(item\_to\_merge);}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eat\_was\_successful)}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ closest\_furniture-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().update(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ eat\_was\_successful;}
+\DoxyCodeLine{00411\ \ \ \ \ \};}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \_merge\_item\_in\_hand\_into\_furniture\_item\ =\ [\&]()\ \{}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ std::shared\_ptr<Furniture>\ closest\_furniture\ =}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_aabd55f01e173666f0e5ac17f5bceb394}{EntityHelper::getClosestMatchingFurniture}}(}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>(),\ cho.\mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{reach}}(),}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\&](std::shared\_ptr<Furniture>\ f)\ \{}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (f-\/>is\_missing<CanHoldItem>())\ return\ false;}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ CanHoldItem\&\ fCHI\ =\ f-\/>get<CanHoldItem>();}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ is\ there\ something\ there\ to\ merge\ into?}}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (!fCHI.is\_holding\_item())\ return\ false;}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ can\ that\ thing\ hold\ the\ item\ we\ are\ holding?}}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ fCHI.item()-\/>can\_eat(}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>get<CanHoldItem>().item());}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ No\ matching\ furniture}}
+\DoxyCodeLine{00428\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!closest\_furniture)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00429\ }
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ need\ to\ handle\ the\ case\ where\ the\ merged\ item\ is\ not\ a}}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ valid\ thing\ the\ furniture\ can\ hold.}}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ happens\ for\ example\ when\ you\ merge\ into\ a\ supply\ cache.}}
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Because\ the\ supply\ can\ only\ hold\ the\ container\ and\ not\ a}}
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ filled\ one...\ In\ this\ case\ we\ should\ either:}}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ block\ the\ merge}}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ place\ the\ merged\ item\ into\ the\ player's\ hand}}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ eat\_was\_successful\ =}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ closest\_furniture-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().item()-\/>eat(}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().\mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{item}}());}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!eat\_was\_successful)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ need\ a\ let\_go\_of\_item()\ to\ handle\ this\ kind\ of}}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ transfer\ because\ it\ might\ get\ complicated\ and\ we\ might\ end\ up}}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ with\ two\ things\ owning\ this\ could\ maybe\ be\ solved\ by}}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ enforcing\ uniqueptr}}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ player-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().update(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00449\ \ \ \ \ \};}
+\DoxyCodeLine{00450\ }
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \_place\_item\_onto\_furniture\ =\ [\&]()\ \{}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ can\_place\_item\_into\ =\ [](std::shared\_ptr<Entity>\ entity,}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<Item>\ item)\ \{}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>is\_missing<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}\&\ furnCanHold\ =\ entity-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>();}
+\DoxyCodeLine{00456\ }
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ item\_container\_is\_matching\_item\ =}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ []<\textcolor{keyword}{typename}\ I>(std::shared\_ptr<Entity>\ entity,}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<I>\ item\ =\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!item)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!entity)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>is\_missing<\mbox{\hyperlink{struct_is_item_container}{IsItemContainer<I>}}>())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_is_item_container}{IsItemContainer<I>}}\&\ itemContainer\ =}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity-\/>get<\mbox{\hyperlink{struct_is_item_container}{IsItemContainer<I>}}>();}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ itemContainer.\mbox{\hyperlink{struct_is_item_container_a9fb9d7678c0d04d4f9f89db568dbd694}{is\_matching\_item}}(item);}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Handle\ item\ containers}}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ matches\_bag\ =\ item\_container\_is\_matching\_item(}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity,\ dynamic\_pointer\_cast<Bag>(item));}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (matches\_bag)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ matches\_pill\_bottle\ =\ item\_container\_is\_matching\_item(}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entity,\ dynamic\_pointer\_cast<PillBottle>(item));}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (matches\_pill\_bottle)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00476\ }
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ we\ are\ empty\ and\ can\ hold\ we\ good..}}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ furnCanHold.\mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{empty}}();}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00480\ }
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ std::shared\_ptr<Furniture>\ closest\_furniture\ =}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_aabd55f01e173666f0e5ac17f5bceb394}{EntityHelper::getClosestMatchingFurniture}}(}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>(),\ cho.\mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{reach}}(),}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [player,\ can\_place\_item\_into](std::shared\_ptr<Furniture>\ f)\ \{}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ can\_place\_item\_into(}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f,\ player-\/>get<CanHoldItem>().item());}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00488\ }
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ no\ matching\ furniture}}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!closest\_furniture)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00491\ }
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ furnT\ =\ closest\_furniture-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}\&\ furnCHI\ =\ closest\_furniture-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>();}
+\DoxyCodeLine{00494\ }
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ std::shared\_ptr<Item>\&\ item\ =\ player-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().item();}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ item-\/>update\_position(furnT.\mbox{\hyperlink{struct_transform_a64ba3d05bc47f05d2ef60fab5a5957fa}{snap\_position}}());}
+\DoxyCodeLine{00497\ }
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ furnCHI.update(item,\ \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a3b28b7d1ed305505eee86fbfd5327fc5}{Item::HeldBy::FURNITURE}});}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ player-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().update(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00501\ \ \ \ \ \};}
+\DoxyCodeLine{00502\ }
+\DoxyCodeLine{00503\ \ \ \ \ \textcolor{comment}{//\ TODO\ could\ be\ solved\ with\ tl::expected\ i\ think}}
+\DoxyCodeLine{00504\ \ \ \ \ \textcolor{keywordtype}{bool}\ item\_merged\ =\ \_merge\_item\_from\_furniture\_into\_hand();}
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{keywordflow}{if}\ (item\_merged)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00507\ \ \ \ \ item\_merged\ =\ \_merge\_item\_in\_hand\_into\_furniture\_item();}
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{keywordflow}{if}\ (item\_merged)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00509\ }
+\DoxyCodeLine{00510\ \ \ \ \ [[maybe\_unused]]\ \textcolor{keywordtype}{bool}\ item\_placed\ =\ \_place\_item\_onto\_furniture();}
+\DoxyCodeLine{00511\ }
+\DoxyCodeLine{00512\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00513\ \}}
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_ab60a89d3fd59ae62ddb5837bce401117}{handle\_grab}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ player)\ \{}
+\DoxyCodeLine{00516\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \_try\_to\_pickup\_item\_from\_furniture\ =\ [player]()\ \{}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}\&\ cho\ =\ player-\/>get<\mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}>();}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ playerT\ =\ player-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
+\DoxyCodeLine{00519\ }
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ std::shared\_ptr<Furniture>\ closest\_furniture\ =}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_entity_helper_aabd55f01e173666f0e5ac17f5bceb394}{EntityHelper::getClosestMatchingFurniture}}(}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ playerT,\ cho.\mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{reach}}(),\ [](std::shared\_ptr<Furniture>\ furn)\ \{}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ furniture\ can\ never\ hold\ anything\ so\ no\ match}}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (furn-\/>is\_missing<CanHoldItem>())\ return\ false;}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ its\ holding\ something}}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ furn-\/>get<CanHoldItem>().is\_holding\_item();}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ No\ matching\ furniture\ that\ also\ can\ hold\ item}}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!closest\_furniture)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ found\ a\ match,\ grab\ the\ item\ from\ it}}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}\&\ furnCanHold\ =\ closest\_furniture-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>();}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ std::shared\_ptr<Item>\ item\ =\ furnCanHold.\mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{item}}();}
+\DoxyCodeLine{00535\ }
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}\&\ playerCHI\ =\ player-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>();}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ playerCHI.\mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{item}}()\ =\ item;}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ playerCHI.\mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{item}}()-\/>held\_by\ =\ \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313aaca7714ebc132e0fb559664bbe96c552}{Item::HeldBy::PLAYER}};}
+\DoxyCodeLine{00539\ }
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ furnCanHold.\mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{item}}()\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00542\ \ \ \ \ \};}
+\DoxyCodeLine{00543\ }
+\DoxyCodeLine{00544\ \ \ \ \ \textcolor{keywordtype}{bool}\ picked\_up\_item\ =\ \_try\_to\_pickup\_item\_from\_furniture();}
+\DoxyCodeLine{00545\ \ \ \ \ \textcolor{keywordflow}{if}\ (picked\_up\_item)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00546\ }
+\DoxyCodeLine{00547\ \ \ \ \ \textcolor{comment}{//\ Handles\ the\ non-\/furniture\ grabbing\ case}}
+\DoxyCodeLine{00548\ \ \ \ \ \mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}\&\ cho\ =\ player-\/>get<\mbox{\hyperlink{struct_can_highlight_others}{CanHighlightOthers}}>();}
+\DoxyCodeLine{00549\ \ \ \ \ \mbox{\hyperlink{struct_transform}{Transform}}\&\ playerT\ =\ player-\/>get<\mbox{\hyperlink{struct_transform}{Transform}}>();}
+\DoxyCodeLine{00550\ }
+\DoxyCodeLine{00551\ \ \ \ \ std::shared\_ptr<Item>\ closest\_item\ =}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ ItemHelper::getClosestMatchingItem<Item>(playerT.as2(),}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}\ *\ cho.\mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{reach}}());}
+\DoxyCodeLine{00554\ }
+\DoxyCodeLine{00555\ \ \ \ \ \textcolor{comment}{//\ nothing\ found}}
+\DoxyCodeLine{00556\ \ \ \ \ \textcolor{keywordflow}{if}\ (closest\_item\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ \ \ \ \ player-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().update(closest\_item,\ \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313aaca7714ebc132e0fb559664bbe96c552}{Item::HeldBy::PLAYER}});}
+\DoxyCodeLine{00559\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00560\ \}}
+\DoxyCodeLine{00561\ }
+\DoxyCodeLine{00562\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a47e7eaf60f723e301c8beaafa526d52a}{handle\_grab\_or\_drop}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\&\ player)\ \{}
+\DoxyCodeLine{00563\ \ \ \ \ \textcolor{comment}{//\ TODO\ Need\ to\ auto\ drop\ any\ held\ furniture}}
+\DoxyCodeLine{00564\ }
+\DoxyCodeLine{00565\ \ \ \ \ \textcolor{comment}{//\ Do\ we\ already\ have\ something\ in\ our\ hands?}}
+\DoxyCodeLine{00566\ \ \ \ \ \textcolor{comment}{//\ We\ must\ be\ trying\ to\ drop\ it}}
+\DoxyCodeLine{00567\ \ \ \ \ player-\/>get<\mbox{\hyperlink{struct_can_hold_item}{CanHoldItem}}>().empty()\ ?\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_ab60a89d3fd59ae62ddb5837bce401117}{handle\_grab}}(player)}
+\DoxyCodeLine{00568\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a66e29957845883f72afd9ac7a4ff6f07}{handle\_drop}}(player);}
+\DoxyCodeLine{00569\ \}}
+\DoxyCodeLine{00570\ }
+\DoxyCodeLine{00571\ \}\ \ \textcolor{comment}{//\ namespace\ inround}}
+\DoxyCodeLine{00572\ }
+\DoxyCodeLine{00573\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a595ee8c3edadc901e3c643c2970304b0}{process\_input}}(\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\ entity,}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{keymap_8h_af73d01ab87ab62b056bd8032af826d55}{UserInput}}\&\ input)\ \{}
+\DoxyCodeLine{00575\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \_proc\_single\_input\_name\ =}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ std::shared\_ptr<Entity>\ entity,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{keymap_8h_a17ed9738c4fcd08b8a24a1d405fac706}{InputName}}\&\ input\_name,}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ frame\_dt)\ \{}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (input\_name)\ \{}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ InputName::PlayerLeft:}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ InputName::PlayerRight:}
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ InputName::PlayerForward:}
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ InputName::PlayerBack:}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a035c4557197042eac734dee082c03877}{process\_player\_movement\_input}}(entity,\ frame\_dt,}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ input\_name,\ 1.f);}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (input\_name)\ \{}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ InputName::PlayerRotateFurniture:}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a25a3d525215fa57a429277fa32c0d9c6}{planning::rotate\_furniture}}(entity);}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ InputName::PlayerPickup:}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ grab\_or\_drop(entity);}}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_game_state_abbfb101b96ae617d2b67acbf58f50693}{GameState::s\_in\_round}}())\ \{}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a47e7eaf60f723e301c8beaafa526d52a}{inround::handle\_grab\_or\_drop}}(entity);}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (GameState::get().is(\mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game::State::Planning}}))\ \{}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a98407cfe6adbdb0e08992e111c9f5fd9}{planning::handle\_grab\_or\_drop}}(entity);}
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ we\ probably\ want\ to\ handle\ messing\ around\ in}}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ lobby}}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ InputName::PlayerDoWork:}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a0cb152e15774f293b74fdb240a12dbf5}{inround::work\_furniture}}(entity,\ frame\_dt);}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00612\ }
+\DoxyCodeLine{00613\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{keymap_8h_aee799aa8b14c1cb0f4c8dc024ea4ea74}{InputSet}}\ input\_set\ =\ std::get<0>(input);}
+\DoxyCodeLine{00614\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ frame\_dt\ =\ std::get<1>(input);}
+\DoxyCodeLine{00615\ }
+\DoxyCodeLine{00616\ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 0;}
+\DoxyCodeLine{00617\ \ \ \ \ \textcolor{keywordflow}{while}\ (i\ <\ InputName::Last)\ \{}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ input\_name\ =\ magic\_enum::enum\_value<InputName>(i);}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ was\_pressed\ =\ input\_set.test(i);}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (was\_pressed)\ \{}
+\DoxyCodeLine{00621\ \ \ \ \ \ \ \ \ \ \ \ \ \_proc\_single\_input\_name(entity,\ input\_name,\ frame\_dt);}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ i++;}
+\DoxyCodeLine{00624\ \ \ \ \ \}}
+\DoxyCodeLine{00625\ \}}
+\DoxyCodeLine{00626\ \}\ \ \textcolor{comment}{//\ namespace\ input\_process\_manager}}
+\DoxyCodeLine{00627\ \}\ \ \textcolor{comment}{//\ namespace\ system\_manager}}
+
+\end{DoxyCode}

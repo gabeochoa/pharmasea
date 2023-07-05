@@ -136,8 +136,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0e3e9361df9d2b0071299c51a642c528"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a041b916a0c1b4feb83b0a55e97d3fded"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d66/struct_item.html#a041b916a0c1b4feb83b0a55e97d3fded">eat</a> (std::shared_ptr&lt; <a class="el" href="../../db/d66/struct_item.html">Item</a> &gt; item)</td></tr>
 <tr class="separator:a041b916a0c1b4feb83b0a55e97d3fded"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a182f7bac8365029d055b04e279981a82"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d66/struct_item.html#a182f7bac8365029d055b04e279981a82">can_eat</a> (std::shared_ptr&lt; <a class="el" href="../../db/d66/struct_item.html">Item</a> &gt; item)</td></tr>
-<tr class="separator:a182f7bac8365029d055b04e279981a82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7caa08865e2193086ba97358f2384875"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d66/struct_item.html#a7caa08865e2193086ba97358f2384875">evaluate_eat_request</a> (std::shared_ptr&lt; <a class="el" href="../../db/d66/struct_item.html">Item</a> &gt; item)</td></tr>
+<tr class="separator:a7caa08865e2193086ba97358f2384875"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d012a67c73427dd4f2b4fb4bb8d6f68"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d66/struct_item.html#a4d012a67c73427dd4f2b4fb4bb8d6f68">can_eat</a> (std::shared_ptr&lt; <a class="el" href="../../db/d66/struct_item.html">Item</a> &gt;) const</td></tr>
+<tr class="separator:a4d012a67c73427dd4f2b4fb4bb8d6f68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a523767b015090eca0c122605de78c846"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d66/struct_item.html#a523767b015090eca0c122605de78c846">has_holding_ability</a> () const</td></tr>
 <tr class="separator:a523767b015090eca0c122605de78c846"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87521e07ad9e083fa892d52880ce67c5"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d66/struct_item.html#a87521e07ad9e083fa892d52880ce67c5">empty</a> () const</td></tr>
@@ -350,8 +352,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a182f7bac8365029d055b04e279981a82" name="a182f7bac8365029d055b04e279981a82"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a182f7bac8365029d055b04e279981a82">&#9670;&#160;</a></span>can_eat()</h2>
+<a id="a4d012a67c73427dd4f2b4fb4bb8d6f68" name="a4d012a67c73427dd4f2b4fb4bb8d6f68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d012a67c73427dd4f2b4fb4bb8d6f68">&#9670;&#160;</a></span>can_eat()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -363,8 +365,8 @@ Private Member Functions</h2></td></tr>
           <td class="memname">virtual bool Item::can_eat </td>
           <td>(</td>
           <td class="paramtype">std::shared_ptr&lt; <a class="el" href="../../db/d66/struct_item.html">Item</a> &gt;&#160;</td>
-          <td class="paramname"><em>item</em></td><td>)</td>
-          <td></td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -374,9 +376,9 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../db/d66/struct_item.html#a87521e07ad9e083fa892d52880ce67c5">empty()</a>, <a class="el" href="../../db/d66/struct_item.html#a523767b015090eca0c122605de78c846">has_holding_ability()</a>, and <a class="el" href="../../d7/d7f/log_8h.html#aa1cfe5444875c8eca0ea6f6993977d6d">log_info</a>.</p>
+<p>Reimplemented in <a class="el" href="../../d2/d4d/struct_pill_bottle.html#a90c820101a3f7aadd524689a84dc366e">PillBottle</a>, and <a class="el" href="../../d3/dbd/struct_bag.html#aaaf54cb06929d89bdf25da385a8f652f">Bag</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../db/d66/struct_item.html#a041b916a0c1b4feb83b0a55e97d3fded">eat()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../db/d66/struct_item.html#a7caa08865e2193086ba97358f2384875">evaluate_eat_request()</a>.</p>
 
 </div>
 </div>
@@ -432,7 +434,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../db/d66/struct_item.html#a182f7bac8365029d055b04e279981a82">can_eat()</a>, and <a class="el" href="../../db/d66/struct_item.html#a7bbff5c89eda76d407fda7acbb7e2313aead1b164bfce2586f784f684ff72d509">ITEM</a>.</p>
+<p class="reference">References <a class="el" href="../../db/d66/struct_item.html#a7caa08865e2193086ba97358f2384875">evaluate_eat_request()</a>, and <a class="el" href="../../db/d66/struct_item.html#a7bbff5c89eda76d407fda7acbb7e2313aead1b164bfce2586f784f684ff72d509">ITEM</a>.</p>
 
 </div>
 </div>
@@ -461,7 +463,37 @@ Private Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="../../db/d66/struct_item.html#a523767b015090eca0c122605de78c846">has_holding_ability()</a>, and <a class="el" href="../../db/d66/struct_item.html#a24622ff456a347d704ac2cc38f922905">held_item</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../db/d66/struct_item.html#a182f7bac8365029d055b04e279981a82">can_eat()</a>, and <a class="el" href="../../d3/dbd/struct_bag.html#ad66adfe94f97d7f5da10da2769049d8e">Bag::model()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../db/d66/struct_item.html#a7caa08865e2193086ba97358f2384875">evaluate_eat_request()</a>, and <a class="el" href="../../d3/dbd/struct_bag.html#ad66adfe94f97d7f5da10da2769049d8e">Bag::model()</a>.</p>
+
+</div>
+</div>
+<a id="a7caa08865e2193086ba97358f2384875" name="a7caa08865e2193086ba97358f2384875"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7caa08865e2193086ba97358f2384875">&#9670;&#160;</a></span>evaluate_eat_request()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Item::evaluate_eat_request </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="../../db/d66/struct_item.html">Item</a> &gt;&#160;</td>
+          <td class="paramname"><em>item</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../db/d66/struct_item.html#a4d012a67c73427dd4f2b4fb4bb8d6f68">can_eat()</a>, <a class="el" href="../../db/d66/struct_item.html#a87521e07ad9e083fa892d52880ce67c5">empty()</a>, <a class="el" href="../../db/d66/struct_item.html#a523767b015090eca0c122605de78c846">has_holding_ability()</a>, and <a class="el" href="../../d7/d7f/log_8h.html#aa1cfe5444875c8eca0ea6f6993977d6d">log_info</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../db/d66/struct_item.html#a041b916a0c1b4feb83b0a55e97d3fded">eat()</a>.</p>
 
 </div>
 </div>
@@ -488,9 +520,9 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="../../d3/dbd/struct_bag.html#ac8a55c4ee9e9f6e95425bf9b0a5901c8">Bag</a>.</p>
+<p>Reimplemented in <a class="el" href="../../d2/d4d/struct_pill_bottle.html#a10f5bea712c990559e1dd7204ef40e65">PillBottle</a>, and <a class="el" href="../../d3/dbd/struct_bag.html#ac8a55c4ee9e9f6e95425bf9b0a5901c8">Bag</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../db/d66/struct_item.html#a182f7bac8365029d055b04e279981a82">can_eat()</a>, and <a class="el" href="../../db/d66/struct_item.html#a87521e07ad9e083fa892d52880ce67c5">empty()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../db/d66/struct_item.html#a87521e07ad9e083fa892d52880ce67c5">empty()</a>, and <a class="el" href="../../db/d66/struct_item.html#a7caa08865e2193086ba97358f2384875">evaluate_eat_request()</a>.</p>
 
 </div>
 </div>
@@ -628,7 +660,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="../../db/d66/struct_item.html#a0eb98a0db3e8e4e6e4b94d92c53f175b">held_by</a>, <a class="el" href="../../db/d66/struct_item.html#a7bbff5c89eda76d407fda7acbb7e2313aead1b164bfce2586f784f684ff72d509">ITEM</a>, <a class="el" href="../../db/d66/struct_item.html#a0e3e9361df9d2b0071299c51a642c528">model()</a>, <a class="el" href="../../db/d66/struct_item.html#a44db496c8de100b4f6e9bb7e546b0b4f">model_scale()</a>, <a class="el" href="../../db/d66/struct_item.html#aa59326bb87cffcdcf4e7ca6715566b6f">position</a>, <a class="el" href="../../db/d66/struct_item.html#a325a03f663374790e5ffc0b51f08683b">size()</a>, and <a class="el" href="../../d9/db4/namespaceui_1_1color.html#ab3981d4504b439492296189f2532b8c6">ui::color::white</a>.</p>
+<p class="reference">References <a class="el" href="../../d5/d87/globals_8h.html#a2c70132077dcb9781666e37aee6d0de1">ENABLE_MODELS</a>, <a class="el" href="../../db/d66/struct_item.html#a0eb98a0db3e8e4e6e4b94d92c53f175b">held_by</a>, <a class="el" href="../../db/d66/struct_item.html#a7bbff5c89eda76d407fda7acbb7e2313aead1b164bfce2586f784f684ff72d509">ITEM</a>, <a class="el" href="../../db/d66/struct_item.html#a0e3e9361df9d2b0071299c51a642c528">model()</a>, <a class="el" href="../../db/d66/struct_item.html#a44db496c8de100b4f6e9bb7e546b0b4f">model_scale()</a>, <a class="el" href="../../db/d66/struct_item.html#aa59326bb87cffcdcf4e7ca6715566b6f">position</a>, <a class="el" href="../../db/d66/struct_item.html#a325a03f663374790e5ffc0b51f08683b">size()</a>, and <a class="el" href="../../d9/db4/namespaceui_1_1color.html#ab3981d4504b439492296189f2532b8c6">ui::color::white</a>.</p>
 
 </div>
 </div>

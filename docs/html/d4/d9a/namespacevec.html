@@ -70,13 +70,18 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">vec Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:abca94cc6b9343e0e4c5c5acf0b80eda2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#abca94cc6b9343e0e4c5c5acf0b80eda2">forEachNeighbor</a> (int i, int j, std::function&lt; void(const <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> &amp;)&gt; cb, int step=1)</td></tr>
+<tr class="separator:abca94cc6b9343e0e4c5c5acf0b80eda2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb9d98389871928fc1495f58786a7336"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#adb9d98389871928fc1495f58786a7336">get_neighbors</a> (int i, int j, int step=1)</td></tr>
+<tr class="separator:adb9d98389871928fc1495f58786a7336"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e18f73ec09c3b1c14c15a0a42c8405a"><td class="memItemLeft" align="right" valign="top">float constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#a3e18f73ec09c3b1c14c15a0a42c8405a">newton_raphson</a> (float x, float cur, float prev)</td></tr>
 <tr class="separator:a3e18f73ec09c3b1c14c15a0a42c8405a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20805d1426584aacd75c13c89856132f"><td class="memItemLeft" align="right" valign="top">float constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#a20805d1426584aacd75c13c89856132f">ce_sqrtf</a> (float x)</td></tr>
@@ -95,6 +100,15 @@ Functions</h2></td></tr>
 <tr class="separator:a5a3a9e37c6f80541240d5cb6cdb4fd4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade144f304cbabbf68741ea3e19b96f1e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#ade144f304cbabbf68741ea3e19b96f1e">snap</a> (<a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> position)</td></tr>
 <tr class="separator:ade144f304cbabbf68741ea3e19b96f1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0896021658bc6030ca3348ee3946a0b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#a0896021658bc6030ca3348ee3946a0b3">lerp</a> (<a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> a, <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> b, float pct)</td></tr>
+<tr class="separator:a0896021658bc6030ca3348ee3946a0b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:af3910db49dc587ff25894ab5e8e1fdcc"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#af3910db49dc587ff25894ab5e8e1fdcc">neigh_x</a> [8] = {-1, -1, -1, 0, 0, 1, 1, 1}</td></tr>
+<tr class="separator:af3910db49dc587ff25894ab5e8e1fdcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35e7b1db3053956001d23cb0dc07e081"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#a35e7b1db3053956001d23cb0dc07e081">neigh_y</a> [8] = {-1, 0, 1, -1, 1, -1, 0, 1}</td></tr>
+<tr class="separator:a35e7b1db3053956001d23cb0dc07e081"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a20805d1426584aacd75c13c89856132f" name="a20805d1426584aacd75c13c89856132f"></a>
@@ -163,7 +177,7 @@ Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="../../d4/d9a/namespacevec.html#a20805d1426584aacd75c13c89856132f">ce_sqrtf()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../dd/de3/namespaceastar.html#a5ed9154348f3c75837c41448c03ddcd7">astar::distance_between()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#a321f609c7e2ac2633d18562edcebb49c">EntityHelper::getClosestMatchingEntity()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#ae92914dda24df2609cd0578075bf3bd4">EntityHelper::getEntitiesInRange()</a>, <a class="el" href="../../d9/dd0/struct_item_helper.html#a7d3afea322f196765e7c22a61bea38b3">ItemHelper::getitemsInRange()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#a5cdd24f82a343b41f887186d9b1acf45">EntityHelper::getMatchingEntityInFront()</a>, and <a class="el" href="../../dd/de3/namespaceastar.html#a05bf641d43876bcd1f7fd0ad254d3563">astar::path_estimate()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../df/d04/namespacetest.html#a44ab8ef8604a87885854abcee9db2963">test::canvisit()</a>, <a class="el" href="../../dd/de3/namespaceastar.html#a5ed9154348f3c75837c41448c03ddcd7">astar::distance_between()</a>, <a class="el" href="../../dd/de3/namespaceastar.html#a5f1709497770393433f6517db883f8aa">astar::find_path_impl()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#a321f609c7e2ac2633d18562edcebb49c">EntityHelper::getClosestMatchingEntity()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#ae92914dda24df2609cd0578075bf3bd4">EntityHelper::getEntitiesInRange()</a>, <a class="el" href="../../d9/dd0/struct_item_helper.html#a7d3afea322f196765e7c22a61bea38b3">ItemHelper::getitemsInRange()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#a5cdd24f82a343b41f887186d9b1acf45">EntityHelper::getMatchingEntityInFront()</a>, <a class="el" href="../../d2/d63/struct_job.html#af52868928945ccf5d593eb404b6aba22">Job::is_at_position()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#a3610c9a5865dc6bfa24cdc6f6858a763">EntityHelper::isWalkableRawEntities()</a>, <a class="el" href="../../dd/de3/namespaceastar.html#a05bf641d43876bcd1f7fd0ad254d3563">astar::path_estimate()</a>, and <a class="el" href="../../d9/d49/namespacesystem__manager.html#aae333b079103d5d1c60cd78e91f20516">system_manager::sophie()</a>.</p>
 
 </div>
 </div>
@@ -172,6 +186,9 @@ Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">float vec::dot2 </td>
@@ -191,9 +208,154 @@ Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d4/d9a/namespacevec.html#a2b336372bfe6c8bd752922c357866a24">norm()</a>, and <a class="el" href="../../dc/dc4/struct_entity.html#a86799bd4754255d67557ff0fe67a67d1">Entity::turn_to_face_entity()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d4/d9a/namespacevec.html#a2b336372bfe6c8bd752922c357866a24">norm()</a>.</p>
+
+</div>
+</div>
+<a id="abca94cc6b9343e0e4c5c5acf0b80eda2" name="abca94cc6b9343e0e4c5c5acf0b80eda2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abca94cc6b9343e0e4c5c5acf0b80eda2">&#9670;&#160;</a></span>forEachNeighbor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void vec::forEachNeighbor </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>j</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; void(const <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> &amp;)&gt;&#160;</td>
+          <td class="paramname"><em>cb</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>step</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d4/d9a/namespacevec.html#af3910db49dc587ff25894ab5e8e1fdcc">neigh_x</a>, and <a class="el" href="../../d4/d9a/namespacevec.html#a35e7b1db3053956001d23cb0dc07e081">neigh_y</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d4/d9a/namespacevec.html#adb9d98389871928fc1495f58786a7336">get_neighbors()</a>, and <a class="el" href="../../dd/de3/namespaceastar.html#a9f1223e812b7ef83a3fc8ddcc99d44b2">astar::get_neighbors()</a>.</p>
+
+</div>
+</div>
+<a id="adb9d98389871928fc1495f58786a7336" name="adb9d98389871928fc1495f58786a7336"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb9d98389871928fc1495f58786a7336">&#9670;&#160;</a></span>get_neighbors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::vector&lt; <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> &gt; vec::get_neighbors </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>j</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>step</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="../../d4/d9a/namespacevec.html#abca94cc6b9343e0e4c5c5acf0b80eda2">forEachNeighbor()</a>.</p>
+
+</div>
+</div>
+<a id="a0896021658bc6030ca3348ee3946a0b3" name="a0896021658bc6030ca3348ee3946a0b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0896021658bc6030ca3348ee3946a0b3">&#9670;&#160;</a></span>lerp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> vec::lerp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a>&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a>&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>pct</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="../../d9/df4/namespacetests.html#a43365f2afd4ccd76b465de3090e880c2">tests::test_half()</a>, and <a class="el" href="../../d9/df4/namespacetests.html#a9999b304d3dc9efbfe485609ca395450">tests::test_tenth()</a>.</p>
 
 </div>
 </div>
@@ -248,6 +410,9 @@ Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> vec::norm </td>
@@ -257,11 +422,14 @@ Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="../../d4/d9a/namespacevec.html#aabd3fc26e0da594069a9f344c48beb8d">dot2()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="../../dc/dc4/struct_entity.html#a86799bd4754255d67557ff0fe67a67d1">Entity::turn_to_face_entity()</a>.</p>
 
 </div>
 </div>
@@ -270,6 +438,9 @@ Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> vec::snap </td>
@@ -279,11 +450,16 @@ Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="../../d5/d87/globals_8h.html#af3c09b249c48587aba215cce49091fa0">TILESIZE</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="../../d5/dab/struct_entity_helper.html#a5cdd24f82a343b41f887186d9b1acf45">EntityHelper::getMatchingEntityInFront()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a947c5a65ae1a78b3c4e46fdf76e2f86b">system_manager::process_input()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a64ba3d05bc47f05d2ef60fab5a5957fa">Transform::snap_position()</a>, and <a class="el" href="../../db/d66/struct_item.html#a3a2607e15ddf8c337bc7480cadccf307">Item::snap_position()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../da/d70/namespacesystem__manager_1_1input__process__manager_1_1planning.html#a86a051e227fe3d76b78b701f01880914">system_manager::input_process_manager::planning::drop_held_furniture()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#a5cdd24f82a343b41f887186d9b1acf45">EntityHelper::getMatchingEntityInFront()</a>, <a class="el" href="../../dd/d69/struct_transform.html#a64ba3d05bc47f05d2ef60fab5a5957fa">Transform::snap_position()</a>, and <a class="el" href="../../db/d66/struct_item.html#a3a2607e15ddf8c337bc7480cadccf307">Item::snap_position()</a>.</p>
 
 </div>
 </div>
@@ -292,6 +468,9 @@ Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> vec::snap </td>
@@ -301,6 +480,11 @@ Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="../../d5/d87/globals_8h.html#af3c09b249c48587aba215cce49091fa0">TILESIZE</a>.</p>
@@ -331,7 +515,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../dd/d69/struct_transform.html#aeb1c3da9267cef25c5ece078dbceb849">Transform::as2()</a>, <a class="el" href="../../d9/dd0/struct_item_helper.html#a7d3afea322f196765e7c22a61bea38b3">ItemHelper::getitemsInRange()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#a5cdd24f82a343b41f887186d9b1acf45">EntityHelper::getMatchingEntityInFront()</a>, and <a class="el" href="../../dc/dc4/struct_entity.html#a5ccbde35c86805a9450faa4da52f414d">Entity::tile_infront()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../dd/d69/struct_transform.html#aeb1c3da9267cef25c5ece078dbceb849">Transform::as2()</a>, <a class="el" href="../../d9/dd0/struct_item_helper.html#a7d3afea322f196765e7c22a61bea38b3">ItemHelper::getitemsInRange()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#a5cdd24f82a343b41f887186d9b1acf45">EntityHelper::getMatchingEntityInFront()</a>, and <a class="el" href="../../dd/d69/struct_transform.html#ad831d83c947f2ddcf0357a9404f3f31a">Transform::tile_infront()</a>.</p>
 
 </div>
 </div>
@@ -359,7 +543,56 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d4/dd7/struct_polygon.html#abd3769748b625338e011a6320495070f">Polygon::as_3d()</a>, <a class="el" href="../../dd/d8c/namespaceraylib.html#adf92235c8362e980a25030f08465d209">raylib::DrawLineStrip2Din3D()</a>, <a class="el" href="../../da/d05/struct_game_map_info.html#a7f8ea036a76651a221c0c18490a4c22d">GameMapInfo::generate_map()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a947c5a65ae1a78b3c4e46fdf76e2f86b">system_manager::process_input()</a>, and <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#adc930a9721c3daf854c661ec1905d357">system_manager::job_system::render_job_visual()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../d4/dd7/struct_polygon.html#abd3769748b625338e011a6320495070f">Polygon::as_3d()</a>, <a class="el" href="../../dd/d8c/namespaceraylib.html#adf92235c8362e980a25030f08465d209">raylib::DrawLineStrip2Din3D()</a>, <a class="el" href="../../da/d70/namespacesystem__manager_1_1input__process__manager_1_1planning.html#a86a051e227fe3d76b78b701f01880914">system_manager::input_process_manager::planning::drop_held_furniture()</a>, <a class="el" href="../../d1/df1/structgeneration_1_1helper.html#a7af3da545dc8fda3263f0bb787cbf423">generation::helper::generate_entity_from_character()</a>, <a class="el" href="../../d8/d83/entity_8h.html#ae9b6ff048ccc67a2a6de1877e294edf4">make_customer()</a>, <a class="el" href="../../df/d3b/namespacesystem__manager_1_1job__system.html#adc930a9721c3daf854c661ec1905d357">system_manager::job_system::render_job_visual()</a>, and <a class="el" href="../../d2/d63/struct_job.html#a2e875fe84ba07e39c39ca49706917921">Job::travel_to_position()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="af3910db49dc587ff25894ab5e8e1fdcc" name="af3910db49dc587ff25894ab5e8e1fdcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3910db49dc587ff25894ab5e8e1fdcc">&#9670;&#160;</a></span>neigh_x</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int vec::neigh_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="../../d4/d9a/namespacevec.html#abca94cc6b9343e0e4c5c5acf0b80eda2">forEachNeighbor()</a>.</p>
+
+</div>
+</div>
+<a id="a35e7b1db3053956001d23cb0dc07e081" name="a35e7b1db3053956001d23cb0dc07e081"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35e7b1db3053956001d23cb0dc07e081">&#9670;&#160;</a></span>neigh_y</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int vec::neigh_y[8] = {-1, 0, 1, -1, 1, -1, 0, 1}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="../../d4/d9a/namespacevec.html#abca94cc6b9343e0e4c5c5acf0b80eda2">forEachNeighbor()</a>.</p>
 
 </div>
 </div>

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['msg_0',['Msg',['../dd/d1c/structnetwork_1_1_client_packet.html#a8b764c2200658cb2460a824d39418d19',1,'network::ClientPacket']]],
-  ['mypolymorphicclasses_1',['MyPolymorphicClasses',['../da/db4/shared_8h.html#a81d6bddbdad830eb00a8389649633985',1,'shared.h']]]
+  ['modelnamefetcher_0',['ModelNameFetcher',['../db/d81/struct_has_dynamic_model_name.html#a202e5f463db1bec31f5884fd908d900c',1,'HasDynamicModelName']]],
+  ['msg_1',['Msg',['../dd/d1c/structnetwork_1_1_client_packet.html#aaeca9f49b09a552b6c3d6232624663d5',1,'network::ClientPacket']]],
+  ['mypolymorphicclasses_2',['MyPolymorphicClasses',['../da/db4/shared_8h.html#a52e7f8a375df95d4145e6fa530707517',1,'shared.h']]]
 ];

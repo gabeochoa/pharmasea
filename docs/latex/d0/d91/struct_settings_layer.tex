@@ -24,11 +24,9 @@ enum \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7a}{A
 \item 
 virtual \mbox{\hyperlink{struct_settings_layer_a4c0c1e7cea44f09d4ea9316582a8d8c6}{$\sim$\+Settings\+Layer}} ()
 \item 
-virtual void \mbox{\hyperlink{struct_settings_layer_a3d582e4d4c4f4c77de135351afad5ab6}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event) override
+bool \mbox{\hyperlink{struct_settings_layer_a94a9925e975d7e76437914d4635c27db}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&event) override
 \item 
-bool \mbox{\hyperlink{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&event)
-\item 
-bool \mbox{\hyperlink{struct_settings_layer_a7de19f92164510ae75ff9043db1c16cd}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&event)
+bool \mbox{\hyperlink{struct_settings_layer_a7df4720a1945ef147dd4401b56a81313}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&event) override
 \item 
 void \mbox{\hyperlink{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}{streamer\+\_\+safe\+\_\+box}} ()
 \item 
@@ -67,7 +65,15 @@ virtual void \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{on
 \item 
 virtual void \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{on\+Draw}} (float elapsed)=0
 \item 
-virtual void \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&)=0
+void \mbox{\hyperlink{struct_layer_a753e388bb8e7416a7cc2b338b5566396}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_aaad763977a0828b342ddd6ac0af65aea}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_ad1793a53fff5c6516848d2a1a0c73a10}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_a4410643bde2d400ba6731f48ad5a8727}{on\+Gamepad\+Axis\+Moved}} (\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_affe784562ca969d024bb98866455985d}{on\+Char\+Pressed\+Event}} (\mbox{\hyperlink{struct_char_pressed_event}{Char\+Pressed\+Event}} \&)
 \item 
 const std\+::string \& \mbox{\hyperlink{struct_layer_a592dabab6ae280b7a3a3f4b195c9833b}{getname}} () const
 \end{DoxyCompactItemize}
@@ -252,47 +258,33 @@ Implements \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{Laye
 
 References \mbox{\hyperlink{namespaceext_a5bb9a44990202857eea129e5b983f183}{ext\+::clear\+\_\+background()}}, \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\+\_\+ui()}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu\+::\+Settings}}, and \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
 
-\mbox{\Hypertarget{struct_settings_layer_a3d582e4d4c4f4c77de135351afad5ab6}\label{struct_settings_layer_a3d582e4d4c4f4c77de135351afad5ab6}} 
-\index{SettingsLayer@{SettingsLayer}!onEvent@{onEvent}}
-\index{onEvent@{onEvent}!SettingsLayer@{SettingsLayer}}
-\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
-{\footnotesize\ttfamily virtual void Settings\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_event}{Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Implements \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{Layer}}.
-
-
-
-References \mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{Event\+Dispatcher\+::dispatch()}}, \mbox{\hyperlink{struct_settings_layer_a7de19f92164510ae75ff9043db1c16cd}{on\+Gamepad\+Button\+Pressed()}}, and \mbox{\hyperlink{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}{on\+Key\+Pressed()}}.
-
-\mbox{\Hypertarget{struct_settings_layer_a7de19f92164510ae75ff9043db1c16cd}\label{struct_settings_layer_a7de19f92164510ae75ff9043db1c16cd}} 
+\mbox{\Hypertarget{struct_settings_layer_a7df4720a1945ef147dd4401b56a81313}\label{struct_settings_layer_a7df4720a1945ef147dd4401b56a81313}} 
 \index{SettingsLayer@{SettingsLayer}!onGamepadButtonPressed@{onGamepadButtonPressed}}
 \index{onGamepadButtonPressed@{onGamepadButtonPressed}!SettingsLayer@{SettingsLayer}}
 \doxysubsubsection{\texorpdfstring{onGamepadButtonPressed()}{onGamepadButtonPressed()}}
-{\footnotesize\ttfamily bool Settings\+Layer\+::on\+Gamepad\+Button\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily bool Settings\+Layer\+::on\+Gamepad\+Button\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_layer_ad1793a53fff5c6516848d2a1a0c73a10}{Layer}}.
 
 
 
 References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu\+::\+Settings}}, and \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
 
-
-
-Referenced by \mbox{\hyperlink{struct_settings_layer_a3d582e4d4c4f4c77de135351afad5ab6}{on\+Event()}}.
-
-\mbox{\Hypertarget{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}\label{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}} 
+\mbox{\Hypertarget{struct_settings_layer_a94a9925e975d7e76437914d4635c27db}\label{struct_settings_layer_a94a9925e975d7e76437914d4635c27db}} 
 \index{SettingsLayer@{SettingsLayer}!onKeyPressed@{onKeyPressed}}
 \index{onKeyPressed@{onKeyPressed}!SettingsLayer@{SettingsLayer}}
 \doxysubsubsection{\texorpdfstring{onKeyPressed()}{onKeyPressed()}}
-{\footnotesize\ttfamily bool Settings\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily bool Settings\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_layer_aaad763977a0828b342ddd6ac0af65aea}{Layer}}.
 
 
 
 References \mbox{\hyperlink{struct_settings_layer_a3544b379d9ac79e8178f07bac7c634d8}{active\+Window}}, \mbox{\hyperlink{struct_key_event_a099e4f3c01870f67baffeba80b5c1860}{Key\+Event\+::keycode}}, \mbox{\hyperlink{struct_settings_layer_a5a29db2a76602aa3634eb5fab6b3df7aafadad06caf84178f48fe2a18561c87e1}{Root}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6af4f70727dc34561dfde1a3c529b6205c}{menu\+::\+Settings}}, and \mbox{\hyperlink{struct_settings_layer_a19364694cf9d49c927f03b8538f2a6ee}{ui\+\_\+context}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_settings_layer_a3d582e4d4c4f4c77de135351afad5ab6}{on\+Event()}}.
 
 \mbox{\Hypertarget{struct_settings_layer_a61847ff955819ef4cfffe526202d9df3}\label{struct_settings_layer_a61847ff955819ef4cfffe526202d9df3}} 
 \index{SettingsLayer@{SettingsLayer}!onUpdate@{onUpdate}}
@@ -347,7 +339,7 @@ Referenced by \mbox{\hyperlink{struct_settings_layer_ad18cb265fa3c9fd30ee613e876
 
 
 
-Referenced by \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\+\_\+ui()}}, and \mbox{\hyperlink{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}{on\+Key\+Pressed()}}.
+Referenced by \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\+\_\+ui()}}, and \mbox{\hyperlink{struct_settings_layer_a94a9925e975d7e76437914d4635c27db}{on\+Key\+Pressed()}}.
 
 \mbox{\Hypertarget{struct_settings_layer_adb61f10c121d444e8dd5aa337b74a520}\label{struct_settings_layer_adb61f10c121d444e8dd5aa337b74a520}} 
 \index{SettingsLayer@{SettingsLayer}!keyBindingTrie@{keyBindingTrie}}
@@ -407,7 +399,7 @@ Referenced by \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e
 
 
 
-Referenced by \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\+\_\+ui()}}, \mbox{\hyperlink{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}{enable\+\_\+post\+\_\+processing()}}, \mbox{\hyperlink{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}{master\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}{music\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_a25715e82ed14d56401b9a39b57c03b0b}{on\+Draw()}}, \mbox{\hyperlink{struct_settings_layer_a7de19f92164510ae75ff9043db1c16cd}{on\+Gamepad\+Button\+Pressed()}}, \mbox{\hyperlink{struct_settings_layer_ae02dea54b3504a2ae28c6e30f6b2a4f7}{on\+Key\+Pressed()}}, \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{resolution\+\_\+switcher()}}, \mbox{\hyperlink{struct_settings_layer_a1d190e9acf832ded498984746352e2a1}{Settings\+Layer()}}, and \mbox{\hyperlink{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}{streamer\+\_\+safe\+\_\+box()}}.
+Referenced by \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f25dd1a}{draw\+\_\+ui()}}, \mbox{\hyperlink{struct_settings_layer_af8a10237406e508e5de36cc3e9ad1d0c}{enable\+\_\+post\+\_\+processing()}}, \mbox{\hyperlink{struct_settings_layer_ac918b802645133df5aeadd80478c6df3}{master\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_a2ba0d94a3400a2144ac4975899326bcd}{music\+\_\+volume()}}, \mbox{\hyperlink{struct_settings_layer_a25715e82ed14d56401b9a39b57c03b0b}{on\+Draw()}}, \mbox{\hyperlink{struct_settings_layer_a7df4720a1945ef147dd4401b56a81313}{on\+Gamepad\+Button\+Pressed()}}, \mbox{\hyperlink{struct_settings_layer_a94a9925e975d7e76437914d4635c27db}{on\+Key\+Pressed()}}, \mbox{\hyperlink{struct_settings_layer_ab868e4dbe9bb6e71502d728d2e776704}{resolution\+\_\+switcher()}}, \mbox{\hyperlink{struct_settings_layer_a1d190e9acf832ded498984746352e2a1}{Settings\+Layer()}}, and \mbox{\hyperlink{struct_settings_layer_ad034cf2f8a7b156822029fc66868ac7b}{streamer\+\_\+safe\+\_\+box()}}.
 
 \mbox{\Hypertarget{struct_settings_layer_a2436c15dac32006970485af13ace1163}\label{struct_settings_layer_a2436c15dac32006970485af13ace1163}} 
 \index{SettingsLayer@{SettingsLayer}!windowSizeDropdownIndex@{windowSizeDropdownIndex}}
@@ -425,4 +417,4 @@ Referenced by \mbox{\hyperlink{struct_settings_layer_ac7ac7226fc96d9ba1950092a1f
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/\mbox{\hyperlink{settingslayer_8h}{settingslayer.\+h}}\end{DoxyCompactItemize}
+src/layers/\mbox{\hyperlink{settingslayer_8h}{settingslayer.\+h}}\end{DoxyCompactItemize}

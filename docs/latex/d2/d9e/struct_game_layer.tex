@@ -17,13 +17,11 @@ Inheritance diagram for Game\+Layer\+:\begin{figure}[H]
 \item 
 virtual \mbox{\hyperlink{struct_game_layer_ade39138cdf14f80bf254885a49e43fdf}{$\sim$\+Game\+Layer}} ()
 \item 
-virtual void \mbox{\hyperlink{struct_game_layer_a0cb58f0bb55b154e6236df80fbe0eea0}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event) override
+bool \mbox{\hyperlink{struct_game_layer_a5055c329c8fbba7d8e526325bd168205}{on\+Gamepad\+Axis\+Moved}} (\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&) override
 \item 
-bool \mbox{\hyperlink{struct_game_layer_ac09e8d5b737b41758dffd544d99166cd}{on\+Gamepad\+Axis\+Moved}} (\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&)
+bool \mbox{\hyperlink{struct_game_layer_ae4df5a2bb4e3174ab40e5da305779d01}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&event) override
 \item 
-bool \mbox{\hyperlink{struct_game_layer_a84417a9ddbc61d6c74a0c1d598661e46}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&event)
-\item 
-bool \mbox{\hyperlink{struct_game_layer_a614faefb9cd5b78e3117eea4bd3de3b1}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&event)
+bool \mbox{\hyperlink{struct_game_layer_a2b807062f384c89c984b3f2029a0efd4}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&event) override
 \item 
 void \mbox{\hyperlink{struct_game_layer_acc7d3f410b4c25afd764848638d39c6f}{play\+\_\+music}} ()
 \item 
@@ -46,16 +44,22 @@ virtual void \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{on
 \item 
 virtual void \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{on\+Draw}} (float elapsed)=0
 \item 
-virtual void \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&)=0
+void \mbox{\hyperlink{struct_layer_a753e388bb8e7416a7cc2b338b5566396}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_aaad763977a0828b342ddd6ac0af65aea}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_ad1793a53fff5c6516848d2a1a0c73a10}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_a4410643bde2d400ba6731f48ad5a8727}{on\+Gamepad\+Axis\+Moved}} (\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_affe784562ca969d024bb98866455985d}{on\+Char\+Pressed\+Event}} (\mbox{\hyperlink{struct_char_pressed_event}{Char\+Pressed\+Event}} \&)
 \item 
 const std\+::string \& \mbox{\hyperlink{struct_layer_a592dabab6ae280b7a3a3f4b195c9833b}{getname}} () const
 \end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_player}{Player}} $>$ \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}
-\item 
-std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_base_player}{Base\+Player}} $>$ \mbox{\hyperlink{struct_game_layer_a02d82848d230e3efc306e41ccb8a0711}{active\+\_\+player}}
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \mbox{\hyperlink{struct_game_layer_aea83f649a09b0dc864d4c0622fe874ce}{active\+\_\+player}}
 \item 
 std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_game_cam}{Game\+Cam}} $>$ \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}
 \item 
@@ -79,7 +83,7 @@ std\+::string \mbox{\hyperlink{struct_layer_a2071349b5667273725ae7f05a42db7a6}{n
 
 
 
-References \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}, \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}, \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}, and \mbox{\hyperlink{struct_global_value_register_a0020d85a5afb11283c115e425f7e175c}{Global\+Value\+Register\+::set()}}.
+References \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}, \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}, and \mbox{\hyperlink{struct_global_value_register_a0020d85a5afb11283c115e425f7e175c}{Global\+Value\+Register\+::set()}}.
 
 \mbox{\Hypertarget{struct_game_layer_ade39138cdf14f80bf254885a49e43fdf}\label{struct_game_layer_ade39138cdf14f80bf254885a49e43fdf}} 
 \index{GameLayer@{GameLayer}!````~GameLayer@{$\sim$GameLayer}}
@@ -102,59 +106,45 @@ Implements \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{Laye
 
 
 
-References \mbox{\hyperlink{namespaceext_a5bb9a44990202857eea129e5b983f183}{ext\+::clear\+\_\+background()}}, \mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{Global\+Value\+Register\+::get\+\_\+or\+\_\+default()}}, \mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{Global\+Value\+Register\+::get\+\_\+ptr()}}, \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}, \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}, \mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{Menu\+State\+::s\+\_\+in\+\_\+game()}}, \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
+References \mbox{\hyperlink{namespaceext_a5bb9a44990202857eea129e5b983f183}{ext\+::clear\+\_\+background()}}, \mbox{\hyperlink{struct_global_value_register_a2ebfe0e4ca648cac401ec3c1ee1afae5}{Global\+Value\+Register\+::get\+\_\+or\+\_\+default()}}, \mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{Global\+Value\+Register\+::get\+\_\+ptr()}}, \mbox{\hyperlink{globals_8h_a9b5348cc15afb030f3257335ce85a09f}{global\+\_\+player}}, \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}, \mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{Menu\+State\+::s\+\_\+in\+\_\+game()}}, \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
 
-\mbox{\Hypertarget{struct_game_layer_a0cb58f0bb55b154e6236df80fbe0eea0}\label{struct_game_layer_a0cb58f0bb55b154e6236df80fbe0eea0}} 
-\index{GameLayer@{GameLayer}!onEvent@{onEvent}}
-\index{onEvent@{onEvent}!GameLayer@{GameLayer}}
-\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
-{\footnotesize\ttfamily virtual void Game\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_event}{Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Implements \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{Layer}}.
-
-
-
-References \mbox{\hyperlink{struct_event_dispatcher_aaa084fba3bab5eb635066b00f1985c24}{Event\+Dispatcher\+::dispatch()}}, \mbox{\hyperlink{struct_game_layer_ac09e8d5b737b41758dffd544d99166cd}{on\+Gamepad\+Axis\+Moved()}}, \mbox{\hyperlink{struct_game_layer_a84417a9ddbc61d6c74a0c1d598661e46}{on\+Gamepad\+Button\+Pressed()}}, \mbox{\hyperlink{struct_game_layer_a614faefb9cd5b78e3117eea4bd3de3b1}{on\+Key\+Pressed()}}, and \mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{Menu\+State\+::s\+\_\+in\+\_\+game()}}.
-
-\mbox{\Hypertarget{struct_game_layer_ac09e8d5b737b41758dffd544d99166cd}\label{struct_game_layer_ac09e8d5b737b41758dffd544d99166cd}} 
+\mbox{\Hypertarget{struct_game_layer_a5055c329c8fbba7d8e526325bd168205}\label{struct_game_layer_a5055c329c8fbba7d8e526325bd168205}} 
 \index{GameLayer@{GameLayer}!onGamepadAxisMoved@{onGamepadAxisMoved}}
 \index{onGamepadAxisMoved@{onGamepadAxisMoved}!GameLayer@{GameLayer}}
 \doxysubsubsection{\texorpdfstring{onGamepadAxisMoved()}{onGamepadAxisMoved()}}
-{\footnotesize\ttfamily bool Game\+Layer\+::on\+Gamepad\+Axis\+Moved (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily bool Game\+Layer\+::on\+Gamepad\+Axis\+Moved (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
-Referenced by \mbox{\hyperlink{struct_game_layer_a0cb58f0bb55b154e6236df80fbe0eea0}{on\+Event()}}.
+Reimplemented from \mbox{\hyperlink{struct_layer_a4410643bde2d400ba6731f48ad5a8727}{Layer}}.
 
-\mbox{\Hypertarget{struct_game_layer_a84417a9ddbc61d6c74a0c1d598661e46}\label{struct_game_layer_a84417a9ddbc61d6c74a0c1d598661e46}} 
+\mbox{\Hypertarget{struct_game_layer_ae4df5a2bb4e3174ab40e5da305779d01}\label{struct_game_layer_ae4df5a2bb4e3174ab40e5da305779d01}} 
 \index{GameLayer@{GameLayer}!onGamepadButtonPressed@{onGamepadButtonPressed}}
 \index{onGamepadButtonPressed@{onGamepadButtonPressed}!GameLayer@{GameLayer}}
 \doxysubsubsection{\texorpdfstring{onGamepadButtonPressed()}{onGamepadButtonPressed()}}
-{\footnotesize\ttfamily bool Game\+Layer\+::on\+Gamepad\+Button\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily bool Game\+Layer\+::on\+Gamepad\+Button\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
-References \mbox{\hyperlink{struct_gamepad_button_pressed_event_af34a9b36877fe246213d861ba4711b46}{Gamepad\+Button\+Pressed\+Event\+::button}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, \mbox{\hyperlink{struct_key_map_aa512c05b66f7e01fc35b102ff7959349}{Key\+Map\+::get\+\_\+button()}}, and \mbox{\hyperlink{struct_game_state_a9a3ed09dd6f05acb6aa3a804a8aedc37}{Game\+State\+::s\+\_\+pause()}}.
+Reimplemented from \mbox{\hyperlink{struct_layer_ad1793a53fff5c6516848d2a1a0c73a10}{Layer}}.
 
 
 
-Referenced by \mbox{\hyperlink{struct_game_layer_a0cb58f0bb55b154e6236df80fbe0eea0}{on\+Event()}}.
+References \mbox{\hyperlink{struct_gamepad_button_pressed_event_af34a9b36877fe246213d861ba4711b46}{Gamepad\+Button\+Pressed\+Event\+::button}}, \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, \mbox{\hyperlink{struct_key_map_aa512c05b66f7e01fc35b102ff7959349}{Key\+Map\+::get\+\_\+button()}}, \mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{Menu\+State\+::s\+\_\+in\+\_\+game()}}, and \mbox{\hyperlink{struct_game_state_a9a3ed09dd6f05acb6aa3a804a8aedc37}{Game\+State\+::s\+\_\+pause()}}.
 
-\mbox{\Hypertarget{struct_game_layer_a614faefb9cd5b78e3117eea4bd3de3b1}\label{struct_game_layer_a614faefb9cd5b78e3117eea4bd3de3b1}} 
+\mbox{\Hypertarget{struct_game_layer_a2b807062f384c89c984b3f2029a0efd4}\label{struct_game_layer_a2b807062f384c89c984b3f2029a0efd4}} 
 \index{GameLayer@{GameLayer}!onKeyPressed@{onKeyPressed}}
 \index{onKeyPressed@{onKeyPressed}!GameLayer@{GameLayer}}
 \doxysubsubsection{\texorpdfstring{onKeyPressed()}{onKeyPressed()}}
-{\footnotesize\ttfamily bool Game\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily bool Game\+Layer\+::on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
-References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, \mbox{\hyperlink{struct_key_map_a8026f7f5618d4f427a5c4883872e0332}{Key\+Map\+::get\+\_\+key\+\_\+code()}}, \mbox{\hyperlink{struct_key_event_a099e4f3c01870f67baffeba80b5c1860}{Key\+Event\+::keycode}}, and \mbox{\hyperlink{struct_game_state_a9a3ed09dd6f05acb6aa3a804a8aedc37}{Game\+State\+::s\+\_\+pause()}}.
+Reimplemented from \mbox{\hyperlink{struct_layer_aaad763977a0828b342ddd6ac0af65aea}{Layer}}.
 
 
 
-Referenced by \mbox{\hyperlink{struct_game_layer_a0cb58f0bb55b154e6236df80fbe0eea0}{on\+Event()}}.
+References \mbox{\hyperlink{namespacemenu_a010aa2a545937970804803afb7977bc6a63d72051e901c069f8aa1b32aa0c43bb}{menu\+::\+Game}}, \mbox{\hyperlink{struct_key_map_a8026f7f5618d4f427a5c4883872e0332}{Key\+Map\+::get\+\_\+key\+\_\+code()}}, \mbox{\hyperlink{struct_key_event_a099e4f3c01870f67baffeba80b5c1860}{Key\+Event\+::keycode}}, \mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{Menu\+State\+::s\+\_\+in\+\_\+game()}}, and \mbox{\hyperlink{struct_game_state_a9a3ed09dd6f05acb6aa3a804a8aedc37}{Game\+State\+::s\+\_\+pause()}}.
 
 \mbox{\Hypertarget{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514cd}\label{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514cd}} 
 \index{GameLayer@{GameLayer}!onUpdate@{onUpdate}}
@@ -168,7 +158,7 @@ Implements \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{Laye
 
 
 
-References \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}, \mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{Global\+Value\+Register\+::get\+\_\+ptr()}}, \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}, \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{Map\+::grab\+\_\+things()}}, \mbox{\hyperlink{struct_game_layer_acc7d3f410b4c25afd764848638d39c6f}{play\+\_\+music()}}, \mbox{\hyperlink{struct_game_layer_aafada798b14b84a58a5428fcfde93994}{player}}, \mbox{\hyperlink{struct_transform_aa3e740901d4e8a1b57ebbf06d8fab13e}{Transform\+::position}}, \mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{Menu\+State\+::s\+\_\+in\+\_\+game()}}, \mbox{\hyperlink{struct_game_state_aa927cf7b60fe39c96c4d97187a5d33bd}{Game\+State\+::s\+\_\+should\+\_\+update()}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
+References \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}{cam}}, \mbox{\hyperlink{struct_global_value_register_af490d6abcf31e2e41b1f0eead7f94f0a}{Global\+Value\+Register\+::get\+\_\+ptr()}}, \mbox{\hyperlink{globals_8h_a9b5348cc15afb030f3257335ce85a09f}{global\+\_\+player}}, \mbox{\hyperlink{globals__register_8h_aac6abbd011709171879036d77206a4aa}{GLOBALS}}, \mbox{\hyperlink{struct_map_a654d7b033c2104b2edecfcf73ffcf887}{Map\+::grab\+\_\+things()}}, \mbox{\hyperlink{struct_game_layer_acc7d3f410b4c25afd764848638d39c6f}{play\+\_\+music()}}, \mbox{\hyperlink{struct_transform_a2d05f8befe3b38c8c29ae679869647cc}{Transform\+::pos()}}, \mbox{\hyperlink{struct_menu_state_aa317b81f763c51173c2cc01b74ad2559}{Menu\+State\+::s\+\_\+in\+\_\+game()}}, \mbox{\hyperlink{struct_game_state_aa927cf7b60fe39c96c4d97187a5d33bd}{Game\+State\+::s\+\_\+should\+\_\+update()}}, and \mbox{\hyperlink{tracy_8h_af0966b1b117a1e09190aaee5d5175e27}{TRACY\+\_\+\+ZONE\+\_\+\+SCOPED}}.
 
 \mbox{\Hypertarget{struct_game_layer_acc7d3f410b4c25afd764848638d39c6f}\label{struct_game_layer_acc7d3f410b4c25afd764848638d39c6f}} 
 \index{GameLayer@{GameLayer}!play\_music@{play\_music}}
@@ -178,7 +168,7 @@ References \mbox{\hyperlink{struct_game_layer_af695efab40968136bd04fb0f448df43a}
 
 
 
-References \mbox{\hyperlink{struct_music_library_aa483c444b8a7363bff5973295fe45217}{Music\+Library\+::get()}}.
+References \mbox{\hyperlink{globals_8h_ae9ba2614abaa79d7b8b4f053a870ba27}{ENABLE\+\_\+\+SOUND}}, and \mbox{\hyperlink{struct_music_library_aa483c444b8a7363bff5973295fe45217}{Music\+Library\+::get()}}.
 
 
 
@@ -187,11 +177,11 @@ Referenced by \mbox{\hyperlink{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_game_layer_a02d82848d230e3efc306e41ccb8a0711}\label{struct_game_layer_a02d82848d230e3efc306e41ccb8a0711}} 
+\mbox{\Hypertarget{struct_game_layer_aea83f649a09b0dc864d4c0622fe874ce}\label{struct_game_layer_aea83f649a09b0dc864d4c0622fe874ce}} 
 \index{GameLayer@{GameLayer}!active\_player@{active\_player}}
 \index{active\_player@{active\_player}!GameLayer@{GameLayer}}
 \doxysubsubsection{\texorpdfstring{active\_player}{active\_player}}
-{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_base_player}{Base\+Player}}$>$ Game\+Layer\+::active\+\_\+player}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_entity}{Entity}}$>$ Game\+Layer\+::active\+\_\+player}
 
 \mbox{\Hypertarget{struct_game_layer_a9214aa50097d74419596c09975f03000}\label{struct_game_layer_a9214aa50097d74419596c09975f03000}} 
 \index{GameLayer@{GameLayer}!bag\_model@{bag\_model}}
@@ -209,18 +199,8 @@ Referenced by \mbox{\hyperlink{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514
 
 Referenced by \mbox{\hyperlink{struct_game_layer_a867f76f6783f7d63333a646cbc2bbfa0}{Game\+Layer()}}, and \mbox{\hyperlink{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514cd}{on\+Update()}}.
 
-\mbox{\Hypertarget{struct_game_layer_aafada798b14b84a58a5428fcfde93994}\label{struct_game_layer_aafada798b14b84a58a5428fcfde93994}} 
-\index{GameLayer@{GameLayer}!player@{player}}
-\index{player@{player}!GameLayer@{GameLayer}}
-\doxysubsubsection{\texorpdfstring{player}{player}}
-{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_player}{Player}}$>$ Game\+Layer\+::player}
-
-
-
-Referenced by \mbox{\hyperlink{struct_game_layer_a867f76f6783f7d63333a646cbc2bbfa0}{Game\+Layer()}}, \mbox{\hyperlink{struct_game_layer_ac93aed3c3aeeb92b41fd322d0ca926c5}{on\+Draw()}}, and \mbox{\hyperlink{struct_game_layer_a4f215c223179bd3f6f2e305ae9c514cd}{on\+Update()}}.
-
 
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/\mbox{\hyperlink{gamelayer_8h}{gamelayer.\+h}}\end{DoxyCompactItemize}
+src/layers/\mbox{\hyperlink{gamelayer_8h}{gamelayer.\+h}}\end{DoxyCompactItemize}

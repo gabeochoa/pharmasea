@@ -19,13 +19,11 @@ bool \mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{em
 \item 
 bool \mbox{\hyperlink{struct_can_hold_item_ae846dc6de7e3b22454114d68f9449581}{is\+\_\+holding\+\_\+item}} () const
 \item 
-bool \mbox{\hyperlink{struct_can_hold_item_a81ced0366bb6ce69389287421347767d}{can\+\_\+take\+\_\+item\+\_\+from}} () const
-\item 
 {\footnotesize template$<$typename T $>$ }\\std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{struct_can_hold_item_a6197306bfad85f4b2816fcdd6f3b450b}{asT}} () const
 \item 
-void \mbox{\hyperlink{struct_can_hold_item_a1859b1b208d938ed63a5eea0d7a5fd47}{update}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{item}})
+void \mbox{\hyperlink{struct_can_hold_item_a36786350563a05c4398d473ed7f1f7f8}{update}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{item}}, \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313}{Item\+::\+Held\+By}} new\+HB=\mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a238dfba9b1b1077df2b9d4281d305ad7}{Item\+::\+Held\+By\+::\+NONE}})
 \item 
-std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{item}} () const
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \& \mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{item}} ()
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_base_component}{Base\+Component}}}
 \begin{DoxyCompactItemize}
@@ -33,6 +31,8 @@ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \mbox{\hyperl
 \mbox{\hyperlink{struct_base_component_ac74326a615877f3c1a17bc47787ad91e}{Base\+Component}} ()
 \item 
 \mbox{\hyperlink{struct_base_component_abec738e46eb8875697d7f9497958543d}{Base\+Component}} (\mbox{\hyperlink{struct_base_component}{Base\+Component}} \&\&)=default
+\item 
+virtual void \mbox{\hyperlink{struct_base_component_ac7389bfd8b903625667e1427ef3cb70b}{on\+Attach}} ()
 \item 
 virtual \mbox{\hyperlink{struct_base_component_ab281730e838c4cb33e96ab6d6b7fe15f}{$\sim$\+Base\+Component}} ()
 \end{DoxyCompactItemize}
@@ -69,16 +69,6 @@ std\+::shared\+\_\+ptr$<$ T $>$ Can\+Hold\+Item\+::asT (\begin{DoxyParamCaption}
 
 References \mbox{\hyperlink{struct_can_hold_item_a82ecfe70923e55ee5fddde1c2461d2b1}{held\+\_\+item}}.
 
-\mbox{\Hypertarget{struct_can_hold_item_a81ced0366bb6ce69389287421347767d}\label{struct_can_hold_item_a81ced0366bb6ce69389287421347767d}} 
-\index{CanHoldItem@{CanHoldItem}!can\_take\_item\_from@{can\_take\_item\_from}}
-\index{can\_take\_item\_from@{can\_take\_item\_from}!CanHoldItem@{CanHoldItem}}
-\doxysubsubsection{\texorpdfstring{can\_take\_item\_from()}{can\_take\_item\_from()}}
-{\footnotesize\ttfamily bool Can\+Hold\+Item\+::can\+\_\+take\+\_\+item\+\_\+from (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-References \mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{empty()}}.
-
 \mbox{\Hypertarget{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}\label{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}} 
 \index{CanHoldItem@{CanHoldItem}!empty@{empty}}
 \index{empty@{empty}!CanHoldItem@{CanHoldItem}}
@@ -91,7 +81,7 @@ References \mbox{\hyperlink{struct_can_hold_item_a82ecfe70923e55ee5fddde1c2461d2
 
 
 
-Referenced by \mbox{\hyperlink{struct_can_hold_item_a81ced0366bb6ce69389287421347767d}{can\+\_\+take\+\_\+item\+\_\+from()}}, \mbox{\hyperlink{struct_can_hold_item_ae846dc6de7e3b22454114d68f9449581}{is\+\_\+holding\+\_\+item()}}, \mbox{\hyperlink{namespacesystem__manager_a04abec43eee11830c4261b9b4831a1f1}{system\+\_\+manager\+::process\+\_\+conveyer\+\_\+items()}}, \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{system\+\_\+manager\+::process\+\_\+input()}}, \mbox{\hyperlink{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}{system\+\_\+manager\+::update\+\_\+held\+\_\+item\+\_\+position()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information()}}.
+Referenced by \mbox{\hyperlink{namespacesystem__manager_acc6534b731c1273ed5815c5acb42a201}{system\+\_\+manager\+::delete\+\_\+held\+\_\+items\+\_\+when\+\_\+leaving\+\_\+inround()}}, \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a66e29957845883f72afd9ac7a4ff6f07}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::inround\+::handle\+\_\+drop()}}, \mbox{\hyperlink{struct_can_hold_item_ae846dc6de7e3b22454114d68f9449581}{is\+\_\+holding\+\_\+item()}}, \mbox{\hyperlink{namespacesystem__manager_a04abec43eee11830c4261b9b4831a1f1}{system\+\_\+manager\+::process\+\_\+conveyer\+\_\+items()}}, \mbox{\hyperlink{struct_wait_in_queue_job_aa90f4ee0465f795acf599bf91c067de0}{Wait\+In\+Queue\+Job\+::run\+\_\+state\+\_\+working\+\_\+at\+\_\+end()}}, and \mbox{\hyperlink{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}{system\+\_\+manager\+::update\+\_\+held\+\_\+item\+\_\+position()}}.
 
 \mbox{\Hypertarget{struct_can_hold_item_ae846dc6de7e3b22454114d68f9449581}\label{struct_can_hold_item_ae846dc6de7e3b22454114d68f9449581}} 
 \index{CanHoldItem@{CanHoldItem}!is\_holding\_item@{is\_holding\_item}}
@@ -105,13 +95,13 @@ References \mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0e
 
 
 
-Referenced by \mbox{\hyperlink{struct_item_container_a7522f088f3cda5726ad38ddbb706f1f9}{Item\+Container$<$ I $>$\+::in\+\_\+round\+\_\+update()}}, \mbox{\hyperlink{namespacesystem__manager_a925981f732982288e8ca5bd2874b4413}{system\+\_\+manager\+::process\+\_\+grabber\+\_\+items()}}, and \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{system\+\_\+manager\+::process\+\_\+input()}}.
+Referenced by \mbox{\hyperlink{namespacesystem__manager_a548590822db8bd9a1d3d72786aa32081}{system\+\_\+manager\+::process\+\_\+grabber\+\_\+items()}}, \mbox{\hyperlink{namespacesystem__manager_a2c6f844647982193ec1786016165804b}{system\+\_\+manager\+::process\+\_\+is\+\_\+container\+\_\+and\+\_\+should\+\_\+backfill\+\_\+item()}}, \mbox{\hyperlink{namespacesystem__manager_a29daf00e663dee1af2a74387579fc512}{system\+\_\+manager\+::process\+\_\+is\+\_\+container\+\_\+and\+\_\+should\+\_\+update\+\_\+item()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1ui_a06bd4ce977baa96f699ef1bb5061833a}{system\+\_\+manager\+::ui\+::render\+\_\+player\+\_\+info()}}.
 
-\mbox{\Hypertarget{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}\label{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}} 
+\mbox{\Hypertarget{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}\label{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}} 
 \index{CanHoldItem@{CanHoldItem}!item@{item}}
 \index{item@{item}!CanHoldItem@{CanHoldItem}}
 \doxysubsubsection{\texorpdfstring{item()}{item()}}
-{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ Can\+Hold\+Item\+::item (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \& Can\+Hold\+Item\+::item (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -119,7 +109,7 @@ References \mbox{\hyperlink{struct_can_hold_item_a82ecfe70923e55ee5fddde1c2461d2
 
 
 
-Referenced by \mbox{\hyperlink{struct_item_container_a7522f088f3cda5726ad38ddbb706f1f9}{Item\+Container$<$ I $>$\+::in\+\_\+round\+\_\+update()}}, \mbox{\hyperlink{namespacesystem__manager_a04abec43eee11830c4261b9b4831a1f1}{system\+\_\+manager\+::process\+\_\+conveyer\+\_\+items()}}, \mbox{\hyperlink{namespacesystem__manager_a925981f732982288e8ca5bd2874b4413}{system\+\_\+manager\+::process\+\_\+grabber\+\_\+items()}}, \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{system\+\_\+manager\+::process\+\_\+input()}}, \mbox{\hyperlink{struct_can_hold_item_a1859b1b208d938ed63a5eea0d7a5fd47}{update()}}, \mbox{\hyperlink{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}{system\+\_\+manager\+::update\+\_\+held\+\_\+item\+\_\+position()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information()}}.
+Referenced by \mbox{\hyperlink{namespacesystem__manager_a769cc2552dc38cf5334128cac189c268}{system\+\_\+manager\+::backfill\+\_\+empty\+\_\+container()}}, \mbox{\hyperlink{namespacesystem__manager_acc6534b731c1273ed5815c5acb42a201}{system\+\_\+manager\+::delete\+\_\+held\+\_\+items\+\_\+when\+\_\+leaving\+\_\+inround()}}, \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_a66e29957845883f72afd9ac7a4ff6f07}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::inround\+::handle\+\_\+drop()}}, \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1inround_ab60a89d3fd59ae62ddb5837bce401117}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::inround\+::handle\+\_\+grab()}}, \mbox{\hyperlink{namespacesystem__manager_a04abec43eee11830c4261b9b4831a1f1}{system\+\_\+manager\+::process\+\_\+conveyer\+\_\+items()}}, \mbox{\hyperlink{namespacesystem__manager_a548590822db8bd9a1d3d72786aa32081}{system\+\_\+manager\+::process\+\_\+grabber\+\_\+items()}}, \mbox{\hyperlink{namespacesystem__manager_a29daf00e663dee1af2a74387579fc512}{system\+\_\+manager\+::process\+\_\+is\+\_\+container\+\_\+and\+\_\+should\+\_\+update\+\_\+item()}}, \mbox{\hyperlink{struct_wait_in_queue_job_aa90f4ee0465f795acf599bf91c067de0}{Wait\+In\+Queue\+Job\+::run\+\_\+state\+\_\+working\+\_\+at\+\_\+end()}}, \mbox{\hyperlink{struct_can_hold_item_a36786350563a05c4398d473ed7f1f7f8}{update()}}, \mbox{\hyperlink{namespacesystem__manager_aaf4c71db1de570e1fa2b96cd420ba642}{system\+\_\+manager\+::update\+\_\+held\+\_\+item\+\_\+position()}}, and \mbox{\hyperlink{component_8h_a8fa94912ded9b380397752a60234ccc0}{validate\+\_\+held\+\_\+item\+\_\+serialized()}}.
 
 \mbox{\Hypertarget{struct_can_hold_item_a3397cfb2f0bf08692b5fb33a3da2d568}\label{struct_can_hold_item_a3397cfb2f0bf08692b5fb33a3da2d568}} 
 \index{CanHoldItem@{CanHoldItem}!serialize@{serialize}}
@@ -132,19 +122,19 @@ void Can\+Hold\+Item\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end
 
 References \mbox{\hyperlink{struct_can_hold_item_a82ecfe70923e55ee5fddde1c2461d2b1}{held\+\_\+item}}.
 
-\mbox{\Hypertarget{struct_can_hold_item_a1859b1b208d938ed63a5eea0d7a5fd47}\label{struct_can_hold_item_a1859b1b208d938ed63a5eea0d7a5fd47}} 
+\mbox{\Hypertarget{struct_can_hold_item_a36786350563a05c4398d473ed7f1f7f8}\label{struct_can_hold_item_a36786350563a05c4398d473ed7f1f7f8}} 
 \index{CanHoldItem@{CanHoldItem}!update@{update}}
 \index{update@{update}!CanHoldItem@{CanHoldItem}}
 \doxysubsubsection{\texorpdfstring{update()}{update()}}
-{\footnotesize\ttfamily void Can\+Hold\+Item\+::update (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$}]{item }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily void Can\+Hold\+Item\+::update (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$}]{item,  }\item[{\mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313}{Item\+::\+Held\+By}}}]{new\+HB = {\ttfamily \mbox{\hyperlink{struct_item_a7bbff5c89eda76d407fda7acbb7e2313a238dfba9b1b1077df2b9d4281d305ad7}{Item\+::\+Held\+By\+::\+NONE}}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-References \mbox{\hyperlink{struct_can_hold_item_a82ecfe70923e55ee5fddde1c2461d2b1}{held\+\_\+item}}, and \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{item()}}.
+References \mbox{\hyperlink{struct_can_hold_item_a82ecfe70923e55ee5fddde1c2461d2b1}{held\+\_\+item}}, \mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{item()}}, and \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\+\_\+warn}}.
 
 
 
-Referenced by \mbox{\hyperlink{namespacesystem__manager_a925981f732982288e8ca5bd2874b4413}{system\+\_\+manager\+::process\+\_\+grabber\+\_\+items()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1job__system_a77e67ff8d61329379931c6d03ea68708}{system\+\_\+manager\+::job\+\_\+system\+::update\+\_\+job\+\_\+information()}}.
+Referenced by \mbox{\hyperlink{namespacesystem__manager_a769cc2552dc38cf5334128cac189c268}{system\+\_\+manager\+::backfill\+\_\+empty\+\_\+container()}}, \mbox{\hyperlink{namespacesystem__manager_acc6534b731c1273ed5815c5acb42a201}{system\+\_\+manager\+::delete\+\_\+held\+\_\+items\+\_\+when\+\_\+leaving\+\_\+inround()}}, \mbox{\hyperlink{namespacesystem__manager_a04abec43eee11830c4261b9b4831a1f1}{system\+\_\+manager\+::process\+\_\+conveyer\+\_\+items()}}, \mbox{\hyperlink{namespacesystem__manager_a548590822db8bd9a1d3d72786aa32081}{system\+\_\+manager\+::process\+\_\+grabber\+\_\+items()}}, \mbox{\hyperlink{namespacesystem__manager_a29daf00e663dee1af2a74387579fc512}{system\+\_\+manager\+::process\+\_\+is\+\_\+container\+\_\+and\+\_\+should\+\_\+update\+\_\+item()}}, and \mbox{\hyperlink{struct_wait_in_queue_job_aa90f4ee0465f795acf599bf91c067de0}{Wait\+In\+Queue\+Job\+::run\+\_\+state\+\_\+working\+\_\+at\+\_\+end()}}.
 
 
 
@@ -157,7 +147,7 @@ Referenced by \mbox{\hyperlink{namespacesystem__manager_a925981f732982288e8ca5bd
 
 
 
-Referenced by \mbox{\hyperlink{struct_can_hold_item_a6197306bfad85f4b2816fcdd6f3b450b}{as\+T()}}, \mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{empty()}}, \mbox{\hyperlink{struct_can_hold_item_a628f6a73fc0348efcc31e1b19a95097d}{item()}}, \mbox{\hyperlink{struct_can_hold_item_a3397cfb2f0bf08692b5fb33a3da2d568}{serialize()}}, and \mbox{\hyperlink{struct_can_hold_item_a1859b1b208d938ed63a5eea0d7a5fd47}{update()}}.
+Referenced by \mbox{\hyperlink{struct_can_hold_item_a6197306bfad85f4b2816fcdd6f3b450b}{as\+T()}}, \mbox{\hyperlink{struct_can_hold_item_a0fb8e72bb3f5e14c60ce0a3991bf0ef8}{empty()}}, \mbox{\hyperlink{struct_can_hold_item_ae65c97157995f751ee7ed7615341d281}{item()}}, \mbox{\hyperlink{struct_can_hold_item_a3397cfb2f0bf08692b5fb33a3da2d568}{serialize()}}, and \mbox{\hyperlink{struct_can_hold_item_a36786350563a05c4398d473ed7f1f7f8}{update()}}.
 
 
 

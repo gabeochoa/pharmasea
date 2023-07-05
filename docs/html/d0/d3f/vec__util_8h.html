@@ -98,14 +98,14 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae07a33106b4919c5da84f5a3ab77e2e4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d3f/vec__util_8h.html#ae07a33106b4919c5da84f5a3ab77e2e4">forEachNeighbor</a> (int i, int j, std::function&lt; void(const <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> &amp;)&gt; cb, int step=1)</td></tr>
-<tr class="separator:ae07a33106b4919c5da84f5a3ab77e2e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a3b66ac1c7427b7059a875740cce0a6"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d3f/vec__util_8h.html#a4a3b66ac1c7427b7059a875740cce0a6">get_neighbors</a> (int i, int j, int step=1)</td></tr>
-<tr class="separator:a4a3b66ac1c7427b7059a875740cce0a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add3dd9e63d43f81591ca9e25b88470d7"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d3f/vec__util_8h.html#add3dd9e63d43f81591ca9e25b88470d7">comp_max</a> (const <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> &amp;a)</td></tr>
 <tr class="separator:add3dd9e63d43f81591ca9e25b88470d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bc0ade59022f5ab1ebe03a4d6cee6aa"><td class="memItemLeft" align="right" valign="top">constexpr BoundingBox&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d3f/vec__util_8h.html#a7bc0ade59022f5ab1ebe03a4d6cee6aa">get_bounds</a> (<a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> position, <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> size)</td></tr>
 <tr class="separator:a7bc0ade59022f5ab1ebe03a4d6cee6aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abca94cc6b9343e0e4c5c5acf0b80eda2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#abca94cc6b9343e0e4c5c5acf0b80eda2">vec::forEachNeighbor</a> (int i, int j, std::function&lt; void(const <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> &amp;)&gt; cb, int step=1)</td></tr>
+<tr class="separator:abca94cc6b9343e0e4c5c5acf0b80eda2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb9d98389871928fc1495f58786a7336"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#adb9d98389871928fc1495f58786a7336">vec::get_neighbors</a> (int i, int j, int step=1)</td></tr>
+<tr class="separator:adb9d98389871928fc1495f58786a7336"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e18f73ec09c3b1c14c15a0a42c8405a"><td class="memItemLeft" align="right" valign="top">float constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#a3e18f73ec09c3b1c14c15a0a42c8405a">vec::newton_raphson</a> (float x, float cur, float prev)</td></tr>
 <tr class="separator:a3e18f73ec09c3b1c14c15a0a42c8405a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20805d1426584aacd75c13c89856132f"><td class="memItemLeft" align="right" valign="top">float constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#a20805d1426584aacd75c13c89856132f">vec::ce_sqrtf</a> (float x)</td></tr>
@@ -124,13 +124,15 @@ Functions</h2></td></tr>
 <tr class="separator:a5a3a9e37c6f80541240d5cb6cdb4fd4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade144f304cbabbf68741ea3e19b96f1e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#ade144f304cbabbf68741ea3e19b96f1e">vec::snap</a> (<a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> position)</td></tr>
 <tr class="separator:ade144f304cbabbf68741ea3e19b96f1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0896021658bc6030ca3348ee3946a0b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#a0896021658bc6030ca3348ee3946a0b3">vec::lerp</a> (<a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> a, <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> b, float pct)</td></tr>
+<tr class="separator:a0896021658bc6030ca3348ee3946a0b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a39c52fd1116a4c85f6a446768e4b270c"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d3f/vec__util_8h.html#a39c52fd1116a4c85f6a446768e4b270c">neigh_x</a> [8] = {-1, -1, -1, 0, 0, 1, 1, 1}</td></tr>
-<tr class="separator:a39c52fd1116a4c85f6a446768e4b270c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac980e9b912e5a146e732e94a9adb1392"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d3f/vec__util_8h.html#ac980e9b912e5a146e732e94a9adb1392">neigh_y</a> [8] = {-1, 0, 1, -1, 1, -1, 0, 1}</td></tr>
-<tr class="separator:ac980e9b912e5a146e732e94a9adb1392"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3910db49dc587ff25894ab5e8e1fdcc"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#af3910db49dc587ff25894ab5e8e1fdcc">vec::neigh_x</a> [8] = {-1, -1, -1, 0, 0, 1, 1, 1}</td></tr>
+<tr class="separator:af3910db49dc587ff25894ab5e8e1fdcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35e7b1db3053956001d23cb0dc07e081"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d9a/namespacevec.html#a35e7b1db3053956001d23cb0dc07e081">vec::neigh_y</a> [8] = {-1, 0, 1, -1, 1, -1, 0, 1}</td></tr>
+<tr class="separator:a35e7b1db3053956001d23cb0dc07e081"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a002b2f4894492820fe708b1b7e7c5e70" name="a002b2f4894492820fe708b1b7e7c5e70"></a>
@@ -174,58 +176,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae07a33106b4919c5da84f5a3ab77e2e4" name="ae07a33106b4919c5da84f5a3ab77e2e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae07a33106b4919c5da84f5a3ab77e2e4">&#9670;&#160;</a></span>forEachNeighbor()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void forEachNeighbor </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>i</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>j</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::function&lt; void(const <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> &amp;)&gt;&#160;</td>
-          <td class="paramname"><em>cb</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>step</em> = <code>1</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="../../d0/d3f/vec__util_8h.html#a39c52fd1116a4c85f6a446768e4b270c">neigh_x</a>, and <a class="el" href="../../d0/d3f/vec__util_8h.html#ac980e9b912e5a146e732e94a9adb1392">neigh_y</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="../../d0/d3f/vec__util_8h.html#a4a3b66ac1c7427b7059a875740cce0a6">get_neighbors()</a>, and <a class="el" href="../../dd/de3/namespaceastar.html#a9f1223e812b7ef83a3fc8ddcc99d44b2">astar::get_neighbors()</a>.</p>
-
-</div>
-</div>
 <a id="a7bc0ade59022f5ab1ebe03a4d6cee6aa" name="a7bc0ade59022f5ab1ebe03a4d6cee6aa"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7bc0ade59022f5ab1ebe03a4d6cee6aa">&#9670;&#160;</a></span>get_bounds()</h2>
 
@@ -260,102 +210,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../dd/d69/struct_transform.html#a73449bd3661ec2561a31fb1cf40759c8">Transform::bounds()</a>, <a class="el" href="../../dc/dc4/struct_entity.html#a1f2fa3adb8f9deb8754660726925dbac">Entity::bounds()</a>, <a class="el" href="../../db/d66/struct_item.html#a6b50c8e2df7d6031f59ead493f544f03">Item::bounds()</a>, <a class="el" href="../../d5/dab/struct_entity_helper.html#a3610c9a5865dc6bfa24cdc6f6858a763">EntityHelper::isWalkableRawEntities()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a27a95df8b20f1e69fe055a138e7f7e5d">system_manager::person_update_given_new_pos()</a>, <a class="el" href="../../dd/d69/struct_transform.html#af3c0d92c8ce1f9c2754f0c512cfd087b">Transform::raw_bounds()</a>, and <a class="el" href="../../db/d66/struct_item.html#a3a59ef91c6a7308e3d681740613ad06b">Item::raw_bounds()</a>.</p>
-
-</div>
-</div>
-<a id="a4a3b66ac1c7427b7059a875740cce0a6" name="a4a3b66ac1c7427b7059a875740cce0a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a3b66ac1c7427b7059a875740cce0a6">&#9670;&#160;</a></span>get_neighbors()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static std::vector&lt; <a class="el" href="../../d7/d04/graphics_8h.html#acf64f2c7361f0fc6883a80cb1d698f28">vec2</a> &gt; get_neighbors </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>i</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>j</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>step</em> = <code>1</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="../../d0/d3f/vec__util_8h.html#ae07a33106b4919c5da84f5a3ab77e2e4">forEachNeighbor()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="../../dd/de3/namespaceastar.html#a5f1709497770393433f6517db883f8aa">astar::find_path_impl()</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a39c52fd1116a4c85f6a446768e4b270c" name="a39c52fd1116a4c85f6a446768e4b270c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39c52fd1116a4c85f6a446768e4b270c">&#9670;&#160;</a></span>neigh_x</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr int neigh_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="../../d0/d3f/vec__util_8h.html#ae07a33106b4919c5da84f5a3ab77e2e4">forEachNeighbor()</a>.</p>
-
-</div>
-</div>
-<a id="ac980e9b912e5a146e732e94a9adb1392" name="ac980e9b912e5a146e732e94a9adb1392"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac980e9b912e5a146e732e94a9adb1392">&#9670;&#160;</a></span>neigh_y</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr int neigh_y[8] = {-1, 0, 1, -1, 1, -1, 0, 1}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="../../d0/d3f/vec__util_8h.html#ae07a33106b4919c5da84f5a3ab77e2e4">forEachNeighbor()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="../../dd/d69/struct_transform.html#a73449bd3661ec2561a31fb1cf40759c8">Transform::bounds()</a>, <a class="el" href="../../db/d66/struct_item.html#a6b50c8e2df7d6031f59ead493f544f03">Item::bounds()</a>, <a class="el" href="../../dd/d69/struct_transform.html#ab7a472d842ab342f2ce770d166222e8c">Transform::expanded_bounds()</a>, <a class="el" href="../../d9/d49/namespacesystem__manager.html#a0c766a298e1abda388fb8b8795805f58">system_manager::person_update_given_new_pos()</a>, <a class="el" href="../../dd/d69/struct_transform.html#ac45768d41d801c89f2f53d44a6904881">Transform::raw_bounds()</a>, and <a class="el" href="../../db/d66/struct_item.html#a3a59ef91c6a7308e3d681740613ad06b">Item::raw_bounds()</a>.</p>
 
 </div>
 </div>

@@ -24,7 +24,6 @@ var searchData=
   ['connectioninfo_21',['ConnectionInfo',['../d9/d08/structnetwork_1_1_client_1_1_connection_info.html',1,'network::Client']]],
   ['containerconverter_22',['ContainerConverter',['../dc/d72/class_container_converter.html',1,'']]],
   ['conveyshelditem_23',['ConveysHeldItem',['../da/d4a/struct_conveys_held_item.html',1,'']]],
-  ['customer_24',['Customer',['../d9/d68/struct_customer.html',1,'']]],
-  ['customerspawner_25',['CustomerSpawner',['../d2/d99/struct_customer_spawner.html',1,'']]],
-  ['customhelditemposition_26',['CustomHeldItemPosition',['../db/d9c/struct_custom_held_item_position.html',1,'']]]
+  ['customerspawner_24',['CustomerSpawner',['../d2/d99/struct_customer_spawner.html',1,'']]],
+  ['customhelditemposition_25',['CustomHeldItemPosition',['../db/d9c/struct_custom_held_item_position.html',1,'']]]
 ];

@@ -3,6 +3,10 @@
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+static void \mbox{\hyperlink{namespacevec_abca94cc6b9343e0e4c5c5acf0b80eda2}{for\+Each\+Neighbor}} (int i, int j, std\+::function$<$ void(const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&)$>$ cb, int step=1)
+\item 
+static std\+::vector$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ \mbox{\hyperlink{namespacevec_adb9d98389871928fc1495f58786a7336}{get\+\_\+neighbors}} (int i, int j, int step=1)
+\item 
 float constexpr \mbox{\hyperlink{namespacevec_a3e18f73ec09c3b1c14c15a0a42c8405a}{newton\+\_\+raphson}} (float x, float cur, float prev)
 \item 
 float constexpr \mbox{\hyperlink{namespacevec_a20805d1426584aacd75c13c89856132f}{ce\+\_\+sqrtf}} (float x)
@@ -20,6 +24,15 @@ constexpr \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}
 \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{snap}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} position)
 \item 
 \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} \mbox{\hyperlink{namespacevec_ade144f304cbabbf68741ea3e19b96f1e}{snap}} (\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} position)
+\item 
+\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \mbox{\hyperlink{namespacevec_a0896021658bc6030ca3348ee3946a0b3}{lerp}} (\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} a, \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} b, float pct)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr int \mbox{\hyperlink{namespacevec_af3910db49dc587ff25894ab5e8e1fdcc}{neigh\+\_\+x}} \mbox{[}8\mbox{]} = \{-\/1, -\/1, -\/1, 0, 0, 1, 1, 1\}
+\item 
+static constexpr int \mbox{\hyperlink{namespacevec_a35e7b1db3053956001d23cb0dc07e081}{neigh\+\_\+y}} \mbox{[}8\mbox{]} = \{-\/1, 0, 1, -\/1, 1, -\/1, 0, 1\}
 \end{DoxyCompactItemize}
 
 
@@ -50,17 +63,51 @@ References \mbox{\hyperlink{namespacevec_a20805d1426584aacd75c13c89856132f}{ce\+
 
 
 
-Referenced by \mbox{\hyperlink{namespaceastar_a5ed9154348f3c75837c41448c03ddcd7}{astar\+::distance\+\_\+between()}}, \mbox{\hyperlink{struct_entity_helper_a321f609c7e2ac2633d18562edcebb49c}{Entity\+Helper\+::get\+Closest\+Matching\+Entity()}}, \mbox{\hyperlink{struct_entity_helper_ae92914dda24df2609cd0578075bf3bd4}{Entity\+Helper\+::get\+Entities\+In\+Range()}}, \mbox{\hyperlink{struct_item_helper_a7d3afea322f196765e7c22a61bea38b3}{Item\+Helper\+::getitems\+In\+Range()}}, \mbox{\hyperlink{struct_entity_helper_a5cdd24f82a343b41f887186d9b1acf45}{Entity\+Helper\+::get\+Matching\+Entity\+In\+Front()}}, and \mbox{\hyperlink{namespaceastar_a05bf641d43876bcd1f7fd0ad254d3563}{astar\+::path\+\_\+estimate()}}.
+Referenced by \mbox{\hyperlink{namespacetest_a44ab8ef8604a87885854abcee9db2963}{test\+::canvisit()}}, \mbox{\hyperlink{namespaceastar_a5ed9154348f3c75837c41448c03ddcd7}{astar\+::distance\+\_\+between()}}, \mbox{\hyperlink{namespaceastar_a5f1709497770393433f6517db883f8aa}{astar\+::find\+\_\+path\+\_\+impl()}}, \mbox{\hyperlink{struct_entity_helper_a321f609c7e2ac2633d18562edcebb49c}{Entity\+Helper\+::get\+Closest\+Matching\+Entity()}}, \mbox{\hyperlink{struct_entity_helper_ae92914dda24df2609cd0578075bf3bd4}{Entity\+Helper\+::get\+Entities\+In\+Range()}}, \mbox{\hyperlink{struct_item_helper_a7d3afea322f196765e7c22a61bea38b3}{Item\+Helper\+::getitems\+In\+Range()}}, \mbox{\hyperlink{struct_entity_helper_a5cdd24f82a343b41f887186d9b1acf45}{Entity\+Helper\+::get\+Matching\+Entity\+In\+Front()}}, \mbox{\hyperlink{struct_job_af52868928945ccf5d593eb404b6aba22}{Job\+::is\+\_\+at\+\_\+position()}}, \mbox{\hyperlink{struct_entity_helper_a3610c9a5865dc6bfa24cdc6f6858a763}{Entity\+Helper\+::is\+Walkable\+Raw\+Entities()}}, \mbox{\hyperlink{namespaceastar_a05bf641d43876bcd1f7fd0ad254d3563}{astar\+::path\+\_\+estimate()}}, and \mbox{\hyperlink{namespacesystem__manager_aae333b079103d5d1c60cd78e91f20516}{system\+\_\+manager\+::sophie()}}.
 
 \mbox{\Hypertarget{namespacevec_aabd3fc26e0da594069a9f344c48beb8d}\label{namespacevec_aabd3fc26e0da594069a9f344c48beb8d}} 
 \index{vec@{vec}!dot2@{dot2}}
 \index{dot2@{dot2}!vec@{vec}}
 \doxysubsubsection{\texorpdfstring{dot2()}{dot2()}}
-{\footnotesize\ttfamily float vec\+::dot2 (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&}]{a,  }\item[{const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&}]{b }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily float vec\+::dot2 (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&}]{a,  }\item[{const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-Referenced by \mbox{\hyperlink{namespacevec_a2b336372bfe6c8bd752922c357866a24}{norm()}}, and \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{Entity\+::turn\+\_\+to\+\_\+face\+\_\+entity()}}.
+Referenced by \mbox{\hyperlink{namespacevec_a2b336372bfe6c8bd752922c357866a24}{norm()}}.
+
+\mbox{\Hypertarget{namespacevec_abca94cc6b9343e0e4c5c5acf0b80eda2}\label{namespacevec_abca94cc6b9343e0e4c5c5acf0b80eda2}} 
+\index{vec@{vec}!forEachNeighbor@{forEachNeighbor}}
+\index{forEachNeighbor@{forEachNeighbor}!vec@{vec}}
+\doxysubsubsection{\texorpdfstring{forEachNeighbor()}{forEachNeighbor()}}
+{\footnotesize\ttfamily static void vec\+::for\+Each\+Neighbor (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{j,  }\item[{std\+::function$<$ void(const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&)$>$}]{cb,  }\item[{int}]{step = {\ttfamily 1} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{namespacevec_af3910db49dc587ff25894ab5e8e1fdcc}{neigh\+\_\+x}}, and \mbox{\hyperlink{namespacevec_a35e7b1db3053956001d23cb0dc07e081}{neigh\+\_\+y}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacevec_adb9d98389871928fc1495f58786a7336}{get\+\_\+neighbors()}}, and \mbox{\hyperlink{namespaceastar_a9f1223e812b7ef83a3fc8ddcc99d44b2}{astar\+::get\+\_\+neighbors()}}.
+
+\mbox{\Hypertarget{namespacevec_adb9d98389871928fc1495f58786a7336}\label{namespacevec_adb9d98389871928fc1495f58786a7336}} 
+\index{vec@{vec}!get\_neighbors@{get\_neighbors}}
+\index{get\_neighbors@{get\_neighbors}!vec@{vec}}
+\doxysubsubsection{\texorpdfstring{get\_neighbors()}{get\_neighbors()}}
+{\footnotesize\ttfamily static std\+::vector$<$ \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} $>$ vec\+::get\+\_\+neighbors (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{j,  }\item[{int}]{step = {\ttfamily 1} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{namespacevec_abca94cc6b9343e0e4c5c5acf0b80eda2}{for\+Each\+Neighbor()}}.
+
+\mbox{\Hypertarget{namespacevec_a0896021658bc6030ca3348ee3946a0b3}\label{namespacevec_a0896021658bc6030ca3348ee3946a0b3}} 
+\index{vec@{vec}!lerp@{lerp}}
+\index{lerp@{lerp}!vec@{vec}}
+\doxysubsubsection{\texorpdfstring{lerp()}{lerp()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} vec\+::lerp (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{a,  }\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{b,  }\item[{float}]{pct }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespacetests_a43365f2afd4ccd76b465de3090e880c2}{tests\+::test\+\_\+half()}}, and \mbox{\hyperlink{namespacetests_a9999b304d3dc9efbfe485609ca395450}{tests\+::test\+\_\+tenth()}}.
 
 \mbox{\Hypertarget{namespacevec_a3e18f73ec09c3b1c14c15a0a42c8405a}\label{namespacevec_a3e18f73ec09c3b1c14c15a0a42c8405a}} 
 \index{vec@{vec}!newton\_raphson@{newton\_raphson}}
@@ -80,21 +127,17 @@ Referenced by \mbox{\hyperlink{namespacevec_a20805d1426584aacd75c13c89856132f}{c
 \index{vec@{vec}!norm@{norm}}
 \index{norm@{norm}!vec@{vec}}
 \doxysubsubsection{\texorpdfstring{norm()}{norm()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} vec\+::norm (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&}]{a }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} vec\+::norm (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} \&}]{a }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
 References \mbox{\hyperlink{namespacevec_aabd3fc26e0da594069a9f344c48beb8d}{dot2()}}.
 
-
-
-Referenced by \mbox{\hyperlink{struct_entity_a86799bd4754255d67557ff0fe67a67d1}{Entity\+::turn\+\_\+to\+\_\+face\+\_\+entity()}}.
-
 \mbox{\Hypertarget{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}\label{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}} 
 \index{vec@{vec}!snap@{snap}}
 \index{snap@{snap}!vec@{vec}}
 \doxysubsubsection{\texorpdfstring{snap()}{snap()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
-{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} vec\+::snap (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{position }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}} vec\+::snap (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_acf64f2c7361f0fc6883a80cb1d698f28}{vec2}}}]{position }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -102,13 +145,13 @@ References \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESI
 
 
 
-Referenced by \mbox{\hyperlink{struct_entity_helper_a5cdd24f82a343b41f887186d9b1acf45}{Entity\+Helper\+::get\+Matching\+Entity\+In\+Front()}}, \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{system\+\_\+manager\+::process\+\_\+input()}}, \mbox{\hyperlink{struct_transform_a64ba3d05bc47f05d2ef60fab5a5957fa}{Transform\+::snap\+\_\+position()}}, and \mbox{\hyperlink{struct_item_a3a2607e15ddf8c337bc7480cadccf307}{Item\+::snap\+\_\+position()}}.
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a86a051e227fe3d76b78b701f01880914}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning\+::drop\+\_\+held\+\_\+furniture()}}, \mbox{\hyperlink{struct_entity_helper_a5cdd24f82a343b41f887186d9b1acf45}{Entity\+Helper\+::get\+Matching\+Entity\+In\+Front()}}, \mbox{\hyperlink{struct_transform_a64ba3d05bc47f05d2ef60fab5a5957fa}{Transform\+::snap\+\_\+position()}}, and \mbox{\hyperlink{struct_item_a3a2607e15ddf8c337bc7480cadccf307}{Item\+::snap\+\_\+position()}}.
 
 \mbox{\Hypertarget{namespacevec_ade144f304cbabbf68741ea3e19b96f1e}\label{namespacevec_ade144f304cbabbf68741ea3e19b96f1e}} 
 \index{vec@{vec}!snap@{snap}}
 \index{snap@{snap}!vec@{vec}}
 \doxysubsubsection{\texorpdfstring{snap()}{snap()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
-{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} vec\+::snap (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{position }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}} vec\+::snap (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graphics_8h_a308f9233b868e4e52062de502c3d9cef}{vec3}}}]{position }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -122,7 +165,7 @@ References \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESI
 
 
 
-Referenced by \mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{Transform\+::as2()}}, \mbox{\hyperlink{struct_item_helper_a7d3afea322f196765e7c22a61bea38b3}{Item\+Helper\+::getitems\+In\+Range()}}, \mbox{\hyperlink{struct_entity_helper_a5cdd24f82a343b41f887186d9b1acf45}{Entity\+Helper\+::get\+Matching\+Entity\+In\+Front()}}, and \mbox{\hyperlink{struct_entity_a5ccbde35c86805a9450faa4da52f414d}{Entity\+::tile\+\_\+infront()}}.
+Referenced by \mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb849}{Transform\+::as2()}}, \mbox{\hyperlink{struct_item_helper_a7d3afea322f196765e7c22a61bea38b3}{Item\+Helper\+::getitems\+In\+Range()}}, \mbox{\hyperlink{struct_entity_helper_a5cdd24f82a343b41f887186d9b1acf45}{Entity\+Helper\+::get\+Matching\+Entity\+In\+Front()}}, and \mbox{\hyperlink{struct_transform_ad831d83c947f2ddcf0357a9404f3f31a}{Transform\+::tile\+\_\+infront()}}.
 
 \mbox{\Hypertarget{namespacevec_a234aab197b01eb9b8f9163149e410399}\label{namespacevec_a234aab197b01eb9b8f9163149e410399}} 
 \index{vec@{vec}!to3@{to3}}
@@ -132,5 +175,28 @@ Referenced by \mbox{\hyperlink{struct_transform_aeb1c3da9267cef25c5ece078dbceb84
 
 
 
-Referenced by \mbox{\hyperlink{struct_polygon_abd3769748b625338e011a6320495070f}{Polygon\+::as\+\_\+3d()}}, \mbox{\hyperlink{namespaceraylib_adf92235c8362e980a25030f08465d209}{raylib\+::\+Draw\+Line\+Strip2\+Din3\+D()}}, \mbox{\hyperlink{struct_game_map_info_a7f8ea036a76651a221c0c18490a4c22d}{Game\+Map\+Info\+::generate\+\_\+map()}}, \mbox{\hyperlink{namespacesystem__manager_a947c5a65ae1a78b3c4e46fdf76e2f86b}{system\+\_\+manager\+::process\+\_\+input()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1job__system_adc930a9721c3daf854c661ec1905d357}{system\+\_\+manager\+::job\+\_\+system\+::render\+\_\+job\+\_\+visual()}}.
+Referenced by \mbox{\hyperlink{struct_polygon_abd3769748b625338e011a6320495070f}{Polygon\+::as\+\_\+3d()}}, \mbox{\hyperlink{namespaceraylib_adf92235c8362e980a25030f08465d209}{raylib\+::\+Draw\+Line\+Strip2\+Din3\+D()}}, \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a86a051e227fe3d76b78b701f01880914}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning\+::drop\+\_\+held\+\_\+furniture()}}, \mbox{\hyperlink{structgeneration_1_1helper_a7af3da545dc8fda3263f0bb787cbf423}{generation\+::helper\+::generate\+\_\+entity\+\_\+from\+\_\+character()}}, \mbox{\hyperlink{entity_8h_ae9b6ff048ccc67a2a6de1877e294edf4}{make\+\_\+customer()}}, \mbox{\hyperlink{namespacesystem__manager_1_1job__system_adc930a9721c3daf854c661ec1905d357}{system\+\_\+manager\+::job\+\_\+system\+::render\+\_\+job\+\_\+visual()}}, and \mbox{\hyperlink{struct_job_a2e875fe84ba07e39c39ca49706917921}{Job\+::travel\+\_\+to\+\_\+position()}}.
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacevec_af3910db49dc587ff25894ab5e8e1fdcc}\label{namespacevec_af3910db49dc587ff25894ab5e8e1fdcc}} 
+\index{vec@{vec}!neigh\_x@{neigh\_x}}
+\index{neigh\_x@{neigh\_x}!vec@{vec}}
+\doxysubsubsection{\texorpdfstring{neigh\_x}{neigh\_x}}
+{\footnotesize\ttfamily constexpr int vec\+::neigh\+\_\+x\mbox{[}8\mbox{]} = \{-\/1, -\/1, -\/1, 0, 0, 1, 1, 1\}\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespacevec_abca94cc6b9343e0e4c5c5acf0b80eda2}{for\+Each\+Neighbor()}}.
+
+\mbox{\Hypertarget{namespacevec_a35e7b1db3053956001d23cb0dc07e081}\label{namespacevec_a35e7b1db3053956001d23cb0dc07e081}} 
+\index{vec@{vec}!neigh\_y@{neigh\_y}}
+\index{neigh\_y@{neigh\_y}!vec@{vec}}
+\doxysubsubsection{\texorpdfstring{neigh\_y}{neigh\_y}}
+{\footnotesize\ttfamily constexpr int vec\+::neigh\+\_\+y\mbox{[}8\mbox{]} = \{-\/1, 0, 1, -\/1, 1, -\/1, 0, 1\}\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+
+
+Referenced by \mbox{\hyperlink{namespacevec_abca94cc6b9343e0e4c5c5acf0b80eda2}{for\+Each\+Neighbor()}}.
 

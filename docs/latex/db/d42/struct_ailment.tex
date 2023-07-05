@@ -4,12 +4,6 @@
 
 {\ttfamily \#include $<$ailment.\+h$>$}
 
-Inheritance diagram for Ailment\+:\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[height=2.000000cm]{db/d42/struct_ailment}
-\end{center}
-\end{figure}
 \doxysubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
@@ -45,37 +39,50 @@ float \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger
 \item 
 float \mbox{\hyperlink{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}{overall}} ()
 \item 
+\mbox{\hyperlink{struct_ailment_aa84fb8f922e9147c610b04cb0e957776}{Ailment}} ()
+\item 
 \mbox{\hyperlink{struct_ailment_a7e3b9ce9261ee9a55a77f0adaf0bcead}{Ailment}} (const \mbox{\hyperlink{struct_ailment_1_1_config}{Config}} \&opt)
 \item 
-virtual \mbox{\hyperlink{struct_ailment_ae1fb64b8ccde82a585a1217d89648299}{$\sim$\+Ailment}} ()
+\mbox{\hyperlink{struct_ailment_a5c0ac620d5d39f23cd6ec57399189e7d}{$\sim$\+Ailment}} ()
 \item 
 std\+::string \mbox{\hyperlink{struct_ailment_a8086cb055fab92c493846a3981268383}{icon\+\_\+name}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{struct_ailment}{Ailment}} $\ast$ \mbox{\hyperlink{struct_ailment_aac363f986756f33d06257808c0a08dad}{make\+\_\+max\+\_\+ailment}} ()
+\item 
+static \mbox{\hyperlink{struct_ailment}{Ailment}} $\ast$ \mbox{\hyperlink{struct_ailment_aa177a11223f1024509bca76240a1c03a}{make\+\_\+insomnia}} ()
+\item 
+static \mbox{\hyperlink{struct_ailment}{Ailment}} $\ast$ \mbox{\hyperlink{struct_ailment_ad71324053190fda0b4337087912495b4}{make\+\_\+hooked}} ()
 \end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 struct \mbox{\hyperlink{struct_ailment_1_1_config}{Ailment\+::\+Config}} \mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{config}}
 \item 
-std\+::set$<$ \mbox{\hyperlink{struct_symptom}{Symptom}} $>$ \mbox{\hyperlink{struct_ailment_aa105a67b919f67ab813127dd3c76a522}{symptoms}}
+std\+::array$<$ \mbox{\hyperlink{struct_symptom}{Symptom}}, 10 $>$ \mbox{\hyperlink{struct_ailment_a049203f82bbd7e7402301d33ec5b6981}{symptoms}}
 \item 
-\mbox{\hyperlink{struct_ailment}{Ailment}} $\ast$ \mbox{\hyperlink{struct_ailment_af2e4203faf4979a7931fc6dd84a1db14}{comorbids}} = nullptr
+std\+::array$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_ailment}{Ailment}} $>$, 10 $>$ \mbox{\hyperlink{struct_ailment_acf9712e10093aefea928cdb836422919}{comorbids}}
 \item 
 int \mbox{\hyperlink{struct_ailment_a4b4db8ae7ee23646188a49cf8fe273f7}{num\+\_\+comorbids}} = 0
 \end{DoxyCompactItemize}
 \doxysubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-virtual float \mbox{\hyperlink{struct_ailment_a1ed7342cc6ae4ed3560a52e47c2a8dfc}{overall\+\_\+mult}} ()
+float \mbox{\hyperlink{struct_ailment_a70b712bd54ee1e057068983e4bb348d0}{overall\+\_\+mult}} ()
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-virtual float \mbox{\hyperlink{struct_ailment_a00fb6cfcfdcd8834f2b0d5621fe5043a}{clamp}} (float val, float mn=0.\+1f, float mx=1.f)
+float \mbox{\hyperlink{struct_ailment_a1ee432fa0a7615da06350c5cbe6c8835}{clamp}} (float val, float mn=0.\+1f, float mx=1.f)
+\item 
+{\footnotesize template$<$typename S $>$ }\\void \mbox{\hyperlink{struct_ailment_a7d22b6c71d87777b3d8d3946d7928eb7}{serialize}} (S \&s)
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
-bool \mbox{\hyperlink{struct_ailment_ac47ad580aeeaecb224bc061085895254}{stagger\+\_\+dir}} = false
+int \mbox{\hyperlink{struct_ailment_ace80d06be025e9a58c7d62b5a5c15a73}{stagger\+\_\+dir}} = 0
 \end{DoxyCompactItemize}
 
 
@@ -155,26 +162,36 @@ Insomnia&\\
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_ailment_aa84fb8f922e9147c610b04cb0e957776}\label{struct_ailment_aa84fb8f922e9147c610b04cb0e957776}} 
+\index{Ailment@{Ailment}!Ailment@{Ailment}}
+\index{Ailment@{Ailment}!Ailment@{Ailment}}
+\doxysubsubsection{\texorpdfstring{Ailment()}{Ailment()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Ailment\+::\+Ailment (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Referenced by \mbox{\hyperlink{struct_ailment_ad71324053190fda0b4337087912495b4}{make\+\_\+hooked()}}, \mbox{\hyperlink{struct_ailment_aa177a11223f1024509bca76240a1c03a}{make\+\_\+insomnia()}}, and \mbox{\hyperlink{struct_ailment_aac363f986756f33d06257808c0a08dad}{make\+\_\+max\+\_\+ailment()}}.
+
 \mbox{\Hypertarget{struct_ailment_a7e3b9ce9261ee9a55a77f0adaf0bcead}\label{struct_ailment_a7e3b9ce9261ee9a55a77f0adaf0bcead}} 
 \index{Ailment@{Ailment}!Ailment@{Ailment}}
 \index{Ailment@{Ailment}!Ailment@{Ailment}}
-\doxysubsubsection{\texorpdfstring{Ailment()}{Ailment()}}
+\doxysubsubsection{\texorpdfstring{Ailment()}{Ailment()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily Ailment\+::\+Ailment (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_ailment_1_1_config}{Config}} \&}]{opt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
 
-\mbox{\Hypertarget{struct_ailment_ae1fb64b8ccde82a585a1217d89648299}\label{struct_ailment_ae1fb64b8ccde82a585a1217d89648299}} 
+\mbox{\Hypertarget{struct_ailment_a5c0ac620d5d39f23cd6ec57399189e7d}\label{struct_ailment_a5c0ac620d5d39f23cd6ec57399189e7d}} 
 \index{Ailment@{Ailment}!````~Ailment@{$\sim$Ailment}}
 \index{````~Ailment@{$\sim$Ailment}!Ailment@{Ailment}}
 \doxysubsubsection{\texorpdfstring{$\sim$Ailment()}{~Ailment()}}
-{\footnotesize\ttfamily virtual Ailment\+::$\sim$\+Ailment (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily Ailment\+::$\sim$\+Ailment (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{struct_ailment_a00fb6cfcfdcd8834f2b0d5621fe5043a}\label{struct_ailment_a00fb6cfcfdcd8834f2b0d5621fe5043a}} 
+\mbox{\Hypertarget{struct_ailment_a1ee432fa0a7615da06350c5cbe6c8835}\label{struct_ailment_a1ee432fa0a7615da06350c5cbe6c8835}} 
 \index{Ailment@{Ailment}!clamp@{clamp}}
 \index{clamp@{clamp}!Ailment@{Ailment}}
 \doxysubsubsection{\texorpdfstring{clamp()}{clamp()}}
-{\footnotesize\ttfamily virtual float Ailment\+::clamp (\begin{DoxyParamCaption}\item[{float}]{val,  }\item[{float}]{mn = {\ttfamily 0.1f},  }\item[{float}]{mx = {\ttfamily 1.f} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily float Ailment\+::clamp (\begin{DoxyParamCaption}\item[{float}]{val,  }\item[{float}]{mn = {\ttfamily 0.1f},  }\item[{float}]{mx = {\ttfamily 1.f} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
 
 
 
@@ -190,6 +207,40 @@ Referenced by \mbox{\hyperlink{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}
 
 References \mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{config}}, \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a8b6686705bab67bc81f8f4c522e9a935}{Hooked}}, \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a866d815adb055e7d4ed23ac402b221f1}{Insomnia}}, \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a6adf97f83acf6453d4a6a4b1070f3754}{None}}, \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a0cbc6611f5540bd0809a388dc95a615b}{Test}}, and \mbox{\hyperlink{struct_ailment_1_1_config_a9968324828f2eb14e29564e6f8050364}{Ailment\+::\+Config\+::type}}.
 
+\mbox{\Hypertarget{struct_ailment_ad71324053190fda0b4337087912495b4}\label{struct_ailment_ad71324053190fda0b4337087912495b4}} 
+\index{Ailment@{Ailment}!make\_hooked@{make\_hooked}}
+\index{make\_hooked@{make\_hooked}!Ailment@{Ailment}}
+\doxysubsubsection{\texorpdfstring{make\_hooked()}{make\_hooked()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{struct_ailment}{Ailment}} $\ast$ Ailment\+::make\+\_\+hooked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{struct_ailment_aa84fb8f922e9147c610b04cb0e957776}{Ailment()}}, \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa7a1920d61156abc05a60135aefe8bc67}{Default}}, \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a8b6686705bab67bc81f8f4c522e9a935}{Hooked}}, \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a76657b14f61fb22008f7f0a3ecd17b0b}{Lots}}, and \mbox{\hyperlink{struct_ailment_aa177a11223f1024509bca76240a1c03a}{make\+\_\+insomnia()}}.
+
+\mbox{\Hypertarget{struct_ailment_aa177a11223f1024509bca76240a1c03a}\label{struct_ailment_aa177a11223f1024509bca76240a1c03a}} 
+\index{Ailment@{Ailment}!make\_insomnia@{make\_insomnia}}
+\index{make\_insomnia@{make\_insomnia}!Ailment@{Ailment}}
+\doxysubsubsection{\texorpdfstring{make\_insomnia()}{make\_insomnia()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{struct_ailment}{Ailment}} $\ast$ Ailment\+::make\+\_\+insomnia (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{struct_ailment_aa84fb8f922e9147c610b04cb0e957776}{Ailment()}}, \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a866d815adb055e7d4ed23ac402b221f1}{Insomnia}}, \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a6adf97f83acf6453d4a6a4b1070f3754}{None}}, and \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa26b63f278101527e06a5547719568bb5}{Okay}}.
+
+
+
+Referenced by \mbox{\hyperlink{entity_8h_ae9b6ff048ccc67a2a6de1877e294edf4}{make\+\_\+customer()}}, and \mbox{\hyperlink{struct_ailment_ad71324053190fda0b4337087912495b4}{make\+\_\+hooked()}}.
+
+\mbox{\Hypertarget{struct_ailment_aac363f986756f33d06257808c0a08dad}\label{struct_ailment_aac363f986756f33d06257808c0a08dad}} 
+\index{Ailment@{Ailment}!make\_max\_ailment@{make\_max\_ailment}}
+\index{make\_max\_ailment@{make\_max\_ailment}!Ailment@{Ailment}}
+\doxysubsubsection{\texorpdfstring{make\_max\_ailment()}{make\_max\_ailment()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{struct_ailment}{Ailment}} $\ast$ Ailment\+::make\+\_\+max\+\_\+ailment (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+References \mbox{\hyperlink{struct_ailment_aa84fb8f922e9147c610b04cb0e957776}{Ailment()}}, \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a76657b14f61fb22008f7f0a3ecd17b0b}{Lots}}, \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59faefa5397985b8609a5dbeb430a4bcadd3}{Slow}}, and \mbox{\hyperlink{struct_ailment_a6212e85ba6e6f9e5e9fe148e92125965a0cbc6611f5540bd0809a388dc95a615b}{Test}}.
+
 \mbox{\Hypertarget{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}\label{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}} 
 \index{Ailment@{Ailment}!overall@{overall}}
 \index{overall@{overall}!Ailment@{Ailment}}
@@ -198,21 +249,32 @@ References \mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{co
 
 
 
-References \mbox{\hyperlink{struct_ailment_a00fb6cfcfdcd8834f2b0d5621fe5043a}{clamp()}}, and \mbox{\hyperlink{struct_ailment_a1ed7342cc6ae4ed3560a52e47c2a8dfc}{overall\+\_\+mult()}}.
+References \mbox{\hyperlink{struct_ailment_a1ee432fa0a7615da06350c5cbe6c8835}{clamp()}}, and \mbox{\hyperlink{struct_ailment_a70b712bd54ee1e057068983e4bb348d0}{overall\+\_\+mult()}}.
 
 
 
 Referenced by \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{speed\+\_\+multiplier()}}, and \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger()}}.
 
-\mbox{\Hypertarget{struct_ailment_a1ed7342cc6ae4ed3560a52e47c2a8dfc}\label{struct_ailment_a1ed7342cc6ae4ed3560a52e47c2a8dfc}} 
+\mbox{\Hypertarget{struct_ailment_a70b712bd54ee1e057068983e4bb348d0}\label{struct_ailment_a70b712bd54ee1e057068983e4bb348d0}} 
 \index{Ailment@{Ailment}!overall\_mult@{overall\_mult}}
 \index{overall\_mult@{overall\_mult}!Ailment@{Ailment}}
 \doxysubsubsection{\texorpdfstring{overall\_mult()}{overall\_mult()}}
-{\footnotesize\ttfamily virtual float Ailment\+::overall\+\_\+mult (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily float Ailment\+::overall\+\_\+mult (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
 
 
 
 Referenced by \mbox{\hyperlink{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}{overall()}}.
+
+\mbox{\Hypertarget{struct_ailment_a7d22b6c71d87777b3d8d3946d7928eb7}\label{struct_ailment_a7d22b6c71d87777b3d8d3946d7928eb7}} 
+\index{Ailment@{Ailment}!serialize@{serialize}}
+\index{serialize@{serialize}!Ailment@{Ailment}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename S $>$ \\
+void Ailment\+::serialize (\begin{DoxyParamCaption}\item[{S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+References \mbox{\hyperlink{struct_ailment_acf9712e10093aefea928cdb836422919}{comorbids}}, \mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{config}}, \mbox{\hyperlink{struct_ailment_a4b4db8ae7ee23646188a49cf8fe273f7}{num\+\_\+comorbids}}, and \mbox{\hyperlink{struct_ailment_a049203f82bbd7e7402301d33ec5b6981}{symptoms}}.
 
 \mbox{\Hypertarget{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}\label{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}} 
 \index{Ailment@{Ailment}!speed\_multiplier@{speed\_multiplier}}
@@ -222,11 +284,7 @@ Referenced by \mbox{\hyperlink{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}
 
 
 
-References \mbox{\hyperlink{struct_ailment_a00fb6cfcfdcd8834f2b0d5621fe5043a}{clamp()}}, \mbox{\hyperlink{struct_ailment_af2e4203faf4979a7931fc6dd84a1db14}{comorbids}}, \mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{config}}, \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa7a1920d61156abc05a60135aefe8bc67}{Default}}, \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fae16b5b7f26f54214445cbe38d72c2828}{Fast}}, \mbox{\hyperlink{struct_ailment_a4b4db8ae7ee23646188a49cf8fe273f7}{num\+\_\+comorbids}}, \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa26b63f278101527e06a5547719568bb5}{Okay}}, \mbox{\hyperlink{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}{overall()}}, \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59faefa5397985b8609a5dbeb430a4bcadd3}{Slow}}, \mbox{\hyperlink{struct_ailment_1_1_config_a45b5a2ce80b3d861c94996430bad1c87}{Ailment\+::\+Config\+::speed}}, and \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{speed\+\_\+multiplier()}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{speed\+\_\+multiplier()}}.
+References \mbox{\hyperlink{struct_ailment_a1ee432fa0a7615da06350c5cbe6c8835}{clamp()}}, \mbox{\hyperlink{struct_ailment_acf9712e10093aefea928cdb836422919}{comorbids}}, \mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{config}}, \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa7a1920d61156abc05a60135aefe8bc67}{Default}}, \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fae16b5b7f26f54214445cbe38d72c2828}{Fast}}, \mbox{\hyperlink{struct_ailment_a4b4db8ae7ee23646188a49cf8fe273f7}{num\+\_\+comorbids}}, \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59fa26b63f278101527e06a5547719568bb5}{Okay}}, \mbox{\hyperlink{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}{overall()}}, \mbox{\hyperlink{struct_ailment_a923b4c92939e9246bf4bf9054e4ae59faefa5397985b8609a5dbeb430a4bcadd3}{Slow}}, and \mbox{\hyperlink{struct_ailment_1_1_config_a45b5a2ce80b3d861c94996430bad1c87}{Ailment\+::\+Config\+::speed}}.
 
 \mbox{\Hypertarget{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}\label{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}} 
 \index{Ailment@{Ailment}!stagger@{stagger}}
@@ -236,24 +294,20 @@ Referenced by \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}
 
 
 
-References \mbox{\hyperlink{struct_ailment_a00fb6cfcfdcd8834f2b0d5621fe5043a}{clamp()}}, \mbox{\hyperlink{struct_ailment_af2e4203faf4979a7931fc6dd84a1db14}{comorbids}}, \mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{config}}, \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a0f9197b3e286a7522984831949087332}{Little}}, \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a76657b14f61fb22008f7f0a3ecd17b0b}{Lots}}, \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a6adf97f83acf6453d4a6a4b1070f3754}{None}}, \mbox{\hyperlink{struct_ailment_a4b4db8ae7ee23646188a49cf8fe273f7}{num\+\_\+comorbids}}, \mbox{\hyperlink{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}{overall()}}, \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a695c6ae413c00446733d926ccadefd8b}{Some}}, \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger()}}, \mbox{\hyperlink{struct_ailment_1_1_config_a0c938c0d5e14a2dcba8e0338b0c718a7}{Ailment\+::\+Config\+::stagger}}, and \mbox{\hyperlink{struct_ailment_ac47ad580aeeaecb224bc061085895254}{stagger\+\_\+dir}}.
-
-
-
-Referenced by \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger()}}.
+References \mbox{\hyperlink{struct_ailment_a1ee432fa0a7615da06350c5cbe6c8835}{clamp()}}, \mbox{\hyperlink{struct_ailment_acf9712e10093aefea928cdb836422919}{comorbids}}, \mbox{\hyperlink{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}{config}}, \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a0f9197b3e286a7522984831949087332}{Little}}, \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a76657b14f61fb22008f7f0a3ecd17b0b}{Lots}}, \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a6adf97f83acf6453d4a6a4b1070f3754}{None}}, \mbox{\hyperlink{struct_ailment_a4b4db8ae7ee23646188a49cf8fe273f7}{num\+\_\+comorbids}}, \mbox{\hyperlink{struct_ailment_a4e8d630010073a45a05dd2fa3d1ae315}{overall()}}, \mbox{\hyperlink{struct_ailment_a06aabd2aa556044b2cad74f084dfb9f9a695c6ae413c00446733d926ccadefd8b}{Some}}, \mbox{\hyperlink{struct_ailment_1_1_config_a0c938c0d5e14a2dcba8e0338b0c718a7}{Ailment\+::\+Config\+::stagger}}, and \mbox{\hyperlink{struct_ailment_ace80d06be025e9a58c7d62b5a5c15a73}{stagger\+\_\+dir}}.
 
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_ailment_af2e4203faf4979a7931fc6dd84a1db14}\label{struct_ailment_af2e4203faf4979a7931fc6dd84a1db14}} 
+\mbox{\Hypertarget{struct_ailment_acf9712e10093aefea928cdb836422919}\label{struct_ailment_acf9712e10093aefea928cdb836422919}} 
 \index{Ailment@{Ailment}!comorbids@{comorbids}}
 \index{comorbids@{comorbids}!Ailment@{Ailment}}
 \doxysubsubsection{\texorpdfstring{comorbids}{comorbids}}
-{\footnotesize\ttfamily \mbox{\hyperlink{struct_ailment}{Ailment}}$\ast$ Ailment\+::comorbids = nullptr}
+{\footnotesize\ttfamily std\+::array$<$std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_ailment}{Ailment}}$>$, 10$>$ Ailment\+::comorbids}
 
 
 
-Referenced by \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{speed\+\_\+multiplier()}}, \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger()}}, and \mbox{\hyperlink{struct_hooked_a84c5e5c6ae6be9e8d5bc0ee81caf9570}{Hooked\+::$\sim$\+Hooked()}}.
+Referenced by \mbox{\hyperlink{struct_ailment_a7d22b6c71d87777b3d8d3946d7928eb7}{serialize()}}, \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{speed\+\_\+multiplier()}}, and \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger()}}.
 
 \mbox{\Hypertarget{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}\label{struct_ailment_a843b450c974a1bde6b3f452c0b0b9794}} 
 \index{Ailment@{Ailment}!config@{config}}
@@ -263,7 +317,7 @@ Referenced by \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}
 
 
 
-Referenced by \mbox{\hyperlink{struct_ailment_a8086cb055fab92c493846a3981268383}{icon\+\_\+name()}}, \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{speed\+\_\+multiplier()}}, and \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger()}}.
+Referenced by \mbox{\hyperlink{struct_ailment_a8086cb055fab92c493846a3981268383}{icon\+\_\+name()}}, \mbox{\hyperlink{struct_ailment_a7d22b6c71d87777b3d8d3946d7928eb7}{serialize()}}, \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{speed\+\_\+multiplier()}}, and \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger()}}.
 
 \mbox{\Hypertarget{struct_ailment_a4b4db8ae7ee23646188a49cf8fe273f7}\label{struct_ailment_a4b4db8ae7ee23646188a49cf8fe273f7}} 
 \index{Ailment@{Ailment}!num\_comorbids@{num\_comorbids}}
@@ -273,26 +327,30 @@ Referenced by \mbox{\hyperlink{struct_ailment_a8086cb055fab92c493846a3981268383}
 
 
 
-Referenced by \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{speed\+\_\+multiplier()}}, and \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger()}}.
+Referenced by \mbox{\hyperlink{struct_ailment_a7d22b6c71d87777b3d8d3946d7928eb7}{serialize()}}, \mbox{\hyperlink{struct_ailment_af580fc6ad2a3e6d3fc8625beabf54267}{speed\+\_\+multiplier()}}, and \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger()}}.
 
-\mbox{\Hypertarget{struct_ailment_ac47ad580aeeaecb224bc061085895254}\label{struct_ailment_ac47ad580aeeaecb224bc061085895254}} 
+\mbox{\Hypertarget{struct_ailment_ace80d06be025e9a58c7d62b5a5c15a73}\label{struct_ailment_ace80d06be025e9a58c7d62b5a5c15a73}} 
 \index{Ailment@{Ailment}!stagger\_dir@{stagger\_dir}}
 \index{stagger\_dir@{stagger\_dir}!Ailment@{Ailment}}
 \doxysubsubsection{\texorpdfstring{stagger\_dir}{stagger\_dir}}
-{\footnotesize\ttfamily bool Ailment\+::stagger\+\_\+dir = false\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily int Ailment\+::stagger\+\_\+dir = 0\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
 Referenced by \mbox{\hyperlink{struct_ailment_a7e83427eb08f7d6d1bf8b28ca26b6628}{stagger()}}.
 
-\mbox{\Hypertarget{struct_ailment_aa105a67b919f67ab813127dd3c76a522}\label{struct_ailment_aa105a67b919f67ab813127dd3c76a522}} 
+\mbox{\Hypertarget{struct_ailment_a049203f82bbd7e7402301d33ec5b6981}\label{struct_ailment_a049203f82bbd7e7402301d33ec5b6981}} 
 \index{Ailment@{Ailment}!symptoms@{symptoms}}
 \index{symptoms@{symptoms}!Ailment@{Ailment}}
 \doxysubsubsection{\texorpdfstring{symptoms}{symptoms}}
-{\footnotesize\ttfamily std\+::set$<$\mbox{\hyperlink{struct_symptom}{Symptom}}$>$ Ailment\+::symptoms}
+{\footnotesize\ttfamily std\+::array$<$\mbox{\hyperlink{struct_symptom}{Symptom}}, 10$>$ Ailment\+::symptoms}
+
+
+
+Referenced by \mbox{\hyperlink{struct_ailment_a7d22b6c71d87777b3d8d3946d7928eb7}{serialize()}}.
 
 
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/\mbox{\hyperlink{ailment_8h}{ailment.\+h}}\end{DoxyCompactItemize}
+src/dataclass/\mbox{\hyperlink{ailment_8h}{ailment.\+h}}\end{DoxyCompactItemize}

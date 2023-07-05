@@ -17,8 +17,6 @@ Inheritance diagram for Streamer\+Safe\+Layer\+:\begin{figure}[H]
 \item 
 virtual \mbox{\hyperlink{struct_streamer_safe_layer_a091cc82880043753f6bf4b30e5198a28}{$\sim$\+Streamer\+Safe\+Layer}} ()
 \item 
-virtual void \mbox{\hyperlink{struct_streamer_safe_layer_aa4521aefaa0b666b629ee3c8de640f46}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&) override
-\item 
 virtual void \mbox{\hyperlink{struct_streamer_safe_layer_aa5a21158f507b5dc88a84f73524d0fea}{on\+Update}} (float) override
 \item 
 virtual void \mbox{\hyperlink{struct_streamer_safe_layer_a6537fe319ba82606836c3e4e7b6bae19}{on\+Draw}} (float) override
@@ -38,7 +36,15 @@ virtual void \mbox{\hyperlink{struct_layer_a48aac9e190e03beef1e02a34e8fefd0f}{on
 \item 
 virtual void \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{on\+Draw}} (float elapsed)=0
 \item 
-virtual void \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&)=0
+void \mbox{\hyperlink{struct_layer_a753e388bb8e7416a7cc2b338b5566396}{on\+Event}} (\mbox{\hyperlink{struct_event}{Event}} \&event)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_aaad763977a0828b342ddd6ac0af65aea}{on\+Key\+Pressed}} (\mbox{\hyperlink{struct_key_pressed_event}{Key\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_ad1793a53fff5c6516848d2a1a0c73a10}{on\+Gamepad\+Button\+Pressed}} (\mbox{\hyperlink{struct_gamepad_button_pressed_event}{Gamepad\+Button\+Pressed\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_a4410643bde2d400ba6731f48ad5a8727}{on\+Gamepad\+Axis\+Moved}} (\mbox{\hyperlink{struct_gamepad_axis_moved_event}{Gamepad\+Axis\+Moved\+Event}} \&)
+\item 
+virtual bool \mbox{\hyperlink{struct_layer_affe784562ca969d024bb98866455985d}{on\+Char\+Pressed\+Event}} (\mbox{\hyperlink{struct_char_pressed_event}{Char\+Pressed\+Event}} \&)
 \item 
 const std\+::string \& \mbox{\hyperlink{struct_layer_a592dabab6ae280b7a3a3f4b195c9833b}{getname}} () const
 \end{DoxyCompactItemize}
@@ -92,16 +98,6 @@ Implements \mbox{\hyperlink{struct_layer_a2e8efa32b1a8749dc24ddc07ea90f29b}{Laye
 
 References \mbox{\hyperlink{struct_streamer_safe_layer_ad5c8a7afa00ade11f62c75586e86fdc3}{streamer\+\_\+box\+\_\+padd}}, \mbox{\hyperlink{struct_streamer_safe_layer_adc0f343126ea9e897e7ab0d54ef83591}{streamer\+\_\+box\+\_\+size}}, \mbox{\hyperlink{engine_2globals_8h_af36a79e782a145f85642cd276acd8e0c}{WIN\+\_\+\+H()}}, and \mbox{\hyperlink{engine_2globals_8h_afe1358b24401e43a8eabe7880feaf770}{WIN\+\_\+\+W()}}.
 
-\mbox{\Hypertarget{struct_streamer_safe_layer_aa4521aefaa0b666b629ee3c8de640f46}\label{struct_streamer_safe_layer_aa4521aefaa0b666b629ee3c8de640f46}} 
-\index{StreamerSafeLayer@{StreamerSafeLayer}!onEvent@{onEvent}}
-\index{onEvent@{onEvent}!StreamerSafeLayer@{StreamerSafeLayer}}
-\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
-{\footnotesize\ttfamily virtual void Streamer\+Safe\+Layer\+::on\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_event}{Event}} \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
-
-
-
-Implements \mbox{\hyperlink{struct_layer_aa11590c772daca6da696f7b789e16852}{Layer}}.
-
 \mbox{\Hypertarget{struct_streamer_safe_layer_aa5a21158f507b5dc88a84f73524d0fea}\label{struct_streamer_safe_layer_aa5a21158f507b5dc88a84f73524d0fea}} 
 \index{StreamerSafeLayer@{StreamerSafeLayer}!onUpdate@{onUpdate}}
 \index{onUpdate@{onUpdate}!StreamerSafeLayer@{StreamerSafeLayer}}
@@ -139,4 +135,4 @@ Referenced by \mbox{\hyperlink{struct_streamer_safe_layer_a6537fe319ba82606836c3
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/\mbox{\hyperlink{streamersafelayer_8h}{streamersafelayer.\+h}}\end{DoxyCompactItemize}
+src/layers/\mbox{\hyperlink{streamersafelayer_8h}{streamersafelayer.\+h}}\end{DoxyCompactItemize}

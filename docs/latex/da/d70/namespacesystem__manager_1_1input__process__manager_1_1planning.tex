@@ -1,0 +1,56 @@
+\hypertarget{namespacesystem__manager_1_1input__process__manager_1_1planning}{}\doxysection{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning Namespace Reference}
+\label{namespacesystem__manager_1_1input__process__manager_1_1planning}\index{system\_manager::input\_process\_manager::planning@{system\_manager::input\_process\_manager::planning}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a25a3d525215fa57a429277fa32c0d9c6}{rotate\+\_\+furniture}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ player)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a86a051e227fe3d76b78b701f01880914}{drop\+\_\+held\+\_\+furniture}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&player)
+\item 
+void \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a98407cfe6adbdb0e08992e111c9f5fd9}{handle\+\_\+grab\+\_\+or\+\_\+drop}} (const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&player)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacesystem__manager_1_1input__process__manager_1_1planning_a86a051e227fe3d76b78b701f01880914}\label{namespacesystem__manager_1_1input__process__manager_1_1planning_a86a051e227fe3d76b78b701f01880914}} 
+\index{system\_manager::input\_process\_manager::planning@{system\_manager::input\_process\_manager::planning}!drop\_held\_furniture@{drop\_held\_furniture}}
+\index{drop\_held\_furniture@{drop\_held\_furniture}!system\_manager::input\_process\_manager::planning@{system\_manager::input\_process\_manager::planning}}
+\doxysubsubsection{\texorpdfstring{drop\_held\_furniture()}{drop\_held\_furniture()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning\+::drop\+\_\+held\+\_\+furniture (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&}]{player }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_can_hold_furniture_aa855e1a6a60090ccb0c68249354f3c23}{Can\+Hold\+Furniture\+::furniture()}}, \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\+\_\+info}}, \mbox{\hyperlink{namespacevec_a5a3a9e37c6f80541240d5cb6cdb4fd4e}{vec\+::snap()}}, \mbox{\hyperlink{struct_transform_ad831d83c947f2ddcf0357a9404f3f31a}{Transform\+::tile\+\_\+infront()}}, \mbox{\hyperlink{namespacevec_a234aab197b01eb9b8f9163149e410399}{vec\+::to3()}}, and \mbox{\hyperlink{struct_can_hold_furniture_aabb8f2add67c7526177f24fc8afd7b7c}{Can\+Hold\+Furniture\+::update()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_a561a93d3b20bcf76f4f9701cc7be2edf}{system\+\_\+manager\+::handle\+\_\+autodrop\+\_\+furniture\+\_\+when\+\_\+exiting\+\_\+planning()}}, and \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a98407cfe6adbdb0e08992e111c9f5fd9}{handle\+\_\+grab\+\_\+or\+\_\+drop()}}.
+
+\mbox{\Hypertarget{namespacesystem__manager_1_1input__process__manager_1_1planning_a98407cfe6adbdb0e08992e111c9f5fd9}\label{namespacesystem__manager_1_1input__process__manager_1_1planning_a98407cfe6adbdb0e08992e111c9f5fd9}} 
+\index{system\_manager::input\_process\_manager::planning@{system\_manager::input\_process\_manager::planning}!handle\_grab\_or\_drop@{handle\_grab\_or\_drop}}
+\index{handle\_grab\_or\_drop@{handle\_grab\_or\_drop}!system\_manager::input\_process\_manager::planning@{system\_manager::input\_process\_manager::planning}}
+\doxysubsubsection{\texorpdfstring{handle\_grab\_or\_drop()}{handle\_grab\_or\_drop()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning\+::handle\+\_\+grab\+\_\+or\+\_\+drop (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$ \&}]{player }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_1_1planning_a86a051e227fe3d76b78b701f01880914}{drop\+\_\+held\+\_\+furniture()}}, \mbox{\hyperlink{struct_entity_helper_aabd55f01e173666f0e5ac17f5bceb394}{Entity\+Helper\+::get\+Closest\+Matching\+Furniture()}}, and \mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{Can\+Highlight\+Others\+::reach()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a595ee8c3edadc901e3c643c2970304b0}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::process\+\_\+input()}}.
+
+\mbox{\Hypertarget{namespacesystem__manager_1_1input__process__manager_1_1planning_a25a3d525215fa57a429277fa32c0d9c6}\label{namespacesystem__manager_1_1input__process__manager_1_1planning_a25a3d525215fa57a429277fa32c0d9c6}} 
+\index{system\_manager::input\_process\_manager::planning@{system\_manager::input\_process\_manager::planning}!rotate\_furniture@{rotate\_furniture}}
+\index{rotate\_furniture@{rotate\_furniture}!system\_manager::input\_process\_manager::planning@{system\_manager::input\_process\_manager::planning}}
+\doxysubsubsection{\texorpdfstring{rotate\_furniture()}{rotate\_furniture()}}
+{\footnotesize\ttfamily void system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::planning\+::rotate\+\_\+furniture (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_entity}{Entity}} $>$}]{player }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \mbox{\hyperlink{struct_entity_helper_aabd55f01e173666f0e5ac17f5bceb394}{Entity\+Helper\+::get\+Closest\+Matching\+Furniture()}}, \mbox{\hyperlink{namespacegame_ae87aa40decbe65eaf21f2d039e7375d6a0424f6962dd71b8298a3ea3a73d1df23}{game\+::\+Planning}}, and \mbox{\hyperlink{struct_can_highlight_others_abf240b68e008f58ba76d5be7bc905183}{Can\+Highlight\+Others\+::reach()}}.
+
+
+
+Referenced by \mbox{\hyperlink{namespacesystem__manager_1_1input__process__manager_a595ee8c3edadc901e3c643c2970304b0}{system\+\_\+manager\+::input\+\_\+process\+\_\+manager\+::process\+\_\+input()}}.
+

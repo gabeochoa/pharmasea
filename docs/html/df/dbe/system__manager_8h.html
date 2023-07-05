@@ -80,22 +80,7 @@ $(function() {
   <div class="headertitle"><div class="title">system_manager.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d7/dc6/base__player_8h_source.html">../base_player.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d1/d8a/can__be__ghost__player_8h_source.html">../components/can_be_ghost_player.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../de/d7f/can__grab__from__other__furniture_8h_source.html">../components/can_grab_from_other_furniture.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../dd/dad/can__highlight__others_8h_source.html">../components/can_highlight_others.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d6/d76/can__hold__furniture_8h_source.html">../components/can_hold_furniture.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../de/df1/can__perform__job_8h_source.html">../components/can_perform_job.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d6/dfa/collects__user__input_8h_source.html">../components/collects_user_input.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d0/d37/conveys__held__item_8h_source.html">../components/conveys_held_item.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../df/de8/custom__item__position_8h_source.html">../components/custom_item_position.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/dbc/is__snappable_8h_source.html">../components/is_snappable.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../db/d08/responds__to__user__input_8h_source.html">../components/responds_to_user_input.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d2/d80/transform_8h_source.html">../components/transform.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d3/d35/customer_8h_source.html">../customer.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/d83/entity_8h_source.html">../entity.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d9/d3c/entityhelper_8h_source.html">../entityhelper.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d1/d57/furniture_8h_source.html">../furniture.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d9/dff/input__process__manager_8h_source.html">input_process_manager.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d6/d60/job__system_8h_source.html">job_system.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d9/d97/rendering__system_8h_source.html">rendering_system.h</a>&quot;</code><br />
 </div>
@@ -109,6 +94,7 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:d9/d49/namespacesystem__manager"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html">system_manager</a></td></tr>
+<tr class="memdesc:d9/d49/namespacesystem__manager"><td class="mdescLeft">&#160;</td><td class="mdescRight">probably needed by map and not included in there <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -125,18 +111,31 @@ Functions</h2></td></tr>
 <tr class="separator:a59f2cc661fe66e73806e73eaab658a6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23e2737adee52e940c7942a7e312cb90"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a23e2737adee52e940c7942a7e312cb90">system_manager::move_entity_based_on_push_force</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float, <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> &amp;new_pos_x, <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> &amp;new_pos_z)</td></tr>
 <tr class="separator:a23e2737adee52e940c7942a7e312cb90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27a95df8b20f1e69fe055a138e7f7e5d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a27a95df8b20f1e69fe055a138e7f7e5d">system_manager::person_update_given_new_pos</a> (int id, <a class="el" href="../../dd/d69/struct_transform.html">Transform</a> &amp;transform, std::shared_ptr&lt; <a class="el" href="../../d3/de1/struct_person.html">Person</a> &gt; person, float dt, <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> new_pos_x, <a class="el" href="../../d7/d04/graphics_8h.html#a308f9233b868e4e52062de502c3d9cef">vec3</a> new_pos_z)</td></tr>
-<tr class="separator:a27a95df8b20f1e69fe055a138e7f7e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a659184773c10c97c2fae2ef1f542e0c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a659184773c10c97c2fae2ef1f542e0c6">system_manager::collect_user_input</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
-<tr class="separator:a659184773c10c97c2fae2ef1f542e0c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e8126dd8986710c90900c8230f55c8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a3e8126dd8986710c90900c8230f55c8d">system_manager::process_player_movement_input</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt, <a class="el" href="../../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706">InputName</a> input_name, float input_amount)</td></tr>
-<tr class="separator:a3e8126dd8986710c90900c8230f55c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a947c5a65ae1a78b3c4e46fdf76e2f86b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a947c5a65ae1a78b3c4e46fdf76e2f86b">system_manager::process_input</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, const <a class="el" href="../../da/d9a/keymap_8h.html#ace92b9e658d8e6b1535c88a5da6e8453">UserInput</a> &amp;input)</td></tr>
-<tr class="separator:a947c5a65ae1a78b3c4e46fdf76e2f86b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04abec43eee11830c4261b9b4831a1f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a04abec43eee11830c4261b9b4831a1f1">system_manager::process_conveyer_items</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
 <tr class="separator:a04abec43eee11830c4261b9b4831a1f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a925981f732982288e8ca5bd2874b4413"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a925981f732982288e8ca5bd2874b4413">system_manager::process_grabber_items</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float dt)</td></tr>
-<tr class="separator:a925981f732982288e8ca5bd2874b4413"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a548590822db8bd9a1d3d72786aa32081"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a548590822db8bd9a1d3d72786aa32081">system_manager::process_grabber_items</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
+<tr class="separator:a548590822db8bd9a1d3d72786aa32081"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf22b7a119874634e7965a4c49777b0f"><td class="memTemplParams" colspan="2">template&lt;typename I &gt; </td></tr>
+<tr class="memitem:abf22b7a119874634e7965a4c49777b0f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#abf22b7a119874634e7965a4c49777b0f">system_manager::backfill_empty_container</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity)</td></tr>
+<tr class="separator:abf22b7a119874634e7965a4c49777b0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c6f844647982193ec1786016165804b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a2c6f844647982193ec1786016165804b">system_manager::process_is_container_and_should_backfill_item</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
+<tr class="separator:a2c6f844647982193ec1786016165804b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29daf00e663dee1af2a74387579fc512"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a29daf00e663dee1af2a74387579fc512">system_manager::process_is_container_and_should_update_item</a> (std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; entity, float)</td></tr>
+<tr class="separator:a29daf00e663dee1af2a74387579fc512"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a561a93d3b20bcf76f4f9701cc7be2edf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a561a93d3b20bcf76f4f9701cc7be2edf">system_manager::handle_autodrop_furniture_when_exiting_planning</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;entity)</td></tr>
+<tr class="separator:a561a93d3b20bcf76f4f9701cc7be2edf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc6534b731c1273ed5815c5acb42a201"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#acc6534b731c1273ed5815c5acb42a201">system_manager::delete_held_items_when_leaving_inround</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;entity)</td></tr>
+<tr class="separator:acc6534b731c1273ed5815c5acb42a201"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8bf560d525c02f0846838bb94db0f69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#ac8bf560d525c02f0846838bb94db0f69">system_manager::refetch_dynamic_model_names</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;entity, float)</td></tr>
+<tr class="separator:ac8bf560d525c02f0846838bb94db0f69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e3a2a333caf3171a4bbcd6bd9058176"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a6e3a2a333caf3171a4bbcd6bd9058176">system_manager::process_trigger_area</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;entity, float dt)</td></tr>
+<tr class="separator:a6e3a2a333caf3171a4bbcd6bd9058176"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a312b551fedaa36a272c9363a4338e191"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a312b551fedaa36a272c9363a4338e191">system_manager::process_spawner</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;entity, float dt)</td></tr>
+<tr class="separator:a312b551fedaa36a272c9363a4338e191"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ecf617b3b679259e478d2e5f916b96e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#a2ecf617b3b679259e478d2e5f916b96e">system_manager::run_timer</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;entity, float dt)</td></tr>
+<tr class="separator:a2ecf617b3b679259e478d2e5f916b96e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae333b079103d5d1c60cd78e91f20516"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d49/namespacesystem__manager.html#aae333b079103d5d1c60cd78e91f20516">system_manager::sophie</a> (const std::shared_ptr&lt; <a class="el" href="../../dc/dc4/struct_entity.html">Entity</a> &gt; &amp;entity, float)</td></tr>
+<tr class="separator:aae333b079103d5d1c60cd78e91f20516"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

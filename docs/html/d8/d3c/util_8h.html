@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Pharmasea: src/util.h File Reference</title>
+<title>Pharmasea: src/engine/util.h File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -69,7 +69,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="../../dir_2052808828190f934b76e979ee65af8a.html">engine</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -114,6 +114,8 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a5bf3abd7929d330a17820e9c653ea94f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#a5bf3abd7929d330a17820e9c653ea94f">util::force_segfault</a> ()</td></tr>
+<tr class="separator:a5bf3abd7929d330a17820e9c653ea94f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addfd55c03039ca8158e80a71b451eecd"><td class="memTemplParams" colspan="2">template&lt;class... Ts&gt; </td></tr>
 <tr class="memitem:addfd55c03039ca8158e80a71b451eecd"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#addfd55c03039ca8158e80a71b451eecd">util::overloaded</a> (Ts...) -&gt; overloaded&lt; Ts... &gt;</td></tr>
 <tr class="separator:addfd55c03039ca8158e80a71b451eecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,6 +132,12 @@ Functions</h2></td></tr>
 <tr class="separator:a5f5caebc89c06dcdd631966f2ba0cb72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5020e504940e09639480aed917da6ba1"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#a5020e504940e09639480aed917da6ba1">util::clamp</a> (float a, float mn, float mx)</td></tr>
 <tr class="separator:a5020e504940e09639480aed917da6ba1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d8ab89401ce7c1afe474cbe90009042"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#a8d8ab89401ce7c1afe474cbe90009042">util::round_up</a> (float value, int decimal_places)</td></tr>
+<tr class="separator:a8d8ab89401ce7c1afe474cbe90009042"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03256e36c20c6257c41c991ff2a4c7d6"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#a03256e36c20c6257c41c991ff2a4c7d6">util::trunc</a> (float value, int decimal_places)</td></tr>
+<tr class="separator:a03256e36c20c6257c41c991ff2a4c7d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a992d5bc619ec26409ea75140a3a3087c"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#a992d5bc619ec26409ea75140a3a3087c">util::lerp</a> (float a, float b, float pct)</td></tr>
+<tr class="separator:a992d5bc619ec26409ea75140a3a3087c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fad71d00f379fced9c845d2387b5304"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; class Container, typename K , typename V , typename... Ts&gt; </td></tr>
 <tr class="memitem:a5fad71d00f379fced9c845d2387b5304"><td class="memTemplItemLeft" align="right" valign="top">V&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d72/namespaceutil.html#a5fad71d00f379fced9c845d2387b5304">util::map_get_or_default</a> (Container&lt; K, V, Ts... &gt; map, K key, V def_value)</td></tr>
 <tr class="separator:a5fad71d00f379fced9c845d2387b5304"><td class="memSeparator" colspan="2">&#160;</td></tr>

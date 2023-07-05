@@ -70,7 +70,7 @@ var searchData=
   ['darkish_5fpink_67',['darkish_pink',['../d9/db4/namespaceui_1_1color.html#a6476c954b71159888948b5a1c7c4f336',1,'ui::color']]],
   ['darkish_5fpurple_68',['darkish_purple',['../d9/db4/namespaceui_1_1color.html#a608443c5cd7dc5faecdacc033d87ded8',1,'ui::color']]],
   ['darkish_5fred_69',['darkish_red',['../d9/db4/namespaceui_1_1color.html#a598808e724aab22925519696b04f73db',1,'ui::color']]],
-  ['data_70',['data',['../d2/d63/struct_job.html#a22eb4726b3b3fca6dd8d4b706167adc7',1,'Job::data()'],['../d0/d62/struct_settings.html#a0d42804ff6cf9b3bb7b9388f45266632',1,'Settings::data()'],['../dd/dac/struct_gamepad_axis_moved_event.html#a40b72a0b103413b43a85af07e5c876a7',1,'GamepadAxisMovedEvent::data()'],['../d9/dd2/struct_c_e_vector.html#a2d46950c9f78f5df5e3120dbf73e5e2a',1,'CEVector::data()'],['../dd/d44/struct_c_e_map.html#a119e56ca3be4c7ba299d97c9edab4eb5',1,'CEMap::data()']]],
+  ['data_70',['data',['../d0/d62/struct_settings.html#a0d42804ff6cf9b3bb7b9388f45266632',1,'Settings::data()'],['../dd/dac/struct_gamepad_axis_moved_event.html#a40b72a0b103413b43a85af07e5c876a7',1,'GamepadAxisMovedEvent::data()'],['../d9/dd2/struct_c_e_vector.html#a2d46950c9f78f5df5e3120dbf73e5e2a',1,'CEVector::data()'],['../dd/d44/struct_c_e_map.html#a119e56ca3be4c7ba299d97c9edab4eb5',1,'CEMap::data()']]],
   ['debug_5fui_5fenabled_71',['debug_ui_enabled',['../db/dfb/struct_game_debug_layer.html#aedbbf095ca340443b80a08a8991b405d',1,'GameDebugLayer']]],
   ['deep_5faqua_72',['deep_aqua',['../d9/db4/namespaceui_1_1color.html#a7fbe0bc9b99f6a55f143bd016d842eef',1,'ui::color']]],
   ['deep_5fblue_73',['deep_blue',['../d9/db4/namespaceui_1_1color.html#a52faf134513457ef6f800feee1c2ad2e',1,'ui::color']]],
@@ -108,7 +108,7 @@ var searchData=
   ['dirty_5fpurple_105',['dirty_purple',['../d9/db4/namespaceui_1_1color.html#af43f9d68f134e2c3c8596d3b8fda02c6',1,'ui::color']]],
   ['dirty_5fyellow_106',['dirty_yellow',['../d9/db4/namespaceui_1_1color.html#a248320564e707cd6e0fdea103ae40796',1,'ui::color']]],
   ['dist_107',['dist',['../da/d05/struct_game_map_info.html#afcab4192a82f3790641aa7726309adb7',1,'GameMapInfo']]],
-  ['do_5fwork_108',['do_work',['../d5/da1/struct_has_work.html#ad660f8476be1978b5f1714b2cc4aa6ff',1,'HasWork']]],
+  ['do_5fwork_108',['do_work',['../d5/da1/struct_has_work.html#acf74192e7ddcffd2ad4f9bd789120693',1,'HasWork']]],
   ['dodger_5fblue_109',['dodger_blue',['../d9/db4/namespaceui_1_1color.html#a5feb6942b6e7ab8de1861e55c6350732',1,'ui::color']]],
   ['drab_110',['drab',['../d9/db4/namespaceui_1_1color.html#a087c1936b4949dc8ec95e508f84cac9b',1,'ui::color']]],
   ['drab_5fgreen_111',['drab_green',['../d9/db4/namespaceui_1_1color.html#abcb6850ab1e280708a4d40106fb1269d',1,'ui::color']]],
@@ -138,5 +138,6 @@ var searchData=
   ['dusty_5fpurple_135',['dusty_purple',['../d9/db4/namespaceui_1_1color.html#a4f91467c84feefa68d29d5de98686184',1,'ui::color']]],
   ['dusty_5fred_136',['dusty_red',['../d9/db4/namespaceui_1_1color.html#a73fbe2ba40e8d64d750acbd6a5b32b02',1,'ui::color']]],
   ['dusty_5frose_137',['dusty_rose',['../d9/db4/namespaceui_1_1color.html#a020229d4d41b0f18fe6d23b5268a4702',1,'ui::color']]],
-  ['dusty_5fteal_138',['dusty_teal',['../d9/db4/namespaceui_1_1color.html#aa673339711275e4649dda156a8c1cdd8',1,'ui::color']]]
+  ['dusty_5fteal_138',['dusty_teal',['../d9/db4/namespaceui_1_1color.html#aa673339711275e4649dda156a8c1cdd8',1,'ui::color']]],
+  ['dynamic_5ftype_139',['dynamic_type',['../db/d81/struct_has_dynamic_model_name.html#ad6f6c51f935a95edf44636500e43db25',1,'HasDynamicModelName']]]
 ];

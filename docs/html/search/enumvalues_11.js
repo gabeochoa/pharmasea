@@ -10,6 +10,6 @@ var searchData=
   ['toggledebug_7',['ToggleDebug',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706aa1f5f5cc43ed0f342a89f7a40185b1a2',1,'keymap.h']]],
   ['togglelobby_8',['ToggleLobby',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706ac54a06308208deba09fee2d3b04a228e',1,'keymap.h']]],
   ['togglenetworkview_9',['ToggleNetworkView',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706a33626f04f68a27fd6677d799de3624f5',1,'keymap.h']]],
-  ['toggleplanning_10',['TogglePlanning',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706a2502969dfc0e0b7caa17d00a7a2e050f',1,'keymap.h']]],
-  ['trace_11',['TRACE',['../d7/d7f/log_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a2d3e4144aa384b18849ab9a8abad74d6',1,'log.h']]]
+  ['toggletoinround_10',['ToggleToInRound',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706afc0090697435a95aff2286dff47320a2',1,'keymap.h']]],
+  ['toggletoplanning_11',['ToggleToPlanning',['../da/d9a/keymap_8h.html#a17ed9738c4fcd08b8a24a1d405fac706abddd5a4bc84390b8e0ca3d176fc52d31',1,'keymap.h']]]
 ];

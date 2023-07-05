@@ -7,77 +7,96 @@
 \DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
 \DoxyCodeLine{00004\ }
 \DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cassert>}}
-\DoxyCodeLine{00006\ }
-\DoxyCodeLine{00007\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ \{}
-\DoxyCodeLine{00008\ \ \ \ \ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a5fb1f955b45e38e31789286a1790398d}{ALL}}\ =\ 0,}
-\DoxyCodeLine{00009\ \ \ \ \ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a2d3e4144aa384b18849ab9a8abad74d6}{TRACE}}\ =\ 1,}
-\DoxyCodeLine{00010\ \ \ \ \ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a551b723eafd6a31d444fcb2f5920fbd3}{INFO}}\ =\ 2,}
-\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a32bd8a1db2275458673903bdb84cb277}{WARN}}\ =\ 3,}
-\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9abb1ca97ec761fc37101737ba0aa2e7c5}{ERROR}}\ =\ 4,}
-\DoxyCodeLine{00013\ \};}
-\DoxyCodeLine{00014\ }
-\DoxyCodeLine{00015\ \textcolor{comment}{//\ TODO\ log\ to\ file}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}\ \textcolor{comment}{//\ where\ LOG\_LEVEL\ is\ located\ }}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9ad527e1d069fb4c6d031cc0db3b011a6c}{LOG\_ALOG\_}}\ =\ 0,}
+\DoxyCodeLine{00010\ \ \ \ \ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a5b76dd51db62558b1952158ba38b723f}{LOG\_TRACE}}\ =\ 1,}
+\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a6e98ff471e3ce6c4ef2d75c37ee51837}{LOG\_INFO}}\ =\ 2,}
+\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9ac8041ffa22bc823d4726701cdb13fc13}{LOG\_WARN}}\ =\ 3,}
+\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9a230506cce5c68c3bac5a821c42ed3473}{LOG\_ERROR}}\ =\ 4,}
+\DoxyCodeLine{00014\ \ \ \ \ \mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9aac5429584240f2aecc42eaacbbe1ca85}{LOG\_IF}}\ =\ 5,}
+\DoxyCodeLine{00015\ \};}
 \DoxyCodeLine{00016\ }
-\DoxyCodeLine{00017\ \textcolor{comment}{//\ TODO\ right\ now\ having\ some\ issues\ with\ MSVC\ and\ not\ getting\ any\ decent\ error}}
-\DoxyCodeLine{00018\ \textcolor{comment}{//\ message}}
-\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#ifdef\ \_\_APPLE\_\_}}
-\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <functional>}}
-\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <iostream>}}
-\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <string>}}
-\DoxyCodeLine{00023\ }
-\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}../external\_include.h"{}}}
-\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}globals.h"{}}}
-\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tracy_8h}{tracy.h}}"{}}}
-\DoxyCodeLine{00027\ \textcolor{comment}{//\ TODO\ add\ an\ is\_server\ flag\ so\ we\ can\ easier\ distinguish\ between}}
-\DoxyCodeLine{00028\ }
-\DoxyCodeLine{00029\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ std::string\_view\ level\_to\_string(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level)\ \{}
-\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{return}\ magic\_enum::enum\_name(level);}
-\DoxyCodeLine{00031\ \}}
-\DoxyCodeLine{00032\ }
-\DoxyCodeLine{00033\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ vlog(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,}
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::string\_view\ format,\ fmt::format\_args\ args)\ \{}
-\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordflow}{if}\ ((\textcolor{keywordtype}{int})\ level\ <\ \mbox{\hyperlink{engine_2globals_8h_a3ecebc9d2fcb9f207a3373191a0ca251}{LOG\_LEVEL}})\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ file\_info\ =}
-\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}\{\}:\ \{\}:\ \{\}:\ "{}},\ file,\ line,\ level\_to\_string(level));}
-\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ message\ =\ fmt::vformat(format,\ args);}
-\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ full\_output\ =\ fmt::format(\textcolor{stringliteral}{"{}\{\}\{\}"{}},\ file\_info,\ message);}
-\DoxyCodeLine{00040\ \ \ \ \ fmt::print(\textcolor{stringliteral}{"{}\{\}"{}},\ full\_output);}
-\DoxyCodeLine{00041\ \ \ \ \ fmt::print(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
-\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{tracy_8h_a6054ce68e13e89333eb518c30f7607d8}{TRACY\_LOG}}(full\_output.c\_str(),\ full\_output.size());}
-\DoxyCodeLine{00043\ \}}
-\DoxyCodeLine{00044\ }
-\DoxyCodeLine{00045\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}...\ Args>}
-\DoxyCodeLine{00046\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\_me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ format,\ Args\&\&...\ args)\ \{}
-\DoxyCodeLine{00048\ \ \ \ \ vlog(level,\ file,\ line,\ format,}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ fmt::make\_args\_checked<Args...>(format,\ args...));}
-\DoxyCodeLine{00050\ \}}
-\DoxyCodeLine{00051\ }
-\DoxyCodeLine{00052\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}...\ Args>}
-\DoxyCodeLine{00053\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\_me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}*\ format,\ Args\&\&...\ args)\ \{}
-\DoxyCodeLine{00055\ \ \ \ \ vlog(level,\ file,\ line,\ format,}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ fmt::make\_args\_checked<Args...>(format,\ args...));}
-\DoxyCodeLine{00057\ \}}
-\DoxyCodeLine{00058\ }
-\DoxyCodeLine{00059\ \textcolor{keyword}{template}<>}
-\DoxyCodeLine{00060\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\_me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ format,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\&\&\ args)\ \{}
-\DoxyCodeLine{00062\ \ \ \ \ vlog(level,\ file,\ line,\ format,}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ fmt::make\_args\_checked<const\ char*>(format,\ args));}
-\DoxyCodeLine{00064\ \}}
-\DoxyCodeLine{00065\ }
-\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{00067\ \textcolor{comment}{//\ TODO\ implement\ for\ windows}}
-\DoxyCodeLine{00068\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\_me}}(...)\ \{\}}
-\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{00070\ }
-\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ log\_trace(...)\ log\_me(LogLevel::TRACE,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ TODO\ log\ to\ file}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ TODO\ right\ now\ having\ some\ issues\ with\ MSVC\ and\ not\ getting\ any\ decent\ error}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ message}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifdef\ \_\_APPLE\_\_}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}../external\_include.h"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{globals_8h}{globals.h}}"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tracy_8h}{tracy.h}}"{}}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ TODO\ add\ an\ is\_server\ flag\ so\ we\ can\ easier\ distinguish\ between}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ std::string\_view\ level\_to\_string(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level)\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordflow}{return}\ magic\_enum::enum\_name(level);}
+\DoxyCodeLine{00033\ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ vlog(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt::string\_view\ format,\ fmt::format\_args\ args)\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{if}\ ((\textcolor{keywordtype}{int})\ level\ <\ \mbox{\hyperlink{engine_2globals_8h_a3ecebc9d2fcb9f207a3373191a0ca251}{LOG\_LEVEL}})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ file\_info\ =}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ fmt::format(\textcolor{stringliteral}{"{}\{\}:\ \{\}:\ \{\}:\ "{}},\ file,\ line,\ level\_to\_string(level));}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ message\ =\ fmt::vformat(format,\ args);}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ full\_output\ =\ fmt::format(\textcolor{stringliteral}{"{}\{\}\{\}"{}},\ file\_info,\ message);}
+\DoxyCodeLine{00042\ \ \ \ \ fmt::print(\textcolor{stringliteral}{"{}\{\}"{}},\ full\_output);}
+\DoxyCodeLine{00043\ \ \ \ \ fmt::print(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{00044\ \ \ \ \ \mbox{\hyperlink{tracy_8h_a6054ce68e13e89333eb518c30f7607d8}{TRACY\_LOG}}(full\_output.c\_str(),\ full\_output.size());}
+\DoxyCodeLine{00045\ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}...\ Args>}
+\DoxyCodeLine{00048\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\_me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ format,\ Args\&\&...\ args)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ vlog(level,\ file,\ line,\ format,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ fmt::make\_args\_checked<Args...>(format,\ args...));}
+\DoxyCodeLine{00052\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}...\ Args>}
+\DoxyCodeLine{00055\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\_me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}*\ format,\ Args\&\&...\ args)\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ vlog(level,\ file,\ line,\ format,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ fmt::make\_args\_checked<Args...>(format,\ args...));}
+\DoxyCodeLine{00059\ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00062\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\_me}}(\mbox{\hyperlink{log_8h_aca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ format,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\&\&\ args)\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ vlog(level,\ file,\ line,\ format,}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ fmt::make\_args\_checked<const\ char*>(format,\ args));}
+\DoxyCodeLine{00066\ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00069\ \textcolor{comment}{//\ TODO\ implement\ for\ windows}}
+\DoxyCodeLine{00070\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{log_8h_a10a36e8960ca2289329a063e7fa3be63}{log\_me}}(...)\ \{\}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{00072\ }
-\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ log\_info(...)\ log\_me(LogLevel::INFO,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_)}}
-\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ log\_warn(...)\ log\_me(LogLevel::WARN,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_)}}
-\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ log\_error(...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
-\DoxyCodeLine{00076\ \textcolor{preprocessor}{\ \ \ \ log\_me(LogLevel::ERROR,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_);\ \(\backslash\)}}
-\DoxyCodeLine{00077\ \textcolor{preprocessor}{\ \ \ \ assert(false)}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ log\_trace(...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\ \ \ \ if\ (LogLevel::LOG\_TRACE\ >=\ LOG\_LEVEL)\ \(\backslash\)}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\ \ \ \ log\_me(LogLevel::LOG\_TRACE,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ log\_info(...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\ \ \ \ if\ (LogLevel::LOG\_INFO\ >=\ LOG\_LEVEL)\ \(\backslash\)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\ \ \ \ log\_me(LogLevel::LOG\_INFO,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ log\_warn(...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\ \ \ \ if\ (LogLevel::LOG\_WARN\ >=\ LOG\_LEVEL)\ \(\backslash\)}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\ \ \ \ log\_me(LogLevel::LOG\_WARN,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ log\_error(...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\ \ \ \ if\ (LogLevel::LOG\_ERROR\ >=\ LOG\_LEVEL)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ log\_me(LogLevel::LOG\_ERROR,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_);\ \(\backslash\)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\ \ \ \ assert(false)}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ log\_if(x,\ ...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (x)\ log\_me(LogLevel::LOG\_IF,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_);\ \(\backslash\)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\ \ \ \ \}}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ log\_ifx(x,\ level,\ ...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (x)\ log\_me(level,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_);\ \(\backslash\)}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\ \ \ \ \}}}
 
 \end{DoxyCode}

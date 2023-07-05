@@ -38,81 +38,82 @@
 \DoxyCodeLine{00034\ }
 \DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{const}\ tl::expected<std::string,\ Error>\ \mbox{\hyperlink{struct_library_a65d43718628be926ecc899742bd6c75d}{add}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,}
 \DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T\&\ item)\ \{}
-\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.find(name)\ !=\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.end())\ \{}
-\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tl::unexpected(\mbox{\hyperlink{struct_library_ae9e3ae85efeaa3c8cb6c1ce0ef9b6e33a2ed6b51832a1946ce9cfe5f420ab234d}{Error::DUPLICATE\_NAME}});}
-\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}[name]\ =\ item;}
-\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ name;}
-\DoxyCodeLine{00042\ \ \ \ \ \}}
-\DoxyCodeLine{00043\ }
-\DoxyCodeLine{00044\ \ \ \ \ [[nodiscard]]\ T\&\ \mbox{\hyperlink{struct_library_ac80cdc54a2b3717d59a2927cdb17f0dc}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
-\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!this-\/>\mbox{\hyperlink{struct_library_a150773c13840e0b6b84ec12ddfa7de6f}{contains}}(name))\ \{}
-\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}asking\ for\ item:\ \{\}\ but\ nothing\ has\ been\ loaded\ with\ that\ "{}}}
-\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}name\ yet"{}},}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name);}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.at(name);}
-\DoxyCodeLine{00052\ \ \ \ \ \}}
-\DoxyCodeLine{00053\ }
-\DoxyCodeLine{00054\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ T\&\ \mbox{\hyperlink{struct_library_a723584d9de879bd7e96f3a181022a644}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!this-\/>\mbox{\hyperlink{struct_library_a150773c13840e0b6b84ec12ddfa7de6f}{contains}}(name))\ \{}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}asking\ for\ item:\ \{\}\ but\ nothing\ has\ been\ loaded\ with\ that\ "{}}}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}name\ yet"{}},}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name);}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.at(name);}
-\DoxyCodeLine{00062\ \ \ \ \ \}}
-\DoxyCodeLine{00063\ }
-\DoxyCodeLine{00064\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_library_a150773c13840e0b6b84ec12ddfa7de6f}{contains}}(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.find(name)\ !=\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.end());}
-\DoxyCodeLine{00066\ \ \ \ \ \}}
-\DoxyCodeLine{00067\ }
-\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_library_a302c08203328daab021a1fafe96cea1d}{load}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name)\ \{}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}Loading\ \{\}:\ \{\}\ from\ \{\}"{}},\ type\_name<T>(),\ name,\ filename);}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_library_a65d43718628be926ecc899742bd6c75d}{add}}(name,\ \mbox{\hyperlink{struct_library_ab9c8d4dd119dd2085e767d7a382adbcc}{convert\_filename\_to\_object}}(filename));}
-\DoxyCodeLine{00071\ \ \ \ \ \}}
-\DoxyCodeLine{00072\ }
-\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{virtual}\ T\ \mbox{\hyperlink{struct_library_ab9c8d4dd119dd2085e767d7a382adbcc}{convert\_filename\_to\_object}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename)\ =\ 0;}
-\DoxyCodeLine{00074\ }
-\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_library_a93f23a8f8220a383c90bab9e4dfae4f0}{unload\_all}}()\ \{}
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}Library<\{\}>\ loaded\ \{\}\ items"{}},\ type\_name<T>(),\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.size());}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ kv\ :\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}})\ \{}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_library_a9ba91d4ab844d7972a4f167e84fdc50b}{unload}}(kv.second);}
-\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00080\ \ \ \ \ \}}
-\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_library_a9ba91d4ab844d7972a4f167e84fdc50b}{unload}}(T)\ =\ 0;}
-\DoxyCodeLine{00082\ }
-\DoxyCodeLine{00083\ \ \ \ \ [[nodiscard]]\ tl::expected<T,\ Error>\ \mbox{\hyperlink{struct_library_ad75d677c2e849c73e86254d7354729d9}{get\_random\_match}}(}
-\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ key)\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ matches\ =\ \mbox{\hyperlink{struct_library_ac67fa132228b572fde11f446a4d2073b}{lookup}}(key);}
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ num\_matches\ =\ std::distance(matches.first,\ matches.second);}
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_matches\ ==\ 0)\ \{}
-\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}got\ no\ matches\ for\ your\ prefix\ search:\ \{\}"{}},\ key);}
-\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tl::unexpected(\mbox{\hyperlink{struct_library_ae9e3ae85efeaa3c8cb6c1ce0ef9b6e33a94935cef4046d086a88dc70dae2086ca}{Error::NO\_MATCH}});}
-\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00091\ }
-\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ \mbox{\hyperlink{random_8h_ac595cabd40bee1b9e1c604ea389dc528}{randIn}}(0,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(num\_matches)\ -\/\ 1);}
-\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_library_a93e91cdb10a3852616a58fce74ad079c}{const\_iterator}}\ \mbox{\hyperlink{struct_library_a2a858d67788c3cf9d4cc5a6e7c548532}{begin}}(matches.first);}
-\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ std::advance(\mbox{\hyperlink{struct_library_a2a858d67788c3cf9d4cc5a6e7c548532}{begin}},\ idx);}
-\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_library_a2a858d67788c3cf9d4cc5a6e7c548532}{begin}}-\/>second;}
-\DoxyCodeLine{00096\ \ \ \ \ \}}
-\DoxyCodeLine{00097\ }
-\DoxyCodeLine{00098\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{struct_library_ac67fa132228b572fde11f446a4d2073b}{lookup}}(\textcolor{keyword}{const}\ std::string\&\ key)\ \textcolor{keyword}{const}}
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ -\/>\ std::pair<const\_iterator,\ const\_iterator>\ \{}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ p\ =\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.lower\_bound(key);}
-\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ q\ =\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.end();}
-\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ !=\ q\ \&\&\ p-\/>first\ ==\ key)\ \{}
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_pair(p,\ std::next(p));}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ r\ =\ p;}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (r\ !=\ q\ \&\&\ r-\/>first.compare(0,\ key.size(),\ key)\ ==\ 0)\ \{}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++r;}
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_pair(p,\ r);}
-\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00111\ \ \ \ \ \}}
-\DoxyCodeLine{00112\ \};}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}adding\ \{\}\ to\ the\ library"{}},\ name);}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.find(name)\ !=\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.end())\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tl::unexpected(\mbox{\hyperlink{struct_library_ae9e3ae85efeaa3c8cb6c1ce0ef9b6e33a2ed6b51832a1946ce9cfe5f420ab234d}{Error::DUPLICATE\_NAME}});}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}[name]\ =\ item;}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ name;}
+\DoxyCodeLine{00043\ \ \ \ \ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ [[nodiscard]]\ T\&\ \mbox{\hyperlink{struct_library_ac80cdc54a2b3717d59a2927cdb17f0dc}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!this-\/>\mbox{\hyperlink{struct_library_a150773c13840e0b6b84ec12ddfa7de6f}{contains}}(name))\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}asking\ for\ item:\ \{\}\ but\ nothing\ has\ been\ loaded\ with\ that\ "{}}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}name\ yet"{}},}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name);}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.at(name);}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ T\&\ \mbox{\hyperlink{struct_library_a723584d9de879bd7e96f3a181022a644}{get}}(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!this-\/>\mbox{\hyperlink{struct_library_a150773c13840e0b6b84ec12ddfa7de6f}{contains}}(name))\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}asking\ for\ item:\ \{\}\ but\ nothing\ has\ been\ loaded\ with\ that\ "{}}}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}name\ yet"{}},}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name);}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.at(name);}
+\DoxyCodeLine{00063\ \ \ \ \ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_library_a150773c13840e0b6b84ec12ddfa7de6f}{contains}}(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.find(name)\ !=\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.end());}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_library_a302c08203328daab021a1fafe96cea1d}{load}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name)\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_af89cb876e6e1d43cfeacdd58a7c9b78c}{log\_trace}}(\textcolor{stringliteral}{"{}Loading\ \{\}:\ \{\}\ from\ \{\}"{}},\ type\_name<T>(),\ name,\ filename);}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{struct_library_a65d43718628be926ecc899742bd6c75d}{add}}(name,\ \mbox{\hyperlink{struct_library_ab9c8d4dd119dd2085e767d7a382adbcc}{convert\_filename\_to\_object}}(filename));}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{virtual}\ T\ \mbox{\hyperlink{struct_library_ab9c8d4dd119dd2085e767d7a382adbcc}{convert\_filename\_to\_object}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename)\ =\ 0;}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_library_a93f23a8f8220a383c90bab9e4dfae4f0}{unload\_all}}()\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_aa1cfe5444875c8eca0ea6f6993977d6d}{log\_info}}(\textcolor{stringliteral}{"{}Library<\{\}>\ loaded\ \{\}\ items"{}},\ type\_name<T>(),\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.size());}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ kv\ :\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}})\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_library_a9ba91d4ab844d7972a4f167e84fdc50b}{unload}}(kv.second);}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00081\ \ \ \ \ \}}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_library_a9ba91d4ab844d7972a4f167e84fdc50b}{unload}}(T)\ =\ 0;}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ [[nodiscard]]\ tl::expected<T,\ Error>\ \mbox{\hyperlink{struct_library_ad75d677c2e849c73e86254d7354729d9}{get\_random\_match}}(}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ matches\ =\ \mbox{\hyperlink{struct_library_ac67fa132228b572fde11f446a4d2073b}{lookup}}(key);}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ num\_matches\ =\ std::distance(matches.first,\ matches.second);}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_matches\ ==\ 0)\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{log_8h_a04af09851c431d178f16b24fa1aac1e9}{log\_warn}}(\textcolor{stringliteral}{"{}got\ no\ matches\ for\ your\ prefix\ search:\ \{\}"{}},\ key);}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tl::unexpected(\mbox{\hyperlink{struct_library_ae9e3ae85efeaa3c8cb6c1ce0ef9b6e33a94935cef4046d086a88dc70dae2086ca}{Error::NO\_MATCH}});}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ \mbox{\hyperlink{random_8h_ac595cabd40bee1b9e1c604ea389dc528}{randIn}}(0,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(num\_matches)\ -\/\ 1);}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_library_a93e91cdb10a3852616a58fce74ad079c}{const\_iterator}}\ \mbox{\hyperlink{struct_library_a2a858d67788c3cf9d4cc5a6e7c548532}{begin}}(matches.first);}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ std::advance(\mbox{\hyperlink{struct_library_a2a858d67788c3cf9d4cc5a6e7c548532}{begin}},\ idx);}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_library_a2a858d67788c3cf9d4cc5a6e7c548532}{begin}}-\/>second;}
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{struct_library_ac67fa132228b572fde11f446a4d2073b}{lookup}}(\textcolor{keyword}{const}\ std::string\&\ key)\ \textcolor{keyword}{const}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ -\/>\ std::pair<const\_iterator,\ const\_iterator>\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ p\ =\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.lower\_bound(key);}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ q\ =\ \mbox{\hyperlink{struct_library_a6336d7fa20034d256eee82435d413757}{storage}}.end();}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ !=\ q\ \&\&\ p-\/>first\ ==\ key)\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_pair(p,\ std::next(p));}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ r\ =\ p;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (r\ !=\ q\ \&\&\ r-\/>first.compare(0,\ key.size(),\ key)\ ==\ 0)\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++r;}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_pair(p,\ r);}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00113\ \};}
 
 \end{DoxyCode}

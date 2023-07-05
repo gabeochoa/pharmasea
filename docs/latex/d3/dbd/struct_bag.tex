@@ -21,6 +21,8 @@ Inheritance diagram for Bag\+:\begin{figure}[H]
 \item 
 virtual bool \mbox{\hyperlink{struct_bag_ac8a55c4ee9e9f6e95425bf9b0a5901c8}{has\+\_\+holding\+\_\+ability}} () const override
 \item 
+virtual bool \mbox{\hyperlink{struct_bag_aaaf54cb06929d89bdf25da385a8f652f}{can\+\_\+eat}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ item) const override
+\item 
 virtual std\+::optional$<$ raylib\+::\+Model $>$ \mbox{\hyperlink{struct_bag_ad66adfe94f97d7f5da10da2769049d8e}{model}} () const override
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_item}{Item}}}
@@ -54,7 +56,9 @@ virtual std\+::optional$<$ raylib\+::\+Model $>$ \mbox{\hyperlink{struct_item_a0
 \item 
 virtual bool \mbox{\hyperlink{struct_item_a041b916a0c1b4feb83b0a55e97d3fded}{eat}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ item)
 \item 
-virtual bool \mbox{\hyperlink{struct_item_a182f7bac8365029d055b04e279981a82}{can\+\_\+eat}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ item)
+bool \mbox{\hyperlink{struct_item_a7caa08865e2193086ba97358f2384875}{evaluate\+\_\+eat\+\_\+request}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ item)
+\item 
+virtual bool \mbox{\hyperlink{struct_item_a4d012a67c73427dd4f2b4fb4bb8d6f68}{can\+\_\+eat}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$) const
 \item 
 virtual bool \mbox{\hyperlink{struct_item_a523767b015090eca0c122605de78c846}{has\+\_\+holding\+\_\+ability}} () const
 \item 
@@ -126,6 +130,16 @@ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$ \mbox{\hyperl
 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_bag_aaaf54cb06929d89bdf25da385a8f652f}\label{struct_bag_aaaf54cb06929d89bdf25da385a8f652f}} 
+\index{Bag@{Bag}!can\_eat@{can\_eat}}
+\index{can\_eat@{can\_eat}!Bag@{Bag}}
+\doxysubsubsection{\texorpdfstring{can\_eat()}{can\_eat()}}
+{\footnotesize\ttfamily virtual bool Bag\+::can\+\_\+eat (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_item}{Item}} $>$}]{item }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{struct_item_a4d012a67c73427dd4f2b4fb4bb8d6f68}{Item}}.
+
 \mbox{\Hypertarget{struct_bag_ac8a55c4ee9e9f6e95425bf9b0a5901c8}\label{struct_bag_ac8a55c4ee9e9f6e95425bf9b0a5901c8}} 
 \index{Bag@{Bag}!has\_holding\_ability@{has\_holding\_ability}}
 \index{has\_holding\_ability@{has\_holding\_ability}!Bag@{Bag}}

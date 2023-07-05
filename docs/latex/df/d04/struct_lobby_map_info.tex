@@ -20,11 +20,11 @@ virtual void \mbox{\hyperlink{struct_lobby_map_info_af72bfe92b12587543d0df931323
 \doxysubsubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_level_info}{Level\+Info}}}
 \begin{DoxyCompactItemize}
 \item 
-virtual void \mbox{\hyperlink{struct_level_info_a69320651f4975db03abfcf8979341cb4}{on\+Update}} (float dt)
+virtual void \mbox{\hyperlink{struct_level_info_afc8cbde7e95c3b3a3c58fc0e7ec8dbb3}{on\+Update}} (const \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}} \&players, float dt)
 \item 
 virtual void \mbox{\hyperlink{struct_level_info_a7c2985c6599e2a7d5e051cc7f835fc6d}{on\+Draw}} (float dt) const
 \item 
-virtual void \mbox{\hyperlink{struct_level_info_a29c9081e7343c8fb18e46104f73b957b}{on\+Draw\+UI}} (float)
+virtual void \mbox{\hyperlink{struct_level_info_a4831864db4d34ecc1e19a1007dac9ba7}{on\+Draw\+UI}} (float dt)
 \item 
 void \mbox{\hyperlink{struct_level_info_a66f640142946bce849c3b1e73884c45e}{grab\+\_\+things}} ()
 \item 
@@ -42,8 +42,6 @@ virtual void \mbox{\hyperlink{struct_level_info_a0784ca0f3cf019f17d50596242a0243
 \begin{DoxyCompactItemize}
 \item 
 bool \mbox{\hyperlink{struct_level_info_a098c0e83c76b9b85263af606e0b465f7}{was\+\_\+generated}} = false
-\item 
-\mbox{\hyperlink{struct_system_manager}{System\+Manager}} \mbox{\hyperlink{struct_level_info_a7c46f127f733274ead38458a65ca3016}{system\+\_\+manager}}
 \item 
 \mbox{\hyperlink{entityhelper_8h_a183abbcc97de7f620b2aafb4880e06f7}{Entities}} \mbox{\hyperlink{struct_level_info_ac9ac8f187c4e95277137ff7d38a5efe4}{entities}}
 \item 
@@ -70,7 +68,7 @@ Implements \mbox{\hyperlink{struct_level_info_a0784ca0f3cf019f17d50596242a02431}
 
 
 
-References \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{Entity\+Helper\+::add\+Entity()}}, and \mbox{\hyperlink{struct_furniture_a358f91902463b0bb9d57f8b92c35d65c}{Furniture\+::make\+\_\+character\+\_\+switcher()}}.
+References \mbox{\hyperlink{struct_entity_helper_a97f17944dd8ed19696573fa9fb34c2b9}{Entity\+Helper\+::add\+Entity()}}, \mbox{\hyperlink{namespaceentities_a42ce60037b7f401840b866a2badc65cd}{entities\+::make\+\_\+character\+\_\+switcher()}}, \mbox{\hyperlink{namespaceentities_a0d6d07d53d6aacaa5b3547ac03d693b2}{entities\+::make\+\_\+trigger\+\_\+area()}}, and \mbox{\hyperlink{globals_8h_af3c09b249c48587aba215cce49091fa0}{TILESIZE}}.
 
 \mbox{\Hypertarget{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}\label{struct_lobby_map_info_af72bfe92b12587543d0df931323584b3}} 
 \index{LobbyMapInfo@{LobbyMapInfo}!onDraw@{onDraw}}
