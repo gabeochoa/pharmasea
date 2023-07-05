@@ -53,7 +53,7 @@ inline void person_update_given_new_pos(int id, Transform& transform,
     // we need some way to handle popping people back to spawn or something if
     // they get stuck
 
-    // TODO this should be a component
+    // TODO this should be a component?
     {
         // horizontal check
         auto new_bounds_x = get_bounds(new_pos_x, transform.size());

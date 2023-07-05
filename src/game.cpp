@@ -119,6 +119,10 @@ void process_dev_flags(char* argv[]) {
 #if ENABLE_DEV_FLAGS
     argh::parser cmdl(argv);
 
+    if (cmdl[{"--tests-only", "-t"}]) {
+        TESTS_ONLY = true;
+    }
+
     if (cmdl[{"--disable-all", "-d"}]) {
         ENABLE_MODELS = false;
         ENABLE_SOUND = false;
@@ -145,11 +149,11 @@ void process_dev_flags(char* argv[]) {
 int main(int argc, char* argv[]) {
     process_dev_flags(argv);
 
-    // TODO Add flag to run tests only
-    // TODO update makefile to do ./p -t && ./ph -S
     tests::run_all();
-    std::cout << "All tests ran " << std::endl;
-    // return 0;
+    if (TESTS_ONLY) {
+        std::cout << "All tests ran " << std::endl;
+        return 0;
+    }
 
     // What i realized is that somehow every time i write a test
     // it fixes the component bug im investigating
