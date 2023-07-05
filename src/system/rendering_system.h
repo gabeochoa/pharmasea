@@ -367,8 +367,8 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
     auto& ht = entity->get<HasTimer>();
     switch (ht.type) {
         case HasTimer::Renderer::Round: {
-            const bool is_day =
-                GameState::s_in_round() && !GameState::s_is_closing();
+            const bool is_closing = ht.store_is_closed();
+            const bool is_day = GameState::s_in_round() && !is_closing;
 
             const vec2 center = {200.f, 75.f};
 
@@ -404,8 +404,7 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
                 is_day ? primary : bg);
 
             auto status_text =
-                is_day ? "OPEN"
-                       : (GameState::s_is_closing() ? "CLOSING" : "CLOSED");
+                is_day ? "OPEN" : (is_closing ? "CLOSING" : "CLOSED");
 
             raylib::DrawTextEx(Preload::get().font, status_text,
                                {rect_pos.x, rect_pos.y - 2}, 20, 0, font_color);
@@ -423,13 +422,17 @@ inline void render_block_state_change_reason(std::shared_ptr<Entity> entity,
     if (entity->is_missing<HasTimer>()) return;
     auto& ht = entity->get<HasTimer>();
 
-    //
+    // if the round isnt over dont need to show anything
+    if (ht.currentRoundTime > 0) return;
 
-    Color font_color = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
-    auto countdown = fmt::format("Next Round Starts in: {}",
-                                 (int) util::trunc(ht.roundSwitchCountdown, 1));
-    raylib::DrawTextEx(Preload::get().font, countdown.c_str(), {200, 200}, 75,
-                       0, font_color);
+    {
+        Color font_color = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
+        auto countdown =
+            fmt::format("Next Round Starts in: {}",
+                        (int) util::trunc(ht.roundSwitchCountdown, 1));
+        raylib::DrawTextEx(Preload::get().font, countdown.c_str(), {200, 150},
+                           75, 0, font_color);
+    }
 
     //
     auto _render_single_reason = [](std::string text, float y) {

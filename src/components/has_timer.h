@@ -96,6 +96,10 @@ struct HasTimer : public BaseComponent {
         if (value) roundSwitchCountdown = roundSwitchCountdownReset;
     }
 
+    [[nodiscard]] bool store_is_closed() const {
+        return roundSwitchCountdown <= 0 && GameState::s_in_round();
+    }
+
     void on_complete(float dt) {
         auto _reset_timer = [&]() { currentRoundTime = totalRoundTime; };
 
@@ -106,18 +110,15 @@ struct HasTimer : public BaseComponent {
         }
 
         switch (GameState::get().read()) {
-            case game::State::InRoundClosing: {
-                // For this one, we need to wait until everyone is done leaving
-                if (read_reason(WaitingReason::CustomersInStore)) return;
-                GameState::get().set(game::State::Planning);
-            } break;
             case game::State::Planning: {
                 // For this one, we need to wait until everyone drops the things
                 if (read_reason(WaitingReason::HoldingFurniture)) return;
                 GameState::get().set(game::State::InRound);
             } break;
             case game::State::InRound: {
-                GameState::get().set(game::State::InRoundClosing);
+                // For this one, we need to wait until everyone is done leaving
+                if (read_reason(WaitingReason::CustomersInStore)) return;
+                GameState::get().set(game::State::Planning);
             } break;
 
             default:

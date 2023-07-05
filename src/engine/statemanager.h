@@ -112,9 +112,8 @@ enum State {
     InMenu = 0,
     Lobby = 1,
     InRound = 2,
-    InRoundClosing = 3,
-    Planning = 4,
-    Paused = 5,
+    Planning = 3,
+    Paused = 4,
 };
 inline std::ostream& operator<<(std::ostream& os, const State& state) {
     os << "Game::State " << magic_enum::enum_name(state);
@@ -140,17 +139,9 @@ struct GameState : public StateManager2<game::State> {
     }
     static game::State s_pause() { return GameState::get().pause(); }
 
-    [[nodiscard]] bool in_round() const {
-        return is(game::State::InRound) || is(game::State::InRoundClosing);
-    }
+    [[nodiscard]] bool in_round() const { return is(game::State::InRound); }
     [[nodiscard]] static bool s_in_round() {
         return GameState::get().in_round();
-    }
-    [[nodiscard]] bool is_closing() const {
-        return is(game::State::InRoundClosing);
-    }
-    [[nodiscard]] static bool s_is_closing() {
-        return GameState::get().is_closing();
     }
 
     [[nodiscard]] bool is_paused() const { return is(game::State::Paused); }
@@ -164,7 +155,7 @@ struct GameState : public StateManager2<game::State> {
 
     [[nodiscard]] static bool is_update_state(game::State s) {
         return s == game::State::Lobby || s == game::State::InRound ||
-               s == game::State::InRoundClosing || s == game::State::Planning;
+               s == game::State::Planning;
     }
 
     [[nodiscard]] static bool s_should_update() {
@@ -201,8 +192,6 @@ struct GameState : public StateManager2<game::State> {
         if (is(game::State::Planning)) {
             set(game::State::InRound);
         } else if (is(game::State::InRound)) {
-            set(game::State::InRoundClosing);
-        } else if (is(game::State::InRoundClosing)) {
             set(game::State::Planning);
         }
         return read();

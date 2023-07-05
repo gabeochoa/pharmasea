@@ -69,8 +69,7 @@ struct SystemManager {
         // log_warn("system manager on gamestate change from {} to {}",
         // old_state, new_state);
 
-        if ((old_state == game::State::InRound ||
-             old_state == game::State::InRoundClosing) &&
+        if (old_state == game::State::InRound &&
             new_state == game::State::Planning) {
             state_transitioned_round_to_planning = true;
         }
