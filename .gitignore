@@ -11,6 +11,7 @@ WinPharmaSea/**/
 pharmasea/WinPharmaSea/**/
 pharmasea.exe
 .obsidian/
+release/*
 *.o
 *.d
 cppcheck_err

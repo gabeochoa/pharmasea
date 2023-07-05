@@ -51,6 +51,37 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+### alpha_0.23.07.04
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (All) grabbing / dropping is pretty bad and doesnt work as expected 
+- (All) you can get the controls into a backwards state.. 
+- (IR) Conveyer belt model is now bread cause it kept crashing on windows 
+
+impact 
+- Spawner now spawns people! 
+- Add ability to support multiple registers and find the best one 
+- Add Day/Night cycle with sunrise ui and countdown timers
+- Show a reason for when the gamemode isnt switching 
+
+bug fix
+- grabber now grabs from non conveyers 
+
+BE
+- debug mode turns on noclip now
+- run tests only first and then the game 
+- move render ui into rendering_system 
+- rename canhold update to be more obvious 
+- move player info into the system manager (8 hours ago) <Gabe Ochoa>
+- add timer component 
+- add util functions to know if a register is full 
+- send inputs less often so that it works better for 60fps 
+- send half as much data on every input frame :) 
+- add leak tester command; also sign code i guess 
+- add util function to find all entities with component 
+
+
 ### alpha_0.23.07.03
 
 Known Issues
