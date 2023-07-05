@@ -426,8 +426,8 @@ inline void render_block_state_change_reason(std::shared_ptr<Entity> entity,
     //
 
     Color font_color = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
-    auto countdown =
-        fmt::format("{}", (int) util::trunc(ht.roundSwitchCountdown, 1));
+    auto countdown = fmt::format("Next Round Starts in: {}",
+                                 (int) util::trunc(ht.roundSwitchCountdown, 1));
     raylib::DrawTextEx(Preload::get().font, countdown.c_str(), {200, 200}, 75,
                        0, font_color);
 
