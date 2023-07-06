@@ -108,4 +108,14 @@ leak:
 # 	command source lldbcommands 
 # and thatll handle it for you
 
+
+
+# if you are getting dylib errors,
+# build GameNetworkingSockets locally 
+# 	git clone ... cmake ... ninja ... 
+# and then copy the new dylib into this folder (it should be the same) 
+#
+# then make and if you see protobuf or other dylib try installing the one you just added .
+# install_name_tool -id @executable_path/libGameNetworkingSockets.dylib libGameNetworkingSockets.dylib
+
 -include $(OBJ_FILES:.o=.d)
