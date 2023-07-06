@@ -91,7 +91,6 @@ struct Server {
     }
 
     void send_message_to_all(
-
         const char *buffer, uint32 size,
         std::function<bool(Client_t &)> exclude = nullptr) {
         for (auto &c : clients) {

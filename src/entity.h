@@ -347,7 +347,7 @@ static Entity* make_customer(vec2 p, bool has_ailment = true) {
 
 typedef Entity Furniture;
 
-// TODO This namespace should probably be "furniture::" 
+// TODO This namespace should probably be "furniture::"
 // or add the ones above into it
 namespace entities {
 static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
@@ -567,16 +567,17 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
 }
 
 template<typename I>
-[[nodiscard]] static Entity* make_itemcontainer(vec2 pos) {
-    Entity* container =
-        entities::make_furniture(DebugOptions{.name = "item container"}, pos,
-                                 ui::color::white, ui::color::white);
+[[nodiscard]] static Entity* make_itemcontainer(const DebugOptions& options,
+                                                vec2 pos) {
+    Entity* container = entities::make_furniture(options, pos, ui::color::white,
+                                                 ui::color::white);
     container->addComponent<IsItemContainer<I>>();
     return container;
 }
 
 [[nodiscard]] static Entity* make_bagbox(vec2 pos) {
-    Entity* container = entities::make_itemcontainer<Bag>(pos);
+    Entity* container =
+        entities::make_itemcontainer<Bag>({.name = "bagbox"}, pos);
 
     if (ENABLE_MODELS) {
         container->get<ModelRenderer>().update(ModelInfo{
@@ -593,7 +594,8 @@ template<typename I>
 }
 
 [[nodiscard]] static Entity* make_medicine_cabinet(vec2 pos) {
-    Entity* container = entities::make_itemcontainer<PillBottle>(pos);
+    Entity* container = entities::make_itemcontainer<PillBottle>(
+        {.name = "medicine cabinet"}, pos);
     if (ENABLE_MODELS) {
         container->get<ModelRenderer>().update(ModelInfo{
             .model_name = "medicine_cabinet",
@@ -607,7 +609,8 @@ template<typename I>
 [[nodiscard]] static Entity* make_pill_dispenser(vec2 pos) {
     // TODO when making a new itemcontainer, it silently creates a new component
     // and then youll get a polymorphism error, probably need something
-    Entity* container = entities::make_itemcontainer<Pill>(pos);
+    Entity* container =
+        entities::make_itemcontainer<Pill>({.name = "pill dispenser"}, pos);
     if (ENABLE_MODELS) {
         container->get<ModelRenderer>().update(ModelInfo{
             .model_name = "crate",
