@@ -14,6 +14,7 @@
 #include "lerp_test.h"
 #include "test_pathing.h"
 #include "test_ui_widget.h"
+#include "size_ents.h"
 
 namespace tests {
 
@@ -23,6 +24,8 @@ void run_all() {
 
     lerp_test();
     test_all_pathing();
+
+    size_test();
 }
 
 }  // namespace tests

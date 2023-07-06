@@ -26,7 +26,11 @@ struct PolymorphicBaseClass<BaseComponent>
           IsItemContainer<Bag>, IsItemContainer<PillBottle>,
           IsItemContainer<Pill>, UsesCharacterModel, ShowsProgressBar,
           DebugName, HasDynamicModelName, IsTriggerArea, HasSpeechBubble,
-          Indexer, IsSpawner, HasTimer> {};
+          Indexer, IsSpawner, HasTimer, 
+
+          // This one i didnt find before cause its not serialzed generally
+          CollectsUserInput
+              > {};
 // If you add anything here ^^ then you should add that component to
 // register_all_components in entity.h
 
