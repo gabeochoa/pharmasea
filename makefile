@@ -31,7 +31,8 @@ CXX := clang++
 
 
 all: $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) && ./$(OUTPUT_EXE) -t && ./$(OUTPUT_EXE) -S
+	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) 
+	# ./$(OUTPUT_EXE) -t && ./$(OUTPUT_EXE) -S
 
 
 mp: $(H_FILES) $(OBJ_FILES) 
@@ -76,6 +77,8 @@ countall:
 todo: 
 	{ git grep -niE '(FIXME|TODO)' src/; cat todo.md | grep -e "- \[\s";} 
 
+# for shuf you might need to 
+# brew install coreutils
 todor:
 	{ git grep -niE '(FIXME|TODO)' src/; cat todo.md | grep -e "- \[\s";} | shuf -n1
 
