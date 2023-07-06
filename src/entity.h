@@ -347,6 +347,8 @@ static Entity* make_customer(vec2 p, bool has_ailment = true) {
 
 typedef Entity Furniture;
 
+// TODO This namespace should probably be "furniture::" 
+// or add the ones above into it
 namespace entities {
 static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
                               Color base, bool is_static = false) {

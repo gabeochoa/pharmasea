@@ -77,6 +77,7 @@ struct Server {
                 .map = *pharmacy_map,
             }),
         });
+
         send_client_packet_to_all(map_packet);
     }
 

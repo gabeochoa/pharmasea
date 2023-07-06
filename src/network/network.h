@@ -87,7 +87,7 @@ struct Info {
     [[nodiscard]] bool has_username() { return username_set; }
     [[nodiscard]] bool missing_username() { return !has_username(); }
 
-    TriggerOnDt menu_state_tick_trigger = TriggerOnDt(0.1f);
+    TriggerOnDt menu_state_tick_trigger = TriggerOnDt(1.0f);
 
     Info() {}
 
@@ -122,6 +122,8 @@ struct Info {
 #endif
     }
 
+    // TODO should probably move to network/client. 
+    // Right now we only have the is_host() check here
     void send_current_menu_state(float dt) {
         bool run = menu_state_tick_trigger.test(dt);
         if (!run) return;
