@@ -13,6 +13,47 @@ struct SizeInfo {
     bool operator<(const SizeInfo& si) const { return size < si.size; }
 };
 
+template<typename A>
+inline void size_component_a(std::vector<SizeInfo>& results) {
+    Entity* entity = new Entity();
+    network::Buffer buff = network::serialize_to_entity(entity);
+    results.push_back({std::string(type_name<A>()), (int) buff.size()});
+    delete entity;
+}
+
+template<typename A>
+inline void size_components(auto& results) {
+    size_component_a<A>(results);
+}
+
+template<typename A, typename B, typename... Rest>
+inline std::vector<SizeInfo> size_components(auto& results) {
+    size_component_a<A>(results);
+    size_components<B, Rest...>(results);
+    return results;
+}
+
+inline std::vector<SizeInfo> size_all_components_sorted() {
+    using namespace entities;
+
+    std::vector<SizeInfo> results;
+    size_components<
+        Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
+        CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
+        CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
+        CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid,
+        CanBeHeld, IsRotatable, CanGrabFromOtherFurniture, ConveysHeldItem,
+        HasWaitingQueue, CanBeTakenFrom, IsItemContainer<Bag>,
+        IsItemContainer<PillBottle>, IsItemContainer<Pill>, UsesCharacterModel,
+        ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
+        HasSpeechBubble, Indexer, IsSpawner, HasTimer, CollectsUserInput>(
+        results);
+
+    std::sort(results.begin(), results.end());
+
+    return results;
+}
+
 inline std::vector<SizeInfo> size_all_sorted() {
     using namespace entities;
     vec3 zero = {0, 0, 0};
@@ -98,7 +139,12 @@ inline std::vector<SizeInfo> size_all_sorted() {
 }
 
 inline void size_test() {
-    auto r = size_all_sorted();
+    auto r = size_all_components_sorted();
+    for (auto si : r) {
+        std::cout << si.name << " " << si.size << std::endl;
+    }
+
+    r = size_all_sorted();
     for (auto si : r) {
         std::cout << si.name << " " << si.size << std::endl;
     }
