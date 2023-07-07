@@ -383,7 +383,9 @@ inline void work_furniture(const std::shared_ptr<Entity> player,
 inline void handle_drop(const std::shared_ptr<Entity>& player) {
     CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
-    const auto _merge_item_from_furniture_into_hand =
+    // This is for example putting a pill into a bag you are holding
+    // taking an item and placing it into the container in your hand
+    const auto _merge_item_from_furniture_into_hand_item =
         [player]() -> tl::expected<bool, std::string> {
         CanHighlightOthers& cho = player->get<CanHighlightOthers>();
         // our item cant hold anything or is already full
@@ -430,7 +432,8 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
                 });
 
         // No matching furniture
-        if (!closest_furniture) return false;
+        if (!closest_furniture)
+            return tl::unexpected("merge hand into: no matching furniture");
 
         // TODO need to handle the case where the merged item is not a
         // valid thing the furniture can hold.
@@ -453,7 +456,8 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
         return true;
     };
 
-    const auto _place_item_onto_furniture = [&]() {
+    const auto _place_item_onto_furniture =
+        [&]() -> tl::expected<bool, std::string> {
         const auto can_place_item_into = [](std::shared_ptr<Entity> entity,
                                             std::shared_ptr<Item> item) {
             if (entity->is_missing<CanHoldItem>()) return false;
@@ -492,7 +496,8 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
                 });
 
         // no matching furniture
-        if (!closest_furniture) return false;
+        if (!closest_furniture)
+            return tl::unexpected("place_onto: no matching furniture");
 
         Transform& furnT = closest_furniture->get<Transform>();
         CanHoldItem& furnCHI = closest_furniture->get<CanHoldItem>();
@@ -506,15 +511,28 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
     };
 
     // TODO could be solved with tl::expected i think
-    auto item_merged = _merge_item_from_furniture_into_hand();
-    if (item_merged) return;
+    auto item_merged = _merge_item_from_furniture_into_hand_item();
+    if (item_merged)
+        return;
+    else
+        log_info("{}", item_merged.error());
+
+    // item_merged = _merge_item_from_furniture_around_hand_item();
+    // if (item_merged) return;
     // else
     // log_info("{}", item_merged.error());
 
     item_merged = _merge_item_in_hand_into_furniture_item();
-    if (item_merged) return;
+    if (item_merged)
+        return;
+    else
+        log_info("{}", item_merged.error());
 
-    [[maybe_unused]] bool item_placed = _place_item_onto_furniture();
+    item_merged = _place_item_onto_furniture();
+    if (item_merged)
+        return;
+    else
+        log_info("{}", item_merged.error());
 
     return;
 }
