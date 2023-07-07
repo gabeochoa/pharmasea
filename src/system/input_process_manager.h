@@ -383,11 +383,13 @@ inline void work_furniture(const std::shared_ptr<Entity> player,
 inline void handle_drop(const std::shared_ptr<Entity>& player) {
     CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
-    const auto _merge_item_from_furniture_into_hand = [player] {
+    const auto _merge_item_from_furniture_into_hand =
+        [player]() -> tl::expected<bool, std::string> {
         CanHighlightOthers& cho = player->get<CanHighlightOthers>();
         // our item cant hold anything or is already full
         if (!player->get<CanHoldItem>().item()->empty()) {
-            return false;
+            return tl::unexpected(
+                "trying to merge from furniture, but item was not empty");
         }
 
         std::shared_ptr<Furniture> closest_furniture =
@@ -399,7 +401,9 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
                 });
 
         if (!closest_furniture) {
-            return false;
+            return tl::unexpected(
+                "trying to merge from furniture, but didnt find anything "
+                "holding something");
         }
 
         auto item_to_merge = closest_furniture->get<CanHoldItem>().item();
@@ -410,7 +414,8 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
         return eat_was_successful;
     };
 
-    const auto _merge_item_in_hand_into_furniture_item = [&]() {
+    const auto _merge_item_in_hand_into_furniture_item =
+        [&]() -> tl::expected<bool, std::string> {
         std::shared_ptr<Furniture> closest_furniture =
             EntityHelper::getClosestMatchingFurniture(
                 player->get<Transform>(), cho.reach(),
@@ -501,8 +506,10 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
     };
 
     // TODO could be solved with tl::expected i think
-    bool item_merged = _merge_item_from_furniture_into_hand();
+    auto item_merged = _merge_item_from_furniture_into_hand();
     if (item_merged) return;
+    // else
+    // log_info("{}", item_merged.error());
 
     item_merged = _merge_item_in_hand_into_furniture_item();
     if (item_merged) return;

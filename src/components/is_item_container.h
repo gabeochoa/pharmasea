@@ -13,6 +13,9 @@ struct IsItemContainer : public BaseComponent {
         auto i = dynamic_pointer_cast<I>(item);
         if (!i) return false;
         // TODO idk what this was for
+        //  - i think this was for handling putting a full bag back into the bag
+        //  box
+        //
         // if (!i->empty()) return false;
         return true;
     }
