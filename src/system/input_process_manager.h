@@ -467,7 +467,7 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
 
         if (!closest_furniture) {
             return tl::unexpected(
-                "trying to merge from furniture aroudn hand, but didnt find "
+                "trying to merge from furniture around hand, but didnt find "
                 "anything than can hold what we are holding");
         }
 
@@ -580,30 +580,20 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
         return true;
     };
 
-    // TODO could be solved with tl::expected i think
-    auto item_merged = _merge_item_from_furniture_into_hand_item();
-    if (item_merged)
-        return;
-    else
-        log_info("{}", item_merged.error());
+    typedef std::function<tl::expected<bool, std::string>()> MergeFunc;
+    // NOTE: ORDER MATTERS HERE
+    std::vector<MergeFunc> fns{
+        _merge_item_from_furniture_into_hand_item,
+        _merge_item_from_furniture_around_hand_item,
+        _merge_item_in_hand_into_furniture_item,
+        _place_item_onto_furniture,
+    };
 
-    item_merged = _merge_item_from_furniture_around_hand_item();
-    if (item_merged)
-        return;
-    else
+    for (auto fn : fns) {
+        auto item_merged = fn();
+        if (item_merged) break;
         log_info("{}", item_merged.error());
-
-    item_merged = _merge_item_in_hand_into_furniture_item();
-    if (item_merged)
-        return;
-    else
-        log_info("{}", item_merged.error());
-
-    item_merged = _place_item_onto_furniture();
-    if (item_merged)
-        return;
-    else
-        log_info("{}", item_merged.error());
+    }
 
     return;
 }
