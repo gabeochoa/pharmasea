@@ -70,6 +70,12 @@ struct Preload {
             {"images", "face.png", "face"},
             {"images", "jug.png", "jug"},
             {"images", "sleepyico.png", "sleepy"},
+
+            //
+            {"images", "character_duck_mug.png", "character_duck_mug"},
+            {"images", "character_rogue_mug.png", "character_rogue_mug"},
+            {"images", "character_bear_mug.png", "character_bear_mug"},
+            {"images", "character_dog_mug.png", "character_dog_mug"},
         };
 
         for (const auto& t : textures) {

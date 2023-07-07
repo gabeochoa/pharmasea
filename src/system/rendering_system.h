@@ -281,6 +281,7 @@ inline void render_speech_bubble(std::shared_ptr<Entity> entity, float) {
                           raylib::WHITE);
 }
 
+// TODO theres two functions called render normal, maybe we should address this
 inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
     // Ghost player cant render during normal mode
     if (entity->has<CanBeGhostPlayer>() &&
