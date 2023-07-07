@@ -19,9 +19,11 @@ void render_networked_players(const Entities& entities, float dt) {
     const auto _render_single_networked_player =
         [&](std::shared_ptr<Entity> entity, float) {
             _draw_text(                                     //
-                fmt::format("{}({})",                       //
+                fmt::format("{}({}) {}",                    //
                             entity->get<HasName>().name(),  //
-                            entity->get<HasClientID>().id()));
+                            entity->get<HasClientID>().id(),
+                            // TODO replace with icon
+                            entity->get<HasClientID>().ping()));
         };
     const auto _render_little_model_guy = [&](std::shared_ptr<Entity> entity,
                                               float) {

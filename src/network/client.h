@@ -166,7 +166,9 @@ struct Client {
             update_player_remotely(rp, location, username, facing);
         };
 
-        auto update_remote_player_rare = [&](int client_id, int model_index) {
+        auto update_remote_player_rare = [&](int client_id,    //
+                                             int model_index,  //
+                                             long last_ping) {
             if (!remote_players.contains(client_id)) {
                 log_warn("(rare) Remote player doesnt exist but should: {}",
                          client_id);
@@ -180,7 +182,7 @@ struct Client {
 
             // log_info("updating remote player arre {} {} id{}", client_id,
             // model_index, rp->id);
-            update_player_rare_remotely(rp, model_index);
+            update_player_rare_remotely(rp, model_index, last_ping);
         };
 
         ClientPacket packet = client_p->deserialize_to_packet(msg);
@@ -252,7 +254,8 @@ struct Client {
             case ClientPacket::MsgType::PlayerRare: {
                 ClientPacket::PlayerRareInfo info =
                     std::get<ClientPacket::PlayerRareInfo>(packet.msg);
-                update_remote_player_rare(info.client_id, info.model_index);
+                update_remote_player_rare(info.client_id, info.model_index,
+                                          info.last_ping);
             } break;
 
             case ClientPacket::MsgType::Ping: {

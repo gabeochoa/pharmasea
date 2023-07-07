@@ -288,12 +288,16 @@ static void update_player_remotely(std::shared_ptr<Entity> entity,
 }
 
 static void update_player_rare_remotely(std::shared_ptr<Entity> entity,
-                                        int model_index) {
-    if (entity->is_missing_any<UsesCharacterModel, ModelRenderer>()) return;
+                                        int model_index, int last_ping) {
+    if (entity
+            ->is_missing_any<UsesCharacterModel, ModelRenderer, HasClientID>())
+        return;
     UsesCharacterModel& ucm = entity->get<UsesCharacterModel>();
     ModelRenderer& renderer = entity->get<ModelRenderer>();
 
     ucm.update_index_CLIENT_ONLY(model_index);
+
+    entity->get<HasClientID>().update_ping(last_ping);
 
     // TODO this should be the same as all other rendere updates for players
     renderer.update(ModelInfo{

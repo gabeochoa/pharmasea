@@ -131,6 +131,7 @@ struct ClientPacket {
     struct PlayerRareInfo {
         int client_id = -1;
         int model_index;
+        int last_ping = -1;
     };
 
     typedef std::variant<
@@ -246,6 +247,7 @@ void serialize(S& s, ClientPacket& packet) {
               [](S& s, ClientPacket::PlayerRareInfo& info) {
                   s.value4b(info.client_id);
                   s.value4b(info.model_index);
+                  s.value4b(info.last_ping);
               },
               [](S& s, ClientPacket::PingInfo& info) {
     // Im not sure if this will cause issues with networked clients,

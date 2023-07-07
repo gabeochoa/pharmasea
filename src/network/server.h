@@ -92,6 +92,7 @@ struct Server {
                     .client_id = player.first,
                     .model_index = player.second->get<UsesCharacterModel>()
                                        .index_server_only(),
+                    .last_ping = player.second->get<HasClientID>().ping(),
                 }),
             });
             send_client_packet_to_all(player_rare_updated);
@@ -396,18 +397,29 @@ struct Server {
         ClientPacket::PingInfo info =
             std::get<ClientPacket::PingInfo>(orig_packet.msg);
 
+        auto pong = now::current_ms();
+
         ClientPacket packet({
             .channel = Channel::UNRELIABLE_NO_DELAY,
             .client_id = SERVER_CLIENT_ID,
             .msg_type = network::ClientPacket::MsgType::Ping,
             .msg = network::ClientPacket::PingInfo({
                 .ping = info.ping,
-                .pong = now::current_ms(),
+                .pong = pong,
             }),
         });
         send_client_packet_to_all(packet, [&](internal::Client_t& client) {
             return client.client_id != incoming_client.client_id;
         });
+
+        auto player_match = players.find(incoming_client.client_id);
+        if (player_match == players.end()) {
+            log_warn("We dont have a matching player for {}",
+                     incoming_client.client_id);
+            return;
+        }
+        player_match->second->get<HasClientID>().update_ping(
+            (int) (pong - info.ping));
     }
 
     void server_enqueue_message_string(
