@@ -322,6 +322,7 @@ inline void render_floating_name(std::shared_ptr<Entity> entity, float) {
     // log_warn("drawing floating name {} for {} @ {} ({})", hasName.name(),
     // entity->id, transform.position, transform.raw_position);
 
+    // TODO rotate the name with the camera?
     raylib::DrawFloatingText(
         transform.raw() + vec3{0, 0.5f * TILESIZE, 0.2f * TILESIZE},
         Preload::get().font, hasName.name().c_str());
@@ -480,6 +481,7 @@ inline void render_player_info() {
         fmt::format("holding item?: {}",
                     global_player->get<CanHoldItem>().is_holding_item()));
 }
+void render_networked_players(float dt);
 
 inline void render_debug(const Entities&, float) {
     render_player_info();
@@ -492,6 +494,7 @@ inline void render_normal(const Entities& entities, float dt) {
         render_timer(entity, dt);
         render_block_state_change_reason(entity, dt);
     }
+    render_networked_players(dt);
 }
 
 }  // namespace ui
