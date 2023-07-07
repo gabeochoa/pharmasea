@@ -110,6 +110,18 @@ struct SystemManager {
         update(all, dt);
     }
 
+    void render_all_entities(const Entities&, float dt) const {
+        // TODO figure out if its okay for us to throw out the updated players,
+        // and use oldAll
+        render_entities(oldAll, dt);
+    }
+
+    void render_all_ui(const Entities&, float dt) const {
+        // TODO figure out if its okay for us to throw out the updated players,
+        // and use oldAll
+        render_ui(oldAll, dt);
+    }
+
     void process_inputs(const Entities& entities, const UserInputs& inputs) {
         for (auto& entity : entities) {
             if (entity->is_missing<RespondsToUserInput>()) continue;

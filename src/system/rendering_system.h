@@ -481,7 +481,7 @@ inline void render_player_info() {
         fmt::format("holding item?: {}",
                     global_player->get<CanHoldItem>().is_holding_item()));
 }
-void render_networked_players(float dt);
+void render_networked_players(const Entities&, float dt);
 
 inline void render_debug(const Entities&, float) {
     render_player_info();
@@ -494,7 +494,7 @@ inline void render_normal(const Entities& entities, float dt) {
         render_timer(entity, dt);
         render_block_state_change_reason(entity, dt);
     }
-    render_networked_players(dt);
+    render_networked_players(entities, dt);
 }
 
 }  // namespace ui

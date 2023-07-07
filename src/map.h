@@ -14,7 +14,7 @@ struct Map {
     LobbyMapInfo lobby_info;
     GameMapInfo game_info;
 
-    std::vector<std::shared_ptr<Entity>> remote_players_NOT_SERIALIZED;
+    Entities remote_players_NOT_SERIALIZED;
     std::string seed;
 
     // This gets called on every network frame because
@@ -54,6 +54,7 @@ struct Map {
 
     void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
+        // TODO merge this into normal render pipeline
         SystemManager::get().render_entities(
             container_cast(remote_players_NOT_SERIALIZED,
                            "converting sp<RemotePlayer> to sp<Entity> as these "
@@ -69,6 +70,13 @@ struct Map {
 
     void onDrawUI(float dt) {
         TRACY_ZONE_SCOPED;
+
+        // TODO merge this into normal render pipeline
+        SystemManager::get().render_ui(
+            container_cast(remote_players_NOT_SERIALIZED,
+                           "converting sp<RemotePlayer> to sp<Entity> as these "
+                           "are not serialized and so not part of level info"),
+            dt);
         if (in_lobby_state()) {
             lobby_info.onDrawUI(dt);
         } else {
