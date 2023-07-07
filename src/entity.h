@@ -373,6 +373,7 @@ static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
     if (!is_static) {
         furniture->addComponent<IsRotatable>();
         furniture->addComponent<CanHoldItem>();
+        // These two are the heavy ones
         furniture->addComponent<CanBeHeld>();
         furniture->addComponent<CanBeHighlighted>();
     }

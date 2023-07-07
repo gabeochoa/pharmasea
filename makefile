@@ -32,7 +32,8 @@ CXX := clang++
 
 all: $(H_FILES) $(OBJ_FILES) 
 	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) 
-	# ./$(OUTPUT_EXE) -t && ./$(OUTPUT_EXE) -S
+	./$(OUTPUT_EXE) -t && ./$(OUTPUT_EXE) -S
+	# ./$(OUTPUT_EXE) -t
 
 
 mp: $(H_FILES) $(OBJ_FILES) 
