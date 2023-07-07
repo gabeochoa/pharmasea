@@ -322,8 +322,9 @@ inline void render_floating_name(std::shared_ptr<Entity> entity, float) {
     // log_warn("drawing floating name {} for {} @ {} ({})", hasName.name(),
     // entity->id, transform.position, transform.raw_position);
 
-    raylib::DrawFloatingText(transform.raw() + vec3{0, 0.5f * TILESIZE, 0},
-                             Preload::get().font, hasName.name().c_str());
+    raylib::DrawFloatingText(
+        transform.raw() + vec3{0, 0.5f * TILESIZE, 0.2f * TILESIZE},
+        Preload::get().font, hasName.name().c_str());
 }
 
 inline void render_progress_bar(std::shared_ptr<Entity> entity, float) {
