@@ -416,6 +416,76 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
         return eat_was_successful;
     };
 
+    // This is like placing an item onto a plate and immediately picking it up
+    // it should only apply when the merged item isnt valid in that spot anymore
+    // ie only empty bags go in bagbox so a bag containg something shouldnt go
+    // back
+    //
+    /*
+     * TODO since this exists as a way to handle containers
+     * maybe short circuit earlier by doing?
+        static bool is_an_item_container(Entity* e) {
+            return e->has_any<                //
+                IsItemContainer<Pill>,        //
+                IsItemContainer<PillBottle>,  //
+                IsItemContainer<Bag>          //
+                >();
+        }
+     * */
+    const auto _merge_item_from_furniture_around_hand_item =
+        [player]() -> tl::expected<bool, std::string> {
+        CanHighlightOthers& cho = player->get<CanHighlightOthers>();
+        CanHoldItem& playerCHI = player->get<CanHoldItem>();
+
+        if (!playerCHI.is_holding_item()) {
+            return tl::unexpected(
+                "trying to merge from furniture around hand, but player wasnt "
+                "holding anything");
+        }
+
+        std::shared_ptr<Furniture> closest_furniture =
+            EntityHelper::getClosestMatchingFurniture(
+                player->get<Transform>(), cho.reach(),
+                [&playerCHI](std::shared_ptr<Furniture> f) {
+                    if (f->is_missing<CanHoldItem>()) return false;
+                    const auto& chi = f->get<CanHoldItem>();
+                    if (chi.empty()) return false;
+                    // TODO we are using asT here since its not const, and chi
+                    // is const theoretically we probably should enforce const
+                    // another way
+                    const auto item = chi.asT<Item>();
+
+                    // Does the item this furniture holds have the ability to
+                    // hold things
+                    if (!item->has_holding_ability()) return false;
+                    // Can it hold the thing we are holding?
+                    if (!item->evaluate_eat_request(playerCHI.item()))
+                        return false;
+
+                    return true;
+                });
+
+        if (!closest_furniture) {
+            return tl::unexpected(
+                "trying to merge from furniture aroudn hand, but didnt find "
+                "anything than can hold what we are holding");
+        }
+
+        auto item_to_merge = closest_furniture->get<CanHoldItem>().item();
+        bool eat_was_successful = item_to_merge->eat(playerCHI.item());
+        if (eat_was_successful) {
+            // remove the link to the one we were already holding
+            player->get<CanHoldItem>().update(nullptr);
+            // add the link to the new one
+            player->get<CanHoldItem>().update(item_to_merge,
+                                              Item::HeldBy::PLAYER);
+
+            // furniture can let go
+            closest_furniture->get<CanHoldItem>().update(nullptr);
+        }
+        return eat_was_successful;
+    };
+
     const auto _merge_item_in_hand_into_furniture_item =
         [&]() -> tl::expected<bool, std::string> {
         std::shared_ptr<Furniture> closest_furniture =
@@ -517,10 +587,11 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
     else
         log_info("{}", item_merged.error());
 
-    // item_merged = _merge_item_from_furniture_around_hand_item();
-    // if (item_merged) return;
-    // else
-    // log_info("{}", item_merged.error());
+    item_merged = _merge_item_from_furniture_around_hand_item();
+    if (item_merged)
+        return;
+    else
+        log_info("{}", item_merged.error());
 
     item_merged = _merge_item_in_hand_into_furniture_item();
     if (item_merged)
