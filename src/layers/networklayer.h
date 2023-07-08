@@ -99,7 +99,8 @@ struct NetworkLayer : public Layer {
         ui_context->push_parent(content);
         {
             text(*ui::components::mk_text(),
-                 fmt::format("Username: {}", Settings::get().data.username));
+                 fmt::format("{}: {}", text_lookup(strings::i18n::USERNAME),
+                             Settings::get().data.username));
             if (button(*ui::components::mk_icon_button(MK_UUID(id, ROOT_ID)),
                        text_lookup(strings::i18n::EDIT))) {
                 network_info->unlock_username();
@@ -155,7 +156,7 @@ struct NetworkLayer : public Layer {
         // TODO add show/hide button for the ip address
         auto ip_address_input = ui_context->own(Widget(
             MK_UUID(id, ROOT_ID), Size_Px(400.f, 1.f), Size_Px(25.f, 0.5f)));
-        text(*ui::components::mk_text(), "Enter IP Address");
+        text(*ui::components::mk_text(), text_lookup(strings::i18n::ENTER_IP));
         // TODO add trimming of whitespace or validate whitespace
         textfield(*ip_address_input, network_info->host_ip_address(),
                   [](const std::string& content) {
@@ -170,17 +171,18 @@ struct NetworkLayer : public Layer {
                   });
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                   "Load Last Used IP")) {
+                   text_lookup(strings::i18n::LOAD_LAST_IP))) {
             network_info->host_ip_address() = Settings::get().last_used_ip();
         }
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                   "Connect")) {
+                   text_lookup(strings::i18n::CONNECT))) {
             Settings::get().update_last_used_ip_address(
                 network_info->host_ip_address());
             network_info->lock_in_ip();
         }
         padding(*ui::components::mk_but_pad());
-        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                   text_lookup(strings::i18n::BACK_BUTTON))) {
             network_info->unlock_username();
         }
     }
@@ -202,13 +204,15 @@ struct NetworkLayer : public Layer {
                         Widget(MK_UUID(id, ROOT_ID), Size_Px(75.f, 0.5f),
                                Size_Px(25.f, 1.f)));
                     std::string show_hide_host_ip_text =
-                        should_show_host_ip ? "Hide" : "Show";
+                        should_show_host_ip
+                            ? text_lookup(strings::i18n::HIDE_IP)
+                            : text_lookup(strings::i18n::SHOW_IP);
                     if (checkbox(*checkbox_widget, &should_show_host_ip,
                                  &show_hide_host_ip_text)) {
                     }
                     if (button(*ui::components::mk_icon_button(
                                    MK_UUID(id, ROOT_ID)),
-                               "Copy")) {
+                               text_lookup(strings::i18n::COPY_IP))) {
                         ext::set_clipboard_text(my_ip_address.c_str());
                     }
                 }
@@ -232,7 +236,7 @@ struct NetworkLayer : public Layer {
 
         if (network_info->is_host()) {
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       "Start")) {
+                       text_lookup(strings::i18n::START))) {
                 MenuState::get().set(menu::State::Game);
                 GameState::get().set(game::State::Lobby);
             }
@@ -240,7 +244,7 @@ struct NetworkLayer : public Layer {
         }
 
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                   "Disconnect")) {
+                   text_lookup(strings::i18n::DISCONNECT))) {
             network_info.reset(new network::Info());
         }
 
@@ -258,7 +262,7 @@ struct NetworkLayer : public Layer {
             Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
                    Size_Px(100.f, 1.f)));
 
-        text(*player_text, "Username: ");
+        text(*player_text, text_lookup(strings::i18n::USERNAME));
         // TODO theres a problem where it is constantly saving as you type which
         // might not be expected
         textfield(*username_input, Settings::get().data.username,
@@ -271,11 +275,12 @@ struct NetworkLayer : public Layer {
                   });
         padding(*ui::components::mk_but_pad());
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                   "Lock in")) {
+                   text_lookup(strings::i18n::LOCK_IN))) {
             network_info->lock_in_username();
         }
         padding(*ui::components::mk_but_pad());
-        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)), "Back")) {
+        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                   text_lookup(strings::i18n::BACK_BUTTON))) {
             MenuState::get().go_back();
         }
     }

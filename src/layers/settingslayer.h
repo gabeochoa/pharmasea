@@ -76,7 +76,8 @@ struct SettingsLayer : public Layer {
         div(*container);
         ui_context->push_parent(container);
         {
-            text(*ui::components::mk_text(), "Show Streamer Safe Box");
+            text(*ui::components::mk_text(),
+                 text_lookup(strings::i18n::SHOW_SAFE_BOX));
             auto checkbox_widget = ui_context->own(Widget(
                 MK_UUID(id, ROOT_ID), Size_Px(75.f, 0.5f), Size_Px(25.f, 1.f)));
             bool sssb = Settings::get().data.show_streamer_safe_box;
@@ -94,7 +95,8 @@ struct SettingsLayer : public Layer {
         div(*container);
         ui_context->push_parent(container);
         {
-            text(*ui::components::mk_text(), "Enable Post-Processing Shaders");
+            text(*ui::components::mk_text(),
+                 text_lookup(strings::i18n::ENABLE_PPS));
             auto checkbox_widget = ui_context->own(Widget(
                 MK_UUID(id, ROOT_ID), Size_Px(75.f, 0.5f), Size_Px(25.f, 1.f)));
             bool sssb = Settings::get().data.enable_postprocessing;
@@ -112,7 +114,8 @@ struct SettingsLayer : public Layer {
         div(*volume_slider_container);
         ui_context->push_parent(volume_slider_container);
         {
-            text(*ui::components::mk_text(), "Master Volume");
+            text(*ui::components::mk_text(),
+                 text_lookup(strings::i18n::MASTER_VOLUME));
             padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                                 Size_Px(100.f, 1.f)));
 
@@ -134,7 +137,8 @@ struct SettingsLayer : public Layer {
         div(*volume_slider_container);
         ui_context->push_parent(volume_slider_container);
         {
-            text(*ui::components::mk_text(), "Music Volume");
+            text(*ui::components::mk_text(),
+                 text_lookup(strings::i18n::MUSIC_VOLUME));
             padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                                 Size_Px(100.f, 1.f)));
 
@@ -156,7 +160,8 @@ struct SettingsLayer : public Layer {
         div(*resolution_switcher_container);
         ui_context->push_parent(resolution_switcher_container);
         {
-            text(*ui::components::mk_text(), "Resolution");
+            text(*ui::components::mk_text(),
+                 text_lookup(strings::i18n::RESOLUTION));
             padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                                 Size_Px(100.f, 1.f)));
 
@@ -179,7 +184,7 @@ struct SettingsLayer : public Layer {
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID),
                                               Size_Px(120.f, 1.f),
                                               Size_Px(50.f, 1.f)),
-                   "Back")) {
+                   text_lookup(strings::i18n::BACK_BUTTON))) {
             MenuState::get().go_back();
         }
         padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),

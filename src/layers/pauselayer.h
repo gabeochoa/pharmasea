@@ -70,15 +70,15 @@ struct BasePauseLayer : public Layer {
                 padding(*top_padding);
                 {
                     if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                               "Continue")) {
+                               text_lookup(strings::i18n::CONTINUE))) {
                         GameState::get().go_back();
                     }
                     if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                               "Settings")) {
+                               text_lookup(strings::i18n::SETTINGS))) {
                         MenuState::get().set(menu::State::Settings);
                     }
                     if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                               "Quit")) {
+                               text_lookup(strings::i18n::QUIT))) {
                         MenuState::get().reset();
                         GameState::get().reset();
                     }

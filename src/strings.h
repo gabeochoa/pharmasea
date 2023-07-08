@@ -160,20 +160,50 @@ constexpr const char* PHARMASEA = "Pharmasea";
 
 namespace i18n {
 
-constexpr const char* ABOUT = "About";        // TODO translate
-constexpr const char* JOIN = "Join";          // TODO translate
-constexpr const char* HOST = "Host";          // TODO translate
-constexpr const char* PLAY = "Play";          // TODO translate
-constexpr const char* SETTINGS = "Settings";  // TODO translate
-constexpr const char* EXIT = "Exit";          // TODO translate
-constexpr const char* EDIT = "Edit";          // TODO translate
-constexpr const char* BACK_BUTTON = "Back";   // TODO translate
+// DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
+// DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
+// DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
+// DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
+// DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
+// DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
+// DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
+// DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
+
+constexpr const char* ABOUT = "About";
+constexpr const char* JOIN = "Join";
+constexpr const char* HOST = "Host";
+constexpr const char* PLAY = "Play";
+constexpr const char* SETTINGS = "Settings";
+constexpr const char* EXIT = "Exit";
+constexpr const char* EDIT = "Edit";
+constexpr const char* BACK_BUTTON = "Back";
+constexpr const char* CONTINUE = "Continue";
+constexpr const char* QUIT = "Quit";
+constexpr const char* SAFE_ZONE = "safe zone";
+constexpr const char* SHOW_SAFE_BOX = "Show Streamer Safe Box";
+constexpr const char* ENABLE_PPS = "Enable Post-Processing Shaders";
+constexpr const char* MASTER_VOLUME = "Master Volume";
+constexpr const char* MUSIC_VOLUME = "Music Volume";
+constexpr const char* RESOLUTION = "Resolution";
+constexpr const char* START = "Start";
+constexpr const char* DISCONNECT = "Disconnect";
+constexpr const char* USERNAME = "Username";
+constexpr const char* LOCK_IN = "Lock-In";
+constexpr const char* ENTER_IP = "Enter IP Address";
+constexpr const char* LOAD_LAST_IP = "Load Last Used IP";
+constexpr const char* CONNECT = "Connect";
+
+constexpr const char* HIDE_IP = "Hide";
+constexpr const char* SHOW_IP = "Show";
+constexpr const char* COPY_IP = "Copy";
+
 // This is not aligned on purpose
+// TODO translate
 constexpr const char* ABOUT_INFO = R"(
 A game by: 
     Gabe
     Brett
-    Alice)";  // TODO translate
+    Alice)";
 
 }  // namespace i18n
 

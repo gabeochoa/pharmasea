@@ -1,0 +1,89 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2023-07-07 09:51-0800\n"
+"Last-Translator: Gabe Ochoa <>\n"
+"Language-Team:  <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "About"
+msgstr "tuobA"
+
+msgid "Join"
+msgstr "nioJ"
+
+msgid "Host"
+msgstr "tsoH"
+
+msgid "Play"
+msgstr "yalP"
+
+msgid "Settings"
+msgstr "sgnitteS"
+
+msgid "Exit"
+msgstr "tixE"
+
+msgid "Edit"
+msgstr "tidE"
+
+msgid "Back"
+msgstr "kcaB"
+
+msgid "Continue"
+msgstr "eunitnoC"
+
+msgid "Quit"
+msgstr "tiuQ"
+
+msgid "safe zone"
+msgstr "enoz efas"
+
+msgid "Show Streamer Safe Box"
+msgstr "xoB efaS remaertS wohS"
+
+msgid "Enable Post-Processing Shaders"
+msgstr "sredahS gnissecorP-tsoP elbanE"
+
+msgid "Master Volume"
+msgstr "emuloV retsaM"
+
+msgid "Music Volume"
+msgstr "emuloV cisuM"
+
+msgid "Resolution"
+msgstr "noituloseR"
+
+msgid "Start"
+msgstr "tratS"
+
+msgid "Disconnect"
+msgstr "tcennocsiD"
+
+msgid "Username"
+msgstr "emanresU"
+
+msgid "Lock-In"
+msgstr "nI-kcoL"
+
+msgid "Enter IP Address"
+msgstr "sserddA PI retnE"
+
+msgid "Load Last Used IP"
+msgstr "PI desU tsaL daoL"
+
+msgid "Connect"
+msgstr "tcennoC"
+
+msgid "Hide"
+msgstr "ediH"
+
+msgid "Show"
+msgstr "wohS"
+
+msgid "Copy"
+msgstr "ypoC"
+

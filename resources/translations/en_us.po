@@ -11,3 +11,6 @@ msgstr ""
 
 msgid "ABOUT"
 msgstr "About"
+
+msgid "Join"
+msgstr "Join"

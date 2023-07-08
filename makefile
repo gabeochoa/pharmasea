@@ -101,7 +101,8 @@ leak:
 	xctrace record --template 'Leaks' --output 'recording.trace' --launch $(OUTPUT_EXE)
 
 translate:
-	msgfmt -o resources/en_us.mo resources/en_us.po
+	msgfmt -o resources/translations/en_us.mo resources/translations/en_us.po
+	msgfmt -o resources/translations/en_rev.mo resources/translations/en_rev.po
 
 findstr:
 	grep -r "\"" src/ | grep -v "preload"  | grep -v "game.cpp" | grep -v "src//strings.h" | grep -v "include" | grep -v "src//test" | grep -v "src//engine" | grep -v "src//dataclass" | grep -v "log" | grep -v "TODO" | grep -v "VALIDATE" 
