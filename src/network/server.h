@@ -143,10 +143,7 @@ struct Server {
 
     TriggerOnDt next_update_timer = TriggerOnDt(5.f);
 
-    void tick(float dt) {
-        TRACY_ZONE_SCOPED;
-        server_p->run();
-
+    void process_incoming_messages() {
         // Check to see if we have any new packets to process
         while (!incoming_message_queue.empty()) {
             TRACY_ZONE_NAMED(tracy_server_process, "packets to process", true);
@@ -154,7 +151,9 @@ struct Server {
             server_process_message_string(incoming_message_queue.front());
             incoming_message_queue.pop_front();
         }
+    }
 
+    void process_packet_forwarding() {
         // TODO move one of these while loops, probably the one belowVVV to a
         // different thread
         // This will allow us to empty the steam queue faster, and give us more
@@ -182,7 +181,9 @@ struct Server {
             send_client_packet_to_all(p);
             packet_queue.pop_front();
         }
+    }
 
+    void process_map_updates(float dt) {
         // TODO right now we have the run update on all the server players
         // this kinda makes sense but most of the game doesnt need this.
         //
@@ -202,19 +203,31 @@ struct Server {
                                         next_update_timer / 1000.f);
             }
         }
-
         next_map_tick -= dt;
         if (next_map_tick <= 0) {
             send_map_state();
             next_map_tick = next_map_tick_reset;
         }
+    }
 
+    void process_player_rare_tick(float dt) {
         next_player_rare_tick -= dt;
         if (next_player_rare_tick <= 0) {
             // TODO decide if this needs to be more / less often
             send_player_rare_data();
             next_player_rare_tick = next_player_rare_tick_reset;
         }
+    }
+
+    void tick(float dt) {
+        TRACY_ZONE_SCOPED;
+        server_p->run();
+
+        process_incoming_messages();
+        process_packet_forwarding();
+        process_map_updates(dt);
+        process_player_rare_tick(dt);
+
         TRACY_FRAME_MARK("server::tick");
     }
 

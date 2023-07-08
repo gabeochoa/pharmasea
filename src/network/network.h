@@ -92,14 +92,14 @@ struct Info {
     Info() {}
 
     ~Info() {
-        // cleanup_server();
         desired_role = Role::s_None;
-    }
 
-    void cleanup_server() {
-        if (server_thread_id == std::thread::id()) return;
-        Server::stop();
-        server_thread.join();
+        // cleanup server
+        {
+            if (server_thread_id == std::thread::id()) return;
+            Server::stop();
+            server_thread.join();
+        }
     }
 
     static void init_connections() {

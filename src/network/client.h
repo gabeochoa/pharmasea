@@ -211,6 +211,7 @@ struct Client {
                     add_new_player(id, client_p->username);
                     GLOBALS.set("active_camera_target",
                                 remote_players[id].get());
+                    // TODO make shared doesnt work here
                     global_player.reset(remote_players[id].get());
                     global_player->addComponent<CollectsUserInput>();
                     // TODO i dont think we need this anymore
