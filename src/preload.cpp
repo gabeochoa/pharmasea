@@ -25,18 +25,6 @@ raylib::Font Preload::load_karmina_regular() {
     return ffont;
 }
 
-void Preload::load_translations_from_file(const char* fn) {
-    if (localization) delete localization;
-
-    log_info("Loading language file: {}", fn);
-    localization = new i18n::LocalizationText();
-    bool success = localization->init(fn);
-
-    if (!success) {
-        log_error("Failed to load localization file @ {}", fn);
-    }
-}
-
 Preload::Preload() {
     load_translations();
     load_shaders();
@@ -64,13 +52,6 @@ Preload::~Preload() {
     ModelLibrary::get().unload_all();
     SoundLibrary::get().unload_all();
     ShaderLibrary::get().unload_all();
-}
-
-void Preload::load_translations() {
-    load_translations_from_file(
-        Files::get()
-            .fetch_resource_path(strings::settings::TRANSLATIONS, "en_rev.mo")
-            .c_str());
 }
 
 void Preload::load_fonts() {

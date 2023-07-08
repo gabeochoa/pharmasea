@@ -7,6 +7,9 @@
 
 #include <string>
 
+// BTW LOG_LEVEL is in there
+#include "log.h"
+
 // https://stackoverflow.com/a/48896410
 template<typename Str>
 [[nodiscard]] constexpr size_t hashString(const Str& toHash) {
@@ -26,11 +29,6 @@ template<typename Str>
 
 static int __WIN_H = 720;
 static int __WIN_W = 1280;
-static i18n::LocalizationText* localization;
-
-// TODO lets move this to an env var or something
-// we shouldnt have to recompile to change the level
-static int LOG_LEVEL = 2;  // LogLevel::INFO;
 
 [[nodiscard]] inline int WIN_W() { return __WIN_W; }
 [[nodiscard]] inline float WIN_WF() { return static_cast<float>(__WIN_W); }
@@ -45,3 +43,25 @@ static long total_ping = 0;
 static long there_ping = 0;
 static long return_ping = 0;
 }  // namespace network
+
+static i18n::LocalizationText* localization;
+
+// localization comes from engine/global.h
+inline const char* text_lookup(const char* s) {
+    if (!localization) {
+        log_error("localization is nullptr");
+        return s;
+    }
+    if (!localization->mo_data) {
+        log_warn("localization not initialized");
+        return s;
+    }
+
+    int target_index = get_target_index(localization, s);
+    if (target_index == -1) {
+        log_warn("localization missing {}", s);
+        return s;
+    }
+
+    return get_translated_string(localization, target_index);
+}

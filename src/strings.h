@@ -232,13 +232,3 @@ A game by:
 }  // namespace i18n
 
 }  // namespace strings
-
-// localization comes from engine/global.h
-inline const char* text_lookup(const char* s) {
-    if (!localization->mo_data) return s;
-
-    int target_index = get_target_index(localization, s);
-    if (target_index == -1) return s;  // Maybe we want to log an error?
-
-    return get_translated_string(localization, target_index);
-}

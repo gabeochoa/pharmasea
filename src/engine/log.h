@@ -3,7 +3,9 @@
 #pragma once
 
 #include <cassert>
-#include "globals.h" // where LOG_LEVEL is located 
+// TODO lets move this to an env var or something
+// we shouldnt have to recompile to change the level
+static int LOG_LEVEL = 2;  // LogLevel::INFO;
 
 enum LogLevel {
     LOG_ALOG_ = 0,
@@ -24,7 +26,6 @@ enum LogLevel {
 #include <string>
 
 #include "../external_include.h"
-#include "globals.h"
 #include "tracy.h"
 // TODO add an is_server flag so we can easier distinguish between
 

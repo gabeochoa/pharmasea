@@ -10,10 +10,14 @@
 #include "../external_include.h"
 //
 
+// TODO is there a better way?
+#include "../preload.h"
+//
 #include "app.h"
 #include "event.h"
 #include "files.h"
 #include "globals.h"
+#include "language.h"
 #include "log.h"
 #include "music_library.h"
 #include "resolution.h"
@@ -37,6 +41,7 @@ using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 struct Data {
     int engineVersion = 0;
     rez::ResolutionInfo resolution;
+    std::string language_name;
     // Volume percent [0, 1] for everything
     float master_volume = 0.5f;
     float music_volume = 0.5f;
@@ -51,6 +56,7 @@ struct Data {
     void serialize(S& s) {
         s.value4b(engineVersion);
         s.object(resolution);
+        s.text1b(language_name, lang::MAX_STRING_LENGTH);
         s.value4b(master_volume);
         s.value4b(music_volume);
         s.value1b(show_streamer_safe_box);
@@ -63,6 +69,7 @@ struct Data {
         os << "version: " << data.engineVersion << std::endl;
         os << "resolution: " << data.resolution.width << ", "
            << data.resolution.height << std::endl;
+        os << "language: " << data.language_name << std::endl;
         os << "master vol: " << data.master_volume << std::endl;
         os << "music vol: " << data.music_volume << std::endl;
         os << "Safe box: " << data.show_streamer_safe_box << std::endl;
@@ -90,14 +97,29 @@ struct Settings {
         update_window_size(rez::ResolutionExplorer::get().fetch(index));
     }
 
+    void update_selected_language(const std::string lang_name) {
+        int index = lang::LanguageExplorer::get().index(lang_name);
+        if (index == -1) {
+            index = 0;
+            log_warn("selected language not found {} ", lang_name);
+        }
+        return update_language_from_index(index);
+    }
+
+    void update_language_from_index(int index) {
+        auto& li = lang::LanguageExplorer::get().fetch(index);
+        data.language_name = li.name;
+        // Preload::get().load_translations_from_file(li.filename.c_str());
+    }
+
     void update_window_size(rez::ResolutionInfo rez) {
         data.resolution = rez;
 
         data.resolution.width = static_cast<int>(
-            fminf(3860.f, fmaxf((float)data.resolution.width, 1280.f)));
+            fminf(3860.f, fmaxf((float) data.resolution.width, 1280.f)));
 
         data.resolution.height = static_cast<int>(
-            fminf(2160.f, fmaxf((float)data.resolution.height, 720.f)));
+            fminf(2160.f, fmaxf((float) data.resolution.height, 720.f)));
 
         //
         WindowResizeEvent* event = new WindowResizeEvent(
@@ -140,8 +162,16 @@ struct Settings {
         return rez::ResolutionExplorer::get().index(data.resolution);
     }
 
+    [[nodiscard]] int get_current_language_index() const {
+        return lang::LanguageExplorer::get().index(data.language_name);
+    }
+
     [[nodiscard]] std::vector<std::string> resolution_options() const {
         return rez::ResolutionExplorer::get().fetch_options();
+    }
+
+    [[nodiscard]] std::vector<std::string> language_options() const {
+        return lang::LanguageExplorer::get().fetch_options();
     }
 
     [[nodiscard]] std::string last_used_ip() const {
@@ -206,7 +236,11 @@ struct Settings {
         // them ready
         rez::ResolutionExplorer::get().load_resolution_options();
 
+        // same for languages
+        lang::LanguageExplorer::get().load_language_options();
+
         // version doesnt need update
+        update_selected_language(data.language_name);
         update_window_size(data.resolution);
         update_music_volume(data.music_volume);
         update_master_volume(data.master_volume);

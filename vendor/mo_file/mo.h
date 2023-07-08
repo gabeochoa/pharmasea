@@ -69,7 +69,8 @@ THE SOFTWARE.
 namespace i18n {
 
 struct LocalizationText {
-    LocalizationText(const char *filename);
+    LocalizationText() {}
+    bool init(const char *filename);
     ~LocalizationText();
 
     void abort();
@@ -207,7 +208,7 @@ inline int get_target_index(LocalizationText *loc, const char *s) {
     return -1;
 }
 
-inline LocalizationText::LocalizationText(const char *filename) {
+inline bool LocalizationText::init(const char *filename) {
     mo_data = NULL;
     num_strings = 0;
     original_table_offset = 0;
@@ -216,7 +217,7 @@ inline LocalizationText::LocalizationText(const char *filename) {
     hash_offset = 0;
 
     FILE *f = fopen(filename, "rb");
-    if (!f) return;
+    if (!f) return false;
 
     void *data;
     int length = os_read_entire_file(
@@ -224,10 +225,10 @@ inline LocalizationText::LocalizationText(const char *filename) {
                     // file and return it in a block of newly-allocated memory.
     fclose(f);
 
-    if (length < 0) return;  // os_read_entire_file returns -1 on failure.
+    if (length < 0) return false;  // os_read_entire_file returns -1 on failure.
     if (length < 24) {  // There has to be at least this much in the header...
         abort();
-        return;
+        return false;
     }
 
     mo_data = data;
@@ -244,7 +245,7 @@ inline LocalizationText::LocalizationText(const char *filename) {
         reversed = 1;
     } else {
         abort();
-        return;
+        return false;
     }
 
     num_strings = read4_from_offset(this, 8);
@@ -256,8 +257,9 @@ inline LocalizationText::LocalizationText(const char *filename) {
     if (hash_num_entries ==
         0) {  // We expect a hash table to be there; if it's not, bail.
         abort();
-        return;
+        return false;
     }
+    return true;
 }
 
 inline void LocalizationText::abort() {

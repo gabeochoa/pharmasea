@@ -3,6 +3,7 @@
 
 #include "components/transform.h"
 #include "engine/globals_register.h"
+#include "engine/model_library.h"
 #include "engine/ui_color.h"
 #include "entity.h"
 #include "entityhelper.h"
