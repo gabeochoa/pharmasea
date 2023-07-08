@@ -209,7 +209,7 @@ struct SystemManager {
 
             // TODO these eventually should move into their own functions but
             // for now >:)
-            if (entity->get<DebugName>().name() == "sophie")
+            if (entity->get<DebugName>().name() == strings::entity::SOPHIE)
                 system_manager::sophie(entity, dt);
         }
     }

@@ -36,10 +36,10 @@ struct UsesCharacterModel : public BaseComponent {
 
    private:
     std::array<std::string, 4> character_models = {
-        "character_duck",
-        "character_dog",
-        "character_bear",
-        "character_rogue",
+        strings::model::CHARACTER_BEAR,
+        strings::model::CHARACTER_DOG,
+        strings::model::CHARACTER_DUCK,
+        strings::model::CHARACTER_ROGUE,
     };
     int index;
     bool changed;

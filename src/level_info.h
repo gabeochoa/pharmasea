@@ -8,6 +8,7 @@
 #include "entityhelper.h"
 #include "item.h"
 #include "item_helper.h"
+#include "strings.h"
 #include "system/system_manager.h"
 #include "tests/test_maps.h"
 
@@ -184,21 +185,21 @@ struct helper {
     void validate() {
         auto soph = EntityHelper::getFirstMatching<Entity>(
             [](std::shared_ptr<Entity> e) {
-                return e->get<DebugName>().name() == "sophie";
+                return check_name(e, strings::entity::SOPHIE);
             });
         VALIDATE(soph, "sophie needs to be there ");
 
         // find register,
         auto reg = EntityHelper::getFirstMatching<Entity>(
             [](std::shared_ptr<Entity> e) {
-                return e->get<DebugName>().name() == "register";
+                return check_name(e, strings::entity::REGISTER);
             });
         VALIDATE(reg, "map needs to have at least one register");
 
         // find customer
         auto customer = EntityHelper::getFirstMatching<Entity>(
             [](std::shared_ptr<Entity> e) {
-                return e->get<DebugName>().name() == "customer spawner";
+                return check_name(e, strings::entity::CUSTOMER_SPAWNER);
             });
         VALIDATE(customer,
                  "map needs to have at least one customer spawn point");

@@ -31,7 +31,7 @@ inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
     if (cbp.pushed_force().x != 0.0f || cbp.pushed_force().z != 0.0f) {
         job->path.clear();
         job->local = {};
-        SoundLibrary::get().play("roblox");
+        SoundLibrary::get().play(strings::sounds::ROBLOX);
     }
 }
 
@@ -56,7 +56,7 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float dt) {
     // TODO handle paying for your cart
 
     // IF the story is closed then leave
-    auto sophie = EntityHelper::getAllWithName("sophie")[0];
+    auto sophie = EntityHelper::getAllWithName(strings::entity::SOPHIE)[0];
     VALIDATE(sophie, "there should always be a sophie");
     if (sophie->get<HasTimer>().store_is_closed()) {
         auto pos = entity->get<Transform>().as2();

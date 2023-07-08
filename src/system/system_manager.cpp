@@ -229,12 +229,6 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
 // getMatchingEntity is a pretty large chunk of that
 // processconveyer is 10x faster ...
 void process_grabber_items(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<Transform>()) {
-        log_warn("process grabber missing transform {}", entity->id);
-        log_warn("process grabber missing transform {}",
-                 entity->get<DebugName>().name());
-    }
-
     Transform& transform = entity->get<Transform>();
 
     if (entity->is_missing<CanHoldItem>()) return;
@@ -381,8 +375,7 @@ void count_max_trigger_area_entrants(const std::shared_ptr<Entity>& entity,
 
     int count = 0;
     for (auto& e : SystemManager::get().oldAll) {
-        // TODO need a better way to match player
-        if (e->get<DebugName>().name() != "player") continue;
+        if (!check_name(e, strings::entity::PLAYER)) continue;
         count++;
     }
     entity->get<IsTriggerArea>().update_max_entrants(count);
@@ -393,8 +386,7 @@ void count_trigger_area_entrants(const std::shared_ptr<Entity>& entity, float) {
 
     int count = 0;
     for (auto& e : SystemManager::get().oldAll) {
-        // TODO need a better way to match player
-        if (e->get<DebugName>().name() != "player") continue;
+        if (!check_name(e, strings::entity::PLAYER)) continue;
         if (CheckCollisionBoxes(
                 e->get<Transform>().bounds(),
                 entity->get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
@@ -454,7 +446,8 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
         const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
 
         bool all_gone = true;
-        auto customers = EntityHelper::getAllWithName("customer");
+        auto customers =
+            EntityHelper::getAllWithName(strings::entity::CUSTOMER);
         for (auto e : customers) {
             if (vec::distance(e->get<Transform>().as2(), endpos) >
                 TILESIZE * 2.f) {

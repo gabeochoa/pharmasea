@@ -40,6 +40,7 @@
 #include "components/uses_character_model.h"
 #include "engine/assert.h"
 #include "external_include.h"
+#include "strings.h"
 //
 #include <bitsery/ext/pointer.h>
 #include <bitsery/ext/std_map.h>
@@ -215,6 +216,10 @@ struct DebugOptions {
     std::string name;
 };
 
+static bool check_name(std::shared_ptr<Entity> entity, const char* name) {
+    return entity->get<DebugName>().name() == name;
+}
+
 static void add_entity_components(Entity* entity) {
     entity->addComponent<Transform>();
 }
@@ -269,7 +274,8 @@ static void add_player_components(Entity* player) {
 }
 
 static Entity* make_remote_player(vec3 pos) {
-    Entity* remote_player = make_entity({.name = "remote player"}, pos);
+    Entity* remote_player =
+        make_entity({.name = strings::entity::REMOTE_PLAYER}, pos);
     add_person_components(remote_player);
     add_player_components(remote_player);
     return remote_player;
@@ -309,7 +315,7 @@ static void update_player_rare_remotely(std::shared_ptr<Entity> entity,
 }
 
 static Entity* make_player(vec3 p) {
-    Entity* player = make_entity({.name = "player"}, p);
+    Entity* player = make_entity({.name = strings::entity::PLAYER}, p);
     add_person_components(player);
     add_player_components(player);
 
@@ -331,8 +337,8 @@ static Entity* make_aiperson(const DebugOptions& options, vec3 p) {
 }
 
 static Entity* make_customer(vec2 p, bool has_ailment = true) {
-    Entity* customer =
-        make_aiperson(DebugOptions{.name = "customer"}, vec::to3(p));
+    Entity* customer = make_aiperson(
+        DebugOptions{.name = strings::entity::CUSTOMER}, vec::to3(p));
 
     customer->addComponent<HasName>().update(get_random_name());
 
@@ -386,8 +392,9 @@ static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
 }
 
 static Entity* make_table(vec2 pos) {
-    Entity* table = entities::make_furniture(
-        DebugOptions{.name = "table"}, pos, ui::color::brown, ui::color::brown);
+    Entity* table =
+        entities::make_furniture(DebugOptions{.name = strings::entity::TABLE},
+                                 pos, ui::color::brown, ui::color::brown);
 
     table->get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);
@@ -406,9 +413,9 @@ static Entity* make_table(vec2 pos) {
 }
 
 static Entity* make_character_switcher(vec2 pos) {
-    Entity* character_switcher =
-        entities::make_furniture(DebugOptions{.name = "character switcher"},
-                                 pos, ui::color::green, ui::color::yellow);
+    Entity* character_switcher = entities::make_furniture(
+        DebugOptions{.name = strings::entity::CHARACTER_SWITCHER}, pos,
+        ui::color::green, ui::color::yellow);
 
     character_switcher->addComponent<HasWork>().init(
         [](std::shared_ptr<Entity>, HasWork& hasWork,
@@ -429,8 +436,8 @@ static Entity* make_character_switcher(vec2 pos) {
 }
 
 static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
-    Entity* wall =
-        entities::make_furniture(DebugOptions{.name = "wall"}, pos, c, c, true);
+    Entity* wall = entities::make_furniture(
+        DebugOptions{.name = strings::entity::WALL}, pos, c, c, true);
 
     return wall;
     // enum Type {
@@ -512,9 +519,9 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
 }
 
 [[nodiscard]] static Entity* make_conveyer(vec2 pos) {
-    Entity* conveyer =
-        entities::make_furniture(DebugOptions{.name = "conveyer"}, pos,
-                                 ui::color::blue, ui::color::blue);
+    Entity* conveyer = entities::make_furniture(
+        DebugOptions{.name = strings::entity::CONVEYER}, pos, ui::color::blue,
+        ui::color::blue);
     conveyer->get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Conveyer);
     conveyer->addComponent<ConveysHeldItem>();
@@ -535,8 +542,8 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
 
 [[nodiscard]] static Entity* make_grabber(vec2 pos) {
     Entity* grabber =
-        entities::make_furniture(DebugOptions{.name = "grabber"}, pos,
-                                 ui::color::yellow, ui::color::yellow);
+        entities::make_furniture(DebugOptions{.name = strings::entity::GRABBER},
+                                 pos, ui::color::yellow, ui::color::yellow);
 
     grabber->get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Conveyer);
@@ -556,9 +563,9 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
 }
 
 [[nodiscard]] static Entity* make_register(vec2 pos) {
-    Entity* reg =
-        entities::make_furniture(DebugOptions{.name = "register"}, pos,
-                                 ui::color::grey, ui::color::grey);
+    Entity* reg = entities::make_furniture(
+        DebugOptions{.name = strings::entity::REGISTER}, pos, ui::color::grey,
+        ui::color::grey);
     reg->addComponent<HasWaitingQueue>();
 
     if (ENABLE_MODELS) {
@@ -582,7 +589,7 @@ template<typename I>
 
 [[nodiscard]] static Entity* make_bagbox(vec2 pos) {
     Entity* container =
-        entities::make_itemcontainer<Bag>({.name = "bagbox"}, pos);
+        entities::make_itemcontainer<Bag>({strings::entity::BAG_BOX}, pos);
 
     if (ENABLE_MODELS) {
         container->get<ModelRenderer>().update(ModelInfo{
@@ -600,7 +607,7 @@ template<typename I>
 
 [[nodiscard]] static Entity* make_medicine_cabinet(vec2 pos) {
     Entity* container = entities::make_itemcontainer<PillBottle>(
-        {.name = "medicine cabinet"}, pos);
+        {strings::entity::MEDICINE_CABINET}, pos);
     if (ENABLE_MODELS) {
         container->get<ModelRenderer>().update(ModelInfo{
             .model_name = "medicine_cabinet",
@@ -612,10 +619,11 @@ template<typename I>
 }
 
 [[nodiscard]] static Entity* make_pill_dispenser(vec2 pos) {
-    // TODO when making a new itemcontainer, it silently creates a new component
-    // and then youll get a polymorphism error, probably need something
-    Entity* container =
-        entities::make_itemcontainer<Pill>({.name = "pill dispenser"}, pos);
+    // TODO when making a new itemcontainer, it silently creates a new
+    // component and then youll get a polymorphism error, probably need
+    // something
+    Entity* container = entities::make_itemcontainer<Pill>(
+        {strings::entity::PILL_DISPENSER}, pos);
     if (ENABLE_MODELS) {
         container->get<ModelRenderer>().update(ModelInfo{
             .model_name = "crate",
@@ -644,8 +652,8 @@ template<typename I>
 
 [[nodiscard]] static Entity* make_trigger_area(
     vec3 pos, float width, float height,
-    std::string title = "DEFAULT TRIGGER") {
-    Entity* trigger_area = make_entity({.name = "trigger area"}, pos);
+    std::string title = strings::entity::TRIGGER_AREA) {
+    Entity* trigger_area = make_entity({strings::entity::TRIGGER_AREA}, pos);
 
     trigger_area->get<Transform>().update_size({
         width,
@@ -668,10 +676,12 @@ template<typename I>
 }
 
 [[nodiscard]] static Entity* make_customer_spawner(vec3 pos) {
-    Entity* customer_spawner = make_entity({.name = "customer spawner"}, pos);
+    Entity* customer_spawner =
+        make_entity({strings::entity::CUSTOMER_SPAWNER}, pos);
 
-    // TODO maybe one day add some kind of ui that shows when the next person is
-    // coming? that migth be good to be part of the round timer ui?
+    // TODO maybe one day add some kind of ui that shows when the next
+    // person is coming? that migth be good to be part of the round
+    // timer ui?
     customer_spawner->addComponent<SimpleColoredBoxRenderer>().update(PINK,
                                                                       PINK);
     const auto sfn = std::bind(&make_customer, std::placeholders::_1, true);
@@ -686,7 +696,7 @@ template<typename I>
 
 // This will be a catch all for anything that just needs to get updated
 [[nodiscard]] static Entity* make_sophie(vec3 pos) {
-    Entity* sophie = make_entity({.name = "sophie"}, pos);
+    Entity* sophie = make_entity({strings::entity::SOPHIE}, pos);
 
     // TODO how long is a day?
     sophie->addComponent<HasTimer>(HasTimer::Renderer::Round, 90.f);

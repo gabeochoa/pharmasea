@@ -100,6 +100,12 @@ leak:
 	codesign -s - -f --verbose --entitlements ent_pharmasea.plist $(OUTPUT_EXE)
 	xctrace record --template 'Leaks' --output 'recording.trace' --launch $(OUTPUT_EXE)
 
+translate:
+	msgfmt -o resources/en_us.mo resources/en_us.po
+
+findstr:
+	grep -r "\"" src/ | grep -v "preload"  | grep -v "game.cpp" | grep -v "src//strings.h" | grep -v "include" | grep -v "src//test" | grep -v "src//engine" | grep -v "src//dataclass" | grep -v "log" | grep -v "TODO" | grep -v "VALIDATE" 
+
 # When using lldb, you have to run these commands:
 # 	settings set platform.plugin.darwin.ignored-exceptions EXC_BAD_INSTRUCTION
 # 	c

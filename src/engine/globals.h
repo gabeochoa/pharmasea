@@ -2,6 +2,9 @@
 
 #pragma once
 
+// TODO should be in vendor but we'd like it here
+#include <mo_file/mo.h>
+
 #include <string>
 
 // https://stackoverflow.com/a/48896410
@@ -23,6 +26,7 @@ template<typename Str>
 
 static int __WIN_H = 720;
 static int __WIN_W = 1280;
+static i18n::LocalizationText* localization;
 
 // TODO lets move this to an env var or something
 // we shouldnt have to recompile to change the level

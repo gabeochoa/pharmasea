@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "engine/globals.h"
 #include "external_include.h"
 //
 #include "engine/graphics.h"
@@ -15,6 +16,7 @@
 #include "engine/texture_library.h"
 #include "globals.h"
 #include "resources/fonts/Karmina_Regular_256.h"
+#include "strings.h"
 
 inline raylib::Font load_karmina_regular() {
     auto font = font::LoadFont_KarminaRegular256();
@@ -30,6 +32,7 @@ struct Preload {
     raylib::Font font;
 
     Preload() {
+        load_translations();
         load_shaders();
 
         load_fonts();
@@ -46,6 +49,8 @@ struct Preload {
     }
 
     ~Preload() {
+        delete localization;
+
         ext::close_audio_device();
 
         TextureLibrary::get().unload_all();
@@ -53,6 +58,13 @@ struct Preload {
         ModelLibrary::get().unload_all();
         SoundLibrary::get().unload_all();
         ShaderLibrary::get().unload_all();
+    }
+
+    void load_translations() {
+        // TODO load correct language pack for settings file
+        auto path = Files::get().fetch_resource_path(
+            strings::settings::TRANSLATIONS, "en_us.mo");
+        localization = new i18n::LocalizationText(path.c_str());
     }
 
     void load_fonts() {
@@ -67,15 +79,19 @@ struct Preload {
 
     void load_textures() {
         const std::tuple<const char*, const char*, const char*> textures[] = {
-            {"images", "face.png", "face"},
-            {"images", "jug.png", "jug"},
-            {"images", "sleepyico.png", "sleepy"},
+            {strings::settings::IMAGES, "face.png", "face"},
+            {strings::settings::IMAGES, "jug.png", "jug"},
+            {strings::settings::IMAGES, "sleepyico.png", "sleepy"},
 
             //
-            {"images", "character_duck_mug.png", "character_duck_mug"},
-            {"images", "character_rogue_mug.png", "character_rogue_mug"},
-            {"images", "character_bear_mug.png", "character_bear_mug"},
-            {"images", "character_dog_mug.png", "character_dog_mug"},
+            {strings::settings::IMAGES, "character_duck_mug.png",
+             "character_duck_mug"},
+            {strings::settings::IMAGES, "character_rogue_mug.png",
+             "character_rogue_mug"},
+            {strings::settings::IMAGES, "character_bear_mug.png",
+             "character_bear_mug"},
+            {strings::settings::IMAGES, "character_dog_mug.png",
+             "character_dog_mug"},
         };
 
         for (const auto& t : textures) {
@@ -92,12 +108,12 @@ struct Preload {
         //
         constexpr ModelLibrary::ModelLoadingInfo models[] = {
             ModelLibrary::ModelLoadingInfo{
-                .folder = "models",
+                .folder = strings::settings::MODELS,
                 .filename = "bag.obj",
                 .libraryname = "bag",
             },
             ModelLibrary::ModelLoadingInfo{
-                .folder = "models",
+                .folder = strings::settings::MODELS,
                 .filename = "empty_bag.obj",
                 .libraryname = "empty_bag",
             },
@@ -107,7 +123,7 @@ struct Preload {
                 .libraryname = "conveyer",
             },
             ModelLibrary::ModelLoadingInfo{
-                .folder = "models",
+                .folder = strings::settings::MODELS,
                 .filename = "register.obj",
                 .libraryname = "register",
             },
@@ -154,22 +170,22 @@ struct Preload {
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kaykit",
                 .filename = "character_bear.gltf",
-                .libraryname = "character_bear",
+                .libraryname = strings::model::CHARACTER_BEAR,
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kaykit",
                 .filename = "character_dog.gltf",
-                .libraryname = "character_dog",
+                .libraryname = strings::model::CHARACTER_DOG,
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kaykit",
                 .filename = "character_duck.gltf",
-                .libraryname = "character_duck",
+                .libraryname = strings::model::CHARACTER_DUCK,
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kaykit",
                 .filename = "character_rogue.gltf",
-                .libraryname = "character_rogue",
+                .libraryname = strings::model::CHARACTER_ROGUE,
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
@@ -192,12 +208,13 @@ struct Preload {
     void load_sounds() {
         SoundLibrary::get().load(
             Files::get()
-                .fetch_resource_path("sounds", "roblox_oof.ogg")
+                .fetch_resource_path(strings::settings::SOUNDS,
+                                     "roblox_oof.ogg")
                 .c_str(),
-            "roblox");
+            strings::sounds::ROBLOX);
 
         Files::get().for_resources_in_folder(
-            "sounds", "pa_announcements",
+            strings::settings::SOUNDS, "pa_announcements",
             [](const std::string& name, const std::string& filename) {
                 SoundLibrary::get().load(
                     filename.c_str(),
@@ -208,18 +225,22 @@ struct Preload {
     void load_music() {
         MusicLibrary::get().load(
             Files::get()
-                .fetch_resource_path("music", "supermarket.ogg")
+                .fetch_resource_path(strings::settings::MUSIC,
+                                     "supermarket.ogg")
                 .c_str(),
             "supermarket");
 
         MusicLibrary::get().load(
-            Files::get().fetch_resource_path("music", "theme.ogg").c_str(),
+            Files::get()
+                .fetch_resource_path(strings::settings::MUSIC, "theme.ogg")
+                .c_str(),
             "theme");
     }
 
     void load_shaders() {
         std::tuple<const char*, const char*, const char*> shaders[] = {
-            {"shaders", "post_processing.fs", "post_processing"},
+            {strings::settings::SHADERS, "post_processing.fs",
+             "post_processing"},
         };
 
         for (const auto& s : shaders) {
