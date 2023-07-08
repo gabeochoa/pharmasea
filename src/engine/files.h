@@ -35,7 +35,8 @@ struct Files {
                                                   std::string_view name) const;
     void for_resources_in_group(
         std::string_view group,
-        std::function<void(std::string, std::string)>) const;
+        // TODO replace with struct?
+        std::function<void(std::string, std::string, std::string)>) const;
     void for_resources_in_folder(
         std::string_view group, std::string_view folder,
         std::function<void(std::string, std::string)>) const;

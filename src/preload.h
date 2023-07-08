@@ -64,7 +64,11 @@ struct Preload {
         // TODO load correct language pack for settings file
         auto path = Files::get().fetch_resource_path(
             strings::settings::TRANSLATIONS, "en_rev.mo");
-        localization = new i18n::LocalizationText(path.c_str());
+        reload_translations_from_file(path.c_str());
+    }
+
+    void reload_translations_from_file(const char* fn) {
+        localization = new i18n::LocalizationText(fn);
     }
 
     void load_fonts() {

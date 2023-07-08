@@ -19,6 +19,8 @@
 #include "resolution.h"
 #include "singleton.h"
 #include "util.h"
+// TODO
+#include "../strings.h"
 
 namespace settings {
 
@@ -29,6 +31,8 @@ using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 // TODO how do we support different games having different save file data
 // requirements?
 
+const int MAX_LANG_LENGTH = 25;
+
 // TODO How do we support multiple versions
 // we dont want to add a new field and break
 // all past save games
@@ -37,6 +41,7 @@ using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 struct Data {
     int engineVersion = 0;
     rez::ResolutionInfo resolution;
+    std::string lang_name;
     // Volume percent [0, 1] for everything
     float master_volume = 0.5f;
     float music_volume = 0.5f;
@@ -57,6 +62,7 @@ struct Data {
         s.text1b(username, network::MAX_NAME_LENGTH);
         s.value1b(enable_postprocessing);
         s.text1b(last_ip_joined, 25);
+        s.text1b(lang_name, MAX_LANG_LENGTH);
     }
     friend std::ostream& operator<<(std::ostream& os, const Data& data) {
         os << "Settings(" << std::endl;
@@ -69,8 +75,27 @@ struct Data {
         os << "username: " << data.username << std::endl;
         os << "post_processing: " << data.enable_postprocessing << std::endl;
         os << "last ip joined: " << data.last_ip_joined << std::endl;
+        os << "lang name: " << data.lang_name << std::endl;
         os << ")" << std::endl;
         return os;
+    }
+};
+
+// TODO move into its own file?
+
+struct LanguageInfo {
+    std::string name;
+    std::string filename;
+
+    bool operator<(const LanguageInfo& r) const { return name < r.name; }
+    bool operator==(const LanguageInfo& r) const { return name == r.name; }
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.text1b(name, MAX_LANG_LENGTH);
+        s.text1b(filename, MAX_LANG_LENGTH);
     }
 };
 
@@ -81,6 +106,8 @@ struct Settings {
     SINGLETON(Settings)
 
     settings::Data data;
+
+    std::vector<settings::LanguageInfo> lang_options;
 
     Settings() : data(settings::Data()) {}
 
@@ -94,10 +121,10 @@ struct Settings {
         data.resolution = rez;
 
         data.resolution.width = static_cast<int>(
-            fminf(3860.f, fmaxf((float)data.resolution.width, 1280.f)));
+            fminf(3860.f, fmaxf((float) data.resolution.width, 1280.f)));
 
         data.resolution.height = static_cast<int>(
-            fminf(2160.f, fmaxf((float)data.resolution.height, 720.f)));
+            fminf(2160.f, fmaxf((float) data.resolution.height, 720.f)));
 
         //
         WindowResizeEvent* event = new WindowResizeEvent(
@@ -195,6 +222,48 @@ struct Settings {
         return true;
     }
 
+    void load_language_options() {
+        if (!lang_options.empty()) return;
+
+        Files::get().for_resources_in_group(
+            strings::settings::TRANSLATIONS,
+            [&](const std::string& name, const std::string& filename,
+                const std::string& extension) {
+                if (extension != ".mo") return;
+                log_info("adding {} {} {}", name, filename, extension);
+
+                lang_options.push_back(
+                    settings::LanguageInfo{.name = name, .filename = filename});
+            });
+
+        if (lang_options.empty()) {
+            // TODO Fail more gracefully in the future
+            log_error("no language options found");
+        }
+
+        log_info("loaded {} language options", lang_options.size());
+    }
+
+    void update_language_name(const std::string& l) {
+        std::string lang = l;
+        if (lang.empty()) lang = lang_options[0].name;
+
+        log_info("updating currently language to {}", lang);
+        auto _index = [&](const std::string& name) -> int {
+            int i = 0;
+            for (const auto& res : lang_options) {
+                if (res.name == name) return i;
+                i++;
+            }
+            return -1;
+        };
+        // TODO handle exception
+        auto li = lang_options[_index(lang)];
+        log_info("Loading updated translations from {}", li.filename);
+        reload_translations_from_file(li.filename.c_str());
+        data.lang_name = li.name;
+    }
+
     // Note: Basically once we load the file,
     // we run into an issue where our settings is correct,
     // but the underlying data isnt being used
@@ -206,10 +275,14 @@ struct Settings {
         // them ready
         rez::ResolutionExplorer::get().load_resolution_options();
 
+        // Refresh the language files
+        load_language_options();
+
         // version doesnt need update
         update_window_size(data.resolution);
         update_music_volume(data.music_volume);
         update_master_volume(data.master_volume);
         update_streamer_safe_box(data.show_streamer_safe_box);
+        update_language_name(data.lang_name);
     }
 };

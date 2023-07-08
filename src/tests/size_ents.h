@@ -139,6 +139,8 @@ inline std::vector<SizeInfo> size_all_sorted() {
 }
 
 inline void size_test() {
+    // TODO turn back on at some point
+    return;
     auto r = size_all_components_sorted();
     for (auto si : r) {
         std::cout << si.name << " " << si.size << std::endl;
