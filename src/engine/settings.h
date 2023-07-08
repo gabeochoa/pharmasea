@@ -19,7 +19,7 @@
 #include "resolution.h"
 #include "singleton.h"
 #include "util.h"
-// TODO
+// TODO we should not be reaches outside of engine
 #include "../strings.h"
 
 namespace settings {

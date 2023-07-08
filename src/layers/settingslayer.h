@@ -33,7 +33,7 @@ struct SettingsLayer : public Layer {
     int language_selected_index = 0;
 
     SettingsLayer() : Layer("Settings") {
-        ui_context.reset(new ui::UIContext());
+        ui_context = std::make_shared<ui::UIContext>();
 
         resolution_selected_index =
             Settings::get().get_current_resolution_index();

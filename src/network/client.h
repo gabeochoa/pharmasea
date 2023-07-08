@@ -28,12 +28,12 @@ struct Client {
     float next_ping = 0.0f;
 
     Client() {
-        client_p.reset(new internal::Client());
+        client_p = std::make_shared<internal::Client>();
         client_p->set_process_message(
             std::bind(&Client::client_process_message_string, this,
                       std::placeholders::_1));
 
-        map.reset(new Map("default_seed"));
+        map = std::make_shared<Map>("default_seed");
         GLOBALS.set("map", map.get());
     }
 

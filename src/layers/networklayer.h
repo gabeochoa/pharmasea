@@ -31,10 +31,10 @@ struct NetworkLayer : public Layer {
     bool should_show_host_ip = false;
 
     NetworkLayer() : Layer("Network") {
-        ui_context.reset(new ui::UIContext());
+        ui_context = std::make_shared<ui::UIContext>();
 
         network::Info::init_connections();
-        network_info.reset(new network::Info());
+        network_info = std::make_shared<network::Info>();
         my_ip_address = network::get_remote_ip_address().value_or("");
         if (!Settings::get().data.username.empty()) {
             network_info->lock_in_username();

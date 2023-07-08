@@ -150,6 +150,7 @@ int main(int argc, char* argv[]) {
     process_dev_flags(argv);
 
     tests::run_all();
+
     if (TESTS_ONLY) {
         std::cout << "All tests ran " << std::endl;
         return 0;

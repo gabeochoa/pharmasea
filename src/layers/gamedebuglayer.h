@@ -21,7 +21,7 @@ struct GameDebugLayer : public Layer {
     GameDebugLayer() : Layer(strings::menu::GAME) {
         GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);
         GLOBALS.set("network_ui_enabled", &network_ui_enabled);
-        ui_context.reset(new ui::UIContext());
+        ui_context = std::make_shared<ui::UIContext>();
     }
     virtual ~GameDebugLayer() {}
 

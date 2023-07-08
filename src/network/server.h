@@ -24,6 +24,7 @@ struct Server {
     // TODO once clang supports jthread replace with jthread and remove "running
     // = true" to use stop_token
     static std::thread start(int port) {
+        // TODO makeshared doesnt work here
         g_server.reset(new Server(port));
         g_server->running = true;
         return std::thread(std::bind(&Server::run, g_server.get()));

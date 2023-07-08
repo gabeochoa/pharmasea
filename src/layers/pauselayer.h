@@ -12,7 +12,7 @@ struct BasePauseLayer : public Layer {
 
     BasePauseLayer(const char* name, game::State e_state)
         : Layer(name), enabled_state(e_state) {
-        ui_context.reset(new ui::UIContext());
+        ui_context = std::make_shared<ui::UIContext>();
     }
     virtual ~BasePauseLayer() {}
 

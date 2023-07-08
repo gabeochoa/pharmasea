@@ -10,7 +10,7 @@ struct AboutLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
 
     AboutLayer() : Layer(strings::menu::ABOUT) {
-        ui_context.reset(new ui::UIContext());
+        ui_context = std::make_shared<ui::UIContext>();
     }
     virtual ~AboutLayer() {}
 

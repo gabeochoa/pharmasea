@@ -49,7 +49,7 @@ struct Info {
                 desired_role = Role::s_Host;
                 server_thread = Server::start(DEFAULT_PORT);
                 //
-                client.reset(new Client());
+                client = std::make_shared<Client>();
                 client->update_username(Settings::get().data.username);
                 client->lock_in_ip();
 
@@ -57,7 +57,7 @@ struct Info {
             case Role::s_Client: {
                 log_info("set user's role to client");
                 desired_role = Role::s_Client;
-                client.reset(new Client());
+                client = std::make_shared<Client>();
                 client->update_username(Settings::get().data.username);
             } break;
             default:
@@ -93,8 +93,6 @@ struct Info {
 
     ~Info() {
         // cleanup_server();
-        client.reset();
-        //
         desired_role = Role::s_None;
     }
 
@@ -122,7 +120,7 @@ struct Info {
 #endif
     }
 
-    // TODO should probably move to network/client. 
+    // TODO should probably move to network/client.
     // Right now we only have the is_host() check here
     void send_current_menu_state(float dt) {
         bool run = menu_state_tick_trigger.test(dt);

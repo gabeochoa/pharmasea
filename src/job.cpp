@@ -452,13 +452,12 @@ Job::State LeavingJob::run_state_working_at_end(
     // Now that we are done and got our item, time to leave the store
     {
         auto start = entity->get<Transform>().as2();
-        std::shared_ptr<Job> jshared;
-        jshared.reset(new WaitJob(
+        std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
             start,
             // TODO create a global so they all leave to the same spot
             vec2{GATHER_SPOT, GATHER_SPOT},
             // TODO replace with remaining round time so they dont come back
-            90.f));
+            90.f);
         entity->get<CanPerformJob>().push_onto_queue(jshared);
     }
     return (Job::State::Completed);
