@@ -71,13 +71,17 @@ std::string Files::fetch_resource_path(std::string_view group,
 
 void Files::for_resources_in_group(
     std::string_view group,
-    std::function<void(std::string, std::string)> cb) const {
+    std::function<void(std::string, std::string, std::string)> cb) const {
     auto folder_path = (resource_folder() / fs::path(group));
 
     try {
         auto dir_iter = std::filesystem::directory_iterator{folder_path};
         for (auto const& dir_entry : dir_iter) {
-            cb(dir_entry.path().stem().string(), dir_entry.path().string());
+            cb(                                        //
+                dir_entry.path().stem().string(),      //
+                dir_entry.path().string(),             //
+                dir_entry.path().extension().string()  //
+            );
         }
     } catch (std::exception e) {
         std::cout << e.what() << std::endl;
