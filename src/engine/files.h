@@ -33,6 +33,9 @@ struct Files {
     [[nodiscard]] fs::path game_controller_db() const;
     [[nodiscard]] std::string fetch_resource_path(std::string_view group,
                                                   std::string_view name) const;
+    void for_resources_in_group(
+        std::string_view group,
+        std::function<void(std::string, std::string)>) const;
     void for_resources_in_folder(
         std::string_view group, std::string_view folder,
         std::function<void(std::string, std::string)>) const;

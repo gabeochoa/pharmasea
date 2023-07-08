@@ -57,6 +57,9 @@ msgstr "emuloV cisuM"
 msgid "Resolution"
 msgstr "noituloseR"
 
+msgid "Language"
+msgstr "egaugnaL"
+
 msgid "Start"
 msgstr "tratS"
 
