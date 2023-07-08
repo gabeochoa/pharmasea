@@ -234,6 +234,10 @@ struct Settings {
 
                 lang_options.push_back(
                     settings::LanguageInfo{.name = name, .filename = filename});
+                // TODO we are adding twice because theres a bug with dropdown
+                // where you cant select option 0
+                lang_options.push_back(
+                    settings::LanguageInfo{.name = name, .filename = filename});
             });
 
         if (lang_options.empty()) {
@@ -244,11 +248,15 @@ struct Settings {
         log_info("loaded {} language options", lang_options.size());
     }
 
-    void update_language_name(const std::string& l) {
-        std::string lang = l;
-        if (lang.empty()) lang = lang_options[0].name;
+    [[nodiscard]] std::vector<std::string> language_options() {
+        std::vector<std::string> options;
+        for (auto li : lang_options) {
+            options.push_back(li.name);
+        }
+        return options;
+    }
 
-        log_info("updating currently language to {}", lang);
+    [[nodiscard]] int get_current_language_index() {
         auto _index = [&](const std::string& name) -> int {
             int i = 0;
             for (const auto& res : lang_options) {
@@ -257,11 +265,30 @@ struct Settings {
             }
             return -1;
         };
+        return _index(data.lang_name);
+    }
+
+    void update_language_from_index(int index) {
         // TODO handle exception
-        auto li = lang_options[_index(lang)];
+        auto li = lang_options[index];
         log_info("Loading updated translations from {}", li.filename);
         reload_translations_from_file(li.filename.c_str());
         data.lang_name = li.name;
+    }
+
+    void update_language_name(const std::string& l) {
+        std::string lang = l;
+        if (lang.empty()) lang = lang_options[0].name;
+
+        auto _index = [&](const std::string& name) -> int {
+            int i = 0;
+            for (const auto& res : lang_options) {
+                if (res.name == name) return i;
+                i++;
+            }
+            return -1;
+        };
+        update_language_from_index(_index(lang));
     }
 
     // Note: Basically once we load the file,

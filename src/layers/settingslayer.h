@@ -29,12 +29,18 @@ struct SettingsLayer : public Layer {
     bool resolution_dropdown_open = false;
     int resolution_selected_index = 0;
 
+    bool language_dropdown_open = false;
+    int language_selected_index = 0;
+
     SettingsLayer() : Layer("Settings") {
         ui_context.reset(new ui::UIContext());
 
         resolution_selected_index =
             Settings::get().get_current_resolution_index();
         if (resolution_selected_index < 0) resolution_selected_index = 0;
+
+        language_selected_index = Settings::get().get_current_language_index();
+        if (language_selected_index < 0) language_selected_index = 0;
 
         keyInputNames = magic_enum::enum_entries<InputName>();
         for (const auto& kv : keyInputNames) {
@@ -180,6 +186,32 @@ struct SettingsLayer : public Layer {
         }
     }
 
+    void language_switcher() {
+        auto language_switcher_container = ui_context->own(
+            Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
+
+        div(*language_switcher_container);
+        ui_context->push_parent(language_switcher_container);
+        {
+            text(*ui::components::mk_text(),
+                 text_lookup(strings::i18n::LANGUAGE));
+            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
+                                                Size_Px(100.f, 1.f)));
+
+            auto dropdown_widget =
+                ui_context->own(Widget({Size_Px(100.f, 1.f), Size_Px(50.f, 1.f),
+                                        GrowFlags::Row | GrowFlags::Column}));
+
+            if (dropdown(*dropdown_widget, Settings::get().language_options(),
+                         &language_dropdown_open, &language_selected_index)) {
+                Settings::get().update_language_from_index(
+                    language_selected_index);
+            }
+
+            ui_context->pop_parent();
+        }
+    }
+
     void back_button() {
         if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID),
                                               Size_Px(120.f, 1.f),
@@ -196,7 +228,9 @@ struct SettingsLayer : public Layer {
                                             Size_Px(100.f, 0.5f)));
         master_volume();
         music_volume();
-        resolution_switcher();
+        // TODO
+        // resolution_switcher();
+        language_switcher();
         streamer_safe_box();
         enable_post_processing();
         back_button();
