@@ -168,7 +168,7 @@ struct Client {
 
         auto update_remote_player_rare = [&](int client_id,    //
                                              int model_index,  //
-                                             long last_ping) {
+                                             int last_ping) {
             if (!remote_players.contains(client_id)) {
                 log_warn("(rare) Remote player doesnt exist but should: {}",
                          client_id);

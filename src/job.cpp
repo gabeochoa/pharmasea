@@ -73,7 +73,8 @@ Job* Job::create_job_of_type(vec2 _start, vec2 _end, JobType job_type) {
         case Wait:
             job = new WaitJob(_start, _end, 1.f);
             break;
-        case None:
+            // TODO do we even need the NoneJob?
+        case NoJob:
             job = new WaitJob(_start, _end, 1.f);
             break;
         case Leaving:

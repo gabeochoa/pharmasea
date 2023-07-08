@@ -152,8 +152,12 @@ struct helper {
                 global_player->get<Transform>().update(vec::to3(location));
                 return nullptr;
             } break;
+            case 32: {
+                // space
+            } break;
             default: {
-                log_warn("Found character we dont parse in string {}", ch);
+                log_warn("Found character we dont parse in string '{}'({})", ch,
+                         (int) ch);
             } break;
         };
         return nullptr;

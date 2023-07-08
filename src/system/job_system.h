@@ -46,7 +46,7 @@ inline void render_job_visual(std::shared_ptr<Entity> entity, float) {
         });
 }
 
-inline void ensure_has_job(std::shared_ptr<Entity> entity, float dt) {
+inline void ensure_has_job(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanPerformJob>()) return;
     CanPerformJob& cpj = entity->get<CanPerformJob>();
     if (cpj.has_job()) return;

@@ -9,7 +9,7 @@
 struct Entity;
 
 enum JobType {
-    None = 0,
+    NoJob = 0,
     Wait = 1,
 
     Wandering,
