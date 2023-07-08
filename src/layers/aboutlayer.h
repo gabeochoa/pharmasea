@@ -9,14 +9,9 @@
 struct AboutLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
 
-    // NOTE: this is not aligned on purpose
-    const std::string about_info = R"(
-A game by: 
-    Gabe
-    Brett
-    Alice)";
-
-    AboutLayer() : Layer("About") { ui_context.reset(new ui::UIContext()); }
+    AboutLayer() : Layer(strings::menu::ABOUT) {
+        ui_context.reset(new ui::UIContext());
+    }
     virtual ~AboutLayer() {}
 
     bool onKeyPressed(KeyPressedEvent& event) override {
@@ -50,9 +45,9 @@ A game by:
                                                     Size_Pct(0.5, 0.f)));
                 auto about_text = ui_context->own(
                     Widget(Size_Px(200.f, 0.5f), Size_Px(400.f, 0.5f)));
-                text(*about_text, about_info);
+                text(*about_text, text_lookup(strings::i18n::ABOUT_INFO));
                 if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                           "Back")) {
+                           text_lookup(strings::i18n::BACK_BUTTON))) {
                     MenuState::get().go_back();
                 }
                 padding(*ui::components::mk_padding(Size_Px(50.f, 1.f),

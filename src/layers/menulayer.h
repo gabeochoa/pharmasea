@@ -7,7 +7,9 @@
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
 
-    MenuLayer() : Layer("Menu") { ui_context.reset(new ui::UIContext()); }
+    MenuLayer() : Layer(strings::menu::MENU) {
+        ui_context.reset(new ui::UIContext());
+    }
 
     virtual ~MenuLayer() {}
 
@@ -31,7 +33,7 @@ struct MenuLayer : public Layer {
             // TODO better music playing wrapper so we can not duplicate this
             // everwhere
             // TODO music stops playing when you grab title bar
-            auto m = MusicLibrary::get().get("theme");
+            auto m = MusicLibrary::get().get(strings::music::THEME);
             if (!raylib::IsMusicStreamPlaying(m)) {
                 raylib::PlayMusicStream(m);
             }
@@ -54,22 +56,22 @@ struct MenuLayer : public Layer {
             padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                                 Size_Pct(1.f, 0.f)));
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       "Play")) {
+                       text_lookup(strings::i18n::PLAY))) {
                 MenuState::get().set(menu::State::Network);
             }
             padding(*ui::components::mk_but_pad());
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       "About")) {
+                       text_lookup(strings::i18n::ABOUT))) {
                 MenuState::get().set(menu::State::About);
             }
             padding(*ui::components::mk_but_pad());
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       "Settings")) {
+                       text_lookup(strings::i18n::SETTINGS))) {
                 MenuState::get().set(menu::State::Settings);
             }
             padding(*ui::components::mk_but_pad());
             if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       "Exit")) {
+                       text_lookup(strings::i18n::EXIT))) {
                 App::get().close();
             }
 
@@ -95,7 +97,7 @@ struct MenuLayer : public Layer {
             auto title_text = ui_context->own(
                 Widget(Size_Pct(1.f, 0.5f), Size_Px(100.f, 1.f)));
             // TODO this somewhere should match the one in app.h
-            text(*title_text, "Pharmasea");
+            text(*title_text, strings::menu::PHARMASEA);
         }
         ui_context->pop_parent();
     }

@@ -18,7 +18,7 @@ struct GameDebugLayer : public Layer {
     bool network_ui_enabled = false;
     std::shared_ptr<ui::UIContext> ui_context;
 
-    GameDebugLayer() : Layer("Game") {
+    GameDebugLayer() : Layer(strings::menu::GAME) {
         GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);
         GLOBALS.set("network_ui_enabled", &network_ui_enabled);
         ui_context.reset(new ui::UIContext());

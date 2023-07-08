@@ -173,14 +173,14 @@ inline char *get_translated_string(LocalizationText *loc, int index) {
     return t;
 }
 
-static bool label_matches(LocalizationText *loc, char *s, int index) {
+static bool label_matches(LocalizationText *loc, const char *s, int index) {
     char *t = get_source_string(loc, index);
     if (strcmp(s, t) == 0) return true;
 
     return false;
 }
 
-inline int get_target_index(LocalizationText *loc, char *s) {
+inline int get_target_index(LocalizationText *loc, const char *s) {
     unsigned long V = hashpjw(s);
     int S = loc->hash_num_entries;
 

@@ -16,9 +16,9 @@ struct GameLayer : public Layer {
     std::shared_ptr<GameCam> cam;
     raylib::Model bag_model;
 
-    GameLayer() : Layer("Game") {
+    GameLayer() : Layer(strings::menu::GAME) {
         cam.reset(new GameCam());
-        GLOBALS.set("game_cam", cam.get());
+        GLOBALS.set(strings::globals::GAME_CAM, cam.get());
     }
 
     virtual ~GameLayer() {}
@@ -51,7 +51,7 @@ struct GameLayer : public Layer {
 
     void play_music() {
         if (ENABLE_SOUND) {
-            auto m = MusicLibrary::get().get("supermarket");
+            auto m = MusicLibrary::get().get(strings::music::SUPERMARKET);
             if (!IsMusicStreamPlaying(m)) {
                 PlayMusicStream(m);
             }
@@ -68,7 +68,7 @@ struct GameLayer : public Layer {
         // Dont quit window on escape
         raylib::SetExitKey(raylib::KEY_NULL);
 
-        auto act = GLOBALS.get_ptr<Entity>("active_camera_target");
+        auto act = GLOBALS.get_ptr<Entity>(strings::globals::CAM_TARGET);
         if (!act) {
             return;
         }
@@ -77,7 +77,7 @@ struct GameLayer : public Layer {
         cam->updateCamera();
 
         //         jun 24-23 we need this so furniture shows up
-        auto map_ptr = GLOBALS.get_ptr<Map>("map");
+        auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
         if (map_ptr) {
             // NOTE: today we need to grab things so that the client renders
             // what they server has access to
@@ -91,7 +91,7 @@ struct GameLayer : public Layer {
         TRACY_ZONE_SCOPED;
         if (!MenuState::s_in_game()) return;
 
-        auto map_ptr = GLOBALS.get_ptr<Map>("map");
+        auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
         const auto network_debug_mode_on =
             GLOBALS.get_or_default<bool>("network_ui_enabled", false);
         if (network_debug_mode_on) {

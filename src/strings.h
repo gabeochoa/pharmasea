@@ -131,4 +131,60 @@ constexpr const char* SHADERS = "shaders";
 
 }  // namespace settings
 
+namespace music {
+
+constexpr const char* SUPERMARKET = "supermarket";
+constexpr const char* THEME = "theme";
+
+}  // namespace music
+
+namespace globals {
+
+constexpr const char* GAME_CAM = "game_cam";
+constexpr const char* CAM_TARGET = "active_camera_target";
+constexpr const char* MAP = "map";
+
+}  // namespace globals
+
+namespace menu {
+
+constexpr const char* FPS = "FPS";
+constexpr const char* GAME = "Game";
+constexpr const char* MENU = "Menu";
+constexpr const char* ABOUT = "About";
+
+constexpr const char* PHARMASEA = "Pharmasea";
+
+// TODO translate
+}  // namespace menu
+
+namespace i18n {
+
+constexpr const char* ABOUT = "About";        // TODO translate
+constexpr const char* JOIN = "Join";          // TODO translate
+constexpr const char* HOST = "Host";          // TODO translate
+constexpr const char* PLAY = "Play";          // TODO translate
+constexpr const char* SETTINGS = "Settings";  // TODO translate
+constexpr const char* EXIT = "Exit";          // TODO translate
+constexpr const char* EDIT = "Edit";          // TODO translate
+constexpr const char* BACK_BUTTON = "Back";   // TODO translate
+// This is not aligned on purpose
+constexpr const char* ABOUT_INFO = R"(
+A game by: 
+    Gabe
+    Brett
+    Alice)";  // TODO translate
+
+}  // namespace i18n
+
 }  // namespace strings
+
+// localization comes from engine/global.h
+inline const char* text_lookup(const char* s) {
+    if (!localization->mo_data) return s;
+
+    int target_index = get_target_index(localization, s);
+    if (target_index == -1) return s;  // Maybe we want to log an error?
+
+    return get_translated_string(localization, target_index);
+}

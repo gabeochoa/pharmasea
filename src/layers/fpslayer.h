@@ -9,7 +9,7 @@
 
 using namespace profile;
 struct FPSLayer : public Layer {
-    FPSLayer() : Layer("FPS") { Profiler::clear(); }
+    FPSLayer() : Layer(strings::menu::FPS) { Profiler::clear(); }
 
     virtual void onUpdate(float) override {}
 

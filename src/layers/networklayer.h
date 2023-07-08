@@ -101,7 +101,7 @@ struct NetworkLayer : public Layer {
             text(*ui::components::mk_text(),
                  fmt::format("Username: {}", Settings::get().data.username));
             if (button(*ui::components::mk_icon_button(MK_UUID(id, ROOT_ID)),
-                       "Edit")) {
+                       text_lookup(strings::i18n::EDIT))) {
                 network_info->unlock_username();
             }
         }
@@ -119,17 +119,17 @@ struct NetworkLayer : public Layer {
             {
                 padding(*ui::components::mk_but_pad());
                 if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                           "Host")) {
+                           text_lookup(strings::i18n::HOST))) {
                     network_info->set_role(network::Info::Role::s_Host);
                 }
                 padding(*ui::components::mk_but_pad());
                 if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                           "Join")) {
+                           text_lookup(strings::i18n::JOIN))) {
                     network_info->set_role(network::Info::Role::s_Client);
                 }
                 padding(*ui::components::mk_but_pad());
                 if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                           "Back")) {
+                           text_lookup(strings::i18n::BACK_BUTTON))) {
                     MenuState::get().clear_history();
                     MenuState::get().set(menu::State::Root);
                 }
