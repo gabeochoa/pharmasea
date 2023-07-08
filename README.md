@@ -14,6 +14,7 @@ libraries used:
 - tracy https://github.com/wolfpld/tracy
 - backward https://github.com/bombela/backward-cpp
 - argh (for dev flags) https://github.com/adishavit/argh
+- mo for translations http://number-none.com/blow/code/mo_file/index.html
 
 
 Models from 

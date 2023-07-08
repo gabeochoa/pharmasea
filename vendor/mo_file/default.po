@@ -1,0 +1,26 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2007-12-21 09:51-0800\n"
+"Last-Translator: Jonathan Blow <jon@number-none.com>\n"
+"Language-Team:  <jon@number-none.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "hello"
+msgstr "Yes, the look-up worked.  Congratulations!!"
+
+msgid "misc_1"
+msgstr ""
+"This is just here to provide\n"
+"some other strings so that the lookup\n"
+"is not totally trivial."
+
+msgid "misc_2"
+msgstr "Another misc."
+
+msgid "misc_3"
+msgstr "Bye!"
+
