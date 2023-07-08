@@ -105,6 +105,12 @@ constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
 
 }  // namespace entity
 
+namespace textures {
+
+constexpr const char* FACE = "face";
+
+}  // namespace textures
+
 namespace model {
 
 constexpr const char* CHARACTER_BEAR = "character_bear";
@@ -196,6 +202,19 @@ constexpr const char* CONNECT = "Connect";
 constexpr const char* HIDE_IP = "Hide";
 constexpr const char* SHOW_IP = "Show";
 constexpr const char* COPY_IP = "Copy";
+
+constexpr const char* START_GAME = "Start Game";
+
+constexpr const char* CUSTOMERS_IN_STORE =
+    "Can't close until all customers leave";
+constexpr const char* HOLDING_FURNITURE =
+    "Can't start game until all players drop furniture ";
+
+constexpr const char* LOADING = "Loading...";
+constexpr const char* OPEN = "OPEN";
+constexpr const char* CLOSING = "CLOSING";
+constexpr const char* CLOSED = "CLOSED";
+constexpr const char* NEXT_ROUND_COUNTDOWN = "Next Round Starting In";
 
 // This is not aligned on purpose
 // TODO translate

@@ -87,3 +87,28 @@ msgstr "wohS"
 msgid "Copy"
 msgstr "ypoC"
 
+msgid "Start Game"
+msgstr "emaG tratS"
+
+msgid "Can't close until all customers leave"
+msgstr "evael sremotsuc lla litnu esolc t'naC"
+
+msgid "Can't start game until all players drop furniture"
+msgstr "erutinruf pord sreyalp lla litnu emag trats t'naC"
+
+msgid "Loading..."
+msgstr "...gnidaoL"
+
+msgid "OPEN"
+msgstr "NEPO"
+
+msgid "CLOSING"
+msgstr "GNISOLC"
+
+msgid "CLOSED"
+msgstr "DESOLC"
+
+msgid "Next Round Starting In"
+msgstr "nI gnitratS dnuoR txeN"
+
+

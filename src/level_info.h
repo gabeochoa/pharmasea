@@ -306,22 +306,23 @@ struct LobbyMapInfo : public LevelInfo {
         {
             std::shared_ptr<Entity> loadGameTriggerArea;
             loadGameTriggerArea.reset(entities::make_trigger_area(
-                {5, TILESIZE / -2.f, 10}, 8, 3, "Start Game"));
+                {5, TILESIZE / -2.f, 10}, 8, 3,
+                text_lookup(strings::i18n::START_GAME)));
             EntityHelper::addEntity(loadGameTriggerArea);
         }
     }
 
     virtual void onDraw(float dt) const override {
-        auto cam = GLOBALS.get_ptr<GameCam>("game_cam");
+        auto cam = GLOBALS.get_ptr<GameCam>(strings::globals::GAME_CAM);
         if (cam) {
-            raylib::DrawBillboard(cam->camera,
-                                  TextureLibrary::get().get("face"),
-                                  {
-                                      1.f,
-                                      0.f,
-                                      1.f,
-                                  },
-                                  TILESIZE, WHITE);
+            raylib::DrawBillboard(
+                cam->camera, TextureLibrary::get().get(strings::textures::FACE),
+                {
+                    1.f,
+                    0.f,
+                    1.f,
+                },
+                TILESIZE, WHITE);
         }
 
         LevelInfo::onDraw(dt);

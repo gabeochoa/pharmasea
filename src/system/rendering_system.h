@@ -211,15 +211,16 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
         // TODO we probably should have all of this kind of thing in the config
         // for the components
         //
-        raylib::DrawTextWave3D(font,
-                               fmt::format("~~{}~~", "Loading...").c_str(),
-                               text_position, fsize,
-                               4,                  // font spacing
-                               4,                  // line spacing
-                               false,              // backface
-                               &waveConfig,        //
-                               now::current_ms(),  //
-                               WHITE);
+        raylib::DrawTextWave3D(
+            font,
+            fmt::format("~~{}~~", text_lookup(strings::i18n::LOADING)).c_str(),
+            text_position, fsize,
+            4,                  // font spacing
+            4,                  // line spacing
+            false,              // backface
+            &waveConfig,        //
+            now::current_ms(),  //
+            WHITE);
 
     } else {
         raylib::DrawText3D(font, title.c_str(), text_position, fsize,
@@ -271,7 +272,7 @@ inline void render_speech_bubble(std::shared_ptr<Entity> entity, float) {
     auto ailment = cha.ailment();
     if (!ailment) return;
 
-    GameCam cam = GLOBALS.get<GameCam>("game_cam");
+    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
     raylib::Texture texture = TextureLibrary::get().get(ailment->icon_name());
     raylib::DrawBillboard(cam.camera, texture,
                           vec3{position.x,                     //
@@ -407,7 +408,9 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
                 is_day ? primary : bg);
 
             auto status_text =
-                is_day ? "OPEN" : (is_closing ? "CLOSING" : "CLOSED");
+                is_day ? text_lookup(strings::i18n::OPEN)
+                       : (is_closing ? text_lookup(strings::i18n::CLOSING)
+                                     : text_lookup(strings::i18n::CLOSED));
 
             raylib::DrawTextEx(Preload::get().font, status_text,
                                {rect_pos.x, rect_pos.y - 2}, 20, 0, font_color);
@@ -449,9 +452,9 @@ inline void render_block_state_change_reason(std::shared_ptr<Entity> entity,
 
     if (ht.block_state_change_reasons.none()) {
         Color font_color = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
-        auto countdown =
-            fmt::format("Next Round Starts in: {}",
-                        (int) ceil(util::trunc(ht.roundSwitchCountdown, 1)));
+        auto countdown = fmt::format(
+            "{}: {}", text_lookup(strings::i18n::NEXT_ROUND_COUNTDOWN),
+            (int) ceil(util::trunc(ht.roundSwitchCountdown, 1)));
         raylib::DrawTextEx(Preload::get().font, countdown.c_str(), {200, 100},
                            75, 0, font_color);
     }

@@ -67,9 +67,9 @@ struct HasTimer : public BaseComponent {
     [[nodiscard]] std::string text_reason(WaitingReason wr) {
         switch (wr) {
             case CustomersInStore:
-                return "Can't close until all customers leave";
+                return text_lookup(strings::i18n::CUSTOMERS_IN_STORE);
             case HoldingFurniture:
-                return "Can't start game until all players drop furniture";
+                return text_lookup(strings::i18n::HOLDING_FURNITURE);
             default:
             case WaitingReasonLast:
             case None:
