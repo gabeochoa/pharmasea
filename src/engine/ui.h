@@ -426,6 +426,11 @@ inline bool button_list(const Widget& widget,
 inline bool dropdown(const Widget& widget,
                      const std::vector<std::string>& options,
                      bool* dropdownState, int* selectedIndex) {
+    if (options.empty()) {
+        log_warn("the options passed to dropdown were empty");
+        return false;
+    }
+
     init_widget(widget, __FUNCTION__);
     auto state = get().widget_init<DropdownState>(widget.id);
     if (dropdownState) state->on.set(*dropdownState);
