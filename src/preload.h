@@ -60,10 +60,11 @@ struct Preload {
         ShaderLibrary::get().unload_all();
     }
 
-    void load_translations() {
-        // TODO load correct language pack for settings file
+    void load_translations() { load_translations_from_file("en_rev.mo"); }
+
+    void load_translations_from_file(const char* fn) {
         auto path = Files::get().fetch_resource_path(
-            strings::settings::TRANSLATIONS, "en_rev.mo");
+            strings::settings::TRANSLATIONS, fn);
         localization = new i18n::LocalizationText(path.c_str());
     }
 

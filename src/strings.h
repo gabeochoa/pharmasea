@@ -185,26 +185,31 @@ constexpr const char* EDIT = "Edit";
 constexpr const char* BACK_BUTTON = "Back";
 constexpr const char* CONTINUE = "Continue";
 constexpr const char* QUIT = "Quit";
+constexpr const char* START = "Start";
+
 constexpr const char* SAFE_ZONE = "safe zone";
+
+// Settings
 constexpr const char* SHOW_SAFE_BOX = "Show Streamer Safe Box";
 constexpr const char* ENABLE_PPS = "Enable Post-Processing Shaders";
 constexpr const char* MASTER_VOLUME = "Master Volume";
 constexpr const char* MUSIC_VOLUME = "Music Volume";
 constexpr const char* RESOLUTION = "Resolution";
-constexpr const char* START = "Start";
+constexpr const char* LANGUAGE = "Language";
+
+// Network
 constexpr const char* DISCONNECT = "Disconnect";
 constexpr const char* USERNAME = "Username";
 constexpr const char* LOCK_IN = "Lock-In";
 constexpr const char* ENTER_IP = "Enter IP Address";
 constexpr const char* LOAD_LAST_IP = "Load Last Used IP";
 constexpr const char* CONNECT = "Connect";
-
 constexpr const char* HIDE_IP = "Hide";
 constexpr const char* SHOW_IP = "Show";
 constexpr const char* COPY_IP = "Copy";
 
+// In Game
 constexpr const char* START_GAME = "Start Game";
-
 constexpr const char* CUSTOMERS_IN_STORE =
     "Can't close until all customers leave";
 constexpr const char* HOLDING_FURNITURE =
