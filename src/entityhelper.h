@@ -20,7 +20,7 @@
 #include "entity.h"
 #include "item.h"
 
-// TODO eventually move to system manager but for now has to be in here
+// TODO eventually move to input manager but for now has to be in here
 // to prevent circular includes
 
 // return true if the item has collision and is currently collidable
