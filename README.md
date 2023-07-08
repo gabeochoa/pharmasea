@@ -52,6 +52,35 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+### alpha_0.23.07.08
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (All) grabbing / dropping is pretty bad and doesnt work as expected 
+- (All) you can get the controls into a backwards state.. 
+- (IR) Conveyer belt model is now bread cause it kept crashing on windows 
+- (UI) The first option in a dropdown isnt selectable 
+
+impact 
+- Can change language and it updates across the game! (Setting saves across plays)
+- Show who is connected to the game in top right with ping!
+- When merging into an item container, the item now goes into your hand if it can wrap what you are holding
+- Added a round timer that looks like a Sun rise. Store will open and close. When store is closed, customers wont come in, but any already there will stay around.
+- Before switching rounds (open / closed) we now show a countdown (5secs) in case you are still doing something. It wont countdown if theres a reason why the round shouldnt end (for example people are still in the store) 
+
+bug fix
+- move name forward a bit to conflict less with models 
+- rotate conveyers to be correctly aligned for test map
+- grabber now grabs from non conveyers 
+- Fix CheckHeldFurniture so that it correctly checks players and not just entities
+
+BE
+- add loop-through-files api 
+- add warning to dropdown for when options is empty 
+- be rename canhold update to be more obvious 
+- move player info into the system manager 
+
+
 ### alpha_0.23.07.04
 
 Known Issues
@@ -74,7 +103,7 @@ BE
 - run tests only first and then the game 
 - move render ui into rendering_system 
 - rename canhold update to be more obvious 
-- move player info into the system manager (8 hours ago) <Gabe Ochoa>
+- move player info into the system manager 
 - add timer component 
 - add util functions to know if a register is full 
 - send inputs less often so that it works better for 60fps 
