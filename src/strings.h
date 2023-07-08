@@ -175,22 +175,30 @@ namespace i18n {
 // DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
 // DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
 
+// This is not aligned on purpose
+// TODO add to po file
+constexpr const char* ABOUT_INFO = R"(
+A game by: 
+    Gabe
+    Brett
+    Alice)";
+
+// Menu Buttons
 constexpr const char* ABOUT = "About";
-constexpr const char* JOIN = "Join";
-constexpr const char* HOST = "Host";
 constexpr const char* PLAY = "Play";
 constexpr const char* SETTINGS = "Settings";
 constexpr const char* EXIT = "Exit";
-constexpr const char* EDIT = "Edit";
+
 constexpr const char* BACK_BUTTON = "Back";
+
+// Pause Menu
 constexpr const char* CONTINUE = "Continue";
 constexpr const char* QUIT = "Quit";
-constexpr const char* SAFE_ZONE = "safe zone";
-constexpr const char* SHOW_SAFE_BOX = "Show Streamer Safe Box";
-constexpr const char* ENABLE_PPS = "Enable Post-Processing Shaders";
-constexpr const char* MASTER_VOLUME = "Master Volume";
-constexpr const char* MUSIC_VOLUME = "Music Volume";
-constexpr const char* RESOLUTION = "Resolution";
+
+// Network Stuff
+constexpr const char* JOIN = "Join";
+constexpr const char* HOST = "Host";
+constexpr const char* EDIT = "Edit";
 constexpr const char* START = "Start";
 constexpr const char* DISCONNECT = "Disconnect";
 constexpr const char* USERNAME = "Username";
@@ -203,26 +211,26 @@ constexpr const char* HIDE_IP = "Hide";
 constexpr const char* SHOW_IP = "Show";
 constexpr const char* COPY_IP = "Copy";
 
-constexpr const char* START_GAME = "Start Game";
+// Settings Page
+constexpr const char* SAFE_ZONE = "safe zone";
+constexpr const char* SHOW_SAFE_BOX = "Show Streamer Safe Box";
+constexpr const char* ENABLE_PPS = "Enable Post-Processing Shaders";
+constexpr const char* MASTER_VOLUME = "Master Volume";
+constexpr const char* MUSIC_VOLUME = "Music Volume";
+constexpr const char* RESOLUTION = "Resolution";
+constexpr const char* LANGUAGE = "Language";
 
+// In Game
+constexpr const char* START_GAME = "Start Game";
 constexpr const char* CUSTOMERS_IN_STORE =
     "Can't close until all customers leave";
 constexpr const char* HOLDING_FURNITURE =
     "Can't start game until all players drop furniture ";
-
 constexpr const char* LOADING = "Loading...";
 constexpr const char* OPEN = "OPEN";
 constexpr const char* CLOSING = "CLOSING";
 constexpr const char* CLOSED = "CLOSED";
 constexpr const char* NEXT_ROUND_COUNTDOWN = "Next Round Starting In";
-
-// This is not aligned on purpose
-// TODO translate
-constexpr const char* ABOUT_INFO = R"(
-A game by: 
-    Gabe
-    Brett
-    Alice)";
 
 }  // namespace i18n
 
