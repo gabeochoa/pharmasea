@@ -46,6 +46,7 @@
 #include <bitsery/ext/std_map.h>
 
 #include <array>
+#include <functional>
 #include <map>
 
 using bitsery::ext::PointerOwner;
@@ -54,11 +55,11 @@ using StdMap = bitsery::ext::StdMap;
 
 #include "dataclass/names.h"
 #include "drawing_util.h"
+#include "engine.h"
 #include "engine/astar.h"
 #include "engine/is_server.h"
 #include "engine/model_library.h"
 #include "engine/util.h"
-#include "engine.h"
 #include "globals.h"
 #include "item.h"
 #include "item_helper.h"
@@ -190,6 +191,14 @@ struct Entity {
 };
 
 typedef Transform::Transform::FrontFaceDirection EntityDir;
+typedef std::reference_wrapper<Entity> RefEntity;
+typedef std::optional<std::reference_wrapper<Entity>> OptEntity;
+
+inline bool valid(OptEntity& opte) { return opte.has_value(); }
+inline Entity& asE(OptEntity& opte) { return opte.value(); }
+inline Entity& asE(RefEntity& refe) { return refe.get(); }
+inline OptEntity& asOpt(Entity& e) { return std::make_optional(e); }
+inline RefEntity& asRef(Entity& e) { return std::ref(e); }
 
 namespace bitsery {
 template<typename S>
