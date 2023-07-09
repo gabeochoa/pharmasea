@@ -137,6 +137,7 @@ constexpr const char* MODELS = "models";
 constexpr const char* SOUNDS = "sounds";
 constexpr const char* MUSIC = "music";
 constexpr const char* SHADERS = "shaders";
+constexpr const char* CONFIG = "config";
 
 }  // namespace settings
 

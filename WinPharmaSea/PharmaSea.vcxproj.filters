@@ -36,6 +36,9 @@
     <None Include="..\src\makefile">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="..\resources\config.json">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\furniture\wall.h">
@@ -405,6 +408,9 @@
     </ClCompile>
     <ClCompile Include="..\src\system\rendering_system.cpp">
       <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\preload.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -32,6 +32,7 @@ struct Preload {
     raylib::Font font;
 
     Preload() {
+        load_config();
         load_translations();
         load_shaders();
 
@@ -59,6 +60,9 @@ struct Preload {
         SoundLibrary::get().unload_all();
         ShaderLibrary::get().unload_all();
     }
+   
+    // Note: Defined in .cpp to avoid LOG_LEVEL violating C++ ODR during linking.
+    void load_config();
 
     void load_translations() {
         // TODO load correct language pack for settings file

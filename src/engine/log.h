@@ -3,7 +3,7 @@
 #pragma once
 
 #include <cassert>
-#include "globals.h" // where LOG_LEVEL is located 
+#include "globals.h" // where LOG_LEVEL is located
 
 enum LogLevel {
     LOG_ALOG_ = 0,
@@ -13,6 +13,8 @@ enum LogLevel {
     LOG_ERROR = 4,
     LOG_IF = 5,
 };
+
+extern int LOG_LEVEL;
 
 // TODO log to file
 

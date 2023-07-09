@@ -15,6 +15,7 @@ libraries used:
 - backward https://github.com/bombela/backward-cpp
 - argh (for dev flags) https://github.com/adishavit/argh
 - mo for translations http://number-none.com/blow/code/mo_file/index.html
+- nlomann json for JSON reading / writing https://github.com/nlohmann/json
 
 
 Models from 

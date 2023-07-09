@@ -32,9 +32,7 @@ static void reload_translations_from_file(const char* fn) {
     localization = new i18n::LocalizationText(fn);
 }
 
-// TODO lets move this to an env var or something
-// we shouldnt have to recompile to change the level
-static int LOG_LEVEL = 2;  // LogLevel::INFO;
+extern int LOG_LEVEL;
 
 [[nodiscard]] inline int WIN_W() { return __WIN_W; }
 [[nodiscard]] inline float WIN_WF() { return static_cast<float>(__WIN_W); }

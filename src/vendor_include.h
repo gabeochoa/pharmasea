@@ -43,6 +43,8 @@
 #include <bitsery/traits/string.h>
 #include <bitsery/traits/vector.h>
 
+#include <nlohmann/json.hpp>
+
 namespace bitsery {
 template<typename S>
 void serialize(S& s, vec2& data) {

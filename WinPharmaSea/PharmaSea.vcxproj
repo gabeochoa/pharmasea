@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
+    <None Include="..\resources\config.json" />
     <None Include="..\src\makefile" />
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +145,7 @@
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\job.cpp" />
+    <ClCompile Include="..\src\preload.cpp" />
     <ClCompile Include="..\src\system\rendering_system.cpp" />
     <ClCompile Include="..\src\system\system_manager.cpp" />
     <ClCompile Include="..\vendor\tracy\TracyClient.cpp" />
