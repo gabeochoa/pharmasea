@@ -3,6 +3,8 @@
 #pragma once
 
 #include "base_component.h"
+//
+#include "../entityhelper.h"
 
 constexpr int MAX_QUEUE_SIZE = 3;
 
@@ -14,9 +16,7 @@ struct HasWaitingQueue : public BaseComponent {
         return next_line_position < MAX_QUEUE_SIZE;
     }
     [[nodiscard]] OptEntity person(int i) {
-        // return ppl_in_line[i];
-        // TODO entity helper again
-        return {};
+        return EntityHelper::findEntity(ppl_in_line[i]);
     }
 
     void erase(int index) {

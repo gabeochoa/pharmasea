@@ -3,6 +3,8 @@
 #pragma once
 
 #include "base_component.h"
+//
+#include "../entityhelper.h"
 
 struct CanHoldFurniture : public BaseComponent {
     CanHoldFurniture() { load_held(); }
@@ -21,8 +23,7 @@ struct CanHoldFurniture : public BaseComponent {
 
     void load_held() {
         if (valid(held_furniture)) return;
-        // TODO add cpp for enitty helper
-        // held_furniture = EntityHelper::findEntity(held_entity_id);
+        held_furniture = EntityHelper::findEntity(held_entity_id);
     }
 
    private:

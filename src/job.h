@@ -6,6 +6,7 @@
 #include "external_include.h"
 //
 #include "entity.h"
+#include "entityhelper.h"
 
 struct Entity;
 
@@ -187,11 +188,7 @@ struct WaitInQueueJob : public Job {
     virtual State run_state_working_at_end(Entity& entity, float dt) override;
 
     virtual void before_each_job_tick(Entity&, float) override;
-    OptEntity reg() {
-        // TODO add cpp for enitty helper
-        // held_furniture = EntityHelper::findEntity(held_entity_id);
-        return {};
-    }
+    OptEntity reg() { return EntityHelper::findEntity(reg_id); }
 
     friend bitsery::Access;
     template<typename S>

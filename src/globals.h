@@ -20,7 +20,7 @@ constexpr int MAP_H = 33;
 constexpr float TILESIZE = 1.0f;
 
 struct Entity;
-static std::shared_ptr<Entity> global_player;
+static int global_player_id = -1;
 
 constexpr float GATHER_SPOT = -20.f;
 

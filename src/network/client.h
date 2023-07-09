@@ -19,6 +19,7 @@ struct Client {
 
     int id = 0;
     std::shared_ptr<internal::Client> client_p;
+    std::shared_ptr<Entity> global_player;
     std::map<int, std::shared_ptr<Entity>> remote_players;
     std::shared_ptr<Map> map;
     std::vector<ClientPacket::AnnouncementInfo> announcements;
@@ -92,6 +93,7 @@ struct Client {
     void send_player_input_packet(int my_id) {
         CollectsUserInput& cui = global_player->get<CollectsUserInput>();
 
+        // log_info("player input size: {}", cui.inputs.size());
         if (cui.inputs.empty()) return;
 
         ClientPacket packet({
@@ -218,6 +220,7 @@ struct Client {
                     // TODO make shared doesnt work here
                     global_player.reset(remote_players[id].get());
                     global_player->addComponent<CollectsUserInput>();
+                    global_player_id = global_player->id;
                     // TODO i dont think we need this anymore
                     // global_player->addComponent<CanBeGhostPlayer>().update(
                     // true);

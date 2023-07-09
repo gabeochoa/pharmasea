@@ -84,8 +84,15 @@ struct GameLayer : public Layer {
             map_ptr->grab_things();
         }
 
-        // TODO player wont move yet
-        // SystemManager::get().update(Entities{global_player}, dt);
+        if (global_player_id > 0) {
+            // TODO do this in init or something
+            OptEntity opte = EntityHelper::findEntity(global_player_id);
+            if (valid(opte)) {
+                std::vector<Entity> players;
+                players.push_back(asE(opte));
+                SystemManager::get().update(players, dt);
+            }
+        }
     }
 
     virtual void onDraw(float dt) override {
@@ -113,9 +120,11 @@ struct GameLayer : public Layer {
                         GLOBALS.get_or_default<
                             std::map<int, std::shared_ptr<Entity>>>(
                             "server_players", {}));
-                // TODO this doesnt work anymore
-                // SystemManager::get().render_entities(Entities{*global_player},
-                // dt);
+                // TODO do this in init or something
+                OptEntity opte = EntityHelper::findEntity(global_player_id);
+                std::vector<Entity> players;
+                players.push_back(asE(opte));
+                SystemManager::get().update(players, dt);
             }
             // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
             // if (nav) {

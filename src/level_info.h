@@ -152,7 +152,9 @@ struct helper {
                 return (entities::make_pill_dispenser(location));
             } break;
             case PLAYER: {
-                global_player->get<Transform>().update(vec::to3(location));
+                OptEntity opte = EntityHelper::findEntity(global_player_id);
+                Entity& global_player = asE(opte);
+                global_player.get<Transform>().update(vec::to3(location));
                 return nullptr;
             } break;
             case 32: {

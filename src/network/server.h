@@ -244,11 +244,10 @@ struct Server {
         const ClientPacket::PlayerControlInfo info =
             std::get<ClientPacket::PlayerControlInfo>(packet.msg);
 
-        Entity& player = players.at(packet.client_id);
         // TODO interpolate our old position and new position so its smoother
-        // TODO COME BACK AND FIX THIS
-        // SystemManager::get().process_inputs(Entities{player},
-        // info.inputs);
+        Entity& player = players.at(packet.client_id);
+        std::vector<Entity> temp{player};
+        SystemManager::get().process_inputs(temp, info.inputs);
         auto updated_position = player.get<Transform>().pos();
 
         // TODO if the position and face direction didnt change
