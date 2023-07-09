@@ -178,8 +178,7 @@ struct EntityHelper {
             auto tile =
                 Transform::tile_infront_given_pos(pos, cur_step, direction);
 
-            for (auto& e : get_entities()) {
-                auto& current_entity = e;
+            for (auto& current_entity : get_entities()) {
                 if (!filter(current_entity)) continue;
 
                 // all entitites should have transforms but just in case
@@ -189,7 +188,8 @@ struct EntityHelper {
                     continue;
                 }
 
-                Transform& transform = current_entity.template get<Transform>();
+                const Transform& transform =
+                    current_entity.template get<Transform>();
 
                 float cur_dist = vec::distance(transform.as2(), tile);
                 // outside reach

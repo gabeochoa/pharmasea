@@ -12,6 +12,7 @@
 
 struct BaseComponent {
     BaseComponent() {}
+    BaseComponent(BaseComponent&) {}
     BaseComponent(BaseComponent&&) = default;
 
     virtual void onAttach() {}

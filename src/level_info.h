@@ -288,7 +288,6 @@ struct LevelInfo {
         s.value8b(num_entities);
         s.container(entities, num_entities,
                     [](S& s2, Entity entity) { s2.object(entity); });
-
         s.value8b(num_items);
         s.container(items, num_items, [](S& s2, std::shared_ptr<Item>& item) {
             s2.ext(item, bitsery::ext::StdSmartPtr{});
@@ -358,11 +357,6 @@ struct GameMapInfo : public LevelInfo {
         dist = std::uniform_int_distribution<>(1, MAX_MAP_SIZE - 1);
 
         // TODO need to regenerate the map and clean up entitiyhelper
-    }
-
-    virtual void onUpdate(Entities& players, float dt) override {
-        // log_info("update round");
-        LevelInfo::onUpdate(players, dt);
     }
 
    private:

@@ -89,7 +89,7 @@ struct PolymorphicBaseClass<LevelInfo>
 }  // namespace bitsery
 
 using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<BaseComponent, Entity, Item, Job>;
+    bitsery::ext::PolymorphicClassesList<BaseComponent, Item, Job>;
 
 namespace network {
 

@@ -57,6 +57,13 @@ struct Entity {
     ComponentBitSet componentSet;
     ComponentArray componentArray;
 
+    // Destructor
+    // ~Entity();
+    // Copy constructor
+    // Entity(const Entity& other);
+    // Copy assignment operator
+    // Entity& operator=(const Entity& other);
+
     bool cleanup = false;
 
     // These two functions can be used to validate than an entity has all of the
@@ -142,8 +149,6 @@ struct Entity {
     }
 
     const std::string& name() const;
-
-    virtual ~Entity() {}
 
     Entity() : id(ENTITY_ID_GEN++) {}
 
