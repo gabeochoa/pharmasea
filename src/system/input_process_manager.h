@@ -189,9 +189,13 @@ inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
 
     // we need to rotate these controls based on the camera
     auto cam = GLOBALS.get_ptr<GameCam>("game_cam");
-    int xang = ((int) util::clamp(util::rad2deg(cam->angle.x), 0, 370)) % 360;
-    // int yang = ((int) util::clamp(util::rad2deg(cam->angle.y), 0, 370)) %
-    // 360; log_info(" angles {} {}", xang, yang);
+    auto camAngle = util::rad2deg(cam->angle.x);
+    camAngle = std::fmod(camAngle, 360.0f);
+    if (camAngle < 0.0f) {
+        camAngle += 360.0f;
+    }
+    int xang = static_cast<int>(camAngle);
+    //log_warn(" angles {}", xang);
 
     if (xang >= 135 && xang < 225) {
         // Default controls
