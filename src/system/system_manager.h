@@ -209,6 +209,7 @@ struct SystemManager {
 
             // TODO these eventually should move into their own functions but
             // for now >:)
+            // TODO switch to using match_name()
             if (entity->get<DebugName>().name() == strings::entity::SOPHIE)
                 system_manager::sophie(entity, dt);
         }
@@ -220,6 +221,7 @@ struct SystemManager {
             system_manager::job_system::in_round_update(entity, dt);
             system_manager::process_grabber_items(entity, dt);
             system_manager::process_conveyer_items(entity, dt);
+            // TODO you should be able to put items back in the container
             system_manager::process_is_container_and_should_backfill_item(
                 entity, dt);
             system_manager::process_is_container_and_should_update_item(entity,
@@ -238,6 +240,7 @@ struct SystemManager {
     void render_normal(const std::vector<std::shared_ptr<Entity>>& entity_list,
                        float dt) const {
         for (auto& entity : entity_list) {
+            // TODO extract render normal into system facign functions
             system_manager::render_manager::render_normal(entity, dt);
             system_manager::render_manager::render_floating_name(entity, dt);
             system_manager::render_manager::render_progress_bar(entity, dt);

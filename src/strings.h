@@ -80,6 +80,9 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
 
  */
 
+// TODO write a python script that extracts any new strings from here and adds
+// them as empty in the .po files
+
 #include <string>
 
 namespace strings {

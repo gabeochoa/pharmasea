@@ -7,8 +7,16 @@ Pharmacy
         - Can't take an OTC solution again
     - Good solutions mean people are good for the day 
 - Small / Medium / Large pill bottle
+- How does waiting work? 
+    - Patience on line, restores a bit when they move up 
+    - 
+- How do we reward good work? 
+    - Research bonus when you 've been doing a good job 
+    - 
 - How do upgrades work?
     - Options: Deterministic Skill Tree or RNG + money(Like Plateup)
+    - Research over time, similar to factorio where better items take longer 
+    - Get your new items delivered in a semi truck 
 - Weigh station
     - Auto-weigher upgrade? 
 - Label maker
