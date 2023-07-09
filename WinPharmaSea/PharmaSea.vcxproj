@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-    <None Include="..\resources\config.json" />
+    <None Include="..\resources\config\settings.json" />
     <None Include="..\src\makefile" />
   </ItemGroup>
   <ItemGroup>

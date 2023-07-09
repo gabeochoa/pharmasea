@@ -36,7 +36,7 @@
     <None Include="..\src\makefile">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="..\resources\config.json">
+    <None Include="..\resources\config\settings.json">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
