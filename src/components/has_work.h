@@ -33,13 +33,12 @@ struct HasWork : public BaseComponent {
     }
 
     // TODO make private
-    std::function<void(std::shared_ptr<Entity> owner, HasWork&,
-                       std::shared_ptr<Entity> person, float dt)>
+    std::function<void(Entity& owner, HasWork&, Entity& person, float dt)>
         do_work;
 
-    void init(std::function<void(std::shared_ptr<Entity> owner, HasWork&,
-                                 std::shared_ptr<Entity> person, float dt)>
-                  worker) {
+    void init(
+        std::function<void(Entity& owner, HasWork&, Entity& person, float dt)>
+            worker) {
         do_work = worker;
     }
 
