@@ -58,6 +58,7 @@ using StdMap = bitsery::ext::StdMap;
 #include "engine/is_server.h"
 #include "engine/model_library.h"
 #include "engine/util.h"
+#include "engine.h"
 #include "globals.h"
 #include "item.h"
 #include "item_helper.h"

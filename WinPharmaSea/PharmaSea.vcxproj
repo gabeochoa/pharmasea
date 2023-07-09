@@ -123,6 +123,7 @@
     <ClInclude Include="..\src\statemanager.h" />
     <ClInclude Include="..\src\std_include.h" />
     <ClInclude Include="..\src\streamersafelayer.h" />
+    <ClInclude Include="..\src\system\input_process_manager.h" />
     <ClInclude Include="..\src\system\job_system.h" />
     <ClInclude Include="..\src\system\logging_system.h" />
     <ClInclude Include="..\src\system\rendering_system.h" />
@@ -143,6 +144,7 @@
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\job.cpp" />
+    <ClCompile Include="..\src\system\rendering_system.cpp" />
     <ClCompile Include="..\src\system\system_manager.cpp" />
     <ClCompile Include="..\vendor\tracy\TracyClient.cpp" />
   </ItemGroup>
