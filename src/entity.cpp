@@ -53,6 +53,7 @@ using bitsery::ext::PointerOwner;
 using bitsery::ext::PointerType;
 using StdMap = bitsery::ext::StdMap;
 
+#include "components/debug_name.h"
 #include "dataclass/names.h"
 #include "drawing_util.h"
 #include "engine.h"
@@ -69,16 +70,6 @@ using StdMap = bitsery::ext::StdMap;
 #include "vec_util.h"
 
 typedef Transform::Transform::FrontFaceDirection EntityDir;
-
-template<typename T>
-[[nodiscard]] bool Entity::has() const {
-    log_trace("checking component {} {} on entity {}",
-              ::components::get_type_id<T>(), type_name<T>(), id);
-    log_trace("your set is now {}", componentSet);
-    bool result = componentSet[::components::get_type_id<T>()];
-    log_trace("and the result was {}", result);
-    return result;
-}
 
 template<typename T, typename... TArgs>
 T& Entity::addComponent(TArgs&&... args) {
@@ -112,55 +103,7 @@ T& Entity::addComponent(TArgs&&... args) {
     return *component;
 }
 
-template<typename T>
-[[nodiscard]] T& Entity::get() const {
-    if (this->is_missing<DebugName>()) {
-        log_error(
-            "This entity is missing debugname which will cause issues for "
-            "if the get<> is missing");
-    }
-    if (this->is_missing<T>()) {
-        log_warn(
-            "This entity {} {} is missing id: {}, "
-            "component {}",
-            this->get<DebugName>().name(), id, ::components::get_type_id<T>(),
-            type_name<T>());
-    }
-    BaseComponent* comp = componentArray.at(::components::get_type_id<T>());
-    return *static_cast<T*>(comp);
-}
-
-// TODO combine this with the const one at some point
-template<typename T>
-[[nodiscard]] T& Entity::get() {
-    if (this->is_missing<DebugName>()) {
-        log_error(
-            "This entity is missing debugname which will cause issues for "
-            "if the get<> is missing");
-    }
-    if (this->is_missing<T>()) {
-        log_warn(
-            "This entity {} {} is missing id: {}, "
-            "component {}",
-            this->get<DebugName>().name(), id, ::components::get_type_id<T>(),
-            type_name<T>());
-    }
-    BaseComponent* comp = componentArray.at(::components::get_type_id<T>());
-    return *static_cast<T*>(comp);
-}
-
-template<typename S>
-void Entity::serialize(S& s) {
-    s.value4b(id);
-    s.ext(componentSet, bitsery::ext::StdBitset{});
-    s.value1b(cleanup);
-
-    s.ext(componentArray, StdMap{max_num_components},
-          [](S& sv, int& key, BaseComponent*(&value)) {
-              sv.value4b(key);
-              sv.ext(value, PointerOwner{PointerType::Nullable});
-          });
-}
+const std::string& Entity::name() const { return get<DebugName>().name(); }
 
 void register_all_components() {
     Entity* entity = new Entity();

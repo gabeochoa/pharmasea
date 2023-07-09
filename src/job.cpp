@@ -454,7 +454,3 @@ Job::State LeavingJob::run_state_working_at_end(Entity& entity, float) {
     // }
     return (Job::State::Completed);
 }
-
-//
-// TODO why do i need this for it to link
-#include "entity.cpp"

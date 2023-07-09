@@ -61,7 +61,3 @@ void render_networked_players(Entities& entities, float dt) {
 
 }  // namespace ui
 }  // namespace system_manager
-
-//
-// TODO why do i need this for it to link
-#include "../entity.cpp"

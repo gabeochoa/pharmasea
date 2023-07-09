@@ -12,8 +12,35 @@
 #include <functional>
 #include <map>
 
-#include "components/base_component.h"
 #include "engine/log.h"
+#include "engine/type_name.h"
+
+struct BaseComponent;
+
+constexpr int max_num_components = 64;
+using ComponentBitSet = std::bitset<max_num_components>;
+// originally this was a std::array<BaseComponent*, max_num_components> but i
+// cant seem to serialize this so lets try map
+using ComponentArray = std::map<int, BaseComponent*>;
+using ComponentID = int;
+
+namespace components {
+namespace internal {
+inline ComponentID get_unique_id() noexcept {
+    static ComponentID lastID{0};
+    return lastID++;
+}
+
+}  // namespace internal
+
+template<typename T>
+inline ComponentID get_type_id() noexcept {
+    static_assert(std::is_base_of<BaseComponent, T>::value,
+                  "T must inherit from BaseComponent");
+    static ComponentID typeID{internal::get_unique_id()};
+    return typeID;
+}
+}  // namespace components
 
 using bitsery::ext::PointerObserver;
 using bitsery::ext::PointerOwner;
@@ -21,6 +48,9 @@ using bitsery::ext::PointerType;
 using StdMap = bitsery::ext::StdMap;
 
 static std::atomic_int ENTITY_ID_GEN = 0;
+
+struct DebugName;
+
 struct Entity {
     int id;
 
@@ -31,8 +61,16 @@ struct Entity {
 
     // These two functions can be used to validate than an entity has all of the
     // matching components that are needed for this system to run
+
     template<typename T>
-    [[nodiscard]] bool has() const;
+    [[nodiscard]] bool has() const {
+        log_trace("checking component {} {} on entity {}",
+                  ::components::get_type_id<T>(), type_name<T>(), id);
+        log_trace("your set is now {}", componentSet);
+        bool result = componentSet[::components::get_type_id<T>()];
+        log_trace("and the result was {}", result);
+        return result;
+    }
 
     template<typename A, typename B, typename... Rest>
     bool has() const {
@@ -69,10 +107,41 @@ struct Entity {
     }
 
     template<typename T>
-    [[nodiscard]] T& get() const;
+    [[nodiscard]] T& get() {
+        if (this->is_missing<DebugName>()) {
+            log_error(
+                "This entity is missing debugname which will cause issues for "
+                "if the get<> is missing");
+        }
+        if (this->is_missing<T>()) {
+            log_warn(
+                "This entity {} {} is missing id: {}, "
+                "component {}",
+                name(), id, components::get_type_id<T>(), type_name<T>());
+        }
+        BaseComponent* comp = componentArray.at(components::get_type_id<T>());
+        return *static_cast<T*>(comp);
+    }
 
+    // TODO combine with non const
     template<typename T>
-    [[nodiscard]] T& get();
+    [[nodiscard]] T& get() const {
+        if (this->is_missing<DebugName>()) {
+            log_error(
+                "This entity is missing debugname which will cause issues for "
+                "if the get<> is missing");
+        }
+        if (this->is_missing<T>()) {
+            log_warn(
+                "This entity {} {} is missing id: {}, "
+                "component {}",
+                name(), id, components::get_type_id<T>(), type_name<T>());
+        }
+        BaseComponent* comp = componentArray.at(components::get_type_id<T>());
+        return *static_cast<T*>(comp);
+    }
+
+    const std::string& name() const;
 
     virtual ~Entity() {}
 
@@ -81,7 +150,17 @@ struct Entity {
    private:
     friend bitsery::Access;
     template<typename S>
-    void serialize(S& s);
+    void serialize(S& s) {
+        s.value4b(id);
+        s.ext(componentSet, bitsery::ext::StdBitset{});
+        s.value1b(cleanup);
+
+        s.ext(componentArray, StdMap{max_num_components},
+              [](S& sv, int& key, BaseComponent*(&value)) {
+                  sv.value4b(key);
+                  sv.ext(value, PointerOwner{PointerType::Nullable});
+              });
+    }
 };
 
 struct DebugOptions {

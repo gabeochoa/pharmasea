@@ -44,10 +44,6 @@
 #include "../entityhelper.h"
 #include "../map.h"
 
-//
-// TODO why do i need this for it to link
-#include "../entity.cpp"
-
 namespace system_manager {
 void transform_snapper(Entity& entity, float) {
     if (entity.is_missing<Transform>()) return;
