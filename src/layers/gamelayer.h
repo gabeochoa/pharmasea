@@ -84,14 +84,12 @@ struct GameLayer : public Layer {
             map_ptr->grab_things();
         }
 
-        if (global_player_id > 0) {
+        if (global_player) {
             // TODO do this in init or something
-            OptEntity opte = EntityHelper::findEntity(global_player_id);
-            if (valid(opte)) {
-                std::vector<Entity> players;
-                players.push_back(asE(opte));
-                SystemManager::get().update(players, dt);
-            }
+
+            std::vector<Entity> players;
+            players.push_back(*global_player);
+            SystemManager::get().update(players, dt);
         }
     }
 
@@ -121,9 +119,8 @@ struct GameLayer : public Layer {
                             std::map<int, std::shared_ptr<Entity>>>(
                             "server_players", {}));
                 // TODO do this in init or something
-                OptEntity opte = EntityHelper::findEntity(global_player_id);
                 std::vector<Entity> players;
-                players.push_back(asE(opte));
+                players.push_back(*global_player);
                 SystemManager::get().update(players, dt);
             }
             // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");

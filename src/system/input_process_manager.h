@@ -184,7 +184,6 @@ namespace input_process_manager {
 
 inline void collect_user_input(Entity& entity, float dt) {
     if (entity.is_missing<CollectsUserInput>()) return;
-    // log_info("collecting user input");
     CollectsUserInput& cui = entity.get<CollectsUserInput>();
 
     // Theres no players not in game menu state,

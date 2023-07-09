@@ -117,6 +117,7 @@ void register_all_components() {
         IsItemContainer<PillBottle>, IsItemContainer<Pill>, UsesCharacterModel,
         ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
         HasSpeechBubble, Indexer, IsSpawner, HasTimer>();
+    entity->addComponent<CollectsUserInput>();
     delete entity;
 }
 
@@ -220,11 +221,6 @@ Entity* make_player(vec3 p) {
     Entity* player = make_entity({.name = strings::entity::PLAYER}, p);
     add_person_components(player);
     add_player_components(player);
-
-    // note: these are added to some remote players
-    // ie the one the client is controlling
-    player->addComponent<CollectsUserInput>();
-    player->addComponent<CanBeGhostPlayer>();
 
     player->addComponent<RespondsToUserInput>();
     return player;
