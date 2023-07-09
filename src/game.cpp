@@ -186,3 +186,7 @@ int main(int argc, char* argv[]) {
     App::get().run();
     return 0;
 }
+
+//
+// TODO why do i need this for it to link
+#include "entity.cpp"

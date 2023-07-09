@@ -34,7 +34,9 @@ void compare_and_validate_components(Entity* a, Entity* b) {
     }
 }
 
-Entity* mk_entity() { return make_entity(DebugOptions{.name = "test"}); }
+inline Entity* mk_entity() {
+    return make_entity(DebugOptions{.name = "test"}, vec3{0, 0, 0});
+}
 
 void entity_components() {
     Entity* entity = mk_entity();

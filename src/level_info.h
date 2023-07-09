@@ -2,6 +2,7 @@
 #pragma once
 
 #include "components/transform.h"
+#include "engine/astar.h"
 #include "engine/globals_register.h"
 #include "engine/ui_color.h"
 #include "entity.h"
@@ -24,9 +25,10 @@ static void generate_and_insert_walls(std::string /* seed */) {
             if (i == 0 || j == 0 || i == MAX_MAP_SIZE - 1 ||
                 j == MAX_MAP_SIZE - 1) {
                 vec2 location = vec2{i * TILESIZE, j * TILESIZE};
-                std::shared_ptr<Furniture> wall;
+                std::shared_ptr<Entity> wall;
                 wall.reset(entities::make_wall(location, d_color));
-                EntityHelper::addEntity(wall);
+                // TODO THIS IS A LEAK
+                EntityHelper::addEntity(*wall);
             }
         }
     }
@@ -69,7 +71,8 @@ struct helper {
             add_to_map = [](Entity* entity) {
                 std::shared_ptr<Entity> s_e;
                 s_e.reset(entity);
-                EntityHelper::addEntity(s_e);
+                // TODO !!!!!!! THIS IS A LEAK
+                EntityHelper::addEntity(*entity);
             };
         }
         vec2 origin = find_origin();
@@ -110,7 +113,7 @@ struct helper {
                 return (entities::make_wall(location, d_color));
             } break;
             case CUSTOMER: {
-                return make_customer(location);
+                return make_customer(location, true);
             } break;
             case CUST_SPAWNER: {
                 return entities::make_customer_spawner(vec::to3(location));
@@ -187,38 +190,36 @@ struct helper {
     }
 
     void validate() {
-        auto soph = EntityHelper::getFirstMatching<Entity>(
-            [](std::shared_ptr<Entity> e) {
-                return check_name(e, strings::entity::SOPHIE);
-            });
+        auto soph = EntityHelper::getFirstMatching(
+            [](Entity e) { return check_name(e, strings::entity::SOPHIE); });
         VALIDATE(soph, "sophie needs to be there ");
 
         // find register,
-        auto reg = EntityHelper::getFirstMatching<Entity>(
-            [](std::shared_ptr<Entity> e) {
-                return check_name(e, strings::entity::REGISTER);
-            });
-        VALIDATE(reg, "map needs to have at least one register");
+        auto reg_opt = EntityHelper::getFirstMatching(
+            [](Entity e) { return check_name(e, strings::entity::REGISTER); });
+        VALIDATE(valid(reg_opt), "map needs to have at least one register");
+        auto reg = asE(reg_opt);
 
         // find customer
-        auto customer = EntityHelper::getFirstMatching<Entity>(
-            [](std::shared_ptr<Entity> e) {
+        auto customer_opt =
+            EntityHelper::getFirstMatching([](Entity& e) -> bool {
                 return check_name(e, strings::entity::CUSTOMER_SPAWNER);
             });
-        VALIDATE(customer,
+        VALIDATE(valid(customer_opt),
                  "map needs to have at least one customer spawn point");
+        auto customer = asE(customer_opt);
 
         // ensure customers can make it to the register
 
         // TODO need a better way to do this
         // 0 makes sense but is the position of the entity, when its infront?
-        auto reg_pos = reg->get<Transform>().tile_infront(1);
+        auto reg_pos = reg.get<Transform>().tile_infront(1);
 
-        log_info(" reg{} rep{} c{}", reg->get<Transform>().as2(), reg_pos,
-                 customer->get<Transform>().as2());
+        log_info(" reg{} rep{} c{}", reg.get<Transform>().as2(), reg_pos,
+                 customer.get<Transform>().as2());
 
         auto new_path = astar::find_path(
-            customer->get<Transform>().as2(), reg_pos,
+            customer.get<Transform>().as2(), reg_pos,
             std::bind(EntityHelper::isWalkable, std::placeholders::_1));
         VALIDATE(new_path.size(),
                  "customer should be able to generate a path to the register");
@@ -238,12 +239,13 @@ struct LevelInfo {
 
     std::string seed;
 
-    virtual void onUpdate(const Entities& players, float dt) {
+    virtual void onUpdate(Entities& players, float dt) {
         TRACY_ZONE_SCOPED;
         SystemManager::get().update_all_entities(players, dt);
     }
 
-    virtual void onDraw(float dt) const {
+    // TODO add const
+    virtual void onDraw(float dt) {
         TRACY_ZONE_SCOPED;
         SystemManager::get().render_entities(entities, dt);
         SystemManager::get().render_items(items, dt);
@@ -285,9 +287,7 @@ struct LevelInfo {
     void serialize(S& s) {
         s.value8b(num_entities);
         s.container(entities, num_entities,
-                    [](S& s2, std::shared_ptr<Entity>& entity) {
-                        s2.ext(entity, bitsery::ext::StdSmartPtr{});
-                    });
+                    [](S& s2, Entity entity) { s2.object(entity); });
 
         s.value8b(num_items);
         s.container(items, num_items, [](S& s2, std::shared_ptr<Item>& item) {
@@ -301,10 +301,11 @@ struct LevelInfo {
 struct LobbyMapInfo : public LevelInfo {
     virtual void generate_map() override {
         {
-            std::shared_ptr<Furniture> charSwitch;
+            std::shared_ptr<Entity> charSwitch;
             const auto location = vec2{5, 5};
             charSwitch.reset(entities::make_character_switcher(location));
-            EntityHelper::addEntity(charSwitch);
+            // TODO !!!MEMORY LEAK
+            EntityHelper::addEntity(*charSwitch);
         }
 
         {
@@ -312,11 +313,13 @@ struct LobbyMapInfo : public LevelInfo {
             loadGameTriggerArea.reset(entities::make_trigger_area(
                 {5, TILESIZE / -2.f, 10}, 8, 3,
                 text_lookup(strings::i18n::START_GAME)));
-            EntityHelper::addEntity(loadGameTriggerArea);
+            // TODO !!!MEMORY LEAK
+            EntityHelper::addEntity(*loadGameTriggerArea);
         }
     }
 
-    virtual void onDraw(float dt) const override {
+    // TODO make const
+    virtual void onDraw(float dt) override {
         auto cam = GLOBALS.get_ptr<GameCam>(strings::globals::GAME_CAM);
         if (cam) {
             raylib::DrawBillboard(
@@ -357,7 +360,7 @@ struct GameMapInfo : public LevelInfo {
         // TODO need to regenerate the map and clean up entitiyhelper
     }
 
-    virtual void onUpdate(const Entities& players, float dt) override {
+    virtual void onUpdate(Entities& players, float dt) override {
         // log_info("update round");
         LevelInfo::onUpdate(players, dt);
     }

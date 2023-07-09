@@ -73,9 +73,9 @@ typedef Transform::Transform::FrontFaceDirection EntityDir;
 template<typename T>
 [[nodiscard]] bool Entity::has() const {
     log_trace("checking component {} {} on entity {}",
-              components::get_type_id<T>(), type_name<T>(), id);
+              ::components::get_type_id<T>(), type_name<T>(), id);
     log_trace("your set is now {}", componentSet);
-    bool result = componentSet[components::get_type_id<T>()];
+    bool result = componentSet[::components::get_type_id<T>()];
     log_trace("and the result was {}", result);
     return result;
 }
@@ -83,14 +83,14 @@ template<typename T>
 template<typename T, typename... TArgs>
 T& Entity::addComponent(TArgs&&... args) {
     log_trace("adding component_id:{} {} to entity_id: {}",
-              components::get_type_id<T>(), type_name<T>(), id);
+              ::components::get_type_id<T>(), type_name<T>(), id);
 
     if (this->has<T>()) {
         log_warn(
             "This entity {}, {} already has this component attached id: "
             "{}, "
             "component {}",
-            this->get<DebugName>().name(), id, components::get_type_id<T>(),
+            this->get<DebugName>().name(), id, ::components::get_type_id<T>(),
             type_name<T>());
 
         VALIDATE(false, "duplicate component");
@@ -102,8 +102,8 @@ T& Entity::addComponent(TArgs&&... args) {
     }
 
     T* component(new T(std::forward<TArgs>(args)...));
-    componentArray[components::get_type_id<T>()] = component;
-    componentSet[components::get_type_id<T>()] = true;
+    componentArray[::components::get_type_id<T>()] = component;
+    componentSet[::components::get_type_id<T>()] = true;
 
     log_trace("your set is now {}", componentSet);
 
@@ -123,10 +123,29 @@ template<typename T>
         log_warn(
             "This entity {} {} is missing id: {}, "
             "component {}",
-            this->get<DebugName>().name(), id, components::get_type_id<T>(),
+            this->get<DebugName>().name(), id, ::components::get_type_id<T>(),
             type_name<T>());
     }
-    BaseComponent* comp = componentArray.at(components::get_type_id<T>());
+    BaseComponent* comp = componentArray.at(::components::get_type_id<T>());
+    return *static_cast<T*>(comp);
+}
+
+// TODO combine this with the const one at some point
+template<typename T>
+[[nodiscard]] T& Entity::get() {
+    if (this->is_missing<DebugName>()) {
+        log_error(
+            "This entity is missing debugname which will cause issues for "
+            "if the get<> is missing");
+    }
+    if (this->is_missing<T>()) {
+        log_warn(
+            "This entity {} {} is missing id: {}, "
+            "component {}",
+            this->get<DebugName>().name(), id, ::components::get_type_id<T>(),
+            type_name<T>());
+    }
+    BaseComponent* comp = componentArray.at(::components::get_type_id<T>());
     return *static_cast<T*>(comp);
 }
 
@@ -143,7 +162,7 @@ void Entity::serialize(S& s) {
           });
 }
 
-static void register_all_components() {
+void register_all_components() {
     Entity* entity = new Entity();
     entity->addAll<
         Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
@@ -158,19 +177,15 @@ static void register_all_components() {
     delete entity;
 }
 
-struct DebugOptions {
-    std::string name;
-};
-
-static bool check_name(Entity& entity, const char* name) {
+bool check_name(const Entity& entity, const char* name) {
     return entity.get<DebugName>().name() == name;
 }
 
-static void add_entity_components(Entity* entity) {
+void add_entity_components(Entity* entity) {
     entity->addComponent<Transform>();
 }
 
-static Entity* make_entity(const DebugOptions& options, vec3 p = {-2, -2, -2}) {
+Entity* make_entity(const DebugOptions& options, vec3 p = {-2, -2, -2}) {
     Entity* entity = new Entity();
 
     entity->addComponent<DebugName>().update(options.name);
@@ -181,7 +196,7 @@ static Entity* make_entity(const DebugOptions& options, vec3 p = {-2, -2, -2}) {
     return entity;
 }
 
-static void add_person_components(Entity* person) {
+void add_person_components(Entity* person) {
     // TODO idk why but you spawn under the ground without this
     person->get<Transform>().update_y(0);
     float size_multiplier = 0.75f;
@@ -211,7 +226,7 @@ static void add_person_components(Entity* person) {
     person->addComponent<UsesCharacterModel>();
 }
 
-static void add_player_components(Entity* player) {
+void add_player_components(Entity* player) {
     player->addComponent<CanHighlightOthers>();
     player->addComponent<CanHoldFurniture>();
     player->get<HasBaseSpeed>().update(7.5f);
@@ -219,7 +234,7 @@ static void add_player_components(Entity* player) {
     player->addComponent<HasClientID>();
 }
 
-static Entity* make_remote_player(vec3 pos) {
+Entity* make_remote_player(vec3 pos) {
     Entity* remote_player =
         make_entity({.name = strings::entity::REMOTE_PLAYER}, pos);
     add_person_components(remote_player);
@@ -227,8 +242,8 @@ static Entity* make_remote_player(vec3 pos) {
     return remote_player;
 }
 
-static void update_player_remotely(Entity& entity, float* location,
-                                   std::string username, int facing_direction) {
+void update_player_remotely(Entity& entity, float* location,
+                            std::string username, int facing_direction) {
     entity.get<HasName>().update(username);
 
     Transform& transform = entity.get<Transform>();
@@ -238,8 +253,8 @@ static void update_player_remotely(Entity& entity, float* location,
         static_cast<Transform::FrontFaceDirection>(facing_direction));
 }
 
-static void update_player_rare_remotely(Entity& entity, int model_index,
-                                        int last_ping) {
+void update_player_rare_remotely(Entity& entity, int model_index,
+                                 int last_ping) {
     if (entity.is_missing_any<UsesCharacterModel, ModelRenderer, HasClientID>())
         return;
     UsesCharacterModel& ucm = entity.get<UsesCharacterModel>();
@@ -258,7 +273,7 @@ static void update_player_rare_remotely(Entity& entity, int model_index,
     });
 }
 
-static Entity* make_player(vec3 p) {
+Entity* make_player(vec3 p) {
     Entity* player = make_entity({.name = strings::entity::PLAYER}, p);
     add_person_components(player);
     add_player_components(player);
@@ -272,7 +287,7 @@ static Entity* make_player(vec3 p) {
     return player;
 }
 
-static Entity* make_aiperson(const DebugOptions& options, vec3 p) {
+Entity* make_aiperson(const DebugOptions& options, vec3 p) {
     Entity* person = make_entity(options, p);
     add_person_components(person);
 
@@ -280,7 +295,7 @@ static Entity* make_aiperson(const DebugOptions& options, vec3 p) {
     return person;
 }
 
-static Entity* make_customer(vec2 p, bool has_ailment = true) {
+Entity* make_customer(vec2 p, bool has_ailment = true) {
     Entity* customer = make_aiperson(
         DebugOptions{.name = strings::entity::CUSTOMER}, vec::to3(p));
 
@@ -304,8 +319,8 @@ typedef Entity Furniture;
 // TODO This namespace should probably be "furniture::"
 // or add the ones above into it
 namespace entities {
-static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
-                              Color base, bool is_static = false) {
+Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
+                       Color base, bool is_ = false) {
     Entity* furniture = make_entity(options);
 
     furniture->get<Transform>().init({pos.x, 0, pos.y},
@@ -324,7 +339,7 @@ static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
         CustomHeldItemPosition::Positioner::Default);
 
     // Walls should not have these
-    if (!is_static) {
+    if (!is_) {
         furniture->addComponent<IsRotatable>();
         furniture->addComponent<CanHoldItem>();
         // These two are the heavy ones
@@ -335,7 +350,7 @@ static Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
     return furniture;
 }
 
-static Entity* make_table(vec2 pos) {
+Entity* make_table(vec2 pos) {
     Entity* table =
         entities::make_furniture(DebugOptions{.name = strings::entity::TABLE},
                                  pos, ui::color::brown, ui::color::brown);
@@ -355,7 +370,7 @@ static Entity* make_table(vec2 pos) {
     return table;
 }
 
-static Entity* make_character_switcher(vec2 pos) {
+Entity* make_character_switcher(vec2 pos) {
     Entity* character_switcher = entities::make_furniture(
         DebugOptions{.name = strings::entity::CHARACTER_SWITCHER}, pos,
         ui::color::green, ui::color::yellow);
@@ -377,7 +392,7 @@ static Entity* make_character_switcher(vec2 pos) {
     return character_switcher;
 }
 
-static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
+Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
     Entity* wall = entities::make_furniture(
         DebugOptions{.name = strings::entity::WALL}, pos, c, c, true);
 
@@ -460,7 +475,7 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
     // }
 }
 
-[[nodiscard]] static Entity* make_conveyer(vec2 pos) {
+[[nodiscard]] Entity* make_conveyer(vec2 pos) {
     Entity* conveyer = entities::make_furniture(
         DebugOptions{.name = strings::entity::CONVEYER}, pos, ui::color::blue,
         ui::color::blue);
@@ -482,7 +497,7 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
     return conveyer;
 }
 
-[[nodiscard]] static Entity* make_grabber(vec2 pos) {
+[[nodiscard]] Entity* make_grabber(vec2 pos) {
     Entity* grabber =
         entities::make_furniture(DebugOptions{.name = strings::entity::GRABBER},
                                  pos, ui::color::yellow, ui::color::yellow);
@@ -504,7 +519,7 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
     return grabber;
 }
 
-[[nodiscard]] static Entity* make_register(vec2 pos) {
+[[nodiscard]] Entity* make_register(vec2 pos) {
     Entity* reg = entities::make_furniture(
         DebugOptions{.name = strings::entity::REGISTER}, pos, ui::color::grey,
         ui::color::grey);
@@ -521,15 +536,15 @@ static Entity* make_wall(vec2 pos, Color c = ui::color::brown) {
 }
 
 template<typename I>
-[[nodiscard]] static Entity* make_itemcontainer(const DebugOptions& options,
-                                                vec2 pos) {
+[[nodiscard]] Entity* make_itemcontainer(const DebugOptions& options,
+                                         vec2 pos) {
     Entity* container = entities::make_furniture(options, pos, ui::color::white,
                                                  ui::color::white);
     container->addComponent<IsItemContainer<I>>();
     return container;
 }
 
-[[nodiscard]] static Entity* make_bagbox(vec2 pos) {
+[[nodiscard]] Entity* make_bagbox(vec2 pos) {
     Entity* container =
         entities::make_itemcontainer<Bag>({strings::entity::BAG_BOX}, pos);
 
@@ -547,7 +562,7 @@ template<typename I>
     return container;
 }
 
-[[nodiscard]] static Entity* make_medicine_cabinet(vec2 pos) {
+[[nodiscard]] Entity* make_medicine_cabinet(vec2 pos) {
     Entity* container = entities::make_itemcontainer<PillBottle>(
         {strings::entity::MEDICINE_CABINET}, pos);
     if (ENABLE_MODELS) {
@@ -560,7 +575,7 @@ template<typename I>
     return container;
 }
 
-[[nodiscard]] static Entity* make_pill_dispenser(vec2 pos) {
+[[nodiscard]] Entity* make_pill_dispenser(vec2 pos) {
     // TODO when making a new itemcontainer, it silently creates a new
     // component and then youll get a polymorphism error, probably need
     // something
@@ -591,7 +606,7 @@ template<typename I>
     return container;
 }
 
-[[nodiscard]] static Entity* make_trigger_area(
+[[nodiscard]] Entity* make_trigger_area(
     vec3 pos, float width, float height,
     std::string title = strings::entity::TRIGGER_AREA) {
     Entity* trigger_area = make_entity({strings::entity::TRIGGER_AREA}, pos);
@@ -616,7 +631,7 @@ template<typename I>
     return trigger_area;
 }
 
-[[nodiscard]] static Entity* make_customer_spawner(vec3 pos) {
+[[nodiscard]] Entity* make_customer_spawner(vec3 pos) {
     Entity* customer_spawner =
         make_entity({strings::entity::CUSTOMER_SPAWNER}, pos);
 
@@ -636,7 +651,7 @@ template<typename I>
 }
 
 // This will be a catch all for anything that just needs to get updated
-[[nodiscard]] static Entity* make_sophie(vec3 pos) {
+[[nodiscard]] Entity* make_sophie(vec3 pos) {
     Entity* sophie = make_entity({strings::entity::SOPHIE}, pos);
 
     // TODO how long is a day?

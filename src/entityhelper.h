@@ -137,17 +137,20 @@ struct EntityHelper {
         }
     }
 
-    template<typename T>
-    static constexpr std::shared_ptr<T> getFirstMatching(
-        std::function<bool(std::shared_ptr<T>)> filter  //
+    static OptEntity findEntity(int id) {
+        for (auto& e : get_entities()) {
+            if (e.id == id) return e;
+        }
+        return {};
+    }
+
+    static OptEntity getFirstMatching(std::function<bool(RefEntity)> filter  //
     ) {
         for (auto& e : get_entities()) {
-            auto s = dynamic_pointer_cast<T>(e);
-            if (!s) continue;
-            if (!filter(s)) continue;
-            return s;
+            if (!filter(e)) continue;
+            return e;
         }
-        return nullptr;
+        return {};
     }
 
     static std::vector<RefEntity> getEntitiesInRange(vec2 pos, float range) {
@@ -228,13 +231,12 @@ struct EntityHelper {
     }
 
     template<typename T>
-    static std::shared_ptr<Entity> getClosestWithComponent(const Entity& entity,
-                                                           float range) {
+    static OptEntity getClosestWithComponent(const Entity& entity,
+                                             float range) {
         const Transform& transform = entity.get<Transform>();
         return EntityHelper::getClosestMatchingEntity(
-            transform.as2(), range, [](const std::shared_ptr<Entity> entity) {
-                return entity->has<T>();
-            });
+            transform.as2(), range,
+            [](Entity entity) -> bool { return entity.has<T>(); });
     }
 
     template<typename T>

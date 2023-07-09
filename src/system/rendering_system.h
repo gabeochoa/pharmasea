@@ -3,7 +3,19 @@
 #pragma once
 
 #include "../camera.h"
+#include "../components/can_be_highlighted.h"
+#include "../components/can_have_ailment.h"
+#include "../components/can_hold_item.h"
+#include "../components/has_name.h"
+#include "../components/has_speech_bubble.h"
+#include "../components/has_work.h"
+#include "../components/is_trigger_area.h"
+#include "../components/model_renderer.h"
+#include "../components/shows_progress_bar.h"
+#include "../components/simple_colored_box_renderer.h"
 #include "../components/uses_character_model.h"
+#include "../drawing_util.h"
+#include "../engine/graphics.h"
 #include "../engine/log.h"
 #include "../engine/time.h"
 #include "job_system.h"
@@ -38,18 +50,15 @@ inline void draw_valid_colored_box(const Transform& transform,
         transform.FrontFaceDirectionMap.at(transform.face_direction()), f, b);
 }
 
-inline void update_character_model_from_index(std::shared_ptr<Entity> entity,
-                                              float) {
-    if (!entity) return;
-
-    if (entity->is_missing<UsesCharacterModel>()) return;
-    UsesCharacterModel& usesCharacterModel = entity->get<UsesCharacterModel>();
+inline void update_character_model_from_index(Entity& entity, float) {
+    if (entity.is_missing<UsesCharacterModel>()) return;
+    UsesCharacterModel& usesCharacterModel = entity.get<UsesCharacterModel>();
 
     if (usesCharacterModel.value_same_as_last_render()) return;
 
-    if (entity->is_missing<ModelRenderer>()) return;
+    if (entity.is_missing<ModelRenderer>()) return;
 
-    ModelRenderer& renderer = entity->get<ModelRenderer>();
+    ModelRenderer& renderer = entity.get<ModelRenderer>();
 
     // TODO this should be the same as all other rendere updates for players
     renderer.update(ModelInfo{
@@ -62,58 +71,56 @@ inline void update_character_model_from_index(std::shared_ptr<Entity> entity,
     usesCharacterModel.mark_change_completed();
 }
 
-inline bool render_simple_highlighted(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<Transform>()) return false;
-    Transform& transform = entity->get<Transform>();
-    if (entity->is_missing<SimpleColoredBoxRenderer>()) return false;
-    SimpleColoredBoxRenderer& renderer =
-        entity->get<SimpleColoredBoxRenderer>();
+inline bool render_simple_highlighted(Entity& entity, float) {
+    if (entity.is_missing<Transform>()) return false;
+    Transform& transform = entity.get<Transform>();
+    if (entity.is_missing<SimpleColoredBoxRenderer>()) return false;
+    SimpleColoredBoxRenderer& renderer = entity.get<SimpleColoredBoxRenderer>();
     // TODO replace size with Bounds component when it exists
     draw_valid_colored_box(transform, renderer, true);
     return true;
 }
 
-inline bool render_simple_normal(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<Transform>()) return false;
-    Transform& transform = entity->get<Transform>();
-    if (entity->is_missing<SimpleColoredBoxRenderer>()) return false;
-    SimpleColoredBoxRenderer& renderer =
-        entity->get<SimpleColoredBoxRenderer>();
+inline bool render_simple_normal(Entity& entity, float) {
+    if (entity.is_missing<Transform>()) return false;
+    Transform& transform = entity.get<Transform>();
+    if (entity.is_missing<SimpleColoredBoxRenderer>()) return false;
+    SimpleColoredBoxRenderer& renderer = entity.get<SimpleColoredBoxRenderer>();
 
     draw_valid_colored_box(transform, renderer, false);
     return true;
 }
 
-inline bool render_bounding_box(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<Transform>()) return false;
-    Transform& transform = entity->get<Transform>();
+inline bool render_bounding_box(Entity& entity, float) {
+    if (entity.is_missing<Transform>()) return false;
+    Transform& transform = entity.get<Transform>();
 
     DrawBoundingBox(transform.bounds(), MAROON);
     DrawFloatingText(transform.raw(), Preload::get().font,
-                     fmt::format("{}", entity->id).c_str());
+                     fmt::format("{}", entity.id).c_str());
     return true;
 }
 
-inline bool render_debug(std::shared_ptr<Entity> entity, float dt) {
+inline bool render_debug(Entity& entity, float dt) {
     job_system::render_job_visual(entity, dt);
 
     // Ghost player only render during debug mode
-    if (entity->has<CanBeGhostPlayer>() &&
-        entity->get<CanBeGhostPlayer>().is_ghost()) {
+    if (entity.has<CanBeGhostPlayer>() &&
+        entity.get<CanBeGhostPlayer>().is_ghost()) {
         render_simple_normal(entity, dt);
     }
     return render_bounding_box(entity, dt);
 }
 
-inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<ModelRenderer>()) return false;
-    if (entity->is_missing<CanBeHighlighted>()) return false;
+inline bool render_model_highlighted(Entity& entity, float) {
+    if (entity.is_missing<ModelRenderer>()) return false;
+    if (entity.is_missing<CanBeHighlighted>()) return false;
 
-    ModelRenderer& renderer = entity->get<ModelRenderer>();
+    ModelRenderer& renderer = entity.get<ModelRenderer>();
     if (!renderer.has_model()) return false;
 
-    if (entity->is_missing<Transform>()) return false;
-    Transform& transform = entity->get<Transform>();
+    if (entity.is_missing<Transform>()) return false;
+    Transform& transform = entity.get<Transform>();
 
     ModelInfo model_info = renderer.model_info().value();
 
@@ -137,16 +144,16 @@ inline bool render_model_highlighted(std::shared_ptr<Entity> entity, float) {
     return true;
 }
 
-inline bool render_model_normal(std::shared_ptr<Entity> entity, float) {
+inline bool render_model_normal(Entity& entity, float) {
     if (!ENABLE_MODELS) return false;
 
-    if (entity->is_missing<ModelRenderer>()) return false;
+    if (entity.is_missing<ModelRenderer>()) return false;
 
-    ModelRenderer& renderer = entity->get<ModelRenderer>();
+    ModelRenderer& renderer = entity.get<ModelRenderer>();
     if (!renderer.has_model()) return false;
 
-    if (entity->is_missing<Transform>()) return false;
-    Transform& transform = entity->get<Transform>();
+    if (entity.is_missing<Transform>()) return false;
+    Transform& transform = entity.get<Transform>();
 
     ModelInfo model_info = renderer.model_info().value();
 
@@ -168,15 +175,15 @@ inline bool render_model_normal(std::shared_ptr<Entity> entity, float) {
     return true;
 }
 
-inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
-    if (entity->is_missing<IsTriggerArea>()) return;
+inline void render_trigger_area(Entity& entity, float dt) {
+    if (entity.is_missing<IsTriggerArea>()) return;
 
     // TODO add highlight when you walk in
     // TODO add progress bar when all players are inside
 
-    const IsTriggerArea& ita = entity->get<IsTriggerArea>();
+    const IsTriggerArea& ita = entity.get<IsTriggerArea>();
 
-    const Transform& transform = entity->get<Transform>();
+    const Transform& transform = entity.get<Transform>();
 
     vec3 pos = transform.pos();
     vec3 size = transform.size();
@@ -199,10 +206,10 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
     // place the english
     auto fsize = 500.f;
 
-    std::string title = entity->get<IsTriggerArea>().title();
+    std::string title = entity.get<IsTriggerArea>().title();
     log_ifx(title.empty(), LogLevel::LOG_WARN,
             "Rendering trigger area with empty text string: id{} pos{}",
-            entity->id, pos);
+            entity.id, pos);
 
     if (ita.should_wave()) {
         raylib::WaveTextConfig waveConfig = {.waveRange = {0, 0, TILESIZE},
@@ -260,15 +267,15 @@ inline void render_trigger_area(std::shared_ptr<Entity> entity, float dt) {
     render_simple_normal(entity, dt);
 }
 
-inline void render_speech_bubble(std::shared_ptr<Entity> entity, float) {
+inline void render_speech_bubble(Entity& entity, float) {
     // Right now this is the only thing we can put in a bubble
-    if (entity->is_missing<CanHaveAilment>()) return;
-    if (entity->get<HasSpeechBubble>().disabled()) return;
+    if (entity.is_missing<CanHaveAilment>()) return;
+    if (entity.get<HasSpeechBubble>().disabled()) return;
 
-    const Transform& transform = entity->get<Transform>();
+    const Transform& transform = entity.get<Transform>();
     const vec3 position = transform.pos();
 
-    const CanHaveAilment& cha = entity->get<CanHaveAilment>();
+    const CanHaveAilment& cha = entity.get<CanHaveAilment>();
     auto ailment = cha.ailment();
     if (!ailment) return;
 
@@ -283,20 +290,20 @@ inline void render_speech_bubble(std::shared_ptr<Entity> entity, float) {
 }
 
 // TODO theres two functions called render normal, maybe we should address this
-inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
+inline void render_normal(Entity& entity, float dt) {
     // Ghost player cant render during normal mode
-    if (entity->has<CanBeGhostPlayer>() &&
-        entity->get<CanBeGhostPlayer>().is_ghost()) {
+    if (entity.has<CanBeGhostPlayer>() &&
+        entity.get<CanBeGhostPlayer>().is_ghost()) {
         return;
     }
 
-    if (entity->has<IsTriggerArea>()) {
+    if (entity.has<IsTriggerArea>()) {
         render_trigger_area(entity, dt);
         return;
     }
 
-    if (entity->has<CanBeHighlighted>() &&
-        entity->get<CanBeHighlighted>().is_highlighted()) {
+    if (entity.has<CanBeHighlighted>() &&
+        entity.get<CanBeHighlighted>().is_highlighted()) {
         bool used = render_model_highlighted(entity, dt);
         if (!used) {
             render_simple_highlighted(entity, dt);
@@ -304,7 +311,7 @@ inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
         return;
     }
 
-    if (entity->has<HasSpeechBubble>()) {
+    if (entity.has<HasSpeechBubble>()) {
         render_speech_bubble(entity, dt);
     }
 
@@ -314,15 +321,15 @@ inline void render_normal(std::shared_ptr<Entity> entity, float dt) {
     }
 }
 
-inline void render_floating_name(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<HasName>()) return;
-    HasName& hasName = entity->get<HasName>();
+inline void render_floating_name(Entity& entity, float) {
+    if (entity.is_missing<HasName>()) return;
+    HasName& hasName = entity.get<HasName>();
 
-    if (entity->is_missing<Transform>()) return;
-    const Transform& transform = entity->get<Transform>();
+    if (entity.is_missing<Transform>()) return;
+    const Transform& transform = entity.get<Transform>();
 
     // log_warn("drawing floating name {} for {} @ {} ({})", hasName.name(),
-    // entity->id, transform.position, transform.raw_position);
+    // entity.id, transform.position, transform.raw_position);
 
     // TODO rotate the name with the camera?
     raylib::DrawFloatingText(
@@ -330,17 +337,17 @@ inline void render_floating_name(std::shared_ptr<Entity> entity, float) {
         Preload::get().font, hasName.name().c_str());
 }
 
-inline void render_progress_bar(std::shared_ptr<Entity> entity, float) {
+inline void render_progress_bar(Entity& entity, float) {
     // TODO only renders for the host...
 
-    if (entity->is_missing<ShowsProgressBar>()) return;
+    if (entity.is_missing<ShowsProgressBar>()) return;
 
-    if (entity->is_missing<Transform>()) return;
-    const Transform& transform = entity->get<Transform>();
+    if (entity.is_missing<Transform>()) return;
+    const Transform& transform = entity.get<Transform>();
 
-    if (entity->is_missing<HasWork>()) return;
+    if (entity.is_missing<HasWork>()) return;
 
-    HasWork& hasWork = entity->get<HasWork>();
+    HasWork& hasWork = entity.get<HasWork>();
     if (hasWork.dont_show_progres_bar()) return;
 
     const int length = 20;
@@ -365,10 +372,10 @@ inline void render_progress_bar(std::shared_ptr<Entity> entity, float) {
 
 namespace ui {
 
-inline void render_timer(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<HasTimer>()) return;
+inline void render_timer(Entity& entity, float) {
+    if (entity.is_missing<HasTimer>()) return;
 
-    auto& ht = entity->get<HasTimer>();
+    auto& ht = entity.get<HasTimer>();
     switch (ht.type) {
         case HasTimer::Renderer::Round: {
             const bool is_closing = ht.store_is_closed();
@@ -423,10 +430,9 @@ inline void render_timer(std::shared_ptr<Entity> entity, float) {
     }
 }
 
-inline void render_block_state_change_reason(std::shared_ptr<Entity> entity,
-                                             float) {
-    if (entity->is_missing<HasTimer>()) return;
-    auto& ht = entity->get<HasTimer>();
+inline void render_block_state_change_reason(Entity& entity, float) {
+    if (entity.is_missing<HasTimer>()) return;
+    auto& ht = entity.get<HasTimer>();
 
     // if the round isnt over dont need to show anything
     if (ht.currentRoundTime > 0) return;
@@ -485,15 +491,16 @@ inline void render_player_info() {
         fmt::format("holding item?: {}",
                     global_player->get<CanHoldItem>().is_holding_item()));
 }
-void render_networked_players(const Entities&, float dt);
 
-inline void render_debug(const Entities&, float) {
+void render_networked_players(Entities&, float dt);
+
+inline void render_debug(Entities&, float) {
     render_player_info();
     // for (auto& entity : entities) {
     // }
 }
 
-inline void render_normal(const Entities& entities, float dt) {
+inline void render_normal(Entities& entities, float dt) {
     for (auto& entity : entities) {
         render_timer(entity, dt);
         render_block_state_change_reason(entity, dt);

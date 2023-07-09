@@ -121,15 +121,17 @@ struct Client {
             rp->get<HasName>().update(username);
             // NOTE we add to the map directly because its colocated with
             //      the other entity info
+
             map->remote_players_NOT_SERIALIZED.push_back(
-                remote_players[client_id]);
+                // TODO IDK WHAT THIS IS DOING, the star i mean
+                *remote_players[client_id]);
             log_info("Adding a player {}", client_id);
         };
 
         auto remove_player = [&](int client_id) {
             for (auto it = map->remote_players_NOT_SERIALIZED.begin();
                  it != map->remote_players_NOT_SERIALIZED.end(); it++) {
-                if ((*it)->get<HasClientID>().id() == client_id) {
+                if ((*it).get<HasClientID>().id() == client_id) {
                     map->remote_players_NOT_SERIALIZED.erase(it);
                     break;
                 }
@@ -165,7 +167,7 @@ struct Client {
             }
             auto rp = remote_players[client_id];
             if (!rp) return;
-            update_player_remotely(rp, location, username, facing);
+            update_player_remotely(*rp, location, username, facing);
         };
 
         auto update_remote_player_rare = [&](int client_id,    //
@@ -184,7 +186,7 @@ struct Client {
 
             // log_info("updating remote player arre {} {} id{}", client_id,
             // model_index, rp->id);
-            update_player_rare_remotely(rp, model_index, last_ping);
+            update_player_rare_remotely(*rp, model_index, last_ping);
         };
 
         ClientPacket packet = client_p->deserialize_to_packet(msg);

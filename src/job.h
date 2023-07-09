@@ -5,6 +5,7 @@
 #include "engine/log.h"
 #include "external_include.h"
 //
+#include "entity.h"
 
 struct Entity;
 
@@ -76,7 +77,7 @@ struct Job {
 
     static Job* create_job_of_type(vec2, vec2, JobType type);
 
-    void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
+    void run_job_tick(Entity& entity, float dt) {
         state = _run_job_tick(entity, dt);
         return;
     }
@@ -89,32 +90,28 @@ struct Job {
     virtual ~Job() {}
 
    protected:
-    virtual State run_state_initialize(const std::shared_ptr<Entity>&, float) {
+    virtual State run_state_initialize(Entity&, float) {
         return State::HeadingToStart;
     }
 
-    virtual State run_state_heading_to_start(
-        const std::shared_ptr<Entity>& entity, float dt);
-    virtual State run_state_heading_to_end(
-        const std::shared_ptr<Entity>& entity, float dt);
+    virtual State run_state_heading_to_start(Entity& entity, float dt);
+    virtual State run_state_heading_to_end(Entity& entity, float dt);
 
-    virtual State run_state_working_at_start(const std::shared_ptr<Entity>&,
-                                             float) {
+    virtual State run_state_working_at_start(Entity&, float) {
         return State::HeadingToEnd;
     }
-    virtual State run_state_working_at_end(const std::shared_ptr<Entity>&,
-                                           float) {
+    virtual State run_state_working_at_end(Entity&, float) {
         return State::Completed;
     }
 
     virtual void on_cleanup() {}
 
-    virtual void before_each_job_tick(const std::shared_ptr<Entity>&, float) {}
+    virtual void before_each_job_tick(Entity&, float) {}
 
     bool has_local_target() const { return local.has_value(); }
 
    private:
-    State _run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
+    State _run_job_tick(Entity& entity, float dt) {
         before_each_job_tick(entity, dt);
         switch (state) {
             case Job::State::Initialize: {
@@ -141,11 +138,9 @@ struct Job {
         return state;
     }
 
-    [[nodiscard]] inline bool is_at_position(
-        const std::shared_ptr<Entity>& entity, vec2 position);
+    [[nodiscard]] inline bool is_at_position(Entity& entity, vec2 position);
 
-    inline void travel_to_position(const std::shared_ptr<Entity>& entity,
-                                   float dt, vec2 goal);
+    inline void travel_to_position(Entity& entity, float dt, vec2 goal);
 };
 
 struct WanderingJob : public Job {
@@ -169,8 +164,7 @@ struct WaitJob : public Job {
     WaitJob(vec2 _start, vec2 _end, float _timeToComplete)
         : Job(JobType::Wait, _start, _end), timeToComplete(_timeToComplete) {}
 
-    virtual State run_state_working_at_end(
-        const std::shared_ptr<Entity>& entity, float dt) override;
+    virtual State run_state_working_at_end(Entity& entity, float dt) override;
 
     friend bitsery::Access;
     template<typename S>
@@ -185,18 +179,19 @@ struct WaitJob : public Job {
 struct WaitInQueueJob : public Job {
     WaitInQueueJob() : Job(JobType::WaitInQueue, vec2{0, 0}, vec2{0, 0}) {}
 
-    std::shared_ptr<Entity> reg;
+    int reg_id = -1;
     int spot_in_line = -1;
 
-    virtual State run_state_initialize(const std::shared_ptr<Entity>& entity,
-                                       float dt) override;
-    virtual State run_state_working_at_start(
-        const std::shared_ptr<Entity>& entity, float dt) override;
-    virtual State run_state_working_at_end(
-        const std::shared_ptr<Entity>& entity, float dt) override;
+    virtual State run_state_initialize(Entity& entity, float dt) override;
+    virtual State run_state_working_at_start(Entity& entity, float dt) override;
+    virtual State run_state_working_at_end(Entity& entity, float dt) override;
 
-    virtual void before_each_job_tick(const std::shared_ptr<Entity>&,
-                                      float) override;
+    virtual void before_each_job_tick(Entity&, float) override;
+    OptEntity reg() {
+        // TODO add cpp for enitty helper
+        // held_furniture = EntityHelper::findEntity(held_entity_id);
+        return {};
+    }
 
     friend bitsery::Access;
     template<typename S>
@@ -204,7 +199,7 @@ struct WaitInQueueJob : public Job {
         s.ext(*this, bitsery::ext::BaseClass<Job>{});
 
         s.value4b(spot_in_line);
-        s.object(reg);
+        s.value4b(reg_id);
     }
 };
 
@@ -212,8 +207,7 @@ struct LeavingJob : public Job {
     LeavingJob() : Job(JobType::Leaving, vec2{0, 0}, vec2{0, 0}) {}
     LeavingJob(vec2 _start, vec2 _end) : Job(JobType::Leaving, _start, _end) {}
 
-    virtual State run_state_working_at_end(
-        const std::shared_ptr<Entity>& entity, float dt) override;
+    virtual State run_state_working_at_end(Entity& entity, float dt) override;
 
     friend bitsery::Access;
     template<typename S>

@@ -6,15 +6,22 @@
 #include "../components/can_grab_from_other_furniture.h"
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
+#include "../components/can_hold_item.h"
 #include "../components/can_perform_job.h"
 #include "../components/collects_user_input.h"
 #include "../components/conveys_held_item.h"
 #include "../components/custom_item_position.h"
+#include "../components/has_base_speed.h"
+#include "../components/has_work.h"
+#include "../components/is_item_container.h"
+#include "../components/is_rotatable.h"
 #include "../components/is_snappable.h"
 #include "../components/responds_to_user_input.h"
 #include "../components/transform.h"
 #include "../entity.h"
 #include "../entityhelper.h"
+// TODO one day rename one of these to match
+#include "../item_helper.h"
 
 namespace system_manager {
 
@@ -255,7 +262,7 @@ inline void process_player_movement_input(Entity& entity, float dt,
                                           float input_amount) {
     if (entity.is_missing<Transform>()) return;
     Transform& transform = entity.get<Transform>();
-    Entity& player = dynamic_pointer_cast<Entity>(entity);
+    Entity& player = entity;
 
     if (entity.is_missing<HasBaseSpeed>()) return;
     HasBaseSpeed& hasBaseSpeed = entity.get<HasBaseSpeed>();
@@ -287,33 +294,33 @@ inline void rotate_furniture(const Entity& player) {
     // TODO need to figure out if reach should be separate from highlighting
     CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
-    std::shared_ptr<Furniture> match =
-        EntityHelper::getClosestMatchingFurniture(
-            player.get<Transform>(), cho.reach(), [](auto&& furniture) {
-                return furniture.template has<IsRotatable>();
-            });
+    OptEntity match = EntityHelper::getClosestMatchingFurniture(
+        player.get<Transform>(), cho.reach(), [](Entity furniture) -> bool {
+            return furniture.template has<IsRotatable>();
+        });
 
-    if (!match) return;
-    match.get<Transform>().rotate_facing_clockwise();
+    if (!valid(match)) return;
+    asE(match).get<Transform>().rotate_facing_clockwise();
 }
 
 inline void drop_held_furniture(const Entity& player) {
     CanHoldFurniture& ourCHF = player.get<CanHoldFurniture>();
     // TODO need to make sure it doesnt place ontop of another
     // one
-    auto hf = ourCHF.furniture();
-    if (!hf) {
+    OptEntity hf = ourCHF.furniture();
+    if (!valid(hf)) {
         log_info(" id:{} we'd like to drop but our hands are empty", player.id);
         return;
     }
+    Entity& hfe = asE(hf);
 
-    hf.get<CanBeHeld>().set_is_being_held(false);
-    hf.get<Transform>().update(
+    hfe.get<CanBeHeld>().set_is_being_held(false);
+    hfe.get<Transform>().update(
         vec::snap(vec::to3(player.get<Transform>().tile_infront(1))));
 
-    ourCHF.update(nullptr);
+    ourCHF.unown();
     log_info("we {} dropped the furniture {} we were holding", player.id,
-             hf.id);
+             hfe.id);
 }
 
 // TODO grabbing reach needs to be better, you should be able to grab in the 8
@@ -332,20 +339,20 @@ inline void handle_grab_or_drop(const Entity& player) {
         // TODO support finding things in the direction the player is
         // facing, instead of in a box around him
 
-        std::shared_ptr<Furniture> closest_furniture =
+        OptEntity closest_furniture_opt =
             EntityHelper::getClosestMatchingFurniture(
-                player.get<Transform>(), cho.reach(),
-                [](std::shared_ptr<Furniture> f) {
+                player.get<Transform>(), cho.reach(), [](Entity f) -> bool {
                     // TODO right now walls inherit this from furniture but
                     // eventually that should not be the case
                     if (f.is_missing<CanBeHeld>()) return false;
                     return f.get<CanBeHeld>().is_not_held();
                 });
         // no match
-        if (!closest_furniture) return;
+        if (!valid(closest_furniture_opt)) return;
+        Entity& closest_furniture = asE(closest_furniture_opt);
 
         ourCHF.update(closest_furniture);
-        ourCHF.furniture().get<CanBeHeld>().set_is_being_held(true);
+        asE(ourCHF.furniture()).get<CanBeHeld>().set_is_being_held(true);
 
         // TODO
         // NOTE: we want to remove the furniture ONLY from the nav mesh
@@ -363,34 +370,33 @@ inline void handle_grab_or_drop(const Entity& player) {
 
 namespace inround {
 
-inline void work_furniture(const Entity& player, float frame_dt) {
+inline void work_furniture(Entity& player, float frame_dt) {
     // Cant do work during planning
     if (GameState::get().is(game::State::Planning)) return;
 
     // TODO need to figure out if this should be separate from highlighting
     CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
-    std::shared_ptr<Furniture> match =
-        EntityHelper::getClosestMatchingFurniture(
-            player.get<Transform>(), cho.reach(), [](auto&& furniture) {
-                if (furniture.template is_missing<HasWork>()) return false;
-                HasWork& hasWork = furniture.template get<HasWork>();
-                return hasWork.has_work();
-            });
+    OptEntity match = EntityHelper::getClosestMatchingFurniture(
+        player.get<Transform>(), cho.reach(), [](Entity furniture) -> bool {
+            if (furniture.template is_missing<HasWork>()) return false;
+            HasWork& hasWork = furniture.template get<HasWork>();
+            return hasWork.has_work();
+        });
 
     if (!match) return;
 
-    HasWork& hasWork = match.get<HasWork>();
-    if (hasWork.do_work) hasWork.do_work(match, hasWork, player, frame_dt);
+    HasWork& hasWork = asE(match).get<HasWork>();
+    if (hasWork.do_work) hasWork.do_work(asE(match), hasWork, player, frame_dt);
 }
 
-inline void handle_drop(const Entity& player) {
+inline void handle_drop(Entity& player) {
     CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
     // This is for example putting a pill into a bag you are holding
     // taking an item and placing it into the container in your hand
     const auto _merge_item_from_furniture_into_hand_item =
-        [player]().tl::expected<bool, std::string> {
+        [player]() -> tl::expected<bool, std::string> {
         CanHighlightOthers& cho = player.get<CanHighlightOthers>();
         // our item cant hold anything or is already full
         if (!player.get<CanHoldItem>().item()->empty()) {
@@ -398,19 +404,19 @@ inline void handle_drop(const Entity& player) {
                 "trying to merge from furniture, but item was not empty");
         }
 
-        std::shared_ptr<Furniture> closest_furniture =
+        OptEntity closest_furniture_optional =
             EntityHelper::getClosestMatchingFurniture(
-                player.get<Transform>(), cho.reach(),
-                [](std::shared_ptr<Furniture> f) {
+                player.get<Transform>(), cho.reach(), [](Entity f) {
                     if (f.is_missing<CanHoldItem>()) return false;
                     return f.get<CanHoldItem>().is_holding_item();
                 });
 
-        if (!closest_furniture) {
+        if (!valid(closest_furniture_optional)) {
             return tl::unexpected(
                 "trying to merge from furniture, but didnt find anything "
                 "holding something");
         }
+        Entity& closest_furniture = asE(closest_furniture_optional);
 
         auto item_to_merge = closest_furniture.get<CanHoldItem>().item();
         bool eat_was_successful =
@@ -437,7 +443,7 @@ inline void handle_drop(const Entity& player) {
         }
      * */
     const auto _merge_item_from_furniture_around_hand_item =
-        [player]().tl::expected<bool, std::string> {
+        [player]() -> tl::expected<bool, std::string> {
         CanHighlightOthers& cho = player.get<CanHighlightOthers>();
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
 
@@ -447,10 +453,9 @@ inline void handle_drop(const Entity& player) {
                 "holding anything");
         }
 
-        std::shared_ptr<Furniture> closest_furniture =
+        OptEntity closest_furniture_opt =
             EntityHelper::getClosestMatchingFurniture(
-                player.get<Transform>(), cho.reach(),
-                [&playerCHI](std::shared_ptr<Furniture> f) {
+                player.get<Transform>(), cho.reach(), [&playerCHI](Entity f) {
                     if (f.is_missing<CanHoldItem>()) return false;
                     const auto& chi = f.get<CanHoldItem>();
                     if (chi.empty()) return false;
@@ -461,22 +466,24 @@ inline void handle_drop(const Entity& player) {
 
                     // Does the item this furniture holds have the ability to
                     // hold things
-                    if (!item.has_holding_ability()) return false;
+                    if (!item->has_holding_ability()) return false;
                     // Can it hold the thing we are holding?
-                    if (!item.evaluate_eat_request(playerCHI.item()))
+                    if (!item->evaluate_eat_request(playerCHI.item()))
                         return false;
 
                     return true;
                 });
 
-        if (!closest_furniture) {
+        if (!valid(closest_furniture_opt)) {
             return tl::unexpected(
                 "trying to merge from furniture around hand, but didnt find "
                 "anything than can hold what we are holding");
         }
 
+        Entity& closest_furniture = asE(closest_furniture_opt);
+
         auto item_to_merge = closest_furniture.get<CanHoldItem>().item();
-        bool eat_was_successful = item_to_merge.eat(playerCHI.item());
+        bool eat_was_successful = item_to_merge->eat(playerCHI.item());
         if (eat_was_successful) {
             // remove the link to the one we were already holding
             player.get<CanHoldItem>().update(nullptr);
@@ -491,23 +498,24 @@ inline void handle_drop(const Entity& player) {
     };
 
     const auto _merge_item_in_hand_into_furniture_item =
-        [&]().tl::expected<bool, std::string> {
-        std::shared_ptr<Furniture> closest_furniture =
+        [&]() -> tl::expected<bool, std::string> {
+        OptEntity closest_furniture_opt =
             EntityHelper::getClosestMatchingFurniture(
-                player.get<Transform>(), cho.reach(),
-                [&](std::shared_ptr<Furniture> f) {
+                player.get<Transform>(), cho.reach(), [&](Entity f) {
                     if (f.is_missing<CanHoldItem>()) return false;
                     CanHoldItem& fCHI = f.get<CanHoldItem>();
                     // is there something there to merge into?
                     if (!fCHI.is_holding_item()) return false;
                     // can that thing hold the item we are holding?
-                    return fCHI.item().can_eat(
+                    return fCHI.item()->can_eat(
                         player.get<CanHoldItem>().item());
                 });
 
         // No matching furniture
-        if (!closest_furniture)
+        if (!valid(closest_furniture_opt))
             return tl::unexpected("merge hand into: no matching furniture");
+
+        Entity& closest_furniture = asE(closest_furniture_opt);
 
         // TODO need to handle the case where the merged item is not a
         // valid thing the furniture can hold.
@@ -530,8 +538,8 @@ inline void handle_drop(const Entity& player) {
         return true;
     };
 
-    const auto
-        _place_item_onto_furniture = [&]().tl::expected<bool, std::string> {
+    const auto _place_item_onto_furniture =
+        [&]() -> tl::expected<bool, std::string> {
         const auto can_place_item_into = [](Entity& entity,
                                             std::shared_ptr<Item> item) {
             if (entity.is_missing<CanHoldItem>()) return false;
@@ -541,7 +549,6 @@ inline void handle_drop(const Entity& player) {
                 []<typename I>(Entity& entity,
                                std::shared_ptr<I> item = nullptr) {
                     if (!item) return false;
-                    if (!entity) return false;
                     if (entity.is_missing<IsItemContainer<I>>()) return false;
                     IsItemContainer<I>& itemContainer =
                         entity.get<IsItemContainer<I>>();
@@ -561,23 +568,25 @@ inline void handle_drop(const Entity& player) {
             return furnCanHold.empty();
         };
 
-        std::shared_ptr<Furniture> closest_furniture =
+        OptEntity closest_furniture_opt =
             EntityHelper::getClosestMatchingFurniture(
                 player.get<Transform>(), cho.reach(),
-                [player, can_place_item_into](std::shared_ptr<Furniture> f) {
+                [player, can_place_item_into](Entity f) {
                     return can_place_item_into(
                         f, player.get<CanHoldItem>().item());
                 });
 
         // no matching furniture
-        if (!closest_furniture)
+        if (!valid(closest_furniture_opt))
             return tl::unexpected("place_onto: no matching furniture");
+
+        Entity& closest_furniture = asE(closest_furniture_opt);
 
         Transform& furnT = closest_furniture.get<Transform>();
         CanHoldItem& furnCHI = closest_furniture.get<CanHoldItem>();
 
         std::shared_ptr<Item>& item = player.get<CanHoldItem>().item();
-        item.update_position(furnT.snap_position());
+        item->update_position(furnT.snap_position());
 
         furnCHI.update(item, Item::HeldBy::FURNITURE);
         player.get<CanHoldItem>().update(nullptr);
@@ -607,9 +616,9 @@ inline void handle_grab(const Entity& player) {
         CanHighlightOthers& cho = player.get<CanHighlightOthers>();
         Transform& playerT = player.get<Transform>();
 
-        std::shared_ptr<Furniture> closest_furniture =
+        OptEntity closest_furniture_opt =
             EntityHelper::getClosestMatchingFurniture(
-                playerT, cho.reach(), [](std::shared_ptr<Furniture> furn) {
+                playerT, cho.reach(), [](Entity furn) -> bool {
                     // This furniture can never hold anything so no match
                     if (furn.is_missing<CanHoldItem>()) return false;
                     // its holding something
@@ -617,7 +626,9 @@ inline void handle_grab(const Entity& player) {
                 });
 
         // No matching furniture that also can hold item
-        if (!closest_furniture) return false;
+        if (!valid(closest_furniture_opt)) return false;
+
+        Entity& closest_furniture = asE(closest_furniture_opt);
 
         // we found a match, grab the item from it
         CanHoldItem& furnCanHold = closest_furniture.get<CanHoldItem>();
@@ -625,7 +636,7 @@ inline void handle_grab(const Entity& player) {
 
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
         playerCHI.item() = item;
-        playerCHI.item().held_by = Item::HeldBy::PLAYER;
+        playerCHI.item()->held_by = Item::HeldBy::PLAYER;
 
         furnCanHold.item() = nullptr;
         return true;
@@ -649,7 +660,7 @@ inline void handle_grab(const Entity& player) {
     return;
 }
 
-inline void handle_grab_or_drop(const Entity& player) {
+inline void handle_grab_or_drop(Entity& player) {
     // TODO Need to auto drop any held furniture
 
     // Do we already have something in our hands?
@@ -660,9 +671,9 @@ inline void handle_grab_or_drop(const Entity& player) {
 
 }  // namespace inround
 
-inline void process_input(const Entity& entity, const UserInput& input) {
+inline void process_input(Entity& entity, const UserInput& input) {
     const auto _proc_single_input_name =
-        [](const Entity& entity, const InputName& input_name, float frame_dt) {
+        [](Entity& entity, const InputName& input_name, float frame_dt) {
             switch (input_name) {
                 case InputName::PlayerLeft:
                 case InputName::PlayerRight:

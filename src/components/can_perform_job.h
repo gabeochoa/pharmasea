@@ -68,7 +68,7 @@ struct CanPerformJob : public BaseComponent {
         // magic_enum::enum_name(current_job->type));
     }
 
-    void run_tick(const std::shared_ptr<Entity>& entity, float dt) {
+    void run_tick(Entity& entity, float dt) {
         if (needs_job()) return;
         current_job->run_job_tick(entity, dt);
     }
