@@ -10,6 +10,8 @@
 namespace network {
 
 struct Client {
+    // TODO eventually generate room codes instead of IP address
+    // can be some hash of the real ip that the we can decode
     struct ConnectionInfo {
         std::string host_ip_address = "127.0.0.1";
         bool ip_set = false;
