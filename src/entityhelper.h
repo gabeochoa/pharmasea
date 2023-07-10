@@ -164,10 +164,10 @@ struct EntityHelper {
     }
 
     static OptEntity getMatchingEntityInFront(
-        vec2 pos,                                 //
-        float range,                              //
-        Transform::FrontFaceDirection direction,  //
-        std::function<bool(RefEntity)> filter     //
+        vec2 pos,                                  //
+        float range,                               //
+        Transform::FrontFaceDirection direction,   //
+        std::function<bool(const Entity&)> filter  //
     ) {
         TRACY_ZONE_SCOPED;
         VALIDATE(range > 0,
@@ -208,10 +208,10 @@ struct EntityHelper {
     }
 
     static OptEntity getClosestMatchingEntity(
-        vec2 pos, float range, std::function<bool(Entity)> filter) {
+        vec2 pos, float range, std::function<bool(const Entity&)> filter) {
         float best_distance = range;
         OptEntity best_so_far;
-        for (auto& e : get_entities()) {
+        for (Entity& e : get_entities()) {
             if (!filter(e)) continue;
             float d = vec::distance(pos, e.get<Transform>().as2());
             if (d > range) continue;
@@ -225,7 +225,7 @@ struct EntityHelper {
 
     static OptEntity getClosestMatchingFurniture(
         const Transform& transform, float range,
-        std::function<bool(Entity)> filter) {
+        std::function<bool(const Entity&)> filter) {
         return EntityHelper::getMatchingEntityInFront(
             transform.as2(), range, transform.face_direction(), filter);
     }
@@ -236,7 +236,7 @@ struct EntityHelper {
         const Transform& transform = entity.get<Transform>();
         return EntityHelper::getClosestMatchingEntity(
             transform.as2(), range,
-            [](Entity entity) -> bool { return entity.has<T>(); });
+            [](const Entity& entity) -> bool { return entity.has<T>(); });
     }
 
     template<typename T>
@@ -297,7 +297,7 @@ struct EntityHelper {
     static inline bool isWalkableRawEntities(const vec2& pos) {
         TRACY_ZONE_SCOPED;
         bool hit_impassible_entity = false;
-        forEachEntity([&](const auto entity) {
+        forEachEntity([&](const auto& entity) {
             if (!is_collidable(entity)) return ForEachFlow::Continue;
             if (vec::distance(entity.template get<Transform>().as2(), pos) <
                 TILESIZE / 2.f) {

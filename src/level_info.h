@@ -300,20 +300,16 @@ struct LevelInfo {
 struct LobbyMapInfo : public LevelInfo {
     virtual void generate_map() override {
         {
-            std::shared_ptr<Entity> charSwitch;
-            const auto location = vec2{5, 5};
-            charSwitch.reset(entities::make_character_switcher(location));
             // TODO !!!MEMORY LEAK
-            EntityHelper::addEntity(*charSwitch);
+            EntityHelper::addEntity(
+                *entities::make_character_switcher(vec2{5, 5}));
         }
 
         {
-            std::shared_ptr<Entity> loadGameTriggerArea;
-            loadGameTriggerArea.reset(entities::make_trigger_area(
+            // TODO !!!MEMORY LEAK
+            EntityHelper::addEntity(*entities::make_trigger_area(
                 {5, TILESIZE / -2.f, 10}, 8, 3,
                 text_lookup(strings::i18n::START_GAME)));
-            // TODO !!!MEMORY LEAK
-            EntityHelper::addEntity(*loadGameTriggerArea);
         }
     }
 
