@@ -361,8 +361,8 @@ struct Server {
 
         // create the player if they dont already exist
         if (!players.contains(packet.client_id)) {
-            // TODO AGAIN FIX THIS
-            Entity* e = make_player({0, 0, 0});
+            Entity* e = new Entity();
+            make_player(*e, {0, 0, 0});
             players[packet.client_id] = *e;
         }
 

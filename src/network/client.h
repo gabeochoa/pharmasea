@@ -113,8 +113,12 @@ struct Client {
                 return;
             };
 
-            remote_players[client_id] =
-                std::shared_ptr<Entity>(make_remote_player({0, 0, 0}));
+            // Note: the reason we use new and not createEntity is that we dont
+            // want this in the array that is serialized, this should only live
+            // in remote_players
+            Entity* entity = new Entity();
+            make_remote_player(*entity, {0, 0, 0});
+            remote_players[client_id] = std::shared_ptr<Entity>(entity);
             auto& rp = remote_players[client_id];
             rp->get<HasClientID>().update(client_id);
             // We want to crash if no hasName so no has<> check here

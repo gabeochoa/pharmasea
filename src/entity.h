@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "bitsery/ext/utils/pointer_utils.h"
 #include "engine/assert.h"
 #include "external_include.h"
 #include "strings.h"
@@ -19,8 +20,8 @@ struct BaseComponent;
 
 constexpr int max_num_components = 64;
 using ComponentBitSet = std::bitset<max_num_components>;
-// originally this was a std::array<BaseComponent*, max_num_components> but i
-// cant seem to serialize this so lets try map
+// originally this was a std::array<BaseComponent*, max_num_components> but
+// i cant seem to serialize this so lets try map
 using ComponentArray = std::map<int, BaseComponent*>;
 using ComponentID = int;
 
@@ -57,14 +58,24 @@ struct Entity {
     ComponentBitSet componentSet;
     ComponentArray componentArray;
 
+    bool cleanup = false;
+
+    Entity() : id(ENTITY_ID_GEN++) {}
+
     // Destructor
     // ~Entity();
     // Copy constructor
-    // Entity(const Entity& other);
+    // Entity(const Entity& other) = delete;
+
+    // move constructor
+    // Entity(Entity&& other)
+    // : id(std::move(other.id)),
+    // componentSet(std::move(other.componentSet)),
+    // componentArray(std::move(other.componentArray)),
+    // cleanup(std::move(other.cleanup)) {}
+
     // Copy assignment operator
     // Entity& operator=(const Entity& other);
-
-    bool cleanup = false;
 
     // These two functions can be used to validate than an entity has all of the
     // matching components that are needed for this system to run
@@ -150,8 +161,6 @@ struct Entity {
 
     const std::string& name() const;
 
-    Entity() : id(ENTITY_ID_GEN++) {}
-
    private:
     friend bitsery::Access;
     template<typename S>
@@ -163,7 +172,11 @@ struct Entity {
         s.ext(componentArray, StdMap{max_num_components},
               [](S& sv, int& key, BaseComponent*(&value)) {
                   sv.value4b(key);
-                  sv.ext(value, PointerOwner{PointerType::Nullable});
+                  // sv.ext(value, PointerOwner{PointerType::Nullable});
+
+                  // TODO this is probably a memory leak but at least it doesnt
+                  // crash
+                  sv.ext(value, PointerObserver{PointerType::Nullable});
               });
     }
 };
@@ -199,54 +212,56 @@ inline RefEntity asRef(Entity& e) { return std::ref(e); }
 
 bool check_name(const Entity&, const char*);
 
-void register_all_components();
-void add_entity_components(Entity* entity);
-Entity* make_entity(const DebugOptions& options, vec3 p);
-void add_person_components(Entity* person);
-void add_player_components(Entity* player);
-Entity* make_remote_player(vec3 pos);
-
 void update_player_remotely(Entity& entity, float* location,
                             std::string username, int facing_direction);
 void update_player_rare_remotely(Entity& entity, int model_index,
                                  int last_ping);
-Entity* make_player(vec3 p);
 
-Entity* make_aiperson(const DebugOptions& options, vec3 p);
+void register_all_components();
+void add_entity_components(Entity& entity);
+void add_person_components(Entity& person);
+void add_player_components(Entity& player);
 
-Entity* make_customer(vec2 p, bool has_ailment);
+Entity& make_entity(Entity& entity, const DebugOptions& options, vec3 p);
+Entity& make_remote_player(Entity& entity, vec3 pos);
+Entity& make_player(Entity& entity, vec3 p);
+
+Entity& make_aiperson(Entity& entity, const DebugOptions& options, vec3 p);
+
+Entity& make_customer(Entity& entity, vec2 p, bool has_ailment);
 
 // TODO This namespace should probably be "furniture::"
 // or add the ones above into it
 namespace entities {
-Entity* make_furniture(const DebugOptions& options, vec2 pos, Color face,
-                       Color base, bool is_);
-Entity* make_table(vec2 pos);
-Entity* make_character_switcher(vec2 pos);
+Entity& make_furniture(Entity& entity, const DebugOptions& options, vec2 pos,
+                       Color face, Color base, bool is_);
+Entity& make_table(Entity& entity, vec2 pos);
+Entity& make_character_switcher(Entity& entity, vec2 pos);
 
-Entity* make_wall(vec2 pos, Color c);
+Entity& make_wall(Entity& entity, vec2 pos, Color c);
 
-[[nodiscard]] Entity* make_conveyer(vec2 pos);
+Entity& make_conveyer(Entity& entity, vec2 pos);
 
-[[nodiscard]] Entity* make_grabber(vec2 pos);
+Entity& make_grabber(Entity& entity, vec2 pos);
 
-[[nodiscard]] Entity* make_register(vec2 pos);
+Entity& make_register(Entity& entity, vec2 pos);
 
 template<typename I>
-[[nodiscard]] Entity* make_itemcontainer(const DebugOptions& options, vec2 pos);
+Entity& make_itemcontainer(Entity& entity, const DebugOptions& options,
+                           vec2 pos);
 
-[[nodiscard]] Entity* make_bagbox(vec2 pos);
+Entity& make_bagbox(Entity& entity, vec2 pos);
 
-[[nodiscard]] Entity* make_medicine_cabinet(vec2 pos);
+Entity& make_medicine_cabinet(Entity& entity, vec2 pos);
 
-[[nodiscard]] Entity* make_pill_dispenser(vec2 pos);
+Entity& make_pill_dispenser(Entity& entity, vec2 pos);
 
-[[nodiscard]] Entity* make_trigger_area(vec3 pos, float width, float height,
-                                        std::string title);
+Entity& make_trigger_area(Entity& entity, vec3 pos, float width, float height,
+                          std::string title);
 
-[[nodiscard]] Entity* make_customer_spawner(vec3 pos);
+Entity& make_customer_spawner(Entity& entity, vec3 pos);
 
 // This will be a catch all for anything that just needs to get updated
-[[nodiscard]] Entity* make_sophie(vec3 pos);
+Entity& make_sophie(Entity& entity, vec3 pos);
 
 }  // namespace entities

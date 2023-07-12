@@ -445,12 +445,7 @@ void process_trigger_area(Entity& entity, float dt) {
 void process_spawner(Entity& entity, float dt) {
     if (entity.is_missing<IsSpawner>()) return;
     auto pos = entity.get<Transform>().as2();
-    Entity* e = entity.get<IsSpawner>().pass_time(pos, dt);
-    if (!e) return;
-    // TODO MEMORY LEAK
-    std::shared_ptr<Entity> s_e;
-    s_e.reset(e);
-    EntityHelper::addEntity(*s_e);
+    entity.get<IsSpawner>().pass_time(pos, dt);
 }
 
 void run_timer(Entity& entity, float dt) {

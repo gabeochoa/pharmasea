@@ -64,8 +64,8 @@ struct EntityHelper {
         return client_entities_DO_NOT_USE;
     }
 
-    static void addEntity(Entity e) {
-        get_entities().push_back(e);
+    static Entity& createEntity() {
+        return get_entities().emplace_back();
         // if (!e->add_to_navmesh()) {
         // return;
         // }
@@ -78,23 +78,17 @@ struct EntityHelper {
         // cache_is_walkable.clear();
     }
 
-    static void removeEntity(Entity e) {
+    static void removeEntity(int id) {
         // if (e->add_to_navmesh()) {
         // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
         // nav->removeEntity(e->id);
         // cache_is_walkable.clear();
         // }
 
-        auto entities = get_entities();
-
-        auto it = entities.begin();
-        while (it != get_entities().end()) {
-            if ((*it).id == e.id) {
-                entities.erase(it);
-                continue;
-            }
-            it++;
-        }
+        auto& entities = get_entities();
+        [[maybe_unused]] auto erased =
+            std::remove_if(entities.begin(), entities.end(),
+                           [id](const Entity& x) { return id == x.id; });
     }
 
     // static Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
@@ -110,16 +104,18 @@ struct EntityHelper {
 
     static void cleanup() {
         // Cleanup entities marked cleanup
-        auto entities = get_entities();
+        auto& entities = get_entities();
+        [[maybe_unused]] auto erased =
+            std::remove_if(entities.begin(), entities.end(),
+                           [](const Entity& x) { return x.cleanup; });
+    }
 
-        auto it = entities.begin();
-        while (it != entities.end()) {
-            if ((*it).cleanup) {
-                entities.erase(it);
-                continue;
-            }
-            it++;
-        }
+    static void clear() {
+        // Cleanup entities marked cleanup
+        auto& entities = get_entities();
+        [[maybe_unused]] auto erased =
+            std::remove_if(entities.begin(), entities.end(),
+                           [](const Entity&) { return true; });
     }
 
     enum ForEachFlow {
