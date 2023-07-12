@@ -70,6 +70,8 @@ struct Server {
         pharmacy_map->grab_things();
         pharmacy_map->ensure_generated_map();
 
+        if (pharmacy_map->entities().empty()) return;
+
         ClientPacket map_packet({
             .channel = Channel::RELIABLE,
             .client_id = SERVER_CLIENT_ID,
