@@ -66,8 +66,6 @@ THE SOFTWARE.
 #include <string.h>
 #include <sys/stat.h>
 
-#include <iostream>
-
 namespace i18n {
 
 struct LocalizationText {
@@ -210,7 +208,6 @@ inline int get_target_index(LocalizationText *loc, const char *s) {
 }
 
 inline LocalizationText::LocalizationText(const char *filename) {
-    std::cout << "RUNNING CTOR " << std::endl;
     mo_data = NULL;
     num_strings = 0;
     original_table_offset = 0;
@@ -270,7 +267,6 @@ inline void LocalizationText::abort() {
 }
 
 inline LocalizationText::~LocalizationText() {
-    std::cout << "RUNNING DTOR " << std::endl;
     if (mo_data) delete[] ((char *) mo_data);
 }
 
