@@ -85,6 +85,8 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
 
 #include <string>
 
+#include "engine/globals.h"
+
 namespace strings {
 namespace entity {
 

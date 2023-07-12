@@ -10,6 +10,45 @@
 #include "../map.h"
 #include "internal/channel.h"
 #include "steam/steamnetworkingtypes.h"
+//
+
+#include "../components/base_component.h"
+#include "../components/can_be_ghost_player.h"
+#include "../components/can_be_held.h"
+#include "../components/can_be_highlighted.h"
+#include "../components/can_be_pushed.h"
+#include "../components/can_be_taken_from.h"
+#include "../components/can_grab_from_other_furniture.h"
+#include "../components/can_have_ailment.h"
+#include "../components/can_highlight_others.h"
+#include "../components/can_hold_furniture.h"
+#include "../components/can_hold_item.h"
+#include "../components/can_perform_job.h"
+#include "../components/collects_user_input.h"
+#include "../components/conveys_held_item.h"
+#include "../components/custom_item_position.h"
+#include "../components/debug_name.h"
+#include "../components/has_base_speed.h"
+#include "../components/has_client_id.h"
+#include "../components/has_dynamic_model_name.h"
+#include "../components/has_name.h"
+#include "../components/has_speech_bubble.h"
+#include "../components/has_timer.h"
+#include "../components/has_waiting_queue.h"
+#include "../components/has_work.h"
+#include "../components/indexer.h"
+#include "../components/is_item_container.h"
+#include "../components/is_rotatable.h"
+#include "../components/is_snappable.h"
+#include "../components/is_solid.h"
+#include "../components/is_spawner.h"
+#include "../components/is_trigger_area.h"
+#include "../components/model_renderer.h"
+#include "../components/responds_to_user_input.h"
+#include "../components/shows_progress_bar.h"
+#include "../components/simple_colored_box_renderer.h"
+#include "../components/transform.h"
+#include "../components/uses_character_model.h"
 
 namespace bitsery {
 
@@ -50,7 +89,7 @@ struct PolymorphicBaseClass<LevelInfo>
 }  // namespace bitsery
 
 using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<BaseComponent, Entity, Item, Job>;
+    bitsery::ext::PolymorphicClassesList<BaseComponent, Item, Job>;
 
 namespace network {
 
@@ -263,26 +302,26 @@ void serialize(S& s, ClientPacket& packet) {
           });
 }
 
-static Buffer serialize_to_entity(Entity* entity) {
+static Buffer serialize_to_entity(Entity& entity) {
     Buffer buffer;
     TContext ctx{};
 
     std::get<1>(ctx).registerBasesList<BitserySerializer>(
         MyPolymorphicClasses{});
     BitserySerializer ser{ctx, buffer};
-    ser.object(*entity);
+    ser.object(entity);
     ser.adapter().flush();
 
     return buffer;
 }
 
-static void deserialize_to_entity(Entity* entity, const std::string& msg) {
+static void deserialize_to_entity(Entity& entity, const std::string& msg) {
     TContext ctx{};
     std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
         MyPolymorphicClasses{});
 
     BitseryDeserializer des{ctx, msg.begin(), msg.size()};
-    des.object(*entity);
+    des.object(entity);
 
     switch (des.adapter().error()) {
         case bitsery::ReaderError::NoError:

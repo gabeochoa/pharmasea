@@ -84,7 +84,13 @@ struct GameLayer : public Layer {
             map_ptr->grab_things();
         }
 
-        SystemManager::get().update(Entities{global_player}, dt);
+        if (global_player) {
+            // TODO do this in init or something
+
+            std::vector<Entity> players;
+            players.push_back(*global_player);
+            SystemManager::get().update(players, dt);
+        }
     }
 
     virtual void onDraw(float dt) override {
@@ -112,8 +118,10 @@ struct GameLayer : public Layer {
                         GLOBALS.get_or_default<
                             std::map<int, std::shared_ptr<Entity>>>(
                             "server_players", {}));
-                SystemManager::get().render_entities(Entities{global_player},
-                                                     dt);
+                // TODO do this in init or something
+                std::vector<Entity> players;
+                players.push_back(*global_player);
+                SystemManager::get().update(players, dt);
             }
             // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
             // if (nav) {

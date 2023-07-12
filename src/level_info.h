@@ -2,6 +2,7 @@
 #pragma once
 
 #include "components/transform.h"
+#include "engine/astar.h"
 #include "engine/globals_register.h"
 #include "engine/ui_color.h"
 #include "entity.h"
@@ -24,9 +25,8 @@ static void generate_and_insert_walls(std::string /* seed */) {
             if (i == 0 || j == 0 || i == MAX_MAP_SIZE - 1 ||
                 j == MAX_MAP_SIZE - 1) {
                 vec2 location = vec2{i * TILESIZE, j * TILESIZE};
-                std::shared_ptr<Furniture> wall;
-                wall.reset(entities::make_wall(location, d_color));
-                EntityHelper::addEntity(wall);
+                entities::make_wall(EntityHelper::createEntity(), location,
+                                    d_color);
             }
         }
     }
@@ -64,12 +64,10 @@ struct helper {
 
     helper(const std::vector<std::string>& l) : lines(l) {}
 
-    void generate(std::function<void(Entity*)> add_to_map = nullptr) {
+    void generate(std::function<Entity&()> add_to_map = nullptr) {
         if (!add_to_map) {
-            add_to_map = [](Entity* entity) {
-                std::shared_ptr<Entity> s_e;
-                s_e.reset(entity);
-                EntityHelper::addEntity(s_e);
+            add_to_map = []() -> Entity& {
+                return EntityHelper::createEntity();
             };
         }
         vec2 origin = find_origin();
@@ -80,77 +78,89 @@ struct helper {
                 vec2 raw_location = vec2{i * TILESIZE, j * TILESIZE};
                 vec2 location = raw_location - origin;
                 auto ch = get_char(i, j);
-                Entity* e_ptr = generate_entity_from_character(ch, location);
-                if (e_ptr) add_to_map(e_ptr);
+                generate_entity_from_character(add_to_map, ch, location);
             }
         }
     }
 
-    Entity* generate_entity_from_character(char ch, vec2 location) {
+    void generate_entity_from_character(std::function<Entity&()> create,
+                                        char ch, vec2 location) {
         switch (ch) {
             case 'x':
                 x = location;
-                return make_entity(DebugOptions{.name = "x"},
-                                   vec::to3(location));
+                make_entity(create(), DebugOptions{.name = "x"},
+                            vec::to3(location));
+                return;
             case 'z':
                 z = location;
-                return make_entity(DebugOptions{.name = "z"},
-                                   vec::to3(location));
+                make_entity(create(), DebugOptions{.name = "z"},
+                            vec::to3(location));
+                return;
             case EMPTY:
-                return nullptr;
+                return;
             case SOPHIE: {
-                return (entities::make_sophie(vec::to3(location)));
+                (entities::make_sophie(create(), vec::to3(location)));
+                return;
             } break;
             case REGISTER: {
-                return (entities::make_register(location));
+                (entities::make_register(create(), location));
+                return;
             } break;
             case WALL2:
             case WALL: {
                 const auto d_color = (Color){155, 75, 0, 255};
-                return (entities::make_wall(location, d_color));
+                (entities::make_wall(create(), location, d_color));
+                return;
             } break;
             case CUSTOMER: {
-                return make_customer(location);
+                make_customer(create(), location, true);
+                return;
             } break;
             case CUST_SPAWNER: {
-                return entities::make_customer_spawner(vec::to3(location));
+                entities::make_customer_spawner(create(), vec::to3(location));
+                return;
             } break;
             case GRABBERu: {
-                return (entities::make_grabber(location));
+                (entities::make_grabber(create(), location));
+                return;
             } break;
             case GRABBERl: {
-                Entity* grabber;
-                grabber = (entities::make_grabber(location));
-                grabber->get<Transform>().rotate_facing_clockwise(270);
-                return grabber;
+                Entity& grabber = create();
+                (entities::make_grabber(grabber, location));
+                grabber.get<Transform>().rotate_facing_clockwise(270);
+                return;
             } break;
             case GRABBERr: {
-                Entity* grabber;
-                grabber = (entities::make_grabber(location));
-                grabber->get<Transform>().rotate_facing_clockwise(90);
-                return grabber;
+                Entity& grabber = create();
+                (entities::make_grabber(grabber, location));
+                grabber.get<Transform>().rotate_facing_clockwise(90);
+                return;
             } break;
             case GRABBERd: {
-                Entity* grabber;
-                grabber = (entities::make_grabber(location));
-                grabber->get<Transform>().rotate_facing_clockwise(180);
-                return grabber;
+                Entity& grabber = create();
+                (entities::make_grabber(grabber, location));
+                grabber.get<Transform>().rotate_facing_clockwise(180);
+                return;
             } break;
             case TABLE: {
-                return (entities::make_table(location));
+                (entities::make_table(create(), location));
+                return;
             } break;
             case BAGBOX: {
-                return (entities::make_bagbox(location));
+                (entities::make_bagbox(create(), location));
+                return;
             } break;
             case MED_CAB: {
-                return (entities::make_medicine_cabinet(location));
+                (entities::make_medicine_cabinet(create(), location));
+                return;
             } break;
             case PILL_DISP: {
-                return (entities::make_pill_dispenser(location));
+                (entities::make_pill_dispenser(create(), location));
+                return;
             } break;
             case PLAYER: {
                 global_player->get<Transform>().update(vec::to3(location));
-                return nullptr;
+                return;
             } break;
             case 32: {
                 // space
@@ -160,7 +170,7 @@ struct helper {
                          (int) ch);
             } break;
         };
-        return nullptr;
+        return;
     }
 
     inline vec2 find_origin() {
@@ -187,38 +197,36 @@ struct helper {
     }
 
     void validate() {
-        auto soph = EntityHelper::getFirstMatching<Entity>(
-            [](std::shared_ptr<Entity> e) {
-                return check_name(e, strings::entity::SOPHIE);
-            });
+        auto soph = EntityHelper::getFirstMatching(
+            [](Entity e) { return check_name(e, strings::entity::SOPHIE); });
         VALIDATE(soph, "sophie needs to be there ");
 
         // find register,
-        auto reg = EntityHelper::getFirstMatching<Entity>(
-            [](std::shared_ptr<Entity> e) {
-                return check_name(e, strings::entity::REGISTER);
-            });
-        VALIDATE(reg, "map needs to have at least one register");
+        auto reg_opt = EntityHelper::getFirstMatching(
+            [](Entity e) { return check_name(e, strings::entity::REGISTER); });
+        VALIDATE(valid(reg_opt), "map needs to have at least one register");
+        auto reg = asE(reg_opt);
 
         // find customer
-        auto customer = EntityHelper::getFirstMatching<Entity>(
-            [](std::shared_ptr<Entity> e) {
+        auto customer_opt =
+            EntityHelper::getFirstMatching([](Entity& e) -> bool {
                 return check_name(e, strings::entity::CUSTOMER_SPAWNER);
             });
-        VALIDATE(customer,
+        VALIDATE(valid(customer_opt),
                  "map needs to have at least one customer spawn point");
+        auto customer = asE(customer_opt);
 
         // ensure customers can make it to the register
 
         // TODO need a better way to do this
         // 0 makes sense but is the position of the entity, when its infront?
-        auto reg_pos = reg->get<Transform>().tile_infront(1);
+        auto reg_pos = reg.get<Transform>().tile_infront(1);
 
-        log_info(" reg{} rep{} c{}", reg->get<Transform>().as2(), reg_pos,
-                 customer->get<Transform>().as2());
+        log_info(" reg{} rep{} c{}", reg.get<Transform>().as2(), reg_pos,
+                 customer.get<Transform>().as2());
 
         auto new_path = astar::find_path(
-            customer->get<Transform>().as2(), reg_pos,
+            customer.get<Transform>().as2(), reg_pos,
             std::bind(EntityHelper::isWalkable, std::placeholders::_1));
         VALIDATE(new_path.size(),
                  "customer should be able to generate a path to the register");
@@ -238,12 +246,13 @@ struct LevelInfo {
 
     std::string seed;
 
-    virtual void onUpdate(const Entities& players, float dt) {
+    virtual void onUpdate(Entities& players, float dt) {
         TRACY_ZONE_SCOPED;
         SystemManager::get().update_all_entities(players, dt);
     }
 
-    virtual void onDraw(float dt) const {
+    // TODO add const
+    virtual void onDraw(float dt) {
         TRACY_ZONE_SCOPED;
         SystemManager::get().render_entities(entities, dt);
         SystemManager::get().render_items(items, dt);
@@ -285,10 +294,7 @@ struct LevelInfo {
     void serialize(S& s) {
         s.value8b(num_entities);
         s.container(entities, num_entities,
-                    [](S& s2, std::shared_ptr<Entity>& entity) {
-                        s2.ext(entity, bitsery::ext::StdSmartPtr{});
-                    });
-
+                    [](S& s2, Entity entity) { s2.object(entity); });
         s.value8b(num_items);
         s.container(items, num_items, [](S& s2, std::shared_ptr<Item>& item) {
             s2.ext(item, bitsery::ext::StdSmartPtr{});
@@ -301,22 +307,19 @@ struct LevelInfo {
 struct LobbyMapInfo : public LevelInfo {
     virtual void generate_map() override {
         {
-            std::shared_ptr<Furniture> charSwitch;
-            const auto location = vec2{5, 5};
-            charSwitch.reset(entities::make_character_switcher(location));
-            EntityHelper::addEntity(charSwitch);
+            auto& entity = EntityHelper::createEntity();
+            entities::make_character_switcher(entity, vec2{5.f, 5.f});
         }
 
         {
-            std::shared_ptr<Entity> loadGameTriggerArea;
-            loadGameTriggerArea.reset(entities::make_trigger_area(
-                {5, TILESIZE / -2.f, 10}, 8, 3,
-                text_lookup(strings::i18n::START_GAME)));
-            EntityHelper::addEntity(loadGameTriggerArea);
+            auto& entity = EntityHelper::createEntity();
+            entities::make_trigger_area(entity, {5, TILESIZE / -2.f, 10}, 8, 3,
+                                        text_lookup(strings::i18n::START_GAME));
         }
     }
 
-    virtual void onDraw(float dt) const override {
+    // TODO make const
+    virtual void onDraw(float dt) override {
         auto cam = GLOBALS.get_ptr<GameCam>(strings::globals::GAME_CAM);
         if (cam) {
             raylib::DrawBillboard(
@@ -355,11 +358,6 @@ struct GameMapInfo : public LevelInfo {
         dist = std::uniform_int_distribution<>(1, MAX_MAP_SIZE - 1);
 
         // TODO need to regenerate the map and clean up entitiyhelper
-    }
-
-    virtual void onUpdate(const Entities& players, float dt) override {
-        // log_info("update round");
-        LevelInfo::onUpdate(players, dt);
     }
 
    private:

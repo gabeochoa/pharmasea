@@ -7,6 +7,7 @@
 #include "../components/can_hold_furniture.h"
 #include "../components/can_perform_job.h"
 #include "../components/custom_item_position.h"
+#include "../components/has_timer.h"
 #include "../components/transform.h"
 #include "../entity.h"
 #include "../entityhelper.h"
@@ -20,13 +21,13 @@ namespace job_system {
 /*
  // TODO eventually turn this back on
 
-inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<CanPerformJob>()) return;
-    CanPerformJob& cpf = entity->get<CanPerformJob>();
+inline void handle_job_holder_pushed(Entity& entity, float) {
+    if (entity.is_missing<CanPerformJob>()) return;
+    CanPerformJob& cpf = entity.get<CanPerformJob>();
     if (!cpf.has_job()) return;
     auto job = cpf.job();
 
-    const CanBePushed& cbp = entity->get<CanBePushed>();
+    const CanBePushed& cbp = entity.get<CanBePushed>();
 
     if (cbp.pushed_force().x != 0.0f || cbp.pushed_force().z != 0.0f) {
         job->path.clear();
@@ -37,18 +38,18 @@ inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
 
 */
 
-inline void render_job_visual(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<CanPerformJob>()) return;
+inline void render_job_visual(Entity& entity, float) {
+    if (entity.is_missing<CanPerformJob>()) return;
     const float box_size = TILESIZE / 10.f;
-    entity->get<CanPerformJob>().for_each_path_location(
+    entity.get<CanPerformJob>().for_each_path_location(
         [box_size](vec2 location) {
             DrawCube(vec::to3(location), box_size, box_size, box_size, BLUE);
         });
 }
 
-inline void ensure_has_job(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<CanPerformJob>()) return;
-    CanPerformJob& cpj = entity->get<CanPerformJob>();
+inline void ensure_has_job(Entity& entity, float) {
+    if (entity.is_missing<CanPerformJob>()) return;
+    CanPerformJob& cpj = entity.get<CanPerformJob>();
     if (cpj.has_job()) return;
 
     // TODO handle employee ai
@@ -56,10 +57,11 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float) {
     // TODO handle paying for your cart
 
     // IF the story is closed then leave
-    auto sophie = EntityHelper::getAllWithName(strings::entity::SOPHIE)[0];
-    VALIDATE(sophie, "there should always be a sophie");
-    if (sophie->get<HasTimer>().store_is_closed()) {
-        auto pos = entity->get<Transform>().as2();
+    auto sophies = EntityHelper::getAllWithName(strings::entity::SOPHIE);
+    VALIDATE(!sophies.empty(), "there should always be a sophie");
+    auto& sophie = asE(sophies[0]);
+    if (sophie.get<HasTimer>().store_is_closed()) {
+        auto pos = entity.get<Transform>().as2();
         cpj.update(Job::create_job_of_type(pos, vec2{GATHER_SPOT, GATHER_SPOT},
                                            JobType::Leaving));
         return;
@@ -68,7 +70,7 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float) {
     auto& personal_queue = cpj.job_queue();
     if (personal_queue.empty()) {
         // No job and nothing in the queue? grab the next default one then
-        auto pos = entity->get<Transform>().as2();
+        auto pos = entity.get<Transform>().as2();
         cpj.update(Job::create_job_of_type(pos, pos, cpj.get_next_job_type()));
         // TODO i really want to not return right here but the job is
         // nullptr if i do
@@ -83,19 +85,18 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float) {
     personal_queue.pop();
 }
 
-inline void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
-    if (entity->is_missing<CanPerformJob>()) return;
-    entity->get<CanPerformJob>().run_tick(entity, dt);
+inline void run_job_tick(Entity& entity, float dt) {
+    if (entity.is_missing<CanPerformJob>()) return;
+    entity.get<CanPerformJob>().run_tick(entity, dt);
 }
 
-inline void cleanup_completed_job(const std::shared_ptr<Entity>& entity,
-                                  float) {
+inline void cleanup_completed_job(Entity& entity, float) {
     // TODO probably can just live in 'in_round_update'?
-    if (entity->is_missing<CanPerformJob>()) return;
-    entity->get<CanPerformJob>().cleanup_if_completed();
+    if (entity.is_missing<CanPerformJob>()) return;
+    entity.get<CanPerformJob>().cleanup_if_completed();
 }
 
-inline void in_round_update(const std::shared_ptr<Entity>& entity, float dt) {
+inline void in_round_update(Entity& entity, float dt) {
     cleanup_completed_job(entity, dt);
     ensure_has_job(entity, dt);
     run_job_tick(entity, dt);

@@ -41,7 +41,7 @@ struct Server {
     AtomicQueue<ClientMessage> incoming_message_queue;
     AtomicQueue<ClientPacket> packet_queue;
     std::shared_ptr<internal::Server> server_p;
-    std::map<int, std::shared_ptr<Entity>> players;
+    std::map<int, Entity> players;
     std::shared_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
     std::thread::id thread_id;
@@ -91,9 +91,9 @@ struct Server {
                 .msg_type = network::ClientPacket::MsgType::PlayerRare,
                 .msg = network::ClientPacket::PlayerRareInfo({
                     .client_id = player.first,
-                    .model_index = player.second->get<UsesCharacterModel>()
+                    .model_index = player.second.get<UsesCharacterModel>()
                                        .index_server_only(),
-                    .last_ping = player.second->get<HasClientID>().ping(),
+                    .last_ping = player.second.get<HasClientID>().ping(),
                 }),
             });
             send_client_packet_to_all(player_rare_updated);
@@ -191,8 +191,9 @@ struct Server {
         // without this the position doesnt change until you drop it
         //
         // TODO idk the perf implications of this (map->vec)
-        std::vector<std::shared_ptr<Entity>> temp_players;
+        Entities temp_players;
         for (auto it = players.begin(); it != players.end(); ++it) {
+            // TODO what are the implications of this copy?
             temp_players.push_back(it->second);
         }
 
@@ -243,13 +244,11 @@ struct Server {
         const ClientPacket::PlayerControlInfo info =
             std::get<ClientPacket::PlayerControlInfo>(packet.msg);
 
-        auto player = players[packet.client_id];
-
-        if (!player) return;
-
         // TODO interpolate our old position and new position so its smoother
-        SystemManager::get().process_inputs(Entities{player}, info.inputs);
-        auto updated_position = player->get<Transform>().pos();
+        Entity& player = players.at(packet.client_id);
+        std::vector<Entity> temp{player};
+        SystemManager::get().process_inputs(temp, info.inputs);
+        auto updated_position = player.get<Transform>().pos();
 
         // TODO if the position and face direction didnt change
         //      then we can early return
@@ -263,15 +262,15 @@ struct Server {
             .client_id = incoming_client.client_id,
             .msg_type = network::ClientPacket::MsgType::PlayerLocation,
             .msg = network::ClientPacket::PlayerInfo({
-                .facing_direction =
-                    static_cast<int>(player->get<Transform>().face_direction()),
+                .facing_direction = static_cast<int>(
+                    asE(player).get<Transform>().face_direction()),
                 .location =
                     {
                         updated_position.x,
                         updated_position.y,
                         updated_position.z,
                     },
-                .username = player->get<HasName>().name(),
+                .username = player.get<HasName>().name(),
             }),
         });
 
@@ -362,12 +361,13 @@ struct Server {
 
         // create the player if they dont already exist
         if (!players.contains(packet.client_id)) {
-            players[packet.client_id] =
-                std::shared_ptr<Entity>(make_player({0, 0, 0}));
+            Entity* e = new Entity();
+            make_player(*e, {0, 0, 0});
+            players[packet.client_id] = *e;
         }
 
         // update the username
-        players[packet.client_id]->get<HasName>().update(info.username);
+        asE(players[packet.client_id]).get<HasName>().update(info.username);
 
         // TODO i looked into std::transform but kept getting std::out of range
         // errors
@@ -432,8 +432,9 @@ struct Server {
                      incoming_client.client_id);
             return;
         }
-        player_match->second->get<HasClientID>().update_ping(
-            (int) (pong - info.ping));
+        asE(player_match->second)
+            .get<HasClientID>()
+            .update_ping((int) (pong - info.ping));
     }
 
     void server_enqueue_message_string(

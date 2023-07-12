@@ -90,7 +90,7 @@ struct Client {
     }
 
     void send_player_input_packet(int my_id) {
-        CollectsUserInput& cui = global_player->get<CollectsUserInput>();
+        CollectsUserInput& cui = remote_players[id]->get<CollectsUserInput>();
 
         if (cui.inputs.empty()) return;
 
@@ -113,23 +113,28 @@ struct Client {
                 return;
             };
 
-            remote_players[client_id] =
-                std::shared_ptr<Entity>(make_remote_player({0, 0, 0}));
+            // Note: the reason we use new and not createEntity is that we dont
+            // want this in the array that is serialized, this should only live
+            // in remote_players
+            Entity* entity = new Entity();
+            make_remote_player(*entity, {0, 0, 0});
+            remote_players[client_id] = std::shared_ptr<Entity>(entity);
             auto& rp = remote_players[client_id];
             rp->get<HasClientID>().update(client_id);
             // We want to crash if no hasName so no has<> check here
             rp->get<HasName>().update(username);
             // NOTE we add to the map directly because its colocated with
             //      the other entity info
+
             map->remote_players_NOT_SERIALIZED.push_back(
-                remote_players[client_id]);
+                *remote_players[client_id]);
             log_info("Adding a player {}", client_id);
         };
 
         auto remove_player = [&](int client_id) {
             for (auto it = map->remote_players_NOT_SERIALIZED.begin();
                  it != map->remote_players_NOT_SERIALIZED.end(); it++) {
-                if ((*it)->get<HasClientID>().id() == client_id) {
+                if ((*it).get<HasClientID>().id() == client_id) {
                     map->remote_players_NOT_SERIALIZED.erase(it);
                     break;
                 }
@@ -165,7 +170,7 @@ struct Client {
             }
             auto rp = remote_players[client_id];
             if (!rp) return;
-            update_player_remotely(rp, location, username, facing);
+            update_player_remotely(*rp, location, username, facing);
         };
 
         auto update_remote_player_rare = [&](int client_id,    //
@@ -184,7 +189,7 @@ struct Client {
 
             // log_info("updating remote player arre {} {} id{}", client_id,
             // model_index, rp->id);
-            update_player_rare_remotely(rp, model_index, last_ping);
+            update_player_rare_remotely(*rp, model_index, last_ping);
         };
 
         ClientPacket packet = client_p->deserialize_to_packet(msg);
@@ -213,7 +218,7 @@ struct Client {
                     add_new_player(id, client_p->username);
                     GLOBALS.set("active_camera_target",
                                 remote_players[id].get());
-                    // TODO make shared doesnt work here
+
                     global_player.reset(remote_players[id].get());
                     global_player->addComponent<CollectsUserInput>();
                     // TODO i dont think we need this anymore

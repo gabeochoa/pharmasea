@@ -5,7 +5,7 @@
 
 struct Entity;
 
-typedef std::function<Entity*(vec2)> SpawnFn;
+typedef std::function<void(vec2)> SpawnFn;
 
 struct IsSpawner : public BaseComponent {
     virtual ~IsSpawner() {}
@@ -29,20 +29,21 @@ struct IsSpawner : public BaseComponent {
         return *this;
     }
 
-    Entity* pass_time(vec2 pos, float dt) {
-        if (hit_max()) return nullptr;
+    bool pass_time(vec2 pos, float dt) {
+        if (hit_max()) return false;
         if (!spawn_fn) {
             log_warn("calling pass_time without a valid spawn function");
-            return nullptr;
+            return false;
         }
 
         countdown -= dt;
         if (countdown <= 0) {
             countdown = spread;
             num_spawned++;
-            return spawn_fn(pos);
+            spawn_fn(pos);
+            return true;
         }
-        return nullptr;
+        return false;
     }
 
    private:

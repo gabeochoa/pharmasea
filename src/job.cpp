@@ -1,41 +1,44 @@
 
 #include "job.h"
 
+#include "components/can_have_ailment.h"
+#include "components/can_hold_item.h"
 #include "components/can_perform_job.h"
+#include "components/has_base_speed.h"
 #include "components/has_speech_bubble.h"
 #include "components/has_waiting_queue.h"
 #include "engine/assert.h"
+#include "engine/astar.h"
 #include "entity.h"
 #include "entityhelper.h"
 #include "globals.h"
 #include "system/logging_system.h"
 
-HasWaitingQueue& HasWaitingQueue::add_customer(
-    const std::shared_ptr<Entity>& customer) {
-    log_info("we are adding {} {} to the line in position {}", customer->id,
-             customer->get<DebugName>().name(), next_line_position);
-    ppl_in_line[next_line_position] = customer;
+HasWaitingQueue& HasWaitingQueue::add_customer(Entity& customer) {
+    log_info("we are adding {} {} to the line in position {}", customer.id,
+             customer.get<DebugName>().name(), next_line_position);
+    ppl_in_line[next_line_position] = {.id = customer.id};
     next_line_position++;
 
-    VALIDATE(has_matching_person(customer->id) >= 0,
+    VALIDATE(has_matching_person(customer.id) >= 0,
              "Customer should be in line somewhere");
     return *this;
 }
 
 void HasWaitingQueue::dump_contents() const {
     log_info("dumping contents of ppl_in_line");
-    for (int i = 0; i < max_queue_size; i++) {
+    for (int i = 0; i < MAX_QUEUE_SIZE; i++) {
         log_info("index: {}, set? {}, id {}", i, !!ppl_in_line[i],
-                 ppl_in_line[i] ? ppl_in_line[i]->id : -1);
+                 ppl_in_line[i]);
     }
 }
 
 bool HasWaitingQueue::matching_id(int id, int i) const {
-    return ppl_in_line[i] ? ppl_in_line[i]->id == id : false;
+    return ppl_in_line[i] == id;
 }
 
 bool HasWaitingQueue::has_matching_person(int id) const {
-    for (int i = 0; i < max_queue_size; i++) {
+    for (int i = 0; i < MAX_QUEUE_SIZE; i++) {
         if (matching_id(id, i)) return i;
     }
     log_warn("Cannot find customer {} in line", id);
@@ -89,29 +92,26 @@ Job* Job::create_job_of_type(vec2 _start, vec2 _end, JobType job_type) {
     return job;
 }
 
-bool Job::is_at_position(const std::shared_ptr<Entity>& entity, vec2 position) {
-    return vec::distance(entity->get<Transform>().as2(), position) <
+bool Job::is_at_position(Entity& entity, vec2 position) {
+    return vec::distance(entity.get<Transform>().as2(), position) <
            (TILESIZE / 2.f);
 }
 
-Job::State Job::run_state_heading_to_start(
-    const std::shared_ptr<Entity>& entity, float dt) {
+Job::State Job::run_state_heading_to_start(Entity& entity, float dt) {
     // log_info("heading to start job {}", magic_enum::enum_name(type));
     travel_to_position(entity, dt, start);
     return (is_at_position(entity, start) ? Job::State::WorkingAtStart
                                           : Job::State::HeadingToStart);
 }
 
-Job::State Job::run_state_heading_to_end(const std::shared_ptr<Entity>& entity,
-                                         float dt) {
+Job::State Job::run_state_heading_to_end(Entity& entity, float dt) {
     // log_info("heading to end job {}", magic_enum::enum_name(type));
     travel_to_position(entity, dt, end);
     return (is_at_position(entity, end) ? Job::State::WorkingAtEnd
                                         : Job::State::HeadingToEnd);
 }
 
-void Job::travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
-                             vec2 goal) {
+void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
     // we just call this again cause its fun, be we could merge the two in
     // the future
     if (is_at_position(entity, goal)) {
@@ -121,10 +121,10 @@ void Job::travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
         return;
     }
 
-    const auto _grab_path_to_goal = [this, goal, entity]() {
+    auto _grab_path_to_goal = [this, goal, entity]() {
         if (!path_empty()) return;
 
-        vec2 me = entity->get<Transform>().as2();
+        vec2 me = entity.get<Transform>().as2();
 
         {
             auto new_path = astar::find_path(
@@ -139,7 +139,7 @@ void Job::travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
         // TODO For now we are just going to let the customer noclip
         if (path_empty()) {
             log_warn("Forcing customer {} to noclip in order to get valid path",
-                     entity->id);
+                     entity.id);
             auto new_path =
                 astar::find_path(me, goal, [](auto&&) { return true; });
             update_path(new_path);
@@ -151,7 +151,7 @@ void Job::travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
         VALIDATE(!path_empty(), "path should no longer be empty");
     };
 
-    const auto _grab_local_target = [this, entity]() {
+    auto _grab_local_target = [this, &entity]() {
         // Either we dont yet have a local target
         // or we already reached the one we had
 
@@ -167,12 +167,12 @@ void Job::travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
         VALIDATE(has_local_target(), "job should have a local target");
     };
 
-    const auto _move_toward_local_target = [this, entity, dt]() {
+    auto _move_toward_local_target = [this, entity, dt]() {
         // TODO forcing get<HasBaseSpeed> to crash here
-        float base_speed = entity->get<HasBaseSpeed>().speed();
+        float base_speed = entity.get<HasBaseSpeed>().speed();
 
-        if (entity->has<CanHaveAilment>()) {
-            const CanHaveAilment& cha = entity->get<CanHaveAilment>();
+        if (entity.has<CanHaveAilment>()) {
+            const CanHaveAilment& cha = entity.get<CanHaveAilment>();
 
             float speed_multiplier = cha.ailment()->speed_multiplier();
             if (speed_multiplier != 0) base_speed *= speed_multiplier;
@@ -192,7 +192,7 @@ void Job::travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
 
         float speed = base_speed * dt;
 
-        Transform& transform = entity->get<Transform>();
+        Transform& transform = entity.get<Transform>();
 
         vec2 new_pos = transform.as2();
 
@@ -214,74 +214,70 @@ void Job::travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
     _move_toward_local_target();
 }
 
-inline void WIQ_wait_and_return(const std::shared_ptr<Entity>& entity) {
-    CanPerformJob& cpj = entity->get<CanPerformJob>();
+inline void WIQ_wait_and_return(Entity& entity) {
+    CanPerformJob& cpj = entity.get<CanPerformJob>();
     // Add the current job to the queue,
     // and then add the waiting job
     cpj.push_and_reset(new WaitJob(cpj.job_start(), cpj.job_start(), 1.f));
     return;
 }
 
-inline vec2 WIQ_add_to_queue_and_get_position(
-    const std::shared_ptr<Entity>& reg,
-    const std::shared_ptr<Entity>& customer) {
-    VALIDATE(reg->has<HasWaitingQueue>(),
+inline vec2 WIQ_add_to_queue_and_get_position(Entity& reg, Entity& customer) {
+    VALIDATE(reg.has<HasWaitingQueue>(),
              "Trying to get-next-queue-pos for entity which doesnt have a "
              "waiting queue ");
-    VALIDATE(customer, "entity passed to register queue should not be null");
+    // VALIDATE(customer, "entity passed to register queue should not be null");
 
-    int next_position = reg->get<HasWaitingQueue>()
+    int next_position = reg.get<HasWaitingQueue>()
                             .add_customer(customer)  //
                             .get_next_pos();
 
     // the place the customers stand is 1 tile infront of the register
-    return reg->get<Transform>().tile_infront((next_position + 1));
+    return reg.get<Transform>().tile_infront((next_position + 1));
 }
 
-inline int WIQ_position_in_line(const std::shared_ptr<Entity>& reg,
-                                const std::shared_ptr<Entity>& customer) {
-    VALIDATE(customer, "entity passed to position-in-line should not be null");
-    VALIDATE(reg, "entity passed to position-in-line should not be null");
+inline int WIQ_position_in_line(Entity& reg, Entity& customer) {
+    // VALIDATE(customer, "entity passed to position-in-line should not be
+    // null"); VALIDATE(reg, "entity passed to position-in-line should not be
+    // null");
     VALIDATE(
-        reg->has<HasWaitingQueue>(),
+        reg.has<HasWaitingQueue>(),
         "Trying to pos-in-line for entity which doesnt have a waiting queue ");
-    const HasWaitingQueue& hwq = reg->get<HasWaitingQueue>();
-    return hwq.has_matching_person(customer->id);
+    const HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
+    return hwq.has_matching_person(customer.id);
 }
 
-inline void WIQ_leave_line(const std::shared_ptr<Entity>& reg,
-                           const std::shared_ptr<Entity>& customer) {
-    VALIDATE(customer, "entity passed to leave-line should not be null");
-    VALIDATE(reg, "register passed to leave-line should not be null");
+inline void WIQ_leave_line(Entity& reg, Entity& customer) {
+    // VALIDATE(customer, "entity passed to leave-line should not be null");
+    // VALIDATE(reg, "register passed to leave-line should not be null");
     VALIDATE(
-        reg->has<HasWaitingQueue>(),
+        reg.has<HasWaitingQueue>(),
         "Trying to leave-line for entity which doesnt have a waiting queue ");
 
     int pos = WIQ_position_in_line(reg, customer);
     if (pos == -1) return;
 
-    reg->get<HasWaitingQueue>().erase(pos);
+    reg.get<HasWaitingQueue>().erase(pos);
 }
 
-inline bool WIQ_can_move_up(const std::shared_ptr<Entity>& reg,
-                            const std::shared_ptr<Entity>& customer) {
-    VALIDATE(customer, "entity passed to can-move-up should not be null");
-    VALIDATE(reg->has<HasWaitingQueue>(),
+inline bool WIQ_can_move_up(Entity& reg, Entity& customer) {
+    // VALIDATE(customer, "entity passed to can-move-up should not be null");
+    VALIDATE(reg.has<HasWaitingQueue>(),
              "Trying to can-move-up for entity which doesnt "
              "have a waiting queue ");
-    return reg->get<HasWaitingQueue>().matching_id(customer->id, 0);
+    return reg.get<HasWaitingQueue>().matching_id(customer.id, 0);
 }
 
-void WaitInQueueJob::before_each_job_tick(const std::shared_ptr<Entity>& entity,
-                                          float) {
+void WaitInQueueJob::before_each_job_tick(Entity& entity, float) {
     // This runs before init so its possible theres no register at all
-    if (reg) {
-        entity->get<Transform>().turn_to_face_pos(reg->get<Transform>().as2());
-    }
+
+    // TODO support fetching from regid
+    const auto reg = EntityHelper::findEntity(reg_id);
+    if (!valid(reg)) return;
+    entity.get<Transform>().turn_to_face_pos(asE(reg).get<Transform>().as2());
 }
 
-Job::State WaitInQueueJob::run_state_initialize(
-    const std::shared_ptr<Entity>& entity, float) {
+Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
     log_warn("starting a new wait in queue job");
 
     // Figure out which register to go to...
@@ -289,10 +285,11 @@ Job::State WaitInQueueJob::run_state_initialize(
     auto all_registers = EntityHelper::getAllWithComponent<HasWaitingQueue>();
 
     // Find the register with the least people on it
-    std::shared_ptr<Entity> best_target;
+    OptEntity best_target;
     int best_pos = -1;
-    for (auto r : all_registers) {
-        auto& hwq = r->get<HasWaitingQueue>();
+    for (OptEntity r : all_registers) {
+        if (!valid(r)) continue;
+        auto& hwq = asE(r).get<HasWaitingQueue>();
         if (hwq.is_full()) continue;
         auto rpos = hwq.get_next_pos();
         if (best_pos == -1 || rpos < best_pos) {
@@ -301,32 +298,39 @@ Job::State WaitInQueueJob::run_state_initialize(
         }
     }
 
-    if (!best_target) {
+    if (!valid(best_target)) {
         log_warn("Could not find a valid register");
         WIQ_wait_and_return(entity);
         return Job::State::Initialize;
     }
 
-    reg = best_target;
-    VALIDATE(reg, "underlying job should contain a register now");
+    VALIDATE(valid(best_target),
+             "underlying job should contain a register now");
 
-    start = WIQ_add_to_queue_and_get_position(best_target, entity);
-    end = best_target->get<Transform>().tile_infront(1);
+    auto& reg = asE(best_target);
 
-    spot_in_line = WIQ_position_in_line(best_target, entity);
+    // This is very important as everything is looked up later on in the job
+    // based on this
+    reg_id = reg.id;
+
+    start = WIQ_add_to_queue_and_get_position(reg, entity);
+    end = reg.get<Transform>().tile_infront(1);
+
+    spot_in_line = WIQ_position_in_line(reg, entity);
 
     VALIDATE(spot_in_line >= 0, "customer should be in line right now");
 
     return Job::State::HeadingToStart;
 }
 
-Job::State WaitInQueueJob::run_state_working_at_start(
-    const std::shared_ptr<Entity>& entity, float) {
+Job::State WaitInQueueJob::run_state_working_at_start(Entity& entity, float) {
     if (spot_in_line == 0) {
         return (Job::State::HeadingToEnd);
     }
 
-    VALIDATE(reg, "workingatstart job should contain register");
+    auto opt_reg = EntityHelper::findEntity(reg_id);
+    VALIDATE(valid(opt_reg), "workingatstart job should contain register");
+    auto& reg = asE(opt_reg);
     // Check the spot in front of us
     int cur_spot_in_line = WIQ_position_in_line(reg, entity);
 
@@ -354,19 +358,20 @@ Job::State WaitInQueueJob::run_state_working_at_start(
     }
 
     // otherwise walk up one spot
-    start = reg->get<Transform>().tile_infront(spot_in_line);
+    start = reg.get<Transform>().tile_infront(spot_in_line);
     return (Job::State::WorkingAtStart);
 }
 
-Job::State WaitInQueueJob::run_state_working_at_end(
-    const std::shared_ptr<Entity>& entity, float) {
-    VALIDATE(reg, "workingatend job should contain register");
+Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
+    auto opt_reg = EntityHelper::findEntity(reg_id);
+    VALIDATE(valid(opt_reg), "workingatend job should contain register");
+    auto& reg = asE(opt_reg);
 
     // TODO safer way to do it?
     // we are at the front so turn it on
-    entity->get<HasSpeechBubble>().on();
+    entity.get<HasSpeechBubble>().on();
 
-    CanHoldItem& regCHI = reg->get<CanHoldItem>();
+    CanHoldItem& regCHI = reg.get<CanHoldItem>();
 
     if (regCHI.empty()) {
         system_manager::logging_manager::announce(entity,
@@ -375,7 +380,7 @@ Job::State WaitInQueueJob::run_state_working_at_end(
         return (Job::State::WorkingAtEnd);
     }
 
-    auto bag = reg->get<CanHoldItem>().asT<Bag>();
+    auto bag = reg.get<CanHoldItem>().asT<Bag>();
     if (!bag) {
         system_manager::logging_manager::announce(
             entity, "this isnt my rx (not a bag)");
@@ -414,7 +419,7 @@ Job::State WaitInQueueJob::run_state_working_at_end(
 
     // TODO Validate the actual underlying pill
 
-    CanHoldItem& ourCHI = entity->get<CanHoldItem>();
+    CanHoldItem& ourCHI = entity.get<CanHoldItem>();
     ourCHI.update(regCHI.item());
     regCHI.update(nullptr);
 
@@ -425,17 +430,16 @@ Job::State WaitInQueueJob::run_state_working_at_end(
     {
         std::shared_ptr<Job> jshared;
         jshared.reset(Job::create_job_of_type(
-            entity->get<Transform>().as2(),
+            entity.get<Transform>().as2(),
             // TODO just find the customer spawner and go back there...
             vec2{GATHER_SPOT, GATHER_SPOT}, JobType::Leaving));
-        entity->get<CanPerformJob>().push_onto_queue(jshared);
+        entity.get<CanPerformJob>().push_onto_queue(jshared);
     }
-    entity->get<HasSpeechBubble>().off();
+    entity.get<HasSpeechBubble>().off();
     return (Job::State::Completed);
 }
 
-Job::State WaitJob::run_state_working_at_end(
-    const std::shared_ptr<Entity>& entity, float dt) {
+Job::State WaitJob::run_state_working_at_end(Entity& entity, float dt) {
     timePassedInCurrentState += dt;
     if (timePassedInCurrentState >= timeToComplete) {
         return (Job::State::Completed);
@@ -447,18 +451,17 @@ Job::State WaitJob::run_state_working_at_end(
     return (Job::State::WorkingAtEnd);
 }
 
-Job::State LeavingJob::run_state_working_at_end(
-    const std::shared_ptr<Entity>& entity, float) {
+Job::State LeavingJob::run_state_working_at_end(Entity& entity, float) {
     // Now that we are done and got our item, time to leave the store
     {
-        auto start = entity->get<Transform>().as2();
+        auto start = entity.get<Transform>().as2();
         std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
             start,
             // TODO create a global so they all leave to the same spot
             vec2{GATHER_SPOT, GATHER_SPOT},
             // TODO replace with remaining round time so they dont come back
             90.f);
-        entity->get<CanPerformJob>().push_onto_queue(jshared);
+        entity.get<CanPerformJob>().push_onto_queue(jshared);
     }
     return (Job::State::Completed);
 }

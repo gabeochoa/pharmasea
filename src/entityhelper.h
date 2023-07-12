@@ -24,28 +24,26 @@
 // to prevent circular includes
 
 // return true if the item has collision and is currently collidable
-[[nodiscard]] inline bool is_collidable(std::shared_ptr<Entity> entity) {
-    if (!entity) return false;
-
+[[nodiscard]] inline bool is_collidable(const Entity& entity) {
     // by default we disable collisions when you are holding something
     // since its generally inside your bounding box
-    if (entity->has<CanBeHeld>()) {
-        return !entity->get<CanBeHeld>().is_held();
+    if (entity.has<CanBeHeld>()) {
+        return !(entity.get<CanBeHeld>().is_held());
     }
 
-    if (entity->has<IsSolid>()) {
+    if (entity.has<IsSolid>()) {
         return true;
     }
 
     // if you are a ghost player and are currently not a ghost
     // then you are collidable
-    if (entity->has<CanBeGhostPlayer>()) {
-        return entity->get<CanBeGhostPlayer>().is_not_ghost();
+    if (entity.has<CanBeGhostPlayer>()) {
+        return entity.get<CanBeGhostPlayer>().is_not_ghost();
     }
     return false;
 }
 
-typedef std::vector<std::shared_ptr<Entity>> Entities;
+typedef std::vector<Entity> Entities;
 static Entities client_entities_DO_NOT_USE;
 static Entities server_entities_DO_NOT_USE;
 static std::map<vec2, bool> cache_is_walkable;
@@ -66,8 +64,8 @@ struct EntityHelper {
         return client_entities_DO_NOT_USE;
     }
 
-    static void addEntity(std::shared_ptr<Entity> e) {
-        get_entities().push_back(e);
+    static Entity& createEntity() {
+        return get_entities().emplace_back();
         // if (!e->add_to_navmesh()) {
         // return;
         // }
@@ -80,23 +78,17 @@ struct EntityHelper {
         // cache_is_walkable.clear();
     }
 
-    static void removeEntity(std::shared_ptr<Entity> e) {
+    static void removeEntity(int id) {
         // if (e->add_to_navmesh()) {
         // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
         // nav->removeEntity(e->id);
         // cache_is_walkable.clear();
         // }
 
-        auto entities = get_entities();
-
-        auto it = entities.begin();
-        while (it != get_entities().end()) {
-            if ((*it)->id == e->id) {
-                entities.erase(it);
-                continue;
-            }
-            it++;
-        }
+        auto& entities = get_entities();
+        [[maybe_unused]] auto erased =
+            std::remove_if(entities.begin(), entities.end(),
+                           [id](const Entity& x) { return id == x.id; });
     }
 
     // static Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
@@ -112,16 +104,18 @@ struct EntityHelper {
 
     static void cleanup() {
         // Cleanup entities marked cleanup
-        auto entities = get_entities();
+        auto& entities = get_entities();
+        [[maybe_unused]] auto erased =
+            std::remove_if(entities.begin(), entities.end(),
+                           [](const Entity& x) { return x.cleanup; });
+    }
 
-        auto it = entities.begin();
-        while (it != entities.end()) {
-            if ((*it)->cleanup) {
-                entities.erase(it);
-                continue;
-            }
-            it++;
-        }
+    static void clear() {
+        // Cleanup entities marked cleanup
+        auto& entities = get_entities();
+        [[maybe_unused]] auto erased =
+            std::remove_if(entities.begin(), entities.end(),
+                           [](const Entity&) { return true; });
     }
 
     enum ForEachFlow {
@@ -130,50 +124,46 @@ struct EntityHelper {
         Break = 2,
     };
 
-    static void forEachEntity(
-        std::function<ForEachFlow(std::shared_ptr<Entity>&)> cb) {
+    static void forEachEntity(std::function<ForEachFlow(Entity&)> cb) {
         TRACY_ZONE_SCOPED;
         for (auto& e : get_entities()) {
-            if (!e) continue;
             auto fef = cb(e);
             if (fef == 1) continue;
             if (fef == 2) break;
         }
     }
 
-    template<typename T>
-    static constexpr std::shared_ptr<T> getFirstMatching(
-        std::function<bool(std::shared_ptr<T>)> filter  //
-    ) {
+    static OptEntity findEntity(int id) {
         for (auto& e : get_entities()) {
-            auto s = dynamic_pointer_cast<T>(e);
-            if (!s) continue;
-            if (!filter(s)) continue;
-            return s;
+            if (e.id == id) return e;
         }
-        return nullptr;
+        return {};
     }
 
-    template<typename T>
-    static constexpr std::vector<std::shared_ptr<T>> getEntitiesInRange(
-        vec2 pos, float range) {
-        std::vector<std::shared_ptr<T>> matching;
+    static OptEntity getFirstMatching(std::function<bool(RefEntity)> filter  //
+    ) {
         for (auto& e : get_entities()) {
-            auto s = dynamic_pointer_cast<T>(e);
-            if (!s) continue;
-            if (vec::distance(pos, e->get<Transform>().as2()) < range) {
-                matching.push_back(s);
+            if (!filter(e)) continue;
+            return e;
+        }
+        return {};
+    }
+
+    static std::vector<RefEntity> getEntitiesInRange(vec2 pos, float range) {
+        std::vector<RefEntity> matching;
+        for (auto& e : get_entities()) {
+            if (vec::distance(pos, e.get<Transform>().as2()) < range) {
+                matching.push_back(asRef(e));
             }
         }
         return matching;
     }
 
-    template<typename T>
-    static std::shared_ptr<T> getMatchingEntityInFront(
-        vec2 pos,                                       //
-        float range,                                    //
-        Transform::FrontFaceDirection direction,        //
-        std::function<bool(std::shared_ptr<T>)> filter  //
+    static OptEntity getMatchingEntityInFront(
+        vec2 pos,                                  //
+        float range,                               //
+        Transform::FrontFaceDirection direction,   //
+        std::function<bool(const Entity&)> filter  //
     ) {
         TRACY_ZONE_SCOPED;
         VALIDATE(range > 0,
@@ -184,20 +174,18 @@ struct EntityHelper {
             auto tile =
                 Transform::tile_infront_given_pos(pos, cur_step, direction);
 
-            for (auto& e : get_entities()) {
-                auto current_entity = dynamic_pointer_cast<T>(e);
-                if (!current_entity) continue;
+            for (auto& current_entity : get_entities()) {
                 if (!filter(current_entity)) continue;
 
                 // all entitites should have transforms but just in case
-                if (current_entity->template is_missing<Transform>()) {
+                if (current_entity.template is_missing<Transform>()) {
                     log_warn("component {} is missing transform",
-                             current_entity->id);
+                             current_entity.id);
                     continue;
                 }
 
-                Transform& transform =
-                    current_entity->template get<Transform>();
+                const Transform& transform =
+                    current_entity.template get<Transform>();
 
                 float cur_dist = vec::distance(transform.as2(), tile);
                 // outside reach
@@ -207,7 +195,7 @@ struct EntityHelper {
 
                 // TODO add a snap_as2() function to transform
                 if (vec::to2(transform.snap_position()) == vec::snap(tile)) {
-                    return current_entity;
+                    return asOpt(current_entity);
                 }
             }
             cur_step++;
@@ -215,48 +203,43 @@ struct EntityHelper {
         return {};
     }
 
-    template<typename T>
-    static constexpr std::shared_ptr<T> getClosestMatchingEntity(
-        vec2 pos, float range, std::function<bool(std::shared_ptr<T>)> filter) {
+    static OptEntity getClosestMatchingEntity(
+        vec2 pos, float range, std::function<bool(const Entity&)> filter) {
         float best_distance = range;
-        std::shared_ptr<T> best_so_far;
-        for (auto& e : get_entities()) {
-            auto s = dynamic_pointer_cast<T>(e);
-            if (!s) continue;
-            if (!filter(s)) continue;
-            float d = vec::distance(pos, e->get<Transform>().as2());
+        OptEntity best_so_far;
+        for (Entity& e : get_entities()) {
+            if (!filter(e)) continue;
+            float d = vec::distance(pos, e.get<Transform>().as2());
             if (d > range) continue;
             if (d < best_distance) {
-                best_so_far = s;
+                best_so_far = asOpt(e);
                 best_distance = d;
             }
         }
         return best_so_far;
     }
 
-    static std::shared_ptr<Entity> getClosestMatchingFurniture(
+    static OptEntity getClosestMatchingFurniture(
         const Transform& transform, float range,
-        std::function<bool(std::shared_ptr<Furniture>)> filter) {
-        return EntityHelper::getMatchingEntityInFront<Furniture>(
+        std::function<bool(const Entity&)> filter) {
+        return EntityHelper::getMatchingEntityInFront(
             transform.as2(), range, transform.face_direction(), filter);
     }
 
     template<typename T>
-    static std::shared_ptr<Entity> getClosestWithComponent(
-        const std::shared_ptr<Entity>& entity, float range) {
-        const Transform& transform = entity->get<Transform>();
-        return EntityHelper::getClosestMatchingEntity<Furniture>(
-            transform.as2(), range, [](const std::shared_ptr<Entity> entity) {
-                return entity->has<T>();
-            });
+    static OptEntity getClosestWithComponent(const Entity& entity,
+                                             float range) {
+        const Transform& transform = entity.get<Transform>();
+        return EntityHelper::getClosestMatchingEntity(
+            transform.as2(), range,
+            [](const Entity& entity) -> bool { return entity.has<T>(); });
     }
 
     template<typename T>
-    static std::vector<std::shared_ptr<Entity>> getAllWithComponent() {
-        std::vector<std::shared_ptr<Entity>> matching;
+    static std::vector<RefEntity> getAllWithComponent() {
+        std::vector<RefEntity> matching;
         for (auto& e : get_entities()) {
-            if (!e) continue;
-            if (e->has<T>()) matching.push_back(e);
+            if (e.has<T>()) matching.push_back(asRef(e));
         }
         return matching;
     }
@@ -264,14 +247,25 @@ struct EntityHelper {
     // TODO replace with an enum or something
     // also doesnt this break the idea of ecs
     // TODO change other debugname filter guys to this
-    static std::vector<std::shared_ptr<Entity>> getAllWithName(
-        const std::string name) {
-        std::vector<std::shared_ptr<Entity>> matching;
+    static std::vector<RefEntity> getAllWithName(const std::string name) {
+        std::vector<RefEntity> matching;
         for (auto& e : get_entities()) {
-            if (!e) continue;
-            if (e->get<DebugName>().name() == name) matching.push_back(e);
+            if (e.get<DebugName>().name() == name) matching.push_back(asRef(e));
         }
         return matching;
+    }
+
+    static OptEntity findFirstCollidedEntity(const Entity& entity,
+                                             const BoundingBox new_bounds) {
+        for (auto& e : get_entities()) {
+            if (e.id == entity.id) continue;
+            if (!is_collidable(e)) continue;
+            if (CheckCollisionBoxes(new_bounds,
+                                    e.template get<Transform>().bounds())) {
+                return e;
+            }
+        }
+        return {};
     }
 
     // TODO i think this is slower because we are doing "outside mesh" as
@@ -312,9 +306,9 @@ struct EntityHelper {
     static inline bool isWalkableRawEntities(const vec2& pos) {
         TRACY_ZONE_SCOPED;
         bool hit_impassible_entity = false;
-        forEachEntity([&](auto entity) {
+        forEachEntity([&](const auto& entity) {
             if (!is_collidable(entity)) return ForEachFlow::Continue;
-            if (vec::distance(entity->template get<Transform>().as2(), pos) <
+            if (vec::distance(entity.template get<Transform>().as2(), pos) <
                 TILESIZE / 2.f) {
                 hit_impassible_entity = true;
                 return ForEachFlow::Break;

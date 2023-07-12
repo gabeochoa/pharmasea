@@ -32,13 +32,14 @@ struct Map {
         return in_lobby_state() ? lobby_info.items : game_info.items;
     }
 
-    Entities entities() const {
+    // TODO should be const?
+    Entities entities() {
         return in_lobby_state() ? lobby_info.entities : game_info.entities;
     }
 
     void onUpdate(float dt) { _onUpdate(remote_players_NOT_SERIALIZED, dt); }
 
-    void _onUpdate(std::vector<std::shared_ptr<Entity>> players, float dt) {
+    void _onUpdate(Entities players, float dt) {
         TRACY_ZONE_SCOPED;
         // TODO add to debug overlay
         // log_info("num items {}", items().size());
@@ -52,14 +53,11 @@ struct Map {
         }
     }
 
-    void onDraw(float dt) const {
+    // TODO make const again
+    void onDraw(float dt) {
         TRACY_ZONE_SCOPED;
         // TODO merge this into normal render pipeline
-        SystemManager::get().render_entities(
-            container_cast(remote_players_NOT_SERIALIZED,
-                           "converting sp<RemotePlayer> to sp<Entity> as these "
-                           "are not serialized and so not part of level info"),
-            dt);
+        SystemManager::get().render_entities(remote_players_NOT_SERIALIZED, dt);
 
         if (in_lobby_state()) {
             lobby_info.onDraw(dt);
@@ -72,11 +70,7 @@ struct Map {
         TRACY_ZONE_SCOPED;
 
         // TODO merge this into normal render pipeline
-        SystemManager::get().render_ui(
-            container_cast(remote_players_NOT_SERIALIZED,
-                           "converting sp<RemotePlayer> to sp<Entity> as these "
-                           "are not serialized and so not part of level info"),
-            dt);
+        SystemManager::get().render_ui(remote_players_NOT_SERIALIZED, dt);
         if (in_lobby_state()) {
             lobby_info.onDrawUI(dt);
         } else {
