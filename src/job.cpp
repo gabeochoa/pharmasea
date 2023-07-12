@@ -2,6 +2,7 @@
 #include "job.h"
 
 #include "components/can_have_ailment.h"
+#include "components/can_hold_item.h"
 #include "components/can_perform_job.h"
 #include "components/has_base_speed.h"
 #include "components/has_speech_bubble.h"
@@ -271,7 +272,9 @@ void WaitInQueueJob::before_each_job_tick(Entity& entity, float) {
     // This runs before init so its possible theres no register at all
 
     // TODO support fetching from regid
-    // entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
+    const auto reg = EntityHelper::findEntity(reg_id);
+    if (!valid(reg)) return;
+    entity.get<Transform>().turn_to_face_pos(asE(reg).get<Transform>().as2());
 }
 
 Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
@@ -301,156 +304,164 @@ Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
         return Job::State::Initialize;
     }
 
-    // TODO fix this
-    // reg = best_target;
-    // VALIDATE(reg, "underlying job should contain a register now");
-    //
-    // start = WIQ_add_to_queue_and_get_position(best_target, entity);
-    // end = best_target->get<Transform>().tile_infront(1);
-    //
-    // spot_in_line = WIQ_position_in_line(best_target, entity);
-    //
-    // VALIDATE(spot_in_line >= 0, "customer should be in line right now");
+    VALIDATE(valid(best_target),
+             "underlying job should contain a register now");
+
+    auto& reg = asE(best_target);
+
+    // This is very important as everything is looked up later on in the job
+    // based on this
+    reg_id = reg.id;
+
+    start = WIQ_add_to_queue_and_get_position(reg, entity);
+    end = reg.get<Transform>().tile_infront(1);
+
+    spot_in_line = WIQ_position_in_line(reg, entity);
+
+    VALIDATE(spot_in_line >= 0, "customer should be in line right now");
 
     return Job::State::HeadingToStart;
 }
 
 Job::State WaitInQueueJob::run_state_working_at_start(Entity& entity, float) {
-    // if (spot_in_line == 0) {
-    // return (Job::State::HeadingToEnd);
-    // }
-    //
-    // VALIDATE(reg, "workingatstart job should contain register");
-    // // Check the spot in front of us
-    // int cur_spot_in_line = WIQ_position_in_line(reg, entity);
-    //
-    // if (cur_spot_in_line == spot_in_line || !WIQ_can_move_up(reg, entity)) {
-    // // We didnt move so just wait a bit before trying again
-    // system_manager::logging_manager::announce(
-    // entity, fmt::format("im just going to wait a bit longer"));
-    //
-    // log_info("wait and return");
-    //
-    // // Add the current job to the queue,
-    // // and then add the waiting job
-    // WIQ_wait_and_return(entity);
-    // return (Job::State::WorkingAtStart);
-    // }
-    //
-    // // if our spot did change, then move forward
-    // system_manager::logging_manager::announce(
-    // entity, fmt::format("im moving up to {}", cur_spot_in_line));
-    //
-    // spot_in_line = cur_spot_in_line;
-    //
-    // if (spot_in_line == 0) {
-    // return (Job::State::HeadingToEnd);
-    // }
-    //
-    // // otherwise walk up one spot
-    // start = reg->get<Transform>().tile_infront(spot_in_line);
-    // return (Job::State::WorkingAtStart);
+    if (spot_in_line == 0) {
+        return (Job::State::HeadingToEnd);
+    }
+
+    auto opt_reg = EntityHelper::findEntity(reg_id);
+    VALIDATE(valid(opt_reg), "workingatstart job should contain register");
+    auto& reg = asE(opt_reg);
+    // Check the spot in front of us
+    int cur_spot_in_line = WIQ_position_in_line(reg, entity);
+
+    if (cur_spot_in_line == spot_in_line || !WIQ_can_move_up(reg, entity)) {
+        // We didnt move so just wait a bit before trying again
+        system_manager::logging_manager::announce(
+            entity, fmt::format("im just going to wait a bit longer"));
+
+        log_info("wait and return");
+
+        // Add the current job to the queue,
+        // and then add the waiting job
+        WIQ_wait_and_return(entity);
+        return (Job::State::WorkingAtStart);
+    }
+
+    // if our spot did change, then move forward
+    system_manager::logging_manager::announce(
+        entity, fmt::format("im moving up to {}", cur_spot_in_line));
+
+    spot_in_line = cur_spot_in_line;
+
+    if (spot_in_line == 0) {
+        return (Job::State::HeadingToEnd);
+    }
+
+    // otherwise walk up one spot
+    start = reg.get<Transform>().tile_infront(spot_in_line);
+    return (Job::State::WorkingAtStart);
 }
 
 Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
-    // VALIDATE(reg, "workingatend job should contain register");
-    //
-    // // TODO safer way to do it?
-    // // we are at the front so turn it on
-    // entity->get<HasSpeechBubble>().on();
-    //
-    // CanHoldItem& regCHI = reg->get<CanHoldItem>();
-    //
-    // if (regCHI.empty()) {
-    // system_manager::logging_manager::announce(entity,
-    // "my rx isnt ready yet");
-    // WIQ_wait_and_return(entity);
-    // return (Job::State::WorkingAtEnd);
-    // }
-    //
-    // auto bag = reg->get<CanHoldItem>().asT<Bag>();
-    // if (!bag) {
-    // system_manager::logging_manager::announce(
-    // entity, "this isnt my rx (not a bag)");
-    // WIQ_wait_and_return(entity);
-    // return (Job::State::WorkingAtEnd);
-    // }
-    //
-    // if (bag->empty()) {
-    // system_manager::logging_manager::announce(entity,
-    // "this bag is empty...");
-    // WIQ_wait_and_return(entity);
-    // return (Job::State::WorkingAtEnd);
-    // }
-    //
-    // // TODO eventually migrate item to ECS
-    // // auto pill_bottle =
-    // // bag->get<CanHoldItem>().asT<PillBottle>();
-    //
-    // auto pill_bottle = dynamic_pointer_cast<PillBottle>(bag->held_item);
-    // if (!pill_bottle) {
-    // system_manager::logging_manager::announce(
-    // entity, "this bag doesnt have my pills");
-    // WIQ_wait_and_return(entity);
-    // return (Job::State::WorkingAtEnd);
-    // }
-    //
-    // system_manager::logging_manager::announce(entity, "got the pill bottle
-    // ");
-    //
-    // auto pill = dynamic_pointer_cast<Pill>(pill_bottle->held_item);
-    // if (!pill) {
-    // system_manager::logging_manager::announce(
-    // entity, "this bottle doesnt have any pills");
-    // WIQ_wait_and_return(entity);
-    // return (Job::State::WorkingAtEnd);
-    // }
-    //
-    // // TODO Validate the actual underlying pill
-    //
-    // CanHoldItem& ourCHI = entity->get<CanHoldItem>();
-    // ourCHI.update(regCHI.item());
-    // regCHI.update(nullptr);
-    //
-    // system_manager::logging_manager::announce(entity, "got it");
-    // WIQ_leave_line(reg, entity);
-    //
-    // // Now that we are done and got our item, time to leave the store
-    // {
-    // std::shared_ptr<Job> jshared;
-    // jshared.reset(Job::create_job_of_type(
-    // entity->get<Transform>().as2(),
-    // // TODO just find the customer spawner and go back there...
-    // vec2{GATHER_SPOT, GATHER_SPOT}, JobType::Leaving));
-    // entity->get<CanPerformJob>().push_onto_queue(jshared);
-    // }
-    // entity->get<HasSpeechBubble>().off();
+    auto opt_reg = EntityHelper::findEntity(reg_id);
+    VALIDATE(valid(opt_reg), "workingatend job should contain register");
+    auto& reg = asE(opt_reg);
+
+    // TODO safer way to do it?
+    // we are at the front so turn it on
+    entity.get<HasSpeechBubble>().on();
+
+    CanHoldItem& regCHI = reg.get<CanHoldItem>();
+
+    if (regCHI.empty()) {
+        system_manager::logging_manager::announce(entity,
+                                                  "my rx isnt ready yet");
+        WIQ_wait_and_return(entity);
+        return (Job::State::WorkingAtEnd);
+    }
+
+    auto bag = reg.get<CanHoldItem>().asT<Bag>();
+    if (!bag) {
+        system_manager::logging_manager::announce(
+            entity, "this isnt my rx (not a bag)");
+        WIQ_wait_and_return(entity);
+        return (Job::State::WorkingAtEnd);
+    }
+
+    if (bag->empty()) {
+        system_manager::logging_manager::announce(entity,
+                                                  "this bag is empty...");
+        WIQ_wait_and_return(entity);
+        return (Job::State::WorkingAtEnd);
+    }
+
+    // TODO eventually migrate item to ECS
+    // auto pill_bottle =
+    // bag->get<CanHoldItem>().asT<PillBottle>();
+
+    auto pill_bottle = dynamic_pointer_cast<PillBottle>(bag->held_item);
+    if (!pill_bottle) {
+        system_manager::logging_manager::announce(
+            entity, "this bag doesnt have my pills");
+        WIQ_wait_and_return(entity);
+        return (Job::State::WorkingAtEnd);
+    }
+
+    system_manager::logging_manager::announce(entity, "got the pill bottle ");
+
+    auto pill = dynamic_pointer_cast<Pill>(pill_bottle->held_item);
+    if (!pill) {
+        system_manager::logging_manager::announce(
+            entity, "this bottle doesnt have any pills");
+        WIQ_wait_and_return(entity);
+        return (Job::State::WorkingAtEnd);
+    }
+
+    // TODO Validate the actual underlying pill
+
+    CanHoldItem& ourCHI = entity.get<CanHoldItem>();
+    ourCHI.update(regCHI.item());
+    regCHI.update(nullptr);
+
+    system_manager::logging_manager::announce(entity, "got it");
+    WIQ_leave_line(reg, entity);
+
+    // Now that we are done and got our item, time to leave the store
+    {
+        std::shared_ptr<Job> jshared;
+        jshared.reset(Job::create_job_of_type(
+            entity.get<Transform>().as2(),
+            // TODO just find the customer spawner and go back there...
+            vec2{GATHER_SPOT, GATHER_SPOT}, JobType::Leaving));
+        entity.get<CanPerformJob>().push_onto_queue(jshared);
+    }
+    entity.get<HasSpeechBubble>().off();
     return (Job::State::Completed);
 }
 
 Job::State WaitJob::run_state_working_at_end(Entity& entity, float dt) {
-    // timePassedInCurrentState += dt;
-    // if (timePassedInCurrentState >= timeToComplete) {
-    // return (Job::State::Completed);
-    // }
-    // system_manager::logging_manager::announce(
-    // entity, fmt::format("waiting a little longer: {} => {} ",
-    // timePassedInCurrentState, timeToComplete));
-    //
+    timePassedInCurrentState += dt;
+    if (timePassedInCurrentState >= timeToComplete) {
+        return (Job::State::Completed);
+    }
+    system_manager::logging_manager::announce(
+        entity, fmt::format("waiting a little longer: {} => {} ",
+                            timePassedInCurrentState, timeToComplete));
+
     return (Job::State::WorkingAtEnd);
 }
 
 Job::State LeavingJob::run_state_working_at_end(Entity& entity, float) {
     // Now that we are done and got our item, time to leave the store
-    // {
-    // auto start = entity->get<Transform>().as2();
-    // std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
-    // start,
-    // // TODO create a global so they all leave to the same spot
-    // vec2{GATHER_SPOT, GATHER_SPOT},
-    // // TODO replace with remaining round time so they dont come back
-    // 90.f);
-    // entity->get<CanPerformJob>().push_onto_queue(jshared);
-    // }
+    {
+        auto start = entity.get<Transform>().as2();
+        std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
+            start,
+            // TODO create a global so they all leave to the same spot
+            vec2{GATHER_SPOT, GATHER_SPOT},
+            // TODO replace with remaining round time so they dont come back
+            90.f);
+        entity.get<CanPerformJob>().push_onto_queue(jshared);
+    }
     return (Job::State::Completed);
 }
