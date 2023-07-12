@@ -251,8 +251,7 @@ struct LevelInfo {
         SystemManager::get().update_all_entities(players, dt);
     }
 
-    // TODO add const
-    virtual void onDraw(float dt) {
+    virtual void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
         SystemManager::get().render_entities(entities, dt);
         SystemManager::get().render_items(items, dt);
@@ -318,8 +317,7 @@ struct LobbyMapInfo : public LevelInfo {
         }
     }
 
-    // TODO make const
-    virtual void onDraw(float dt) override {
+    virtual void onDraw(float dt) const override {
         auto cam = GLOBALS.get_ptr<GameCam>(strings::globals::GAME_CAM);
         if (cam) {
             raylib::DrawBillboard(

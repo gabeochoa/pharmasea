@@ -130,8 +130,7 @@ struct SystemManager {
         }
     }
 
-    // TODO const
-    void render_entities(Entities& entities, float dt) {
+    void render_entities(const Entities& entities, float dt) const {
         const auto debug_mode_on =
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
         if (debug_mode_on) {
@@ -234,8 +233,7 @@ struct SystemManager {
         }
     }
 
-    // TODO const
-    void render_normal(Entities& entity_list, float dt) {
+    void render_normal(const Entities& entity_list, float dt) const {
         for (auto& entity : entity_list) {
             // TODO extract render normal into system facign functions
             system_manager::render_manager::render_normal(entity, dt);
@@ -244,8 +242,7 @@ struct SystemManager {
         }
     }
 
-    // TODO const
-    void render_debug(Entities& entity_list, float dt) {
+    void render_debug(const Entities& entity_list, float dt) const {
         for (auto& entity : entity_list) {
             system_manager::render_manager::render_debug(entity, dt);
         }

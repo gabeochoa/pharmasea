@@ -71,7 +71,7 @@ inline void update_character_model_from_index(Entity& entity, float) {
     usesCharacterModel.mark_change_completed();
 }
 
-inline bool render_simple_highlighted(Entity& entity, float) {
+inline bool render_simple_highlighted(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return false;
     Transform& transform = entity.get<Transform>();
     if (entity.is_missing<SimpleColoredBoxRenderer>()) return false;
@@ -81,7 +81,7 @@ inline bool render_simple_highlighted(Entity& entity, float) {
     return true;
 }
 
-inline bool render_simple_normal(Entity& entity, float) {
+inline bool render_simple_normal(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return false;
     Transform& transform = entity.get<Transform>();
     if (entity.is_missing<SimpleColoredBoxRenderer>()) return false;
@@ -91,7 +91,7 @@ inline bool render_simple_normal(Entity& entity, float) {
     return true;
 }
 
-inline bool render_bounding_box(Entity& entity, float) {
+inline bool render_bounding_box(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return false;
     Transform& transform = entity.get<Transform>();
 
@@ -101,7 +101,7 @@ inline bool render_bounding_box(Entity& entity, float) {
     return true;
 }
 
-inline bool render_debug(Entity& entity, float dt) {
+inline bool render_debug(const Entity& entity, float dt) {
     job_system::render_job_visual(entity, dt);
 
     // Ghost player only render during debug mode
@@ -112,7 +112,7 @@ inline bool render_debug(Entity& entity, float dt) {
     return render_bounding_box(entity, dt);
 }
 
-inline bool render_model_highlighted(Entity& entity, float) {
+inline bool render_model_highlighted(const Entity& entity, float) {
     if (entity.is_missing<ModelRenderer>()) return false;
     if (entity.is_missing<CanBeHighlighted>()) return false;
 
@@ -144,7 +144,7 @@ inline bool render_model_highlighted(Entity& entity, float) {
     return true;
 }
 
-inline bool render_model_normal(Entity& entity, float) {
+inline bool render_model_normal(const Entity& entity, float) {
     if (!ENABLE_MODELS) return false;
 
     if (entity.is_missing<ModelRenderer>()) return false;
@@ -175,7 +175,7 @@ inline bool render_model_normal(Entity& entity, float) {
     return true;
 }
 
-inline void render_trigger_area(Entity& entity, float dt) {
+inline void render_trigger_area(const Entity& entity, float dt) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
     // TODO add highlight when you walk in
@@ -267,7 +267,7 @@ inline void render_trigger_area(Entity& entity, float dt) {
     render_simple_normal(entity, dt);
 }
 
-inline void render_speech_bubble(Entity& entity, float) {
+inline void render_speech_bubble(const Entity& entity, float) {
     // Right now this is the only thing we can put in a bubble
     if (entity.is_missing<CanHaveAilment>()) return;
     if (entity.get<HasSpeechBubble>().disabled()) return;
@@ -290,7 +290,7 @@ inline void render_speech_bubble(Entity& entity, float) {
 }
 
 // TODO theres two functions called render normal, maybe we should address this
-inline void render_normal(Entity& entity, float dt) {
+inline void render_normal(const Entity& entity, float dt) {
     // Ghost player cant render during normal mode
     if (entity.has<CanBeGhostPlayer>() &&
         entity.get<CanBeGhostPlayer>().is_ghost()) {
@@ -321,7 +321,7 @@ inline void render_normal(Entity& entity, float dt) {
     }
 }
 
-inline void render_floating_name(Entity& entity, float) {
+inline void render_floating_name(const Entity& entity, float) {
     if (entity.is_missing<HasName>()) return;
     HasName& hasName = entity.get<HasName>();
 
@@ -337,7 +337,7 @@ inline void render_floating_name(Entity& entity, float) {
         Preload::get().font, hasName.name().c_str());
 }
 
-inline void render_progress_bar(Entity& entity, float) {
+inline void render_progress_bar(const Entity& entity, float) {
     // TODO only renders for the host...
 
     if (entity.is_missing<ShowsProgressBar>()) return;
