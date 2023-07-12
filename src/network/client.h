@@ -127,7 +127,6 @@ struct Client {
             //      the other entity info
 
             map->remote_players_NOT_SERIALIZED.push_back(
-                // TODO IDK WHAT THIS IS DOING, the star i mean
                 *remote_players[client_id]);
             log_info("Adding a player {}", client_id);
         };
