@@ -174,7 +174,7 @@ struct EntityHelper {
             auto tile =
                 Transform::tile_infront_given_pos(pos, cur_step, direction);
 
-            for (auto& current_entity : get_entities()) {
+            for (Entity& current_entity : get_entities()) {
                 if (!filter(current_entity)) continue;
 
                 // all entitites should have transforms but just in case

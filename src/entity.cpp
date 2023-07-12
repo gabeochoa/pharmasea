@@ -118,6 +118,22 @@ void register_all_components() {
         ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
         HasSpeechBubble, Indexer, IsSpawner, HasTimer>();
     entity->addComponent<CollectsUserInput>();
+
+    // Now that they are all registered we can delete them
+    //
+    // since we dont have a destructor today TODO because we are copying
+    // components we have to delete these manually before the ent delete because
+    // otherwise it will leak the memory
+    //
+
+    for (auto it = entity->componentArray.cbegin(), next_it = it;
+         it != entity->componentArray.cend(); it = next_it) {
+        ++next_it;
+        BaseComponent* comp = it->second;
+        if (comp) delete comp;
+        entity->componentArray.erase(it);
+    }
+
     delete entity;
 }
 
