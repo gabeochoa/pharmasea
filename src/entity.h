@@ -172,11 +172,7 @@ struct Entity {
         s.ext(componentArray, StdMap{max_num_components},
               [](S& sv, int& key, BaseComponent*(&value)) {
                   sv.value4b(key);
-                  // sv.ext(value, PointerOwner{PointerType::Nullable});
-
-                  // TODO this is probably a memory leak but at least it doesnt
-                  // crash
-                  sv.ext(value, PointerObserver{PointerType::Nullable});
+                  sv.ext(value, PointerOwner{PointerType::Nullable});
               });
     }
 };
