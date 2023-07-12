@@ -25,9 +25,8 @@
 
 namespace system_manager {
 
-inline void person_update_given_new_pos(int id, Transform& transform,
-                                        Entity& person, float, vec3 new_pos_x,
-                                        vec3 new_pos_z) {
+inline void person_update_given_new_pos(Entity& person, Transform& transform,
+                                        float, vec3 new_pos_x, vec3 new_pos_z) {
     int facedir_x = -1;
     int facedir_z = -1;
 
@@ -68,38 +67,13 @@ inline void person_update_given_new_pos(int id, Transform& transform,
         // vertical check
         auto new_bounds_y = get_bounds(new_pos_z, transform.size());
 
-        bool would_collide_x = false;
-        bool would_collide_z = false;
-        OptEntity collided_entity_x;
-        OptEntity collided_entity_z;
-        EntityHelper::forEachEntity([&](auto entity) {
-            if (id == entity.id) {
-                return EntityHelper::ForEachFlow::Continue;
-            }
-            if (!is_collidable(entity)) {
-                return EntityHelper::ForEachFlow::Continue;
-            }
-            if (!is_collidable(person)) {
-                return EntityHelper::ForEachFlow::Continue;
-            }
-            if (CheckCollisionBoxes(
-                    new_bounds_x, entity.template get<Transform>().bounds())) {
-                would_collide_x = true;
-                collided_entity_x = entity;
-            }
-            if (CheckCollisionBoxes(
-                    new_bounds_y, entity.template get<Transform>().bounds())) {
-                would_collide_z = true;
-                collided_entity_z = entity;
-            }
-            // Note: if these are both true, then we definitely dont need to
-            // keep going and can break early, otherwise we should check the
-            // rest to make sure
-            if (would_collide_x && would_collide_z) {
-                return EntityHelper::ForEachFlow::Break;
-            }
-            return EntityHelper::ForEachFlow::NormalFlow;
-        });
+        OptEntity collided_entity_x =
+            EntityHelper::findFirstCollidedEntity(person, new_bounds_x);
+        OptEntity collided_entity_z =
+            EntityHelper::findFirstCollidedEntity(person, new_bounds_y);
+
+        bool would_collide_x = valid(collided_entity_x);
+        bool would_collide_z = valid(collided_entity_z);
 
         const auto debug_mode_on =
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
@@ -257,15 +231,14 @@ inline void collect_user_input(Entity& entity, float dt) {
     cui.publish(dt);
 }
 
-inline void process_player_movement_input(Entity& entity, float dt,
+inline void process_player_movement_input(Entity& player, float dt,
                                           InputName input_name,
                                           float input_amount) {
-    if (entity.is_missing<Transform>()) return;
-    Transform& transform = entity.get<Transform>();
-    Entity& player = entity;
+    if (player.is_missing<Transform>()) return;
+    Transform& transform = player.get<Transform>();
 
-    if (entity.is_missing<HasBaseSpeed>()) return;
-    HasBaseSpeed& hasBaseSpeed = entity.get<HasBaseSpeed>();
+    if (player.is_missing<HasBaseSpeed>()) return;
+    HasBaseSpeed& hasBaseSpeed = player.get<HasBaseSpeed>();
 
     const float speed = hasBaseSpeed.speed() * dt;
     auto new_position = transform.pos();
@@ -280,7 +253,7 @@ inline void process_player_movement_input(Entity& entity, float dt,
         new_position.z += input_amount * speed;
     }
 
-    person_update_given_new_pos(entity.id, transform, player, dt, new_position,
+    person_update_given_new_pos(player, transform, dt, new_position,
                                 new_position);
     transform.trunc(2);
 };

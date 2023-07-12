@@ -255,6 +255,19 @@ struct EntityHelper {
         return matching;
     }
 
+    static OptEntity findFirstCollidedEntity(const Entity& entity,
+                                             const BoundingBox new_bounds) {
+        for (auto& e : get_entities()) {
+            if (e.id == entity.id) continue;
+            if (!is_collidable(e)) continue;
+            if (CheckCollisionBoxes(new_bounds,
+                                    e.template get<Transform>().bounds())) {
+                return e;
+            }
+        }
+        return {};
+    }
+
     // TODO i think this is slower because we are doing "outside mesh" as
     // outside we should probably have just make some tiles for inside the map
     // ('.' on map for example) and use those to mark where people can walk and
