@@ -29,6 +29,7 @@ static int __WIN_W = 1280;
 
 static i18n::LocalizationText* localization;
 static void reload_translations_from_file(const char* fn) {
+    if (localization) delete localization;
     localization = new i18n::LocalizationText(fn);
 }
 
