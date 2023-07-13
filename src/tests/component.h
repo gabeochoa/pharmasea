@@ -6,13 +6,13 @@
 #include "../engine/defer.h"
 #include "../network/shared.h"
 
-void compare_and_validate_components(Entity& a, Entity& b) {
+inline void compare_and_validate_components(Entity& a, Entity& b) {
     VALIDATE(a.componentSet == b.componentSet, "component sets should match");
 
     int i = 0;
     while (i < max_num_components) {
-        auto eC = a.componentArray[i];
-        auto e2C = b.componentArray[i];
+        auto& eC = a.componentArray[i];
+        auto& e2C = b.componentArray[i];
         if (eC == nullptr && e2C == nullptr) {
             i++;
             continue;

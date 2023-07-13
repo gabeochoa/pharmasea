@@ -126,14 +126,14 @@ struct Info {
         bool run = menu_state_tick_trigger.test(dt);
         if (!run) return;
 
-        ClientPacket packet({
+        ClientPacket packet{
             .client_id = SERVER_CLIENT_ID,
             .msg_type = ClientPacket::MsgType::GameState,
             .msg = ClientPacket::GameStateInfo({
                 .host_menu_state = MenuState::get().read(),
                 .host_game_state = GameState::get().read(),
             }),
-        });
+        };
         Server::queue_packet(packet);
     }
 

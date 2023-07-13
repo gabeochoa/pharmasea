@@ -6,7 +6,7 @@ RAYLIB_LIB := `pkg-config --libs raylib`
 RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) 
 
 FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
-		-Wmost -Wconversion -g $(RAYLIB_FLAGS) -DTRACY_ENABLE 
+		-Wmost -Wconversion -g $(RAYLIB_FLAGS) -DTRACY_ENABLE -ftemplate-backtrace-limit=0
 # LEAKFLAGS = -fsanitize=address
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion

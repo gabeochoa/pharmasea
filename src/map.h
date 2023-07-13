@@ -26,20 +26,26 @@ struct Map {
         update_seed(seed);
     }
 
+    OptEntity get_player(int id) {
+        for (auto& e : remote_players_NOT_SERIALIZED) {
+            if (e.id == id) return e;
+        }
+        return {};
+    }
+
     void update_seed(const std::string& s) { game_info.update_seed(s); }
 
     Items items() const {
         return in_lobby_state() ? lobby_info.items : game_info.items;
     }
 
-    // TODO should be const?
-    Entities entities() {
+    Entities& entities() {
         return in_lobby_state() ? lobby_info.entities : game_info.entities;
     }
 
     void onUpdate(float dt) { _onUpdate(remote_players_NOT_SERIALIZED, dt); }
 
-    void _onUpdate(Entities players, float dt) {
+    void _onUpdate(Entities& players, float dt) {
         TRACY_ZONE_SCOPED;
         // TODO add to debug overlay
         // log_info("num items {}", items().size());

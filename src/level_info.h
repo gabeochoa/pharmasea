@@ -197,15 +197,17 @@ struct helper {
     }
 
     void validate() {
-        auto soph = EntityHelper::getFirstMatching(
-            [](Entity e) { return check_name(e, strings::entity::SOPHIE); });
+        auto soph = EntityHelper::getFirstMatching([](const Entity& e) {
+            return check_name(e, strings::entity::SOPHIE);
+        });
         VALIDATE(soph, "sophie needs to be there ");
 
         // find register,
-        auto reg_opt = EntityHelper::getFirstMatching(
-            [](Entity e) { return check_name(e, strings::entity::REGISTER); });
+        auto reg_opt = EntityHelper::getFirstMatching([](const Entity& e) {
+            return check_name(e, strings::entity::REGISTER);
+        });
         VALIDATE(valid(reg_opt), "map needs to have at least one register");
-        auto reg = asE(reg_opt);
+        const auto& reg = asE(reg_opt);
 
         // find customer
         auto customer_opt =
@@ -214,13 +216,13 @@ struct helper {
             });
         VALIDATE(valid(customer_opt),
                  "map needs to have at least one customer spawn point");
-        auto customer = asE(customer_opt);
+        const auto& customer = asE(customer_opt);
 
         // ensure customers can make it to the register
 
         // TODO need a better way to do this
         // 0 makes sense but is the position of the entity, when its infront?
-        auto reg_pos = reg.get<Transform>().tile_infront(1);
+        const auto reg_pos = reg.get<Transform>().tile_infront(1);
 
         log_info(" reg{} rep{} c{}", reg.get<Transform>().as2(), reg_pos,
                  customer.get<Transform>().as2());
@@ -246,6 +248,8 @@ struct LevelInfo {
 
     std::string seed;
 
+    LevelInfo() {}
+
     virtual void onUpdate(Entities& players, float dt) {
         TRACY_ZONE_SCOPED;
         SystemManager::get().update_all_entities(players, dt);
@@ -265,8 +269,7 @@ struct LevelInfo {
         {
             entities.clear();
             EntityHelper::cleanup();
-            auto es = EntityHelper::get_entities();
-            this->entities = es;
+            this->entities = std::move(EntityHelper::get_entities());
             num_entities = this->entities.size();
         }
 
@@ -293,7 +296,7 @@ struct LevelInfo {
     void serialize(S& s) {
         s.value8b(num_entities);
         s.container(entities, num_entities,
-                    [](S& s2, Entity entity) { s2.object(entity); });
+                    [](S& s2, Entity& entity) { s2.object(entity); });
         s.value8b(num_items);
         s.container(items, num_items, [](S& s2, std::shared_ptr<Item>& item) {
             s2.ext(item, bitsery::ext::StdSmartPtr{});

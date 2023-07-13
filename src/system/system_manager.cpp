@@ -395,7 +395,7 @@ void count_max_trigger_area_entrants(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
     int count = 0;
-    for (auto& e : SystemManager::get().oldAll) {
+    for (auto& e : SystemManager::get().sm_players) {
         if (!check_name(e, strings::entity::PLAYER)) continue;
         count++;
     }
@@ -406,7 +406,7 @@ void count_trigger_area_entrants(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
     int count = 0;
-    for (auto& e : SystemManager::get().oldAll) {
+    for (auto& e : SystemManager::get().sm_players) {
         if (!check_name(e, strings::entity::PLAYER)) continue;
         if (CheckCollisionBoxes(
                 e.get<Transform>().bounds(),
