@@ -143,6 +143,7 @@
     <ClCompile Include="..\src\engine\app.cpp" />
     <ClCompile Include="..\src\engine\files.cpp" />
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
+    <ClCompile Include="..\src\entity.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\job.cpp" />
     <ClCompile Include="..\src\preload.cpp" />

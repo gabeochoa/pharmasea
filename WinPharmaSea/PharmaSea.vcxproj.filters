@@ -412,5 +412,8 @@
     <ClCompile Include="..\src\preload.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\entity.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
