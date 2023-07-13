@@ -383,6 +383,9 @@
     <ClInclude Include="..\src\system\input_process_manager.h">
       <Filter>Source Files\System</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\strings.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\game.cpp">
@@ -413,7 +416,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\entity.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
