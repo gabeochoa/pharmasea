@@ -31,7 +31,7 @@ struct Server {
     }
 
     static void queue_packet(ClientPacket& p) {
-        g_server->packet_queue.push_back(p);
+        g_server->packet_queue.push_back(std::move(p));
     }
 
     static void stop() { g_server->running = false; }
@@ -72,21 +72,26 @@ struct Server {
 
         if (pharmacy_map->entities().empty()) return;
 
-        ClientPacket map_packet({
+        network::ClientPacket::MapInfo map_info(std::move(*pharmacy_map));
+
+        ClientPacket map_packet{
             .channel = Channel::RELIABLE,
             .client_id = SERVER_CLIENT_ID,
             .msg_type = network::ClientPacket::MsgType::Map,
-            .msg = network::ClientPacket::MapInfo({
-                .map = *pharmacy_map,
-            }),
-        });
+            .msg = network::ClientPacket::Msg{std::in_place_index<4>,
+                                              std::move(map_info)}};
 
         send_client_packet_to_all(map_packet);
+
+        network::ClientPacket::Msg& msg = map_packet.msg;
+        network::ClientPacket::MapInfo& mapinfo =
+            std::get<network::ClientPacket::MapInfo>(msg);
+        (*pharmacy_map) = std::move(mapinfo.map);
     }
 
     void send_player_rare_data() {
         for (const auto& player : players) {
-            ClientPacket player_rare_updated({
+            ClientPacket player_rare_updated{
                 .channel = Channel::UNRELIABLE,
                 // Pretend this came from the other client
                 .client_id = player.first,
@@ -97,7 +102,7 @@ struct Server {
                                        .index_server_only(),
                     .last_ping = player.second.get<HasClientID>().ping(),
                 }),
-            });
+            };
             send_client_packet_to_all(player_rare_updated);
         }
     }
@@ -193,10 +198,12 @@ struct Server {
         // without this the position doesnt change until you drop it
         //
         // TODO idk the perf implications of this (map->vec)
-        Entities temp_players;
-        for (auto it = players.begin(); it != players.end(); ++it) {
-            // TODO what are the implications of this copy?
-            temp_players.push_back(it->second);
+
+        std::vector<int> temp_player_ids;
+        std::vector<Entity> temp_players;
+        for (auto&& pair : players) {
+            temp_player_ids.push_back(std::move(pair.first));
+            temp_players.push_back(std::move(pair.second));
         }
 
         if (MenuState::s_is_game(current_menu_state)) {
@@ -206,6 +213,12 @@ struct Server {
                                         next_update_timer / 1000.f);
             }
         }
+
+        for (size_t i = 0; i < temp_player_ids.size(); ++i) {
+            players.emplace(std::move(temp_player_ids[i]),
+                            std::move(temp_players[i]));
+        }
+
         next_map_tick -= dt;
         if (next_map_tick <= 0) {
             send_map_state();
@@ -248,8 +261,7 @@ struct Server {
 
         // TODO interpolate our old position and new position so its smoother
         Entity& player = players.at(packet.client_id);
-        std::vector<Entity> temp{player};
-        SystemManager::get().process_inputs(temp, info.inputs);
+        SystemManager::get().process_inputs_for_entity(player, info.inputs);
         auto updated_position = player.get<Transform>().pos();
 
         // TODO if the position and face direction didnt change
@@ -259,7 +271,7 @@ struct Server {
         //      on every call because (mvt * dt) < epsilon
         //
 
-        ClientPacket player_updated({
+        ClientPacket player_updated{
             .channel = Channel::UNRELIABLE,
             .client_id = incoming_client.client_id,
             .msg_type = network::ClientPacket::MsgType::PlayerLocation,
@@ -274,7 +286,7 @@ struct Server {
                     },
                 .username = player.get<HasName>().name(),
             }),
-        });
+        };
 
         send_client_packet_to_all(player_updated);
     }
@@ -295,11 +307,11 @@ struct Server {
                 break;
         }
 
-        ClientPacket announce_packet(
-            {.client_id = SERVER_CLIENT_ID,
-             .msg_type = ClientPacket::MsgType::Announcement,
-             .msg = ClientPacket::AnnouncementInfo(
-                 {.message = msg, .type = announcementInfo})});
+        ClientPacket announce_packet{
+            .client_id = SERVER_CLIENT_ID,
+            .msg_type = ClientPacket::MsgType::Announcement,
+            .msg = ClientPacket::AnnouncementInfo(
+                {.message = msg, .type = announcementInfo})};
 
         send_client_packet_to_client(conn, announce_packet);
     }
@@ -321,13 +333,13 @@ struct Server {
         // Since we are the host, we can use the internal::Client_t to figure
         // out the id / name
         send_client_packet_to_all(
-            ClientPacket({.client_id = SERVER_CLIENT_ID,
-                          .msg_type = ClientPacket::MsgType::PlayerLeave,
-                          .msg = ClientPacket::PlayerLeaveInfo({
-                              .all_clients = ids,
-                              // override the client's id with their real one
-                              .client_id = client_id,
-                          })}),
+            ClientPacket{.client_id = SERVER_CLIENT_ID,
+                         .msg_type = ClientPacket::MsgType::PlayerLeave,
+                         .msg = ClientPacket::PlayerLeaveInfo({
+                             .all_clients = ids,
+                             // override the client's id with their real one
+                             .client_id = client_id,
+                         })},
             // ignore the person who sent it to us since they disconn
             [&](internal::Client_t& client) {
                 return client.client_id == client_id;
@@ -357,19 +369,17 @@ struct Server {
             return;
         }
 
-        ClientPacket packet(orig_packet);
         // overwrite it so its already there
-        packet.client_id = incoming_client.client_id;
+        int client_id = incoming_client.client_id;
 
         // create the player if they dont already exist
-        if (!players.contains(packet.client_id)) {
-            Entity* e = new Entity();
-            make_player(*e, {0, 0, 0});
-            players[packet.client_id] = *e;
+        if (!players.contains(client_id)) {
+            players.emplace(client_id, Entity{});
+            make_player(players[client_id], {0, 0, 0});
         }
 
         // update the username
-        asE(players[packet.client_id]).get<HasName>().update(info.username);
+        asE(players[client_id]).get<HasName>().update(info.username);
 
         // TODO i looked into std::transform but kept getting std::out of range
         // errors
@@ -380,28 +390,28 @@ struct Server {
         // Since we are the host, we can use the internal::Client_t to figure
         // out the id / name
         send_client_packet_to_all(
-            ClientPacket({.client_id = SERVER_CLIENT_ID,
-                          .msg_type = ClientPacket::MsgType::PlayerJoin,
-                          .msg = ClientPacket::PlayerJoinInfo({
-                              .all_clients = ids,
-                              // override the client's id with their real one
-                              .client_id = incoming_client.client_id,
-                              .is_you = false,
-                          })}),
+            ClientPacket{.client_id = SERVER_CLIENT_ID,
+                         .msg_type = ClientPacket::MsgType::PlayerJoin,
+                         .msg = ClientPacket::PlayerJoinInfo({
+                             .all_clients = ids,
+                             // override the client's id with their real one
+                             .client_id = incoming_client.client_id,
+                             .is_you = false,
+                         })},
             // ignore the person who sent it to us
             [&](internal::Client_t& client) {
                 return client.client_id == incoming_client.client_id;
             });
 
         send_client_packet_to_all(
-            ClientPacket({.client_id = SERVER_CLIENT_ID,
-                          .msg_type = ClientPacket::MsgType::PlayerJoin,
-                          .msg = ClientPacket::PlayerJoinInfo({
-                              .all_clients = ids,
-                              // override the client's id with their real one
-                              .client_id = incoming_client.client_id,
-                              .is_you = true,
-                          })}),
+            ClientPacket{.client_id = SERVER_CLIENT_ID,
+                         .msg_type = ClientPacket::MsgType::PlayerJoin,
+                         .msg = ClientPacket::PlayerJoinInfo({
+                             .all_clients = ids,
+                             // override the client's id with their real one
+                             .client_id = incoming_client.client_id,
+                             .is_you = true,
+                         })},
             // ignore everyone except the one that sent to us
             [&](internal::Client_t& client) {
                 return client.client_id != incoming_client.client_id;
@@ -415,7 +425,7 @@ struct Server {
 
         auto pong = now::current_ms();
 
-        ClientPacket packet({
+        ClientPacket packet{
             .channel = Channel::UNRELIABLE_NO_DELAY,
             .client_id = SERVER_CLIENT_ID,
             .msg_type = network::ClientPacket::MsgType::Ping,
@@ -423,7 +433,7 @@ struct Server {
                 .ping = info.ping,
                 .pong = pong,
             }),
-        });
+        };
         send_client_packet_to_all(packet, [&](internal::Client_t& client) {
             return client.client_id != incoming_client.client_id;
         });
@@ -451,7 +461,8 @@ struct Server {
         const internal::Client_t& incoming_client = client_message.first;
         const std::string& msg = client_message.second;
 
-        const ClientPacket packet = network::deserialize_to_packet(msg);
+        ClientPacket packet;
+        network::deserialize_to_packet(packet, msg);
 
         // log_info("Server: recieved packet {}", packet.msg_type);
 
@@ -487,7 +498,7 @@ struct Server {
     }
 
     void send_client_packet_to_client(HSteamNetConnection conn,
-                                      ClientPacket packet) {
+                                      const ClientPacket& packet) {
         // TODO we should probably see if its worth compressing the data we are
         // sending.
 
@@ -499,7 +510,7 @@ struct Server {
     }
 
     void send_client_packet_to_all(
-        ClientPacket packet,
+        const ClientPacket& packet,
         std::function<bool(internal::Client_t&)> exclude = nullptr) {
         Buffer buffer = serialize_to_buffer(packet);
         server_p->send_message_to_all(buffer.c_str(), (uint32) buffer.size(),

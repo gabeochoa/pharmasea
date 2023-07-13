@@ -49,7 +49,7 @@ SINGLETON_FWD(SystemManager)
 struct SystemManager {
     SINGLETON(SystemManager)
 
-    Entities oldAll;
+    Entities sm_players;
 
     SystemManager() {
         // Register state manager
@@ -93,40 +93,34 @@ struct SystemManager {
 
     void update_all_entities(Entities& players, float dt) {
         // TODO speed?
-        Entities all;
-        Entities ents = EntityHelper::get_entities();
 
-        all.reserve(players.size() + ents.size());
+        update(players, dt);
 
-        all.insert(all.end(), players.begin(), players.end());
-        all.insert(all.end(), ents.begin(), ents.end());
+        sm_players.clear();
+        sm_players.reserve(players.size());
+        sm_players.insert(sm_players.end(),
+                          std::make_move_iterator(players.begin()),
+                          std::make_move_iterator(players.end()));
 
-        oldAll = all;
+        update(EntityHelper::get_entities(), dt);
 
-        update(all, dt);
+        players.clear();
+        players.reserve(sm_players.size());
+        players.insert(players.end(),
+                       std::make_move_iterator(sm_players.begin()),
+                       std::make_move_iterator(sm_players.end()));
     }
 
-    // TODO const
-    void render_all_entities(Entities&, float dt) {
-        // TODO figure out if its okay for us to throw out the updated players,
-        // and use oldAll
-        render_entities(oldAll, dt);
-    }
-
-    // TODO const
-    void render_all_ui(Entities&, float dt) {
-        // TODO figure out if its okay for us to throw out the updated players,
-        // and use oldAll
-        render_ui(oldAll, dt);
+    void process_inputs_for_entity(Entity& entity, const UserInputs& inputs) {
+        if (entity.is_missing<RespondsToUserInput>()) return;
+        for (auto input : inputs) {
+            system_manager::input_process_manager::process_input(entity, input);
+        }
     }
 
     void process_inputs(Entities& entities, const UserInputs& inputs) {
         for (auto& entity : entities) {
-            if (entity.is_missing<RespondsToUserInput>()) continue;
-            for (auto input : inputs) {
-                system_manager::input_process_manager::process_input(entity,
-                                                                     input);
-            }
+            process_inputs_for_entity(entity, inputs);
         }
     }
 
@@ -213,7 +207,7 @@ struct SystemManager {
         }
     }
 
-    void in_round_update(Entities entity_list, float dt) {
+    void in_round_update(Entities& entity_list, float dt) {
         for (auto& entity : entity_list) {
             system_manager::job_system::in_round_update(entity, dt);
             system_manager::process_grabber_items(entity, dt);

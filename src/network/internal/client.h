@@ -134,21 +134,19 @@ struct Client {
             connection, msg.c_str(), (uint32) msg.length(), channel, nullptr);
     }
 
-    ClientPacket deserialize_to_packet(std::string msg) {
+    void deserialize_to_packet(ClientPacket &packet, std::string msg) {
         TContext ctx{};
         std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
             MyPolymorphicClasses{});
 
         BitseryDeserializer des{ctx, msg.begin(), msg.size()};
 
-        ClientPacket packet;
         des.object(packet);
         // TODO obviously theres a ton of validation we can do here but idk
         // https://github.com/fraillt/bitsery/blob/master/examples/smart_pointers_with_polymorphism.cpp
-        return packet;
     }
 
-    void send_packet_to_server(ClientPacket packet) {
+    void send_packet_to_server(ClientPacket &packet) {
         Buffer buffer;
         TContext ctx{};
 
@@ -163,25 +161,25 @@ struct Client {
 
     void send_join_info_request() {
         log_info("client sending join info request");
-        ClientPacket packet({.client_id = -1,  // we dont know yet what it is
-                             .msg_type = ClientPacket::MsgType::PlayerJoin,
-                             .msg = ClientPacket::PlayerJoinInfo({
-                                 .client_id = -1,  // again
-                                 .hashed_version = HASHED_VERSION,
-                                 .is_you = false,
-                                 .username = username,
-                             })});
+        ClientPacket packet{.client_id = -1,  // we dont know yet what it is
+                            .msg_type = ClientPacket::MsgType::PlayerJoin,
+                            .msg = ClientPacket::PlayerJoinInfo({
+                                .client_id = -1,  // again
+                                .hashed_version = HASHED_VERSION,
+                                .is_you = false,
+                                .username = username,
+                            })};
         send_packet_to_server(packet);
     }
 
     void send_leave_info_request() {
         log_info("internal client sending leave info request");
-        ClientPacket packet(
-            {.client_id = -1,  // TODO we know this, idk where it is tho
-             .msg_type = ClientPacket::MsgType::PlayerLeave,
-             .msg = ClientPacket::PlayerLeaveInfo({
-                 .client_id = -1,  // Server will fill this out for us
-             })});
+        ClientPacket packet{
+            .client_id = -1,  // TODO we know this, idk where it is tho
+            .msg_type = ClientPacket::MsgType::PlayerLeave,
+            .msg = ClientPacket::PlayerLeaveInfo({
+                .client_id = -1,  // Server will fill this out for us
+            })};
         send_packet_to_server(packet);
     }
 

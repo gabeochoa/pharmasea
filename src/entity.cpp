@@ -92,15 +92,18 @@ T& Entity::addComponent(TArgs&&... args) {
         // return this->get<T>();
     }
 
-    T* component(new T(std::forward<TArgs>(args)...));
-    componentArray[::components::get_type_id<T>()] = component;
+    componentArray[::components::get_type_id<T>()] =
+        std::move(std::unique_ptr<T>(new T(std::forward<TArgs>(args)...)));
     componentSet[::components::get_type_id<T>()] = true;
+
+    std::unique_ptr<BaseComponent>& component =
+        componentArray[::components::get_type_id<T>()];
 
     log_trace("your set is now {}", componentSet);
 
     component->onAttach();
 
-    return *component;
+    return *static_cast<T*>(component.get());
 }
 
 const std::string& Entity::name() const { return get<DebugName>().name(); }
@@ -118,21 +121,6 @@ void register_all_components() {
         ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
         HasSpeechBubble, Indexer, IsSpawner, HasTimer>();
     entity->addComponent<CollectsUserInput>();
-
-    // Now that they are all registered we can delete them
-    //
-    // since we dont have a destructor today TODO because we are copying
-    // components we have to delete these manually before the ent delete because
-    // otherwise it will leak the memory
-    //
-
-    for (auto it = entity->componentArray.cbegin(), next_it = it;
-         it != entity->componentArray.cend(); it = next_it) {
-        ++next_it;
-        BaseComponent* comp = it->second;
-        if (comp) delete comp;
-        entity->componentArray.erase(it);
-    }
 
     delete entity;
 }

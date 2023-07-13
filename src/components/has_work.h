@@ -28,7 +28,7 @@ struct HasWork : public BaseComponent {
     void set_has_more_work() { more_to_do = true; }
     void reset_pct() { pct_work_complete = 0.f; }
 
-    [[nodiscard]] int scale_length(int length) {
+    [[nodiscard]] int scale_length(int length) const {
         return (int) (pct_work_complete * length);
     }
 

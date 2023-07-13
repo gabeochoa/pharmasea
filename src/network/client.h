@@ -19,7 +19,7 @@ struct Client {
 
     int id = 0;
     std::shared_ptr<internal::Client> client_p;
-    std::map<int, std::shared_ptr<Entity>> remote_players;
+    std::map<int, int> remote_players;
     std::shared_ptr<Map> map;
     std::vector<ClientPacket::AnnouncementInfo> announcements;
 
@@ -78,30 +78,40 @@ struct Client {
         if (next_ping > 0) return;
         next_ping = next_ping_reset;
 
-        ClientPacket packet({
+        ClientPacket packet{
             .channel = Channel::UNRELIABLE_NO_DELAY,
             .client_id = my_id,
             .msg_type = network::ClientPacket::MsgType::Ping,
             .msg = network::ClientPacket::PingInfo({
                 .ping = now::current_ms(),
             }),
-        });
+        };
         client_p->send_packet_to_server(packet);
     }
 
     void send_player_input_packet(int my_id) {
-        CollectsUserInput& cui = remote_players[id]->get<CollectsUserInput>();
+        int entity_id = remote_players[id];
+        OptEntity match = map->get_player(entity_id);
+        if (!valid(match)) {
+            log_warn(
+                "trying to send player input of player that we couldnt find "
+                "clientId{} enittyid",
+                my_id, entity_id);
+            return;
+        }
+
+        CollectsUserInput& cui = asE(match).get<CollectsUserInput>();
 
         if (cui.inputs.empty()) return;
 
-        ClientPacket packet({
+        ClientPacket packet{
             .channel = Channel::UNRELIABLE_NO_DELAY,
             .client_id = my_id,
             .msg_type = network::ClientPacket::MsgType::PlayerControl,
             .msg = network::ClientPacket::PlayerControlInfo({
                 .inputs = cui.inputs,
             }),
-        });
+        };
         cui.inputs.clear();
         client_p->send_packet_to_server(packet);
     }
@@ -116,18 +126,18 @@ struct Client {
             // Note: the reason we use new and not createEntity is that we dont
             // want this in the array that is serialized, this should only live
             // in remote_players
-            Entity* entity = new Entity();
-            make_remote_player(*entity, {0, 0, 0});
-            remote_players[client_id] = std::shared_ptr<Entity>(entity);
-            auto& rp = remote_players[client_id];
-            rp->get<HasClientID>().update(client_id);
+
+            Entity& entity = map->remote_players_NOT_SERIALIZED.emplace_back();
+            make_remote_player(entity, {0, 0, 0});
+
+            remote_players[client_id] = entity.id;
+
+            entity.get<HasClientID>().update(client_id);
             // We want to crash if no hasName so no has<> check here
-            rp->get<HasName>().update(username);
+            entity.get<HasName>().update(username);
             // NOTE we add to the map directly because its colocated with
             //      the other entity info
 
-            map->remote_players_NOT_SERIALIZED.push_back(
-                *remote_players[client_id]);
             log_info("Adding a player {}", client_id);
         };
 
@@ -148,14 +158,20 @@ struct Client {
                 return;
             }
 
-            auto rp = rp_it->second;
-            if (!rp) {
+            auto entity_id = rp_it->second;
+            if (!entity_id) {
                 log_warn(
                     "RemovePlayer:: Remote player exists but has null "
                     "shared_ptr",
                     client_id);
             } else {
-                rp->cleanup = true;
+                OptEntity match = map->get_player(entity_id);
+                if (!valid(match)) {
+                    log_warn(" remove player clientId{} enittyid", client_id,
+                             entity_id);
+                    return;
+                }
+                asE(match).cleanup = true;
             }
 
             remote_players.erase(client_id);
@@ -168,9 +184,13 @@ struct Client {
                          client_id);
                 add_new_player(client_id, username);
             }
-            auto rp = remote_players[client_id];
-            if (!rp) return;
-            update_player_remotely(*rp, location, username, facing);
+            auto entity_id = remote_players[client_id];
+            OptEntity match = map->get_player(entity_id);
+            if (!valid(match)) {
+                log_warn("id {}", entity_id);
+                return;
+            }
+            update_player_remotely(asE(match), location, username, facing);
         };
 
         auto update_remote_player_rare = [&](int client_id,    //
@@ -181,18 +201,25 @@ struct Client {
                          client_id);
                 return;
             }
-            auto rp = remote_players[client_id];
-            if (!rp) {
+            auto entity_id = remote_players[client_id];
+            if (!entity_id) {
                 log_warn("remote player {} is not valid - rare update",
                          client_id);
             }
 
             // log_info("updating remote player arre {} {} id{}", client_id,
             // model_index, rp->id);
-            update_player_rare_remotely(*rp, model_index, last_ping);
+
+            OptEntity match = map->get_player(entity_id);
+            if (!valid(match)) {
+                log_warn("id {}", entity_id);
+                return;
+            }
+            update_player_rare_remotely(asE(match), model_index, last_ping);
         };
 
-        ClientPacket packet = client_p->deserialize_to_packet(msg);
+        ClientPacket packet;
+        client_p->deserialize_to_packet(packet, msg);
 
         // log_info("Client: recieved packet {}", packet.msg_type);
 
@@ -216,14 +243,16 @@ struct Client {
                     id = info.client_id;
                     log_info("my id is {}", id);
                     add_new_player(id, client_p->username);
-                    GLOBALS.set("active_camera_target",
-                                remote_players[id].get());
+                    // GLOBALS.set("active_camera_target",
+                    // remote_players[id].get());
 
-                    global_player.reset(remote_players[id].get());
-                    global_player->addComponent<CollectsUserInput>();
-                    // TODO i dont think we need this anymore
-                    // global_player->addComponent<CanBeGhostPlayer>().update(
-                    // true);
+                    int entity_id = remote_players[id];
+                    OptEntity match = map->get_player(entity_id);
+                    if (!valid(match)) {
+                        log_warn(" add you clientId{} enittyid", id, entity_id);
+                        return;
+                    }
+                    asE(match).addComponent<CollectsUserInput>();
                 }
 
                 for (auto client_id : info.all_clients) {
@@ -249,13 +278,22 @@ struct Client {
                                      info.location, info.facing_direction);
             } break;
             case ClientPacket::MsgType::Map: {
-                ClientPacket::MapInfo info =
+                ClientPacket::MapInfo& info =
                     std::get<ClientPacket::MapInfo>(packet.msg);
 
                 client_entities_DO_NOT_USE.clear();
                 client_items_DO_NOT_USE.clear();
 
-                client_entities_DO_NOT_USE = info.map.entities();
+                // Here lies the copy assignment operator
+                // client_entities_DO_NOT_USE = info.map.entities();
+
+                client_entities_DO_NOT_USE.clear();
+                client_entities_DO_NOT_USE.reserve(info.map.entities().size());
+                client_entities_DO_NOT_USE.insert(
+                    client_entities_DO_NOT_USE.end(),
+                    std::make_move_iterator(info.map.entities().begin()),
+                    std::make_move_iterator(info.map.entities().end()));
+
                 client_items_DO_NOT_USE = info.map.items();
             } break;
 

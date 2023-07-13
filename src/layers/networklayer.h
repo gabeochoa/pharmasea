@@ -224,14 +224,20 @@ struct NetworkLayer : public Layer {
         };
 
         for (auto kv : network_info->client->remote_players) {
-            // TODO figure out why there are null rps
-            if (!kv.second) continue;
+            int entity_id = kv.second;
+
+            OptEntity match = network_info->client->map->get_player(entity_id);
+            if (!valid(match)) {
+                log_warn(" render network entity enittyid", entity_id);
+                continue;
+            }
+            Entity& player = asE(match);
+
             auto player_text = ui_context->own(
                 Widget(MK_UUID_LOOP(id, ROOT_ID, kv.first),
                        Size_Px(120.f, 0.5f), Size_Px(100.f, 1.f)));
             text(*player_text,
-                 fmt::format("{}({})", kv.second->get<HasName>().name(),
-                             kv.first));
+                 fmt::format("{}({})", player.get<HasName>().name(), kv.first));
         }
 
         if (network_info->is_host()) {

@@ -6,6 +6,11 @@
 
 template<typename T>
 struct AtomicQueue {
+    void push_back(T&& value) {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        q.push_back(std::move(value));
+    }
+
     void push_back(const T& value) {
         std::lock_guard<std::mutex> lock(m_mutex);
         q.push_back(value);

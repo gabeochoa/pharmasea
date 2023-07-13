@@ -20,10 +20,12 @@ struct BaseComponent;
 
 constexpr int max_num_components = 64;
 using ComponentBitSet = std::bitset<max_num_components>;
+using ComponentID = int;
 // originally this was a std::array<BaseComponent*, max_num_components> but
 // i cant seem to serialize this so lets try map
-using ComponentArray = std::map<int, BaseComponent*>;
-using ComponentID = int;
+// using ComponentArray = std::map<ComponentID, std::unique_ptr<BaseComponent>>;
+using ComponentArray =
+    std::array<std::unique_ptr<BaseComponent>, max_num_components>;
 
 namespace components {
 namespace internal {
@@ -46,6 +48,7 @@ inline ComponentID get_type_id() noexcept {
 using bitsery::ext::PointerObserver;
 using bitsery::ext::PointerOwner;
 using bitsery::ext::PointerType;
+using bitsery::ext::StdSmartPtr;
 using StdMap = bitsery::ext::StdMap;
 
 static std::atomic_int ENTITY_ID_GEN = 0;
@@ -137,13 +140,14 @@ struct Entity {
                 "component {}",
                 name(), id, components::get_type_id<T>(), type_name<T>());
         }
-        BaseComponent* comp = componentArray.at(components::get_type_id<T>());
-        return *static_cast<T*>(comp);
+        std::unique_ptr<BaseComponent>& comp =
+            componentArray[components::get_type_id<T>()];
+        return *static_cast<T*>(comp.get());
     }
 
     // TODO combine with non const
     template<typename T>
-    [[nodiscard]] T& get() const {
+    [[nodiscard]] const T& get() const {
         if (this->is_missing<DebugName>()) {
             log_error(
                 "This entity is missing debugname which will cause issues for "
@@ -155,8 +159,9 @@ struct Entity {
                 "component {}",
                 name(), id, components::get_type_id<T>(), type_name<T>());
         }
-        BaseComponent* comp = componentArray.at(components::get_type_id<T>());
-        return *static_cast<T*>(comp);
+        const std::unique_ptr<BaseComponent>& comp =
+            componentArray.at(components::get_type_id<T>());
+        return *static_cast<T*>(comp.get());
     }
 
     const std::string& name() const;
@@ -169,12 +174,18 @@ struct Entity {
         s.ext(componentSet, bitsery::ext::StdBitset{});
         s.value1b(cleanup);
 
-        s.ext(componentArray, StdMap{max_num_components},
-              [](S& sv, int& key, BaseComponent*(&value)) {
-                  sv.value4b(key);
-                  //sv.ext(value, PointerOwner{PointerType::Nullable});
-                  sv.ext(value, PointerObserver{PointerType::Nullable});
-              });
+        s.container(componentArray,  // max_num_components,
+                    [](S& sv, std::unique_ptr<BaseComponent>(&value)) {
+                        sv.ext(value, StdSmartPtr{});
+                    });
+
+        // s.ext(componentArray, StdMap{max_num_components},
+        // [](S& sv, int& key, std::unique_ptr<BaseComponent>(&value)) {
+        // sv.value4b(key);
+        // sv.ext(value, StdSmartPtr{});
+        // // sv.ext(value, PointerOwner{PointerType::Nullable});
+        // // sv.ext(value, PointerObserver{PointerType::Nullable});
+        // });
     }
 };
 
