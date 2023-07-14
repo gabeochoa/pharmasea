@@ -268,7 +268,8 @@ inline void rotate_furniture(const Entity& player) {
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
     OptEntity match = EntityHelper::getClosestMatchingFurniture(
-        player.get<Transform>(), cho.reach(), [](Entity furniture) -> bool {
+        player.get<Transform>(), cho.reach(),
+        [](const Entity& furniture) -> bool {
             return furniture.template has<IsRotatable>();
         });
 
@@ -314,7 +315,8 @@ inline void handle_grab_or_drop(Entity& player) {
 
         OptEntity closest_furniture_opt =
             EntityHelper::getClosestMatchingFurniture(
-                player.get<Transform>(), cho.reach(), [](Entity f) -> bool {
+                player.get<Transform>(), cho.reach(),
+                [](const Entity& f) -> bool {
                     // TODO right now walls inherit this from furniture but
                     // eventually that should not be the case
                     if (f.is_missing<CanBeHeld>()) return false;

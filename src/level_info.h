@@ -197,15 +197,14 @@ struct helper {
     }
 
     void validate() {
-        auto soph = EntityHelper::getFirstMatching(
-            [](Entity e) { return check_name(e, strings::entity::SOPHIE); });
+        auto soph = EntityHelper::getFirstMatchingName(strings::entity::SOPHIE);
         VALIDATE(soph, "sophie needs to be there ");
 
         // find register,
-        auto reg_opt = EntityHelper::getFirstMatching(
-            [](Entity e) { return check_name(e, strings::entity::REGISTER); });
+        auto reg_opt =
+            EntityHelper::getFirstMatchingName(strings::entity::REGISTER);
         VALIDATE(valid(reg_opt), "map needs to have at least one register");
-        auto reg = asE(reg_opt);
+        auto& reg = asE(reg_opt);
 
         // find customer
         auto customer_opt =
@@ -214,7 +213,7 @@ struct helper {
             });
         VALIDATE(valid(customer_opt),
                  "map needs to have at least one customer spawn point");
-        auto customer = asE(customer_opt);
+        auto& customer = asE(customer_opt);
 
         // ensure customers can make it to the register
 
