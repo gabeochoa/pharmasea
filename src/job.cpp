@@ -167,7 +167,7 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
         VALIDATE(has_local_target(), "job should have a local target");
     };
 
-    auto _move_toward_local_target = [this, entity, dt]() {
+    auto _move_toward_local_target = [this, &entity, dt]() {
         // TODO forcing get<HasBaseSpeed> to crash here
         float base_speed = entity.get<HasBaseSpeed>().speed();
 

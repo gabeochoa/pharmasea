@@ -143,7 +143,7 @@ struct Entity {
 
     // TODO combine with non const
     template<typename T>
-    [[nodiscard]] T& get() const {
+    [[nodiscard]] const T& get() const {
         if (this->is_missing<DebugName>()) {
             log_error(
                 "This entity is missing debugname which will cause issues for "

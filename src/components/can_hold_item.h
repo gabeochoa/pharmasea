@@ -34,6 +34,10 @@ struct CanHoldItem : public BaseComponent {
     // (change to use update instead and make this const)
     [[nodiscard]] std::shared_ptr<Item>& item() { return held_item; }
 
+    [[nodiscard]] const std::shared_ptr<Item>& item() const {
+        return held_item;
+    }
+
    private:
     std::shared_ptr<Item> held_item = nullptr;
 
