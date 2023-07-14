@@ -193,10 +193,11 @@ struct Server {
         // without this the position doesnt change until you drop it
         //
         // TODO idk the perf implications of this (map->vec)
-        Entities temp_players;
-        for (auto it = players.begin(); it != players.end(); ++it) {
-            // TODO what are the implications of this copy?
-            temp_players.push_back(it->second);
+        std::vector<int> temp_player_ids;
+        std::vector<Entity> temp_players;
+        for (auto&& pair : players) {
+            temp_player_ids.push_back(std::move(pair.first));
+            temp_players.push_back(std::move(pair.second));
         }
 
         if (MenuState::s_is_game(current_menu_state)) {
@@ -206,6 +207,12 @@ struct Server {
                                         next_update_timer / 1000.f);
             }
         }
+
+        for (size_t i = 0; i < temp_player_ids.size(); ++i) {
+            players.emplace(std::move(temp_player_ids[i]),
+                            std::move(temp_players[i]));
+        }
+
         next_map_tick -= dt;
         if (next_map_tick <= 0) {
             send_map_state();
@@ -358,17 +365,17 @@ struct Server {
 
         ClientPacket packet(orig_packet);
         // overwrite it so its already there
-        packet.client_id = incoming_client.client_id;
+        int client_id = incoming_client.client_id;
 
         // create the player if they dont already exist
-        if (!players.contains(packet.client_id)) {
-            Entity* e = new Entity();
-            make_player(*e, {0, 0, 0});
-            players[packet.client_id] = *e;
+
+        if (!players.contains(client_id)) {
+            players.emplace(client_id, Entity{});
+            make_player(players[client_id], {0, 0, 0});
         }
 
         // update the username
-        asE(players[packet.client_id]).get<HasName>().update(info.username);
+        asE(players[client_id]).get<HasName>().update(info.username);
 
         // TODO i looked into std::transform but kept getting std::out of range
         // errors
@@ -433,9 +440,8 @@ struct Server {
                      incoming_client.client_id);
             return;
         }
-        asE(player_match->second)
-            .get<HasClientID>()
-            .update_ping((int) (pong - info.ping));
+        Entity& player = player_match->second;
+        player.get<HasClientID>().update_ping((int) (pong - info.ping));
     }
 
     void server_enqueue_message_string(
@@ -445,8 +451,8 @@ struct Server {
 
     void server_process_message_string(const ClientMessage& client_message) {
         TRACY_ZONE_SCOPED;
-        // Note: not using structured binding since they cannot be captured by
-        // lambda expr yet
+        // Note: not using structured binding since they cannot be captured
+        // by lambda expr yet
         const internal::Client_t& incoming_client = client_message.first;
         const std::string& msg = client_message.second;
 
@@ -474,8 +480,8 @@ struct Server {
             // return process_player_rare_packet(incoming_client, packet);
             // } break;
             default:
-                // No clue so lets just send it to everyone except the guy that
-                // sent it to us
+                // No clue so lets just send it to everyone except the guy
+                // that sent it to us
                 send_client_packet_to_all(
                     packet, [&](internal::Client_t& client) {
                         return client.client_id == incoming_client.client_id;
@@ -487,11 +493,11 @@ struct Server {
 
     void send_client_packet_to_client(HSteamNetConnection conn,
                                       ClientPacket packet) {
-        // TODO we should probably see if its worth compressing the data we are
-        // sending.
+        // TODO we should probably see if its worth compressing the data we
+        // are sending.
 
-        // TODO write logs for how much data to understand avg packet size per
-        // type
+        // TODO write logs for how much data to understand avg packet size
+        // per type
         Buffer buffer = serialize_to_buffer(packet);
         server_p->send_message_to_connection(conn, buffer.c_str(),
                                              (uint32) buffer.size());
