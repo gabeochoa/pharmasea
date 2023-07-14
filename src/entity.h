@@ -185,7 +185,7 @@ struct Entity {
         s.ext(componentArray, StdMap{max_num_components},
               [](S& sv, int& key, BaseComponent*(&value)) {
                   sv.value4b(key);
-                  //sv.ext(value, PointerOwner{PointerType::Nullable});
+                  // sv.ext(value, PointerOwner{PointerType::Nullable});
                   sv.ext(value, PointerObserver{PointerType::Nullable});
               });
     }

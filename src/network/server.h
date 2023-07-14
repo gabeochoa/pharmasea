@@ -379,28 +379,28 @@ struct Server {
         // Since we are the host, we can use the internal::Client_t to figure
         // out the id / name
         send_client_packet_to_all(
-            ClientPacket({.client_id = SERVER_CLIENT_ID,
-                          .msg_type = ClientPacket::MsgType::PlayerJoin,
-                          .msg = ClientPacket::PlayerJoinInfo({
-                              .all_clients = ids,
-                              // override the client's id with their real one
-                              .client_id = incoming_client.client_id,
-                              .is_you = false,
-                          })}),
+            ClientPacket{.client_id = SERVER_CLIENT_ID,
+                         .msg_type = ClientPacket::MsgType::PlayerJoin,
+                         .msg = ClientPacket::PlayerJoinInfo({
+                             .all_clients = ids,
+                             // override the client's id with their real one
+                             .client_id = incoming_client.client_id,
+                             .is_you = false,
+                         })},
             // ignore the person who sent it to us
             [&](internal::Client_t& client) {
                 return client.client_id == incoming_client.client_id;
             });
 
         send_client_packet_to_all(
-            ClientPacket({.client_id = SERVER_CLIENT_ID,
-                          .msg_type = ClientPacket::MsgType::PlayerJoin,
-                          .msg = ClientPacket::PlayerJoinInfo({
-                              .all_clients = ids,
-                              // override the client's id with their real one
-                              .client_id = incoming_client.client_id,
-                              .is_you = true,
-                          })}),
+            ClientPacket{.client_id = SERVER_CLIENT_ID,
+                         .msg_type = ClientPacket::MsgType::PlayerJoin,
+                         .msg = ClientPacket::PlayerJoinInfo({
+                             .all_clients = ids,
+                             // override the client's id with their real one
+                             .client_id = incoming_client.client_id,
+                             .is_you = true,
+                         })},
             // ignore everyone except the one that sent to us
             [&](internal::Client_t& client) {
                 return client.client_id != incoming_client.client_id;

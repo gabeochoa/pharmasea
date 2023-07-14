@@ -78,14 +78,15 @@ struct Client {
         if (next_ping > 0) return;
         next_ping = next_ping_reset;
 
-        ClientPacket packet({
+        ClientPacket packet{
             .channel = Channel::UNRELIABLE_NO_DELAY,
             .client_id = my_id,
             .msg_type = network::ClientPacket::MsgType::Ping,
-            .msg = network::ClientPacket::PingInfo({
-                .ping = now::current_ms(),
-            }),
-        });
+            .msg =
+                network::ClientPacket::PingInfo{
+                    .ping = now::current_ms(),
+                },
+        };
         client_p->send_packet_to_server(packet);
     }
 
@@ -94,14 +95,15 @@ struct Client {
 
         if (cui.inputs.empty()) return;
 
-        ClientPacket packet({
+        ClientPacket packet{
             .channel = Channel::UNRELIABLE_NO_DELAY,
             .client_id = my_id,
             .msg_type = network::ClientPacket::MsgType::PlayerControl,
-            .msg = network::ClientPacket::PlayerControlInfo({
-                .inputs = cui.inputs,
-            }),
-        });
+            .msg =
+                network::ClientPacket::PlayerControlInfo{
+                    .inputs = cui.inputs,
+                },
+        };
         cui.inputs.clear();
         client_p->send_packet_to_server(packet);
     }
