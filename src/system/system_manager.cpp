@@ -395,7 +395,7 @@ void count_max_trigger_area_entrants(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
     int count = 0;
-    for (auto& e : SystemManager::get().oldAll) {
+    for (const auto& e : SystemManager::get().sm_players) {
         if (!check_name(e, strings::entity::PLAYER)) continue;
         count++;
     }
@@ -406,7 +406,7 @@ void count_trigger_area_entrants(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
     int count = 0;
-    for (auto& e : SystemManager::get().oldAll) {
+    for (const auto& e : SystemManager::get().sm_players) {
         if (!check_name(e, strings::entity::PLAYER)) continue;
         if (CheckCollisionBoxes(
                 e.get<Transform>().bounds(),
@@ -484,7 +484,7 @@ void sophie(Entity& entity, float) {
         //
         // auto players = EntityHelper::getAllWithComponent<CanHoldFurniture>();
 
-        for (Entity& e : SystemManager::get().oldAll) {
+        for (const Entity& e : SystemManager::get().sm_players) {
             if (e.is_missing<CanHoldFurniture>()) continue;
             if (e.get<CanHoldFurniture>().is_holding_furniture()) {
                 all_empty = false;

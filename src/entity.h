@@ -66,6 +66,7 @@ struct Entity {
     // ~Entity();
     // Copy constructor
     // Entity(const Entity& other) = delete;
+    // Entity& operator=(const Entity&) = delete;
 
     // move constructor
     // Entity(Entity&& other)
@@ -73,12 +74,22 @@ struct Entity {
     // componentSet(std::move(other.componentSet)),
     // componentArray(std::move(other.componentArray)),
     // cleanup(std::move(other.cleanup)) {}
+    //
+    // Entity& operator=(Entity&& other) {
+    // if (this != &other) {
+    // id = std::move(other.id);
+    // componentSet = std::move(other.componentSet);
+    // componentArray = std::move(other.componentArray);
+    // cleanup = std::move(other.cleanup);
+    // }
+    // return *this;
+    // }
 
     // Copy assignment operator
     // Entity& operator=(const Entity& other);
 
-    // These two functions can be used to validate than an entity has all of the
-    // matching components that are needed for this system to run
+    // These two functions can be used to validate than an entity has all of
+    // the matching components that are needed for this system to run
 
     template<typename T>
     [[nodiscard]] bool has() const {
@@ -128,7 +139,8 @@ struct Entity {
     [[nodiscard]] T& get() {
         if (this->is_missing<DebugName>()) {
             log_error(
-                "This entity is missing debugname which will cause issues for "
+                "This entity is missing debugname which will cause issues "
+                "for "
                 "if the get<> is missing");
         }
         if (this->is_missing<T>()) {
@@ -143,10 +155,11 @@ struct Entity {
 
     // TODO combine with non const
     template<typename T>
-    [[nodiscard]] T& get() const {
+    [[nodiscard]] const T& get() const {
         if (this->is_missing<DebugName>()) {
             log_error(
-                "This entity is missing debugname which will cause issues for "
+                "This entity is missing debugname which will cause issues "
+                "for "
                 "if the get<> is missing");
         }
         if (this->is_missing<T>()) {
@@ -172,8 +185,8 @@ struct Entity {
         s.ext(componentArray, StdMap{max_num_components},
               [](S& sv, int& key, BaseComponent*(&value)) {
                   sv.value4b(key);
-                  //sv.ext(value, PointerOwner{PointerType::Nullable});
-                  sv.ext(value, PointerObserver{PointerType::Nullable});
+                  sv.ext(value, PointerOwner{PointerType::Nullable});
+                  // sv.ext(value, PointerObserver{PointerType::Nullable});
               });
     }
 };

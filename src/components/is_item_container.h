@@ -9,7 +9,7 @@ struct IsItemContainer : public BaseComponent {
     virtual ~IsItemContainer() {}
 
     [[nodiscard]] virtual bool is_matching_item(
-        std::shared_ptr<Item> item = nullptr) {
+        std::shared_ptr<Item> item = nullptr) const {
         auto i = dynamic_pointer_cast<I>(item);
         if (!i) return false;
         // TODO idk what this was for

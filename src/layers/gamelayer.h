@@ -87,9 +87,9 @@ struct GameLayer : public Layer {
         if (global_player) {
             // TODO do this in init or something
 
-            std::vector<Entity> players;
-            players.push_back(*global_player);
-            SystemManager::get().update(players, dt);
+            // std::vector<Entity> players;
+            // players.push_back(*global_player);
+            // SystemManager::get().update(players, dt);
         }
     }
 
@@ -119,9 +119,9 @@ struct GameLayer : public Layer {
                             std::map<int, std::shared_ptr<Entity>>>(
                             "server_players", {}));
                 // TODO do this in init or something
-                std::vector<Entity> players;
-                players.push_back(*global_player);
-                SystemManager::get().update(players, dt);
+                // std::vector<Entity> players;
+                // players.push_back(*global_player);
+                // SystemManager::get().update(players, dt);
             }
             // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
             // if (nav) {

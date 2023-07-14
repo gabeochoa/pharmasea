@@ -11,8 +11,9 @@
 // - vendor/tracy/TracyClient.cpp
 // - app.cpp
 // TODO find a way to enable this in the compiler so we dont have to do this
-#define ENABLE_TRACING 1
-#include "engine/tracy.h"
+// #define ENABLE_TRACING 1
+// #include "engine/tracy.h"
+#define ZoneScoped
 
 #define ENABLE_DEV_FLAGS 1
 

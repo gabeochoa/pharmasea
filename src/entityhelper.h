@@ -149,6 +149,13 @@ struct EntityHelper {
         return {};
     }
 
+    static OptEntity getFirstMatchingName(const std::string& name) {
+        for (auto& e : get_entities()) {
+            if (check_name(e, name.c_str())) return e;
+        }
+        return {};
+    }
+
     static std::vector<RefEntity> getEntitiesInRange(vec2 pos, float range) {
         std::vector<RefEntity> matching;
         for (auto& e : get_entities()) {

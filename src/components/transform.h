@@ -137,7 +137,7 @@ struct Transform : public BaseComponent {
      *
      * @returns vec2 the location `distance` tiles ahead
      * */
-    vec2 tile_infront(int distance) {
+    vec2 tile_infront(int distance) const {
         vec2 tile = vec::to2(snap_position());
         return tile_infront_given_pos(tile, distance, face_direction());
     }

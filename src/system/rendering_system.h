@@ -73,9 +73,10 @@ inline void update_character_model_from_index(Entity& entity, float) {
 
 inline bool render_simple_highlighted(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return false;
-    Transform& transform = entity.get<Transform>();
+    const Transform& transform = entity.get<Transform>();
     if (entity.is_missing<SimpleColoredBoxRenderer>()) return false;
-    SimpleColoredBoxRenderer& renderer = entity.get<SimpleColoredBoxRenderer>();
+    const SimpleColoredBoxRenderer& renderer =
+        entity.get<SimpleColoredBoxRenderer>();
     // TODO replace size with Bounds component when it exists
     draw_valid_colored_box(transform, renderer, true);
     return true;
@@ -83,9 +84,10 @@ inline bool render_simple_highlighted(const Entity& entity, float) {
 
 inline bool render_simple_normal(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return false;
-    Transform& transform = entity.get<Transform>();
+    const Transform& transform = entity.get<Transform>();
     if (entity.is_missing<SimpleColoredBoxRenderer>()) return false;
-    SimpleColoredBoxRenderer& renderer = entity.get<SimpleColoredBoxRenderer>();
+    const SimpleColoredBoxRenderer& renderer =
+        entity.get<SimpleColoredBoxRenderer>();
 
     draw_valid_colored_box(transform, renderer, false);
     return true;
@@ -93,7 +95,7 @@ inline bool render_simple_normal(const Entity& entity, float) {
 
 inline bool render_bounding_box(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return false;
-    Transform& transform = entity.get<Transform>();
+    const Transform& transform = entity.get<Transform>();
 
     DrawBoundingBox(transform.bounds(), MAROON);
     DrawFloatingText(transform.raw(), Preload::get().font,
@@ -116,11 +118,11 @@ inline bool render_model_highlighted(const Entity& entity, float) {
     if (entity.is_missing<ModelRenderer>()) return false;
     if (entity.is_missing<CanBeHighlighted>()) return false;
 
-    ModelRenderer& renderer = entity.get<ModelRenderer>();
+    const ModelRenderer& renderer = entity.get<ModelRenderer>();
     if (!renderer.has_model()) return false;
 
     if (entity.is_missing<Transform>()) return false;
-    Transform& transform = entity.get<Transform>();
+    const Transform& transform = entity.get<Transform>();
 
     ModelInfo model_info = renderer.model_info().value();
 
@@ -149,11 +151,11 @@ inline bool render_model_normal(const Entity& entity, float) {
 
     if (entity.is_missing<ModelRenderer>()) return false;
 
-    ModelRenderer& renderer = entity.get<ModelRenderer>();
+    const ModelRenderer& renderer = entity.get<ModelRenderer>();
     if (!renderer.has_model()) return false;
 
     if (entity.is_missing<Transform>()) return false;
-    Transform& transform = entity.get<Transform>();
+    const Transform& transform = entity.get<Transform>();
 
     ModelInfo model_info = renderer.model_info().value();
 
@@ -323,7 +325,7 @@ inline void render_normal(const Entity& entity, float dt) {
 
 inline void render_floating_name(const Entity& entity, float) {
     if (entity.is_missing<HasName>()) return;
-    HasName& hasName = entity.get<HasName>();
+    const HasName& hasName = entity.get<HasName>();
 
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
@@ -347,7 +349,7 @@ inline void render_progress_bar(const Entity& entity, float) {
 
     if (entity.is_missing<HasWork>()) return;
 
-    HasWork& hasWork = entity.get<HasWork>();
+    const HasWork& hasWork = entity.get<HasWork>();
     if (hasWork.dont_show_progres_bar()) return;
 
     const int length = 20;
