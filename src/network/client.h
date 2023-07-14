@@ -252,11 +252,19 @@ struct Client {
                 ClientPacket::MapInfo info =
                     std::get<ClientPacket::MapInfo>(packet.msg);
 
-                client_entities_DO_NOT_USE.clear();
                 client_items_DO_NOT_USE.clear();
-
-                client_entities_DO_NOT_USE = info.map.entities();
                 client_items_DO_NOT_USE = info.map.items();
+
+                client_entities_DO_NOT_USE.clear();
+                // Here lies the copy assignment operator
+                // client_entities_DO_NOT_USE = info.map.entities();
+
+                client_entities_DO_NOT_USE.clear();
+                client_entities_DO_NOT_USE.reserve(info.map.entities().size());
+                client_entities_DO_NOT_USE.insert(
+                    client_entities_DO_NOT_USE.end(),
+                    std::make_move_iterator(info.map.entities().begin()),
+                    std::make_move_iterator(info.map.entities().end()));
             } break;
 
             case ClientPacket::MsgType::PlayerRare: {

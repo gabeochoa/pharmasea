@@ -66,23 +66,24 @@ struct Entity {
     // ~Entity();
     // Copy constructor
     // Entity(const Entity& other) = delete;
+    // Entity& operator=(const Entity&) = delete;
 
     // move constructor
-    Entity(Entity&& other)
-        : id(std::move(other.id)),
-          componentSet(std::move(other.componentSet)),
-          componentArray(std::move(other.componentArray)),
-          cleanup(std::move(other.cleanup)) {}
-
-    Entity& operator=(Entity&& other) {
-        if (this != &other) {
-            id = std::move(other.id);
-            componentSet = std::move(other.componentSet);
-            componentArray = std::move(other.componentArray);
-            cleanup = std::move(other.cleanup);
-        }
-        return *this;
-    }
+    // Entity(Entity&& other)
+    // : id(std::move(other.id)),
+    // componentSet(std::move(other.componentSet)),
+    // componentArray(std::move(other.componentArray)),
+    // cleanup(std::move(other.cleanup)) {}
+    //
+    // Entity& operator=(Entity&& other) {
+    // if (this != &other) {
+    // id = std::move(other.id);
+    // componentSet = std::move(other.componentSet);
+    // componentArray = std::move(other.componentArray);
+    // cleanup = std::move(other.cleanup);
+    // }
+    // return *this;
+    // }
 
     // Copy assignment operator
     // Entity& operator=(const Entity& other);
