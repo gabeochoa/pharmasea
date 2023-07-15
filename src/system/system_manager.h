@@ -239,17 +239,18 @@ struct SystemManager {
 
     void render_normal(const std::vector<std::shared_ptr<Entity>>& entity_list,
                        float dt) const {
-        for (auto& entity : entity_list) {
+        for (const auto& entity : entity_list) {
             // TODO extract render normal into system facign functions
-            system_manager::render_manager::render_normal(entity, dt);
-            system_manager::render_manager::render_floating_name(entity, dt);
-            system_manager::render_manager::render_progress_bar(entity, dt);
+            system_manager::render_manager::render_normal(*entity, dt);
+            system_manager::render_manager::render_floating_name(*entity, dt);
+            system_manager::render_manager::render_progress_bar(*entity, dt);
         }
     }
 
     void render_debug(const std::vector<std::shared_ptr<Entity>>& entity_list,
                       float dt) const {
-        for (auto& entity : entity_list) {
+        for (const auto& entity_ptr : entity_list) {
+            const Entity& entity = *entity_ptr;
             system_manager::render_manager::render_debug(entity, dt);
         }
     }

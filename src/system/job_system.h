@@ -37,10 +37,10 @@ inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
 
 */
 
-inline void render_job_visual(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<CanPerformJob>()) return;
+inline void render_job_visual(const Entity& entity, float) {
+    if (entity.is_missing<CanPerformJob>()) return;
     const float box_size = TILESIZE / 10.f;
-    entity->get<CanPerformJob>().for_each_path_location(
+    entity.get<CanPerformJob>().for_each_path_location(
         [box_size](vec2 location) {
             DrawCube(vec::to3(location), box_size, box_size, box_size, BLUE);
         });

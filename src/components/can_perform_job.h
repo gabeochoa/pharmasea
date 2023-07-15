@@ -73,7 +73,7 @@ struct CanPerformJob : public BaseComponent {
         current_job->run_job_tick(entity, dt);
     }
 
-    void for_each_path_location(std::function<void(vec2)> cb) {
+    void for_each_path_location(std::function<void(vec2)> cb) const {
         if (needs_job()) return;
 
         for (auto location : job().get_path()) {

@@ -64,7 +64,7 @@ struct HasTimer : public BaseComponent {
 
     std::bitset<WaitingReason::WaitingReasonLast> block_state_change_reasons;
 
-    [[nodiscard]] std::string text_reason(WaitingReason wr) {
+    [[nodiscard]] const char* text_reason(WaitingReason wr) const {
         switch (wr) {
             case CustomersInStore:
                 return text_lookup(strings::i18n::CUSTOMERS_IN_STORE);
@@ -77,8 +77,8 @@ struct HasTimer : public BaseComponent {
         }
     }
 
-    [[nodiscard]] std::string text_reason(int i) {
-        auto name = magic_enum::enum_value<WaitingReason>(i);
+    [[nodiscard]] const char* text_reason(int i) const {
+        WaitingReason name = magic_enum::enum_value<WaitingReason>(i);
         return text_reason(name);
     }
 

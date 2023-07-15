@@ -54,11 +54,11 @@ using StdMap = bitsery::ext::StdMap;
 
 #include "dataclass/names.h"
 #include "drawing_util.h"
+#include "engine.h"
 #include "engine/astar.h"
 #include "engine/is_server.h"
 #include "engine/model_library.h"
 #include "engine/util.h"
-#include "engine.h"
 #include "globals.h"
 #include "item.h"
 #include "item_helper.h"
@@ -152,7 +152,26 @@ struct Entity {
     }
 
     template<typename T>
-    [[nodiscard]] T& get() const {
+    [[nodiscard]] T& get() {
+        if (this->is_missing<DebugName>()) {
+            log_error(
+                "This entity is missing debugname which will cause issues for "
+                "if the get<> is missing");
+        }
+        if (this->is_missing<T>()) {
+            log_warn(
+                "This entity {} {} is missing id: {}, "
+                "component {}",
+                this->get<DebugName>().name(), id, components::get_type_id<T>(),
+                type_name<T>());
+        }
+        BaseComponent* comp = componentArray.at(components::get_type_id<T>());
+        return *static_cast<T*>(comp);
+    }
+
+    template<typename T>
+    [[nodiscard]] const T& get() const {
+        // TODO gotta be a way to merge these two
         if (this->is_missing<DebugName>()) {
             log_error(
                 "This entity is missing debugname which will cause issues for "
