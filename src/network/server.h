@@ -356,18 +356,17 @@ struct Server {
             return;
         }
 
-        ClientPacket packet(orig_packet);
         // overwrite it so its already there
-        packet.client_id = incoming_client.client_id;
+        int client_id = incoming_client.client_id;
 
         // create the player if they dont already exist
-        if (!players.contains(packet.client_id)) {
-            players[packet.client_id] =
+        if (!players.contains(client_id)) {
+            players[client_id] =
                 std::shared_ptr<Entity>(make_player({0, 0, 0}));
         }
 
         // update the username
-        players[packet.client_id]->get<HasName>().update(info.username);
+        players[client_id]->get<HasName>().update(info.username);
 
         // TODO i looked into std::transform but kept getting std::out of range
         // errors
