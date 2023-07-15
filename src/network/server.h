@@ -84,7 +84,7 @@ struct Server {
 
     void send_player_rare_data() {
         for (const auto& player : players) {
-            ClientPacket player_rare_updated({
+            ClientPacket player_rare_updated{
                 .channel = Channel::UNRELIABLE,
                 // Pretend this came from the other client
                 .client_id = player.first,
@@ -95,7 +95,7 @@ struct Server {
                                        .index_server_only(),
                     .last_ping = player.second->get<HasClientID>().ping(),
                 }),
-            });
+            };
             send_client_packet_to_all(player_rare_updated);
         }
     }
@@ -258,7 +258,7 @@ struct Server {
         //      on every call because (mvt * dt) < epsilon
         //
 
-        ClientPacket player_updated({
+        ClientPacket player_updated{
             .channel = Channel::UNRELIABLE,
             .client_id = incoming_client.client_id,
             .msg_type = network::ClientPacket::MsgType::PlayerLocation,
@@ -273,7 +273,7 @@ struct Server {
                     },
                 .username = player->get<HasName>().name(),
             }),
-        });
+        };
 
         send_client_packet_to_all(player_updated);
     }
@@ -320,13 +320,13 @@ struct Server {
         // Since we are the host, we can use the internal::Client_t to figure
         // out the id / name
         send_client_packet_to_all(
-            ClientPacket({.client_id = SERVER_CLIENT_ID,
-                          .msg_type = ClientPacket::MsgType::PlayerLeave,
-                          .msg = ClientPacket::PlayerLeaveInfo({
-                              .all_clients = ids,
-                              // override the client's id with their real one
-                              .client_id = client_id,
-                          })}),
+            ClientPacket{.client_id = SERVER_CLIENT_ID,
+                         .msg_type = ClientPacket::MsgType::PlayerLeave,
+                         .msg = ClientPacket::PlayerLeaveInfo({
+                             .all_clients = ids,
+                             // override the client's id with their real one
+                             .client_id = client_id,
+                         })},
             // ignore the person who sent it to us since they disconn
             [&](internal::Client_t& client) {
                 return client.client_id == client_id;
@@ -378,28 +378,28 @@ struct Server {
         // Since we are the host, we can use the internal::Client_t to figure
         // out the id / name
         send_client_packet_to_all(
-            ClientPacket({.client_id = SERVER_CLIENT_ID,
-                          .msg_type = ClientPacket::MsgType::PlayerJoin,
-                          .msg = ClientPacket::PlayerJoinInfo({
-                              .all_clients = ids,
-                              // override the client's id with their real one
-                              .client_id = incoming_client.client_id,
-                              .is_you = false,
-                          })}),
+            ClientPacket{.client_id = SERVER_CLIENT_ID,
+                         .msg_type = ClientPacket::MsgType::PlayerJoin,
+                         .msg = ClientPacket::PlayerJoinInfo({
+                             .all_clients = ids,
+                             // override the client's id with their real one
+                             .client_id = incoming_client.client_id,
+                             .is_you = false,
+                         })},
             // ignore the person who sent it to us
             [&](internal::Client_t& client) {
                 return client.client_id == incoming_client.client_id;
             });
 
         send_client_packet_to_all(
-            ClientPacket({.client_id = SERVER_CLIENT_ID,
-                          .msg_type = ClientPacket::MsgType::PlayerJoin,
-                          .msg = ClientPacket::PlayerJoinInfo({
-                              .all_clients = ids,
-                              // override the client's id with their real one
-                              .client_id = incoming_client.client_id,
-                              .is_you = true,
-                          })}),
+            ClientPacket{.client_id = SERVER_CLIENT_ID,
+                         .msg_type = ClientPacket::MsgType::PlayerJoin,
+                         .msg = ClientPacket::PlayerJoinInfo({
+                             .all_clients = ids,
+                             // override the client's id with their real one
+                             .client_id = incoming_client.client_id,
+                             .is_you = true,
+                         })},
             // ignore everyone except the one that sent to us
             [&](internal::Client_t& client) {
                 return client.client_id != incoming_client.client_id;
@@ -413,7 +413,7 @@ struct Server {
 
         auto pong = now::current_ms();
 
-        ClientPacket packet({
+        ClientPacket packet{
             .channel = Channel::UNRELIABLE_NO_DELAY,
             .client_id = SERVER_CLIENT_ID,
             .msg_type = network::ClientPacket::MsgType::Ping,
@@ -421,7 +421,7 @@ struct Server {
                 .ping = info.ping,
                 .pong = pong,
             }),
-        });
+        };
         send_client_packet_to_all(packet, [&](internal::Client_t& client) {
             return client.client_id != incoming_client.client_id;
         });
@@ -484,7 +484,7 @@ struct Server {
     }
 
     void send_client_packet_to_client(HSteamNetConnection conn,
-                                      ClientPacket packet) {
+                                      const ClientPacket& packet) {
         // TODO we should probably see if its worth compressing the data we are
         // sending.
 
@@ -496,7 +496,7 @@ struct Server {
     }
 
     void send_client_packet_to_all(
-        ClientPacket packet,
+        const ClientPacket& packet,
         std::function<bool(internal::Client_t&)> exclude = nullptr) {
         Buffer buffer = serialize_to_buffer(packet);
         server_p->send_message_to_all(buffer.c_str(), (uint32) buffer.size(),
