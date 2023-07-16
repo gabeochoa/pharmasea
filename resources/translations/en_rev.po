@@ -99,6 +99,9 @@ msgstr "evael sremotsuc lla litnu esolc t'naC"
 msgid "Can't start game until all players drop furniture"
 msgstr "erutinruf pord sreyalp lla litnu emag trats t'naC"
 
+msgid "Can't start game until there is a path to a register"
+msgstr "retsiger a ot htap a si ereht litnu emag trats t'naC"
+
 msgid "Loading..."
 msgstr "...gnidaoL"
 

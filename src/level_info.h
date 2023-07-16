@@ -380,9 +380,6 @@ struct GameMapInfo : public LevelInfo {
         generation::helper helper(EXAMPLE_MAP);
         helper.generate();
 
-        // TODO when you place a register we need to make sure you cant
-        // start the game until it has an empty spot infront of it
-        //
         // TODO run a lighter version of validate every time the player moves
         // things around
         helper.validate();

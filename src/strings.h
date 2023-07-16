@@ -238,7 +238,9 @@ constexpr const char* START_GAME = "Start Game";
 constexpr const char* CUSTOMERS_IN_STORE =
     "Can't close until all customers leave";
 constexpr const char* HOLDING_FURNITURE =
-    "Can't start game until all players drop furniture ";
+    "Can't start game until all players drop furniture";
+constexpr const char* NO_PATH_TO_REGISTER =
+    "Can't start game until there is a path to a register";
 constexpr const char* LOADING = "Loading...";
 constexpr const char* OPEN = "OPEN";
 constexpr const char* CLOSING = "CLOSING";

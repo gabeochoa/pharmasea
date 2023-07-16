@@ -28,8 +28,8 @@
 
     // by default we disable collisions when you are holding something
     // since its generally inside your bounding box
-    if (entity->has<CanBeHeld>()) {
-        return !entity->get<CanBeHeld>().is_held();
+    if (entity->has<CanBeHeld>() && entity->get<CanBeHeld>().is_held()) {
+        return false;
     }
 
     if (entity->has<IsSolid>()) {
@@ -325,6 +325,10 @@ struct EntityHelper {
     static inline void invalidatePathCache() { cache_is_walkable.clear(); }
 
     static inline bool isWalkable(vec2 pos) {
+        // TODO removed cache because it breaks the map-validation code
+        // i think the issue is that the cache is static so its stays whatever
+        // the initial state was
+        return isWalkableRawEntities(pos);
         TRACY_ZONE_SCOPED;
         if (!cache_is_walkable.contains(pos)) {
             bool walkable = isWalkableRawEntities(pos);

@@ -442,8 +442,9 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
     if (entity->is_missing<HasTimer>()) return;
 
     // Handle customers finally leaving the store
-    {
-        // TODO with the others siwtch to something else... customer spawner?
+    auto _customers_in_store = [entity]() {
+        // TODO with the others siwtch to something else... customer
+        // spawner?
         const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
 
         bool all_gone = true;
@@ -458,15 +459,17 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
         }
         entity->get<HasTimer>().write_reason(
             HasTimer::WaitingReason::CustomersInStore, !all_gone);
-    }
+        return;
+    };
 
     // Handle some player is holding furniture
-    {
+    auto _player_holding_furniture = [entity]() {
         bool all_empty = true;
-        // TODO i want to to do it this way: but players are not in entities, so
-        // its not possible
+        // TODO i want to to do it this way: but players are not in
+        // entities, so its not possible
         //
-        // auto players = EntityHelper::getAllWithComponent<CanHoldFurniture>();
+        // auto players =
+        // EntityHelper::getAllWithComponent<CanHoldFurniture>();
 
         for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
             if (e->is_missing<CanHoldFurniture>()) continue;
@@ -477,6 +480,55 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
         }
         entity->get<HasTimer>().write_reason(
             HasTimer::WaitingReason::HoldingFurniture, !all_empty);
+        return;
+    };
+
+    // TODO merge with map generation validation?
+    // Run lightweight map validation
+    auto _lightweight_map_validation = [entity]() {
+        // find customer
+        auto customer_opt =
+            EntityHelper::getFirstMatching([](const Entity& e) -> bool {
+                return check_name(e, strings::entity::CUSTOMER_SPAWNER);
+            });
+        // TODO we are validating this now, but we shouldnt have to worry about
+        // this in the future
+        VALIDATE(valid(customer_opt),
+                 "map needs to have at least one customer spawn point");
+        auto& customer = asE(customer_opt);
+
+        // ensure customers can make it to the register
+
+        auto reg_opt =
+            EntityHelper::getFirstMatching([&customer](const Entity& e) {
+                if (!check_name(e, strings::entity::REGISTER)) return false;
+                // TODO need a better way to do this
+                // 0 makes sense but is the position of the entity, when its
+                // infront?
+                auto new_path = astar::find_path(
+                    customer.get<Transform>().as2(),
+                    e.get<Transform>().tile_infront(1),
+                    std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+                return new_path.size() > 0;
+            });
+
+        entity->get<HasTimer>().write_reason(
+            HasTimer::WaitingReason::NoPathToRegister, !valid(reg_opt));
+
+        return;
+    };
+
+    // doing it this way so that if we wanna make them return bool itll be easy
+    typedef std::function<void()> WaitingFn;
+
+    std::vector<WaitingFn> fns{
+        _customers_in_store,
+        _player_holding_furniture,
+        _lightweight_map_validation,
+    };
+
+    for (auto fn : fns) {
+        fn();
     }
 }
 

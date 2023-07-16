@@ -427,8 +427,11 @@ inline void render_block_state_change_reason(const Entity& entity, float) {
     if (entity.is_missing<HasTimer>()) return;
     const auto& ht = entity.get<HasTimer>();
 
+    const auto debug_mode_on =
+        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+
     // if the round isnt over dont need to show anything
-    if (ht.currentRoundTime > 0) return;
+    if (ht.currentRoundTime > 0 && !debug_mode_on) return;
 
     //
     auto _render_single_reason = [](std::string text, float y) {
