@@ -43,9 +43,13 @@ struct HasWork : public BaseComponent {
         do_work = worker;
     }
 
+    [[nodiscard]] bool should_reset_on_empty() const { return reset_on_empty; }
+    void set_reset_on_empty(bool roe) { reset_on_empty = roe; }
+
    private:
     float pct_work_complete;
     bool more_to_do;
+    bool reset_on_empty;
 
     friend bitsery::Access;
     template<typename S>
@@ -54,5 +58,6 @@ struct HasWork : public BaseComponent {
         //
         s.value1b(more_to_do);
         s.value4b(pct_work_complete);
+        s.value1b(reset_on_empty);
     }
 };

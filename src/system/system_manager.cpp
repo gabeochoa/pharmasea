@@ -475,4 +475,22 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
     }
 }
 
+void reset_empty_work_furniture(const std::shared_ptr<Entity>& entity,
+                                float dt) {
+    if (entity->is_missing<HasWork>()) return;
+    if (entity->is_missing<CanHoldItem>()) return;
+
+    HasWork& hasWork = entity->get<HasWork>();
+    if (!hasWork.should_reset_on_empty()) return;
+
+    const CanHoldItem& chi = entity->get<CanHoldItem>();
+    if (chi.empty()) {
+        hasWork.reset_pct();
+        return;
+    }
+
+    // TODO if its not empty, we have to see if its an item that can be worked
+    return;
+}
+
 }  // namespace system_manager

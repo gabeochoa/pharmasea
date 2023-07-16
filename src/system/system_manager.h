@@ -44,6 +44,9 @@ void process_trigger_area(const std::shared_ptr<Entity>& entity, float dt);
 // loop / entity thing or mayeb all the server only ones?
 void process_spawner(const std::shared_ptr<Entity>& entity, float dt);
 
+void reset_empty_work_furniture(const std::shared_ptr<Entity>& entity,
+                                float dt);
+
 void run_timer(const std::shared_ptr<Entity>& entity, float dt);
 void sophie(const std::shared_ptr<Entity>& entity, float dt);
 
@@ -227,6 +230,7 @@ struct SystemManager {
             system_manager::process_is_container_and_should_update_item(entity,
                                                                         dt);
             system_manager::process_spawner(entity, dt);
+            system_manager::reset_empty_work_furniture(entity, dt);
         }
     }
 

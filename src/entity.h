@@ -739,6 +739,29 @@ static void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
         .set_time_between(2.f);
 }
 
+static void make_blender(Entity& blender, vec2 pos) {
+    entities::make_furniture(blender,
+                             DebugOptions{.name = strings::entity::BLENDER},
+                             pos, ui::color::red, ui::color::yellow);
+
+    blender.addComponent<HasWork>().init(
+        [](std::shared_ptr<Entity> owner, HasWork& hasWork,
+           std::shared_ptr<Entity> person, float dt) {
+            CanHoldItem& canHold = owner->get<CanHoldItem>();
+            if (canHold.empty()) return;
+            std::shared_ptr<Item> item = canHold.item();
+
+            const float amt = 1.5f;
+            hasWork.increase_pct(amt * dt);
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
+
+                // TODO do work on the item you are holding
+            }
+        });
+    blender.addComponent<ShowsProgressBar>();
+}
+
 // This will be a catch all for anything that just needs to get updated
 static void make_sophie(Entity& sophie, vec3 pos) {
     make_entity(sophie, {strings::entity::SOPHIE}, pos);

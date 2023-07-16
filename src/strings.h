@@ -103,6 +103,7 @@ constexpr const char* PILL_DISPENSER = "pill dispenser";
 constexpr const char* TRIGGER_AREA = "trigger area";
 constexpr const char* CUSTOMER_SPAWNER = "customer spawner";
 constexpr const char* SOPHIE = "sophie";
+constexpr const char* BLENDER = "blender";
 
 constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
 
