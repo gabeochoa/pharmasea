@@ -720,11 +720,8 @@ static void make_trigger_area(
         });
 }
 
-static void spawn_customer(vec2 pos) {
-    // TODO this requires us to cpp file
-    // auto& entity = EntityHelper::createEntity();
-    // make_customer(entity, pos);
-}
+// This lives in entityhelper for now
+static void spawn_customer(vec2 pos);
 
 static void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
     make_entity(customer_spawner, {strings::entity::CUSTOMER_SPAWNER}, pos);

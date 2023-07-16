@@ -19,7 +19,6 @@
 #include "engine/statemanager.h"
 #include "entity.h"
 #include "item.h"
-
 // TODO eventually move to input manager but for now has to be in here
 // to prevent circular includes
 
@@ -341,3 +340,12 @@ struct EntityHelper {
 
 #pragma clang diagnostic pop
 };
+
+namespace entities {
+// TODO eventually move to entity.cpp but that breaks the std library so idk
+// itll stay here for now
+static void spawn_customer(vec2 pos) {
+    auto& entity = EntityHelper::createEntity();
+    make_customer(entity, pos);
+}
+}  // namespace entities
