@@ -25,7 +25,7 @@ struct PolymorphicBaseClass<BaseComponent>
           ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom, IsItemContainer,
           UsesCharacterModel, ShowsProgressBar, DebugName, HasDynamicModelName,
           IsTriggerArea, HasSpeechBubble, Indexer, IsSpawner, HasTimer,
-          HasRopeToItem, HasSubtype, IsItem,
+          HasRopeToItem, HasSubtype, IsItem, IsDrink, AddsIngredient,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

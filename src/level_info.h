@@ -55,6 +55,7 @@ const char MED_CAB = 'M';
 const char PILL_DISP = 'P';
 const char BLENDER = 'b';
 const char SODA_MACHINE = 'S';
+const char DRINK = 'd';
 
 const char SOPHIE = 's';
 
@@ -176,6 +177,10 @@ struct helper {
             } break;
             case SODA_MACHINE: {
                 (entities::make_soda_machine(create(), location));
+                return;
+            } break;
+            case DRINK: {
+                (items::make_drink(create(), location));
                 return;
             } break;
             case 32: {
@@ -390,11 +395,7 @@ struct GameMapInfo : public LevelInfo {
 
         generation::helper helper(EXAMPLE_MAP);
         helper.generate();
-
-        // TODO run a lighter version of validate every time the player moves
-        // things around
         helper.validate();
-
         EntityHelper::invalidatePathCache();
     }
 

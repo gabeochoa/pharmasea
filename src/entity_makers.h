@@ -3,8 +3,10 @@
 #pragma once
 
 #include "components/has_rope_to_item.h"
+#include "dataclass/ingredient.h"
 #include "entity.h"
 //
+#include "components/adds_ingredient.h"
 #include "components/can_be_ghost_player.h"
 #include "components/can_be_held.h"
 #include "components/can_be_highlighted.h"
@@ -29,6 +31,7 @@
 #include "components/has_waiting_queue.h"
 #include "components/has_work.h"
 #include "components/indexer.h"
+#include "components/is_drink.h"
 #include "components/is_item_container.h"
 #include "components/is_rotatable.h"
 #include "components/is_snappable.h"
@@ -49,11 +52,13 @@ static void register_all_components() {
         DebugName, Transform, HasName,
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
+        IsDrink,
         //
-        CanHoldItem, CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
-        CanBeGhostPlayer, CanPerformJob, CanBePushed, CanHaveAilment,
-        CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
-        ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
+        AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
+        CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
+        CanHaveAilment, CustomHeldItemPosition, CanBeHeld,
+        CanGrabFromOtherFurniture, ConveysHeldItem, CanBeTakenFrom,
+        UsesCharacterModel, Indexer,
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
         HasBaseSpeed, HasRopeToItem,
@@ -239,6 +244,19 @@ static void make_furniture(Entity& furniture, const DebugOptions& options,
     }
 }
 
+static void process_table_working(Entity& table, HasWork& hasWork,
+                                  Entity& player, float dt) {
+    CanHoldItem& tableCHI = table.get<CanHoldItem>();
+    if (tableCHI.empty()) return;
+
+    if (!tableCHI.item()->has<HasWork>()) return;
+    HasWork& itemHasWork = tableCHI.item()->get<HasWork>();
+    if (itemHasWork.do_work)
+        itemHasWork.do_work(*tableCHI.item(), hasWork, player, dt);
+
+    return;
+}
+
 static void make_table(Entity& table, vec2 pos) {
     entities::make_furniture(table,
                              DebugOptions{.name = strings::entity::TABLE}, pos,
@@ -247,14 +265,9 @@ static void make_table(Entity& table, vec2 pos) {
     table.get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);
 
-    table.addComponent<HasWork>().init(
-        [](Entity&, HasWork& hasWork, Entity&, float dt) {
-            // TODO eventually we need it to decide whether it has work
-            // based on the current held item
-            const float amt = 0.5f;
-            hasWork.increase_pct(amt * dt);
-            if (hasWork.is_work_complete()) hasWork.reset_pct();
-        });
+    table.addComponent<HasWork>().init(std::bind(
+        process_table_working, std::placeholders::_1, std::placeholders::_2,
+        std::placeholders::_3, std::placeholders::_4));
     table.addComponent<ShowsProgressBar>();
 }
 
@@ -697,6 +710,52 @@ static void make_soda_spout(Item& soda_spout, vec2 pos) {
 
     soda_spout.get<IsItem>().set_hb_filter(IsItem::HeldBy::SODA_MACHINE |
                                            IsItem::HeldBy::PLAYER);
+
+    soda_spout.addComponent<AddsIngredient>(Ingredient::Soda);
+}
+
+static void process_drink_working(Entity& drink, HasWork& hasWork,
+                                  Entity& player, float dt) {
+    auto _process_add_ingredient = [&]() {
+        const CanHoldItem& playerCHI = player.get<CanHoldItem>();
+        // not holding anything
+        if (playerCHI.empty()) return;
+        std::shared_ptr<Item> item = playerCHI.const_item();
+        // not holding item that adds ingredients
+        if (item->is_missing<AddsIngredient>()) return;
+        Ingredient ing = item->get<AddsIngredient>().get();
+
+        IsDrink& isdrink = drink.get<IsDrink>();
+        // Already has the ingredient
+        if (isdrink.has_ingredient(ing)) return;
+
+        const float amt = 1.f;
+        hasWork.increase_pct(amt * dt);
+        if (hasWork.is_work_complete()) {
+            isdrink.add_ingredient(ing);
+            hasWork.reset_pct();
+        }
+    };
+
+    _process_add_ingredient();
+}
+
+static void make_drink(Item& drink, vec2 pos) {
+    make_item(drink, {.name = strings::item::DRINK}, pos);
+
+    drink.addComponent<ModelRenderer>().update(ModelInfo{
+        .model_name = "bottle_a_brown",
+        .size_scale = 2.0f,
+        .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 0,
+    });
+
+    drink.addComponent<IsDrink>();
+    drink.addComponent<HasWork>().init(std::bind(
+        process_drink_working, std::placeholders::_1, std::placeholders::_2,
+        std::placeholders::_3, std::placeholders::_4));
+    // TODO should this just be part of has work?
+    drink.addComponent<ShowsProgressBar>();
 }
 
 static void make_item_type(Item& item, const std::string& type_name,  //
