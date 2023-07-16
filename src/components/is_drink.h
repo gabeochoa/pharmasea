@@ -8,9 +8,6 @@
 #include "../vendor_include.h"
 #include "base_component.h"
 
-const int MAX_INGREDIENT_TYPES = 32;
-using IngredientBitSet = std::bitset<MAX_INGREDIENT_TYPES>;
-
 struct IsDrink : public BaseComponent {
     virtual ~IsDrink() {}
 
@@ -23,6 +20,12 @@ struct IsDrink : public BaseComponent {
         log_info("added ingredient {}", magic_enum::enum_name<Ingredient>(i));
         int index = magic_enum::enum_integer<Ingredient>(i);
         ingredients[index] = true;
+    }
+
+    [[nodiscard]] bool matches_recipe(const IngredientBitSet& recipe) const {
+        bool has_req = (recipe & ingredients) == recipe;
+        bool has_extra = (recipe ^ ingredients).any();
+        return has_req && !has_extra;
     }
 
    private:

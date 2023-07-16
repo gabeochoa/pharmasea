@@ -744,7 +744,7 @@ static void make_drink(Item& drink, vec2 pos) {
     make_item(drink, {.name = strings::item::DRINK}, pos);
 
     drink.addComponent<ModelRenderer>().update(ModelInfo{
-        .model_name = "bottle_a_brown",
+        .model_name = "eggcup",
         .size_scale = 2.0f,
         .position_offset = vec3{0, 0, 0},
         .rotation_angle = 0,
@@ -756,6 +756,15 @@ static void make_drink(Item& drink, vec2 pos) {
         std::placeholders::_3, std::placeholders::_4));
     // TODO should this just be part of has work?
     drink.addComponent<ShowsProgressBar>();
+
+    drink.addComponent<HasDynamicModelName>().init(
+        "eggcup", HasDynamicModelName::DynamicType::Ingredients,
+        [](const Item& owner, const std::string base_name) -> std::string {
+            const IsDrink& isdrink = owner.get<IsDrink>();
+            if (isdrink.matches_recipe(recipe::COKE)) return "bottle_a_brown";
+            if (isdrink.matches_recipe(recipe::RUM_AND_COKE)) return "cocktail";
+            return base_name;
+        });
 }
 
 static void make_item_type(Item& item, const std::string& type_name,  //

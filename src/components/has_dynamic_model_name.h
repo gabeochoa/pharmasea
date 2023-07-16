@@ -11,11 +11,7 @@
 struct Entity;
 
 struct HasDynamicModelName : public BaseComponent {
-    enum DynamicType {
-        OpenClosed,
-        Subtype,
-        EmptyFull,
-    };
+    enum DynamicType { OpenClosed, Subtype, EmptyFull, Ingredients };
 
     virtual ~HasDynamicModelName() {}
     typedef std::function<std::string(const Entity&, const std::string&)>
@@ -36,6 +32,9 @@ struct HasDynamicModelName : public BaseComponent {
                 // TODO eventually id like the logic to live in here assuming we
                 // have a ton using these. if its just one for each then fetcher
                 // (Custom:) is perfectly fine
+            case Ingredients: {
+                return fetcher(owner, base_name);
+            } break;
             case EmptyFull: {
                 return fetcher(owner, base_name);
             } break;

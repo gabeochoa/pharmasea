@@ -214,6 +214,16 @@ struct Preload {
                 .filename = "banana.obj",
                 .libraryname = "banana",
             },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "cocktail.obj",
+                .libraryname = "cocktail",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "eggCup.obj",
+                .libraryname = "eggcup",
+            },
         };
 
         for (const auto& m : models) {
