@@ -14,6 +14,8 @@
 constexpr int MAX_MAP_SIZE = 20;
 constexpr int MAX_SEED_LENGTH = 20;
 
+extern std::vector<std::string> EXAMPLE_MAP;
+
 static void generate_and_insert_walls(std::string /* seed */) {
     // TODO generate walls based on seed
     const auto d_color = (Color){155, 75, 0, 255};
@@ -375,28 +377,7 @@ struct GameMapInfo : public LevelInfo {
     virtual void generate_map() override {
         server_entities_DO_NOT_USE.clear();
 
-        // TODO eventually this would be generated using the seed
-        const std::string EXAMPLE_MAP_ = R"(
-#####################
-#...................#
-#.....t.............#
-#P....R....@........#
-#B....R.............#
-#M....t...0.........#
-#.....t.............#
-#.....t.............#
-###########.....#####
-#...................#
-#..>v.....#.........#
-#..<>.....#.........#
-#..<>.....#.........#
-#..^<.....#.........#
-#.........#.........#
-#######..############
-..............C.....s)";
-
-        auto lines = util::split_string(EXAMPLE_MAP_, "\n");
-        generation::helper helper(lines);
+        generation::helper helper(EXAMPLE_MAP);
         helper.generate();
 
         // TODO when you place a register we need to make sure you cant
@@ -405,153 +386,6 @@ struct GameMapInfo : public LevelInfo {
         // TODO run a lighter version of validate every time the player moves
         // things around
         helper.validate();
-
-        /*
-        auto generate_conveyer_test = []() {
-            auto location = vec2{-5, 0};
-            for (int i = 0; i < 5; i++) {
-                location.y++;
-                std::shared_ptr<Furniture> conveyer;
-                conveyer.reset(entities::make_grabber(location));
-                EntityHelper::addEntity(conveyer);
-            }
-
-            {
-                location.y += 1;
-                std::shared_ptr<Furniture> conveyer;
-                conveyer.reset(entities::make_grabber(location));
-                conveyer->get<Transform>().rotate_facing_clockwise(270);
-                EntityHelper::addEntity(conveyer);
-            }
-
-            {
-                location.x -= 1;
-                std::shared_ptr<Furniture> conveyer;
-                conveyer.reset(entities::make_grabber(location));
-                conveyer->get<Transform>().rotate_facing_clockwise(180);
-                EntityHelper::addEntity(conveyer);
-            }
-
-            for (int i = 0; i < 4; i++) {
-                location.y--;
-                std::shared_ptr<Furniture> conveyer;
-                conveyer.reset(entities::make_grabber(location));
-                conveyer->get<Transform>().rotate_facing_clockwise(180);
-                EntityHelper::addEntity(conveyer);
-            }
-
-            {
-                location.y--;
-                std::shared_ptr<Furniture> conveyer;
-                conveyer.reset(entities::make_grabber(location));
-                conveyer->get<Transform>().rotate_facing_clockwise();
-                EntityHelper::addEntity(conveyer);
-
-                std::shared_ptr<Pill> item;
-                item.reset(new Pill(location, Color{255, 15, 240, 255}));
-                ItemHelper::addItem(item);
-                conveyer->get<CanHoldItem>().update(item);
-            }
-        };
-        generate_conveyer_test();
-
-        auto generate_tables = [this]() {
-            {
-                const auto location = get_rand_walkable();
-
-                std::shared_ptr<Furniture> table;
-                table.reset(entities::make_table(location));
-                EntityHelper::addEntity(table);
-
-                std::shared_ptr<Pill> item;
-                item.reset(new Pill(location, Color{255, 15, 240, 255}));
-                ItemHelper::addItem(item);
-                table->get<CanHoldItem>().update(item);
-            }
-
-            {
-                const auto location = get_rand_walkable();
-
-                std::shared_ptr<Furniture> table;
-                table.reset(entities::make_table(location));
-                EntityHelper::addEntity(table);
-
-                std::shared_ptr<PillBottle> item;
-                item.reset(new PillBottle(location, RED));
-                ItemHelper::addItem(item);
-                table->get<CanHoldItem>().update(item);
-            }
-        };
-
-        const auto generate_medicine_cabinet = [this]() {
-            std::shared_ptr<Furniture> medicineCab;
-            const auto location = get_rand_walkable();
-            medicineCab.reset(entities::make_medicine_cabinet(location));
-            EntityHelper::addEntity(medicineCab);
-        };
-
-        const auto generate_bag_box = [this]() {
-            std::shared_ptr<Furniture> bagbox;
-            const auto location = get_rand_walkable();
-            bagbox.reset(entities::make_bagbox(location));
-            EntityHelper::addEntity(bagbox);
-        };
-
-        const auto generate_register = [this]() {
-            std::shared_ptr<Furniture> reg;
-            const auto location = get_rand_walkable();
-            reg.reset(entities::make_register(location));
-            EntityHelper::addEntity(reg);
-        };
-
-        // TODO replace with a CustomerSpawner eventually
-        const auto generate_customer = []() {
-            {
-                const auto location = vec2{-10 * TILESIZE, -10 * TILESIZE};
-                std::shared_ptr<Entity> customer;
-                customer.reset(make_customer(vec::to3(location), false));
-                EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
-            }
-
-            if (1) {
-                const auto location = vec2{-11 * TILESIZE, -10 * TILESIZE};
-                std::shared_ptr<Entity> customer;
-                customer.reset(make_customer(vec::to3(location)));
-                EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
-            }
-
-            if (0) {
-                const auto location = vec2{-12 * TILESIZE, -10 * TILESIZE};
-                std::shared_ptr<Entity> customer;
-                customer.reset(make_customer(vec::to3(location)));
-                EntityHelper::addEntity(dynamic_pointer_cast<Entity>(customer));
-            }
-        };
-
-        auto generate_test = [this]() {
-            for (int i = 0; i < 5; i++) {
-                const auto location = get_rand_walkable();
-                std::shared_ptr<Furniture> conveyer;
-
-                if (i == 0)
-                    conveyer.reset(entities::make_conveyer(location));
-                else
-                    conveyer.reset(entities::make_grabber(location));
-
-                EntityHelper::addEntity(conveyer);
-            }
-        };
-
-        generate_and_insert_walls(this->seed);
-        generate_tables();
-        generate_tables();
-        generate_medicine_cabinet();
-        generate_bag_box();
-
-        generate_register();
-        generate_customer();
-        generate_test();
-        */
 
         EntityHelper::invalidatePathCache();
     }

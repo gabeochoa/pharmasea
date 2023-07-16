@@ -11,7 +11,7 @@ constexpr std::string_view TINY = R"(
 ..@......
 ........#)";
 
-constexpr std::string_view EXAMPLE_MAP = R"(
+constexpr std::string_view EXAMPLE_MAP_OLD = R"(
 ####################################################
 #......TTTTTTTTTTTT................................#
 #..................................................#
