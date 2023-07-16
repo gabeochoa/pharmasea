@@ -264,10 +264,9 @@ struct LevelInfo {
 
     void grab_things() {
         {
-            entities.clear();
+            this->entities.clear();
             EntityHelper::cleanup();
-            auto es = EntityHelper::get_entities();
-            this->entities = es;
+            this->entities = EntityHelper::get_entities();
             num_entities = this->entities.size();
         }
     }

@@ -126,7 +126,7 @@ struct EntityHelper {
 
     static void cleanup() {
         // Cleanup entities marked cleanup
-        auto entities = get_entities();
+        Entities& entities = get_entities();
 
         auto it = entities.begin();
         while (it != entities.end()) {

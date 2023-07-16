@@ -311,12 +311,13 @@ void process_is_container_and_should_backfill_item(
     if (entity->is_missing<Indexer>()) return;
     backfill_empty_container(strings::item::PILL, entity, pos,
                              entity->get<Indexer>().value());
+    // entity->get<Indexer>().mark_change_completed();
 }
 
 void process_is_container_and_should_update_item(std::shared_ptr<Entity> entity,
                                                  float) {
     if (entity->is_missing<Indexer>()) return;
-    auto& indexer = entity->get<Indexer>();
+    Indexer& indexer = entity->get<Indexer>();
     // user didnt change the index so we are good to wait
     if (indexer.value_same_as_last_render()) return;
 
