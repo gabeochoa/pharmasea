@@ -64,13 +64,12 @@ inline void test_all_neighbors() {
 static std::vector<Entity> ents;
 
 inline bool canvisit(const vec2& pos) {
-    auto is_collidable = [](Entity* entity) {
-        if (!entity) return false;
-        return (entity->has<IsSolid>());
+    auto is_collidable = [](const Entity& entity) {
+        return (entity.has<IsSolid>());
     };
     bool hit_impassible_entity = false;
-    for (auto entity : ents) {
-        if (!is_collidable(&entity)) continue;
+    for (const auto& entity : ents) {
+        if (!is_collidable(entity)) continue;
 
         if (vec::distance(entity.template get<Transform>().as2(), pos) <
             TILESIZE / 2.f) {
@@ -86,7 +85,9 @@ inline auto p(vec2 a, vec2 b) {
     return astar::find_path(a, b, std::bind(&canvisit, std::placeholders::_1));
 }
 
-inline auto p(Entity* a, vec2 b) { return p(a->get<Transform>().as2(), b); }
+inline auto p(const Entity& a, vec2 b) {
+    return p(a.get<Transform>().as2(), b);
+}
 
 inline std::pair<vec2, vec2> setup(const std::string map) {
     auto lines = util::split_string(map, "\n");
