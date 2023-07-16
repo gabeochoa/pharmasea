@@ -366,7 +366,7 @@ void refetch_dynamic_model_names(const std::shared_ptr<Entity>& entity, float) {
 
     HasDynamicModelName& hDMN = entity->get<HasDynamicModelName>();
     ModelRenderer& renderer = entity->get<ModelRenderer>();
-    renderer.update_model_name(hDMN.fetch());
+    renderer.update_model_name(hDMN.fetch(*entity));
 }
 
 void count_max_trigger_area_entrants(const std::shared_ptr<Entity>& entity,

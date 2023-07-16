@@ -797,20 +797,33 @@ static void make_pill(Entity& pill, vec2 pos) {
     });
 
     pill.addComponent<HasDynamicModelName>().init(
-        "pill_red", HasDynamicModelName::DynamicType::Subtype);
-
-    // switch (type) {
-    // case PillType::Red:
-    // return ModelLibrary::get().get("pill_red");
-    // case PillType::RedLong:
-    // return ModelLibrary::get().get("pill_redlong");
-    // case PillType::Blue:
-    // return ModelLibrary::get().get("pill_blue");
-    // case PillType::BlueLong:
-    // return ModelLibrary::get().get("pill_bluelong");
-    // }
-    // log_warn("Failed to get matching model for pill type: {}",
-    // magic_enum::enum_name(type));
+        "pill_red",  //
+        HasDynamicModelName::DynamicType::Subtype,
+        [](const Entity& owner, const std::string base_name) -> std::string {
+            if (owner.is_missing<HasSubtype>()) {
+                log_warn(
+                    "Generating a dynamic model name with a subtype, but your "
+                    "entity doesnt have a subtype {}",
+                    owner.get<DebugName>().name());
+                return base_name;
+            }
+            const Subtype type = owner.get<HasSubtype>().get_type();
+            switch (type) {
+                case Subtype::PillRed:
+                    return "pill_red";
+                case Subtype::PillRedLong:
+                    return "pill_redlong";
+                case Subtype::PillBlue:
+                    return "pill_blue";
+                case Subtype::PillBlueLong:
+                    return "pill_bluelong";
+                default:
+                    log_warn("Failed to get matching model for pill type: {}",
+                             magic_enum::enum_name(type));
+                    break;
+            }
+            return base_name;
+        });
 }
 
 }  // namespace items

@@ -10,10 +10,10 @@ enum Subtype {
     INVALID = 0,
 
     PILL_START,
-    Red,
-    RedLong,
-    Blue,
-    BlueLong,
+    PillRed,
+    PillRedLong,
+    PillBlue,
+    PillBlueLong,
     PILL_END,
 
 };
