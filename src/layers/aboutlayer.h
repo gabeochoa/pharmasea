@@ -45,7 +45,7 @@ struct AboutLayer : public Layer {
                                                     Size_Pct(0.5, 0.f)));
                 auto about_text = ui_context->own(
                     Widget(Size_Px(200.f, 0.5f), Size_Px(400.f, 0.5f)));
-                text(*about_text, text_lookup(strings::i18n::ABOUT_INFO));
+                text(*about_text, text_lookup(strings::ABOUT_INFO));
                 if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                            text_lookup(strings::i18n::BACK_BUTTON))) {
                     MenuState::get().go_back();

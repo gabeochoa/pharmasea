@@ -1,22 +1,5 @@
-msgid ""
-msgstr ""
-"Project-Id-Version: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-07-07 09:51-0800\n"
-"Last-Translator: Gabe Ochoa <>\n"
-"Language-Team:  <>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
-"Content-Transfer-Encoding: 8bit\n"
-
 msgid "About"
 msgstr "tuobA"
-
-msgid "Join"
-msgstr "nioJ"
-
-msgid "Host"
-msgstr "tsoH"
 
 msgid "Play"
 msgstr "yalP"
@@ -27,9 +10,6 @@ msgstr "sgnitteS"
 msgid "Exit"
 msgstr "tixE"
 
-msgid "Edit"
-msgstr "tidE"
-
 msgid "Back"
 msgstr "kcaB"
 
@@ -39,26 +19,14 @@ msgstr "eunitnoC"
 msgid "Quit"
 msgstr "tiuQ"
 
-msgid "safe zone"
-msgstr "enoz efas"
+msgid "Join"
+msgstr "nioJ"
 
-msgid "Show Streamer Safe Box"
-msgstr "xoB efaS remaertS wohS"
+msgid "Host"
+msgstr "tsoH"
 
-msgid "Enable Post-Processing Shaders"
-msgstr "sredahS gnissecorP-tsoP elbanE"
-
-msgid "Master Volume"
-msgstr "emuloV retsaM"
-
-msgid "Music Volume"
-msgstr "emuloV cisuM"
-
-msgid "Resolution"
-msgstr "noituloseR"
-
-msgid "Language"
-msgstr "egaugnaL"
+msgid "Edit"
+msgstr "tidE"
 
 msgid "Start"
 msgstr "tratS"
@@ -90,6 +58,27 @@ msgstr "wohS"
 msgid "Copy"
 msgstr "ypoC"
 
+msgid "safe zone"
+msgstr "enoz efas"
+
+msgid "Show Streamer Safe Box"
+msgstr "xoB efaS remaertS wohS"
+
+msgid "Enable Post-Processing Shaders"
+msgstr "sredahS gnissecorP-tsoP elbanE"
+
+msgid "Master Volume"
+msgstr "emuloV retsaM"
+
+msgid "Music Volume"
+msgstr "emuloV cisuM"
+
+msgid "Resolution"
+msgstr "noituloseR"
+
+msgid "Language"
+msgstr "egaugnaL"
+
 msgid "Start Game"
 msgstr "emaG tratS"
 
@@ -116,5 +105,4 @@ msgstr "DESOLC"
 
 msgid "Next Round Starting In"
 msgstr "nI gnitratS dnuoR txeN"
-
 

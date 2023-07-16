@@ -101,6 +101,7 @@ leak:
 	xctrace record --template 'Leaks' --output 'recording.trace' --launch $(OUTPUT_EXE)
 
 translate:
+	python3 scripts/extract_strings.py
 	msgfmt -o resources/translations/en_us.mo resources/translations/en_us.po
 	msgfmt -o resources/translations/en_rev.mo resources/translations/en_rev.po
 

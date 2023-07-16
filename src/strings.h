@@ -177,6 +177,14 @@ constexpr const char* PHARMASEA = "Pharmasea";
 // TODO translate
 }  // namespace menu
 
+// This is not aligned on purpose
+// TODO add to po file
+constexpr const char* ABOUT_INFO = R"(
+A game by: 
+    Gabe
+    Brett
+    Alice)";
+
 namespace i18n {
 
 // DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
@@ -187,14 +195,6 @@ namespace i18n {
 // DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
 // DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
 // DO NOT CHANGE THESE WITHOUT CHANGING THE ONES IN THE .PO FILES
-
-// This is not aligned on purpose
-// TODO add to po file
-constexpr const char* ABOUT_INFO = R"(
-A game by: 
-    Gabe
-    Brett
-    Alice)";
 
 // Menu Buttons
 constexpr const char* ABOUT = "About";
