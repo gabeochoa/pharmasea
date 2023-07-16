@@ -7,11 +7,10 @@
 #include "../engine/statemanager.h"
 #include "../vendor_include.h"
 #include "base_component.h"
+#include "has_subtype.h"
 
 struct HasDynamicModelName : public BaseComponent {
-    enum DynamicType {
-        OpenClosed,
-    };
+    enum DynamicType { OpenClosed, Subtype };
 
     virtual ~HasDynamicModelName() {}
     typedef std::function<std::string()> ModelNameFetcher;
@@ -22,11 +21,16 @@ struct HasDynamicModelName : public BaseComponent {
                 "calling HasDynamicModelName::fetch() without initializing");
 
         switch (dynamic_type) {
-            case OpenClosed:
+            case OpenClosed: {
                 const bool in_planning =
                     GameState::get().is(game::State::Planning);
                 if (in_planning) return base_name;
                 return fmt::format("open_{}", base_name);
+            } break;
+            case Subtype: {
+                // TODO support fetching subtype based model name
+                return base_name;
+            } break;
         }
         return base_name;
     }

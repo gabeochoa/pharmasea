@@ -26,7 +26,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsItemContainer<Bag>, IsItemContainer<PillBottle>,
           IsItemContainer<Pill>, UsesCharacterModel, ShowsProgressBar,
           DebugName, HasDynamicModelName, IsTriggerArea, HasSpeechBubble,
-          Indexer, IsSpawner, HasTimer,
+          Indexer, IsSpawner, HasTimer, HasSubtype,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

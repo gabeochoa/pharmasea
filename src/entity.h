@@ -38,6 +38,10 @@
 #include "components/simple_colored_box_renderer.h"
 #include "components/transform.h"
 #include "components/uses_character_model.h"
+//
+// Item related components
+#include "components/has_subtype.h"
+//
 #include "engine/assert.h"
 #include "external_include.h"
 #include "strings.h"
@@ -238,7 +242,7 @@ static void register_all_components() {
         HasWaitingQueue, CanBeTakenFrom, IsItemContainer<Bag>,
         IsItemContainer<PillBottle>, IsItemContainer<Pill>, UsesCharacterModel,
         ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
-        HasSpeechBubble, Indexer, IsSpawner, HasTimer>();
+        HasSpeechBubble, Indexer, IsSpawner, HasTimer, HasSubtype>();
 
     // Now that they are all registered we can delete them
     //
@@ -771,3 +775,42 @@ static void make_sophie(Entity& sophie, vec3 pos) {
 }
 
 }  // namespace entities
+
+namespace items {
+
+static void make_item(Entity& item, const DebugOptions& options,
+                      vec2 p = {0, 0}) {
+    make_entity(item, options, {p.x, 0, p.y});
+}
+
+static void make_pill(Entity& pill, vec2 pos) {
+    make_item(pill, {.name = strings::item::PILL}, pos);
+    pill.addComponent<HasSubtype>(Subtype::PILL_START, Subtype::PILL_END,
+                                  Subtype::INVALID);
+
+    pill.addComponent<ModelRenderer>().update(ModelInfo{
+        .model_name = "pill_red",
+        // Scale needs to be a vec3 {3.f, 3.f, 12.f}
+        .size_scale = 3.f,
+        .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 0,
+    });
+
+    pill.addComponent<HasDynamicModelName>().init(
+        "pill_red", HasDynamicModelName::DynamicType::Subtype);
+
+    // switch (type) {
+    // case PillType::Red:
+    // return ModelLibrary::get().get("pill_red");
+    // case PillType::RedLong:
+    // return ModelLibrary::get().get("pill_redlong");
+    // case PillType::Blue:
+    // return ModelLibrary::get().get("pill_blue");
+    // case PillType::BlueLong:
+    // return ModelLibrary::get().get("pill_bluelong");
+    // }
+    // log_warn("Failed to get matching model for pill type: {}",
+    // magic_enum::enum_name(type));
+}
+
+}  // namespace items

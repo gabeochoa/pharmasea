@@ -324,6 +324,8 @@ struct LobbyMapInfo : public LevelInfo {
             entities::make_trigger_area(entity, {5, TILESIZE / -2.f, 10}, 8, 3,
                                         text_lookup(strings::i18n::START_GAME));
         }
+
+        items::make_pill(EntityHelper::createEntity(), vec2{2, 2});
     }
 
     virtual void onDraw(float dt) const override {
