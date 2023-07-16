@@ -32,7 +32,20 @@ struct IsItemContainer : public BaseComponent {
 
     [[nodiscard]] const std::string& type() const { return item_type; }
 
+    IsItemContainer& set_max_generations(int mx) {
+        max_gens = mx;
+        return *this;
+    }
+
+    [[nodiscard]] bool hit_max() const { return gens >= max_gens; }
+    IsItemContainer& increment() {
+        gens++;
+        return *this;
+    }
+
    private:
+    int gens = 0;
+    int max_gens = -1;
     std::string item_type;
 
     friend bitsery::Access;
@@ -41,5 +54,6 @@ struct IsItemContainer : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         s.text1b(item_type, MAX_ITEM_NAME);
+        s.value4b(max_gens);
     }
 };

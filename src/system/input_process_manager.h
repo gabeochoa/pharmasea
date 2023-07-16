@@ -385,13 +385,13 @@ inline void work_furniture(const std::shared_ptr<Entity> player,
 }
 
 inline void handle_drop(const std::shared_ptr<Entity>& player) {
-    CanHighlightOthers& cho = player->get<CanHighlightOthers>();
+    const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
     // This is for example putting a pill into a bag you are holding
     // taking an item and placing it into the container in your hand
     const auto _merge_item_from_furniture_into_hand_item =
         [player]() -> tl::expected<bool, std::string> {
-        CanHighlightOthers& cho = player->get<CanHighlightOthers>();
+        const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
         std::shared_ptr<Item> item = player->get<CanHoldItem>().item();
 
@@ -460,7 +460,7 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
      * */
     const auto _merge_item_from_furniture_around_hand_item =
         [player]() -> tl::expected<bool, std::string> {
-        CanHighlightOthers& cho = player->get<CanHighlightOthers>();
+        const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
         CanHoldItem& playerCHI = player->get<CanHoldItem>();
 
         if (!playerCHI.is_holding_item()) {

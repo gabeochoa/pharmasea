@@ -445,9 +445,6 @@ static void make_medicine_cabinet(Entity& container, vec2 pos) {
 }
 
 static void make_pill_dispenser(Entity& container, vec2 pos) {
-    // TODO when making a new itemcontainer, it silently creates a new
-    // component and then youll get a polymorphism error, probably need
-    // something
     entities::make_itemcontainer(container, {strings::entity::PILL_DISPENSER},
                                  pos, strings::item::PILL);
     if (ENABLE_MODELS) {

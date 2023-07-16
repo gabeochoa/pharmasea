@@ -282,10 +282,13 @@ void backfill_empty_container(const std::string& match_type,
                               std::shared_ptr<Entity>& entity,
                               TArgs&&... args) {
     if (entity->is_missing<IsItemContainer>()) return;
-    const IsItemContainer& iic = entity->get<IsItemContainer>();
+    IsItemContainer& iic = entity->get<IsItemContainer>();
     if (iic.type() != match_type) return;
     CanHoldItem& canHold = entity->get<CanHoldItem>();
     if (canHold.is_holding_item()) return;
+
+    if (iic.hit_max()) return;
+    iic.increment();
 
     // create item
     std::shared_ptr<Item> item =
