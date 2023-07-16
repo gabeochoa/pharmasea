@@ -89,12 +89,13 @@ struct Server {
                 // Pretend this came from the other client
                 .client_id = player.first,
                 .msg_type = network::ClientPacket::MsgType::PlayerRare,
-                .msg = network::ClientPacket::PlayerRareInfo({
-                    .client_id = player.first,
-                    .model_index = player.second->get<UsesCharacterModel>()
-                                       .index_server_only(),
-                    .last_ping = player.second->get<HasClientID>().ping(),
-                }),
+                .msg =
+                    network::ClientPacket::PlayerRareInfo{
+                        .client_id = player.first,
+                        .model_index = player.second->get<UsesCharacterModel>()
+                                           .index_server_only(),
+                        .last_ping = player.second->get<HasClientID>().ping(),
+                    },
             };
             send_client_packet_to_all(player_rare_updated);
         }
@@ -262,17 +263,18 @@ struct Server {
             .channel = Channel::UNRELIABLE,
             .client_id = incoming_client.client_id,
             .msg_type = network::ClientPacket::MsgType::PlayerLocation,
-            .msg = network::ClientPacket::PlayerInfo({
-                .facing_direction =
-                    static_cast<int>(player->get<Transform>().face_direction()),
-                .location =
-                    {
-                        updated_position.x,
-                        updated_position.y,
-                        updated_position.z,
-                    },
-                .username = player->get<HasName>().name(),
-            }),
+            .msg =
+                network::ClientPacket::PlayerInfo{
+                    .facing_direction = static_cast<int>(
+                        player->get<Transform>().face_direction()),
+                    .location =
+                        {
+                            updated_position.x,
+                            updated_position.y,
+                            updated_position.z,
+                        },
+                    .username = player->get<HasName>().name(),
+                },
         };
 
         send_client_packet_to_all(player_updated);
@@ -294,11 +296,11 @@ struct Server {
                 break;
         }
 
-        ClientPacket announce_packet(
-            {.client_id = SERVER_CLIENT_ID,
-             .msg_type = ClientPacket::MsgType::Announcement,
-             .msg = ClientPacket::AnnouncementInfo(
-                 {.message = msg, .type = announcementInfo})});
+        ClientPacket announce_packet{
+            .client_id = SERVER_CLIENT_ID,
+            .msg_type = ClientPacket::MsgType::Announcement,
+            .msg = ClientPacket::AnnouncementInfo{.message = msg,
+                                                  .type = announcementInfo}};
 
         send_client_packet_to_client(conn, announce_packet);
     }
@@ -322,11 +324,12 @@ struct Server {
         send_client_packet_to_all(
             ClientPacket{.client_id = SERVER_CLIENT_ID,
                          .msg_type = ClientPacket::MsgType::PlayerLeave,
-                         .msg = ClientPacket::PlayerLeaveInfo({
-                             .all_clients = ids,
-                             // override the client's id with their real one
-                             .client_id = client_id,
-                         })},
+                         .msg =
+                             ClientPacket::PlayerLeaveInfo{
+                                 .all_clients = ids,
+                                 // override the client's id with their real one
+                                 .client_id = client_id,
+                             }},
             // ignore the person who sent it to us since they disconn
             [&](internal::Client_t& client) {
                 return client.client_id == client_id;
@@ -380,12 +383,13 @@ struct Server {
         send_client_packet_to_all(
             ClientPacket{.client_id = SERVER_CLIENT_ID,
                          .msg_type = ClientPacket::MsgType::PlayerJoin,
-                         .msg = ClientPacket::PlayerJoinInfo({
-                             .all_clients = ids,
-                             // override the client's id with their real one
-                             .client_id = incoming_client.client_id,
-                             .is_you = false,
-                         })},
+                         .msg =
+                             ClientPacket::PlayerJoinInfo{
+                                 .all_clients = ids,
+                                 // override the client's id with their real one
+                                 .client_id = incoming_client.client_id,
+                                 .is_you = false,
+                             }},
             // ignore the person who sent it to us
             [&](internal::Client_t& client) {
                 return client.client_id == incoming_client.client_id;
@@ -394,12 +398,13 @@ struct Server {
         send_client_packet_to_all(
             ClientPacket{.client_id = SERVER_CLIENT_ID,
                          .msg_type = ClientPacket::MsgType::PlayerJoin,
-                         .msg = ClientPacket::PlayerJoinInfo({
-                             .all_clients = ids,
-                             // override the client's id with their real one
-                             .client_id = incoming_client.client_id,
-                             .is_you = true,
-                         })},
+                         .msg =
+                             ClientPacket::PlayerJoinInfo{
+                                 .all_clients = ids,
+                                 // override the client's id with their real one
+                                 .client_id = incoming_client.client_id,
+                                 .is_you = true,
+                             }},
             // ignore everyone except the one that sent to us
             [&](internal::Client_t& client) {
                 return client.client_id != incoming_client.client_id;
@@ -417,10 +422,11 @@ struct Server {
             .channel = Channel::UNRELIABLE_NO_DELAY,
             .client_id = SERVER_CLIENT_ID,
             .msg_type = network::ClientPacket::MsgType::Ping,
-            .msg = network::ClientPacket::PingInfo({
-                .ping = info.ping,
-                .pong = pong,
-            }),
+            .msg =
+                network::ClientPacket::PingInfo{
+                    .ping = info.ping,
+                    .pong = pong,
+                },
         };
         send_client_packet_to_all(packet, [&](internal::Client_t& client) {
             return client.client_id != incoming_client.client_id;

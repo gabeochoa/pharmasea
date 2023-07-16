@@ -97,7 +97,19 @@ inline std::pair<vec2, vec2> setup(const std::string map) {
     return std::make_pair(helper.z, helper.x);
 }
 
-inline void teardown() { ents.clear(); }
+inline void teardown() {
+    for (auto& entity : ents) {
+        for (auto it = entity.componentArray.cbegin(), next_it = it;
+             it != entity.componentArray.cend(); it = next_it) {
+            ++next_it;
+            BaseComponent* comp = it->second;
+            if (comp) delete comp;
+            entity.componentArray.erase(it);
+        }
+    }
+
+    ents.clear();
+}
 
 inline void test_no_obstacles() {
     auto [z, x] = setup("z............x");
@@ -219,4 +231,6 @@ inline void test_all_pathing() {
     test_clear_path_surround_one_exit();
     test_maze_path_exists();
     test_maze_path_doesnt_exist();
+
+    test::ents.clear();
 }
