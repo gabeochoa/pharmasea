@@ -325,7 +325,7 @@ struct LobbyMapInfo : public LevelInfo {
                                         text_lookup(strings::i18n::START_GAME));
         }
 
-        items::make_pill(EntityHelper::createEntity(), vec2{2, 2});
+        items::make_pill_bottle(EntityHelper::createEntity(), vec2{2, 2});
     }
 
     virtual void onDraw(float dt) const override {

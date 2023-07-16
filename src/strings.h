@@ -112,8 +112,9 @@ constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
 namespace item {
 
 constexpr const char* PILL = "PILL";
+constexpr const char* PILL_BOTTLE = "PILL_BOTTLE";
 
-}
+}  // namespace item
 
 namespace textures {
 

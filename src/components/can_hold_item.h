@@ -6,6 +6,8 @@
 struct CanHoldItem : public BaseComponent {
     virtual ~CanHoldItem() {}
 
+    typedef std::function<bool(const Entity&)> Filterfn;
+
     [[nodiscard]] bool empty() const { return held_item == nullptr; }
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
@@ -34,8 +36,17 @@ struct CanHoldItem : public BaseComponent {
     // (change to use update instead and make this const)
     [[nodiscard]] std::shared_ptr<Item>& item() { return held_item; }
 
+    void set_filter_fn(Filterfn fn = nullptr) { filter = fn; }
+
+    [[nodiscard]] bool can_hold(const Entity& item) const {
+        if (filter) return filter(item);
+        // By default accept anything
+        return true;
+    }
+
    private:
     std::shared_ptr<Item> held_item = nullptr;
+    Filterfn filter;
 
     friend bitsery::Access;
     template<typename S>

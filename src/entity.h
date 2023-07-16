@@ -41,6 +41,7 @@
 //
 // Item related components
 #include "components/has_subtype.h"
+#include "components/is_item.h"
 //
 #include "engine/assert.h"
 #include "external_include.h"
@@ -242,7 +243,9 @@ static void register_all_components() {
         HasWaitingQueue, CanBeTakenFrom, IsItemContainer<Bag>,
         IsItemContainer<PillBottle>, IsItemContainer<Pill>, UsesCharacterModel,
         ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
-        HasSpeechBubble, Indexer, IsSpawner, HasTimer, HasSubtype>();
+        HasSpeechBubble, Indexer, IsSpawner, HasTimer, HasSubtype, IsItem
+        //
+        >();
 
     // Now that they are all registered we can delete them
     //
@@ -781,6 +784,7 @@ namespace items {
 static void make_item(Entity& item, const DebugOptions& options,
                       vec2 p = {0, 0}) {
     make_entity(item, options, {p.x, 0, p.y});
+    item.addComponent<IsItem>();
 }
 
 static void make_pill(Entity& pill, vec2 pos) {
@@ -823,6 +827,22 @@ static void make_pill(Entity& pill, vec2 pos) {
                     break;
             }
             return base_name;
+        });
+}
+
+static void make_pill_bottle(Entity& pill_bottle, vec2 pos) {
+    make_item(pill_bottle, {.name = strings::item::PILL_BOTTLE}, pos);
+
+    pill_bottle.addComponent<ModelRenderer>().update(ModelInfo{
+        .model_name = "pill_bottle",
+        .size_scale = 3.f,
+        .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 0,
+    });
+
+    pill_bottle.addComponent<CanHoldItem>().set_filter_fn(
+        [](const Entity& item) {
+            return check_name(item, strings::item::PILL);
         });
 }
 
