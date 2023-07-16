@@ -9,7 +9,8 @@ struct CustomHeldItemPosition : public BaseComponent {
     enum struct Positioner {
         Default,
         Table,
-        Conveyer
+        Conveyer,
+        ItemHoldingItem,
     } positioner = Positioner::Default;
 
     void init(Positioner p) { positioner = p; }

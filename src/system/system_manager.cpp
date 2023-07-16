@@ -76,6 +76,10 @@ void update_held_item_position(std::shared_ptr<Entity> entity, float) {
             case CustomHeldItemPosition::Positioner::Table:
                 new_pos.y += TILESIZE / 2;
                 break;
+            case CustomHeldItemPosition::Positioner::ItemHoldingItem:
+                new_pos.x += 0;
+                new_pos.y += 0;
+                break;
             case CustomHeldItemPosition::Positioner::Conveyer:
                 if (entity->is_missing<ConveysHeldItem>()) {
                     log_warn(

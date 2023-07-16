@@ -76,7 +76,7 @@ using ComponentBitSet = std::bitset<max_num_components>;
 // originally this was a std::array<BaseComponent*, max_num_components> but i
 // cant seem to serialize this so lets try map
 using ComponentArray = std::map<int, BaseComponent*>;
-#define Item Entity
+using Item = Entity;
 
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
@@ -787,6 +787,9 @@ static void make_item(Item& item, const DebugOptions& options,
                       vec2 p = {0, 0}) {
     make_entity(item, options, {p.x, 0, p.y});
     item.addComponent<IsItem>();
+    // TODO Not everyone needs this but easier for now
+    item.addComponent<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::ItemHoldingItem);
 }
 
 static void make_pill(Item& pill, vec2 pos, int index) {
