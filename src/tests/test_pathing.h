@@ -61,7 +61,7 @@ inline void test_all_neighbors() {
 }
 }  // namespace neighbors
 
-static std::vector<Entity*> ents;
+static std::vector<Entity> ents;
 
 inline bool canvisit(const vec2& pos) {
     auto is_collidable = [](Entity* entity) {
@@ -70,9 +70,9 @@ inline bool canvisit(const vec2& pos) {
     };
     bool hit_impassible_entity = false;
     for (auto entity : ents) {
-        if (!is_collidable(entity)) continue;
+        if (!is_collidable(&entity)) continue;
 
-        if (vec::distance(entity->template get<Transform>().as2(), pos) <
+        if (vec::distance(entity.template get<Transform>().as2(), pos) <
             TILESIZE / 2.f) {
             hit_impassible_entity = true;
             break;
@@ -91,17 +91,12 @@ inline auto p(Entity* a, vec2 b) { return p(a->get<Transform>().as2(), b); }
 inline std::pair<vec2, vec2> setup(const std::string map) {
     auto lines = util::split_string(map, "\n");
     generation::helper helper(lines);
-    helper.generate([](Entity* e) { ents.push_back(e); });
+    helper.generate([]() -> Entity& { return ents.emplace_back(); });
 
     return std::make_pair(helper.z, helper.x);
 }
 
-inline void teardown() {
-    for (auto it = ents.begin(); it != ents.end(); ++it) {
-        delete *it;
-    }
-    ents.clear();
-}
+inline void teardown() { ents.clear(); }
 
 inline void test_no_obstacles() {
     auto [z, x] = setup("z............x");

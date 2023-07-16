@@ -5,7 +5,7 @@
 
 struct Entity;
 
-typedef std::function<Entity*(vec2)> SpawnFn;
+typedef std::function<void(vec2)> SpawnFn;
 
 struct IsSpawner : public BaseComponent {
     virtual ~IsSpawner() {}
@@ -40,7 +40,7 @@ struct IsSpawner : public BaseComponent {
         if (countdown <= 0) {
             countdown = spread;
             num_spawned++;
-            return spawn_fn(pos);
+            spawn_fn(pos);
         }
         return nullptr;
     }

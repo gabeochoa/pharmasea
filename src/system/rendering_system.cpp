@@ -46,8 +46,8 @@ void render_networked_players(const Entities& entities, float dt) {
 
     for (auto& entity : entities) {
         // TODO think about this check more
-        if (!(check_name(entity, strings::entity::PLAYER) ||
-              check_name(entity, strings::entity::REMOTE_PLAYER)))
+        if (!(check_name(*entity, strings::entity::PLAYER) ||
+              check_name(*entity, strings::entity::REMOTE_PLAYER)))
             continue;
         _render_little_model_guy(entity, dt);
         _render_single_networked_player(entity, dt);

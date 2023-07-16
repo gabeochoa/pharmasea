@@ -66,8 +66,11 @@ struct EntityHelper {
         return client_entities_DO_NOT_USE;
     }
 
-    static void addEntity(std::shared_ptr<Entity> e) {
+    static Entity& createEntity() {
+        std::shared_ptr<Entity> e(new Entity());
         get_entities().push_back(e);
+        return *e;
+
         // if (!e->add_to_navmesh()) {
         // return;
         // }
@@ -141,6 +144,7 @@ struct EntityHelper {
         }
     }
 
+    // TODO delete
     template<typename T>
     static constexpr std::shared_ptr<T> getFirstMatching(
         std::function<bool(std::shared_ptr<T>)> filter  //
@@ -152,6 +156,17 @@ struct EntityHelper {
             return s;
         }
         return nullptr;
+    }
+
+    static OptEntity getFirstMatching(std::function<bool(RefEntity)> filter  //
+    ) {
+        for (auto& e_ptr : get_entities()) {
+            if (!e_ptr) continue;
+            Entity& s = *e_ptr;
+            if (!filter(s)) continue;
+            return s;
+        }
+        return {};
     }
 
     template<typename T>
