@@ -60,8 +60,9 @@ struct Preload {
         SoundLibrary::get().unload_all();
         ShaderLibrary::get().unload_all();
     }
-   
-    // Note: Defined in .cpp to avoid LOG_LEVEL violating C++ ODR during linking.
+
+    // Note: Defined in .cpp to avoid LOG_LEVEL violating C++ ODR during
+    // linking.
     void load_config();
 
     void load_translations() {
@@ -72,6 +73,7 @@ struct Preload {
     }
 
     void reload_translations_from_file(const char* fn) {
+        if (localization) delete localization;
         localization = new i18n::LocalizationText(fn);
     }
 
