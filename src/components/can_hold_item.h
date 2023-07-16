@@ -22,11 +22,16 @@ struct CanHoldItem : public BaseComponent {
         return dynamic_pointer_cast<T>(held_item);
     }
 
-    void update(std::shared_ptr<Entity> item) {
-        if (held_item != nullptr && !held_item->cleanup) {
+    CanHoldItem& update(std::shared_ptr<Entity> item) {
+        if (held_item != nullptr && !held_item->cleanup &&
+            //
+            (held_item->has<IsItem>() && !held_item->get<IsItem>().is_held())
+            //
+        ) {
             log_warn(
                 "you are updating the held item to null, but the old one isnt "
-                "marked cleanup, this might be an issue if you are tring to "
+                "marked cleanup (and not being held) , this might be an issue "
+                "if you are tring to "
                 "delete it");
         }
 
@@ -52,15 +57,27 @@ struct CanHoldItem : public BaseComponent {
         return held_item;
     }
 
-    void set_filter_fn(Filterfn fn = nullptr) { filter = fn; }
+    CanHoldItem& set_filter_fn(Filterfn fn = nullptr) {
+        filter = fn;
+        return *this;
+    }
 
     [[nodiscard]] bool can_hold(const Entity& item) const {
-        if (filter) return filter(item);
+        if (item.has<IsItem>()) {
+            bool cbhb = item.get<IsItem>().can_be_held_by(held_by);
+            // log_info("trying to pick up {} with {} and {} ",
+            // item.get<DebugName>(), held_by, cbhb);
+            if (!cbhb) return false;
+        }
+        if (filter && !filter(item)) return false;
         // By default accept anything
         return true;
     }
 
-    void update_held_by(IsItem::HeldBy hb) { held_by = hb; }
+    CanHoldItem& update_held_by(IsItem::HeldBy hb) {
+        held_by = hb;
+        return *this;
+    }
 
    private:
     std::shared_ptr<Entity> held_item = nullptr;
