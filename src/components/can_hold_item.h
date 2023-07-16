@@ -38,6 +38,7 @@ struct CanHoldItem : public BaseComponent {
                 "UNKNOWN",
                 item->id, item->get<DebugName>());
         }
+        return *this;
     }
 
     // TODO this isnt const because we want to write to the item
