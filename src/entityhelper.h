@@ -94,23 +94,39 @@ struct EntityHelper {
         // cache_is_walkable.clear();
     }
 
-    static void removeEntity(std::shared_ptr<Entity> e) {
+    static void markIDForCleanup(int e_id) {
+        auto& entities = get_entities();
+        auto it = entities.begin();
+        while (it != get_entities().end()) {
+            if ((*it)->id == e_id) {
+                (*it)->cleanup = true;
+                break;
+            }
+            it++;
+        }
+    }
+
+    static void removeEntity(int e_id) {
         // if (e->add_to_navmesh()) {
         // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
         // nav->removeEntity(e->id);
         // cache_is_walkable.clear();
         // }
 
-        auto entities = get_entities();
+        auto& entities = get_entities();
 
         auto it = entities.begin();
         while (it != get_entities().end()) {
-            if ((*it)->id == e->id) {
+            if ((*it)->id == e_id) {
                 entities.erase(it);
                 continue;
             }
             it++;
         }
+    }
+
+    static void removeEntity(std::shared_ptr<Entity> e) {
+        EntityHelper::removeEntity(e->id);
     }
 
     // static Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
