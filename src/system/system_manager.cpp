@@ -571,19 +571,34 @@ void process_has_rope(const std::shared_ptr<Entity>& entity, float) {
     OptEntity opt_player;
     for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
         if (!check_name(*e, strings::entity::PLAYER)) continue;
-        if (!check_name(*e->get<CanHoldItem>().item(),
-                        strings::item::SODA_SPOUT))
-            continue;
+        auto i = e->get<CanHoldItem>().item();
+        if (!i) continue;
+        if (!check_name(*i, strings::item::SODA_SPOUT)) continue;
         opt_player = *e;
     }
     if (!valid(opt_player)) return;
 
+    auto pos = asE(opt_player).get<Transform>().as2();
+
+    // If we moved more then regenerate
+    if (vec::distance(pos, hrti.goal()) > TILESIZE) {
+        hrti.clear();
+    }
+
+    // Already generated
     if (hrti.was_generated()) return;
 
-    std::shared_ptr<Item> item = EntityHelper::createItem(
-        strings::item::SODA_SPOUT, asE(opt_player).get<Transform>().as2());
-    hrti.add(item);
-    hrti.mark_generated();
+    auto new_path = astar::find_path(entity->get<Transform>().as2(), pos,
+                                     [](vec2) { return true; });
+
+    for (auto p : new_path) {
+        std::shared_ptr<Item> item =
+            EntityHelper::createItem(strings::item::SODA_SPOUT, p);
+        item->get<IsItem>().set_held_by(IsItem::HeldBy::PLAYER);
+        item->addComponent<IsSolid>();
+        hrti.add(item);
+    }
+    hrti.mark_generated(pos);
 }
 
 }  // namespace system_manager

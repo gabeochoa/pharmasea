@@ -4,6 +4,7 @@
 #include <thread>
 
 #include "assert.h"
+#include "components/can_hold_item.h"
 #include "components/debug_name.h"
 #include "components/transform.h"
 #include "external_include.h"
@@ -19,16 +20,34 @@
 #include "engine/statemanager.h"
 #include "entity.h"
 #include "entity_makers.h"
+#include "strings.h"
 // TODO eventually move to input manager but for now has to be in here
 // to prevent circular includes
 
 // return true if the item has collision and is currently collidable
-[[nodiscard]] inline bool is_collidable(std::shared_ptr<Entity> entity) {
+[[nodiscard]] inline bool is_collidable(
+    std::shared_ptr<Entity> entity, std::shared_ptr<Entity> other = nullptr) {
     if (!entity) return false;
 
     // by default we disable collisions when you are holding something
     // since its generally inside your bounding box
     if (entity->has<CanBeHeld>() && entity->get<CanBeHeld>().is_held()) {
+        return false;
+    }
+
+    if (
+        // checking for person update
+        other != nullptr &&
+        // Entity is item and held by player
+        entity->has<IsItem>() &&
+        entity->get<IsItem>().is_held_by(IsItem::HeldBy::PLAYER) &&
+        // Entity is rope
+        check_name(*entity, strings::item::SODA_SPOUT) &&
+        // we are a player that is holding rope
+        other->has<CanHoldItem>() &&
+        other->get<CanHoldItem>().is_holding_item() &&
+        check_name(*other->get<CanHoldItem>().item(),
+                   strings::item::SODA_SPOUT)) {
         return false;
     }
 
