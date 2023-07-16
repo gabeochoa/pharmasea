@@ -49,7 +49,7 @@ void reset_empty_work_furniture(const std::shared_ptr<Entity>& entity,
 
 void run_timer(const std::shared_ptr<Entity>& entity, float dt);
 void sophie(const std::shared_ptr<Entity>& entity, float dt);
-
+void process_has_rope(const std::shared_ptr<Entity>& entity, float dt);
 }  // namespace system_manager
 
 SINGLETON_FWD(SystemManager)
@@ -217,6 +217,7 @@ struct SystemManager {
                 entity, dt);
             system_manager::process_is_container_and_should_update_item(entity,
                                                                         dt);
+            system_manager::process_has_rope(entity, dt);
             system_manager::process_spawner(entity, dt);
             system_manager::reset_empty_work_furniture(entity, dt);
         }

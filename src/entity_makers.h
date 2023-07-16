@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "components/has_rope_to_item.h"
 #include "entity.h"
 //
 #include "components/can_be_ghost_player.h"
@@ -22,6 +23,7 @@
 #include "components/has_client_id.h"
 #include "components/has_dynamic_model_name.h"
 #include "components/has_name.h"
+#include "components/has_rope_to_item.h"
 #include "components/has_speech_bubble.h"
 #include "components/has_timer.h"
 #include "components/has_waiting_queue.h"
@@ -54,7 +56,7 @@ static void register_all_components() {
         ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
-        HasBaseSpeed,
+        HasBaseSpeed, HasRopeToItem,
         // render
         ShowsProgressBar, ModelRenderer, HasDynamicModelName,
         SimpleColoredBoxRenderer
@@ -489,6 +491,7 @@ static void make_soda_machine(Entity& soda_machine, vec2 pos) {
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
         });
     }
+    soda_machine.addComponent<HasRopeToItem>();
     soda_machine.get<IsItemContainer>().set_max_generations(1);
     soda_machine.get<CanHoldItem>()
         .update_held_by(IsItem::HeldBy::SODA_MACHINE)
@@ -711,6 +714,9 @@ static void make_item_type(Item& item, const std::string& type_name,  //
             return make_bag(item, pos);
         case hashString(strings::item::SODA_SPOUT):
             return make_soda_spout(item, pos);
+            // TODO add rope item
+            // case hashString(strings::item::ROPE):
+            // return make_rope(item, pos);
     }
     log_warn(
         "Trying to make item with item type {} but not handled in "

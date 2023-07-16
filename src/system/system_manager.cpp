@@ -555,4 +555,35 @@ void reset_empty_work_furniture(const std::shared_ptr<Entity>& entity,
     return;
 }
 
+void process_has_rope(const std::shared_ptr<Entity>& entity, float) {
+    if (entity->is_missing<CanHoldItem>()) return;
+    if (entity->is_missing<HasRopeToItem>()) return;
+
+    HasRopeToItem& hrti = entity->get<HasRopeToItem>();
+
+    // No need to have rope if spout is put away
+    const CanHoldItem& chi = entity->get<CanHoldItem>();
+    if (chi.is_holding_item()) {
+        hrti.clear();
+        return;
+    }
+
+    OptEntity opt_player;
+    for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
+        if (!check_name(*e, strings::entity::PLAYER)) continue;
+        if (!check_name(*e->get<CanHoldItem>().item(),
+                        strings::item::SODA_SPOUT))
+            continue;
+        opt_player = *e;
+    }
+    if (!valid(opt_player)) return;
+
+    if (hrti.was_generated()) return;
+
+    std::shared_ptr<Item> item = EntityHelper::createItem(
+        strings::item::SODA_SPOUT, asE(opt_player).get<Transform>().as2());
+    hrti.add(item);
+    hrti.mark_generated();
+}
+
 }  // namespace system_manager

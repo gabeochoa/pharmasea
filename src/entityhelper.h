@@ -70,8 +70,6 @@ struct EntityHelper {
     static std::shared_ptr<Entity> createItem(TArgs... args) {
         Entity& e = createEntity();
         items::make_item_type(e, std::forward<TArgs>(args)...);
-        VALIDATE(e.has<DebugName>(),
-                 "trying to create item but name was missing");
         // log_info("created a new item {} {} ", e.id, e.get<DebugName>());
         return get_entities().back();
     }
