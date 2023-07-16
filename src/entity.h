@@ -77,6 +77,17 @@ struct Entity {
 
     bool cleanup = false;
 
+    ~Entity() {
+        for (auto itr = componentArray.begin(); itr != componentArray.end();
+             itr++) {
+            if (itr->second) delete (itr->second);
+        }
+        componentArray.clear();
+    }
+
+    Entity(const Entity&) = delete;
+    Entity(Entity&& other) noexcept = default;
+
     // These two functions can be used to validate than an entity has all of the
     // matching components that are needed for this system to run
     template<typename T>
@@ -188,8 +199,6 @@ struct Entity {
         BaseComponent* comp = componentArray.at(components::get_type_id<T>());
         return *static_cast<T*>(comp);
     }
-
-    virtual ~Entity() {}
 
     Entity() : id(ENTITY_ID_GEN++) {}
 

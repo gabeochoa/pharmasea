@@ -64,13 +64,13 @@ struct helper {
 
     helper(const std::vector<std::string>& l) : lines(l) {}
 
-    void generate(std::function<Entity&()> add_to_map = nullptr) {
-        if (!add_to_map) {
-            add_to_map = []() -> Entity& {
-                return EntityHelper::createEntity();
-            };
-        }
+    template<typename Func = std::function<Entity&()>>
+    void generate(Func&& add_to_map = nullptr) {
         vec2 origin = find_origin();
+
+        const auto default_create = []() -> Entity& {
+            return EntityHelper::createEntity();
+        };
 
         for (int i = 0; i < (int) lines.size(); i++) {
             auto line = lines[i];
@@ -78,13 +78,18 @@ struct helper {
                 vec2 raw_location = vec2{i * TILESIZE, j * TILESIZE};
                 vec2 location = raw_location - origin;
                 auto ch = get_char(i, j);
-                generate_entity_from_character(add_to_map, ch, location);
+                if (add_to_map) {
+                    generate_entity_from_character(add_to_map, ch, location);
+                } else {
+                    generate_entity_from_character(default_create, ch,
+                                                   location);
+                }
             }
         }
     }
 
-    void generate_entity_from_character(std::function<Entity&()> create,
-                                        char ch, vec2 location) {
+    template<typename Func = std::function<Entity&()>>
+    void generate_entity_from_character(Func&& create, char ch, vec2 location) {
         switch (ch) {
             case 'x':
                 x = location;
@@ -203,11 +208,11 @@ struct helper {
         VALIDATE(soph, "sophie needs to be there ");
 
         // find register,
-        auto reg_opt = EntityHelper::getFirstMatching([](const Entity e) {
+        auto reg_opt = EntityHelper::getFirstMatching([](const Entity& e) {
             return check_name(e, strings::entity::REGISTER);
         });
         VALIDATE(valid(reg_opt), "map needs to have at least one register");
-        auto reg = asE(reg_opt);
+        auto& reg = asE(reg_opt);
 
         // find customer
         auto customer_opt =
@@ -216,7 +221,7 @@ struct helper {
             });
         VALIDATE(valid(customer_opt),
                  "map needs to have at least one customer spawn point");
-        auto customer = asE(customer_opt);
+        auto& customer = asE(customer_opt);
 
         // ensure customers can make it to the register
 
