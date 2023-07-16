@@ -13,7 +13,7 @@
 HasWaitingQueue& HasWaitingQueue::add_customer(
     const std::shared_ptr<Entity>& customer) {
     log_info("we are adding {} {} to the line in position {}", customer->id,
-             customer->get<DebugName>().name(), next_line_position);
+             customer->get<DebugName>(), next_line_position);
     ppl_in_line[next_line_position] = customer;
     next_line_position++;
 
@@ -375,27 +375,23 @@ Job::State WaitInQueueJob::run_state_working_at_end(
         return (Job::State::WorkingAtEnd);
     }
 
-    auto bag = reg->get<CanHoldItem>().asT<Bag>();
-    if (!bag) {
+    std::shared_ptr<Item> bag = reg->get<CanHoldItem>().item();
+    if (!bag || !check_name(*bag, strings::item::BAG)) {
         system_manager::logging_manager::announce(
             entity, "this isnt my rx (not a bag)");
         WIQ_wait_and_return(entity);
         return (Job::State::WorkingAtEnd);
     }
 
-    if (bag->empty()) {
+    if (bag->get<CanHoldItem>().empty()) {
         system_manager::logging_manager::announce(entity,
                                                   "this bag is empty...");
         WIQ_wait_and_return(entity);
         return (Job::State::WorkingAtEnd);
     }
 
-    // TODO eventually migrate item to ECS
-    // auto pill_bottle =
-    // bag->get<CanHoldItem>().asT<PillBottle>();
-
-    auto pill_bottle = dynamic_pointer_cast<PillBottle>(bag->held_item);
-    if (!pill_bottle) {
+    std::shared_ptr<Item> pill_bottle = bag->get<CanHoldItem>().item();
+    if (!pill_bottle || !check_name(*pill_bottle, strings::item::PILL_BOTTLE)) {
         system_manager::logging_manager::announce(
             entity, "this bag doesnt have my pills");
         WIQ_wait_and_return(entity);
@@ -404,8 +400,8 @@ Job::State WaitInQueueJob::run_state_working_at_end(
 
     system_manager::logging_manager::announce(entity, "got the pill bottle ");
 
-    auto pill = dynamic_pointer_cast<Pill>(pill_bottle->held_item);
-    if (!pill) {
+    std::shared_ptr<Item> pill = pill_bottle->get<CanHoldItem>().item();
+    if (!pill || !check_name(*pill, strings::item::PILL)) {
         system_manager::logging_manager::announce(
             entity, "this bottle doesnt have any pills");
         WIQ_wait_and_return(entity);

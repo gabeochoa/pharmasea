@@ -44,8 +44,8 @@ size_components<
     CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
     CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid,
     CanBeHeld, IsRotatable, CanGrabFromOtherFurniture, ConveysHeldItem,
-    HasWaitingQueue, CanBeTakenFrom, IsItemContainer<Bag>,
-    IsItemContainer<PillBottle>, IsItemContainer<Pill>, UsesCharacterModel,
+    HasWaitingQueue, CanBeTakenFrom,
+    UsesCharacterModel,
     ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
     HasSpeechBubble, Indexer, IsSpawner, HasTimer, CollectsUserInput>(
     results);

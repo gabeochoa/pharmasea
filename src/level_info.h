@@ -7,8 +7,6 @@
 #include "engine/ui_color.h"
 #include "entity.h"
 #include "entityhelper.h"
-#include "item.h"
-#include "item_helper.h"
 #include "strings.h"
 #include "system/system_manager.h"
 #include "tests/test_maps.h"
@@ -248,9 +246,6 @@ struct LevelInfo {
     Entities entities;
     Entities::size_type num_entities;
 
-    Items items;
-    Items::size_type num_items;
-
     std::string seed;
 
     virtual void onUpdate(Entities& players, float dt) {
@@ -261,7 +256,6 @@ struct LevelInfo {
     virtual void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
         SystemManager::get().render_entities(entities, dt);
-        SystemManager::get().render_items(items, dt);
     }
 
     virtual void onDrawUI(float dt) {
@@ -275,13 +269,6 @@ struct LevelInfo {
             auto es = EntityHelper::get_entities();
             this->entities = es;
             num_entities = this->entities.size();
-        }
-
-        {
-            items.clear();
-            auto is = ItemHelper::get_items();
-            this->items = is;
-            num_items = this->items.size();
         }
     }
 
@@ -303,10 +290,6 @@ struct LevelInfo {
                     [](S& s2, std::shared_ptr<Entity>& entity) {
                         s2.ext(entity, bitsery::ext::StdSmartPtr{});
                     });
-        s.value8b(num_items);
-        s.container(items, num_items, [](S& s2, std::shared_ptr<Item>& item) {
-            s2.ext(item, bitsery::ext::StdSmartPtr{});
-        });
         s.value1b(was_generated);
         s.text1b(seed, MAX_SEED_LENGTH);
     }
@@ -325,7 +308,7 @@ struct LobbyMapInfo : public LevelInfo {
                                         text_lookup(strings::i18n::START_GAME));
         }
 
-        items::make_pill_bottle(EntityHelper::createEntity(), vec2{2, 2});
+        items::make_bag(EntityHelper::createEntity(), vec2{2, 2});
     }
 
     virtual void onDraw(float dt) const override {
@@ -392,7 +375,6 @@ struct GameMapInfo : public LevelInfo {
 
     virtual void generate_map() override {
         server_entities_DO_NOT_USE.clear();
-        server_items_DO_NOT_USE.clear();
 
         // TODO eventually this would be generated using the seed
         const std::string EXAMPLE_MAP_ = R"(

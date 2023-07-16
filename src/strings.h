@@ -113,6 +113,7 @@ namespace item {
 
 constexpr const char* PILL = "PILL";
 constexpr const char* PILL_BOTTLE = "PILL_BOTTLE";
+constexpr const char* BAG = "BAG";
 
 }  // namespace item
 

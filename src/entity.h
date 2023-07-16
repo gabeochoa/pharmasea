@@ -2,6 +2,11 @@
 #pragma once
 
 #include "components/base_component.h"
+//
+// Item related components
+#include "components/has_subtype.h"
+#include "components/is_item.h"
+//
 #include "components/can_be_ghost_player.h"
 #include "components/can_be_held.h"
 #include "components/can_be_highlighted.h"
@@ -39,10 +44,6 @@
 #include "components/transform.h"
 #include "components/uses_character_model.h"
 //
-// Item related components
-#include "components/has_subtype.h"
-#include "components/is_item.h"
-//
 #include "engine/assert.h"
 #include "external_include.h"
 #include "strings.h"
@@ -66,12 +67,16 @@ using StdMap = bitsery::ext::StdMap;
 #include "engine/model_library.h"
 #include "engine/util.h"
 #include "globals.h"
-#include "item.h"
-#include "item_helper.h"
 #include "preload.h"
 #include "raylib.h"
 #include "text_util.h"
 #include "vec_util.h"
+
+using ComponentBitSet = std::bitset<max_num_components>;
+// originally this was a std::array<BaseComponent*, max_num_components> but i
+// cant seem to serialize this so lets try map
+using ComponentArray = std::map<int, BaseComponent*>;
+#define Item Entity
 
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
@@ -135,7 +140,7 @@ struct Entity {
                 "This entity {}, {} already has this component attached id: "
                 "{}, "
                 "component {}",
-                this->get<DebugName>().name(), id, components::get_type_id<T>(),
+                this->get<DebugName>(), id, components::get_type_id<T>(),
                 type_name<T>());
 
             VALIDATE(false, "duplicate component");
@@ -179,7 +184,7 @@ struct Entity {
             log_warn(
                 "This entity {} {} is missing id: {}, "
                 "component {}",
-                this->get<DebugName>().name(), id, components::get_type_id<T>(),
+                this->get<DebugName>(), id, components::get_type_id<T>(),
                 type_name<T>());
         }
         BaseComponent* comp = componentArray.at(components::get_type_id<T>());
@@ -198,7 +203,7 @@ struct Entity {
             log_warn(
                 "This entity {} {} is missing id: {}, "
                 "component {}",
-                this->get<DebugName>().name(), id, components::get_type_id<T>(),
+                this->get<DebugName>(), id, components::get_type_id<T>(),
                 type_name<T>());
         }
         BaseComponent* comp = componentArray.at(components::get_type_id<T>());
@@ -240,8 +245,7 @@ static void register_all_components() {
         CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
         CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid,
         CanBeHeld, IsRotatable, CanGrabFromOtherFurniture, ConveysHeldItem,
-        HasWaitingQueue, CanBeTakenFrom, IsItemContainer<Bag>,
-        IsItemContainer<PillBottle>, IsItemContainer<Pill>, UsesCharacterModel,
+        HasWaitingQueue, CanBeTakenFrom, IsItemContainer, UsesCharacterModel,
         ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
         HasSpeechBubble, Indexer, IsSpawner, HasTimer, HasSubtype, IsItem
         //
@@ -637,17 +641,16 @@ static void make_register(Entity& reg, vec2 pos) {
     }
 }
 
-template<typename I>
 static void make_itemcontainer(Entity& container, const DebugOptions& options,
-                               vec2 pos) {
+                               vec2 pos, const std::string& item_type) {
     entities::make_furniture(container, options, pos, ui::color::white,
                              ui::color::white);
-    container.addComponent<IsItemContainer<I>>();
+    container.addComponent<IsItemContainer>(item_type);
 }
 
 static void make_bagbox(Entity& container, vec2 pos) {
-    entities::make_itemcontainer<Bag>(container, {strings::entity::BAG_BOX},
-                                      pos);
+    entities::make_itemcontainer(container, {strings::entity::BAG_BOX}, pos,
+                                 strings::item::BAG);
 
     if (ENABLE_MODELS) {
         container.get<ModelRenderer>().update(ModelInfo{
@@ -662,8 +665,8 @@ static void make_bagbox(Entity& container, vec2 pos) {
 }
 
 static void make_medicine_cabinet(Entity& container, vec2 pos) {
-    entities::make_itemcontainer<PillBottle>(
-        container, {strings::entity::MEDICINE_CABINET}, pos);
+    entities::make_itemcontainer(container, {strings::entity::MEDICINE_CABINET},
+                                 pos, strings::item::PILL_BOTTLE);
     if (ENABLE_MODELS) {
         container.get<ModelRenderer>().update(ModelInfo{
             .model_name = "medicine_cabinet",
@@ -677,8 +680,8 @@ static void make_pill_dispenser(Entity& container, vec2 pos) {
     // TODO when making a new itemcontainer, it silently creates a new
     // component and then youll get a polymorphism error, probably need
     // something
-    entities::make_itemcontainer<Pill>(container,
-                                       {strings::entity::PILL_DISPENSER}, pos);
+    entities::make_itemcontainer(container, {strings::entity::PILL_DISPENSER},
+                                 pos, strings::item::PILL);
     if (ENABLE_MODELS) {
         container.get<ModelRenderer>().update(ModelInfo{
             .model_name = "crate",
@@ -686,8 +689,7 @@ static void make_pill_dispenser(Entity& container, vec2 pos) {
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
         });
     }
-    container.addComponent<Indexer>(
-        (int) magic_enum::enum_count<Pill::PillType>());
+    container.addComponent<Indexer>((Subtype::PILL_END - Subtype::PILL_START));
 
     container.addComponent<HasWork>().init(
         [](std::shared_ptr<Entity> owner, HasWork& hasWork,
@@ -753,10 +755,10 @@ static void make_blender(Entity& blender, vec2 pos) {
 
     blender.addComponent<HasWork>().init(
         [](std::shared_ptr<Entity> owner, HasWork& hasWork,
-           std::shared_ptr<Entity> person, float dt) {
+           std::shared_ptr<Entity> /* person */, float dt) {
             CanHoldItem& canHold = owner->get<CanHoldItem>();
             if (canHold.empty()) return;
-            std::shared_ptr<Item> item = canHold.item();
+            std::shared_ptr<Entity> item = canHold.item();
 
             const float amt = 1.5f;
             hasWork.increase_pct(amt * dt);
@@ -781,16 +783,18 @@ static void make_sophie(Entity& sophie, vec3 pos) {
 
 namespace items {
 
-static void make_item(Entity& item, const DebugOptions& options,
+static void make_item(Item& item, const DebugOptions& options,
                       vec2 p = {0, 0}) {
     make_entity(item, options, {p.x, 0, p.y});
     item.addComponent<IsItem>();
 }
 
-static void make_pill(Entity& pill, vec2 pos) {
+static void make_pill(Item& pill, vec2 pos, int index) {
     make_item(pill, {.name = strings::item::PILL}, pos);
-    pill.addComponent<HasSubtype>(Subtype::PILL_START, Subtype::PILL_END,
-                                  Subtype::INVALID);
+    pill.addComponent<HasSubtype>(
+        Subtype::PILL_START, Subtype::PILL_END,
+        // TODO add a check to see if its past the end
+        static_cast<Subtype>(Subtype::PILL_START + index));
 
     pill.addComponent<ModelRenderer>().update(ModelInfo{
         .model_name = "pill_red",
@@ -803,12 +807,12 @@ static void make_pill(Entity& pill, vec2 pos) {
     pill.addComponent<HasDynamicModelName>().init(
         "pill_red",  //
         HasDynamicModelName::DynamicType::Subtype,
-        [](const Entity& owner, const std::string base_name) -> std::string {
+        [](const Item& owner, const std::string base_name) -> std::string {
             if (owner.is_missing<HasSubtype>()) {
                 log_warn(
                     "Generating a dynamic model name with a subtype, but your "
                     "entity doesnt have a subtype {}",
-                    owner.get<DebugName>().name());
+                    owner.get<DebugName>());
                 return base_name;
             }
             const Subtype type = owner.get<HasSubtype>().get_type();
@@ -828,22 +832,69 @@ static void make_pill(Entity& pill, vec2 pos) {
             }
             return base_name;
         });
-}
+}  // namespace items
 
-static void make_pill_bottle(Entity& pill_bottle, vec2 pos) {
+static void make_pill_bottle(Item& pill_bottle, vec2 pos) {
     make_item(pill_bottle, {.name = strings::item::PILL_BOTTLE}, pos);
 
     pill_bottle.addComponent<ModelRenderer>().update(ModelInfo{
         .model_name = "pill_bottle",
-        .size_scale = 3.f,
+        .size_scale = 1.5f,
         .position_offset = vec3{0, 0, 0},
         .rotation_angle = 0,
     });
 
     pill_bottle.addComponent<CanHoldItem>().set_filter_fn(
-        [](const Entity& item) {
-            return check_name(item, strings::item::PILL);
+        [](const Item& item) { return check_name(item, strings::item::PILL); });
+}
+
+static void make_bag(Item& bag, vec2 pos) {
+    make_item(bag, {.name = strings::item::BAG}, pos);
+
+    bag.addComponent<ModelRenderer>().update(ModelInfo{
+        .model_name = "bag",
+        .size_scale = 0.25f,
+        .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 0,
+    });
+
+    bag.addComponent<HasDynamicModelName>().init(
+        "bag", HasDynamicModelName::DynamicType::EmptyFull,
+        [](const Item& owner, const std::string base_name) -> std::string {
+            if (owner.is_missing<CanHoldItem>()) {
+                log_warn(
+                    "Generating a dynamic model name with empty/full but your "
+                    "entity cant hold items {}",
+                    owner.get<DebugName>());
+                return base_name;
+            }
+            const CanHoldItem& chi = owner.get<CanHoldItem>();
+            return chi.empty() ? fmt::format("empty_{}", base_name) : base_name;
         });
+
+    bag.addComponent<CanHoldItem>().set_filter_fn([](const Item& item) {
+        return check_name(item, strings::item::PILL_BOTTLE);
+    });
+}
+
+static void make_item_type(Item& item, const std::string& type_name,  //
+                           vec2 pos,                                  //
+                           int index = -1                             //
+) {
+    log_info("generating new item {} of type {} at {}", item.id, type_name,
+             pos);
+    switch (hashString(type_name)) {
+        case hashString(strings::item::PILL):
+            return make_pill(item, pos, index);
+        case hashString(strings::item::PILL_BOTTLE):
+            return make_pill_bottle(item, pos);
+        case hashString(strings::item::BAG):
+            return make_bag(item, pos);
+    }
+    log_warn(
+        "Trying to make item with item type {} but not handled in "
+        "make_item_type()",
+        type_name);
 }
 
 }  // namespace items

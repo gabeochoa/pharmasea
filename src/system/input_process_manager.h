@@ -195,7 +195,7 @@ inline void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
         camAngle += 360.0f;
     }
     int xang = static_cast<int>(camAngle);
-    //log_warn(" angles {}", xang);
+    // log_warn(" angles {}", xang);
 
     if (xang >= 135 && xang < 225) {
         // Default controls
@@ -392,8 +392,19 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
     const auto _merge_item_from_furniture_into_hand_item =
         [player]() -> tl::expected<bool, std::string> {
         CanHighlightOthers& cho = player->get<CanHighlightOthers>();
-        // our item cant hold anything or is already full
-        if (!player->get<CanHoldItem>().item()->empty()) {
+
+        std::shared_ptr<Item> item = player->get<CanHoldItem>().item();
+
+        if (item->is_missing<CanHoldItem>()) {
+            return tl::unexpected(
+                "trying to merge from furniture, but item can not hold things");
+        }
+
+        CanHoldItem& item_chi = item->get<CanHoldItem>();
+
+        // TODO replace !empty() with full()
+        // our item is already full
+        if (!item_chi.empty()) {
             return tl::unexpected(
                 "trying to merge from furniture, but item was not empty");
         }
@@ -412,12 +423,23 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
                 "holding something");
         }
 
-        auto item_to_merge = closest_furniture->get<CanHoldItem>().item();
-        bool eat_was_successful =
-            player->get<CanHoldItem>().item()->eat(item_to_merge);
-        if (eat_was_successful)
-            closest_furniture->get<CanHoldItem>().update(nullptr);
-        return eat_was_successful;
+        std::shared_ptr<Item> item_to_merge =
+            closest_furniture->get<CanHoldItem>().item();
+
+        // TODO this check should be probably be int he furniture check
+        if (!item_chi.can_hold(*item_to_merge)) {
+            return tl::unexpected(
+                "trying to merge from furniture, but we cant hold"
+                "that kind of item ");
+        }
+
+        // TODO probably need to have heldby updated here
+
+        // Our item takes ownership of the item
+        item_chi.update(item_to_merge);
+        // furniture lets go
+        closest_furniture->get<CanHoldItem>().update(nullptr);
+        return true;
     };
 
     // This is like placing an item onto a plate and immediately picking it up
@@ -457,14 +479,16 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
                     // TODO we are using asT here since its not const, and chi
                     // is const theoretically we probably should enforce const
                     // another way
-                    const auto item = chi.asT<Item>();
+                    // // TODO Entity->Item
+                    const auto item = chi.asT<Entity>();
 
                     // Does the item this furniture holds have the ability to
                     // hold things
-                    if (!item->has_holding_ability()) return false;
+                    if (item->is_missing<CanHoldItem>()) return false;
+
                     // Can it hold the thing we are holding?
-                    if (!item->evaluate_eat_request(playerCHI.item()))
-                        return false;
+                    const CanHoldItem& item_chi = item->get<CanHoldItem>();
+                    if (!item_chi.can_hold(*playerCHI.item())) return false;
 
                     return true;
                 });
@@ -475,21 +499,27 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
                 "anything than can hold what we are holding");
         }
 
-        auto item_to_merge = closest_furniture->get<CanHoldItem>().item();
-        bool eat_was_successful = item_to_merge->eat(playerCHI.item());
-        if (eat_was_successful) {
-            // remove the link to the one we were already holding
-            player->get<CanHoldItem>().update(nullptr);
-            // add the link to the new one
-            player->get<CanHoldItem>().update(item_to_merge,
-                                              Item::HeldBy::PLAYER);
+        std::shared_ptr<Item> item_to_merge =
+            closest_furniture->get<CanHoldItem>().item();
 
-            // furniture can let go
-            closest_furniture->get<CanHoldItem>().update(nullptr);
-        }
-        return eat_was_successful;
+        CanHoldItem& merge_chi = item_to_merge->get<CanHoldItem>();
+
+        // TODO probably need to have heldby updated here
+        // Their item takes ownership of the item
+        merge_chi.update(playerCHI.item());
+
+        // remove the link to the one we were already holding
+        player->get<CanHoldItem>().update(nullptr);
+        // add the link to the new one
+        player->get<CanHoldItem>().update(item_to_merge,
+                                          IsItem::HeldBy::PLAYER);
+        // furniture can let go
+        closest_furniture->get<CanHoldItem>().update(nullptr);
+        return true;
     };
 
+    // TODO is there a time when this function gets called?
+    // i feel like the wrap-around function will handle this case
     const auto _merge_item_in_hand_into_furniture_item =
         [&]() -> tl::expected<bool, std::string> {
         std::shared_ptr<Furniture> closest_furniture =
@@ -500,9 +530,16 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
                     CanHoldItem& fCHI = f->get<CanHoldItem>();
                     // is there something there to merge into?
                     if (!fCHI.is_holding_item()) return false;
-                    // can that thing hold the item we are holding?
-                    return fCHI.item()->can_eat(
-                        player->get<CanHoldItem>().item());
+                    // Grab furniture item
+                    const auto furn_item = fCHI.item();
+                    // Does the item this furniture holds have the ability to
+                    // hold things
+                    if (furn_item->is_missing<CanHoldItem>()) return false;
+                    // Grab the item we are holding...
+                    const auto player_item = player->get<CanHoldItem>().item();
+                    // Can it hold the thing we are holding?
+                    if (!fCHI.can_hold(*player_item)) return false;
+                    return true;
                 });
 
         // No matching furniture
@@ -518,15 +555,15 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
         // - block the merge
         // - place the merged item into the player's hand
 
-        bool eat_was_successful =
-            closest_furniture->get<CanHoldItem>().item()->eat(
-                player->get<CanHoldItem>().item());
-        if (!eat_was_successful) return false;
-        // TODO we need a let_go_of_item() to handle this kind of
-        // transfer because it might get complicated and we might end up
-        // with two things owning this could maybe be solved by
-        // enforcing uniqueptr
+        CanHoldItem& fCHI = closest_furniture->get<CanHoldItem>();
+
+        std::shared_ptr<Item> f_item = fCHI.item();
+        const auto player_item = player->get<CanHoldItem>().item();
+
+        // Their item eats our item
+        f_item->get<CanHoldItem>().update(player_item);
         player->get<CanHoldItem>().update(nullptr);
+
         return true;
     };
 
@@ -538,23 +575,22 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
             CanHoldItem& furnCanHold = entity->get<CanHoldItem>();
 
             const auto item_container_is_matching_item =
-                []<typename I>(std::shared_ptr<Entity> entity,
-                               std::shared_ptr<I> item = nullptr) {
+                [](std::shared_ptr<Entity> entity,
+                   std::shared_ptr<Item> item = nullptr) {
                     if (!item) return false;
                     if (!entity) return false;
-                    if (entity->is_missing<IsItemContainer<I>>()) return false;
-                    IsItemContainer<I>& itemContainer =
-                        entity->get<IsItemContainer<I>>();
+                    if (entity->is_missing<IsItemContainer>()) return false;
+                    IsItemContainer& itemContainer =
+                        entity->get<IsItemContainer>();
                     return itemContainer.is_matching_item(item);
                 };
 
             // Handle item containers
-            bool matches_bag = item_container_is_matching_item(
-                entity, dynamic_pointer_cast<Bag>(item));
+            bool matches_bag = item_container_is_matching_item(entity, item);
             if (matches_bag) return true;
 
-            bool matches_pill_bottle = item_container_is_matching_item(
-                entity, dynamic_pointer_cast<PillBottle>(item));
+            bool matches_pill_bottle =
+                item_container_is_matching_item(entity, item);
             if (matches_pill_bottle) return true;
 
             // If we are empty and can hold we good..
@@ -577,9 +613,9 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
         CanHoldItem& furnCHI = closest_furniture->get<CanHoldItem>();
 
         std::shared_ptr<Item>& item = player->get<CanHoldItem>().item();
-        item->update_position(furnT.snap_position());
+        item->get<Transform>().update(furnT.snap_position());
 
-        furnCHI.update(item, Item::HeldBy::FURNITURE);
+        furnCHI.update(item, IsItem::HeldBy::FURNITURE);
         player->get<CanHoldItem>().update(nullptr);
         return true;
     };
@@ -624,10 +660,8 @@ inline void handle_grab(const std::shared_ptr<Entity>& player) {
         std::shared_ptr<Item> item = furnCanHold.item();
 
         CanHoldItem& playerCHI = player->get<CanHoldItem>();
-        playerCHI.item() = item;
-        playerCHI.item()->held_by = Item::HeldBy::PLAYER;
-
-        furnCanHold.item() = nullptr;
+        playerCHI.update(item, IsItem::HeldBy::PLAYER);
+        furnCanHold.update(nullptr);
         return true;
     };
 
@@ -636,16 +670,15 @@ inline void handle_grab(const std::shared_ptr<Entity>& player) {
 
     // Handles the non-furniture grabbing case
     CanHighlightOthers& cho = player->get<CanHighlightOthers>();
-    Transform& playerT = player->get<Transform>();
 
     std::shared_ptr<Item> closest_item =
-        ItemHelper::getClosestMatchingItem<Item>(playerT.as2(),
-                                                 TILESIZE * cho.reach());
+        EntityHelper::getClosestWithComponent<IsItem>(player,
+                                                      TILESIZE * cho.reach());
 
     // nothing found
     if (closest_item == nullptr) return;
 
-    player->get<CanHoldItem>().update(closest_item, Item::HeldBy::PLAYER);
+    player->get<CanHoldItem>().update(closest_item, IsItem::HeldBy::PLAYER);
     return;
 }
 

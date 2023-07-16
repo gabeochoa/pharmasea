@@ -7,15 +7,16 @@
 #include "base_component.h"
 
 enum Subtype {
-    INVALID = 0,
+    INVALID = -1,
+    ST_NONE = 0,  // If you are getting none, you probably have to increment
+                  // your index by ITEM_START
 
-    PILL_START,
-    PillRed,
-    PillRedLong,
-    PillBlue,
-    PillBlueLong,
-    PILL_END,
-
+    PILL_START = 1,
+    PillRed = 1,
+    PillRedLong = 2,
+    PillBlue = 3,
+    PillBlueLong = 4,
+    PILL_END = 4
 };
 
 struct HasSubtype : public BaseComponent {

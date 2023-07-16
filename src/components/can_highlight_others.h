@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "../item.h"
 #include "base_component.h"
 
 struct CanHighlightOthers : public BaseComponent {

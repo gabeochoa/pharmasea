@@ -18,7 +18,6 @@
 //
 #include "engine/statemanager.h"
 #include "entity.h"
-#include "item.h"
 // TODO eventually move to input manager but for now has to be in here
 // to prevent circular includes
 
@@ -65,9 +64,21 @@ struct EntityHelper {
         return client_entities_DO_NOT_USE;
     }
 
+    // TODO eventually return the entity id or something
+    template<typename... TArgs>
+    static std::shared_ptr<Entity> createItem(TArgs... args) {
+        Entity& e = createEntity();
+        items::make_item_type(e, std::forward<TArgs>(args)...);
+        VALIDATE(e.has<DebugName>(),
+                 "trying to create item but name was missing");
+        log_info("created a new item {} {} ", e.id, e.get<DebugName>());
+        return get_entities().back();
+    }
+
     static Entity& createEntity() {
         std::shared_ptr<Entity> e(new Entity());
         get_entities().push_back(e);
+        log_info("created a new entity {}", e->id);
         return *e;
 
         // if (!e->add_to_navmesh()) {
@@ -198,8 +209,7 @@ struct EntityHelper {
             auto tile =
                 Transform::tile_infront_given_pos(pos, cur_step, direction);
 
-            for (auto& e : get_entities()) {
-                auto current_entity = dynamic_pointer_cast<T>(e);
+            for (std::shared_ptr<Entity> current_entity : get_entities()) {
                 if (!current_entity) continue;
                 if (!filter(current_entity)) continue;
 
@@ -207,6 +217,8 @@ struct EntityHelper {
                 if (current_entity->template is_missing<Transform>()) {
                     log_warn("component {} is missing transform",
                              current_entity->id);
+                    log_error("component {} is missing name",
+                              current_entity->template get<DebugName>());
                     continue;
                 }
 
@@ -275,15 +287,14 @@ struct EntityHelper {
         return matching;
     }
 
-    // TODO replace with an enum or something
-    // also doesnt this break the idea of ecs
+    // TODO does this break the idea of ecs
     // TODO change other debugname filter guys to this
     static std::vector<std::shared_ptr<Entity>> getAllWithName(
         const std::string name) {
         std::vector<std::shared_ptr<Entity>> matching;
-        for (auto& e : get_entities()) {
+        for (std::shared_ptr<Entity> e : get_entities()) {
             if (!e) continue;
-            if (e->get<DebugName>().name() == name) matching.push_back(e);
+            if (check_name(*e, name.c_str())) matching.push_back(e);
         }
         return matching;
     }

@@ -22,20 +22,15 @@ struct PolymorphicBaseClass<BaseComponent>
           CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
           CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed,
           IsSolid, CanBeHeld, IsRotatable, CanGrabFromOtherFurniture,
-          ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom,
-          IsItemContainer<Bag>, IsItemContainer<PillBottle>,
-          IsItemContainer<Pill>, UsesCharacterModel, ShowsProgressBar,
-          DebugName, HasDynamicModelName, IsTriggerArea, HasSpeechBubble,
-          Indexer, IsSpawner, HasTimer, HasSubtype, IsItem,
+          ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom, IsItemContainer,
+          UsesCharacterModel, ShowsProgressBar, DebugName, HasDynamicModelName,
+          IsTriggerArea, HasSpeechBubble, Indexer, IsSpawner, HasTimer,
+          HasSubtype, IsItem,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};
 // If you add anything here ^^ then you should add that component to
 // register_all_components in entity.h
-
-template<>
-struct PolymorphicBaseClass<Item>
-    : PolymorphicDerivedClasses<Bag, PillBottle, Pill> {};
 
 template<>
 struct PolymorphicBaseClass<Job>
@@ -50,7 +45,7 @@ struct PolymorphicBaseClass<LevelInfo>
 }  // namespace bitsery
 
 using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<BaseComponent, Entity, Item, Job>;
+    bitsery::ext::PolymorphicClassesList<BaseComponent, Job>;
 
 namespace network {
 

@@ -31,7 +31,7 @@ void render_networked_players(const Entities& entities, float dt) {
         if (entity->is_missing<ModelRenderer>()) {
             log_warn(
                 "render_little_model_guy, entity {} is missing model renderer",
-                entity->get<DebugName>().name());
+                entity->get<DebugName>());
             return;
         }
         auto model_name =

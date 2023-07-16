@@ -153,17 +153,6 @@ struct SystemManager {
         system_manager::ui::render_normal(entities, dt);
     }
 
-    void render_items(Items items, float) const {
-        for (auto i : items) {
-            if (!i) {
-                log_warn("we have invalid items");
-                continue;
-            }
-            if (i->cleanup) continue;
-            i->render();
-        }
-    }
-
    private:
     void process_state_change(
         const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
@@ -212,8 +201,7 @@ struct SystemManager {
 
             // TODO these eventually should move into their own functions but
             // for now >:)
-            // TODO switch to using match_name()
-            if (entity->get<DebugName>().name() == strings::entity::SOPHIE)
+            if (check_name(*entity, strings::entity::SOPHIE))
                 system_manager::sophie(entity, dt);
         }
     }

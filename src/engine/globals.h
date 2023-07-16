@@ -24,6 +24,19 @@ template<typename Str>
     return result;
 }
 
+[[nodiscard]] constexpr size_t hashString(const char* toHash) {
+    static_assert(sizeof(size_t) == 8,
+                  "Only 64-bit size_t is supported for this example.");
+    size_t result = 0xcbf29ce484222325;  // FNV offset basis
+    const char* str = toHash;
+    while (*str) {
+        result ^= *str;
+        result *= 1099511628211;  // FNV prime
+        ++str;
+    }
+    return result;
+}
+
 static int __WIN_H = 720;
 static int __WIN_W = 1280;
 

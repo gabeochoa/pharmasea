@@ -26,3 +26,8 @@ struct DebugName : public BaseComponent {
         s.text1b(_name, name_length);
     }
 };
+
+inline std::ostream& operator<<(std::ostream& os, const DebugName& dn) {
+    os << dn.name();
+    return os;
+}

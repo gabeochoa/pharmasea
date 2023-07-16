@@ -9,14 +9,8 @@
 #include "../globals.h"
 #include "../vendor_include.h"
 
-struct Entity;
 struct BaseComponent;
-
 constexpr int max_num_components = 64;
-using ComponentBitSet = std::bitset<max_num_components>;
-// originally this was a std::array<BaseComponent*, max_num_components> but i
-// cant seem to serialize this so lets try map
-using ComponentArray = std::map<int, BaseComponent*>;
 using ComponentID = int;
 
 namespace components {

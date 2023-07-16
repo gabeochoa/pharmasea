@@ -28,10 +28,6 @@ struct Map {
 
     void update_seed(const std::string& s) { game_info.update_seed(s); }
 
-    Items items() const {
-        return in_lobby_state() ? lobby_info.items : game_info.items;
-    }
-
     Entities entities() const {
         return in_lobby_state() ? lobby_info.entities : game_info.entities;
     }

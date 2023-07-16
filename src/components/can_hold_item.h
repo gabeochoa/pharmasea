@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../item.h"
 #include "base_component.h"
+//
+#include "is_item.h"
 
 struct CanHoldItem : public BaseComponent {
     virtual ~CanHoldItem() {}
@@ -17,24 +18,25 @@ struct CanHoldItem : public BaseComponent {
         return dynamic_pointer_cast<T>(held_item);
     }
 
-    void update(std::shared_ptr<Item> item,
-                Item::HeldBy newHB = Item::HeldBy::NONE) {
-        if (held_item != nullptr && !held_item->cleanup) {
-            log_warn(
-                "you are updating the held item to null, but the old one isnt "
-                "marked cleanup, this might be an issue if you are tring to "
-                "delete it");
-        }
-
+    void update(std::shared_ptr<Entity> item,
+                IsItem::HeldBy newHB = IsItem::HeldBy::NONE) {
+        // TODO handle
+        // if (held_item != nullptr && !held_item->cleanup) {
+        // log_warn(
+        // "you are updating the held item to null, but the old one isnt "
+        // "marked cleanup, this might be an issue if you are tring to "
+        // "delete it");
+        // }
+        //
         held_item = item;
-        if (held_item) held_item->held_by = newHB;
+        // if (held_item) held_item->held_by = newHB;
     }
 
     // TODO this isnt const because we want to write to the item
     // we could make this const and then expose certain things that we want to
     // change separately like 'held_by'
     // (change to use update instead and make this const)
-    [[nodiscard]] std::shared_ptr<Item>& item() { return held_item; }
+    [[nodiscard]] std::shared_ptr<Entity>& item() { return held_item; }
 
     void set_filter_fn(Filterfn fn = nullptr) { filter = fn; }
 
@@ -45,7 +47,7 @@ struct CanHoldItem : public BaseComponent {
     }
 
    private:
-    std::shared_ptr<Item> held_item = nullptr;
+    std::shared_ptr<Entity> held_item = nullptr;
     Filterfn filter;
 
     friend bitsery::Access;

@@ -103,7 +103,7 @@ void update_held_item_position(std::shared_ptr<Entity> entity, float) {
                 new_pos.y += TILESIZE / 4;
                 break;
         }
-        can_hold_item.item()->update_position(new_pos);
+        can_hold_item.item()->get<Transform>().update(new_pos);
         return;
     }
 
@@ -120,7 +120,7 @@ void update_held_item_position(std::shared_ptr<Entity> entity, float) {
     if (transform.face_direction() & Transform::FrontFaceDirection::LEFT) {
         new_pos.x -= TILESIZE;
     }
-    can_hold_item.item()->update_position(new_pos);
+    can_hold_item.item()->get<Transform>().update(new_pos);
 }
 
 void reset_highlighted(std::shared_ptr<Entity> entity, float) {
@@ -208,7 +208,7 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     CanHoldItem& ourCHI = entity->get<CanHoldItem>();
 
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
-    matchCHI.update(ourCHI.item(), Item::HeldBy::FURNITURE);
+    matchCHI.update(ourCHI.item(), IsItem::HeldBy::FURNITURE);
 
     ourCHI.update(nullptr);
 
@@ -267,22 +267,27 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
     CanHoldItem& ourCHI = entity->get<CanHoldItem>();
 
-    ourCHI.update(matchCHI.item(), Item::HeldBy::FURNITURE);
+    ourCHI.update(matchCHI.item(), IsItem::HeldBy::FURNITURE);
     matchCHI.update(nullptr);
 
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
 }
 
-template<typename I, typename... TArgs>
-void backfill_empty_container(std::shared_ptr<Entity>& entity,
+template<typename... TArgs>
+void backfill_empty_container(const std::string& match_type,
+                              std::shared_ptr<Entity>& entity,
                               TArgs&&... args) {
-    if (entity->is_missing<IsItemContainer<I>>()) return;
+    if (entity->is_missing<IsItemContainer>()) return;
+    const IsItemContainer& iic = entity->get<IsItemContainer>();
+    if (iic.type() != match_type) return;
     CanHoldItem& canHold = entity->get<CanHoldItem>();
-    I* newItem(new I(std::forward<TArgs>(args)...));
-    std::shared_ptr<I> container;
-    container.reset(newItem);
-    canHold.update(container, Item::HeldBy::FURNITURE);
-    ItemHelper::addItem(canHold.item());
+    if (canHold.is_holding_item()) return;
+
+    // create item
+    std::shared_ptr<Item> item =
+        EntityHelper::createItem(iic.type(), std::forward<TArgs>(args)...);
+
+    canHold.update(item, IsItem::HeldBy::FURNITURE);
 }
 
 void process_is_container_and_should_backfill_item(
@@ -295,14 +300,13 @@ void process_is_container_and_should_backfill_item(
     //      then can skip the rest, are there any that can hold mixed ?
 
     auto pos = entity->get<Transform>().as2();
-    auto color = Color({255, 15, 240, 255});
 
-    backfill_empty_container<Bag>(entity, pos, color);
-    backfill_empty_container<PillBottle>(entity, pos, color);
+    backfill_empty_container(strings::item::BAG, entity, pos);
+    backfill_empty_container(strings::item::PILL_BOTTLE, entity, pos);
 
     if (entity->is_missing<Indexer>()) return;
-    backfill_empty_container<Pill>(entity, pos, color,
-                                   entity->get<Indexer>().value());
+    backfill_empty_container(strings::item::PILL, entity, pos,
+                             entity->get<Indexer>().value());
 }
 
 void process_is_container_and_should_update_item(std::shared_ptr<Entity> entity,
@@ -322,9 +326,8 @@ void process_is_container_and_should_update_item(std::shared_ptr<Entity> entity,
     }
 
     auto pos = entity->get<Transform>().as2();
-    auto color = Color({255, 15, 240, 255});
 
-    backfill_empty_container<Pill>(entity, pos, color, indexer.value());
+    backfill_empty_container(strings::item::PILL, entity, pos, indexer.value());
     indexer.mark_change_completed();
 }
 
@@ -344,10 +347,7 @@ void delete_held_items_when_leaving_inround(
     // TODO this doesnt seem to work
     // you keep holding it even after the transition
 
-    // log_warn("delete_held_items_when_leaving_inround");
     if (entity->is_missing<CanHoldItem>()) return;
-    // log_warn("delete_ canhold {} {}", entity->get<DebugName>().name(),
-    // entity->id);
 
     CanHoldItem& canHold = entity->get<CanHoldItem>();
     if (canHold.empty()) return;
@@ -442,9 +442,9 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
         const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
 
         bool all_gone = true;
-        auto customers =
+        std::vector<std::shared_ptr<Entity>> customers =
             EntityHelper::getAllWithName(strings::entity::CUSTOMER);
-        for (auto e : customers) {
+        for (std::shared_ptr<Entity> e : customers) {
             if (vec::distance(e->get<Transform>().as2(), endpos) >
                 TILESIZE * 2.f) {
                 all_gone = false;
@@ -463,7 +463,7 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
         //
         // auto players = EntityHelper::getAllWithComponent<CanHoldFurniture>();
 
-        for (auto& e : SystemManager::get().oldAll) {
+        for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
             if (e->is_missing<CanHoldFurniture>()) continue;
             if (e->get<CanHoldFurniture>().is_holding_furniture()) {
                 all_empty = false;
