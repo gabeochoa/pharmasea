@@ -204,11 +204,15 @@ struct Preload {
                 .filename = "crate.obj",
                 .libraryname = "crate",
             },
-
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kaykit",
                 .filename = "bottle_A_labeled_green.gltf.glb",
                 .libraryname = "bottle_a_brown",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "banana.obj",
+                .libraryname = "banana",
             },
         };
 

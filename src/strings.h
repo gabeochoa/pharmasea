@@ -104,6 +104,7 @@ constexpr const char* TRIGGER_AREA = "trigger area";
 constexpr const char* CUSTOMER_SPAWNER = "customer spawner";
 constexpr const char* SOPHIE = "sophie";
 constexpr const char* BLENDER = "blender";
+constexpr const char* SODA_MACHINE = "soda machine";
 
 constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
 
@@ -114,6 +115,7 @@ namespace item {
 constexpr const char* PILL = "PILL";
 constexpr const char* PILL_BOTTLE = "PILL_BOTTLE";
 constexpr const char* BAG = "BAG";
+constexpr const char* SODA_SPOUT = "SODA_SPOUT";
 
 }  // namespace item
 

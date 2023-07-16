@@ -656,6 +656,9 @@ inline void handle_grab(const std::shared_ptr<Entity>& player) {
         CanHoldItem& furnCanHold = closest_furniture->get<CanHoldItem>();
         std::shared_ptr<Item> item = furnCanHold.item();
 
+        // log_info("Found {} to pick up from {}", item->get<DebugName>(),
+        // closest_furniture->get<DebugName>());
+
         CanHoldItem& playerCHI = player->get<CanHoldItem>();
         playerCHI.update(item);
         furnCanHold.update(nullptr);

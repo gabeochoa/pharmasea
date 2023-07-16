@@ -54,6 +54,7 @@ const char BAGBOX = 'B';
 const char MED_CAB = 'M';
 const char PILL_DISP = 'P';
 const char BLENDER = 'b';
+const char SODA_MACHINE = 'S';
 
 const char SOPHIE = 's';
 
@@ -171,6 +172,10 @@ struct helper {
             } break;
             case BLENDER: {
                 (entities::make_blender(create(), location));
+                return;
+            } break;
+            case SODA_MACHINE: {
+                (entities::make_soda_machine(create(), location));
                 return;
             } break;
             case 32: {

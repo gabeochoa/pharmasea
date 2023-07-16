@@ -39,18 +39,25 @@
 #include "components/simple_colored_box_renderer.h"
 #include "components/transform.h"
 #include "components/uses_character_model.h"
+#include "strings.h"
 
 static void register_all_components() {
     Entity* entity = new Entity();
-    entity->addAll<
-        Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
-        CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
-        CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
-        CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid,
-        CanBeHeld, IsRotatable, CanGrabFromOtherFurniture, ConveysHeldItem,
-        HasWaitingQueue, CanBeTakenFrom, IsItemContainer, UsesCharacterModel,
-        ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
-        HasSpeechBubble, Indexer, IsSpawner, HasTimer, HasSubtype, IsItem
+    entity->addAll<  //
+        DebugName, Transform, HasName,
+        // Is
+        IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
+        //
+        CanHoldItem, CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
+        CanBeGhostPlayer, CanPerformJob, CanBePushed, CanHaveAilment,
+        CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
+        ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
+        //
+        HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
+        HasBaseSpeed,
+        // render
+        ShowsProgressBar, ModelRenderer, HasDynamicModelName,
+        SimpleColoredBoxRenderer
         //
         >();
 
@@ -470,6 +477,26 @@ static void make_pill_dispenser(Entity& container, vec2 pos) {
         CustomHeldItemPosition::Positioner::Table);
 }
 
+static void make_soda_machine(Entity& soda_machine, vec2 pos) {
+    entities::make_itemcontainer(soda_machine,
+                                 DebugOptions{.name = strings::entity::BLENDER},
+                                 pos, strings::item::SODA_SPOUT);
+    if (ENABLE_MODELS) {
+        soda_machine.get<ModelRenderer>().update(ModelInfo{
+            // TODO get custom model for this
+            .model_name = "crate",
+            .size_scale = 2.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        });
+    }
+    soda_machine.get<IsItemContainer>().set_max_generations(1);
+    soda_machine.get<CanHoldItem>()
+        .update_held_by(IsItem::HeldBy::SODA_MACHINE)
+        .set_filter_fn([](const Item& item) {
+            return check_name(item, strings::item::SODA_SPOUT);
+        });
+}
+
 static void make_trigger_area(
     Entity& trigger_area, vec3 pos, float width, float height,
     std::string title = strings::entity::TRIGGER_AREA) {
@@ -655,6 +682,20 @@ static void make_bag(Item& bag, vec2 pos) {
         });
 }
 
+static void make_soda_spout(Item& soda_spout, vec2 pos) {
+    make_item(soda_spout, {.name = strings::item::SODA_SPOUT}, pos);
+
+    soda_spout.addComponent<ModelRenderer>().update(ModelInfo{
+        .model_name = "banana",
+        .size_scale = 2.0f,
+        .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 0,
+    });
+
+    soda_spout.get<IsItem>().set_hb_filter(IsItem::HeldBy::SODA_MACHINE |
+                                           IsItem::HeldBy::PLAYER);
+}
+
 static void make_item_type(Item& item, const std::string& type_name,  //
                            vec2 pos,                                  //
                            int index = -1                             //
@@ -668,6 +709,8 @@ static void make_item_type(Item& item, const std::string& type_name,  //
             return make_pill_bottle(item, pos);
         case hashString(strings::item::BAG):
             return make_bag(item, pos);
+        case hashString(strings::item::SODA_SPOUT):
+            return make_soda_spout(item, pos);
     }
     log_warn(
         "Trying to make item with item type {} but not handled in "

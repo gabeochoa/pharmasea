@@ -305,11 +305,13 @@ void process_is_container_and_should_backfill_item(
 
     // TODO speed have each <> return true/false if it worked
     //      then can skip the rest, are there any that can hold mixed ?
+    // TODO can we dynamically figure out what to run?
 
     auto pos = entity->get<Transform>().as2();
 
     backfill_empty_container(strings::item::BAG, entity, pos);
     backfill_empty_container(strings::item::PILL_BOTTLE, entity, pos);
+    backfill_empty_container(strings::item::SODA_SPOUT, entity, pos);
 
     if (entity->is_missing<Indexer>()) return;
     backfill_empty_container(strings::item::PILL, entity, pos,
