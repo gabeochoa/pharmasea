@@ -52,7 +52,9 @@ struct Preload {
     ~Preload() {
         delete localization;
 
-        ext::close_audio_device();
+        if (ENABLE_SOUND) {
+            ext::close_audio_device();
+        }
 
         TextureLibrary::get().unload_all();
         MusicLibrary::get().unload_all();
