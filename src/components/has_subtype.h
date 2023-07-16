@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "../engine/random.h"
 #include "../vendor_include.h"
+//
+#include "../engine/random.h"
 #include "base_component.h"
 
 enum Subtype {
@@ -33,6 +34,12 @@ struct HasSubtype : public BaseComponent {
         return magic_enum::enum_value<Subtype>(start + index);
     }
     [[nodiscard]] Subtype get_type() const { return type; }
+
+    void increment_type() {
+        int index = magic_enum::enum_integer<Subtype>(type);
+        if (index == end) index = (start - 1);
+        type = magic_enum::enum_cast<Subtype>(index + 1).value();
+    }
 
    private:
     int start;

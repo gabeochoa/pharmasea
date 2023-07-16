@@ -86,7 +86,7 @@ static void add_person_components(Entity& person) {
         TILESIZE * size_multiplier,
     });
 
-    person.addComponent<CanHoldItem>();
+    person.addComponent<CanHoldItem>(IsItem::HeldBy::PLAYER);
     person.addComponent<CanBePushed>();
 
     person.addComponent<HasBaseSpeed>().update(10.f);
@@ -223,7 +223,7 @@ static void make_furniture(Entity& furniture, const DebugOptions& options,
     // Walls should not have these
     if (!is_static) {
         furniture.addComponent<IsRotatable>();
-        furniture.addComponent<CanHoldItem>();
+        furniture.addComponent<CanHoldItem>(IsItem::HeldBy::UNKNOWN_FURNITURE);
         // These two are the heavy ones
         furniture.addComponent<CanBeHeld>();
         furniture.addComponent<CanBeHighlighted>();
@@ -238,15 +238,14 @@ static void make_table(Entity& table, vec2 pos) {
     table.get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);
 
-    table.addComponent<HasWork>().init([](std::shared_ptr<Entity>,
-                                          HasWork& hasWork,
-                                          std::shared_ptr<Entity>, float dt) {
-        // TODO eventually we need it to decide whether it has work
-        // based on the current held item
-        const float amt = 0.5f;
-        hasWork.increase_pct(amt * dt);
-        if (hasWork.is_work_complete()) hasWork.reset_pct();
-    });
+    table.addComponent<HasWork>().init(
+        [](Entity&, HasWork& hasWork, Entity&, float dt) {
+            // TODO eventually we need it to decide whether it has work
+            // based on the current held item
+            const float amt = 0.5f;
+            hasWork.increase_pct(amt * dt);
+            if (hasWork.is_work_complete()) hasWork.reset_pct();
+        });
     table.addComponent<ShowsProgressBar>();
 }
 
@@ -257,11 +256,10 @@ static void make_character_switcher(Entity& character_switcher, vec2 pos) {
         ui::color::green, ui::color::yellow);
 
     character_switcher.addComponent<HasWork>().init(
-        [](std::shared_ptr<Entity>, HasWork& hasWork,
-           std::shared_ptr<Entity> person, float dt) {
-            if (person->is_missing<UsesCharacterModel>()) return;
+        [](Entity&, HasWork& hasWork, Entity& person, float dt) {
+            if (person.is_missing<UsesCharacterModel>()) return;
             UsesCharacterModel& usesCharacterModel =
-                person->get<UsesCharacterModel>();
+                person.get<UsesCharacterModel>();
 
             const float amt = 1.5f;
             hasWork.increase_pct(amt * dt);
@@ -462,12 +460,11 @@ static void make_pill_dispenser(Entity& container, vec2 pos) {
     container.addComponent<Indexer>((Subtype::PILL_END - Subtype::PILL_START));
 
     container.addComponent<HasWork>().init(
-        [](std::shared_ptr<Entity> owner, HasWork& hasWork,
-           std::shared_ptr<Entity>, float dt) {
+        [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
             const float amt = 2.f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
-                owner->get<Indexer>().increment();
+                owner.get<Indexer>().increment();
                 hasWork.reset_pct();
             }
         });
@@ -522,23 +519,7 @@ static void make_blender(Entity& blender, vec2 pos) {
     entities::make_furniture(blender,
                              DebugOptions{.name = strings::entity::BLENDER},
                              pos, ui::color::red, ui::color::yellow);
-
-    blender.addComponent<HasWork>().init(
-        [](std::shared_ptr<Entity> owner, HasWork& hasWork,
-           std::shared_ptr<Entity> /* person */, float dt) {
-            CanHoldItem& canHold = owner->get<CanHoldItem>();
-            if (canHold.empty()) return;
-            std::shared_ptr<Entity> item = canHold.item();
-
-            const float amt = 1.5f;
-            hasWork.increase_pct(amt * dt);
-            if (hasWork.is_work_complete()) {
-                hasWork.reset_pct();
-
-                // TODO do work on the item you are holding
-            }
-        });
-    blender.addComponent<ShowsProgressBar>();
+    blender.get<CanHoldItem>().update_held_by(IsItem::HeldBy::BLENDER);
 }
 
 // This will be a catch all for anything that just needs to get updated
@@ -605,7 +586,31 @@ static void make_pill(Item& pill, vec2 pos, int index) {
             }
             return base_name;
         });
-}  // namespace items
+
+    pill.addComponent<HasWork>().init(
+        [](Entity& owner, HasWork& hasWork, Entity& /* person */, float dt) {
+            const IsItem& ii = owner.get<IsItem>();
+            HasSubtype& hasSubtype = owner.get<HasSubtype>();
+
+            if (ii.is_not_held_by(IsItem::HeldBy::BLENDER)) {
+                hasWork.reset_pct();
+                return;
+            }
+
+            const float amt = 1.5f;
+            hasWork.increase_pct(amt * dt);
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
+
+                HasDynamicModelName& hDMN = owner.get<HasDynamicModelName>();
+                ModelRenderer& renderer = owner.get<ModelRenderer>();
+
+                hasSubtype.increment_type();
+                renderer.update_model_name(hDMN.fetch(owner));
+            }
+        });
+    pill.addComponent<ShowsProgressBar>();
+}
 
 static void make_pill_bottle(Item& pill_bottle, vec2 pos) {
     make_item(pill_bottle, {.name = strings::item::PILL_BOTTLE}, pos);
@@ -617,8 +622,10 @@ static void make_pill_bottle(Item& pill_bottle, vec2 pos) {
         .rotation_angle = 0,
     });
 
-    pill_bottle.addComponent<CanHoldItem>().set_filter_fn(
-        [](const Item& item) { return check_name(item, strings::item::PILL); });
+    pill_bottle.addComponent<CanHoldItem>(IsItem::HeldBy::ITEM)
+        .set_filter_fn([](const Item& item) {
+            return check_name(item, strings::item::PILL);
+        });
 }
 
 static void make_bag(Item& bag, vec2 pos) {
@@ -645,9 +652,10 @@ static void make_bag(Item& bag, vec2 pos) {
             return chi.empty() ? fmt::format("empty_{}", base_name) : base_name;
         });
 
-    bag.addComponent<CanHoldItem>().set_filter_fn([](const Item& item) {
-        return check_name(item, strings::item::PILL_BOTTLE);
-    });
+    bag.addComponent<CanHoldItem>(IsItem::HeldBy::ITEM)
+        .set_filter_fn([](const Item& item) {
+            return check_name(item, strings::item::PILL_BOTTLE);
+        });
 }
 
 static void make_item_type(Item& item, const std::string& type_name,  //

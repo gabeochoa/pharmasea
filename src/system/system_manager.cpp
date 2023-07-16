@@ -212,7 +212,7 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     CanHoldItem& ourCHI = entity->get<CanHoldItem>();
 
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
-    matchCHI.update(ourCHI.item(), IsItem::HeldBy::FURNITURE);
+    matchCHI.update(ourCHI.item());
 
     ourCHI.update(nullptr);
 
@@ -271,7 +271,7 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
     CanHoldItem& ourCHI = entity->get<CanHoldItem>();
 
-    ourCHI.update(matchCHI.item(), IsItem::HeldBy::FURNITURE);
+    ourCHI.update(matchCHI.item());
     matchCHI.update(nullptr);
 
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
@@ -291,7 +291,7 @@ void backfill_empty_container(const std::string& match_type,
     std::shared_ptr<Item> item =
         EntityHelper::createItem(iic.type(), std::forward<TArgs>(args)...);
 
-    canHold.update(item, IsItem::HeldBy::FURNITURE);
+    canHold.update(item);
 }
 
 void process_is_container_and_should_backfill_item(
@@ -311,7 +311,7 @@ void process_is_container_and_should_backfill_item(
     if (entity->is_missing<Indexer>()) return;
     backfill_empty_container(strings::item::PILL, entity, pos,
                              entity->get<Indexer>().value());
-    // entity->get<Indexer>().mark_change_completed();
+    entity->get<Indexer>().mark_change_completed();
 }
 
 void process_is_container_and_should_update_item(std::shared_ptr<Entity> entity,

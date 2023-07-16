@@ -6,6 +6,9 @@
 #include "is_item.h"
 
 struct CanHoldItem : public BaseComponent {
+    CanHoldItem() : held_by(IsItem::HeldBy::UNKNOWN) {}
+    CanHoldItem(IsItem::HeldBy hb) : held_by(hb) {}
+
     virtual ~CanHoldItem() {}
 
     typedef std::function<bool(const Entity&)> Filterfn;
@@ -19,8 +22,7 @@ struct CanHoldItem : public BaseComponent {
         return dynamic_pointer_cast<T>(held_item);
     }
 
-    void update(std::shared_ptr<Entity> item,
-                IsItem::HeldBy newHB = IsItem::HeldBy::NONE) {
+    void update(std::shared_ptr<Entity> item) {
         if (held_item != nullptr && !held_item->cleanup) {
             log_warn(
                 "you are updating the held item to null, but the old one isnt "
@@ -29,7 +31,13 @@ struct CanHoldItem : public BaseComponent {
         }
 
         held_item = item;
-        if (held_item) held_item->get<IsItem>().set_held_by(newHB);
+        if (held_item) held_item->get<IsItem>().set_held_by(held_by);
+        if (held_item && held_by == IsItem::HeldBy::UNKNOWN) {
+            log_warn(
+                "We never had our HeldBy set, so we are holding {}{}  by "
+                "UNKNOWN",
+                item->id, item->get<DebugName>());
+        }
     }
 
     // TODO this isnt const because we want to write to the item
@@ -51,9 +59,12 @@ struct CanHoldItem : public BaseComponent {
         return true;
     }
 
+    void update_held_by(IsItem::HeldBy hb) { held_by = hb; }
+
    private:
     std::shared_ptr<Entity> held_item = nullptr;
     Filterfn filter;
+    IsItem::HeldBy held_by;
 
     friend bitsery::Access;
     template<typename S>

@@ -381,7 +381,7 @@ inline void work_furniture(const std::shared_ptr<Entity> player,
     if (!match) return;
 
     HasWork& hasWork = match->get<HasWork>();
-    if (hasWork.do_work) hasWork.do_work(match, hasWork, player, frame_dt);
+    if (hasWork.do_work) hasWork.do_work(*match, hasWork, *player, frame_dt);
 }
 
 inline void handle_drop(const std::shared_ptr<Entity>& player) {
@@ -509,8 +509,7 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
         // remove the link to the one we were already holding
         player->get<CanHoldItem>().update(nullptr);
         // add the link to the new one
-        player->get<CanHoldItem>().update(item_to_merge,
-                                          IsItem::HeldBy::PLAYER);
+        player->get<CanHoldItem>().update(item_to_merge);
         // furniture can let go
         closest_furniture->get<CanHoldItem>().update(nullptr);
         return true;
@@ -613,7 +612,7 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
         std::shared_ptr<Item>& item = player->get<CanHoldItem>().item();
         item->get<Transform>().update(furnT.snap_position());
 
-        furnCHI.update(item, IsItem::HeldBy::FURNITURE);
+        furnCHI.update(item);
         player->get<CanHoldItem>().update(nullptr);
         return true;
     };
@@ -658,7 +657,7 @@ inline void handle_grab(const std::shared_ptr<Entity>& player) {
         std::shared_ptr<Item> item = furnCanHold.item();
 
         CanHoldItem& playerCHI = player->get<CanHoldItem>();
-        playerCHI.update(item, IsItem::HeldBy::PLAYER);
+        playerCHI.update(item);
         furnCanHold.update(nullptr);
         return true;
     };
@@ -676,7 +675,7 @@ inline void handle_grab(const std::shared_ptr<Entity>& player) {
     // nothing found
     if (closest_item == nullptr) return;
 
-    player->get<CanHoldItem>().update(closest_item, IsItem::HeldBy::PLAYER);
+    player->get<CanHoldItem>().update(closest_item);
     return;
 }
 

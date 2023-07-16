@@ -32,16 +32,14 @@ struct HasWork : public BaseComponent {
         return (int) (pct_work_complete * length);
     }
 
-    // TODO make private
-    std::function<void(std::shared_ptr<Entity> owner, HasWork&,
-                       std::shared_ptr<Entity> person, float dt)>
-        do_work;
+    typedef std::function<void(Entity& owner, HasWork&, Entity& person,
+                               float dt)>
+        WorkFn;
 
-    void init(std::function<void(std::shared_ptr<Entity> owner, HasWork&,
-                                 std::shared_ptr<Entity> person, float dt)>
-                  worker) {
-        do_work = worker;
-    }
+    // TODO make private
+    WorkFn do_work;
+
+    void init(WorkFn worker) { do_work = worker; }
 
     [[nodiscard]] bool should_reset_on_empty() const { return reset_on_empty; }
     void set_reset_on_empty(bool roe) { reset_on_empty = roe; }

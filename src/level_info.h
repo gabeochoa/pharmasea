@@ -6,6 +6,7 @@
 #include "engine/globals_register.h"
 #include "engine/ui_color.h"
 #include "entity.h"
+#include "entity_makers.h"
 #include "entityhelper.h"
 #include "strings.h"
 #include "system/system_manager.h"
@@ -52,6 +53,7 @@ const char GRABBERd = 'v';
 const char BAGBOX = 'B';
 const char MED_CAB = 'M';
 const char PILL_DISP = 'P';
+const char BLENDER = 'b';
 
 const char SOPHIE = 's';
 
@@ -165,6 +167,10 @@ struct helper {
             } break;
             case PLAYER: {
                 global_player->get<Transform>().update(vec::to3(location));
+                return;
+            } break;
+            case BLENDER: {
+                (entities::make_blender(create(), location));
                 return;
             } break;
             case 32: {
