@@ -476,11 +476,9 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
                     if (f->is_missing<CanHoldItem>()) return false;
                     const auto& chi = f->get<CanHoldItem>();
                     if (chi.empty()) return false;
-                    // TODO we are using asT here since its not const, and chi
-                    // is const theoretically we probably should enforce const
-                    // another way
-                    // // TODO Entity->Item
-                    const auto item = chi.asT<Entity>();
+                    // TODO we are using const_item() but this doesnt
+                    // enforce const and is just for us to understand
+                    const std::shared_ptr<Entity> item = chi.const_item();
 
                     // Does the item this furniture holds have the ability to
                     // hold things

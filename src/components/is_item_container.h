@@ -19,7 +19,7 @@ struct IsItemContainer : public BaseComponent {
     virtual ~IsItemContainer() {}
 
     [[nodiscard]] virtual bool is_matching_item(
-        // TODO ITEM
+        // TODO ITEM needs entity cpp
         std::shared_ptr<Entity> item = nullptr) {
         if (item_type.empty()) {
             log_warn(
