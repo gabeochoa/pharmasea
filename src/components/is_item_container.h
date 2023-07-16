@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../entity.h"
 #include "base_component.h"
 
 constexpr int MAX_ITEM_NAME = 20;
@@ -19,18 +20,14 @@ struct IsItemContainer : public BaseComponent {
     virtual ~IsItemContainer() {}
 
     [[nodiscard]] virtual bool is_matching_item(
-        // TODO ITEM needs entity cpp
-        std::shared_ptr<Entity> item = nullptr) {
+        std::shared_ptr<Item> item = nullptr) {
         if (item_type.empty()) {
             log_warn(
                 "You created an item container but didnt specify which type to "
                 "match, so we are going to match everything");
             return true;
         }
-        // TODO add support for check name
-        // needs entitycpp
-        // return check_name(item, item_type);
-        return true;
+        return check_name(*item, item_type.c_str());
     }
 
     [[nodiscard]] const std::string& type() const { return item_type; }

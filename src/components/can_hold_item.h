@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../entity.h"
 #include "base_component.h"
 //
 #include "is_item.h"
@@ -20,16 +21,15 @@ struct CanHoldItem : public BaseComponent {
 
     void update(std::shared_ptr<Entity> item,
                 IsItem::HeldBy newHB = IsItem::HeldBy::NONE) {
-        // TODO handle
-        // if (held_item != nullptr && !held_item->cleanup) {
-        // log_warn(
-        // "you are updating the held item to null, but the old one isnt "
-        // "marked cleanup, this might be an issue if you are tring to "
-        // "delete it");
-        // }
-        //
+        if (held_item != nullptr && !held_item->cleanup) {
+            log_warn(
+                "you are updating the held item to null, but the old one isnt "
+                "marked cleanup, this might be an issue if you are tring to "
+                "delete it");
+        }
+
         held_item = item;
-        // if (held_item) held_item->held_by = newHB;
+        if (held_item) held_item->get<IsItem>().set_held_by(newHB);
     }
 
     // TODO this isnt const because we want to write to the item

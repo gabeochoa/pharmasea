@@ -18,6 +18,7 @@
 //
 #include "engine/statemanager.h"
 #include "entity.h"
+#include "entity_makers.h"
 // TODO eventually move to input manager but for now has to be in here
 // to prevent circular includes
 
@@ -71,14 +72,14 @@ struct EntityHelper {
         items::make_item_type(e, std::forward<TArgs>(args)...);
         VALIDATE(e.has<DebugName>(),
                  "trying to create item but name was missing");
-        log_info("created a new item {} {} ", e.id, e.get<DebugName>());
+        // log_info("created a new item {} {} ", e.id, e.get<DebugName>());
         return get_entities().back();
     }
 
     static Entity& createEntity() {
         std::shared_ptr<Entity> e(new Entity());
         get_entities().push_back(e);
-        log_info("created a new entity {}", e->id);
+        // log_info("created a new entity {}", e->id);
         return *e;
 
         // if (!e->add_to_navmesh()) {

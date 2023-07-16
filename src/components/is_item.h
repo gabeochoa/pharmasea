@@ -9,6 +9,10 @@ struct IsItem : public BaseComponent {
 
     virtual ~IsItem() {}
 
+    void set_held_by(HeldBy hb) { held_by = hb; }
+
+    // TODO we dont ever read this?
+
    private:
     HeldBy held_by = NONE;
 
