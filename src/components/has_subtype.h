@@ -21,30 +21,34 @@ enum Subtype {
 };
 
 struct HasSubtype : public BaseComponent {
-    HasSubtype() : start(INVALID), end(INVALID), type(INVALID) {}
-    HasSubtype(int st_start, int st_end, Subtype st_type = INVALID)
-        : start(st_start), end(st_end), type(st_type) {
-        if (type == INVALID) type = get_random_type();
+    HasSubtype() : start(INVALID), end(INVALID), type_index(INVALID) {}
+    HasSubtype(int st_start, int st_end, int st_type = -1)
+        : start(st_start), end(st_end), type_index(st_type) {
+        if (type_index == -1) type_index = get_random_index();
     }
     virtual ~HasSubtype() {}
 
     [[nodiscard]] int get_num_types() const { return end - start; }
-    [[nodiscard]] Subtype get_random_type() const {
+    [[nodiscard]] int get_random_index() const {
         int index = randIn(0, get_num_types());
-        return magic_enum::enum_value<Subtype>(start + index);
+        return start + index;
     }
-    [[nodiscard]] Subtype get_type() const { return type; }
+    [[nodiscard]] Subtype get_type() const {
+        return magic_enum::enum_cast<Subtype>(type_index).value();
+    }
+
+    [[nodiscard]] int get_type_index() const { return type_index; }
 
     void increment_type() {
-        int index = magic_enum::enum_integer<Subtype>(type);
+        int index = type_index;
         if (index == end) index = (start - 1);
-        type = magic_enum::enum_cast<Subtype>(index + 1).value();
+        type_index = index + 1;
     }
 
    private:
     int start;
     int end;
-    Subtype type;
+    int type_index;
 
     friend bitsery::Access;
     template<typename S>
@@ -53,6 +57,6 @@ struct HasSubtype : public BaseComponent {
 
         s.value4b(start);
         s.value4b(end);
-        s.value4b(type);
+        s.value4b(type_index);
     }
 };

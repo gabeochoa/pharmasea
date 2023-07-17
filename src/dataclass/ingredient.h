@@ -41,6 +41,12 @@ enum Ingredient {
 
 };
 
+namespace ingredient {
+const Ingredient ALC_START = Ingredient::Rum;
+const Ingredient ALC_END = Ingredient::Gin;
+
+}  // namespace ingredient
+
 const int MAX_INGREDIENT_TYPES = 32;
 using IngredientBitSet = std::bitset<MAX_INGREDIENT_TYPES>;
 

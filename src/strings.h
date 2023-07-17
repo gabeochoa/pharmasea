@@ -117,6 +117,7 @@ constexpr const char* PILL_BOTTLE = "PILL_BOTTLE";
 constexpr const char* BAG = "BAG";
 constexpr const char* SODA_SPOUT = "SODA_SPOUT";
 constexpr const char* DRINK = "DRINK";
+constexpr const char* ALCOHOL = "ALCOHOL";
 
 }  // namespace item
 

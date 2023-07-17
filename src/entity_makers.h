@@ -3,6 +3,7 @@
 #pragma once
 
 #include "components/has_rope_to_item.h"
+#include "components/has_subtype.h"
 #include "dataclass/ingredient.h"
 #include "entity.h"
 //
@@ -457,7 +458,7 @@ static void make_bagbox(Entity& container, vec2 pos) {
 static void make_medicine_cabinet(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container,
                                   {strings::entity::MEDICINE_CABINET}, pos,
-                                  strings::item::PILL_BOTTLE);
+                                  strings::item::ALCOHOL);
     if (ENABLE_MODELS) {
         container.get<ModelRenderer>().update(ModelInfo{
             .model_name = "medicine_cabinet",
@@ -465,6 +466,20 @@ static void make_medicine_cabinet(Entity& container, vec2 pos) {
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
         });
     }
+
+    container.addComponent<Indexer>((Ingredient::Gin - Ingredient::Rum));
+    container.addComponent<HasWork>().init(
+        [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
+            const float amt = 2.f;
+            hasWork.increase_pct(amt * dt);
+            if (hasWork.is_work_complete()) {
+                owner.get<Indexer>().increment();
+                hasWork.reset_pct();
+            }
+        });
+    container.addComponent<ShowsProgressBar>();
+    container.get<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::Table);
 }
 
 static void make_pill_dispenser(Entity& container, vec2 pos) {
@@ -741,6 +756,59 @@ static void process_drink_working(Entity& drink, HasWork& hasWork,
     _process_add_ingredient();
 }
 
+static void make_alcohol(Item& alc, vec2 pos, int index) {
+    make_item(alc, {.name = strings::item::ALCOHOL}, pos);
+
+    alc.addComponent<ModelRenderer>().update(ModelInfo{
+        .model_name = "bottle_a_brown",
+        .size_scale = 2.0f,
+        .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 0,
+    });
+
+    alc.addComponent<HasSubtype>(ingredient::ALC_START, ingredient::ALC_END,
+                                 index);
+
+    alc.addComponent<HasDynamicModelName>().init(
+        "bottle_a_brown", HasDynamicModelName::DynamicType::Subtype,
+        [](const Item& owner, const std::string base_name) -> std::string {
+            const HasSubtype& hst = owner.get<HasSubtype>();
+            Ingredient bottle =
+                magic_enum::enum_cast<Ingredient>(ingredient::ALC_START +
+                                                  hst.get_type_index())
+                    .value();
+            switch (bottle) {
+                case Ingredient::Rum:
+                    return "bottle_a_brown";
+                    break;
+                case Ingredient::Tequila:
+                    return "bottle_a_green";
+                    break;
+                case Ingredient::Vodka:
+                    return "bottle_b_brown";
+                    break;
+                case Ingredient::Whiskey:
+                    return "bottle_b_green";
+                    break;
+                // case Ingredient::Gin:
+                // return "bottle_a_green";
+                // break;
+                default:
+                    if (hst.get_type_index() >= ingredient::ALC_START &&
+                        hst.get_type_index() <= ingredient::ALC_END) {
+                        log_warn(
+                            "You are trying to set an alcohol dynamic model "
+                            "but forgot to setup the model name for {} {}",
+                            hst.get_type_index(), bottle);
+                    }
+                    log_info("{}", bottle);
+                    break;
+            }
+
+            return base_name;
+        });
+}
+
 static void make_drink(Item& drink, vec2 pos) {
     make_item(drink, {.name = strings::item::DRINK}, pos);
 
@@ -772,8 +840,8 @@ static void make_item_type(Item& item, const std::string& type_name,  //
                            vec2 pos,                                  //
                            int index = -1                             //
 ) {
-    log_info("generating new item {} of type {} at {}", item.id, type_name,
-             pos);
+    log_info("generating new item {} of type {} at {} subtype{}", item.id,
+             type_name, pos, index);
     switch (hashString(type_name)) {
         case hashString(strings::item::PILL):
             return make_pill(item, pos, index);
@@ -783,6 +851,8 @@ static void make_item_type(Item& item, const std::string& type_name,  //
             return make_bag(item, pos);
         case hashString(strings::item::SODA_SPOUT):
             return make_soda_spout(item, pos);
+        case hashString(strings::item::ALCOHOL):
+            return make_alcohol(item, pos, index);
             // TODO add rope item
             // case hashString(strings::item::ROPE):
             // return make_rope(item, pos);

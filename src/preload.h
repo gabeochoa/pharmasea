@@ -205,11 +205,6 @@ struct Preload {
                 .libraryname = "crate",
             },
             ModelLibrary::ModelLoadingInfo{
-                .folder = "models/kaykit",
-                .filename = "bottle_A_labeled_green.gltf.glb",
-                .libraryname = "bottle_a_brown",
-            },
-            ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
                 .filename = "banana.obj",
                 .libraryname = "banana",
@@ -223,6 +218,30 @@ struct Preload {
                 .folder = "models/kennynl",
                 .filename = "eggCup.obj",
                 .libraryname = "eggcup",
+            },
+
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kaykit",
+                .filename = "bottle_A_labeled_green.gltf.glb",
+                .libraryname = "bottle_a_green",
+            },
+
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kaykit",
+                .filename = "bottle_A_brown.gltf.glb",
+                .libraryname = "bottle_a_brown",
+            },
+
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kaykit",
+                .filename = "bottle_B_brown.gltf.glb",
+                .libraryname = "bottle_b_brown",
+            },
+
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kaykit",
+                .filename = "bottle_B_green.gltf.glb",
+                .libraryname = "bottle_b_green",
             },
         };
 
