@@ -602,7 +602,7 @@ static void make_item(Item& item, const DebugOptions& options,
 static void make_pill(Item& pill, vec2 pos, int index) {
     make_item(pill, {.name = strings::item::PILL}, pos);
     pill.addComponent<HasSubtype>(
-        Subtype::PILL_START, Subtype::PILL_END,
+        Subtype::PILL_START, Subtype::PILL_END + 1,
         // TODO add a check to see if its past the end
         static_cast<Subtype>(Subtype::PILL_START + index));
 
@@ -759,6 +759,8 @@ static void process_drink_working(Entity& drink, HasWork& hasWork,
 static void make_alcohol(Item& alc, vec2 pos, int index) {
     make_item(alc, {.name = strings::item::ALCOHOL}, pos);
 
+    // TODO add how many uses each bottle gives us
+
     alc.addComponent<ModelRenderer>().update(ModelInfo{
         .model_name = "bottle_a_brown",
         .size_scale = 2.0f,
@@ -766,7 +768,7 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
         .rotation_angle = 0,
     });
 
-    alc.addComponent<HasSubtype>(ingredient::ALC_START, ingredient::ALC_END,
+    alc.addComponent<HasSubtype>(ingredient::ALC_START, ingredient::ALC_END + 1,
                                  index);
 
     alc.addComponent<HasDynamicModelName>().init(
@@ -779,7 +781,7 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
                     .value();
             switch (bottle) {
                 case Ingredient::Rum:
-                    return "bottle_a_brown";
+                    return "bottle_c_brown";
                     break;
                 case Ingredient::Tequila:
                     return "bottle_a_green";
@@ -790,9 +792,9 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
                 case Ingredient::Whiskey:
                     return "bottle_b_green";
                     break;
-                // case Ingredient::Gin:
-                // return "bottle_a_green";
-                // break;
+                case Ingredient::Gin:
+                    return "bottle_a_brown";
+                    break;
                 default:
                     if (hst.get_type_index() >= ingredient::ALC_START &&
                         hst.get_type_index() <= ingredient::ALC_END) {
@@ -801,7 +803,6 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
                             "but forgot to setup the model name for {} {}",
                             hst.get_type_index(), bottle);
                     }
-                    log_info("{}", bottle);
                     break;
             }
 

@@ -243,6 +243,16 @@ struct Preload {
                 .filename = "bottle_B_green.gltf.glb",
                 .libraryname = "bottle_b_green",
             },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kaykit",
+                .filename = "bottle_C_brown.gltf.glb",
+                .libraryname = "bottle_c_brown",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kaykit",
+                .filename = "bottle_C_green.gltf.glb",
+                .libraryname = "bottle_c_green",
+            },
         };
 
         for (const auto& m : models) {
