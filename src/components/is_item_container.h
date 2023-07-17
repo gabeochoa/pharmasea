@@ -37,7 +37,9 @@ struct IsItemContainer : public BaseComponent {
         return *this;
     }
 
-    [[nodiscard]] bool hit_max() const { return gens >= max_gens; }
+    [[nodiscard]] bool hit_max() const {
+        return max_gens < 0 ? false : gens >= max_gens;
+    }
     IsItemContainer& increment() {
         gens++;
         return *this;
