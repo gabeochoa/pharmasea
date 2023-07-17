@@ -390,11 +390,11 @@ struct EntityHelper {
 #pragma clang diagnostic pop
 };
 
-namespace entities {
+namespace furniture {
 // TODO eventually move to entity.cpp but that breaks the std library so idk
 // itll stay here for now
 static void spawn_customer(vec2 pos) {
     auto& entity = EntityHelper::createEntity();
     make_customer(entity, pos);
 }
-}  // namespace entities
+}  // namespace furniture

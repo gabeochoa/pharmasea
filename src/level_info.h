@@ -26,8 +26,8 @@ static void generate_and_insert_walls(std::string /* seed */) {
             if (i == 0 || j == 0 || i == MAX_MAP_SIZE - 1 ||
                 j == MAX_MAP_SIZE - 1) {
                 vec2 location = vec2{i * TILESIZE, j * TILESIZE};
-                entities::make_wall(EntityHelper::createEntity(), location,
-                                    d_color);
+                furniture::make_wall(EntityHelper::createEntity(), location,
+                                     d_color);
             }
         }
     }
@@ -108,17 +108,17 @@ struct helper {
             case EMPTY:
                 return;
             case SOPHIE: {
-                (entities::make_sophie(create(), vec::to3(location)));
+                (furniture::make_sophie(create(), vec::to3(location)));
                 return;
             } break;
             case REGISTER: {
-                (entities::make_register(create(), location));
+                (furniture::make_register(create(), location));
                 return;
             } break;
             case WALL2:
             case WALL: {
                 const auto d_color = (Color){155, 75, 0, 255};
-                (entities::make_wall(create(), location, d_color));
+                (furniture::make_wall(create(), location, d_color));
                 return;
             } break;
             case CUSTOMER: {
@@ -126,45 +126,45 @@ struct helper {
                 return;
             } break;
             case CUST_SPAWNER: {
-                entities::make_customer_spawner(create(), vec::to3(location));
+                furniture::make_customer_spawner(create(), vec::to3(location));
                 return;
             } break;
             case GRABBERu: {
-                (entities::make_grabber(create(), location));
+                (furniture::make_grabber(create(), location));
                 return;
             } break;
             case GRABBERl: {
                 Entity& grabber = create();
-                (entities::make_grabber(grabber, location));
+                (furniture::make_grabber(grabber, location));
                 grabber.get<Transform>().rotate_facing_clockwise(270);
                 return;
             } break;
             case GRABBERr: {
                 Entity& grabber = create();
-                (entities::make_grabber(grabber, location));
+                (furniture::make_grabber(grabber, location));
                 grabber.get<Transform>().rotate_facing_clockwise(90);
                 return;
             } break;
             case GRABBERd: {
                 Entity& grabber = create();
-                (entities::make_grabber(grabber, location));
+                (furniture::make_grabber(grabber, location));
                 grabber.get<Transform>().rotate_facing_clockwise(180);
                 return;
             } break;
             case TABLE: {
-                (entities::make_table(create(), location));
+                (furniture::make_table(create(), location));
                 return;
             } break;
             case BAGBOX: {
-                (entities::make_bagbox(create(), location));
+                (furniture::make_bagbox(create(), location));
                 return;
             } break;
             case MED_CAB: {
-                (entities::make_medicine_cabinet(create(), location));
+                (furniture::make_medicine_cabinet(create(), location));
                 return;
             } break;
             case PILL_DISP: {
-                (entities::make_pill_dispenser(create(), location));
+                (furniture::make_pill_dispenser(create(), location));
                 return;
             } break;
             case PLAYER: {
@@ -172,11 +172,11 @@ struct helper {
                 return;
             } break;
             case BLENDER: {
-                (entities::make_blender(create(), location));
+                (furniture::make_blender(create(), location));
                 return;
             } break;
             case SODA_MACHINE: {
-                (entities::make_soda_machine(create(), location));
+                (furniture::make_soda_machine(create(), location));
                 return;
             } break;
             case DRINK: {
@@ -316,13 +316,14 @@ struct LobbyMapInfo : public LevelInfo {
     virtual void generate_map() override {
         {
             auto& entity = EntityHelper::createEntity();
-            entities::make_character_switcher(entity, vec2{5.f, 5.f});
+            furniture::make_character_switcher(entity, vec2{5.f, 5.f});
         }
 
         {
             auto& entity = EntityHelper::createEntity();
-            entities::make_trigger_area(entity, {5, TILESIZE / -2.f, 10}, 8, 3,
-                                        text_lookup(strings::i18n::START_GAME));
+            furniture::make_trigger_area(
+                entity, {5, TILESIZE / -2.f, 10}, 8, 3,
+                text_lookup(strings::i18n::START_GAME));
         }
 
         items::make_bag(EntityHelper::createEntity(), vec2{2, 2});

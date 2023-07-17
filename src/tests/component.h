@@ -168,7 +168,7 @@ void validate_held_item_serialized() {
 }
 
 void validate_wall_color_serialized() {
-    Entity* entity = entities::make_wall(vec2{0, 0}, ui::color::saffron);
+    Entity* entity = furniture::make_wall(vec2{0, 0}, ui::color::saffron);
 
     M_TEST_T(entity->has<SimpleColoredBoxRenderer>(), "should have renderer");
 
@@ -197,7 +197,8 @@ void validate_wall_color_serialized() {
 }
 
 void validate_trigger_area_serialized() {
-    Entity* entity = entities::make_trigger_area(vec3{0, 0, 0}, 10, 20, "test");
+    Entity* entity = furniture::make_trigger_area(vec3{0, 0, 0}, 10, 20,
+"test");
 
     M_TEST_T(entity->has<IsTriggerArea>(), "should have ta component");
 

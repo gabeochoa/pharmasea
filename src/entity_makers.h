@@ -213,7 +213,7 @@ typedef Entity Furniture;
 
 // TODO This namespace should probably be "furniture::"
 // or add the ones above into it
-namespace entities {
+namespace furniture {
 static void make_furniture(Entity& furniture, const DebugOptions& options,
                            vec2 pos, Color face, Color base,
                            bool is_static = false) {
@@ -258,9 +258,9 @@ static void process_table_working(Entity& table, HasWork& hasWork,
 }
 
 static void make_table(Entity& table, vec2 pos) {
-    entities::make_furniture(table,
-                             DebugOptions{.name = strings::entity::TABLE}, pos,
-                             ui::color::brown, ui::color::brown);
+    furniture::make_furniture(table,
+                              DebugOptions{.name = strings::entity::TABLE}, pos,
+                              ui::color::brown, ui::color::brown);
 
     table.get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);
@@ -272,7 +272,7 @@ static void make_table(Entity& table, vec2 pos) {
 }
 
 static void make_character_switcher(Entity& character_switcher, vec2 pos) {
-    entities::make_furniture(
+    furniture::make_furniture(
         character_switcher,
         DebugOptions{.name = strings::entity::CHARACTER_SWITCHER}, pos,
         ui::color::green, ui::color::yellow);
@@ -294,8 +294,8 @@ static void make_character_switcher(Entity& character_switcher, vec2 pos) {
 }
 
 static void make_wall(Entity& wall, vec2 pos, Color c = ui::color::brown) {
-    entities::make_furniture(wall, DebugOptions{.name = strings::entity::WALL},
-                             pos, c, c, true);
+    furniture::make_furniture(wall, DebugOptions{.name = strings::entity::WALL},
+                              pos, c, c, true);
 
     // enum Type {
     // FULL,
@@ -376,9 +376,9 @@ static void make_wall(Entity& wall, vec2 pos, Color c = ui::color::brown) {
 }
 
 static void make_conveyer(Entity& conveyer, vec2 pos) {
-    entities::make_furniture(conveyer,
-                             DebugOptions{.name = strings::entity::CONVEYER},
-                             pos, ui::color::blue, ui::color::blue);
+    furniture::make_furniture(conveyer,
+                              DebugOptions{.name = strings::entity::CONVEYER},
+                              pos, ui::color::blue, ui::color::blue);
     conveyer.get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Conveyer);
     conveyer.addComponent<ConveysHeldItem>();
@@ -396,9 +396,9 @@ static void make_conveyer(Entity& conveyer, vec2 pos) {
 }
 
 static void make_grabber(Entity& grabber, vec2 pos) {
-    entities::make_furniture(grabber,
-                             DebugOptions{.name = strings::entity::GRABBER},
-                             pos, ui::color::yellow, ui::color::yellow);
+    furniture::make_furniture(grabber,
+                              DebugOptions{.name = strings::entity::GRABBER},
+                              pos, ui::color::yellow, ui::color::yellow);
 
     grabber.get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Conveyer);
@@ -417,9 +417,9 @@ static void make_grabber(Entity& grabber, vec2 pos) {
 }
 
 static void make_register(Entity& reg, vec2 pos) {
-    entities::make_furniture(reg,
-                             DebugOptions{.name = strings::entity::REGISTER},
-                             pos, ui::color::grey, ui::color::grey);
+    furniture::make_furniture(reg,
+                              DebugOptions{.name = strings::entity::REGISTER},
+                              pos, ui::color::grey, ui::color::grey);
     reg.addComponent<HasWaitingQueue>();
 
     if (ENABLE_MODELS) {
@@ -433,14 +433,14 @@ static void make_register(Entity& reg, vec2 pos) {
 
 static void make_itemcontainer(Entity& container, const DebugOptions& options,
                                vec2 pos, const std::string& item_type) {
-    entities::make_furniture(container, options, pos, ui::color::white,
-                             ui::color::white);
+    furniture::make_furniture(container, options, pos, ui::color::white,
+                              ui::color::white);
     container.addComponent<IsItemContainer>(item_type);
 }
 
 static void make_bagbox(Entity& container, vec2 pos) {
-    entities::make_itemcontainer(container, {strings::entity::BAG_BOX}, pos,
-                                 strings::item::BAG);
+    furniture::make_itemcontainer(container, {strings::entity::BAG_BOX}, pos,
+                                  strings::item::BAG);
 
     if (ENABLE_MODELS) {
         container.get<ModelRenderer>().update(ModelInfo{
@@ -455,8 +455,9 @@ static void make_bagbox(Entity& container, vec2 pos) {
 }
 
 static void make_medicine_cabinet(Entity& container, vec2 pos) {
-    entities::make_itemcontainer(container, {strings::entity::MEDICINE_CABINET},
-                                 pos, strings::item::PILL_BOTTLE);
+    furniture::make_itemcontainer(container,
+                                  {strings::entity::MEDICINE_CABINET}, pos,
+                                  strings::item::PILL_BOTTLE);
     if (ENABLE_MODELS) {
         container.get<ModelRenderer>().update(ModelInfo{
             .model_name = "medicine_cabinet",
@@ -467,8 +468,8 @@ static void make_medicine_cabinet(Entity& container, vec2 pos) {
 }
 
 static void make_pill_dispenser(Entity& container, vec2 pos) {
-    entities::make_itemcontainer(container, {strings::entity::PILL_DISPENSER},
-                                 pos, strings::item::PILL);
+    furniture::make_itemcontainer(container, {strings::entity::PILL_DISPENSER},
+                                  pos, strings::item::PILL);
     if (ENABLE_MODELS) {
         container.get<ModelRenderer>().update(ModelInfo{
             .model_name = "crate",
@@ -493,9 +494,9 @@ static void make_pill_dispenser(Entity& container, vec2 pos) {
 }
 
 static void make_soda_machine(Entity& soda_machine, vec2 pos) {
-    entities::make_itemcontainer(soda_machine,
-                                 DebugOptions{.name = strings::entity::BLENDER},
-                                 pos, strings::item::SODA_SPOUT);
+    furniture::make_itemcontainer(
+        soda_machine, DebugOptions{.name = strings::entity::BLENDER}, pos,
+        strings::item::SODA_SPOUT);
     if (ENABLE_MODELS) {
         soda_machine.get<ModelRenderer>().update(ModelInfo{
             // TODO get custom model for this
@@ -556,9 +557,9 @@ static void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
 }
 
 static void make_blender(Entity& blender, vec2 pos) {
-    entities::make_furniture(blender,
-                             DebugOptions{.name = strings::entity::BLENDER},
-                             pos, ui::color::red, ui::color::yellow);
+    furniture::make_furniture(blender,
+                              DebugOptions{.name = strings::entity::BLENDER},
+                              pos, ui::color::red, ui::color::yellow);
     blender.get<CanHoldItem>().update_held_by(IsItem::HeldBy::BLENDER);
 }
 
@@ -570,7 +571,7 @@ static void make_sophie(Entity& sophie, vec3 pos) {
     sophie.addComponent<HasTimer>(HasTimer::Renderer::Round, 90.f);
 }
 
-}  // namespace entities
+}  // namespace furniture
 
 namespace items {
 
