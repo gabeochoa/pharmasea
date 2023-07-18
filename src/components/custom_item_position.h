@@ -20,7 +20,7 @@ struct CustomHeldItemPosition : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(positioner);
+        // s.value4b(positioner);
     }
 };
 

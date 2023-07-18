@@ -100,7 +100,10 @@ struct CanPerformJob : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.ext(current_job, bitsery::ext::StdSmartPtr{});
+
+        // Note we are choosing not to send this data to the client 
+        // s.ext(current_job, bitsery::ext::StdSmartPtr{});
+        
         // Only things that need to be rendered, need to be serialized :)
     }
 };
