@@ -727,7 +727,8 @@ static void make_soda_spout(Item& soda_spout, vec2 pos) {
     soda_spout.get<IsItem>().set_hb_filter(IsItem::HeldBy::SODA_MACHINE |
                                            IsItem::HeldBy::PLAYER);
 
-    soda_spout.addComponent<AddsIngredient>(Ingredient::Soda);
+    soda_spout.addComponent<AddsIngredient>(
+        [](Entity&) { return Ingredient::Soda; });
 }
 
 static void process_drink_working(Entity& drink, HasWork& hasWork,
@@ -739,7 +740,7 @@ static void process_drink_working(Entity& drink, HasWork& hasWork,
         std::shared_ptr<Item> item = playerCHI.const_item();
         // not holding item that adds ingredients
         if (item->is_missing<AddsIngredient>()) return;
-        Ingredient ing = item->get<AddsIngredient>().get();
+        Ingredient ing = item->get<AddsIngredient>().get(*item);
 
         IsDrink& isdrink = drink.get<IsDrink>();
         // Already has the ingredient
@@ -763,13 +764,19 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
 
     alc.addComponent<ModelRenderer>().update(ModelInfo{
         .model_name = "bottle_a_brown",
-        .size_scale = 2.0f,
+        .size_scale = 1.0f,
         .position_offset = vec3{0, 0, 0},
         .rotation_angle = 0,
     });
 
     alc.addComponent<HasSubtype>(ingredient::ALC_START, ingredient::ALC_END + 1,
                                  index);
+    alc.addComponent<AddsIngredient>([](Entity& alcohol) {
+        const HasSubtype& hst = alcohol.get<HasSubtype>();
+        return magic_enum::enum_cast<Ingredient>(ingredient::ALC_START +
+                                                 hst.get_type_index())
+            .value();
+    });
 
     alc.addComponent<HasDynamicModelName>().init(
         "bottle_a_brown", HasDynamicModelName::DynamicType::Subtype,
@@ -831,8 +838,11 @@ static void make_drink(Item& drink, vec2 pos) {
         "eggcup", HasDynamicModelName::DynamicType::Ingredients,
         [](const Item& owner, const std::string base_name) -> std::string {
             const IsDrink& isdrink = owner.get<IsDrink>();
-            if (isdrink.matches_recipe(recipe::COKE)) return "bottle_a_brown";
-            if (isdrink.matches_recipe(recipe::RUM_AND_COKE)) return "cocktail";
+            if (isdrink.matches_recipe(recipe::COKE)) return "soda_bottle";
+            if (isdrink.matches_recipe(recipe::RUM_AND_COKE))
+                return "soda_glass";
+            if (isdrink.matches_recipe(recipe::G_AND_T)) return "soda_can";
+            if (isdrink.matches_recipe(recipe::DAIQUIRI)) return "cocktail";
             return base_name;
         });
 }
