@@ -450,6 +450,11 @@ void run_timer(const std::shared_ptr<Entity>& entity, float dt) {
 void sophie(const std::shared_ptr<Entity>& entity, float) {
     if (entity->is_missing<HasTimer>()) return;
 
+    const auto debug_mode_on =
+        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+    const HasTimer& ht = entity->get<HasTimer>();
+    if (ht.currentRoundTime > 0 && !debug_mode_on) return;
+
     // Handle customers finally leaving the store
     auto _customers_in_store = [entity]() {
         // TODO with the others siwtch to something else... customer
