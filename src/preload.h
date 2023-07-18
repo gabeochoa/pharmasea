@@ -253,6 +253,27 @@ struct Preload {
                 .filename = "bottle_C_green.gltf.glb",
                 .libraryname = "bottle_c_green",
             },
+
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "soda.obj",
+                .libraryname = "soda",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "sodaBottle.obj",
+                .libraryname = "soda_bottle",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "sodaCan.obj",
+                .libraryname = "soda_can",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "sodaGlass.obj",
+                .libraryname = "soda_glass",
+            },
         };
 
         for (const auto& m : models) {
