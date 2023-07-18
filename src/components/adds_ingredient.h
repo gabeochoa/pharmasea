@@ -24,9 +24,13 @@ struct AddsIngredient : public BaseComponent {
         return fetcher(entity);
     }
     void set(IngredientFetcherFn fn) { fetcher = fn; }
+    void set_num_uses(int nu) { num_uses = nu; }
+    void decrement_uses() { num_uses--; }
+    [[nodiscard]] int uses_left() const { return num_uses; }
 
    private:
     IngredientFetcherFn fetcher;
+    int num_uses = -1;
 
     friend bitsery::Access;
     template<typename S>

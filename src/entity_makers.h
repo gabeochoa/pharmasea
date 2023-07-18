@@ -734,13 +734,14 @@ static void make_soda_spout(Item& soda_spout, vec2 pos) {
 static void process_drink_working(Entity& drink, HasWork& hasWork,
                                   Entity& player, float dt) {
     auto _process_add_ingredient = [&]() {
-        const CanHoldItem& playerCHI = player.get<CanHoldItem>();
+        CanHoldItem& playerCHI = player.get<CanHoldItem>();
         // not holding anything
         if (playerCHI.empty()) return;
         std::shared_ptr<Item> item = playerCHI.const_item();
         // not holding item that adds ingredients
         if (item->is_missing<AddsIngredient>()) return;
-        Ingredient ing = item->get<AddsIngredient>().get(*item);
+        AddsIngredient& addsIG = item->get<AddsIngredient>();
+        Ingredient ing = addsIG.get(*item);
 
         IsDrink& isdrink = drink.get<IsDrink>();
         // Already has the ingredient
@@ -750,6 +751,14 @@ static void process_drink_working(Entity& drink, HasWork& hasWork,
         hasWork.increase_pct(amt * dt);
         if (hasWork.is_work_complete()) {
             isdrink.add_ingredient(ing);
+            addsIG.decrement_uses();
+
+            // We do == 0 because infinite is -1
+            if (addsIG.uses_left() == 0) {
+                item->cleanup = true;
+                playerCHI.update(nullptr);
+            }
+
             hasWork.reset_pct();
         }
     };
@@ -772,11 +781,12 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
     alc.addComponent<HasSubtype>(ingredient::ALC_START, ingredient::ALC_END + 1,
                                  index);
     alc.addComponent<AddsIngredient>([](Entity& alcohol) {
-        const HasSubtype& hst = alcohol.get<HasSubtype>();
-        return magic_enum::enum_cast<Ingredient>(ingredient::ALC_START +
-                                                 hst.get_type_index())
-            .value();
-    });
+           const HasSubtype& hst = alcohol.get<HasSubtype>();
+           return magic_enum::enum_cast<Ingredient>(ingredient::ALC_START +
+                                                    hst.get_type_index())
+               .value();
+       })
+        .set_num_uses(1);
 
     alc.addComponent<HasDynamicModelName>().init(
         "bottle_a_brown", HasDynamicModelName::DynamicType::Subtype,
