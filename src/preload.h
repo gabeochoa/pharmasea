@@ -289,6 +289,12 @@ struct Preload {
                 .filename = "kitchenBlender.obj",
                 .libraryname = "blender",
             },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                // Yes i know its spelled wrong, it was kenney
+                .filename = "bottleMusterd.obj",
+                .libraryname = "simple_syrup",
+            },
         };
 
         for (const auto& m : models) {

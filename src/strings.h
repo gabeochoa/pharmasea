@@ -119,6 +119,7 @@ constexpr const char* SODA_SPOUT = "SODA_SPOUT";
 constexpr const char* DRINK = "DRINK";
 constexpr const char* ALCOHOL = "ALCOHOL";
 constexpr const char* LEMON = "LEMON";
+constexpr const char* SIMPLE_SYRUP = "SIMPLE_SYRUP";
 
 }  // namespace item
 

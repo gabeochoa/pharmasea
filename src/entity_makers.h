@@ -836,6 +836,22 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
         });
 }
 
+static void make_simple_syrup(Item& simple_syrup, vec2 pos) {
+    make_item(simple_syrup, {.name = strings::item::SIMPLE_SYRUP}, pos);
+
+    simple_syrup.addComponent<ModelRenderer>().update(ModelInfo{
+        .model_name = "simple_syrup",
+        .size_scale = 3.0f,
+        .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 0,
+    });
+
+    simple_syrup
+        .addComponent<AddsIngredient>(
+            [](Entity&) { return Ingredient::SimpleSyrup; })
+        .set_num_uses(-1);
+}
+
 static void make_lemon(Item& lemon, vec2 pos, int index) {
     make_item(lemon, {.name = strings::item::LEMON}, pos);
 
@@ -850,6 +866,15 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
         .position_offset = vec3{0, 0, 0},
         .rotation_angle = 0,
     });
+
+    lemon
+        .addComponent<AddsIngredient>([](Entity& lemmy) {
+            const HasSubtype& hst = lemmy.get<HasSubtype>();
+            return magic_enum::enum_cast<Ingredient>(ingredient::LEMON_START +
+                                                     hst.get_type_index())
+                .value();
+        })
+        .set_num_uses(1);
 
     lemon.addComponent<HasDynamicModelName>().init(
         "lemon",  //
