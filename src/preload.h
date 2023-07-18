@@ -274,6 +274,21 @@ struct Preload {
                 .filename = "sodaGlass.obj",
                 .libraryname = "soda_glass",
             },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "lemon.obj",
+                .libraryname = "lemon",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "lemonHalf.obj",
+                .libraryname = "lemon_half",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "kitchenBlender.obj",
+                .libraryname = "blender",
+            },
         };
 
         for (const auto& m : models) {

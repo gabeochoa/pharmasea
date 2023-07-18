@@ -55,7 +55,9 @@ const char MED_CAB = 'M';
 const char PILL_DISP = 'P';
 const char BLENDER = 'b';
 const char SODA_MACHINE = 'S';
+
 const char DRINK = 'd';
+const char LEMON = 'l';
 
 const char SOPHIE = 's';
 
@@ -181,6 +183,10 @@ struct helper {
             } break;
             case DRINK: {
                 (items::make_drink(create(), location));
+                return;
+            } break;
+            case LEMON: {
+                (items::make_lemon(create(), location, 0));
                 return;
             } break;
             case 32: {

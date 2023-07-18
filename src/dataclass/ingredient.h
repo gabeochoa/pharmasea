@@ -31,9 +31,12 @@ enum Ingredient {
     Cointreau,  // seems like this is a triplesec alt TODO support alts?
     Bitters,
 
+    // Lemon
+    Lemon,
+    LemonJuice,
+
     // Juice,
     LimeJuice,
-    LemonJuice,  // TODO do we need this?
     CranJuice,
     PinaJuice,
     CoconutCream,
@@ -44,6 +47,9 @@ enum Ingredient {
 namespace ingredient {
 const Ingredient ALC_START = Ingredient::Rum;
 const Ingredient ALC_END = Ingredient::Gin;
+
+const Ingredient LEMON_START = Ingredient::Lemon;
+const Ingredient LEMON_END = Ingredient::LemonJuice;
 
 }  // namespace ingredient
 

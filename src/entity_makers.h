@@ -576,6 +576,15 @@ static void make_blender(Entity& blender, vec2 pos) {
                               DebugOptions{.name = strings::entity::BLENDER},
                               pos, ui::color::red, ui::color::yellow);
     blender.get<CanHoldItem>().update_held_by(IsItem::HeldBy::BLENDER);
+    if (ENABLE_MODELS) {
+        blender.get<ModelRenderer>().update(ModelInfo{
+            .model_name = "blender",
+            // Scale needs to be a vec3 {3.f, 3.f, 12.f}
+            .size_scale = 7.f,
+            .position_offset = vec3{-0.5f, 0, 0.5f},
+            .rotation_angle = 0,
+        });
+    }
 }
 
 // This will be a catch all for anything that just needs to get updated
@@ -825,6 +834,84 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
 
             return base_name;
         });
+}
+
+static void make_lemon(Item& lemon, vec2 pos, int index) {
+    make_item(lemon, {.name = strings::item::LEMON}, pos);
+
+    // TODO i dont like that you have to remember to do +1 here
+    lemon.addComponent<HasSubtype>(ingredient::LEMON_START,
+                                   ingredient::LEMON_END + 1, index);
+
+    lemon.addComponent<ModelRenderer>().update(ModelInfo{
+        .model_name = "lemon",
+        // Scale needs to be a vec3 {3.f, 3.f, 12.f}
+        .size_scale = 2.f,
+        .position_offset = vec3{0, 0, 0},
+        .rotation_angle = 0,
+    });
+
+    lemon.addComponent<HasDynamicModelName>().init(
+        "lemon",  //
+        HasDynamicModelName::DynamicType::Subtype,
+        [](const Item& owner, const std::string base_name) -> std::string {
+            if (owner.is_missing<HasSubtype>()) {
+                log_warn(
+                    "Generating a dynamic model name with a subtype, but your "
+                    "entity doesnt have a subtype {}",
+                    owner.get<DebugName>());
+                return base_name;
+            }
+            const HasSubtype& hst = owner.get<HasSubtype>();
+            Ingredient lemon_type =
+                magic_enum::enum_cast<Ingredient>(ingredient::LEMON_START +
+                                                  hst.get_type_index())
+                    .value();
+            switch (lemon_type) {
+                case Ingredient::Lemon:
+                    return "lemon";
+                case Ingredient::LemonJuice:
+                    return "lemon_half";
+                default:
+                    log_warn("Failed to get matching model for lemon type: {}",
+                             magic_enum::enum_name(lemon_type));
+                    break;
+            }
+            return base_name;
+        });
+
+    lemon.addComponent<HasWork>().init(
+        [](Entity& owner, HasWork& hasWork, Entity& /*person*/, float dt) {
+            const IsItem& ii = owner.get<IsItem>();
+            HasSubtype& hasSubtype = owner.get<HasSubtype>();
+            Ingredient lemon_type =
+                magic_enum::enum_cast<Ingredient>(ingredient::LEMON_START +
+                                                  hasSubtype.get_type_index())
+                    .value();
+
+            // Can only handle lemon -> juice right now
+            if (lemon_type != Ingredient::Lemon) return;
+            // TODO we shouldnt blindly increment type but in this case its
+            // okay i guess
+
+            if (ii.is_not_held_by(IsItem::HeldBy::BLENDER)) {
+                hasWork.reset_pct();
+                return;
+            }
+
+            const float amt = 1.5f;
+            hasWork.increase_pct(amt * dt);
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
+
+                HasDynamicModelName& hDMN = owner.get<HasDynamicModelName>();
+                ModelRenderer& renderer = owner.get<ModelRenderer>();
+
+                hasSubtype.increment_type();
+                renderer.update_model_name(hDMN.fetch(owner));
+            }
+        });
+    lemon.addComponent<ShowsProgressBar>();
 }
 
 static void make_drink(Item& drink, vec2 pos) {
