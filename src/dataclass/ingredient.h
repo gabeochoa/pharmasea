@@ -2,6 +2,7 @@
 #pragma once
 
 #include <bitset>
+#include <magic_enum/magic_enum.hpp>
 
 enum Ingredient {
     Invalid = -1,
@@ -47,11 +48,17 @@ enum Ingredient {
 namespace ingredient {
 const Ingredient ALC_START = Ingredient::Rum;
 const Ingredient ALC_END = Ingredient::Gin;
+const int NUM_ALC = (ALC_END - ALC_START) + 1;
 
 const Ingredient LEMON_START = Ingredient::Lemon;
 const Ingredient LEMON_END = Ingredient::LemonJuice;
+const int NUM_LEMON = (LEMON_END - LEMON_START) + 1;
 
 }  // namespace ingredient
+
+static Ingredient get_ingredient_from_index(int index) {
+    return magic_enum::enum_cast<Ingredient>(index).value();
+}
 
 const int MAX_INGREDIENT_TYPES = 32;
 using IngredientBitSet = std::bitset<MAX_INGREDIENT_TYPES>;

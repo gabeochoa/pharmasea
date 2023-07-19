@@ -467,8 +467,7 @@ static void make_medicine_cabinet(Entity& container, vec2 pos) {
         });
     }
 
-    container.addComponent<Indexer>(
-        (ingredient::ALC_END - ingredient::ALC_START) + 1);
+    container.addComponent<Indexer>(ingredient::NUM_ALC);
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
             const float amt = 2.f;
@@ -476,7 +475,6 @@ static void make_medicine_cabinet(Entity& container, vec2 pos) {
             if (hasWork.is_work_complete()) {
                 owner.get<Indexer>().increment();
                 hasWork.reset_pct();
-                log_info("increment medicine cabinet");
             }
         });
     container.addComponent<ShowsProgressBar>();
@@ -876,9 +874,8 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
     lemon
         .addComponent<AddsIngredient>([](Entity& lemmy) {
             const HasSubtype& hst = lemmy.get<HasSubtype>();
-            return magic_enum::enum_cast<Ingredient>(ingredient::LEMON_START +
-                                                     hst.get_type_index())
-                .value();
+            return get_ingredient_from_index(ingredient::LEMON_START +
+                                             hst.get_type_index());
         })
         .set_num_uses(1);
 
@@ -894,10 +891,8 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
                 return base_name;
             }
             const HasSubtype& hst = owner.get<HasSubtype>();
-            Ingredient lemon_type =
-                magic_enum::enum_cast<Ingredient>(ingredient::LEMON_START +
-                                                  hst.get_type_index())
-                    .value();
+            Ingredient lemon_type = get_ingredient_from_index(
+                ingredient::LEMON_START + hst.get_type_index());
             switch (lemon_type) {
                 case Ingredient::Lemon:
                     return "lemon";
@@ -915,10 +910,8 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
         [](Entity& owner, HasWork& hasWork, Entity& /*person*/, float dt) {
             const IsItem& ii = owner.get<IsItem>();
             HasSubtype& hasSubtype = owner.get<HasSubtype>();
-            Ingredient lemon_type =
-                magic_enum::enum_cast<Ingredient>(ingredient::LEMON_START +
-                                                  hasSubtype.get_type_index())
-                    .value();
+            Ingredient lemon_type = get_ingredient_from_index(
+                ingredient::LEMON_START + hasSubtype.get_type_index());
 
             // Can only handle lemon -> juice right now
             if (lemon_type != Ingredient::Lemon) return;
