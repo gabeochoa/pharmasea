@@ -782,8 +782,6 @@ static void process_drink_working(Entity& drink, HasWork& hasWork,
 static void make_alcohol(Item& alc, vec2 pos, int index) {
     make_item(alc, {.name = strings::item::ALCOHOL}, pos);
 
-    // TODO add how many uses each bottle gives us
-
     alc.addComponent<ModelRenderer>().update(ModelInfo{
         .model_name = "bottle_a_brown",
         .size_scale = 1.0f,
@@ -795,20 +793,19 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
                                  index);
     alc.addComponent<AddsIngredient>([](Entity& alcohol) {
            const HasSubtype& hst = alcohol.get<HasSubtype>();
-           return magic_enum::enum_cast<Ingredient>(ingredient::ALC_START +
-                                                    hst.get_type_index())
-               .value();
+           return get_ingredient_from_index(ingredient::ALC_START +
+                                            hst.get_type_index());
        })
+        // TODO need a place to put the bottles when they are half used and
+        // track them
         .set_num_uses(1);
 
     alc.addComponent<HasDynamicModelName>().init(
         "bottle_a_brown", HasDynamicModelName::DynamicType::Subtype,
         [](const Item& owner, const std::string base_name) -> std::string {
             const HasSubtype& hst = owner.get<HasSubtype>();
-            Ingredient bottle =
-                magic_enum::enum_cast<Ingredient>(ingredient::ALC_START +
-                                                  hst.get_type_index())
-                    .value();
+            Ingredient bottle = get_ingredient_from_index(
+                ingredient::ALC_START + hst.get_type_index());
             switch (bottle) {
                 case Ingredient::Rum:
                     return "bottle_c_brown";
@@ -826,8 +823,9 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
                     return "bottle_a_brown";
                     break;
                 default:
-                    if (hst.get_type_index() >= ingredient::ALC_START &&
-                        hst.get_type_index() <= ingredient::ALC_END) {
+                    if (util::in_range(ingredient::ALC_START,
+                                       ingredient::ALC_END,
+                                       hst.get_type_index())) {
                         log_warn(
                             "You are trying to set an alcohol dynamic model "
                             "but forgot to setup the model name for {} {}",

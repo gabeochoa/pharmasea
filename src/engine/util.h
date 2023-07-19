@@ -18,8 +18,18 @@
 
 namespace util {
 
+#ifdef __APPLE__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
+#endif
 // Legit what it says
 inline void force_segfault() { *(int*) 0 = 0; }
+
+#ifdef __APPLE__
+#pragma clang diagnostic pop
+#else
+#pragma enable_warn
+#endif
 
 template<class... Ts>
 struct overloaded : Ts... {
@@ -41,6 +51,8 @@ static float deg2rad(float deg) {
 static float rad2deg(float rad) {
     return rad * (180.f / static_cast<float>(M_PI));
 }
+
+static bool in_range(int a, int b, int val) { return val >= a && val <= b; }
 
 static std::vector<std::string> split_string(const std::string& str,
                                              const std::string& delimiter) {

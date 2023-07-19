@@ -546,8 +546,7 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
     }
 }
 
-void reset_empty_work_furniture(const std::shared_ptr<Entity>& entity,
-                                float dt) {
+void reset_empty_work_furniture(const std::shared_ptr<Entity>& entity, float) {
     if (entity->is_missing<HasWork>()) return;
     if (entity->is_missing<CanHoldItem>()) return;
 
