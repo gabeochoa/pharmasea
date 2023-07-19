@@ -107,7 +107,7 @@ struct Entity {
                 "This entity {}, {} already has this component attached id: "
                 "{}, "
                 "component {}",
-                this->get<DebugName>(), id, components::get_type_id<T>(),
+                this->get<DebugName>().name(), id, components::get_type_id<T>(),
                 type_name<T>());
 
             VALIDATE(false, "duplicate component");
@@ -151,7 +151,7 @@ struct Entity {
             log_warn(
                 "This entity {} {} is missing id: {}, "
                 "component {}",
-                this->get<DebugName>(), id, components::get_type_id<T>(),
+                this->get<DebugName>().name(), id, components::get_type_id<T>(),
                 type_name<T>());
         }
         BaseComponent* comp = componentArray.at(components::get_type_id<T>());
@@ -170,7 +170,7 @@ struct Entity {
             log_warn(
                 "This entity {} {} is missing id: {}, "
                 "component {}",
-                this->get<DebugName>(), id, components::get_type_id<T>(),
+                this->get<DebugName>().name(), id, components::get_type_id<T>(),
                 type_name<T>());
         }
         BaseComponent* comp = componentArray.at(components::get_type_id<T>());

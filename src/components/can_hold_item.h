@@ -41,7 +41,7 @@ struct CanHoldItem : public BaseComponent {
             log_warn(
                 "We never had our HeldBy set, so we are holding {}{}  by "
                 "UNKNOWN",
-                item->id, item->get<DebugName>());
+                item->id, item->get<DebugName>().name());
         }
         return *this;
     }

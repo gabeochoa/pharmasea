@@ -252,7 +252,7 @@ struct EntityHelper {
                     log_warn("component {} is missing transform",
                              current_entity->id);
                     log_error("component {} is missing name",
-                              current_entity->template get<DebugName>());
+                              current_entity->template get<DebugName>().name());
                     continue;
                 }
 

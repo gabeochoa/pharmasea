@@ -631,7 +631,7 @@ static void make_pill(Item& pill, vec2 pos, int index) {
                 log_warn(
                     "Generating a dynamic model name with a subtype, but your "
                     "entity doesnt have a subtype {}",
-                    owner.get<DebugName>());
+                    owner.get<DebugName>().name());
                 return base_name;
             }
             const Subtype type = owner.get<HasSubtype>().get_type();
@@ -710,7 +710,7 @@ static void make_bag(Item& bag, vec2 pos) {
                 log_warn(
                     "Generating a dynamic model name with empty/full but your "
                     "entity cant hold items {}",
-                    owner.get<DebugName>());
+                    owner.get<DebugName>().name());
                 return base_name;
             }
             const CanHoldItem& chi = owner.get<CanHoldItem>();
@@ -885,7 +885,7 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
                 log_warn(
                     "Generating a dynamic model name with a subtype, but your "
                     "entity doesnt have a subtype {}",
-                    owner.get<DebugName>());
+                    owner.get<DebugName>().name());
                 return base_name;
             }
             const HasSubtype& hst = owner.get<HasSubtype>();

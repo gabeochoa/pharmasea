@@ -120,7 +120,7 @@ struct helper {
             } break;
             case WALL2:
             case WALL: {
-                const auto d_color = (Color){155, 75, 0, 255};
+                const auto d_color = Color{155, 75, 0, 255};
                 (furniture::make_wall(create(), location, d_color));
                 return;
             } break;
