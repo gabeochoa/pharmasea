@@ -467,7 +467,8 @@ static void make_medicine_cabinet(Entity& container, vec2 pos) {
         });
     }
 
-    container.addComponent<Indexer>((Ingredient::Gin - Ingredient::Rum));
+    container.addComponent<Indexer>(
+        (ingredient::ALC_END - ingredient::ALC_START) + 1);
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
             const float amt = 2.f;
@@ -475,6 +476,7 @@ static void make_medicine_cabinet(Entity& container, vec2 pos) {
             if (hasWork.is_work_complete()) {
                 owner.get<Indexer>().increment();
                 hasWork.reset_pct();
+                log_info("increment medicine cabinet");
             }
         });
     container.addComponent<ShowsProgressBar>();
@@ -736,6 +738,10 @@ static void make_soda_spout(Item& soda_spout, vec2 pos) {
     soda_spout.get<IsItem>().set_hb_filter(IsItem::HeldBy::SODA_MACHINE |
                                            IsItem::HeldBy::PLAYER);
 
+    // TODO :SODAWAND: right now theres no good way to change what is selected
+    // in the soda wand, id like to have it automatically figure it out but it
+    // doesnt really work because we dont know what the player is trying to make
+    // and so its easier if everything is soda
     soda_spout.addComponent<AddsIngredient>(
         [](Entity&) { return Ingredient::Soda; });
 }

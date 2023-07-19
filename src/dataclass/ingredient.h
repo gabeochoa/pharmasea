@@ -78,8 +78,11 @@ const IngredientBitSet MOJITO =
     // TODO this is actually supposdd to be lime juice
     // IngredientBitSet().set(LimeJuice) |
     IngredientBitSet().set(LemonJuice) | IngredientBitSet().set(Soda) |
-    IngredientBitSet().set(Water) | IngredientBitSet().set(MintLeaf) |
-    IngredientBitSet().set(SimpleSyrup);
+    // TODO :SODAWAND: i really want you to have to do it twice but for now w'll
+    // just ignore
+    //
+    // IngredientBitSet().set(Water) |
+    IngredientBitSet().set(MintLeaf) | IngredientBitSet().set(SimpleSyrup);
 
 const IngredientBitSet OLD_FASH = IngredientBitSet().set(Whiskey) |
                                   IngredientBitSet().set(Bitters) |
@@ -87,7 +90,9 @@ const IngredientBitSet OLD_FASH = IngredientBitSet().set(Whiskey) |
 
 const IngredientBitSet DAIQUIRI = IngredientBitSet().set(Rum) |
                                   // TODO this is actually supposdd to be lime
-                                  // juice IngredientBitSet().set(LimeJuice) |
+                                  // juice
+                                  //
+                                  // IngredientBitSet().set(LimeJuice) |
                                   IngredientBitSet().set(LemonJuice) |
                                   IngredientBitSet().set(SimpleSyrup);
 
@@ -96,7 +101,9 @@ const IngredientBitSet PINA_COLADA = IngredientBitSet().set(Rum) |
                                      IngredientBitSet().set(CoconutCream);
 
 const IngredientBitSet G_AND_T = IngredientBitSet().set(Gin) |
-                                 IngredientBitSet().set(Tonic) |
+                                 // TODO See :SODAWAND: for more info
+                                 // IngredientBitSet().set(Tonic) |
+                                 IngredientBitSet().set(Soda) |
                                  // TODO lime
                                  // IngredientBitSet().set(Lime);
                                  IngredientBitSet().set(Lemon);
@@ -106,7 +113,9 @@ const IngredientBitSet WHISKEY_SOUR = IngredientBitSet().set(Whiskey) |
                                       IngredientBitSet().set(SimpleSyrup);
 
 const IngredientBitSet VODKA_TONIC = IngredientBitSet().set(Vodka) |
-                                     IngredientBitSet().set(Tonic) |
+                                     // TODO See :SODAWAND: for more info
+                                     // IngredientBitSet().set(Tonic) |
+                                     IngredientBitSet().set(Soda) |
                                      // TODO lime
                                      // IngredientBitSet().set(Lime);
                                      IngredientBitSet().set(Lemon);
