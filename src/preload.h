@@ -113,6 +113,12 @@ struct Preload {
                     .c_str(),
                 std::get<2>(t));
         }
+
+        Files::get().for_resources_in_folder(
+            strings::settings::IMAGES, "drinks",
+            [](const std::string& name, const std::string& filename) {
+                TextureLibrary::get().load(filename.c_str(), name.c_str());
+            });
     }
 
     void load_models() {

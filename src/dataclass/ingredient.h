@@ -129,16 +129,84 @@ const IngredientBitSet VODKA_TONIC = IngredientBitSet().set(Vodka) |
                                      // IngredientBitSet().set(Lime);
                                      IngredientBitSet().set(Lemon);
 
-constexpr int NUM_DRINKS = 11;
-const std::array<IngredientBitSet, NUM_DRINKS> ALL_DRINK_OPTIONS = {
-    COKE,     RUM_AND_COKE, MARGARITA, COSMO,        MOJITO,     OLD_FASH,
-    DAIQUIRI, PINA_COLADA,  G_AND_T,   WHISKEY_SOUR, VODKA_TONIC};
-
 }  // namespace recipe
+   //
 
-using Drink = IngredientBitSet;
+enum Drink {
+    Coke,
+    RumAndCoke,
+    Margarita,
+    Cosmo,
+    Mojito,
+    OldFash,
+    Daiquiri,
+    PinaColada,
+    GAndT,
+    WhiskeySour,
+    VodkaTonic,
+    //
+    LAST_DRINK,
+};
+
+static IngredientBitSet get_recipe_for_drink(Drink drink) {
+    switch (drink) {
+        case LAST_DRINK:
+        case Coke:
+            return recipe::COKE;
+        case RumAndCoke:
+            return recipe::RUM_AND_COKE;
+        case Margarita:
+            return recipe::MARGARITA;
+        case Cosmo:
+            return recipe::COSMO;
+        case Mojito:
+            return recipe::MOJITO;
+        case OldFash:
+            return recipe::OLD_FASH;
+        case Daiquiri:
+            return recipe::DAIQUIRI;
+        case PinaColada:
+            return recipe::PINA_COLADA;
+        case GAndT:
+            return recipe::G_AND_T;
+        case WhiskeySour:
+            return recipe::WHISKEY_SOUR;
+        case VodkaTonic:
+            return recipe::VODKA_TONIC;
+    }
+    return recipe::COKE;
+}
+
+static std::string get_icon_name_for_drink(Drink drink) {
+    switch (drink) {
+        case LAST_DRINK:
+        case Coke:
+            return "coke";
+        case RumAndCoke:
+            return "rum_and_coke";
+        case Margarita:
+            return "margarita";
+        case Cosmo:
+            return "cosmo";
+        case Mojito:
+            return "mojito";
+        case OldFash:
+            return "old_fash";
+        case Daiquiri:
+            return "daiquiri";
+        case PinaColada:
+            return "pina_colada";
+        case GAndT:
+            return "g_and_t";
+        case WhiskeySour:
+            return "whiskey_sour";
+        case VodkaTonic:
+            return "vodka_tonic";
+    }
+    return "coke";
+}
 
 static Drink get_random_drink() {
-    int index = randIn(0, recipe::NUM_DRINKS);
-    return recipe::ALL_DRINK_OPTIONS[index];
+    int index = randIn(0, Drink::LAST_DRINK);
+    return magic_enum::enum_cast<Drink>(index).value();
 }
