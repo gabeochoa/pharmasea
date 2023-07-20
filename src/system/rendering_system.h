@@ -262,18 +262,18 @@ inline void render_trigger_area(const Entity& entity, float dt) {
 
 inline void render_speech_bubble(const Entity& entity, float) {
     // Right now this is the only thing we can put in a bubble
-    if (entity.is_missing<CanHaveAilment>()) return;
+    if (entity.is_missing<CanOrderDrink>()) return;
     if (entity.get<HasSpeechBubble>().disabled()) return;
 
     const Transform& transform = entity.get<Transform>();
     const vec3 position = transform.pos();
 
-    const CanHaveAilment& cha = entity.get<CanHaveAilment>();
-    auto ailment = cha.ailment();
-    if (!ailment) return;
+    const CanOrderDrink& cod = entity.get<CanOrderDrink>();
+    if (!cod.has_order()) return;
 
     GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-    raylib::Texture texture = TextureLibrary::get().get(ailment->icon_name());
+    raylib::Texture texture =
+        TextureLibrary::get().get(get_icon_name_for_drink(cod.order()));
     raylib::DrawBillboard(cam.camera, texture,
                           vec3{position.x,                     //
                                position.y + (TILESIZE * 2.f),  //

@@ -171,11 +171,12 @@ void Job::travel_to_position(const std::shared_ptr<Entity>& entity, float dt,
         // TODO forcing get<HasBaseSpeed> to crash here
         float base_speed = entity->get<HasBaseSpeed>().speed();
 
-        if (entity->has<CanHaveAilment>()) {
-            const CanHaveAilment& cha = entity->get<CanHaveAilment>();
-
-            float speed_multiplier = cha.ailment()->speed_multiplier();
-            if (speed_multiplier != 0) base_speed *= speed_multiplier;
+        // TODO Does OrderDrink hold stagger information?
+        // or should it live in another component?
+        if (entity->has<CanOrderDrink>()) {
+            // const CanOrderDrink& cha = entity->get<CanOrderDrink>();
+            // float speed_multiplier = cha.ailment()->speed_multiplier();
+            // if (speed_multiplier != 0) base_speed *= speed_multiplier;
 
             // TODO Turning off stagger; couple problems
             // - configuration is hard to reason about and mess with

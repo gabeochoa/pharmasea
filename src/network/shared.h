@@ -20,12 +20,12 @@ struct PolymorphicBaseClass<BaseComponent>
           Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
           CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
           CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
-          CanHaveAilment, CustomHeldItemPosition, HasWork, HasBaseSpeed,
-          IsSolid, CanBeHeld, IsRotatable, CanGrabFromOtherFurniture,
-          ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom, IsItemContainer,
-          UsesCharacterModel, ShowsProgressBar, DebugName, HasDynamicModelName,
-          IsTriggerArea, HasSpeechBubble, Indexer, IsSpawner, HasTimer,
-          HasRopeToItem, HasSubtype, IsItem, IsDrink, AddsIngredient,
+          CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid, CanBeHeld,
+          IsRotatable, CanGrabFromOtherFurniture, ConveysHeldItem,
+          HasWaitingQueue, CanBeTakenFrom, IsItemContainer, UsesCharacterModel,
+          ShowsProgressBar, DebugName, HasDynamicModelName, IsTriggerArea,
+          HasSpeechBubble, Indexer, IsSpawner, HasTimer, HasRopeToItem,
+          HasSubtype, IsItem, IsDrink, AddsIngredient, CanOrderDrink,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

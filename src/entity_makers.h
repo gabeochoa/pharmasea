@@ -14,10 +14,10 @@
 #include "components/can_be_pushed.h"
 #include "components/can_be_taken_from.h"
 #include "components/can_grab_from_other_furniture.h"
-#include "components/can_have_ailment.h"
 #include "components/can_highlight_others.h"
 #include "components/can_hold_furniture.h"
 #include "components/can_hold_item.h"
+#include "components/can_order_drink.h"
 #include "components/can_perform_job.h"
 #include "components/collects_user_input.h"
 #include "components/conveys_held_item.h"
@@ -57,9 +57,9 @@ static void register_all_components() {
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
-        CanHaveAilment, CustomHeldItemPosition, CanBeHeld,
-        CanGrabFromOtherFurniture, ConveysHeldItem, CanBeTakenFrom,
-        UsesCharacterModel, Indexer,
+        CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
+        ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
+        CanOrderDrink,
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
         HasBaseSpeed, HasRopeToItem,
@@ -193,16 +193,15 @@ static void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
     person.addComponent<CanPerformJob>().update(Wandering, Wandering);
 }
 
-static void make_customer(Entity& customer, vec2 p, bool has_ailment = true) {
+static void make_customer(Entity& customer, vec2 p, bool has_order = true) {
     make_aiperson(customer, DebugOptions{.name = strings::entity::CUSTOMER},
                   vec::to3(p));
 
     customer.addComponent<HasName>().update(get_random_name());
 
     // TODO for now, eventually move to customer spawner
-    if (has_ailment)
-        customer.addComponent<CanHaveAilment>().update(
-            Ailment::make_insomnia());
+    if (has_order)
+        customer.addComponent<CanOrderDrink>().update(get_random_drink());
 
     customer.addComponent<HasSpeechBubble>();
 

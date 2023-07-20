@@ -4,6 +4,8 @@
 #include <bitset>
 #include <magic_enum/magic_enum.hpp>
 
+#include "../engine/random.h"
+
 enum Ingredient {
     Invalid = -1,
 
@@ -127,4 +129,20 @@ const IngredientBitSet VODKA_TONIC = IngredientBitSet().set(Vodka) |
                                      // IngredientBitSet().set(Lime);
                                      IngredientBitSet().set(Lemon);
 
+constexpr int NUM_DRINKS = 11;
+const std::array<IngredientBitSet, NUM_DRINKS> ALL_DRINK_OPTIONS = {
+    COKE,     RUM_AND_COKE, MARGARITA, COSMO,        MOJITO,     OLD_FASH,
+    DAIQUIRI, PINA_COLADA,  G_AND_T,   WHISKEY_SOUR, VODKA_TONIC};
+
 }  // namespace recipe
+
+using Drink = IngredientBitSet;
+
+static Drink get_random_drink() {
+    int index = randIn(0, recipe::NUM_DRINKS);
+    return recipe::ALL_DRINK_OPTIONS[index];
+}
+
+// TODO should this live here?
+// TODO implement
+static std::string get_icon_name_for_drink(Drink d) { return "jug"; }
