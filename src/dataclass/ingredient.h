@@ -177,6 +177,8 @@ static IngredientBitSet get_recipe_for_drink(Drink drink) {
     return recipe::COKE;
 }
 
+// TODO i dont like that this lives here but then the entity_makers owns all the
+// 3d models
 static std::string get_icon_name_for_drink(Drink drink) {
     switch (drink) {
         case LAST_DRINK:

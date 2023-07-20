@@ -1,6 +1,7 @@
 
 #include "job.h"
 
+#include "components/can_order_drink.h"
 #include "components/can_perform_job.h"
 #include "components/has_speech_bubble.h"
 #include "components/has_waiting_queue.h"
@@ -366,6 +367,9 @@ Job::State WaitInQueueJob::run_state_working_at_end(
     // TODO safer way to do it?
     // we are at the front so turn it on
     entity->get<HasSpeechBubble>().on();
+    CanOrderDrink& canOrderDrink = entity->get<CanOrderDrink>();
+
+    VALIDATE(canOrderDrink.has_order(), "I should have an order");
 
     CanHoldItem& regCHI = reg->get<CanHoldItem>();
 
@@ -376,44 +380,26 @@ Job::State WaitInQueueJob::run_state_working_at_end(
         return (Job::State::WorkingAtEnd);
     }
 
-    std::shared_ptr<Item> bag = reg->get<CanHoldItem>().item();
-    if (!bag || !check_name(*bag, strings::item::BAG)) {
-        system_manager::logging_manager::announce(
-            entity, "this isnt my rx (not a bag)");
+    std::shared_ptr<Item> drink = reg->get<CanHoldItem>().item();
+    if (!drink || !check_name(*drink, strings::item::DRINK)) {
+        system_manager::logging_manager::announce(entity, "this isnt a drink");
         WIQ_wait_and_return(entity);
         return (Job::State::WorkingAtEnd);
     }
 
-    if (bag->get<CanHoldItem>().empty()) {
+    system_manager::logging_manager::announce(entity, "i got **A** drink ");
+
+    // TODO how many ingredients have to be correct?
+    // as people get more drunk they should care less and less
+
+    bool all_ingredients_match =
+        drink->get<IsDrink>().matches_recipe(canOrderDrink.order().recipe);
+    if (!all_ingredients_match) {
         system_manager::logging_manager::announce(entity,
-                                                  "this bag is empty...");
+                                                  "this isnt what i ordered");
         WIQ_wait_and_return(entity);
         return (Job::State::WorkingAtEnd);
     }
-
-    std::shared_ptr<Item> pill_bottle = bag->get<CanHoldItem>().item();
-    if (!pill_bottle || !check_name(*pill_bottle, strings::item::PILL_BOTTLE)) {
-        system_manager::logging_manager::announce(
-            entity, "this bag doesnt have my pills");
-        WIQ_wait_and_return(entity);
-        return (Job::State::WorkingAtEnd);
-    }
-
-    system_manager::logging_manager::announce(entity, "got the pill bottle ");
-
-    std::shared_ptr<Item> pill = pill_bottle->get<CanHoldItem>().item();
-    if (!pill || !check_name(*pill, strings::item::PILL)) {
-        system_manager::logging_manager::announce(
-            entity, "this bottle doesnt have any pills");
-        WIQ_wait_and_return(entity);
-        return (Job::State::WorkingAtEnd);
-    }
-
-    // TODO Validate the actual underlying pill
-
-    CanHoldItem& ourCHI = entity->get<CanHoldItem>();
-    ourCHI.update(regCHI.item());
-    regCHI.update(nullptr);
 
     system_manager::logging_manager::announce(entity, "got it");
     WIQ_leave_line(reg, entity);

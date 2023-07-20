@@ -28,6 +28,8 @@ struct IsDrink : public BaseComponent {
         return has_req && !has_extra;
     }
 
+    [[nodiscard]] const IngredientBitSet ing() const { return ingredients; }
+
    private:
     IngredientBitSet ingredients;
 

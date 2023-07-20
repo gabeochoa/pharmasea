@@ -87,4 +87,9 @@ inline vec2 lerp(vec2 a, vec2 b, float pct) {
     };
 }
 
+inline vec3 raise(vec3 a, float amt) {
+    a.y += amt;
+    return a;
+}
+
 }  // namespace vec

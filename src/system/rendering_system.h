@@ -94,8 +94,34 @@ inline bool render_bounding_box(const Entity& entity, float) {
     return true;
 }
 
+inline void render_debug_subtype(const Entity& entity, float) {
+    if (entity.is_missing<HasSubtype>()) return;
+    const HasSubtype& hs = entity.get<HasSubtype>();
+    const Transform& transform = entity.get<Transform>();
+    DrawFloatingText(vec::raise(transform.raw(), 1.f), Preload::get().font,
+                     fmt::format("{}", hs.get_type_index()).c_str());
+}
+
+inline void render_debug_drink_info(const Entity& entity, float) {
+    if (entity.is_missing<IsDrink>()) return;
+    const IsDrink& isdrink = entity.get<IsDrink>();
+    const Transform& transform = entity.get<Transform>();
+    float y = 0.25f;
+    for (size_t i = 0; i < magic_enum::enum_count<Ingredient>(); i++) {
+        Ingredient ingredient = magic_enum::enum_value<Ingredient>(i);
+        if (!(isdrink.has_ingredient(ingredient))) continue;
+        auto content = magic_enum::enum_name(ingredient);
+        DrawFloatingText(vec::raise(transform.raw(), y), Preload::get().font,
+                         std::string(content).c_str(), 50);
+        y += 0.25f;
+    }
+}
+
 inline bool render_debug(const Entity& entity, float dt) {
     job_system::render_job_visual(entity, dt);
+
+    render_debug_subtype(entity, dt);
+    render_debug_drink_info(entity, dt);
 
     // Ghost player only render during debug mode
     if (entity.has<CanBeGhostPlayer>() &&
@@ -314,6 +340,9 @@ inline void render_normal(const Entity& entity, float dt) {
         render_speech_bubble(entity, dt);
     }
 
+    //  TODO for now while we do dev work render it
+    render_debug_drink_info(entity, dt);
+
     bool used = render_model_normal(entity, dt);
     if (!used) {
         render_simple_normal(entity, dt);
@@ -466,10 +495,10 @@ inline void render_block_state_change_reason(const Entity& entity, float) {
     }
 }
 
-inline void render_player_info() {
-    // TODO eventually switch to using the actual entity instead of global
-    // just need a way to find them
-    if (!global_player) return;
+inline void render_player_info(const Entity& entity) {
+    if (!check_name(entity, strings::entity::REMOTE_PLAYER)) return;
+
+    if (entity.id != global_player->id) return;
 
     int y_pos = 0;
 
@@ -482,21 +511,22 @@ inline void render_player_info() {
     raylib::DrawRectangle(5, 200, 175, 75, (Color){50, 50, 50, 200});
 
     _draw_text("PlayerInfo:");
-    _draw_text(fmt::format("id: {} position: {}", global_player->id,
-                           global_player->get<Transform>().pos()));
-    _draw_text(fmt::format(
-        "holding furniture?: {}",
-        global_player->get<CanHoldFurniture>().is_holding_furniture()));
+    _draw_text(fmt::format("id: {} position: {}", entity.id,
+                           entity.get<Transform>().pos()));
     _draw_text(
-        fmt::format("holding item?: {}",
-                    global_player->get<CanHoldItem>().is_holding_item()));
+        fmt::format("holding furniture?: {}",
+                    entity.get<CanHoldFurniture>().is_holding_furniture()));
+    _draw_text(fmt::format("holding item?: {}",
+                           entity.get<CanHoldItem>().is_holding_item()));
 }
+
 void render_networked_players(const Entities&, float dt);
 
-inline void render_debug(const Entities&, float) {
-    render_player_info();
-    // for (auto& entity : entities) {
-    // }
+inline void render_debug_ui(const Entities& entities, float) {
+    for (std::shared_ptr<Entity> entity_ptr : entities) {
+        const Entity& entity = *entity_ptr;
+        render_player_info(entity);
+    }
 }
 
 inline void render_normal(const Entities& entities, float dt) {

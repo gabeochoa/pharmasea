@@ -148,7 +148,7 @@ struct SystemManager {
         const auto debug_mode_on =
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
         if (debug_mode_on) {
-            system_manager::ui::render_debug(entities, dt);
+            system_manager::ui::render_debug_ui(entities, dt);
         }
         system_manager::ui::render_normal(entities, dt);
     }
