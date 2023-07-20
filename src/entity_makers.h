@@ -200,8 +200,7 @@ static void make_customer(Entity& customer, vec2 p, bool has_order = true) {
     customer.addComponent<HasName>().update(get_random_name());
 
     // TODO for now, eventually move to customer spawner
-    if (has_order)
-        customer.addComponent<CanOrderDrink>().update(get_random_drink());
+    if (has_order) customer.addComponent<CanOrderDrink>();
 
     customer.addComponent<HasSpeechBubble>();
 

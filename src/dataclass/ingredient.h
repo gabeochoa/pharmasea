@@ -142,7 +142,3 @@ static Drink get_random_drink() {
     int index = randIn(0, recipe::NUM_DRINKS);
     return recipe::ALL_DRINK_OPTIONS[index];
 }
-
-// TODO should this live here?
-// TODO implement
-static std::string get_icon_name_for_drink(Drink d) { return "jug"; }

@@ -7,6 +7,10 @@
     return a + (std::rand() % (b - a + 1));
 }
 
+[[nodiscard]] inline float randfIn(float a, float b) {
+    return a + (std::rand() * (b - a));
+}
+
 [[nodiscard]] inline int randSign() {
     int sign = randIn(0, 1);
     if (sign == 0) {

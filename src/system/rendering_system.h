@@ -260,6 +260,9 @@ inline void render_trigger_area(const Entity& entity, float dt) {
     render_simple_normal(entity, dt);
 }
 
+// TODO implement
+static std::string get_icon_name_for_order(Order) { return "jug"; }
+
 inline void render_speech_bubble(const Entity& entity, float) {
     // Right now this is the only thing we can put in a bubble
     if (entity.is_missing<CanOrderDrink>()) return;
@@ -273,7 +276,7 @@ inline void render_speech_bubble(const Entity& entity, float) {
 
     GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
     raylib::Texture texture =
-        TextureLibrary::get().get(get_icon_name_for_drink(cod.order()));
+        TextureLibrary::get().get(get_icon_name_for_order(cod.order()));
     raylib::DrawBillboard(cam.camera, texture,
                           vec3{position.x,                     //
                                position.y + (TILESIZE * 2.f),  //
@@ -331,8 +334,6 @@ inline void render_floating_name(const Entity& entity, float) {
 }
 
 inline void render_progress_bar(const Entity& entity, float) {
-    // TODO only renders for the host...
-
     if (entity.is_missing<ShowsProgressBar>()) return;
 
     if (entity.is_missing<Transform>()) return;
