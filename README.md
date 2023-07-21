@@ -53,6 +53,57 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+### alpha_0.23.07.21
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (All) grabbing / dropping is pretty bad and doesnt work as expected 
+- (IR) Conveyer belt model is now bread cause it kept crashing on windows 
+- (UI) The first option in a dropdown isnt selectable 
+
+
+**Pivoting from Pharmacy to Bar** 
+- fully pivoting from medicine to _medicine_ 
+
+impact 
+- Added 10 drinks and 21 ingredients 
+- Add placeholder images for each drink order
+- Add blender that can whizz up fruits
+- change medicine cabinet to be the alcohol storage
+- add recipes for some popular drinks
+- dynamic model based on ingredients
+- add soda machine with spout
+- enforce can_be_held when picking up / dropping
+- add a check for when theres no path to register
+
+bug fix
+- fix bug where entity cleanup wasnt working in all cases 
+- turn off audio engine only if audio is enabled 
+- remove all memory leaks so the game should run much smoother over time (~5k different leaks)
+- (All) you can get the controls into a backwards state.. Small camera formula refactor fix.
+
+BE
+- Convert all Items into Entities so now we only have one update render path 
+- debug UI for ingredients to make it easier to understand what the current cup holds
+- util::in_range function
+- util function for getting ingredient from index
+- turn off serialization for jobs and some other things that we dont need rendering info for
+- only run sophie checks when time is out (speed)
+- renamed entities:: => furniture::
+- util for cleaning up by entity id
+- update grab/drop to better support can hold checks
+- add support for max-generated items for item containers
+- change item held by to suport flags
+- inital basic animation loading, tho untested
+- add python script to extract i18n strings from strings.h to mo and reverse them
+- move example map to configjson
+- move entity makers into another file so we can include entity.h places without issue
+- better const stuff across the code base (lots in rendering code) 
+- add some notes about detecting streaming software
+- made the json parsing for the config settings safe if json is improperly formatted.
+- Added JSON library, config for log_level, and globally reading LOG_LEVEL from config file. Defaults to LEVEL_INFO if not supplied.
+- removed useless #pragma
+
 ### alpha_0.23.07.08
 
 Known Issues
