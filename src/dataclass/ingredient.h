@@ -136,16 +136,17 @@ enum Drink {
     Coke,
     RumAndCoke,
     Margarita,
-    Cosmo,
-    Mojito,
-    OldFash,
     Daiquiri,
-    PinaColada,
     GAndT,
     WhiskeySour,
     VodkaTonic,
     //
     LAST_DRINK,
+    //
+    OldFash,
+    Cosmo,
+    Mojito,
+    PinaColada,
 };
 
 static IngredientBitSet get_recipe_for_drink(Drink drink) {

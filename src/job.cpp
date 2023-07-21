@@ -401,6 +401,10 @@ Job::State WaitInQueueJob::run_state_working_at_end(
         return (Job::State::WorkingAtEnd);
     }
 
+    CanHoldItem& ourCHI = entity->get<CanHoldItem>();
+    ourCHI.update(regCHI.item());
+    regCHI.update(nullptr);
+
     system_manager::logging_manager::announce(entity, "got it");
     WIQ_leave_line(reg, entity);
 
