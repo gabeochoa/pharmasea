@@ -45,6 +45,13 @@ struct HasSubtype : public BaseComponent {
         type_index = index + 1;
     }
 
+    template<typename T>
+    [[nodiscard]] std::string_view as_type() const {
+        // TODO Why do we need the plus 1 here?
+        T t = magic_enum::enum_value<T>(start + get_type_index() + 1);
+        return magic_enum::enum_name<T>(t);
+    }
+
    private:
     int start;
     int end;

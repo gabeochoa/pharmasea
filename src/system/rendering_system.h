@@ -98,8 +98,16 @@ inline void render_debug_subtype(const Entity& entity, float) {
     if (entity.is_missing<HasSubtype>()) return;
     const HasSubtype& hs = entity.get<HasSubtype>();
     const Transform& transform = entity.get<Transform>();
+
+    std::string content = fmt::format("{}", hs.get_type_index());
+
+    // Convert from ID to ingredient if its an alcohol
+    if (check_name(entity, strings::item::ALCOHOL)) {
+        content = fmt::format("{}", hs.as_type<Ingredient>());
+    }
+
     DrawFloatingText(vec::raise(transform.raw(), 1.f), Preload::get().font,
-                     fmt::format("{}", hs.get_type_index()).c_str());
+                     content.c_str());
 }
 
 inline void render_debug_drink_info(const Entity& entity, float) {
@@ -341,6 +349,7 @@ inline void render_normal(const Entity& entity, float dt) {
     }
 
     //  TODO for now while we do dev work render it
+    render_debug_subtype(entity, dt);
     render_debug_drink_info(entity, dt);
 
     bool used = render_model_normal(entity, dt);
