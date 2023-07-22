@@ -29,6 +29,8 @@ void process_is_container_and_should_backfill_item(std::shared_ptr<Entity>,
                                                    float);
 void process_is_container_and_should_update_item(std::shared_ptr<Entity>,
                                                  float);
+void process_is_indexed_container_holding_incorrect_item(
+    std::shared_ptr<Entity>, float);
 
 void handle_autodrop_furniture_when_exiting_planning(
     const std::shared_ptr<Entity>& entity);
@@ -212,11 +214,14 @@ struct SystemManager {
             system_manager::job_system::in_round_update(entity, dt);
             system_manager::process_grabber_items(entity, dt);
             system_manager::process_conveyer_items(entity, dt);
-            // TODO you should be able to put items back in the container
             system_manager::process_is_container_and_should_backfill_item(
                 entity, dt);
             system_manager::process_is_container_and_should_update_item(entity,
                                                                         dt);
+            // This one should be after the other container ones
+            system_manager::process_is_indexed_container_holding_incorrect_item(
+                entity, dt);
+
             system_manager::process_has_rope(entity, dt);
             system_manager::process_spawner(entity, dt);
             system_manager::reset_empty_work_furniture(entity, dt);

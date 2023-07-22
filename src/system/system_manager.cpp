@@ -344,6 +344,31 @@ void process_is_container_and_should_update_item(std::shared_ptr<Entity> entity,
     indexer.mark_change_completed();
 }
 
+void process_is_indexed_container_holding_incorrect_item(
+    std::shared_ptr<Entity> entity, float) {
+    // This function is for when you have an indexed container and you put the
+    // item back in but the index had changed.
+    //
+    // in this case we need to clear the item because otherwise they will both
+    // live there which will cause overlap and grab issues.
+
+    if (entity->is_missing<Indexer>()) return;
+    Indexer& indexer = entity->get<Indexer>();
+
+    if (entity->is_missing<CanHoldItem>()) return;
+    CanHoldItem& canHold = entity->get<CanHoldItem>();
+
+    if (canHold.empty()) return;
+
+    int current_value = indexer.value();
+    int item_value = canHold.item()->get<HasSubtype>().get_type_index();
+
+    if (current_value != item_value) {
+        canHold.item()->cleanup = true;
+        canHold.update(nullptr);
+    }
+}
+
 void handle_autodrop_furniture_when_exiting_planning(
     const std::shared_ptr<Entity>& entity) {
     if (entity->is_missing<CanHoldFurniture>()) return;
