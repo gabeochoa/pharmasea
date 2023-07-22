@@ -464,19 +464,23 @@ static void make_medicine_cabinet(Entity& container, vec2 pos) {
         CustomHeldItemPosition::Positioner::Table);
 }
 
-static void make_pill_dispenser(Entity& container, vec2 pos) {
-    // TODO lemon
-    furniture::make_itemcontainer(container, {strings::entity::PILL_DISPENSER},
-                                  pos, strings::item::LEMON);
+/*
+static void make_box(Entity& container, vec2 pos) {
+    furniture::make_itemcontainer(container,
+                                  {strings::entity::MEDICINE_CABINET}, pos,
+                                  strings::item::LEMON);
     if (ENABLE_MODELS) {
         container.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "crate",
+            .model_name = "box",
             .size_scale = 2.f,
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
         });
     }
-    container.addComponent<Indexer>((Subtype::PILL_END - Subtype::PILL_START));
 
+    container.addComponent<HasDynamicModelName>().init(
+        "box", HasDynamicModelName::DynamicType::OpenClosed);
+
+    container.addComponent<Indexer>(ingredient::NUM_ALC);
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
             const float amt = 2.f;
@@ -489,6 +493,36 @@ static void make_pill_dispenser(Entity& container, vec2 pos) {
     container.addComponent<ShowsProgressBar>();
     container.get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);
+}
+*/
+
+static void make_fruit_basket(Entity& container, vec2 pos) {
+    furniture::make_itemcontainer(container, {strings::entity::PILL_DISPENSER},
+                                  pos, strings::item::LEMON);
+    if (ENABLE_MODELS) {
+        container.get<ModelRenderer>().update(ModelInfo{
+            .model_name = "crate",
+            .size_scale = 2.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        });
+    }
+    container.get<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::Table);
+
+    // TODO right now lets just worry about lemon first we can come back and
+    // handle other fruits later
+    container.addComponent<Indexer>(1);
+    //
+    // container.addComponent<HasWork>().init(
+    // [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
+    // const float amt = 2.f;
+    // hasWork.increase_pct(amt * dt);
+    // if (hasWork.is_work_complete()) {
+    // owner.get<Indexer>().increment();
+    // hasWork.reset_pct();
+    // }
+    // });
+    // container.addComponent<ShowsProgressBar>();
 }
 
 static void make_soda_machine(Entity& soda_machine, vec2 pos) {
@@ -845,6 +879,8 @@ static void make_item_type(Item& item, const std::string& type_name,  //
             return make_soda_spout(item, pos);
         case hashString(strings::item::ALCOHOL):
             return make_alcohol(item, pos, index);
+        case hashString(strings::item::LEMON):
+            return make_lemon(item, pos, index);
             // TODO add rope item
             // case hashString(strings::item::ROPE):
             // return make_rope(item, pos);

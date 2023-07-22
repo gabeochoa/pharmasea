@@ -314,6 +314,8 @@ void process_is_container_and_should_backfill_item(
     if (entity->is_missing<Indexer>()) return;
     backfill_empty_container(strings::item::ALCOHOL, entity, pos,
                              entity->get<Indexer>().value());
+    backfill_empty_container(strings::item::LEMON, entity, pos,
+                             entity->get<Indexer>().value());
     entity->get<Indexer>().mark_change_completed();
 }
 
@@ -337,6 +339,8 @@ void process_is_container_and_should_update_item(std::shared_ptr<Entity> entity,
 
     backfill_empty_container(strings::item::ALCOHOL, entity, pos,
                              indexer.value());
+    backfill_empty_container(strings::item::LEMON, entity, pos,
+                             entity->get<Indexer>().value());
     indexer.mark_change_completed();
 }
 

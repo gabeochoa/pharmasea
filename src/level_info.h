@@ -51,7 +51,7 @@ const char GRABBERr = '>';
 const char GRABBERd = 'v';
 
 const char MED_CAB = 'M';
-const char PILL_DISP = 'P';
+const char FRUIT = 'F';
 const char BLENDER = 'b';
 const char SODA_MACHINE = 'S';
 
@@ -161,8 +161,8 @@ struct helper {
                 (furniture::make_medicine_cabinet(create(), location));
                 return;
             } break;
-            case PILL_DISP: {
-                (furniture::make_pill_dispenser(create(), location));
+            case FRUIT: {
+                (furniture::make_fruit_basket(create(), location));
                 return;
             } break;
             case PLAYER: {
