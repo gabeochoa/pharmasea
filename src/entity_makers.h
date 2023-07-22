@@ -554,9 +554,7 @@ static void make_soda_machine(Entity& soda_machine, vec2 pos) {
     soda_machine.get<IsItemContainer>().set_max_generations(1);
     soda_machine.get<CanHoldItem>()
         .update_held_by(IsItem::HeldBy::SODA_MACHINE)
-        .set_filter_fn([](const Item& item) {
-            return check_name(item, strings::item::SODA_SPOUT);
-        });
+        .set_filter(EntityFilter().set_name_filter(strings::item::SODA_SPOUT));
 }
 
 static void make_trigger_area(

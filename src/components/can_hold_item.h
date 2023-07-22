@@ -1,17 +1,51 @@
 #pragma once
 
+#include <optional>
+//
+
 #include "../entity.h"
 #include "base_component.h"
 //
 #include "is_item.h"
+
+struct EntityFilter {
+    enum FilterDatumType {
+        Name,
+    } flags;
+
+    std::optional<std::string> name;
+
+    void clear() { clear_name_filter(); }
+
+    EntityFilter& set_name_filter(const std::string& data) {
+        name = data;
+        return *this;
+    }
+    void clear_name_filter() { name = {}; }
+
+    void enable_filter_on(FilterDatumType datum_type, Entity& data) {
+        // stores the information from data in that flag
+        switch (datum_type) {
+            case Name:
+                name = data.get<DebugName>().name();
+                break;
+        }
+    }
+
+    [[nodiscard]] bool matches(const Entity& data) const {
+        if (name.has_value()) {
+            if (!check_name(data, name->c_str())) return false;
+        }
+        //
+        return true;
+    }
+};
 
 struct CanHoldItem : public BaseComponent {
     CanHoldItem() : held_by(IsItem::HeldBy::UNKNOWN) {}
     CanHoldItem(IsItem::HeldBy hb) : held_by(hb) {}
 
     virtual ~CanHoldItem() {}
-
-    typedef std::function<bool(const Entity&)> Filterfn;
 
     [[nodiscard]] bool empty() const { return held_item == nullptr; }
     // Whether or not this entity has something we can take from them
@@ -57,8 +91,8 @@ struct CanHoldItem : public BaseComponent {
         return held_item;
     }
 
-    CanHoldItem& set_filter_fn(Filterfn fn = nullptr) {
-        filter = fn;
+    CanHoldItem& set_filter(EntityFilter ef) {
+        filter = ef;
         return *this;
     }
 
@@ -69,7 +103,7 @@ struct CanHoldItem : public BaseComponent {
             // item.get<DebugName>(), held_by, cbhb);
             if (!cbhb) return false;
         }
-        if (filter && !filter(item)) return false;
+        if (!filter.matches(item)) return false;
         // By default accept anything
         return true;
     }
@@ -81,7 +115,7 @@ struct CanHoldItem : public BaseComponent {
 
    private:
     std::shared_ptr<Entity> held_item = nullptr;
-    Filterfn filter;
+    EntityFilter filter;
     IsItem::HeldBy held_by;
 
     friend bitsery::Access;
