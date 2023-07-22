@@ -55,7 +55,7 @@ const char FRUIT = 'F';
 const char BLENDER = 'b';
 const char SODA_MACHINE = 'S';
 
-const char DRINK = 'd';
+const char CUPBOARD = 'd';
 const char LEMON = 'l';
 const char SIMPLE_SYRUP = 'y';
 
@@ -177,8 +177,8 @@ struct helper {
                 (furniture::make_soda_machine(create(), location));
                 return;
             } break;
-            case DRINK: {
-                (items::make_drink(create(), location));
+            case CUPBOARD: {
+                (furniture::make_cupboard(create(), location));
                 return;
             } break;
             case LEMON: {

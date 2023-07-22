@@ -104,6 +104,7 @@ constexpr const char* CUSTOMER_SPAWNER = "customer spawner";
 constexpr const char* SOPHIE = "sophie";
 constexpr const char* BLENDER = "blender";
 constexpr const char* SODA_MACHINE = "soda machine";
+constexpr const char* CUPBOARD = "cupboard";
 
 constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
 

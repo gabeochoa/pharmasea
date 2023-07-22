@@ -464,38 +464,6 @@ static void make_medicine_cabinet(Entity& container, vec2 pos) {
         CustomHeldItemPosition::Positioner::Table);
 }
 
-/*
-static void make_box(Entity& container, vec2 pos) {
-    furniture::make_itemcontainer(container,
-                                  {strings::entity::MEDICINE_CABINET}, pos,
-                                  strings::item::LEMON);
-    if (ENABLE_MODELS) {
-        container.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "box",
-            .size_scale = 2.f,
-            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-        });
-    }
-
-    container.addComponent<HasDynamicModelName>().init(
-        "box", HasDynamicModelName::DynamicType::OpenClosed);
-
-    container.addComponent<Indexer>(ingredient::NUM_ALC);
-    container.addComponent<HasWork>().init(
-        [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
-            const float amt = 2.f;
-            hasWork.increase_pct(amt * dt);
-            if (hasWork.is_work_complete()) {
-                owner.get<Indexer>().increment();
-                hasWork.reset_pct();
-            }
-        });
-    container.addComponent<ShowsProgressBar>();
-    container.get<CustomHeldItemPosition>().init(
-        CustomHeldItemPosition::Positioner::Table);
-}
-*/
-
 static void make_fruit_basket(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container, {strings::entity::PILL_DISPENSER},
                                   pos, strings::item::LEMON);
@@ -525,13 +493,30 @@ static void make_fruit_basket(Entity& container, vec2 pos) {
     // container.addComponent<ShowsProgressBar>();
 }
 
+static void make_cupboard(Entity& cupboard, vec2 pos) {
+    furniture::make_itemcontainer(cupboard, {strings::entity::CUPBOARD}, pos,
+                                  strings::item::DRINK);
+    if (ENABLE_MODELS) {
+        cupboard.get<ModelRenderer>().update(ModelInfo{
+            .model_name = "box",
+            .size_scale = 4.f,
+            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
+        });
+    }
+
+    cupboard.addComponent<HasDynamicModelName>().init(
+        "box", HasDynamicModelName::DynamicType::OpenClosed);
+
+    cupboard.get<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::Table);
+}
+
 static void make_soda_machine(Entity& soda_machine, vec2 pos) {
     furniture::make_itemcontainer(
         soda_machine, DebugOptions{.name = strings::entity::BLENDER}, pos,
         strings::item::SODA_SPOUT);
     if (ENABLE_MODELS) {
         soda_machine.get<ModelRenderer>().update(ModelInfo{
-            // TODO get custom model for this
             .model_name = "crate",
             .size_scale = 2.f,
             .position_offset = vec3{0, -TILESIZE / 2.f, 0},
@@ -884,6 +869,8 @@ static void make_item_type(Item& item, const std::string& type_name,  //
             return make_alcohol(item, pos, index);
         case hashString(strings::item::LEMON):
             return make_lemon(item, pos, index);
+        case hashString(strings::item::DRINK):
+            return make_drink(item, pos);
             // TODO add rope item
             // case hashString(strings::item::ROPE):
             // return make_rope(item, pos);
