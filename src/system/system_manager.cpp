@@ -262,8 +262,17 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
             if (entity->id == furn->id) return false;
             // needs to be able to hold something
             if (furn->is_missing<CanHoldItem>()) return false;
+            CanHoldItem& furnCHI = furn->get<CanHoldItem>();
             // doesnt have anything
-            if (furn->get<CanHoldItem>().empty()) return false;
+            if (furnCHI.empty()) return false;
+
+            // Can we hold the item it has?
+            bool can_hold = entity->get<CanHoldItem>().can_hold(
+                *(furnCHI.item()), RespectFilter::All);
+
+            // we cant
+            if (!can_hold) return false;
+
             // We only check CanBe when it exists because everyone else can
             // always be taken from with a grabber
             if (furn->is_missing<CanBeTakenFrom>()) return true;
@@ -281,6 +290,26 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
     matchCHI.update(nullptr);
 
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
+}
+
+void process_grabber_filter(std::shared_ptr<Entity> entity, float) {
+    if (!check_name(*entity, strings::entity::FILTERED_GRABBER)) return;
+    if (entity->is_missing<CanHoldItem>()) return;
+    CanHoldItem& canHold = entity->get<CanHoldItem>();
+    if (canHold.empty()) return;
+
+    // If we are holding something, then:
+    // - either its already in the filter (and setting it wont be a big deal)
+    // - or we should set the filter
+
+    EntityFilter& ef = canHold.get_filter();
+
+    if (ef.filter_is_set()) {
+        // TODO
+        return;
+    }
+
+    ef.set_filter_with_entity(*(canHold.const_item()));
 }
 
 template<typename... TArgs>
@@ -686,6 +715,7 @@ void process_squirter(const std::shared_ptr<Entity> entity, float) {
     }
 }
 
+// TODO not everything can be trashed !
 void process_trash(const std::shared_ptr<Entity> entity, float) {
     // TODO this normally would be an IsComponent but for those where theres
     // only one probably check_name is easier/ cheaper? idk

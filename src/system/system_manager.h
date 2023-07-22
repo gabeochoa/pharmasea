@@ -21,6 +21,7 @@ void move_entity_based_on_push_force(std::shared_ptr<Entity> entity, float,
 void process_conveyer_items(std::shared_ptr<Entity> entity, float dt);
 
 void process_grabber_items(std::shared_ptr<Entity> entity, float);
+void process_grabber_filter(std::shared_ptr<Entity> entity, float);
 
 template<typename I>
 void backfill_empty_container(std::shared_ptr<Entity> entity);
@@ -216,6 +217,7 @@ struct SystemManager {
             system_manager::job_system::in_round_update(entity, dt);
             system_manager::process_grabber_items(entity, dt);
             system_manager::process_conveyer_items(entity, dt);
+            system_manager::process_grabber_filter(entity, dt);
             // should move all the container functions into its own
             // function?
             system_manager::process_is_container_and_should_backfill_item(

@@ -19,21 +19,21 @@ struct EntityFilter {
 
     std::optional<std::string> name;
 
+    [[nodiscard]] bool filter_is_set() const { return name.has_value(); }
+
     void clear() { clear_name_filter(); }
 
     EntityFilter& set_name_filter(const std::string& data) {
         name = data;
+
+        log_info("setting filter {} ", name.value());
         return *this;
     }
     void clear_name_filter() { name = {}; }
 
-    void enable_filter_on(FilterDatumType datum_type, Entity& data) {
+    void set_filter_with_entity(const Entity& data) {
         // stores the information from data in that flag
-        switch (datum_type) {
-            case Name:
-                name = data.get<DebugName>().name();
-                break;
-        }
+        name = data.get<DebugName>().name();
     }
 
     EntityFilter& set_filter_strength(FilterStrength fs) {
@@ -126,6 +126,8 @@ struct CanHoldItem : public BaseComponent {
         held_by = hb;
         return *this;
     }
+
+    [[nodiscard]] EntityFilter& get_filter() { return filter; }
 
    private:
     std::shared_ptr<Entity> held_item = nullptr;
