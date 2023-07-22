@@ -41,6 +41,7 @@ void delete_held_items_when_leaving_inround(
 void refetch_dynamic_model_names(const std::shared_ptr<Entity> entity, float);
 
 void process_squirter(const std::shared_ptr<Entity> entity, float dt);
+void process_trash(const std::shared_ptr<Entity> entity, float dt);
 void process_trigger_area(const std::shared_ptr<Entity> entity, float dt);
 
 // TODO maybe we could pull out all the singleton boiz into their own update
@@ -228,6 +229,7 @@ struct SystemManager {
             system_manager::process_has_rope(entity, dt);
             system_manager::process_spawner(entity, dt);
             system_manager::process_squirter(entity, dt);
+            system_manager::process_trash(entity, dt);
             system_manager::reset_empty_work_furniture(entity, dt);
         }
     }

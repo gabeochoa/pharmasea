@@ -680,4 +680,18 @@ void process_squirter(const std::shared_ptr<Entity> entity, float) {
     }
 }
 
+void process_trash(const std::shared_ptr<Entity> entity, float) {
+    // TODO this normally would be an IsComponent but for those where theres
+    // only one probably check_name is easier/ cheaper? idk
+    if (!check_name(*entity, strings::entity::TRASH)) return;
+
+    CanHoldItem& trashCHI = entity->get<CanHoldItem>();
+
+    // If we arent holding anything, nothing to delete
+    if (trashCHI.empty()) return;
+
+    trashCHI.item()->cleanup = true;
+    trashCHI.update(nullptr);
+}
+
 }  // namespace system_manager

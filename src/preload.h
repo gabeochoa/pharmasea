@@ -296,6 +296,12 @@ struct Preload {
                 .filename = "kitchenCoffeeMachine.obj",
                 .libraryname = "coffee_machine",
             },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "toilet.obj",
+                // TODO i should rename these to be strings::
+                .libraryname = "toilet",
+            },
         };
 
         for (const auto& m : models) {

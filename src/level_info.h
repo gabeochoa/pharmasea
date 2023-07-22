@@ -59,6 +59,7 @@ const char CUPBOARD = 'd';
 const char LEMON = 'l';
 const char SIMPLE_SYRUP = 'y';
 const char SQUIRTER = 'q';
+const char TRASH = 'T';
 
 const char SOPHIE = 's';
 
@@ -192,6 +193,10 @@ struct helper {
             } break;
             case SQUIRTER: {
                 (furniture::make_squirter(create(), location));
+                return;
+            } break;
+            case TRASH: {
+                (furniture::make_trash(create(), location));
                 return;
             } break;
             case 32: {

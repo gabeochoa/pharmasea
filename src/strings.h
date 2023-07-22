@@ -106,6 +106,7 @@ constexpr const char* BLENDER = "blender";
 constexpr const char* SODA_MACHINE = "soda machine";
 constexpr const char* CUPBOARD = "cupboard";
 constexpr const char* SQUIRTER = "squirter";
+constexpr const char* TRASH = "trash";
 
 constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
 

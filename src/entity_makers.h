@@ -443,7 +443,7 @@ static void make_squirter(Entity& squ, vec2 pos) {
         squ.get<ModelRenderer>().update(ModelInfo{
             .model_name = "coffee_machine",
             .size_scale = 4.f,
-            .position_offset = vec3{0, 0, 0},
+            .position_offset = vec3{-TILESIZE / 2.f, 0, 0},
         });
     }
 
@@ -452,6 +452,17 @@ static void make_squirter(Entity& squ, vec2 pos) {
 
     // TODO change how progress bar works to support this
     // squ.addComponent<ShowsProgressBar>();
+}
+
+static void make_trash(Entity& trash, vec2 pos) {
+    furniture::make_furniture(trash, {strings::entity::TRASH}, pos);
+    if (ENABLE_MODELS) {
+        trash.get<ModelRenderer>().update(ModelInfo{
+            .model_name = "toilet",
+            .size_scale = 2.f,
+            .position_offset = vec3{0, 0, 0},
+        });
+    }
 }
 
 static void make_medicine_cabinet(Entity& container, vec2 pos) {
