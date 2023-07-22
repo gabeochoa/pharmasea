@@ -14,7 +14,7 @@ INCLUDES = -Ivendor/
 LIBS = -L. -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
 # SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/tracy/TracyClient.cpp)
-SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/tracy/TracyClient.cpp vendor/backward/backward.cpp)
+SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/backward/backward.cpp)
 H_FILES := $(wildcard src/**/*.h src/engine/**/*.h) 
 OBJ_DIR := ./output
 OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)

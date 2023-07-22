@@ -58,6 +58,7 @@ const char SODA_MACHINE = 'S';
 const char CUPBOARD = 'd';
 const char LEMON = 'l';
 const char SIMPLE_SYRUP = 'y';
+const char SQUIRTER = 'q';
 
 const char SOPHIE = 's';
 
@@ -187,6 +188,10 @@ struct helper {
             } break;
             case SIMPLE_SYRUP: {
                 (items::make_simple_syrup(create(), location));
+                return;
+            } break;
+            case SQUIRTER: {
+                (furniture::make_squirter(create(), location));
                 return;
             } break;
             case 32: {

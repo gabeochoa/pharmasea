@@ -214,7 +214,7 @@ typedef Entity Furniture;
 // or add the ones above into it
 namespace furniture {
 static void make_furniture(Entity& furniture, const DebugOptions& options,
-                           vec2 pos, Color face, Color base,
+                           vec2 pos, Color face = PINK, Color base = PINK,
                            bool is_static = false) {
     make_entity(furniture, options);
 
@@ -437,6 +437,23 @@ static void make_itemcontainer(Entity& container, const DebugOptions& options,
     container.addComponent<IsItemContainer>(item_type);
 }
 
+static void make_squirter(Entity& squ, vec2 pos) {
+    furniture::make_furniture(squ, {strings::entity::SQUIRTER}, pos);
+    if (ENABLE_MODELS) {
+        squ.get<ModelRenderer>().update(ModelInfo{
+            .model_name = "coffee_machine",
+            .size_scale = 4.f,
+            .position_offset = vec3{0, 0, 0},
+        });
+    }
+
+    squ.get<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::Table);
+
+    // TODO change how progress bar works to support this
+    // squ.addComponent<ShowsProgressBar>();
+}
+
 static void make_medicine_cabinet(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container,
                                   {strings::entity::MEDICINE_CABINET}, pos,
@@ -631,6 +648,24 @@ static void make_soda_spout(Item& soda_spout, vec2 pos) {
         [](Entity&) { return Ingredient::Soda; });
 }
 
+// Returns true if item was cleaned up
+static bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
+    IsDrink& isdrink = drink.get<IsDrink>();
+
+    AddsIngredient& addsIG = toadd.get<AddsIngredient>();
+    Ingredient ing = addsIG.get(toadd);
+
+    isdrink.add_ingredient(ing);
+    addsIG.decrement_uses();
+
+    // We do == 0 because infinite is -1
+    if (addsIG.uses_left() == 0) {
+        toadd.cleanup = true;
+        return true;
+    }
+    return false;
+}
+
 static void process_drink_working(Entity& drink, HasWork& hasWork,
                                   Entity& player, float dt) {
     auto _process_add_ingredient = [&]() {
@@ -650,16 +685,10 @@ static void process_drink_working(Entity& drink, HasWork& hasWork,
         const float amt = 1.f;
         hasWork.increase_pct(amt * dt);
         if (hasWork.is_work_complete()) {
-            isdrink.add_ingredient(ing);
-            addsIG.decrement_uses();
-
-            // We do == 0 because infinite is -1
-            if (addsIG.uses_left() == 0) {
-                item->cleanup = true;
-                playerCHI.update(nullptr);
-            }
-
             hasWork.reset_pct();
+            bool cleaned_up =
+                _add_ingredient_to_drink_NO_VALIDATION(drink, *item);
+            if (cleaned_up) playerCHI.update(nullptr);
         }
     };
 

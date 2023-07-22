@@ -639,4 +639,45 @@ void process_has_rope(const std::shared_ptr<Entity> entity, float) {
     hrti.mark_generated(pos);
 }
 
+void process_squirter(const std::shared_ptr<Entity> entity, float) {
+    // TODO this normally would be an IsComponent but for those where theres
+    // only one probably check_name is easier/ cheaper? idk
+    if (!check_name(*entity, strings::entity::SQUIRTER)) return;
+
+    CanHoldItem& sqCHI = entity->get<CanHoldItem>();
+
+    // If we arent holding anything, nothing to squirt into
+    if (sqCHI.empty()) return;
+
+    // cant squirt into this !
+    if (sqCHI.item()->is_missing<IsDrink>()) return;
+
+    // so we got something, lets see if anyone around can give us something to
+    // use
+
+    std::shared_ptr<Furniture> closest_furniture =
+        EntityHelper::getClosestMatchingEntity<Furniture>(
+            entity->get<Transform>().as2(), 1.25f,
+            [](std::shared_ptr<Furniture> f) {
+                if (f->is_missing<CanHoldItem>()) return false;
+                const CanHoldItem& fchi = f->get<CanHoldItem>();
+                if (fchi.empty()) return false;
+
+                std::shared_ptr<Item> item = fchi.const_item();
+
+                // TODO should we instead check for <AddsIngredient>?
+                if (!check_name(*item, strings::item::ALCOHOL)) return false;
+                return true;
+            });
+    if (!closest_furniture) return;
+
+    std::shared_ptr<Entity> drink = sqCHI.item();
+    std::shared_ptr<Item> item = closest_furniture->get<CanHoldItem>().item();
+
+    bool cleanup = items::_add_ingredient_to_drink_NO_VALIDATION(*drink, *item);
+    if (cleanup) {
+        closest_furniture->get<CanHoldItem>().update(nullptr);
+    }
+}
+
 }  // namespace system_manager

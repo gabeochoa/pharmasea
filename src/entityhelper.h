@@ -297,6 +297,7 @@ struct EntityHelper {
     static std::shared_ptr<Entity> getClosestMatchingFurniture(
         const Transform& transform, float range,
         std::function<bool(std::shared_ptr<Furniture>)> filter) {
+        // TODO should this really be using this?
         return EntityHelper::getMatchingEntityInFront<Furniture>(
             transform.as2(), range, transform.face_direction(), filter);
     }
