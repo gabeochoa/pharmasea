@@ -97,7 +97,6 @@ constexpr const char* WALL = "wall";
 constexpr const char* CONVEYER = "conveyer";
 constexpr const char* GRABBER = "grabber";
 constexpr const char* REGISTER = "register";
-constexpr const char* BAG_BOX = "bag box";
 constexpr const char* MEDICINE_CABINET = "medicine cabinet";
 constexpr const char* PILL_DISPENSER = "pill dispenser";
 constexpr const char* TRIGGER_AREA = "trigger area";
@@ -112,9 +111,6 @@ constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
 
 namespace item {
 
-constexpr const char* PILL = "PILL";
-constexpr const char* PILL_BOTTLE = "PILL_BOTTLE";
-constexpr const char* BAG = "BAG";
 constexpr const char* SODA_SPOUT = "SODA_SPOUT";
 constexpr const char* DRINK = "DRINK";
 constexpr const char* ALCOHOL = "ALCOHOL";

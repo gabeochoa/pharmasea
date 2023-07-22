@@ -437,22 +437,6 @@ static void make_itemcontainer(Entity& container, const DebugOptions& options,
     container.addComponent<IsItemContainer>(item_type);
 }
 
-static void make_bagbox(Entity& container, vec2 pos) {
-    furniture::make_itemcontainer(container, {strings::entity::BAG_BOX}, pos,
-                                  strings::item::BAG);
-
-    if (ENABLE_MODELS) {
-        container.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "box",
-            .size_scale = 4.f,
-            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-        });
-
-        container.addComponent<HasDynamicModelName>().init(
-            "box", HasDynamicModelName::DynamicType::OpenClosed);
-    }
-}
-
 static void make_medicine_cabinet(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container,
                                   {strings::entity::MEDICINE_CABINET}, pos,
@@ -481,8 +465,9 @@ static void make_medicine_cabinet(Entity& container, vec2 pos) {
 }
 
 static void make_pill_dispenser(Entity& container, vec2 pos) {
+    // TODO lemon
     furniture::make_itemcontainer(container, {strings::entity::PILL_DISPENSER},
-                                  pos, strings::item::PILL);
+                                  pos, strings::item::LEMON);
     if (ENABLE_MODELS) {
         container.get<ModelRenderer>().update(ModelInfo{
             .model_name = "crate",
@@ -604,121 +589,6 @@ static void make_item(Item& item, const DebugOptions& options,
     // TODO Not everyone needs this but easier for now
     item.addComponent<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::ItemHoldingItem);
-}
-
-static void make_pill(Item& pill, vec2 pos, int index) {
-    make_item(pill, {.name = strings::item::PILL}, pos);
-    pill.addComponent<HasSubtype>(
-        Subtype::PILL_START, Subtype::PILL_END + 1,
-        // TODO add a check to see if its past the end
-        static_cast<Subtype>(Subtype::PILL_START + index));
-
-    pill.addComponent<ModelRenderer>().update(ModelInfo{
-        .model_name = "pill_red",
-        // Scale needs to be a vec3 {3.f, 3.f, 12.f}
-        .size_scale = 3.f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 0,
-    });
-
-    pill.addComponent<HasDynamicModelName>().init(
-        "pill_red",  //
-        HasDynamicModelName::DynamicType::Subtype,
-        [](const Item& owner, const std::string base_name) -> std::string {
-            if (owner.is_missing<HasSubtype>()) {
-                log_warn(
-                    "Generating a dynamic model name with a subtype, but your "
-                    "entity doesnt have a subtype {}",
-                    owner.get<DebugName>().name());
-                return base_name;
-            }
-            const Subtype type = owner.get<HasSubtype>().get_type();
-            switch (type) {
-                case Subtype::PillRed:
-                    return "pill_red";
-                case Subtype::PillRedLong:
-                    return "pill_redlong";
-                case Subtype::PillBlue:
-                    return "pill_blue";
-                case Subtype::PillBlueLong:
-                    return "pill_bluelong";
-                default:
-                    log_warn("Failed to get matching model for pill type: {}",
-                             magic_enum::enum_name(type));
-                    break;
-            }
-            return base_name;
-        });
-
-    pill.addComponent<HasWork>().init(
-        [](Entity& owner, HasWork& hasWork, Entity& /* person */, float dt) {
-            const IsItem& ii = owner.get<IsItem>();
-            HasSubtype& hasSubtype = owner.get<HasSubtype>();
-
-            if (ii.is_not_held_by(IsItem::HeldBy::BLENDER)) {
-                hasWork.reset_pct();
-                return;
-            }
-
-            const float amt = 1.5f;
-            hasWork.increase_pct(amt * dt);
-            if (hasWork.is_work_complete()) {
-                hasWork.reset_pct();
-
-                HasDynamicModelName& hDMN = owner.get<HasDynamicModelName>();
-                ModelRenderer& renderer = owner.get<ModelRenderer>();
-
-                hasSubtype.increment_type();
-                renderer.update_model_name(hDMN.fetch(owner));
-            }
-        });
-    pill.addComponent<ShowsProgressBar>();
-}
-
-static void make_pill_bottle(Item& pill_bottle, vec2 pos) {
-    make_item(pill_bottle, {.name = strings::item::PILL_BOTTLE}, pos);
-
-    pill_bottle.addComponent<ModelRenderer>().update(ModelInfo{
-        .model_name = "pill_bottle",
-        .size_scale = 1.5f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 0,
-    });
-
-    pill_bottle.addComponent<CanHoldItem>(IsItem::HeldBy::ITEM)
-        .set_filter_fn([](const Item& item) {
-            return check_name(item, strings::item::PILL);
-        });
-}
-
-static void make_bag(Item& bag, vec2 pos) {
-    make_item(bag, {.name = strings::item::BAG}, pos);
-
-    bag.addComponent<ModelRenderer>().update(ModelInfo{
-        .model_name = "bag",
-        .size_scale = 0.25f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 0,
-    });
-
-    bag.addComponent<HasDynamicModelName>().init(
-        "bag", HasDynamicModelName::DynamicType::EmptyFull,
-        [](const Item& owner, const std::string base_name) -> std::string {
-            if (owner.is_missing<CanHoldItem>()) {
-                log_warn(
-                    "Generating a dynamic model name with empty/full but your "
-                    "entity cant hold items {}",
-                    owner.get<DebugName>().name());
-                return base_name;
-            }
-            const CanHoldItem& chi = owner.get<CanHoldItem>();
-            return chi.empty() ? fmt::format("empty_{}", base_name) : base_name;
-        });
-
-    bag.addComponent<CanHoldItem>(IsItem::HeldBy::ITEM)
-        .set_filter_fn([](const Item& item) {
-            return check_name(item, strings::item::PILL_BOTTLE);
-        });
 }
 
 static void make_soda_spout(Item& soda_spout, vec2 pos) {
@@ -971,12 +841,6 @@ static void make_item_type(Item& item, const std::string& type_name,  //
     log_info("generating new item {} of type {} at {} subtype{}", item.id,
              type_name, pos, index);
     switch (hashString(type_name)) {
-        case hashString(strings::item::PILL):
-            return make_pill(item, pos, index);
-        case hashString(strings::item::PILL_BOTTLE):
-            return make_pill_bottle(item, pos);
-        case hashString(strings::item::BAG):
-            return make_bag(item, pos);
         case hashString(strings::item::SODA_SPOUT):
             return make_soda_spout(item, pos);
         case hashString(strings::item::ALCOHOL):

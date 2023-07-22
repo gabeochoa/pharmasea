@@ -50,7 +50,6 @@ const char GRABBERl = '<';
 const char GRABBERr = '>';
 const char GRABBERd = 'v';
 
-const char BAGBOX = 'B';
 const char MED_CAB = 'M';
 const char PILL_DISP = 'P';
 const char BLENDER = 'b';
@@ -156,10 +155,6 @@ struct helper {
             } break;
             case TABLE: {
                 (furniture::make_table(create(), location));
-                return;
-            } break;
-            case BAGBOX: {
-                (furniture::make_bagbox(create(), location));
                 return;
             } break;
             case MED_CAB: {
@@ -336,8 +331,6 @@ struct LobbyMapInfo : public LevelInfo {
                 entity, {5, TILESIZE / -2.f, 10}, 8, 3,
                 text_lookup(strings::i18n::START_GAME));
         }
-
-        items::make_bag(EntityHelper::createEntity(), vec2{2, 2});
     }
 
     virtual void onDraw(float dt) const override {

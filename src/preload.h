@@ -126,16 +126,6 @@ struct Preload {
         //
         constexpr ModelLibrary::ModelLoadingInfo models[] = {
             ModelLibrary::ModelLoadingInfo{
-                .folder = strings::settings::MODELS,
-                .filename = "bag.obj",
-                .libraryname = "bag",
-            },
-            ModelLibrary::ModelLoadingInfo{
-                .folder = strings::settings::MODELS,
-                .filename = "empty_bag.obj",
-                .libraryname = "empty_bag",
-            },
-            ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
                 .filename = "bread.obj",
                 .libraryname = "conveyer",
