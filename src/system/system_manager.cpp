@@ -182,13 +182,19 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     }
 
     auto match = EntityHelper::getClosestMatchingFurniture(
-        transform, 1.f, [entity](std::shared_ptr<Furniture> furn) {
+        transform, 1.f, [entity, &canHold](std::shared_ptr<Furniture> furn) {
             // cant be us
             if (entity->id == furn->id) return false;
             // needs to be able to hold something
             if (furn->is_missing<CanHoldItem>()) return false;
+            CanHoldItem& furnCHI = furn->get<CanHoldItem>();
             // has to be empty
-            return furn->get<CanHoldItem>().empty();
+            if (furnCHI.is_holding_item()) return false;
+            // can this furniture hold the item we are passing?
+            // some have filters
+            bool can_hold =
+                furnCHI.can_hold(*(canHold.item()), RespectFilter::ReqOnly);
+            return can_hold;
         });
 
     // no match means we can't continue, stay in the middle

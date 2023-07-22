@@ -8,7 +8,11 @@
 //
 #include "is_item.h"
 
+enum RespectFilter { All, ReqOnly, Ignore };
+
 struct EntityFilter {
+    enum FilterStrength { Suggestion, Requirement } strength;
+
     enum FilterDatumType {
         Name,
     } flags;
@@ -32,7 +36,16 @@ struct EntityFilter {
         }
     }
 
-    [[nodiscard]] bool matches(const Entity& data) const {
+    EntityFilter& set_filter_strength(FilterStrength fs) {
+        strength = fs;
+        return *this;
+    }
+
+    [[nodiscard]] bool matches(const Entity& data,
+                               RespectFilter respect) const {
+        if (respect == Ignore) return true;
+        if (respect == ReqOnly && strength == Suggestion) return true;
+
         if (name.has_value()) {
             if (!check_name(data, name->c_str())) return false;
         }
@@ -96,14 +109,15 @@ struct CanHoldItem : public BaseComponent {
         return *this;
     }
 
-    [[nodiscard]] bool can_hold(const Entity& item) const {
+    [[nodiscard]] bool can_hold(const Entity& item,
+                                RespectFilter respect_filter) const {
         if (item.has<IsItem>()) {
             bool cbhb = item.get<IsItem>().can_be_held_by(held_by);
             // log_info("trying to pick up {} with {} and {} ",
             // item.get<DebugName>(), held_by, cbhb);
             if (!cbhb) return false;
         }
-        if (!filter.matches(item)) return false;
+        if (!filter.matches(item, respect_filter)) return false;
         // By default accept anything
         return true;
     }

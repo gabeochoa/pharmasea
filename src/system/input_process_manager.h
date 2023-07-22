@@ -427,7 +427,7 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
             closest_furniture->get<CanHoldItem>().item();
 
         // TODO this check should be probably be int he furniture check
-        if (!item_chi.can_hold(*item_to_merge)) {
+        if (!item_chi.can_hold(*item_to_merge, RespectFilter::All)) {
             return tl::unexpected(
                 "trying to merge from furniture, but we cant hold"
                 "that kind of item ");
@@ -486,7 +486,9 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
 
                     // Can it hold the thing we are holding?
                     const CanHoldItem& item_chi = item->get<CanHoldItem>();
-                    if (!item_chi.can_hold(*playerCHI.item())) return false;
+                    if (!item_chi.can_hold(*playerCHI.item(),
+                                           RespectFilter::All))
+                        return false;
 
                     return true;
                 });
@@ -535,7 +537,8 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
                     // Grab the item we are holding...
                     const auto player_item = player->get<CanHoldItem>().item();
                     // Can it hold the thing we are holding?
-                    if (!fCHI.can_hold(*player_item)) return false;
+                    if (!fCHI.can_hold(*player_item, RespectFilter::All))
+                        return false;
                     return true;
                 });
 
@@ -599,7 +602,10 @@ inline void handle_drop(const std::shared_ptr<Entity>& player) {
                     if (!furnCanHold.empty()) return false;
 
                     // Can it hold the item we are trying to drop
-                    return furnCanHold.can_hold(*item);
+                    return furnCanHold.can_hold(
+                        *item,
+                        // dont worry about suggested filters
+                        RespectFilter::ReqOnly);
                 });
 
         // no matching furniture
@@ -664,7 +670,8 @@ inline void handle_grab(const std::shared_ptr<Entity>& player) {
 
                     auto item = furn->get<CanHoldItem>().const_item();
                     // Can we hold the item it has?
-                    return player->get<CanHoldItem>().can_hold(*item);
+                    return player->get<CanHoldItem>().can_hold(
+                        *item, RespectFilter::All);
                 });
 
         // No matching furniture that also can hold item
