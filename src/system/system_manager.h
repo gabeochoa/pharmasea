@@ -214,6 +214,8 @@ struct SystemManager {
             system_manager::job_system::in_round_update(entity, dt);
             system_manager::process_grabber_items(entity, dt);
             system_manager::process_conveyer_items(entity, dt);
+            // should move all the container functions into its own
+            // function?
             system_manager::process_is_container_and_should_backfill_item(
                 entity, dt);
             system_manager::process_is_container_and_should_update_item(entity,
