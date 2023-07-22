@@ -35,7 +35,11 @@ struct NetworkLayer : public Layer {
 
         network::Info::init_connections();
         network_info = std::make_shared<network::Info>();
-        my_ip_address = network::get_remote_ip_address().value_or("");
+        if (network::ENABLE_REMOTE_IP) {
+            my_ip_address = network::get_remote_ip_address().value_or("");
+        } else {
+            my_ip_address = "(DEV) network disabled";
+        }
         if (!Settings::get().data.username.empty()) {
             network_info->lock_in_username();
         }

@@ -120,13 +120,24 @@ void process_dev_flags(char* argv[]) {
 #if ENABLE_DEV_FLAGS
     argh::parser cmdl(argv);
 
+    if (cmdl[{"--gabe", "-g"}]) {
+        ENABLE_MODELS = true;
+        ENABLE_SOUND = false;
+        network::ENABLE_REMOTE_IP = false;
+        return;
+    }
+
     if (cmdl[{"--tests-only", "-t"}]) {
         TESTS_ONLY = true;
+        ENABLE_MODELS = false;
+        ENABLE_SOUND = false;
+        network::ENABLE_REMOTE_IP = false;
     }
 
     if (cmdl[{"--disable-all", "-d"}]) {
         ENABLE_MODELS = false;
         ENABLE_SOUND = false;
+        network::ENABLE_REMOTE_IP = false;
     }
 
     if (cmdl[{"--models", "-m"}]) {

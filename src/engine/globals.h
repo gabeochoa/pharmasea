@@ -60,4 +60,5 @@ constexpr int MAX_NAME_LENGTH = 25;
 static long total_ping = 0;
 static long there_ping = 0;
 static long return_ping = 0;
+static bool ENABLE_REMOTE_IP = false;
 }  // namespace network
