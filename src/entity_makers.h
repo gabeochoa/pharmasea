@@ -691,7 +691,7 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
         .rotation_angle = 0,
     });
 
-    alc.addComponent<HasSubtype>(ingredient::ALC_START, ingredient::ALC_END + 1,
+    alc.addComponent<HasSubtype>(ingredient::ALC_START, ingredient::ALC_END,
                                  index);
     alc.addComponent<AddsIngredient>([](Entity& alcohol) {
            const HasSubtype& hst = alcohol.get<HasSubtype>();
@@ -724,6 +724,9 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
                 case Ingredient::Gin:
                     return "bottle_a_brown";
                     break;
+                case Ingredient::Bitters:
+                    return "bottle_a_brown";
+                    break;
                 default:
                     if (util::in_range(ingredient::ALC_START,
                                        ingredient::ALC_END,
@@ -731,11 +734,11 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
                         log_warn(
                             "You are trying to set an alcohol dynamic model "
                             "but forgot to setup the model name for {} {}",
-                            hst.get_type_index(), bottle);
+                            hst.get_type_index(),
+                            magic_enum::enum_name(bottle));
                     }
                     break;
             }
-
             return base_name;
         });
 }

@@ -27,11 +27,11 @@ enum Ingredient {
     Vodka,
     Whiskey,  // Rye or Bourbon?
     Gin,
-
     // What are these
     TripleSec,
     Cointreau,  // seems like this is a triplesec alt TODO support alts?
     Bitters,
+    LAST_ALC,
 
     // Lemon
     Lemon,
@@ -49,8 +49,8 @@ enum Ingredient {
 
 namespace ingredient {
 const Ingredient ALC_START = Ingredient::Rum;
-const Ingredient ALC_END = Ingredient::Gin;
-const int NUM_ALC = (ALC_END - ALC_START) + 1;
+const Ingredient ALC_END = LAST_ALC;
+const int NUM_ALC = (ALC_END - ALC_START);
 
 const Ingredient LEMON_START = Ingredient::Lemon;
 const Ingredient LEMON_END = Ingredient::LemonJuice;
