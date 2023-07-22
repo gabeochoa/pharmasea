@@ -60,6 +60,7 @@ const char LEMON = 'l';
 const char SIMPLE_SYRUP = 'y';
 const char SQUIRTER = 'q';
 const char TRASH = 'T';
+const char FILTERED_GRABBER = 'G';
 
 const char SOPHIE = 's';
 
@@ -197,6 +198,10 @@ struct helper {
             } break;
             case TRASH: {
                 (furniture::make_trash(create(), location));
+                return;
+            } break;
+            case FILTERED_GRABBER: {
+                (furniture::make_filtered_grabber(create(), location));
                 return;
             } break;
             case 32: {

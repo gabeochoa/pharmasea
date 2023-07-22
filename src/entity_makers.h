@@ -415,6 +415,31 @@ static void make_grabber(Entity& grabber, vec2 pos) {
     grabber.addComponent<CanGrabFromOtherFurniture>();
 }
 
+static void make_filtered_grabber(Entity& grabber, vec2 pos) {
+    furniture::make_furniture(
+        grabber, DebugOptions{.name = strings::entity::FILTERED_GRABBER}, pos,
+        ui::color::yellow, ui::color::yellow);
+
+    grabber.get<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::Conveyer);
+    grabber.addComponent<CanBeTakenFrom>();
+
+    if (ENABLE_MODELS) {
+        grabber.get<ModelRenderer>().update(ModelInfo{
+            .model_name = "filtered_grabber",
+            .size_scale = 3.f,
+            .position_offset = vec3{0, 0, 0},
+            .rotation_angle = 90.f,
+        });
+    }
+    grabber.addComponent<ConveysHeldItem>();
+    grabber.addComponent<CanGrabFromOtherFurniture>();
+
+    // Initially set empty filter
+    grabber.get<CanHoldItem>().set_filter(EntityFilter().set_filter_strength(
+        EntityFilter::FilterStrength::Suggestion));
+}
+
 static void make_register(Entity& reg, vec2 pos) {
     furniture::make_furniture(reg,
                               DebugOptions{.name = strings::entity::REGISTER},

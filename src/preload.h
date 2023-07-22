@@ -302,6 +302,12 @@ struct Preload {
                 // TODO i should rename these to be strings::
                 .libraryname = "toilet",
             },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "chocolateWrapper.obj",
+                // TODO i should rename these to be strings::
+                .libraryname = "filtered_grabber",
+            },
         };
 
         for (const auto& m : models) {
