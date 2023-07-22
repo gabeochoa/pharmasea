@@ -279,8 +279,7 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
 
 template<typename... TArgs>
 void backfill_empty_container(const std::string& match_type,
-                              std::shared_ptr<Entity>& entity,
-                              TArgs&&... args) {
+                              std::shared_ptr<Entity> entity, TArgs&&... args) {
     if (entity->is_missing<IsItemContainer>()) return;
     IsItemContainer& iic = entity->get<IsItemContainer>();
     if (iic.type() != match_type) return;
@@ -371,7 +370,7 @@ void process_is_indexed_container_holding_incorrect_item(
 }
 
 void handle_autodrop_furniture_when_exiting_planning(
-    const std::shared_ptr<Entity>& entity) {
+    const std::shared_ptr<Entity> entity) {
     if (entity->is_missing<CanHoldFurniture>()) return;
 
     CanHoldFurniture& ourCHF = entity->get<CanHoldFurniture>();
@@ -382,7 +381,7 @@ void handle_autodrop_furniture_when_exiting_planning(
 }
 
 void delete_held_items_when_leaving_inround(
-    const std::shared_ptr<Entity>& entity) {
+    const std::shared_ptr<Entity> entity) {
     // TODO this doesnt seem to work
     // you keep holding it even after the transition
 
@@ -399,7 +398,7 @@ void delete_held_items_when_leaving_inround(
     canHold.update(nullptr);
 }
 
-void refetch_dynamic_model_names(const std::shared_ptr<Entity>& entity, float) {
+void refetch_dynamic_model_names(const std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<ModelRenderer>()) return;
     if (entity->is_missing<HasDynamicModelName>()) return;
 
@@ -408,7 +407,7 @@ void refetch_dynamic_model_names(const std::shared_ptr<Entity>& entity, float) {
     renderer.update_model_name(hDMN.fetch(*entity));
 }
 
-void count_max_trigger_area_entrants(const std::shared_ptr<Entity>& entity,
+void count_max_trigger_area_entrants(const std::shared_ptr<Entity> entity,
                                      float) {
     if (entity->is_missing<IsTriggerArea>()) return;
 
@@ -420,7 +419,7 @@ void count_max_trigger_area_entrants(const std::shared_ptr<Entity>& entity,
     entity->get<IsTriggerArea>().update_max_entrants(count);
 }
 
-void count_trigger_area_entrants(const std::shared_ptr<Entity>& entity, float) {
+void count_trigger_area_entrants(const std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<IsTriggerArea>()) return;
 
     int count = 0;
@@ -435,7 +434,7 @@ void count_trigger_area_entrants(const std::shared_ptr<Entity>& entity, float) {
     entity->get<IsTriggerArea>().update_entrants(count);
 }
 
-void update_trigger_area_percent(const std::shared_ptr<Entity>& entity,
+void update_trigger_area_percent(const std::shared_ptr<Entity> entity,
                                  float dt) {
     if (entity->is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity->get<IsTriggerArea>();
@@ -446,7 +445,7 @@ void update_trigger_area_percent(const std::shared_ptr<Entity>& entity,
     }
 }
 
-void trigger_cb_on_full_progress(const std::shared_ptr<Entity>& entity, float) {
+void trigger_cb_on_full_progress(const std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity->get<IsTriggerArea>();
     if (ita.progress() < 1.f) return;
@@ -454,31 +453,31 @@ void trigger_cb_on_full_progress(const std::shared_ptr<Entity>& entity, float) {
     if (cb) cb();
 }
 
-void process_trigger_area(const std::shared_ptr<Entity>& entity, float dt) {
+void process_trigger_area(const std::shared_ptr<Entity> entity, float dt) {
     count_max_trigger_area_entrants(entity, dt);
     count_trigger_area_entrants(entity, dt);
     update_trigger_area_percent(entity, dt);
     trigger_cb_on_full_progress(entity, dt);
 }
 
-void process_spawner(const std::shared_ptr<Entity>& entity, float dt) {
+void process_spawner(const std::shared_ptr<Entity> entity, float dt) {
     if (entity->is_missing<IsSpawner>()) return;
     auto pos = entity->get<Transform>().as2();
     entity->get<IsSpawner>().pass_time(pos, dt);
 }
 
-void run_timer(const std::shared_ptr<Entity>& entity, float dt) {
+void run_timer(const std::shared_ptr<Entity> entity, float dt) {
     if (entity->is_missing<HasTimer>()) return;
     entity->get<HasTimer>().pass_time(dt).reset_if_complete(dt);
 }
 
-void run_order_timer(const std::shared_ptr<Entity>& entity, float dt) {
+void run_order_timer(const std::shared_ptr<Entity> entity, float dt) {
     if (entity->is_missing<CanOrderDrink>()) return;
     CanOrderDrink& cod = entity->get<CanOrderDrink>();
     cod.order().pass_time(dt);
 }
 
-void sophie(const std::shared_ptr<Entity>& entity, float) {
+void sophie(const std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<HasTimer>()) return;
 
     const auto debug_mode_on =
@@ -577,7 +576,7 @@ void sophie(const std::shared_ptr<Entity>& entity, float) {
     }
 }
 
-void reset_empty_work_furniture(const std::shared_ptr<Entity>& entity, float) {
+void reset_empty_work_furniture(const std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<HasWork>()) return;
     if (entity->is_missing<CanHoldItem>()) return;
 
@@ -594,7 +593,7 @@ void reset_empty_work_furniture(const std::shared_ptr<Entity>& entity, float) {
     return;
 }
 
-void process_has_rope(const std::shared_ptr<Entity>& entity, float) {
+void process_has_rope(const std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<CanHoldItem>()) return;
     if (entity->is_missing<HasRopeToItem>()) return;
 

@@ -33,25 +33,24 @@ void process_is_indexed_container_holding_incorrect_item(
     std::shared_ptr<Entity>, float);
 
 void handle_autodrop_furniture_when_exiting_planning(
-    const std::shared_ptr<Entity>& entity);
+    const std::shared_ptr<Entity> entity);
 
 void delete_held_items_when_leaving_inround(
-    const std::shared_ptr<Entity>& entity);
+    const std::shared_ptr<Entity> entity);
 
-void refetch_dynamic_model_names(const std::shared_ptr<Entity>& entity, float);
+void refetch_dynamic_model_names(const std::shared_ptr<Entity> entity, float);
 
-void process_trigger_area(const std::shared_ptr<Entity>& entity, float dt);
+void process_trigger_area(const std::shared_ptr<Entity> entity, float dt);
 
 // TODO maybe we could pull out all the singleton boiz into their own update
 // loop / entity thing or mayeb all the server only ones?
-void process_spawner(const std::shared_ptr<Entity>& entity, float dt);
+void process_spawner(const std::shared_ptr<Entity> entity, float dt);
 
-void reset_empty_work_furniture(const std::shared_ptr<Entity>& entity,
-                                float dt);
+void reset_empty_work_furniture(const std::shared_ptr<Entity> entity, float dt);
 
-void run_timer(const std::shared_ptr<Entity>& entity, float dt);
-void sophie(const std::shared_ptr<Entity>& entity, float dt);
-void process_has_rope(const std::shared_ptr<Entity>& entity, float dt);
+void run_timer(const std::shared_ptr<Entity> entity, float dt);
+void sophie(const std::shared_ptr<Entity> entity, float dt);
+void process_has_rope(const std::shared_ptr<Entity> entity, float dt);
 }  // namespace system_manager
 
 SINGLETON_FWD(SystemManager)
@@ -162,6 +161,7 @@ struct SystemManager {
             state_transitioned_round_to_planning = false;
             for (auto& entity : entities) {
                 system_manager::delete_held_items_when_leaving_inround(entity);
+                // TODO reset haswork's
             }
         }
 
