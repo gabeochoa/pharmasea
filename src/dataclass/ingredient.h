@@ -15,7 +15,7 @@ enum Ingredient {
     // Non Alcoholic
     Soda,
     Water,
-    Tonic,
+    Tonic = Soda,
 
     // Garnishes
     Salt,
@@ -36,13 +36,13 @@ enum Ingredient {
     // Lemon
     Lemon,
     LemonJuice,
-    // Lime,      // TODO we dont currently have a lime model, so everythign is
-    // LimeJuice, // lemon
+    Lime = Lemon,
+    LimeJuice = LemonJuice,
 
     // Juice,
-    CranJuice,
-    PinaJuice,
-    CoconutCream,
+    CranJuice = Soda,
+    PinaJuice = Soda,
+    CoconutCream = Soda,
     SimpleSyrup,
 
 };
@@ -71,22 +71,16 @@ const IngredientBitSet COKE = IngredientBitSet().set(Soda);
 const IngredientBitSet RUM_AND_COKE = COKE | IngredientBitSet().set(Rum);
 
 const IngredientBitSet MARGARITA = IngredientBitSet().set(Tequila) |
-                                   // TODO this is actually supposdd to be lime
-                                   // juice IngredientBitSet().set(LimeJuice) |
-                                   IngredientBitSet().set(LemonJuice) |
+                                   IngredientBitSet().set(LimeJuice) |
                                    IngredientBitSet().set(TripleSec);
 
 const IngredientBitSet COSMO =
     IngredientBitSet().set(Vodka) | IngredientBitSet().set(CranJuice) |
-    // TODO this is actually supposdd to be lime juice
-    // IngredientBitSet().set(LimeJuice) |
-    IngredientBitSet().set(LemonJuice) | IngredientBitSet().set(TripleSec);
+    IngredientBitSet().set(LimeJuice) | IngredientBitSet().set(TripleSec);
 
 const IngredientBitSet MOJITO =
-    IngredientBitSet().set(Rum) |
-    // TODO this is actually supposdd to be lime juice
-    // IngredientBitSet().set(LimeJuice) |
-    IngredientBitSet().set(LemonJuice) | IngredientBitSet().set(Soda) |
+    IngredientBitSet().set(Rum) | IngredientBitSet().set(LimeJuice) |
+    IngredientBitSet().set(Soda) |
     // TODO :SODAWAND: i really want you to have to do it twice but for now w'll
     // just ignore
     //
@@ -98,11 +92,7 @@ const IngredientBitSet OLD_FASH = IngredientBitSet().set(Whiskey) |
                                   IngredientBitSet().set(SimpleSyrup);
 
 const IngredientBitSet DAIQUIRI = IngredientBitSet().set(Rum) |
-                                  // TODO this is actually supposdd to be lime
-                                  // juice
-                                  //
-                                  // IngredientBitSet().set(LimeJuice) |
-                                  IngredientBitSet().set(LemonJuice) |
+                                  IngredientBitSet().set(LimeJuice) |
                                   IngredientBitSet().set(SimpleSyrup);
 
 const IngredientBitSet PINA_COLADA = IngredientBitSet().set(Rum) |
@@ -110,24 +100,16 @@ const IngredientBitSet PINA_COLADA = IngredientBitSet().set(Rum) |
                                      IngredientBitSet().set(CoconutCream);
 
 const IngredientBitSet G_AND_T = IngredientBitSet().set(Gin) |
-                                 // TODO See :SODAWAND: for more info
-                                 // IngredientBitSet().set(Tonic) |
-                                 IngredientBitSet().set(Soda) |
-                                 // TODO lime
-                                 // IngredientBitSet().set(Lime);
-                                 IngredientBitSet().set(Lemon);
+                                 IngredientBitSet().set(Tonic) |
+                                 IngredientBitSet().set(Lime);
 
 const IngredientBitSet WHISKEY_SOUR = IngredientBitSet().set(Whiskey) |
                                       IngredientBitSet().set(LemonJuice) |
                                       IngredientBitSet().set(SimpleSyrup);
 
 const IngredientBitSet VODKA_TONIC = IngredientBitSet().set(Vodka) |
-                                     // TODO See :SODAWAND: for more info
-                                     // IngredientBitSet().set(Tonic) |
-                                     IngredientBitSet().set(Soda) |
-                                     // TODO lime
-                                     // IngredientBitSet().set(Lime);
-                                     IngredientBitSet().set(Lemon);
+                                     IngredientBitSet().set(Tonic) |
+                                     IngredientBitSet().set(Lime);
 
 }  // namespace recipe
    //
