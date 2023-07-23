@@ -136,6 +136,15 @@ constexpr const char* CHARACTER_DOG = "character_dog";
 constexpr const char* CHARACTER_DUCK = "character_duck";
 constexpr const char* CHARACTER_ROGUE = "character_rogue";
 
+constexpr const char* RUM = "rum";
+constexpr const char* VODKA = "vodka";
+constexpr const char* TEQUILA = "tequila";
+constexpr const char* WHISKEY = "whiskey";
+constexpr const char* GIN = "gin";
+constexpr const char* BITTERS = "bitters";
+constexpr const char* TRIPLESEC = "triplesec";
+constexpr const char* COINTREAU = "cointreau";
+
 }  // namespace model
 
 namespace sounds {

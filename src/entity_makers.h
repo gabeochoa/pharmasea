@@ -107,8 +107,7 @@ static void add_person_components(Entity& person) {
     person.addComponent<HasBaseSpeed>().update(10.f);
 
     if (ENABLE_MODELS) {
-        // TODO why do we need the update() here?
-        person.addComponent<ModelRenderer>("character_duck");
+        person.addComponent<ModelRenderer>(strings::model::CHARACTER_DUCK);
     } else {
         person.addComponent<SimpleColoredBoxRenderer>().update(RED, PINK);
     }
@@ -658,22 +657,28 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
                 ingredient::ALC_START + hst.get_type_index());
             switch (bottle) {
                 case Ingredient::Rum:
-                    return "bottle_c_brown";
+                    return strings::model::RUM;
                     break;
                 case Ingredient::Tequila:
-                    return "bottle_a_green";
+                    return strings::model::TEQUILA;
                     break;
                 case Ingredient::Vodka:
-                    return "bottle_b_brown";
+                    return strings::model::VODKA;
                     break;
                 case Ingredient::Whiskey:
-                    return "bottle_b_green";
+                    return strings::model::WHISKEY;
                     break;
                 case Ingredient::Gin:
-                    return "bottle_b_brown";
+                    return strings::model::GIN;
                     break;
                 case Ingredient::Bitters:
-                    return "bottle_b_brown";
+                    return strings::model::BITTERS;
+                    break;
+                case Ingredient::TripleSec:
+                    return strings::model::TRIPLESEC;
+                    break;
+                case Ingredient::Cointreau:
+                    return strings::model::COINTREAU;
                     break;
                 default:
                     if (util::in_range(ingredient::ALC_START,

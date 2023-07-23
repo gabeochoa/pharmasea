@@ -128,16 +128,6 @@
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
         },
-
-        {
-            "folder": "models/kaykit",
-            "filename": "bottle_A_labeled_green.gltf.glb",
-            "library_name": "bottle_a_green",
-            "size_scale": 1.0,
-            "position_offset": [0,0,0],
-            "rotation_angle": 0.0
-        },
-
         {
             "folder": "models/kaykit",
             "filename": "bottle_A_brown.gltf.glb",
@@ -146,11 +136,36 @@
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
         },
+        {
+            "folder": "models/kaykit",
+            "filename": "bottle_C_brown.gltf.glb",
+            "library_name": "rum",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+
+        {
+            "folder": "models/kaykit",
+            "filename": "bottle_A_labeled_green.gltf.glb",
+            "library_name": "vodka",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
 
         {
             "folder": "models/kaykit",
             "filename": "bottle_B_brown.gltf.glb",
-            "library_name": "bottle_b_brown",
+            "library_name": "tequila",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kaykit",
+            "filename": "bottle_B_green.gltf.glb",
+            "library_name": "gin",
             "size_scale": 1.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
@@ -158,16 +173,17 @@
 
         {
             "folder": "models/kaykit",
-            "filename": "bottle_B_green.gltf.glb",
-            "library_name": "bottle_b_green",
+            "filename": "bottle_A_brown.gltf.glb",
+            "library_name": "bitters",
             "size_scale": 1.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
         },
+
         {
             "folder": "models/kaykit",
-            "filename": "bottle_C_brown.gltf.glb",
-            "library_name": "bottle_c_brown",
+            "filename": "bottle_C_green.gltf.glb",
+            "library_name": "triplesec",
             "size_scale": 1.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
@@ -175,11 +191,21 @@
         {
             "folder": "models/kaykit",
             "filename": "bottle_C_green.gltf.glb",
-            "library_name": "bottle_c_green",
+            "library_name": "cointreau",
             "size_scale": 1.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
         },
+        {
+            "folder": "models/kaykit",
+            "filename": "bottle_C_green.gltf.glb",
+            "library_name": "whiskey",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+
+
 
         {
             "folder": "models/kennynl",
