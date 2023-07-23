@@ -55,7 +55,7 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float) {
     // TODO handle being angry or something
     // TODO handle paying for your cart
 
-    // IF the story is closed then leave
+    // IF the store is closed then leave
     auto sophie = EntityHelper::getAllWithName(strings::entity::SOPHIE)[0];
     VALIDATE(sophie, "there should always be a sophie");
     if (sophie->get<HasTimer>().store_is_closed()) {

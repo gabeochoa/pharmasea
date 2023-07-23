@@ -8,7 +8,7 @@
 }
 
 [[nodiscard]] inline float randfIn(float a, float b) {
-    return a + (std::rand() * (b - a));
+    return a + (std::rand() * (b - a + 1));
 }
 
 [[nodiscard]] inline int randSign() {

@@ -308,12 +308,6 @@ inline void render_trigger_area(const Entity& entity, float dt) {
     render_simple_normal(entity, dt);
 }
 
-// TODO implement
-static std::string get_icon_name_for_order(Order order) {
-    if (!order.is_active()) return "jug";
-    return get_icon_name_for_drink(order.drink());
-}
-
 inline void render_speech_bubble(const Entity& entity, float) {
     // Right now this is the only thing we can put in a bubble
     if (entity.is_missing<CanOrderDrink>()) return;
@@ -323,11 +317,9 @@ inline void render_speech_bubble(const Entity& entity, float) {
     const vec3 position = transform.pos();
 
     const CanOrderDrink& cod = entity.get<CanOrderDrink>();
-    if (!cod.has_order()) return;
 
     GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-    raylib::Texture texture =
-        TextureLibrary::get().get(get_icon_name_for_order(cod.order()));
+    raylib::Texture texture = TextureLibrary::get().get(cod.icon_name());
     raylib::DrawBillboard(cam.camera, texture,
                           vec3{position.x,                     //
                                position.y + (TILESIZE * 2.f),  //

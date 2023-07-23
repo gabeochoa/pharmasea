@@ -500,12 +500,6 @@ void run_timer(const std::shared_ptr<Entity> entity, float dt) {
     entity->get<HasTimer>().pass_time(dt).reset_if_complete(dt);
 }
 
-void run_order_timer(const std::shared_ptr<Entity> entity, float dt) {
-    if (entity->is_missing<CanOrderDrink>()) return;
-    CanOrderDrink& cod = entity->get<CanOrderDrink>();
-    cod.order().pass_time(dt);
-}
-
 void sophie(const std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<HasTimer>()) return;
 

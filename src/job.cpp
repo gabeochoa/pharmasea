@@ -62,6 +62,26 @@ inline Job* create_wandering_job(vec2 _start) {
     return new WanderingJob(_start, target);
 }
 
+inline Job* create_drinking_job(vec2 _start) {
+    // TODO add cooldown so that not all time is spent here
+    // TODO find only places inside the place
+    int max_tries = 10;
+    int range = 20;
+    bool walkable = false;
+    int i = 0;
+    vec2 target;
+    while (!walkable) {
+        target =
+            (vec2){1.f * randIn(-range, range), 1.f * randIn(-range, range)};
+        walkable = EntityHelper::isWalkable(target);
+        i++;
+        if (i > max_tries) {
+            return nullptr;
+        }
+    }
+    return new DrinkingJob(_start, target, randIn(1, 5));
+}
+
 Job* Job::create_job_of_type(vec2 _start, vec2 _end, JobType job_type) {
     Job* job = nullptr;
     switch (job_type) {
@@ -375,7 +395,7 @@ Job::State WaitInQueueJob::run_state_working_at_end(
 
     if (regCHI.empty()) {
         system_manager::logging_manager::announce(entity,
-                                                  "my rx isnt ready yet");
+                                                  "my drink isnt ready yet");
         WIQ_wait_and_return(entity);
         return (Job::State::WorkingAtEnd);
     }
@@ -393,13 +413,17 @@ Job::State WaitInQueueJob::run_state_working_at_end(
     // as people get more drunk they should care less and less
 
     bool all_ingredients_match =
-        drink->get<IsDrink>().matches_recipe(canOrderDrink.order().recipe);
+        drink->get<IsDrink>().matches_recipe(canOrderDrink.recipe());
     if (!all_ingredients_match) {
         system_manager::logging_manager::announce(entity,
                                                   "this isnt what i ordered");
         WIQ_wait_and_return(entity);
         return (Job::State::WorkingAtEnd);
     }
+
+    // I'm relatively happy with my drink
+
+    canOrderDrink.order_state = CanOrderDrink::OrderState::Drinking;
 
     CanHoldItem& ourCHI = entity->get<CanHoldItem>();
     ourCHI.update(regCHI.item());
@@ -411,10 +435,7 @@ Job::State WaitInQueueJob::run_state_working_at_end(
     // Now that we are done and got our item, time to leave the store
     {
         std::shared_ptr<Job> jshared;
-        jshared.reset(Job::create_job_of_type(
-            entity->get<Transform>().as2(),
-            // TODO just find the customer spawner and go back there...
-            vec2{GATHER_SPOT, GATHER_SPOT}, JobType::Leaving));
+        jshared.reset(create_drinking_job(entity->get<Transform>().as2()));
         entity->get<CanPerformJob>().push_onto_queue(jshared);
     }
     entity->get<HasSpeechBubble>().off();
@@ -448,4 +469,44 @@ Job::State LeavingJob::run_state_working_at_end(
         entity->get<CanPerformJob>().push_onto_queue(jshared);
     }
     return (Job::State::Completed);
+}
+
+Job::State DrinkingJob::run_state_working_at_end(
+    const std::shared_ptr<Entity>& entity, float dt) {
+    CanOrderDrink& cod = entity->get<CanOrderDrink>();
+    cod.order_state = CanOrderDrink::OrderState::Drinking;
+    entity->get<HasSpeechBubble>().on();
+
+    timePassedInCurrentState += dt;
+    if (timePassedInCurrentState >= timeToComplete) {
+        // Done with my drink, delete it
+
+        CanHoldItem& chi = entity->get<CanHoldItem>();
+        chi.item()->cleanup = true;
+        chi.update(nullptr);
+
+        entity->get<HasSpeechBubble>().off();
+
+        cod.num_orders_rem--;
+        if (cod.num_orders_rem > 0) {
+            cod.order_state = CanOrderDrink::OrderState::Ordering;
+            cod.current_order = get_random_drink();
+            auto start = entity->get<Transform>().as2();
+            std::shared_ptr<Job> jshared;
+            jshared.reset(
+                create_job_of_type(start, start, JobType::WaitInQueue));
+            entity->get<CanPerformJob>().push_onto_queue(jshared);
+        } else {
+            cod.order_state = CanOrderDrink::OrderState::DoneDrinking;
+            std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
+                start,
+                // TODO create a global so they all leave to the same spot
+                vec2{GATHER_SPOT, GATHER_SPOT},
+                // TODO replace with remaining round time so they dont come back
+                90.f);
+            entity->get<CanPerformJob>().push_onto_queue(jshared);
+        }
+        return (Job::State::Completed);
+    }
+    return (Job::State::WorkingAtEnd);
 }

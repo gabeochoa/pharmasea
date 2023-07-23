@@ -18,6 +18,7 @@ enum JobType {
     WaitInQueueForPickup,
     Paying,
     Leaving,
+    Drinking,
 
     MAX_JOB_TYPE,
 };
@@ -219,5 +220,27 @@ struct LeavingJob : public Job {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<Job>{});
+    }
+};
+
+struct DrinkingJob : public Job {
+    float timePassedInCurrentState = 0.f;
+    float timeToComplete = 1.f;
+
+    DrinkingJob()
+        : Job(JobType::Drinking, vec2{0, 0}, vec2{0, 0}), timeToComplete(1.f) {}
+    DrinkingJob(vec2 _start, vec2 _end, float ttc)
+        : Job(JobType::Drinking, _start, _end), timeToComplete(ttc) {}
+
+    virtual State run_state_working_at_end(
+        const std::shared_ptr<Entity>& entity, float dt) override;
+
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Job>{});
+
+        s.value4b(timePassedInCurrentState);
+        s.value4b(timeToComplete);
     }
 };
