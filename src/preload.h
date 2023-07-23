@@ -131,6 +131,11 @@ struct Preload {
                 .libraryname = strings::entity::CONVEYER,
             },
             ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "bread.obj",
+                .libraryname = strings::entity::GRABBER,
+            },
+            ModelLibrary::ModelLoadingInfo{
                 .folder = strings::settings::MODELS,
                 .filename = "register.obj",
                 .libraryname = "register",
@@ -149,6 +154,11 @@ struct Preload {
                 .folder = "models/kennynl",
                 .filename = "box.glb",
                 .libraryname = "box",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "box.glb",
+                .libraryname = "cupboard",
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
@@ -198,7 +208,12 @@ struct Preload {
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
                 .filename = "crate.obj",
-                .libraryname = "crate",
+                .libraryname = "pill_dispenser",
+            },
+            ModelLibrary::ModelLoadingInfo{
+                .folder = "models/kennynl",
+                .filename = "crate.obj",
+                .libraryname = "soda_machine",
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
@@ -294,13 +309,12 @@ struct Preload {
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
                 .filename = "kitchenCoffeeMachine.obj",
-                .libraryname = "coffee_machine",
+                .libraryname = "squirter",
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
                 .filename = "toilet.obj",
-                // TODO i should rename these to be strings::
-                .libraryname = "toilet",
+                .libraryname = "trash",
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",

@@ -6,6 +6,9 @@
 #include "base_component.h"
 
 struct ModelRenderer : public BaseComponent {
+    ModelRenderer() : model_name("invalid") {}
+    ModelRenderer(const std::string& s) : model_name(s) {}
+
     virtual ~ModelRenderer() {}
 
     [[nodiscard]] bool has_model() const { return model_info().has_value(); }
@@ -20,6 +23,8 @@ struct ModelRenderer : public BaseComponent {
         if (!info.has_value()) return;
         info.value().model_name = new_name;
     }
+    // TODO make private
+    std::string model_name;
 
    private:
     std::optional<ModelInfo> info;
@@ -29,6 +34,7 @@ struct ModelRenderer : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
+        s.text1b(model_name, MAX_MODEL_NAME_LENGTH);
         s.ext(info, bitsery::ext::StdOptional{});
     }
 };

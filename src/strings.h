@@ -115,11 +115,11 @@ constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
 
 namespace item {
 
-constexpr const char* SODA_SPOUT = "SODA_SPOUT";
-constexpr const char* DRINK = "DRINK";
-constexpr const char* ALCOHOL = "ALCOHOL";
-constexpr const char* LEMON = "LEMON";
-constexpr const char* SIMPLE_SYRUP = "SIMPLE_SYRUP";
+constexpr const char* SODA_SPOUT = "soda_spout";
+constexpr const char* DRINK = "drink";
+constexpr const char* ALCOHOL = "alcohol";
+constexpr const char* LEMON = "lemon";
+constexpr const char* SIMPLE_SYRUP = "simple_syrup";
 
 }  // namespace item
 

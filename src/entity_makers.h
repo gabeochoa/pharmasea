@@ -108,12 +108,7 @@ static void add_person_components(Entity& person) {
 
     if (ENABLE_MODELS) {
         // TODO why do we need the update() here?
-        person.addComponent<ModelRenderer>().update(ModelInfo{
-            .model_name = "character_duck",
-            .size_scale = 1.5f,
-            .position_offset = vec3{0, 0, 0},
-            .rotation_angle = 180,
-        });
+        person.addComponent<ModelRenderer>("character_duck");
     } else {
         person.addComponent<SimpleColoredBoxRenderer>().update(RED, PINK);
     }
@@ -164,7 +159,7 @@ static void update_player_rare_remotely(Entity& entity, int model_index,
 
     entity.get<HasClientID>().update_ping(last_ping);
 
-    // TODO this should be the same as all other rendere updates for players
+    // TODO this should be the same as all other renderer updates for players
     renderer.update(ModelInfo{
         .model_name = ucm.fetch_model_name(),
         .size_scale = 1.5f,
@@ -226,7 +221,7 @@ static void make_furniture(Entity& furniture, const DebugOptions& options,
     // need
     furniture.addComponent<SimpleColoredBoxRenderer>().update(face, base);
     if (ENABLE_MODELS) {
-        furniture.addComponent<ModelRenderer>();
+        furniture.addComponent<ModelRenderer>(options.name);
     }
 
     // we need to add it to set a default, so its here
@@ -382,16 +377,6 @@ static void make_conveyer(Entity& conveyer, vec2 pos) {
         CustomHeldItemPosition::Positioner::Conveyer);
     conveyer.addComponent<ConveysHeldItem>();
     conveyer.addComponent<CanBeTakenFrom>();
-
-    if (ENABLE_MODELS) {
-        // TODO we probably want this and grabber to be 100% the same
-        conveyer.get<ModelRenderer>().update(ModelInfo{
-            .model_name = strings::entity::CONVEYER,
-            .size_scale = 3.f,
-            .position_offset = vec3{0, 0, 0},
-            .rotation_angle = 90.f,
-        });
-    }
 }
 
 static void make_grabber(Entity& grabber, vec2 pos) {
@@ -402,15 +387,6 @@ static void make_grabber(Entity& grabber, vec2 pos) {
     grabber.get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Conveyer);
     grabber.addComponent<CanBeTakenFrom>();
-
-    if (ENABLE_MODELS) {
-        grabber.get<ModelRenderer>().update(ModelInfo{
-            .model_name = strings::entity::CONVEYER,
-            .size_scale = 3.f,
-            .position_offset = vec3{0, 0, 0},
-            .rotation_angle = 90.f,
-        });
-    }
     grabber.addComponent<ConveysHeldItem>();
     grabber.addComponent<CanGrabFromOtherFurniture>();
 }
@@ -423,15 +399,6 @@ static void make_filtered_grabber(Entity& grabber, vec2 pos) {
     grabber.get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Conveyer);
     grabber.addComponent<CanBeTakenFrom>();
-
-    if (ENABLE_MODELS) {
-        grabber.get<ModelRenderer>().update(ModelInfo{
-            .model_name = strings::entity::FILTERED_GRABBER,
-            .size_scale = 3.f,
-            .position_offset = vec3{0, 0, 0},
-            .rotation_angle = 90.f,
-        });
-    }
     grabber.addComponent<ConveysHeldItem>();
     grabber.addComponent<CanGrabFromOtherFurniture>();
 
@@ -448,14 +415,6 @@ static void make_register(Entity& reg, vec2 pos) {
                               DebugOptions{.name = strings::entity::REGISTER},
                               pos, ui::color::grey, ui::color::grey);
     reg.addComponent<HasWaitingQueue>();
-
-    if (ENABLE_MODELS) {
-        reg.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "register",
-            .size_scale = 10.f,
-            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-        });
-    }
 }
 
 static void make_itemcontainer(Entity& container, const DebugOptions& options,
@@ -467,14 +426,6 @@ static void make_itemcontainer(Entity& container, const DebugOptions& options,
 
 static void make_squirter(Entity& squ, vec2 pos) {
     furniture::make_furniture(squ, {strings::entity::SQUIRTER}, pos);
-    if (ENABLE_MODELS) {
-        squ.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "coffee_machine",
-            .size_scale = 4.f,
-            .position_offset = vec3{-TILESIZE / 2.f, 0, 0},
-        });
-    }
-
     squ.get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);
 
@@ -484,27 +435,12 @@ static void make_squirter(Entity& squ, vec2 pos) {
 
 static void make_trash(Entity& trash, vec2 pos) {
     furniture::make_furniture(trash, {strings::entity::TRASH}, pos);
-    if (ENABLE_MODELS) {
-        trash.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "toilet",
-            .size_scale = 2.f,
-            .position_offset = vec3{-TILESIZE / 4.f, -TILESIZE / 2.f, 0},
-        });
-    }
 }
 
 static void make_medicine_cabinet(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container,
                                   {strings::entity::MEDICINE_CABINET}, pos,
                                   strings::item::ALCOHOL);
-    if (ENABLE_MODELS) {
-        container.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "medicine_cabinet",
-            .size_scale = 2.f,
-            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-        });
-    }
-
     container.addComponent<Indexer>(ingredient::NUM_ALC);
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
@@ -523,13 +459,6 @@ static void make_medicine_cabinet(Entity& container, vec2 pos) {
 static void make_fruit_basket(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container, {strings::entity::PILL_DISPENSER},
                                   pos, strings::item::LEMON);
-    if (ENABLE_MODELS) {
-        container.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "crate",
-            .size_scale = 2.f,
-            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-        });
-    }
     container.get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);
 
@@ -552,16 +481,9 @@ static void make_fruit_basket(Entity& container, vec2 pos) {
 static void make_cupboard(Entity& cupboard, vec2 pos) {
     furniture::make_itemcontainer(cupboard, {strings::entity::CUPBOARD}, pos,
                                   strings::item::DRINK);
-    if (ENABLE_MODELS) {
-        cupboard.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "box",
-            .size_scale = 4.f,
-            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-        });
-    }
-
     cupboard.addComponent<HasDynamicModelName>().init(
-        "box", HasDynamicModelName::DynamicType::OpenClosed);
+        strings::entity::CUPBOARD,
+        HasDynamicModelName::DynamicType::OpenClosed);
 
     cupboard.get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);
@@ -569,15 +491,8 @@ static void make_cupboard(Entity& cupboard, vec2 pos) {
 
 static void make_soda_machine(Entity& soda_machine, vec2 pos) {
     furniture::make_itemcontainer(
-        soda_machine, DebugOptions{.name = strings::entity::BLENDER}, pos,
+        soda_machine, DebugOptions{.name = strings::entity::SODA_MACHINE}, pos,
         strings::item::SODA_SPOUT);
-    if (ENABLE_MODELS) {
-        soda_machine.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "crate",
-            .size_scale = 2.f,
-            .position_offset = vec3{0, -TILESIZE / 2.f, 0},
-        });
-    }
     soda_machine.addComponent<HasRopeToItem>();
     soda_machine.get<IsItemContainer>().set_max_generations(1);
     soda_machine.get<CanHoldItem>()
@@ -638,15 +553,6 @@ static void make_blender(Entity& blender, vec2 pos) {
                               DebugOptions{.name = strings::entity::BLENDER},
                               pos, ui::color::red, ui::color::yellow);
     blender.get<CanHoldItem>().update_held_by(IsItem::HeldBy::BLENDER);
-    if (ENABLE_MODELS) {
-        blender.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "blender",
-            // Scale needs to be a vec3 {3.f, 3.f, 12.f}
-            .size_scale = 7.f,
-            .position_offset = vec3{-0.5f, 0, 0.5f},
-            .rotation_angle = 0,
-        });
-    }
 }
 
 // This will be a catch all for anything that just needs to get updated
@@ -673,12 +579,7 @@ static void make_item(Item& item, const DebugOptions& options,
 static void make_soda_spout(Item& soda_spout, vec2 pos) {
     make_item(soda_spout, {.name = strings::item::SODA_SPOUT}, pos);
 
-    soda_spout.addComponent<ModelRenderer>().update(ModelInfo{
-        .model_name = "banana",
-        .size_scale = 2.0f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 0,
-    });
+    soda_spout.addComponent<ModelRenderer>(strings::item::SODA_SPOUT);
 
     soda_spout.get<IsItem>().set_hb_filter(IsItem::HeldBy::SODA_MACHINE |
                                            IsItem::HeldBy::PLAYER);
@@ -741,12 +642,7 @@ static void process_drink_working(Entity& drink, HasWork& hasWork,
 static void make_alcohol(Item& alc, vec2 pos, int index) {
     make_item(alc, {.name = strings::item::ALCOHOL}, pos);
 
-    alc.addComponent<ModelRenderer>().update(ModelInfo{
-        .model_name = "bottle_a_brown",
-        .size_scale = 1.0f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 0,
-    });
+    alc.addComponent<ModelRenderer>(strings::item::ALCOHOL);
 
     alc.addComponent<HasSubtype>(ingredient::ALC_START, ingredient::ALC_END,
                                  index);
@@ -760,7 +656,7 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
         .set_num_uses(1);
 
     alc.addComponent<HasDynamicModelName>().init(
-        "bottle_a_brown", HasDynamicModelName::DynamicType::Subtype,
+        strings::item::ALCOHOL, HasDynamicModelName::DynamicType::Subtype,
         [](const Item& owner, const std::string base_name) -> std::string {
             const HasSubtype& hst = owner.get<HasSubtype>();
             Ingredient bottle = get_ingredient_from_index(
@@ -779,10 +675,10 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
                     return "bottle_b_green";
                     break;
                 case Ingredient::Gin:
-                    return "bottle_a_brown";
+                    return "bottle_b_brown";
                     break;
                 case Ingredient::Bitters:
-                    return "bottle_a_brown";
+                    return "bottle_b_brown";
                     break;
                 default:
                     if (util::in_range(ingredient::ALC_START,
@@ -803,13 +699,7 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
 static void make_simple_syrup(Item& simple_syrup, vec2 pos) {
     make_item(simple_syrup, {.name = strings::item::SIMPLE_SYRUP}, pos);
 
-    simple_syrup.addComponent<ModelRenderer>().update(ModelInfo{
-        .model_name = "simple_syrup",
-        .size_scale = 3.0f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 0,
-    });
-
+    simple_syrup.addComponent<ModelRenderer>(strings::item::SIMPLE_SYRUP);
     simple_syrup
         .addComponent<AddsIngredient>(
             [](Entity&) { return Ingredient::SimpleSyrup; })
@@ -823,13 +713,8 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
     lemon.addComponent<HasSubtype>(ingredient::LEMON_START,
                                    ingredient::LEMON_END + 1, index);
 
-    lemon.addComponent<ModelRenderer>().update(ModelInfo{
-        .model_name = "lemon",
-        // Scale needs to be a vec3 {3.f, 3.f, 12.f}
-        .size_scale = 2.f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 0,
-    });
+    // Scale needs to be a vec3 {3.f, 3.f, 12.f}
+    lemon.addComponent<ModelRenderer>(strings::item::LEMON);
 
     lemon
         .addComponent<AddsIngredient>([](Entity& lemmy) {
@@ -840,7 +725,7 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
         .set_num_uses(1);
 
     lemon.addComponent<HasDynamicModelName>().init(
-        "lemon",  //
+        strings::item::LEMON,  //
         HasDynamicModelName::DynamicType::Subtype,
         [](const Item& owner, const std::string base_name) -> std::string {
             if (owner.is_missing<HasSubtype>()) {
@@ -855,7 +740,7 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
                 ingredient::LEMON_START + hst.get_type_index());
             switch (lemon_type) {
                 case Ingredient::Lemon:
-                    return "lemon";
+                    return strings::item::LEMON;
                 case Ingredient::LemonJuice:
                     return "lemon_half";
                 default:
@@ -901,12 +786,7 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
 static void make_drink(Item& drink, vec2 pos) {
     make_item(drink, {.name = strings::item::DRINK}, pos);
 
-    drink.addComponent<ModelRenderer>().update(ModelInfo{
-        .model_name = "eggcup",
-        .size_scale = 2.0f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 0,
-    });
+    drink.addComponent<ModelRenderer>(strings::item::DRINK);
 
     drink.addComponent<IsDrink>();
     drink.addComponent<HasWork>().init(std::bind(

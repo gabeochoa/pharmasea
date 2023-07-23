@@ -2,8 +2,24 @@
     "models": [
         {
             "folder": "models/kennynl",
+            "filename": "banana.obj",
+            "library_name": "invalid",
+            "size_scale": 3.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 90.0
+        },
+        {
+            "folder": "models/kennynl",
             "filename": "bread.obj",
             "library_name": "conveyer",
+            "size_scale": 3.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 90.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "bread.obj",
+            "library_name": "grabber",
             "size_scale": 3.0,
             "position_offset": [0,0,0],
             "rotation_angle": 90.0
@@ -19,7 +35,7 @@
         {
             "folder": "models/kennynl",
             "filename": "boxOpen.glb",
-            "library_name": "open_box",
+            "library_name": "open_cupboard",
             "size_scale": 4.0,
             "position_offset": [0,-0.5,0],
             "rotation_angle": 0.0
@@ -27,7 +43,7 @@
         {
             "folder": "models/kennynl",
             "filename": "box.glb",
-            "library_name": "box",
+            "library_name": "cupboard",
             "size_scale": 4.0,
             "position_offset": [0,-0.5,0],
             "rotation_angle": 0.0
@@ -75,7 +91,15 @@
         {
             "folder": "models/kennynl",
             "filename": "crate.obj",
-            "library_name": "crate",
+            "library_name": "soda_machine",
+            "size_scale": 2.0,
+            "position_offset": [0,-0.5,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "crate.obj",
+            "library_name": "pill_dispenser",
             "size_scale": 2.0,
             "position_offset": [0,-0.5,0],
             "rotation_angle": 0.0
@@ -83,7 +107,7 @@
         {
             "folder": "models/kennynl",
             "filename": "banana.obj",
-            "library_name": "banana",
+            "library_name": "soda_spout",
             "size_scale": 2.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
@@ -99,7 +123,7 @@
         {
             "folder": "models/kennynl",
             "filename": "eggCup.obj",
-            "library_name": "eggcup",
+            "library_name": "drink",
             "size_scale": 2.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
@@ -117,7 +141,7 @@
         {
             "folder": "models/kaykit",
             "filename": "bottle_A_brown.gltf.glb",
-            "library_name": "bottle_a_brown",
+            "library_name": "alcohol",
             "size_scale": 1.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
@@ -224,7 +248,7 @@
         {
             "folder": "models/kennynl",
             "filename": "kitchenCoffeeMachine.obj",
-            "library_name": "coffee_machine",
+            "library_name": "squirter",
             "size_scale": 4.0,
             "position_offset": [-0.5,0.0,0.5],
             "rotation_angle": 0.0
@@ -232,7 +256,7 @@
         {
             "folder": "models/kennynl",
             "filename": "toilet.obj",
-            "library_name": "toilet",
+            "library_name": "trash",
             "size_scale": 2.0,
             "position_offset": [-0.25,-0.5,0],
             "rotation_angle": 0.0

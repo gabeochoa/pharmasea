@@ -85,12 +85,18 @@ void load_model_configs() {
                 .position_offset = modelInfo.position_offset,
                 .rotation_angle = modelInfo.rotation_angle,
             });
+            // TODO move to log
+            std::cout << "loaded " << modelInfo.filename << " as "
+                      << modelInfo.library_name << std::endl;
         }
 
     } catch (const std::exception& e) {
         std::cerr << "Preload::load_config: models.json formatted improperly. "
                   << e.what() << std::endl;
     }
+    // TODO move to log
+    // TODO add count of models
+    std::cout << "Loaded model json successfully" << std::endl;
 }
 
 void Preload::load_config() {
