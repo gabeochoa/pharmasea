@@ -132,7 +132,9 @@ void load_drink_recipes() {
     }
 
     try {
-        const auto configJSON = nlohmann::json::parse(ifs);
+        const auto configJSON = nlohmann::json::parse(
+            ifs, nullptr /*parser_callback_t*/, true /*allow_exceptions=*/,
+            true /* ignore comments */);
 
         auto models = configJSON["drinks"];
 
@@ -168,6 +170,7 @@ void load_drink_recipes() {
                 {
                     .drink = drink,
                     .base_name = base_name,
+                    .model_name = object["model_name"].get<std::string>(),
                     .viewer_name = object["viewer_name"].get<std::string>(),
                     .icon_name = object["icon_name"].get<std::string>(),
                     .ingredients = ingredients,

@@ -45,6 +45,7 @@
 #include "components/simple_colored_box_renderer.h"
 #include "components/transform.h"
 #include "components/uses_character_model.h"
+#include "recipe_library.h"
 #include "strings.h"
 
 static void register_all_components() {
@@ -799,12 +800,12 @@ static void make_drink(Item& drink, vec2 pos) {
         strings::item::DRINK, HasDynamicModelName::DynamicType::Ingredients,
         [](const Item& owner, const std::string base_name) -> std::string {
             const IsDrink& isdrink = owner.get<IsDrink>();
-            if (isdrink.matches_recipe(Drink::coke)) return "soda_bottle";
-            if (isdrink.matches_recipe(Drink::rum_and_coke))
-                return "soda_glass";
-            if (isdrink.matches_recipe(recipe::G_AND_T)) return "soda_can";
-            if (isdrink.matches_recipe(recipe::DAIQUIRI)) return "cocktail";
-            return base_name;
+            constexpr auto drinks = magic_enum::enum_values<Drink>();
+            for (Drink d : drinks) {
+                if (isdrink.matches_recipe(d))
+                    return get_model_name_for_drink(d);
+            }
+            return strings::item::DRINK;
         });
 }
 

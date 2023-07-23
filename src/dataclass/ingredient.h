@@ -65,70 +65,22 @@ static Ingredient get_ingredient_from_index(int index) {
 const int MAX_INGREDIENT_TYPES = 32;
 using IngredientBitSet = std::bitset<MAX_INGREDIENT_TYPES>;
 
-namespace recipe {
-
-const IngredientBitSet MARGARITA = IngredientBitSet().set(Tequila) |
-                                   IngredientBitSet().set(LimeJuice) |
-                                   IngredientBitSet().set(TripleSec);
-
-const IngredientBitSet COSMO =
-    IngredientBitSet().set(Vodka) | IngredientBitSet().set(CranJuice) |
-    IngredientBitSet().set(LimeJuice) | IngredientBitSet().set(TripleSec);
-
-const IngredientBitSet MOJITO =
-    IngredientBitSet().set(Rum) | IngredientBitSet().set(LimeJuice) |
-    IngredientBitSet().set(Soda) |
-    // TODO :SODAWAND: i really want you to have to do it twice but for now w'll
-    // just ignore
-    //
-    // IngredientBitSet().set(Water) |
-    IngredientBitSet().set(MintLeaf) | IngredientBitSet().set(SimpleSyrup);
-
-const IngredientBitSet OLD_FASH = IngredientBitSet().set(Whiskey) |
-                                  IngredientBitSet().set(Bitters) |
-                                  IngredientBitSet().set(SimpleSyrup);
-
-const IngredientBitSet DAIQUIRI = IngredientBitSet().set(Rum) |
-                                  IngredientBitSet().set(LimeJuice) |
-                                  IngredientBitSet().set(SimpleSyrup);
-
-const IngredientBitSet PINA_COLADA = IngredientBitSet().set(Rum) |
-                                     IngredientBitSet().set(PinaJuice) |
-                                     IngredientBitSet().set(CoconutCream);
-
-const IngredientBitSet G_AND_T = IngredientBitSet().set(Gin) |
-                                 IngredientBitSet().set(Tonic) |
-                                 IngredientBitSet().set(Lime);
-
-const IngredientBitSet WHISKEY_SOUR = IngredientBitSet().set(Whiskey) |
-                                      IngredientBitSet().set(LemonJuice) |
-                                      IngredientBitSet().set(SimpleSyrup);
-
-const IngredientBitSet VODKA_TONIC = IngredientBitSet().set(Vodka) |
-                                     IngredientBitSet().set(Tonic) |
-                                     IngredientBitSet().set(Lime);
-
-}  // namespace recipe
-   //
-
 enum Drink {
     coke,
     rum_and_coke,
-    Margarita,
-    Daiquiri,
-    GAndT,
-    WhiskeySour,
-    VodkaTonic,
-    //
-    LAST_DRINK,
-    //
-    OldFash,
-    Cosmo,
-    Mojito,
-    PinaColada,
+    margarita,
+    daiquiri,
+    gin_and_tonic,
+    whiskey_sour,
+    vodka_tonic,
+    old_fashioned,
+    cosmo,
+    mojito,
+    pina_colada,
 };
 
 static Drink get_random_drink() {
-    int index = randIn(0, Drink::LAST_DRINK);
-    return magic_enum::enum_cast<Drink>(index).value();
+    int index = randIn(0, magic_enum::enum_count<Drink>() - 1);
+    auto drink_opt = magic_enum::enum_cast<Drink>(index);
+    return drink_opt.value();
 }
