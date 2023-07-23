@@ -145,6 +145,8 @@ constexpr const char* BITTERS = "bitters";
 constexpr const char* TRIPLESEC = "triplesec";
 constexpr const char* COINTREAU = "cointreau";
 
+constexpr const char* LEMON_HALF = "lemon_half";
+
 }  // namespace model
 
 namespace sounds {

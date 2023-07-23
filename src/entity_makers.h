@@ -706,7 +706,7 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
                 case Ingredient::Lemon:
                     return strings::item::LEMON;
                 case Ingredient::LemonJuice:
-                    return "lemon_half";
+                    return strings::model::LEMON_HALF;
                 default:
                     log_warn("Failed to get matching model for lemon type: {}",
                              magic_enum::enum_name(lemon_type));
