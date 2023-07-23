@@ -194,9 +194,6 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     }
 
     bool is_ipp = entity->has<IsPnumaticPipe>();
-    if (is_ipp) {
-        entity->get<IsPnumaticPipe>().recieving = false;
-    }
 
     const auto _conveyer_filter = [entity,
                                    &canHold](std::shared_ptr<Furniture> furn) {
@@ -220,6 +217,7 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
         if (furn->is_missing<IsPnumaticPipe>()) return false;
         IsPnumaticPipe& mypp = entity->get<IsPnumaticPipe>();
         if (mypp.paired_id != furn->id) return false;
+        if (mypp.recieving) return false;
         return _conveyer_filter(furn);
     };
 
@@ -233,6 +231,10 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
         conveysHeldItem.relative_item_pos = 0.f;
         canBeTakenFrom.update(true);
         return;
+    }
+
+    if (is_ipp) {
+        entity->get<IsPnumaticPipe>().recieving = false;
     }
 
     // we got something that will take from us,
@@ -257,7 +259,11 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     // reset so that the next item we get starts from beginning
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
 
-    if (match->has<IsPnumaticPipe>()) {
+    if (match->has<CanBeTakenFrom>()) {
+        match->get<CanBeTakenFrom>().update(false);
+    }
+
+    if (is_ipp && match->has<IsPnumaticPipe>()) {
         match->get<IsPnumaticPipe>().recieving = true;
     }
 
@@ -782,12 +788,12 @@ void process_pnumatic_pipe_movement(std::shared_ptr<Entity> entity, float dt) {
 
     if (chi.empty()) {
         ipp.item_id = -1;
+        ipp.recieving = false;
         return;
     }
 
     int cur_id = chi.const_item()->id;
     if (ipp.item_id != cur_id) {
-        ipp.item_changed = true;
         ipp.item_id = cur_id;
     }
 }

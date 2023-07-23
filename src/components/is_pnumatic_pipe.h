@@ -6,7 +6,6 @@
 
 struct IsPnumaticPipe : public BaseComponent {
     bool recieving = false;
-    bool item_changed = false;
     int item_id = -1;
 
     int paired_id = -1;
@@ -23,6 +22,5 @@ struct IsPnumaticPipe : public BaseComponent {
 
         s.value4b(paired_id);
         s.value4b(item_id);
-        s.value1b(item_changed);
     }
 };
