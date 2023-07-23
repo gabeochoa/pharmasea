@@ -108,6 +108,7 @@ constexpr const char* CUPBOARD = "cupboard";
 constexpr const char* SQUIRTER = "squirter";
 constexpr const char* TRASH = "trash";
 constexpr const char* FILTERED_GRABBER = "filtered_grabber";
+constexpr const char* PNUMATIC_PIPE = "pnumatic_pipe";
 
 constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
 

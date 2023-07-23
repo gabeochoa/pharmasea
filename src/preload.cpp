@@ -108,8 +108,11 @@ void load_model_configs() {
         // TODO add count of models
         std::cout << "Loaded model json successfully" << std::endl;
     } catch (const std::exception& e) {
-        log_warn("Preload::load_config: models.json formatted improperly. {}",
-                 e.what());
+        // for now crash the game, because if we are not loading some models
+        // the game will crash anyway later once we try to use it which will be
+        // worse
+        log_error("Preload::load_config: models.json formatted improperly. {}",
+                  e.what());
     }
 }
 
@@ -182,8 +185,8 @@ void load_drink_recipes() {
         log_info("Loaded drink recipe json successfully");
     } catch (const std::exception& e) {
         // TODO extract this logic for the three functions into helper
-        log_warn("Preload::load_config: drinks.json formatted improperly. {}",
-                 e.what());
+        log_error("Preload::load_config: drinks.json formatted improperly. {}",
+                  e.what());
     }
 }
 

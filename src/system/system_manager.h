@@ -43,6 +43,10 @@ void refetch_dynamic_model_names(const std::shared_ptr<Entity> entity, float);
 
 void process_squirter(const std::shared_ptr<Entity> entity, float dt);
 void process_trash(const std::shared_ptr<Entity> entity, float dt);
+void process_pnumatic_pipe_pairing(const std::shared_ptr<Entity> entity,
+                                   float dt);
+void process_pnumatic_pipe_movement(const std::shared_ptr<Entity> entity,
+                                    float dt);
 void process_trigger_area(const std::shared_ptr<Entity> entity, float dt);
 
 // TODO maybe we could pull out all the singleton boiz into their own update
@@ -203,6 +207,7 @@ struct SystemManager {
                 entity, dt);
 
             system_manager::run_timer(entity, dt);
+            system_manager::process_pnumatic_pipe_pairing(entity, dt);
 
             // TODO these eventually should move into their own functions but
             // for now >:)
@@ -218,6 +223,7 @@ struct SystemManager {
             system_manager::process_grabber_items(entity, dt);
             system_manager::process_conveyer_items(entity, dt);
             system_manager::process_grabber_filter(entity, dt);
+            system_manager::process_pnumatic_pipe_movement(entity, dt);
             // should move all the container functions into its own
             // function?
             system_manager::process_is_container_and_should_backfill_item(

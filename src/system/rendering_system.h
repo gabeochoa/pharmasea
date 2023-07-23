@@ -89,15 +89,21 @@ inline bool render_bounding_box(const Entity& entity, float) {
 }
 
 inline void render_debug_subtype(const Entity& entity, float) {
-    if (entity.is_missing<HasSubtype>()) return;
-    const HasSubtype& hs = entity.get<HasSubtype>();
     const Transform& transform = entity.get<Transform>();
+    std::string content;
 
-    std::string content = fmt::format("{}", hs.get_type_index());
+    if (entity.has<HasSubtype>()) {
+        const HasSubtype& hs = entity.get<HasSubtype>();
+        content = fmt::format("{}", hs.get_type_index());
+        // Convert from ID to ingredient if its an alcohol
+        if (check_name(entity, strings::item::ALCOHOL)) {
+            content = fmt::format("{}", hs.as_type<Ingredient>());
+        }
+    }
 
-    // Convert from ID to ingredient if its an alcohol
-    if (check_name(entity, strings::item::ALCOHOL)) {
-        content = fmt::format("{}", hs.as_type<Ingredient>());
+    if (entity.has<IsPnumaticPipe>()) {
+        const IsPnumaticPipe& ipp = entity.get<IsPnumaticPipe>();
+        content = fmt::format("{} -> {}", entity.id, ipp.paired_id);
     }
 
     DrawFloatingText(vec::raise(transform.raw(), 1.f), Preload::get().font,

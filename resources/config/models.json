@@ -363,6 +363,14 @@
             "size_scale": 3.0,
             "position_offset": [0,0,0],
             "rotation_angle": 90.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "pylon.obj",
+            "library_name": "pnumatic_pipe",
+            "size_scale": 7.0,
+            "position_offset": [0,-0.5,0],
+            "rotation_angle": 0.0
         }
     ]
 }

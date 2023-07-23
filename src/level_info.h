@@ -61,6 +61,7 @@ const char SIMPLE_SYRUP = 'y';
 const char SQUIRTER = 'q';
 const char TRASH = 'T';
 const char FILTERED_GRABBER = 'G';
+const char PIPE = 'p';
 
 const char SOPHIE = 's';
 
@@ -202,6 +203,10 @@ struct helper {
             } break;
             case FILTERED_GRABBER: {
                 (furniture::make_filtered_grabber(create(), location));
+                return;
+            } break;
+            case PIPE: {
+                (furniture::make_pnumatic_pipe(create(), location));
                 return;
             } break;
             case 32: {

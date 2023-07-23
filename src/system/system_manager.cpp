@@ -178,21 +178,37 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
         return;
     }
 
-    auto match = EntityHelper::getClosestMatchingFurniture(
-        transform, 1.f, [entity, &canHold](std::shared_ptr<Furniture> furn) {
-            // cant be us
-            if (entity->id == furn->id) return false;
-            // needs to be able to hold something
-            if (furn->is_missing<CanHoldItem>()) return false;
-            CanHoldItem& furnCHI = furn->get<CanHoldItem>();
-            // has to be empty
-            if (furnCHI.is_holding_item()) return false;
-            // can this furniture hold the item we are passing?
-            // some have filters
-            bool can_hold =
-                furnCHI.can_hold(*(canHold.item()), RespectFilter::ReqOnly);
-            return can_hold;
-        });
+    const auto _conveyer_filter = [entity,
+                                   &canHold](std::shared_ptr<Furniture> furn) {
+        // cant be us
+        if (entity->id == furn->id) return false;
+        // needs to be able to hold something
+        if (furn->is_missing<CanHoldItem>()) return false;
+        CanHoldItem& furnCHI = furn->get<CanHoldItem>();
+        // has to be empty
+        if (furnCHI.is_holding_item()) return false;
+        // can this furniture hold the item we are passing?
+        // some have filters
+        bool can_hold =
+            furnCHI.can_hold(*(canHold.item()), RespectFilter::ReqOnly);
+
+        return can_hold;
+    };
+
+    const auto _ipp_filter = [=](std::shared_ptr<Furniture> furn) {
+        // if we are a pnumatic pipe, filter only down to our guy
+        if (furn->is_missing<IsPnumaticPipe>()) return false;
+        IsPnumaticPipe& mypp = entity->get<IsPnumaticPipe>();
+        if (mypp.paired_id != furn->id) return false;
+        return _conveyer_filter(furn);
+    };
+
+    bool is_ipp = entity->has<IsPnumaticPipe>();
+
+    auto match = is_ipp ? EntityHelper::getClosestMatchingEntity<Furniture>(
+                              transform.as2(), 100, _ipp_filter)
+                        : EntityHelper::getClosestMatchingFurniture(
+                              transform, 1.f, _conveyer_filter);
 
     // no match means we can't continue, stay in the middle
     if (!match) {
@@ -713,6 +729,45 @@ void process_trash(const std::shared_ptr<Entity> entity, float) {
 
     trashCHI.item()->cleanup = true;
     trashCHI.update(nullptr);
+}
+
+void process_pnumatic_pipe_pairing(const std::shared_ptr<Entity> entity,
+                                   float) {
+    if (entity->is_missing<IsPnumaticPipe>()) return;
+
+    IsPnumaticPipe& ipp = entity->get<IsPnumaticPipe>();
+
+    if (ipp.has_pair()) return;
+
+    for (auto other : EntityHelper::getAllWithComponent<IsPnumaticPipe>()) {
+        if (other->cleanup) continue;
+        if (other->id == entity->id) continue;
+        IsPnumaticPipe& otherpp = other->get<IsPnumaticPipe>();
+        if (otherpp.has_pair()) continue;
+
+        otherpp.paired_id = entity->id;
+        ipp.paired_id = other->id;
+        break;
+    }
+    // still dont have a pair, we probably just have an odd number
+    if (!ipp.has_pair()) return;
+}
+void process_pnumatic_pipe_movement(std::shared_ptr<Entity> entity, float dt) {
+    if (entity->is_missing<IsPnumaticPipe>()) return;
+
+    IsPnumaticPipe& ipp = entity->get<IsPnumaticPipe>();
+    CanHoldItem& chi = entity->get<CanHoldItem>();
+
+    if (chi.empty()) {
+        ipp.item_id = -1;
+        return;
+    }
+
+    int cur_id = chi.const_item()->id;
+    if (ipp.item_id != cur_id) {
+        ipp.item_changed = true;
+        ipp.item_id = cur_id;
+    }
 }
 
 }  // namespace system_manager

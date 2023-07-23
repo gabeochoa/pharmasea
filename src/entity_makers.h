@@ -4,6 +4,7 @@
 
 #include "components/has_rope_to_item.h"
 #include "components/has_subtype.h"
+#include "components/is_pnumatic_pipe.h"
 #include "dataclass/ingredient.h"
 #include "entity.h"
 //
@@ -34,6 +35,7 @@
 #include "components/indexer.h"
 #include "components/is_drink.h"
 #include "components/is_item_container.h"
+#include "components/is_pnumatic_pipe.h"
 #include "components/is_rotatable.h"
 #include "components/is_snappable.h"
 #include "components/is_solid.h"
@@ -54,7 +56,7 @@ static void register_all_components() {
         DebugName, Transform, HasName,
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
-        IsDrink,
+        IsDrink, IsPnumaticPipe,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
@@ -414,6 +416,12 @@ static void make_squirter(Entity& squ, vec2 pos) {
 
 static void make_trash(Entity& trash, vec2 pos) {
     furniture::make_furniture(trash, {strings::entity::TRASH}, pos);
+}
+
+static void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
+    furniture::make_conveyer(pnumatic, pos, {strings::entity::PNUMATIC_PIPE});
+
+    pnumatic.addComponent<IsPnumaticPipe>();
 }
 
 static void make_medicine_cabinet(Entity& container, vec2 pos) {
