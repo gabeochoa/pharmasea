@@ -160,12 +160,7 @@ static void update_player_rare_remotely(Entity& entity, int model_index,
     entity.get<HasClientID>().update_ping(last_ping);
 
     // TODO this should be the same as all other renderer updates for players
-    renderer.update(ModelInfo{
-        .model_name = ucm.fetch_model_name(),
-        .size_scale = 1.5f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 180,
-    });
+    renderer.update_model_name(ucm.fetch_model_name());
 }
 
 static void make_player(Entity& player, vec3 p) {

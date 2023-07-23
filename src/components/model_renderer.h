@@ -22,17 +22,14 @@ struct ModelRenderer : public BaseComponent {
     [[nodiscard]] raylib::Model model() const {
         return ModelLibrary::get().get(model_name);
     }
-
-    void update(const ModelInfo& new_info) { info = new_info; }
+    [[nodiscard]] const std::string name() const { return model_name; }
 
     void update_model_name(const std::string& new_name) {
         model_name = new_name;
     }
-    // TODO make private
-    std::string model_name;
 
    private:
-    std::optional<ModelInfo> info;
+    std::string model_name;
 
     friend bitsery::Access;
     template<typename S>
@@ -40,6 +37,5 @@ struct ModelRenderer : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         s.text1b(model_name, MAX_MODEL_NAME_LENGTH);
-        s.ext(info, bitsery::ext::StdOptional{});
     }
 };

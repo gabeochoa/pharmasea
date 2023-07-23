@@ -52,13 +52,7 @@ inline void update_character_model_from_index(std::shared_ptr<Entity> entity,
     ModelRenderer& renderer = entity->get<ModelRenderer>();
 
     // TODO this should be the same as all other rendere updates for players
-    renderer.update(ModelInfo{
-        .model_name = usesCharacterModel.fetch_model_name(),
-        .size_scale = 1.5f,
-        .position_offset = vec3{0, 0, 0},
-        .rotation_angle = 180,
-    });
-
+    renderer.update_model_name(usesCharacterModel.fetch_model_name());
     usesCharacterModel.mark_change_completed();
 }
 
@@ -202,7 +196,7 @@ inline bool render_model_normal(const Entity& entity, float) {
     const ModelRenderer& renderer = entity.get<ModelRenderer>();
     if (renderer.missing()) return false;
 
-    ModelInfo model_info = ModelInfoLibrary::get().get(renderer.model_name);
+    const ModelInfo& model_info = renderer.model_info();
 
     float rotation_angle =
         // TODO make this api better
