@@ -422,6 +422,8 @@ static void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
     furniture::make_conveyer(pnumatic, pos, {strings::entity::PNUMATIC_PIPE});
 
     pnumatic.addComponent<IsPnumaticPipe>();
+    pnumatic.get<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::PnumaticPipe);
 }
 
 static void make_medicine_cabinet(Entity& container, vec2 pos) {

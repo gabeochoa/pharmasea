@@ -77,7 +77,7 @@ void update_held_item_position(std::shared_ptr<Entity> entity, float) {
                 new_pos.x += 0;
                 new_pos.y += 0;
                 break;
-            case CustomHeldItemPosition::Positioner::Conveyer:
+            case CustomHeldItemPosition::Positioner::Conveyer: {
                 if (entity->is_missing<ConveysHeldItem>()) {
                     log_warn(
                         "A conveyer positioned item needs ConveysHeldItem");
@@ -102,7 +102,22 @@ void update_held_item_position(std::shared_ptr<Entity> entity, float) {
                     new_pos.x -= TILESIZE * conveysHeldItem.relative_item_pos;
                 }
                 new_pos.y += TILESIZE / 4;
-                break;
+            } break;
+            case CustomHeldItemPosition::Positioner::PnumaticPipe: {
+                if (entity->is_missing<IsPnumaticPipe>()) {
+                    log_warn("pipe positioned item needs ispnumaticpipe");
+                    break;
+                }
+                if (entity->is_missing<ConveysHeldItem>()) {
+                    log_warn("pipe positioned item needs ConveysHeldItem");
+                    break;
+                }
+                ConveysHeldItem& conveysHeldItem =
+                    entity->get<ConveysHeldItem>();
+                int mult = entity->get<IsPnumaticPipe>().recieving ? 1 : -1;
+                new_pos.y +=
+                    mult * TILESIZE * conveysHeldItem.relative_item_pos;
+            } break;
         }
         can_hold_item.item()->get<Transform>().update(new_pos);
         return;
@@ -178,6 +193,11 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
         return;
     }
 
+    bool is_ipp = entity->has<IsPnumaticPipe>();
+    if (is_ipp) {
+        entity->get<IsPnumaticPipe>().recieving = false;
+    }
+
     const auto _conveyer_filter = [entity,
                                    &canHold](std::shared_ptr<Furniture> furn) {
         // cant be us
@@ -202,8 +222,6 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
         if (mypp.paired_id != furn->id) return false;
         return _conveyer_filter(furn);
     };
-
-    bool is_ipp = entity->has<IsPnumaticPipe>();
 
     auto match = is_ipp ? EntityHelper::getClosestMatchingEntity<Furniture>(
                               transform.as2(), 100, _ipp_filter)
@@ -238,6 +256,10 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     canBeTakenFrom.update(true);  // we are ready to have someone grab from us
     // reset so that the next item we get starts from beginning
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
+
+    if (match->has<IsPnumaticPipe>()) {
+        match->get<IsPnumaticPipe>().recieving = true;
+    }
 
     // TODO if we are pushing onto a conveyer, we need to make sure
     // we are keeping track of the orientations

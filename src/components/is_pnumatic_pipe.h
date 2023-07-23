@@ -5,6 +5,7 @@
 #include "base_component.h"
 
 struct IsPnumaticPipe : public BaseComponent {
+    bool recieving = false;
     bool item_changed = false;
     int item_id = -1;
 
