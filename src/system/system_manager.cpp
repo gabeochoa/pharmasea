@@ -70,9 +70,6 @@ void update_held_item_position(std::shared_ptr<Entity> entity, float) {
             entity->get<CustomHeldItemPosition>();
 
         switch (custom_item_position.positioner) {
-            case CustomHeldItemPosition::Positioner::Default:
-                new_pos.y += TILESIZE / 4;
-                break;
             case CustomHeldItemPosition::Positioner::Table:
                 new_pos.y += TILESIZE / 2;
                 break;

@@ -221,7 +221,7 @@ static void make_furniture(Entity& furniture, const DebugOptions& options,
 
     // we need to add it to set a default, so its here
     furniture.addComponent<CustomHeldItemPosition>().init(
-        CustomHeldItemPosition::Positioner::Default);
+        CustomHeldItemPosition::Positioner::Table);
 
     // Walls should not have these
     if (!is_static) {
@@ -250,9 +250,6 @@ static void make_table(Entity& table, vec2 pos) {
     furniture::make_furniture(table,
                               DebugOptions{.name = strings::entity::TABLE}, pos,
                               ui::color::brown, ui::color::brown);
-
-    table.get<CustomHeldItemPosition>().init(
-        CustomHeldItemPosition::Positioner::Table);
 
     table.addComponent<HasWork>().init(std::bind(
         process_table_working, std::placeholders::_1, std::placeholders::_2,
@@ -364,39 +361,29 @@ static void make_wall(Entity& wall, vec2 pos, Color c = ui::color::brown) {
     // }
 }
 
-static void make_conveyer(Entity& conveyer, vec2 pos) {
-    furniture::make_furniture(conveyer,
-                              DebugOptions{.name = strings::entity::CONVEYER},
-                              pos, ui::color::blue, ui::color::blue);
+static void make_conveyer(Entity& conveyer, vec2 pos,
+                          const DebugOptions& options = {
+                              .name = strings::entity::CONVEYER}) {
+    furniture::make_furniture(conveyer, options, pos, ui::color::blue,
+                              ui::color::blue);
     conveyer.get<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Conveyer);
     conveyer.addComponent<ConveysHeldItem>();
     conveyer.addComponent<CanBeTakenFrom>();
 }
 
-static void make_grabber(Entity& grabber, vec2 pos) {
-    furniture::make_furniture(grabber,
-                              DebugOptions{.name = strings::entity::GRABBER},
-                              pos, ui::color::yellow, ui::color::yellow);
-
-    grabber.get<CustomHeldItemPosition>().init(
-        CustomHeldItemPosition::Positioner::Conveyer);
-    grabber.addComponent<CanBeTakenFrom>();
-    grabber.addComponent<ConveysHeldItem>();
+static void make_grabber(Entity& grabber, vec2 pos,
+                         const DebugOptions& options = {
+                             .name = strings::entity::GRABBER}) {
+    furniture::make_conveyer(grabber, pos, options);
     grabber.addComponent<CanGrabFromOtherFurniture>();
 }
 
-static void make_filtered_grabber(Entity& grabber, vec2 pos) {
-    furniture::make_furniture(
-        grabber, DebugOptions{.name = strings::entity::FILTERED_GRABBER}, pos,
-        ui::color::yellow, ui::color::yellow);
-
-    grabber.get<CustomHeldItemPosition>().init(
-        CustomHeldItemPosition::Positioner::Conveyer);
-    grabber.addComponent<CanBeTakenFrom>();
-    grabber.addComponent<ConveysHeldItem>();
-    grabber.addComponent<CanGrabFromOtherFurniture>();
-
+static void make_filtered_grabber(
+    Entity& grabber, vec2 pos,
+    const DebugOptions& options = DebugOptions{
+        .name = strings::entity::FILTERED_GRABBER}) {
+    furniture::make_grabber(grabber, pos, options);
     // Initially set empty filter
     grabber.get<CanHoldItem>().set_filter(
         EntityFilter()
@@ -421,9 +408,6 @@ static void make_itemcontainer(Entity& container, const DebugOptions& options,
 
 static void make_squirter(Entity& squ, vec2 pos) {
     furniture::make_furniture(squ, {strings::entity::SQUIRTER}, pos);
-    squ.get<CustomHeldItemPosition>().init(
-        CustomHeldItemPosition::Positioner::Table);
-
     // TODO change how progress bar works to support this
     // squ.addComponent<ShowsProgressBar>();
 }
@@ -447,15 +431,11 @@ static void make_medicine_cabinet(Entity& container, vec2 pos) {
             }
         });
     container.addComponent<ShowsProgressBar>();
-    container.get<CustomHeldItemPosition>().init(
-        CustomHeldItemPosition::Positioner::Table);
 }
 
 static void make_fruit_basket(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container, {strings::entity::PILL_DISPENSER},
                                   pos, strings::item::LEMON);
-    container.get<CustomHeldItemPosition>().init(
-        CustomHeldItemPosition::Positioner::Table);
 
     // TODO right now lets just worry about lemon first we can come back and
     // handle other fruits later
@@ -479,9 +459,6 @@ static void make_cupboard(Entity& cupboard, vec2 pos) {
     cupboard.addComponent<HasDynamicModelName>().init(
         strings::entity::CUPBOARD,
         HasDynamicModelName::DynamicType::OpenClosed);
-
-    cupboard.get<CustomHeldItemPosition>().init(
-        CustomHeldItemPosition::Positioner::Table);
 }
 
 static void make_soda_machine(Entity& soda_machine, vec2 pos) {

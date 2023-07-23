@@ -7,11 +7,10 @@
 
 struct CustomHeldItemPosition : public BaseComponent {
     enum struct Positioner {
-        Default,
         Table,
         Conveyer,
         ItemHoldingItem,
-    } positioner = Positioner::Default;
+    } positioner = Positioner::Table;
 
     void init(Positioner p) { positioner = p; }
 
@@ -20,6 +19,12 @@ struct CustomHeldItemPosition : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+        // The reason we dont need to serialize this is because
+        // the position is literally the actual position of the item
+        // which is already serialized.
+        //
+        // if we decide to make a visual / real position difference
+        // then itll have to be
         // s.value4b(positioner);
     }
 };
