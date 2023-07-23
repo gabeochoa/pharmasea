@@ -26,8 +26,7 @@ struct ModelRenderer : public BaseComponent {
     void update(const ModelInfo& new_info) { info = new_info; }
 
     void update_model_name(const std::string& new_name) {
-        if (!info.has_value()) return;
-        info.value().model_name = new_name;
+        model_name = new_name;
     }
     // TODO make private
     std::string model_name;

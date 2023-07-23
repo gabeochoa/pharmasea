@@ -796,7 +796,7 @@ static void make_drink(Item& drink, vec2 pos) {
     drink.addComponent<ShowsProgressBar>();
 
     drink.addComponent<HasDynamicModelName>().init(
-        "eggcup", HasDynamicModelName::DynamicType::Ingredients,
+        strings::item::DRINK, HasDynamicModelName::DynamicType::Ingredients,
         [](const Item& owner, const std::string base_name) -> std::string {
             const IsDrink& isdrink = owner.get<IsDrink>();
             if (isdrink.matches_recipe(recipe::COKE)) return "soda_bottle";
