@@ -102,11 +102,17 @@ struct ModelInfoLibrary {
     SINGLETON(ModelInfoLibrary)
 
     struct ModelLoadingInfo {
-        const char* folder;
-        const char* filename;
-        const char* libraryname;
-        const char* texture;
+        std::string folder;
+        std::string filename;
+        std::string library_name;
+        float size_scale;
+        vec3 position_offset;
+        float rotation_angle;
     };
+
+    [[nodiscard]] bool has(const std::string& name) const {
+        return impl.contains(name);
+    }
 
     [[nodiscard]] const NewModelInfo& get(const std::string& name) const {
         return impl.get(name);
@@ -119,7 +125,12 @@ struct ModelInfoLibrary {
     void load(ModelLoadingInfo mli) {
         const auto full_filename =
             Files::get().fetch_resource_path(mli.folder, mli.filename);
-        impl.load(full_filename.c_str(), mli.libraryname);
+        impl.load(full_filename.c_str(), mli.library_name.c_str());
+
+        NewModelInfo& mi = get(mli.library_name);
+        mi.size_scale = mli.size_scale;
+        mi.position_offset = mli.position_offset;
+        mi.rotation_angle = mli.rotation_angle;
     }
 
     void unload_all() { impl.unload_all(); }

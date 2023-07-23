@@ -1,0 +1,249 @@
+{
+    "models": [
+        {
+            "folder": "models/kennynl",
+            "filename": "bread.obj",
+            "library_name": "conveyer",
+            "size_scale": 3.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 90.0
+        },
+        {
+            "folder": "models",
+            "filename": "register.obj",
+            "library_name": "register",
+            "size_scale": 10.0,
+            "position_offset": [0,-0.5,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "boxOpen.glb",
+            "library_name": "open_box",
+            "size_scale": 4.0,
+            "position_offset": [0,-0.5,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "box.glb",
+            "library_name": "box",
+            "size_scale": 4.0,
+            "position_offset": [0,-0.5,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "barrel.glb",
+            "library_name": "medicine_cabinet",
+            "size_scale": 2.0,
+            "position_offset": [0,-0.5,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kaykit",
+            "filename": "character_bear.gltf",
+            "library_name": "character_bear",
+            "size_scale": 1.5,
+            "position_offset": [0,0,0],
+            "rotation_angle": 180.0
+        },
+        {
+            "folder": "models/kaykit",
+            "filename": "character_dog.gltf",
+            "library_name": "character_dog",
+            "size_scale": 1.5,
+            "position_offset": [0,0,0],
+            "rotation_angle": 180.0
+        },
+        {
+            "folder": "models/kaykit",
+            "filename": "character_duck.gltf",
+            "library_name": "character_duck",
+            "size_scale": 1.5,
+            "position_offset": [0,0,0],
+            "rotation_angle": 180.0
+        },
+        {
+            "folder": "models/kaykit",
+            "filename": "character_rogue.gltf",
+            "library_name": "character_rogue",
+            "size_scale": 1.5,
+            "position_offset": [0,0,0],
+            "rotation_angle": 180.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "crate.obj",
+            "library_name": "crate",
+            "size_scale": 2.0,
+            "position_offset": [0,-0.5,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "banana.obj",
+            "library_name": "banana",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "cocktail.obj",
+            "library_name": "cocktail",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "eggCup.obj",
+            "library_name": "eggcup",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+
+        {
+            "folder": "models/kaykit",
+            "filename": "bottle_A_labeled_green.gltf.glb",
+            "library_name": "bottle_a_green",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+
+        {
+            "folder": "models/kaykit",
+            "filename": "bottle_A_brown.gltf.glb",
+            "library_name": "bottle_a_brown",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+
+        {
+            "folder": "models/kaykit",
+            "filename": "bottle_B_brown.gltf.glb",
+            "library_name": "bottle_b_brown",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+
+        {
+            "folder": "models/kaykit",
+            "filename": "bottle_B_green.gltf.glb",
+            "library_name": "bottle_b_green",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kaykit",
+            "filename": "bottle_C_brown.gltf.glb",
+            "library_name": "bottle_c_brown",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kaykit",
+            "filename": "bottle_C_green.gltf.glb",
+            "library_name": "bottle_c_green",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+
+        {
+            "folder": "models/kennynl",
+            "filename": "soda.obj",
+            "library_name": "soda",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "sodaBottle.obj",
+            "library_name": "soda_bottle",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "sodaCan.obj",
+            "library_name": "soda_can",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "sodaGlass.obj",
+            "library_name": "soda_glass",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "lemon.obj",
+            "library_name": "lemon",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "lemonHalf.obj",
+            "library_name": "lemon_half",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "kitchenBlender.obj",
+            "library_name": "blender",
+            "size_scale": 7.0,
+            "position_offset": [-0.5,-0.5,0.5],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "bottleMusterd.obj",
+            "library_name": "simple_syrup",
+            "size_scale": 3.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "kitchenCoffeeMachine.obj",
+            "library_name": "coffee_machine",
+            "size_scale": 4.0,
+            "position_offset": [-0.5,0.0,0.5],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "toilet.obj",
+            "library_name": "toilet",
+            "size_scale": 2.0,
+            "position_offset": [-0.25,-0.5,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "chocolateWrapper.obj",
+            "library_name": "filtered_grabber",
+            "size_scale": 3.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 90.0
+        }
+    ]
+}

@@ -207,7 +207,15 @@ inline bool render_model_normal(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return false;
     const Transform& transform = entity.get<Transform>();
 
-    ModelInfo model_info = renderer.model_info().value();
+    ModelInfo old_model_info = renderer.model_info().value();
+    // TODO
+    if (!ModelInfoLibrary::get().has(old_model_info.model_name)) {
+        log_warn("trying to render {} but not in info library",
+                 old_model_info.model_name);
+        return false;
+    }
+    NewModelInfo model_info =
+        ModelInfoLibrary::get().get(old_model_info.model_name);
 
     float rotation_angle =
         // TODO make this api better
