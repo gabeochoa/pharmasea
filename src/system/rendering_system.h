@@ -134,8 +134,7 @@ inline void render_debug_filter_info(const Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
 
     float y = 0.25f;
-    for (size_t i = 0;
-         i < magic_enum::enum_count<EntityFilter::FilterDatumType>(); i++) {
+    for (size_t i = 1; i < filter.type_count(); i++) {
         EntityFilter::FilterDatumType type =
             magic_enum::enum_value<EntityFilter::FilterDatumType>(i);
 
@@ -350,6 +349,11 @@ inline void render_speech_bubble(const Entity& entity, float) {
 
 // TODO theres two functions called render normal, maybe we should address this
 inline void render_normal(const Entity& entity, float dt) {
+    //  TODO for now while we do dev work render it
+    render_debug_subtype(entity, dt);
+    render_debug_drink_info(entity, dt);
+    render_debug_filter_info(entity, dt);
+
     // Ghost player cant render during normal mode
     if (entity.has<CanBeGhostPlayer>() &&
         entity.get<CanBeGhostPlayer>().is_ghost()) {
@@ -373,11 +377,6 @@ inline void render_normal(const Entity& entity, float dt) {
     if (entity.has<HasSpeechBubble>()) {
         render_speech_bubble(entity, dt);
     }
-
-    //  TODO for now while we do dev work render it
-    render_debug_subtype(entity, dt);
-    render_debug_drink_info(entity, dt);
-    render_debug_filter_info(entity, dt);
 
     bool used = render_model_normal(entity, dt);
     if (!used) {

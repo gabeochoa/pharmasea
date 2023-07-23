@@ -21,8 +21,12 @@ struct EntityFilter {
         Subtype = 1 << 1,
     } flags;
 
+    [[nodiscard]] size_t type_count() const {
+        return magic_enum::enum_count<FilterDatumType>();
+    }
+
     std::optional<std::string> name;
-    std::optional<int> subtype_index;
+    int subtype_index;
 
     [[nodiscard]] std::string print_value_for_type(FilterDatumType type) const {
         switch (type) {
@@ -30,9 +34,7 @@ struct EntityFilter {
                 return fmt::format("{}",
                                    name.has_value() ? name.value() : "no name");
             case Subtype:
-                return fmt::format("{}", subtype_index.has_value()
-                                             ? subtype_index.value()
-                                             : -1);
+                return fmt::format("{}", subtype_index);
             case EmptyFilterDatumType:
                 break;
         }
@@ -41,9 +43,8 @@ struct EntityFilter {
 
     [[nodiscard]] bool any_flags() const {
         constexpr auto types = magic_enum::enum_values<FilterDatumType>();
-        constexpr std::size_t count = magic_enum::enum_count<FilterDatumType>();
         std::size_t i = 0;
-        while (i < count) {
+        while (i < type_count()) {
             FilterDatumType filter_type = types[i];
             if (filter_enabled(filter_type)) {
                 return true;
@@ -68,7 +69,7 @@ struct EntityFilter {
                 name = {};
                 break;
             case Subtype:
-                subtype_index = {};
+                subtype_index = -1;
                 break;
             case EmptyFilterDatumType:
                 break;
@@ -90,7 +91,7 @@ struct EntityFilter {
             case Name:
                 return name.has_value();
             case Subtype:
-                return subtype_index.has_value();
+                return subtype_index != -1;
             case EmptyFilterDatumType:
                 break;
         }
@@ -101,11 +102,10 @@ struct EntityFilter {
     // are all of them set?
     [[nodiscard]] bool filter_is_set() const {
         constexpr auto types = magic_enum::enum_values<FilterDatumType>();
-        constexpr std::size_t count = magic_enum::enum_count<FilterDatumType>();
 
         bool all_set = true;
         std::size_t i = 0;
-        while (i < count) {
+        while (i < type_count()) {
             FilterDatumType filter_type = types[i];
             if (filter_enabled(filter_type)) {
                 all_set = all_set && filter_has_value(filter_type);
@@ -134,14 +134,15 @@ struct EntityFilter {
                 return entity.get<DebugName>().name();
         } else if constexpr (std::is_same_v<T, int>) {
             if (type & FilterDatumType::Subtype) {
-                if (entity.is_missing<HasSubtype>()) return 0;
+                if (entity.is_missing<HasSubtype>()) return -1;
                 return entity.get<HasSubtype>().get_type_index();
             }
         }
+        log_warn("EntityFilter:: reading value from entity but no match");
         return 0;
     }
 
-    EntityFilter& set_filter_with_entity(Entity& data) {
+    EntityFilter& set_filter_with_entity(const Entity& data) {
         // stores the information from data in that flag
 
         if (flags & FilterDatumType::Name)
@@ -175,7 +176,7 @@ struct EntityFilter {
                 return check_name(entity, name.value().c_str());
             case Subtype:
                 return read_filter_value_from_entity<int>(entity, type) ==
-                       subtype_index.value();
+                       subtype_index;
                 break;
             case EmptyFilterDatumType:
                 break;
@@ -192,10 +193,9 @@ struct EntityFilter {
         bool pass = true;
 
         auto types = magic_enum::enum_values<FilterDatumType>();
-        std::size_t count = magic_enum::enum_count<FilterDatumType>();
 
         size_t i = 0;
-        while (i < count) {
+        while (i < type_count()) {
             auto type = types[i];
             if (filter_enabled_and_set(type)) {
                 pass = pass && match_specific_filter(type, entity);
@@ -213,8 +213,7 @@ struct EntityFilter {
         s.value4b(flags);
         s.ext(name, bitsery::ext::StdOptional{},
               [](S& sv, std::string& val) { sv.text1b(val, 25); });
-        s.ext(subtype_index, bitsery::ext::StdOptional{},
-              [](S& sv, int val) { sv.value4b(val); });
+        s.value4b(subtype_index);
     }
 };
 
