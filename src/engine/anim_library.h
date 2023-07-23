@@ -65,7 +65,7 @@ struct AnimLibrary {
    private:
     struct AnimLibraryImpl : Library<Animation> {
         virtual Animation convert_filename_to_object(
-            const char* filename) override {
+            const char*, const char* filename) override {
             unsigned int temp_num_anims;
             raylib::ModelAnimation* ma =
                 raylib::LoadModelAnimations(filename, &temp_num_anims);

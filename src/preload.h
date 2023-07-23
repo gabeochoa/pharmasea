@@ -124,11 +124,11 @@ struct Preload {
     void load_models() {
         // TODO add support for model groups
         //
-        constexpr ModelLibrary::ModelLoadingInfo models[] = {
+        const ModelLibrary::ModelLoadingInfo models[] = {
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
                 .filename = "bread.obj",
-                .libraryname = "conveyer",
+                .libraryname = strings::entity::CONVEYER,
             },
             ModelLibrary::ModelLoadingInfo{
                 .folder = strings::settings::MODELS,
@@ -305,8 +305,7 @@ struct Preload {
             ModelLibrary::ModelLoadingInfo{
                 .folder = "models/kennynl",
                 .filename = "chocolateWrapper.obj",
-                // TODO i should rename these to be strings::
-                .libraryname = "filtered_grabber",
+                .libraryname = strings::entity::FILTERED_GRABBER,
             },
         };
 

@@ -25,7 +25,7 @@ struct TextureLibrary {
    private:
     struct TextureLibraryImpl : Library<raylib::Texture2D> {
         virtual raylib::Texture2D convert_filename_to_object(
-            const char* filename) override {
+            const char*, const char* filename) override {
             return raylib::LoadTexture(filename);
         }
 

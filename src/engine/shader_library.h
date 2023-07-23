@@ -22,7 +22,7 @@ struct ShaderLibrary {
    private:
     struct ShaderLibraryImpl : Library<raylib::Shader> {
         virtual raylib::Shader convert_filename_to_object(
-            const char* filename) override {
+            const char*, const char* filename) override {
             // TODO null first param sets default vertex shader, do we want
             // this?
             return raylib::LoadShader(0, filename);

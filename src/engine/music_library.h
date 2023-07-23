@@ -38,7 +38,7 @@ struct MusicLibrary {
 
     struct MusicLibraryImpl : Library<raylib::Music> {
         virtual raylib::Music convert_filename_to_object(
-            const char* filename) override {
+            const char*, const char* filename) override {
             return raylib::LoadMusicStream(filename);
         }
 

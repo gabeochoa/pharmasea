@@ -33,7 +33,7 @@ struct SoundLibrary {
    private:
     struct SoundLibraryImpl : Library<raylib::Sound> {
         virtual raylib::Sound convert_filename_to_object(
-            const char* filename) override {
+            const char*, const char* filename) override {
             return raylib::LoadSound(filename);
         }
         virtual void unload(raylib::Sound sound) override {

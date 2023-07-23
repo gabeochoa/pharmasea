@@ -88,26 +88,26 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
 namespace strings {
 namespace entity {
 
-constexpr const char* REMOTE_PLAYER = "remote player";
+constexpr const char* REMOTE_PLAYER = "remote_player";
 constexpr const char* PLAYER = "player";
 constexpr const char* CUSTOMER = "customer";
 constexpr const char* TABLE = "table";
-constexpr const char* CHARACTER_SWITCHER = "character switcher";
+constexpr const char* CHARACTER_SWITCHER = "character_switcher";
 constexpr const char* WALL = "wall";
 constexpr const char* CONVEYER = "conveyer";
 constexpr const char* GRABBER = "grabber";
 constexpr const char* REGISTER = "register";
-constexpr const char* MEDICINE_CABINET = "medicine cabinet";
-constexpr const char* PILL_DISPENSER = "pill dispenser";
-constexpr const char* TRIGGER_AREA = "trigger area";
+constexpr const char* MEDICINE_CABINET = "medicine_cabinet";
+constexpr const char* PILL_DISPENSER = "pill_dispenser";
+constexpr const char* TRIGGER_AREA = "trigger_area";
 constexpr const char* CUSTOMER_SPAWNER = "customer spawner";
 constexpr const char* SOPHIE = "sophie";
 constexpr const char* BLENDER = "blender";
-constexpr const char* SODA_MACHINE = "soda machine";
+constexpr const char* SODA_MACHINE = "soda_machine";
 constexpr const char* CUPBOARD = "cupboard";
 constexpr const char* SQUIRTER = "squirter";
 constexpr const char* TRASH = "trash";
-constexpr const char* FILTERED_GRABBER = "filtered grabber";
+constexpr const char* FILTERED_GRABBER = "filtered_grabber";
 
 constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
 

@@ -68,10 +68,11 @@ struct Library {
 
     virtual void load(const char* filename, const char* name) {
         log_trace("Loading {}: {} from {}", type_name<T>(), name, filename);
-        this->add(name, convert_filename_to_object(filename));
+        this->add(name, convert_filename_to_object(name, filename));
     }
 
-    virtual T convert_filename_to_object(const char* filename) = 0;
+    virtual T convert_filename_to_object(const char* name,
+                                         const char* filename) = 0;
 
     void unload_all() {
         log_info("Library<{}> loaded {} items", type_name<T>(), storage.size());

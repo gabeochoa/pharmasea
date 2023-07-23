@@ -386,7 +386,7 @@ static void make_conveyer(Entity& conveyer, vec2 pos) {
     if (ENABLE_MODELS) {
         // TODO we probably want this and grabber to be 100% the same
         conveyer.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "conveyer",
+            .model_name = strings::entity::CONVEYER,
             .size_scale = 3.f,
             .position_offset = vec3{0, 0, 0},
             .rotation_angle = 90.f,
@@ -405,7 +405,7 @@ static void make_grabber(Entity& grabber, vec2 pos) {
 
     if (ENABLE_MODELS) {
         grabber.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "conveyer",
+            .model_name = strings::entity::CONVEYER,
             .size_scale = 3.f,
             .position_offset = vec3{0, 0, 0},
             .rotation_angle = 90.f,
@@ -426,7 +426,7 @@ static void make_filtered_grabber(Entity& grabber, vec2 pos) {
 
     if (ENABLE_MODELS) {
         grabber.get<ModelRenderer>().update(ModelInfo{
-            .model_name = "filtered_grabber",
+            .model_name = strings::entity::FILTERED_GRABBER,
             .size_scale = 3.f,
             .position_offset = vec3{0, 0, 0},
             .rotation_angle = 90.f,
