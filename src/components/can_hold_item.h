@@ -24,6 +24,37 @@ struct EntityFilter {
     std::optional<std::string> name;
     std::optional<int> subtype_index;
 
+    [[nodiscard]] std::string print_value_for_type(FilterDatumType type) const {
+        switch (type) {
+            case Name:
+                return fmt::format("{}",
+                                   name.has_value() ? name.value() : "no name");
+            case Subtype:
+                return fmt::format("{}", subtype_index.has_value()
+                                             ? subtype_index.value()
+                                             : -1);
+            case EmptyFilterDatumType:
+                break;
+        }
+        return "EntityFilter::UNSET";
+    }
+
+    [[nodiscard]] bool any_flags() const {
+        constexpr auto types = magic_enum::enum_values<FilterDatumType>();
+        constexpr std::size_t count = magic_enum::enum_count<FilterDatumType>();
+        std::size_t i = 0;
+        while (i < count) {
+            FilterDatumType filter_type = types[i];
+            if (filter_enabled(filter_type)) {
+                return true;
+            }
+            i++;
+        }
+        return false;
+    }
+
+    [[nodiscard]] bool no_flags() const { return !any_flags(); }
+
     void clear() {
         magic_enum::enum_for_each<FilterDatumType>([this](auto val) {
             constexpr FilterDatumType type = val;
@@ -174,6 +205,17 @@ struct EntityFilter {
         //
         return pass;
     }
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.value4b(flags);
+        s.ext(name, bitsery::ext::StdOptional{},
+              [](S& sv, std::string& val) { sv.text1b(val, 25); });
+        s.ext(subtype_index, bitsery::ext::StdOptional{},
+              [](S& sv, int val) { sv.value4b(val); });
+    }
 };
 
 struct CanHoldItem : public BaseComponent {
@@ -250,6 +292,7 @@ struct CanHoldItem : public BaseComponent {
     }
 
     [[nodiscard]] EntityFilter& get_filter() { return filter; }
+    [[nodiscard]] const EntityFilter& get_filter() const { return filter; }
 
    private:
     std::shared_ptr<Entity> held_item = nullptr;
@@ -262,5 +305,8 @@ struct CanHoldItem : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         s.ext(held_item, bitsery::ext::StdSmartPtr{});
+
+        // TODO we only need this for debug info
+        s.object(filter);
     }
 };

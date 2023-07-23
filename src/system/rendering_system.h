@@ -125,11 +125,37 @@ inline void render_debug_drink_info(const Entity& entity, float) {
     }
 }
 
+inline void render_debug_filter_info(const Entity& entity, float) {
+    if (entity.is_missing<CanHoldItem>()) return;
+    const EntityFilter& filter = entity.get<CanHoldItem>().get_filter();
+    if (filter.flags == 0) return;
+    if (!filter.filter_is_set()) return;
+
+    const Transform& transform = entity.get<Transform>();
+
+    float y = 0.25f;
+    for (size_t i = 0;
+         i < magic_enum::enum_count<EntityFilter::FilterDatumType>(); i++) {
+        EntityFilter::FilterDatumType type =
+            magic_enum::enum_value<EntityFilter::FilterDatumType>(i);
+
+        auto filter_name = magic_enum::enum_name(type);
+        auto filter_value = filter.print_value_for_type(type);
+
+        auto content = fmt::format("filter {}: {}", filter_name, filter_value);
+
+        DrawFloatingText(vec::raise(transform.raw(), y), Preload::get().font,
+                         std::string(content).c_str(), 50);
+        y += 0.25f;
+    }
+}
+
 inline bool render_debug(const Entity& entity, float dt) {
     job_system::render_job_visual(entity, dt);
 
     render_debug_subtype(entity, dt);
     render_debug_drink_info(entity, dt);
+    render_debug_filter_info(entity, dt);
 
     // Ghost player only render during debug mode
     if (entity.has<CanBeGhostPlayer>() &&
@@ -351,6 +377,7 @@ inline void render_normal(const Entity& entity, float dt) {
     //  TODO for now while we do dev work render it
     render_debug_subtype(entity, dt);
     render_debug_drink_info(entity, dt);
+    render_debug_filter_info(entity, dt);
 
     bool used = render_model_normal(entity, dt);
     if (!used) {
