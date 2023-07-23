@@ -1,0 +1,22 @@
+
+{
+  "drinks": [
+      {
+          "name": "coke",
+          "icon_name": "coke",
+          "viewer_name": "Cola",
+          "ingredients": [
+              "Soda"
+          ]
+      },
+      {
+          "name": "rum_and_coke",
+          "icon_name": "rum_and_coke",
+          "viewer_name": "Rum & Coke",
+          "ingredients": [
+              "Soda",
+              "Rum"
+          ]
+      }
+  ]
+}

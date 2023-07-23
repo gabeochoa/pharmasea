@@ -799,8 +799,8 @@ static void make_drink(Item& drink, vec2 pos) {
         strings::item::DRINK, HasDynamicModelName::DynamicType::Ingredients,
         [](const Item& owner, const std::string base_name) -> std::string {
             const IsDrink& isdrink = owner.get<IsDrink>();
-            if (isdrink.matches_recipe(recipe::COKE)) return "soda_bottle";
-            if (isdrink.matches_recipe(recipe::RUM_AND_COKE))
+            if (isdrink.matches_recipe(Drink::coke)) return "soda_bottle";
+            if (isdrink.matches_recipe(Drink::rum_and_coke))
                 return "soda_glass";
             if (isdrink.matches_recipe(recipe::G_AND_T)) return "soda_can";
             if (isdrink.matches_recipe(recipe::DAIQUIRI)) return "cocktail";

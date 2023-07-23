@@ -5,6 +5,7 @@
 #include "../vendor_include.h"
 //
 #include "../engine/random.h"
+#include "../recipe_library.h"
 #include "ingredient.h"
 
 struct Order {
