@@ -6,6 +6,7 @@
 #include "../entity.h"
 #include "base_component.h"
 //
+#include "debug_name.h"
 #include "has_subtype.h"
 #include "is_item.h"
 
@@ -94,17 +95,34 @@ struct EntityFilter {
         return *this;
     }
 
+    template<typename T>
+    T read_filter_value_from_entity(const Entity& entity,
+                                    FilterDatumType type) const {
+        if constexpr (std::is_same_v<T, std::string>) {
+            if (type & FilterDatumType::Name)
+                return entity.get<DebugName>().name();
+        } else if constexpr (std::is_same_v<T, int>) {
+            if (type & FilterDatumType::Subtype) {
+                if (entity.is_missing<HasSubtype>()) return 0;
+                return entity.get<HasSubtype>().get_type_index();
+            }
+        }
+        return 0;
+    }
+
     EntityFilter& set_filter_with_entity(Entity& data) {
         // stores the information from data in that flag
 
         if (flags & FilterDatumType::Name)
             set_filter_value_for_type<std::string>(
-                FilterDatumType::Name, data.get<DebugName>().name());
+                FilterDatumType::Name,
+                read_filter_value_from_entity<std::string>(
+                    data, FilterDatumType::Name));
 
         if (flags & FilterDatumType::Subtype)
-            set_filter_value_for_type<int>(
-                FilterDatumType::Subtype,
-                data.get<HasSubtype>().get_type_index());
+            set_filter_value_for_type<int>(FilterDatumType::Subtype,
+                                           read_filter_value_from_entity<int>(
+                                               data, FilterDatumType::Subtype));
 
         return *this;
     }
@@ -125,7 +143,7 @@ struct EntityFilter {
             case Name:
                 return check_name(entity, name.value().c_str());
             case Subtype:
-                return entity.get<HasSubtype>().get_type_index() ==
+                return read_filter_value_from_entity<int>(entity, type) ==
                        subtype_index.value();
                 break;
             case EmptyFilterDatumType:
