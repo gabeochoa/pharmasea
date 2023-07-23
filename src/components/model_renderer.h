@@ -16,7 +16,7 @@ struct ModelRenderer : public BaseComponent {
         return ModelInfoLibrary::get().has(model_name);
     }
 
-    [[nodiscard]] NewModelInfo& model_info() const {
+    [[nodiscard]] ModelInfo& model_info() const {
         return ModelInfoLibrary::get().get(model_name);
     }
     [[nodiscard]] raylib::Model model() const {

@@ -74,29 +74,6 @@ struct ModelLibrary {
     } impl;
 };
 
-struct NewModelInfo {
-    // Note this has to be a string because the string_view isnt serializable in
-    // bitsery
-    std::string model_name;
-
-    float size_scale;
-    vec3 position_offset;
-    // TODO it would be nice to support this,
-    // but we have no way of doing a double rotation on diff axis
-    // vec3 rotation_axis = vec3{0, 1, 0};
-    float rotation_angle = 0;
-
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.text1b(model_name, MAX_MODEL_NAME_LENGTH);
-        s.value4b(size_scale);
-        s.object(position_offset);
-        s.value4b(rotation_angle);
-    }
-};
-
 SINGLETON_FWD(ModelInfoLibrary)
 struct ModelInfoLibrary {
     SINGLETON(ModelInfoLibrary)
@@ -114,11 +91,11 @@ struct ModelInfoLibrary {
         return impl.contains(name);
     }
 
-    [[nodiscard]] const NewModelInfo& get(const std::string& name) const {
+    [[nodiscard]] const ModelInfo& get(const std::string& name) const {
         return impl.get(name);
     }
 
-    [[nodiscard]] NewModelInfo& get(const std::string& name) {
+    [[nodiscard]] ModelInfo& get(const std::string& name) {
         return impl.get(name);
     }
 
@@ -127,7 +104,7 @@ struct ModelInfoLibrary {
             Files::get().fetch_resource_path(mli.folder, mli.filename);
         impl.load(full_filename.c_str(), mli.library_name.c_str());
 
-        NewModelInfo& mi = get(mli.library_name);
+        ModelInfo& mi = get(mli.library_name);
         mi.size_scale = mli.size_scale;
         mi.position_offset = mli.position_offset;
         mi.rotation_angle = mli.rotation_angle;
@@ -136,10 +113,10 @@ struct ModelInfoLibrary {
     void unload_all() { impl.unload_all(); }
 
    private:
-    struct ModelInfoLibraryImpl : Library<NewModelInfo> {
-        virtual NewModelInfo convert_filename_to_object(const char* name,
-                                                        const char*) override {
-            return NewModelInfo{
+    struct ModelInfoLibraryImpl : Library<ModelInfo> {
+        virtual ModelInfo convert_filename_to_object(const char* name,
+                                                     const char*) override {
+            return ModelInfo{
                 .model_name = name,                //
                 .size_scale = 0.f,                 //
                 .position_offset = vec3{0, 0, 0},  //
@@ -147,6 +124,6 @@ struct ModelInfoLibrary {
             };
         }
 
-        virtual void unload(NewModelInfo) override {}
+        virtual void unload(ModelInfo) override {}
     } impl;
 };
