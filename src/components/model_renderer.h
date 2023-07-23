@@ -11,10 +11,16 @@ struct ModelRenderer : public BaseComponent {
 
     virtual ~ModelRenderer() {}
 
-    [[nodiscard]] bool has_model() const { return model_info().has_value(); }
-    [[nodiscard]] std::optional<ModelInfo> model_info() const { return info; }
+    [[nodiscard]] bool missing() const { return !exists(); }
+    [[nodiscard]] bool exists() const {
+        return ModelInfoLibrary::get().has(model_name);
+    }
+
+    [[nodiscard]] NewModelInfo& model_info() const {
+        return ModelInfoLibrary::get().get(model_name);
+    }
     [[nodiscard]] raylib::Model model() const {
-        return ModelLibrary::get().get(model_info().value().model_name);
+        return ModelLibrary::get().get(model_name);
     }
 
     void update(const ModelInfo& new_info) { info = new_info; }

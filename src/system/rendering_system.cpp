@@ -34,8 +34,7 @@ void render_networked_players(const Entities& entities, float dt) {
                 entity->get<DebugName>().name());
             return;
         }
-        auto model_name =
-            entity->get<ModelRenderer>().model_info().value().model_name;
+        auto model_name = entity->get<ModelRenderer>().model_info().model_name;
         raylib::Texture texture =
             TextureLibrary::get().get(fmt::format("{}_mug", model_name));
         float scale = 0.06f;

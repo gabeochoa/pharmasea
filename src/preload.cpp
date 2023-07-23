@@ -41,6 +41,13 @@ void load_settings_config() {
 }
 
 void load_model_configs() {
+    if (!ENABLE_MODELS)
+    // TODO log
+    {
+        std::cout << "Skipping Model Loading" << std::endl;
+        return;
+    }
+
     std::tuple<const char*, const char*> configFilePath = {
         strings::settings::CONFIG, "models.json"};
 
@@ -84,6 +91,11 @@ void load_model_configs() {
                 .size_scale = modelInfo.size_scale,
                 .position_offset = modelInfo.position_offset,
                 .rotation_angle = modelInfo.rotation_angle,
+            });
+            ModelLibrary::get().load({
+                .folder = modelInfo.folder.c_str(),
+                .filename = modelInfo.filename.c_str(),
+                .libraryname = modelInfo.library_name.c_str(),
             });
             // TODO move to log
             std::cout << "loaded " << modelInfo.filename << " as "

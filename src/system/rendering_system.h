@@ -167,14 +167,11 @@ inline bool render_debug(const Entity& entity, float dt) {
 inline bool render_model_highlighted(const Entity& entity, float) {
     if (entity.is_missing<ModelRenderer>()) return false;
     if (entity.is_missing<CanBeHighlighted>()) return false;
-
-    const ModelRenderer& renderer = entity.get<ModelRenderer>();
-    if (!renderer.has_model()) return false;
-
     if (entity.is_missing<Transform>()) return false;
     const Transform& transform = entity.get<Transform>();
-
-    ModelInfo model_info = renderer.model_info().value();
+    const ModelRenderer& renderer = entity.get<ModelRenderer>();
+    if (renderer.missing()) return false;
+    NewModelInfo& model_info = renderer.model_info();
 
     // TODO this is the exact same code as render_model_normal
     // should be able to fix it
@@ -198,18 +195,14 @@ inline bool render_model_highlighted(const Entity& entity, float) {
 
 inline bool render_model_normal(const Entity& entity, float) {
     if (!ENABLE_MODELS) return false;
-
     if (entity.is_missing<ModelRenderer>()) return false;
-
-    const ModelRenderer& renderer = entity.get<ModelRenderer>();
-
     if (entity.is_missing<Transform>()) return false;
     const Transform& transform = entity.get<Transform>();
 
-    if (!ModelInfoLibrary::get().has(renderer.model_name)) return false;
+    const ModelRenderer& renderer = entity.get<ModelRenderer>();
+    if (renderer.missing()) return false;
 
     NewModelInfo model_info = ModelInfoLibrary::get().get(renderer.model_name);
-    raylib::Model model = ModelLibrary::get().get(renderer.model_name);
 
     float rotation_angle =
         // TODO make this api better
@@ -217,7 +210,7 @@ inline bool render_model_normal(const Entity& entity, float) {
                     transform.face_direction()));
 
     raylib::DrawModelEx(
-        model,
+        renderer.model(),
         {
             transform.pos().x + model_info.position_offset.x,
             transform.pos().y + model_info.position_offset.y,
