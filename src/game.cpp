@@ -80,6 +80,19 @@ void startup() {
     // to font requirements
     Preload::create();
 
+    // What i realized is that somehow every time i write a test
+    // it fixes the component bug im investigating
+    //
+    // And so im thinking wait maybe theres some bug where if the host has a
+    // component but the client doesnt have it registered yet, or the order is
+    // different it doesnt deserialize the data correctly (size / color w/e)
+    //
+    // okay well i can fix that by just forcing the order to remain the same by
+    // creating an entity that just adds all the components in order
+    //
+    // and thats this
+    register_all_components();
+
     // Note: there was an issue where the master volume wasnt being respected
     // until you open the settings page.
     //
@@ -167,19 +180,6 @@ int main(int argc, char* argv[]) {
         std::cout << "All tests ran " << std::endl;
         return 0;
     }
-
-    // What i realized is that somehow every time i write a test
-    // it fixes the component bug im investigating
-    //
-    // And so im thinking wait maybe theres some bug where if the host has a
-    // component but the client doesnt have it registered yet, or the order is
-    // different it doesnt deserialize the data correctly (size / color w/e)
-    //
-    // okay well i can fix that by just forcing the order to remain the same by
-    // creating an entity that just adds all the components in order
-    //
-    // and thats this
-    register_all_components();
 
     startup();
     defer(Settings::get().write_save_file());
