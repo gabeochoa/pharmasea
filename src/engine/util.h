@@ -5,6 +5,7 @@
 #include <math.h>
 
 #include <algorithm>
+#include <cctype>
 #include <cmath>
 #include <regex>
 #include <sstream>
@@ -53,6 +54,15 @@ static float rad2deg(float rad) {
 }
 
 static bool in_range(int a, int b, int val) { return val >= a && val <= b; }
+
+static std::string toLowerCase(const std::string_view& str) {
+    std::string result;
+    for (char c : str) {
+        result +=
+            static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    }
+    return result;
+}
 
 static std::vector<std::string> split_string(const std::string& str,
                                              const std::string& delimiter) {

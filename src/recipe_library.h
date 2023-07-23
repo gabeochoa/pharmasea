@@ -7,9 +7,6 @@
 struct Recipe {
     Drink drink;
     std::string base_name;
-    // TODO this should just be base_name but for now
-    std::string model_name;
-
     std::string viewer_name;
     std::string icon_name;
     IngredientBitSet ingredients;
@@ -58,5 +55,5 @@ static std::string get_icon_name_for_drink(Drink drink) {
     return RecipeLibrary::get().get(get_string_for_drink(drink)).icon_name;
 }
 static std::string get_model_name_for_drink(Drink drink) {
-    return RecipeLibrary::get().get(get_string_for_drink(drink)).model_name;
+    return RecipeLibrary::get().get(get_string_for_drink(drink)).base_name;
 }

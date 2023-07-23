@@ -80,6 +80,12 @@ void startup() {
     // to font requirements
     Preload::create();
 
+    // Note: there was an issue where the master volume wasnt being respected
+    // until you open the settings page.
+    //
+    // Having this line here fixes that
+    Settings::get().refresh_settings();
+
     // What i realized is that somehow every time i write a test
     // it fixes the component bug im investigating
     //
@@ -92,12 +98,6 @@ void startup() {
     //
     // and thats this
     register_all_components();
-
-    // Note: there was an issue where the master volume wasnt being respected
-    // until you open the settings page.
-    //
-    // Having this line here fixes that
-    Settings::get().refresh_settings();
 
     MenuState::get().reset();
     GameState::get().reset();

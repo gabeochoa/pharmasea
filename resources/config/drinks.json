@@ -4,7 +4,6 @@
       {
           "name": "coke",
           "icon_name": "coke",
-          "model_name": "soda_bottle",
           "viewer_name": "Cola",
           "ingredients": [
               "Soda"
@@ -13,7 +12,6 @@
       {
           "name": "rum_and_coke",
           "icon_name": "rum_and_coke",
-          "model_name": "soda_glass",
           "viewer_name": "Rum & Coke",
           "ingredients": [
               "Soda",
@@ -23,43 +21,39 @@
       {
           "name": "margarita",
           "icon_name": "margarita",
-          "model_name": "soda_can",
           "viewer_name": "Margarita",
           "ingredients": [
               "Tequila",
-              "LimeJuice",
+              "LemonJuice", // "LimeJuice",
               "TripleSec"
           ]
       },
       {
           "name": "cosmo",
           "icon_name": "cosmo",
-          "model_name": "cocktail",
           "viewer_name": "Cosmopolitan",
           "ingredients": [
               "Vodka",
-              "CranJuice",
-              "LimeJuice",
+              "LemonJuice", // "CranJuice",
+              "LemonJuice", // "LimeJuice",
               "TripleSec"
           ]
       },
       {
           "name": "mojito",
           "icon_name": "mojito",
-          "model_name": "soda_glass",
           "viewer_name": "Mojito",
           "ingredients": [
               "Rum",
-              "LimeJuice",
+              "LemonJuice", // "LimeJuice",
               "Soda",
-              // "Water"
+              "Soda", // "Water"
               //"MintLeaf",
               "SimpleSyrup"
           ]
       },
       {
           "name": "old_fashioned",
-          "model_name": "soda_glass",
           "icon_name": "old_fash",
           "viewer_name": "Old Fashioned",
           "ingredients": [
@@ -71,39 +65,35 @@
       {
           "name": "daiquiri",
           "icon_name": "daiquiri",
-          "model_name": "soda_glass",
           "viewer_name": "Daiquiri",
           "ingredients": [
               "Rum",
-              "LimeJuice",
+              "LemonJuice", // "LimeJuice",
               "SimpleSyrup"
           ]
       },
       {
           "name": "pina_colada",
           "icon_name": "pina_colada",
-          "model_name": "soda_glass",
           "viewer_name": "Pina Colada",
           "ingredients": [
               "Rum",
-              "PinaJuice",
-              "CoconutCream"
+              "LemonJuice", // "PinaJuice",
+              "LemonJuice" // "CoconutCream"
           ]
       },
       {
           "name": "gin_and_tonic",
           "icon_name": "g_and_t",
-          "model_name": "soda_glass",
           "viewer_name": "Gin & Tonic",
           "ingredients": [
               "Gin",
-              "Tonic",
-              "Lime"
+              "Soda", // "Tonic",
+              "Lemon" //"Lime"
           ]
       },
       {
           "name": "whiskey_sour",
-          "model_name": "soda_glass",
           "icon_name": "whiskey_sour",
           "viewer_name": "Whiskey Sour",
           "ingredients": [
@@ -115,12 +105,11 @@
       {
           "name": "vodka_tonic",
           "icon_name": "vodka_tonic",
-          "model_name": "soda_glass",
           "viewer_name": "Vodka Tonic",
           "ingredients": [
               "Vodka",
-              "Tonic",
-              "Lime"
+              "Soda", // "Tonic",
+              "Lemon" //"Lime"
           ]
       }
   ]

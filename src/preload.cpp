@@ -170,7 +170,6 @@ void load_drink_recipes() {
                 {
                     .drink = drink,
                     .base_name = base_name,
-                    .model_name = object["model_name"].get<std::string>(),
                     .viewer_name = object["viewer_name"].get<std::string>(),
                     .icon_name = object["icon_name"].get<std::string>(),
                     .ingredients = ingredients,
@@ -191,5 +190,6 @@ void load_drink_recipes() {
 void Preload::load_config() {
     load_settings_config();
     load_model_configs();
+    // drinks use models, so let those load first
     load_drink_recipes();
 }

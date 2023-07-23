@@ -7,15 +7,15 @@
 #include "../engine/random.h"
 
 enum Ingredient {
-    Invalid = -1,
+    Invalid,
 
     IceCubes,
     IceCrushed,
 
     // Non Alcoholic
     Soda,
-    Water,
-    Tonic = Soda,
+    // Water, //< Soda
+    // Tonic, //< Soda
 
     // Garnishes
     Salt,
@@ -27,24 +27,21 @@ enum Ingredient {
     Vodka,
     Whiskey,  // Rye or Bourbon?
     Gin,
-    // What are these
     TripleSec,
-    Cointreau,  // seems like this is a triplesec alt TODO support alts?
+    // Cointreau, < TripleSec
     Bitters,
     LAST_ALC,
 
     // Lemon
     Lemon,
     LemonJuice,
-    Lime = Lemon,
-    LimeJuice = LemonJuice,
+    // Lime, //< lemon
+    // LimeJuice, //< lemonjuice
+    // CranJuice, //< lemonjuice
+    // PinaJuice, //< lemonjuice
+    // CoconutCream, //< lemonjuice
 
-    // Juice,
-    CranJuice = Soda,
-    PinaJuice = Soda,
-    CoconutCream = Soda,
     SimpleSyrup,
-
 };
 
 namespace ingredient {

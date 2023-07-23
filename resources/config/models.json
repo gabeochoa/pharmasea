@@ -115,7 +115,15 @@
         {
             "folder": "models/kennynl",
             "filename": "cocktail.obj",
-            "library_name": "cocktail",
+            "library_name": "margarita",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "cocktail.obj",
+            "library_name": "cosmopolitan",
             "size_scale": 2.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
@@ -204,9 +212,6 @@
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
         },
-
-
-
         {
             "folder": "models/kennynl",
             "filename": "soda.obj",
@@ -218,7 +223,7 @@
         {
             "folder": "models/kennynl",
             "filename": "sodaBottle.obj",
-            "library_name": "soda_bottle",
+            "library_name": "coke",
             "size_scale": 2.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
@@ -234,7 +239,71 @@
         {
             "folder": "models/kennynl",
             "filename": "sodaGlass.obj",
+            "library_name": "rum_and_coke",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "sodaGlass.obj",
+            "library_name": "mojito",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "sodaGlass.obj",
+            "library_name": "old_fashioned",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "sodaGlass.obj",
+            "library_name": "vodka_tonic",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "sodaGlass.obj",
+            "library_name": "whiskey_sour",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "sodaGlass.obj",
+            "library_name": "gin_and_tonic",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "sodaGlass.obj",
+            "library_name": "pina_colada",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "sodaGlass.obj",
             "library_name": "soda_glass",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "sodaGlass.obj",
+            "library_name": "daiquiri",
             "size_scale": 2.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0

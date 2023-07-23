@@ -652,48 +652,11 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
 
     alc.addComponent<HasDynamicModelName>().init(
         strings::item::ALCOHOL, HasDynamicModelName::DynamicType::Subtype,
-        [](const Item& owner, const std::string base_name) -> std::string {
+        [](const Item& owner, const std::string) -> std::string {
             const HasSubtype& hst = owner.get<HasSubtype>();
             Ingredient bottle = get_ingredient_from_index(
                 ingredient::ALC_START + hst.get_type_index());
-            switch (bottle) {
-                case Ingredient::Rum:
-                    return strings::model::RUM;
-                    break;
-                case Ingredient::Tequila:
-                    return strings::model::TEQUILA;
-                    break;
-                case Ingredient::Vodka:
-                    return strings::model::VODKA;
-                    break;
-                case Ingredient::Whiskey:
-                    return strings::model::WHISKEY;
-                    break;
-                case Ingredient::Gin:
-                    return strings::model::GIN;
-                    break;
-                case Ingredient::Bitters:
-                    return strings::model::BITTERS;
-                    break;
-                case Ingredient::TripleSec:
-                    return strings::model::TRIPLESEC;
-                    break;
-                case Ingredient::Cointreau:
-                    return strings::model::COINTREAU;
-                    break;
-                default:
-                    if (util::in_range(ingredient::ALC_START,
-                                       ingredient::ALC_END,
-                                       hst.get_type_index())) {
-                        log_warn(
-                            "You are trying to set an alcohol dynamic model "
-                            "but forgot to setup the model name for {} {}",
-                            hst.get_type_index(),
-                            magic_enum::enum_name(bottle));
-                    }
-                    break;
-            }
-            return base_name;
+            return util::toLowerCase(magic_enum::enum_name<Ingredient>(bottle));
         });
 }
 
@@ -798,7 +761,7 @@ static void make_drink(Item& drink, vec2 pos) {
 
     drink.addComponent<HasDynamicModelName>().init(
         strings::item::DRINK, HasDynamicModelName::DynamicType::Ingredients,
-        [](const Item& owner, const std::string base_name) -> std::string {
+        [](const Item& owner, const std::string) -> std::string {
             const IsDrink& isdrink = owner.get<IsDrink>();
             constexpr auto drinks = magic_enum::enum_values<Drink>();
             for (Drink d : drinks) {
