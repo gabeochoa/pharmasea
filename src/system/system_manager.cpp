@@ -303,12 +303,6 @@ void process_grabber_filter(std::shared_ptr<Entity> entity, float) {
     // - or we should set the filter
 
     EntityFilter& ef = canHold.get_filter();
-
-    if (ef.filter_is_set()) {
-        // TODO
-        return;
-    }
-
     ef.set_filter_with_entity(*(canHold.const_item()));
 }
 

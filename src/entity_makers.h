@@ -436,8 +436,11 @@ static void make_filtered_grabber(Entity& grabber, vec2 pos) {
     grabber.addComponent<CanGrabFromOtherFurniture>();
 
     // Initially set empty filter
-    grabber.get<CanHoldItem>().set_filter(EntityFilter().set_filter_strength(
-        EntityFilter::FilterStrength::Suggestion));
+    grabber.get<CanHoldItem>().set_filter(
+        EntityFilter()
+            .set_enabled_flags(EntityFilter::FilterDatumType::Name |
+                               EntityFilter::FilterDatumType::Subtype)
+            .set_filter_strength(EntityFilter::FilterStrength::Suggestion));
 }
 
 static void make_register(Entity& reg, vec2 pos) {
@@ -485,7 +488,7 @@ static void make_trash(Entity& trash, vec2 pos) {
         trash.get<ModelRenderer>().update(ModelInfo{
             .model_name = "toilet",
             .size_scale = 2.f,
-            .position_offset = vec3{0, 0, 0},
+            .position_offset = vec3{-TILESIZE / 4.f, -TILESIZE / 2.f, 0},
         });
     }
 }
@@ -579,10 +582,13 @@ static void make_soda_machine(Entity& soda_machine, vec2 pos) {
     soda_machine.get<IsItemContainer>().set_max_generations(1);
     soda_machine.get<CanHoldItem>()
         .update_held_by(IsItem::HeldBy::SODA_MACHINE)
-        .set_filter(EntityFilter()
-                        .set_name_filter(strings::item::SODA_SPOUT)
-                        .set_filter_strength(
-                            EntityFilter::FilterStrength::Requirement));
+        .set_filter(
+            EntityFilter()
+                .set_enabled_flags(EntityFilter::FilterDatumType::Name)
+                .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
+                                           strings::item::SODA_SPOUT)
+                .set_filter_strength(
+                    EntityFilter::FilterStrength::Requirement));
 }
 
 static void make_trigger_area(
