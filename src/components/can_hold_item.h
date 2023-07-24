@@ -140,7 +140,7 @@ struct EntityFilter {
             }
         }
         log_warn("EntityFilter:: reading value from entity but no match");
-        throw new std::exception("Reading Value from Entity but no match");
+        throw std::runtime_error("Reading Value from Entity but no match");
     }
 
     EntityFilter& set_filter_with_entity(const Entity& data) {
