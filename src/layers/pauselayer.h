@@ -78,6 +78,10 @@ struct BasePauseLayer : public Layer {
                         MenuState::get().set(menu::State::Settings);
                     }
                     if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                               "RELOAD CONFIGS")) {
+                        Preload::get().load_config();
+                    }
+                    if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                                text_lookup(strings::i18n::QUIT))) {
                         MenuState::get().reset();
                         GameState::get().reset();
