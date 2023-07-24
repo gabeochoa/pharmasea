@@ -1,5 +1,6 @@
 #pragma once
 
+#include <exception>
 #include <optional>
 //
 
@@ -139,7 +140,7 @@ struct EntityFilter {
             }
         }
         log_warn("EntityFilter:: reading value from entity but no match");
-        return 0;
+        throw new std::exception("Reading Value from Entity but no match");
     }
 
     EntityFilter& set_filter_with_entity(const Entity& data) {
