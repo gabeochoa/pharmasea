@@ -98,32 +98,38 @@ struct Client {
         log_info("success connecting");
         running = true;
     }
+    bool poll_incoming_messages() {
+        ISteamNetworkingMessage *incoming_msg = nullptr;
+        int num_msgs = interface->ReceiveMessagesOnConnection(connection,
+                                                              &incoming_msg, 1);
+        if (num_msgs == 0) return false;
+        if (num_msgs == -1) {
+            VALIDATE(false, "Failed checking for messages");
+            return false;
+        }
+
+        std::string cmd;
+        cmd.assign((const char *) incoming_msg->m_pData,
+                   incoming_msg->m_cbSize);
+        incoming_msg->Release();
+        this->process_message_cb(cmd);
+        return true;
+    }
 
     bool run() {
         if (!running) return false;
 
-        auto poll_incoming_messages = [&]() {
-            ISteamNetworkingMessage *incoming_msg = nullptr;
-            int num_msgs = interface->ReceiveMessagesOnConnection(
-                connection, &incoming_msg, 1);
-            if (num_msgs == 0) return;
-            if (num_msgs == -1) {
-                VALIDATE(false, "Failed checking for messages");
-                return;
-            }
-
-            std::string cmd;
-            cmd.assign((const char *) incoming_msg->m_pData,
-                       incoming_msg->m_cbSize);
-            incoming_msg->Release();
-            this->process_message_cb(cmd);
-        };
         auto poll_connection_state_changes = [&]() {
             callback_instance = this;
             interface->RunCallbacks();
         };
 
-        poll_incoming_messages();
+        // TODO mess around with this a bit more to see whats a reasonable
+        // number
+        int i = 0;
+        while (poll_incoming_messages()) {
+            if (i++ > 10) break;
+        }
         poll_connection_state_changes();
 
         return true;
