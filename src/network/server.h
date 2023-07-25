@@ -70,14 +70,15 @@ struct Server {
         pharmacy_map->grab_things();
         pharmacy_map->ensure_generated_map();
 
-        ClientPacket map_packet({
+        ClientPacket map_packet{
             .channel = Channel::RELIABLE,
             .client_id = SERVER_CLIENT_ID,
             .msg_type = network::ClientPacket::MsgType::Map,
-            .msg = network::ClientPacket::MapInfo({
-                .map = *pharmacy_map,
-            }),
-        });
+            .msg =
+                network::ClientPacket::MapInfo{
+                    .map = *pharmacy_map,
+                },
+        };
 
         send_client_packet_to_all(map_packet);
     }
@@ -100,40 +101,13 @@ struct Server {
             send_client_packet_to_all(player_rare_updated);
         }
     }
-    void run2() {
-        TRACY_ZONE_SCOPED;
-        thread_id = std::this_thread::get_id();
-        GLOBALS.set("server_thread_id", &thread_id);
-
-        using namespace std::chrono_literals;
-        auto start = std::chrono::high_resolution_clock::now();
-        auto end = start;
-        float duration = 0.f;
-        while (running) {
-            tick(duration);
-
-            // do {
-            // TRACY_ZONE_NAMED(server_run_wait_loop,
-            // "waiting for run loop continue", true);
-            end = std::chrono::high_resolution_clock::now();
-            duration =
-                (float) std::chrono::duration_cast<std::chrono::milliseconds>(
-                    end - start)
-                    .count();
-            // std::this_thread::sleep_for(1ms);
-            // } while (duration < 4);
-
-            // start = end;
-            start = std::chrono::high_resolution_clock::now();
-        }
-    }
 
     void run() {
         TRACY_ZONE_SCOPED;
         thread_id = std::this_thread::get_id();
         GLOBALS.set("server_thread_id", &thread_id);
 
-        constexpr float desiredFrameRate = 60.0f;
+        constexpr float desiredFrameRate = 120.0f;
         constexpr std::chrono::duration<float> fixedTimeStep(1.0f /
                                                              desiredFrameRate);
 
@@ -160,32 +134,50 @@ struct Server {
         }
     }
 
+    float fps_timer = 1.f;
+    int frames = 0;
+
+    void fps(float dt) {
+        fps_timer -= dt;
+        frames++;
+        if (fps_timer <= 0) {
+            fps_timer = 1.f;
+            log_info("{} {} imq{} fwq{}", dt, frames,
+                     incoming_message_queue.size(), packet_queue.size());
+            frames = 0;
+        }
+    }
+
     void tick(float dt) {
+        // fps(dt);
+
         TRACY_ZONE_SCOPED;
         server_p->run();
 
+        // network
         process_incoming_messages();
         process_packet_forwarding();
-        process_map_updates(dt);
+
+        // game
+        process_map_update(dt);
+
+        // TODO sending updates takes ~15x the time of running the game
+        // gotta look into what to do here to reduce the amount of info we are
+        // sending
+        //  / if theres networking settings we can change
+
+        // send updates back
         process_player_rare_tick(dt);
+        process_map_sync(dt);
 
         TRACY_FRAME_MARK("server::tick");
     }
 
-    // TODO when trying to convert these to "trigger_on_dt"
-    // ran into an issue where both players would get kicked back to the main
-    // menu not sure why but it seems to be related to the next_map_tick timer
-
-    // TODO verify that these numbers make sense, i have a feeling
-    // its not 2fps but 1/50 seconds which woudl be 0.5fps
-    // NOTE: server time things are in s
-    float next_map_tick_reset = 50;  // 1fps
+    float next_map_tick_reset = 1.f / 30;  // 60fps
     float next_map_tick = 0;
 
-    float next_player_rare_tick_reset = 100;
+    float next_player_rare_tick_reset = 1.f / 10;  // 10fps
     float next_player_rare_tick = 0;
-
-    TriggerOnDt next_update_timer = TriggerOnDt(5.f);
 
     void process_incoming_messages() {
         // Check to see if we have any new packets to process
@@ -227,7 +219,10 @@ struct Server {
         }
     }
 
-    void process_map_updates(float dt) {
+    void process_map_update(float dt) {
+        // No need to do anything if we are still in the menu
+        if (!MenuState::s_is_game(current_menu_state)) return;
+
         // TODO right now we have the run update on all the server players
         // this kinda makes sense but most of the game doesnt need this.
         //
@@ -235,22 +230,22 @@ struct Server {
         // without this the position doesnt change until you drop it
         //
         // TODO idk the perf implications of this (map->vec)
+
         std::vector<std::shared_ptr<Entity>> temp_players;
         for (auto it = players.begin(); it != players.end(); ++it) {
             temp_players.push_back(it->second);
         }
 
-        if (MenuState::s_is_game(current_menu_state)) {
-            TRACY_ZONE(tracy_server_gametick);
-            if (next_update_timer.test(dt)) {
-                pharmacy_map->_onUpdate(temp_players,
-                                        next_update_timer / 1000.f);
-            }
-        }
+        pharmacy_map->_onUpdate(temp_players, dt);
+
+        TRACY_ZONE(tracy_server_gametick);
+    }
+
+    void process_map_sync(float dt) {
         next_map_tick -= dt;
         if (next_map_tick <= 0) {
             send_map_state();
-            next_map_tick = next_map_tick_reset;
+            next_map_tick += next_map_tick_reset;
         }
     }
 

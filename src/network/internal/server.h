@@ -252,9 +252,9 @@ struct Server {
                  info->m_info.m_szConnectionDescription);
 
         // This should be a new connection
-        // const auto preexisting_client = clients.find(info->m_hConn);
-        // VALIDATE(preexisting_client == clients.end(),
-        // "Client already connected but shouldnt be");
+        const auto preexisting_client = clients.find(info->m_hConn);
+        VALIDATE(preexisting_client == clients.end(),
+                 "Client already connected but shouldnt be");
 
         // A client is attempting to connect
         // Try to accept the connection.
