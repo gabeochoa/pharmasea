@@ -538,7 +538,69 @@ void process_spawner(const std::shared_ptr<Entity> entity, float dt) {
 
 void run_timer(const std::shared_ptr<Entity> entity, float dt) {
     if (entity->is_missing<HasTimer>()) return;
-    entity->get<HasTimer>().pass_time(dt).reset_if_complete(dt);
+    HasTimer& ht = entity->get<HasTimer>();
+
+    ht.pass_time(dt);
+
+    // If we round isnt over yet, then thats all for now
+    if (ht.round_not_over()) return;
+
+    // Round is over so pass time for the round switch countdown
+
+    ht.pass_time_round_switch(dt);
+
+    // player still has time to do things
+    if (ht.round_switch_not_ready()) return;
+
+    // the timer expired, time to switch rounds
+    // but first need to check if we can or not
+
+    const auto _validate_if_round_can_end = [&hastimer = std::as_const(ht)]() {
+        switch (GameState::get().read()) {
+            case game::State::Planning: {
+                // For this one, we need to wait until everyone drops the things
+                if (hastimer.read_reason(
+                        HasTimer::WaitingReason::HoldingFurniture))
+                    return false;
+                return true;
+            } break;
+            case game::State::InRound: {
+                // For this one, we need to wait until everyone is done leaving
+                if (hastimer.read_reason(
+                        HasTimer::WaitingReason::CustomersInStore))
+                    return false;
+                return true;
+            } break;
+            default:
+                log_warn(
+                    "validating round switch timer but no state handler {}",
+                    GameState::get().read());
+                return false;
+        }
+        log_warn("validating round switch timer finished switch {}",
+                 GameState::get().read());
+        return false;
+    };
+
+    bool can_round_finish = _validate_if_round_can_end();
+    if (!can_round_finish) return;
+
+    // Round is actually over, reset timers
+
+    switch (GameState::get().read()) {
+        case game::State::Planning: {
+            GameState::get().set(game::State::InRound);
+        } break;
+        case game::State::InRound: {
+            GameState::get().set(game::State::Planning);
+        } break;
+        default:
+            log_warn("processing round switch timer but no state handler {}",
+                     GameState::get().read());
+            return;
+    }
+
+    ht.reset_round_switch_timer().reset_timer();
 }
 
 void sophie(const std::shared_ptr<Entity> entity, float) {

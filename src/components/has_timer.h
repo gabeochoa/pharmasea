@@ -30,6 +30,11 @@ struct HasTimer : public BaseComponent {
         return currentRoundTime / totalRoundTime;
     }
 
+    auto& reset_timer() {
+        currentRoundTime = totalRoundTime;
+        return *this;
+    }
+
     // TODO make these private
     float currentRoundTime;
     float totalRoundTime;
@@ -104,40 +109,26 @@ struct HasTimer : public BaseComponent {
     }
 
     [[nodiscard]] bool store_is_closed() const {
-        return currentRoundTime <= 0 && GameState::s_in_round();
+        return round_over() && GameState::s_in_round();
     }
 
-    void on_complete(float dt) {
-        auto _reset_timer = [&]() { currentRoundTime = totalRoundTime; };
+    [[nodiscard]] bool round_over() const { return currentRoundTime <= 0; }
+    [[nodiscard]] bool round_not_over() const { return !round_over(); }
 
-        // Countdown timer
-        if (roundSwitchCountdown >= 0) {
-            roundSwitchCountdown -= dt;
-            return;
-        }
+    auto& pass_time_round_switch(float dt) {
+        if (roundSwitchCountdown >= 0) roundSwitchCountdown -= dt;
+        return *this;
+    }
 
-        switch (GameState::get().read()) {
-            case game::State::Planning: {
-                // For this one, we need to wait until everyone drops the things
-                if (read_reason(WaitingReason::HoldingFurniture)) return;
-                GameState::get().set(game::State::InRound);
-            } break;
-            case game::State::InRound: {
-                // For this one, we need to wait until everyone is done leaving
-                if (read_reason(WaitingReason::CustomersInStore)) return;
-                GameState::get().set(game::State::Planning);
-            } break;
+    [[nodiscard]] bool round_switch_ready() const {
+        return roundSwitchCountdown <= 0;
+    }
+    [[nodiscard]] bool round_switch_not_ready() const {
+        return !round_switch_ready();
+    }
 
-            default:
-                log_warn("Completed round switch timer but no state handler {}",
-                         GameState::get().read());
-                return;
-        }
-
+    auto& reset_round_switch_timer() {
         roundSwitchCountdown = roundSwitchCountdownReset;
-        _reset_timer();
-    }
-    void reset_if_complete(float dt) {
-        if (currentRoundTime <= 0.f) on_complete(dt);
+        return *this;
     }
 };
