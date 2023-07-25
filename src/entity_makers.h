@@ -196,7 +196,7 @@ static void make_customer(Entity& customer, vec2 p, bool has_order = true) {
 
     customer.addComponent<HasSpeechBubble>();
 
-    customer.get<HasBaseSpeed>().update(10.f);
+    customer.get<HasBaseSpeed>().update(5.f);
     customer.get<CanPerformJob>().update(WaitInQueue, Wandering);
 }
 
