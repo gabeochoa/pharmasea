@@ -59,6 +59,7 @@ struct Server {
         VALIDATE(port > 0 && port < 65535, "invalid port");
         address.Clear();
         address.m_port = (unsigned short) port;
+        callback_instance = this;
     }
 
     ~Server() {
