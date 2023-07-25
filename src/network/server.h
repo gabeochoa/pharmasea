@@ -100,8 +100,7 @@ struct Server {
             send_client_packet_to_all(player_rare_updated);
         }
     }
-
-    void run() {
+    void run2() {
         TRACY_ZONE_SCOPED;
         thread_id = std::this_thread::get_id();
         GLOBALS.set("server_thread_id", &thread_id);
@@ -113,20 +112,64 @@ struct Server {
         while (running) {
             tick(duration);
 
-            do {
-                TRACY_ZONE_NAMED(server_run_wait_loop,
-                                 "waiting for run loop continue", true);
-                end = std::chrono::high_resolution_clock::now();
-                duration =
-                    (float)
-                        std::chrono::duration_cast<std::chrono::milliseconds>(
-                            end - start)
-                            .count();
-                std::this_thread::sleep_for(1ms);
-            } while (duration < 4);
+            // do {
+            // TRACY_ZONE_NAMED(server_run_wait_loop,
+            // "waiting for run loop continue", true);
+            end = std::chrono::high_resolution_clock::now();
+            duration =
+                (float) std::chrono::duration_cast<std::chrono::milliseconds>(
+                    end - start)
+                    .count();
+            // std::this_thread::sleep_for(1ms);
+            // } while (duration < 4);
 
-            start = end;
+            // start = end;
+            start = std::chrono::high_resolution_clock::now();
         }
+    }
+
+    void run() {
+        TRACY_ZONE_SCOPED;
+        thread_id = std::this_thread::get_id();
+        GLOBALS.set("server_thread_id", &thread_id);
+
+        constexpr float desiredFrameRate = 60.0f;
+        constexpr std::chrono::duration<float> fixedTimeStep(1.0f /
+                                                             desiredFrameRate);
+
+        // Initialize time variables
+        auto previousTime = std::chrono::high_resolution_clock::now();
+        auto currentTime = previousTime;
+
+        while (running) {
+            currentTime = std::chrono::high_resolution_clock::now();
+            float duration =
+                std::chrono::duration_cast<std::chrono::duration<float>>(
+                    currentTime - previousTime)
+                    .count();
+
+            if (duration >= fixedTimeStep.count()) {
+                tick(fixedTimeStep.count());
+
+                // Update previous time to keep track of the next tick
+                previousTime = currentTime;
+            }
+
+            // Sleep to control the frame rate
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+    }
+
+    void tick(float dt) {
+        TRACY_ZONE_SCOPED;
+        server_p->run();
+
+        process_incoming_messages();
+        process_packet_forwarding();
+        process_map_updates(dt);
+        process_player_rare_tick(dt);
+
+        TRACY_FRAME_MARK("server::tick");
     }
 
     // TODO when trying to convert these to "trigger_on_dt"
@@ -218,18 +261,6 @@ struct Server {
             send_player_rare_data();
             next_player_rare_tick = next_player_rare_tick_reset;
         }
-    }
-
-    void tick(float dt) {
-        TRACY_ZONE_SCOPED;
-        server_p->run();
-
-        process_incoming_messages();
-        process_packet_forwarding();
-        process_map_updates(dt);
-        process_player_rare_tick(dt);
-
-        TRACY_FRAME_MARK("server::tick");
     }
 
     void process_announcement_packet(const internal::Client_t&,

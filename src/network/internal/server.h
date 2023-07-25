@@ -178,161 +178,164 @@ struct Server {
     }
 
    private:
-    void connection_changed_callback(
+    void process_connection_ended(
         SteamNetConnectionStatusChangedCallback_t *info) {
-        log_info("connection_changed_callback");
         std::string temp;
         InternalServerAnnouncement annoucement_type;
+        // Ignore if they were not previously connected.  (If they
+        // disconnected before we accepted the connection.)
+        if (info->m_eOldState == k_ESteamNetworkingConnectionState_Connected) {
+            // Locate the client.  Note that it should have been found,
+            // because this is the only codepath where we remove clients
+            // (except on shutdown), and connection change callbacks are
+            // dispatched in queue order.
+            auto itClient = clients.find(info->m_hConn);
+            assert(itClient != clients.end());
+
+            // Select appropriate log messages
+            const char *pszDebugLogAction;
+            if (info->m_info.m_eState ==
+                k_ESteamNetworkingConnectionState_ProblemDetectedLocally) {
+                pszDebugLogAction = "problem detected locally";
+                temp = fmt::format("Alas, {} hath fallen into shadow.  ({})",
+                                   itClient->second.client_id,
+                                   info->m_info.m_szEndDebug);
+                annoucement_type = InternalServerAnnouncement::Warn;
+            } else {
+                // Note that here we could check the reason code to see
+                // if it was a "usual" connection or an "unusual" one.
+                pszDebugLogAction = "closed by peer";
+                temp = fmt::format("{}; {} hath departed", temp,
+                                   itClient->second.client_id);
+                annoucement_type = InternalServerAnnouncement::Warn;
+            }
+
+            // Spew something to our own log.  Note that because we put
+            // their nick as the connection description, it will show
+            // up, along with their transport-specific data (e.g. their
+            // IP address)
+            log_warn("Connection {} {}, reason {}: {}\n",
+                     info->m_info.m_szConnectionDescription, pszDebugLogAction,
+                     info->m_info.m_eEndReason, info->m_info.m_szEndDebug);
+
+            // TODO change keepalive timeout to be lower?
+
+            int client_id = (int) itClient->second.client_id;
+
+            if (onClientDisconnect) onClientDisconnect(client_id);
+
+            clients.erase(itClient);
+
+            // Send a message so everybody else knows what happened
+            send_announcement_to_all(temp, annoucement_type);
+
+        } else {
+            VALIDATE(info->m_eOldState ==
+                         k_ESteamNetworkingConnectionState_Connecting,
+                     "We expected them not to be connected but they were");
+        }
+
+        // Clean up the connection.  This is important!
+        // The connection is "closed" in the network sense, but
+        // it has not been destroyed.  We must close it on our end, too
+        // to finish up.  The reason information do not matter in this
+        // case, and we cannot linger because it's already closed on the
+        // other end, so we just pass 0's.
+        interface->CloseConnection(info->m_hConn, 0, nullptr, false);
+    }
+
+    void process_connection_starting(
+        SteamNetConnectionStatusChangedCallback_t *info) {
+        std::string temp;
+        log_info("Connection request from {}",
+                 info->m_info.m_szConnectionDescription);
+
+        // This should be a new connection
+        // const auto preexisting_client = clients.find(info->m_hConn);
+        // VALIDATE(preexisting_client == clients.end(),
+        // "Client already connected but shouldnt be");
+
+        // A client is attempting to connect
+        // Try to accept the connection.
+        if (interface->AcceptConnection(info->m_hConn) != k_EResultOK) {
+            // This could fail.  If the remote host tried to connect,
+            // but then disconnected, the connection may already be half
+            // closed.  Just destroy whatever we have on our side.
+            interface->CloseConnection(info->m_hConn, 0, nullptr, false);
+            log_info("Can't accept connection. (It was already closed?)");
+            return;
+        }
+
+        // Assign the poll group
+        if (!interface->SetConnectionPollGroup(info->m_hConn, poll_group)) {
+            interface->CloseConnection(info->m_hConn, 0, nullptr, false);
+            log_info("Failed to set poll group?");
+            return;
+        }
+
+        // Generate a random nick.  A random temporary nick
+        // is really dumb and not how you would write a real chat
+        // server. You would want them to have some sort of signon
+        // message, and you would keep their client in a state of limbo
+        // (connected, but not logged on) until them.  I'm trying to
+        // keep this example code really simple.
+        int nick_id = 10000 + (rand() % 100000);
+
+        // Send them a welcome message
+        temp = fmt::format(
+            "Welcome, stranger.  Thou art known to us for now as '{}'; "
+            "upon thine command '/nick' we shall know thee otherwise.",
+            nick_id);
+        send_announcement_to_client(info->m_hConn, temp,
+                                    InternalServerAnnouncement::Info);
+
+        // Also send them a list of everybody who is already connected
+        if (clients.empty()) {
+            send_announcement_to_client(info->m_hConn,
+                                        "Thou art utterly alone.",
+                                        InternalServerAnnouncement::Info);
+        } else {
+            temp =
+                fmt::format("{} companions greet you:", (int) clients.size());
+            for (auto &c : clients)
+                send_announcement_to_client(
+                    info->m_hConn,
+                    fmt::format("{}, your id is: {}", temp, c.second.client_id),
+                    InternalServerAnnouncement::Info);
+        }
+
+        // Add them to the client list, using std::map wacky syntax
+        clients[info->m_hConn];
+
+        clients[info->m_hConn].client_id = nick_id;
+        interface->SetConnectionName(info->m_hConn,
+                                     fmt::format("{}", nick_id).c_str());
+
+        // Let everybody else know who they are for now
+        temp = fmt::format(
+            "Hark!  A stranger hath joined this merry host.  For "
+            "now we shall call them '{}'",
+            nick_id);
+        send_announcement_to_all(temp, InternalServerAnnouncement::Info,
+                                 [&](const Client_t &client) {
+                                     return client.client_id == nick_id;
+                                 });
+    }
+
+    void connection_changed_callback(
+        SteamNetConnectionStatusChangedCallback_t *info) {
+        log_info("connection_changed_callback {}", info->m_info.m_eState);
 
         // What's the state of the connection?
         switch (info->m_info.m_eState) {
             case k_ESteamNetworkingConnectionState_ClosedByPeer:
             case k_ESteamNetworkingConnectionState_ProblemDetectedLocally: {
-                // Ignore if they were not previously connected.  (If they
-                // disconnected before we accepted the connection.)
-                if (info->m_eOldState ==
-                    k_ESteamNetworkingConnectionState_Connected) {
-                    // Locate the client.  Note that it should have been found,
-                    // because this is the only codepath where we remove clients
-                    // (except on shutdown), and connection change callbacks are
-                    // dispatched in queue order.
-                    auto itClient = clients.find(info->m_hConn);
-                    assert(itClient != clients.end());
-
-                    // Select appropriate log messages
-                    const char *pszDebugLogAction;
-                    if (info->m_info.m_eState ==
-                        k_ESteamNetworkingConnectionState_ProblemDetectedLocally) {
-                        pszDebugLogAction = "problem detected locally";
-                        temp = fmt::format(
-                            "Alas, {} hath fallen into shadow.  ({})",
-                            itClient->second.client_id,
-                            info->m_info.m_szEndDebug);
-                        annoucement_type = InternalServerAnnouncement::Warn;
-                    } else {
-                        // Note that here we could check the reason code to see
-                        // if it was a "usual" connection or an "unusual" one.
-                        pszDebugLogAction = "closed by peer";
-                        temp = fmt::format("{}; {} hath departed", temp,
-                                           itClient->second.client_id);
-                        annoucement_type = InternalServerAnnouncement::Warn;
-                    }
-
-                    // Spew something to our own log.  Note that because we put
-                    // their nick as the connection description, it will show
-                    // up, along with their transport-specific data (e.g. their
-                    // IP address)
-                    log_warn("Connection {} {}, reason {}: {}\n",
-                             info->m_info.m_szConnectionDescription,
-                             pszDebugLogAction, info->m_info.m_eEndReason,
-                             info->m_info.m_szEndDebug);
-
-                    // TODO change keepalive timeout to be lower?
-
-                    int client_id = (int) itClient->second.client_id;
-
-                    if (onClientDisconnect) onClientDisconnect(client_id);
-
-                    clients.erase(itClient);
-
-                    // Send a message so everybody else knows what happened
-                    send_announcement_to_all(temp, annoucement_type);
-
-                } else {
-                    VALIDATE(
-                        info->m_eOldState ==
-                            k_ESteamNetworkingConnectionState_Connecting,
-                        "We expected them not to be connected but they were");
-                }
-
-                // Clean up the connection.  This is important!
-                // The connection is "closed" in the network sense, but
-                // it has not been destroyed.  We must close it on our end, too
-                // to finish up.  The reason information do not matter in this
-                // case, and we cannot linger because it's already closed on the
-                // other end, so we just pass 0's.
-                interface->CloseConnection(info->m_hConn, 0, nullptr, false);
+                process_connection_ended(info);
                 break;
             }
 
             case k_ESteamNetworkingConnectionState_Connecting: {
-                // This must be a new connection
-                VALIDATE(clients.find(info->m_hConn) == clients.end(),
-                         "Client already connected but shouldnt be");
-
-                log_info("Connection request from {}",
-                         info->m_info.m_szConnectionDescription);
-
-                // A client is attempting to connect
-                // Try to accept the connection.
-                if (interface->AcceptConnection(info->m_hConn) != k_EResultOK) {
-                    // This could fail.  If the remote host tried to connect,
-                    // but then disconnected, the connection may already be half
-                    // closed.  Just destroy whatever we have on our side.
-                    interface->CloseConnection(info->m_hConn, 0, nullptr,
-                                               false);
-                    log_info(
-                        "Can't accept connection. (It was already closed?)");
-                    break;
-                }
-
-                // Assign the poll group
-                if (!interface->SetConnectionPollGroup(info->m_hConn,
-                                                       poll_group)) {
-                    interface->CloseConnection(info->m_hConn, 0, nullptr,
-                                               false);
-                    log_info("Failed to set poll group?");
-                    break;
-                }
-
-                // Generate a random nick.  A random temporary nick
-                // is really dumb and not how you would write a real chat
-                // server. You would want them to have some sort of signon
-                // message, and you would keep their client in a state of limbo
-                // (connected, but not logged on) until them.  I'm trying to
-                // keep this example code really simple.
-                int nick_id = 10000 + (rand() % 100000);
-
-                // Send them a welcome message
-                temp = fmt::format(
-                    "Welcome, stranger.  Thou art known to us for now as '{}'; "
-                    "upon thine command '/nick' we shall know thee otherwise.",
-                    nick_id);
-                send_announcement_to_client(info->m_hConn, temp,
-                                            InternalServerAnnouncement::Info);
-
-                // Also send them a list of everybody who is already connected
-                if (clients.empty()) {
-                    send_announcement_to_client(
-                        info->m_hConn, "Thou art utterly alone.",
-                        InternalServerAnnouncement::Info);
-                } else {
-                    temp = fmt::format("{} companions greet you:",
-                                       (int) clients.size());
-                    for (auto &c : clients)
-                        send_announcement_to_client(
-                            info->m_hConn,
-                            fmt::format("{}, your id is: {}", temp,
-                                        c.second.client_id),
-                            InternalServerAnnouncement::Info);
-                }
-
-                // Add them to the client list, using std::map wacky syntax
-                clients[info->m_hConn];
-
-                clients[info->m_hConn].client_id = nick_id;
-                interface->SetConnectionName(
-                    info->m_hConn, fmt::format("{}", nick_id).c_str());
-
-                // Let everybody else know who they are for now
-                temp = fmt::format(
-                    "Hark!  A stranger hath joined this merry host.  For "
-                    "now we shall call them '{}'",
-                    nick_id);
-                send_announcement_to_all(temp, InternalServerAnnouncement::Info,
-                                         [&](const Client_t &client) {
-                                             return client.client_id == nick_id;
-                                         });
+                process_connection_starting(info);
                 break;
             }
 
