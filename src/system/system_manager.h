@@ -57,6 +57,7 @@ void reset_empty_work_furniture(const std::shared_ptr<Entity> entity, float dt);
 
 void run_timer(const std::shared_ptr<Entity> entity, float dt);
 void sophie(const std::shared_ptr<Entity> entity, float dt);
+void increment_day_count(const std::shared_ptr<Entity> entity, float dt);
 void process_has_rope(const std::shared_ptr<Entity> entity, float dt);
 }  // namespace system_manager
 
@@ -167,7 +168,9 @@ struct SystemManager {
         if (state_transitioned_round_to_planning) {
             state_transitioned_round_to_planning = false;
             for (auto& entity : entities) {
+                // TODO make a namespace for transition functions
                 system_manager::delete_held_items_when_leaving_inround(entity);
+                system_manager::increment_day_count(entity, dt);
                 // TODO reset haswork's
             }
         }

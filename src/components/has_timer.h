@@ -48,11 +48,13 @@ struct HasTimer : public BaseComponent {
         s.ext(block_state_change_reasons, bitsery::ext::StdBitset{});
         s.value4b(roundSwitchCountdown);
         s.value4b(roundSwitchCountdownReset);
+        s.value4b(dayCount);
     }
 
    public:
     float roundSwitchCountdownReset = 5.f;
     float roundSwitchCountdown = 5.f;
+    int dayCount = 0;
 
     // TODO move into its own component
     enum WaitingReason {
@@ -127,7 +129,7 @@ struct HasTimer : public BaseComponent {
             } break;
 
             default:
-                log_warn("Completed timer but no state handler {}",
+                log_warn("Completed round switch timer but no state handler {}",
                          GameState::get().read());
                 return;
         }

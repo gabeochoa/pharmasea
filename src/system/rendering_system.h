@@ -467,8 +467,14 @@ inline void render_timer(const Entity& entity, float) {
                        : (is_closing ? text_lookup(strings::i18n::CLOSING)
                                      : text_lookup(strings::i18n::CLOSED));
 
-            raylib::DrawTextEx(Preload::get().font, status_text,
-                               {rect_pos.x, rect_pos.y - 2}, 20, 0, font_color);
+            // TODO figure out how to translate strings that have numbers in
+            // them...
+            auto day_text = fmt::format("{} {}", "Day", ht.dayCount);
+
+            raylib::DrawTextEx(
+                Preload::get().font,
+                fmt::format("{} {}", status_text, day_text).c_str(),
+                {rect_pos.x, rect_pos.y - 2}, 20, 0, font_color);
 
         } break;
         default:

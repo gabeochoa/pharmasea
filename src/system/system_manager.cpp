@@ -798,4 +798,9 @@ void process_pnumatic_pipe_movement(std::shared_ptr<Entity> entity, float dt) {
     }
 }
 
+void increment_day_count(const std::shared_ptr<Entity> entity, float) {
+    if (entity->is_missing<HasTimer>()) return;
+    entity->get<HasTimer>().dayCount++;
+}
+
 }  // namespace system_manager
