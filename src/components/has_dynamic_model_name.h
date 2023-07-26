@@ -63,8 +63,11 @@ struct HasDynamicModelName : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+
+        // Not needed because this is only used to change the underlying model
+        // inside <ModelRenderer>
         //
-        s.value1b(initialized);
-        s.text1b(base_name, MAX_MODEL_NAME_LENGTH);
+        // s.value1b(initialized);
+        // s.text1b(base_name, MAX_MODEL_NAME_LENGTH);
     }
 };

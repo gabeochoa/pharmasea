@@ -6,7 +6,6 @@
 struct HasSpeechBubble : public BaseComponent {
     virtual ~HasSpeechBubble() {}
 
-    [[nodiscard]] vec3 relative_position() const { return position; }
     [[nodiscard]] std::string icon() const { return icon_name; }
     [[nodiscard]] bool enabled() const { return _enabled; }
     [[nodiscard]] bool disabled() const { return !_enabled; }
@@ -18,7 +17,6 @@ struct HasSpeechBubble : public BaseComponent {
     bool _enabled = false;
     int max_icon_name_length = 20;
     std::string icon_name;
-    vec3 position;
 
     friend bitsery::Access;
     template<typename S>
@@ -29,7 +27,5 @@ struct HasSpeechBubble : public BaseComponent {
 
         s.value4b(max_icon_name_length);
         s.text1b(icon_name, max_icon_name_length);
-
-        s.object(position);
     }
 };

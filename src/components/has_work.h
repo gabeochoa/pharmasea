@@ -54,8 +54,9 @@ struct HasWork : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
         //
-        s.value1b(more_to_do);
+        // s.value1b(more_to_do);
+        // s.value1b(reset_on_empty);
+
         s.value4b(pct_work_complete);
-        s.value1b(reset_on_empty);
     }
 };

@@ -47,6 +47,5 @@ struct CanOrderDrink : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         s.value4b(current_order);
-        s.value4b(num_orders_rem);
     }
 };

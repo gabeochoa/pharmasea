@@ -315,9 +315,11 @@ inline void render_trigger_area(const Entity& entity, float dt) {
 }
 
 inline void render_speech_bubble(const Entity& entity, float) {
+    if (entity.is_missing<HasSpeechBubble>()) return;
+    if (entity.get<HasSpeechBubble>().disabled()) return;
+
     // Right now this is the only thing we can put in a bubble
     if (entity.is_missing<CanOrderDrink>()) return;
-    if (entity.get<HasSpeechBubble>().disabled()) return;
 
     const Transform& transform = entity.get<Transform>();
     const vec3 position = transform.pos();
@@ -361,9 +363,7 @@ inline void render_normal(const Entity& entity, float dt) {
         return;
     }
 
-    if (entity.has<HasSpeechBubble>()) {
-        render_speech_bubble(entity, dt);
-    }
+    render_speech_bubble(entity, dt);
 
     bool used = render_model_normal(entity, dt);
     if (!used) {

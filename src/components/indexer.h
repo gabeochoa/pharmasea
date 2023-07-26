@@ -34,8 +34,10 @@ struct Indexer : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(max_value);
+
         s.value4b(index);
-        s.value1b(changed);
+
+        // s.value4b(max_value);
+        // s.value1b(changed);
     }
 };

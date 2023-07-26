@@ -132,11 +132,6 @@ constexpr const char* FACE = "face";
 
 namespace model {
 
-constexpr const char* CHARACTER_BEAR = "character_bear";
-constexpr const char* CHARACTER_DOG = "character_dog";
-constexpr const char* CHARACTER_DUCK = "character_duck";
-constexpr const char* CHARACTER_ROGUE = "character_rogue";
-
 constexpr const char* RUM = "rum";
 constexpr const char* VODKA = "vodka";
 constexpr const char* TEQUILA = "tequila";
@@ -148,7 +143,19 @@ constexpr const char* COINTREAU = "cointreau";
 
 constexpr const char* LEMON_HALF = "lemon_half";
 
+constexpr const char* CHARACTER_BEAR = "character_bear";
+constexpr const char* CHARACTER_DOG = "character_dog";
+constexpr const char* CHARACTER_DUCK = "character_duck";
+constexpr const char* CHARACTER_ROGUE = "character_rogue";
+
 }  // namespace model
+
+const std::array<std::string, 4> character_models = {
+    strings::model::CHARACTER_BEAR,
+    strings::model::CHARACTER_DOG,
+    strings::model::CHARACTER_DUCK,
+    strings::model::CHARACTER_ROGUE,
+};
 
 namespace sounds {
 

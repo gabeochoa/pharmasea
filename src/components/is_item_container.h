@@ -55,7 +55,7 @@ struct IsItemContainer : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
-        s.text1b(item_type, MAX_ITEM_NAME);
-        s.value4b(max_gens);
+        // s.text1b(item_type, MAX_ITEM_NAME);
+        // s.value4b(max_gens);
     }
 };

@@ -87,6 +87,8 @@ struct IsTriggerArea : public BaseComponent {
         s.value4b(wanted_entrants);
         s.value4b(current_entrants);
 
+        // These two are needed for drawing the percentage
+        // TODO store the pct instead of sending two ints?
         s.value4b(completion_time_max);
         s.value4b(completion_time_passed);
 

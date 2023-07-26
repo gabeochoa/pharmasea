@@ -17,6 +17,12 @@ struct ConveysHeldItem : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(relative_item_pos);
+
+        // The reason we dont need to serialize this is that
+        // we dont render the underlying value,
+        // we use this value to move the entity and then serialize the entity's
+        // position
+        //
+        // s.value4b(relative_item_pos);
     }
 };

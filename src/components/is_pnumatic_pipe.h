@@ -21,6 +21,7 @@ struct IsPnumaticPipe : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         s.value4b(paired_id);
-        s.value4b(item_id);
+
+        // s.value4b(item_id);
     }
 };

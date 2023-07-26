@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "../strings.h"
 #include "base_component.h"
 
 struct UsesCharacterModel : public BaseComponent {
@@ -10,12 +11,12 @@ struct UsesCharacterModel : public BaseComponent {
     virtual ~UsesCharacterModel() {}
 
     void increment() {
-        index = (index + 1) % character_models.size();
+        index = (index + 1) % strings::character_models.size();
         changed = true;
     }
 
     [[nodiscard]] const std::string& fetch_model_name() const {
-        return character_models[index];
+        return strings::character_models[index];
     }
 
     [[nodiscard]] bool value_same_as_last_render() const {
@@ -30,17 +31,11 @@ struct UsesCharacterModel : public BaseComponent {
     [[nodiscard]] int index_server_only() const { return index; }
 
     void update_index_CLIENT_ONLY(int newind) {
-        index = newind % character_models.size();
+        index = newind % strings::character_models.size();
         changed = true;
     }
 
    private:
-    std::array<std::string, 4> character_models = {
-        strings::model::CHARACTER_BEAR,
-        strings::model::CHARACTER_DOG,
-        strings::model::CHARACTER_DUCK,
-        strings::model::CHARACTER_ROGUE,
-    };
     int index;
     bool changed;
 
@@ -48,6 +43,7 @@ struct UsesCharacterModel : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+
         s.value4b(index);
         s.value1b(changed);
     }
