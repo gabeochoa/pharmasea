@@ -115,6 +115,12 @@ struct Preload {
             [](const std::string& name, const std::string& filename) {
                 TextureLibrary::get().load(filename.c_str(), name.c_str());
             });
+
+        Files::get().for_resources_in_folder(
+            strings::settings::IMAGES, "external",
+            [](const std::string& name, const std::string& filename) {
+                TextureLibrary::get().load(filename.c_str(), name.c_str());
+            });
     }
 
     void load_sounds() {

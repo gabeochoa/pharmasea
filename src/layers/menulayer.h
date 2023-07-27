@@ -2,6 +2,7 @@
 
 #include "../engine.h"
 #include "../engine/app.h"
+#include "../engine/util.h"
 #include "../external_include.h"
 
 struct MenuLayer : public Layer {
@@ -102,6 +103,32 @@ struct MenuLayer : public Layer {
         ui_context->pop_parent();
     }
 
+    void draw_external_icons() {
+        using namespace ui;
+
+        padding(*ui::components::mk_padding(Size_Px(500.f, 1.f),
+                                            Size_Px(WIN_HF(), 1.f)));
+
+        auto third_col = ui_context->own(Widget(
+            Size_Pct(1.f, 0.f), Size_Px(WIN_HF(), 1.f), GrowFlags::Column));
+        div(*third_col);
+        ui_context->push_parent(third_col);
+        {
+            padding(*ui::components::mk_padding(
+                Size_Pct(1.f, 0.f), Size_Px(WIN_HF() - 150.f, 1.f)));
+
+            auto button = ui::components::mk_button(MK_UUID(id, ROOT_ID),
+                                                    Size_Pct(0.05f, 1.f),
+                                                    Size_Pct(0.075f, 1.f));
+
+            if (image_button(*button, "discord")) {
+                std::cout << "clicked button" << std::endl;
+                util::open_url(strings::urls::DISCORD);
+            }
+        }
+        ui_context->pop_parent();
+    }
+
     virtual void onUpdate(float) override {
         ZoneScoped;
         if (MenuState::get().is_in_menu()) play_music();
@@ -124,6 +151,7 @@ struct MenuLayer : public Layer {
         {
             draw_menu_buttons();
             draw_title_section();
+            draw_external_icons();
         }
         ui_context->pop_parent();
         ui_context->end(root.get());

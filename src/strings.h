@@ -80,9 +80,6 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
 
  */
 
-// TODO write a python script that extracts any new strings from here and adds
-// them as empty in the .po files
-
 #include <string>
 
 namespace strings {
@@ -273,6 +270,12 @@ constexpr const char* CLOSED = "CLOSED";
 constexpr const char* NEXT_ROUND_COUNTDOWN = "Next Round Starting In";
 
 }  // namespace i18n
+
+namespace urls {
+
+constexpr const char* DISCORD = "https://ochoag.com/discord.html";
+
+}
 
 }  // namespace strings
 
