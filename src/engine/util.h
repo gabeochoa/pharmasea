@@ -1,12 +1,14 @@
 #pragma once
 
 //
+#include "log.h"
 #define _USE_MATH_DEFINES  // for C++
 #include <math.h>
 
 #include <algorithm>
 #include <cctype>
 #include <cmath>
+#include <cstdlib>  // For using the system function
 #include <regex>
 #include <sstream>
 #include <string>
@@ -137,6 +139,23 @@ template<typename Range, typename Value = typename Range::value_type>
     const int count = (int) std::count_if(str.begin(), str.end(),
                                           [](char i) { return i == ' '; });
     return count;
+}
+
+inline void open_url(const std::string& url) {
+#ifdef _WIN32
+    // For Windows
+    std::string command = "start " + url;
+#elif __APPLE__
+    std::string command = "open " + url;
+#else
+    // For Unix-based systems (e.g., Linux)
+    std::string command = "xdg-open " + url;
+#endif
+
+    int result = std::system(command.c_str());
+    if (result != 0) {
+        log_warn("Failed to open url: {}", result);
+    }
 }
 
 }  // namespace util
