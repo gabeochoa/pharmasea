@@ -76,13 +76,19 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
              "$$$$$$ooooooo     """""""""$$$""""$$o   ""
 
 
- This file is for all strings that dont need to be translated;
+ This file is for all strings
 
  */
 
 #include <string>
 
 namespace strings {
+
+constexpr const char* GAME_NAME = "Pub Panic!";
+constexpr const char* GAME_FOLDER = "pharmasea";
+
+///
+
 namespace entity {
 
 constexpr const char* REMOTE_PLAYER = "remote_player";
@@ -193,8 +199,6 @@ constexpr const char* FPS = "FPS";
 constexpr const char* GAME = "Game";
 constexpr const char* MENU = "Menu";
 constexpr const char* ABOUT = "About";
-
-constexpr const char* PHARMASEA = "Pharmasea";
 
 // TODO translate
 }  // namespace menu

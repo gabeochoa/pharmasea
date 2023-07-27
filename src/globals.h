@@ -8,7 +8,6 @@
 constexpr std::string_view VERSION = "alpha_0.23.07.21";
 constexpr size_t HASHED_VERSION = hashString(VERSION);
 
-constexpr std::string_view GAME_FOLDER = "pharmasea";
 constexpr std::string_view SETTINGS_FILE_NAME = "settings.bin";
 
 constexpr int MAP_H = 33;

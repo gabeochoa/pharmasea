@@ -97,8 +97,7 @@ struct MenuLayer : public Layer {
                                                 Size_Px(100.f, 1.f)));
             auto title_text = ui_context->own(
                 Widget(Size_Pct(1.f, 0.5f), Size_Px(100.f, 1.f)));
-            // TODO this somewhere should match the one in app.h
-            text(*title_text, strings::menu::PHARMASEA);
+            text(*title_text, strings::GAME_NAME);
         }
         ui_context->pop_parent();
     }
@@ -122,7 +121,6 @@ struct MenuLayer : public Layer {
                                                     Size_Pct(0.075f, 1.f));
 
             if (image_button(*button, "discord")) {
-                std::cout << "clicked button" << std::endl;
                 util::open_url(strings::urls::DISCORD);
             }
         }

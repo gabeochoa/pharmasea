@@ -59,7 +59,7 @@ void startup() {
         WIN_W(),
         WIN_H(),
         //
-        "PharmaSea",
+        strings::GAME_NAME,
         //
         raylib::LOG_WARNING,
     });
@@ -68,7 +68,7 @@ void startup() {
 
     // Doesnt strictly need to be before preload but just to be safe
     Files::create(FilesConfig{
-        GAME_FOLDER,
+        strings::GAME_FOLDER,
         SETTINGS_FILE_NAME,
     });
 
