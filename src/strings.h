@@ -206,10 +206,10 @@ constexpr const char* ABOUT = "About";
 // This is not aligned on purpose
 // TODO add to po file
 constexpr const char* ABOUT_INFO = R"(
-A game by: 
-    Gabe
-    Brett
-    Alice)";
+A game
+Choice Honey 
+Gabe 
+    )";
 
 namespace i18n {
 
