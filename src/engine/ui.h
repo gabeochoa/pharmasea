@@ -12,6 +12,7 @@
 #include "ui_widget.h"
 
 //
+#include "texture_library.h"
 #include "uuid.h"
 
 namespace ui {
@@ -46,7 +47,15 @@ bool button(
     // returns true if the button was clicked else false
     const Widget& widget,
     // button label if needed
-    const std::string& content = "");
+    const std::string& content = "",
+    // if true, hides the button background
+    const bool no_background = false);
+
+bool image_button(
+    // returns true if the button was clicked else false
+    const Widget& widget,
+    // button label if needed
+    const std::string& texture_name = "");
 
 // TODO is this what we want?
 bool button_list(
@@ -289,7 +298,8 @@ inline bool text(const Widget& widget, const std::string& content,
     return true;
 }
 
-inline bool button(const Widget& widget, const std::string& content) {
+inline bool button(const Widget& widget, const std::string& content,
+                   bool no_background) {
     const auto _button_pressed = [](const uuid id) {
         // check click
         if (has_kb_focus(id) && get().pressed(InputName::WidgetPress)) {
@@ -312,14 +322,41 @@ inline bool button(const Widget& widget, const std::string& content) {
         try_to_grab_kb(widget.id);
 
         _draw_focus_ring(widget);
-        get().draw_widget_rect(widget.rect, is_active_and_hot(widget.id)
-                                                ? (theme::Usage::Secondary)
-                                                : (theme::Usage::Primary));
+        if (!no_background) {
+            get().draw_widget_rect(widget.rect, is_active_and_hot(widget.id)
+                                                    ? (theme::Usage::Secondary)
+                                                    : (theme::Usage::Primary));
+        }
         get()._draw_text(widget.rect, content, theme::Usage::Font);
 
         handle_tabbing(widget.id);
     }
     return _button_pressed(widget.id);
+}
+
+inline float calculateScale(const vec2& rect_size, const vec2& image_size) {
+    float scale_x = rect_size.x / image_size.x;
+    float scale_y = rect_size.y / image_size.y;
+    return std::min(scale_x, scale_y);
+}
+
+inline bool image_button(
+    // returns true if the button was clicked else false
+    const Widget& widget, const std::string& texture_name) {
+    UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
+    bool button_pressed = button(widget, "", true);
+
+    if (lf.rect.has_value()) {
+        const Rectangle& rect = lf.rect.value();
+        const vec2 button_size = {(float) rect.width, (float) rect.height};
+
+        const raylib::Texture texture = TextureLibrary::get().get(texture_name);
+        const vec2 tex_size = {(float) texture.width, (float) texture.height};
+
+        get().draw_image(texture, {rect.x, rect.y}, 0,
+                         calculateScale(button_size, tex_size));
+    }
+    return button_pressed;
 }
 
 inline bool button_list(const Widget& widget,

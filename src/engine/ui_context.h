@@ -485,6 +485,12 @@ struct UIContext : public IUIContextInputManager,
         DrawRectangleRounded(rect, 0.15f, 4, active_theme().from_usage(usage));
     }
 
+    void draw_image(const raylib::Texture& texture, vec2 pos,
+                    float rotation = 0.f, float scale = 1.f,
+                    Color tint = WHITE) {
+        raylib::DrawTextureEx(texture, pos, rotation, scale, tint);
+    }
+
     void draw_widget(Widget widget, theme::Usage usage) {
         draw_widget_rect(widget.rect, usage);
     }
