@@ -60,6 +60,7 @@ struct ModelLibrary {
     }
 
     void unload_all() { impl.unload_all(); }
+    [[nodiscard]] auto size() { return impl.size(); }
 
    private:
     struct ModelLibraryImpl : Library<raylib::Model> {
@@ -111,6 +112,8 @@ struct ModelInfoLibrary {
     }
 
     void unload_all() { impl.unload_all(); }
+
+    [[nodiscard]] auto size() { return impl.size(); }
 
    private:
     struct ModelInfoLibraryImpl : Library<ModelInfo> {

@@ -100,10 +100,10 @@ inline std::vector<SizeInfo> size_all_components_sorted() {
 }
 
 inline void size_test() {
-    auto r = size_all_components_sorted();
-    for (auto si : r) {
-        std::cout << si.name << " " << si.size << std::endl;
-    }
+    // auto r = size_all_components_sorted();
+    // for (auto si : r) {
+    // std::cout << si.name << " " << si.size << std::endl;
+    // }
     //
     // r = size_all_sorted();
     // for (auto si : r) {

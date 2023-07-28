@@ -95,8 +95,8 @@ void Preload::load_models() {
         }
     });
 
-    // TODO add count of models
-    log_info("Loaded model json successfully");
+    log_info("Loaded model json successfully, {} models",
+             ModelLibrary::get().size());
 }
 
 void Preload::load_drink_recipes() {
@@ -140,11 +140,12 @@ void Preload::load_drink_recipes() {
                 },
                 "INVALID", base_name.c_str());
 
-            log_info("loaded recipe {} ", base_name);
+            log_trace("loaded recipe {} ", base_name);
         }
     });
 
-    log_info("Loaded drink recipe json successfully");
+    log_info("Loaded drink json successfully, {} drinks",
+             RecipeLibrary::get().size());
 }
 
 void Preload::load_textures() {
@@ -174,9 +175,10 @@ void Preload::load_textures() {
                 Files::get().fetch_resource_path(folder, filename).c_str(),
                 library_name.c_str());
 
-            log_info("loaded texture {} ", library_name);
+            log_trace("loaded texture {} ", library_name);
         }
 
-        log_info("Loaded texture json successfully");
+        log_info("Loaded texture json successfully, {} textures",
+                 TextureLibrary::get().size());
     });
 }

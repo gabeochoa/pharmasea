@@ -8,6 +8,7 @@ SINGLETON_FWD(TextureLibrary)
 struct TextureLibrary {
     SINGLETON(TextureLibrary)
 
+    [[nodiscard]] auto size() { return impl.size(); }
     void unload_all() { impl.unload_all(); }
 
     [[nodiscard]] raylib::Texture2D& get(const std::string& name) {

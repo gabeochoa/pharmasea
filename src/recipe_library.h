@@ -16,6 +16,8 @@ SINGLETON_FWD(RecipeLibrary)
 struct RecipeLibrary {
     SINGLETON(RecipeLibrary)
 
+    [[nodiscard]] auto size() { return impl.size(); }
+
     [[nodiscard]] const Recipe& get(const std::string& name) const {
         return impl.get(name);
     }
