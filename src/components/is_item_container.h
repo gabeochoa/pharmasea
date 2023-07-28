@@ -45,6 +45,8 @@ struct IsItemContainer : public BaseComponent {
         return *this;
     }
 
+    void reset_generations() { gens = 0; }
+
    private:
     int gens = 0;
     int max_gens = -1;

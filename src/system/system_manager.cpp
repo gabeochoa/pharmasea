@@ -468,6 +468,17 @@ void delete_held_items_when_leaving_inround(
     canHold.update(nullptr);
 }
 
+void reset_max_gen_when_after_deletion(const std::shared_ptr<Entity> entity) {
+    if (entity->is_missing<CanHoldItem>()) return;
+    if (entity->is_missing<IsItemContainer>()) return;
+
+    CanHoldItem& canHold = entity->get<CanHoldItem>();
+    // If something wasnt deleted, then just ignore it for now
+    if (canHold.is_holding_item()) return;
+
+    entity->get<IsItemContainer>().reset_generations();
+}
+
 void refetch_dynamic_model_names(const std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<ModelRenderer>()) return;
     if (entity->is_missing<HasDynamicModelName>()) return;

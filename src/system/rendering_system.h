@@ -503,7 +503,7 @@ inline void render_block_state_change_reason(const Entity& entity, float) {
 
     // TODO handle centering the text better when there are more than one
     bool has_reasons = ht.block_state_change_reasons.count() > 1;
-    int posy = has_reasons ? 75 : 200;
+    int posy = has_reasons ? 25 : 25;
     for (int i = 1; i < HasTimer::WaitingReason::WaitingReasonLast; i++) {
         bool enabled = ht.read_reason(i);
 

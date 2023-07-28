@@ -39,6 +39,8 @@ void handle_autodrop_furniture_when_exiting_planning(
 void delete_held_items_when_leaving_inround(
     const std::shared_ptr<Entity> entity);
 
+void reset_max_gen_when_after_deletion(const std::shared_ptr<Entity> entity);
+
 void refetch_dynamic_model_names(const std::shared_ptr<Entity> entity, float);
 
 void process_squirter(const std::shared_ptr<Entity> entity, float dt);
@@ -170,6 +172,7 @@ struct SystemManager {
             for (auto& entity : entities) {
                 // TODO make a namespace for transition functions
                 system_manager::delete_held_items_when_leaving_inround(entity);
+                system_manager::reset_max_gen_when_after_deletion(entity);
                 system_manager::increment_day_count(entity, dt);
                 // TODO reset haswork's
             }
