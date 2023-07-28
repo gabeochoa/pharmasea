@@ -316,6 +316,8 @@ inline void drop_held_furniture(const std::shared_ptr<Entity>& player) {
         ourCHF.update(nullptr);
         log_info("we {} dropped the furniture {} we were holding", player->id,
                  hf->id);
+
+        EntityHelper::invalidatePathCache();
     }
 
     // TODO need to make sure it doesnt place ontop of another
