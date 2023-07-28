@@ -21,24 +21,13 @@ struct EntityFilter {
         Subtype = 1 << 1,
     } flags;
 
-    [[nodiscard]] size_t type_count() const {
-        return magic_enum::enum_count<FilterDatumType>();
-    }
-
+   private:
     std::optional<std::string> name;
     int subtype_index;
 
-    [[nodiscard]] std::string print_value_for_type(FilterDatumType type) const {
-        switch (type) {
-            case Name:
-                return fmt::format("{}",
-                                   name.has_value() ? name.value() : "no name");
-            case Subtype:
-                return fmt::format("{}", subtype_index);
-            case EmptyFilterDatumType:
-                break;
-        }
-        return "EntityFilter::UNSET";
+   public:
+    [[nodiscard]] size_t type_count() const {
+        return magic_enum::enum_count<FilterDatumType>();
     }
 
     [[nodiscard]] bool any_flags() const {
@@ -56,24 +45,37 @@ struct EntityFilter {
 
     [[nodiscard]] bool no_flags() const { return !any_flags(); }
 
-    void clear() {
-        magic_enum::enum_for_each<FilterDatumType>([this](auto val) {
-            constexpr FilterDatumType type = val;
-            clear_type(type);
-        });
-    }
-
-    void clear_type(FilterDatumType type) {
+    [[nodiscard]] std::string print_value_for_type(FilterDatumType type) const {
         switch (type) {
             case Name:
-                name = {};
-                break;
+                return fmt::format("{}",
+                                   name.has_value() ? name.value() : "no name");
             case Subtype:
-                subtype_index = -1;
-                break;
+                return fmt::format("{}", subtype_index);
             case EmptyFilterDatumType:
                 break;
         }
+        return "EntityFilter::UNSET";
+    }
+
+    void clear() {
+        const auto clear_type = [this](FilterDatumType type) {
+            switch (type) {
+                case Name:
+                    name = {};
+                    break;
+                case Subtype:
+                    subtype_index = -1;
+                    break;
+                case EmptyFilterDatumType:
+                    break;
+            }
+        };
+
+        magic_enum::enum_for_each<FilterDatumType>([clear_type](auto val) {
+            constexpr FilterDatumType type = val;
+            clear_type(type);
+        });
     }
 
     // Is this type of filtering enabled on our object?
@@ -191,7 +193,6 @@ struct EntityFilter {
         if (respect == ReqOnly && strength == Suggestion) return true;
 
         bool pass = true;
-
         auto types = magic_enum::enum_values<FilterDatumType>();
 
         size_t i = 0;
