@@ -97,6 +97,9 @@ struct EntityHelper {
         std::shared_ptr<Entity> e(new Entity());
         get_entities().push_back(e);
         // log_info("created a new entity {}", e->id);
+
+        invalidatePathCache();
+
         return *e;
 
         // if (!e->add_to_navmesh()) {
@@ -359,10 +362,6 @@ struct EntityHelper {
     static inline void invalidatePathCache() { cache_is_walkable.clear(); }
 
     static inline bool isWalkable(vec2 pos) {
-        // TODO removed cache because it breaks the map-validation code
-        // i think the issue is that the cache is static so its stays whatever
-        // the initial state was
-        return isWalkableRawEntities(pos);
         TRACY_ZONE_SCOPED;
         if (!cache_is_walkable.contains(pos)) {
             bool walkable = isWalkableRawEntities(pos);
