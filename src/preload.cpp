@@ -9,9 +9,11 @@
 int LOG_LEVEL = 2;
 std::vector<std::string> EXAMPLE_MAP;
 
-void load_settings_config() {
+auto Preload::load_json_config_file(
+    const char* filename,
+    const std::function<void(nlohmann::json)>& processor) {
     std::tuple<const char*, const char*> configFilePath = {
-        strings::settings::CONFIG, "settings.json"};
+        strings::settings::CONFIG, filename};
 
     std::ifstream ifs(Files::get().fetch_resource_path(
         std::get<0>(configFilePath), std::get<1>(configFilePath)));
@@ -27,23 +29,30 @@ void load_settings_config() {
     }
 
     try {
-        const auto configJSON = nlohmann::json::parse(ifs);
+        const auto configJSON = nlohmann::json::parse(
+            ifs, nullptr /*parser_callback_t*/, true /*allow_exceptions=*/,
+            true /* ignore comments */);
 
-        LOG_LEVEL = configJSON.value("LOG_LEVEL", 2);
-        std::cout << "LOG_LEVEL read from file: " << LOG_LEVEL << std::endl;
-
-        EXAMPLE_MAP = configJSON["DEFAULT_MAP"];
-        std::cout << "DEFAULT_MAP read from file: " << EXAMPLE_MAP.size()
-                  << std::endl;
+        processor(configJSON);
 
     } catch (const std::exception& e) {
-        std::cerr
-            << "Preload::load_config: settings.json formatted improperly. "
-            << e.what() << std::endl;
+        std::cerr << "Preload::load_config: " << filename
+                  << " formatted improperly. " << e.what() << std::endl;
     }
 }
 
-void load_model_configs() {
+void Preload::load_config() {
+    load_json_config_file("settings.json", [](const nlohmann::json& contents) {
+        LOG_LEVEL = contents.value("LOG_LEVEL", 2);
+        std::cout << "LOG_LEVEL read from file: " << LOG_LEVEL << std::endl;
+
+        EXAMPLE_MAP = contents["DEFAULT_MAP"];
+        std::cout << "DEFAULT_MAP read from file: " << EXAMPLE_MAP.size()
+                  << std::endl;
+    });
+}
+
+void Preload::load_models() {
     if (!ENABLE_MODELS)
     // TODO log
     {
@@ -51,27 +60,8 @@ void load_model_configs() {
         return;
     }
 
-    std::tuple<const char*, const char*> configFilePath = {
-        strings::settings::CONFIG, "models.json"};
-
-    std::ifstream ifs(Files::get().fetch_resource_path(
-        std::get<0>(configFilePath), std::get<1>(configFilePath)));
-
-    if (!ifs.good()) {
-        std::cerr << "load_config error: configFilePath not found, "
-                     "streamer couldn't open file. Check path: "
-                  << Files::get().fetch_resource_path(
-                         std::get<0>(configFilePath),
-                         std::get<1>(configFilePath))
-                  << std::endl;
-        return;
-    }
-
-    try {
-        const auto configJSON = nlohmann::json::parse(ifs);
-
-        auto models = configJSON["models"];
-
+    load_json_config_file("models.json", [](const nlohmann::json& contents) {
+        auto models = contents["models"];
         for (auto object : models) {
             ModelInfoLibrary::ModelLoadingInfo modelInfo;
             modelInfo.folder = object["folder"].get<std::string>();
@@ -103,44 +93,15 @@ void load_model_configs() {
             log_trace("loaded {} as {} ", modelInfo.filename,
                       modelInfo.library_name);
         }
+    });
 
-        // TODO move to log
-        // TODO add count of models
-        std::cout << "Loaded model json successfully" << std::endl;
-    } catch (const std::exception& e) {
-        // for now crash the game, because if we are not loading some models
-        // the game will crash anyway later once we try to use it which will be
-        // worse
-        log_error("Preload::load_config: models.json formatted improperly. {}",
-                  e.what());
-    }
+    // TODO add count of models
+    log_info("Loaded model json successfully");
 }
 
-void load_drink_recipes() {
-    std::tuple<const char*, const char*> configFilePath = {
-        strings::settings::CONFIG, "drinks.json"};
-
-    std::ifstream ifs(Files::get().fetch_resource_path(
-        std::get<0>(configFilePath), std::get<1>(configFilePath)));
-
-    if (!ifs.good()) {
-        // TODO move to log
-        std::cerr << "load_config error: configFilePath not found, "
-                     "streamer couldn't open file. Check path: "
-                  << Files::get().fetch_resource_path(
-                         std::get<0>(configFilePath),
-                         std::get<1>(configFilePath))
-                  << std::endl;
-        return;
-    }
-
-    try {
-        const auto configJSON = nlohmann::json::parse(
-            ifs, nullptr /*parser_callback_t*/, true /*allow_exceptions=*/,
-            true /* ignore comments */);
-
-        auto models = configJSON["drinks"];
-
+void Preload::load_drink_recipes() {
+    load_json_config_file("drinks.json", [](const nlohmann::json& contents) {
+        auto models = contents["drinks"];
         for (auto object : models) {
             auto base_name = object["name"].get<std::string>();
             IngredientBitSet ingredients;
@@ -181,13 +142,9 @@ void load_drink_recipes() {
 
             log_info("loaded recipe {} ", base_name);
         }
+    });
 
-        log_info("Loaded drink recipe json successfully");
-    } catch (const std::exception& e) {
-        // TODO extract this logic for the three functions into helper
-        log_error("Preload::load_config: drinks.json formatted improperly. {}",
-                  e.what());
-    }
+    log_info("Loaded drink recipe json successfully");
 }
 
 void Preload::load_textures() {
@@ -205,29 +162,8 @@ void Preload::load_textures() {
 
     // Now load the one off ones
 
-    std::tuple<const char*, const char*> configFilePath = {
-        strings::settings::CONFIG, "textures.json"};
-
-    std::ifstream ifs(Files::get().fetch_resource_path(
-        std::get<0>(configFilePath), std::get<1>(configFilePath)));
-
-    if (!ifs.good()) {
-        // TODO move to log
-        std::cerr << "load_config error: configFilePath not found, "
-                     "streamer couldn't open file. Check path: "
-                  << Files::get().fetch_resource_path(
-                         std::get<0>(configFilePath),
-                         std::get<1>(configFilePath))
-                  << std::endl;
-        return;
-    }
-
-    try {
-        const auto configJSON = nlohmann::json::parse(
-            ifs, nullptr /*parser_callback_t*/, true /*allow_exceptions=*/,
-            true /* ignore comments */);
-
-        auto textures = configJSON["textures"];
+    load_json_config_file("textures.json", [](const nlohmann::json& contents) {
+        auto textures = contents["textures"];
 
         for (auto object : textures) {
             auto folder = object["folder"].get<std::string>();
@@ -242,17 +178,5 @@ void Preload::load_textures() {
         }
 
         log_info("Loaded texture json successfully");
-    } catch (const std::exception& e) {
-        // TODO extract this logic for the three functions into helper
-        log_error(
-            "Preload::load_config: textures.json formatted improperly. {}",
-            e.what());
-    }
-}
-
-void Preload::load_config() {
-    load_settings_config();
-    load_model_configs();
-    // drinks use models, so let those load first
-    load_drink_recipes();
+    });
 }

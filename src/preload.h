@@ -33,6 +33,11 @@ struct Preload {
 
     Preload() {
         load_config();
+        load_models();
+
+        // drinks use models, so let those load first
+        load_drink_recipes();
+
         load_translations();
         load_shaders();
 
@@ -86,6 +91,12 @@ struct Preload {
     }
 
     void load_textures();
+    void load_models();
+    auto load_json_config_file(
+        const char* filename,
+        const std::function<void(nlohmann::json)>& processor);
+    void load_settings_config();
+    void load_drink_recipes();
 
     void load_sounds() {
         SoundLibrary::get().load(
