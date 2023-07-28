@@ -7,11 +7,6 @@
 struct CollectsUserInput : public BaseComponent {
     virtual ~CollectsUserInput() {}
 
-    // TODO make private at some point
-    UserInputs inputs;
-
-    InputSet pressed;
-
     auto& reset() {
         pressed.reset();
         return *this;
@@ -31,7 +26,18 @@ struct CollectsUserInput : public BaseComponent {
         return *this;
     }
 
+    [[nodiscard]] bool empty() const { return inputs.empty(); }
+
+    [[nodiscard]] UserInputs& inputs_NETWORK_ONLY() { return inputs; }
+    void clear() { inputs.clear(); }
+
    private:
+    // TODO I wonder if there is a way to combine all the inputs for the current
+    // frame into one InputSet but we need the dts
+    UserInputs inputs;
+
+    InputSet pressed;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {

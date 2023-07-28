@@ -81,7 +81,7 @@ struct CanPerformJob : public BaseComponent {
         }
     }
 
-    vec2 job_start() {
+    vec2 job_start() const {
         if (needs_job()) return vec2{0, 0};
         return job().start;
     }
