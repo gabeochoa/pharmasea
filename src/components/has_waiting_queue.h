@@ -44,11 +44,5 @@ struct HasWaitingQueue : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        // s.value4b(next_line_position);
-
-        // s.container(ppl_in_line, [](S& sv, std::shared_ptr<Entity> entity) {
-        // sv.object(entity);
-        // });
     }
 };
