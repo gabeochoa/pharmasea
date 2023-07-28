@@ -502,6 +502,7 @@ static void make_trigger_area(
     trigger_area.addComponent<SimpleColoredBoxRenderer>().update(PINK, PINK);
     trigger_area.addComponent<IsTriggerArea>()
         .update_title(title)
+        // TODO we dont need to hard code these, why not just default to these
         .update_max_entrants(1)
         .update_progress_max(2.f)
         .on_complete([]() {
@@ -526,8 +527,8 @@ static void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
     customer_spawner
         .addComponent<IsSpawner>()  //
         .set_fn(sfn)
-        .set_total(3)
-        .set_time_between(2.f);
+        .set_total(round_settings::NUM_CUSTOMERS)
+        .set_time_between(round_settings::TIME_BETWEEN_CUSTOMERS_S);
 }
 
 static void make_blender(Entity& blender, vec2 pos) {
@@ -541,8 +542,8 @@ static void make_blender(Entity& blender, vec2 pos) {
 static void make_sophie(Entity& sophie, vec3 pos) {
     make_entity(sophie, {strings::entity::SOPHIE}, pos);
 
-    // TODO how long is a day?
-    sophie.addComponent<HasTimer>(HasTimer::Renderer::Round, 90.f);
+    sophie.addComponent<HasTimer>(HasTimer::Renderer::Round,
+                                  round_settings::ROUND_LENGTH_S);
 }
 
 }  // namespace furniture

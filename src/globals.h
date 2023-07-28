@@ -44,3 +44,13 @@ static bool is_host = false;
 }  // namespace mp_test
 
 }  // namespace network
+
+namespace round_settings {
+
+// TODO how long is a day?
+constexpr const float ROUND_LENGTH_S = 90.f;
+
+constexpr const int NUM_CUSTOMERS = 1;
+constexpr const float TIME_BETWEEN_CUSTOMERS_S = 2.f;
+
+}  // namespace round_settings
