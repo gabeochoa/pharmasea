@@ -22,6 +22,7 @@ struct Entity;
 static std::shared_ptr<Entity> global_player;
 
 constexpr float GATHER_SPOT = -20.f;
+constexpr int MAX_SEARCH_RANGE = 100;
 
 static bool ENABLE_MODELS = true;
 static bool ENABLE_SOUND = true;
@@ -48,7 +49,7 @@ static bool is_host = false;
 namespace round_settings {
 
 // TODO how long is a day?
-constexpr const float ROUND_LENGTH_S = 90.f;
+constexpr const float ROUND_LENGTH_S = 10.f;
 
 constexpr const int NUM_CUSTOMERS = 1;
 constexpr const float TIME_BETWEEN_CUSTOMERS_S = 2.f;

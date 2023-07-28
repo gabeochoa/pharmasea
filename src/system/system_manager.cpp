@@ -222,7 +222,7 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     };
 
     auto match = is_ipp ? EntityHelper::getClosestMatchingEntity<Furniture>(
-                              transform.as2(), 100, _ipp_filter)
+                              transform.as2(), MAX_SEARCH_RANGE, _ipp_filter)
                         : EntityHelper::getClosestMatchingFurniture(
                               transform, 1.f, _conveyer_filter);
 
