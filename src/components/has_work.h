@@ -45,6 +45,10 @@ struct HasWork : public BaseComponent {
         if (do_work) do_work(owner, *this, player, dt);
     }
 
+    void call(HasWork& other, Entity& owner, Entity& player, float dt) {
+        if (do_work) do_work(owner, other, player, dt);
+    }
+
    private:
     WorkFn do_work;
 

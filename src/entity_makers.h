@@ -242,7 +242,10 @@ static void process_table_working(Entity& table, HasWork& hasWork,
 
     if (!tableCHI.item()->has<HasWork>()) return;
 
-    hasWork.call(*tableCHI.item(), player, dt);
+    // TODO add comment on why we have to run the "itemHasWork" and not
+    // hasWork.call()
+    HasWork& itemHasWork = tableCHI.item()->get<HasWork>();
+    itemHasWork.call(hasWork, *tableCHI.item(), player, dt);
 
     return;
 }
