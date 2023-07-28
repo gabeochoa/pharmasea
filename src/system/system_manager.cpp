@@ -876,4 +876,11 @@ void increment_day_count(const std::shared_ptr<Entity> entity, float) {
     entity->get<HasTimer>().dayCount++;
 }
 
+void reset_customer_orders_when_leaving_inround(
+    const std::shared_ptr<Entity> entity) {
+    if (entity->is_missing<CanOrderDrink>()) return;
+    CanOrderDrink& cod = entity->get<CanOrderDrink>();
+    cod.reset();
+}
+
 }  // namespace system_manager

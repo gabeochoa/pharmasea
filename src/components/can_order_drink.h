@@ -16,12 +16,15 @@ struct CanOrderDrink : public BaseComponent {
         DoneDrinking,
     } order_state;
 
-    CanOrderDrink() {
+    CanOrderDrink() { reset(); }
+
+    virtual ~CanOrderDrink() {}
+
+    void reset() {
+        // TODO eventually read from game settings
         num_orders_rem = randIn(0, 5);
         current_order = get_random_drink();
     }
-
-    virtual ~CanOrderDrink() {}
 
     [[nodiscard]] IngredientBitSet recipe() const {
         return get_recipe_for_drink(current_order);
