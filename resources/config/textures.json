@@ -1,0 +1,39 @@
+{
+    "textures": [
+        {
+            "folder": "images",
+            "filename": "face.png",
+            "library_name": "face"
+        },
+        {
+            "folder": "images",
+            "filename": "jug.png",
+            "library_name": "jug"
+        },
+        {
+            "folder": "images",
+            "filename": "sleepyico.png",
+            "library_name": "sleepy"
+        },
+        {
+            "folder": "images",
+            "filename": "character_duck_mug.png",
+            "library_name": "character_duck_mug"
+        },
+        {
+            "folder": "images",
+            "filename": "character_rogue_mug.png",
+            "library_name": "character_rogue_mug"
+        },
+        {
+            "folder": "images",
+            "filename": "character_bear_mug.png",
+            "library_name": "character_bear_mug"
+        },
+        {
+            "folder": "images",
+            "filename": "character_dog_mug.png",
+            "library_name": "character_dog_mug"
+        }
+    ]
+}

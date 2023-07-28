@@ -190,6 +190,66 @@ void load_drink_recipes() {
     }
 }
 
+void Preload::load_textures() {
+    Files::get().for_resources_in_folder(
+        strings::settings::IMAGES, "drinks",
+        [](const std::string& name, const std::string& filename) {
+            TextureLibrary::get().load(filename.c_str(), name.c_str());
+        });
+
+    Files::get().for_resources_in_folder(
+        strings::settings::IMAGES, "external",
+        [](const std::string& name, const std::string& filename) {
+            TextureLibrary::get().load(filename.c_str(), name.c_str());
+        });
+
+    // Now load the one off ones
+
+    std::tuple<const char*, const char*> configFilePath = {
+        strings::settings::CONFIG, "textures.json"};
+
+    std::ifstream ifs(Files::get().fetch_resource_path(
+        std::get<0>(configFilePath), std::get<1>(configFilePath)));
+
+    if (!ifs.good()) {
+        // TODO move to log
+        std::cerr << "load_config error: configFilePath not found, "
+                     "streamer couldn't open file. Check path: "
+                  << Files::get().fetch_resource_path(
+                         std::get<0>(configFilePath),
+                         std::get<1>(configFilePath))
+                  << std::endl;
+        return;
+    }
+
+    try {
+        const auto configJSON = nlohmann::json::parse(
+            ifs, nullptr /*parser_callback_t*/, true /*allow_exceptions=*/,
+            true /* ignore comments */);
+
+        auto textures = configJSON["textures"];
+
+        for (auto object : textures) {
+            auto folder = object["folder"].get<std::string>();
+            auto filename = object["filename"].get<std::string>();
+            auto library_name = object["library_name"].get<std::string>();
+
+            TextureLibrary::get().load(
+                Files::get().fetch_resource_path(folder, filename).c_str(),
+                library_name.c_str());
+
+            log_info("loaded texture {} ", library_name);
+        }
+
+        log_info("Loaded texture json successfully");
+    } catch (const std::exception& e) {
+        // TODO extract this logic for the three functions into helper
+        log_error(
+            "Preload::load_config: textures.json formatted improperly. {}",
+            e.what());
+    }
+}
+
 void Preload::load_config() {
     load_settings_config();
     load_model_configs();

@@ -85,43 +85,7 @@ struct Preload {
         // font = LoadFontEx("./resources/fonts/constan.ttf", 96, 0, 0);
     }
 
-    void load_textures() {
-        const std::tuple<const char*, const char*, const char*> textures[] = {
-            {strings::settings::IMAGES, "face.png", "face"},
-            {strings::settings::IMAGES, "jug.png", "jug"},
-            {strings::settings::IMAGES, "sleepyico.png", "sleepy"},
-
-            //
-            {strings::settings::IMAGES, "character_duck_mug.png",
-             "character_duck_mug"},
-            {strings::settings::IMAGES, "character_rogue_mug.png",
-             "character_rogue_mug"},
-            {strings::settings::IMAGES, "character_bear_mug.png",
-             "character_bear_mug"},
-            {strings::settings::IMAGES, "character_dog_mug.png",
-             "character_dog_mug"},
-        };
-
-        for (const auto& t : textures) {
-            TextureLibrary::get().load(
-                Files::get()
-                    .fetch_resource_path(std::get<0>(t), std::get<1>(t))
-                    .c_str(),
-                std::get<2>(t));
-        }
-
-        Files::get().for_resources_in_folder(
-            strings::settings::IMAGES, "drinks",
-            [](const std::string& name, const std::string& filename) {
-                TextureLibrary::get().load(filename.c_str(), name.c_str());
-            });
-
-        Files::get().for_resources_in_folder(
-            strings::settings::IMAGES, "external",
-            [](const std::string& name, const std::string& filename) {
-                TextureLibrary::get().load(filename.c_str(), name.c_str());
-            });
-    }
+    void load_textures();
 
     void load_sounds() {
         SoundLibrary::get().load(
