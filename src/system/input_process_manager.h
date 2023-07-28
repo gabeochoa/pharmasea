@@ -297,22 +297,30 @@ inline void rotate_furniture(const std::shared_ptr<Entity> player) {
 
 inline void drop_held_furniture(const std::shared_ptr<Entity>& player) {
     CanHoldFurniture& ourCHF = player->get<CanHoldFurniture>();
-    // TODO need to make sure it doesnt place ontop of another
-    // one
-    auto hf = ourCHF.furniture();
+    std::shared_ptr<Furniture> hf = ourCHF.furniture();
     if (!hf) {
         log_info(" id:{} we'd like to drop but our hands are empty",
                  player->id);
         return;
     }
 
-    hf->get<CanBeHeld>().set_is_being_held(false);
-    hf->get<Transform>().update(
-        vec::snap(vec::to3(player->get<Transform>().tile_infront(1))));
+    vec3 drop_location =
+        vec::snap(vec::to3(player->get<Transform>().tile_infront(1)));
 
-    ourCHF.update(nullptr);
-    log_info("we {} dropped the furniture {} we were holding", player->id,
-             hf->id);
+    bool can_place = EntityHelper::isWalkable(vec::to2(drop_location));
+
+    if (can_place) {
+        hf->get<CanBeHeld>().set_is_being_held(false);
+        hf->get<Transform>().update(drop_location);
+
+        ourCHF.update(nullptr);
+        log_info("we {} dropped the furniture {} we were holding", player->id,
+                 hf->id);
+    }
+
+    // TODO need to make sure it doesnt place ontop of another
+    // one
+    log_info("you cant place that here...");
 }
 
 // TODO grabbing reach needs to be better, you should be able to grab in the 8
