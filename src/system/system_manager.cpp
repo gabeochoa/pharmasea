@@ -853,7 +853,7 @@ void process_pnumatic_pipe_pairing(const std::shared_ptr<Entity> entity,
     // still dont have a pair, we probably just have an odd number
     if (!ipp.has_pair()) return;
 }
-void process_pnumatic_pipe_movement(std::shared_ptr<Entity> entity, float dt) {
+void process_pnumatic_pipe_movement(std::shared_ptr<Entity> entity, float) {
     if (entity->is_missing<IsPnumaticPipe>()) return;
 
     IsPnumaticPipe& ipp = entity->get<IsPnumaticPipe>();

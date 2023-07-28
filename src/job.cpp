@@ -423,7 +423,7 @@ Job::State WaitInQueueJob::run_state_working_at_end(
 
     // I'm relatively happy with my drink
 
-    canOrderDrink.order_state = CanOrderDrink::OrderState::Drinking;
+    canOrderDrink.order_state = CanOrderDrink::OrderState::DrinkingNow;
 
     CanHoldItem& ourCHI = entity->get<CanHoldItem>();
     ourCHI.update(regCHI.item());
@@ -474,7 +474,7 @@ Job::State LeavingJob::run_state_working_at_end(
 Job::State DrinkingJob::run_state_working_at_end(
     const std::shared_ptr<Entity>& entity, float dt) {
     CanOrderDrink& cod = entity->get<CanOrderDrink>();
-    cod.order_state = CanOrderDrink::OrderState::Drinking;
+    cod.order_state = CanOrderDrink::OrderState::DrinkingNow;
     entity->get<HasSpeechBubble>().on();
 
     timePassedInCurrentState += dt;

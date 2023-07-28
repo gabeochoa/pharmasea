@@ -12,7 +12,7 @@
 struct CanOrderDrink : public BaseComponent {
     enum OrderState {
         Ordering,
-        Drinking,
+        DrinkingNow,
         DoneDrinking,
     } order_state;
 
@@ -32,7 +32,8 @@ struct CanOrderDrink : public BaseComponent {
     }
 
     [[nodiscard]] const std::string icon_name() const {
-        if (order_state == OrderState::Drinking) return "jug";
+        // TODO this doesnt work today
+        if (order_state == OrderState::DrinkingNow) return "jug";
         return get_icon_name_for_drink(current_order);
     }
 

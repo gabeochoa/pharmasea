@@ -1,8 +1,6 @@
 
 #include "rendering_system.h"
 
-#include "system_manager.h"
-
 namespace system_manager {
 namespace ui {
 
