@@ -241,9 +241,8 @@ static void process_table_working(Entity& table, HasWork& hasWork,
     if (tableCHI.empty()) return;
 
     if (!tableCHI.item()->has<HasWork>()) return;
-    HasWork& itemHasWork = tableCHI.item()->get<HasWork>();
-    if (itemHasWork.do_work)
-        itemHasWork.do_work(*tableCHI.item(), hasWork, player, dt);
+
+    hasWork.call(*tableCHI.item(), player, dt);
 
     return;
 }

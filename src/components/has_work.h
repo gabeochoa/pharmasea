@@ -36,15 +36,18 @@ struct HasWork : public BaseComponent {
                                float dt)>
         WorkFn;
 
-    // TODO make private
-    WorkFn do_work;
-
     void init(WorkFn worker) { do_work = worker; }
 
     [[nodiscard]] bool should_reset_on_empty() const { return reset_on_empty; }
     void set_reset_on_empty(bool roe) { reset_on_empty = roe; }
 
+    void call(Entity& owner, Entity& player, float dt) {
+        if (do_work) do_work(owner, *this, player, dt);
+    }
+
    private:
+    WorkFn do_work;
+
     float pct_work_complete;
     bool more_to_do;
     bool reset_on_empty;

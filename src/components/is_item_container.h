@@ -27,6 +27,7 @@ struct IsItemContainer : public BaseComponent {
                 "match, so we are going to match everything");
             return true;
         }
+        // TODO consider changing from a name to an enum at some point
         return check_name(*item, item_type.c_str());
     }
 
@@ -40,6 +41,7 @@ struct IsItemContainer : public BaseComponent {
     [[nodiscard]] bool hit_max() const {
         return max_gens < 0 ? false : gens >= max_gens;
     }
+
     IsItemContainer& increment() {
         gens++;
         return *this;
