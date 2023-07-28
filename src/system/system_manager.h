@@ -39,6 +39,9 @@ void handle_autodrop_furniture_when_exiting_planning(
 void delete_held_items_when_leaving_inround(
     const std::shared_ptr<Entity> entity);
 
+void delete_customers_when_leaving_inround(
+    const std::shared_ptr<Entity> entity);
+
 void reset_customer_orders_when_leaving_inround(
     const std::shared_ptr<Entity> entity);
 
@@ -175,6 +178,7 @@ struct SystemManager {
             for (auto& entity : entities) {
                 // TODO make a namespace for transition functions
                 system_manager::delete_held_items_when_leaving_inround(entity);
+                system_manager::delete_customers_when_leaving_inround(entity);
                 system_manager::reset_max_gen_when_after_deletion(entity);
                 system_manager::increment_day_count(entity, dt);
                 system_manager::reset_customer_orders_when_leaving_inround(

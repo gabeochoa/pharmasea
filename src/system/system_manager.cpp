@@ -450,6 +450,16 @@ void handle_autodrop_furniture_when_exiting_planning(
     input_process_manager::planning::drop_held_furniture(entity);
 }
 
+void delete_customers_when_leaving_inround(
+    const std::shared_ptr<Entity> entity) {
+    // TODO im thinking this might not be enough if we have
+    // robots that can order for people or something
+    if (entity->is_missing<CanOrderDrink>()) return;
+    if (!check_name(*entity, strings::entity::CUSTOMER)) return;
+
+    entity->cleanup = true;
+}
+
 void delete_held_items_when_leaving_inround(
     const std::shared_ptr<Entity> entity) {
     // TODO this doesnt seem to work
