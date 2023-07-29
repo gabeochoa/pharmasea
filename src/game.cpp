@@ -133,6 +133,8 @@ void process_dev_flags(char* argv[]) {
 #if ENABLE_DEV_FLAGS
     argh::parser cmdl(argv);
 
+    network::ENABLE_REMOTE_IP = true;
+
     if (cmdl[{"--gabe", "-g"}]) {
         ENABLE_MODELS = true;
         ENABLE_SOUND = false;
