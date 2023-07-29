@@ -64,6 +64,7 @@ SINGLETON_FWD(SystemManager)
 struct SystemManager {
     SINGLETON(SystemManager)
 
+    // TODO fix this if we have more than one local player
     EntityID firstPlayerID = -1;
     Entities oldAll;
 
@@ -87,6 +88,8 @@ struct SystemManager {
     // if it does then the game inifite loops once you join the lobby
     void update_local_players(const Entities& players, float dt) {
         for (auto& entity : players) {
+            // TODO fix this if we have more than one local player
+            firstPlayerID = entity->id;
             system_manager::input_process_manager::collect_user_input(entity,
                                                                       dt);
         }
