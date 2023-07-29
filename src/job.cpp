@@ -35,7 +35,8 @@ bool HasWaitingQueue::matching_id(int id, int i) const {
     return ppl_in_line[i] ? ppl_in_line[i]->id == id : false;
 }
 
-bool HasWaitingQueue::has_matching_person(int id) const {
+// TODO rename this or fix return type to work in other contexts better
+int HasWaitingQueue::has_matching_person(int id) const {
     for (int i = 0; i < max_queue_size; i++) {
         if (matching_id(id, i)) return i;
     }
