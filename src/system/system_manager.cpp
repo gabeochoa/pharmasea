@@ -504,6 +504,7 @@ void count_max_trigger_area_entrants(const std::shared_ptr<Entity> entity,
 
     int count = 0;
     for (auto& e : SystemManager::get().oldAll) {
+        if (!e) continue;
         if (!check_name(*e, strings::entity::PLAYER)) continue;
         count++;
     }
@@ -515,6 +516,7 @@ void count_trigger_area_entrants(const std::shared_ptr<Entity> entity, float) {
 
     int count = 0;
     for (auto& e : SystemManager::get().oldAll) {
+        if (!e) continue;
         if (!check_name(*e, strings::entity::PLAYER)) continue;
         if (CheckCollisionBoxes(
                 e->get<Transform>().bounds(),
@@ -642,6 +644,7 @@ void sophie(const std::shared_ptr<Entity> entity, float) {
         std::vector<std::shared_ptr<Entity>> customers =
             EntityHelper::getAllWithName(strings::entity::CUSTOMER);
         for (std::shared_ptr<Entity> e : customers) {
+            if (!e) continue;
             if (vec::distance(e->get<Transform>().as2(), endpos) >
                 TILESIZE * 2.f) {
                 all_gone = false;
@@ -663,6 +666,7 @@ void sophie(const std::shared_ptr<Entity> entity, float) {
         // EntityHelper::getAllWithComponent<CanHoldFurniture>();
 
         for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
+            if (!e) continue;
             if (e->is_missing<CanHoldFurniture>()) continue;
             if (e->get<CanHoldFurniture>().is_holding_furniture()) {
                 all_empty = false;
@@ -755,6 +759,7 @@ void process_has_rope(const std::shared_ptr<Entity> entity, float) {
 
     OptEntity opt_player;
     for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
+        if (!e) continue;
         if (!check_name(*e, strings::entity::PLAYER)) continue;
         auto i = e->get<CanHoldItem>().item();
         if (!i) continue;
@@ -985,7 +990,8 @@ void SystemManager::process_state_change(
     const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
     if (state_transitioned_round_to_planning) {
         state_transitioned_round_to_planning = false;
-        for (auto& entity : entities) {
+
+        for_each(entities, dt, [](std::shared_ptr<Entity> entity, float dt) {
             // TODO make a namespace for transition functions
             system_manager::delete_held_items_when_leaving_inround(entity);
             system_manager::delete_customers_when_leaving_inround(entity);
@@ -993,26 +999,25 @@ void SystemManager::process_state_change(
             system_manager::increment_day_count(entity, dt);
             system_manager::reset_customer_orders_when_leaving_inround(entity);
             // TODO reset haswork's
-        }
+        });
     }
 
     if (state_transitioned_planning_to_round) {
         state_transitioned_planning_to_round = false;
-        for (auto& entity : entities) {
+        for_each(entities, dt, [](std::shared_ptr<Entity> entity, float) {
             system_manager::handle_autodrop_furniture_when_exiting_planning(
                 entity);
-        }
+        });
     }
 
     // All transitions
-    for (auto& entity : entities) {
+    for_each(entities, dt, [](std::shared_ptr<Entity> entity, float dt) {
         system_manager::refetch_dynamic_model_names(entity, dt);
-    }
+    });
 }
 
-void SystemManager::always_update(
-    const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
-    for (auto& entity : entity_list) {
+void SystemManager::always_update(const Entities& entities, float dt) {
+    for_each(entities, dt, [](std::shared_ptr<Entity> entity, float dt) {
         system_manager::reset_highlighted(entity, dt);
         // TODO should be just planning + lobby?
         // maybe a second one for highlighting items?
@@ -1035,12 +1040,12 @@ void SystemManager::always_update(
         // for now >:)
         if (check_name(*entity, strings::entity::SOPHIE))
             system_manager::sophie(entity, dt);
-    }
+    });
 }
 
 void SystemManager::in_round_update(
-    const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
-    for (auto& entity : entity_list) {
+    const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
+    for_each(entities, dt, [](std::shared_ptr<Entity> entity, float dt) {
         system_manager::job_system::in_round_update(entity, dt);
         system_manager::process_grabber_items(entity, dt);
         system_manager::process_conveyer_items(entity, dt);
@@ -1060,30 +1065,31 @@ void SystemManager::in_round_update(
         system_manager::process_squirter(entity, dt);
         system_manager::process_trash(entity, dt);
         system_manager::reset_empty_work_furniture(entity, dt);
-    }
+    });
 }
 
 void SystemManager::planning_update(
-    const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
-    for (auto& entity : entity_list) {
+    const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
+    for_each(entities, dt, [](std::shared_ptr<Entity> entity, float dt) {
         system_manager::update_held_furniture_position(entity, dt);
-    }
+    });
 }
 
 void SystemManager::render_normal(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) const {
-    for (const auto& entity : entity_list) {
+    for_each(entity_list, dt, [](std::shared_ptr<Entity> entity_ptr, float dt) {
+        const Entity& entity = *entity_ptr;
         // TODO extract render normal into system facign functions
-        system_manager::render_manager::render_normal(*entity, dt);
-        system_manager::render_manager::render_floating_name(*entity, dt);
-        system_manager::render_manager::render_progress_bar(*entity, dt);
-    }
+        system_manager::render_manager::render_normal(entity, dt);
+        system_manager::render_manager::render_floating_name(entity, dt);
+        system_manager::render_manager::render_progress_bar(entity, dt);
+    });
 }
 
 void SystemManager::render_debug(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) const {
-    for (const auto& entity_ptr : entity_list) {
+    for_each(entity_list, dt, [](std::shared_ptr<Entity> entity_ptr, float dt) {
         const Entity& entity = *entity_ptr;
         system_manager::render_manager::render_debug(entity, dt);
-    }
+    });
 }

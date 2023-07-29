@@ -113,6 +113,24 @@ struct SystemManager {
     void render_ui(const Entities& entities, float dt) const;
 
    private:
+    void for_each(
+        Entities& entities, float dt,
+        const std::function<void(std::shared_ptr<Entity>, float)>& cb) {
+        for (auto& entity : entities) {
+            if (!entity) continue;
+            cb(entity, dt);
+        }
+    }
+
+    void for_each(
+        const Entities& entities, float dt,
+        const std::function<void(std::shared_ptr<Entity>, float)>& cb) const {
+        for (auto& entity : entities) {
+            if (!entity) continue;
+            cb(entity, dt);
+        }
+    }
+
     void process_state_change(
         const std::vector<std::shared_ptr<Entity>>& entities, float dt);
 
