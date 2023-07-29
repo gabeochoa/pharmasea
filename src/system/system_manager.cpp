@@ -20,20 +20,20 @@
 #include "../map.h"
 
 namespace system_manager {
-void transform_snapper(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<Transform>()) return;
-    Transform& transform = entity->get<Transform>();
-    transform.update(entity->has<IsSnappable>() ? transform.snap_position()
-                                                : transform.raw());
+void transform_snapper(Entity& entity, float) {
+    if (entity.is_missing<Transform>()) return;
+    Transform& transform = entity.get<Transform>();
+    transform.update(entity.has<IsSnappable>() ? transform.snap_position()
+                                               : transform.raw());
 }
 
 // TODO if cannot be placed in this spot make it obvious to the user
-void update_held_furniture_position(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing_any<Transform, CanHoldFurniture>()) return;
+void update_held_furniture_position(Entity& entity, float) {
+    if (entity.is_missing_any<Transform, CanHoldFurniture>()) return;
 
-    const Transform& transform = entity->get<Transform>();
+    const Transform& transform = entity.get<Transform>();
 
-    CanHoldFurniture& can_hold_furniture = entity->get<CanHoldFurniture>();
+    CanHoldFurniture& can_hold_furniture = entity.get<CanHoldFurniture>();
     if (can_hold_furniture.empty()) return;
 
     auto new_pos = transform.pos();
@@ -55,19 +55,19 @@ void update_held_furniture_position(std::shared_ptr<Entity> entity, float) {
 
 // TODO should held item position be a physical movement or just visual?
 // does it matter if the reach/pickup is working as expected
-void update_held_item_position(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<CanHoldItem>()) return;
+void update_held_item_position(Entity& entity, float) {
+    if (entity.is_missing<CanHoldItem>()) return;
 
-    CanHoldItem& can_hold_item = entity->get<CanHoldItem>();
+    CanHoldItem& can_hold_item = entity.get<CanHoldItem>();
     if (can_hold_item.empty()) return;
 
-    const Transform& transform = entity->get<Transform>();
+    const Transform& transform = entity.get<Transform>();
 
     vec3 new_pos = transform.pos();
 
-    if (entity->has<CustomHeldItemPosition>()) {
+    if (entity.has<CustomHeldItemPosition>()) {
         CustomHeldItemPosition& custom_item_position =
-            entity->get<CustomHeldItemPosition>();
+            entity.get<CustomHeldItemPosition>();
 
         switch (custom_item_position.positioner) {
             case CustomHeldItemPosition::Positioner::Table:
@@ -78,13 +78,13 @@ void update_held_item_position(std::shared_ptr<Entity> entity, float) {
                 new_pos.y += 0;
                 break;
             case CustomHeldItemPosition::Positioner::Conveyer: {
-                if (entity->is_missing<ConveysHeldItem>()) {
+                if (entity.is_missing<ConveysHeldItem>()) {
                     log_warn(
                         "A conveyer positioned item needs ConveysHeldItem");
                     break;
                 }
                 ConveysHeldItem& conveysHeldItem =
-                    entity->get<ConveysHeldItem>();
+                    entity.get<ConveysHeldItem>();
                 if (transform.face_direction() &
                     Transform::FrontFaceDirection::FORWARD) {
                     new_pos.z += TILESIZE * conveysHeldItem.relative_item_pos;
@@ -104,17 +104,17 @@ void update_held_item_position(std::shared_ptr<Entity> entity, float) {
                 new_pos.y += TILESIZE / 4;
             } break;
             case CustomHeldItemPosition::Positioner::PnumaticPipe: {
-                if (entity->is_missing<IsPnumaticPipe>()) {
+                if (entity.is_missing<IsPnumaticPipe>()) {
                     log_warn("pipe positioned item needs ispnumaticpipe");
                     break;
                 }
-                if (entity->is_missing<ConveysHeldItem>()) {
+                if (entity.is_missing<ConveysHeldItem>()) {
                     log_warn("pipe positioned item needs ConveysHeldItem");
                     break;
                 }
                 ConveysHeldItem& conveysHeldItem =
-                    entity->get<ConveysHeldItem>();
-                int mult = entity->get<IsPnumaticPipe>().recieving ? 1 : -1;
+                    entity.get<ConveysHeldItem>();
+                int mult = entity.get<IsPnumaticPipe>().recieving ? 1 : -1;
                 new_pos.y +=
                     mult * TILESIZE * conveysHeldItem.relative_item_pos;
             } break;
@@ -139,17 +139,17 @@ void update_held_item_position(std::shared_ptr<Entity> entity, float) {
     can_hold_item.item()->get<Transform>().update(new_pos);
 }
 
-void reset_highlighted(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<CanBeHighlighted>()) return;
-    CanBeHighlighted& cbh = entity->get<CanBeHighlighted>();
+void reset_highlighted(Entity& entity, float) {
+    if (entity.is_missing<CanBeHighlighted>()) return;
+    CanBeHighlighted& cbh = entity.get<CanBeHighlighted>();
     cbh.update(false);
 }
 
-void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
-    Transform& transform = entity->get<Transform>();
-    if (entity->is_missing<CanHighlightOthers>()) return;
+void highlight_facing_furniture(Entity& entity, float) {
+    Transform& transform = entity.get<Transform>();
+    if (entity.is_missing<CanHighlightOthers>()) return;
     // TODO add a player reach component
-    CanHighlightOthers& cho = entity->get<CanHighlightOthers>();
+    CanHighlightOthers& cho = entity.get<CanHighlightOthers>();
 
     auto match = EntityHelper::getClosestMatchingFurniture(
         transform, cho.reach(),
@@ -160,9 +160,9 @@ void highlight_facing_furniture(std::shared_ptr<Entity> entity, float) {
 }
 
 // TODO We need like a temporary storage for this
-void move_entity_based_on_push_force(std::shared_ptr<Entity> entity, float,
-                                     vec3& new_pos_x, vec3& new_pos_z) {
-    CanBePushed& cbp = entity->get<CanBePushed>();
+void move_entity_based_on_push_force(Entity& entity, float, vec3& new_pos_x,
+                                     vec3& new_pos_z) {
+    CanBePushed& cbp = entity.get<CanBePushed>();
 
     new_pos_x.x += cbp.pushed_force().x;
     cbp.update_x(0.0f);
@@ -171,14 +171,14 @@ void move_entity_based_on_push_force(std::shared_ptr<Entity> entity, float,
     cbp.update_z(0.0f);
 }
 
-void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
-    Transform& transform = entity->get<Transform>();
-    if (entity->is_missing_any<CanHoldItem, ConveysHeldItem, CanBeTakenFrom>())
+void process_conveyer_items(Entity& entity, float dt) {
+    Transform& transform = entity.get<Transform>();
+    if (entity.is_missing_any<CanHoldItem, ConveysHeldItem, CanBeTakenFrom>())
         return;
 
-    CanHoldItem& canHold = entity->get<CanHoldItem>();
-    CanBeTakenFrom& canBeTakenFrom = entity->get<CanBeTakenFrom>();
-    ConveysHeldItem& conveysHeldItem = entity->get<ConveysHeldItem>();
+    CanHoldItem& canHold = entity.get<CanHoldItem>();
+    CanBeTakenFrom& canBeTakenFrom = entity.get<CanBeTakenFrom>();
+    ConveysHeldItem& conveysHeldItem = entity.get<ConveysHeldItem>();
 
     // we are not holding anything
     if (canHold.empty()) return;
@@ -193,12 +193,12 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
         return;
     }
 
-    bool is_ipp = entity->has<IsPnumaticPipe>();
+    bool is_ipp = entity.has<IsPnumaticPipe>();
 
-    const auto _conveyer_filter = [entity,
+    const auto _conveyer_filter = [&entity,
                                    &canHold](std::shared_ptr<Furniture> furn) {
         // cant be us
-        if (entity->id == furn->id) return false;
+        if (entity.id == furn->id) return false;
         // needs to be able to hold something
         if (furn->is_missing<CanHoldItem>()) return false;
         CanHoldItem& furnCHI = furn->get<CanHoldItem>();
@@ -212,14 +212,15 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
         return can_hold;
     };
 
-    const auto _ipp_filter = [=](std::shared_ptr<Furniture> furn) {
-        // if we are a pnumatic pipe, filter only down to our guy
-        if (furn->is_missing<IsPnumaticPipe>()) return false;
-        IsPnumaticPipe& mypp = entity->get<IsPnumaticPipe>();
-        if (mypp.paired_id != furn->id) return false;
-        if (mypp.recieving) return false;
-        return _conveyer_filter(furn);
-    };
+    const auto _ipp_filter =
+        [&entity, _conveyer_filter](std::shared_ptr<Furniture> furn) {
+            // if we are a pnumatic pipe, filter only down to our guy
+            if (furn->is_missing<IsPnumaticPipe>()) return false;
+            const IsPnumaticPipe& mypp = entity.get<IsPnumaticPipe>();
+            if (mypp.paired_id != furn->id) return false;
+            if (mypp.recieving) return false;
+            return _conveyer_filter(furn);
+        };
 
     auto match = is_ipp ? EntityHelper::getClosestMatchingEntity<Furniture>(
                               transform.as2(), MAX_SEARCH_RANGE, _ipp_filter)
@@ -234,7 +235,7 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
     }
 
     if (is_ipp) {
-        entity->get<IsPnumaticPipe>().recieving = false;
+        entity.get<IsPnumaticPipe>().recieving = false;
     }
 
     // we got something that will take from us,
@@ -248,7 +249,7 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
 
     // we reached the end, pass ownership
 
-    CanHoldItem& ourCHI = entity->get<CanHoldItem>();
+    CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
     matchCHI.update(ourCHI.item());
@@ -279,28 +280,28 @@ void process_conveyer_items(std::shared_ptr<Entity> entity, float dt) {
 // TODO This function is 33% of our run time
 // getMatchingEntity is a pretty large chunk of that
 // processconveyer is 10x faster ...
-void process_grabber_items(std::shared_ptr<Entity> entity, float) {
-    Transform& transform = entity->get<Transform>();
+void process_grabber_items(Entity& entity, float) {
+    Transform& transform = entity.get<Transform>();
 
-    if (entity->is_missing<CanHoldItem>()) return;
-    CanHoldItem& canHold = entity->get<CanHoldItem>();
+    if (entity.is_missing<CanHoldItem>()) return;
+    CanHoldItem& canHold = entity.get<CanHoldItem>();
     // we are already holding something so
     if (canHold.is_holding_item()) return;
 
     // Should only run this for conveyers
-    if (entity->is_missing<ConveysHeldItem>()) return;
+    if (entity.is_missing<ConveysHeldItem>()) return;
     // Should only run for grabbers
-    if (entity->is_missing<CanGrabFromOtherFurniture>()) return;
+    if (entity.is_missing<CanGrabFromOtherFurniture>()) return;
 
-    ConveysHeldItem& conveysHeldItem = entity->get<ConveysHeldItem>();
+    ConveysHeldItem& conveysHeldItem = entity.get<ConveysHeldItem>();
 
     auto behind =
         transform.offsetFaceDirection(transform.face_direction(), 180);
     auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
         transform.as2(), 1.f, behind,
-        [entity](std::shared_ptr<Furniture> furn) {
+        [&entity](std::shared_ptr<Furniture> furn) {
             // cant be us
-            if (entity->id == furn->id) return false;
+            if (entity.id == furn->id) return false;
             // needs to be able to hold something
             if (furn->is_missing<CanHoldItem>()) return false;
             CanHoldItem& furnCHI = furn->get<CanHoldItem>();
@@ -308,7 +309,7 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
             if (furnCHI.empty()) return false;
 
             // Can we hold the item it has?
-            bool can_hold = entity->get<CanHoldItem>().can_hold(
+            bool can_hold = entity.get<CanHoldItem>().can_hold(
                 *(furnCHI.item()), RespectFilter::All);
 
             // we cant
@@ -325,7 +326,7 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
 
     // Grab from the furniture match
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
-    CanHoldItem& ourCHI = entity->get<CanHoldItem>();
+    CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
     ourCHI.update(matchCHI.item());
     matchCHI.update(nullptr);
@@ -333,10 +334,10 @@ void process_grabber_items(std::shared_ptr<Entity> entity, float) {
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
 }
 
-void process_grabber_filter(std::shared_ptr<Entity> entity, float) {
-    if (!check_name(*entity, strings::entity::FILTERED_GRABBER)) return;
-    if (entity->is_missing<CanHoldItem>()) return;
-    CanHoldItem& canHold = entity->get<CanHoldItem>();
+void process_grabber_filter(Entity& entity, float) {
+    if (!check_name(entity, strings::entity::FILTERED_GRABBER)) return;
+    if (entity.is_missing<CanHoldItem>()) return;
+    CanHoldItem& canHold = entity.get<CanHoldItem>();
     if (canHold.empty()) return;
 
     // If we are holding something, then:
@@ -348,12 +349,12 @@ void process_grabber_filter(std::shared_ptr<Entity> entity, float) {
 }
 
 template<typename... TArgs>
-void backfill_empty_container(const std::string& match_type,
-                              std::shared_ptr<Entity> entity, TArgs&&... args) {
-    if (entity->is_missing<IsItemContainer>()) return;
-    IsItemContainer& iic = entity->get<IsItemContainer>();
+void backfill_empty_container(const std::string& match_type, Entity& entity,
+                              TArgs&&... args) {
+    if (entity.is_missing<IsItemContainer>()) return;
+    IsItemContainer& iic = entity.get<IsItemContainer>();
     if (iic.type() != match_type) return;
-    CanHoldItem& canHold = entity->get<CanHoldItem>();
+    CanHoldItem& canHold = entity.get<CanHoldItem>();
     if (canHold.is_holding_item()) return;
 
     if (iic.hit_max()) return;
@@ -366,38 +367,36 @@ void backfill_empty_container(const std::string& match_type,
     canHold.update(item);
 }
 
-void process_is_container_and_should_backfill_item(
-    std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<CanHoldItem>()) return;
-    CanHoldItem& canHold = entity->get<CanHoldItem>();
+void process_is_container_and_should_backfill_item(Entity& entity, float) {
+    if (entity.is_missing<CanHoldItem>()) return;
+    CanHoldItem& canHold = entity.get<CanHoldItem>();
     if (canHold.is_holding_item()) return;
 
     // TODO speed have each <> return true/false if it worked
     //      then can skip the rest, are there any that can hold mixed ?
     // TODO can we dynamically figure out what to run?
 
-    auto pos = entity->get<Transform>().as2();
+    auto pos = entity.get<Transform>().as2();
 
     backfill_empty_container(strings::item::SODA_SPOUT, entity, pos);
     backfill_empty_container(strings::item::DRINK, entity, pos);
 
-    if (entity->is_missing<Indexer>()) return;
+    if (entity.is_missing<Indexer>()) return;
     backfill_empty_container(strings::item::ALCOHOL, entity, pos,
-                             entity->get<Indexer>().value());
+                             entity.get<Indexer>().value());
     backfill_empty_container(strings::item::LEMON, entity, pos,
-                             entity->get<Indexer>().value());
-    entity->get<Indexer>().mark_change_completed();
+                             entity.get<Indexer>().value());
+    entity.get<Indexer>().mark_change_completed();
 }
 
-void process_is_container_and_should_update_item(std::shared_ptr<Entity> entity,
-                                                 float) {
-    if (entity->is_missing<Indexer>()) return;
-    Indexer& indexer = entity->get<Indexer>();
+void process_is_container_and_should_update_item(Entity& entity, float) {
+    if (entity.is_missing<Indexer>()) return;
+    Indexer& indexer = entity.get<Indexer>();
     // user didnt change the index so we are good to wait
     if (indexer.value_same_as_last_render()) return;
 
-    if (entity->is_missing<CanHoldItem>()) return;
-    CanHoldItem& canHold = entity->get<CanHoldItem>();
+    if (entity.is_missing<CanHoldItem>()) return;
+    CanHoldItem& canHold = entity.get<CanHoldItem>();
 
     // Delete the currently held item
     if (canHold.is_holding_item()) {
@@ -405,28 +404,28 @@ void process_is_container_and_should_update_item(std::shared_ptr<Entity> entity,
         canHold.update(nullptr);
     }
 
-    auto pos = entity->get<Transform>().as2();
+    auto pos = entity.get<Transform>().as2();
 
     backfill_empty_container(strings::item::ALCOHOL, entity, pos,
                              indexer.value());
     backfill_empty_container(strings::item::LEMON, entity, pos,
-                             entity->get<Indexer>().value());
+                             entity.get<Indexer>().value());
     indexer.mark_change_completed();
 }
 
-void process_is_indexed_container_holding_incorrect_item(
-    std::shared_ptr<Entity> entity, float) {
+void process_is_indexed_container_holding_incorrect_item(Entity& entity,
+                                                         float) {
     // This function is for when you have an indexed container and you put the
     // item back in but the index had changed.
     //
     // in this case we need to clear the item because otherwise they will both
     // live there which will cause overlap and grab issues.
 
-    if (entity->is_missing<Indexer>()) return;
-    Indexer& indexer = entity->get<Indexer>();
+    if (entity.is_missing<Indexer>()) return;
+    Indexer& indexer = entity.get<Indexer>();
 
-    if (entity->is_missing<CanHoldItem>()) return;
-    CanHoldItem& canHold = entity->get<CanHoldItem>();
+    if (entity.is_missing<CanHoldItem>()) return;
+    CanHoldItem& canHold = entity.get<CanHoldItem>();
 
     if (canHold.empty()) return;
 
@@ -439,35 +438,32 @@ void process_is_indexed_container_holding_incorrect_item(
     }
 }
 
-void handle_autodrop_furniture_when_exiting_planning(
-    const std::shared_ptr<Entity> entity) {
-    if (entity->is_missing<CanHoldFurniture>()) return;
+void handle_autodrop_furniture_when_exiting_planning(Entity& entity) {
+    if (entity.is_missing<CanHoldFurniture>()) return;
 
-    CanHoldFurniture& ourCHF = entity->get<CanHoldFurniture>();
+    CanHoldFurniture& ourCHF = entity.get<CanHoldFurniture>();
     if (ourCHF.empty()) return;
 
     // TODO need to find a spot it can go in using EntityHelper::isWalkable
     input_process_manager::planning::drop_held_furniture(entity);
 }
 
-void delete_customers_when_leaving_inround(
-    const std::shared_ptr<Entity> entity) {
+void delete_customers_when_leaving_inround(Entity& entity) {
     // TODO im thinking this might not be enough if we have
     // robots that can order for people or something
-    if (entity->is_missing<CanOrderDrink>()) return;
-    if (!check_name(*entity, strings::entity::CUSTOMER)) return;
+    if (entity.is_missing<CanOrderDrink>()) return;
+    if (!check_name(entity, strings::entity::CUSTOMER)) return;
 
-    entity->cleanup = true;
+    entity.cleanup = true;
 }
 
-void delete_held_items_when_leaving_inround(
-    const std::shared_ptr<Entity> entity) {
+void delete_held_items_when_leaving_inround(Entity& entity) {
     // TODO this doesnt seem to work
     // you keep holding it even after the transition
 
-    if (entity->is_missing<CanHoldItem>()) return;
+    if (entity.is_missing<CanHoldItem>()) return;
 
-    CanHoldItem& canHold = entity->get<CanHoldItem>();
+    CanHoldItem& canHold = entity.get<CanHoldItem>();
     if (canHold.empty()) return;
 
     // Mark it as deletable
@@ -478,29 +474,28 @@ void delete_held_items_when_leaving_inround(
     canHold.update(nullptr);
 }
 
-void reset_max_gen_when_after_deletion(const std::shared_ptr<Entity> entity) {
-    if (entity->is_missing<CanHoldItem>()) return;
-    if (entity->is_missing<IsItemContainer>()) return;
+void reset_max_gen_when_after_deletion(Entity& entity) {
+    if (entity.is_missing<CanHoldItem>()) return;
+    if (entity.is_missing<IsItemContainer>()) return;
 
-    CanHoldItem& canHold = entity->get<CanHoldItem>();
+    CanHoldItem& canHold = entity.get<CanHoldItem>();
     // If something wasnt deleted, then just ignore it for now
     if (canHold.is_holding_item()) return;
 
-    entity->get<IsItemContainer>().reset_generations();
+    entity.get<IsItemContainer>().reset_generations();
 }
 
-void refetch_dynamic_model_names(const std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<ModelRenderer>()) return;
-    if (entity->is_missing<HasDynamicModelName>()) return;
+void refetch_dynamic_model_names(Entity& entity, float) {
+    if (entity.is_missing<ModelRenderer>()) return;
+    if (entity.is_missing<HasDynamicModelName>()) return;
 
-    HasDynamicModelName& hDMN = entity->get<HasDynamicModelName>();
-    ModelRenderer& renderer = entity->get<ModelRenderer>();
-    renderer.update_model_name(hDMN.fetch(*entity));
+    HasDynamicModelName& hDMN = entity.get<HasDynamicModelName>();
+    ModelRenderer& renderer = entity.get<ModelRenderer>();
+    renderer.update_model_name(hDMN.fetch(entity));
 }
 
-void count_max_trigger_area_entrants(const std::shared_ptr<Entity> entity,
-                                     float) {
-    if (entity->is_missing<IsTriggerArea>()) return;
+void count_max_trigger_area_entrants(Entity& entity, float) {
+    if (entity.is_missing<IsTriggerArea>()) return;
 
     int count = 0;
     for (auto& e : SystemManager::get().oldAll) {
@@ -508,11 +503,11 @@ void count_max_trigger_area_entrants(const std::shared_ptr<Entity> entity,
         if (!check_name(*e, strings::entity::PLAYER)) continue;
         count++;
     }
-    entity->get<IsTriggerArea>().update_max_entrants(count);
+    entity.get<IsTriggerArea>().update_max_entrants(count);
 }
 
-void count_trigger_area_entrants(const std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<IsTriggerArea>()) return;
+void count_trigger_area_entrants(Entity& entity, float) {
+    if (entity.is_missing<IsTriggerArea>()) return;
 
     int count = 0;
     for (auto& e : SystemManager::get().oldAll) {
@@ -520,17 +515,16 @@ void count_trigger_area_entrants(const std::shared_ptr<Entity> entity, float) {
         if (!check_name(*e, strings::entity::PLAYER)) continue;
         if (CheckCollisionBoxes(
                 e->get<Transform>().bounds(),
-                entity->get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
+                entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
             count++;
         }
     }
-    entity->get<IsTriggerArea>().update_entrants(count);
+    entity.get<IsTriggerArea>().update_entrants(count);
 }
 
-void update_trigger_area_percent(const std::shared_ptr<Entity> entity,
-                                 float dt) {
-    if (entity->is_missing<IsTriggerArea>()) return;
-    IsTriggerArea& ita = entity->get<IsTriggerArea>();
+void update_trigger_area_percent(Entity& entity, float dt) {
+    if (entity.is_missing<IsTriggerArea>()) return;
+    IsTriggerArea& ita = entity.get<IsTriggerArea>();
     if (ita.should_wave()) {
         ita.increase_progress(dt);
     } else {
@@ -538,30 +532,30 @@ void update_trigger_area_percent(const std::shared_ptr<Entity> entity,
     }
 }
 
-void trigger_cb_on_full_progress(const std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<IsTriggerArea>()) return;
-    IsTriggerArea& ita = entity->get<IsTriggerArea>();
+void trigger_cb_on_full_progress(Entity& entity, float) {
+    if (entity.is_missing<IsTriggerArea>()) return;
+    IsTriggerArea& ita = entity.get<IsTriggerArea>();
     if (ita.progress() < 1.f) return;
     auto cb = ita.get_complete_fn();
     if (cb) cb();
 }
 
-void process_trigger_area(const std::shared_ptr<Entity> entity, float dt) {
+void process_trigger_area(Entity& entity, float dt) {
     count_max_trigger_area_entrants(entity, dt);
     count_trigger_area_entrants(entity, dt);
     update_trigger_area_percent(entity, dt);
     trigger_cb_on_full_progress(entity, dt);
 }
 
-void process_spawner(const std::shared_ptr<Entity> entity, float dt) {
-    if (entity->is_missing<IsSpawner>()) return;
-    auto pos = entity->get<Transform>().as2();
-    entity->get<IsSpawner>().pass_time(pos, dt);
+void process_spawner(Entity& entity, float dt) {
+    if (entity.is_missing<IsSpawner>()) return;
+    auto pos = entity.get<Transform>().as2();
+    entity.get<IsSpawner>().pass_time(pos, dt);
 }
 
-void run_timer(const std::shared_ptr<Entity> entity, float dt) {
-    if (entity->is_missing<HasTimer>()) return;
-    HasTimer& ht = entity->get<HasTimer>();
+void run_timer(Entity& entity, float dt) {
+    if (entity.is_missing<HasTimer>()) return;
+    HasTimer& ht = entity.get<HasTimer>();
 
     ht.pass_time(dt);
 
@@ -626,16 +620,16 @@ void run_timer(const std::shared_ptr<Entity> entity, float dt) {
     ht.reset_round_switch_timer().reset_timer();
 }
 
-void sophie(const std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<HasTimer>()) return;
+void sophie(Entity& entity, float) {
+    if (entity.is_missing<HasTimer>()) return;
 
     const auto debug_mode_on =
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-    const HasTimer& ht = entity->get<HasTimer>();
+    const HasTimer& ht = entity.get<HasTimer>();
     if (ht.currentRoundTime > 0 && !debug_mode_on) return;
 
     // Handle customers finally leaving the store
-    auto _customers_in_store = [entity]() {
+    auto _customers_in_store = [&entity]() {
         // TODO with the others siwtch to something else... customer
         // spawner?
         const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
@@ -643,7 +637,7 @@ void sophie(const std::shared_ptr<Entity> entity, float) {
         bool all_gone = true;
         std::vector<std::shared_ptr<Entity>> customers =
             EntityHelper::getAllWithName(strings::entity::CUSTOMER);
-        for (std::shared_ptr<Entity> e : customers) {
+        for (auto& e : customers) {
             if (!e) continue;
             if (vec::distance(e->get<Transform>().as2(), endpos) >
                 TILESIZE * 2.f) {
@@ -651,13 +645,13 @@ void sophie(const std::shared_ptr<Entity> entity, float) {
                 break;
             }
         }
-        entity->get<HasTimer>().write_reason(
+        entity.get<HasTimer>().write_reason(
             HasTimer::WaitingReason::CustomersInStore, !all_gone);
         return;
     };
 
     // Handle some player is holding furniture
-    auto _player_holding_furniture = [entity]() {
+    auto _player_holding_furniture = [&entity]() {
         bool all_empty = true;
         // TODO i want to to do it this way: but players are not in
         // entities, so its not possible
@@ -665,7 +659,7 @@ void sophie(const std::shared_ptr<Entity> entity, float) {
         // auto players =
         // EntityHelper::getAllWithComponent<CanHoldFurniture>();
 
-        for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
+        for (std::shared_ptr<Entity>& e : SystemManager::get().oldAll) {
             if (!e) continue;
             if (e->is_missing<CanHoldFurniture>()) continue;
             if (e->get<CanHoldFurniture>().is_holding_furniture()) {
@@ -673,14 +667,14 @@ void sophie(const std::shared_ptr<Entity> entity, float) {
                 break;
             }
         }
-        entity->get<HasTimer>().write_reason(
+        entity.get<HasTimer>().write_reason(
             HasTimer::WaitingReason::HoldingFurniture, !all_empty);
         return;
     };
 
     // TODO merge with map generation validation?
     // Run lightweight map validation
-    auto _lightweight_map_validation = [entity]() {
+    auto _lightweight_map_validation = [&entity]() {
         // find customer
         auto customer_opt =
             EntityHelper::getFirstMatching([](const Entity& e) -> bool {
@@ -707,7 +701,7 @@ void sophie(const std::shared_ptr<Entity> entity, float) {
                 return new_path.size() > 0;
             });
 
-        entity->get<HasTimer>().write_reason(
+        entity.get<HasTimer>().write_reason(
             HasTimer::WaitingReason::NoPathToRegister, !valid(reg_opt));
 
         return;
@@ -727,14 +721,14 @@ void sophie(const std::shared_ptr<Entity> entity, float) {
     }
 }
 
-void reset_empty_work_furniture(const std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<HasWork>()) return;
-    if (entity->is_missing<CanHoldItem>()) return;
+void reset_empty_work_furniture(Entity& entity, float) {
+    if (entity.is_missing<HasWork>()) return;
+    if (entity.is_missing<CanHoldItem>()) return;
 
-    HasWork& hasWork = entity->get<HasWork>();
+    HasWork& hasWork = entity.get<HasWork>();
     if (!hasWork.should_reset_on_empty()) return;
 
-    const CanHoldItem& chi = entity->get<CanHoldItem>();
+    const CanHoldItem& chi = entity.get<CanHoldItem>();
     if (chi.empty()) {
         hasWork.reset_pct();
         return;
@@ -744,21 +738,21 @@ void reset_empty_work_furniture(const std::shared_ptr<Entity> entity, float) {
     return;
 }
 
-void process_has_rope(const std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<CanHoldItem>()) return;
-    if (entity->is_missing<HasRopeToItem>()) return;
+void process_has_rope(Entity& entity, float) {
+    if (entity.is_missing<CanHoldItem>()) return;
+    if (entity.is_missing<HasRopeToItem>()) return;
 
-    HasRopeToItem& hrti = entity->get<HasRopeToItem>();
+    HasRopeToItem& hrti = entity.get<HasRopeToItem>();
 
     // No need to have rope if spout is put away
-    const CanHoldItem& chi = entity->get<CanHoldItem>();
+    const CanHoldItem& chi = entity.get<CanHoldItem>();
     if (chi.is_holding_item()) {
         hrti.clear();
         return;
     }
 
     OptEntity opt_player;
-    for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
+    for (std::shared_ptr<Entity>& e : SystemManager::get().oldAll) {
         if (!e) continue;
         if (!check_name(*e, strings::entity::PLAYER)) continue;
         auto i = e->get<CanHoldItem>().item();
@@ -778,7 +772,7 @@ void process_has_rope(const std::shared_ptr<Entity> entity, float) {
     // Already generated
     if (hrti.was_generated()) return;
 
-    auto new_path = astar::find_path(entity->get<Transform>().as2(), pos,
+    auto new_path = astar::find_path(entity.get<Transform>().as2(), pos,
                                      [](vec2) { return true; });
 
     for (auto p : new_path) {
@@ -791,12 +785,12 @@ void process_has_rope(const std::shared_ptr<Entity> entity, float) {
     hrti.mark_generated(pos);
 }
 
-void process_squirter(const std::shared_ptr<Entity> entity, float) {
+void process_squirter(Entity& entity, float) {
     // TODO this normally would be an IsComponent but for those where theres
     // only one probably check_name is easier/ cheaper? idk
-    if (!check_name(*entity, strings::entity::SQUIRTER)) return;
+    if (!check_name(entity, strings::entity::SQUIRTER)) return;
 
-    CanHoldItem& sqCHI = entity->get<CanHoldItem>();
+    CanHoldItem& sqCHI = entity.get<CanHoldItem>();
 
     // If we arent holding anything, nothing to squirt into
     if (sqCHI.empty()) return;
@@ -809,7 +803,7 @@ void process_squirter(const std::shared_ptr<Entity> entity, float) {
 
     std::shared_ptr<Furniture> closest_furniture =
         EntityHelper::getClosestMatchingEntity<Furniture>(
-            entity->get<Transform>().as2(), 1.25f,
+            entity.get<Transform>().as2(), 1.25f,
             [](std::shared_ptr<Furniture> f) {
                 if (f->is_missing<CanHoldItem>()) return false;
                 const CanHoldItem& fchi = f->get<CanHoldItem>();
@@ -833,12 +827,12 @@ void process_squirter(const std::shared_ptr<Entity> entity, float) {
 }
 
 // TODO not everything can be trashed !
-void process_trash(const std::shared_ptr<Entity> entity, float) {
+void process_trash(Entity& entity, float) {
     // TODO this normally would be an IsComponent but for those where theres
     // only one probably check_name is easier/ cheaper? idk
-    if (!check_name(*entity, strings::entity::TRASH)) return;
+    if (!check_name(entity, strings::entity::TRASH)) return;
 
-    CanHoldItem& trashCHI = entity->get<CanHoldItem>();
+    CanHoldItem& trashCHI = entity.get<CanHoldItem>();
 
     // If we arent holding anything, nothing to delete
     if (trashCHI.empty()) return;
@@ -847,32 +841,31 @@ void process_trash(const std::shared_ptr<Entity> entity, float) {
     trashCHI.update(nullptr);
 }
 
-void process_pnumatic_pipe_pairing(const std::shared_ptr<Entity> entity,
-                                   float) {
-    if (entity->is_missing<IsPnumaticPipe>()) return;
+void process_pnumatic_pipe_pairing(Entity& entity, float) {
+    if (entity.is_missing<IsPnumaticPipe>()) return;
 
-    IsPnumaticPipe& ipp = entity->get<IsPnumaticPipe>();
+    IsPnumaticPipe& ipp = entity.get<IsPnumaticPipe>();
 
     if (ipp.has_pair()) return;
 
     for (auto other : EntityHelper::getAllWithComponent<IsPnumaticPipe>()) {
         if (other->cleanup) continue;
-        if (other->id == entity->id) continue;
+        if (other->id == entity.id) continue;
         IsPnumaticPipe& otherpp = other->get<IsPnumaticPipe>();
         if (otherpp.has_pair()) continue;
 
-        otherpp.paired_id = entity->id;
+        otherpp.paired_id = entity.id;
         ipp.paired_id = other->id;
         break;
     }
     // still dont have a pair, we probably just have an odd number
     if (!ipp.has_pair()) return;
 }
-void process_pnumatic_pipe_movement(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<IsPnumaticPipe>()) return;
+void process_pnumatic_pipe_movement(Entity& entity, float) {
+    if (entity.is_missing<IsPnumaticPipe>()) return;
 
-    IsPnumaticPipe& ipp = entity->get<IsPnumaticPipe>();
-    CanHoldItem& chi = entity->get<CanHoldItem>();
+    IsPnumaticPipe& ipp = entity.get<IsPnumaticPipe>();
+    CanHoldItem& chi = entity.get<CanHoldItem>();
 
     if (chi.empty()) {
         ipp.item_id = -1;
@@ -886,15 +879,14 @@ void process_pnumatic_pipe_movement(std::shared_ptr<Entity> entity, float) {
     }
 }
 
-void increment_day_count(const std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<HasTimer>()) return;
-    entity->get<HasTimer>().dayCount++;
+void increment_day_count(Entity& entity, float) {
+    if (entity.is_missing<HasTimer>()) return;
+    entity.get<HasTimer>().dayCount++;
 }
 
-void reset_customer_orders_when_leaving_inround(
-    const std::shared_ptr<Entity> entity) {
-    if (entity->is_missing<CanOrderDrink>()) return;
-    CanOrderDrink& cod = entity->get<CanOrderDrink>();
+void reset_customer_orders_when_leaving_inround(Entity& entity) {
+    if (entity.is_missing<CanOrderDrink>()) return;
+    CanOrderDrink& cod = entity.get<CanOrderDrink>();
     cod.reset();
 }
 
@@ -968,30 +960,13 @@ void SystemManager::process_inputs(const Entities& entities,
     }
 }
 
-void SystemManager::render_entities(const Entities& entities, float dt) const {
-    const auto debug_mode_on =
-        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-    if (debug_mode_on) {
-        render_debug(entities, dt);
-    }
-    render_normal(entities, dt);
-}
-
-void SystemManager::render_ui(const Entities& entities, float dt) const {
-    const auto debug_mode_on =
-        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-    if (debug_mode_on) {
-        system_manager::ui::render_debug_ui(entities, dt);
-    }
-    system_manager::ui::render_normal(entities, dt);
-}
-
 void SystemManager::process_state_change(
     const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
     if (state_transitioned_round_to_planning) {
         state_transitioned_round_to_planning = false;
 
-        for_each(entities, dt, [](std::shared_ptr<Entity> entity, float dt) {
+        for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
+            Entity& entity = *e_ptr;
             // TODO make a namespace for transition functions
             system_manager::delete_held_items_when_leaving_inround(entity);
             system_manager::delete_customers_when_leaving_inround(entity);
@@ -1004,20 +979,23 @@ void SystemManager::process_state_change(
 
     if (state_transitioned_planning_to_round) {
         state_transitioned_planning_to_round = false;
-        for_each(entities, dt, [](std::shared_ptr<Entity> entity, float) {
+        for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float) {
+            Entity& entity = *e_ptr;
             system_manager::handle_autodrop_furniture_when_exiting_planning(
                 entity);
         });
     }
 
     // All transitions
-    for_each(entities, dt, [](std::shared_ptr<Entity> entity, float dt) {
+    for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
+        Entity& entity = *e_ptr;
         system_manager::refetch_dynamic_model_names(entity, dt);
     });
 }
 
 void SystemManager::always_update(const Entities& entities, float dt) {
-    for_each(entities, dt, [](std::shared_ptr<Entity> entity, float dt) {
+    for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
+        Entity& entity = *e_ptr;
         system_manager::reset_highlighted(entity, dt);
         // TODO should be just planning + lobby?
         // maybe a second one for highlighting items?
@@ -1030,23 +1008,24 @@ void SystemManager::always_update(const Entities& entities, float dt) {
         // TODO this is in the render manager but its not really a
         // render thing but at the same time it kinda is idk This could
         // run only in lobby if we wanted to distinguish
-        system_manager::render_manager::update_character_model_from_index(
-            entity, dt);
+        system_manager::render_manager::update_character_model_from_index(e_ptr,
+                                                                          dt);
 
         system_manager::run_timer(entity, dt);
         system_manager::process_pnumatic_pipe_pairing(entity, dt);
 
         // TODO these eventually should move into their own functions but
         // for now >:)
-        if (check_name(*entity, strings::entity::SOPHIE))
+        if (check_name(entity, strings::entity::SOPHIE))
             system_manager::sophie(entity, dt);
     });
 }
 
 void SystemManager::in_round_update(
     const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
-    for_each(entities, dt, [](std::shared_ptr<Entity> entity, float dt) {
-        system_manager::job_system::in_round_update(entity, dt);
+    for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
+        Entity& entity = *e_ptr;
+        system_manager::job_system::in_round_update(e_ptr, dt);
         system_manager::process_grabber_items(entity, dt);
         system_manager::process_conveyer_items(entity, dt);
         system_manager::process_grabber_filter(entity, dt);
@@ -1070,7 +1049,8 @@ void SystemManager::in_round_update(
 
 void SystemManager::planning_update(
     const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
-    for_each(entities, dt, [](std::shared_ptr<Entity> entity, float dt) {
+    for_each(entities, dt, [](std::shared_ptr<Entity> entity_ptr, float dt) {
+        Entity& entity = *entity_ptr;
         system_manager::update_held_furniture_position(entity, dt);
     });
 }
@@ -1092,4 +1072,22 @@ void SystemManager::render_debug(
         const Entity& entity = *entity_ptr;
         system_manager::render_manager::render_debug(entity, dt);
     });
+}
+
+void SystemManager::render_entities(const Entities& entities, float dt) const {
+    const auto debug_mode_on =
+        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+    if (debug_mode_on) {
+        render_debug(entities, dt);
+    }
+    render_normal(entities, dt);
+}
+
+void SystemManager::render_ui(const Entities& entities, float dt) const {
+    const auto debug_mode_on =
+        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+    if (debug_mode_on) {
+        system_manager::ui::render_debug_ui(entities, dt);
+    }
+    system_manager::ui::render_normal(entities, dt);
 }

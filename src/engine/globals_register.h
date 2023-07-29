@@ -63,4 +63,4 @@ struct GlobalValueRegister {
     }
 };
 
-static GlobalValueRegister GLOBALS;
+extern GlobalValueRegister GLOBALS;

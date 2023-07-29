@@ -295,17 +295,16 @@ inline void rotate_furniture(const std::shared_ptr<Entity> player) {
     match->get<Transform>().rotate_facing_clockwise();
 }
 
-inline void drop_held_furniture(const std::shared_ptr<Entity>& player) {
-    CanHoldFurniture& ourCHF = player->get<CanHoldFurniture>();
+inline void drop_held_furniture(Entity& player) {
+    CanHoldFurniture& ourCHF = player.get<CanHoldFurniture>();
     std::shared_ptr<Furniture> hf = ourCHF.furniture();
     if (!hf) {
-        log_info(" id:{} we'd like to drop but our hands are empty",
-                 player->id);
+        log_info(" id:{} we'd like to drop but our hands are empty", player.id);
         return;
     }
 
     vec3 drop_location =
-        vec::snap(vec::to3(player->get<Transform>().tile_infront(1)));
+        vec::snap(vec::to3(player.get<Transform>().tile_infront(1)));
 
     bool can_place = EntityHelper::isWalkable(vec::to2(drop_location));
 
@@ -314,7 +313,7 @@ inline void drop_held_furniture(const std::shared_ptr<Entity>& player) {
         hf->get<Transform>().update(drop_location);
 
         ourCHF.update(nullptr);
-        log_info("we {} dropped the furniture {} we were holding", player->id,
+        log_info("we {} dropped the furniture {} we were holding", player.id,
                  hf->id);
 
         EntityHelper::invalidatePathCache();
@@ -335,7 +334,7 @@ inline void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
     CanHoldFurniture& ourCHF = player->get<CanHoldFurniture>();
 
     if (ourCHF.is_holding_furniture()) {
-        drop_held_furniture(player);
+        drop_held_furniture(*player);
         return;
     } else {
         // TODO support finding things in the direction the player is

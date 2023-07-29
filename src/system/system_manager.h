@@ -7,66 +7,57 @@
 
 namespace system_manager {
 
-void transform_snapper(std::shared_ptr<Entity> entity, float);
+void transform_snapper(Entity& entity, float);
 
-void update_held_furniture_position(std::shared_ptr<Entity> entity, float);
+void update_held_furniture_position(Entity& entity, float);
 
-void update_held_item_position(std::shared_ptr<Entity> entity, float);
+void update_held_item_position(Entity& entity, float);
 
-void reset_highlighted(std::shared_ptr<Entity> entity, float);
+void reset_highlighted(Entity& entity, float);
 
-void highlight_facing_furniture(std::shared_ptr<Entity> entity, float);
-void move_entity_based_on_push_force(std::shared_ptr<Entity> entity, float,
-                                     vec3& new_pos_x, vec3& new_pos_z);
-void process_conveyer_items(std::shared_ptr<Entity> entity, float dt);
+void highlight_facing_furniture(Entity& entity, float);
+void move_entity_based_on_push_force(Entity& entity, float, vec3& new_pos_x,
+                                     vec3& new_pos_z);
+void process_conveyer_items(Entity& entity, float dt);
 
-void process_grabber_items(std::shared_ptr<Entity> entity, float);
-void process_grabber_filter(std::shared_ptr<Entity> entity, float);
+void process_grabber_items(Entity& entity, float);
+void process_grabber_filter(Entity& entity, float);
 
 template<typename I>
-void backfill_empty_container(std::shared_ptr<Entity> entity);
+void backfill_empty_container(Entity& entity);
 
-void process_is_container_and_should_backfill_item(std::shared_ptr<Entity>,
-                                                   float);
-void process_is_container_and_should_update_item(std::shared_ptr<Entity>,
-                                                 float);
-void process_is_indexed_container_holding_incorrect_item(
-    std::shared_ptr<Entity>, float);
+void process_is_container_and_should_backfill_item(Entity&, float);
+void process_is_container_and_should_update_item(Entity&, float);
+void process_is_indexed_container_holding_incorrect_item(Entity&, float);
 
-void handle_autodrop_furniture_when_exiting_planning(
-    const std::shared_ptr<Entity> entity);
+void handle_autodrop_furniture_when_exiting_planning(const Entity& entity);
 
-void delete_held_items_when_leaving_inround(
-    const std::shared_ptr<Entity> entity);
+void delete_held_items_when_leaving_inround(const Entity& entity);
 
-void delete_customers_when_leaving_inround(
-    const std::shared_ptr<Entity> entity);
+void delete_customers_when_leaving_inround(const Entity& entity);
 
-void reset_customer_orders_when_leaving_inround(
-    const std::shared_ptr<Entity> entity);
+void reset_customer_orders_when_leaving_inround(const Entity& entity);
 
-void reset_max_gen_when_after_deletion(const std::shared_ptr<Entity> entity);
+void reset_max_gen_when_after_deletion(const Entity& entity);
 
-void refetch_dynamic_model_names(const std::shared_ptr<Entity> entity, float);
+void refetch_dynamic_model_names(const Entity& entity, float);
 
-void process_squirter(const std::shared_ptr<Entity> entity, float dt);
-void process_trash(const std::shared_ptr<Entity> entity, float dt);
-void process_pnumatic_pipe_pairing(const std::shared_ptr<Entity> entity,
-                                   float dt);
-void process_pnumatic_pipe_movement(const std::shared_ptr<Entity> entity,
-                                    float dt);
-void process_trigger_area(const std::shared_ptr<Entity> entity, float dt);
+void process_squirter(const Entity& entity, float dt);
+void process_trash(const Entity& entity, float dt);
+void process_pnumatic_pipe_pairing(const Entity& entity, float dt);
+void process_pnumatic_pipe_movement(const Entity& entity, float dt);
+void process_trigger_area(const Entity& entity, float dt);
 
 // TODO maybe we could pull out all the singleton boiz into their own update
 // loop / entity thing or mayeb all the server only ones?
-void process_spawner(const std::shared_ptr<Entity> entity, float dt);
+void process_spawner(const Entity& entity, float dt);
 
-void reset_empty_work_furniture(const std::shared_ptr<Entity> entity, float dt);
+void reset_empty_work_furniture(const Entity& entity, float dt);
 
-void run_timer(const std::shared_ptr<Entity> entity, float dt);
-void sophie(const std::shared_ptr<Entity> entity, float dt);
-void increment_day_count(const std::shared_ptr<Entity> entity, float dt);
-void process_has_rope(const std::shared_ptr<Entity> entity, float dt);
+void run_timer(const Entity& entity, float dt);
+void sophie(const Entity& entity, float dt);
+void increment_day_count(const Entity& entity, float dt);
+void process_has_rope(const Entity& entity, float dt);
 }  // namespace system_manager
 
 SINGLETON_FWD(SystemManager)
