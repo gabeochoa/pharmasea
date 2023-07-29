@@ -164,14 +164,11 @@ struct EntityHelper {
         // Cleanup entities marked cleanup
         Entities& entities = get_entities();
 
-        auto it = entities.begin();
-        while (it != entities.end()) {
-            if ((*it)->cleanup) {
-                entities.erase(it);
-                continue;
-            }
-            it++;
-        }
+        std::remove_if(entities.begin(), entities.end(),
+                       [](const auto& entity) 
+        { 
+           return !entity || (entity && entity->cleanup);
+        });
     }
 
     enum ForEachFlow {
