@@ -90,7 +90,11 @@ struct Client {
     }
 
     void send_player_input_packet(int my_id) {
-        CollectsUserInput& cui = map->first_player->get<CollectsUserInput>();
+        // TODO if we add support for local players we need them all to have
+        // their own unique network ids otherwise we cant distinguish when
+        // sending player updates
+        CollectsUserInput& cui =
+            map->local_players_NOT_SERIALIZED[0]->get<CollectsUserInput>();
 
         if (cui.empty()) return;
 
@@ -219,8 +223,10 @@ struct Client {
                     GLOBALS.set("active_camera_target",
                                 remote_players[id].get());
                     // TODO make shared doesnt work here
-                    map->first_player.reset(remote_players[id].get());
-                    map->first_player->addComponent<CollectsUserInput>();
+                    map->local_players_NOT_SERIALIZED.push_back(
+                        remote_players[id]);
+                    (*(map->local_players_NOT_SERIALIZED.rbegin()))
+                        ->addComponent<CollectsUserInput>();
                 }
 
                 for (auto client_id : info.all_clients) {

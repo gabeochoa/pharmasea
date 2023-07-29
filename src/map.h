@@ -9,12 +9,13 @@
 //
 #include "entityhelper.h"
 #include "level_info.h"
+#include "system/system_manager.h"
 
 struct Map {
     LobbyMapInfo lobby_info;
     GameMapInfo game_info;
 
-    std::shared_ptr<Entity> first_player;
+    Entities local_players_NOT_SERIALIZED;
     Entities remote_players_NOT_SERIALIZED;
     std::string seed;
 
@@ -33,18 +34,11 @@ struct Map {
         return in_lobby_state() ? lobby_info.entities : game_info.entities;
     }
 
-    void onUpdate(float dt) {
-        Entities players;
-        players.reserve(remote_players_NOT_SERIALIZED.size() + 1);
+    void onUpdate(float dt) { _onUpdate(remote_players_NOT_SERIALIZED, dt); }
 
-        players.insert(players.end(), remote_players_NOT_SERIALIZED.begin(),
-                       remote_players_NOT_SERIALIZED.end());
-        players.push_back(first_player);
-
-        // TODO does this need to happen every frame?
-        SystemManager::get().firstPlayerID = first_player->id;
-
-        _onUpdate(players, dt);
+    void onUpdateLocalPlayers(float dt) {
+        SystemManager::get().update_local_players(local_players_NOT_SERIALIZED,
+                                                  dt);
     }
 
     void _onUpdate(std::vector<std::shared_ptr<Entity>> players, float dt) {

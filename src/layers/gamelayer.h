@@ -82,7 +82,7 @@ struct GameLayer : public Layer {
             // NOTE: today we need to grab things so that the client renders
             // what they server has access to
             map_ptr->grab_things();
-            SystemManager::get().update(Entities{map_ptr->first_player}, dt);
+            map_ptr->onUpdateLocalPlayers(dt);
         }
     }
 

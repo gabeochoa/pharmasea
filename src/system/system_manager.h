@@ -132,6 +132,13 @@ struct SystemManager {
         update(all, dt);
     }
 
+    void update_local_players(const Entities& players, float dt) {
+        for (auto& entity : players) {
+            system_manager::input_process_manager::collect_user_input(entity,
+                                                                      dt);
+        }
+    }
+
     void render_all_entities(const Entities&, float dt) const {
         // TODO figure out if its okay for us to throw out the updated players,
         // and use oldAll
@@ -211,8 +218,6 @@ struct SystemManager {
             // maybe a second one for highlighting items?
             system_manager::highlight_facing_furniture(entity, dt);
             system_manager::transform_snapper(entity, dt);
-            system_manager::input_process_manager::collect_user_input(entity,
-                                                                      dt);
             system_manager::update_held_item_position(entity, dt);
 
             system_manager::process_trigger_area(entity, dt);
