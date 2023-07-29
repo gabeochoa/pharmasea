@@ -53,6 +53,72 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+
+### alpha_0.23.07.29
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (All) grabbing / dropping is pretty bad and doesnt work as expected 
+- (IR) Conveyer belt model is now bread cause it kept crashing on windows 
+- (UI) The first option in a dropdown isnt selectable 
+
+
+Game Renamed!
+- pub panic for now :) 
+
+impact 
+- Add new Furniture 
+    - cup spawner 
+    - trash can 
+    - squirter (finds alcohol nearby and squirts it into the cup)
+    - filtered grabber (name + subtype) 
+    - Pneumatic Pipe (teleporter) 
+- Furniture Changes
+    - pill dispenser => fruit basket 
+- New Ingredients
+    - add bitters and the other liquires? liquoors? 
+- customers can order multuple times now 
+- add Day Counter
+- Menu now has button to link to discord invite 
+
+bug fix
+- customer takes their drink now (also hide drinks that are not makeable yet) 
+- handle if you put something back into an indexer that doesnt match the current index 
+- fix issue where item containers could have duplicated items 
+- conveyers now respect canhold filters 
+- fix issue where items without subtypes crashed the game 
+- fix subtype rendering for filters 
+- fix issue where countdown seconds were each two seconds (walkable cache) 
+- fix issue where item containers with limits werent generating more in future rounds 
+- invalidate walkable cache when player moves furniture around 
+- block player from dropping furniture ontop of other furniture 
+- reset customer order count when changing rounds 
+- delete the customers when ending the round 
+
+better eng
+- allow rendering underlying enum name in subtype debug info 
+- remove bag / pill bottle / pill 
+- no more reference shared pointers 
+- change from filter function to data store 
+- disable network if in gabe mode 
+- add debug info for filters 
+- no longer need to update the entire model object 
+- add back support for dynamic model loading 
+- new model info => model info :) 
+- more model loading 
+- move basic model rendering to json config 
+- Migrate all drinks and recipes to json
+- add button in pause menu to releoad configs, good for model scale/position changes 
+- add function to open urls 
+- add image_button() to ui library 
+- extract search range for teleporter into global 
+- add better json loading utils in preload 
+- move one off textures to config file 
+- lot less logs on startup 
+- update to local player list in case we consider doing that later 
+- remove all uses of global player 
+
+
 ### alpha_0.23.07.21
 
 Known Issues
