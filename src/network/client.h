@@ -90,7 +90,7 @@ struct Client {
     }
 
     void send_player_input_packet(int my_id) {
-        CollectsUserInput& cui = global_player->get<CollectsUserInput>();
+        CollectsUserInput& cui = map->first_player->get<CollectsUserInput>();
 
         if (cui.empty()) return;
 
@@ -219,11 +219,8 @@ struct Client {
                     GLOBALS.set("active_camera_target",
                                 remote_players[id].get());
                     // TODO make shared doesnt work here
-                    global_player.reset(remote_players[id].get());
-                    global_player->addComponent<CollectsUserInput>();
-                    // TODO i dont think we need this anymore
-                    // global_player->addComponent<CanBeGhostPlayer>().update(
-                    // true);
+                    map->first_player.reset(remote_players[id].get());
+                    map->first_player->addComponent<CollectsUserInput>();
                 }
 
                 for (auto client_id : info.all_clients) {

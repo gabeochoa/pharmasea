@@ -82,9 +82,8 @@ struct GameLayer : public Layer {
             // NOTE: today we need to grab things so that the client renders
             // what they server has access to
             map_ptr->grab_things();
+            SystemManager::get().update(Entities{map_ptr->first_player}, dt);
         }
-
-        SystemManager::get().update(Entities{global_player}, dt);
     }
 
     virtual void onDraw(float dt) override {
@@ -104,17 +103,6 @@ struct GameLayer : public Layer {
             raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f},
                               (vec2){256.0f, 256.0f}, DARKGRAY);
             if (map_ptr) map_ptr->onDraw(dt);
-            if (network_debug_mode_on) {
-                const auto network_players =
-                    // Forcing a copy to avoid the data changing from underneath
-                    // us
-                    std::map<int, std::shared_ptr<Entity>>(
-                        GLOBALS.get_or_default<
-                            std::map<int, std::shared_ptr<Entity>>>(
-                            "server_players", {}));
-                SystemManager::get().render_entities(Entities{global_player},
-                                                     dt);
-            }
             // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
             // if (nav) {
             // for (auto kv : nav->entityShapes) {

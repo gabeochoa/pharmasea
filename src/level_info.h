@@ -43,7 +43,6 @@ const char CUSTOMER = 'c';
 const char CUST_SPAWNER = 'C';
 const char REGISTER = 'R';
 const char TABLE = 't';
-const char PLAYER = '@';
 
 const char GRABBERu = '^';
 const char GRABBERl = '<';
@@ -167,10 +166,6 @@ struct helper {
             } break;
             case FRUIT: {
                 (furniture::make_fruit_basket(create(), location));
-                return;
-            } break;
-            case PLAYER: {
-                global_player->get<Transform>().update(vec::to3(location));
                 return;
             } break;
             case BLENDER: {

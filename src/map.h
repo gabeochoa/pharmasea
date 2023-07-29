@@ -14,6 +14,7 @@ struct Map {
     LobbyMapInfo lobby_info;
     GameMapInfo game_info;
 
+    std::shared_ptr<Entity> first_player;
     Entities remote_players_NOT_SERIALIZED;
     std::string seed;
 
@@ -32,7 +33,19 @@ struct Map {
         return in_lobby_state() ? lobby_info.entities : game_info.entities;
     }
 
-    void onUpdate(float dt) { _onUpdate(remote_players_NOT_SERIALIZED, dt); }
+    void onUpdate(float dt) {
+        Entities players;
+        players.reserve(remote_players_NOT_SERIALIZED.size() + 1);
+
+        players.insert(players.end(), remote_players_NOT_SERIALIZED.begin(),
+                       remote_players_NOT_SERIALIZED.end());
+        players.push_back(first_player);
+
+        // TODO does this need to happen every frame?
+        SystemManager::get().firstPlayerID = first_player->id;
+
+        _onUpdate(players, dt);
+    }
 
     void _onUpdate(std::vector<std::shared_ptr<Entity>> players, float dt) {
         TRACY_ZONE_SCOPED;

@@ -19,7 +19,6 @@ constexpr int MAP_H = 33;
 constexpr float TILESIZE = 1.0f;
 
 struct Entity;
-static std::shared_ptr<Entity> global_player;
 
 constexpr float GATHER_SPOT = -20.f;
 constexpr int MAX_SEARCH_RANGE = 100;
