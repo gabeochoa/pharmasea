@@ -44,10 +44,12 @@ using ComponentBitSet = std::bitset<max_num_components>;
 // cant seem to serialize this so lets try map
 using ComponentArray = std::map<int, BaseComponent*>;
 using Item = Entity;
+using EntityID = int;
 
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
-    int id;
+    // TODO go around and audit id uses
+    EntityID id;
 
     ComponentBitSet componentSet;
     ComponentArray componentArray;

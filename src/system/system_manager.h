@@ -64,8 +64,7 @@ SINGLETON_FWD(SystemManager)
 struct SystemManager {
     SINGLETON(SystemManager)
 
-    // TODO add type for EntityID
-    int firstPlayerID = -1;
+    EntityID firstPlayerID = -1;
     Entities oldAll;
 
     SystemManager() {
