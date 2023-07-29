@@ -24,6 +24,7 @@ struct CanOrderDrink : public BaseComponent {
         // TODO eventually read from game settings
         num_orders_rem = randIn(0, 5);
         current_order = get_random_drink();
+        order_state = OrderState::Ordering;
     }
 
     [[nodiscard]] IngredientBitSet recipe() const {
