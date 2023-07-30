@@ -379,6 +379,22 @@
             "size_scale": 0.75,
             "position_offset": [0,-0.5,0],
             "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "lampSquareCeiling.obj",
+            "library_name": "mop_holder",
+            "size_scale": 5.0,
+            "position_offset": [-0.25,-0.5,0.25],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "lampRoundFloor.obj",
+            "library_name": "mop",
+            "size_scale": 3.0,
+            "position_offset": [0,-0.5,0],
+            "rotation_angle": 0.0
         }
     ]
 }

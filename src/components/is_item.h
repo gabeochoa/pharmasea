@@ -15,6 +15,7 @@ struct IsItem : public BaseComponent {
         CUSTOMER = 1 << 4,
         BLENDER = 1 << 5,
         SODA_MACHINE = 1 << 6,
+        MOP_HOLDER = 1 << 7,
 
     };
 

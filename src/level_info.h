@@ -61,6 +61,7 @@ const char SQUIRTER = 'q';
 const char TRASH = 'T';
 const char FILTERED_GRABBER = 'G';
 const char PIPE = 'p';
+const char MOP_HOLDER = 'm';
 
 const char SOPHIE = 's';
 
@@ -202,6 +203,10 @@ struct helper {
             } break;
             case PIPE: {
                 (furniture::make_pnumatic_pipe(create(), location));
+                return;
+            } break;
+            case MOP_HOLDER: {
+                (furniture::make_mop_holder(create(), location));
                 return;
             } break;
             case 32: {

@@ -113,6 +113,7 @@ constexpr const char* TRASH = "trash";
 constexpr const char* FILTERED_GRABBER = "filtered_grabber";
 constexpr const char* PNUMATIC_PIPE = "pnumatic_pipe";
 constexpr const char* VOMIT = "vomit";
+constexpr const char* MOP_HOLDER = "mop_holder";
 
 constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
 
@@ -125,6 +126,7 @@ constexpr const char* DRINK = "drink";
 constexpr const char* ALCOHOL = "alcohol";
 constexpr const char* LEMON = "lemon";
 constexpr const char* SIMPLE_SYRUP = "simple_syrup";
+constexpr const char* MOP = "mop";
 
 }  // namespace item
 

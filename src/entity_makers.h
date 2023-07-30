@@ -477,6 +477,22 @@ static void make_soda_machine(Entity& soda_machine, vec2 pos) {
                     EntityFilter::FilterStrength::Requirement));
 }
 
+static void make_mop_holder(Entity& mop_holder, vec2 pos) {
+    furniture::make_itemcontainer(
+        mop_holder, DebugOptions{.name = strings::entity::MOP_HOLDER}, pos,
+        strings::item::MOP);
+    mop_holder.get<IsItemContainer>().set_max_generations(1);
+    mop_holder.get<CanHoldItem>()
+        .update_held_by(IsItem::HeldBy::MOP_HOLDER)
+        .set_filter(
+            EntityFilter()
+                .set_enabled_flags(EntityFilter::FilterDatumType::Name)
+                .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
+                                           strings::item::MOP)
+                .set_filter_strength(
+                    EntityFilter::FilterStrength::Requirement));
+}
+
 static void make_trigger_area(
     Entity& trigger_area, vec3 pos, float width, float height,
     std::string title = strings::entity::TRIGGER_AREA) {
@@ -556,6 +572,15 @@ static void make_soda_spout(Item& soda_spout, vec2 pos) {
     // and so its easier if everything is soda
     soda_spout.addComponent<AddsIngredient>(
         [](Entity&) { return Ingredient::Soda; });
+}
+
+static void make_mop(Item& mop, vec2 pos) {
+    make_item(mop, {.name = strings::item::MOP}, pos);
+
+    mop.addComponent<ModelRenderer>(strings::item::MOP);
+
+    mop.get<IsItem>().set_hb_filter(IsItem::HeldBy::MOP_HOLDER |
+                                    IsItem::HeldBy::PLAYER);
 }
 
 // Returns true if item was cleaned up
@@ -758,6 +783,8 @@ static void make_item_type(Item& item, const std::string& type_name,  //
             return make_lemon(item, pos, index);
         case hashString(strings::item::DRINK):
             return make_drink(item, pos);
+        case hashString(strings::item::MOP):
+            return make_mop(item, pos);
             // TODO add rope item
             // case hashString(strings::item::ROPE):
             // return make_rope(item, pos);

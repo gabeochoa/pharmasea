@@ -380,6 +380,7 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
 
     backfill_empty_container(strings::item::SODA_SPOUT, entity, pos);
     backfill_empty_container(strings::item::DRINK, entity, pos);
+    backfill_empty_container(strings::item::MOP, entity, pos);
 
     if (entity.is_missing<Indexer>()) return;
     backfill_empty_container(strings::item::ALCOHOL, entity, pos,
