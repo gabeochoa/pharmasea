@@ -625,16 +625,17 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
         std::shared_ptr<Item> item = player->get<CanHoldItem>().item();
         item->get<Transform>().update(furnT.snap_position());
 
-        bool is_matching_container =
-            closest_furniture->has<IsItemContainer>() &&
-            closest_furniture->get<IsItemContainer>().is_matching_item(item);
-        if (is_matching_container) {
-            // So in this case, we actually just need to either delete the item
-            // thats already there or delete the one we are dropping i think its
-            // simpler to delete the ones that already there
+        if (closest_furniture->has<IsItemContainer>() &&
+            closest_furniture->get<IsItemContainer>().is_matching_item(item)) {
+            // So in this case,
+            // if theres already an item there, then we just have to delete
+            // the one we are holding.
+            //
+            // if theres nothing there, then we do the normal drop logic
             if (furnCHI.is_holding_item()) {
                 furnCHI.item()->cleanup = true;
-                furnCHI.update(nullptr);
+                player->get<CanHoldItem>().update(nullptr);
+                return true;
             }
         }
 
