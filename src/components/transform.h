@@ -154,7 +154,7 @@ struct Transform : public BaseComponent {
      * */
     static vec2 tile_infront_given_pos(
         vec2 tile, int distance,
-        Transform::Transform::FrontFaceDirection& direction) {
+        const Transform::Transform::FrontFaceDirection& direction) {
         if (direction & Transform::FORWARD) {
             tile.y += distance * TILESIZE;
             tile.y = ceil(tile.y);

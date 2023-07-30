@@ -90,17 +90,16 @@ struct CanHoldItem : public BaseComponent {
 
    private:
     std::shared_ptr<Entity> held_item = nullptr;
-    EntityFilter filter;
     IsItem::HeldBy held_by;
+    EntityFilter filter;
 
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
-        // s.ext(held_item, bitsery::ext::StdSmartPtr{});
-
-        // TODO we only need this for debug info
+        // TODO we only need these for debug info
+        s.ext(held_item, bitsery::ext::StdSmartPtr{});
         s.object(filter);
     }
 };
