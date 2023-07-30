@@ -153,7 +153,7 @@ static void update_player_remotely(Entity& entity, float* location,
 }
 
 static void update_player_rare_remotely(Entity& entity, int model_index,
-                                        int last_ping) {
+                                        long long last_ping) {
     if (entity.is_missing_any<UsesCharacterModel, ModelRenderer, HasClientID>())
         return;
     UsesCharacterModel& ucm = entity.get<UsesCharacterModel>();

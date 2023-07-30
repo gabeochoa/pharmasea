@@ -464,8 +464,8 @@ struct Server {
                      incoming_client.client_id);
             return;
         }
-        player_match->second->get<HasClientID>().update_ping(
-            (int) (pong - info.ping));
+                    
+        player_match->second->get<HasClientID>().update_ping(pong - info.ping);
     }
 
     void server_enqueue_message_string(

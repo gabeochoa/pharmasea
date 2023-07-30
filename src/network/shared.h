@@ -76,13 +76,13 @@ struct ClientPacket {
     } msg_type;
 
     struct PingInfo {
-        long ping;
-        long pong;
+        long long ping = 0;
+        long long pong = 0;
     };
 
     struct AnnouncementInfo {
         std::string message;
-        AnnouncementType type;
+        AnnouncementType type = AnnouncementType::Message;
     };
 
     // Map Info
@@ -93,8 +93,8 @@ struct ClientPacket {
     // Game Info
     struct GameStateInfo {
         // TODO we likely dont need to send menu state anymore
-        menu::State host_menu_state;
-        game::State host_game_state;
+        menu::State host_menu_state = menu::State::Game;
+        game::State host_game_state = game::State::Lobby;
     };
 
     // Packet containing a recent keypress
@@ -107,7 +107,7 @@ struct ClientPacket {
     struct PlayerJoinInfo {
         std::vector<int> all_clients;
         int client_id = -1;
-        size_t hashed_version;
+        size_t hashed_version = 0;
         bool is_you = false;
         std::string username{};
     };
@@ -119,15 +119,15 @@ struct ClientPacket {
 
     // Player Location
     struct PlayerInfo {
-        int facing_direction;
+        int facing_direction = 0;
         float location[3];
         std::string username{};
     };
 
     struct PlayerRareInfo {
         int client_id = -1;
-        int model_index;
-        int last_ping = -1;
+        int model_index = 0;
+        long long last_ping = -1;
     };
 
     typedef std::variant<
@@ -243,18 +243,11 @@ void serialize(S& s, ClientPacket& packet) {
               [](S& s, ClientPacket::PlayerRareInfo& info) {
                   s.value4b(info.client_id);
                   s.value4b(info.model_index);
-                  s.value4b(info.last_ping);
+                  s.value8b(info.last_ping);
               },
               [](S& s, ClientPacket::PingInfo& info) {
-    // Im not sure if this will cause issues with networked clients,
-    // but this allows it to complile for now
-#ifdef __APPLE__
                   s.value8b(info.ping);
                   s.value8b(info.pong);
-#else
-                  s.value4b(info.ping);
-                  s.value4b(info.pong);
-#endif
               },
           });
 }
