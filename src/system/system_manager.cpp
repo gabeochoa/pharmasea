@@ -884,6 +884,11 @@ void increment_day_count(Entity& entity, float) {
     entity.get<HasTimer>().dayCount++;
 }
 
+void reset_customer_spawner_when_leaving_inround(Entity& entity) {
+    if (entity.is_missing<IsSpawner>()) return;
+    entity.get<IsSpawner>().reset_num_spawned();
+}
+
 void reset_customers_that_need_resetting(Entity& entity) {
     if (entity.is_missing<CanOrderDrink>()) return;
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
@@ -985,6 +990,7 @@ void SystemManager::process_state_change(
             // TODO make a namespace for transition functions
             system_manager::delete_held_items_when_leaving_inround(entity);
             system_manager::delete_customers_when_leaving_inround(entity);
+            system_manager::reset_customer_spawner_when_leaving_inround(entity);
             system_manager::reset_max_gen_when_after_deletion(entity);
             system_manager::increment_day_count(entity, dt);
             // TODO reset haswork's

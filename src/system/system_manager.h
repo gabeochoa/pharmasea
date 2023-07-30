@@ -35,6 +35,7 @@ void handle_autodrop_furniture_when_exiting_planning(const Entity& entity);
 void delete_held_items_when_leaving_inround(const Entity& entity);
 
 void delete_customers_when_leaving_inround(const Entity& entity);
+void reset_customer_spawner_when_leaving_inround(const Entity& entity);
 
 void reset_customers_that_need_resetting(const Entity& entity);
 

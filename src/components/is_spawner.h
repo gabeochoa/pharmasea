@@ -12,6 +12,12 @@ struct IsSpawner : public BaseComponent {
 
     [[nodiscard]] bool hit_max() const { return num_spawned >= max_spawned; }
 
+    auto& reset_num_spawned() {
+        // TODO add max to progression_manager
+        num_spawned = 0;
+        return *this;
+    }
+
     auto& set_fn(SpawnFn fn) {
         spawn_fn = fn;
         return *this;
