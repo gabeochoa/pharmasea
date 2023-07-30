@@ -50,9 +50,10 @@ struct IsProgressionManager : public BaseComponent {
     [[nodiscard]] DrinkSet enabled_drinks() const { return enabledDrinks; }
 
     Drink get_random_drink() const {
-        // TODO unlikely but handle an error and default to coke
         int drinkSetBit = get_random_enabled_bit(enabledDrinks);
         if (drinkSetBit == -1) {
+            log_warn("generated {} but we had {} enabled drinks", drinkSetBit,
+                     enabledDrinks.count());
             return Drink::coke;
         }
         return magic_enum::enum_cast<Drink>(drinkSetBit).value();
