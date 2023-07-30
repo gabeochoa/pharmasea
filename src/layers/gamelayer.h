@@ -16,8 +16,7 @@ struct GameLayer : public Layer {
     std::shared_ptr<GameCam> cam;
     raylib::Model bag_model;
 
-    GameLayer() : Layer(strings::menu::GAME) {
-        cam = std::make_shared<GameCam>();
+    GameLayer() : Layer(strings::menu::GAME), cam(std::make_shared<GameCam>()) {
         GLOBALS.set(strings::globals::GAME_CAM, cam.get());
     }
 

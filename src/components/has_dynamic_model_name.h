@@ -9,7 +9,13 @@
 #include "base_component.h"
 
 struct HasDynamicModelName : public BaseComponent {
-    enum DynamicType { OpenClosed, Subtype, EmptyFull, Ingredients };
+    enum DynamicType {
+        NoDynamicType,
+        OpenClosed,
+        Subtype,
+        EmptyFull,
+        Ingredients
+    };
 
     virtual ~HasDynamicModelName() {}
     typedef std::function<std::string(const Entity&, const std::string&)>
@@ -30,6 +36,7 @@ struct HasDynamicModelName : public BaseComponent {
                 // TODO eventually id like the logic to live in here assuming we
                 // have a ton using these. if its just one for each then fetcher
                 // (Custom:) is perfectly fine
+            case NoDynamicType:
             case Ingredients:
             case EmptyFull:
             case Subtype: {
@@ -48,7 +55,7 @@ struct HasDynamicModelName : public BaseComponent {
     }
 
    private:
-    DynamicType dynamic_type;
+    DynamicType dynamic_type = DynamicType::NoDynamicType;
     std::string base_name;
     bool initialized = false;
     ModelNameFetcher fetcher;

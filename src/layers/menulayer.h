@@ -8,9 +8,9 @@
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
 
-    MenuLayer() : Layer(strings::menu::MENU) {
-        ui_context = std::make_shared<ui::UIContext>();
-    }
+    MenuLayer()
+        : Layer(strings::menu::MENU),
+          ui_context(std::make_shared<ui::UIContext>()) {}
 
     virtual ~MenuLayer() {}
 

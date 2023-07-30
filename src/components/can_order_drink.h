@@ -17,7 +17,9 @@ struct CanOrderDrink : public BaseComponent {
         DoneDrinking,
     } order_state;
 
-    CanOrderDrink() { order_state = OrderState::NeedsReset; }
+    CanOrderDrink() : num_orders_rem(-1), current_order(Drink::coke) {
+        order_state = OrderState::NeedsReset;
+    }
 
     virtual ~CanOrderDrink() {}
 

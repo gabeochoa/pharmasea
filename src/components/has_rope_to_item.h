@@ -33,7 +33,7 @@ struct HasRopeToItem : public BaseComponent {
    private:
     vec2 path_to;
     bool generated = false;
-    int rope_length;
+    int rope_length = 0;
     std::vector<std::shared_ptr<Item>> rope;
 
     friend bitsery::Access;

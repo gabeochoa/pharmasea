@@ -7,7 +7,9 @@
 struct Entity;
 
 struct HasWork : public BaseComponent {
-    HasWork() : pct_work_complete(0.f), more_to_do(true) {}
+    // TODO idk if false is a reasonable default
+    HasWork()
+        : pct_work_complete(0.f), more_to_do(true), reset_on_empty(false) {}
     virtual ~HasWork() {}
 
     // Does this have work to be done?

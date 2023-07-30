@@ -134,19 +134,19 @@ struct Server {
         }
     }
 
-    float fps_timer = 1.f;
-    int frames = 0;
-
-    void fps(float dt) {
-        fps_timer -= dt;
-        frames++;
-        if (fps_timer <= 0) {
-            fps_timer = 1.f;
-            log_info("{} {} imq{} fwq{}", dt, frames,
-                     incoming_message_queue.size(), packet_queue.size());
-            frames = 0;
-        }
-    }
+    // float fps_timer = 1.f;
+    // int frames = 0;
+    //
+    // void fps(float dt) {
+    // fps_timer -= dt;
+    // frames++;
+    // if (fps_timer <= 0) {
+    // fps_timer = 1.f;
+    // log_info("{} {} imq{} fwq{}", dt, frames,
+    // incoming_message_queue.size(), packet_queue.size());
+    // frames = 0;
+    // }
+    // }
 
     void tick(float dt) {
         // fps(dt);

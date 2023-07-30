@@ -89,8 +89,8 @@ struct CanPerformJob : public BaseComponent {
    private:
     [[nodiscard]] const Job& job() const { return *current_job; }
 
-    JobType starting_job_type;
-    JobType idle_job_type;
+    JobType starting_job_type = JobType::NoJob;
+    JobType idle_job_type = JobType::NoJob;
     bool worked_before = false;
 
     std::stack<std::shared_ptr<Job>> personal_queue;

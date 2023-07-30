@@ -5,7 +5,7 @@ struct TriggerOnDt {
     float reset;
     float current;
 
-    TriggerOnDt(float timeToPass) : reset(timeToPass) {}
+    explicit TriggerOnDt(float timeToPass) : reset(timeToPass), current(0) {}
 
     [[nodiscard]] operator float() { return reset; }
 

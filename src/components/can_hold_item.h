@@ -13,8 +13,8 @@
 #include "is_item.h"
 
 struct CanHoldItem : public BaseComponent {
-    CanHoldItem() : held_by(IsItem::HeldBy::UNKNOWN) {}
-    CanHoldItem(IsItem::HeldBy hb) : held_by(hb) {}
+    CanHoldItem() : held_by(IsItem::HeldBy::UNKNOWN), filter(EntityFilter()) {}
+    CanHoldItem(IsItem::HeldBy hb) : held_by(hb), filter(EntityFilter()) {}
 
     virtual ~CanHoldItem() {}
 
