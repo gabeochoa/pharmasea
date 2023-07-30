@@ -17,7 +17,8 @@ struct CanOrderDrink : public BaseComponent {
         DoneDrinking,
     } order_state;
 
-    CanOrderDrink() : num_orders_rem(-1), current_order(Drink::coke) {
+    CanOrderDrink()
+        : num_orders_rem(-1), num_orders_had(0), current_order(Drink::coke) {
         order_state = OrderState::NeedsReset;
     }
 

@@ -29,6 +29,11 @@ struct IsSpawner : public BaseComponent {
         return *this;
     }
 
+    auto& enable_prevent_duplicates() {
+        prevent_duplicate_spawns = true;
+        return *this;
+    }
+
     auto& set_total(int mx) {
         max_spawned = mx;
         return *this;
@@ -51,18 +56,25 @@ struct IsSpawner : public BaseComponent {
         countdown -= dt;
         if (countdown <= 0) {
             countdown = spread;
-            num_spawned++;
             return true;
         }
         return false;
     }
 
-    void spawn(Entity& entity, vec2 pos) { spawn_fn(entity, pos); }
-    void validate(Entity& entity, vec2 pos) {
-        validation_spawn_fn ? validation_spawn_fn(entity, pos) : true;
+    void spawn(Entity& entity, vec2 pos) {
+        spawn_fn(entity, pos);
+        num_spawned++;
+    }
+    [[nodiscard]] bool validate(Entity& entity, vec2 pos) {
+        return validation_spawn_fn ? validation_spawn_fn(entity, pos) : true;
+    }
+
+    [[nodiscard]] bool prevent_dupes() const {
+        return prevent_duplicate_spawns;
     }
 
    private:
+    bool prevent_duplicate_spawns = false;
     int max_spawned = 0;
     float spread = 0;
 

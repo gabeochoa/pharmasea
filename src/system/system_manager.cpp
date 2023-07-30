@@ -549,9 +549,28 @@ void process_trigger_area(Entity& entity, float dt) {
 
 void process_spawner(Entity& entity, float dt) {
     if (entity.is_missing<IsSpawner>()) return;
-    auto pos = entity.get<Transform>().as2();
-    bool should_spawn = entity.get<IsSpawner>().pass_time(dt);
-    if (!should_spawn) return;
+    vec2 pos = entity.get<Transform>().as2();
+
+    bool is_time_to_spawn = entity.get<IsSpawner>().pass_time(dt);
+    if (!is_time_to_spawn) return;
+
+    // If there is a validation function check that first
+    bool can_spawn_here_and_now = entity.get<IsSpawner>().validate(entity, pos);
+    if (!can_spawn_here_and_now) return;
+
+    bool should_prev_dupes = entity.get<IsSpawner>().prevent_dupes();
+    if (should_prev_dupes) {
+        const Entities& ents = EntityHelper::getEntitiesInPosition(pos);
+        for (auto e_ptr : ents) {
+            if (!e_ptr) continue;
+            if (e_ptr->id == entity.id) continue;
+
+            // Other than invalid and Us, is there anything else there?
+            // log_info(
+            // "was ready to spawn but then there was someone there already");
+            return;
+        }
+    }
 
     auto& new_ent = EntityHelper::createEntity();
     entity.get<IsSpawner>().spawn(new_ent, pos);
@@ -909,7 +928,7 @@ void reset_customers_that_need_resetting(Entity& entity) {
     {
         // TODO eventually read from game settings
         cod.num_orders_rem = randIn(0, 5);
-        cod.num_orders_rem = 0;
+        cod.num_orders_had = 0;
         cod.current_order = progressionManager.get_random_drink();
         cod.order_state = CanOrderDrink::OrderState::Ordering;
     }

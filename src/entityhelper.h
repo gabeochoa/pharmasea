@@ -225,6 +225,11 @@ struct EntityHelper {
         return matching;
     }
 
+    static std::vector<std::shared_ptr<Entity>> getEntitiesInPosition(
+        vec2 pos) {
+        return getEntitiesInRange<Entity>(pos, TILESIZE);
+    }
+
     template<typename T>
     static std::shared_ptr<T> getMatchingEntityInFront(
         vec2 pos,                                       //

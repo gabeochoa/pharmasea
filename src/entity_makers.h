@@ -791,13 +791,13 @@ static void make_customer(Entity& customer, vec2 p, bool has_order = true) {
             const CanOrderDrink& cod = entity.get<CanOrderDrink>();
             // not vomiting since didnt have anything to drink yet
             if (cod.num_orders_had <= 0) return false;
-
-            // TODO check if there is already vomit in that spot
-
             return true;
         })
-        .set_total(3)
-        .set_time_between(10.f);
+        // check if there is already vomit in that spot
+        .enable_prevent_duplicates()
+        // TODO dynamically set these based on num drinks
+        .set_total(13)
+        .set_time_between(5.f);
 }
 
 namespace furniture {
