@@ -79,7 +79,7 @@ struct BasePauseLayer : public Layer {
                     }
                     if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                                "RELOAD CONFIGS")) {
-                        Preload::get().load_config();
+                        Preload::get().reload_config();
                     }
                     if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
                                text_lookup(strings::i18n::QUIT))) {

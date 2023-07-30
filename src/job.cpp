@@ -495,6 +495,8 @@ Job::State DrinkingJob::run_state_working_at_end(
         entity->get<HasSpeechBubble>().off();
 
         cod.num_orders_rem--;
+        cod.num_orders_had++;
+
         if (cod.num_orders_rem > 0) {
             cod.order_state = CanOrderDrink::OrderState::Ordering;
 

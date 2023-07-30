@@ -6,6 +6,7 @@
 struct Entity;
 
 typedef std::function<void(Entity&, vec2)> SpawnFn;
+typedef std::function<bool(Entity&, vec2)> ValidationSpawnFn;
 
 struct IsSpawner : public BaseComponent {
     virtual ~IsSpawner() {}
@@ -20,6 +21,11 @@ struct IsSpawner : public BaseComponent {
 
     auto& set_fn(SpawnFn fn) {
         spawn_fn = fn;
+        return *this;
+    }
+
+    auto& set_validation_fn(ValidationSpawnFn fn) {
+        validation_spawn_fn = fn;
         return *this;
     }
 
@@ -52,6 +58,9 @@ struct IsSpawner : public BaseComponent {
     }
 
     void spawn(Entity& entity, vec2 pos) { spawn_fn(entity, pos); }
+    void validate(Entity& entity, vec2 pos) {
+        validation_spawn_fn ? validation_spawn_fn(entity, pos) : true;
+    }
 
    private:
     int max_spawned = 0;
@@ -60,13 +69,14 @@ struct IsSpawner : public BaseComponent {
     int num_spawned = 0;
     float countdown = 0;
     SpawnFn spawn_fn;
+    ValidationSpawnFn validation_spawn_fn;
 
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
-        // We likely dont need to serialize anything because it should be all
-        // server side info
+        // We likely dont need to serialize anything because it should be
+        // all server side info
     }
 };

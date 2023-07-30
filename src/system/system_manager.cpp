@@ -909,6 +909,7 @@ void reset_customers_that_need_resetting(Entity& entity) {
     {
         // TODO eventually read from game settings
         cod.num_orders_rem = randIn(0, 5);
+        cod.num_orders_rem = 0;
         cod.current_order = progressionManager.get_random_drink();
         cod.order_state = CanOrderDrink::OrderState::Ordering;
     }

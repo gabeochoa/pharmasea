@@ -187,21 +187,6 @@ static void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
     person.addComponent<CanPerformJob>().update(Wandering, Wandering);
 }
 
-static void make_customer(Entity& customer, vec2 p, bool has_order = true) {
-    make_aiperson(customer, DebugOptions{.name = strings::entity::CUSTOMER},
-                  vec::to3(p));
-
-    customer.addComponent<HasName>().update(get_random_name());
-
-    // TODO for now, eventually move to customer spawner
-    if (has_order) customer.addComponent<CanOrderDrink>();
-
-    customer.addComponent<HasSpeechBubble>();
-
-    customer.get<HasBaseSpeed>().update(5.f);
-    customer.get<CanPerformJob>().update(WaitInQueue, Wandering);
-}
-
 typedef Entity Furniture;
 
 // TODO This namespace should probably be "furniture::"
@@ -516,23 +501,6 @@ static void make_trigger_area(
         });
 }
 
-static void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
-    make_entity(customer_spawner, {strings::entity::CUSTOMER_SPAWNER}, pos);
-
-    // TODO maybe one day add some kind of ui that shows when the next
-    // person is coming? that migth be good to be part of the round
-    // timer ui?
-    customer_spawner.addComponent<SimpleColoredBoxRenderer>().update(PINK,
-                                                                     PINK);
-    const auto sfn = std::bind(&make_customer, std::placeholders::_1,
-                               std::placeholders::_2, true);
-    customer_spawner
-        .addComponent<IsSpawner>()  //
-        .set_fn(sfn)
-        .set_total(round_settings::NUM_CUSTOMERS)
-        .set_time_between(round_settings::TIME_BETWEEN_CUSTOMERS_S);
-}
-
 static void make_blender(Entity& blender, vec2 pos) {
     furniture::make_furniture(blender,
                               DebugOptions{.name = strings::entity::BLENDER},
@@ -547,6 +515,18 @@ static void make_sophie(Entity& sophie, vec3 pos) {
     sophie.addComponent<HasTimer>(HasTimer::Renderer::Round,
                                   round_settings::ROUND_LENGTH_S);
     sophie.addComponent<IsProgressionManager>();
+}
+
+static void make_vomit(Entity& vomit, vec2 pos) {
+    make_entity(vomit, {.name = strings::entity::VOMIT});
+
+    vomit.get<Transform>().init({pos.x, 0, pos.y},
+                                {TILESIZE, TILESIZE, TILESIZE});
+    if (ENABLE_MODELS) {
+        vomit.addComponent<ModelRenderer>(strings::entity::VOMIT);
+    }
+
+    vomit.addComponent<CanBeHighlighted>();
 }
 
 }  // namespace furniture
@@ -789,3 +769,53 @@ static void make_item_type(Item& item, const std::string& type_name,  //
 }
 
 }  // namespace items
+
+static void make_customer(Entity& customer, vec2 p, bool has_order = true) {
+    make_aiperson(customer, DebugOptions{.name = strings::entity::CUSTOMER},
+                  vec::to3(p));
+
+    customer.addComponent<HasName>().update(get_random_name());
+
+    // TODO for now, eventually move to customer spawner
+    if (has_order) customer.addComponent<CanOrderDrink>();
+
+    customer.addComponent<HasSpeechBubble>();
+
+    customer.get<HasBaseSpeed>().update(5.f);
+    customer.get<CanPerformJob>().update(WaitInQueue, Wandering);
+
+    customer
+        .addComponent<IsSpawner>()  //
+        .set_fn(&furniture::make_vomit)
+        .set_validation_fn([](Entity& entity, vec2) {
+            const CanOrderDrink& cod = entity.get<CanOrderDrink>();
+            // not vomiting since didnt have anything to drink yet
+            if (cod.num_orders_had <= 0) return false;
+
+            // TODO check if there is already vomit in that spot
+
+            return true;
+        })
+        .set_total(3)
+        .set_time_between(10.f);
+}
+
+namespace furniture {
+static void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
+    make_entity(customer_spawner, {strings::entity::CUSTOMER_SPAWNER}, pos);
+
+    // TODO maybe one day add some kind of ui that shows when the next
+    // person is coming? that migth be good to be part of the round
+    // timer ui?
+    customer_spawner.addComponent<SimpleColoredBoxRenderer>().update(PINK,
+                                                                     PINK);
+    const auto sfn = std::bind(&make_customer, std::placeholders::_1,
+                               std::placeholders::_2, true);
+    customer_spawner
+        .addComponent<IsSpawner>()  //
+        .set_fn(sfn)
+        .set_total(round_settings::NUM_CUSTOMERS)
+        .set_time_between(round_settings::TIME_BETWEEN_CUSTOMERS_S);
+}
+
+}  // namespace furniture

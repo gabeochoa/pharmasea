@@ -32,11 +32,10 @@ struct Preload {
     raylib::Font font;
 
     Preload() {
-        load_config();
-        load_models();
+        reload_config();
 
-        // drinks use models, so let those load first
-        load_drink_recipes();
+        // TODO right now these arent reloadable yet but should be soon
+        // add support an move them to reload_config()
 
         load_translations();
         load_shaders();
@@ -67,6 +66,14 @@ struct Preload {
     // Note: Defined in .cpp to avoid LOG_LEVEL violating C++ ODR during
     // linking.
     void load_config();
+
+    void reload_config() {
+        load_config();
+        load_models();
+
+        // drinks use models, so let those load first
+        load_drink_recipes();
+    }
 
     void load_translations() {
         // TODO load correct language pack for settings file

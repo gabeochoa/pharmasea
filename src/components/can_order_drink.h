@@ -39,6 +39,7 @@ struct CanOrderDrink : public BaseComponent {
 
     // TODO make private
     int num_orders_rem = -1;
+    int num_orders_had = 0;
     Drink current_order;
 
    private:
