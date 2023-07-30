@@ -39,7 +39,7 @@ struct Client {
         GLOBALS.set("map", map.get());
     }
 
-    void update_username(std::string new_name) {
+    void update_username(const std::string& new_name) {
         client_p->username = new_name;
     }
 
@@ -111,8 +111,8 @@ struct Client {
         client_p->send_packet_to_server(packet);
     }
 
-    void client_process_message_string(std::string msg) {
-        auto add_new_player = [&](int client_id, std::string username) {
+    void client_process_message_string(const std::string& msg) {
+        auto add_new_player = [&](int client_id, const std::string& username) {
             if (remote_players.contains(client_id)) {
                 log_warn("Why are we trying to add {}", client_id);
                 return;
@@ -124,7 +124,7 @@ struct Client {
             Entity* entity = new Entity();
             make_remote_player(*entity, {0, 0, 0});
             remote_players[client_id] = std::shared_ptr<Entity>(entity);
-            auto& rp = remote_players[client_id];
+            const auto& rp = remote_players[client_id];
             rp->get<HasClientID>().update(client_id);
             // We want to crash if no hasName so no has<> check here
             rp->get<HasName>().update(username);

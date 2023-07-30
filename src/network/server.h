@@ -30,7 +30,7 @@ struct Server {
         return std::thread(std::bind(&Server::run, g_server.get()));
     }
 
-    static void queue_packet(ClientPacket& p) {
+    static void queue_packet(const ClientPacket& p) {
         g_server->packet_queue.push_back(p);
     }
 
@@ -260,7 +260,7 @@ struct Server {
 
     void process_announcement_packet(const internal::Client_t&,
                                      const ClientPacket& packet) {
-        const ClientPacket::AnnouncementInfo info =
+        [[maybe_unused]] const ClientPacket::AnnouncementInfo info =
             std::get<ClientPacket::AnnouncementInfo>(packet.msg);
         send_client_packet_to_all(packet);
     }
@@ -454,9 +454,10 @@ struct Server {
                     .pong = pong,
                 },
         };
-        send_client_packet_to_all(packet, [&](internal::Client_t& client) {
-            return client.client_id != incoming_client.client_id;
-        });
+        send_client_packet_to_all(
+            packet, [&](const internal::Client_t& client) {
+                return client.client_id != incoming_client.client_id;
+            });
 
         auto player_match = players.find(incoming_client.client_id);
         if (player_match == players.end()) {
@@ -506,7 +507,7 @@ struct Server {
                 // No clue so lets just send it to everyone except the guy that
                 // sent it to us
                 send_client_packet_to_all(
-                    packet, [&](internal::Client_t& client) {
+                    packet, [&](const internal::Client_t& client) {
                         return client.client_id == incoming_client.client_id;
                     });
                 log_warn("Server: {} not handled yet ", packet.msg_type);

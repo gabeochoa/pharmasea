@@ -66,7 +66,7 @@ struct Client {
 
     void set_address(SteamNetworkingIPAddr addy) { address = addy; }
 
-    void set_address(std::string ip) {
+    void set_address(const std::string &ip) {
         address.ParseString(ip.c_str());
         address.m_port = DEFAULT_PORT;
     }
@@ -135,12 +135,12 @@ struct Client {
         return true;
     }
 
-    void send_string_to_server(std::string msg, Channel channel) {
+    void send_string_to_server(const std::string &msg, Channel channel) {
         interface->SendMessageToConnection(
             connection, msg.c_str(), (uint32) msg.length(), channel, nullptr);
     }
 
-    ClientPacket deserialize_to_packet(std::string msg) {
+    ClientPacket deserialize_to_packet(const std::string &msg) {
         TContext ctx{};
         std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
             MyPolymorphicClasses{});

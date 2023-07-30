@@ -42,7 +42,7 @@ void render_networked_players(const Entities& entities, float dt) {
                               0, scale, WHITE);
     };
 
-    for (auto& entity_ptr : entities) {
+    for (const auto& entity_ptr : entities) {
         if (!entity_ptr) continue;
         Entity& entity = *entity_ptr;
         // TODO think about this check more

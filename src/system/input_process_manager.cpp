@@ -256,7 +256,7 @@ void process_player_movement_input(std::shared_ptr<Entity> entity, float dt,
     std::shared_ptr<Entity> player = dynamic_pointer_cast<Entity>(entity);
 
     if (entity->is_missing<HasBaseSpeed>()) return;
-    HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
+    const HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
 
     const float speed = hasBaseSpeed.speed() * dt;
     auto new_position = transform.pos();
@@ -283,7 +283,7 @@ void rotate_furniture(const std::shared_ptr<Entity> player) {
     if (GameState::get().is_not(game::State::Planning)) return;
 
     // TODO need to figure out if reach should be separate from highlighting
-    CanHighlightOthers& cho = player->get<CanHighlightOthers>();
+    const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
     std::shared_ptr<Furniture> match =
         EntityHelper::getClosestMatchingFurniture(
@@ -330,7 +330,7 @@ void drop_held_furniture(Entity& player) {
 
 void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
     // TODO need to figure out if this should be separate from highlighting
-    CanHighlightOthers& cho = player->get<CanHighlightOthers>();
+    const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
     CanHoldFurniture& ourCHF = player->get<CanHoldFurniture>();
 
     if (ourCHF.is_holding_furniture()) {
@@ -376,13 +376,13 @@ void work_furniture(const std::shared_ptr<Entity> player, float frame_dt) {
     if (GameState::get().is(game::State::Planning)) return;
 
     // TODO need to figure out if this should be separate from highlighting
-    CanHighlightOthers& cho = player->get<CanHighlightOthers>();
+    const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
     std::shared_ptr<Furniture> match =
         EntityHelper::getClosestMatchingFurniture(
             player->get<Transform>(), cho.reach(), [](auto&& furniture) {
                 if (furniture->template is_missing<HasWork>()) return false;
-                HasWork& hasWork = furniture->template get<HasWork>();
+                const HasWork& hasWork = furniture->template get<HasWork>();
                 return hasWork.has_work();
             });
 
@@ -582,7 +582,7 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
                 [player](std::shared_ptr<Furniture> f) {
                     // This cant hold anything
                     if (f->is_missing<CanHoldItem>()) return false;
-                    CanHoldItem& furnCanHold = f->get<CanHoldItem>();
+                    const CanHoldItem& furnCanHold = f->get<CanHoldItem>();
 
                     std::shared_ptr<Item> item =
                         player->get<CanHoldItem>().item();
@@ -703,7 +703,7 @@ void handle_grab(const std::shared_ptr<Entity>& player) {
     if (picked_up_item) return;
 
     // Handles the non-furniture grabbing case
-    CanHighlightOthers& cho = player->get<CanHighlightOthers>();
+    const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
     std::shared_ptr<Item> closest_item =
         EntityHelper::getClosestMatchingEntity<Item>(

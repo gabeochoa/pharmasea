@@ -202,7 +202,7 @@ struct EntityHelper {
 
     static OptEntity getFirstMatching(std::function<bool(RefEntity)> filter  //
     ) {
-        for (auto& e_ptr : get_entities()) {
+        for (const auto& e_ptr : get_entities()) {
             if (!e_ptr) continue;
             Entity& s = *e_ptr;
             if (!filter(s)) continue;
@@ -259,7 +259,7 @@ struct EntityHelper {
                     continue;
                 }
 
-                Transform& transform =
+                const Transform& transform =
                     current_entity->template get<Transform>();
 
                 float cur_dist = vec::distance(transform.as2(), tile);
@@ -327,8 +327,7 @@ struct EntityHelper {
 
     template<typename T>
     static std::shared_ptr<Entity> getFirstWithComponent() {
-        std::vector<std::shared_ptr<Entity>> matching;
-        for (auto& e : get_entities()) {
+        for (const auto& e : get_entities()) {
             if (!e) continue;
             if (e->has<T>()) return e;
         }
@@ -338,7 +337,7 @@ struct EntityHelper {
     // TODO does this break the idea of ecs
     // TODO change other debugname filter guys to this
     static std::vector<std::shared_ptr<Entity>> getAllWithName(
-        const std::string name) {
+        const std::string& name) {
         std::vector<std::shared_ptr<Entity>> matching;
         for (std::shared_ptr<Entity> e : get_entities()) {
             if (!e) continue;

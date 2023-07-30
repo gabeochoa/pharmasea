@@ -64,19 +64,18 @@ inline void test_all_neighbors() {
 static std::vector<Entity> ents;
 
 inline bool canvisit(const vec2& pos) {
-    auto is_collidable = [](const Entity& entity) {
+    auto is_collidable_ = [](const Entity& entity) {
         return (entity.has<IsSolid>());
     };
     bool hit_impassible_entity = false;
     for (const auto& entity : ents) {
-        if (!is_collidable(entity)) continue;
+        if (!is_collidable_(entity)) continue;
 
         if (vec::distance(entity.template get<Transform>().as2(), pos) <
             TILESIZE / 2.f) {
             hit_impassible_entity = true;
             break;
         }
-        continue;
     }
     return !hit_impassible_entity;
 }
@@ -89,7 +88,7 @@ inline auto p(const Entity& a, vec2 b) {
     return p(a.get<Transform>().as2(), b);
 }
 
-inline std::pair<vec2, vec2> setup(const std::string map) {
+inline std::pair<vec2, vec2> setup(const std::string& map) {
     auto lines = util::split_string(map, "\n");
     generation::helper helper(lines);
     helper.generate([]() -> Entity& { return ents.emplace_back(); });

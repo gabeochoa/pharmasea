@@ -181,7 +181,6 @@ struct Server {
    private:
     void process_connection_ended(
         SteamNetConnectionStatusChangedCallback_t *info) {
-        std::string temp;
         InternalServerAnnouncement annoucement_type;
         // Ignore if they were not previously connected.  (If they
         // disconnected before we accepted the connection.)
@@ -193,6 +192,7 @@ struct Server {
             auto itClient = clients.find(info->m_hConn);
             assert(itClient != clients.end());
 
+            std::string temp;
             // Select appropriate log messages
             const char *pszDebugLogAction;
             if (info->m_info.m_eState ==
@@ -247,7 +247,6 @@ struct Server {
 
     void process_connection_starting(
         SteamNetConnectionStatusChangedCallback_t *info) {
-        std::string temp;
         log_info("Connection request from {}",
                  info->m_info.m_szConnectionDescription);
 
@@ -273,6 +272,8 @@ struct Server {
             log_info("Failed to set poll group?");
             return;
         }
+
+        std::string temp;
 
         // Generate a random nick.  A random temporary nick
         // is really dumb and not how you would write a real chat

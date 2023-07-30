@@ -142,7 +142,8 @@ static void make_remote_player(Entity& remote_player, vec3 pos) {
 }
 
 static void update_player_remotely(Entity& entity, float* location,
-                                   std::string username, int facing_direction) {
+                                   const std::string& username,
+                                   int facing_direction) {
     entity.get<HasName>().update(username);
 
     Transform& transform = entity.get<Transform>();
@@ -495,7 +496,7 @@ static void make_mop_holder(Entity& mop_holder, vec2 pos) {
 
 static void make_trigger_area(
     Entity& trigger_area, vec3 pos, float width, float height,
-    std::string title = strings::entity::TRIGGER_AREA) {
+    const std::string& title = strings::entity::TRIGGER_AREA) {
     make_entity(trigger_area, {strings::entity::TRIGGER_AREA}, pos);
 
     trigger_area.get<Transform>().update_size({
@@ -548,8 +549,8 @@ static void make_vomit(Entity& vomit, vec2 pos) {
     vomit.addComponent<ShowsProgressBar>();
 
     vomit.addComponent<HasWork>().init(
-        [](Entity& vom, HasWork& hasWork, Entity& player, float dt) {
-            CanHoldItem& playerCHI = player.get<CanHoldItem>();
+        [](Entity& vom, HasWork& hasWork, const Entity& player, float dt) {
+            const CanHoldItem& playerCHI = player.get<CanHoldItem>();
             // not holding anything
             if (playerCHI.empty()) return;
             std::shared_ptr<Item> item = playerCHI.const_item();
@@ -631,10 +632,10 @@ static void process_drink_working(Entity& drink, HasWork& hasWork,
         std::shared_ptr<Item> item = playerCHI.const_item();
         // not holding item that adds ingredients
         if (item->is_missing<AddsIngredient>()) return;
-        AddsIngredient& addsIG = item->get<AddsIngredient>();
+        const AddsIngredient& addsIG = item->get<AddsIngredient>();
         Ingredient ing = addsIG.get(*item);
 
-        IsDrink& isdrink = drink.get<IsDrink>();
+        const IsDrink& isdrink = drink.get<IsDrink>();
         // Already has the ingredient
         if (isdrink.has_ingredient(ing)) return;
 
@@ -658,7 +659,7 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
 
     alc.addComponent<HasSubtype>(ingredient::ALC_START, ingredient::ALC_END,
                                  index);
-    alc.addComponent<AddsIngredient>([](Entity& alcohol) {
+    alc.addComponent<AddsIngredient>([](const Entity& alcohol) {
            const HasSubtype& hst = alcohol.get<HasSubtype>();
            return get_ingredient_from_index(ingredient::ALC_START +
                                             hst.get_type_index());
@@ -669,7 +670,7 @@ static void make_alcohol(Item& alc, vec2 pos, int index) {
 
     alc.addComponent<HasDynamicModelName>().init(
         strings::item::ALCOHOL, HasDynamicModelName::DynamicType::Subtype,
-        [](const Item& owner, const std::string) -> std::string {
+        [](const Item& owner, const std::string&) -> std::string {
             const HasSubtype& hst = owner.get<HasSubtype>();
             Ingredient bottle = get_ingredient_from_index(
                 ingredient::ALC_START + hst.get_type_index());
@@ -698,7 +699,7 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
     lemon.addComponent<ModelRenderer>(strings::item::LEMON);
 
     lemon
-        .addComponent<AddsIngredient>([](Entity& lemmy) {
+        .addComponent<AddsIngredient>([](const Entity& lemmy) {
             const HasSubtype& hst = lemmy.get<HasSubtype>();
             return get_ingredient_from_index(ingredient::LEMON_START +
                                              hst.get_type_index());
@@ -708,7 +709,7 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
     lemon.addComponent<HasDynamicModelName>().init(
         strings::item::LEMON,  //
         HasDynamicModelName::DynamicType::Subtype,
-        [](const Item& owner, const std::string base_name) -> std::string {
+        [](const Item& owner, const std::string& base_name) -> std::string {
             if (owner.is_missing<HasSubtype>()) {
                 log_warn(
                     "Generating a dynamic model name with a subtype, but your "
@@ -732,35 +733,35 @@ static void make_lemon(Item& lemon, vec2 pos, int index) {
             return base_name;
         });
 
-    lemon.addComponent<HasWork>().init(
-        [](Entity& owner, HasWork& hasWork, Entity& /*person*/, float dt) {
-            const IsItem& ii = owner.get<IsItem>();
-            HasSubtype& hasSubtype = owner.get<HasSubtype>();
-            Ingredient lemon_type = get_ingredient_from_index(
-                ingredient::LEMON_START + hasSubtype.get_type_index());
+    lemon.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
+                                          Entity& /*person*/, float dt) {
+        const IsItem& ii = owner.get<IsItem>();
+        HasSubtype& hasSubtype = owner.get<HasSubtype>();
+        Ingredient lemon_type = get_ingredient_from_index(
+            ingredient::LEMON_START + hasSubtype.get_type_index());
 
-            // Can only handle lemon -> juice right now
-            if (lemon_type != Ingredient::Lemon) return;
-            // TODO we shouldnt blindly increment type but in this case its
-            // okay i guess
+        // Can only handle lemon -> juice right now
+        if (lemon_type != Ingredient::Lemon) return;
+        // TODO we shouldnt blindly increment type but in this case its
+        // okay i guess
 
-            if (ii.is_not_held_by(IsItem::HeldBy::BLENDER)) {
-                hasWork.reset_pct();
-                return;
-            }
+        if (ii.is_not_held_by(IsItem::HeldBy::BLENDER)) {
+            hasWork.reset_pct();
+            return;
+        }
 
-            const float amt = 1.5f;
-            hasWork.increase_pct(amt * dt);
-            if (hasWork.is_work_complete()) {
-                hasWork.reset_pct();
+        const float amt = 1.5f;
+        hasWork.increase_pct(amt * dt);
+        if (hasWork.is_work_complete()) {
+            hasWork.reset_pct();
 
-                HasDynamicModelName& hDMN = owner.get<HasDynamicModelName>();
-                ModelRenderer& renderer = owner.get<ModelRenderer>();
+            const HasDynamicModelName& hDMN = owner.get<HasDynamicModelName>();
+            ModelRenderer& renderer = owner.get<ModelRenderer>();
 
-                hasSubtype.increment_type();
-                renderer.update_model_name(hDMN.fetch(owner));
-            }
-        });
+            hasSubtype.increment_type();
+            renderer.update_model_name(hDMN.fetch(owner));
+        }
+    });
     lemon.addComponent<ShowsProgressBar>();
 }
 
@@ -778,7 +779,7 @@ static void make_drink(Item& drink, vec2 pos) {
 
     drink.addComponent<HasDynamicModelName>().init(
         strings::item::DRINK, HasDynamicModelName::DynamicType::Ingredients,
-        [](const Item& owner, const std::string) -> std::string {
+        [](const Item& owner, const std::string&) -> std::string {
             const IsDrink& isdrink = owner.get<IsDrink>();
             constexpr auto drinks = magic_enum::enum_values<Drink>();
             for (Drink d : drinks) {
@@ -835,7 +836,7 @@ static void make_customer(Entity& customer, vec2 p, bool has_order = true) {
     customer
         .addComponent<IsSpawner>()  //
         .set_fn(&furniture::make_vomit)
-        .set_validation_fn([](Entity& entity, vec2) {
+        .set_validation_fn([](const Entity& entity, vec2) {
             const CanOrderDrink& cod = entity.get<CanOrderDrink>();
             // not vomiting since didnt have anything to drink yet
             if (cod.num_orders_had <= 0) return false;
@@ -844,7 +845,7 @@ static void make_customer(Entity& customer, vec2 p, bool has_order = true) {
         // check if there is already vomit in that spot
         .enable_prevent_duplicates()
         // TODO dynamically set these based on num drinks
-        .set_total(13)
+        .set_total(2)
         .set_time_between(5.f);
 }
 

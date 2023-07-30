@@ -32,8 +32,8 @@ void update_held_furniture_position(Entity& entity, float) {
     if (entity.is_missing_any<Transform, CanHoldFurniture>()) return;
 
     const Transform& transform = entity.get<Transform>();
+    const CanHoldFurniture& can_hold_furniture = entity.get<CanHoldFurniture>();
 
-    CanHoldFurniture& can_hold_furniture = entity.get<CanHoldFurniture>();
     if (can_hold_furniture.empty()) return;
 
     auto new_pos = transform.pos();
@@ -66,7 +66,7 @@ void update_held_item_position(Entity& entity, float) {
     vec3 new_pos = transform.pos();
 
     if (entity.has<CustomHeldItemPosition>()) {
-        CustomHeldItemPosition& custom_item_position =
+        const CustomHeldItemPosition& custom_item_position =
             entity.get<CustomHeldItemPosition>();
 
         switch (custom_item_position.positioner) {
@@ -83,7 +83,7 @@ void update_held_item_position(Entity& entity, float) {
                         "A conveyer positioned item needs ConveysHeldItem");
                     break;
                 }
-                ConveysHeldItem& conveysHeldItem =
+                const ConveysHeldItem& conveysHeldItem =
                     entity.get<ConveysHeldItem>();
                 if (transform.face_direction() &
                     Transform::FrontFaceDirection::FORWARD) {
@@ -112,7 +112,7 @@ void update_held_item_position(Entity& entity, float) {
                     log_warn("pipe positioned item needs ConveysHeldItem");
                     break;
                 }
-                ConveysHeldItem& conveysHeldItem =
+                const ConveysHeldItem& conveysHeldItem =
                     entity.get<ConveysHeldItem>();
                 int mult = entity.get<IsPnumaticPipe>().recieving ? 1 : -1;
                 new_pos.y +=
@@ -146,10 +146,10 @@ void reset_highlighted(Entity& entity, float) {
 }
 
 void highlight_facing_furniture(Entity& entity, float) {
-    Transform& transform = entity.get<Transform>();
+    const Transform& transform = entity.get<Transform>();
     if (entity.is_missing<CanHighlightOthers>()) return;
     // TODO add a player reach component
-    CanHighlightOthers& cho = entity.get<CanHighlightOthers>();
+    const CanHighlightOthers& cho = entity.get<CanHighlightOthers>();
 
     auto match = EntityHelper::getClosestMatchingFurniture(
         transform, cho.reach(),
@@ -172,7 +172,7 @@ void move_entity_based_on_push_force(Entity& entity, float, vec3& new_pos_x,
 }
 
 void process_conveyer_items(Entity& entity, float dt) {
-    Transform& transform = entity.get<Transform>();
+    const Transform& transform = entity.get<Transform>();
     if (entity.is_missing_any<CanHoldItem, ConveysHeldItem, CanBeTakenFrom>())
         return;
 
@@ -201,7 +201,7 @@ void process_conveyer_items(Entity& entity, float dt) {
         if (entity.id == furn->id) return false;
         // needs to be able to hold something
         if (furn->is_missing<CanHoldItem>()) return false;
-        CanHoldItem& furnCHI = furn->get<CanHoldItem>();
+        const CanHoldItem& furnCHI = furn->get<CanHoldItem>();
         // has to be empty
         if (furnCHI.is_holding_item()) return false;
         // can this furniture hold the item we are passing?
@@ -281,10 +281,10 @@ void process_conveyer_items(Entity& entity, float dt) {
 // getMatchingEntity is a pretty large chunk of that
 // processconveyer is 10x faster ...
 void process_grabber_items(Entity& entity, float) {
-    Transform& transform = entity.get<Transform>();
+    const Transform& transform = entity.get<Transform>();
 
     if (entity.is_missing<CanHoldItem>()) return;
-    CanHoldItem& canHold = entity.get<CanHoldItem>();
+    const CanHoldItem& canHold = entity.get<CanHoldItem>();
     // we are already holding something so
     if (canHold.is_holding_item()) return;
 
@@ -369,7 +369,7 @@ void backfill_empty_container(const std::string& match_type, Entity& entity,
 
 void process_is_container_and_should_backfill_item(Entity& entity, float) {
     if (entity.is_missing<CanHoldItem>()) return;
-    CanHoldItem& canHold = entity.get<CanHoldItem>();
+    const CanHoldItem& canHold = entity.get<CanHoldItem>();
     if (canHold.is_holding_item()) return;
 
     // TODO speed have each <> return true/false if it worked
@@ -423,7 +423,7 @@ void process_is_indexed_container_holding_incorrect_item(Entity& entity,
     // live there which will cause overlap and grab issues.
 
     if (entity.is_missing<Indexer>()) return;
-    Indexer& indexer = entity.get<Indexer>();
+    const Indexer& indexer = entity.get<Indexer>();
 
     if (entity.is_missing<CanHoldItem>()) return;
     CanHoldItem& canHold = entity.get<CanHoldItem>();
@@ -442,7 +442,7 @@ void process_is_indexed_container_holding_incorrect_item(Entity& entity,
 void handle_autodrop_furniture_when_exiting_planning(Entity& entity) {
     if (entity.is_missing<CanHoldFurniture>()) return;
 
-    CanHoldFurniture& ourCHF = entity.get<CanHoldFurniture>();
+    const CanHoldFurniture& ourCHF = entity.get<CanHoldFurniture>();
     if (ourCHF.empty()) return;
 
     // TODO need to find a spot it can go in using EntityHelper::isWalkable
@@ -468,7 +468,7 @@ void delete_held_items_when_leaving_inround(Entity& entity) {
     if (canHold.empty()) return;
 
     // Mark it as deletable
-    std::shared_ptr<Item>& item = canHold.item();
+    const std::shared_ptr<Item>& item = canHold.item();
 
     // let go of the item
     item->cleanup = true;
@@ -479,7 +479,7 @@ void reset_max_gen_when_after_deletion(Entity& entity) {
     if (entity.is_missing<CanHoldItem>()) return;
     if (entity.is_missing<IsItemContainer>()) return;
 
-    CanHoldItem& canHold = entity.get<CanHoldItem>();
+    const CanHoldItem& canHold = entity.get<CanHoldItem>();
     // If something wasnt deleted, then just ignore it for now
     if (canHold.is_holding_item()) return;
 
@@ -490,7 +490,7 @@ void refetch_dynamic_model_names(Entity& entity, float) {
     if (entity.is_missing<ModelRenderer>()) return;
     if (entity.is_missing<HasDynamicModelName>()) return;
 
-    HasDynamicModelName& hDMN = entity.get<HasDynamicModelName>();
+    const HasDynamicModelName& hDMN = entity.get<HasDynamicModelName>();
     ModelRenderer& renderer = entity.get<ModelRenderer>();
     renderer.update_model_name(hDMN.fetch(entity));
 }
@@ -499,7 +499,7 @@ void count_max_trigger_area_entrants(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
     int count = 0;
-    for (auto& e : SystemManager::get().oldAll) {
+    for (const auto& e : SystemManager::get().oldAll) {
         if (!e) continue;
         if (!check_name(*e, strings::entity::PLAYER)) continue;
         count++;
@@ -511,7 +511,7 @@ void count_trigger_area_entrants(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
     int count = 0;
-    for (auto& e : SystemManager::get().oldAll) {
+    for (const auto& e : SystemManager::get().oldAll) {
         if (!e) continue;
         if (!check_name(*e, strings::entity::PLAYER)) continue;
         if (CheckCollisionBoxes(
@@ -644,7 +644,7 @@ void run_timer(Entity& entity, float dt) {
     ht.reset_round_switch_timer().reset_timer();
 }
 
-void sophie(Entity& entity, float) {
+void update_sophie(Entity& entity, float) {
     if (entity.is_missing<HasTimer>()) return;
 
     const auto debug_mode_on =
@@ -661,7 +661,7 @@ void sophie(Entity& entity, float) {
         bool all_gone = true;
         std::vector<std::shared_ptr<Entity>> customers =
             EntityHelper::getAllWithName(strings::entity::CUSTOMER);
-        for (auto& e : customers) {
+        for (const auto& e : customers) {
             if (!e) continue;
             if (vec::distance(e->get<Transform>().as2(), endpos) >
                 TILESIZE * 2.f) {
@@ -786,7 +786,7 @@ void process_has_rope(Entity& entity, float) {
     }
 
     OptEntity opt_player;
-    for (std::shared_ptr<Entity>& e : SystemManager::get().oldAll) {
+    for (const std::shared_ptr<Entity>& e : SystemManager::get().oldAll) {
         if (!e) continue;
         if (!check_name(*e, strings::entity::PLAYER)) continue;
         auto i = e->get<CanHoldItem>().item();
@@ -899,7 +899,7 @@ void process_pnumatic_pipe_movement(Entity& entity, float) {
     if (entity.is_missing<IsPnumaticPipe>()) return;
 
     IsPnumaticPipe& ipp = entity.get<IsPnumaticPipe>();
-    CanHoldItem& chi = entity.get<CanHoldItem>();
+    const CanHoldItem& chi = entity.get<CanHoldItem>();
 
     if (chi.empty()) {
         ipp.item_id = -1;
@@ -908,9 +908,7 @@ void process_pnumatic_pipe_movement(Entity& entity, float) {
     }
 
     int cur_id = chi.const_item()->id;
-    if (ipp.item_id != cur_id) {
-        ipp.item_id = cur_id;
-    }
+    ipp.item_id = cur_id;
 }
 
 void increment_day_count(Entity& entity, float) {
@@ -1007,7 +1005,7 @@ void SystemManager::render_all_ui(const Entities&, float dt) const {
 
 void SystemManager::process_inputs(const Entities& entities,
                                    const UserInputs& inputs) {
-    for (auto& entity : entities) {
+    for (const auto& entity : entities) {
         if (entity->is_missing<RespondsToUserInput>()) continue;
         for (auto input : inputs) {
             system_manager::input_process_manager::process_input(entity, input);
@@ -1072,7 +1070,7 @@ void SystemManager::always_update(const Entities& entities, float dt) {
         // TODO these eventually should move into their own functions but
         // for now >:)
         if (check_name(entity, strings::entity::SOPHIE))
-            system_manager::sophie(entity, dt);
+            system_manager::update_sophie(entity, dt);
     });
 }
 

@@ -56,7 +56,7 @@ void process_spawner(const Entity& entity, float dt);
 void reset_empty_work_furniture(const Entity& entity, float dt);
 
 void run_timer(const Entity& entity, float dt);
-void sophie(const Entity& entity, float dt);
+void update_sophie(const Entity& entity, float dt);
 void increment_day_count(const Entity& entity, float dt);
 void process_has_rope(const Entity& entity, float dt);
 }  // namespace system_manager
@@ -88,7 +88,7 @@ struct SystemManager {
     // TODO for some reason this cant go into the cpp
     // if it does then the game inifite loops once you join the lobby
     void update_local_players(const Entities& players, float dt) {
-        for (auto& entity : players) {
+        for (const auto& entity : players) {
             // TODO fix this if we have more than one local player
             firstPlayerID = entity->id;
             system_manager::input_process_manager::collect_user_input(entity,

@@ -495,7 +495,7 @@ inline void render_block_state_change_reason(const Entity& entity, float) {
     if (ht.currentRoundTime > 0 && !debug_mode_on) return;
 
     //
-    auto _render_single_reason = [](std::string text, float y) {
+    auto _render_single_reason = [](const std::string& text, float y) {
         Color font_color = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
         raylib::DrawTextEx(Preload::get().font, text.c_str(), {200, y}, 75, 0,
                            font_color);
@@ -536,7 +536,7 @@ inline void render_debug_ui(const Entities& entities, float) {
 }
 
 inline void render_normal(const Entities& entities, float dt) {
-    for (auto& entity_ptr : entities) {
+    for (const auto& entity_ptr : entities) {
         if (!entity_ptr) continue;
         const Entity& entity = *entity_ptr;
         render_timer(entity, dt);

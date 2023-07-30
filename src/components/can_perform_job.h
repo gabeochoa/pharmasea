@@ -60,7 +60,7 @@ struct CanPerformJob : public BaseComponent {
             return;
         }
 
-        auto& prev_job = personal_queue.top();
+        const auto& prev_job = personal_queue.top();
         current_job = prev_job;
         personal_queue.pop();
 

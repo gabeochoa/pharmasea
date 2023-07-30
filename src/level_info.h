@@ -254,7 +254,7 @@ struct helper {
             return check_name(e, strings::entity::REGISTER);
         });
         VALIDATE(valid(reg_opt), "map needs to have at least one register");
-        auto& reg = asE(reg_opt);
+        const auto& reg = asE(reg_opt);
 
         // find customer
         auto customer_opt =
@@ -263,7 +263,7 @@ struct helper {
             });
         VALIDATE(valid(customer_opt),
                  "map needs to have at least one customer spawn point");
-        auto& customer = asE(customer_opt);
+        const auto& customer = asE(customer_opt);
 
         // ensure customers can make it to the register
 
