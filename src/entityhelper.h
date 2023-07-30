@@ -165,10 +165,9 @@ struct EntityHelper {
         Entities& entities = get_entities();
 
         std::remove_if(entities.begin(), entities.end(),
-                       [](const auto& entity) 
-        { 
-           return !entity || (entity && entity->cleanup);
-        });
+                       [](const auto& entity) {
+                           return !entity || (entity && entity->cleanup);
+                       });
     }
 
     enum ForEachFlow {
@@ -320,6 +319,16 @@ struct EntityHelper {
             if (e->has<T>()) matching.push_back(e);
         }
         return matching;
+    }
+
+    template<typename T>
+    static std::shared_ptr<Entity> getFirstWithComponent() {
+        std::vector<std::shared_ptr<Entity>> matching;
+        for (auto& e : get_entities()) {
+            if (!e) continue;
+            if (e->has<T>()) return e;
+        }
+        return {};
     }
 
     // TODO does this break the idea of ecs

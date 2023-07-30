@@ -36,7 +36,7 @@ void delete_held_items_when_leaving_inround(const Entity& entity);
 
 void delete_customers_when_leaving_inround(const Entity& entity);
 
-void reset_customer_orders_when_leaving_inround(const Entity& entity);
+void reset_customers_that_need_resetting(const Entity& entity);
 
 void reset_max_gen_when_after_deletion(const Entity& entity);
 

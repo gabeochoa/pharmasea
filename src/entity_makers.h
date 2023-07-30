@@ -5,6 +5,7 @@
 #include "components/has_rope_to_item.h"
 #include "components/has_subtype.h"
 #include "components/is_pnumatic_pipe.h"
+#include "components/is_progression_manager.h"
 #include "dataclass/ingredient.h"
 #include "entity.h"
 //
@@ -36,6 +37,7 @@
 #include "components/is_drink.h"
 #include "components/is_item_container.h"
 #include "components/is_pnumatic_pipe.h"
+#include "components/is_progression_manager.h"
 #include "components/is_rotatable.h"
 #include "components/is_snappable.h"
 #include "components/is_solid.h"
@@ -56,7 +58,7 @@ static void register_all_components() {
         DebugName, Transform, HasName,
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
-        IsDrink, IsPnumaticPipe,
+        IsDrink, IsPnumaticPipe, IsProgressionManager,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
@@ -546,6 +548,7 @@ static void make_sophie(Entity& sophie, vec3 pos) {
 
     sophie.addComponent<HasTimer>(HasTimer::Renderer::Round,
                                   round_settings::ROUND_LENGTH_S);
+    sophie.addComponent<IsProgressionManager>();
 }
 
 }  // namespace furniture

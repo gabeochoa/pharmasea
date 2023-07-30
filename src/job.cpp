@@ -390,6 +390,12 @@ Job::State WaitInQueueJob::run_state_working_at_end(
     entity->get<HasSpeechBubble>().on();
     CanOrderDrink& canOrderDrink = entity->get<CanOrderDrink>();
 
+    if (canOrderDrink.order_state == CanOrderDrink::OrderState::NeedsReset) {
+        system_manager::logging_manager::announce(
+            entity, "I havent decided what i want yet");
+        return (Job::State::WorkingAtEnd);
+    }
+
     VALIDATE(canOrderDrink.has_order(), "I should have an order");
 
     CanHoldItem& regCHI = reg->get<CanHoldItem>();
@@ -491,7 +497,18 @@ Job::State DrinkingJob::run_state_working_at_end(
         cod.num_orders_rem--;
         if (cod.num_orders_rem > 0) {
             cod.order_state = CanOrderDrink::OrderState::Ordering;
-            cod.current_order = get_random_drink();
+
+            // get next order
+            {
+                std::shared_ptr<Entity> sophie =
+                    EntityHelper::getFirstWithComponent<IsProgressionManager>();
+                VALIDATE(sophie, "sophie should exist for sure");
+
+                const IsProgressionManager& progressionManager =
+                    sophie->get<IsProgressionManager>();
+                cod.current_order = progressionManager.get_random_drink();
+            }
+
             auto start = entity->get<Transform>().as2();
             std::shared_ptr<Job> jshared;
             jshared.reset(

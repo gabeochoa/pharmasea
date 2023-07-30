@@ -11,21 +11,15 @@
 
 struct CanOrderDrink : public BaseComponent {
     enum OrderState {
+        NeedsReset,
         Ordering,
         DrinkingNow,
         DoneDrinking,
     } order_state;
 
-    CanOrderDrink() { reset(); }
+    CanOrderDrink() { order_state = OrderState::NeedsReset; }
 
     virtual ~CanOrderDrink() {}
-
-    void reset() {
-        // TODO eventually read from game settings
-        num_orders_rem = randIn(0, 5);
-        current_order = get_random_drink();
-        order_state = OrderState::Ordering;
-    }
 
     [[nodiscard]] IngredientBitSet recipe() const {
         return get_recipe_for_drink(current_order);

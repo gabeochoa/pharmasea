@@ -76,8 +76,4 @@ enum Drink {
     pina_colada,
 };
 
-static Drink get_random_drink() {
-    int index = randIn(0, magic_enum::enum_count<Drink>() - 1);
-    auto drink_opt = magic_enum::enum_cast<Drink>(index);
-    return drink_opt.value();
-}
+using DrinkSet = std::bitset<magic_enum::enum_count<Drink>()>;

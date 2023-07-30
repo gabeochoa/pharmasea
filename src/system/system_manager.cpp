@@ -884,10 +884,25 @@ void increment_day_count(Entity& entity, float) {
     entity.get<HasTimer>().dayCount++;
 }
 
-void reset_customer_orders_when_leaving_inround(Entity& entity) {
+void reset_customers_that_need_resetting(Entity& entity) {
     if (entity.is_missing<CanOrderDrink>()) return;
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
-    cod.reset();
+
+    if (cod.order_state != CanOrderDrink::OrderState::NeedsReset) return;
+
+    std::shared_ptr<Entity> sophie =
+        EntityHelper::getFirstWithComponent<IsProgressionManager>();
+    VALIDATE(sophie, "sophie should exist for sure");
+
+    const IsProgressionManager& progressionManager =
+        sophie->get<IsProgressionManager>();
+
+    {
+        // TODO eventually read from game settings
+        cod.num_orders_rem = randIn(0, 5);
+        cod.current_order = progressionManager.get_random_drink();
+        cod.order_state = CanOrderDrink::OrderState::Ordering;
+    }
 }
 
 }  // namespace system_manager
@@ -972,7 +987,6 @@ void SystemManager::process_state_change(
             system_manager::delete_customers_when_leaving_inround(entity);
             system_manager::reset_max_gen_when_after_deletion(entity);
             system_manager::increment_day_count(entity, dt);
-            system_manager::reset_customer_orders_when_leaving_inround(entity);
             // TODO reset haswork's
         });
     }
@@ -1025,6 +1039,9 @@ void SystemManager::in_round_update(
     const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
     for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
         Entity& entity = *e_ptr;
+        //
+        system_manager::reset_customers_that_need_resetting(entity);
+        //
         system_manager::job_system::in_round_update(e_ptr, dt);
         system_manager::process_grabber_items(entity, dt);
         system_manager::process_conveyer_items(entity, dt);
