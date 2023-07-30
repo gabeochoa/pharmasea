@@ -303,5 +303,7 @@ Cocktail Umbrellas
 VIP Area  (red rope) 
 Robots 
 Drink order kiosk with delivery 
-Pnumatic pipes 
 Sticky Hand 
+
+Gatcha machine to get new items? 
+Card Parks to get new items? 
