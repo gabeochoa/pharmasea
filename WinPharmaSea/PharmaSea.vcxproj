@@ -61,6 +61,7 @@
     <ClInclude Include="..\src\components\is_item.h" />
     <ClInclude Include="..\src\components\is_item_container.h" />
     <ClInclude Include="..\src\components\is_pnumatic_pipe.h" />
+    <ClInclude Include="..\src\components\is_progression_manager.h" />
     <ClInclude Include="..\src\components\is_rotatable.h" />
     <ClInclude Include="..\src\components\is_snappable.h" />
     <ClInclude Include="..\src\components\is_solid.h" />
@@ -185,6 +186,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\engine\app.cpp" />
     <ClCompile Include="..\src\engine\files.cpp" />
+    <ClCompile Include="..\src\engine\globals_register.cpp" />
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\job.cpp" />
