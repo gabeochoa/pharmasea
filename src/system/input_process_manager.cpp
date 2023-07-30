@@ -633,7 +633,7 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
             //
             // if theres nothing there, then we do the normal drop logic
             if (furnCHI.is_holding_item()) {
-                furnCHI.item()->cleanup = true;
+                player->get<CanHoldItem>().item()->cleanup = true;
                 player->get<CanHoldItem>().update(nullptr);
                 return true;
             }
