@@ -53,6 +53,33 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+### alpha_0.23.07.30
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (UI) The first option in a dropdown isnt selectable 
+
+impact
+- Add new Furniture 
+    - Mop Holder and Mop to clean up Customer Vomit
+- Furniture Changes
+- New Ingredients 
+- Add components for handling progression across rounds 
+    - Customers now only generate drinks that are enabled for that round
+
+bug fixes
+- fix a bunch of grab/drop issues which should make this a ton more reliable 
+- Entity Cleanup is better performing on windows
+- Spawners now reset at the end of the round 
+- fix issue where placing into a container was sometimes producing duplicate objects 
+
+better eng 
+- const all the things (plus other cppcheck issues)
+- cpp a ton of code 
+- new EntityID type for just extra info
+- move a ton of shared_ptr > entity&
+- add bitset utils
+
 
 ### alpha_0.23.07.29
 
