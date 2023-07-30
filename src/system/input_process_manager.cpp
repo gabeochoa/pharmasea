@@ -694,6 +694,7 @@ void handle_grab(const std::shared_ptr<Entity>& player) {
 
         CanHoldItem& playerCHI = player->get<CanHoldItem>();
         playerCHI.update(item);
+        item->get<Transform>().update(player->get<Transform>().snap_position());
         furnCanHold.update(nullptr);
         return true;
     };
