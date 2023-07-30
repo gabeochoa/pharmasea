@@ -25,7 +25,7 @@ struct Files {
     std::string root = "example_game";
     std::string settings_file = "settings.bin";
 
-    explicit Files(FilesConfig config);
+    explicit Files(const FilesConfig& config);
     [[nodiscard]] fs::path game_folder() const;
     bool ensure_game_folder_exists();
     [[nodiscard]] fs::path settings_filepath() const;

@@ -63,7 +63,7 @@ struct Widget {
     std::string element = "";
     bool absolute = false;
 
-    static void set_element(const Widget& widget, std::string e) {
+    static void set_element(const Widget& widget, const std::string& e) {
         auto& w = const_cast<Widget&>(widget);
         w.element = e;
     }

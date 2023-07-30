@@ -131,7 +131,7 @@ struct Preload {
     }
 
     void load_shaders() {
-        std::tuple<const char*, const char*, const char*> shaders[] = {
+        const std::tuple<const char*, const char*, const char*> shaders[] = {
             {strings::settings::SHADERS, "post_processing.fs",
              "post_processing"},
         };

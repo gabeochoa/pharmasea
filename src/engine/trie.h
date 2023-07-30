@@ -25,7 +25,9 @@ struct Trie {
 
     void add(const std::string& phrase) { add_(root, phrase); }
 
-    bool contains(const std::string& phrase) { return contains_(root, phrase); }
+    [[nodiscard]] bool contains(const std::string& phrase) const {
+        return contains_(root, phrase);
+    }
 
     [[nodiscard]] std::vector<std::string> dump(Node cur,
                                                 const std::string& prefix) {
@@ -67,7 +69,8 @@ struct Trie {
 
     void reset() { root = Node(0); }
 
-    std::optional<Node> subtrie(Node cur, const std::string& phrase) {
+    [[nodiscard]] std::optional<Node> subtrie(Node cur,
+                                              const std::string& phrase) const {
         if (phrase.empty()) return Node(cur);
         char c = phrase[0];
         if (cur.children.find(c) == cur.children.end())
@@ -75,7 +78,8 @@ struct Trie {
         return subtrie(cur.children.at(c), phrase.substr(1));
     }
 
-    bool contains_(Node cur, const std::string& phrase) {
+    [[nodiscard]] bool contains_(const Node& cur,
+                                 const std::string& phrase) const {
         auto resp = subtrie(cur, phrase);
         if (resp.has_value()) {
             return resp->is_end;

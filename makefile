@@ -85,7 +85,7 @@ todor:
 	{ git grep -niE '(FIXME|TODO)' src/; cat todo.md | grep -e "- \[\s";} | shuf -n1
 
 cppcheck: 
-	cppcheck --enable=all --std=c++20 --language=c++ --output-file=cppcheck_err src/
+	cppcheck src/ --enable=all --std=c++20 --language=c++ --suppress=noConstructor --suppress=noExplicitConstructor --suppress=useStlAlgorithm --suppress=unusedStructMember
 
 gendocs:
 	doxygen doxyconfig

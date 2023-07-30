@@ -173,10 +173,9 @@ static vec3 MeasureText3D(Font font, const char* text, float fontSize,
     float textHeight = scale;
     float textWidth = 0.0f;
 
-    int letter = 0;  // Current character
-    int index = 0;   // Index position in sprite font
-
     for (int i = 0; i < len; i++) {
+        int letter = 0;  // Current character
+        int index = 0;   // Index position in sprite font
         lenCounter++;
 
         int next = 0;
@@ -306,10 +305,9 @@ static vec3 MeasureTextWave3D(Font font, const char* text, float fontSize,
     float textHeight = scale;
     float textWidth = 0.0f;
 
-    int letter = 0;  // Current character
-    int index = 0;   // Index position in sprite font
-
     for (int i = 0; i < len; i++) {
+        int letter = 0;  // Current character
+        int index = 0;   // Index position in sprite font
         lenCounter++;
 
         int next = 0;

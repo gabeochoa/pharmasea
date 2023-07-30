@@ -29,7 +29,7 @@
 
 std::shared_ptr<Files> Files_single;
 
-Files::Files(FilesConfig config)
+Files::Files(const FilesConfig& config)
     : root(config.root_folder), settings_file(config.settings_file_name) {
     ensure_game_folder_exists();
 }
@@ -80,7 +80,7 @@ void Files::for_resources_in_group(
             cb(dir_entry.path().stem().string(), dir_entry.path().string(),
                dir_entry.path().extension().string());
         }
-    } catch (std::exception e) {
+    } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;
         return;
     }
@@ -96,7 +96,7 @@ void Files::for_resources_in_folder(
         for (auto const& dir_entry : dir_iter) {
             cb(dir_entry.path().stem().string(), dir_entry.path().string());
         }
-    } catch (std::exception e) {
+    } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;
         return;
     }

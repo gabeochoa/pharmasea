@@ -62,7 +62,7 @@ struct StateManager2 {
 
    private:
     void call_on_change(T ns, T os) {
-        for (auto& func : on_change_action_list) {
+        for (const auto& func : on_change_action_list) {
             if (func) func(ns, os);
         }
     }

@@ -13,8 +13,8 @@ struct GlobalValueRegister {
     [[nodiscard]] T* get_ptr(const std::string& name) const {
         // TODO do we want to catch the exception here?
         try {
-            return (T*) (globals.at(name));
-        } catch (std::exception e) {
+            return static_cast<T*>(globals.at(name));
+        } catch (const std::exception& e) {
             // TODO turn this back on
             // log_warn("Trying to fetch global of name: {} but it doesnt
             // exist", name);
@@ -42,7 +42,7 @@ struct GlobalValueRegister {
 
     template<typename T>
     void set(const std::string& name, T* value) {
-        globals[name] = (void*) value;
+        globals[name] = static_cast<void*>(value);
     }
 
     template<typename T>

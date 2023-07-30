@@ -92,9 +92,9 @@ struct Library {
         }
 
         int idx = randIn(0, static_cast<int>(num_matches) - 1);
-        const_iterator begin(matches.first);
-        std::advance(begin, idx);
-        return begin->second;
+        const_iterator start(matches.first);
+        std::advance(start, idx);
+        return start->second;
     }
 
     [[nodiscard]] auto lookup(const std::string& key) const

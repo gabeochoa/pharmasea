@@ -269,7 +269,7 @@ inline UIContext::LastFrame init_widget(const Widget& widget,
     get().add_child(widget.me);
 
     const auto _write_lf = [](Widget* widget_ptr) {
-        Widget& widget = *widget_ptr;
+        const Widget& widget = *widget_ptr;
         auto lf = UIContext::LastFrame({.rect = widget.rect});
         get().write_last_frame(widget.id, lf);
     };
@@ -659,7 +659,7 @@ inline bool textfield(const Widget& widget, std::string& content,
     auto _textfield_render = [](Widget* widget_ptr,
                                 TextFieldValidationFn validation) {
         auto state = get().get_widget_state<TextfieldState>(widget_ptr->id);
-        Widget& widget = *widget_ptr;
+        const Widget& widget = *widget_ptr;
 
         TextfieldValidationDecisionFlag validationFlag =
             validation ? validation(state->buffer.asT())
@@ -791,7 +791,7 @@ inline bool checkbox(const Widget& widget, bool* cbState, std::string* label) {
 }
 
 inline bool scroll_view(const Widget& widget, std::function<void()> children,
-                        float* startingLocation = nullptr) {
+                        const float* startingLocation = nullptr) {
     UIContext::LastFrame lf = init_widget(widget, __FUNCTION__);
 
     // TODO can this move into init_widget?
