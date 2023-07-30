@@ -516,9 +516,6 @@ static void make_trigger_area(
         });
 }
 
-// This lives in entityhelper for now
-static void spawn_customer(vec2 pos);
-
 static void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
     make_entity(customer_spawner, {strings::entity::CUSTOMER_SPAWNER}, pos);
 
@@ -527,7 +524,8 @@ static void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
     // timer ui?
     customer_spawner.addComponent<SimpleColoredBoxRenderer>().update(PINK,
                                                                      PINK);
-    const auto sfn = std::bind(&spawn_customer, std::placeholders::_1);
+    const auto sfn = std::bind(&make_customer, std::placeholders::_1,
+                               std::placeholders::_2, true);
     customer_spawner
         .addComponent<IsSpawner>()  //
         .set_fn(sfn)

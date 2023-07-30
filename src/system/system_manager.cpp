@@ -550,7 +550,11 @@ void process_trigger_area(Entity& entity, float dt) {
 void process_spawner(Entity& entity, float dt) {
     if (entity.is_missing<IsSpawner>()) return;
     auto pos = entity.get<Transform>().as2();
-    entity.get<IsSpawner>().pass_time(pos, dt);
+    bool should_spawn = entity.get<IsSpawner>().pass_time(dt);
+    if (!should_spawn) return;
+
+    auto& new_ent = EntityHelper::createEntity();
+    entity.get<IsSpawner>().spawn(new_ent, pos);
 }
 
 void run_timer(Entity& entity, float dt) {
