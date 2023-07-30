@@ -55,6 +55,10 @@ void render_networked_players(const Entities& entities, float dt) {
 }
 
 void render_player_info(const Entity& entity) {
+    // TODO so none of this works because the only information thats serialized
+    // for players is the stuff in PlayerInfo
+    //
+    // If you want this to work then you have to add it there
     if (!check_name(entity, strings::entity::REMOTE_PLAYER)) return;
     if (entity.id != SystemManager::get().firstPlayerID) return;
 
