@@ -17,24 +17,23 @@ void render_networked_players(const Entities& entities, float dt) {
         y_pos += (size * 1.25f);
     };
 
-    const auto _render_single_networked_player =
-        [&](std::shared_ptr<Entity> entity, float) {
-            _draw_text(                                     //
-                fmt::format("{}({}) {}",                    //
-                            entity->get<HasName>().name(),  //
-                            entity->get<HasClientID>().id(),
-                            // TODO replace with icon
-                            entity->get<HasClientID>().ping()));
-        };
-    const auto _render_little_model_guy = [&](std::shared_ptr<Entity> entity,
-                                              float) {
-        if (entity->is_missing<ModelRenderer>()) {
+    const auto _render_single_networked_player = [&](const Entity& entity,
+                                                     float) {
+        _draw_text(                                    //
+            fmt::format("{}({}) {}",                   //
+                        entity.get<HasName>().name(),  //
+                        entity.get<HasClientID>().id(),
+                        // TODO replace with icon
+                        entity.get<HasClientID>().ping()));
+    };
+    const auto _render_little_model_guy = [&](const Entity& entity, float) {
+        if (entity.is_missing<ModelRenderer>()) {
             log_warn(
                 "render_little_model_guy, entity {} is missing model renderer",
-                entity->get<DebugName>().name());
+                entity.get<DebugName>().name());
             return;
         }
-        auto model_name = entity->get<ModelRenderer>().name();
+        auto model_name = entity.get<ModelRenderer>().name();
         raylib::Texture texture =
             TextureLibrary::get().get(fmt::format("{}_mug", model_name));
         float scale = 0.06f;
@@ -43,10 +42,12 @@ void render_networked_players(const Entities& entities, float dt) {
                               0, scale, WHITE);
     };
 
-    for (auto& entity : entities) {
+    for (auto& entity_ptr : entities) {
+        if (!entity_ptr) continue;
+        Entity& entity = *entity_ptr;
         // TODO think about this check more
-        if (!(check_name(*entity, strings::entity::PLAYER) ||
-              check_name(*entity, strings::entity::REMOTE_PLAYER)))
+        if (!(check_name(entity, strings::entity::PLAYER) ||
+              check_name(entity, strings::entity::REMOTE_PLAYER)))
             continue;
         _render_little_model_guy(entity, dt);
         _render_single_networked_player(entity, dt);

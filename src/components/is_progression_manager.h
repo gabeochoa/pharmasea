@@ -22,6 +22,23 @@ int index_of_nth_set_bit(const T& bitset, int n) {
     return -1;  // Return -1 if the nth set bit is not found
 }
 
+template<size_t N>
+int get_random_enabled_bit(const std::bitset<N>& bitset) {
+    std::vector<int> enabled_indices;
+    for (size_t i = 0; i < bitset.size(); ++i) {
+        if (bitset.test(i)) {
+            enabled_indices.push_back(static_cast<int>(i));
+        }
+    }
+
+    if (enabled_indices.empty()) {
+        // No bits are enabled, return -1 or handle the error as needed.
+        return -1;
+    }
+    int random_index = randIn(0, static_cast<int>(enabled_indices.size()) - 1);
+    return enabled_indices[random_index];
+}
+
 struct IsProgressionManager : public BaseComponent {
     virtual ~IsProgressionManager() {}
 
@@ -33,14 +50,12 @@ struct IsProgressionManager : public BaseComponent {
     [[nodiscard]] DrinkSet enabled_drinks() const { return enabledDrinks; }
 
     Drink get_random_drink() const {
-        size_t num_drinks = enabledDrinks.count();
-        int randIndx = randIn(0, (int) num_drinks);
-        int drinkSetIndex =
-            index_of_nth_set_bit<DrinkSet>(enabledDrinks, randIndx);
-        log_info("num drinks {} rand index {} drink index {}", num_drinks,
-                 randIndx, drinkSetIndex);
         // TODO unlikely but handle an error and default to coke
-        return magic_enum::enum_cast<Drink>(drinkSetIndex).value();
+        int drinkSetBit = get_random_enabled_bit(enabledDrinks);
+        if (drinkSetBit == -1) {
+            return Drink::coke;
+        }
+        return magic_enum::enum_cast<Drink>(drinkSetBit).value();
     }
 
    private:
