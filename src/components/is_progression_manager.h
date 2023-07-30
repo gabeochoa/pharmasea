@@ -14,7 +14,7 @@ struct IsProgressionManager : public BaseComponent {
         enabledDrinks |= Drink::coke;
         enabledDrinks |= Drink::rum_and_coke;
         // TODO add progression / level logic
-        enabledDrinks.set();
+        // enabledDrinks.set();
     }
 
     [[nodiscard]] DrinkSet enabled_drinks() const { return enabledDrinks; }
