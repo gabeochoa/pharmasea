@@ -706,8 +706,13 @@ void handle_grab(const std::shared_ptr<Entity>& player) {
     CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
     std::shared_ptr<Item> closest_item =
-        EntityHelper::getClosestWithComponent<IsItem>(player,
-                                                      TILESIZE * cho.reach());
+        EntityHelper::getClosestMatchingEntity<Item>(
+            player->get<Transform>().as2(), TILESIZE * cho.reach(),
+            [](const std::shared_ptr<Item> entity) {
+                if (entity->is_missing<IsItem>()) return false;
+                if (entity->get<IsItem>().is_held()) return false;
+                return true;
+            });
 
     // nothing found
     if (closest_item == nullptr) return;
