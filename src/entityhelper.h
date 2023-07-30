@@ -135,14 +135,12 @@ struct EntityHelper {
 
         auto& entities = get_entities();
 
-        auto it = entities.begin();
-        while (it != get_entities().end()) {
-            if ((*it)->id == e_id) {
-                entities.erase(it);
-                continue;
-            }
-            it++;
-        }
+        auto newend = std::remove_if(entities.begin(), entities.end(),
+                                     [e_id](const auto& entity) {
+                                         return !entity || entity->id == e_id;
+                                     });
+
+        entities.erase(newend, entities.end());
     }
 
     static void removeEntity(std::shared_ptr<Entity> e) {
@@ -164,10 +162,11 @@ struct EntityHelper {
         // Cleanup entities marked cleanup
         Entities& entities = get_entities();
 
-        std::remove_if(entities.begin(), entities.end(),
-                       [](const auto& entity) {
-                           return !entity || (entity && entity->cleanup);
-                       });
+        auto newend = std::remove_if(
+            entities.begin(), entities.end(),
+            [](const auto& entity) { return !entity || entity->cleanup; });
+
+        entities.erase(newend, entities.end());
     }
 
     enum ForEachFlow {
