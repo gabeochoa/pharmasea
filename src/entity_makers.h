@@ -303,7 +303,7 @@ static void make_wall(Entity& wall, vec2 pos, Color c = ui::color::brown) {
     // this.face_color, this.base_color);
     // } break;
     // case Type::FULL: {
-    // DrawCubeCustom(this.raw_position,                        //
+    // (this.raw_position,                        //
     // this.size().x,                            //
     // this.size().y,                            //
     // this.size().z,                            //
@@ -543,6 +543,27 @@ static void make_vomit(Entity& vomit, vec2 pos) {
     }
 
     vomit.addComponent<CanBeHighlighted>();
+
+    // TODO please just add this to has work or something cmon
+    vomit.addComponent<ShowsProgressBar>();
+
+    vomit.addComponent<HasWork>().init(
+        [](Entity& vom, HasWork& hasWork, Entity& player, float dt) {
+            CanHoldItem& playerCHI = player.get<CanHoldItem>();
+            // not holding anything
+            if (playerCHI.empty()) return;
+            std::shared_ptr<Item> item = playerCHI.const_item();
+            // Has to be holding mop
+            if (!check_name(*item, strings::item::MOP)) return;
+
+            const float amt = 1.f;
+            hasWork.increase_pct(amt * dt);
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
+                // Clean it up
+                vom.cleanup = true;
+            }
+        });
 }
 
 }  // namespace furniture
