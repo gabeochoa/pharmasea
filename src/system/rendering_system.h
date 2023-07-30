@@ -529,6 +529,7 @@ void render_networked_players(const Entities&, float dt);
 
 inline void render_debug_ui(const Entities& entities, float) {
     for (std::shared_ptr<Entity> entity_ptr : entities) {
+        if (!entity_ptr) continue;
         const Entity& entity = *entity_ptr;
         render_player_info(entity);
     }
@@ -536,6 +537,7 @@ inline void render_debug_ui(const Entities& entities, float) {
 
 inline void render_normal(const Entities& entities, float dt) {
     for (auto& entity_ptr : entities) {
+        if (!entity_ptr) continue;
         const Entity& entity = *entity_ptr;
         render_timer(entity, dt);
         render_block_state_change_reason(entity, dt);
