@@ -270,6 +270,8 @@ constexpr const char* HOLDING_FURNITURE =
     "Can't start game until all players drop furniture";
 constexpr const char* NO_PATH_TO_REGISTER =
     "Can't start game until there is a path to a register";
+constexpr const char* BAR_NOT_CLEAN =
+    "Can't start game until your bar is all clean";
 constexpr const char* LOADING = "Loading...";
 constexpr const char* OPEN = "OPEN";
 constexpr const char* CLOSING = "CLOSING";

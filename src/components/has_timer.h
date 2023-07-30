@@ -67,6 +67,7 @@ struct HasTimer : public BaseComponent {
         CustomersInStore,
         HoldingFurniture,
         NoPathToRegister,
+        BarNotClean,
         //
         WaitingReasonLast,
     } waiting_reason = None;
@@ -81,6 +82,8 @@ struct HasTimer : public BaseComponent {
                 return text_lookup(strings::i18n::HOLDING_FURNITURE);
             case NoPathToRegister:
                 return text_lookup(strings::i18n::NO_PATH_TO_REGISTER);
+            case BarNotClean:
+                return text_lookup(strings::i18n::BAR_NOT_CLEAN);
             default:
                 log_warn("got reason {} but dont have a way to render it", wr);
             case WaitingReasonLast:

@@ -91,6 +91,9 @@ msgstr "erutinruf pord sreyalp lla litnu emag trats t'naC"
 msgid "Can't start game until there is a path to a register"
 msgstr "retsiger a ot htap a si ereht litnu emag trats t'naC"
 
+msgid "Can't start game until your bar is all clean"
+msgstr "naelc lla si rab ruoy litnu emag trats t'naC"
+
 msgid "Loading..."
 msgstr "...gnidaoL"
 

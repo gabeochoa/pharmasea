@@ -696,6 +696,15 @@ void sophie(Entity& entity, float) {
         return;
     };
 
+    auto _bar_not_clean = [&entity]() {
+        bool has_vomit =
+            !(EntityHelper::getAllWithName(strings::entity::VOMIT)).empty();
+
+        entity.get<HasTimer>().write_reason(
+            HasTimer::WaitingReason::BarNotClean, has_vomit);
+        return;
+    };
+
     // TODO merge with map generation validation?
     // Run lightweight map validation
     auto _lightweight_map_validation = [&entity]() {
@@ -737,6 +746,7 @@ void sophie(Entity& entity, float) {
     std::vector<WaitingFn> fns{
         _customers_in_store,
         _player_holding_furniture,
+        _bar_not_clean,
         _lightweight_map_validation,
     };
 
