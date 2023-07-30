@@ -84,6 +84,7 @@ struct Client {
             .msg_type = network::ClientPacket::MsgType::Ping,
             .msg = network::ClientPacket::PingInfo({
                 .ping = now::current_ms(),
+                .pong = now::current_ms(),
             }),
         };
         client_p->send_packet_to_server(packet);

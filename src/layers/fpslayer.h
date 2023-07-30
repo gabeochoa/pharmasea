@@ -7,6 +7,12 @@
 #include "../preload.h"
 #include "raylib.h"
 
+namespace network {
+    extern long long total_ping;
+    extern long long there_ping;
+    extern long long return_ping;
+}
+
 using namespace profile;
 struct FPSLayer : public Layer {
     FPSLayer() : Layer(strings::menu::FPS) { Profiler::clear(); }

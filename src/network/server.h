@@ -464,7 +464,10 @@ struct Server {
                      incoming_client.client_id);
             return;
         }
-                    
+        
+        std::cout << "pong: " << pong << std::endl;
+        std::cout << "info.ping: " << info.ping << std::endl;
+        std::cout << "pong - info.ping: " << (pong - info.ping) << std::endl;
         player_match->second->get<HasClientID>().update_ping(pong - info.ping);
     }
 

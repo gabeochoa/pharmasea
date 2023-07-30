@@ -45,6 +45,12 @@
 // This one should be last
 #include "./tests/all_tests.h"
 
+namespace network {
+    long long total_ping = 0;
+    long long there_ping = 0;
+    long long return_ping = 0;
+}
+
 void startup() {
     // TODO need to test on lower framerates, there seems to be issues with
     // network initlization
