@@ -17,6 +17,9 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
+    std::cout << "Executable Path: " << fs::current_path() << std::endl;
+    std::cout << "Canon Path: " << fs::canonical(fs::current_path()) << std::endl;
+
     startup();
     defer(Settings::get().write_save_file());
 
@@ -31,6 +34,10 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    App::get().run();
+    try {
+        App::get().run();
+    } catch (const std::exception& e) {
+        std::cout << e.what() << std::endl;
+    }
     return 0;
 }

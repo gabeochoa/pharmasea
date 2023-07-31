@@ -58,7 +58,7 @@ fs::path Files::settings_filepath() const {
     return full_path;
 }
 
-fs::path Files::resource_folder() const { return fs::path("./resources"); }
+fs::path Files::resource_folder() const { return fs::current_path() /  fs::path("resources"); }
 
 fs::path Files::game_controller_db() const {
     return (resource_folder() / fs::path("gamecontrollerdb.txt")).string();

@@ -68,8 +68,15 @@ inline void log_me(LogLevel level, const char* file, int line,
 }
 
 #else
+#include <iostream>
+
 // TODO implement for windows
-static void log_me(...) {}
+inline void log_me() { std::cout << std::endl; }
+template <typename T, typename... Args>
+inline void log_me(const T& arg, const Args&... args) {
+    std::cout << arg << " ";
+    log_me(args...);
+}
 #endif
 
 #define log_trace(...)                    \
