@@ -381,8 +381,8 @@ struct UIContext : public IUIContextInputManager,
     void end(Widget* tree_root) {
         autolayout::process_widget(tree_root);
 
-        // tree_root->print_tree();
-        // exit(0);
+        tree_root->print_tree();
+        exit(0);
 
         render_all();
         reset_tabbing_if_not_visible(tree_root);

@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <cctype>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -9,9 +10,14 @@
 #include <unordered_map>
 #include <vector>
 
+#include "../../strings.h"
+#include "../assert.h"
+#include "../log.h"
+#include "../ui.h"
 #include "../util.h"
 
-std::string loadFile(const std::string& filename) {
+// TODO switch to the one in preload or something
+inline std::string loadFile(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         throw std::runtime_error("Failed to open file: " + filename);
@@ -22,134 +28,397 @@ std::string loadFile(const std::string& filename) {
     return buffer.str();
 }
 
-struct UIElement {
-    std::string tag;  // HTML tag, e.g., "div", "button", "h1", etc.
-    std::string
-        text;  // Text content for text-based elements like buttons or headings
-    std::vector<UIElement> children;  // Child elements (nested elements)
-                                      //
-    UIElement(const std::string& tag, const std::string& text)
-        : tag(tag), text(text) {}
+struct Node;
+
+typedef std::pair<std::string, std::string> Attr;
+typedef std::unordered_map<std::string, std::string> Attrs;
+typedef std::vector<Node> Nodes;
+
+struct Decl {
+    std::string field;
+    std::string value;
+};
+typedef std::vector<Decl> Decls;
+
+struct Rule {
+    Decls decls;
 };
 
-UIElement parseHTML(const std::string& uiMarkup) {
-    std::vector<UIElement> stack;
-    stack.push_back(UIElement("div", ""));  // Add a root element to the stack
-    std::istringstream iss(uiMarkup);
-    std::string line;
-
-    while (std::getline(iss, line)) {
-        // Split the line into tokens using space as the delimiter
-        std::vector<std::string> tokens = util::split_string(line, " ");
-        if (tokens.empty()) continue;  // Empty line
-
-        // Extract the tag name and text content from the first token
-        std::string tag = tokens[0];
-        std::string text;
-        if (tokens.size() > 1) {
-            text = tokens[1];
-        }
-
-        // Create a new UI element
-        UIElement element(tag, text);
-
-        // Add the new element to its parent's children list
-        stack.back().children.push_back(element);
-
-        // Check if the current tag is a container element (e.g., div, span)
-        // If so, push the element onto the stack to act as the new parent
-        if (tag == "div" || tag == "span" || tag == "p" || tag == "h1" ||
-            tag == "h2" || tag == "h3") {
-            stack.push_back(element);
-        }
-
-        // If the tag is a closing tag, pop the corresponding container from the
-        // stack
-        if (tag[0] == '/' && stack.size() > 1 &&
-            stack.back().tag == tag.substr(1)) {
-            stack.pop_back();
-        }
-    }
-
-    return stack[0];  // Return the root element
-}
-
-// Represents the style properties for a UI element
-class Style {
-   public:
-    std::unordered_map<std::string, std::string> properties;
-
-    // Function to apply a style to a UI element
-    void applyTo(UIElement& element);
+struct Style {
+    float width = -1.f;
+    float height = -1.f;
 };
 
-Style parseCSS(const std::string&) {
-    // TODO: Implement the CSS parser to parse the styles and properties
-    // For simplicity, we won't implement the full CSS parsing here.
-    // Instead, we'll return an empty Style for the example.
-    return Style();
+// TODO eventually support selectors
+typedef std::map<std::string, Rule> RuleMap;
+
+struct Node {
+    std::string content;
+    std::string tag;
+    Attrs attrs;
+    Nodes children;
+    Node(){};
+
+    std::optional<Style> style;
+
+    explicit Node(const std::string& content) : content(content) {}
+    Node(const std::string& tag, const Attrs& attrs, const Nodes& children)
+        : tag(tag), attrs(attrs), children(children) {}
+};
+
+std::ostream& operator<<(std::ostream& os, const Style& style) {
+    os << fmt::format("width: {}, height: {}", style.width, style.height);
+    return os;
 }
 
-void Style::applyTo(UIElement&) {
-    // TODO: Apply the styles from this instance to the UI element
-    // For simplicity, we won't implement applying styles here.
-    // Instead, we'll return an empty Style for the example.
+std::ostream& operator<<(std::ostream& os, const std::optional<Style>& style) {
+    if (style.has_value()) os << style.value();
+    return os;
 }
 
-void performLayout(UIElement& root, float containerWidth,
-                   float containerHeight) {
-    // TODO: Implement layout calculations for the UI element tree
-    // For simplicity, we won't implement the full layout engine here.
-    // Instead, we'll just adjust the root element's position and size for the
-    // example.
-    // root.x = 10;
-    // root.y = 10;
-    // root.width = containerWidth - 20;
-    // root.height = containerHeight - 20;
-}
-
-void renderElement(const UIElement& element, int indent) {
-    std::string indentation(indent, ' ');
-    std::cout << indentation << "<" << element.tag << ">" << std::endl;
-    if (!element.text.empty()) {
-        std::cout << indentation << "  " << element.text << std::endl;
+std::ostream& operator<<(std::ostream& os, const Node& node) {
+    if (node.tag.empty()) {
+        os << node.content;
+        return os;
     }
 
-    for (const UIElement& child : element.children) {
-        renderElement(child, indent + 2);
+    os << fmt::format("<{} {} {} style=\"{}\">", node.tag, node.attrs.size(),
+                      node.children.size(), node.style);
+    return os;
+}
+
+namespace dom {
+inline Node text(const std::string& content) { return Node(content); }
+inline Node elem(const std::string& tag, const Attrs& attrs,
+                 const Nodes& children) {
+    return Node(tag, attrs, children);
+}
+
+}  // namespace dom
+
+struct Parser {
+    size_t pos;
+    std::string input;
+
+    Parser(const std::string& source) : input(source) { pos = 0; }
+
+    void validate(unsigned char c, unsigned char m, const std::string& msg) {
+        VALIDATE(c == m, fmt::format("{} != {} =>  {}", c, m, msg));
     }
 
-    std::cout << indentation << "</" << element.tag << ">" << std::endl;
+    unsigned char next_char() const { return input[pos]; }
+    bool starts_with(const std::string& pre) const {
+        return input.substr(pos).find(pre) == 0;
+    }
+
+    bool is_eof() const { return pos >= input.size(); }
+
+    unsigned char consume() {
+        // std::cout << "consumed: " << input[pos] << std::endl;
+        return input[pos++];
+    }
+
+    std::string consume_while(std::function<bool(unsigned char)> pred) {
+        std::string out;
+        while (!is_eof() && pred(next_char())) {
+            out.push_back(consume());
+        }
+        return out;
+    }
+
+    std::string parse_tag_name() {
+        return consume_while([](unsigned char c) { return std::isalnum(c); });
+    }
+
+    Node parse_text() {
+        return dom::text(
+            consume_while([](unsigned char c) { return c != '<'; }));
+    }
+
+    void consume_whitespace() {
+        consume_while([](unsigned char c) { return std::isspace(c); });
+    }
+
+    void consume_singleline_comment() {
+        if (!starts_with("//")) return;
+        consume_while([](unsigned char c) { return c != '\n'; });
+    }
+
+    void consume_multiline_comment() {
+        if (!starts_with("/*")) return;
+        consume_while([](unsigned char c) { return c != '*'; });
+        consume();  // *
+        consume();  // /
+    }
+};
+
+struct CSSParser : Parser {
+    CSSParser(const std::string& source) : Parser(source) {
+        // log_info("css parser: {}", source);
+    }
+
+    std::string parse_style_field() {
+        return consume_while(
+            [](unsigned char c) { return std::isalnum(c) || c == '-'; });
+    }
+
+    std::string parse_style_value() {
+        return consume_while([](unsigned char c) { return c != ';'; });
+    }
+
+    Decl parse_decl() {
+        consume_whitespace();
+        // name: value;
+        auto field = parse_style_field();
+        validate(consume(), ':', "should be a colon between field and value");
+        auto value = parse_style_value();
+        validate(consume(), ';', "should end with a semi colon");
+        return Decl{
+            .field = field,
+            .value = value,
+        };
+    }
+
+    Rule parse_rule() {
+        Decls decls;
+
+        int i = 0;
+        while (i++ < 50 /* max decls */) {
+            consume_whitespace();
+            if (is_eof() || next_char() == '}') break;
+            decls.push_back(parse_decl());
+        }
+
+        return Rule{.decls = decls};
+    }
+
+    RuleMap parse_rule_map() {
+        RuleMap rule_map;
+        int i = 0;
+        while (i++ < 50 /* max rules */) {
+            consume_whitespace();
+            if (next_char() == '<' || is_eof()) break;
+
+            //
+            {
+                auto tag = parse_tag_name();
+                consume_whitespace();
+                validate(consume(), '{', "should be open rule {");
+                Rule r = parse_rule();
+                validate(consume(), '}', "should be close rule {");
+                rule_map.insert({tag, r});
+            }
+        }
+        return rule_map;
+    }
+};
+
+struct HTMLParser : Parser {
+    HTMLParser(const std::string& source) : Parser(source) {}
+
+    Attr parse_attr() {
+        const auto _parse_attr_value = [this]() {
+            auto open_quote = consume();
+            VALIDATE(
+                open_quote == '"' || open_quote == '\'',
+                fmt::format("open_quote{} {}", open_quote, "valid open quote"));
+            auto value = consume_while(
+                [open_quote](unsigned char c) { return c != open_quote; });
+            validate(consume(), open_quote,
+                     "open quote should match local quote");
+            return value;
+        };
+
+        auto name = parse_tag_name();
+        validate(consume(), '=', "should match equal");
+        auto value = _parse_attr_value();
+        return {name, value};
+    }
+
+    Attrs parse_attrs() {
+        Attrs attrs;
+        // this could be while(;;) but i dont trust it
+        int i = 0;
+        while (i++ < 20 /* max attrs */) {
+            consume_whitespace();
+            if (next_char() == '>') break;
+            auto p = parse_attr();
+            attrs.insert(p);
+        }
+        return attrs;
+    }
+
+    Nodes parse_nodes() {
+        Nodes nodes;
+        int i = 0;
+        while (i++ < 20 /* max siblings */) {
+            consume_whitespace();
+            if (is_eof() || starts_with("</")) break;
+            auto sib = parse_node();
+            nodes.push_back(sib);
+        }
+        return nodes;
+    }
+
+    Node parse_element() {
+        validate(consume(), '<', "parsing an tag open");
+        auto tag_name = parse_tag_name();
+        auto attrs = parse_attrs();
+        validate(consume(), '>', "parsing an tag close");
+
+        auto children = parse_nodes();
+
+        validate(consume(), '<', "parsing a closing tag open");
+        validate(consume(), '/', "parsing a closing tag slash");
+        VALIDATE(parse_tag_name() == tag_name, "parsing an tag name close");
+        validate(consume(), '>', "parsing an closing tag close");
+
+        return dom::elem(tag_name, attrs, children);
+    }
+
+    Node parse_node() {
+        return next_char() == '<' ? parse_element() : parse_text();
+    }
+
+    std::optional<Node> find_style_node(const Node& root) {
+        if (root.tag.empty()) return {};
+        if (root.tag == "style") return root.children[0];
+
+        for (auto child : root.children) {
+            auto c = find_style_node(child);
+            if (c.has_value()) return c;
+        }
+        return {};
+    }
+
+    float parse_decl_value(const std::string& value) {
+        Parser p(value);
+        p.consume_whitespace();
+        auto num = p.consume_while(
+            [](unsigned char c) { return std::isdigit(c) || c == '.'; });
+        // TODO consume and check units
+        // TODO for now just divide by 100
+        return (std::stof(num) / 100.f);
+    }
+
+    void populate_style(Style& style, const Decl& decl) {
+        float value = parse_decl_value(decl.value);
+        switch (hashString(decl.field)) {
+            case hashString("width"): {
+                style.width = value;
+            } break;
+            case hashString("height"): {
+                style.height = value;
+            } break;
+        }
+    }
+
+    void apply_rules(Node& root, const RuleMap& rules) {
+        // Not appling css to raw text
+        if (root.tag.empty()) return;
+
+        // Apply to parent first since they might be relative
+        for (const auto& r : rules) {
+            auto matching_tag = r.first;
+            if (matching_tag != root.tag) continue;
+            Style style;
+            for (const auto& decl : r.second.decls) {
+                populate_style(style, decl);
+            }
+            root.style = style;
+        }
+
+        for (auto& child : root.children) {
+            apply_rules(child, rules);
+        }
+    }
+
+    void load_css(Nodes& nodes) {
+        std::optional<Node> style = find_style_node(nodes[0]);
+        if (!style.has_value()) {
+            log_warn("was not able to find css style node");
+            return;
+        }
+        CSSParser p(style.value().content);
+        RuleMap rule_map = p.parse_rule_map();
+        apply_rules(nodes[0], rule_map);
+    }
+};
+
+inline Node parse(const std::string& source) {
+    HTMLParser p(source);
+    Nodes nodes = p.parse_nodes();
+    p.load_css(nodes);
+    return nodes.size() == 1 ? nodes[0] : dom::elem("html", {}, nodes);
 }
 
-void renderUI(UIElement& root) {
-    // TODO: Implement the rendering function to draw the UI element tree
-    // For simplicity, we'll print the structure of the UI elements for the
-    // example.
-    std::cout << "Rendering UI:" << std::endl;
-    renderElement(root, 0);
+inline void dump(const Node& root, int indent = 0) {
+    std::cout << std::string(indent, ' ') << root << std::endl;
+    for (auto& child : root.children) {
+        dump(child, indent + 4);
+    }
 }
 
-int ui_main() {
+inline Node load_and_parse(const std::string& filename) {
+    return parse(loadFile(filename));
+}
+
+inline int ui_main() {
     // Load the UI markup and CSS styles from files or strings
-    std::string uiMarkup = loadFile("ui_markup.html");
-    std::string cssStyles = loadFile("styles.css");
-
-    // Parse the UI markup and CSS styles
-    UIElement rootElement = parseHTML(uiMarkup);
-    Style style = parseCSS(cssStyles);
-
-    // Apply styles to the UI element tree
-    style.applyTo(rootElement);
-
-    // Perform layout calculations
-    int containerWidth = 0;
-    int containerHeight = 0;
-
-    performLayout(rootElement, containerWidth, containerHeight);
-
-    // Render the UI
-    renderUI(rootElement);
+    Node root = load_and_parse("resources/html/simple.html");
+    dump(root);
 
     return 0;
+}
+
+inline void render_node(std::shared_ptr<ui::UIContext> ui_context,
+                        const Node& root) {
+    log_info("render node {} {}", root.tag, root.content);
+    if (root.tag.empty()) {
+        log_info("render text");
+        text(*ui::components::mk_text(), text_lookup(root.content.c_str()));
+        return;
+    }
+
+    using namespace ui;
+
+    Style style = root.style.has_value() ? root.style.value()
+                                         : Style{
+                                               .width = 1.f,
+                                               .height = 1.f,
+                                           };
+
+    auto content = ui_context->own(Widget{
+        Size_Pct(style.width, 1.f),
+        Size_Pct(style.height, 1.f),
+    });
+
+    switch (hashString(root.tag)) {
+        case hashString("em"):
+        case hashString("h1"):
+        case hashString("p"):
+        case hashString("div"):
+        case hashString("body"):
+            log_info("render div");
+            div(*content);
+            break;
+        case hashString("html"):
+        case hashString("head"):
+        case hashString("style"):
+            break;
+        default:
+            log_warn("trying to render {} but we dont support that tag",
+                     root.tag);
+            return;
+    }
+
+    if (root.children.empty()) return;
+
+    ui_context->push_parent(content);
+    {
+        for (const auto& child : root.children) {
+            render_node(ui_context, child);
+        }
+    }
+    ui_context->pop_parent();
 }

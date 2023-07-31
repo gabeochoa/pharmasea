@@ -2,15 +2,19 @@
 
 #include "../engine.h"
 #include "../engine/app.h"
+#include "../engine/ui/ui.h"
 #include "../engine/util.h"
 #include "../external_include.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
+    Node uiroot;
 
     MenuLayer()
         : Layer(strings::menu::MENU),
-          ui_context(std::make_shared<ui::UIContext>()) {}
+          ui_context(std::make_shared<ui::UIContext>()) {
+        uiroot = load_and_parse("resources/html/simple.html");
+    }
 
     virtual ~MenuLayer() {}
 
@@ -147,9 +151,10 @@ struct MenuLayer : public Layer {
 
         ui_context->push_parent(root);
         {
-            draw_menu_buttons();
-            draw_title_section();
-            draw_external_icons();
+            render_node(ui_context, uiroot);
+            // draw_menu_buttons();
+            // draw_title_section();
+            // draw_external_icons();
         }
         ui_context->pop_parent();
         ui_context->end(root.get());
