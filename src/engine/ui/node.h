@@ -286,7 +286,7 @@ struct LayoutBox {
         dims.border.y = border_right;
         dims.padding.x = padding_left;
         dims.padding.y = padding_right;
-        log_info("{} {}", style.values["padding-left"], parent_width);
+        // log_info("{} {}", style.values["padding-left"], parent_width);
     }
 
     void calculate_block_position(const Dimensions& parent_block) {
@@ -324,9 +324,9 @@ struct LayoutBox {
             parent_block.content.y + dims.margin.z + dims.border.z +
             dims.padding.z;
 
-        log_info("{} {} {} {} {} {} {}", node.tag, dims.content.y,
-                 parent_block.content.height, parent_block.content.y,
-                 dims.margin.z, dims.border.z, dims.padding.z);
+        // log_info("{} {} {} {} {} {} {}", node.tag, dims.content.y,
+        // parent_block.content.height, parent_block.content.y,
+        // dims.margin.z, dims.border.z, dims.padding.z);
     }
 
     void layout_block_children() {

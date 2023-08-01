@@ -123,11 +123,13 @@ struct Parser {
     Value parse_decl_color_value(const std::string& value) {
         Parser p(value);
         p.consume_whitespace();
-        auto color =
-            p.consume_while([](unsigned char c) { return std::isalpha(c); });
+        auto color = p.consume_while(
+            [](unsigned char c) { return std::isalpha(c) || c == '"'; });
 
-        return magic_enum::enum_cast<ui::theme::Usage>(color).value_or(
-            ui::theme::Usage::Primary);
+        auto color_no_quote = color.substr(1, color.length() - 2);
+
+        return magic_enum::enum_cast<ui::theme::Usage>(color_no_quote)
+            .value_or(ui::theme::Usage::Primary);
     }
 
     Value parse_decl_value(const std::string& property,

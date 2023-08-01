@@ -54,8 +54,6 @@ inline int ui_main() {
     LayoutBox root_box = build_layout_tree(body);
     root_box.layout(Dimensions{.content = Rectangle{0, 0, 1280, 720}});
 
-    log_info("_____");
-
     dump(root);
     dump(root_box);
     return 0;
