@@ -11,10 +11,12 @@ struct Parser {
     Parser(const std::string& source) : input(source) { pos = 0; }
 
     void validate(unsigned char c, unsigned char m, const std::string& msg) {
-        VALIDATE(c == m, fmt::format("{} != {} =>  {}", c, m, msg));
+        VALIDATE(c == m,
+                 fmt::format("{} != {} => {}", (char) c, (char) m, msg));
     }
 
     unsigned char next_char() const { return input[pos]; }
+
     bool starts_with(const std::string& pre) const {
         return input.substr(pos).find(pre) == 0;
     }
@@ -38,6 +40,11 @@ struct Parser {
         return consume_while([](unsigned char c) { return std::isalnum(c); });
     }
 
+    std::string parse_attr_name() {
+        return consume_while(
+            [](unsigned char c) { return std::isalnum(c) || c == '.'; });
+    }
+
     Node parse_text() {
         return dom::text(
             consume_while([](unsigned char c) { return c != '<'; }));
@@ -58,6 +65,32 @@ struct Parser {
         consume();  // *
         consume();  // /
     }
+
+    Value parse_decl_value(const std::string& value) {
+        Parser p(value);
+        p.consume_whitespace();
+        auto num = p.consume_while(
+            [](unsigned char c) { return std::isdigit(c) || c == '.'; });
+
+        Value::Unit unit;
+        switch (p.next_char()) {
+            case '%':
+                unit = Value::Unit::Percentage;
+                break;
+            case 'p':
+            case ';':
+                unit = Value::Unit::Pixels;
+                break;
+            default:
+                unit = Value::Unit::Pixels;
+                break;
+        }
+
+        return {
+            .data = (std::stof(num)),
+            .unit = unit,
+        };
+    }
 };
 
 struct CSSParser : Parser {
@@ -70,16 +103,13 @@ struct CSSParser : Parser {
             [](unsigned char c) { return std::isalnum(c) || c == '-'; });
     }
 
-    std::string parse_style_value() {
-        return consume_while([](unsigned char c) { return c != ';'; });
-    }
-
     Decl parse_decl() {
         consume_whitespace();
         // name: value;
         auto field = parse_style_field();
         validate(consume(), ':', "should be a colon between field and value");
-        auto value = parse_style_value();
+        Value value = parse_decl_value(
+            consume_while([](unsigned char c) { return c != ';'; }));
         validate(consume(), ';', "should end with a semi colon");
         return Decl{
             .field = field,
@@ -109,12 +139,12 @@ struct CSSParser : Parser {
 
             //
             {
-                auto tag = parse_tag_name();
+                auto attr = parse_attr_name();
                 consume_whitespace();
                 validate(consume(), '{', "should be open rule {");
                 Rule r = parse_rule();
                 validate(consume(), '}', "should be close rule {");
-                rule_map.insert({tag, r});
+                rule_map.insert({attr, r});
             }
         }
         return rule_map;
@@ -199,42 +229,33 @@ struct HTMLParser : Parser {
         return {};
     }
 
-    Value parse_decl_value(const std::string& value) {
-        Parser p(value);
-        p.consume_whitespace();
-        auto num = p.consume_while(
-            [](unsigned char c) { return std::isdigit(c) || c == '.'; });
-
-        Value::Units unit;
-        switch (next_char()) {
-            case '%':
-                unit = Value::Units::Percentage;
-                break;
-            case 'p':
-            case ';':
-                unit = Value::Units::Pixels;
-                break;
-        }
-
-        return {
-            .data = (std::stof(num)),
-            .unit = unit,
-        };
+    void populate_style(Style& style, const Decl& decl) {
+        style.values[decl.field] = decl.value;
     }
 
-    void populate_style(Style& style, const Decl& decl) {
-        Value value = parse_decl_value(decl.value);
-        style.values[decl.field] = value;
+    bool matches_class(const std::string& selector, const Node& root) const {
+        if (selector[0] != '.') return false;
+
+        if (root.attrs.contains("class")) {
+            return selector.substr(1) == root.attrs.at("class");
+        }
+        return false;
+    }
+
+    bool matches_tag(const std::string& selector, const Node& root) const {
+        return selector == root.tag;
     }
 
     void apply_rules(Node& root, const RuleMap& rules) {
-        // Not appling css to raw text
+        // Not applying css to raw text
         if (root.tag.empty()) return;
 
         // Apply to parent first since they might be relative
         for (const auto& r : rules) {
-            auto matching_tag = r.first;
-            if (matching_tag != root.tag) continue;
+            auto selector = r.first;
+            bool match_one = (matches_tag(selector, root) ||  //
+                              matches_class(selector, root));
+            if (!match_one) continue;
             Style style;
             for (const auto& decl : r.second.decls) {
                 populate_style(style, decl);

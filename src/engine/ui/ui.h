@@ -61,11 +61,11 @@ inline int ui_main() {
     return 0;
 }
 
-inline LayoutBox load_ui(const std::string& file) {
+inline LayoutBox load_ui(const std::string& file, raylib::Rectangle parent) {
     Node root = load_and_parse(file);
     Node body = get_body(root).value();
     LayoutBox root_box = build_layout_tree(body);
-    root_box.layout(Dimensions{.content = Rectangle{0, 0, 0, 0}});
+    root_box.layout(Dimensions{.content = parent});
 
     dump(root);
     dump(root_box);

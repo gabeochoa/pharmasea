@@ -52,25 +52,15 @@ enum DisplayType {
     Anonymous,
 };
 
-struct Decl {
-    std::string field;
-    std::string value;
-};
-typedef std::vector<Decl> Decls;
-
-struct Rule {
-    Decls decls;
-};
-
 struct Value {
-    enum Units { Pixels, Percentage } unit = Pixels;
+    enum Unit { Pixels = 0, Percentage = 1 } unit = Pixels;
     float data = 0.f;
 
     float to_f(float parent) const {
         switch (unit) {
-            case Value::Pixels:
+            case Pixels:
                 return data;
-            case Value::Percentage:
+            case Percentage:
                 return (data / 100.f) * parent;
         }
         return data;
@@ -78,10 +68,31 @@ struct Value {
 };
 
 std::ostream& operator<<(std::ostream& os, const Value& value) {
-    os << fmt::format("{} {}", value.data,
-                      magic_enum::enum_name<Value::Units>(value.unit));
+    os << value.data;
+    os << "";
+    switch (value.unit) {
+        case Value::Unit::Pixels:
+            os << "px";
+            break;
+        case Value::Unit::Percentage:
+            os << "%";
+            break;
+        default:
+            os << "?";
+            break;
+    }
     return os;
 }
+
+struct Decl {
+    std::string field;
+    Value value;
+};
+typedef std::vector<Decl> Decls;
+
+struct Rule {
+    Decls decls;
+};
 
 typedef std::map<std::string, Value> ValueMap;
 struct Style {
@@ -247,6 +258,7 @@ struct LayoutBox {
         dims.border.y = border_right;
         dims.padding.x = padding_left;
         dims.padding.y = padding_right;
+        log_info("{} {}", style.values["padding-left"], parent_width);
     }
 
     void calculate_block_position(const Dimensions& parent_block) {
@@ -278,12 +290,15 @@ struct LayoutBox {
         dims.content.x = parent_block.content.x + dims.margin.x +
                          dims.border.x + dims.padding.x;
 
-        dims.content.y = parent_block.content.height + parent_block.content.y +
-                         dims.margin.z + dims.border.z + dims.padding.z;
+        dims.content.y =
+            // Dont add the height when its the body tag
+            (node.tag == "body" ? 0 : parent_block.content.height) +
+            parent_block.content.y + dims.margin.z + dims.border.z +
+            dims.padding.z;
 
-        // log_info("{} {} {} {} {} {} {}", node.tag, dims.content.y,
-        // parent_block.content.height, parent_block.content.y,
-        // dims.margin.z, dims.border.z, dims.padding.z);
+        log_info("{} {} {} {} {} {} {}", node.tag, dims.content.y,
+                 parent_block.content.height, parent_block.content.y,
+                 dims.margin.z, dims.border.z, dims.padding.z);
     }
 
     void layout_block_children() {

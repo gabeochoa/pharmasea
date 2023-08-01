@@ -13,7 +13,8 @@ struct MenuLayer : public Layer {
     MenuLayer()
         : Layer(strings::menu::MENU),
           ui_context(std::make_shared<ui::UIContext>()) {
-        root_box = load_ui("resources/html/simple.html");
+        root_box =
+            load_ui("resources/html/simple.html", {0, 0, WIN_WF(), WIN_HF()});
     }
 
     virtual ~MenuLayer() {}
