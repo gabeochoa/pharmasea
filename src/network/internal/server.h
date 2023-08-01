@@ -158,6 +158,19 @@ struct Server {
         SteamNetworkingUtils()->SetGlobalConfigValueInt32(
             k_ESteamNetworkingConfig_TimeoutConnected, 10);
 
+        /// [connection int32] Minimum/maximum send rate clamp, in bytes/sec.
+        /// At the time of this writing these two options should always be set
+        /// to the same value, to manually configure a specific send rate.  The
+        /// default value is 256K.  Eventually we hope to have the library
+        /// estimate the bandwidth of the channel and set the send rate to that
+        /// estimated bandwidth, and these values will only set limits on that
+        /// send rate.
+        constexpr const int rate = 1024 * 1024 * 1024;
+        SteamNetworkingUtils()->SetGlobalConfigValueInt32(
+            k_ESteamNetworkingConfig_SendRateMin, rate);
+        SteamNetworkingUtils()->SetGlobalConfigValueInt32(
+            k_ESteamNetworkingConfig_SendRateMax, rate);
+
         SteamNetworkingConfigValue_t opt;
         opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged,
                    (void *) Server::SteamNetConnectionStatusChangedCallback);
