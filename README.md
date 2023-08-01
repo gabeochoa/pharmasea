@@ -17,10 +17,12 @@ libraries used:
 - mo for translations http://number-none.com/blow/code/mo_file/index.html
 - nlomann json for JSON reading / writing https://github.com/nlohmann/json
 
-
 Models from 
 - https://www.kenney.nl/assets?q=3d 
 - https://kaylousberg.itch.io/kay-kit-mini-game-variety-pack 
+
+Consider Looking Into: 
+- https://github.com/eyalz800/zpp_bits 
 
 
 
