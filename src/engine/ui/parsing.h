@@ -199,25 +199,32 @@ struct HTMLParser : Parser {
         return {};
     }
 
-    float parse_decl_value(const std::string& value) {
+    Value parse_decl_value(const std::string& value) {
         Parser p(value);
         p.consume_whitespace();
         auto num = p.consume_while(
             [](unsigned char c) { return std::isdigit(c) || c == '.'; });
-        // TODO consume and check units
-        return (std::stof(num));
+
+        Value::Units unit;
+        switch (next_char()) {
+            case '%':
+                unit = Value::Units::Percentage;
+                break;
+            case 'p':
+            case ';':
+                unit = Value::Units::Pixels;
+                break;
+        }
+
+        return {
+            .data = (std::stof(num)),
+            .unit = unit,
+        };
     }
 
     void populate_style(Style& style, const Decl& decl) {
-        float value = parse_decl_value(decl.value);
-        switch (hashString(decl.field)) {
-            case hashString("width"): {
-                style.width = value;
-            } break;
-            case hashString("height"): {
-                style.height = value;
-            } break;
-        }
+        Value value = parse_decl_value(decl.value);
+        style.values[decl.field] = value;
     }
 
     void apply_rules(Node& root, const RuleMap& rules) {

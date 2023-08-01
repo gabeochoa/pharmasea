@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "../../external_include.h"
 #include "../log.h"
 #include "raylib.h"
 
@@ -61,13 +62,54 @@ struct Rule {
     Decls decls;
 };
 
+struct Value {
+    enum Units { Pixels, Percentage } unit = Pixels;
+    float data = 0.f;
+
+    float to_f(float parent) const {
+        switch (unit) {
+            case Value::Pixels:
+                return data;
+            case Value::Percentage:
+                return (data / 100.f) * parent;
+        }
+        return data;
+    }
+};
+
+std::ostream& operator<<(std::ostream& os, const Value& value) {
+    os << fmt::format("{} {}", value.data,
+                      magic_enum::enum_name<Value::Units>(value.unit));
+    return os;
+}
+
+typedef std::map<std::string, Value> ValueMap;
 struct Style {
-    float width = -1.f;
-    float height = -1.f;
+    ValueMap values;
     DisplayType display_type = Inline;
 
-    // eventually (name, backup, backup2,..., zero)
-    float lookup_f() const { return 0.f; }
+    float lookup_f(const std::string& field, const Value& def,
+                   float parent_val) const {
+        auto it = values.find(field);
+        if (it != values.end()) {
+            return it->second.to_f(parent_val);
+        }
+        return def.to_f(parent_val);
+    }
+
+    // Variadic function to look up multiple fields with a fallback and a
+    // default value
+    template<typename... Args>
+    float lookup_f(const std::string& field, const std::string& fallback,
+                   const Args&... args, const Value& def,
+                   float parent_val) const {
+        auto it = values.find(field);
+        if (it != values.end()) {
+            return it->second.to_f(parent_val);
+        }
+        // Recursively call the function with the fallback and remaining fields
+        return lookup_f(fallback, args..., def, parent_val);
+    }
 };
 
 // TODO eventually support selectors
@@ -90,7 +132,9 @@ struct Node {
 };
 
 std::ostream& operator<<(std::ostream& os, const Style& style) {
-    os << fmt::format("width: {}, height: {}", style.width, style.height);
+    for (auto c : style.values) {
+        os << fmt::format(" {}:{}, ", c.first, c.second);
+    }
     return os;
 }
 
@@ -155,18 +199,27 @@ struct LayoutBox {
     }
 
     void calculate_block_width(const Dimensions& parent_block) {
-        auto auto_width = parent_block.content.width;
+        auto parent_width = parent_block.content.width;
+        auto a_uto =
+            Value{.data = parent_block.content.width, .unit = Value::Pixels};
+        auto zero = Value{.data = 0, .unit = Value::Pixels};
 
-        auto width = auto_width;
-        if (style.width != -1) {
-            width = style.width;
-        }
-        auto margin_left = style.lookup_f();
-        auto margin_right = style.lookup_f();
-        auto border_left = style.lookup_f();
-        auto border_right = style.lookup_f();
-        auto padding_left = style.lookup_f();
-        auto padding_right = style.lookup_f();
+        float width = style.lookup_f("width", a_uto, parent_width);
+
+        auto margin_left =
+            style.lookup_f("margin-left", "margin", zero, parent_width);
+        auto margin_right =
+            style.lookup_f("margin-right", "margin", zero, parent_width);
+
+        auto padding_left =
+            style.lookup_f("padding-left", "padding", zero, parent_width);
+        auto padding_right =
+            style.lookup_f("padding-right", "padding", zero, parent_width);
+
+        auto border_left =
+            style.lookup_f("border-left", "border", zero, parent_width);
+        auto border_right =
+            style.lookup_f("border-right", "border", zero, parent_width);
 
         float total = (      //
             margin_left +    //
@@ -179,10 +232,10 @@ struct LayoutBox {
             //
         );
 
-        if (width != auto_width && total > parent_block.content.width) {
-            // if margin_left == auto: left = 0
-            // if margin_right == auto: right = 0
-        }
+        // if (width != auto_width && total > parent_block.content.width) {
+        // if margin_left == auto: left = 0
+        // if margin_right == auto: right = 0
+        // }
 
         // TODO handle overflow underflow
         // auto underflow = parent_block.content.width - total;
@@ -197,12 +250,23 @@ struct LayoutBox {
     }
 
     void calculate_block_position(const Dimensions& parent_block) {
-        auto margin_top = style.lookup_f();
-        auto margin_bottom = style.lookup_f();
-        auto border_top = style.lookup_f();
-        auto border_bottom = style.lookup_f();
-        auto padding_top = style.lookup_f();
-        auto padding_bottom = style.lookup_f();
+        auto zero = Value{.data = 0, .unit = Value::Pixels};
+        float parent_height = parent_block.content.height;
+
+        auto margin_top =
+            style.lookup_f("margin-top", "margin", zero, parent_height);
+        auto margin_bottom =
+            style.lookup_f("margin-bottom", "margin", zero, parent_height);
+
+        auto padding_top =
+            style.lookup_f("padding-top", "padding", zero, parent_height);
+        auto padding_bottom =
+            style.lookup_f("padding-bottom", "padding", zero, parent_height);
+
+        auto border_top =
+            style.lookup_f("border-top", "border", zero, parent_height);
+        auto border_bottom =
+            style.lookup_f("border-bottom", "border", zero, parent_height);
 
         dims.margin.z = margin_top;
         dims.margin.w = margin_bottom;
@@ -232,11 +296,11 @@ struct LayoutBox {
     void calculate_block_height() {
         if (node.tag.empty()) {
             // TODO figure out the font size
-            style.height = 200;
+            style.values["height"] = Value{.data = 200, .unit = Value::Pixels};
         }
 
-        if (style.height != -1) {
-            dims.content.height = style.height;
+        if (style.values.contains("height")) {
+            dims.content.height = style.values.at("height").to_f(200);
         }
     }
 
