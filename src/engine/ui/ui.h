@@ -3,6 +3,7 @@
 
 #include "../../external_include.h"
 #include "../../strings.h"
+#include "../texture_library.h"
 #include "../ui.h"
 #include "parsing.h"
 
@@ -100,6 +101,26 @@ inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
         ui_context->draw_widget_rect(root_box.dims.content, theme.value());
     };
 
+    const auto _draw_button = [ui_context](const LayoutBox& root_box) {
+        auto rect = root_box.dims.content;
+
+        auto image = root_box.style.lookup_s("background-image");
+        if (image.has_value()) {
+            const raylib::Texture texture =
+                TextureLibrary::get().get(image.value());
+            const vec2 tex_size = {(float) texture.width,
+                                   (float) texture.height};
+            const vec2 button_size = {rect.width, rect.height};
+            ui_context->draw_image(texture, {rect.x, rect.y}, 0,
+                                   calculateScale(button_size, tex_size));
+            return;
+        }
+
+        auto theme = root_box.style.lookup_theme("background-color");
+        if (!theme.has_value()) return;
+        ui_context->draw_widget_rect(rect, theme.value());
+    };
+
     switch (hashString(node.tag)) {
         case hashString("button"):
             if (is_mouse_down_in_box(root_box)) {
@@ -116,11 +137,13 @@ inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
     }
 
     switch (hashString(node.tag)) {
-        case hashString("em"):
-        case hashString("div"):
         case hashString("button"):
+            _draw_button(root_box);
+            break;
+        case hashString("div"):
             _draw_rect(root_box);
             break;
+        case hashString("em"):
         case hashString("h1"):
         case hashString("p"):
             break;

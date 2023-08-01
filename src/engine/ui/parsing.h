@@ -43,8 +43,9 @@ struct Parser {
     }
 
     std::string parse_attr_name() {
-        return consume_while(
-            [](unsigned char c) { return std::isalnum(c) || c == '.'; });
+        return consume_while([](unsigned char c) {
+            return std::isalnum(c) || c == '.' || c == '-';
+        });
     }
 
     Node parse_text() {
@@ -137,8 +138,10 @@ struct Parser {
         if (is_numerical_property(property))
             return parse_decl_numerical_value(value);
         if (is_color_property(property)) return parse_decl_color_value(value);
-        log_info("returning decl '{}' value {} as string", property, value);
-        return value;
+        auto val =
+            (value[0] == '"') ? value.substr(1, value.length() - 2) : value;
+        log_info("returning decl '{}' value '{}' as string", property, val);
+        return val;
     }
 };
 
@@ -157,6 +160,7 @@ struct CSSParser : Parser {
         // name: value;
         auto field = parse_style_field();
         validate(consume(), ':', "should be a colon between field and value");
+        consume_whitespace();
         Value value = parse_decl_value(
             field, consume_while([](unsigned char c) { return c != ';'; }));
         validate(consume(), ';', "should end with a semi colon");
@@ -300,12 +304,12 @@ struct HTMLParser : Parser {
         if (root.tag.empty()) return;
 
         // Apply to parent first since they might be relative
+        Style style;
         for (const auto& r : rules) {
             auto selector = r.first;
             bool match_one = (matches_tag(selector, root) ||  //
                               matches_class(selector, root));
             if (!match_one) continue;
-            Style style;
             for (const auto& decl : r.second.decls) {
                 populate_style(style, decl);
             }
