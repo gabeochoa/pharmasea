@@ -84,12 +84,17 @@ inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
         return;
     }
 
+    const auto _draw_rect = [ui_context](const LayoutBox& root_box) {
+        auto theme = root_box.style.lookup_theme("background-color");
+        if (!theme.has_value()) return;
+        ui_context->draw_widget_rect(root_box.dims.content, theme.value());
+    };
+
     switch (hashString(node.tag)) {
         case hashString("em"):
         case hashString("div"):
         case hashString("button"):
-            ui_context->draw_widget_rect(root_box.dims.content,
-                                         theme::Usage::Primary);
+            _draw_rect(root_box);
             break;
         case hashString("h1"):
         case hashString("p"):

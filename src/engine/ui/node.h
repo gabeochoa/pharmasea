@@ -7,6 +7,7 @@
 
 #include "../../external_include.h"
 #include "../log.h"
+#include "../ui_theme.h"
 #include "raylib.h"
 
 struct Node;
@@ -52,7 +53,7 @@ enum DisplayType {
     Anonymous,
 };
 
-struct Value {
+struct NumericalValue {
     enum Unit { Pixels = 0, Percentage = 1 } unit = Pixels;
     float data = 0.f;
 
@@ -67,20 +68,34 @@ struct Value {
     }
 };
 
-std::ostream& operator<<(std::ostream& os, const Value& value) {
+std::ostream& operator<<(std::ostream& os, const NumericalValue& value) {
     os << value.data;
     os << "";
     switch (value.unit) {
-        case Value::Unit::Pixels:
+        case NumericalValue::Unit::Pixels:
             os << "px";
             break;
-        case Value::Unit::Percentage:
+        case NumericalValue::Unit::Percentage:
             os << "%";
             break;
         default:
             os << "?";
             break;
     }
+    return os;
+}
+
+typedef std::variant<NumericalValue, ui::theme::Usage, std::string> Value;
+
+struct ValuePrinter {
+    template<typename T>
+    void operator()(const T& value) const {
+        std::cout << value;
+    }
+};
+
+std::ostream& operator<<(std::ostream& os, const Value& value) {
+    std::visit(ValuePrinter(), value);
     return os;
 }
 
@@ -99,11 +114,24 @@ struct Style {
     ValueMap values;
     DisplayType display_type = Inline;
 
-    float lookup_f(const std::string& field, const Value& def,
+    std::optional<std::string> lookup_s(const std::string& field) const {
+        if (values.contains(field))
+            return std::get<std::string>(values.at(field));
+        return {};
+    }
+
+    std::optional<ui::theme::Usage> lookup_theme(
+        const std::string& field) const {
+        if (values.contains(field))
+            return std::get<ui::theme::Usage>(values.at(field));
+        return {};
+    }
+
+    float lookup_f(const std::string& field, const NumericalValue& def,
                    float parent_val) const {
         auto it = values.find(field);
         if (it != values.end()) {
-            return it->second.to_f(parent_val);
+            return std::get<NumericalValue>(it->second).to_f(parent_val);
         }
         return def.to_f(parent_val);
     }
@@ -112,11 +140,11 @@ struct Style {
     // default value
     template<typename... Args>
     float lookup_f(const std::string& field, const std::string& fallback,
-                   const Args&... args, const Value& def,
+                   const Args&... args, const NumericalValue& def,
                    float parent_val) const {
         auto it = values.find(field);
         if (it != values.end()) {
-            return it->second.to_f(parent_val);
+            return std::get<NumericalValue>(it->second).to_f(parent_val);
         }
         // Recursively call the function with the fallback and remaining fields
         return lookup_f(fallback, args..., def, parent_val);
@@ -211,9 +239,9 @@ struct LayoutBox {
 
     void calculate_block_width(const Dimensions& parent_block) {
         auto parent_width = parent_block.content.width;
-        auto a_uto =
-            Value{.data = parent_block.content.width, .unit = Value::Pixels};
-        auto zero = Value{.data = 0, .unit = Value::Pixels};
+        auto a_uto = NumericalValue{.data = parent_block.content.width,
+                                    .unit = NumericalValue::Pixels};
+        auto zero = NumericalValue{.data = 0, .unit = NumericalValue::Pixels};
 
         float width = style.lookup_f("width", a_uto, parent_width);
 
@@ -262,7 +290,7 @@ struct LayoutBox {
     }
 
     void calculate_block_position(const Dimensions& parent_block) {
-        auto zero = Value{.data = 0, .unit = Value::Pixels};
+        auto zero = NumericalValue{.data = 0, .unit = NumericalValue::Pixels};
         float parent_height = parent_block.content.height;
 
         auto margin_top =
@@ -311,11 +339,13 @@ struct LayoutBox {
     void calculate_block_height() {
         if (node.tag.empty()) {
             // TODO figure out the font size
-            style.values["height"] = Value{.data = 200, .unit = Value::Pixels};
+            style.values["height"] =
+                NumericalValue{.data = 200, .unit = NumericalValue::Pixels};
         }
 
         if (style.values.contains("height")) {
-            dims.content.height = style.values.at("height").to_f(200);
+            dims.content.height =
+                std::get<NumericalValue>(style.values.at("height")).to_f(200);
         }
     }
 

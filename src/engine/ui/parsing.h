@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cctype>
+
 #include "../assert.h"
 #include "node.h"
 #include "utils.h"
@@ -66,30 +68,75 @@ struct Parser {
         consume();  // /
     }
 
-    Value parse_decl_value(const std::string& value) {
+    bool is_numerical_property(const std::string& property) {
+        std::array<std::string, 17> num_prop{
+            //
+            "width",        "height",         "padding-left",  "padding-right",
+            "padding-top",  "padding-bottom", "padding",       "margin-left",
+            "margin-right", "margin-top",     "margin-bottom", "margin",
+            "border-left",  "border-right",   "border-top",    "border-bottom",
+            "border",
+        };
+        for (auto s : num_prop) {
+            if (s == property) return true;
+        }
+        return false;
+    }
+
+    bool is_color_property(const std::string& property) {
+        std::array<std::string, 1> color_prop{
+            //
+            "background-color",
+        };
+        for (auto s : color_prop) {
+            if (s == property) return true;
+        }
+        return false;
+    }
+
+    Value parse_decl_numerical_value(const std::string& value) {
         Parser p(value);
         p.consume_whitespace();
         auto num = p.consume_while(
             [](unsigned char c) { return std::isdigit(c) || c == '.'; });
 
-        Value::Unit unit;
+        NumericalValue::Unit unit;
         switch (p.next_char()) {
             case '%':
-                unit = Value::Unit::Percentage;
+                unit = NumericalValue::Unit::Percentage;
                 break;
             case 'p':
             case ';':
-                unit = Value::Unit::Pixels;
+                unit = NumericalValue::Unit::Pixels;
                 break;
             default:
-                unit = Value::Unit::Pixels;
+                unit = NumericalValue::Unit::Pixels;
                 break;
         }
 
-        return {
+        return NumericalValue{
             .data = (std::stof(num)),
             .unit = unit,
         };
+    }
+
+    Value parse_decl_color_value(const std::string& value) {
+        Parser p(value);
+        p.consume_whitespace();
+        auto color =
+            p.consume_while([](unsigned char c) { return std::isalpha(c); });
+
+        return magic_enum::enum_cast<ui::theme::Usage>(color).value_or(
+            ui::theme::Usage::Primary);
+    }
+
+    Value parse_decl_value(const std::string& property,
+                           const std::string& value) {
+        if (is_numerical_property(property))
+            return parse_decl_numerical_value(value);
+        if (is_color_property(property)) return parse_decl_color_value(value);
+        log_info("returning decl '{}' value {} as string", property, value);
+        return value;
     }
 };
 
@@ -109,7 +156,7 @@ struct CSSParser : Parser {
         auto field = parse_style_field();
         validate(consume(), ':', "should be a colon between field and value");
         Value value = parse_decl_value(
-            consume_while([](unsigned char c) { return c != ';'; }));
+            field, consume_while([](unsigned char c) { return c != ';'; }));
         validate(consume(), ';', "should end with a semi colon");
         return Decl{
             .field = field,
