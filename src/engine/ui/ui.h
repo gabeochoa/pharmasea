@@ -372,15 +372,16 @@ inline int ui_main() {
 }
 
 inline void render_node(std::shared_ptr<ui::UIContext> ui_context,
-                        const Node& root) {
-    log_info("render node {} {}", root.tag, root.content);
+                        const Node& root,
+                        raylib::Rectangle parent = raylib::Rectangle{0, 0, 1280,
+                                                                     720}) {
+    using namespace ui;
+
     if (root.tag.empty()) {
-        log_info("render text");
-        text(*ui::components::mk_text(), text_lookup(root.content.c_str()));
+        ui_context->_draw_text(parent, text_lookup(root.content.c_str()),
+                               ui::theme::Usage::Font);
         return;
     }
-
-    using namespace ui;
 
     Style style = root.style.has_value() ? root.style.value()
                                          : Style{
@@ -388,37 +389,33 @@ inline void render_node(std::shared_ptr<ui::UIContext> ui_context,
                                                .height = 1.f,
                                            };
 
-    auto content = ui_context->own(Widget{
-        Size_Pct(style.width, 1.f),
-        Size_Pct(style.height, 1.f),
-    });
+    auto p = raylib::Rectangle{
+        0, 0,                         //
+        style.width * parent.width,   //
+        style.height * parent.height  //
+    };
 
     switch (hashString(root.tag)) {
         case hashString("em"):
+        case hashString("div"):
+            ui_context->draw_widget_rect(p, theme::Usage::Primary);
+            break;
         case hashString("h1"):
         case hashString("p"):
-        case hashString("div"):
-        case hashString("body"):
-            log_info("render div");
-            div(*content);
             break;
         case hashString("html"):
+        case hashString("body"):
+            break;
         case hashString("head"):
         case hashString("style"):
-            break;
+            return;
         default:
             log_warn("trying to render {} but we dont support that tag",
                      root.tag);
             return;
     }
 
-    if (root.children.empty()) return;
-
-    ui_context->push_parent(content);
-    {
-        for (const auto& child : root.children) {
-            render_node(ui_context, child);
-        }
+    for (const auto& child : root.children) {
+        render_node(ui_context, child, p);
     }
-    ui_context->pop_parent();
 }

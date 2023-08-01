@@ -145,18 +145,19 @@ struct MenuLayer : public Layer {
         PROFILE();
         ext::clear_background(ui_context->active_theme().background);
 
-        ui_context->begin(dt);
+        render_node(ui_context, uiroot);
 
-        auto root = ui::components::mk_root();
-
-        ui_context->push_parent(root);
-        {
-            render_node(ui_context, uiroot);
-            // draw_menu_buttons();
-            // draw_title_section();
-            // draw_external_icons();
-        }
-        ui_context->pop_parent();
-        ui_context->end(root.get());
+        // ui_context->begin(dt);
+        //
+        // auto root = ui::components::mk_root();
+        //
+        // ui_context->push_parent(root);
+        // {
+        // draw_menu_buttons();
+        // draw_title_section();
+        // draw_external_icons();
+        // }
+        // ui_context->pop_parent();
+        // ui_context->end(root.get());
     }
 };
