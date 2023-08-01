@@ -140,15 +140,37 @@ struct MenuLayer : public Layer {
         raylib::SetExitKey(raylib::KEY_ESCAPE);
     }
 
+    void process_on_click(const std::string& id) {
+        log_info("clicked on {}", id);
+
+        switch (hashString(id)) {
+            case hashString(strings::i18n::PLAY):
+                MenuState::get().set(menu::State::Network);
+                break;
+
+            case hashString(strings::i18n::ABOUT):
+                MenuState::get().set(menu::State::About);
+                break;
+
+            case hashString(strings::i18n::SETTINGS):
+                MenuState::get().set(menu::State::Settings);
+                break;
+
+            case hashString(strings::i18n::EXIT):
+                App::get().close();
+                break;
+        }
+    }
+
     virtual void onDraw(float dt) override {
         ZoneScoped;
         if (MenuState::get().is_not(menu::State::Root)) return;
         PROFILE();
         ext::clear_background(ui_context->active_theme().background);
 
-        render_ui(
-            ui_context, root_box, {0, 0, WIN_WF(), WIN_HF()},
-            [](const std::string& id) { log_info("You clicked {}", id); });
+        render_ui(ui_context, root_box, {0, 0, WIN_WF(), WIN_HF()},
+                  std::bind(&MenuLayer::process_on_click, *this,
+                            std::placeholders::_1));
 
         // ui_context->begin(dt);
         //
