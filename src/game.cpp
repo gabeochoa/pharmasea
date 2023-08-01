@@ -8,6 +8,8 @@ long long return_ping = 0;
 }  // namespace network
 
 int main(int argc, char* argv[]) {
+    ui_main();
+
     process_dev_flags(argv);
 
     tests::run_all();

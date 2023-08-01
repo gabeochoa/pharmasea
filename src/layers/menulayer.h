@@ -8,12 +8,12 @@
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
-    Node uiroot;
+    LayoutBox root_box;
 
     MenuLayer()
         : Layer(strings::menu::MENU),
           ui_context(std::make_shared<ui::UIContext>()) {
-        uiroot = load_and_parse("resources/html/simple.html");
+        root_box = load_ui("resources/html/simple.html");
     }
 
     virtual ~MenuLayer() {}
@@ -145,7 +145,7 @@ struct MenuLayer : public Layer {
         PROFILE();
         ext::clear_background(ui_context->active_theme().background);
 
-        render_node(ui_context, uiroot);
+        render_ui(ui_context, root_box, {0, 0, WIN_WF(), WIN_HF()});
 
         // ui_context->begin(dt);
         //
