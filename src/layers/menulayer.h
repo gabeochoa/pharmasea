@@ -164,7 +164,7 @@ struct MenuLayer : public Layer {
         // return true;
     }
 
-    virtual void onDraw(float dt) override {
+    virtual void onDraw(float) override {
         ZoneScoped;
         if (MenuState::get().is_not(menu::State::Root)) return;
         PROFILE();

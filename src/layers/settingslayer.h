@@ -229,8 +229,8 @@ struct SettingsLayer : public Layer {
         master_volume();
         music_volume();
         // TODO
-        resolution_switcher();
-        // language_switcher();
+        // resolution_switcher();
+        language_switcher();
         streamer_safe_box();
         enable_post_processing();
         back_button();
