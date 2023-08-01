@@ -251,6 +251,15 @@ struct HTMLParser : Parser {
         return nodes;
     }
 
+    void ignore_doctype() {
+        validate(consume(), '<', "parsing an tag open");
+        if (next_char() == '!') {
+            consume_while([](unsigned char c) { return c != '>'; });
+        } else {
+            pos--;
+        }
+    }
+
     Node parse_element() {
         validate(consume(), '<', "parsing an tag open");
         auto tag_name = parse_tag_name();
@@ -335,6 +344,10 @@ struct HTMLParser : Parser {
 
 inline Node parse(const std::string& source) {
     HTMLParser p(source);
+
+    // first check for doctype
+    p.ignore_doctype();
+
     Nodes nodes = p.parse_nodes();
     p.load_css(nodes);
     return nodes.size() == 1 ? nodes[0] : dom::elem("html", {}, nodes);
