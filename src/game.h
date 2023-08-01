@@ -126,6 +126,7 @@ void startup() {
         new SettingsLayer(),
         new MenuLayer(),
     };
+
     for (auto layer : layers) App::get().pushLayer(layer);
 }
 
