@@ -160,6 +160,8 @@ struct MenuLayer : public Layer {
                 App::get().close();
                 break;
         }
+        // TODO return true when this was correctly caught
+        // return true;
     }
 
     virtual void onDraw(float dt) override {
@@ -168,21 +170,21 @@ struct MenuLayer : public Layer {
         PROFILE();
         ext::clear_background(ui_context->active_theme().background);
 
-        render_ui(ui_context, root_box, {0, 0, WIN_WF(), WIN_HF()},
-                  std::bind(&MenuLayer::process_on_click, *this,
-                            std::placeholders::_1));
+        // render_ui(ui_context, root_box, {0, 0, WIN_WF(), WIN_HF()},
+        // std::bind(&MenuLayer::process_on_click, *this,
+        // std::placeholders::_1));
 
-        // ui_context->begin(dt);
-        //
-        // auto root = ui::components::mk_root();
-        //
-        // ui_context->push_parent(root);
-        // {
-        // draw_menu_buttons();
-        // draw_title_section();
-        // draw_external_icons();
-        // }
-        // ui_context->pop_parent();
-        // ui_context->end(root.get());
+        ui_context->begin(dt);
+
+        auto root = ui::components::mk_root();
+
+        ui_context->push_parent(root);
+        {
+            draw_menu_buttons();
+            draw_title_section();
+            draw_external_icons();
+        }
+        ui_context->pop_parent();
+        ui_context->end(root.get());
     }
 };
