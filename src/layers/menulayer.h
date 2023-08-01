@@ -146,7 +146,9 @@ struct MenuLayer : public Layer {
         PROFILE();
         ext::clear_background(ui_context->active_theme().background);
 
-        render_ui(ui_context, root_box, {0, 0, WIN_WF(), WIN_HF()});
+        render_ui(
+            ui_context, root_box, {0, 0, WIN_WF(), WIN_HF()},
+            [](const std::string& id) { log_info("You clicked {}", id); });
 
         // ui_context->begin(dt);
         //

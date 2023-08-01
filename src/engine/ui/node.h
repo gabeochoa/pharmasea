@@ -13,7 +13,7 @@
 struct Node;
 
 typedef std::pair<std::string, std::string> Attr;
-typedef std::unordered_map<std::string, std::string> Attrs;
+typedef std::map<std::string, std::string> Attrs;
 typedef std::vector<Node> Nodes;
 
 inline raylib::Rectangle expand(const raylib::Rectangle& a, const vec4& b) {
@@ -187,9 +187,15 @@ std::ostream& operator<<(std::ostream& os, const Node& node) {
         os << node.content;
         return os;
     }
+    os << "<";
+    os << node.tag;
+    os << " ";
 
-    os << fmt::format("<{} {} {} style=\"{}\">", node.tag, node.attrs.size(),
-                      node.children.size(), node.style);
+    for (auto c : node.attrs) {
+        os << fmt::format(" {}:{}, ", c.first, c.second);
+    }
+
+    os << fmt::format("{} style=\"{}\">", node.children.size(), node.style);
     return os;
 }
 

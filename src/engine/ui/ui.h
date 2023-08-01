@@ -70,8 +70,20 @@ inline LayoutBox load_ui(const std::string& file, raylib::Rectangle parent) {
     return root_box;
 }
 
+bool is_mouse_inside(const MouseInfo& mouse_info, const Rectangle& rect) {
+    auto mouse = mouse_info.pos;
+    return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
+           mouse.y >= rect.y && mouse.y <= rect.y + rect.height;
+}
+
+bool is_mouse_down_in_box(const LayoutBox& box) {
+    auto minfo = get_mouse_info();
+    return is_mouse_inside(minfo, box.dims.content) && minfo.leftDown;
+}
+
 inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
-                      const LayoutBox& root_box, raylib::Rectangle parent) {
+                      const LayoutBox& root_box, raylib::Rectangle parent,
+                      const std::function<void(std::string id)>& onClick) {
     using namespace ui;
 
     Node node = root_box.node;
@@ -87,6 +99,21 @@ inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
         if (!theme.has_value()) return;
         ui_context->draw_widget_rect(root_box.dims.content, theme.value());
     };
+
+    switch (hashString(node.tag)) {
+        case hashString("button"):
+            if (is_mouse_down_in_box(root_box)) {
+                if (!root_box.node.attrs.contains("id")) {
+                    log_warn("you have a button without an id {} {}", node.tag,
+                             node.children[0].content);
+                    break;
+                }
+                onClick(root_box.node.attrs.at("id"));
+            }
+            break;
+        default:
+            break;
+    }
 
     switch (hashString(node.tag)) {
         case hashString("em"):
@@ -110,6 +137,6 @@ inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
     }
 
     for (const auto& child : root_box.children) {
-        render_ui(ui_context, child, root_box.dims.content);
+        render_ui(ui_context, child, root_box.dims.content, onClick);
     }
 }
