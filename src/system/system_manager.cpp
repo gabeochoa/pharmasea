@@ -809,9 +809,21 @@ void process_has_rope(Entity& entity, float) {
     auto new_path = astar::find_path(entity.get<Transform>().as2(), pos,
                                      [](vec2) { return true; });
 
+    std::vector<vec2> extended_path;
+    std::optional<vec2> prev;
     for (auto p : new_path) {
-        std::shared_ptr<Item> item =
-            EntityHelper::createItem(strings::item::SODA_SPOUT, p);
+        if (prev.has_value()) {
+            extended_path.push_back(vec::lerp(prev.value(), p, 0.33f));
+            extended_path.push_back(vec::lerp(prev.value(), p, 0.66f));
+            extended_path.push_back(vec::lerp(prev.value(), p, 0.99f));
+        }
+        extended_path.push_back(p);
+        prev = p;
+    }
+
+    std::shared_ptr<Item> item;
+    for (auto p : extended_path) {
+        item = EntityHelper::createItem(strings::item::SODA_SPOUT, p);
         item->get<IsItem>().set_held_by(IsItem::HeldBy::PLAYER);
         item->addComponent<IsSolid>();
         hrti.add(item);

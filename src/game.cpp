@@ -18,7 +18,8 @@ int main(int argc, char* argv[]) {
     }
 
     std::cout << "Executable Path: " << fs::current_path() << std::endl;
-    std::cout << "Canon Path: " << fs::canonical(fs::current_path()) << std::endl;
+    std::cout << "Canon Path: " << fs::canonical(fs::current_path())
+              << std::endl;
 
     startup();
     defer(Settings::get().write_save_file());

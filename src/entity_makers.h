@@ -794,8 +794,8 @@ static void make_item_type(Item& item, const std::string& type_name,  //
                            vec2 pos,                                  //
                            int index = -1                             //
 ) {
-    log_info("generating new item {} of type {} at {} subtype{}", item.id,
-             type_name, pos, index);
+    // log_info("generating new item {} of type {} at {} subtype{}", item.id,
+    // type_name, pos, index);
     switch (hashString(type_name)) {
         case hashString(strings::item::SODA_SPOUT):
             return make_soda_spout(item, pos);
