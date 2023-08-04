@@ -137,7 +137,8 @@ struct ClientPacket {
     Msg msg;
 };
 
-std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
+inline std::ostream& operator<<(std::ostream& os,
+                                const ClientPacket::Msg& msgtype) {
     os << std::visit(
         util::overloaded{
             [&](ClientPacket::AnnouncementInfo info) {
@@ -175,13 +176,13 @@ std::ostream& operator<<(std::ostream& os, const ClientPacket::Msg& msgtype) {
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os,
-                         const ClientPacket::MsgType& msgtype) {
+inline std::ostream& operator<<(std::ostream& os,
+                                const ClientPacket::MsgType& msgtype) {
     os << magic_enum::enum_name(msgtype);
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const ClientPacket& packet) {
+inline std::ostream& operator<<(std::ostream& os, const ClientPacket& packet) {
     os << "Packet(" << packet.client_id << ": " << packet.msg_type << " "
        << packet.msg << ")" << std::endl;
     return os;
