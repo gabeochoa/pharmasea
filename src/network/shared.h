@@ -38,10 +38,6 @@ struct PolymorphicBaseClass<Job>
     : PolymorphicDerivedClasses<WaitJob, WanderingJob, WaitInQueueJob,
                                 LeavingJob> {};
 
-template<>
-struct PolymorphicBaseClass<LevelInfo>
-    : PolymorphicDerivedClasses<LobbyMapInfo, GameMapInfo> {};
-
 }  // namespace ext
 }  // namespace bitsery
 

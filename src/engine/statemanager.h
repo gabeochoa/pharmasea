@@ -187,6 +187,14 @@ struct GameState : public StateManager2<game::State> {
         return GameState::get().is_lobby_like();
     }
 
+    [[nodiscard]] bool is_game_like() {
+        return is(game::State::InRound) || is(game::State::Planning);
+    }
+
+    [[nodiscard]] static bool s_is_game_like() {
+        return GameState::get().is_game_like();
+    }
+
     game::State toggle_planning() {
         // TODO need logic here to stop loops
         if (is(game::State::Planning)) {

@@ -141,6 +141,29 @@ static void make_remote_player(Entity& remote_player, vec3 pos) {
     add_player_components(remote_player);
 }
 
+static void move_player_SERVER_ONLY(Entity& entity, vec3 position) {
+    if (!is_server()) {
+        log_warn(
+            "you are calling a server only function from a client context, "
+            "this is best case a no-op and worst case a visual desync");
+    }
+
+    Transform& transform = entity.get<Transform>();
+    transform.update(position);
+
+    // TODO if we have multiple local players then we need to specify which here
+
+    // TODO right now we dont update the player visually until the next time you
+    // move this can be fixed by uncommenting the code below, but we dont have
+    // access to that network::Info object due to include order
+
+    // network::Server* server = GLOBALS.get_ptr<network::Server*>("server");
+    // server.send_player_location_packet(
+    // // TODO change to SERVER_CLIENT_ID
+    // -1, position, static_cast<int>(transform.face_direction()),
+    // entity.get<HasName>().name());
+}
+
 static void update_player_remotely(Entity& entity, float* location,
                                    const std::string& username,
                                    int facing_direction) {
@@ -511,10 +534,16 @@ static void make_trigger_area(
         // TODO we dont need to hard code these, why not just default to these
         .update_max_entrants(1)
         .update_progress_max(2.f)
-        .on_complete([]() {
+        .on_complete([](const Entities& all) {
             // TODO should be lobby only?
             // TODO only for host...
             GameState::s_toggle_to_planning();
+
+            for (std::shared_ptr<Entity> e : all) {
+                if (!e) continue;
+                if (!check_name(*e, strings::entity::PLAYER)) continue;
+                move_player_SERVER_ONLY(*e, {0, 0, 0});
+            }
         });
 }
 

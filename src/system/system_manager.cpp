@@ -537,8 +537,8 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
     if (ita.progress() < 1.f) return;
-    auto cb = ita.get_complete_fn();
-    if (cb) cb();
+    IsTriggerArea::CompleteFn cb = ita.get_complete_fn();
+    if (cb) cb(SystemManager::get().oldAll);
 }
 
 void process_trigger_area(Entity& entity, float dt) {
@@ -978,10 +978,15 @@ void SystemManager::update(const Entities& entities, float dt) {
     // log_info("num entities {}", entities.size());
     // TODO do we run game updates during paused?
 
-    if (GameState::s_in_round()) {
-        in_round_update(entities, dt);
-    } else {
-        planning_update(entities, dt);
+    if (GameState::s_is_lobby_like()) {
+        //
+    } else if (GameState::s_is_game_like()) {
+        if (GameState::s_in_round()) {
+            in_round_update(entities, dt);
+        } else {
+            planning_update(entities, dt);
+        }
+        game_like_update(entities, dt);
     }
 
     always_update(entities, dt);
@@ -1075,6 +1080,12 @@ void SystemManager::always_update(const Entities& entities, float dt) {
         // run only in lobby if we wanted to distinguish
         system_manager::render_manager::update_character_model_from_index(e_ptr,
                                                                           dt);
+    });
+}
+
+void SystemManager::game_like_update(const Entities& entities, float dt) {
+    for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
+        Entity& entity = *e_ptr;
 
         system_manager::run_timer(entity, dt);
         system_manager::process_pnumatic_pipe_pairing(entity, dt);

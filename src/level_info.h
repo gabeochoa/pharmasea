@@ -288,10 +288,28 @@ struct helper {
 struct LevelInfo {
     bool was_generated = false;
 
+    game::State last_generated = game::State::InMenu;
+
     Entities entities;
     Entities::size_type num_entities;
 
     std::string seed;
+
+    //
+    size_t hashed_seed;
+    std::mt19937 generator;
+    std::uniform_int_distribution<> dist;
+    //
+
+    void update_seed(const std::string& s) {
+        seed = s;
+        hashed_seed = hashString(seed);
+        generator = make_engine(hashed_seed);
+        // TODO leaving at 1 because we dont have a door to block the entrance
+        dist = std::uniform_int_distribution<>(1, MAX_MAP_SIZE - 1);
+
+        // TODO need to regenerate the map and clean up entitiyhelper
+    }
 
     virtual void onUpdate(Entities& players, float dt) {
         TRACY_ZONE_SCOPED;
@@ -299,6 +317,18 @@ struct LevelInfo {
     }
 
     virtual void onDraw(float dt) const {
+        auto cam = GLOBALS.get_ptr<GameCam>(strings::globals::GAME_CAM);
+        if (cam) {
+            raylib::DrawBillboard(
+                cam->camera, TextureLibrary::get().get(strings::textures::FACE),
+                {
+                    1.f,
+                    0.f,
+                    1.f,
+                },
+                TILESIZE, WHITE);
+        }
+
         TRACY_ZONE_SCOPED;
         SystemManager::get().render_entities(entities, dt);
     }
@@ -320,29 +350,18 @@ struct LevelInfo {
         if (was_generated) return;
         seed = new_seed;
         was_generated = true;
-        generate_map();
-    }
 
-    virtual void generate_map() = 0;
+        // TODO this will delete the lobby...
+        server_entities_DO_NOT_USE.clear();
+
+        generate_lobby_map();
+        generate_in_game_map();
+    }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value8b(num_entities);
-        s.container(entities, num_entities,
-                    [](S& s2, std::shared_ptr<Entity>& entity) {
-                        s2.ext(entity, bitsery::ext::StdSmartPtr{});
-                    });
-        s.value1b(was_generated);
-        s.text1b(seed, MAX_SEED_LENGTH);
-    }
-};
-
-struct LobbyMapInfo : public LevelInfo {
     vec3 lobby_origin = {LOBBY_ORIGIN, 0, LOBBY_ORIGIN};
 
-    virtual void generate_map() override {
+    void generate_lobby_map() {
         {
             auto& entity = EntityHelper::createEntity();
             furniture::make_character_switcher(
@@ -356,49 +375,13 @@ struct LobbyMapInfo : public LevelInfo {
                 text_lookup(strings::i18n::START_GAME));
         }
     }
-
-    virtual void onDraw(float dt) const override {
-        auto cam = GLOBALS.get_ptr<GameCam>(strings::globals::GAME_CAM);
-        if (cam) {
-            raylib::DrawBillboard(
-                cam->camera, TextureLibrary::get().get(strings::textures::FACE),
-                {
-                    1.f,
-                    0.f,
-                    1.f,
-                },
-                TILESIZE, WHITE);
-        }
-
-        LevelInfo::onDraw(dt);
+    void generate_in_game_map() {
+        generation::helper helper(EXAMPLE_MAP);
+        helper.generate();
+        helper.validate();
+        EntityHelper::invalidatePathCache();
     }
 
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<LevelInfo>{});
-    }
-};
-
-struct GameMapInfo : public LevelInfo {
-    //
-    size_t hashed_seed;
-    std::mt19937 generator;
-    std::uniform_int_distribution<> dist;
-    //
-
-    void update_seed(const std::string& s) {
-        seed = s;
-        hashed_seed = hashString(seed);
-        generator = make_engine(hashed_seed);
-        // TODO leaving at 1 because we dont have a door to block the entrance
-        dist = std::uniform_int_distribution<>(1, MAX_MAP_SIZE - 1);
-
-        // TODO need to regenerate the map and clean up entitiyhelper
-    }
-
-   private:
     auto get_rand_walkable() {
         vec2 location;
         do {
@@ -419,19 +402,18 @@ struct GameMapInfo : public LevelInfo {
         return location;
     }
 
-    virtual void generate_map() override {
-        server_entities_DO_NOT_USE.clear();
-
-        generation::helper helper(EXAMPLE_MAP);
-        helper.generate();
-        helper.validate();
-        EntityHelper::invalidatePathCache();
-    }
-
+   private:
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<LevelInfo>{});
+        s.value8b(num_entities);
+        s.container(entities, num_entities,
+                    [](S& s2, std::shared_ptr<Entity>& entity) {
+                        s2.ext(entity, bitsery::ext::StdSmartPtr{});
+                    });
+        s.value1b(was_generated);
+        s.text1b(seed, MAX_SEED_LENGTH);
+
         s.value8b(hashed_seed);
         // TODO these arent serializable...
         // s.object(generator);

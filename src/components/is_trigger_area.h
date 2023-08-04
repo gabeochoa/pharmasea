@@ -62,11 +62,12 @@ struct IsTriggerArea : public BaseComponent {
         return *this;
     }
 
-    auto& on_complete(std::function<void()> cb) {
+    typedef std::function<void(const Entities&)> CompleteFn;
+    auto& on_complete(CompleteFn cb) {
         complete_fn = cb;
         return *this;
     }
-    [[nodiscard]] auto get_complete_fn() { return complete_fn; }
+    [[nodiscard]] CompleteFn get_complete_fn() { return complete_fn; }
 
    private:
     int wanted_entrants = 1;
@@ -77,7 +78,7 @@ struct IsTriggerArea : public BaseComponent {
     float completion_time_max = 0.f;
     float completion_time_passed = 0.f;
 
-    std::function<void()> complete_fn;
+    CompleteFn complete_fn;
 
     friend bitsery::Access;
     template<typename S>

@@ -64,6 +64,7 @@ struct Server {
         pharmacy_map.reset(new Map("default_seed"));
         GLOBALS.set("server_map", pharmacy_map.get());
         GLOBALS.set("server_players", &players);
+        GLOBALS.set("server", this);
     }
 
     void send_map_state() {
@@ -285,22 +286,28 @@ struct Server {
         //      on every call because (mvt * dt) < epsilon
         //
 
+        send_player_location_packet(
+            incoming_client.client_id, updated_position,
+            static_cast<int>(player->get<Transform>().face_direction()),
+            player->get<HasName>().name());
+    }
+
+    void send_player_location_packet(int client_id, const vec3& pos,
+                                     int face_direction,
+                                     const std::string& name) {
         ClientPacket player_updated{
             .channel = Channel::UNRELIABLE,
-            .client_id = incoming_client.client_id,
+            .client_id = client_id,
             .msg_type = network::ClientPacket::MsgType::PlayerLocation,
-            .msg =
-                network::ClientPacket::PlayerInfo{
-                    .facing_direction = static_cast<int>(
-                        player->get<Transform>().face_direction()),
-                    .location =
-                        {
-                            updated_position.x,
-                            updated_position.y,
-                            updated_position.z,
-                        },
-                    .username = player->get<HasName>().name(),
-                },
+            .msg = network::ClientPacket::PlayerInfo{.facing_direction =
+                                                         face_direction,
+                                                     .location =
+                                                         {
+                                                             pos.x,
+                                                             pos.y,
+                                                             pos.z,
+                                                         },
+                                                     .username = name},
         };
 
         send_client_packet_to_all(player_updated);

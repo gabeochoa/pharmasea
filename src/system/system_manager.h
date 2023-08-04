@@ -125,21 +125,17 @@ struct SystemManager {
         }
     }
 
-    void process_state_change(
-        const std::vector<std::shared_ptr<Entity>>& entities, float dt);
+    void process_state_change(const Entities& entities, float dt);
 
-    void always_update(const std::vector<std::shared_ptr<Entity>>& entity_list,
-                       float dt);
+    void always_update(const Entities& entity_list, float dt);
 
-    void in_round_update(
-        const std::vector<std::shared_ptr<Entity>>& entity_list, float dt);
+    void game_like_update(const Entities& entity_list, float dt);
 
-    void planning_update(
-        const std::vector<std::shared_ptr<Entity>>& entity_list, float dt);
+    void in_round_update(const Entities& entity_list, float dt);
 
-    void render_normal(const std::vector<std::shared_ptr<Entity>>& entity_list,
-                       float dt) const;
+    void planning_update(const Entities& entity_list, float dt);
 
-    void render_debug(const std::vector<std::shared_ptr<Entity>>& entity_list,
-                      float dt) const;
+    void render_normal(const Entities& entity_list, float dt) const;
+
+    void render_debug(const Entities& entity_list, float dt) const;
 };
