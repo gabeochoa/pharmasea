@@ -21,6 +21,19 @@ struct Server {
     static void queue_packet(const ClientPacket& p);
     static void stop();
 
+    //
+    void send_player_location_packet(int client_id, const vec3& pos,
+                                     int face_direction,
+                                     const std::string& name);
+    int get_client_id_for_entity(Entity& entity) {
+        for (auto player : players) {
+            if (player.second->id == entity.id) {
+                return player.first;
+            }
+        }
+        return -1;
+    }
+
    private:
     typedef std::pair<internal::Client_t, std::string> ClientMessage;
     AtomicQueue<ClientMessage> incoming_message_queue;
@@ -72,9 +85,6 @@ struct Server {
                                      const ClientPacket& packet);
     void process_player_control_packet(
         const internal::Client_t& incoming_client, const ClientPacket& packet);
-    void send_player_location_packet(int client_id, const vec3& pos,
-                                     int face_direction,
-                                     const std::string& name);
 
     void send_announcement(HSteamNetConnection conn, const std::string& msg,
                            internal::InternalServerAnnouncement type);

@@ -5,6 +5,7 @@
 #include "components/is_progression_manager.h"
 #include "dataclass/ingredient.h"
 #include "entity.h"
+#include "network/server.h"
 //
 #include "components/adds_ingredient.h"
 #include "components/can_be_ghost_player.h"
@@ -115,8 +116,7 @@ void add_person_components(Entity& person) {
     person.addComponent<UsesCharacterModel>();
 }
 
-void make_entity(Entity& entity, const DebugOptions& options,
-                 vec3 p = {-2, -2, -2}) {
+void make_entity(Entity& entity, const DebugOptions& options, vec3 p) {
     entity.addComponent<DebugName>().update(options.name);
     add_entity_components(entity);
     entity.get<Transform>().update(p);
@@ -148,15 +148,17 @@ void move_player_SERVER_ONLY(Entity& entity, vec3 position) {
 
     // TODO if we have multiple local players then we need to specify which here
 
-    // TODO right now we dont update the player visually until the next time you
-    // move this can be fixed by uncommenting the code below, but we dont have
-    // access to that network::Info object due to include order
+    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
 
-    // network::Server* server = GLOBALS.get_ptr<network::Server*>("server");
-    // server.send_player_location_packet(
-    // // TODO change to SERVER_CLIENT_ID
-    // -1, position, static_cast<int>(transform.face_direction()),
-    // entity.get<HasName>().name());
+    int client_id = server->get_client_id_for_entity(entity);
+    if (client_id == -1) {
+        log_warn("Tried to find a client id for entity but didnt find one");
+        return;
+    }
+
+    server->send_player_location_packet(
+        client_id, position, static_cast<int>(transform.face_direction()),
+        entity.get<HasName>().name());
 }
 
 void update_player_remotely(Entity& entity, float* location,
@@ -209,8 +211,7 @@ void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
 // or add the ones above into it
 namespace furniture {
 void make_furniture(Entity& furniture, const DebugOptions& options, vec2 pos,
-                    Color face = PINK, Color base = PINK,
-                    bool is_static = false) {
+                    Color face, Color base, bool is_static) {
     make_entity(furniture, options);
 
     furniture.get<Transform>().init({pos.x, 0, pos.y},
@@ -286,7 +287,7 @@ void make_character_switcher(Entity& character_switcher, vec2 pos) {
     character_switcher.addComponent<ShowsProgressBar>();
 }
 
-void make_wall(Entity& wall, vec2 pos, Color c = ui::color::brown) {
+void make_wall(Entity& wall, vec2 pos, Color c) {
     furniture::make_furniture(wall, DebugOptions{.name = strings::entity::WALL},
                               pos, c, c, true);
 
@@ -368,9 +369,7 @@ void make_wall(Entity& wall, vec2 pos, Color c = ui::color::brown) {
     // }
 }
 
-void make_conveyer(Entity& conveyer, vec2 pos,
-                   const DebugOptions& options = {
-                       .name = strings::entity::CONVEYER}) {
+void make_conveyer(Entity& conveyer, vec2 pos, const DebugOptions& options) {
     furniture::make_furniture(conveyer, options, pos, ui::color::blue,
                               ui::color::blue);
     conveyer.get<CustomHeldItemPosition>().init(
@@ -379,16 +378,13 @@ void make_conveyer(Entity& conveyer, vec2 pos,
     conveyer.addComponent<CanBeTakenFrom>();
 }
 
-void make_grabber(Entity& grabber, vec2 pos,
-                  const DebugOptions& options = {
-                      .name = strings::entity::GRABBER}) {
+void make_grabber(Entity& grabber, vec2 pos, const DebugOptions& options) {
     furniture::make_conveyer(grabber, pos, options);
     grabber.addComponent<CanGrabFromOtherFurniture>();
 }
 
 void make_filtered_grabber(Entity& grabber, vec2 pos,
-                           const DebugOptions& options = DebugOptions{
-                               .name = strings::entity::FILTERED_GRABBER}) {
+                           const DebugOptions& options) {
     furniture::make_grabber(grabber, pos, options);
     // Initially set empty filter
     grabber.get<CanHoldItem>().set_filter(
@@ -508,9 +504,8 @@ void make_mop_holder(Entity& mop_holder, vec2 pos) {
                     EntityFilter::FilterStrength::Requirement));
 }
 
-void make_trigger_area(
-    Entity& trigger_area, vec3 pos, float width, float height,
-    const std::string& title = strings::entity::TRIGGER_AREA) {
+void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
+                       float height, const std::string& title) {
     make_entity(trigger_area, {strings::entity::TRIGGER_AREA}, pos);
 
     trigger_area.get<Transform>().update_size({
@@ -591,7 +586,7 @@ void make_vomit(Entity& vomit, vec2 pos) {
 
 namespace items {
 
-void make_item(Item& item, const DebugOptions& options, vec2 p = {0, 0}) {
+void make_item(Item& item, const DebugOptions& options, vec2 p) {
     make_entity(item, options, {p.x, 0, p.y});
     item.addComponent<IsItem>();
     // TODO Not everyone needs this but easier for now
@@ -811,7 +806,7 @@ void make_drink(Item& drink, vec2 pos) {
 
 void make_item_type(Item& item, const std::string& type_name,  //
                     vec2 pos,                                  //
-                    int index = -1                             //
+                    int index                                  //
 ) {
     // log_info("generating new item {} of type {} at {} subtype{}", item.id,
     // type_name, pos, index);
@@ -838,7 +833,7 @@ void make_item_type(Item& item, const std::string& type_name,  //
 
 }  // namespace items
 
-void make_customer(Entity& customer, vec2 p, bool has_order = true) {
+void make_customer(Entity& customer, vec2 p, bool has_order) {
     make_aiperson(customer, DebugOptions{.name = strings::entity::CUSTOMER},
                   vec::to3(p));
 
