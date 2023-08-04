@@ -131,23 +131,3 @@ inline std::ostream& operator<<(std::ostream& os, const GameCam& gc) {
     os << "\tangle:" << gc.angle << std::endl << std::endl;
     return os;
 }
-
-struct MenuCam {
-    raylib::Camera3D camera;
-
-    MenuCam() {
-        this->camera = {};
-        this->camera.position = (vec3){0.0f, 10.0f, 10.0f};
-        this->camera.target = (vec3){0.f};
-        this->camera.up = (vec3){0.0f, 1.0f, 0.0f};
-        this->camera.fovy = 45.0f;
-        this->camera.projection = raylib::CAMERA_PERSPECTIVE;
-
-        raylib::UpdateCamera(&(this->camera), raylib::CAMERA_FREE);
-    }
-
-    void updateCamera() {}
-
-    raylib::Camera3D get() { return this->camera; }
-    raylib::Camera3D* get_ptr() { return &(this->camera); }
-};

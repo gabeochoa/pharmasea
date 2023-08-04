@@ -10,14 +10,25 @@
 #include "../camera.h"
 #include "../engine.h"
 #include "../map.h"
+#include "raylib.h"
 
 struct GameLayer : public Layer {
     std::shared_ptr<Entity> active_player;
     std::shared_ptr<GameCam> cam;
+    std::shared_ptr<GameCam> seedcam;
     raylib::Model bag_model;
 
-    GameLayer() : Layer(strings::menu::GAME), cam(std::make_shared<GameCam>()) {
+    GameLayer()
+        : Layer(strings::menu::GAME),
+          cam(std::make_shared<GameCam>()),
+          seedcam(std::make_shared<GameCam>()) {
         GLOBALS.set(strings::globals::GAME_CAM, cam.get());
+
+        GLOBALS.set("seed_cam", seedcam.get());
+        seedcam->camera.position = vec3{0, 50, 0};
+        seedcam->camera.target = vec3{0, 0, 0};
+        seedcam->angle.y = 90.f * DEG2RAD;
+        seedcam->updateCamera();
     }
 
     virtual ~GameLayer() {}
@@ -89,6 +100,8 @@ struct GameLayer : public Layer {
         TRACY_ZONE_SCOPED;
         if (!MenuState::s_in_game()) return;
 
+        ext::clear_background(Color{200, 200, 200, 255});
+
         auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
         const auto network_debug_mode_on =
             GLOBALS.get_or_default<bool>("network_ui_enabled", false);
@@ -96,7 +109,13 @@ struct GameLayer : public Layer {
             map_ptr = GLOBALS.get_ptr<Map>("server_map");
         }
 
-        ext::clear_background(Color{200, 200, 200, 255});
+        raylib::BeginMode3D((*seedcam).get());
+        raylib::rlTranslatef(0, 30, -10);
+        // raylib::DrawPlane((vec3){0.0f, TILESIZE, 0.0f}, (vec2){256.0f,
+        // 256.0f}, DARKGRAY);
+        if (map_ptr) map_ptr->onDraw(dt);
+        raylib::EndMode3D();
+
         raylib::BeginMode3D((*cam).get());
         {
             raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f},
