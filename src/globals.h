@@ -22,6 +22,7 @@ struct Entity;
 
 constexpr float GATHER_SPOT = -20.f;
 constexpr int MAX_SEARCH_RANGE = 100;
+constexpr float LOBBY_ORIGIN = 50.f;
 
 static bool ENABLE_MODELS = true;
 static bool ENABLE_SOUND = true;

@@ -391,7 +391,7 @@ struct Server {
         // create the player if they dont already exist
         if (!players.contains(client_id)) {
             std::shared_ptr<Entity> E = std::make_shared<Entity>();
-            make_player(*E, {0, 0, 0});
+            make_player(*E, {LOBBY_ORIGIN, 0, LOBBY_ORIGIN});
             players[client_id] = E;
         }
 

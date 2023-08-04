@@ -8,6 +8,7 @@
 #include "entity.h"
 #include "entity_makers.h"
 #include "entityhelper.h"
+#include "globals.h"
 #include "strings.h"
 #include "system/system_manager.h"
 #include "tests/test_maps.h"
@@ -339,16 +340,19 @@ struct LevelInfo {
 };
 
 struct LobbyMapInfo : public LevelInfo {
+    vec3 lobby_origin = {LOBBY_ORIGIN, 0, LOBBY_ORIGIN};
+
     virtual void generate_map() override {
         {
             auto& entity = EntityHelper::createEntity();
-            furniture::make_character_switcher(entity, vec2{5.f, 5.f});
+            furniture::make_character_switcher(
+                entity, vec::to2(lobby_origin) + vec2{5.f, 5.f});
         }
 
         {
             auto& entity = EntityHelper::createEntity();
             furniture::make_trigger_area(
-                entity, {5, TILESIZE / -2.f, 10}, 8, 3,
+                entity, lobby_origin + vec3{5, TILESIZE / -2.f, 10}, 8, 3,
                 text_lookup(strings::i18n::START_GAME));
         }
     }
