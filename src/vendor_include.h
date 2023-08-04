@@ -26,24 +26,9 @@
 // TODO cant use format yet due to no std::format yet (though not even sure what
 // its needed for) #include <magic_enum/magic_enum_format.hpp>
 #include <magic_enum/magic_enum_fuse.hpp>
-
-//
-#include <bitsery/adapter/buffer.h>
-#include <bitsery/bitsery.h>
-#include <bitsery/ext/inheritance.h>
-#include <bitsery/ext/pointer.h>
-#include <bitsery/ext/std_bitset.h>
-#include <bitsery/ext/std_map.h>
-#include <bitsery/ext/std_optional.h>
-#include <bitsery/ext/std_smart_ptr.h>
-#include <bitsery/ext/std_tuple.h>
-#include <bitsery/ext/std_variant.h>
-#include <bitsery/traits/array.h>
-#include <bitsery/traits/deque.h>
-#include <bitsery/traits/string.h>
-#include <bitsery/traits/vector.h>
-
 #include <nlohmann/json.hpp>
+
+#include "bitsery_include.h"
 
 namespace bitsery {
 template<typename S>
