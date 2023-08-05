@@ -168,6 +168,7 @@ inline bool render_model_highlighted(const Entity& entity, float) {
     if (entity.is_missing<ModelRenderer>()) return false;
     if (entity.is_missing<CanBeHighlighted>()) return false;
     if (entity.is_missing<Transform>()) return false;
+
     const Transform& transform = entity.get<Transform>();
     const ModelRenderer& renderer = entity.get<ModelRenderer>();
     if (renderer.missing()) return false;

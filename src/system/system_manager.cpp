@@ -146,8 +146,8 @@ void reset_highlighted(Entity& entity, float) {
 }
 
 void highlight_facing_furniture(Entity& entity, float) {
-    const Transform& transform = entity.get<Transform>();
     if (entity.is_missing<CanHighlightOthers>()) return;
+    const Transform& transform = entity.get<Transform>();
     // TODO add a player reach component
     const CanHighlightOthers& cho = entity.get<CanHighlightOthers>();
 
@@ -1000,8 +1000,8 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
 
     all.reserve(players.size() + ents.size());
 
-    all.insert(all.end(), players.begin(), players.end());
     all.insert(all.end(), ents.begin(), ents.end());
+    all.insert(all.end(), players.begin(), players.end());
 
     oldAll = all;
 

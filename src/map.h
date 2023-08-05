@@ -37,7 +37,9 @@ struct Map {
 
     Entities entities() const { return game_info.entities; }
 
-    void onUpdate(float dt) { _onUpdate(remote_players_NOT_SERIALIZED, dt); }
+    void onUpdate(float dt) {  //
+        _onUpdate(remote_players_NOT_SERIALIZED, dt);
+    }
 
     void onUpdateLocalPlayers(float dt) {
         SystemManager::get().update_local_players(local_players_NOT_SERIALIZED,
