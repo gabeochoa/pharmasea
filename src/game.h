@@ -4,6 +4,7 @@
 // steam networking uses an "app id" that we dont have
 // also the code isnt written yet :)
 // TODO: add support for steam connections
+#include "layers/minimaplayer.h"
 #define BUILD_WITHOUT_STEAM
 
 // Enable tracing
@@ -34,6 +35,7 @@
 #include "layers/gamelayer.h"
 #include "layers/menulayer.h"
 #include "layers/menustatelayer.h"
+#include "layers/minimaplayer.h"
 #include "layers/networklayer.h"
 #include "layers/pauselayer.h"
 #include "layers/settingslayer.h"
@@ -113,6 +115,7 @@ void startup() {
         new PauseLayer(),
         //
         new NetworkLayer(),
+        new MinimapLayer(),
         new GameLayer(),
         new GameDebugLayer(),
         new AboutLayer(),

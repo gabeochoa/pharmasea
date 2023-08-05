@@ -15,23 +15,15 @@
 struct GameLayer : public Layer {
     std::shared_ptr<Entity> active_player;
     std::shared_ptr<GameCam> cam;
-    std::shared_ptr<GameCam> seedcam;
     raylib::Model bag_model;
+    raylib::RenderTexture2D game_render_texture;
 
-    GameLayer()
-        : Layer(strings::menu::GAME),
-          cam(std::make_shared<GameCam>()),
-          seedcam(std::make_shared<GameCam>()) {
+    GameLayer() : Layer(strings::menu::GAME), cam(std::make_shared<GameCam>()) {
         GLOBALS.set(strings::globals::GAME_CAM, cam.get());
-
-        GLOBALS.set("seed_cam", seedcam.get());
-        seedcam->camera.position = vec3{0, 50, 0};
-        seedcam->camera.target = vec3{0, 0, 0};
-        seedcam->angle.y = 90.f * DEG2RAD;
-        seedcam->updateCamera();
+        game_render_texture = raylib::LoadRenderTexture(WIN_W(), WIN_H());
     }
 
-    virtual ~GameLayer() {}
+    virtual ~GameLayer() { raylib::UnloadRenderTexture(game_render_texture); }
 
     bool onGamepadAxisMoved(GamepadAxisMovedEvent&) override { return false; }
 
@@ -96,25 +88,14 @@ struct GameLayer : public Layer {
         }
     }
 
-    virtual void onDraw(float dt) override {
-        TRACY_ZONE_SCOPED;
-        if (!MenuState::s_in_game()) return;
-
-        ext::clear_background(Color{200, 200, 200, 255});
-
+    void draw_world(float dt) {
+        // ext::clear_background(Color{200, 200, 200, 255});
         auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
         const auto network_debug_mode_on =
             GLOBALS.get_or_default<bool>("network_ui_enabled", false);
         if (network_debug_mode_on) {
             map_ptr = GLOBALS.get_ptr<Map>("server_map");
         }
-
-        raylib::BeginMode3D((*seedcam).get());
-        raylib::rlTranslatef(0, 30, -10);
-        // raylib::DrawPlane((vec3){0.0f, TILESIZE, 0.0f}, (vec2){256.0f,
-        // 256.0f}, DARKGRAY);
-        if (map_ptr) map_ptr->onDraw(dt);
-        raylib::EndMode3D();
 
         raylib::BeginMode3D((*cam).get());
         {
@@ -133,6 +114,16 @@ struct GameLayer : public Layer {
             // }
         }
         raylib::EndMode3D();
+    }
+
+    virtual void onDraw(float dt) override {
+        TRACY_ZONE_SCOPED;
+        if (!MenuState::s_in_game()) return;
+
+        auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
+
+        ext::clear_background(Color{200, 200, 200, 255});
+        draw_world(dt);
 
         // note: for ui stuff
         if (map_ptr) map_ptr->onDrawUI(dt);
