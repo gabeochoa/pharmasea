@@ -29,7 +29,11 @@ struct Map {
         update_seed(seed);
     }
 
-    void update_seed(const std::string& s) { game_info.update_seed(s); }
+    void update_seed(const std::string& s) {
+        log_info("changing seed from {} to {}", seed, s);
+        seed = s;
+        game_info.update_seed(s);
+    }
 
     Entities entities() const { return game_info.entities; }
 

@@ -96,6 +96,7 @@ constexpr const char* PLAYER = "player";
 constexpr const char* CUSTOMER = "customer";
 constexpr const char* TABLE = "table";
 constexpr const char* CHARACTER_SWITCHER = "character_switcher";
+constexpr const char* MAP_RANDOMIZER = "map_randomizer";
 constexpr const char* WALL = "wall";
 constexpr const char* CONVEYER = "conveyer";
 constexpr const char* GRABBER = "grabber";

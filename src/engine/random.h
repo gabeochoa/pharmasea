@@ -20,6 +20,16 @@
     }
 }
 
+[[nodiscard]] inline std::string randString(int length) {
+    std::string out;
+
+    for (int i = 0; i < length; i++) {
+        out += (char) (randIn('a', 'z'));
+    }
+
+    return out;
+}
+
 [[nodiscard]] inline std::mt19937 make_engine(size_t seed) {
     std::mt19937 gen((unsigned int) seed);
     return gen;

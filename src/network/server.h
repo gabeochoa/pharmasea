@@ -34,6 +34,8 @@ struct Server {
         return -1;
     }
 
+    std::shared_ptr<Map> get_map_SERVER_ONLY() { return pharmacy_map; }
+
    private:
     typedef std::pair<internal::Client_t, std::string> ClientMessage;
     AtomicQueue<ClientMessage> incoming_message_queue;

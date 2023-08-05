@@ -4,6 +4,7 @@
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
 #include "dataclass/ingredient.h"
+#include "engine/ui_color.h"
 #include "entity.h"
 #include "network/server.h"
 //
@@ -285,6 +286,32 @@ void make_character_switcher(Entity& character_switcher, vec2 pos) {
             }
         });
     character_switcher.addComponent<ShowsProgressBar>();
+}
+
+void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
+    furniture::make_furniture(
+        map_randomizer, DebugOptions{.name = strings::entity::MAP_RANDOMIZER},
+        pos, ui::color::baby_blue, ui::color::baby_pink);
+
+    map_randomizer.addComponent<HasWork>().init(
+        [](Entity&, HasWork& hasWork, Entity&, float dt) {
+            const float amt = 1.5f;
+            hasWork.increase_pct(amt * dt);
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
+                if (!is_server()) {
+                    log_warn(
+                        "you are calling a server only function from a client "
+                        "context, this is probably gonna crash");
+                }
+
+                network::Server* server =
+                    GLOBALS.get_ptr<network::Server>("server");
+                server->get_map_SERVER_ONLY()->update_seed(randString(10));
+            }
+        });
+
+    map_randomizer.addComponent<ShowsProgressBar>();
 }
 
 void make_wall(Entity& wall, vec2 pos, Color c) {

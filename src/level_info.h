@@ -370,6 +370,12 @@ struct LevelInfo {
 
         {
             auto& entity = EntityHelper::createEntity();
+            furniture::make_map_randomizer(
+                entity, vec::to2(lobby_origin) + vec2{7.f, 7.f});
+        }
+
+        {
+            auto& entity = EntityHelper::createEntity();
             furniture::make_trigger_area(
                 entity, lobby_origin + vec3{5, TILESIZE / -2.f, 10}, 8, 3,
                 text_lookup(strings::i18n::START_GAME));
