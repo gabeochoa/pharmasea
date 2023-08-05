@@ -55,6 +55,29 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+
+### alpha_0.23.08.05
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (UI) The first option in a dropdown isnt selectable 
+
+impact
+- Added Seed Changer! 
+    - The generated map is really simple right now so use the default one, but it works
+    - Also shows a minimap with a visual of the generated map
+    - We also validate certain things about the map (like spawner / timer / path to register) 
+- Added more rope between soda stream 
+
+bug fixes
+- Furniture highlighting works again! 
+- Increase network bandwith which reduce lag (but is a bandaid) 
+
+better eng 
+- Merged lobby and game worlds so the code is a ton easier 
+- Split a server/game into cpp
+- Added basic logging for windows 
+
 ### alpha_0.23.07.30
 
 Known Issues
