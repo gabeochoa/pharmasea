@@ -13,6 +13,7 @@
 #include "system/system_manager.h"
 #include "tests/test_maps.h"
 
+constexpr int MIN_MAP_SIZE = 5;
 constexpr int MAX_MAP_SIZE = 20;
 constexpr int MAX_SEED_LENGTH = 20;
 
@@ -302,13 +303,14 @@ struct LevelInfo {
     //
 
     void update_seed(const std::string& s) {
+        log_info("level info update seed {}", s);
         seed = s;
         hashed_seed = hashString(seed);
         generator = make_engine(hashed_seed);
         // TODO leaving at 1 because we dont have a door to block the entrance
         dist = std::uniform_int_distribution<>(1, MAX_MAP_SIZE - 1);
 
-        // TODO need to regenerate the map and clean up entitiyhelper
+        was_generated = false;
     }
 
     virtual void onUpdate(Entities& players, float dt) {
@@ -348,11 +350,15 @@ struct LevelInfo {
 
     void ensure_generated_map(const std::string& new_seed) {
         if (was_generated) return;
+        log_info("generating map with new seed: {}", new_seed);
         seed = new_seed;
         was_generated = true;
 
-        // TODO this will delete the lobby...
+        // TODO idk which of these i need and which i dont
+        // TODO this will delete lobby...
         server_entities_DO_NOT_USE.clear();
+        entities.clear();
+        EntityHelper::delete_all_entities();
 
         generate_lobby_map();
         generate_in_game_map();
@@ -381,8 +387,106 @@ struct LevelInfo {
                 text_lookup(strings::i18n::START_GAME));
         }
     }
-    void generate_in_game_map() {
+
+    void generate_default_seed() {
         generation::helper helper(EXAMPLE_MAP);
+        helper.generate();
+        helper.validate();
+        EntityHelper::invalidatePathCache();
+    }
+
+    [[nodiscard]] int gen_rand(int a, int b) {
+        return a + (generator() % (b - a));
+    }
+
+    void generate_in_game_map() {
+        if (seed == "default_seed") {
+            generate_default_seed();
+            return;
+        }
+
+        std::vector<std::string> lines;
+
+        int rows = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
+        int cols = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
+
+        const auto get_char = [lines](int i, int j) -> char {
+            if (i < 0) return '.';
+            if (j < 0) return '.';
+            if (i >= (int) lines.size()) return '.';
+            if (j >= (int) lines[i].size()) return '.';
+            return lines[i][j];
+        };
+
+        const auto _is_empty = [get_char, lines](int i, int j) -> bool {
+            // TODO probably should allow caller to set default on fail
+            return get_char(i, j) == '.';
+        };
+
+        const auto _get_valid_register_location =
+            [_is_empty, rows, cols, this]() -> std::pair<int, int> {
+            int tries = 0;
+            int x;
+            int y;
+            do {
+                x = gen_rand(1, rows - 1);
+                y = gen_rand(1, cols - 1);
+                if (tries++ > 100) {
+                    x = 0;
+                    y = 0;
+                    break;
+                }
+            } while (  //
+                !_is_empty(x, y) && !_is_empty(x, y + 1));
+            return {x, y};
+        };
+
+        // setup_lines
+        {
+            for (int i = 0; i < rows + 5; i++) {
+                std::string l(cols + 10, '.');
+                lines.push_back(l);
+            }
+        }
+
+        // setup_boundary_walls
+        {
+            for (int i = 0; i < rows; i++) {
+                if (i == 0 || i == rows - 1) {
+                    lines[i] = std::string(cols, '#');
+                    continue;
+                }
+                lines[i][0] = generation::WALL;
+                lines[i][cols] = generation::WALL;
+            }
+
+            // Add one empty spot so that we can get into the box
+            int y = gen_rand(1, rows - 1);
+            lines[y][cols] = '.';
+        }
+
+        // add_customer_spawner + sophie
+        {
+            lines[1][cols + 1] = generation::CUST_SPAWNER;
+            lines[2][cols + 1] = generation::SOPHIE;
+        }
+
+        // place register
+        {
+            auto [x, y] = _get_valid_register_location();
+            lines[x][y] = generation::REGISTER;
+            log_info("placing register at {} {}", x, y);
+        }
+
+        for (auto line : lines) {
+            log_info("{}", line);
+        }
+
+        //////////
+        //////////
+        //////////
+
+        generation::helper helper(lines);
         helper.generate();
         helper.validate();
         EntityHelper::invalidatePathCache();

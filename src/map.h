@@ -12,7 +12,7 @@
 #include "system/system_manager.h"
 
 struct Map {
-    bool showMinimap = false;
+    bool showMinimap = true;
 
     LevelInfo game_info;
 
@@ -85,11 +85,6 @@ struct Map {
     // These are called before every "send_map_state" when server
     // sends everything over to clients
     void grab_things() { game_info.grab_things(); }
-
-    // TODO do we need this
-    void ensure_generated_map() {
-        // game_info.ensure_generated_map(seed);
-    }
 
    private:
     friend bitsery::Access;

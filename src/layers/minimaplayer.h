@@ -34,12 +34,13 @@ struct MinimapLayer : public Layer {
         auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
         if (!map_ptr) return;
 
-        if (!map_ptr->showMinimap) return;
+        // Only show minimap during lobby
+        if (GameState::get().s_is_game_like()) return;
 
         raylib::BeginMode3D((*cam).get());
         {
-            raylib::rlTranslatef(-5, 0, 5);
-            float scale = 0.20f;
+            raylib::rlTranslatef(-5, 0, 7.f);
+            float scale = 0.10f;
             raylib::rlScalef(scale, scale, scale);
             raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f},
                               (vec2){40.0f, 40.0f}, DARKGRAY);

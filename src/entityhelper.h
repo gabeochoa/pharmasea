@@ -169,6 +169,11 @@ struct EntityHelper {
         entities.erase(newend, entities.end());
     }
 
+    static void delete_all_entities() {
+        Entities& entities = get_entities();
+        entities.clear();
+    }
+
     enum ForEachFlow {
         NormalFlow = 0,
         Continue = 1,

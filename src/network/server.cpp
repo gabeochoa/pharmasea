@@ -23,7 +23,6 @@ void Server::stop() { g_server->running = false; }
 
 void Server::send_map_state() {
     pharmacy_map->grab_things();
-    pharmacy_map->ensure_generated_map();
 
     ClientPacket map_packet{
         .channel = Channel::RELIABLE,
