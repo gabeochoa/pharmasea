@@ -89,7 +89,6 @@ struct GameLayer : public Layer {
     }
 
     void draw_world(float dt) {
-        // ext::clear_background(Color{200, 200, 200, 255});
         auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
         const auto network_debug_mode_on =
             GLOBALS.get_or_default<bool>("network_ui_enabled", false);

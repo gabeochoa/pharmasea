@@ -32,6 +32,9 @@ struct MinimapLayer : public Layer {
         if (!MenuState::s_in_game()) return;
 
         auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
+        if (!map_ptr) return;
+
+        if (!map_ptr->showMinimap) return;
 
         raylib::BeginMode3D((*cam).get());
         {
@@ -40,7 +43,7 @@ struct MinimapLayer : public Layer {
             raylib::rlScalef(scale, scale, scale);
             raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f},
                               (vec2){40.0f, 40.0f}, DARKGRAY);
-            if (map_ptr) map_ptr->onDraw(dt);
+            map_ptr->onDraw(dt);
         }
         raylib::EndMode3D();
     }

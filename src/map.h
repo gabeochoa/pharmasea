@@ -12,6 +12,8 @@
 #include "system/system_manager.h"
 
 struct Map {
+    bool showMinimap = false;
+
     LevelInfo game_info;
 
     Entities local_players_NOT_SERIALIZED;
@@ -90,5 +92,6 @@ struct Map {
     template<typename S>
     void serialize(S& s) {
         s.object(game_info);
+        s.value1b(showMinimap);
     }
 };
