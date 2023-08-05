@@ -3,16 +3,27 @@
 
 #include "base_component.h"
 
+struct Entity;
+
+typedef std::function<void(Entity&, bool)> OnChangeFn;
+
 struct CanBeHighlighted : public BaseComponent {
     virtual ~CanBeHighlighted() {}
 
     [[nodiscard]] bool is_highlighted() const { return highlighted; }
     [[nodiscard]] bool is_not_highlighted() const { return !is_highlighted(); }
 
-    void update(bool is_h) { highlighted = is_h; }
+    void update(Entity& entity, bool is_h) {
+        if (highlighted != is_h && onchange) onchange(entity, is_h);
+
+        highlighted = is_h;
+    }
+
+    void set_on_change(OnChangeFn cb) { onchange = cb; }
 
    private:
     bool highlighted;
+    OnChangeFn onchange;
 
     friend bitsery::Access;
     template<typename S>

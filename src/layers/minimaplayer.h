@@ -35,7 +35,7 @@ struct MinimapLayer : public Layer {
         if (!map_ptr) return;
 
         // Only show minimap during lobby
-        if (GameState::get().s_is_game_like()) return;
+        if (!map_ptr->showMinimap) return;
 
         raylib::BeginMode3D((*cam).get());
         {

@@ -142,7 +142,7 @@ void update_held_item_position(Entity& entity, float) {
 void reset_highlighted(Entity& entity, float) {
     if (entity.is_missing<CanBeHighlighted>()) return;
     CanBeHighlighted& cbh = entity.get<CanBeHighlighted>();
-    cbh.update(false);
+    cbh.update(entity, false);
 }
 
 void highlight_facing_furniture(Entity& entity, float) {
@@ -156,7 +156,7 @@ void highlight_facing_furniture(Entity& entity, float) {
         [](auto e) { return e->template has<CanBeHighlighted>(); });
     if (!match) return;
 
-    match->get<CanBeHighlighted>().update(true);
+    match->get<CanBeHighlighted>().update(entity, true);
 }
 
 // TODO We need like a temporary storage for this

@@ -12,7 +12,7 @@
 #include "system/system_manager.h"
 
 struct Map {
-    bool showMinimap = true;
+    bool showMinimap = false;
 
     LevelInfo game_info;
 
@@ -30,7 +30,6 @@ struct Map {
     }
 
     void update_seed(const std::string& s) {
-        log_info("changing seed from {} to {}", seed, s);
         seed = s;
         game_info.update_seed(s);
     }
