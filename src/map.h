@@ -29,6 +29,10 @@ struct Map {
         update_seed(seed);
     }
 
+    void update_map(const Map& new_map) {
+        this->showMinimap = new_map.showMinimap;
+    }
+
     void update_seed(const std::string& s) {
         seed = s;
         game_info.update_seed(s);

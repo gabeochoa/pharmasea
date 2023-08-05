@@ -259,9 +259,7 @@ struct Client {
                 client_entities_DO_NOT_USE.clear();
                 client_entities_DO_NOT_USE = info.map.entities();
 
-                // TODO need some better way to copy over the items we need
-
-                map->showMinimap = info.map.showMinimap;
+                map->update_map(info.map);
 
             } break;
 
