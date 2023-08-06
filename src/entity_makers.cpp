@@ -47,6 +47,7 @@
 #include "components/simple_colored_box_renderer.h"
 #include "components/transform.h"
 #include "components/uses_character_model.h"
+#include "dataclass/names.h"
 #include "recipe_library.h"
 #include "strings.h"
 

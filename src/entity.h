@@ -1,20 +1,15 @@
 
 #pragma once
 
+#include "external_include.h"
+//
 #include "entity_type.h"
 //
 #include "components/base_component.h"
 //
-#include "components/debug_name.h"
-#include "components/transform.h"
-//
-// Item related components
-#include "components/has_subtype.h"
-#include "components/is_item.h"
-//
-//
 #include "engine/assert.h"
-#include "external_include.h"
+#include "engine/log.h"
+#include "engine/type_name.h"
 #include "strings.h"
 //
 #include <bitsery/ext/pointer.h>
@@ -58,14 +53,7 @@ struct Entity {
 
     bool cleanup = false;
 
-    ~Entity() {
-        for (auto itr = componentArray.begin(); itr != componentArray.end();
-             itr++) {
-            if (itr->second) delete (itr->second);
-        }
-        componentArray.clear();
-    }
-
+    ~Entity();
     Entity(const Entity&) = delete;
     Entity(Entity&& other) noexcept = default;
 
@@ -106,13 +94,13 @@ struct Entity {
         log_trace("adding component_id:{} {} to entity_id: {}",
                   components::get_type_id<T>(), type_name<T>(), id);
 
+        // checks for duplicates
         if (this->has<T>()) {
             log_warn(
                 "This entity {}, {} already has this component attached id: "
                 "{}, "
                 "component {}",
-                this->get<DebugName>().name(), id, components::get_type_id<T>(),
-                type_name<T>());
+                name(), id, components::get_type_id<T>(), type_name<T>());
 
             VALIDATE(false, "duplicate component");
             // Commented out on purpose because the assert is gonna kill the
@@ -144,39 +132,32 @@ struct Entity {
         addAll<B, Rest...>();
     }
 
+    void errorIfMissingDebugName() const;
+
+    const std::string_view name() const;
+
     template<typename T>
-    [[nodiscard]] T& get() {
-        if (this->is_missing<DebugName>()) {
-            log_error(
-                "This entity is missing debugname which will cause issues for "
-                "if the get<> is missing");
-        }
+    void warnIfMissingComponent() const {
         if (this->is_missing<T>()) {
             log_warn(
                 "This entity {} {} is missing id: {}, "
                 "component {}",
-                this->get<DebugName>().name(), id, components::get_type_id<T>(),
-                type_name<T>());
+                name(), id, components::get_type_id<T>(), type_name<T>());
         }
+    }
+
+    template<typename T>
+    [[nodiscard]] T& get() {
+        errorIfMissingDebugName();
+        warnIfMissingComponent<T>();
         BaseComponent* comp = componentArray.at(components::get_type_id<T>());
         return *static_cast<T*>(comp);
     }
 
     template<typename T>
     [[nodiscard]] const T& get() const {
-        // TODO gotta be a way to merge these two
-        if (this->is_missing<DebugName>()) {
-            log_error(
-                "This entity is missing debugname which will cause issues for "
-                "if the get<> is missing");
-        }
-        if (this->is_missing<T>()) {
-            log_warn(
-                "This entity {} {} is missing id: {}, "
-                "component {}",
-                this->get<DebugName>().name(), id, components::get_type_id<T>(),
-                type_name<T>());
-        }
+        errorIfMissingDebugName();
+        warnIfMissingComponent<T>();
         BaseComponent* comp = componentArray.at(components::get_type_id<T>());
         return *static_cast<T*>(comp);
     }
@@ -198,8 +179,6 @@ struct Entity {
               });
     }
 };
-
-typedef Transform::Transform::FrontFaceDirection EntityDir;
 
 namespace bitsery {
 template<typename S>
@@ -237,6 +216,4 @@ inline OptEntity asOpt(Entity& e) { return std::make_optional(std::ref(e)); }
 inline Entity& asE(RefEntity& refe) { return refe.get(); }
 inline RefEntity asRef(Entity& e) { return std::ref(e); }
 
-static bool check_type(const Entity& entity, EntityType type) {
-    return entity.get<DebugName>().is_type(type);
-}
+bool check_type(const Entity& entity, EntityType type);

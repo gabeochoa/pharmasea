@@ -5,6 +5,7 @@
 #include <string>  // for basic_string
 
 #include "components/has_work.h"
+#include "engine/ui_color.h"
 #include "entity.h"   // for Item, DebugOptions, Entity
 #include "raylib.h"   // for Color, PINK
 #include "strings.h"  // for GRABBER, CONVEYER, FILTERED_GRABBER
