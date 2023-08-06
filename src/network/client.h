@@ -197,7 +197,7 @@ struct Client {
             update_player_rare_remotely(*rp, model_index, last_ping);
         };
 
-        ClientPacket packet = client_p->deserialize_to_packet(msg);
+        ClientPacket packet = deserialize_to_packet(msg);
 
         // log_info("Client: recieved packet {}", packet.msg_type);
 

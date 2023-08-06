@@ -35,7 +35,6 @@
 #include "../../engine/log.h"
 #include "../../globals.h"
 #include "../shared.h"
-#include "bitsery/serializer.h"
 #include "steam/isteamnetworkingsockets.h"
 
 namespace network {
@@ -138,20 +137,6 @@ struct Client {
     void send_string_to_server(const std::string &msg, Channel channel) {
         interface->SendMessageToConnection(
             connection, msg.c_str(), (uint32) msg.length(), channel, nullptr);
-    }
-
-    ClientPacket deserialize_to_packet(const std::string &msg) {
-        TContext ctx{};
-        std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
-            MyPolymorphicClasses{});
-
-        BitseryDeserializer des{ctx, msg.begin(), msg.size()};
-
-        ClientPacket packet;
-        des.object(packet);
-        // TODO obviously theres a ton of validation we can do here but idk
-        // https://github.com/fraillt/bitsery/blob/master/examples/smart_pointers_with_polymorphism.cpp
-        return packet;
     }
 
     void send_packet_to_server(ClientPacket packet) {
