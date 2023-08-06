@@ -53,7 +53,7 @@ constexpr const float ROUND_LENGTH_S = 100.f;
 
 // TODO if we hit the end of the day and didnt spawn everyone...
 // what should we do?
-constexpr const int NUM_CUSTOMERS = 10;
-constexpr const float TIME_BETWEEN_CUSTOMERS_S = 1.f;
+constexpr const int NUM_CUSTOMERS = 2;
+constexpr const float TIME_BETWEEN_CUSTOMERS_S = 2.f;
 
 }  // namespace round_settings
