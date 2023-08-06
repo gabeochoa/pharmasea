@@ -271,8 +271,8 @@ inline void render_trigger_area(const Entity& entity, float dt) {
             entity.id, pos);
 
     if (ita.should_wave()) {
-        raylib::WaveTextConfig waveConfig = {.waveRange = {0, 0, TILESIZE},
-                                             .waveSpeed = {0, 0, 0.01f},
+        raylib::WaveTextConfig waveConfig = {.waveRange = {0, 0, 1},
+                                             .waveSpeed = {0.0f, 0.0f, 0.01f},
                                              .waveOffset = {0.f, 0.f, 0.2f}};
         // TODO we probably should have all of this kind of thing in the config
         // for the components
@@ -281,11 +281,11 @@ inline void render_trigger_area(const Entity& entity, float dt) {
             font,
             fmt::format("~~{}~~", text_lookup(strings::i18n::LOADING)).c_str(),
             text_position, fsize,
-            4,                  // font spacing
-            4,                  // line spacing
-            false,              // backface
-            &waveConfig,        //
-            now::current_ms(),  //
+            4,                      // font spacing
+            4,                      // line spacing
+            false,                  // backface
+            &waveConfig,            //
+            now::current_hrc_ms(),  //
             WHITE);
 
     } else {
