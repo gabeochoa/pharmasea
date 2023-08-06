@@ -71,39 +71,46 @@ void serialize(S& s, Color& data) {
 
 // For bitwise operations
 template<typename T>
-typename std::enable_if<std::is_enum<T>::value, T>::type operator~(T a) {
+constexpr auto operator~(T a) ->
+    typename std::enable_if<std::is_enum<T>::value, T>::type {
     return static_cast<T>(~static_cast<int>(a));
 }
 
 template<typename T>
-typename std::enable_if<std::is_enum<T>::value, T>::type operator|(T a, T b) {
+constexpr auto operator|(T a, T b) ->
+    typename std::enable_if<std::is_enum<T>::value, T>::type {
     return static_cast<T>((static_cast<int>(a) | static_cast<int>(b)));
 }
 
 template<typename T>
-typename std::enable_if<std::is_enum<T>::value, T>::type operator&(T a, T b) {
+constexpr auto operator&(T a, T b) ->
+    typename std::enable_if<std::is_enum<T>::value, T>::type {
     return static_cast<T>((static_cast<int>(a) & static_cast<int>(b)));
 }
 
 template<typename T>
-typename std::enable_if<std::is_enum<T>::value, T>::type operator^(T a, T b) {
+constexpr auto operator^(T a, T b) ->
+    typename std::enable_if<std::is_enum<T>::value, T>::type {
     return static_cast<T>((static_cast<int>(a) ^ static_cast<int>(b)));
 }
 
 template<typename T>
-typename std::enable_if<std::is_enum<T>::value, T>::type operator|=(T& a, T b) {
+constexpr auto operator|=(T& a, T b) ->
+    typename std::enable_if<std::is_enum<T>::value, T>::type {
     return reinterpret_cast<T&>(
         (reinterpret_cast<int&>(a) |= static_cast<int>(b)));
 }
 
 template<typename T>
-typename std::enable_if<std::is_enum<T>::value, T>::type operator&=(T& a, T b) {
+constexpr auto operator&=(T& a, T b) ->
+    typename std::enable_if<std::is_enum<T>::value, T>::type {
     return reinterpret_cast<T&>(
         (reinterpret_cast<int&>(a) &= static_cast<int>(b)));
 }
 
 template<typename T>
-typename std::enable_if<std::is_enum<T>::value, T>::type operator^=(T& a, T b) {
+constexpr auto operator^=(T& a, T b) ->
+    typename std::enable_if<std::is_enum<T>::value, T>::type {
     return reinterpret_cast<T&>(
         (reinterpret_cast<int&>(a) ^= static_cast<int>(b)));
 }
