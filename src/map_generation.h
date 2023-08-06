@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "entityhelper.h"
+#include "strings.h"
 
 namespace generation {
 
@@ -257,7 +258,10 @@ struct helper {
         VALIDATE(new_path.size(),
                  "customer should be able to generate a path to the register");
 
-        // TODO add fastfowarder
+        auto ffwd = EntityHelper::getFirstMatching([](const Entity& e) {
+            return check_name(e, strings::entity::FAST_FORWARD);
+        });
+        VALIDATE(ffwd, "ffwd needs to be there ");
     }
 };
 

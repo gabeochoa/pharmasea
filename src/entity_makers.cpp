@@ -358,7 +358,7 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
                 }
             }
 
-            hasWork.increase_pct(amt * dt);
+            hasWork.increase_pct(dt * 0.05f);
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();
             }
