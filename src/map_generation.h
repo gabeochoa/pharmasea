@@ -222,45 +222,48 @@ struct helper {
     }
 
     void validate() {
-        auto soph = EntityHelper::getFirstMatching(
-            [](const Entity& e) { return check_type(e, EntityType::Sophie); });
-        VALIDATE(soph, "sophie needs to be there ");
+        const auto validate_exist = [](EntityType et) {
+            auto item = EntityHelper::getFirstMatching(
+                [et](const Entity& e) { return check_type(e, et); });
+            VALIDATE(item, fmt::format("{} needs to be there ", et));
+        };
 
-        // find register,
-        auto reg_opt = EntityHelper::getFirstMatching([](const Entity& e) {
-            return check_type(e, EntityType::Register);
-        });
-        VALIDATE(valid(reg_opt), "map needs to have at least one register");
-        const auto& reg = asE(reg_opt);
-
-        // find customer
-        auto customer_opt =
-            EntityHelper::getFirstMatching([](const Entity& e) -> bool {
-                return check_type(e, EntityType::CustomerSpawner);
-            });
-        VALIDATE(valid(customer_opt),
-                 "map needs to have at least one customer spawn point");
-        const auto& customer = asE(customer_opt);
+        validate_exist(EntityType::Sophie);
+        validate_exist(EntityType::Register);
+        validate_exist(EntityType::CustomerSpawner);
+        validate_exist(EntityType::FastForward);
 
         // ensure customers can make it to the register
+        {
+            // find customer
+            auto customer_opt =
+                EntityHelper::getFirstMatching([](const Entity& e) -> bool {
+                    return check_type(e, EntityType::CustomerSpawner);
+                });
+            // TODO we are validating this now, but we shouldnt have to
+            // worry about this in the future
+            VALIDATE(valid(customer_opt),
+                     "map needs to have at least one customer spawn point");
+            auto& customer = asE(customer_opt);
 
-        // TODO need a better way to do this
-        // 0 makes sense but is the position of the entity, when its infront?
-        auto reg_pos = reg.get<Transform>().tile_infront(1);
+            auto reg_opt =
+                EntityHelper::getFirstMatching([&customer](const Entity& e) {
+                    if (!check_type(e, EntityType::Register)) return false;
+                    // TODO need a better way to do this
+                    // 0 makes sense but is the position of the entity, when
+                    // its infront?
+                    auto new_path =
+                        astar::find_path(customer.get<Transform>().as2(),
+                                         e.get<Transform>().tile_infront(1),
+                                         std::bind(EntityHelper::isWalkable,
+                                                   std::placeholders::_1));
+                    return new_path.size() > 0;
+                });
 
-        log_info(" reg{} rep{} c{}", reg.get<Transform>().as2(), reg_pos,
-                 customer.get<Transform>().as2());
-
-        auto new_path = astar::find_path(
-            customer.get<Transform>().as2(), reg_pos,
-            std::bind(EntityHelper::isWalkable, std::placeholders::_1));
-        VALIDATE(new_path.size(),
-                 "customer should be able to generate a path to the register");
-
-        auto ffwd = EntityHelper::getFirstMatching([](const Entity& e) {
-            return check_type(e, EntityType::FastForward);
-        });
-        VALIDATE(ffwd, "ffwd needs to be there ");
+            VALIDATE(valid(reg_opt),
+                     "customer should be able to generate a path to the "
+                     "register");
+        }
     }
 };
 
