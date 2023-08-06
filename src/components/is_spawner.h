@@ -55,7 +55,9 @@ struct IsSpawner : public BaseComponent {
 
         countdown -= dt;
         if (countdown <= 0) {
-            countdown = spread;
+            // we do += instead of = because
+            // we might overshoot when ffwding
+            countdown += spread;
             return true;
         }
         return false;

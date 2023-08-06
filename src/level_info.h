@@ -65,6 +65,7 @@ const char TRASH = 'T';
 const char FILTERED_GRABBER = 'G';
 const char PIPE = 'p';
 const char MOP_HOLDER = 'm';
+const char FAST_FORWARD = 'f';
 
 const char SOPHIE = 's';
 
@@ -212,6 +213,10 @@ struct helper {
                 (furniture::make_mop_holder(create(), location));
                 return;
             } break;
+            case FAST_FORWARD: {
+                (furniture::make_fast_forward(create(), location));
+                return;
+            } break;
             case 32: {
                 // space
             } break;
@@ -282,6 +287,8 @@ struct helper {
             std::bind(EntityHelper::isWalkable, std::placeholders::_1));
         VALIDATE(new_path.size(),
                  "customer should be able to generate a path to the register");
+
+        // TODO add fastfowarder
     }
 };
 
@@ -470,6 +477,7 @@ struct LevelInfo {
         {
             lines[1][cols + 1] = generation::CUST_SPAWNER;
             lines[2][cols + 1] = generation::SOPHIE;
+            lines[3][cols + 1] = generation::FAST_FORWARD;
         }
 
         // place register

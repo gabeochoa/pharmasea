@@ -115,6 +115,7 @@ constexpr const char* FILTERED_GRABBER = "filtered_grabber";
 constexpr const char* PNUMATIC_PIPE = "pnumatic_pipe";
 constexpr const char* VOMIT = "vomit";
 constexpr const char* MOP_HOLDER = "mop_holder";
+constexpr const char* FAST_FORWARD = "fast_forward";
 
 constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
 

@@ -49,9 +49,11 @@ static bool is_host = false;
 namespace round_settings {
 
 // TODO how long is a day?
-constexpr const float ROUND_LENGTH_S = 10.f;
+constexpr const float ROUND_LENGTH_S = 100.f;
 
-constexpr const int NUM_CUSTOMERS = 1;
-constexpr const float TIME_BETWEEN_CUSTOMERS_S = 2.f;
+// TODO if we hit the end of the day and didnt spawn everyone...
+// what should we do?
+constexpr const int NUM_CUSTOMERS = 10;
+constexpr const float TIME_BETWEEN_CUSTOMERS_S = 1.f;
 
 }  // namespace round_settings

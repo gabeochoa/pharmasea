@@ -281,6 +281,23 @@ void process_player_movement_input(std::shared_ptr<Entity> entity, float dt,
     transform.trunc(2);
 };
 
+void work_furniture(const std::shared_ptr<Entity> player, float frame_dt) {
+    // TODO need to figure out if this should be separate from highlighting
+    const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
+
+    std::shared_ptr<Furniture> match =
+        EntityHelper::getClosestMatchingFurniture(
+            player->get<Transform>(), cho.reach(), [](auto&& furniture) {
+                if (furniture->template is_missing<HasWork>()) return false;
+                const HasWork& hasWork = furniture->template get<HasWork>();
+                return hasWork.has_work();
+            });
+
+    if (!match) return;
+
+    match->get<HasWork>().call(*match, *player, frame_dt);
+}
+
 namespace planning {
 
 void rotate_furniture(const std::shared_ptr<Entity> player) {
@@ -375,26 +392,6 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
 }  // namespace planning
 
 namespace inround {
-
-void work_furniture(const std::shared_ptr<Entity> player, float frame_dt) {
-    // Cant do work during planning
-    if (GameState::get().is(game::State::Planning)) return;
-
-    // TODO need to figure out if this should be separate from highlighting
-    const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
-
-    std::shared_ptr<Furniture> match =
-        EntityHelper::getClosestMatchingFurniture(
-            player->get<Transform>(), cho.reach(), [](auto&& furniture) {
-                if (furniture->template is_missing<HasWork>()) return false;
-                const HasWork& hasWork = furniture->template get<HasWork>();
-                return hasWork.has_work();
-            });
-
-    if (!match) return;
-
-    match->get<HasWork>().call(*match, *player, frame_dt);
-}
 
 void handle_drop(const std::shared_ptr<Entity>& player) {
     const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
@@ -771,7 +768,7 @@ void process_input(const std::shared_ptr<Entity> entity,
                     }
                     break;
                 case InputName::PlayerDoWork:
-                    inround::work_furniture(entity, frame_dt);
+                    work_furniture(entity, frame_dt);
                 default:
                     break;
             }

@@ -43,6 +43,7 @@ void make_table(Entity& table, vec2 pos);
 
 void make_character_switcher(Entity& character_switcher, vec2 pos);
 void make_map_randomizer(Entity&, vec2 pos);
+void make_fast_forward(Entity&, vec2 pos);
 
 void make_wall(Entity& wall, vec2 pos, Color c = ui::color::brown);
 

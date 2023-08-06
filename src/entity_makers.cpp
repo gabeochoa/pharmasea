@@ -1,4 +1,6 @@
 
+#include <ranges>
+
 #include "components/has_rope_to_item.h"
 #include "components/has_subtype.h"
 #include "components/is_pnumatic_pipe.h"
@@ -271,6 +273,7 @@ void make_character_switcher(Entity& character_switcher, vec2 pos) {
 
     character_switcher.addComponent<HasWork>().init(
         [](Entity&, HasWork& hasWork, Entity& person, float dt) {
+            if (GameState::get().is_not(game::State::InRound)) return;
             if (person.is_missing<UsesCharacterModel>()) return;
             UsesCharacterModel& usesCharacterModel =
                 person.get<UsesCharacterModel>();
@@ -307,6 +310,7 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
     map_randomizer.addComponent<HasWork>().init([](Entity& randomizer,
                                                    HasWork& hasWork, Entity&,
                                                    float dt) {
+        if (GameState::get().is_not(game::State::Lobby)) return;
         if (!is_server()) {
             log_warn(
                 "you are calling a server only function from a client "
@@ -326,6 +330,41 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
     });
 
     map_randomizer.addComponent<ShowsProgressBar>();
+}
+
+void make_fast_forward(Entity& fast_forward, vec2 pos) {
+    furniture::make_furniture(
+        fast_forward, DebugOptions{.name = strings::entity::FAST_FORWARD}, pos,
+        ui::color::apricot, ui::color::apricot);
+
+    fast_forward.addComponent<HasName>().update("Fast-Forward Day");
+
+    fast_forward.addComponent<HasWork>().init(
+        [](Entity&, HasWork& hasWork, Entity&, float dt) {
+            // TODO why does this not work
+            // std::shared_ptr<Entity> sophie =
+            // (EntityHelper::getAllWithName(strings::entity::SOPHIE))[0];
+
+            const float amt = 5.f;
+
+            // TODO i dont think the spawner is working correctly
+
+            for (auto e : SystemManager::get().oldAll) {
+                if (check_name(*e, strings::entity::SOPHIE)) {
+                    e->get<HasTimer>().pass_time(amt * dt);
+                }
+                if (check_name(*e, strings::entity::CUSTOMER_SPAWNER)) {
+                    e->get<IsSpawner>().pass_time(amt * dt);
+                }
+            }
+
+            hasWork.increase_pct(amt * dt);
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
+            }
+        });
+
+    fast_forward.addComponent<ShowsProgressBar>();
 }
 
 void make_wall(Entity& wall, vec2 pos, Color c) {
@@ -474,6 +513,7 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
     container.addComponent<Indexer>(ingredient::NUM_ALC);
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
+            if (GameState::get().is_not(game::State::InRound)) return;
             const float amt = 2.f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
@@ -606,6 +646,7 @@ void make_vomit(Entity& vomit, vec2 pos) {
 
     vomit.addComponent<HasWork>().init(
         [](Entity& vom, HasWork& hasWork, const Entity& player, float dt) {
+            if (GameState::get().is_not(game::State::InRound)) return;
             const CanHoldItem& playerCHI = player.get<CanHoldItem>();
             // not holding anything
             if (playerCHI.empty()) return;
@@ -680,6 +721,7 @@ bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
 
 void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
                            float dt) {
+    if (GameState::get().is_not(game::State::InRound)) return;
     auto _process_add_ingredient = [&]() {
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
         // not holding anything
@@ -790,6 +832,7 @@ void make_lemon(Item& lemon, vec2 pos, int index) {
 
     lemon.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
                                           Entity& /*person*/, float dt) {
+        if (GameState::get().is_not(game::State::InRound)) return;
         const IsItem& ii = owner.get<IsItem>();
         HasSubtype& hasSubtype = owner.get<HasSubtype>();
         Ingredient lemon_type = get_ingredient_from_index(
