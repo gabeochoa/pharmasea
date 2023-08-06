@@ -1,9 +1,8 @@
 
 #pragma once
 
-#include "input_process_manager.h"
-#include "job_system.h"
-#include "rendering_system.h"
+#include "../engine/singleton.h"
+#include "../entity.h"
 
 namespace system_manager {
 
@@ -87,14 +86,7 @@ struct SystemManager {
 
     // TODO for some reason this cant go into the cpp
     // if it does then the game inifite loops once you join the lobby
-    void update_local_players(const Entities& players, float dt) {
-        for (const auto& entity : players) {
-            // TODO fix this if we have more than one local player
-            firstPlayerID = entity->id;
-            system_manager::input_process_manager::collect_user_input(entity,
-                                                                      dt);
-        }
-    }
+    void update_local_players(const Entities& players, float dt);
 
     void render_all_entities(const Entities&, float dt) const;
 

@@ -18,6 +18,10 @@
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../map.h"
+#include "input_process_manager.h"
+#include "job_system.h"
+#include "rendering_system.h"
+#include "ui_rendering_system.h"
 
 namespace system_manager {
 void transform_snapper(Entity& entity, float) {
@@ -1006,6 +1010,14 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
     oldAll = all;
 
     update(all, dt);
+}
+
+void SystemManager::update_local_players(const Entities& players, float dt) {
+    for (const auto& entity : players) {
+        // TODO fix this if we have more than one local player
+        firstPlayerID = entity->id;
+        system_manager::input_process_manager::collect_user_input(entity, dt);
+    }
 }
 
 void SystemManager::render_all_entities(const Entities&, float dt) const {

@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "camera.h"
 #include "components/transform.h"
 #include "engine/astar.h"
 #include "engine/globals_register.h"
