@@ -3,6 +3,7 @@
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../level_info.h"
+#include "../map_generation.h"
 
 namespace test {
 namespace neighbors {

@@ -1,6 +1,9 @@
 
 #include "level_info.h"
 
+#include "camera.h"
+#include "map_generation.h"
+
 void LevelInfo::update_seed(const std::string& s) {
     log_info("level info update seed {}", s);
     seed = s;
