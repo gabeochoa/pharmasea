@@ -122,12 +122,17 @@ inline void render_debug_ui(const Entities& entities, float) {
 }
 
 inline void render_normal(const Entities& entities, float dt) {
-    for (const auto& entity_ptr : entities) {
-        if (!entity_ptr) continue;
-        const Entity& entity = *entity_ptr;
-        render_timer(entity, dt);
-        render_block_state_change_reason(entity, dt);
+    // In game only
+    if (GameState::get().s_is_game_like()) {
+        for (const auto& entity_ptr : entities) {
+            if (!entity_ptr) continue;
+            const Entity& entity = *entity_ptr;
+            render_timer(entity, dt);
+            render_block_state_change_reason(entity, dt);
+        }
     }
+
+    // always
     render_networked_players(entities, dt);
 }
 
