@@ -3,8 +3,11 @@
 
 #include "components/can_order_drink.h"
 #include "components/can_perform_job.h"
+#include "components/has_base_speed.h"
 #include "components/has_speech_bubble.h"
 #include "components/has_waiting_queue.h"
+#include "components/is_drink.h"
+#include "components/is_progression_manager.h"
 #include "engine/assert.h"
 #include "entity.h"
 #include "entityhelper.h"

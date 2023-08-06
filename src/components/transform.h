@@ -41,8 +41,9 @@ struct Transform : public BaseComponent {
 
     FrontFaceDirection offsetFaceDirection(FrontFaceDirection startingDirection,
                                            int offset) const {
-        const auto degreesOffset = roundToNearest45(static_cast<int>(
-            FrontFaceDirectionMap.at(startingDirection) + offset));
+        const auto degreesOffset = roundToNearest45(
+            (static_cast<int>(FrontFaceDirectionMap.at(startingDirection)) +
+             offset));
 
         return DirectionToFrontFaceMap.at(degreesOffset % 360);
     }
@@ -153,8 +154,10 @@ struct Transform : public BaseComponent {
      * @returns vec2 the location `distance` tiles ahead
      * */
     static vec2 tile_infront_given_pos(
-        vec2 tile, int distance,
+        vec2 tile, int dist,
         const Transform::Transform::FrontFaceDirection& direction) {
+        float distance = static_cast<float>(dist);
+
         if (direction & Transform::FORWARD) {
             tile.y += distance * TILESIZE;
             tile.y = ceil(tile.y);
@@ -178,9 +181,10 @@ struct Transform : public BaseComponent {
     void turn_to_face_pos(const vec2 goal) {
         float theta_rad = atan2(as2().y - goal.y, as2().x - goal.x);
         float theta_deg = util::rad2deg(theta_rad);
-        int turn_degrees = (180 - (int) theta_deg) % 360;
+        // TODO replace with fmod
+        float turn_degrees = static_cast<float>((180 - (int) theta_deg) % 360);
         float facing = FrontFaceDirectionMap.at(face);
-        int to_rotate = (int) (turn_degrees - facing) + 90;
+        int to_rotate = static_cast<int>((turn_degrees - facing) + 90);
         rotate_facing_clockwise(to_rotate);
     }
 

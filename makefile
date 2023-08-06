@@ -9,7 +9,8 @@ FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
 		-Wmost -Wconversion -g $(RAYLIB_FLAGS) -DTRACY_ENABLE 
 # LEAKFLAGS = -fsanitize=address
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
-		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion
+		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion \
+		  -Wno-implicit-int-float-conversion
 INCLUDES = -Ivendor/ 
 LIBS = -L. -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
@@ -23,6 +24,7 @@ OUTPUT_EXE := pharmasea.exe
 
 # CXX := g++
 CXX := clang++
+# CXX := include-what-you-use
 
 .PHONY: all clean
 

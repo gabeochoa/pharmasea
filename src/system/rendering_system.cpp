@@ -1,6 +1,7 @@
 
 #include "rendering_system.h"
 
+#include "../components/has_client_id.h"
 #include "system_manager.h"
 
 namespace system_manager {

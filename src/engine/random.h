@@ -11,16 +11,10 @@
     return a + (std::rand() * (b - a + 1));
 }
 
-[[nodiscard]] inline int randSign() {
-    int sign = randIn(0, 1);
-    if (sign == 0) {
-        return -1;
-    } else {
-        return 1;
-    }
-}
+[[nodiscard]] inline int randSign() { return randIn(0, 1) == 0 ? -1 : 1; }
 
 [[nodiscard]] inline std::string randString(int length) {
+    // TODO research better ways to do this
     std::string out;
 
     for (int i = 0; i < length; i++) {

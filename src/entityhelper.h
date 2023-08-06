@@ -247,7 +247,8 @@ struct EntityHelper {
                  fmt::format("range has to be positive but was {}", range));
 
         int cur_step = 0;
-        while (cur_step <= range) {
+        int irange = static_cast<int>(range);
+        while (cur_step <= irange) {
             auto tile =
                 Transform::tile_infront_given_pos(pos, cur_step, direction);
 

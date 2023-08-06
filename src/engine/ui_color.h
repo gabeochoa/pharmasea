@@ -27,25 +27,25 @@ inline bool is_empty(const Color& c) {
 }
 
 inline vec3 toHSL(const Color color) {
-    const auto cmax = comp_max(color);
-    const auto cmin = comp_min(color);
-    const auto delta = cmax - cmin;
+    const unsigned char cmax = comp_max(color);
+    const unsigned char cmin = comp_min(color);
+    const unsigned char delta = cmax - cmin;
 
     vec3 hsl = {0.f, 0.f, (cmax + cmin) / 2.f};
 
-    if (abs(delta) <= EPSILON) {
+    if (fabs(delta) <= EPSILON) {
         return hsl;
     }
 
-    if (abs(cmax - color.r) <= EPSILON) {
+    if (fabs(cmax - color.r) <= EPSILON) {
         hsl.x = static_cast<float>(std::fmod((color.g - color.b) / delta, 6.f));
-    } else if (abs(cmax - color.g) <= EPSILON) {
+    } else if (fabs(cmax - color.g) <= EPSILON) {
         hsl.x = (color.b - color.r) / delta + 2.f;
     } else {
         hsl.x = (color.r - color.g) / delta + 4.f;
     }
 
-    hsl.y = delta / (1.f - std::abs(2.f * hsl.z - 1.f));
+    hsl.y = static_cast<float>(delta / (1.f - fabs(2.f * hsl.z - 1.f)));
     hsl.x /= 6.f;
     hsl.x = std::fmod(hsl.x + 1.f, 1.f);
     return hsl;

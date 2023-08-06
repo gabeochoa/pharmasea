@@ -31,7 +31,7 @@ struct HasWork : public BaseComponent {
     void reset_pct() { pct_work_complete = 0.f; }
 
     [[nodiscard]] int scale_length(int length) const {
-        return (int) (pct_work_complete * length);
+        return static_cast<int>(pct_work_complete * length);
     }
 
     typedef std::function<void(Entity& owner, HasWork&, Entity& person,

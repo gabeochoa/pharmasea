@@ -7,6 +7,7 @@
 #include "../components/can_hold_furniture.h"
 #include "../components/can_perform_job.h"
 #include "../components/custom_item_position.h"
+#include "../components/has_timer.h"
 #include "../components/transform.h"
 #include "../entity.h"
 #include "../entityhelper.h"

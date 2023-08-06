@@ -3,6 +3,17 @@
 #pragma once
 
 #include "../camera.h"
+#include "../components/can_be_highlighted.h"
+#include "../components/can_order_drink.h"
+#include "../components/has_name.h"
+#include "../components/has_speech_bubble.h"
+#include "../components/has_work.h"
+#include "../components/is_drink.h"
+#include "../components/is_pnumatic_pipe.h"
+#include "../components/is_trigger_area.h"
+#include "../components/model_renderer.h"
+#include "../components/shows_progress_bar.h"
+#include "../components/simple_colored_box_renderer.h"
 #include "../components/uses_character_model.h"
 #include "../engine/log.h"
 #include "../engine/time.h"

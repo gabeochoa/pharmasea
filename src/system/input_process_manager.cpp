@@ -3,6 +3,7 @@
 
 #include "../camera.h"
 #include "../components/can_be_ghost_player.h"
+#include "../components/can_be_pushed.h"
 #include "../components/can_grab_from_other_furniture.h"
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
@@ -10,6 +11,10 @@
 #include "../components/collects_user_input.h"
 #include "../components/conveys_held_item.h"
 #include "../components/custom_item_position.h"
+#include "../components/has_base_speed.h"
+#include "../components/has_work.h"
+#include "../components/is_item_container.h"
+#include "../components/is_rotatable.h"
 #include "../components/is_snappable.h"
 #include "../components/responds_to_user_input.h"
 #include "../components/transform.h"
