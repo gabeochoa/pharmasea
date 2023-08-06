@@ -1012,39 +1012,38 @@ void SystemManager::on_game_state_change(game::State new_state,
     }
 }
 
-void SystemManager::update(const Entities& entities, float dt) {
-    // TODO add num entities to debug overlay
-    // log_info("num entities {}", entities.size());
-    // TODO do we run game updates during paused?
-
-    if (GameState::s_is_lobby_like()) {
-        //
-    } else if (GameState::s_is_game_like()) {
-        if (GameState::s_in_round()) {
-            in_round_update(entities, dt);
-        } else {
-            planning_update(entities, dt);
-        }
-        game_like_update(entities, dt);
-    }
-
-    always_update(entities, dt);
-    process_state_change(entities, dt);
-}
-
 void SystemManager::update_all_entities(const Entities& players, float dt) {
     // TODO speed?
-    Entities all;
+    Entities entities;
     Entities ents = EntityHelper::get_entities();
 
-    all.reserve(players.size() + ents.size());
+    entities.reserve(players.size() + ents.size());
 
-    all.insert(all.end(), ents.begin(), ents.end());
-    all.insert(all.end(), players.begin(), players.end());
+    entities.insert(entities.end(), ents.begin(), ents.end());
+    entities.insert(entities.end(), players.begin(), players.end());
 
-    oldAll = all;
+    oldAll = entities;
 
-    update(all, dt);
+    // actual update
+    {
+        // TODO add num entities to debug overlay
+        // log_info("num entities {}", entities.size());
+        // TODO do we run game updates during paused?
+
+        if (GameState::s_is_lobby_like()) {
+            //
+        } else if (GameState::s_is_game_like()) {
+            if (GameState::s_in_round()) {
+                in_round_update(entities, dt);
+            } else {
+                planning_update(entities, dt);
+            }
+            game_like_update(entities, dt);
+        }
+
+        always_update(entities, dt);
+        process_state_change(entities, dt);
+    }
 }
 
 void SystemManager::update_local_players(const Entities& players, float dt) {
@@ -1053,18 +1052,6 @@ void SystemManager::update_local_players(const Entities& players, float dt) {
         firstPlayerID = entity->id;
         system_manager::input_process_manager::collect_user_input(entity, dt);
     }
-}
-
-void SystemManager::render_all_entities(const Entities&, float dt) const {
-    // TODO figure out if its okay for us to throw out the updated players,
-    // and use oldAll
-    render_entities(oldAll, dt);
-}
-
-void SystemManager::render_all_ui(const Entities&, float dt) const {
-    // TODO figure out if its okay for us to throw out the updated players,
-    // and use oldAll
-    render_ui(oldAll, dt);
 }
 
 void SystemManager::process_inputs(const Entities& entities,
@@ -1181,32 +1168,15 @@ void SystemManager::planning_update(
     });
 }
 
-void SystemManager::render_normal(
-    const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) const {
-    for_each(entity_list, dt, [](std::shared_ptr<Entity> entity_ptr, float dt) {
-        const Entity& entity = *entity_ptr;
-        // TODO extract render normal into system facign functions
-        system_manager::render_manager::render_normal(entity, dt);
-        system_manager::render_manager::render_floating_name(entity, dt);
-        system_manager::render_manager::render_progress_bar(entity, dt);
-    });
-}
-
-void SystemManager::render_debug(
-    const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) const {
-    for_each(entity_list, dt, [](std::shared_ptr<Entity> entity_ptr, float dt) {
-        const Entity& entity = *entity_ptr;
-        system_manager::render_manager::render_debug(entity, dt);
-    });
-}
-
 void SystemManager::render_entities(const Entities& entities, float dt) const {
     const auto debug_mode_on =
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-    if (debug_mode_on) {
-        render_debug(entities, dt);
-    }
-    render_normal(entities, dt);
+    for_each(entities, dt,
+             [debug_mode_on](std::shared_ptr<Entity> entity_ptr, float dt) {
+                 const Entity& entity = *entity_ptr;
+                 system_manager::render_manager::render(entity, dt,
+                                                        debug_mode_on);
+             });
 }
 
 void SystemManager::render_ui(const Entities& entities, float dt) const {

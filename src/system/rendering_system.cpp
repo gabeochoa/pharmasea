@@ -495,4 +495,17 @@ void render_player_info(const Entity& entity) {
 }
 
 }  // namespace ui
+
+namespace render_manager {
+
+void render(const Entity& entity, float dt, bool is_debug) {
+    if (is_debug) render_debug(entity, dt);
+
+    render_normal(entity, dt);
+    render_floating_name(entity, dt);
+    render_progress_bar(entity, dt);
+}
+
+}  // namespace render_manager
+
 }  // namespace system_manager

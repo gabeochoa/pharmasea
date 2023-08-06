@@ -41,6 +41,8 @@ void render_normal(const Entity& entity, float dt);
 void render_floating_name(const Entity& entity, float);
 void render_progress_bar(const Entity& entity, float);
 
+void render(const Entity&, float, bool);
+
 }  // namespace render_manager
 
 }  // namespace system_manager
