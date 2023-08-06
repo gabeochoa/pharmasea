@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "engine/astar.h"
 #include "entityhelper.h"
 #include "strings.h"
 

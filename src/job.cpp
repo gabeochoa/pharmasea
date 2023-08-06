@@ -9,6 +9,7 @@
 #include "components/is_drink.h"
 #include "components/is_progression_manager.h"
 #include "engine/assert.h"
+#include "engine/astar.h"
 #include "entity.h"
 #include "entityhelper.h"
 #include "globals.h"

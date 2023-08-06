@@ -50,6 +50,7 @@
 ///
 
 #include "../camera.h"  /// probably needed by map and not included in there
+#include "../engine/astar.h"
 #include "../engine/tracy.h"
 #include "../entity.h"
 #include "../entityhelper.h"

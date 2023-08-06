@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "engine.h"
 #include "external_include.h"
 //
 #include "entity_type.h"
@@ -15,7 +16,6 @@
 #include <bitsery/ext/pointer.h>
 #include <bitsery/ext/std_map.h>
 
-#include <array>
 #include <map>
 
 using bitsery::ext::PointerObserver;
@@ -23,16 +23,10 @@ using bitsery::ext::PointerOwner;
 using bitsery::ext::PointerType;
 using StdMap = bitsery::ext::StdMap;
 
-#include "dataclass/names.h"
 #include "drawing_util.h"
-#include "engine.h"
-#include "engine/astar.h"
-#include "engine/is_server.h"
-#include "engine/model_library.h"
 #include "engine/util.h"
 #include "globals.h"
 #include "preload.h"
-#include "raylib.h"
 #include "text_util.h"
 #include "vec_util.h"
 

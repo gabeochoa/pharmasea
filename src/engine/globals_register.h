@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-#include "log.h"
+// #include "log.h"
 
 struct GlobalValueRegister {
     std::map<std::string, void*> globals;
