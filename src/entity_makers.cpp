@@ -99,6 +99,7 @@ void add_person_components(Entity& person) {
         TILESIZE * size_multiplier,
     });
 
+    person.addComponent<CanBeTakenFrom>().update(false);
     person.addComponent<CanHoldItem>(IsItem::HeldBy::PLAYER);
     person.addComponent<CanBePushed>();
 
