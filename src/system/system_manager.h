@@ -84,8 +84,6 @@ struct SystemManager {
 
     void update_all_entities(const Entities& players, float dt);
 
-    // TODO for some reason this cant go into the cpp
-    // if it does then the game inifite loops once you join the lobby
     void update_local_players(const Entities& players, float dt);
 
     void render_all_entities(const Entities&, float dt) const;
@@ -102,19 +100,21 @@ struct SystemManager {
     void for_each(
         Entities& entities, float dt,
         const std::function<void(std::shared_ptr<Entity>, float)>& cb) {
-        for (auto& entity : entities) {
-            if (!entity) continue;
-            cb(entity, dt);
-        }
+        std::ranges::for_each(entities,
+                              [cb, dt](std::shared_ptr<Entity> entity) {
+                                  if (!entity) return;
+                                  cb(entity, dt);
+                              });
     }
 
     void for_each(
         const Entities& entities, float dt,
         const std::function<void(std::shared_ptr<Entity>, float)>& cb) const {
-        for (auto& entity : entities) {
-            if (!entity) continue;
-            cb(entity, dt);
-        }
+        std::ranges::for_each(std::as_const(entities),
+                              [cb, dt](std::shared_ptr<Entity> entity) {
+                                  if (!entity) return;
+                                  cb(entity, dt);
+                              });
     }
 
     void process_state_change(const Entities& entities, float dt);
