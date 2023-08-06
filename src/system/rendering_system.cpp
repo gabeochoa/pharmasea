@@ -47,8 +47,8 @@ void render_networked_players(const Entities& entities, float dt) {
         if (!entity_ptr) continue;
         Entity& entity = *entity_ptr;
         // TODO think about this check more
-        if (!(check_name(entity, strings::entity::PLAYER) ||
-              check_name(entity, strings::entity::REMOTE_PLAYER)))
+        if (!(check_type(entity, EntityType::Player) ||
+              check_type(entity, EntityType::RemotePlayer)))
             continue;
         _render_little_model_guy(entity, dt);
         _render_single_networked_player(entity, dt);
@@ -60,7 +60,7 @@ void render_player_info(const Entity& entity) {
     // for players is the stuff in PlayerInfo
     //
     // If you want this to work then you have to add it there
-    if (!check_name(entity, strings::entity::REMOTE_PLAYER)) return;
+    if (!check_type(entity, EntityType::RemotePlayer)) return;
     if (entity.id != SystemManager::get().firstPlayerID) return;
 
     int y_pos = 0;

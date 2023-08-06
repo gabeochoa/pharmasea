@@ -375,7 +375,7 @@ void process_grabber_items(Entity& entity, float) {
 }
 
 void process_grabber_filter(Entity& entity, float) {
-    if (!check_name(entity, strings::entity::FILTERED_GRABBER)) return;
+    if (!check_type(entity, EntityType::FilteredGrabber)) return;
     if (entity.is_missing<CanHoldItem>()) return;
     CanHoldItem& canHold = entity.get<CanHoldItem>();
     if (canHold.empty()) return;
@@ -389,7 +389,7 @@ void process_grabber_filter(Entity& entity, float) {
 }
 
 template<typename... TArgs>
-void backfill_empty_container(const std::string& match_type, Entity& entity,
+void backfill_empty_container(const EntityType& match_type, Entity& entity,
                               TArgs&&... args) {
     if (entity.is_missing<IsItemContainer>()) return;
     IsItemContainer& iic = entity.get<IsItemContainer>();
@@ -418,14 +418,14 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
 
     auto pos = entity.get<Transform>().as2();
 
-    backfill_empty_container(strings::item::SODA_SPOUT, entity, pos);
-    backfill_empty_container(strings::item::DRINK, entity, pos);
-    backfill_empty_container(strings::item::MOP, entity, pos);
+    backfill_empty_container(EntityType::SodaSpout, entity, pos);
+    backfill_empty_container(EntityType::Drink, entity, pos);
+    backfill_empty_container(EntityType::Mop, entity, pos);
 
     if (entity.is_missing<Indexer>()) return;
-    backfill_empty_container(strings::item::ALCOHOL, entity, pos,
+    backfill_empty_container(EntityType::Alcohol, entity, pos,
                              entity.get<Indexer>().value());
-    backfill_empty_container(strings::item::LEMON, entity, pos,
+    backfill_empty_container(EntityType::Lemon, entity, pos,
                              entity.get<Indexer>().value());
     entity.get<Indexer>().mark_change_completed();
 }
@@ -447,9 +447,8 @@ void process_is_container_and_should_update_item(Entity& entity, float) {
 
     auto pos = entity.get<Transform>().as2();
 
-    backfill_empty_container(strings::item::ALCOHOL, entity, pos,
-                             indexer.value());
-    backfill_empty_container(strings::item::LEMON, entity, pos,
+    backfill_empty_container(EntityType::Alcohol, entity, pos, indexer.value());
+    backfill_empty_container(EntityType::Lemon, entity, pos,
                              entity.get<Indexer>().value());
     indexer.mark_change_completed();
 }
@@ -493,7 +492,7 @@ void delete_customers_when_leaving_inround(Entity& entity) {
     // TODO im thinking this might not be enough if we have
     // robots that can order for people or something
     if (entity.is_missing<CanOrderDrink>()) return;
-    if (!check_name(entity, strings::entity::CUSTOMER)) return;
+    if (!check_type(entity, EntityType::Customer)) return;
 
     entity.cleanup = true;
 }
@@ -541,7 +540,7 @@ void count_max_trigger_area_entrants(Entity& entity, float) {
     int count = 0;
     for (const auto& e : SystemManager::get().oldAll) {
         if (!e) continue;
-        if (!check_name(*e, strings::entity::PLAYER)) continue;
+        if (!check_type(*e, EntityType::Player)) continue;
         count++;
     }
     entity.get<IsTriggerArea>().update_max_entrants(count);
@@ -553,7 +552,7 @@ void count_trigger_area_entrants(Entity& entity, float) {
     int count = 0;
     for (const auto& e : SystemManager::get().oldAll) {
         if (!e) continue;
-        if (!check_name(*e, strings::entity::PLAYER)) continue;
+        if (!check_type(*e, EntityType::Player)) continue;
         if (CheckCollisionBoxes(
                 e->get<Transform>().bounds(),
                 entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
@@ -700,7 +699,7 @@ void update_sophie(Entity& entity, float) {
 
         bool all_gone = true;
         std::vector<std::shared_ptr<Entity>> customers =
-            EntityHelper::getAllWithName(strings::entity::CUSTOMER);
+            EntityHelper::getAllWithType(EntityType::Customer);
         for (const auto& e : customers) {
             if (!e) continue;
             if (vec::distance(e->get<Transform>().as2(), endpos) >
@@ -738,7 +737,7 @@ void update_sophie(Entity& entity, float) {
 
     auto _bar_not_clean = [&entity]() {
         bool has_vomit =
-            !(EntityHelper::getAllWithName(strings::entity::VOMIT)).empty();
+            !(EntityHelper::getAllWithType(EntityType::Vomit)).empty();
 
         entity.get<HasTimer>().write_reason(
             HasTimer::WaitingReason::BarNotClean, has_vomit);
@@ -751,7 +750,7 @@ void update_sophie(Entity& entity, float) {
         // find customer
         auto customer_opt =
             EntityHelper::getFirstMatching([](const Entity& e) -> bool {
-                return check_name(e, strings::entity::CUSTOMER_SPAWNER);
+                return check_type(e, EntityType::CustomerSpawner);
             });
         // TODO we are validating this now, but we shouldnt have to worry about
         // this in the future
@@ -763,7 +762,7 @@ void update_sophie(Entity& entity, float) {
 
         auto reg_opt =
             EntityHelper::getFirstMatching([&customer](const Entity& e) {
-                if (!check_name(e, strings::entity::REGISTER)) return false;
+                if (!check_type(e, EntityType::Register)) return false;
                 // TODO need a better way to do this
                 // 0 makes sense but is the position of the entity, when its
                 // infront?
@@ -828,10 +827,10 @@ void process_has_rope(Entity& entity, float) {
     OptEntity opt_player;
     for (const std::shared_ptr<Entity>& e : SystemManager::get().oldAll) {
         if (!e) continue;
-        if (!check_name(*e, strings::entity::PLAYER)) continue;
+        if (!check_type(*e, EntityType::Player)) continue;
         auto i = e->get<CanHoldItem>().item();
         if (!i) continue;
-        if (!check_name(*i, strings::item::SODA_SPOUT)) continue;
+        if (!check_type(*i, EntityType::SodaSpout)) continue;
         opt_player = *e;
     }
     if (!valid(opt_player)) return;
@@ -863,7 +862,7 @@ void process_has_rope(Entity& entity, float) {
 
     std::shared_ptr<Item> item;
     for (auto p : extended_path) {
-        item = EntityHelper::createItem(strings::item::SODA_SPOUT, p);
+        item = EntityHelper::createItem(EntityType::SodaSpout, p);
         item->get<IsItem>().set_held_by(IsItem::HeldBy::PLAYER);
         item->addComponent<IsSolid>();
         hrti.add(item);
@@ -873,8 +872,8 @@ void process_has_rope(Entity& entity, float) {
 
 void process_squirter(Entity& entity, float) {
     // TODO this normally would be an IsComponent but for those where theres
-    // only one probably check_name is easier/ cheaper? idk
-    if (!check_name(entity, strings::entity::SQUIRTER)) return;
+    // only one probably check_type is easier/ cheaper? idk
+    if (!check_type(entity, EntityType::Squirter)) return;
 
     CanHoldItem& sqCHI = entity.get<CanHoldItem>();
 
@@ -898,7 +897,7 @@ void process_squirter(Entity& entity, float) {
                 std::shared_ptr<Item> item = fchi.const_item();
 
                 // TODO should we instead check for <AddsIngredient>?
-                if (!check_name(*item, strings::item::ALCOHOL)) return false;
+                if (!check_type(*item, EntityType::Alcohol)) return false;
                 return true;
             });
     if (!closest_furniture) return;
@@ -915,8 +914,8 @@ void process_squirter(Entity& entity, float) {
 // TODO not everything can be trashed !
 void process_trash(Entity& entity, float) {
     // TODO this normally would be an IsComponent but for those where theres
-    // only one probably check_name is easier/ cheaper? idk
-    if (!check_name(entity, strings::entity::TRASH)) return;
+    // only one probably check_type is easier/ cheaper? idk
+    if (!check_type(entity, EntityType::Trash)) return;
 
     CanHoldItem& trashCHI = entity.get<CanHoldItem>();
 
@@ -1140,7 +1139,7 @@ void SystemManager::game_like_update(const Entities& entities, float dt) {
 
         // TODO these eventually should move into their own functions but
         // for now >:)
-        if (check_name(entity, strings::entity::SOPHIE))
+        if (check_type(entity, EntityType::Sophie))
             system_manager::update_sophie(entity, dt);
     });
 }

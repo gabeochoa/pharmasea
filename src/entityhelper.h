@@ -42,12 +42,11 @@
         entity->has<IsItem>() &&
         entity->get<IsItem>().is_held_by(IsItem::HeldBy::PLAYER) &&
         // Entity is rope
-        check_name(*entity, strings::item::SODA_SPOUT) &&
+        check_type(*entity, EntityType::SodaSpout) &&
         // we are a player that is holding rope
         other->has<CanHoldItem>() &&
         other->get<CanHoldItem>().is_holding_item() &&
-        check_name(*other->get<CanHoldItem>().item(),
-                   strings::item::SODA_SPOUT)) {
+        check_type(*other->get<CanHoldItem>().item(), EntityType::SodaSpout)) {
         return false;
     }
 
@@ -342,12 +341,12 @@ struct EntityHelper {
 
     // TODO does this break the idea of ecs
     // TODO change other debugname filter guys to this
-    static std::vector<std::shared_ptr<Entity>> getAllWithName(
-        const std::string& name) {
+    static std::vector<std::shared_ptr<Entity>> getAllWithType(
+        const EntityType& type) {
         std::vector<std::shared_ptr<Entity>> matching;
         for (std::shared_ptr<Entity> e : get_entities()) {
             if (!e) continue;
-            if (check_name(*e, name.c_str())) matching.push_back(e);
+            if (check_type(*e, type)) matching.push_back(e);
         }
         return matching;
     }

@@ -57,8 +57,7 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float) {
     // TODO handle paying for your cart
 
     // IF the store is closed then leave
-    const auto sophie =
-        EntityHelper::getAllWithName(strings::entity::SOPHIE)[0];
+    const auto sophie = EntityHelper::getAllWithType(EntityType::Sophie)[0];
     VALIDATE(sophie, "there should always be a sophie");
     if (sophie->get<HasTimer>().store_is_closed()) {
         auto pos = entity->get<Transform>().as2();

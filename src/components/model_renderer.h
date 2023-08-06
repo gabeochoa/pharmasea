@@ -3,11 +3,16 @@
 #pragma once
 
 #include "../engine/model_library.h"
+#include "../engine/util.h"
+#include "../entity.h"
 #include "base_component.h"
 
 struct ModelRenderer : public BaseComponent {
     ModelRenderer() : model_name("invalid") {}
     ModelRenderer(const std::string& s) : model_name(s) {}
+    ModelRenderer(const EntityType& type) {
+        model_name = util::convertToSnakeCase<EntityType>(type);
+    }
 
     virtual ~ModelRenderer() {}
 

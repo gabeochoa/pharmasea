@@ -22,7 +22,7 @@ struct EntityFilter {
     } flags;
 
    private:
-    std::optional<std::string> name;
+    std::optional<EntityType> entity_type;
     int subtype_index;
 
    public:
@@ -48,8 +48,9 @@ struct EntityFilter {
     [[nodiscard]] std::string print_value_for_type(FilterDatumType type) const {
         switch (type) {
             case Name:
-                return fmt::format("{}",
-                                   name.has_value() ? name.value() : "no name");
+                return fmt::format("{}", entity_type.has_value()
+                                             ? str(entity_type.value())
+                                             : "no entity_type");
             case Subtype:
                 return fmt::format("{}", subtype_index);
             case EmptyFilterDatumType:
@@ -62,7 +63,7 @@ struct EntityFilter {
         const auto clear_type = [this](FilterDatumType type) {
             switch (type) {
                 case Name:
-                    name = {};
+                    entity_type = {};
                     break;
                 case Subtype:
                     subtype_index = -1;
@@ -91,7 +92,7 @@ struct EntityFilter {
     [[nodiscard]] bool filter_has_value(FilterDatumType type) const {
         switch (type) {
             case Name:
-                return name.has_value();
+                return entity_type.has_value();
             case Subtype:
                 return subtype_index != -1;
             case EmptyFilterDatumType:
@@ -120,8 +121,8 @@ struct EntityFilter {
     template<typename T>
     EntityFilter& set_filter_value_for_type(FilterDatumType type,
                                             const T& value) {
-        if constexpr (std::is_same_v<T, std::string>) {
-            if (type & FilterDatumType::Name) this->name = (value);
+        if constexpr (std::is_same_v<T, EntityType>) {
+            if (type & FilterDatumType::Name) this->entity_type = (value);
         } else if constexpr (std::is_same_v<T, int>) {
             if (type & FilterDatumType::Subtype) subtype_index = (value);
         }
@@ -133,7 +134,7 @@ struct EntityFilter {
                                     FilterDatumType type) const {
         if constexpr (std::is_same_v<T, std::string>) {
             if (type & FilterDatumType::Name)
-                return entity.get<DebugName>().name();
+                return std::string(entity.get<DebugName>().name());
         } else if constexpr (std::is_same_v<T, int>) {
             if (type & FilterDatumType::Subtype) {
                 if (entity.is_missing<HasSubtype>()) return -1;
@@ -148,9 +149,9 @@ struct EntityFilter {
         // stores the information from data in that flag
 
         if (flags & FilterDatumType::Name)
-            set_filter_value_for_type<std::string>(
+            set_filter_value_for_type<EntityType>(
                 FilterDatumType::Name,
-                read_filter_value_from_entity<std::string>(
+                read_filter_value_from_entity<EntityType>(
                     data, FilterDatumType::Name));
 
         if (flags & FilterDatumType::Subtype)
@@ -175,7 +176,7 @@ struct EntityFilter {
                                              const Entity& entity) const {
         switch (type) {
             case Name:
-                return check_name(entity, name.value().c_str());
+                return check_type(entity, entity_type.value());
             case Subtype:
                 return read_filter_value_from_entity<int>(entity, type) ==
                        subtype_index;
@@ -212,8 +213,8 @@ struct EntityFilter {
     template<typename S>
     void serialize(S& s) {
         s.value4b(flags);
-        s.ext(name, bitsery::ext::StdOptional{},
-              [](S& sv, std::string& val) { sv.text1b(val, 25); });
+        s.ext(entity_type, bitsery::ext::StdOptional{},
+              [](S& sv, EntityType& val) { sv.value4b(val); });
         s.value4b(subtype_index);
     }
 };

@@ -49,15 +49,14 @@ void make_wall(Entity& wall, vec2 pos, Color c = ui::color::brown);
 
 void make_conveyer(Entity& conveyer, vec2 pos,
                    const DebugOptions& options = {
-                       .name = strings::entity::CONVEYER});
+                       .type = EntityType::Conveyer});
 
 void make_grabber(Entity& grabber, vec2 pos,
-                  const DebugOptions& options = {
-                      .name = strings::entity::GRABBER});
+                  const DebugOptions& options = {.type = EntityType::Grabber});
 
 void make_filtered_grabber(Entity& grabber, vec2 pos,
                            const DebugOptions& options = DebugOptions{
-                               .name = strings::entity::FILTERED_GRABBER});
+                               .type = EntityType::FilteredGrabber});
 
 void make_register(Entity& reg, vec2 pos);
 
@@ -80,9 +79,8 @@ void make_soda_machine(Entity& soda_machine, vec2 pos);
 
 void make_mop_holder(Entity& mop_holder, vec2 pos);
 
-void make_trigger_area(
-    Entity& trigger_area, vec3 pos, float width, float height,
-    const std::string& title = strings::entity::TRIGGER_AREA);
+void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
+                       float height, const std::string& title);
 void make_blender(Entity& blender, vec2 pos);
 
 // This will be a catch all for anything that just needs to get updated
@@ -114,10 +112,7 @@ void make_lemon(Item& lemon, vec2 pos, int index);
 
 void make_drink(Item& drink, vec2 pos);
 
-void make_item_type(Item& item, const std::string& type_name,  //
-                    vec2 pos,                                  //
-                    int index = -1                             //
-);
+void make_item_type(Item& item, EntityType type_name, vec2 pos, int index = -1);
 
 }  // namespace items
 

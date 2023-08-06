@@ -411,7 +411,7 @@ Job::State WaitInQueueJob::run_state_working_at_end(
     }
 
     std::shared_ptr<Item> drink = reg->get<CanHoldItem>().item();
-    if (!drink || !check_name(*drink, strings::item::DRINK)) {
+    if (!drink || !check_type(*drink, EntityType::Drink)) {
         system_manager::logging_manager::announce(entity, "this isnt a drink");
         WIQ_wait_and_return(entity);
         return (Job::State::WorkingAtEnd);

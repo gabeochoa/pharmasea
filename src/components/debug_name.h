@@ -2,28 +2,28 @@
 #pragma once
 
 //
+#include "../entity_type.h"
 #include "base_component.h"
 
 struct DebugName : public BaseComponent {
     virtual ~DebugName() {}
 
-    void update(const std::string& new_name) {
-        _name = new_name;
-        name_length = (int) _name.size();
+    void update(EntityType t) { type = t; }
+
+    [[nodiscard]] bool is_type(EntityType t) const { return type == t; }
+    const EntityType& get_type() const { return type; }
+    std::string_view name() const {
+        return magic_enum::enum_name<EntityType>(type);
     }
 
-    const std::string& name() const { return _name; }
-
    private:
-    int name_length = 1;
-    std::string _name = "";
+    EntityType type;
 
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(name_length);
-        s.text1b(_name, name_length);
+        s.value4b(type);
     }
 };
 

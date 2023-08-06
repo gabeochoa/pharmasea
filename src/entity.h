@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "entity_type.h"
+//
 #include "components/base_component.h"
 //
 #include "components/debug_name.h"
@@ -207,7 +209,7 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 }  // namespace bitsery
 
 struct DebugOptions {
-    std::string name;
+    EntityType type = EntityType::Unknown;
 };
 
 typedef std::reference_wrapper<Entity> RefEntity;
@@ -235,6 +237,6 @@ inline OptEntity asOpt(Entity& e) { return std::make_optional(std::ref(e)); }
 inline Entity& asE(RefEntity& refe) { return refe.get(); }
 inline RefEntity asRef(Entity& e) { return std::ref(e); }
 
-static bool check_name(const Entity& entity, const char* name) {
-    return entity.get<DebugName>().name() == name;
+static bool check_type(const Entity& entity, EntityType type) {
+    return entity.get<DebugName>().is_type(type);
 }

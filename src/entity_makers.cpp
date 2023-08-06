@@ -7,6 +7,7 @@
 #include "components/is_progression_manager.h"
 #include "dataclass/ingredient.h"
 #include "engine/ui_color.h"
+#include "engine/util.h"
 #include "entity.h"
 #include "network/server.h"
 //
@@ -117,7 +118,7 @@ void add_person_components(Entity& person) {
 }
 
 void make_entity(Entity& entity, const DebugOptions& options, vec3 p) {
-    entity.addComponent<DebugName>().update(options.name);
+    entity.addComponent<DebugName>().update(options.type);
     add_entity_components(entity);
     entity.get<Transform>().update(p);
 }
@@ -131,7 +132,7 @@ void add_player_components(Entity& player) {
 }
 
 void make_remote_player(Entity& remote_player, vec3 pos) {
-    make_entity(remote_player, {.name = strings::entity::REMOTE_PLAYER}, pos);
+    make_entity(remote_player, {.type = EntityType::RemotePlayer}, pos);
     add_person_components(remote_player);
     add_player_components(remote_player);
 }
@@ -188,7 +189,7 @@ void update_player_rare_remotely(Entity& entity, int model_index,
 }
 
 void make_player(Entity& player, vec3 p) {
-    make_entity(player, {.name = strings::entity::PLAYER}, p);
+    make_entity(player, {.type = EntityType::Player}, p);
     add_person_components(player);
     add_player_components(player);
 
@@ -222,7 +223,7 @@ void make_furniture(Entity& furniture, const DebugOptions& options, vec2 pos,
     // need
     furniture.addComponent<SimpleColoredBoxRenderer>().update(face, base);
     if (ENABLE_MODELS) {
-        furniture.addComponent<ModelRenderer>(options.name);
+        furniture.addComponent<ModelRenderer>(options.type);
     }
 
     // we need to add it to set a default, so its here
@@ -255,9 +256,8 @@ void process_table_working(Entity& table, HasWork& hasWork, Entity& player,
 }
 
 void make_table(Entity& table, vec2 pos) {
-    furniture::make_furniture(table,
-                              DebugOptions{.name = strings::entity::TABLE}, pos,
-                              ui::color::brown, ui::color::brown);
+    furniture::make_furniture(table, DebugOptions{.type = EntityType::Table},
+                              pos, ui::color::brown, ui::color::brown);
 
     table.addComponent<HasWork>().init(std::bind(
         process_table_working, std::placeholders::_1, std::placeholders::_2,
@@ -267,13 +267,12 @@ void make_table(Entity& table, vec2 pos) {
 
 void make_character_switcher(Entity& character_switcher, vec2 pos) {
     furniture::make_furniture(
-        character_switcher,
-        DebugOptions{.name = strings::entity::CHARACTER_SWITCHER}, pos,
-        ui::color::green, ui::color::yellow);
+        character_switcher, DebugOptions{.type = EntityType::CharacterSwitcher},
+        pos, ui::color::green, ui::color::yellow);
 
     character_switcher.addComponent<HasWork>().init(
         [](Entity&, HasWork& hasWork, Entity& person, float dt) {
-            if (GameState::get().is_not(game::State::InRound)) return;
+            if (!GameState::get().s_is_lobby_like()) return;
             if (person.is_missing<UsesCharacterModel>()) return;
             UsesCharacterModel& usesCharacterModel =
                 person.get<UsesCharacterModel>();
@@ -289,9 +288,9 @@ void make_character_switcher(Entity& character_switcher, vec2 pos) {
 }
 
 void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
-    furniture::make_furniture(
-        map_randomizer, DebugOptions{.name = strings::entity::MAP_RANDOMIZER},
-        pos, ui::color::baby_blue, ui::color::baby_pink);
+    furniture::make_furniture(map_randomizer,
+                              DebugOptions{.type = EntityType::MapRandomizer},
+                              pos, ui::color::baby_blue, ui::color::baby_pink);
 
     map_randomizer.addComponent<HasName>().update("default seed");
 
@@ -333,9 +332,9 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
 }
 
 void make_fast_forward(Entity& fast_forward, vec2 pos) {
-    furniture::make_furniture(
-        fast_forward, DebugOptions{.name = strings::entity::FAST_FORWARD}, pos,
-        ui::color::apricot, ui::color::apricot);
+    furniture::make_furniture(fast_forward,
+                              DebugOptions{.type = EntityType::FastForward},
+                              pos, ui::color::apricot, ui::color::apricot);
 
     fast_forward.addComponent<HasName>().update("Fast-Forward Day");
 
@@ -343,17 +342,17 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
         [](Entity&, HasWork& hasWork, Entity&, float dt) {
             // TODO why does this not work
             // std::shared_ptr<Entity> sophie =
-            // (EntityHelper::getAllWithName(strings::entity::SOPHIE))[0];
+            // (EntityHelper::getAllWithName(EntityType::SOPHIE))[0];
 
             const float amt = 5.f;
 
             // TODO i dont think the spawner is working correctly
 
             for (auto e : SystemManager::get().oldAll) {
-                if (check_name(*e, strings::entity::SOPHIE)) {
+                if (check_type(*e, EntityType::Sophie)) {
                     e->get<HasTimer>().pass_time(amt * dt);
                 }
-                if (check_name(*e, strings::entity::CUSTOMER_SPAWNER)) {
+                if (check_type(*e, EntityType::CustomerSpawner)) {
                     e->get<IsSpawner>().pass_time(amt * dt);
                 }
             }
@@ -368,8 +367,8 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
 }
 
 void make_wall(Entity& wall, vec2 pos, Color c) {
-    furniture::make_furniture(wall, DebugOptions{.name = strings::entity::WALL},
-                              pos, c, c, true);
+    furniture::make_furniture(wall, DebugOptions{.type = EntityType::Wall}, pos,
+                              c, c, true);
 
     // enum Type {
     // FULL,
@@ -475,31 +474,30 @@ void make_filtered_grabber(Entity& grabber, vec2 pos,
 }
 
 void make_register(Entity& reg, vec2 pos) {
-    furniture::make_furniture(reg,
-                              DebugOptions{.name = strings::entity::REGISTER},
+    furniture::make_furniture(reg, DebugOptions{.type = EntityType::Register},
                               pos, ui::color::grey, ui::color::grey);
     reg.addComponent<HasWaitingQueue>();
 }
 
 void make_itemcontainer(Entity& container, const DebugOptions& options,
-                        vec2 pos, const std::string& item_type) {
+                        vec2 pos, EntityType item_type) {
     furniture::make_furniture(container, options, pos, ui::color::white,
                               ui::color::white);
     container.addComponent<IsItemContainer>(item_type);
 }
 
 void make_squirter(Entity& squ, vec2 pos) {
-    furniture::make_furniture(squ, {strings::entity::SQUIRTER}, pos);
+    furniture::make_furniture(squ, {EntityType::Squirter}, pos);
     // TODO change how progress bar works to support this
     // squ.addComponent<ShowsProgressBar>();
 }
 
 void make_trash(Entity& trash, vec2 pos) {
-    furniture::make_furniture(trash, {strings::entity::TRASH}, pos);
+    furniture::make_furniture(trash, {EntityType::Trash}, pos);
 }
 
 void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
-    furniture::make_conveyer(pnumatic, pos, {strings::entity::PNUMATIC_PIPE});
+    furniture::make_conveyer(pnumatic, pos, {EntityType::PnumaticPipe});
 
     pnumatic.addComponent<IsPnumaticPipe>();
     pnumatic.get<CustomHeldItemPosition>().init(
@@ -507,9 +505,8 @@ void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
 }
 
 void make_medicine_cabinet(Entity& container, vec2 pos) {
-    furniture::make_itemcontainer(container,
-                                  {strings::entity::MEDICINE_CABINET}, pos,
-                                  strings::item::ALCOHOL);
+    furniture::make_itemcontainer(container, {EntityType::MedicineCabinet}, pos,
+                                  EntityType::Alcohol);
     container.addComponent<Indexer>(ingredient::NUM_ALC);
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
@@ -525,8 +522,8 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
 }
 
 void make_fruit_basket(Entity& container, vec2 pos) {
-    furniture::make_itemcontainer(container, {strings::entity::PILL_DISPENSER},
-                                  pos, strings::item::LEMON);
+    furniture::make_itemcontainer(container, {EntityType::PillDispenser}, pos,
+                                  EntityType::Lemon);
 
     // TODO right now lets just worry about lemon first we can come back and
     // handle other fruits later
@@ -545,17 +542,16 @@ void make_fruit_basket(Entity& container, vec2 pos) {
 }
 
 void make_cupboard(Entity& cupboard, vec2 pos) {
-    furniture::make_itemcontainer(cupboard, {strings::entity::CUPBOARD}, pos,
-                                  strings::item::DRINK);
+    furniture::make_itemcontainer(cupboard, {EntityType::Cupboard}, pos,
+                                  EntityType::Drink);
     cupboard.addComponent<HasDynamicModelName>().init(
-        strings::entity::CUPBOARD,
-        HasDynamicModelName::DynamicType::OpenClosed);
+        EntityType::Cupboard, HasDynamicModelName::DynamicType::OpenClosed);
 }
 
 void make_soda_machine(Entity& soda_machine, vec2 pos) {
-    furniture::make_itemcontainer(
-        soda_machine, DebugOptions{.name = strings::entity::SODA_MACHINE}, pos,
-        strings::item::SODA_SPOUT);
+    furniture::make_itemcontainer(soda_machine,
+                                  DebugOptions{.type = EntityType::SodaMachine},
+                                  pos, EntityType::SodaSpout);
     soda_machine.addComponent<HasRopeToItem>();
     soda_machine.get<IsItemContainer>().set_max_generations(1);
     soda_machine.get<CanHoldItem>()
@@ -564,15 +560,15 @@ void make_soda_machine(Entity& soda_machine, vec2 pos) {
             EntityFilter()
                 .set_enabled_flags(EntityFilter::FilterDatumType::Name)
                 .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
-                                           strings::item::SODA_SPOUT)
+                                           EntityType::SodaSpout)
                 .set_filter_strength(
                     EntityFilter::FilterStrength::Requirement));
 }
 
 void make_mop_holder(Entity& mop_holder, vec2 pos) {
-    furniture::make_itemcontainer(
-        mop_holder, DebugOptions{.name = strings::entity::MOP_HOLDER}, pos,
-        strings::item::MOP);
+    furniture::make_itemcontainer(mop_holder,
+                                  DebugOptions{.type = EntityType::MopHolder},
+                                  pos, EntityType::Mop);
     mop_holder.get<IsItemContainer>().set_max_generations(1);
     mop_holder.get<CanHoldItem>()
         .update_held_by(IsItem::HeldBy::MOP_HOLDER)
@@ -580,14 +576,14 @@ void make_mop_holder(Entity& mop_holder, vec2 pos) {
             EntityFilter()
                 .set_enabled_flags(EntityFilter::FilterDatumType::Name)
                 .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
-                                           strings::item::MOP)
+                                           EntityType::Mop)
                 .set_filter_strength(
                     EntityFilter::FilterStrength::Requirement));
 }
 
 void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
                        float height, const std::string& title) {
-    make_entity(trigger_area, {strings::entity::TRIGGER_AREA}, pos);
+    make_entity(trigger_area, {EntityType::TriggerArea}, pos);
 
     trigger_area.get<Transform>().update_size({
         width,
@@ -608,7 +604,7 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
 
             for (std::shared_ptr<Entity> e : all) {
                 if (!e) continue;
-                if (!check_name(*e, strings::entity::PLAYER)) continue;
+                if (!check_type(*e, EntityType::Player)) continue;
                 move_player_SERVER_ONLY(*e, {0, 0, 0});
             }
         });
@@ -616,14 +612,14 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
 
 void make_blender(Entity& blender, vec2 pos) {
     furniture::make_furniture(blender,
-                              DebugOptions{.name = strings::entity::BLENDER},
-                              pos, ui::color::red, ui::color::yellow);
+                              DebugOptions{.type = EntityType::Blender}, pos,
+                              ui::color::red, ui::color::yellow);
     blender.get<CanHoldItem>().update_held_by(IsItem::HeldBy::BLENDER);
 }
 
 // This will be a catch all for anything that just needs to get updated
 void make_sophie(Entity& sophie, vec3 pos) {
-    make_entity(sophie, {strings::entity::SOPHIE}, pos);
+    make_entity(sophie, {EntityType::Sophie}, pos);
 
     sophie.addComponent<HasTimer>(HasTimer::Renderer::Round,
                                   round_settings::ROUND_LENGTH_S);
@@ -631,12 +627,12 @@ void make_sophie(Entity& sophie, vec3 pos) {
 }
 
 void make_vomit(Entity& vomit, vec2 pos) {
-    make_entity(vomit, {.name = strings::entity::VOMIT});
+    make_entity(vomit, {.type = EntityType::Vomit});
 
     vomit.get<Transform>().init({pos.x, 0, pos.y},
                                 {TILESIZE, TILESIZE, TILESIZE});
     if (ENABLE_MODELS) {
-        vomit.addComponent<ModelRenderer>(strings::entity::VOMIT);
+        vomit.addComponent<ModelRenderer>(EntityType::Vomit);
     }
 
     vomit.addComponent<CanBeHighlighted>();
@@ -652,7 +648,7 @@ void make_vomit(Entity& vomit, vec2 pos) {
             if (playerCHI.empty()) return;
             std::shared_ptr<Item> item = playerCHI.const_item();
             // Has to be holding mop
-            if (!check_name(*item, strings::item::MOP)) return;
+            if (!check_type(*item, EntityType::Mop)) return;
 
             const float amt = 1.f;
             hasWork.increase_pct(amt * dt);
@@ -674,12 +670,12 @@ void make_item(Item& item, const DebugOptions& options, vec2 p) {
     // TODO Not everyone needs this but easier for now
     item.addComponent<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::ItemHoldingItem);
+
+    item.addComponent<ModelRenderer>(options.type);
 }
 
 void make_soda_spout(Item& soda_spout, vec2 pos) {
-    make_item(soda_spout, {.name = strings::item::SODA_SPOUT}, pos);
-
-    soda_spout.addComponent<ModelRenderer>(strings::item::SODA_SPOUT);
+    make_item(soda_spout, {.type = EntityType::SodaSpout}, pos);
 
     soda_spout.get<IsItem>().set_hb_filter(IsItem::HeldBy::SODA_MACHINE |
                                            IsItem::HeldBy::PLAYER);
@@ -693,9 +689,7 @@ void make_soda_spout(Item& soda_spout, vec2 pos) {
 }
 
 void make_mop(Item& mop, vec2 pos) {
-    make_item(mop, {.name = strings::item::MOP}, pos);
-
-    mop.addComponent<ModelRenderer>(strings::item::MOP);
+    make_item(mop, {.type = EntityType::Mop}, pos);
 
     mop.get<IsItem>().set_hb_filter(IsItem::HeldBy::MOP_HOLDER |
                                     IsItem::HeldBy::PLAYER);
@@ -750,9 +744,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
 }
 
 void make_alcohol(Item& alc, vec2 pos, int index) {
-    make_item(alc, {.name = strings::item::ALCOHOL}, pos);
-
-    alc.addComponent<ModelRenderer>(strings::item::ALCOHOL);
+    make_item(alc, {.type = EntityType::Alcohol}, pos);
 
     alc.addComponent<HasSubtype>(ingredient::ALC_START, ingredient::ALC_END,
                                  index);
@@ -766,7 +758,7 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
         .set_num_uses(1);
 
     alc.addComponent<HasDynamicModelName>().init(
-        strings::item::ALCOHOL, HasDynamicModelName::DynamicType::Subtype,
+        EntityType::Alcohol, HasDynamicModelName::DynamicType::Subtype,
         [](const Item& owner, const std::string&) -> std::string {
             const HasSubtype& hst = owner.get<HasSubtype>();
             Ingredient bottle = get_ingredient_from_index(
@@ -776,9 +768,8 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
 }
 
 void make_simple_syrup(Item& simple_syrup, vec2 pos) {
-    make_item(simple_syrup, {.name = strings::item::SIMPLE_SYRUP}, pos);
+    make_item(simple_syrup, {.type = EntityType::SimpleSyrup}, pos);
 
-    simple_syrup.addComponent<ModelRenderer>(strings::item::SIMPLE_SYRUP);
     simple_syrup
         .addComponent<AddsIngredient>(
             [](Entity&) { return Ingredient::SimpleSyrup; })
@@ -786,14 +777,11 @@ void make_simple_syrup(Item& simple_syrup, vec2 pos) {
 }
 
 void make_lemon(Item& lemon, vec2 pos, int index) {
-    make_item(lemon, {.name = strings::item::LEMON}, pos);
+    make_item(lemon, {.type = EntityType::Lemon}, pos);
 
     // TODO i dont like that you have to remember to do +1 here
     lemon.addComponent<HasSubtype>(ingredient::LEMON_START,
                                    ingredient::LEMON_END + 1, index);
-
-    // Scale needs to be a vec3 {3.f, 3.f, 12.f}
-    lemon.addComponent<ModelRenderer>(strings::item::LEMON);
 
     lemon
         .addComponent<AddsIngredient>([](const Entity& lemmy) {
@@ -804,7 +792,7 @@ void make_lemon(Item& lemon, vec2 pos, int index) {
         .set_num_uses(1);
 
     lemon.addComponent<HasDynamicModelName>().init(
-        strings::item::LEMON,  //
+        EntityType::Lemon,  //
         HasDynamicModelName::DynamicType::Subtype,
         [](const Item& owner, const std::string& base_name) -> std::string {
             if (owner.is_missing<HasSubtype>()) {
@@ -819,7 +807,7 @@ void make_lemon(Item& lemon, vec2 pos, int index) {
                 ingredient::LEMON_START + hst.get_type_index());
             switch (lemon_type) {
                 case Ingredient::Lemon:
-                    return strings::item::LEMON;
+                    return strings::model::LEMON;
                 case Ingredient::LemonJuice:
                     return strings::model::LEMON_HALF;
                 default:
@@ -864,9 +852,7 @@ void make_lemon(Item& lemon, vec2 pos, int index) {
 }
 
 void make_drink(Item& drink, vec2 pos) {
-    make_item(drink, {.name = strings::item::DRINK}, pos);
-
-    drink.addComponent<ModelRenderer>(strings::item::DRINK);
+    make_item(drink, {.type = EntityType::Drink}, pos);
 
     drink.addComponent<IsDrink>();
     drink.addComponent<HasWork>().init(std::bind(
@@ -876,7 +862,7 @@ void make_drink(Item& drink, vec2 pos) {
     drink.addComponent<ShowsProgressBar>();
 
     drink.addComponent<HasDynamicModelName>().init(
-        strings::item::DRINK, HasDynamicModelName::DynamicType::Ingredients,
+        EntityType::Drink, HasDynamicModelName::DynamicType::Ingredients,
         [](const Item& owner, const std::string&) -> std::string {
             const IsDrink& isdrink = owner.get<IsDrink>();
             constexpr auto drinks = magic_enum::enum_values<Drink>();
@@ -884,41 +870,37 @@ void make_drink(Item& drink, vec2 pos) {
                 if (isdrink.matches_recipe(d))
                     return get_model_name_for_drink(d);
             }
-            return strings::item::DRINK;
+            return util::convertToSnakeCase<EntityType>(EntityType::Drink);
         });
 }
 
-void make_item_type(Item& item, const std::string& type_name,  //
-                    vec2 pos,                                  //
-                    int index                                  //
-) {
+void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
     // log_info("generating new item {} of type {} at {} subtype{}", item.id,
     // type_name, pos, index);
-    switch (hashString(type_name)) {
-        case hashString(strings::item::SODA_SPOUT):
+    switch (type) {
+        case EntityType::SodaSpout:
             return make_soda_spout(item, pos);
-        case hashString(strings::item::ALCOHOL):
+        case EntityType::Alcohol:
             return make_alcohol(item, pos, index);
-        case hashString(strings::item::LEMON):
+        case EntityType::Lemon:
             return make_lemon(item, pos, index);
-        case hashString(strings::item::DRINK):
+        case EntityType::Drink:
             return make_drink(item, pos);
-        case hashString(strings::item::MOP):
+        case EntityType::Mop:
             return make_mop(item, pos);
-            // TODO add rope item
-            // case hashString(strings::item::ROPE):
-            // return make_rope(item, pos);
+        default:
+            break;
     }
     log_warn(
         "Trying to make item with item type {} but not handled in "
         "make_item_type()",
-        type_name);
+        util::convertToSnakeCase<EntityType>(type));
 }
 
 }  // namespace items
 
 void make_customer(Entity& customer, vec2 p, bool has_order) {
-    make_aiperson(customer, DebugOptions{.name = strings::entity::CUSTOMER},
+    make_aiperson(customer, DebugOptions{.type = EntityType::Customer},
                   vec::to3(p));
 
     customer.addComponent<HasName>().update(get_random_name());
@@ -949,7 +931,7 @@ void make_customer(Entity& customer, vec2 p, bool has_order) {
 
 namespace furniture {
 void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
-    make_entity(customer_spawner, {strings::entity::CUSTOMER_SPAWNER}, pos);
+    make_entity(customer_spawner, {EntityType::CustomerSpawner}, pos);
 
     // TODO maybe one day add some kind of ui that shows when the next
     // person is coming? that migth be good to be part of the round

@@ -107,7 +107,7 @@ inline void render_debug_subtype(const Entity& entity, float) {
         const HasSubtype& hs = entity.get<HasSubtype>();
         content = fmt::format("{}", hs.get_type_index());
         // Convert from ID to ingredient if its an alcohol
-        if (check_name(entity, strings::item::ALCOHOL)) {
+        if (check_type(entity, EntityType::Alcohol)) {
             content = fmt::format("{}", hs.as_type<Ingredient>());
         }
     }

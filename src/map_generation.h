@@ -77,12 +77,12 @@ struct helper {
         switch (ch) {
             case 'x':
                 x = location;
-                make_entity(create(), DebugOptions{.name = "x"},
+                make_entity(create(), DebugOptions{.type = EntityType::x},
                             vec::to3(location));
                 return;
             case 'z':
                 z = location;
-                make_entity(create(), DebugOptions{.name = "z"},
+                make_entity(create(), DebugOptions{.type = EntityType::z},
                             vec::to3(location));
                 return;
             case EMPTY:
@@ -222,14 +222,13 @@ struct helper {
     }
 
     void validate() {
-        auto soph = EntityHelper::getFirstMatching([](const Entity& e) {
-            return check_name(e, strings::entity::SOPHIE);
-        });
+        auto soph = EntityHelper::getFirstMatching(
+            [](const Entity& e) { return check_type(e, EntityType::Sophie); });
         VALIDATE(soph, "sophie needs to be there ");
 
         // find register,
         auto reg_opt = EntityHelper::getFirstMatching([](const Entity& e) {
-            return check_name(e, strings::entity::REGISTER);
+            return check_type(e, EntityType::Register);
         });
         VALIDATE(valid(reg_opt), "map needs to have at least one register");
         const auto& reg = asE(reg_opt);
@@ -237,7 +236,7 @@ struct helper {
         // find customer
         auto customer_opt =
             EntityHelper::getFirstMatching([](const Entity& e) -> bool {
-                return check_name(e, strings::entity::CUSTOMER_SPAWNER);
+                return check_type(e, EntityType::CustomerSpawner);
             });
         VALIDATE(valid(customer_opt),
                  "map needs to have at least one customer spawn point");
@@ -259,7 +258,7 @@ struct helper {
                  "customer should be able to generate a path to the register");
 
         auto ffwd = EntityHelper::getFirstMatching([](const Entity& e) {
-            return check_name(e, strings::entity::FAST_FORWARD);
+            return check_type(e, EntityType::FastForward);
         });
         VALIDATE(ffwd, "ffwd needs to be there ");
     }

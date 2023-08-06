@@ -89,49 +89,6 @@ constexpr const char* GAME_FOLDER = "pharmasea";
 
 ///
 
-namespace entity {
-
-constexpr const char* REMOTE_PLAYER = "remote_player";
-constexpr const char* PLAYER = "player";
-constexpr const char* CUSTOMER = "customer";
-constexpr const char* TABLE = "table";
-constexpr const char* CHARACTER_SWITCHER = "character_switcher";
-constexpr const char* MAP_RANDOMIZER = "map_randomizer";
-constexpr const char* WALL = "wall";
-constexpr const char* CONVEYER = "conveyer";
-constexpr const char* GRABBER = "grabber";
-constexpr const char* REGISTER = "register";
-constexpr const char* MEDICINE_CABINET = "medicine_cabinet";
-constexpr const char* PILL_DISPENSER = "pill_dispenser";
-constexpr const char* TRIGGER_AREA = "trigger_area";
-constexpr const char* CUSTOMER_SPAWNER = "customer spawner";
-constexpr const char* SOPHIE = "sophie";
-constexpr const char* BLENDER = "blender";
-constexpr const char* SODA_MACHINE = "soda_machine";
-constexpr const char* CUPBOARD = "cupboard";
-constexpr const char* SQUIRTER = "squirter";
-constexpr const char* TRASH = "trash";
-constexpr const char* FILTERED_GRABBER = "filtered_grabber";
-constexpr const char* PNUMATIC_PIPE = "pnumatic_pipe";
-constexpr const char* VOMIT = "vomit";
-constexpr const char* MOP_HOLDER = "mop_holder";
-constexpr const char* FAST_FORWARD = "fast_forward";
-
-constexpr const char* DEFAULT_TRIGGER = "DEFAULT TRIGGER";
-
-}  // namespace entity
-
-namespace item {
-
-constexpr const char* SODA_SPOUT = "soda_spout";
-constexpr const char* DRINK = "drink";
-constexpr const char* ALCOHOL = "alcohol";
-constexpr const char* LEMON = "lemon";
-constexpr const char* SIMPLE_SYRUP = "simple_syrup";
-constexpr const char* MOP = "mop";
-
-}  // namespace item
-
 namespace textures {
 
 constexpr const char* FACE = "face";
@@ -149,6 +106,7 @@ constexpr const char* BITTERS = "bitters";
 constexpr const char* TRIPLESEC = "triplesec";
 constexpr const char* COINTREAU = "cointreau";
 
+constexpr const char* LEMON = "lemon";
 constexpr const char* LEMON_HALF = "lemon_half";
 
 constexpr const char* CHARACTER_BEAR = "character_bear";

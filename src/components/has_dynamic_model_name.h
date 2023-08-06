@@ -5,6 +5,8 @@
 #include "../engine/assert.h"
 #include "../engine/model_library.h"
 #include "../engine/statemanager.h"
+#include "../engine/util.h"
+#include "../entity.h"
 #include "../vendor_include.h"
 #include "base_component.h"
 
@@ -46,11 +48,11 @@ struct HasDynamicModelName : public BaseComponent {
         return base_name;
     }
 
-    void init(const std::string& _base_name, DynamicType type,
+    void init(EntityType type, DynamicType dyn_type,
               ModelNameFetcher fet = nullptr) {
         initialized = true;
-        base_name = _base_name;
-        dynamic_type = type;
+        base_name = std::string(util::convertToSnakeCase<EntityType>(type));
+        dynamic_type = dyn_type;
         fetcher = fet;
     }
 

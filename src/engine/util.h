@@ -92,6 +92,28 @@ inline std::vector<std::string> split_re(const std::string& input,
     return std::vector<std::string>{first, last};
 }
 
+inline std::string snake_case(const std::string_view& input) {
+    std::string result;
+
+    for (size_t i = 0; i < input.length(); ++i) {
+        char ch = input[i];
+
+        if (std::isupper(ch)) {
+            if (i > 0) result += '_';
+            ch = static_cast<char>(std::tolower(ch));
+        }
+
+        result += ch;
+    }
+
+    return result;
+}
+
+template<typename T>
+inline std::string convertToSnakeCase(T type) {
+    return snake_case(magic_enum::enum_name(type));
+}
+
 static float clamp(float a, float mn, float mx) {
     return std::min(std::max(a, mn), mx);
 }
