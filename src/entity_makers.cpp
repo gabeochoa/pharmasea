@@ -293,6 +293,8 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
         map_randomizer, DebugOptions{.name = strings::entity::MAP_RANDOMIZER},
         pos, ui::color::baby_blue, ui::color::baby_pink);
 
+    map_randomizer.addComponent<HasName>().update("default seed");
+
     map_randomizer.get<CanBeHighlighted>().set_on_change(
         [](Entity&, bool is_highlighted) {
             if (!is_server()) {
@@ -305,23 +307,26 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
             server->get_map_SERVER_ONLY()->showMinimap = is_highlighted;
         });
 
-    map_randomizer.addComponent<HasWork>().init(
-        [](Entity&, HasWork& hasWork, Entity&, float dt) {
-            const float amt = 1.5f;
-            hasWork.increase_pct(amt * dt);
-            if (hasWork.is_work_complete()) {
-                hasWork.reset_pct();
-                if (!is_server()) {
-                    log_warn(
-                        "you are calling a server only function from a client "
-                        "context, this is probably gonna crash");
-                }
+    map_randomizer.addComponent<HasWork>().init([](Entity& randomizer,
+                                                   HasWork& hasWork, Entity&,
+                                                   float dt) {
+        if (!is_server()) {
+            log_warn(
+                "you are calling a server only function from a client "
+                "context, this is probably gonna crash");
+        }
+        network::Server* server = GLOBALS.get_ptr<network::Server>("server");
 
-                network::Server* server =
-                    GLOBALS.get_ptr<network::Server>("server");
-                server->get_map_SERVER_ONLY()->update_seed(randString(10));
-            }
-        });
+        const float amt = 1.5f;
+        hasWork.increase_pct(amt * dt);
+        if (hasWork.is_work_complete()) {
+            hasWork.reset_pct();
+
+            const auto name = randString(10);
+            server->get_map_SERVER_ONLY()->update_seed(name);
+        }
+        randomizer.get<HasName>().update(server->get_map_SERVER_ONLY()->seed);
+    });
 
     map_randomizer.addComponent<ShowsProgressBar>();
 }

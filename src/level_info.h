@@ -475,7 +475,6 @@ struct LevelInfo {
         {
             auto [x, y] = _get_valid_register_location();
             lines[x][y] = generation::REGISTER;
-            log_info("placing register at {} {}", x, y);
         }
 
         for (auto line : lines) {

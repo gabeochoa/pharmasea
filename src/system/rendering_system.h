@@ -379,8 +379,8 @@ inline void render_floating_name(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
 
-    // log_warn("drawing floating name {} for {} @ {} ({})", hasName.name(),
-    // entity.id, transform.position, transform.raw_position);
+    // log_warn("drawing floating name {} for {} @ {}", hasName.name(),
+    // entity.id, transform.pos());
 
     // TODO rotate the name with the camera?
     raylib::DrawFloatingText(
