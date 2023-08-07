@@ -53,100 +53,6 @@
 #include "recipe_library.h"
 #include "strings.h"
 
-void convert_to_type(EntityType& entity_type, Entity& entity, vec2 location) {
-    // TODO at some point just change all of these to match
-    auto pos = vec::to3(location);
-    switch (entity_type) {
-        case EntityType::Unknown:
-        case EntityType::x:
-        case EntityType::y:
-        case EntityType::z:
-            make_entity(entity, DebugOptions{.type = entity_type}, pos);
-            return;
-        case EntityType::RemotePlayer: {
-            make_remote_player(entity, pos);
-        } break;
-        case EntityType::Player: {
-            make_player(entity, pos);
-        } break;
-        case EntityType::Table: {
-            furniture::make_table(entity, location);
-        } break;
-        case EntityType::CharacterSwitcher: {
-            furniture::make_character_switcher(entity, location);
-        } break;
-        case EntityType::MapRandomizer: {
-            furniture::make_map_randomizer(entity, location);
-        } break;
-        case EntityType::Wall: {
-            const auto d_color = Color{155, 75, 0, 255};
-            (furniture::make_wall(entity, location, d_color));
-        } break;
-        case EntityType::Conveyer: {
-            furniture::make_conveyer(entity, location);
-        } break;
-        case EntityType::Grabber: {
-            furniture::make_grabber(entity, location);
-        } break;
-        case EntityType::Register: {
-            furniture::make_register(entity, location);
-        } break;
-        case EntityType::MedicineCabinet: {
-            furniture::make_medicine_cabinet(entity, location);
-        } break;
-        case EntityType::PillDispenser: {
-            furniture::make_fruit_basket(entity, location);
-        } break;
-        case EntityType::CustomerSpawner: {
-            furniture::make_customer_spawner(entity, pos);
-        } break;
-        case EntityType::Sophie: {
-            furniture::make_sophie(entity, pos);
-        } break;
-        case EntityType::Blender: {
-            furniture::make_blender(entity, location);
-        } break;
-        case EntityType::SodaMachine: {
-            furniture::make_soda_machine(entity, location);
-        } break;
-        case EntityType::Cupboard: {
-            furniture::make_cupboard(entity, location);
-        } break;
-        case EntityType::Squirter: {
-            furniture::make_squirter(entity, location);
-        } break;
-        case EntityType::Trash: {
-            furniture::make_trash(entity, location);
-        } break;
-        case EntityType::FilteredGrabber: {
-            furniture::make_filtered_grabber(entity, location);
-        } break;
-        case EntityType::PnumaticPipe: {
-            furniture::make_pnumatic_pipe(entity, location);
-        } break;
-        case EntityType::MopHolder: {
-            furniture::make_mop_holder(entity, location);
-        } break;
-        case EntityType::FastForward: {
-            furniture::make_fast_forward(entity, location);
-        } break;
-        case EntityType::SimpleSyrup: {
-            items::make_simple_syrup(entity, location);
-        } break;
-        case EntityType::TriggerArea:
-        case EntityType::Vomit:
-        case EntityType::SodaSpout:
-        case EntityType::Drink:
-        case EntityType::Alcohol:
-        case EntityType::Customer:
-        case EntityType::Lemon:
-        case EntityType::Mop:
-            log_warn("{} cant be created through 'convert_to_type'",
-                     entity_type);
-            break;
-    }
-}
-
 void register_all_components() {
     Entity* entity = new Entity();
     entity->addAll<  //
@@ -214,7 +120,8 @@ void add_person_components(Entity& person) {
     person.addComponent<UsesCharacterModel>();
 }
 
-void make_entity(Entity& entity, const DebugOptions& options, vec3 p) {
+void make_entity(Entity& entity, const DebugOptions& options,
+                 vec3 p = {-2, 0, -2}) {
     entity.addComponent<DebugName>().update(options.type);
     add_entity_components(entity);
     entity.get<Transform>().update(p);
@@ -313,7 +220,8 @@ void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
 // or add the ones above into it
 namespace furniture {
 void make_furniture(Entity& furniture, const DebugOptions& options, vec2 pos,
-                    Color face, Color base, bool is_static) {
+                    Color face = PINK, Color base = PINK,
+                    bool is_static = false) {
     make_entity(furniture, options);
 
     furniture.get<Transform>().init({pos.x, 0, pos.y},
@@ -549,7 +457,9 @@ void make_wall(Entity& wall, vec2 pos, Color c) {
     // }
 }
 
-void make_conveyer(Entity& conveyer, vec2 pos, const DebugOptions& options) {
+void make_conveyer(Entity& conveyer, vec2 pos,
+                   const DebugOptions& options = {
+                       .type = EntityType::Conveyer}) {
     furniture::make_furniture(conveyer, options, pos, ui::color::blue,
                               ui::color::blue);
     conveyer.get<CustomHeldItemPosition>().init(
@@ -558,13 +468,15 @@ void make_conveyer(Entity& conveyer, vec2 pos, const DebugOptions& options) {
     conveyer.addComponent<CanBeTakenFrom>();
 }
 
-void make_grabber(Entity& grabber, vec2 pos, const DebugOptions& options) {
+void make_grabber(Entity& grabber, vec2 pos,
+                  const DebugOptions& options = {.type = EntityType::Grabber}) {
     furniture::make_conveyer(grabber, pos, options);
     grabber.addComponent<CanGrabFromOtherFurniture>();
 }
 
 void make_filtered_grabber(Entity& grabber, vec2 pos,
-                           const DebugOptions& options) {
+                           const DebugOptions& options = DebugOptions{
+                               .type = EntityType::FilteredGrabber}) {
     furniture::make_grabber(grabber, pos, options);
     // Initially set empty filter
     grabber.get<CanHoldItem>().set_filter(
@@ -1049,3 +961,97 @@ void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
 }
 
 }  // namespace furniture
+
+void convert_to_type(EntityType& entity_type, Entity& entity, vec2 location) {
+    // TODO at some point just change all of these to match
+    auto pos = vec::to3(location);
+    switch (entity_type) {
+        case EntityType::Unknown:
+        case EntityType::x:
+        case EntityType::y:
+        case EntityType::z:
+            make_entity(entity, DebugOptions{.type = entity_type}, pos);
+            return;
+        case EntityType::RemotePlayer: {
+            make_remote_player(entity, pos);
+        } break;
+        case EntityType::Player: {
+            make_player(entity, pos);
+        } break;
+        case EntityType::Table: {
+            furniture::make_table(entity, location);
+        } break;
+        case EntityType::CharacterSwitcher: {
+            furniture::make_character_switcher(entity, location);
+        } break;
+        case EntityType::MapRandomizer: {
+            furniture::make_map_randomizer(entity, location);
+        } break;
+        case EntityType::Wall: {
+            const auto d_color = Color{155, 75, 0, 255};
+            (furniture::make_wall(entity, location, d_color));
+        } break;
+        case EntityType::Conveyer: {
+            furniture::make_conveyer(entity, location);
+        } break;
+        case EntityType::Grabber: {
+            furniture::make_grabber(entity, location);
+        } break;
+        case EntityType::Register: {
+            furniture::make_register(entity, location);
+        } break;
+        case EntityType::MedicineCabinet: {
+            furniture::make_medicine_cabinet(entity, location);
+        } break;
+        case EntityType::PillDispenser: {
+            furniture::make_fruit_basket(entity, location);
+        } break;
+        case EntityType::CustomerSpawner: {
+            furniture::make_customer_spawner(entity, pos);
+        } break;
+        case EntityType::Sophie: {
+            furniture::make_sophie(entity, pos);
+        } break;
+        case EntityType::Blender: {
+            furniture::make_blender(entity, location);
+        } break;
+        case EntityType::SodaMachine: {
+            furniture::make_soda_machine(entity, location);
+        } break;
+        case EntityType::Cupboard: {
+            furniture::make_cupboard(entity, location);
+        } break;
+        case EntityType::Squirter: {
+            furniture::make_squirter(entity, location);
+        } break;
+        case EntityType::Trash: {
+            furniture::make_trash(entity, location);
+        } break;
+        case EntityType::FilteredGrabber: {
+            furniture::make_filtered_grabber(entity, location);
+        } break;
+        case EntityType::PnumaticPipe: {
+            furniture::make_pnumatic_pipe(entity, location);
+        } break;
+        case EntityType::MopHolder: {
+            furniture::make_mop_holder(entity, location);
+        } break;
+        case EntityType::FastForward: {
+            furniture::make_fast_forward(entity, location);
+        } break;
+        case EntityType::SimpleSyrup: {
+            items::make_simple_syrup(entity, location);
+        } break;
+        case EntityType::TriggerArea:
+        case EntityType::Vomit:
+        case EntityType::SodaSpout:
+        case EntityType::Drink:
+        case EntityType::Alcohol:
+        case EntityType::Customer:
+        case EntityType::Lemon:
+        case EntityType::Mop:
+            log_warn("{} cant be created through 'convert_to_type'",
+                     entity_type);
+            break;
+    }
+}
