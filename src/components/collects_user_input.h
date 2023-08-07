@@ -31,6 +31,8 @@ struct CollectsUserInput : public BaseComponent {
     [[nodiscard]] UserInputs& inputs_NETWORK_ONLY() { return inputs; }
     void clear() { inputs.clear(); }
 
+    [[nodiscard]] InputSet read() const { return pressed; }
+
    private:
     // TODO I wonder if there is a way to combine all the inputs for the current
     // frame into one InputSet but we need the dts

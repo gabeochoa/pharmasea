@@ -99,13 +99,13 @@ void person_update_given_new_pos(int id, Transform& transform,
             return EntityHelper::ForEachFlow::NormalFlow;
         });
 
+        // TODO should probably send this one over the network
         const auto debug_mode_on =
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
         if (debug_mode_on) {
             would_collide_x = false;
             would_collide_z = false;
         }
-
         if (!would_collide_x) {
             transform.update_x(new_pos_x.x);
         }
@@ -250,6 +250,10 @@ void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
     float do_work = KeyMap::is_event(state, InputName::PlayerDoWork);
     if (do_work > 0) cui.write(InputName::PlayerDoWork);
 
+    // run the input on the local client
+    system_manager::input_process_manager::process_input(entity,
+                                                         {cui.read(), dt});
+
     // Actually save the inputs if there were any
     cui.publish(dt);
 }
@@ -299,12 +303,12 @@ void work_furniture(const std::shared_ptr<Entity> player, float frame_dt) {
 }
 
 namespace planning {
-
 void rotate_furniture(const std::shared_ptr<Entity> player) {
     // Cant rotate outside planning mode
     if (GameState::get().is_not(game::State::Planning)) return;
 
-    // TODO need to figure out if reach should be separate from highlighting
+    // TODO need to figure out if reach should be separate from
+    // highlighting
     const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
     std::shared_ptr<Furniture> match =
@@ -346,12 +350,13 @@ void drop_held_furniture(Entity& player) {
     log_info("you cant place that here...");
 }
 
-// TODO grabbing reach needs to be better, you should be able to grab in the 8
-// spots around you and just prioritize the one you are facing
+// TODO grabbing reach needs to be better, you should be able to grab in
+// the 8 spots around you and just prioritize the one you are facing
 //
 
 void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
-    // TODO need to figure out if this should be separate from highlighting
+    // TODO need to figure out if this should be separate from
+    // highlighting
     const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
     CanHoldFurniture& ourCHF = player->get<CanHoldFurniture>();
 
@@ -366,8 +371,8 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
             EntityHelper::getClosestMatchingFurniture(
                 player->get<Transform>(), cho.reach(),
                 [](std::shared_ptr<Furniture> f) {
-                    // TODO right now walls inherit this from furniture but
-                    // eventually that should not be the case
+                    // TODO right now walls inherit this from furniture
+                    // but eventually that should not be the case
                     if (f->is_missing<CanBeHeld>()) return false;
                     return f->get<CanBeHeld>().is_not_held();
                 });
@@ -392,7 +397,6 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
 }  // namespace planning
 
 namespace inround {
-
 void handle_drop(const std::shared_ptr<Entity>& player) {
     const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
@@ -406,7 +410,8 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
 
         if (item->is_missing<CanHoldItem>()) {
             return tl::unexpected(
-                "trying to merge from furniture, but item can not hold things");
+                "trying to merge from furniture, but item can not hold "
+                "things");
         }
 
         CanHoldItem& item_chi = item->get<CanHoldItem>();
@@ -415,7 +420,8 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
         // our item is already full
         if (!item_chi.empty()) {
             return tl::unexpected(
-                "trying to merge from furniture, but item was not empty");
+                "trying to merge from furniture, but item was not "
+                "empty");
         }
 
         std::shared_ptr<Furniture> closest_furniture =
@@ -428,7 +434,8 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
 
         if (!closest_furniture) {
             return tl::unexpected(
-                "trying to merge from furniture, but didnt find anything "
+                "trying to merge from furniture, but didnt find "
+                "anything "
                 "holding something");
         }
 
@@ -451,10 +458,10 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
         return true;
     };
 
-    // This is like placing an item onto a plate and immediately picking it up
-    // it should only apply when the merged item isnt valid in that spot anymore
-    // ie only empty bags go in bagbox so a bag containg something shouldnt go
-    // back
+    // This is like placing an item onto a plate and immediately picking
+    // it up it should only apply when the merged item isnt valid in
+    // that spot anymore ie only empty bags go in bagbox so a bag
+    // containg something shouldnt go back
     //
     /*
      * TODO since this exists as a way to handle containers
@@ -474,7 +481,8 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
 
         if (!playerCHI.is_holding_item()) {
             return tl::unexpected(
-                "trying to merge from furniture around hand, but player wasnt "
+                "trying to merge from furniture around hand, but "
+                "player wasnt "
                 "holding anything");
         }
 
@@ -489,8 +497,8 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
                     // enforce const and is just for us to understand
                     const std::shared_ptr<Entity> item = chi.const_item();
 
-                    // Does the item this furniture holds have the ability to
-                    // hold things
+                    // Does the item this furniture holds have the
+                    // ability to hold things
                     if (item->is_missing<CanHoldItem>()) return false;
 
                     // Can it hold the thing we are holding?
@@ -504,7 +512,8 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
 
         if (!closest_furniture) {
             return tl::unexpected(
-                "trying to merge from furniture around hand, but didnt find "
+                "trying to merge from furniture around hand, but didnt "
+                "find "
                 "anything than can hold what we are holding");
         }
 
@@ -540,8 +549,8 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
                     if (!fCHI.is_holding_item()) return false;
                     // Grab furniture item
                     const auto furn_item = fCHI.item();
-                    // Does the item this furniture holds have the ability to
-                    // hold things
+                    // Does the item this furniture holds have the
+                    // ability to hold things
                     if (furn_item->is_missing<CanHoldItem>()) return false;
                     // Grab the item we are holding...
                     const auto player_item = player->get<CanHoldItem>().item();
@@ -606,8 +615,8 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
                         item_container_is_matching_item(f, item);
                     if (matches_item) return true;
 
-                    // This check has to go after the item containers, for
-                    // putting back into supply to work
+                    // This check has to go after the item containers,
+                    // for putting back into supply to work
                     if (!furnCanHold.empty()) return false;
 
                     // Can it hold the item we are trying to drop
@@ -630,8 +639,8 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
         if (closest_furniture->has<IsItemContainer>() &&
             closest_furniture->get<IsItemContainer>().is_matching_item(item)) {
             // So in this case,
-            // if theres already an item there, then we just have to delete
-            // the one we are holding.
+            // if theres already an item there, then we just have to
+            // delete the one we are holding.
             //
             // if theres nothing there, then we do the normal drop logic
             if (furnCHI.is_holding_item()) {
@@ -673,7 +682,8 @@ void handle_grab(const std::shared_ptr<Entity>& player) {
             EntityHelper::getClosestMatchingFurniture(
                 playerT, cho.reach(),
                 [player](std::shared_ptr<Furniture> furn) -> bool {
-                    // This furniture can never hold anything so no match
+                    // This furniture can never hold anything so no
+                    // match
                     if (furn->is_missing<CanHoldItem>()) return false;
                     // its not holding something
                     if (furn->get<CanHoldItem>().empty()) return false;
@@ -691,8 +701,8 @@ void handle_grab(const std::shared_ptr<Entity>& player) {
         CanHoldItem& furnCanHold = closest_furniture->get<CanHoldItem>();
         std::shared_ptr<Item> item = furnCanHold.item();
 
-        // log_info("Found {} to pick up from {}", item->get<DebugName>(),
-        // closest_furniture->get<DebugName>());
+        // log_info("Found {} to pick up from {}",
+        // item->get<DebugName>(), closest_furniture->get<DebugName>());
 
         CanHoldItem& playerCHI = player->get<CanHoldItem>();
         playerCHI.update(item);
@@ -762,8 +772,8 @@ void process_input(const std::shared_ptr<Entity> entity,
                         } else if (GameState::get().is(game::State::Planning)) {
                             planning::handle_grab_or_drop(entity);
                         } else {
-                            // TODO we probably want to handle messing around in
-                            // the lobby
+                            // TODO we probably want to handle messing
+                            // around in the lobby
                         }
                     }
                     break;

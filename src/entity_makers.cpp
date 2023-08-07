@@ -168,8 +168,9 @@ void update_player_remotely(Entity& entity, float* location,
     entity.get<HasName>().update(username);
 
     Transform& transform = entity.get<Transform>();
+    vec3 new_pos = vec3{location[0], location[1], location[2]};
 
-    transform.update(vec3{location[0], location[1], location[2]});
+    transform.update(new_pos);
     transform.update_face_direction(
         static_cast<Transform::FrontFaceDirection>(facing_direction));
 }
@@ -197,7 +198,10 @@ void make_player(Entity& player, vec3 p) {
     // note: these are added to some remote players
     // ie the one the client is controlling
     player.addComponent<CollectsUserInput>();
-    player.addComponent<CanBeGhostPlayer>();
+    player.addComponent<IsSolid>();
+
+    // This one is only added to local players
+    // player.addComponent<CanBeGhostPlayer>();
 
     player.addComponent<RespondsToUserInput>();
 }

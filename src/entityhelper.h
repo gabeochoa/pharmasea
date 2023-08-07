@@ -54,10 +54,11 @@
         return true;
     }
 
-    // if you are a ghost player and are currently not a ghost
+    // TODO rename this since it no longer makes sense
+    // if you are a ghost player
     // then you are collidable
     if (entity->has<CanBeGhostPlayer>()) {
-        return entity->get<CanBeGhostPlayer>().is_not_ghost();
+        return true;
     }
     return false;
 }

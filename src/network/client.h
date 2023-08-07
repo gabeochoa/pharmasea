@@ -228,6 +228,8 @@ struct Client {
                         remote_players[id]);
                     (*(map->local_players_NOT_SERIALIZED.rbegin()))
                         ->addComponent<CollectsUserInput>();
+                    (*(map->local_players_NOT_SERIALIZED.rbegin()))
+                        ->addComponent<CanBeGhostPlayer>();
                 }
 
                 for (auto client_id : info.all_clients) {
