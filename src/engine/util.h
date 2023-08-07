@@ -2,6 +2,7 @@
 
 //
 #include "log.h"
+#include "../vendor_include.h"
 #define _USE_MATH_DEFINES  // for C++
 #include <math.h>
 

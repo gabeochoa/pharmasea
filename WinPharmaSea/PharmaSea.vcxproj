@@ -23,6 +23,7 @@
     <None Include="..\resources\config\settings.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\bitsery_include.h" />
     <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\components\adds_ingredient.h" />
     <ClInclude Include="..\src\components\base_component.h" />
@@ -68,22 +69,34 @@
     <ClInclude Include="..\src\components\simple_colored_box_renderer.h" />
     <ClInclude Include="..\src\components\transform.h" />
     <ClInclude Include="..\src\components\uses_character_model.h" />
+    <ClInclude Include="..\src\dataclass\entity_filter.h" />
+    <ClInclude Include="..\src\dataclass\ingredient.h" />
+    <ClInclude Include="..\src\dataclass\medicine.h" />
+    <ClInclude Include="..\src\dataclass\names.h" />
     <ClInclude Include="..\src\drawing_util.h" />
     <ClInclude Include="..\src\engine.h" />
+    <ClInclude Include="..\src\engine\anim_library.h" />
     <ClInclude Include="..\src\engine\app.h" />
     <ClInclude Include="..\src\engine\assert.h" />
     <ClInclude Include="..\src\engine\astar.h" />
     <ClInclude Include="..\src\engine\atomic_queue.h" />
+    <ClInclude Include="..\src\engine\bitset_utils.h" />
     <ClInclude Include="..\src\engine\constexpr_containers.h" />
+    <ClInclude Include="..\src\engine\container_cast.h" />
     <ClInclude Include="..\src\engine\defer.h" />
+    <ClInclude Include="..\src\engine\detect_program.h" />
     <ClInclude Include="..\src\engine\event.h" />
     <ClInclude Include="..\src\engine\files.h" />
+    <ClInclude Include="..\src\engine\font_sizer.h" />
     <ClInclude Include="..\src\engine\gamepad_axis_with_dir.h" />
+    <ClInclude Include="..\src\engine\globals.h" />
     <ClInclude Include="..\src\engine\globals_register.h" />
+    <ClInclude Include="..\src\engine\graphics.h" />
     <ClInclude Include="..\src\engine\is_server.h" />
     <ClInclude Include="..\src\engine\keymap.h" />
     <ClInclude Include="..\src\engine\layer.h" />
     <ClInclude Include="..\src\engine\library.h" />
+    <ClInclude Include="..\src\engine\log.h" />
     <ClInclude Include="..\src\engine\model_library.h" />
     <ClInclude Include="..\src\engine\music_library.h" />
     <ClInclude Include="..\src\engine\navmesh.h" />
@@ -91,26 +104,36 @@
     <ClInclude Include="..\src\engine\polygon.h" />
     <ClInclude Include="..\src\engine\profile.h" />
     <ClInclude Include="..\src\engine\random.h" />
+    <ClInclude Include="..\src\engine\resolution.h" />
+    <ClInclude Include="..\src\engine\settings.h" />
     <ClInclude Include="..\src\engine\shader_library.h" />
     <ClInclude Include="..\src\engine\singleton.h" />
     <ClInclude Include="..\src\engine\sound_library.h" />
+    <ClInclude Include="..\src\engine\statemanager.h" />
     <ClInclude Include="..\src\engine\texture_library.h" />
+    <ClInclude Include="..\src\engine\time.h" />
     <ClInclude Include="..\src\engine\timer.h" />
+    <ClInclude Include="..\src\engine\toastmanager.h" />
+    <ClInclude Include="..\src\engine\tracy.h" />
+    <ClInclude Include="..\src\engine\trie.h" />
+    <ClInclude Include="..\src\engine\trigger_on_dt.h" />
+    <ClInclude Include="..\src\engine\type_name.h" />
     <ClInclude Include="..\src\engine\ui.h" />
     <ClInclude Include="..\src\engine\ui_autolayout.h" />
     <ClInclude Include="..\src\engine\ui_color.h" />
+    <ClInclude Include="..\src\engine\ui_components.h" />
     <ClInclude Include="..\src\engine\ui_context.h" />
     <ClInclude Include="..\src\engine\ui_state.h" />
     <ClInclude Include="..\src\engine\ui_theme.h" />
     <ClInclude Include="..\src\engine\ui_widget.h" />
+    <ClInclude Include="..\src\engine\util.h" />
     <ClInclude Include="..\src\engine\uuid.h" />
     <ClInclude Include="..\src\entity.h" />
     <ClInclude Include="..\src\entityhelper.h" />
     <ClInclude Include="..\src\entity_makers.h" />
+    <ClInclude Include="..\src\entity_type.h" />
     <ClInclude Include="..\src\external_include.h" />
-    <ClInclude Include="..\src\furniture\register.h" />
-    <ClInclude Include="..\src\furniture\table.h" />
-    <ClInclude Include="..\src\furniture\wall.h" />
+    <ClInclude Include="..\src\game.h" />
     <ClInclude Include="..\src\globals.h" />
     <ClInclude Include="..\src\job.h" />
     <ClInclude Include="..\src\layers\aboutlayer.h" />
@@ -119,6 +142,7 @@
     <ClInclude Include="..\src\layers\gamelayer.h" />
     <ClInclude Include="..\src\layers\menulayer.h" />
     <ClInclude Include="..\src\layers\menustatelayer.h" />
+    <ClInclude Include="..\src\layers\minimaplayer.h" />
     <ClInclude Include="..\src\layers\networklayer.h" />
     <ClInclude Include="..\src\layers\pauselayer.h" />
     <ClInclude Include="..\src\layers\settingslayer.h" />
@@ -127,12 +151,14 @@
     <ClInclude Include="..\src\layers\versionlayer.h" />
     <ClInclude Include="..\src\level_info.h" />
     <ClInclude Include="..\src\map.h" />
+    <ClInclude Include="..\src\map_generation.h" />
     <ClInclude Include="..\src\network\client.h" />
+    <ClInclude Include="..\src\network\internal\channel.h" />
+    <ClInclude Include="..\src\network\internal\client.h" />
+    <ClInclude Include="..\src\network\internal\server.h" />
     <ClInclude Include="..\src\network\network.h" />
-    <ClInclude Include="..\src\network\networklayer.h" />
     <ClInclude Include="..\src\network\server.h" />
     <ClInclude Include="..\src\network\shared.h" />
-    <ClInclude Include="..\src\network\webrequest.h" />
     <ClInclude Include="..\src\preload.h" />
     <ClInclude Include="..\src\recipe_library.h" />
     <ClInclude Include="..\src\spawner.h" />
@@ -143,18 +169,29 @@
     <ClInclude Include="..\src\system\logging_system.h" />
     <ClInclude Include="..\src\system\rendering_system.h" />
     <ClInclude Include="..\src\system\system_manager.h" />
+    <ClInclude Include="..\src\system\ui_rendering_system.h" />
+    <ClInclude Include="..\src\tests\all_tests.h" />
+    <ClInclude Include="..\src\tests\component.h" />
+    <ClInclude Include="..\src\tests\lerp_test.h" />
+    <ClInclude Include="..\src\tests\size_ents.h" />
+    <ClInclude Include="..\src\tests\test_maps.h" />
+    <ClInclude Include="..\src\tests\test_pathing.h" />
+    <ClInclude Include="..\src\tests\test_ui_widget.h" />
     <ClInclude Include="..\src\text_util.h" />
     <ClInclude Include="..\src\vec_util.h" />
     <ClInclude Include="..\src\vendor_include.h" />
-    <ClInclude Include="..\vendor\HTTPRequest.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\engine\app.cpp" />
     <ClCompile Include="..\src\engine\files.cpp" />
     <ClCompile Include="..\src\engine\globals_register.cpp" />
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
+    <ClCompile Include="..\src\entity.cpp" />
+    <ClCompile Include="..\src\entity_makers.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\job.cpp" />
+    <ClCompile Include="..\src\level_info.cpp" />
+    <ClCompile Include="..\src\network\server.cpp" />
     <ClCompile Include="..\src\preload.cpp" />
     <ClCompile Include="..\src\system\input_process_manager.cpp" />
     <ClCompile Include="..\src\system\rendering_system.cpp" />
@@ -267,6 +304,7 @@
       </AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:__cplusplus /bigobj %(AdditionalOptions)</AdditionalOptions>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -288,7 +326,7 @@
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:__cplusplus /bigobj %(AdditionalOptions)</AdditionalOptions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
     </ClCompile>
     <Link>

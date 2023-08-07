@@ -33,7 +33,7 @@ struct GlobalValueRegister {
                                    T default_value) const {
         if (!contains(name)) return default_value;
 
-        T* t = get_ptr<T>(name);
+        auto* t = get_ptr<T>(name);
         if (t) {
             return *t;
         }
