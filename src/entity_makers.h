@@ -12,6 +12,8 @@
 
 typedef Entity Furniture;
 
+void convert_to_type(EntityType& entity_type, Entity& entity, vec2 location);
+
 void register_all_components();
 void add_entity_components(Entity& entity);
 void add_person_components(Entity& person);
@@ -31,6 +33,8 @@ void update_player_rare_remotely(Entity& entity, int model_index,
 
 void make_player(Entity& player, vec3 p);
 void make_aiperson(Entity& person, const DebugOptions& options, vec3 p);
+
+void make_customer(Entity& customer, vec2 p, bool has_order = true);
 
 namespace furniture {
 void make_furniture(Entity& furniture, const DebugOptions& options, vec2 pos,
@@ -89,6 +93,8 @@ void make_sophie(Entity& sophie, vec3 pos);
 
 void make_vomit(Entity& vomit, vec2 pos);
 
+void make_customer_spawner(Entity& customer_spawner, vec3 pos);
+
 }  // namespace furniture
 
 namespace items {
@@ -116,10 +122,3 @@ void make_drink(Item& drink, vec2 pos);
 void make_item_type(Item& item, EntityType type_name, vec2 pos, int index = -1);
 
 }  // namespace items
-
-void make_customer(Entity& customer, vec2 p, bool has_order = true);
-
-namespace furniture {
-void make_customer_spawner(Entity& customer_spawner, vec3 pos);
-
-}  // namespace furniture

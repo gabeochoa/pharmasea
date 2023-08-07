@@ -73,120 +73,82 @@ struct helper {
         }
     }
 
-    template<typename Func = std::function<Entity&()>>
-    void generate_entity_from_character(Func&& create, char ch, vec2 location) {
+    EntityType convert_character_to_type(char ch) {
         switch (ch) {
-            case 'x':
-                x = location;
-                make_entity(create(), DebugOptions{.type = EntityType::x},
-                            vec::to3(location));
-                return;
-            case 'z':
-                z = location;
-                make_entity(create(), DebugOptions{.type = EntityType::z},
-                            vec::to3(location));
-                return;
             case EMPTY:
-                return;
-            case SOPHIE: {
-                (furniture::make_sophie(create(), vec::to3(location)));
-                return;
-            } break;
+                return EntityType::Unknown;
+            case 'x':
+                return EntityType::x;
+            case 'z':
+                return EntityType::z;
+            case SOPHIE:
+                return EntityType::Sophie;
             case REGISTER: {
-                (furniture::make_register(create(), location));
-                return;
+                return EntityType::Register;
             } break;
             case WALL2:
             case WALL: {
-                const auto d_color = Color{155, 75, 0, 255};
-                (furniture::make_wall(create(), location, d_color));
-                return;
+                return EntityType::Wall;
             } break;
             case CUSTOMER: {
-                make_customer(create(), location, true);
-                return;
+                return EntityType::Customer;
             } break;
             case CUST_SPAWNER: {
-                furniture::make_customer_spawner(create(), vec::to3(location));
-                return;
+                return EntityType::CustomerSpawner;
             } break;
             case GRABBERu: {
-                (furniture::make_grabber(create(), location));
-                return;
+                return EntityType::Grabber;
             } break;
             case GRABBERl: {
-                Entity& grabber = create();
-                (furniture::make_grabber(grabber, location));
-                grabber.get<Transform>().rotate_facing_clockwise(270);
-                return;
+                return EntityType::Grabber;
             } break;
             case GRABBERr: {
-                Entity& grabber = create();
-                (furniture::make_grabber(grabber, location));
-                grabber.get<Transform>().rotate_facing_clockwise(90);
-                return;
+                return EntityType::Grabber;
             } break;
             case GRABBERd: {
-                Entity& grabber = create();
-                (furniture::make_grabber(grabber, location));
-                grabber.get<Transform>().rotate_facing_clockwise(180);
-                return;
+                return EntityType::Grabber;
             } break;
             case TABLE: {
-                (furniture::make_table(create(), location));
-                return;
+                return EntityType::Table;
             } break;
             case MED_CAB: {
-                (furniture::make_medicine_cabinet(create(), location));
-                return;
+                return EntityType::MedicineCabinet;
             } break;
             case FRUIT: {
-                (furniture::make_fruit_basket(create(), location));
-                return;
+                return EntityType::PillDispenser;
             } break;
             case BLENDER: {
-                (furniture::make_blender(create(), location));
-                return;
+                return EntityType::Blender;
             } break;
             case SODA_MACHINE: {
-                (furniture::make_soda_machine(create(), location));
-                return;
+                return EntityType::SodaMachine;
             } break;
             case CUPBOARD: {
-                (furniture::make_cupboard(create(), location));
-                return;
+                return EntityType::Cupboard;
             } break;
             case LEMON: {
-                (items::make_lemon(create(), location, 0));
-                return;
+                return EntityType::Lemon;
             } break;
             case SIMPLE_SYRUP: {
-                (items::make_simple_syrup(create(), location));
-                return;
+                return EntityType::SimpleSyrup;
             } break;
             case SQUIRTER: {
-                (furniture::make_squirter(create(), location));
-                return;
+                return EntityType::Squirter;
             } break;
             case TRASH: {
-                (furniture::make_trash(create(), location));
-                return;
+                return EntityType::Trash;
             } break;
             case FILTERED_GRABBER: {
-                (furniture::make_filtered_grabber(create(), location));
-                return;
+                return EntityType::FilteredGrabber;
             } break;
             case PIPE: {
-                (furniture::make_pnumatic_pipe(create(), location));
-                return;
+                return EntityType::PnumaticPipe;
             } break;
             case MOP_HOLDER: {
-                (furniture::make_mop_holder(create(), location));
-                return;
+                return EntityType::MopHolder;
             } break;
             case FAST_FORWARD: {
-                (furniture::make_fast_forward(create(), location));
-                return;
+                return EntityType::FastForward;
             } break;
             case 32: {
                 // space
@@ -194,6 +156,31 @@ struct helper {
             default: {
                 log_warn("Found character we dont parse in string '{}'({})", ch,
                          (int) ch);
+            } break;
+        }
+        return EntityType::Unknown;
+    }
+
+    template<typename Func = std::function<Entity&()>>
+    void generate_entity_from_character(Func&& create, char ch, vec2 location) {
+        EntityType et = convert_character_to_type(ch);
+        Entity& entity = create();
+        convert_to_type(et, entity, location);
+        switch (ch) {
+            case 'x': {
+                x = location;
+            } break;
+            case 'z': {
+                z = location;
+            } break;
+            case GRABBERl: {
+                entity.get<Transform>().rotate_facing_clockwise(270);
+            } break;
+            case GRABBERr: {
+                entity.get<Transform>().rotate_facing_clockwise(90);
+            } break;
+            case GRABBERd: {
+                entity.get<Transform>().rotate_facing_clockwise(180);
             } break;
         };
         return;
