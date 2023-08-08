@@ -33,6 +33,7 @@
 #include "layers/fpslayer.h"
 #include "layers/gamedebuglayer.h"
 #include "layers/gamelayer.h"
+#include "layers/handlayer.h"
 #include "layers/menulayer.h"
 #include "layers/menustatelayer.h"
 #include "layers/minimaplayer.h"
@@ -114,10 +115,12 @@ void startup() {
         //
         new PauseLayer(),
         //
-        new NetworkLayer(),
-        new MinimapLayer(),
-        new GameLayer(),
         new GameDebugLayer(),
+        new MinimapLayer(),
+        new HandLayer(),
+        //
+        new NetworkLayer(),
+        new GameLayer(),
         new AboutLayer(),
         new SettingsLayer(),
         new MenuLayer(),

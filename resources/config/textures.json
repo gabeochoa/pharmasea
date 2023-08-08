@@ -34,6 +34,11 @@
             "folder": "images",
             "filename": "character_dog_mug.png",
             "library_name": "character_dog_mug"
+        },
+        {
+            "folder": "images",
+            "filename": "hand.png",
+            "library_name": "hand"
         }
     ]
 }

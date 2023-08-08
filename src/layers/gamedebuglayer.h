@@ -12,6 +12,7 @@
 #include "../engine/layer.h"
 #include "../engine/statemanager.h"
 #include "../entityhelper.h"
+#include "raylib.h"
 
 struct GameDebugLayer : public Layer {
     bool debug_ui_enabled = false;
@@ -84,6 +85,12 @@ struct GameDebugLayer : public Layer {
         if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleDebug) ==
             event.keycode) {
             debug_ui_enabled = !debug_ui_enabled;
+            if (debug_ui_enabled) {
+                raylib::EnableCursor();
+            } else {
+                raylib::DisableCursor();
+            }
+
             return true;
         }
         if (KeyMap::get_key_code(menu::State::Game,
