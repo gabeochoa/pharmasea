@@ -217,17 +217,28 @@ struct EntityHelper {
     }
 
     template<typename T>
-    static constexpr std::vector<std::shared_ptr<T>> getEntitiesInRange(
-        vec2 pos, float range) {
+    static constexpr std::vector<std::shared_ptr<T>> getFilteredEntitiesInRange(
+        vec2 pos, float range,
+        std::function<bool(std::shared_ptr<T>)> filter  //
+    ) {
         std::vector<std::shared_ptr<T>> matching;
         for (auto& e : get_entities()) {
             auto s = dynamic_pointer_cast<T>(e);
             if (!s) continue;
+            if (!filter(s)) continue;
             if (vec::distance(pos, e->get<Transform>().as2()) < range) {
                 matching.push_back(s);
             }
         }
         return matching;
+    }
+
+    template<typename T>
+    static constexpr std::vector<std::shared_ptr<T>> getEntitiesInRange(
+        vec2 pos, float range) {
+        std::vector<std::shared_ptr<T>> matching;
+        return getFilteredEntitiesInRange<T>(pos, range,
+                                             [](auto&&) { return true; });
     }
 
     static std::vector<std::shared_ptr<Entity>> getEntitiesInPosition(

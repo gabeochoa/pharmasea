@@ -24,6 +24,7 @@ constexpr BoundingBox get_bounds(vec3 position, vec3 size) {
 
 namespace vec {
 
+// Order is NW, W, SW, N, S, NE, E, SE
 static constexpr int neigh_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
 static constexpr int neigh_y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
