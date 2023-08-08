@@ -55,6 +55,30 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+### alpha_0.23.08.05
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (UI) The first option in a dropdown isnt selectable 
+
+impact
+- Seed Changer now shows the current seed on the block
+- Added fast-forward block to move the day faster if you find it too easy
+- Character now does local movement prediction so it should feel smoother
+- Added placeholder model for wall (not used yet) 
+- Added hand cursor for in menu (no idea how it should work for controller yet though) 
+
+bug fixes
+- Hide timer when in lobby 
+- Stop conveyers from grabbing items from people (again)
+- Bring back loading text waving
+- Stop generating entities for empty space
+
+better eng 
+- Switch from strings for entities to enums, entire game should run faster 
+- Lots of file changes 
+- Start storing the ingredients we haven unlocked 
+- Bitwise operations are now constexpr
 
 ### alpha_0.23.08.05
 
