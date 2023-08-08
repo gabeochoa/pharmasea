@@ -164,7 +164,7 @@ struct helper {
     template<typename Func = std::function<Entity&()>>
     void generate_entity_from_character(Func&& create, char ch, vec2 location) {
         // This is not a warning since most maps are made up of '.'s
-        if (ch == EMPTY) return;
+        if (ch == EMPTY || ch == 32) return;
 
         EntityType et = convert_character_to_type(ch);
 
