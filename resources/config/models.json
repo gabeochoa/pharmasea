@@ -395,22 +395,14 @@
             "size_scale": 3.0,
             "position_offset": [0,-0.5,0],
             "rotation_angle": 0.0
-        },
-        {
-            "folder": "models/kennynl",
-            "filename": "wall.obj",
-            "library_name": "wall",
-            "size_scale": 1.0,
-            "position_offset": [-0.5,-0.5,0],
-            "rotation_angle": 0.0
-        },
-        {
-            "folder": "models/kennynl",
-            "filename": "wallCornerRond.obj",
-            "library_name": "wall_corner",
-            "size_scale": 1.0,
-            "position_offset": [-0.5,-0.5,0],
-            "rotation_angle": 0.0
+        //},
+        //{
+        //    "folder": "models/kennynl",
+        //    "filename": "wall.obj",
+        //    "library_name": "wall",
+        //    "size_scale": 1.0,
+        //    "position_offset": [-0.5,-0.5,0],
+        //    "rotation_angle": 0.0
         }
     ]
 }
