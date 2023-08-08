@@ -55,7 +55,7 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
-### alpha_0.23.08.05
+### alpha_0.23.08.08
 
 Known Issues
 - (All) movement sucks today with analog stick
