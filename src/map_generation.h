@@ -163,7 +163,19 @@ struct helper {
 
     template<typename Func = std::function<Entity&()>>
     void generate_entity_from_character(Func&& create, char ch, vec2 location) {
+        // This is not a warning since most maps are made up of '.'s
+        if (ch == EMPTY) return;
+
         EntityType et = convert_character_to_type(ch);
+
+        if (et == EntityType::Unknown) {
+            log_warn(
+                "you are trying to create an unknown type with character {}, "
+                "refusing to make it ",
+                ch);
+            return;
+        }
+
         Entity& entity = create();
         convert_to_type(et, entity, location);
         switch (ch) {
