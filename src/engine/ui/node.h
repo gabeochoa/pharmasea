@@ -112,7 +112,14 @@ struct Rule {
 typedef std::map<std::string, Value> ValueMap;
 struct Style {
     ValueMap values;
-    DisplayType display_type = Inline;
+
+    DisplayType display_type() const {
+        auto dt = lookup_s("display");
+        if (dt == "inline") {
+            return Inline;
+        }
+        return Block;
+    }
 
     std::optional<std::string> lookup_s(const std::string& field) const {
         if (values.contains(field))
@@ -171,7 +178,7 @@ struct Node {
     Node(const std::string& tag, const Attrs& attrs, const Nodes& children)
         : id(NODE_ID_GEN++), tag(tag), attrs(attrs), children(children) {}
 
-    [[nodiscard]] DisplayType display() const { return style.display_type; }
+    [[nodiscard]] DisplayType display() const { return style.display_type(); }
 };
 
 std::ostream& operator<<(std::ostream& os, const Style& style) {
@@ -195,11 +202,13 @@ std::ostream& operator<<(std::ostream& os, const Node& node) {
     os << node.tag;
     os << " ";
 
+    os << "attrs: ";
     for (auto c : node.attrs) {
         os << fmt::format(" {}:{}, ", c.first, c.second);
     }
 
-    os << fmt::format("{} style=\"{}\">", node.children.size(), node.style);
+    os << fmt::format(" children:{} style=\"{}\">", node.children.size(),
+                      node.style);
     return os;
 }
 
@@ -296,6 +305,7 @@ struct LayoutBox {
         dims.border.y = border_right;
         dims.padding.x = padding_left;
         dims.padding.y = padding_right;
+
         // log_info("{} {}", style.values["padding-left"], parent_width);
     }
 

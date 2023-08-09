@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine.h"
+#include "../engine/ui/ui.h"
 #include "../external_include.h"
 
 using namespace ui;
@@ -24,6 +25,8 @@ struct SettingsLayer : public Layer {
     std::vector<std::pair<InputName, AnyInputs>> keyInputValues;
 
     std::shared_ptr<ui::UIContext> ui_context;
+    LayoutBox root_box;
+
     bool windowSizeDropdownState = false;
     int windowSizeDropdownIndex = 0;
     bool resolution_dropdown_open = false;
@@ -32,7 +35,10 @@ struct SettingsLayer : public Layer {
     bool language_dropdown_open = false;
     int language_selected_index = 0;
 
-    SettingsLayer() : Layer("Settings") {
+    SettingsLayer()
+        : Layer("Settings"),
+          ui_context(std::make_shared<ui::UIContext>()),
+          root_box(load_ui("resources/html/settings.html", WIN_R())) {
         ui_context = std::make_shared<ui::UIContext>();
 
         resolution_selected_index =
@@ -298,9 +304,25 @@ struct SettingsLayer : public Layer {
         raylib::SetExitKey(raylib::KEY_NULL);
     }
 
+    void process_on_click(const std::string& id) {
+        log_info("clicked {}", id);
+        switch (hashString(id)) {
+            case hashString(strings::i18n::BACK_BUTTON):
+                MenuState::get().set(menu::State::Root);
+                break;
+        }
+    }
+
     virtual void onDraw(float dt) override {
         if (MenuState::get().is_not(menu::State::Settings)) return;
         ext::clear_background(ui_context->active_theme().background);
         draw_ui(dt);
+        // elements::focus::begin();
+        //
+        // render_ui(ui_context, root_box, WIN_R(),
+        // std::bind(&SettingsLayer::process_on_click, *this,
+        // std::placeholders::_1));
+        //
+        // elements::focus::end();
     }
 };
