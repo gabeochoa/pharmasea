@@ -154,18 +154,22 @@ struct Style {
 // TODO eventually support selectors
 typedef std::map<std::string, Rule> RuleMap;
 
+static std::atomic_int NODE_ID_GEN = 1;
+
 struct Node {
+    int id = 0;
     std::string content;
     std::string tag;
     Attrs attrs;
     Nodes children;
-    Node(){};
+    Node() : id(NODE_ID_GEN++){};
 
     Style style;
 
-    explicit Node(const std::string& content) : content(content) {}
+    explicit Node(const std::string& content)
+        : id(NODE_ID_GEN++), content(content) {}
     Node(const std::string& tag, const Attrs& attrs, const Nodes& children)
-        : tag(tag), attrs(attrs), children(children) {}
+        : id(NODE_ID_GEN++), tag(tag), attrs(attrs), children(children) {}
 
     [[nodiscard]] DisplayType display() const { return style.display_type; }
 };

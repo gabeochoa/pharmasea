@@ -4,6 +4,7 @@
 #include "../../external_include.h"
 #include "../../strings.h"
 #include "../texture_library.h"
+#include "../uuid.h"
 #include "elements.h"
 #include "parsing.h"
 
@@ -78,20 +79,21 @@ inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
 
     Node node = root_box.node;
 
+    auto widget = elements::Widget{root_box, node.id};
+
     if (node.tag.empty()) {
-        elements::text(ui_context, elements::Widget{root_box}, node.content,
-                       parent);
+        elements::text(ui_context, widget, node.content, parent);
         return;
     }
 
     switch (hashString(node.tag)) {
         case hashString("button"):
-            if (elements::button(ui_context, elements::Widget{root_box})) {
+            if (elements::button(ui_context, widget)) {
                 onClick(root_box.node.attrs.at("id"));
             }
             break;
         case hashString("div"):
-            elements::div(ui_context, elements::Widget{root_box});
+            elements::div(ui_context, widget);
             break;
         case hashString("em"):
         case hashString("h1"):

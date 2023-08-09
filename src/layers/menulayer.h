@@ -170,9 +170,13 @@ struct MenuLayer : public Layer {
         PROFILE();
         ext::clear_background(ui_context->active_theme().background);
 
+        elements::focus::begin();
+
         render_ui(ui_context, root_box, {0, 0, WIN_WF(), WIN_HF()},
                   std::bind(&MenuLayer::process_on_click, *this,
                             std::placeholders::_1));
+
+        elements::focus::end();
 
         // ui_context->begin(dt);
         //

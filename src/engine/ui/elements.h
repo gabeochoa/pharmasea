@@ -28,10 +28,10 @@ inline bool is_mouse_down_in_box(const Rectangle& rect) {
 }
 
 struct Widget {
-    ui::uuid id;
     LayoutBox layout_box;
+    int id;
 
-    Widget(const LayoutBox& lb) : layout_box(lb) {}
+    Widget(const LayoutBox& lb, int i) : layout_box(lb), id(i) {}
 
     std::optional<ui::theme::Usage> get_usage_color_maybe(
         const std::string& type) const {
@@ -64,6 +64,82 @@ struct Widget {
     Rectangle get_rect() const { return layout_box.dims.content; }
 };
 
+namespace focus {
+static const int ROOT_ID = -1;
+static int focus_id = ROOT_ID;
+static int last_processed = ROOT_ID;
+
+static int hot_id = ROOT_ID;
+// static int active_id = ROOT_ID;
+
+inline int get() { return focus_id; }
+inline void set(int id) { focus_id = id; }
+inline bool matches(int id) { return get() == id; }
+inline bool up_for_grabs() { return matches(ROOT_ID); }
+inline void try_to_grab(const Widget& widget) {
+    if (up_for_grabs()) {
+        set(widget.id);
+    }
+}
+
+inline void handle_tabbing(std::shared_ptr<ui::UIContext> ui_context,
+                           const Widget& widget) {
+    // TODO How do we handle something that wants to use
+    // Widget Value Down/Up to control the value?
+    // Do we mark the widget type with "nextable"? (tab will always work but
+    // not very discoverable
+    if (matches(widget.id)) {
+        if (
+            //
+            ui_context->pressed(InputName::WidgetNext) ||
+            ui_context->pressed(InputName::ValueDown)
+            // TODO add support for holding down tab
+            // get().is_held_down_debounced(InputName::WidgetNext) ||
+            // get().is_held_down_debounced(InputName::ValueDown)
+        ) {
+            set(ROOT_ID);
+            if (ui_context->is_held_down(InputName::WidgetMod)) {
+                set(last_processed);
+            }
+        }
+        if (ui_context->pressed(InputName::ValueUp)) {
+            set(last_processed);
+        }
+        if (ui_context->pressed(InputName::WidgetBack)) {
+            set(last_processed);
+        }
+    }
+    // before any returns
+    last_processed = widget.id;
+}
+
+inline void begin() { hot_id = ROOT_ID; }
+inline void end() {
+    if (up_for_grabs()) return;
+
+    // TODO
+    // if(matching_id_in_tree(focus_id, tree_root)) return;
+
+    // focus_id = ROOT_ID;
+}
+
+}  // namespace focus
+
+namespace internal {
+
+inline void draw_focus_ring(                    //
+    std::shared_ptr<ui::UIContext> ui_context,  //
+    const Widget& widget                        //
+) {
+    if (!focus::matches(widget.id)) return;
+    Rectangle rect = widget.get_rect();
+    float pixels = rect.width * 0.01f;
+    rect = expand(rect, {pixels, pixels, pixels, pixels});
+    ui_context->draw_widget_rect(rect, ui::theme::Usage::Accent);
+}
+
+}  // namespace internal
+
 inline bool text(std::shared_ptr<ui::UIContext> ui_context, Widget,
                  const std::string& content, Rectangle parent,
                  ui::theme::Usage color_usage = ui::theme::Usage::Font
@@ -92,6 +168,11 @@ inline bool button(                             //
     bool background = true;
     Rectangle rect = widget.get_rect();
 
+    //
+    focus::try_to_grab(widget);
+    internal::draw_focus_ring(ui_context, widget);
+    focus::handle_tabbing(ui_context, widget);
+
     auto image = widget.get_possible_background_image();
     if (image.has_value()) {
         const raylib::Texture texture =
@@ -110,16 +191,24 @@ inline bool button(                             //
         ui_context->draw_widget_rect(rect, color_usage);
     }
 
-    if (is_mouse_down_in_box(rect)) {
-        if (!widget.layout_box.node.attrs.contains("id")) {
-            log_warn("you have a button without an id {} {}",
-                     widget.layout_box.node.tag,
-                     widget.layout_box.node.children[0].content);
-            return false;
+    const auto _press_logic = [&]() -> bool {
+        if (focus::matches(widget.id) &&
+            ui_context->pressed(InputName::WidgetPress)) {
+            return true;
         }
-        return true;
-    }
-    return false;
+        // TODO handle hot/ active
+        if (is_mouse_down_in_box(rect)) {
+            if (!widget.layout_box.node.attrs.contains("id")) {
+                log_warn("you have a button without an id {} {}",
+                         widget.layout_box.node.tag,
+                         widget.layout_box.node.children[0].content);
+                return false;
+            }
+            return true;
+        }
+    };
+
+    return _press_logic();
 }
 
 }  // namespace elements
