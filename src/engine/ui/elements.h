@@ -251,6 +251,7 @@ inline bool button(                             //
             }
             return true;
         }
+        return false;
     };
 
     return _press_logic();

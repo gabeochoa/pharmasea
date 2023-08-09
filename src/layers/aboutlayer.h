@@ -13,10 +13,9 @@ struct AboutLayer : public Layer {
 
     AboutLayer()
         : Layer(strings::menu::ABOUT),
-          ui_context(std::make_shared<ui::UIContext>()) {
-        root_box =
-            load_ui("resources/html/about.html", {0, 0, WIN_WF(), WIN_HF()});
-    }
+          ui_context(std::make_shared<ui::UIContext>()),
+          root_box(load_ui("resources/html/about.html", WIN_R())) {}
+
     virtual ~AboutLayer() {}
 
     bool onKeyPressed(KeyPressedEvent& event) override {
@@ -52,7 +51,7 @@ struct AboutLayer : public Layer {
 
         elements::focus::begin();
 
-        render_ui(ui_context, root_box, {0, 0, WIN_WF(), WIN_HF()},
+        render_ui(ui_context, root_box, WIN_R(),
                   std::bind(&AboutLayer::process_on_click, *this,
                             std::placeholders::_1));
 
