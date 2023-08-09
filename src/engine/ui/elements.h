@@ -62,6 +62,8 @@ static int hot_id = ROOT_ID;
 static int active_id = ROOT_ID;
 static MouseInfo mouse_info;
 
+static std::set<int> ids;
+
 inline bool is_mouse_inside(const Rectangle& rect) {
     auto mouse = mouse_info.pos;
     return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
@@ -77,6 +79,7 @@ inline void set(int id) { focus_id = id; }
 inline bool matches(int id) { return get() == id; }
 inline bool up_for_grabs() { return matches(ROOT_ID); }
 inline void try_to_grab(const Widget& widget) {
+    ids.insert(widget.id);
     if (up_for_grabs()) {
         set(widget.id);
     }
@@ -139,6 +142,7 @@ inline void begin() {
     mouse_info = get_mouse_info();
     hot_id = ROOT_ID;
 }
+
 inline void end() {
     if (up_for_grabs()) return;
 
@@ -150,9 +154,10 @@ inline void end() {
         set_active(ROOT_ID);
     }
 
-    // TODO
-    // if(matching_id_in_tree(focus_id, tree_root)) return;
-    // focus_id = ROOT_ID;
+    if (!ids.contains(focus_id)) {
+        focus_id = ROOT_ID;
+    }
+    ids.clear();
 }
 
 }  // namespace focus
