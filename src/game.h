@@ -113,11 +113,12 @@ void startup() {
         new VersionLayer(),
         new ToastLayer(),
         //
+        new HandLayer(),
+        //
         new PauseLayer(),
         //
         new GameDebugLayer(),
         new MinimapLayer(),
-        new HandLayer(),
         //
         new NetworkLayer(),
         new GameLayer(),
