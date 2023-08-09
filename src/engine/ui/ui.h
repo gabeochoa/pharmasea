@@ -4,7 +4,7 @@
 #include "../../external_include.h"
 #include "../../strings.h"
 #include "../texture_library.h"
-#include "../ui.h"
+#include "elements.h"
 #include "parsing.h"
 
 inline LayoutBox build_layout_tree(const Node& node) {
@@ -90,36 +90,10 @@ inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
     Node node = root_box.node;
 
     if (node.tag.empty()) {
-        ui_context->_draw_text(parent, text_lookup(node.content.c_str()),
-                               ui::theme::Usage::Font);
+        elements::text(ui_context, elements::Widget{root_box}, node.content,
+                       parent);
         return;
     }
-
-    const auto _draw_rect = [ui_context](const LayoutBox& root_box) {
-        auto theme = root_box.style.lookup_theme("background-color");
-        if (!theme.has_value()) return;
-        ui_context->draw_widget_rect(root_box.dims.content, theme.value());
-    };
-
-    const auto _draw_button = [ui_context](const LayoutBox& root_box) {
-        auto rect = root_box.dims.content;
-
-        auto image = root_box.style.lookup_s("background-image");
-        if (image.has_value()) {
-            const raylib::Texture texture =
-                TextureLibrary::get().get(image.value());
-            const vec2 tex_size = {(float) texture.width,
-                                   (float) texture.height};
-            const vec2 button_size = {rect.width, rect.height};
-            ui_context->draw_image(texture, {rect.x, rect.y}, 0,
-                                   calculateScale(button_size, tex_size));
-            return;
-        }
-
-        auto theme = root_box.style.lookup_theme("background-color");
-        if (!theme.has_value()) return;
-        ui_context->draw_widget_rect(rect, theme.value());
-    };
 
     switch (hashString(node.tag)) {
         case hashString("button"):
@@ -138,10 +112,10 @@ inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
 
     switch (hashString(node.tag)) {
         case hashString("button"):
-            _draw_button(root_box);
+            elements::button(ui_context, elements::Widget{root_box});
             break;
         case hashString("div"):
-            _draw_rect(root_box);
+            elements::div(ui_context, elements::Widget{root_box});
             break;
         case hashString("em"):
         case hashString("h1"):
