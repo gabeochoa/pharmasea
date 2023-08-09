@@ -71,17 +71,6 @@ inline LayoutBox load_ui(const std::string& file, raylib::Rectangle parent) {
     return root_box;
 }
 
-bool is_mouse_inside(const MouseInfo& mouse_info, const Rectangle& rect) {
-    auto mouse = mouse_info.pos;
-    return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
-           mouse.y >= rect.y && mouse.y <= rect.y + rect.height;
-}
-
-bool is_mouse_down_in_box(const LayoutBox& box) {
-    auto minfo = get_mouse_info();
-    return is_mouse_inside(minfo, box.dims.content) && minfo.leftDown;
-}
-
 inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
                       const LayoutBox& root_box, raylib::Rectangle parent,
                       const std::function<void(std::string id)>& onClick) {
@@ -97,22 +86,9 @@ inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
 
     switch (hashString(node.tag)) {
         case hashString("button"):
-            if (is_mouse_down_in_box(root_box)) {
-                if (!root_box.node.attrs.contains("id")) {
-                    log_warn("you have a button without an id {} {}", node.tag,
-                             node.children[0].content);
-                    break;
-                }
+            if (elements::button(ui_context, elements::Widget{root_box})) {
                 onClick(root_box.node.attrs.at("id"));
             }
-            break;
-        default:
-            break;
-    }
-
-    switch (hashString(node.tag)) {
-        case hashString("button"):
-            elements::button(ui_context, elements::Widget{root_box});
             break;
         case hashString("div"):
             elements::div(ui_context, elements::Widget{root_box});
