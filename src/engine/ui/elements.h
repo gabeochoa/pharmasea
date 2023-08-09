@@ -15,18 +15,6 @@ inline float calculateScale(const vec2& rect_size, const vec2& image_size) {
     return std::min(scale_x, scale_y);
 }
 
-inline bool is_mouse_inside(const MouseInfo& mouse_info,
-                            const Rectangle& rect) {
-    auto mouse = mouse_info.pos;
-    return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
-           mouse.y >= rect.y && mouse.y <= rect.y + rect.height;
-}
-
-inline bool is_mouse_down_in_box(const Rectangle& rect) {
-    auto minfo = get_mouse_info();
-    return is_mouse_inside(minfo, rect) && minfo.leftDown;
-}
-
 struct Widget {
     LayoutBox layout_box;
     int id;
@@ -66,11 +54,23 @@ struct Widget {
 
 namespace focus {
 static const int ROOT_ID = -1;
+static const int FAKE_ID = -2;
 static int focus_id = ROOT_ID;
 static int last_processed = ROOT_ID;
 
 static int hot_id = ROOT_ID;
-// static int active_id = ROOT_ID;
+static int active_id = ROOT_ID;
+static MouseInfo mouse_info;
+
+inline bool is_mouse_inside(const Rectangle& rect) {
+    auto mouse = mouse_info.pos;
+    return mouse.x >= rect.x && mouse.x <= rect.x + rect.width &&
+           mouse.y >= rect.y && mouse.y <= rect.y + rect.height;
+}
+
+inline bool is_mouse_down_in_box(const Rectangle& rect) {
+    return is_mouse_inside(rect) && mouse_info.leftDown;
+}
 
 inline int get() { return focus_id; }
 inline void set(int id) { focus_id = id; }
@@ -80,6 +80,28 @@ inline void try_to_grab(const Widget& widget) {
     if (up_for_grabs()) {
         set(widget.id);
     }
+}
+
+inline void set_hot(int id) { hot_id = id; }
+inline void set_active(int id) { active_id = id; }
+inline bool is_hot(int id) { return hot_id == id; }
+inline bool is_active(int id) { return active_id == id; }
+inline bool is_active_or_hot(int id) { return is_hot(id) || is_active(id); }
+inline bool is_active_and_hot(int id) { return is_hot(id) && is_active(id); }
+
+inline void active_if_mouse_inside(const Widget& widget) {
+    bool inside = is_mouse_inside(widget.get_rect());
+    if (inside) {
+        set_hot(widget.id);
+        if (is_active(ROOT_ID) && mouse_info.leftDown) {
+            set_active(widget.id);
+        }
+    }
+}
+
+inline bool is_mouse_click(const Widget& widget) {
+    bool let_go_of_mouse = !mouse_info.leftDown;
+    return let_go_of_mouse && is_active_and_hot(widget.id);
 }
 
 inline void handle_tabbing(std::shared_ptr<ui::UIContext> ui_context,
@@ -113,13 +135,23 @@ inline void handle_tabbing(std::shared_ptr<ui::UIContext> ui_context,
     last_processed = widget.id;
 }
 
-inline void begin() { hot_id = ROOT_ID; }
+inline void begin() {
+    mouse_info = get_mouse_info();
+    hot_id = ROOT_ID;
+}
 inline void end() {
     if (up_for_grabs()) return;
 
+    if (mouse_info.leftDown) {
+        if (is_active(ROOT_ID)) {
+            set_active(FAKE_ID);
+        }
+    } else {
+        set_active(ROOT_ID);
+    }
+
     // TODO
     // if(matching_id_in_tree(focus_id, tree_root)) return;
-
     // focus_id = ROOT_ID;
 }
 
@@ -169,6 +201,7 @@ inline bool button(                             //
     Rectangle rect = widget.get_rect();
 
     //
+    focus::active_if_mouse_inside(widget);
     focus::try_to_grab(widget);
     internal::draw_focus_ring(ui_context, widget);
     focus::handle_tabbing(ui_context, widget);
@@ -188,6 +221,10 @@ inline bool button(                             //
 
     if (background) {
         auto color_usage = widget.get_usage_color("background-color");
+        // TODO add style for 'hover' state
+        if (focus::is_hot(widget.id)) {
+            color_usage = ui::theme::Usage::Accent;
+        }
         ui_context->draw_widget_rect(rect, color_usage);
     }
 
@@ -196,8 +233,7 @@ inline bool button(                             //
             ui_context->pressed(InputName::WidgetPress)) {
             return true;
         }
-        // TODO handle hot/ active
-        if (is_mouse_down_in_box(rect)) {
+        if (focus::is_mouse_click(widget)) {
             if (!widget.layout_box.node.attrs.contains("id")) {
                 log_warn("you have a button without an id {} {}",
                          widget.layout_box.node.tag,

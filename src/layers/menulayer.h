@@ -14,7 +14,7 @@ struct MenuLayer : public Layer {
         : Layer(strings::menu::MENU),
           ui_context(std::make_shared<ui::UIContext>()) {
         root_box =
-            load_ui("resources/html/simple.html", {0, 0, WIN_WF(), WIN_HF()});
+            load_ui("resources/html/menu.html", {0, 0, WIN_WF(), WIN_HF()});
     }
 
     virtual ~MenuLayer() {}
@@ -141,8 +141,6 @@ struct MenuLayer : public Layer {
     }
 
     void process_on_click(const std::string& id) {
-        log_info("clicked on {}", id);
-
         switch (hashString(id)) {
             case hashString(strings::i18n::PLAY):
                 MenuState::get().set(menu::State::Network);

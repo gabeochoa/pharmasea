@@ -5,13 +5,18 @@
 #include "raylib.h"
 //
 #include "../engine.h"
+#include "../engine/ui/ui.h"
 
 struct AboutLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
+    LayoutBox root_box;
 
     AboutLayer()
         : Layer(strings::menu::ABOUT),
-          ui_context(std::make_shared<ui::UIContext>()) {}
+          ui_context(std::make_shared<ui::UIContext>()) {
+        root_box =
+            load_ui("resources/html/about.html", {0, 0, WIN_WF(), WIN_HF()});
+    }
     virtual ~AboutLayer() {}
 
     bool onKeyPressed(KeyPressedEvent& event) override {
@@ -68,9 +73,24 @@ struct AboutLayer : public Layer {
         raylib::SetExitKey(raylib::KEY_NULL);
     }
 
-    virtual void onDraw(float dt) override {
+    void process_on_click(const std::string& id) {
+        switch (hashString(id)) {
+            case hashString(strings::i18n::BACK_BUTTON):
+                MenuState::get().set(menu::State::Root);
+                break;
+        }
+    }
+
+    virtual void onDraw(float) override {
         if (MenuState::get().is_not(menu::State::About)) return;
         ext::clear_background(ui_context->active_theme().background);
-        draw_ui(dt);
+
+        elements::focus::begin();
+
+        render_ui(ui_context, root_box, {0, 0, WIN_WF(), WIN_HF()},
+                  std::bind(&AboutLayer::process_on_click, *this,
+                            std::placeholders::_1));
+
+        elements::focus::end();
     }
 };
