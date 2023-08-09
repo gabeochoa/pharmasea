@@ -213,6 +213,10 @@ inline bool button(                             //
 
     auto image = widget.get_possible_background_image();
     if (image.has_value()) {
+        if (focus::is_hot(widget.id)) {
+            auto color_usage = ui::theme::Usage::Accent;
+            ui_context->draw_widget_rect(rect, color_usage);
+        }
         const raylib::Texture texture =
             TextureLibrary::get().get(image.value());
         const vec2 tex_size = {(float) texture.width, (float) texture.height};
