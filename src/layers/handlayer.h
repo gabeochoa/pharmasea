@@ -9,7 +9,8 @@ struct HandLayer : public Layer {
     raylib::Texture texture;
     HandLayer() : Layer("hand_layer") {
         texture = TextureLibrary::get().get("hand");
-        raylib::DisableCursor();
+        // TODO disable
+        // raylib::DisableCursor();
     }
     virtual ~HandLayer() {}
 

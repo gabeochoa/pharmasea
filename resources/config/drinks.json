@@ -111,6 +111,29 @@
               "Soda", // "Tonic",
               "Lemon" //"Lime"
           ]
+      },
+
+      // These dont yet have icons 
+
+      {
+          "name": "moscow_mule",
+          "icon_name": "moscow_mule",
+          "viewer_name": "Moscow Mule",
+          "ingredients": [
+              "Vodka",
+              "Lemon", //"Lime"
+              "Soda" // "Ginger Beer",
+              // "Ice"
+          ]
+      },
+      {
+          "name": "screwdriver",
+          "icon_name": "screwdriver",
+          "viewer_name": "Screwdriver",
+          "ingredients": [
+              "Vodka",
+              "LemonJuice", //"OrangeJuice"
+          ]
       }
   ]
 }
