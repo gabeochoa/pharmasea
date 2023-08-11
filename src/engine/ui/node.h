@@ -195,7 +195,7 @@ std::ostream& operator<<(std::ostream& os, const std::optional<Style>& style) {
 
 std::ostream& operator<<(std::ostream& os, const Node& node) {
     if (node.tag.empty()) {
-        os << node.content;
+        os << fmt::format("Raw Text: {}", node.content);
         return os;
     }
     os << "<";
@@ -242,12 +242,14 @@ struct LayoutBox {
             case Inline:
                 return *this;
             case Block:
-                if (children.empty()) {
-                    add_anon_child();
-                } else if (children.back().display_type != Anonymous) {
-                    add_anon_child();
-                }
-                return children.back();
+                return *this;
+                // TODO idk what this was for
+                // if (children.empty()) {
+                // add_anon_child();
+                // } else if (children.back().display_type != Anonymous) {
+                // add_anon_child();
+                // }
+                // return children.back();
                 //
             case None:
             case Anonymous:
@@ -344,14 +346,20 @@ struct LayoutBox {
             parent_block.content.y + dims.margin.z + dims.border.z +
             dims.padding.z;
 
-        // log_info("{} {} {} {} {} {} {}", node.tag, dims.content.y,
-        // parent_block.content.height, parent_block.content.y,
-        // dims.margin.z, dims.border.z, dims.padding.z);
+        log_info("tag {} pb {} us{}", node.tag, parent_block, dims);
+
+        // log_info("tag{} cy{} pbch{} pbcy{} dmz{} dbz{} dpz{}", node.tag,
+        // dims.content.y, parent_block.content.height,
+        // parent_block.content.y, dims.margin.z, dims.border.z,
+        // dims.padding.z);
     }
 
     void layout_block_children() {
+        Dimensions offset(dims);
+
         for (auto& child : children) {
-            child.layout(dims);
+            child.layout(offset);
+            offset.content.y += child.dims.margin_box().height;
             dims.content.height += child.dims.margin_box().height;
         }
     }
@@ -376,9 +384,54 @@ struct LayoutBox {
         calculate_block_height();
     }
 
+    void layout_inline(const Dimensions& parent_block) {
+        auto zero = NumericalValue{.data = 0, .unit = NumericalValue::Pixels};
+        float parent_height = parent_block.content.height;
+
+        auto margin_top =
+            style.lookup_f("margin-top", "margin", zero, parent_height);
+        auto margin_bottom =
+            style.lookup_f("margin-bottom", "margin", zero, parent_height);
+
+        auto padding_top =
+            style.lookup_f("padding-top", "padding", zero, parent_height);
+        auto padding_bottom =
+            style.lookup_f("padding-bottom", "padding", zero, parent_height);
+
+        auto border_top =
+            style.lookup_f("border-top", "border", zero, parent_height);
+        auto border_bottom =
+            style.lookup_f("border-bottom", "border", zero, parent_height);
+
+        dims.margin.z = margin_top;
+        dims.margin.w = margin_bottom;
+        dims.border.z = border_top;
+        dims.border.w = border_bottom;
+        dims.padding.z = padding_top;
+        dims.padding.w = padding_bottom;
+
+        dims.content.x = parent_block.content.x + dims.margin.x +
+                         dims.border.x + dims.padding.x;
+        dims.content.y = parent_block.content.height + parent_block.content.y +
+                         dims.margin.z + dims.border.z + dims.padding.z;
+        dims.content.width = parent_block.content.width;
+        dims.content.height = parent_block.content.height;
+
+        Dimensions offset(dims);
+
+        for (auto& child : children) {
+            child.layout(offset);
+            offset.content.x += child.dims.margin_box().width;
+            dims.content.height =
+                fmax(dims.content.height, child.dims.margin_box().height);
+        }
+    }
+
     void layout(const Dimensions& parent_block) {
         switch (display_type) {
             case Inline:
+                layout_inline(parent_block);
+                break;
             case Anonymous:
             case None:
                 //
@@ -391,6 +444,9 @@ struct LayoutBox {
 };
 
 std::ostream& operator<<(std::ostream& os, const LayoutBox& box) {
-    os << fmt::format("{}: {}, {}", box.node.tag, box.display_type, box.dims);
+    const auto tag = box.node.tag.empty()
+                         ? fmt::format("Raw Text {}", box.node.content)
+                         : box.node.tag;
+    os << fmt::format("{}: {}, {}", tag, box.display_type, box.dims);
     return os;
 }

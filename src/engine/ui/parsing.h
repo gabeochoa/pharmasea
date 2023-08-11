@@ -3,6 +3,7 @@
 #include <cctype>
 
 #include "../assert.h"
+#include "../util.h"
 #include "node.h"
 #include "utils.h"
 
@@ -140,7 +141,7 @@ struct Parser {
         if (is_color_property(property)) return parse_decl_color_value(value);
         auto val =
             (value[0] == '"') ? value.substr(1, value.length() - 2) : value;
-        log_info("returning decl '{}' value '{}' as string", property, val);
+        // log_info("returning decl '{}' value '{}' as string", property, val);
         return val;
     }
 };
@@ -299,7 +300,10 @@ struct HTMLParser : Parser {
         if (selector[0] != '.') return false;
 
         if (root.attrs.contains("class")) {
-            return selector.substr(1) == root.attrs.at("class");
+            auto classes = root.attrs.at("class");
+            for (const auto& cl : util::split_string(classes, " ")) {
+                if (selector.substr(1) == cl) return true;
+            }
         }
         return false;
     }

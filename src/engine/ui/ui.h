@@ -6,6 +6,7 @@
 #include "../texture_library.h"
 #include "../uuid.h"
 #include "elements.h"
+#include "node.h"
 #include "parsing.h"
 
 inline LayoutBox build_layout_tree(const Node& node) {

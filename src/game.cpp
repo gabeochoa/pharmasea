@@ -7,6 +7,10 @@ long long there_ping = 0;
 long long return_ping = 0;
 }  // namespace network
 
+#include "engine/globals.h"
+#include "engine/layer.h"
+#include "engine/ui/ui.h"
+
 int main(int argc, char* argv[]) {
     process_dev_flags(argv);
 

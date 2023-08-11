@@ -316,13 +316,13 @@ struct SettingsLayer : public Layer {
     virtual void onDraw(float dt) override {
         if (MenuState::get().is_not(menu::State::Settings)) return;
         ext::clear_background(ui_context->active_theme().background);
-        draw_ui(dt);
-        // elements::focus::begin();
-        //
-        // render_ui(ui_context, root_box, WIN_R(),
-        // std::bind(&SettingsLayer::process_on_click, *this,
-        // std::placeholders::_1));
-        //
-        // elements::focus::end();
+        // draw_ui(dt);
+        elements::focus::begin();
+
+        render_ui(ui_context, root_box, WIN_R(),
+                  std::bind(&SettingsLayer::process_on_click, *this,
+                            std::placeholders::_1));
+
+        elements::focus::end();
     }
 };
