@@ -73,6 +73,30 @@ inline LayoutBox load_ui(const std::string& file, raylib::Rectangle parent) {
     return root_box;
 }
 
+inline void render_input(std::shared_ptr<ui::UIContext> ui_context,
+                         const LayoutBox& root_box, raylib::Rectangle parent,
+                         const std::function<void(std::string id)>& onClick) {
+    using namespace ui;
+    Node node = root_box.node;
+    auto widget = elements::Widget{root_box, node.id};
+
+    auto input_type = node.attrs.at("type");
+    if (input_type.empty()) {
+        log_warn(
+            "you have an input but didnt set the type... pretending its a "
+            "checkbox");
+        input_type = "checkbox";
+    }
+
+    switch (hashString(input_type)) {
+        case hashString("checkbox"):
+            if (elements::checkbox(ui_context, widget)) {
+                log_info("checkbox changed");
+            }
+            break;
+    }
+}
+
 inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
                       const LayoutBox& root_box, raylib::Rectangle parent,
                       const std::function<void(std::string id)>& onClick) {
@@ -95,6 +119,9 @@ inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
             break;
         case hashString("div"):
             elements::div(ui_context, widget);
+            break;
+        case hashString("input"):
+            render_input(ui_context, root_box, parent, onClick);
             break;
         case hashString("em"):
         case hashString("h1"):

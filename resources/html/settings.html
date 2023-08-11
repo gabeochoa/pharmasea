@@ -22,9 +22,8 @@
                 background-color: "Primary";
             }
             .spacing {
-                width: 100%;
+                width: 50%;
                 height: 10%;
-                background-color: "Secondary";
             }
             .inset {
                 display: block;
@@ -32,12 +31,10 @@
                 height: 100%;
             }
 
-            .odd {
+            .checkbox {
+                width: 3%;
+                height: 15%;
                 background-color: "Primary";
-            }
-
-            .even {
-                background-color: "Accent";
             }
 
         </style>
@@ -45,29 +42,29 @@
     <body>
         <div class="spacing"></div>
         <div class="inset">
-            <div class="row odd">
+            <div class="row">
                 <p>Master Volume</p>
                 <p>Slider</p>
             </div>
-            <div class="row even">
+            <div class="row">
                 <p>Music Volume</p>
                 <p>Slider</p>
             </div>
-            <div class="row odd">
+            <div class="row">
                 <p>Resolution Switcher</p>
                 <p>Dropdown</p>
             </div>
-            <div class="row even">
+            <div class="row">
                 <p>Language Switcher</p>
                 <p>Dropdown</p>
             </div>
-            <div class="row odd">
+            <div class="row">
                 <p>Streamer Safe Box</p>
-                <p>Checkbox</p>
+                <input class="checkbox" type="checkbox" id="StreamerSafeBox"/>
             </div>
-            <div class="row even">
+            <div class="row">
                 <p>Post Processing Effects</p>
-                <p>Checkbox</p>
+                <input class="checkbox" type="checkbox" id="PostProcessingEffects"/>
             </div>
             <div class="spacing"></div>
             <div class="spacing"></div>

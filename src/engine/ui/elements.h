@@ -200,9 +200,8 @@ inline bool div(std::shared_ptr<ui::UIContext> ui_context,
 
 inline bool button(                             //
     std::shared_ptr<ui::UIContext> ui_context,  //
-    const Widget& widget                        //
-) {
-    bool background = true;
+    const Widget& widget,                       //
+    bool background = true) {
     Rectangle rect = widget.get_rect();
 
     //
@@ -255,6 +254,23 @@ inline bool button(                             //
     };
 
     return _press_logic();
+}
+
+// Returns true if the checkbox changed
+inline bool checkbox(std::shared_ptr<ui::UIContext> ui_context,
+                     const Widget& widget) {
+    auto state = ui_context->widget_init<ui::CheckboxState>(
+        ui::MK_UUID(widget.id, widget.id));
+    state->on.changed_since = false;
+
+    if (button(ui_context, widget, true)) {
+        state->on = !state->on;
+    }
+
+    const std::string label = state->on ? "  X" : " ";
+    text(ui_context, widget, label, widget.get_rect());
+
+    return state->on.changed_since;
 }
 
 }  // namespace elements
