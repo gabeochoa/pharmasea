@@ -170,7 +170,7 @@ inline void draw_focus_ring(                    //
 ) {
     if (!focus::matches(widget.id)) return;
     Rectangle rect = widget.get_rect();
-    float pixels = rect.width * 0.01f;
+    float pixels = WIN_HF() * 0.003f;
     rect = expand(rect, {pixels, pixels, pixels, pixels});
     ui_context->draw_widget_rect(rect, ui::theme::Usage::Accent);
 }
