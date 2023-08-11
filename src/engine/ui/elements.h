@@ -15,6 +15,9 @@ inline float calculateScale(const vec2& rect_size, const vec2& image_size) {
     return std::min(scale_x, scale_y);
 }
 
+typedef std::vector<std::string> DropdownOptions;
+typedef std::variant<std::string, DropdownOptions> InputDataSource;
+
 struct Widget {
     LayoutBox layout_box;
     int id;
@@ -347,6 +350,26 @@ inline bool slider(std::shared_ptr<ui::UIContext> ui_context,
     };
 
     return changed_previous_frame;
+}
+
+inline bool dropdown(std::shared_ptr<ui::UIContext> ui_context,
+                     const Widget& widget, DropdownOptions options) {
+    if (options.empty()) {
+        log_warn("the options passed to dropdown were empty");
+        return false;
+    }
+
+    auto state = ui_context->widget_init<ui::DropdownState>(
+        ui::MK_UUID(widget.id, widget.id));
+    auto selected_option = options[state->selected];
+
+    if (button(ui_context, widget, true)) {
+        state->on = !state->on;
+    }
+
+    text(ui_context, widget, selected_option, widget.get_rect());
+
+    return false;
 }
 
 }  // namespace elements

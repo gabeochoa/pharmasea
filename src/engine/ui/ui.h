@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <variant>
+
 #include "../../external_include.h"
 #include "../../strings.h"
 #include "../texture_library.h"
@@ -73,9 +75,12 @@ inline LayoutBox load_ui(const std::string& file, raylib::Rectangle parent) {
     return root_box;
 }
 
-inline void render_input(std::shared_ptr<ui::UIContext> ui_context,
-                         const LayoutBox& root_box, raylib::Rectangle parent,
-                         const std::function<void(std::string id)>& onClick) {
+inline void render_input(
+    std::shared_ptr<ui::UIContext> ui_context, const LayoutBox& root_box,
+    raylib::Rectangle parent,
+    const std::function<void(std::string id)>& onClick,
+    const std::function<elements::InputDataSource(std::string)>&
+        getInputDataSource) {
     using namespace ui;
     Node node = root_box.node;
     auto widget = elements::Widget{root_box, node.id};
@@ -99,12 +104,33 @@ inline void render_input(std::shared_ptr<ui::UIContext> ui_context,
                 log_info("slider changed");
             }
             break;
+        case hashString("dropdown"):
+            if (!getInputDataSource) {
+                log_warn(
+                    "rendering dropdown but you didnt provide datasource "
+                    "fetcher");
+                return;
+            }
+            elements::InputDataSource data =
+                getInputDataSource(node.attrs.at("id"));
+            if (!std::holds_alternative<elements::DropdownOptions>(data)) {
+                log_warn("rendering dropdown but you didnt provide options");
+                return;
+            }
+            auto options = std::get<elements::DropdownOptions>(data);
+            if (elements::dropdown(ui_context, widget, options)) {
+                log_info("dropdown changed");
+            }
+            break;
     }
 }
 
-inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
-                      const LayoutBox& root_box, raylib::Rectangle parent,
-                      const std::function<void(std::string id)>& onClick) {
+inline void render_ui(
+    std::shared_ptr<ui::UIContext> ui_context, const LayoutBox& root_box,
+    raylib::Rectangle parent,
+    const std::function<void(std::string id)>& onClick,
+    const std::function<elements::InputDataSource(std::string)>&
+        getInputDataSource = {}) {
     using namespace ui;
 
     Node node = root_box.node;
@@ -126,7 +152,8 @@ inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
             elements::div(ui_context, widget);
             break;
         case hashString("input"):
-            render_input(ui_context, root_box, parent, onClick);
+            render_input(ui_context, root_box, parent, onClick,
+                         getInputDataSource);
             break;
         case hashString("em"):
         case hashString("h1"):
@@ -145,6 +172,7 @@ inline void render_ui(std::shared_ptr<ui::UIContext> ui_context,
     }
 
     for (const auto& child : root_box.children) {
-        render_ui(ui_context, child, root_box.dims.content, onClick);
+        render_ui(ui_context, child, root_box.dims.content, onClick,
+                  getInputDataSource);
     }
 }
