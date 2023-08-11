@@ -233,6 +233,7 @@ struct HTMLParser : Parser {
         int i = 0;
         while (i++ < 20 /* max attrs */) {
             consume_whitespace();
+            if (next_char() == '/') break;
             if (next_char() == '>') break;
             auto p = parse_attr();
             attrs.insert(p);
@@ -261,18 +262,40 @@ struct HTMLParser : Parser {
         }
     }
 
+    bool is_self_closing_tag(const std::string& tag) {
+        std::array<std::string, 14> self_closing_tags{
+            "area",  "base", "br",   "col",   "embed",  "hr",    "img",
+            "input", "link", "meta", "param", "source", "track", "wbr"};
+        for (auto s : self_closing_tags) {
+            if (s == tag) return true;
+        }
+        return false;
+    }
+
     Node parse_element() {
         validate(consume(), '<', "parsing an tag open");
         auto tag_name = parse_tag_name();
         auto attrs = parse_attrs();
-        validate(consume(), '>', "parsing an tag close");
 
-        auto children = parse_nodes();
+        Nodes children;
 
-        validate(consume(), '<', "parsing a closing tag open");
-        validate(consume(), '/', "parsing a closing tag slash");
-        VALIDATE(parse_tag_name() == tag_name, "parsing an tag name close");
-        validate(consume(), '>', "parsing an closing tag close");
+        if (next_char() == '/') {
+            auto err_msg = fmt::format(
+                "Found self closing but tag wasnt self closing: {}", tag_name);
+            VALIDATE(is_self_closing_tag(tag_name), err_msg);
+            validate(consume(), '/', "parsing a closing tag slash");
+            validate(consume(), '>', "parsing an closing tag close");
+
+        } else {
+            validate(consume(), '>', "parsing an tag close");
+
+            children = parse_nodes();
+
+            validate(consume(), '<', "parsing a closing tag open");
+            validate(consume(), '/', "parsing a closing tag slash");
+            VALIDATE(parse_tag_name() == tag_name, "parsing an tag name close");
+            validate(consume(), '>', "parsing an closing tag close");
+        }
 
         return dom::elem(tag_name, attrs, children);
     }
