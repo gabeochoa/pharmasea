@@ -165,6 +165,16 @@ inline void end() {
 
 }  // namespace focus
 
+void begin() {
+    focus::begin();
+    //
+}
+
+void end(std::shared_ptr<ui::UIContext> ui_context) {
+    ui_context->render_all();
+    focus::end();
+}
+
 namespace internal {
 
 inline void draw_focus_ring(                    //
@@ -365,6 +375,17 @@ inline bool dropdown(std::shared_ptr<ui::UIContext> ui_context,
 
     if (button(ui_context, widget, true)) {
         state->on = !state->on;
+    }
+
+    if (state->on) {
+        ui_context->schedule_render_call([ui_context, widget, options]() {
+            Rectangle rect = widget.get_rect();
+            rect.y += rect.height;
+            for (const auto& option : options) {
+                ui_context->draw_widget_rect(rect, ui::theme::Usage::Accent);
+                text(ui_context, widget, option, rect);
+            }
+        });
     }
 
     text(ui_context, widget, selected_option, widget.get_rect());

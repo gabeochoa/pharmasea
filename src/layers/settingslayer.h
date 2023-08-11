@@ -325,7 +325,7 @@ struct SettingsLayer : public Layer {
         if (MenuState::get().is_not(menu::State::Settings)) return;
         ext::clear_background(ui_context->active_theme().background);
         // draw_ui(dt);
-        elements::focus::begin();
+        elements::begin();
 
         render_ui(ui_context, root_box, WIN_R(),
                   std::bind(&SettingsLayer::process_on_click, *this,
@@ -333,6 +333,6 @@ struct SettingsLayer : public Layer {
                   std::bind(&SettingsLayer::dataFetcher, *this,
                             std::placeholders::_1));
 
-        elements::focus::end();
+        elements::end(ui_context);
     }
 };
