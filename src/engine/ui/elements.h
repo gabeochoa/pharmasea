@@ -9,6 +9,43 @@
 
 namespace elements {
 
+class CallbackRegistry {
+   public:
+    inline void register_call(std::function<void(void)> cb, int z_index = 0) {
+        callbacks.emplace_back(ScheduledCall{z_index, cb});
+        insert_sorted();
+    }
+
+    void execute_callbacks() {
+        for (const auto& entry : callbacks) {
+            entry.callback();
+        }
+        callbacks.clear();
+    }
+
+   private:
+    struct ScheduledCall {
+        int z_index;
+        std::function<void(void)> callback;
+    };
+
+    std::vector<ScheduledCall> callbacks;
+
+    void insert_sorted() {
+        if (callbacks.size() <= 1) {
+            return;
+        }
+
+        auto it = callbacks.end() - 1;
+        while (it != callbacks.begin() && (it - 1)->z_index < it->z_index) {
+            std::iter_swap(it - 1, it);
+            --it;
+        }
+    }
+};
+static CallbackRegistry callback_registry;
+static std::shared_ptr<ui::UIContext> context;
+
 inline float calculateScale(const vec2& rect_size, const vec2& image_size) {
     float scale_x = rect_size.x / image_size.x;
     float scale_y = rect_size.y / image_size.y;
@@ -21,6 +58,7 @@ typedef std::variant<std::string, DropdownOptions> InputDataSource;
 struct Widget {
     LayoutBox layout_box;
     int id;
+    int z_index = 0;
 
     Widget(const LayoutBox& lb, int i) : layout_box(lb), id(i) {}
 
@@ -111,8 +149,7 @@ inline bool is_mouse_click(const Widget& widget) {
     return let_go_of_mouse && is_active_and_hot(widget.id);
 }
 
-inline void handle_tabbing(std::shared_ptr<ui::UIContext> ui_context,
-                           const Widget& widget) {
+inline void handle_tabbing(const Widget& widget) {
     // TODO How do we handle something that wants to use
     // Widget Value Down/Up to control the value?
     // Do we mark the widget type with "nextable"? (tab will always work but
@@ -120,21 +157,21 @@ inline void handle_tabbing(std::shared_ptr<ui::UIContext> ui_context,
     if (matches(widget.id)) {
         if (
             //
-            ui_context->pressed(InputName::WidgetNext) ||
-            ui_context->pressed(InputName::ValueDown)
+            context->pressed(InputName::WidgetNext) ||
+            context->pressed(InputName::ValueDown)
             // TODO add support for holding down tab
             // get().is_held_down_debounced(InputName::WidgetNext) ||
             // get().is_held_down_debounced(InputName::ValueDown)
         ) {
             set(ROOT_ID);
-            if (ui_context->is_held_down(InputName::WidgetMod)) {
+            if (context->is_held_down(InputName::WidgetMod)) {
                 set(last_processed);
             }
         }
-        if (ui_context->pressed(InputName::ValueUp)) {
+        if (context->pressed(InputName::ValueUp)) {
             set(last_processed);
         }
-        if (ui_context->pressed(InputName::WidgetBack)) {
+        if (context->pressed(InputName::WidgetBack)) {
             set(last_processed);
         }
     }
@@ -166,76 +203,95 @@ inline void end() {
 
 }  // namespace focus
 
-void begin() {
+inline void begin(std::shared_ptr<ui::UIContext> ui_context) {
+    context = ui_context;
     focus::begin();
     //
 }
 
-void end(std::shared_ptr<ui::UIContext> ui_context) {
-    ui_context->render_all();
+inline void end() {
+    callback_registry.execute_callbacks();
+    context->render_all();
     focus::end();
 }
 
 namespace internal {
 
-inline void draw_focus_ring(                    //
-    std::shared_ptr<ui::UIContext> ui_context,  //
-    const Widget& widget                        //
-) {
+inline void draw_text(const std::string& content, Rectangle parent, int z_index,
+                      ui::theme::Usage color_usage = ui::theme::Usage::Font) {
+    callback_registry.register_call(
+        [=]() {
+            context->_draw_text(parent, text_lookup(content.c_str()),
+                                color_usage);
+        },
+        z_index);
+}
+
+inline void draw_rect(Rectangle rect, int z_index,
+                      ui::theme::Usage color_usage = ui::theme::Usage::Font) {
+    callback_registry.register_call(
+        [=]() { context->draw_widget_rect(rect, color_usage); }, z_index);
+}
+
+inline void draw_image(vec2 pos, raylib::Texture texture, float scale,
+                       int z_index) {
+    callback_registry.register_call(
+        [=]() { context->draw_image(texture, pos, 0, scale); }, z_index);
+}
+
+inline void draw_focus_ring(const Widget& widget) {
     if (!focus::matches(widget.id)) return;
     Rectangle rect = widget.get_rect();
     float pixels = WIN_HF() * 0.003f;
     rect = expand(rect, {pixels, pixels, pixels, pixels});
-    ui_context->draw_widget_rect(rect, ui::theme::Usage::Accent);
+    internal::draw_rect(rect, widget.z_index + 1, ui::theme::Usage::Accent);
 }
 
 }  // namespace internal
 
-inline bool text(std::shared_ptr<ui::UIContext> ui_context, Widget,
-                 const std::string& content, Rectangle parent,
+inline bool text(const Widget& widget, const std::string& content,
+                 Rectangle parent,
                  ui::theme::Usage color_usage = ui::theme::Usage::Font
 
 ) {
     // No need to render if text is empty
     if (content.empty()) return false;
-    ui_context->_draw_text(parent, text_lookup(content.c_str()), color_usage);
+    internal::draw_text(text_lookup(content.c_str()), parent, widget.z_index,
+                        color_usage);
     return true;
 }
 
-inline bool div(std::shared_ptr<ui::UIContext> ui_context,
-                const Widget& widget) {
+inline bool div(const Widget& widget) {
     Rectangle rect = widget.get_rect();
     if (widget.has_background_color()) {
         auto color_usage = widget.get_usage_color("background-color");
-        ui_context->draw_widget_rect(rect, color_usage);
+        internal::draw_rect(rect, widget.z_index, color_usage);
     }
     return true;
 }
 
-inline bool button(                             //
-    std::shared_ptr<ui::UIContext> ui_context,  //
-    const Widget& widget,                       //
-    bool background = true) {
+inline bool button(const Widget& widget, bool background = true) {
     Rectangle rect = widget.get_rect();
 
     //
     focus::active_if_mouse_inside(widget);
     focus::try_to_grab(widget);
-    internal::draw_focus_ring(ui_context, widget);
-    focus::handle_tabbing(ui_context, widget);
+    internal::draw_focus_ring(widget);
+    focus::handle_tabbing(widget);
 
     auto image = widget.get_possible_background_image();
     if (image.has_value()) {
         if (focus::is_hot(widget.id)) {
             auto color_usage = ui::theme::Usage::Accent;
-            ui_context->draw_widget_rect(rect, color_usage);
+            internal::draw_rect(rect, widget.z_index, color_usage);
         }
         const raylib::Texture texture =
             TextureLibrary::get().get(image.value());
         const vec2 tex_size = {(float) texture.width, (float) texture.height};
         const vec2 button_size = {rect.width, rect.height};
-        ui_context->draw_image(texture, {rect.x, rect.y}, 0,
-                               elements::calculateScale(button_size, tex_size));
+        internal::draw_image({rect.x, rect.y}, texture,
+                             elements::calculateScale(button_size, tex_size),
+                             widget.z_index);
 
         // Force no background for now
         background = false;
@@ -247,12 +303,12 @@ inline bool button(                             //
         if (focus::is_hot(widget.id)) {
             color_usage = ui::theme::Usage::Accent;
         }
-        ui_context->draw_widget_rect(rect, color_usage);
+        internal::draw_rect(rect, widget.z_index, color_usage);
     }
 
     const auto _press_logic = [&]() -> bool {
         if (focus::matches(widget.id) &&
-            ui_context->pressed(InputName::WidgetPress)) {
+            context->pressed(InputName::WidgetPress)) {
             return true;
         }
         if (focus::is_mouse_click(widget)) {
@@ -271,38 +327,36 @@ inline bool button(                             //
 }
 
 // Returns true if the checkbox changed
-inline bool checkbox(std::shared_ptr<ui::UIContext> ui_context,
-                     const Widget& widget) {
-    auto state = ui_context->widget_init<ui::CheckboxState>(
+inline bool checkbox(const Widget& widget) {
+    auto state = context->widget_init<ui::CheckboxState>(
         ui::MK_UUID(widget.id, widget.id));
     state->on.changed_since = false;
 
-    if (button(ui_context, widget, true)) {
+    if (button(widget, true)) {
         state->on = !state->on;
     }
 
     const std::string label = state->on ? "  X" : " ";
-    text(ui_context, widget, label, widget.get_rect());
+    text(widget, label, widget.get_rect());
 
     return state->on.changed_since;
 }
 
-inline bool slider(std::shared_ptr<ui::UIContext> ui_context,
-                   const Widget& widget, bool vertical = false) {
+inline bool slider(const Widget& widget, bool vertical = false) {
     // TODO be able to scroll this bar with the scroll wheel
-    auto state = ui_context->widget_init<ui::SliderState>(
+    auto state = context->widget_init<ui::SliderState>(
         ui::MK_UUID(widget.id, widget.id));
     bool changed_previous_frame = state->value.changed_since;
     state->value.changed_since = false;
 
     focus::active_if_mouse_inside(widget);
     focus::try_to_grab(widget);
-    internal::draw_focus_ring(ui_context, widget);
-    focus::handle_tabbing(ui_context, widget);
+    internal::draw_focus_ring(widget);
+    focus::handle_tabbing(widget);
 
     {
-        ui_context->draw_widget_rect(widget.get_rect(),
-                                     ui::theme::Usage::Primary);  // Slider Rail
+        internal::draw_rect(widget.get_rect(), widget.z_index,
+                            ui::theme::Usage::Primary);  // Slider Rail
 
         // slide
         Rectangle rect(widget.get_rect());
@@ -318,7 +372,7 @@ inline bool slider(std::shared_ptr<ui::UIContext> ui_context,
             vertical ? rect.height / 5.f : rect.height,
         };
 
-        ui_context->draw_widget_rect(rect, ui::theme::Usage::Accent);
+        internal::draw_rect(rect, widget.z_index, ui::theme::Usage::Accent);
     }
 
     {
@@ -327,13 +381,13 @@ inline bool slider(std::shared_ptr<ui::UIContext> ui_context,
 
         bool value_changed = false;
         if (focus::matches(widget.id)) {
-            if (ui_context->is_held_down(InputName::ValueRight)) {
+            if (context->is_held_down(InputName::ValueRight)) {
                 state->value = state->value + 0.005f;
                 if (state->value > mxf) state->value = mxf;
 
                 value_changed = true;
             }
-            if (ui_context->is_held_down(InputName::ValueLeft)) {
+            if (context->is_held_down(InputName::ValueLeft)) {
                 state->value = state->value - 0.005f;
                 if (state->value < mnf) state->value = mnf;
                 value_changed = true;
@@ -363,35 +417,33 @@ inline bool slider(std::shared_ptr<ui::UIContext> ui_context,
     return changed_previous_frame;
 }
 
-inline bool dropdown(std::shared_ptr<ui::UIContext> ui_context,
-                     const Widget& widget, DropdownOptions options) {
+inline bool dropdown(const Widget& widget, DropdownOptions options) {
     if (options.empty()) {
         log_warn("the options passed to dropdown were empty");
         return false;
     }
 
-    auto state = ui_context->widget_init<ui::DropdownState>(
+    auto state = context->widget_init<ui::DropdownState>(
         ui::MK_UUID(widget.id, widget.id));
     auto selected_option = options[state->selected];
 
-    if (button(ui_context, widget, true)) {
+    if (button(widget, true)) {
         state->on = !state->on;
     }
 
     if (state->on) {
-        ui_context->schedule_render_call([ui_context, widget, options]() {
-            Rectangle rect = widget.get_rect();
-            rect.y += rect.height;
-            for (const auto& option : options) {
-                Widget option_widget(widget);
-                option_widget.set_rect(rect);
-                button(ui_context, option_widget);
-                text(ui_context, widget, option, rect);
-            }
-        });
+        Rectangle rect = widget.get_rect();
+        rect.y += rect.height;
+        for (const auto& option : options) {
+            Widget option_widget(widget);
+            option_widget.z_index--;
+            option_widget.set_rect(rect);
+            button(option_widget);
+            text(option_widget, option, rect);
+        }
     }
 
-    text(ui_context, widget, selected_option, widget.get_rect());
+    text(widget, selected_option, widget.get_rect());
 
     return false;
 }

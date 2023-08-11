@@ -76,8 +76,7 @@ inline LayoutBox load_ui(const std::string& file, raylib::Rectangle parent) {
 }
 
 inline void render_input(
-    std::shared_ptr<ui::UIContext> ui_context, const LayoutBox& root_box,
-    raylib::Rectangle parent,
+    const LayoutBox& root_box, raylib::Rectangle parent,
     const std::function<void(std::string id)>& onClick,
     const std::function<elements::InputDataSource(std::string)>&
         getInputDataSource) {
@@ -95,12 +94,12 @@ inline void render_input(
 
     switch (hashString(input_type)) {
         case hashString("checkbox"):
-            if (elements::checkbox(ui_context, widget)) {
+            if (elements::checkbox(widget)) {
                 log_info("checkbox changed");
             }
             break;
         case hashString("range"):
-            if (elements::slider(ui_context, widget)) {
+            if (elements::slider(widget)) {
                 log_info("slider changed");
             }
             break;
@@ -118,7 +117,7 @@ inline void render_input(
                 return;
             }
             auto options = std::get<elements::DropdownOptions>(data);
-            if (elements::dropdown(ui_context, widget, options)) {
+            if (elements::dropdown(widget, options)) {
                 log_info("dropdown changed");
             }
             break;
@@ -126,8 +125,7 @@ inline void render_input(
 }
 
 inline void render_ui(
-    std::shared_ptr<ui::UIContext> ui_context, const LayoutBox& root_box,
-    raylib::Rectangle parent,
+    const LayoutBox& root_box, raylib::Rectangle parent,
     const std::function<void(std::string id)>& onClick,
     const std::function<elements::InputDataSource(std::string)>&
         getInputDataSource = {}) {
@@ -138,22 +136,21 @@ inline void render_ui(
     auto widget = elements::Widget{root_box, node.id};
 
     if (node.tag.empty()) {
-        elements::text(ui_context, widget, node.content, parent);
+        elements::text(widget, node.content, parent);
         return;
     }
 
     switch (hashString(node.tag)) {
         case hashString("button"):
-            if (elements::button(ui_context, widget)) {
+            if (elements::button(widget)) {
                 onClick(root_box.node.attrs.at("id"));
             }
             break;
         case hashString("div"):
-            elements::div(ui_context, widget);
+            elements::div(widget);
             break;
         case hashString("input"):
-            render_input(ui_context, root_box, parent, onClick,
-                         getInputDataSource);
+            render_input(root_box, parent, onClick, getInputDataSource);
             break;
         case hashString("em"):
         case hashString("h1"):
@@ -172,7 +169,6 @@ inline void render_ui(
     }
 
     for (const auto& child : root_box.children) {
-        render_ui(ui_context, child, root_box.dims.content, onClick,
-                  getInputDataSource);
+        render_ui(child, root_box.dims.content, onClick, getInputDataSource);
     }
 }
