@@ -215,6 +215,25 @@ inline void end() {
     focus::end();
 }
 
+struct ElementResult {
+    // no explicit on purpose
+    ElementResult(bool val) : result(val) {}
+    ElementResult(bool val, bool d) : result(val), data(d) {}
+    ElementResult(bool val, int d) : result(val), data(d) {}
+    ElementResult(bool val, float d) : result(val), data(d) {}
+
+    template<typename T>
+    T as() const {
+        return std::get<T>(data);
+    }
+
+    operator bool() const { return result; }
+
+   private:
+    bool result = false;
+    std::variant<bool, int, float> data = 0;
+};
+
 namespace internal {
 
 inline void draw_text(const std::string& content, Rectangle parent, int z_index,
@@ -249,9 +268,9 @@ inline void draw_focus_ring(const Widget& widget) {
 
 }  // namespace internal
 
-inline bool text(const Widget& widget, const std::string& content,
-                 Rectangle parent,
-                 ui::theme::Usage color_usage = ui::theme::Usage::Font
+inline ElementResult text(const Widget& widget, const std::string& content,
+                          Rectangle parent,
+                          ui::theme::Usage color_usage = ui::theme::Usage::Font
 
 ) {
     // No need to render if text is empty
@@ -261,7 +280,7 @@ inline bool text(const Widget& widget, const std::string& content,
     return true;
 }
 
-inline bool div(const Widget& widget) {
+inline ElementResult div(const Widget& widget) {
     Rectangle rect = widget.get_rect();
     if (widget.has_background_color()) {
         auto color_usage = widget.get_usage_color("background-color");
@@ -270,7 +289,7 @@ inline bool div(const Widget& widget) {
     return true;
 }
 
-inline bool button(const Widget& widget, bool background = true) {
+inline ElementResult button(const Widget& widget, bool background = true) {
     Rectangle rect = widget.get_rect();
 
     //
@@ -327,7 +346,7 @@ inline bool button(const Widget& widget, bool background = true) {
 }
 
 // Returns true if the checkbox changed
-inline bool checkbox(const Widget& widget) {
+inline ElementResult checkbox(const Widget& widget) {
     auto state = context->widget_init<ui::CheckboxState>(
         ui::MK_UUID(widget.id, widget.id));
     state->on.changed_since = false;
@@ -339,10 +358,10 @@ inline bool checkbox(const Widget& widget) {
     const std::string label = state->on ? "  X" : " ";
     text(widget, label, widget.get_rect());
 
-    return state->on.changed_since;
+    return ElementResult{state->on.changed_since, state->on};
 }
 
-inline bool slider(const Widget& widget, bool vertical = false) {
+inline ElementResult slider(const Widget& widget, bool vertical = false) {
     // TODO be able to scroll this bar with the scroll wheel
     auto state = context->widget_init<ui::SliderState>(
         ui::MK_UUID(widget.id, widget.id));
@@ -414,10 +433,11 @@ inline bool slider(const Widget& widget, bool vertical = false) {
         state->value.changed_since = value_changed;
     };
 
-    return changed_previous_frame;
+    // TODO this name still true?
+    return ElementResult{changed_previous_frame, state->value};
 }
 
-inline bool dropdown(const Widget& widget, DropdownOptions options) {
+inline ElementResult dropdown(const Widget& widget, DropdownOptions options) {
     if (options.empty()) {
         log_warn("the options passed to dropdown were empty");
         return false;
@@ -425,7 +445,7 @@ inline bool dropdown(const Widget& widget, DropdownOptions options) {
 
     auto state = context->widget_init<ui::DropdownState>(
         ui::MK_UUID(widget.id, widget.id));
-    auto selected_option = options[state->selected];
+    state->selected.changed_since = false;
 
     if (button(widget, true)) {
         state->on = !state->on;
@@ -434,18 +454,23 @@ inline bool dropdown(const Widget& widget, DropdownOptions options) {
     if (state->on) {
         Rectangle rect = widget.get_rect();
         rect.y += rect.height;
+        int i = 0;
         for (const auto& option : options) {
             Widget option_widget(widget);
             option_widget.z_index--;
             option_widget.set_rect(rect);
-            button(option_widget);
+            if (button(option_widget)) {
+                state->selected = i;
+            }
             text(option_widget, option, rect);
+            rect.y += rect.height;
+            i++;
         }
     }
 
-    text(widget, selected_option, widget.get_rect());
+    text(widget, options[state->selected], widget.get_rect());
 
-    return false;
+    return ElementResult{state->selected.changed_since, state->selected};
 }
 
 }  // namespace elements

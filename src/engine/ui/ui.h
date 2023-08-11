@@ -117,8 +117,9 @@ inline void render_input(
                 return;
             }
             auto options = std::get<elements::DropdownOptions>(data);
-            if (elements::dropdown(widget, options)) {
-                log_info("dropdown changed");
+            if (auto result = elements::dropdown(widget, options); result) {
+                int index = result.as<int>();
+                log_info("dropdown changed to {}", index, options[index]);
             }
             break;
     }
