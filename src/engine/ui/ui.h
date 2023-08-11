@@ -94,6 +94,11 @@ inline void render_input(std::shared_ptr<ui::UIContext> ui_context,
                 log_info("checkbox changed");
             }
             break;
+        case hashString("range"):
+            if (elements::slider(ui_context, widget)) {
+                log_info("slider changed");
+            }
+            break;
     }
 }
 

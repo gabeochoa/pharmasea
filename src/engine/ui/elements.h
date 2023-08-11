@@ -273,4 +273,80 @@ inline bool checkbox(std::shared_ptr<ui::UIContext> ui_context,
     return state->on.changed_since;
 }
 
+inline bool slider(std::shared_ptr<ui::UIContext> ui_context,
+                   const Widget& widget, bool vertical = false) {
+    // TODO be able to scroll this bar with the scroll wheel
+    auto state = ui_context->widget_init<ui::SliderState>(
+        ui::MK_UUID(widget.id, widget.id));
+    bool changed_previous_frame = state->value.changed_since;
+    state->value.changed_since = false;
+
+    focus::active_if_mouse_inside(widget);
+    focus::try_to_grab(widget);
+    internal::draw_focus_ring(ui_context, widget);
+    focus::handle_tabbing(ui_context, widget);
+
+    {
+        ui_context->draw_widget_rect(widget.get_rect(),
+                                     ui::theme::Usage::Primary);  // Slider Rail
+
+        // slide
+        Rectangle rect(widget.get_rect());
+        const float maxScale = 0.8f;
+        const float pos_offset =
+            state->value *
+            (vertical ? rect.height * maxScale : rect.width * maxScale);
+
+        rect = {
+            vertical ? rect.x : rect.x + pos_offset,
+            vertical ? rect.y + pos_offset : rect.y,
+            vertical ? rect.width : rect.width / 5.f,
+            vertical ? rect.height / 5.f : rect.height,
+        };
+
+        ui_context->draw_widget_rect(rect, ui::theme::Usage::Accent);
+    }
+
+    {
+        float mnf = 0.f;
+        float mxf = 1.f;
+
+        bool value_changed = false;
+        if (focus::matches(widget.id)) {
+            if (ui_context->is_held_down(InputName::ValueRight)) {
+                state->value = state->value + 0.005f;
+                if (state->value > mxf) state->value = mxf;
+
+                value_changed = true;
+            }
+            if (ui_context->is_held_down(InputName::ValueLeft)) {
+                state->value = state->value - 0.005f;
+                if (state->value < mnf) state->value = mnf;
+                value_changed = true;
+            }
+        }
+
+        if (focus::is_active(widget.id)) {
+            focus::set(widget.id);
+            float v;
+            if (vertical) {
+                v = (focus::mouse_info.pos.y - widget.get_rect().y) /
+                    widget.get_rect().height;
+            } else {
+                v = (focus::mouse_info.pos.x - widget.get_rect().x) /
+                    widget.get_rect().width;
+            }
+            if (v < mnf) v = mnf;
+            if (v > mxf) v = mxf;
+            if (v != state->value) {
+                state->value = v;
+                value_changed = true;
+            }
+        }
+        state->value.changed_since = value_changed;
+    };
+
+    return changed_previous_frame;
+}
+
 }  // namespace elements
