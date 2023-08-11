@@ -53,6 +53,7 @@ struct Widget {
     }
 
     Rectangle get_rect() const { return layout_box.dims.content; }
+    void set_rect(Rectangle r) { layout_box.dims.content = r; }
 };
 
 namespace focus {
@@ -382,7 +383,9 @@ inline bool dropdown(std::shared_ptr<ui::UIContext> ui_context,
             Rectangle rect = widget.get_rect();
             rect.y += rect.height;
             for (const auto& option : options) {
-                ui_context->draw_widget_rect(rect, ui::theme::Usage::Accent);
+                Widget option_widget(widget);
+                option_widget.set_rect(rect);
+                button(ui_context, option_widget);
                 text(ui_context, widget, option, rect);
             }
         });
