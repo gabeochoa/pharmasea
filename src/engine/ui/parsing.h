@@ -7,10 +7,927 @@
 #include "utils.h"
 
 struct Parser {
+    // TODO replace with U+FFFD
+    unsigned char REPLACEMENT_CHAR = ' ';
+
+    enum State {
+        CharacterReference,
+        Data,
+
+        RawText,
+        RawTextLessThan,
+        RawTextEndTagOpen,
+        RawTextEndTagName,
+
+        RCData,
+        RCDataLessThan,
+        RCDataEndTagOpen,
+        RCDataEndTagName,
+
+        Plaintext,
+        MarkupDeclarationOpen,
+
+        TagName,
+        TagOpen,
+        EndTagOpen,
+
+        BogusComment,
+        BeforeAttributeName,
+        SelfClosingStartTag,
+
+        ScriptData,
+        ScriptDataEndTagOpen,
+        ScriptDataEndTagName,
+        ScriptDataEscaped,
+        ScriptDataEscapedStart,
+        ScriptDataEscapedDash,
+        ScriptDataEscapedLessThan,
+        ScriptDataEscapedEndTagOpen,
+        ScriptDataEscapedEndTagName,
+        ScriptDataEscapedStartDash,
+        ScriptDataEscapedDashDash,
+        ScriptDataDoubleEscaped,
+        ScriptDataDoubleEscapedDash,
+        ScriptDataDoubleEscapedDashDash,
+        ScriptDataDoubleEscapedLessThan,
+        ScriptDataDoubleEscapedEnd,
+
+        //  TODO continue from
+        //  https://html.spec.whatwg.org/#before-attribute-name-state
+    } state = Data;
+
     size_t pos;
     std::string input;
 
+    struct Token {
+        enum Type { EndTag, StartTag, Character, EndOfFile, Comment } type;
+        std::string data;
+    };
+
+    State return_state = Data;
+    std::vector<Token> tokens;
+    std::vector<Token> emitted;
+    std::string temp_buffer = "";
+
     Parser(const std::string& source) : input(source) { pos = 0; }
+
+    unsigned char next_char() const {
+        if (is_eof()) return -1;
+        return input[pos];
+    }
+    bool is_eof() const { return pos >= input.size(); }
+    unsigned char consume() { return input[pos++]; }
+    void do_not_consume() { return; }
+
+    void emit(unsigned char c) {
+        emitted.push_back(
+            Token{.type = Token::Character, .data = std::string(1, c)});
+    }
+    void emit(const Token& token) { emitted.push_back(token); }
+    void emit(const Token::Type& type) {
+        emitted.push_back(Token{.type = type});
+    }
+
+    void create(const Token& token) { tokens.push_back(token); }
+
+    void data_state() {
+        if (is_eof()) {
+            emit(Token::EndOfFile);
+            return;
+        }
+        auto nc = consume();
+
+        switch (nc) {
+            case '&': {
+                return_state = Data;
+                state = CharacterReference;
+                return;
+            } break;
+            case '<': {
+                state = TagOpen;
+                return;
+            } break;
+            case 0: {
+                log_warn("unexpected null parse error");
+                emit(nc);
+            } break;
+            default:
+                emit(nc);
+                break;
+        }
+    }
+
+    void rc_data_state() {
+        if (is_eof()) {
+            emit(Token::EndOfFile);
+            return;
+        }
+        auto nc = consume();
+        switch (nc) {
+            case '&': {
+                return_state = RCData;
+                state = CharacterReference;
+                return;
+            } break;
+            case '<': {
+                state = RCDataLessThan;
+                return;
+            } break;
+            case 0: {
+                log_warn("unexpected null parse error");
+                // TODO emit U+FFFD Replacement Character
+                emit(0);
+            } break;
+            default:
+                emit(nc);
+                break;
+        }
+    }
+
+    void raw_text_state() {
+        if (is_eof()) {
+            emit(Token::EndOfFile);
+            return;
+        }
+        auto nc = consume();
+        switch (nc) {
+            case '<': {
+                state = RawTextLessThan;
+                return;
+            } break;
+            case 0: {
+                log_warn("unexpected null parse error");
+                // TODO emit U+FFFD Replacement Character
+                emit(0);
+            } break;
+            default:
+                emit(nc);
+                break;
+        }
+    }
+
+    void script_data_state() {
+        if (is_eof()) {
+            emit(Token::EndOfFile);
+            return;
+        }
+        auto nc = consume();
+        switch (nc) {
+            case '<': {
+                state = RawTextLessThan;
+                return;
+            } break;
+            case 0: {
+                log_warn("unexpected null parse error");
+                emit(REPLACEMENT_CHAR);
+            } break;
+            default:
+                emit(nc);
+                break;
+        }
+    }
+
+    void plaintext_state() {
+        auto nc = next_char();
+
+        if (is_eof()) {
+            emit(Token::EndOfFile);
+            return;
+        }
+
+        if (nc == 0) {
+            consume();
+
+            log_warn("unexpected null parse error");
+            emit(REPLACEMENT_CHAR);
+        }
+
+        // anything else
+        consume();
+        emit(nc);
+    }
+
+    // https://html.spec.whatwg.org/#tag-open-state
+    void tag_open_state() {
+        auto nc = next_char();
+
+        if (nc == '!') {
+            consume();
+            state = MarkupDeclarationOpen;
+            return;
+        }
+
+        if (nc == '/') {
+            consume();
+            state = EndTagOpen;
+            return;
+        }
+
+        if (std::isalpha(nc)) {
+            do_not_consume();
+
+            create({.type = Token::StartTag, .data = ""});
+            state = TagName;
+            return;
+        }
+
+        if (nc == '?') {
+            do_not_consume();
+
+            log_warn("unexpected question mark instead of tag name error");
+            create({.type = Token::Comment, .data = ""});
+            state = BogusComment;
+            return;
+        }
+
+        if (is_eof()) {
+            consume();
+
+            log_warn("invalid first character of tag name error");
+            emit('<');
+            emit(Token::EndOfFile);
+            return;
+        }
+
+        // Anything else
+
+        do_not_consume();
+        log_warn("invalid first character of tag name error");
+        emit('<');
+        state = Data;
+    }
+
+    void end_tag_open_state() {
+        auto nc = next_char();
+
+        if (std::isalpha(nc)) {
+            do_not_consume();
+
+            create({.type = Token::EndTag, .data = ""});
+            state = TagName;
+            return;
+        }
+
+        if (nc == '>') {
+            consume();
+            log_warn("missing end tag name parse error");
+            state = Data;
+            return;
+        }
+
+        if (is_eof()) {
+            consume();
+
+            log_warn("eof before tag name error");
+            emit('<');
+            emit('/');
+            emit(Token::EndOfFile);
+            return;
+        }
+
+        // Anything else
+
+        do_not_consume();
+        log_warn("invalid first character of tag name error");
+        create({.type = Token::Comment, .data = ""});
+        state = BogusComment;
+    }
+
+    void tag_name_state() {
+        auto nc = next_char();
+
+        if (                            //
+            nc == '\t' ||               //
+            nc == 12 /* line feed*/ ||  //
+            nc == 14 /* form feed*/ ||  //
+            nc == ' '                   //
+        ) {
+            consume();
+            state = BeforeAttributeName;
+            return;
+        }
+
+        if (nc == '/') {
+            consume();
+            state = SelfClosingStartTag;
+            return;
+        }
+
+        if (nc == '>') {
+            consume();
+
+            state = Data;
+            emit(nc);
+            return;
+        }
+
+        if (std::isupper(nc)) {
+            consume();
+
+            // lower case it
+            tokens.back().data.push_back(nc + 32);
+            return;
+        }
+
+        if (nc == 0) {
+            consume();
+
+            log_warn("unexpected null character");
+            tokens.back().data.push_back(REPLACEMENT_CHAR);
+            return;
+        }
+
+        if (is_eof()) {
+            consume();
+            emit(Token::EndOfFile);
+            return;
+        }
+
+        // Anything else
+
+        consume();
+        tokens.back().data.push_back(nc);
+    }
+
+    bool is_appropriate_end_tag_token() {
+        // An appropriate end tag token is an end tag token whose tag name
+        // matches the tag name of the last start tag to have been emitted from
+        // this tokenizer, if any.
+
+        if (tokens.back().type != Token::EndTag) {
+            log_warn("looking for app but isnt an end tag, need to search");
+        }
+
+        auto it = std::find_if(
+            emitted.rbegin(), emitted.rend(),
+            [](const Token& token) { return token.type == Token::StartTag; });
+        // If no start tag has been emitted from this tokenizer,
+        // then no end tag token is appropriate.
+        if (it == emitted.rend()) {
+            return false;
+        }
+        // Does the token match the last emitted start tag?
+        return tokens.back().data == it->data;
+    }
+
+    void shared_end_tag_name(State anything_else) {
+        auto nc = next_char();
+
+        const auto _anything_else = [&]() {
+            do_not_consume();
+            emit('<');
+            emit('/');
+            for (auto c : temp_buffer) {
+                emit(c);
+            }
+            state = anything_else;
+        };
+
+        if (                            //
+            nc == '\t' ||               //
+            nc == 12 /* line feed*/ ||  //
+            nc == 14 /* form feed*/ ||  //
+            nc == ' '                   //
+        ) {
+            // if current end tag token is appropriate,
+            if (is_appropriate_end_tag_token()) {
+                consume();
+                state = BeforeAttributeName;
+                return;
+            }
+
+            // otherwise treat is as per anything
+            _anything_else();
+            return;
+        }
+
+        if (nc == '/') {
+            if (is_appropriate_end_tag_token()) {
+                consume();
+                state = SelfClosingStartTag;
+                return;
+            }
+            // otherwise treat is as per anything
+            _anything_else();
+            return;
+        }
+
+        if (nc == '>') {
+            if (is_appropriate_end_tag_token()) {
+                consume();
+                state = Data;
+                emit(tokens.back());
+                tokens.pop_back();
+                return;
+            }
+            // otherwise treat is as per anything
+            _anything_else();
+            return;
+        }
+
+        if (std::isupper(nc)) {
+            consume();
+
+            // lower case it
+            tokens.back().data.push_back(nc + 32);
+            temp_buffer.push_back(nc);
+            return;
+        }
+
+        if (std::islower(nc)) {
+            consume();
+
+            tokens.back().data.push_back(nc);
+            temp_buffer.push_back(nc);
+            return;
+        }
+
+        // anything else
+        _anything_else();
+        return;
+    }
+
+    void rc_data_end_tag_name() { shared_end_tag_name(RCData); }
+    void script_data_end_tag_name() { shared_end_tag_name(ScriptData); }
+    void raw_text_end_tag_name() { shared_end_tag_name(RawText); }
+
+    void shared_end_tag_open(State alpha, State anything_else) {
+        auto nc = next_char();
+        if (std::isalpha(nc)) {
+            do_not_consume();
+            create({.type = Token::EndTag, .data = ""});
+            state = alpha;
+            return;
+        }
+
+        do_not_consume();
+        emit('<');
+        emit('/');
+        state = anything_else;
+    }
+
+    void raw_text_end_tag_open() {
+        shared_end_tag_open(RawTextEndTagName, RawText);
+    }
+    void rc_data_end_tag_open() {
+        shared_end_tag_open(RCDataEndTagName, RCData);
+    }
+    void script_data_end_tag_open() {
+        shared_end_tag_open(ScriptDataEndTagName, ScriptData);
+    }
+
+    void shared_less_than(State slash, State anything_else) {
+        auto nc = next_char();
+        if (nc == '/') {
+            consume();
+            temp_buffer.clear();
+            state = slash;
+            return;
+        }
+
+        do_not_consume();
+        emit('<');
+        state = anything_else;
+    }
+
+    void raw_text_less_than() { shared_less_than(RawTextEndTagOpen, RawText); }
+    void rc_data_less_than() { shared_less_than(RCDataEndTagOpen, RCData); }
+    void script_data_less_than() {
+        auto nc = next_char();
+        if (nc == '!') {
+            consume();
+
+            state = ScriptDataEscapedStart;
+            emit('<');
+            emit('!');
+            return;
+        }
+
+        shared_less_than(ScriptDataEndTagOpen, ScriptData);
+    }
+
+    void script_data_escape_start() {
+        auto nc = next_char();
+
+        if (nc == '-') {
+            consume();
+            emit('-');
+            state = ScriptDataEscapedStartDash;
+            return;
+        }
+
+        // Anything else
+        do_not_consume();
+        state = ScriptData;
+    }
+
+    void script_data_escape_start_dash() {
+        auto nc = next_char();
+
+        if (nc == '-') {
+            consume();
+            emit('-');
+            state = ScriptDataEscapedDashDash;
+            return;
+        }
+
+        // Anything else
+        do_not_consume();
+        state = ScriptData;
+    }
+
+    void script_data_escaped() {
+        auto nc = next_char();
+
+        if (nc == '-') {
+            consume();
+            emit('-');
+            state = ScriptDataEscapedDash;
+            return;
+        }
+
+        if (nc == '<') {
+            consume();
+            state = ScriptDataEscapedLessThan;
+            return;
+        }
+
+        if (nc == 0) {
+            consume();
+            emit(REPLACEMENT_CHAR);
+            return;
+        }
+        if (is_eof()) {
+            log_warn("eof in script html comment like text parse error");
+            emit(Token::EndOfFile);
+            return;
+        }
+
+        // Anything else
+        consume();
+        emit(nc);
+        return;
+    }
+
+    void script_data_escaped_dash() {
+        auto nc = next_char();
+
+        if (nc == '-') {
+            consume();
+            emit('-');
+            state = ScriptDataEscapedDashDash;
+            return;
+        }
+
+        if (nc == '<') {
+            consume();
+            state = ScriptDataEscapedLessThan;
+            return;
+        }
+
+        if (nc == 0) {
+            consume();
+            emit(REPLACEMENT_CHAR);
+            return;
+        }
+        if (is_eof()) {
+            log_warn("eof in script html comment like text parse error");
+            emit(Token::EndOfFile);
+            return;
+        }
+
+        // Anything else
+        consume();
+        emit(nc);
+        state = ScriptDataEscaped;
+        return;
+    }
+
+    void script_data_escaped_dash_dash() {
+        auto nc = next_char();
+
+        if (nc == '-') {
+            consume();
+            emit('-');
+            return;
+        }
+
+        if (nc == '<') {
+            consume();
+            state = ScriptDataEscapedLessThan;
+            return;
+        }
+
+        if (nc == '>') {
+            consume();
+            emit('>');
+            state = ScriptDataEscapedLessThan;
+            return;
+        }
+
+        if (nc == 0) {
+            consume();
+            emit(REPLACEMENT_CHAR);
+            return;
+        }
+        if (is_eof()) {
+            log_warn("eof in script html comment like text parse error");
+            emit(Token::EndOfFile);
+            return;
+        }
+
+        // Anything else
+        consume();
+        emit(nc);
+        state = ScriptDataEscaped;
+        return;
+    }
+
+    void script_data_escaped_less_than() {
+        auto nc = next_char();
+
+        if (nc == '/') {
+            consume();
+            temp_buffer.clear();
+            state = ScriptDataEscapedEndTagOpen;
+            return;
+        }
+
+        if (std::isalpha(nc)) {
+            do_not_consume();
+            temp_buffer.clear();
+            emit('<');
+            state = ScriptDataDoubleEscaped;
+            return;
+        }
+
+        do_not_consume();
+        emit('<');
+        state = ScriptDataEscaped;
+    }
+
+    void script_data_escaped_end_tag_open() {
+        auto nc = next_char();
+
+        if (std::isalpha(nc)) {
+            do_not_consume();
+
+            create({.type = Token::EndTag, .data = ""});
+            state = ScriptDataEscapedEndTagName;
+            return;
+        }
+
+        do_not_consume();
+        emit('<');
+        state = ScriptDataEscaped;
+    }
+
+    void script_data_escaped_end_tag_name() {
+        shared_end_tag_name(ScriptDataEscaped);
+    }
+
+    void script_data_double_escape_start() {
+        auto nc = next_char();
+
+        if (                            //
+            nc == '\t' ||               //
+            nc == 12 /* line feed*/ ||  //
+            nc == 14 /* form feed*/ ||  //
+            nc == ' ' ||                //
+            nc == '/' ||                //
+            nc == '>'                   //
+        ) {
+            consume();
+
+            if (temp_buffer == "script") {
+                state = ScriptDataDoubleEscaped;
+            } else {
+                state = ScriptDataEscaped;
+            }
+            emit(nc);
+            return;
+        }
+
+        if (std::isupper(nc)) {
+            consume();
+
+            // lower case it
+            temp_buffer.push_back(nc + 32);
+            emit(nc);
+            return;
+        }
+
+        if (std::islower(nc)) {
+            consume();
+
+            // lower case it
+            temp_buffer.push_back(nc);
+            emit(nc);
+            return;
+        }
+
+        do_not_consume();
+        state = ScriptDataEscaped;
+    }
+
+    void script_data_double_escaped() {
+        auto nc = next_char();
+
+        if (nc == '-') {
+            consume();
+            emit('-');
+            state = ScriptDataDoubleEscapedDash;
+            return;
+        }
+
+        if (nc == '<') {
+            consume();
+            emit('<');
+            state = ScriptDataDoubleEscapedLessThan;
+            return;
+        }
+
+        if (nc == 0) {
+            consume();
+            emit(REPLACEMENT_CHAR);
+            return;
+        }
+        if (is_eof()) {
+            log_warn("eof in script html comment like text parse error");
+            emit(Token::EndOfFile);
+            return;
+        }
+
+        // Anything else
+        consume();
+        emit(nc);
+        return;
+    }
+
+    void script_data_double_escaped_dash() {
+        auto nc = next_char();
+
+        if (nc == '-') {
+            consume();
+            emit('-');
+            state = ScriptDataDoubleEscapedDashDash;
+            return;
+        }
+
+        if (nc == '<') {
+            consume();
+            emit('<');
+            state = ScriptDataDoubleEscapedLessThan;
+            return;
+        }
+
+        if (nc == 0) {
+            consume();
+            emit(REPLACEMENT_CHAR);
+            return;
+        }
+
+        if (is_eof()) {
+            log_warn("eof in script html comment like text parse error");
+            emit(Token::EndOfFile);
+            return;
+        }
+
+        // Anything else
+        consume();
+        emit(nc);
+        return;
+    }
+
+    void script_data_double_escaped_dash_dash() {
+        auto nc = next_char();
+
+        if (nc == '-') {
+            consume();
+            emit('-');
+            return;
+        }
+
+        if (nc == '<') {
+            consume();
+            emit('<');
+            state = ScriptDataDoubleEscapedLessThan;
+            return;
+        }
+
+        if (nc == '>') {
+            consume();
+            emit('>');
+            state = ScriptData;
+            return;
+        }
+
+        if (nc == 0) {
+            consume();
+            emit(REPLACEMENT_CHAR);
+            return;
+        }
+
+        if (is_eof()) {
+            log_warn("eof in script html comment like text parse error");
+            emit(Token::EndOfFile);
+            return;
+        }
+
+        // Anything else
+        consume();
+        emit(nc);
+        state = ScriptDataDoubleEscaped;
+        return;
+    }
+
+    void script_data_double_escaped_less_than() {
+        auto nc = next_char();
+        if (nc == '/') {
+            consume();
+            emit('/');
+            temp_buffer.clear();
+            state = ScriptDataDoubleEscapedEnd;
+            return;
+        }
+
+        do_not_consume();
+        state = ScriptDataDoubleEscaped;
+    }
+
+    void script_data_double_escaped_end() {
+        auto nc = next_char();
+
+        if (                            //
+            nc == '\t' ||               //
+            nc == 12 /* line feed*/ ||  //
+            nc == 14 /* form feed*/ ||  //
+            nc == ' ' ||                //
+            nc == '/' ||                //
+            nc == '>'                   //
+        ) {
+            if (temp_buffer == "script") {
+                state = ScriptDataEscaped;
+            } else {
+                state = ScriptDataDoubleEscaped;
+            }
+            emit(nc);
+            return;
+        }
+
+        if (std::isupper(nc)) {
+            consume();
+            temp_buffer.push_back(nc + 32);
+            emit(nc);
+            return;
+        }
+
+        if (std::islower(nc)) {
+            consume();
+
+            temp_buffer.push_back(nc);
+            emit(nc);
+            return;
+        }
+
+        do_not_consume();
+        state = ScriptDataDoubleEscaped;
+        return;
+    }
+
+    void tokenize() {
+        switch (state) {
+            case Data: {
+                data_state();
+            } break;
+            case RCData: {
+                rc_data_state();
+            } break;
+            case RawText: {
+                raw_text_state();
+            } break;
+            case ScriptData: {
+                script_data_state();
+            } break;
+            case Plaintext: {
+                plaintext_state();
+            } break;
+            case TagOpen: {
+                tag_open_state();
+            } break;
+            case CharacterReference:
+            case RCDataLessThan:
+            case RawTextLessThan:
+                break;
+        }
+    }
+};
+
+struct ParserOld {
+    size_t pos;
+    std::string input;
+
+    ParserOld(const std::string& source) : input(source) { pos = 0; }
 
     void validate(unsigned char c, unsigned char m, const std::string& msg) {
         VALIDATE(c == m,
