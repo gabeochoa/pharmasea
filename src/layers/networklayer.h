@@ -20,6 +20,7 @@ struct NetworkLayer : public Layer {
     LayoutBox role_selector;
     LayoutBox username_picker;
     LayoutBox connected_screen;
+    LayoutBox ip_input_screen;
 
     std::shared_ptr<network::Info> network_info;
 
@@ -31,6 +32,8 @@ struct NetworkLayer : public Layer {
               load_ui("resources/html/username_picker.html", WIN_R())),
           connected_screen(
               load_ui("resources/html/connected_screen.html", WIN_R())),
+          ip_input_screen(
+              load_ui("resources/html/ip_input_screen.html", WIN_R())),
           network_info(std::make_shared<network::Info>()) {}
 
     virtual ~NetworkLayer() {}
@@ -145,8 +148,7 @@ struct NetworkLayer : public Layer {
         if (network_info->has_set_ip()) {
             return connected_screen;
         }
-        // draw_ip_input_screen();
-        return username_picker;
+        return ip_input_screen;
     }
 
     virtual void onDraw(float) override {
