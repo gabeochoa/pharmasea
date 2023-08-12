@@ -67,6 +67,8 @@ struct SettingsLayer : public Layer {
         return ui_context.get()->process_gamepad_button_event(event);
     }
 
+    /*
+
     void draw_keybindings(float) {
         // TODO tons more work to do here but for the most part this shows its
         // possible to load all of them
@@ -89,6 +91,7 @@ struct SettingsLayer : public Layer {
             }
         }
     }
+    */
 
     virtual void onUpdate(float) override {
         if (MenuState::get().is_not(menu::State::Settings)) return;
