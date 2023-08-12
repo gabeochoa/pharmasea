@@ -358,7 +358,8 @@ inline ElementResult button(const Widget& widget, bool background = true) {
 }
 
 // Returns true if the checkbox changed
-inline ElementResult checkbox(const Widget& widget) {
+inline ElementResult checkbox(const Widget& widget,
+                              const TextfieldData& data = {}) {
     auto state = context->widget_init<ui::CheckboxState>(
         ui::MK_UUID(widget.id, widget.id));
     state->on.changed_since = false;
@@ -367,7 +368,10 @@ inline ElementResult checkbox(const Widget& widget) {
         state->on = !state->on;
     }
 
-    const std::string label = state->on ? "  X" : " ";
+    const std::string default_label = state->on ? "  X" : " ";
+    const std::string label =
+        data.content.empty() ? default_label : data.content;
+
     text(widget, label, widget.get_rect());
 
     return ElementResult{state->on.changed_since, state->on};

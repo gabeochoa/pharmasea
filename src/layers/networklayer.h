@@ -133,7 +133,11 @@ struct NetworkLayer : public Layer {
     }
 
     void inputProcessor(const std::string& id, elements::ElementResult result) {
-        switch (hashString(id)) {}
+        switch (hashString(id)) {
+            case hashString("ShowHideIP"): {
+                network_info->show_ip_addr = !network_info->show_ip_addr;
+            } break;
+        }
     }
 
     LayoutBox& get_current_screen() {

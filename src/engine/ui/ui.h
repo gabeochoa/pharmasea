@@ -99,11 +99,21 @@ inline void render_input(
     auto id_attr = node.attrs.at("id");
 
     switch (hashString(input_type)) {
-        case hashString("checkbox"):
-            if (auto result = elements::checkbox(widget); result) {
-                processInput(id_attr, result);
+        case hashString("checkbox"): {
+            if (node.attrs.contains("label")) {
+                const auto label_id = node.attrs.at("label");
+                const auto label_data_source = getInputDataSource(label_id);
+                const auto label =
+                    std::get<elements::TextfieldData>(label_data_source);
+                if (auto result = elements::checkbox(widget, label); result) {
+                    processInput(id_attr, result);
+                }
+            } else {
+                if (auto result = elements::checkbox(widget); result) {
+                    processInput(id_attr, result);
+                }
             }
-            break;
+        } break;
         case hashString("range"):
             if (auto result = elements::slider(widget); result) {
                 processInput(id_attr, result);
