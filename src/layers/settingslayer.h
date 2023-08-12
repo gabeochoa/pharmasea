@@ -90,37 +90,6 @@ struct SettingsLayer : public Layer {
         }
     }
 
-    void draw_ui(float dt) {
-        using namespace ui;
-
-        ui_context->begin(dt);
-
-        auto root = ui::components::mk_root();
-
-        ui_context->push_parent(root);
-        {
-            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
-                                                Size_Px(WIN_HF(), 1.f)));
-            auto content =
-                ui_context->own(Widget({.mode = Children, .strictness = 1.f},
-                                       Size_Pct(1.f, 1.f), Column));
-            div(*content);
-            ui_context->push_parent(content);
-            {
-                switch (activeWindow) {
-                    default:
-                    case ActiveWindow::KeyBindings:
-                        draw_keybindings(dt);
-                        break;
-                }
-            }
-            ui_context->pop_parent();
-        }
-        ui_context->pop_parent();
-
-        ui_context->end(root.get());
-    }
-
     virtual void onUpdate(float) override {
         if (MenuState::get().is_not(menu::State::Settings)) return;
         raylib::SetExitKey(raylib::KEY_NULL);
@@ -188,7 +157,7 @@ struct SettingsLayer : public Layer {
     virtual void onDraw(float) override {
         if (MenuState::get().is_not(menu::State::Settings)) return;
         ext::clear_background(ui_context->active_theme().background);
-        // draw_ui(dt);
+
         elements::begin(ui_context);
 
         render_ui(root_box, WIN_R(),

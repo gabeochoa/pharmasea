@@ -6,6 +6,7 @@
 //
 #include "../engine/settings.h"
 //
+#include "../engine/network/webrequest.h"
 #include "../engine/statemanager.h"
 #include "../engine/trigger_on_dt.h"
 #include "shared.h"
@@ -75,6 +76,7 @@ struct Info {
     std::thread::id server_thread_id;
     std::shared_ptr<Client> client;
     std::thread server_thread;
+    std::string my_ip_address;
 
     bool username_set = false;
 
@@ -89,9 +91,23 @@ struct Info {
 
     TriggerOnDt menu_state_tick_trigger = TriggerOnDt(1.0f);
 
-    Info() {}
+    Info() {
+        network::Info::init_connections();
+
+        if (network::ENABLE_REMOTE_IP) {
+            my_ip_address = network::get_remote_ip_address().value_or("");
+        } else {
+            my_ip_address = "(DEV) network disabled";
+        }
+
+        if (!Settings::get().data.username.empty()) {
+            lock_in_username();
+        }
+    }
 
     ~Info() {
+        network::Info::shutdown_connections();
+
         desired_role = Role::s_None;
 
         // cleanup server
