@@ -218,16 +218,19 @@ inline void end() {
 
 }  // namespace focus
 
-inline void begin(std::shared_ptr<ui::UIContext> ui_context) {
+inline void begin(std::shared_ptr<ui::UIContext> ui_context, float dt) {
     context = ui_context;
     focus::begin();
     //
+    context->begin(dt);
 }
 
 inline void end() {
     callback_registry.execute_callbacks();
     context->render_all();
     focus::end();
+
+    context->cleanup();
 }
 
 struct ElementResult {
@@ -512,21 +515,104 @@ inline ElementResult textfield(const Widget& widget,
     state->buffer.changed_since = false;
 
     bool disabled = widget.attr("disabled", "false") == "true";
-
-    if (!disabled) {
-        focus::active_if_mouse_inside(widget);
-        focus::try_to_grab(widget);
-        internal::draw_focus_ring(widget);
-        focus::handle_tabbing(widget);
-        internal::draw_rect(widget.get_rect(), widget.z_index,
-                            widget.get_usage_color("background-color"));
+    if (disabled) {
+        text(widget, state->buffer, widget.get_rect());
+        return ElementResult{false, state->buffer};
     }
 
-    text(widget, state->buffer, widget.get_rect());
+    // editable text field...
 
-    // TODO rest of textfield
+    bool is_invalid = false;  // TODO
 
-    return ElementResult{state->buffer.changed_since, state->buffer};
+    focus::active_if_mouse_inside(widget);
+    focus::try_to_grab(widget);
+    // TODO change focus color based on is invalid...
+    internal::draw_focus_ring(widget);
+    focus::handle_tabbing(widget);
+
+    if (focus::is_mouse_click(widget)) {
+        focus::set(widget.id);
+    }
+
+    // render
+    {
+        // TODO support the css color?
+        //    widget.get_usage_color("background-color")
+        internal::draw_rect(widget.get_rect(), widget.z_index,
+                            focus::is_active_and_hot(widget.id)
+                                ? ui::theme::Usage::Secondary
+                                : ui::theme::Usage::Primary);
+
+        bool shouldWriteCursor = focus::matches(widget.id) && state->showCursor;
+        const std::string focusStr = shouldWriteCursor ? "_" : "";
+        const std::string focused_content =
+            fmt::format("{}{}", state->buffer.asT(), focusStr);
+
+        auto text_color =
+            is_invalid ? ui::theme::Usage::Error : ui::theme::Usage::Font;
+        text(widget, focused_content, widget.get_rect(), text_color);
+    }
+
+    {
+        state->cursorBlinkTime = state->cursorBlinkTime + 1;
+        if (state->cursorBlinkTime > 60) {
+            state->cursorBlinkTime = 0;
+            state->showCursor = !state->showCursor;
+        }
+
+        bool changed = false;
+
+        if (focus::matches(widget.id)) {
+            // TODO what does this mean
+            if (context->keychar != int()) {
+                // TODO check validation
+
+                state->buffer.asT().append(
+                    std::string(1, (char) context->keychar));
+                changed = true;
+            }
+
+            if (context->pressed(InputName::WidgetBackspace) ||
+                context->is_held_down_debounced(InputName::WidgetBackspace)) {
+                if (state->buffer.asT().size() > 0) {
+                    state->buffer.asT().pop_back();
+                }
+                changed = true;
+            }
+
+            if (context->is_held_down(InputName::WidgetCtrl)) {
+                if (context->pressed(InputName::WidgetPaste)) {
+                    auto clipboard = ext::get_clipboard_text();
+
+                    // make a copy so we can text validation
+                    std::string post_paste(state->buffer.asT());
+                    post_paste.append(clipboard);
+
+                    // TODO run validation
+
+                    // TODO we should paste the amount that fits. but we
+                    // dont know what the max length actually is, so we
+                    // would need to remove one letter at a time until we
+                    // hit something valid.
+
+                    // TODO we probably should give some kind of visual
+                    // error to the user that you cant paste right now
+                    // bool should_append = !validation_test(
+                    // vflag, TextfieldValidationDecisionFlag::StopNewInput);
+
+                    bool should_append = true;
+
+                    // commit the copy-paste
+                    if (should_append) state->buffer.asT() = post_paste;
+                }
+                changed = true;
+            }
+        }
+
+        state->buffer.changed_since = changed;
+    }
+
+    return ElementResult{state->buffer.changed_since, state->buffer.asT()};
 }
 
 }  // namespace elements

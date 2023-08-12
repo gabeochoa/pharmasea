@@ -102,6 +102,13 @@ struct NetworkLayer : public Layer {
             case hashString(strings::i18n::COPY_IP):
                 ext::set_clipboard_text(network_info->my_ip_address.c_str());
                 break;
+            case hashString(strings::i18n::START):
+                MenuState::get().set(menu::State::Game);
+                GameState::get().set(game::State::Lobby);
+                break;
+            case hashString(strings::i18n::DISCONNECT):
+                network_info.reset(new network::Info());
+                break;
         }
     }
 
@@ -112,13 +119,17 @@ struct NetworkLayer : public Layer {
                     Settings::get().data.username,
                 };
             } break;
-            case hashString("ipaddr"): {
+            case hashString("myipaddr"): {
                 auto ip_addr = network_info->show_ip_addr
                                    ? network_info->my_ip_address
                                    : "***.***.***.***";
                 return elements::TextfieldData{
                     ip_addr,
                 };
+            } break;
+            case hashString("ipaddr"): {
+                // TODO add support for show hide on host ip
+                return elements::TextfieldData{network_info->host_ip_address()};
             } break;
             case hashString("show_hide_text"): {
                 return elements::TextfieldData{
@@ -136,6 +147,9 @@ struct NetworkLayer : public Layer {
         switch (hashString(id)) {
             case hashString("ShowHideIP"): {
                 network_info->show_ip_addr = !network_info->show_ip_addr;
+            } break;
+            case hashString("ipaddr"): {
+                network_info->host_ip_address() = result.as<std::string>();
             } break;
         }
     }
@@ -155,14 +169,14 @@ struct NetworkLayer : public Layer {
         return ip_input_screen;
     }
 
-    virtual void onDraw(float) override {
+    virtual void onDraw(float dt) override {
         // TODO add an overlay that shows who's currently available
         // draw_network_overlay();
 
         if (MenuState::get().is_not(menu::State::Network)) return;
         ClearBackground(ui_context->active_theme().background);
 
-        elements::begin(ui_context);
+        elements::begin(ui_context, dt);
 
         render_ui(
             get_current_screen(), WIN_R(),

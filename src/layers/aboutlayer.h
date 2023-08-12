@@ -44,12 +44,12 @@ struct AboutLayer : public Layer {
         }
     }
 
-    virtual void onDraw(float) override {
+    virtual void onDraw(float dt) override {
         if (MenuState::get().is_not(menu::State::About)) return;
         raylib::SetExitKey(raylib::KEY_NULL);
         ext::clear_background(ui_context->active_theme().background);
 
-        elements::begin(ui_context);
+        elements::begin(ui_context, dt);
 
         render_ui(root_box, WIN_R(),
                   std::bind(&AboutLayer::process_on_click, *this,

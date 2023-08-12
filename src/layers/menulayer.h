@@ -161,13 +161,13 @@ struct MenuLayer : public Layer {
         // return true;
     }
 
-    virtual void onDraw(float) override {
+    virtual void onDraw(float dt) override {
         ZoneScoped;
         if (MenuState::get().is_not(menu::State::Root)) return;
         PROFILE();
         ext::clear_background(ui_context->active_theme().background);
 
-        elements::begin(ui_context);
+        elements::begin(ui_context, dt);
 
         render_ui(root_box, {0, 0, WIN_WF(), WIN_HF()},
                   std::bind(&MenuLayer::process_on_click, *this,

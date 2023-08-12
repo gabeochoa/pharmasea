@@ -154,11 +154,11 @@ struct SettingsLayer : public Layer {
         return;
     }
 
-    virtual void onDraw(float) override {
+    virtual void onDraw(float dt) override {
         if (MenuState::get().is_not(menu::State::Settings)) return;
         ext::clear_background(ui_context->active_theme().background);
 
-        elements::begin(ui_context);
+        elements::begin(ui_context, dt);
 
         render_ui(root_box, WIN_R(),
                   std::bind(&SettingsLayer::process_on_click, *this,
