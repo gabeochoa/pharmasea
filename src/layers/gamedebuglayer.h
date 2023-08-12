@@ -88,7 +88,7 @@ struct GameDebugLayer : public Layer {
             if (debug_ui_enabled) {
                 raylib::EnableCursor();
             } else {
-                raylib::DisableCursor();
+                // raylib::DisableCursor();
             }
 
             return true;
