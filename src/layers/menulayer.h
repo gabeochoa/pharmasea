@@ -174,18 +174,5 @@ struct MenuLayer : public Layer {
                             std::placeholders::_1));
 
         elements::end();
-
-        // ui_context->begin(dt);
-        //
-        // auto root = ui::components::mk_root();
-        //
-        // ui_context->push_parent(root);
-        // {
-        // draw_menu_buttons();
-        // draw_title_section();
-        // draw_external_icons();
-        // }
-        // ui_context->pop_parent();
-        // ui_context->end(root.get());
     }
 };

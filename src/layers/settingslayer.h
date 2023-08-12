@@ -98,7 +98,7 @@ struct SettingsLayer : public Layer {
     void process_on_click(const std::string& id) {
         switch (hashString(id)) {
             case hashString(strings::i18n::BACK_BUTTON):
-                MenuState::get().set(menu::State::Root);
+                MenuState::get().go_back();
                 break;
         }
     }
