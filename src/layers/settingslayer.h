@@ -127,7 +127,6 @@ struct SettingsLayer : public Layer {
     }
 
     void process_on_click(const std::string& id) {
-        log_info("clicked {}", id);
         switch (hashString(id)) {
             case hashString(strings::i18n::BACK_BUTTON):
                 MenuState::get().set(menu::State::Root);
@@ -186,7 +185,7 @@ struct SettingsLayer : public Layer {
         return;
     }
 
-    virtual void onDraw(float dt) override {
+    virtual void onDraw(float) override {
         if (MenuState::get().is_not(menu::State::Settings)) return;
         ext::clear_background(ui_context->active_theme().background);
         // draw_ui(dt);
