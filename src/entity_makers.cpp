@@ -860,6 +860,8 @@ void make_customer(Entity& customer, vec2 p, bool has_order) {
     customer.get<HasBaseSpeed>().update(5.f);
     customer.get<CanPerformJob>().update(WaitInQueue, Wandering);
 
+    // TODO if we do dirty-cups, we should have people leave them on any flat
+    // surface but if they are too drunk... just smash on the ground
     customer
         .addComponent<IsSpawner>()  //
         .set_fn(&furniture::make_vomit)
