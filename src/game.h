@@ -130,13 +130,6 @@ void startup() {
     for (auto layer : layers) App::get().pushLayer(layer);
 }
 
-int setup_multiplayer_test(bool is_host = false) {
-    network::mp_test::enabled = true;
-    network::mp_test::is_host = is_host;
-    MenuState::get().set(menu::State::Network);
-    return 0;
-}
-
 void process_dev_flags(char* argv[]) {
 #if ENABLE_DEV_FLAGS
     argh::parser cmdl(argv);
