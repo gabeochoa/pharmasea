@@ -19,6 +19,7 @@ struct NetworkLayer : public Layer {
 
     LayoutBox role_selector;
     LayoutBox username_picker;
+    LayoutBox host_connected_screen;
     LayoutBox connected_screen;
     LayoutBox ip_input_screen;
 
@@ -30,6 +31,8 @@ struct NetworkLayer : public Layer {
           role_selector(load_ui("resources/html/role_selector.html", WIN_R())),
           username_picker(
               load_ui("resources/html/username_picker.html", WIN_R())),
+          host_connected_screen(
+              load_ui("resources/html/host_connected_screen.html", WIN_R())),
           connected_screen(
               load_ui("resources/html/connected_screen.html", WIN_R())),
           ip_input_screen(
@@ -109,6 +112,11 @@ struct NetworkLayer : public Layer {
             case hashString(strings::i18n::DISCONNECT):
                 network_info.reset(new network::Info());
                 break;
+            case hashString(strings::i18n::CONNECT):
+                Settings::get().update_last_used_ip_address(
+                    network_info->host_ip_address());
+                network_info->lock_in_ip();
+                break;
         }
     }
 
@@ -164,6 +172,7 @@ struct NetworkLayer : public Layer {
         }
 
         if (network_info->has_set_ip()) {
+            if (network_info->is_host()) return host_connected_screen;
             return connected_screen;
         }
         return ip_input_screen;
