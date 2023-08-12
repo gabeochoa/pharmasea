@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <style>
+            body {
+                width: 100%;
+                height: 100%;
+            }
+
+            .spacing {
+                width: 50%;
+                height: 10%;
+            }
+
+            .button {
+                height: 20%;
+                background-color: "Primary";
+            }
+
+            .inset {
+                display: block;
+                padding-left: 10%;
+                height: 100%;
+            }
+
+            .row {
+                display: inline;
+                width: 100%;
+            } 
+
+            .col1 {
+                width: 10%;
+            }
+
+            .col2 {
+                padding-left: 10%;
+                width: 30%;
+                height: 30%;
+            }
+
+            .tiny-button {
+                width: 20%;
+                height: 20%;
+                background-color: "Primary";
+            }
+
+            .top-spacing {
+                width: 50%;
+                height: 30%;
+            }
+
+            .button-spacing {
+                height: 5%;
+            }
+
+            .text-field {
+                width: 100%;
+                height: 50%;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="top-spacing"></div>
+        <div class="inset">
+            <button class="button" id="Start">Start</button>
+            <div class="button-spacing"></div>
+            <button class="button" id="Disconnect">Disconnect</button>
+            <div class="row">
+                <p>Your IP is: </p>
+                <input class="text-field" type="text-field" id="username" disabled="true" />
+                <button class="tiny-button" id="Show">Show</button>
+                <button class="tiny-button" id="Copy">Copy</button>
+            </div>
+            <div class="row">
+                <p>Username: </p>
+                <input class="text-field" type="text-field" id="username" disabled="true" />
+                <button class="tiny-button" id="Edit">Edit</button>
+            </div>
+        </div>
+    </body>
+</html>
