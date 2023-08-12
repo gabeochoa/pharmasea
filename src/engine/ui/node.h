@@ -143,8 +143,8 @@ struct Style {
         return def.to_f(parent_val);
     }
 
-    float lookup_f(const std::string& field, const std::string& backup1, const NumericalValue& def,
-                   float parent_val) const {
+    float lookup_f(const std::string& field, const std::string& backup1,
+                   const NumericalValue& def, float parent_val) const {
         auto it = values.find(field);
         if (it != values.end()) {
             return std::get<NumericalValue>(it->second).to_f(parent_val);
@@ -192,6 +192,11 @@ struct Node {
         : id(NODE_ID_GEN++), content(content) {}
     Node(const std::string& tag, const Attrs& attrs, const Nodes& children)
         : id(NODE_ID_GEN++), tag(tag), attrs(attrs), children(children) {}
+
+    const std::string& get_attr(const std::string& name,
+                                const std::string& defaultval = "") const {
+        return attrs.contains(name) ? attrs.at(name) : defaultval;
+    }
 
     [[nodiscard]] DisplayType display() const { return style.display_type(); }
 };
@@ -245,6 +250,11 @@ struct LayoutBox {
     Layouts children;
     Node node;
     Style style;
+
+    const std::string& attr(const std::string& name,
+                            const std::string& def) const {
+        return node.get_attr(name, def);
+    }
 
     void add_anon_child() {
         children.push_back(LayoutBox{

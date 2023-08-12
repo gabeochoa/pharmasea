@@ -102,6 +102,11 @@ struct Widget {
 
     Rectangle get_rect() const { return layout_box.dims.content; }
     void set_rect(Rectangle r) { layout_box.dims.content = r; }
+
+    const std::string& attr(const std::string& name,
+                            const std::string& def) const {
+        return layout_box.attr(name, def);
+    }
 };
 
 namespace focus {
@@ -506,20 +511,17 @@ inline ElementResult textfield(const Widget& widget,
     state->buffer = data.content;
     state->buffer.changed_since = false;
 
-    focus::active_if_mouse_inside(widget);
-    focus::try_to_grab(widget);
-    internal::draw_focus_ring(widget);
-    focus::handle_tabbing(widget);
-
-    // TODO add support for default values for attrs
-    bool disabled = widget.layout_box.node.attrs.contains("disabled")
-                        ? widget.layout_box.node.attrs.at("disabled") == "true"
-                        : false;
+    bool disabled = widget.attr("disabled", "false") == "true";
 
     if (!disabled) {
+        focus::active_if_mouse_inside(widget);
+        focus::try_to_grab(widget);
+        internal::draw_focus_ring(widget);
+        focus::handle_tabbing(widget);
         internal::draw_rect(widget.get_rect(), widget.z_index,
                             widget.get_usage_color("background-color"));
     }
+
     text(widget, state->buffer, widget.get_rect());
 
     // TODO rest of textfield
