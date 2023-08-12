@@ -57,7 +57,12 @@ struct DropdownData {
     int initial = 0;
 };
 
-typedef std::variant<std::string, bool, float, DropdownData> InputDataSource;
+struct TextfieldData {
+    std::string content;
+};
+
+typedef std::variant<std::string, bool, float, TextfieldData, DropdownData>
+    InputDataSource;
 
 struct Widget {
     LayoutBox layout_box;
@@ -225,6 +230,7 @@ struct ElementResult {
     ElementResult(bool val, bool d) : result(val), data(d) {}
     ElementResult(bool val, int d) : result(val), data(d) {}
     ElementResult(bool val, float d) : result(val), data(d) {}
+    ElementResult(bool val, const std::string& d) : result(val), data(d) {}
 
     template<typename T>
     T as() const {
@@ -235,7 +241,7 @@ struct ElementResult {
 
    private:
     bool result = false;
-    std::variant<bool, int, float> data = 0;
+    std::variant<bool, int, float, std::string> data = 0;
 };
 
 namespace internal {
@@ -486,6 +492,34 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
     text(widget, data.options[state->selected], widget.get_rect());
 
     return ElementResult{state->selected.changed_since, state->selected};
+}
+
+inline ElementResult textfield(const Widget& widget,
+                               const TextfieldData& data) {
+    auto state = context->widget_init<ui::TextfieldState>(
+        ui::MK_UUID(widget.id, widget.id));
+    state->buffer = data.content;
+    state->buffer.changed_since = false;
+
+    focus::active_if_mouse_inside(widget);
+    focus::try_to_grab(widget);
+    internal::draw_focus_ring(widget);
+    focus::handle_tabbing(widget);
+
+    // TODO add support for default values for attrs
+    bool disabled = widget.layout_box.node.attrs.contains("disabled")
+                        ? widget.layout_box.node.attrs.at("disabled") == "true"
+                        : false;
+
+    if (!disabled) {
+        internal::draw_rect(widget.get_rect(), widget.z_index,
+                            widget.get_usage_color("background-color"));
+    }
+    text(widget, state->buffer, widget.get_rect());
+
+    // TODO rest of textfield
+
+    return ElementResult{state->buffer.changed_since, state->buffer};
 }
 
 }  // namespace elements

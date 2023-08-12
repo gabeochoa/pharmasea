@@ -10,6 +10,7 @@
 #include "../globals.h"
 //
 #include "../engine/toastmanager.h"
+#include "../engine/ui/ui.h"
 #include "../network/network.h"
 
 using namespace ui;
@@ -26,13 +27,16 @@ inline bool validate_ip(const std::string& ip) {
 
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
+    LayoutBox role_selector;
+
     std::shared_ptr<network::Info> network_info;
     std::string my_ip_address;
     bool should_show_host_ip = false;
 
-    NetworkLayer() : Layer("Network") {
-        ui_context = std::make_shared<ui::UIContext>();
-
+    NetworkLayer()
+        : Layer("Network"),
+          ui_context(std::make_shared<ui::UIContext>()),
+          role_selector(load_ui("resources/html/role_selector.html", WIN_R())) {
         network::Info::init_connections();
         network_info = std::make_shared<network::Info>();
         if (network::ENABLE_REMOTE_IP) {
@@ -318,11 +322,52 @@ struct NetworkLayer : public Layer {
         network_info->client->announcements.clear();
     }
 
+    void process_on_click(const std::string& id) {
+        log_info("on click {}", id);
+        switch (hashString(id)) {
+            case hashString(strings::i18n::BACK_BUTTON):
+                MenuState::get().set(menu::State::Root);
+                break;
+        }
+    }
+
+    elements::InputDataSource dataFetcher(const std::string& id) {
+        switch (hashString(id)) {
+            case hashString("username"): {
+                return elements::TextfieldData{
+                    Settings::get().data.username,
+                };
+            } break;
+        }
+        return "";
+    }
+
+    void inputProcessor(const std::string& id, elements::ElementResult result) {
+        switch (hashString(id)) {}
+    }
+
+    LayoutBox get_current_screen() { return role_selector; }
+
     virtual void onDraw(float dt) override {
         // TODO add an overlay that shows who's currently available
         // draw_network_overlay();
 
         if (MenuState::get().is_not(menu::State::Network)) return;
+        ClearBackground(ui_context->active_theme().background);
+
+        elements::begin(ui_context);
+
+        render_ui(
+            get_current_screen(), WIN_R(),
+            std::bind(&NetworkLayer::process_on_click, *this,
+                      std::placeholders::_1),
+            std::bind(&NetworkLayer::dataFetcher, *this, std::placeholders::_1),
+            std::bind(&NetworkLayer::inputProcessor, *this,
+                      std::placeholders::_1, std::placeholders::_2));
+
+        elements::end();
+
+        return;
 
         ui_context->begin(dt);
 

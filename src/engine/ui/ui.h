@@ -107,6 +107,24 @@ inline void render_input(
                 processInput(id_attr, result);
             }
             break;
+        case hashString("text-field"): {
+            if (!getInputDataSource) {
+                log_warn(
+                    "rendering textfield but you didnt provide datasource "
+                    "fetcher");
+                return;
+            }
+            elements::InputDataSource data =
+                getInputDataSource(node.attrs.at("id"));
+            if (!std::holds_alternative<elements::TextfieldData>(data)) {
+                log_warn("rendering textfield but you didnt provide data");
+                return;
+            }
+            auto fielddata = std::get<elements::TextfieldData>(data);
+            if (auto result = elements::textfield(widget, fielddata); result) {
+                processInput(id_attr, result);
+            }
+        } break;
         case hashString("dropdown"):
             if (!getInputDataSource) {
                 log_warn(
