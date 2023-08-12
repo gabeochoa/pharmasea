@@ -79,6 +79,7 @@ struct Info {
     std::string my_ip_address;
 
     bool username_set = false;
+    bool show_ip_addr = false;
 
     void lock_in_username() { username_set = true; }
     void unlock_username() { username_set = false; }

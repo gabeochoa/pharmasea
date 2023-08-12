@@ -12,6 +12,7 @@
             }
 
             .button {
+                width: 10%;
                 height: 20%;
                 background-color: "Primary";
             }
@@ -21,11 +22,6 @@
                 padding-left: 10%;
                 height: 100%;
             }
-
-            .row {
-                display: inline;
-                width: 100%;
-            } 
 
             .col1 {
                 width: 10%;
@@ -38,6 +34,8 @@
             }
 
             .tiny-button {
+                margin-left: 5%;
+                margin-right: 5%;
                 width: 20%;
                 height: 20%;
                 background-color: "Primary";
@@ -57,24 +55,43 @@
                 height: 50%;
             }
 
+            .ipaddr {
+                display: inline;
+            }
+
+            .username {
+                display: inline;
+            }
+
+            .col {
+                width: 20%;
+            }
+
         </style>
     </head>
     <body>
+        <div class="top-spacing"></div>
         <div class="top-spacing"></div>
         <div class="inset">
             <button class="button" id="Start">Start</button>
             <div class="button-spacing"></div>
             <button class="button" id="Disconnect">Disconnect</button>
-            <div class="row">
-                <p>Your IP is: </p>
-                <input class="text-field" type="text-field" id="username" disabled="true" />
-                <button class="tiny-button" id="Show">Show</button>
-                <button class="tiny-button" id="Copy">Copy</button>
-            </div>
-            <div class="row">
-                <p>Username: </p>
-                <input class="text-field" type="text-field" id="username" disabled="true" />
-                <button class="tiny-button" id="Edit">Edit</button>
+            <div class="col">
+                <div class="ipaddr">
+                    <p>Your IP is: </p>
+                    <input class="text-field" type="text-field" id="ipaddr" disabled="true" />
+                    <button class="tiny-button" id="Show">
+                        <input class="text-field" 
+                               type="text-field" 
+                               id="show_hide_text" disabled="true" />
+                    </button>
+                    <button class="tiny-button" id="Copy">Copy</button>
+                </div>
+                <div class="username">
+                    <p>Username: </p>
+                    <input class="text-field" type="text-field" id="username" disabled="true" />
+                    <button class="tiny-button" id="Edit">Edit</button>
+                </div>
             </div>
         </div>
     </body>

@@ -19,6 +19,7 @@ struct NetworkLayer : public Layer {
 
     LayoutBox role_selector;
     LayoutBox username_picker;
+    LayoutBox connected_screen;
 
     std::shared_ptr<network::Info> network_info;
 
@@ -28,6 +29,8 @@ struct NetworkLayer : public Layer {
           role_selector(load_ui("resources/html/role_selector.html", WIN_R())),
           username_picker(
               load_ui("resources/html/username_picker.html", WIN_R())),
+          connected_screen(
+              load_ui("resources/html/connected_screen.html", WIN_R())),
           network_info(std::make_shared<network::Info>()) {}
 
     virtual ~NetworkLayer() {}
@@ -90,6 +93,12 @@ struct NetworkLayer : public Layer {
             case hashString(strings::i18n::LOCK_IN):
                 network_info->lock_in_username();
                 break;
+            case hashString(strings::i18n::SHOW_IP):
+                network_info->show_ip_addr = !network_info->show_ip_addr;
+                break;
+            case hashString(strings::i18n::COPY_IP):
+                ext::set_clipboard_text(network_info->my_ip_address.c_str());
+                break;
         }
     }
 
@@ -100,7 +109,23 @@ struct NetworkLayer : public Layer {
                     Settings::get().data.username,
                 };
             } break;
+            case hashString("ipaddr"): {
+                auto ip_addr = network_info->show_ip_addr
+                                   ? network_info->my_ip_address
+                                   : "***.***.***.***";
+                return elements::TextfieldData{
+                    ip_addr,
+                };
+            } break;
+            case hashString("show_hide_text"): {
+                return elements::TextfieldData{
+                    network_info->show_ip_addr
+                        ? text_lookup(strings::i18n::HIDE_IP)
+                        : text_lookup(strings::i18n::SHOW_IP),
+                };
+            } break;
         }
+        log_warn("trying to fetch data for {} but didnt find anything", id);
         return "";
     }
 
@@ -118,7 +143,7 @@ struct NetworkLayer : public Layer {
         }
 
         if (network_info->has_set_ip()) {
-            // draw_connected_screen();
+            return connected_screen;
         }
         // draw_ip_input_screen();
         return username_picker;

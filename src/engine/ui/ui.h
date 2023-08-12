@@ -70,8 +70,10 @@ inline LayoutBox load_ui(const std::string& file, raylib::Rectangle parent) {
     LayoutBox root_box = build_layout_tree(body);
     root_box.layout(Dimensions{.content = parent});
 
-    dump(root);
-    dump(root_box);
+    if (file == "resources/html/connected_screen.html") {
+        dump(root);
+        dump(root_box);
+    }
     return root_box;
 }
 
