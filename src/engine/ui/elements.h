@@ -318,6 +318,7 @@ inline ElementResult button(const Widget& widget, bool background = true) {
 
     if (background) {
         auto color_usage = widget.get_usage_color("background-color");
+
         // TODO add style for 'hover' state
         if (focus::is_hot(widget.id)) {
             color_usage = ui::theme::Usage::Accent;
@@ -453,7 +454,7 @@ inline ElementResult dropdown(const Widget& widget, DropdownOptions options) {
 
     if (state->on) {
         Rectangle rect = widget.get_rect();
-        int i = 0;
+        int i = -1;
         for (const auto& option : options) {
             rect.y += rect.height;
             i++;
