@@ -36,8 +36,8 @@ auto Preload::load_json_config_file(
         processor(configJSON);
 
     } catch (const std::exception& e) {
-        std::cerr << "Preload::load_config: " << filename
-                  << " formatted improperly. " << e.what() << std::endl;
+        log_error("Preload::load_config: {} formatted improperly. {}", filename,
+                  e.what());
     }
 }
 
