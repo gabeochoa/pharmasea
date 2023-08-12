@@ -28,9 +28,6 @@ inline bool validate_ip(const std::string& ip) {
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
 
-    std::shared_ptr<ui::UIContext> role_context;
-    std::shared_ptr<ui::UIContext> username_picker_context;
-
     LayoutBox role_selector;
     LayoutBox username_picker;
 
@@ -41,8 +38,6 @@ struct NetworkLayer : public Layer {
     NetworkLayer()
         : Layer("Network"),
           ui_context(std::make_shared<ui::UIContext>()),
-          role_context(std::make_shared<ui::UIContext>()),
-          username_picker_context(std::make_shared<ui::UIContext>()),
           role_selector(load_ui("resources/html/role_selector.html", WIN_R())),
           username_picker(
               load_ui("resources/html/username_picker.html", WIN_R())) {
@@ -300,6 +295,9 @@ struct NetworkLayer : public Layer {
             case hashString(strings::i18n::EDIT):
                 network_info->unlock_username();
                 break;
+            case hashString(strings::i18n::LOCK_IN):
+                network_info->lock_in_username();
+                break;
         }
     }
 
@@ -318,19 +316,20 @@ struct NetworkLayer : public Layer {
         switch (hashString(id)) {}
     }
 
-    std::tuple<std::shared_ptr<UIContext>, LayoutBox> get_current_screen() {
+    LayoutBox& get_current_screen() {
         if (network_info->missing_username()) {
-            return {username_picker_context, username_picker};
+            return username_picker;
         }
 
         if (network_info->missing_role()) {
-            return {role_context, role_selector};
+            return role_selector;
         }
 
         if (network_info->has_set_ip()) {
-            draw_connected_screen();
+            // draw_connected_screen();
         }
-        draw_ip_input_screen();
+        // draw_ip_input_screen();
+        return username_picker;
     }
 
     virtual void onDraw(float dt) override {
@@ -340,12 +339,10 @@ struct NetworkLayer : public Layer {
         if (MenuState::get().is_not(menu::State::Network)) return;
         ClearBackground(ui_context->active_theme().background);
 
-        auto [context, screen] = get_current_screen();
-
-        elements::begin(context);
+        elements::begin(ui_context);
 
         render_ui(
-            screen, WIN_R(),
+            get_current_screen(), WIN_R(),
             std::bind(&NetworkLayer::process_on_click, *this,
                       std::placeholders::_1),
             std::bind(&NetworkLayer::dataFetcher, *this, std::placeholders::_1),
