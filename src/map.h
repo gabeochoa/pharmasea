@@ -13,6 +13,7 @@
 
 struct Map {
     bool showMinimap = false;
+    bool showMenu = false;
 
     LevelInfo game_info;
 
@@ -31,6 +32,7 @@ struct Map {
 
     void update_map(const Map& new_map) {
         this->showMinimap = new_map.showMinimap;
+        this->showMenu = new_map.showMenu;
     }
 
     void update_seed(const std::string& s) {
@@ -97,5 +99,6 @@ struct Map {
     void serialize(S& s) {
         s.object(game_info);
         s.value1b(showMinimap);
+        s.value1b(showMenu);
     }
 };

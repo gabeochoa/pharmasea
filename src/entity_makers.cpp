@@ -296,6 +296,25 @@ void make_character_switcher(Entity& character_switcher, vec2 pos) {
     character_switcher.addComponent<ShowsProgressBar>();
 }
 
+void make_workbench(Entity& workbench, vec2 pos) {
+    furniture::make_furniture(workbench,
+                              DebugOptions{.type = EntityType::Workbench}, pos,
+                              ui::color::baby_blue, ui::color::baby_pink);
+
+    workbench.addComponent<HasName>().update("Menu");
+
+    workbench.get<CanBeHighlighted>().set_on_change([](Entity&,
+                                                       bool is_highlighted) {
+        if (!is_server()) {
+            log_warn(
+                "you are calling a server only function from a client "
+                "context, this is probably gonna crash");
+        }
+        network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+        server->get_map_SERVER_ONLY()->showMenu = is_highlighted;
+    });
+}
+
 void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
     furniture::make_furniture(map_randomizer,
                               DebugOptions{.type = EntityType::MapRandomizer},
@@ -977,6 +996,9 @@ void convert_to_type(EntityType& entity_type, Entity& entity, vec2 location) {
         } break;
         case EntityType::SimpleSyrup: {
             items::make_simple_syrup(entity, location);
+        } break;
+        case EntityType::Workbench: {
+            furniture::make_workbench(entity, location);
         } break;
         case EntityType::TriggerArea:
         case EntityType::Vomit:

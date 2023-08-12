@@ -43,6 +43,7 @@
 #include "layers/streamersafelayer.h"
 #include "layers/toastlayer.h"
 #include "layers/versionlayer.h"
+#include "layers/workbenchlayer.h"
 
 //
 // This one should be last
@@ -119,6 +120,7 @@ void startup() {
         //
         new GameDebugLayer(),
         new MinimapLayer(),
+        new WorkbenchLayer(),
         //
         new NetworkLayer(),
         new GameLayer(),
