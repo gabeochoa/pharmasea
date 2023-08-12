@@ -46,96 +46,9 @@ struct MenuLayer : public Layer {
         }
     }
 
-    void draw_menu_buttons() {
-        using namespace ui;
-        padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
-                                            Size_Px(WIN_HF(), 1.f)));
-
-        auto content =
-            ui_context->own(Widget({.mode = Children, .strictness = 1.f},
-                                   Size_Pct(1.f, 1.0f), Column));
-        div(*content);
-
-        ui_context->push_parent(content);
-        {
-            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
-                                                Size_Pct(1.f, 0.f)));
-            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       text_lookup(strings::i18n::PLAY))) {
-                MenuState::get().set(menu::State::Network);
-            }
-            padding(*ui::components::mk_but_pad());
-            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       text_lookup(strings::i18n::ABOUT))) {
-                MenuState::get().set(menu::State::About);
-            }
-            padding(*ui::components::mk_but_pad());
-            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       text_lookup(strings::i18n::SETTINGS))) {
-                MenuState::get().set(menu::State::Settings);
-            }
-            padding(*ui::components::mk_but_pad());
-            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       text_lookup(strings::i18n::EXIT))) {
-                App::get().close();
-            }
-
-            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
-                                                Size_Pct(1.f, 0.f)));
-        }
-        ui_context->pop_parent();
-    }
-
-    void draw_title_section() {
-        using namespace ui;
-
-        padding(*ui::components::mk_padding(Size_Px(200.f, 1.f),
-                                            Size_Px(WIN_HF(), 1.f)));
-
-        auto title_card = ui_context->own(Widget(
-            Size_Pct(1.f, 0.f), Size_Px(WIN_HF(), 1.f), GrowFlags::Column));
-        div(*title_card);
-        ui_context->push_parent(title_card);
-        {
-            padding(*ui::components::mk_padding(Size_Pct(1.f, 0.f),
-                                                Size_Px(100.f, 1.f)));
-            auto title_text = ui_context->own(
-                Widget(Size_Pct(1.f, 0.5f), Size_Px(100.f, 1.f)));
-            text(*title_text, strings::GAME_NAME);
-        }
-        ui_context->pop_parent();
-    }
-
-    void draw_external_icons() {
-        using namespace ui;
-
-        padding(*ui::components::mk_padding(Size_Px(500.f, 1.f),
-                                            Size_Px(WIN_HF(), 1.f)));
-
-        auto third_col = ui_context->own(Widget(
-            Size_Pct(1.f, 0.f), Size_Px(WIN_HF(), 1.f), GrowFlags::Column));
-        div(*third_col);
-        ui_context->push_parent(third_col);
-        {
-            padding(*ui::components::mk_padding(
-                Size_Pct(1.f, 0.f), Size_Px(WIN_HF() - 150.f, 1.f)));
-
-            auto button = ui::components::mk_button(MK_UUID(id, ROOT_ID),
-                                                    Size_Pct(0.05f, 1.f),
-                                                    Size_Pct(0.075f, 1.f));
-
-            if (image_button(*button, "discord")) {
-                util::open_url(strings::urls::DISCORD);
-            }
-        }
-        ui_context->pop_parent();
-    }
-
     virtual void onUpdate(float) override {
-        ZoneScoped;
         if (MenuState::get().is_in_menu()) play_music();
         if (MenuState::get().is_not(menu::State::Root)) return;
-        PROFILE();
         raylib::SetExitKey(raylib::KEY_ESCAPE);
     }
 
@@ -162,9 +75,7 @@ struct MenuLayer : public Layer {
     }
 
     virtual void onDraw(float dt) override {
-        ZoneScoped;
         if (MenuState::get().is_not(menu::State::Root)) return;
-        PROFILE();
         ext::clear_background(ui_context->active_theme().background);
 
         elements::begin(ui_context, dt);

@@ -467,6 +467,22 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
         return false;
     }
 
+    // TODO when you tab to the dropdown
+    // it would be nice if it opened
+
+    // TODO check if this is still true, theres ltos to check about the tab
+    // states on this, also check backwards tabs
+    //
+    // TODO right now you can change values through tab or through
+    // arrow keys, maybe we should only allow arrows
+    // and then tab just switches to the next non dropdown widget
+    // NOTE: originally we only did this when the dropdown wasnt already
+    // open but we should be safe to always do this
+    // 1. doesnt toggle on, sets on directly
+    // 2. open should have children focused anyway
+    // 3. we dont eat the input, so it doesnt break the button_list
+    // value up/down
+
     auto state = context->widget_init<ui::DropdownState>(
         ui::MK_UUID(widget.id, widget.id));
     state->selected = data.initial;
