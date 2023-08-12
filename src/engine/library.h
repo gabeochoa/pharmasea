@@ -46,8 +46,8 @@ struct Library {
         if (!this->contains(name)) {
             log_warn(
                 "asking for item: {} but nothing has been loaded with that "
-                "name yet",
-                name);
+                "name yet {}",
+                name, type_name<T>());
         }
         return storage.at(name);
     }
@@ -56,8 +56,8 @@ struct Library {
         if (!this->contains(name)) {
             log_warn(
                 "asking for item: {} but nothing has been loaded with that "
-                "name yet",
-                name);
+                "name yet for {}",
+                name, type_name<T>());
         }
         return storage.at(name);
     }
