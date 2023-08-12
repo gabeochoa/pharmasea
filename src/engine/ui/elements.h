@@ -82,8 +82,9 @@ struct Widget {
         auto theme = get_usage_color_maybe(type);
         if (theme.has_value()) return theme.value();
         log_warn(
-            "trying to get usage color from style for {} but it was missing",
-            type);
+            "trying to get usage color from style for {} but it was missing "
+            "from {}",
+            type, layout_box.node.tag);
         return ui::theme::Usage::Primary;
     }
 

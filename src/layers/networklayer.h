@@ -222,6 +222,39 @@ struct NetworkLayer : public Layer {
         }
     }
 
+    void draw_base_screen() {
+        auto content = ui::components::mk_row();
+        div(*content);
+        ui_context->push_parent(content);
+        {
+            auto col1 = ui::components::mk_column();
+            div(*col1);
+            ui_context->push_parent(col1);
+            {
+                padding(*ui::components::mk_but_pad());
+                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                           text_lookup(strings::i18n::HOST))) {
+                    network_info->set_role(network::Info::Role::s_Host);
+                }
+                padding(*ui::components::mk_but_pad());
+                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                           text_lookup(strings::i18n::JOIN))) {
+                    network_info->set_role(network::Info::Role::s_Client);
+                }
+                padding(*ui::components::mk_but_pad());
+                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
+                           text_lookup(strings::i18n::BACK_BUTTON))) {
+                    MenuState::get().clear_history();
+                    MenuState::get().set(menu::State::Root);
+                }
+            }
+            ui_context->pop_parent();
+
+            padding(*ui::components::mk_but_pad());
+        }
+        ui_context->pop_parent();
+    }
+
     void draw_screen_selector_logic() {
         if (network_info->missing_username()) {
             draw_username_picker();
@@ -229,6 +262,7 @@ struct NetworkLayer : public Layer {
         }
 
         if (network_info->missing_role()) {
+            draw_base_screen();
             return;
         }
 
