@@ -99,8 +99,8 @@ inline void render_input(
             }
             break;
         case hashString("range"):
-            if (elements::slider(widget)) {
-                log_info("slider changed");
+            if (auto result = elements::slider(widget); result) {
+                log_info("slider changed {}", result.as<float>());
             }
             break;
         case hashString("dropdown"):

@@ -453,18 +453,27 @@ inline ElementResult dropdown(const Widget& widget, DropdownOptions options) {
 
     if (state->on) {
         Rectangle rect = widget.get_rect();
-        rect.y += rect.height;
         int i = 0;
         for (const auto& option : options) {
-            Widget option_widget(widget);
-            option_widget.z_index--;
-            option_widget.set_rect(rect);
-            if (button(option_widget)) {
-                state->selected = i;
-            }
-            text(option_widget, option, rect);
             rect.y += rect.height;
             i++;
+
+            Widget option_widget(widget);
+            // this should be above the button's index
+            option_widget.z_index--;
+
+            // Needs to be unique on the screen
+            auto uuid = ui::MK_UUID_LOOP(widget.id, widget.id, i);
+            option_widget.id = (int) (size_t) uuid;
+
+            option_widget.set_rect(Rectangle(rect));
+
+            if (button(option_widget)) {
+                state->selected = i;
+                state->on = false;
+            }
+
+            text(option_widget, option, rect);
         }
     }
 
