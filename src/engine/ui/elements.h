@@ -57,7 +57,7 @@ struct DropdownData {
     int initial = 0;
 };
 
-typedef std::variant<std::string, DropdownData> InputDataSource;
+typedef std::variant<std::string, bool, float, DropdownData> InputDataSource;
 
 struct Widget {
     LayoutBox layout_box;
