@@ -52,8 +52,12 @@ inline float calculateScale(const vec2& rect_size, const vec2& image_size) {
     return std::min(scale_x, scale_y);
 }
 
-typedef std::vector<std::string> DropdownOptions;
-typedef std::variant<std::string, DropdownOptions> InputDataSource;
+struct DropdownData {
+    std::vector<std::string> options;
+    int initial = 0;
+};
+
+typedef std::variant<std::string, DropdownData> InputDataSource;
 
 struct Widget {
     LayoutBox layout_box;
@@ -438,14 +442,15 @@ inline ElementResult slider(const Widget& widget, bool vertical = false) {
     return ElementResult{changed_previous_frame, state->value};
 }
 
-inline ElementResult dropdown(const Widget& widget, DropdownOptions options) {
-    if (options.empty()) {
+inline ElementResult dropdown(const Widget& widget, DropdownData data) {
+    if (data.options.empty()) {
         log_warn("the options passed to dropdown were empty");
         return false;
     }
 
     auto state = context->widget_init<ui::DropdownState>(
         ui::MK_UUID(widget.id, widget.id));
+    state->selected = data.initial;
     state->selected.changed_since = false;
 
     if (button(widget, true)) {
@@ -455,7 +460,7 @@ inline ElementResult dropdown(const Widget& widget, DropdownOptions options) {
     if (state->on) {
         Rectangle rect = widget.get_rect();
         int i = -1;
-        for (const auto& option : options) {
+        for (const auto& option : data.options) {
             rect.y += rect.height;
             i++;
 
@@ -478,7 +483,7 @@ inline ElementResult dropdown(const Widget& widget, DropdownOptions options) {
         }
     }
 
-    text(widget, options[state->selected], widget.get_rect());
+    text(widget, data.options[state->selected], widget.get_rect());
 
     return ElementResult{state->selected.changed_since, state->selected};
 }

@@ -316,9 +316,29 @@ struct SettingsLayer : public Layer {
     elements::InputDataSource dataFetcher(const std::string& id) {
         switch (hashString(id)) {
             case hashString("LanguageSwitcher"):
-                return Settings::get().language_options();
+                return elements::DropdownData{
+                    Settings::get().language_options(),
+                    Settings::get().get_current_language_index(),
+                };
+            case hashString("ResolutionSwitcher"):
+                return elements::DropdownData{
+                    Settings::get().resolution_options(),
+                    Settings::get().get_current_resolution_index(),
+                };
         }
         return "";
+    }
+
+    void inputProcessor(const std::string& id, elements::ElementResult result) {
+        switch (hashString(id)) {
+            case hashString("LanguageSwitcher"): {
+                Settings::get().update_language_from_index(result.as<int>());
+            } break;
+            case hashString("ResolutionSwitcher"): {
+                Settings::get().update_resolution_from_index(result.as<int>());
+            } break;
+        }
+        return;
     }
 
     virtual void onDraw(float dt) override {
@@ -331,7 +351,9 @@ struct SettingsLayer : public Layer {
                   std::bind(&SettingsLayer::process_on_click, *this,
                             std::placeholders::_1),
                   std::bind(&SettingsLayer::dataFetcher, *this,
-                            std::placeholders::_1));
+                            std::placeholders::_1),
+                  std::bind(&SettingsLayer::inputProcessor, *this,
+                            std::placeholders::_1, std::placeholders::_2));
 
         elements::end();
     }

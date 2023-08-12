@@ -79,7 +79,9 @@ inline void render_input(
     const LayoutBox& root_box, raylib::Rectangle parent,
     const std::function<void(std::string id)>& onClick,
     const std::function<elements::InputDataSource(std::string)>&
-        getInputDataSource) {
+        getInputDataSource,
+    const std::function<void(std::string, elements::ElementResult)>&
+        processInput) {
     using namespace ui;
     Node node = root_box.node;
     auto widget = elements::Widget{root_box, node.id};
@@ -92,15 +94,17 @@ inline void render_input(
         input_type = "checkbox";
     }
 
+    auto id_attr = node.attrs.at("id");
+
     switch (hashString(input_type)) {
         case hashString("checkbox"):
-            if (elements::checkbox(widget)) {
-                log_info("checkbox changed");
+            if (auto result = elements::checkbox(widget); result) {
+                processInput(id_attr, result);
             }
             break;
         case hashString("range"):
             if (auto result = elements::slider(widget); result) {
-                log_info("slider changed {}", result.as<float>());
+                processInput(id_attr, result);
             }
             break;
         case hashString("dropdown"):
@@ -112,14 +116,13 @@ inline void render_input(
             }
             elements::InputDataSource data =
                 getInputDataSource(node.attrs.at("id"));
-            if (!std::holds_alternative<elements::DropdownOptions>(data)) {
+            if (!std::holds_alternative<elements::DropdownData>(data)) {
                 log_warn("rendering dropdown but you didnt provide options");
                 return;
             }
-            auto options = std::get<elements::DropdownOptions>(data);
+            auto options = std::get<elements::DropdownData>(data);
             if (auto result = elements::dropdown(widget, options); result) {
-                int index = result.as<int>();
-                log_info("dropdown changed to {} {}", index, options[index]);
+                processInput(id_attr, result);
             }
             break;
     }
@@ -129,7 +132,9 @@ inline void render_ui(
     const LayoutBox& root_box, raylib::Rectangle parent,
     const std::function<void(std::string id)>& onClick,
     const std::function<elements::InputDataSource(std::string)>&
-        getInputDataSource = {}) {
+        getInputDataSource = {},
+    const std::function<void(std::string, elements::ElementResult)>&
+        processInput = {}) {
     using namespace ui;
 
     Node node = root_box.node;
@@ -151,7 +156,8 @@ inline void render_ui(
             elements::div(widget);
             break;
         case hashString("input"):
-            render_input(root_box, parent, onClick, getInputDataSource);
+            render_input(root_box, parent, onClick, getInputDataSource,
+                         processInput);
             break;
         case hashString("em"):
         case hashString("h1"):
@@ -170,6 +176,7 @@ inline void render_ui(
     }
 
     for (const auto& child : root_box.children) {
-        render_ui(child, root_box.dims.content, onClick, getInputDataSource);
+        render_ui(child, root_box.dims.content, onClick, getInputDataSource,
+                  processInput);
     }
 }
