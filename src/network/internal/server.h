@@ -180,6 +180,7 @@ struct Server {
             log_warn("Failed to listen on port {}", address.m_port);
             return;
         }
+
         poll_group = interface->CreatePollGroup();
         if (poll_group == k_HSteamNetPollGroup_Invalid) {
             log_warn("(poll group) Failed to listen on port {}",

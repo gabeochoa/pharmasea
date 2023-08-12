@@ -27,7 +27,12 @@ inline bool validate_ip(const std::string& ip) {
 
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
+
+    std::shared_ptr<ui::UIContext> role_context;
+    std::shared_ptr<ui::UIContext> username_picker_context;
+
     LayoutBox role_selector;
+    LayoutBox username_picker;
 
     std::shared_ptr<network::Info> network_info;
     std::string my_ip_address;
@@ -36,7 +41,11 @@ struct NetworkLayer : public Layer {
     NetworkLayer()
         : Layer("Network"),
           ui_context(std::make_shared<ui::UIContext>()),
-          role_selector(load_ui("resources/html/role_selector.html", WIN_R())) {
+          role_context(std::make_shared<ui::UIContext>()),
+          username_picker_context(std::make_shared<ui::UIContext>()),
+          role_selector(load_ui("resources/html/role_selector.html", WIN_R())),
+          username_picker(
+              load_ui("resources/html/username_picker.html", WIN_R())) {
         network::Info::init_connections();
         network_info = std::make_shared<network::Info>();
         if (network::ENABLE_REMOTE_IP) {
@@ -79,66 +88,8 @@ struct NetworkLayer : public Layer {
         // if we get here, then user clicked "join"
     }
 
-    void draw_username() {
-        auto content = ui::components::mk_row();
-        div(*content);
-        ui_context->push_parent(content);
-        {
-            text(*ui::components::mk_text(),
-                 fmt::format("{}: {}", text_lookup(strings::i18n::USERNAME),
-                             Settings::get().data.username));
-            if (button(*ui::components::mk_icon_button(MK_UUID(id, ROOT_ID)),
-                       text_lookup(strings::i18n::EDIT))) {
-                network_info->unlock_username();
-            }
-        }
-        ui_context->pop_parent();
-    }
-
-    void draw_base_screen() {
-        auto content = ui::components::mk_row();
-        div(*content);
-        ui_context->push_parent(content);
-        {
-            auto col1 = ui::components::mk_column();
-            div(*col1);
-            ui_context->push_parent(col1);
-            {
-                padding(*ui::components::mk_but_pad());
-                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                           text_lookup(strings::i18n::HOST))) {
-                    network_info->set_role(network::Info::Role::s_Host);
-                }
-                padding(*ui::components::mk_but_pad());
-                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                           text_lookup(strings::i18n::JOIN))) {
-                    network_info->set_role(network::Info::Role::s_Client);
-                }
-                padding(*ui::components::mk_but_pad());
-                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                           text_lookup(strings::i18n::BACK_BUTTON))) {
-                    MenuState::get().clear_history();
-                    MenuState::get().set(menu::State::Root);
-                }
-            }
-            ui_context->pop_parent();
-
-            padding(*ui::components::mk_but_pad());
-
-            auto col2 = ui::components::mk_column();
-            div(*col2);
-            ui_context->push_parent(col2);
-            {
-                //
-                draw_username();
-            }
-            ui_context->pop_parent();
-        }
-        ui_context->pop_parent();
-    }
-
     void draw_ip_input_screen() {
-        draw_username();
+        // draw_username();
         // TODO add show/hide button for the ip address
         auto ip_address_input = ui_context->own(Widget(
             MK_UUID(id, ROOT_ID), Size_Px(400.f, 1.f), Size_Px(25.f, 0.5f)));
@@ -206,7 +157,7 @@ struct NetworkLayer : public Layer {
             }
             // TODO add button to edit as long as you arent currently
             // hosting people?
-            draw_username();
+            // draw_username();
         };
 
         for (auto kv : network_info->client->remote_players) {
@@ -278,7 +229,6 @@ struct NetworkLayer : public Layer {
         }
 
         if (network_info->missing_role()) {
-            draw_base_screen();
             return;
         }
 
@@ -304,7 +254,17 @@ struct NetworkLayer : public Layer {
         log_info("on click {}", id);
         switch (hashString(id)) {
             case hashString(strings::i18n::BACK_BUTTON):
+                MenuState::get().clear_history();
                 MenuState::get().set(menu::State::Root);
+                break;
+            case hashString(strings::i18n::HOST):
+                network_info->set_role(network::Info::Role::s_Host);
+                break;
+            case hashString(strings::i18n::JOIN):
+                network_info->set_role(network::Info::Role::s_Client);
+                break;
+            case hashString(strings::i18n::EDIT):
+                network_info->unlock_username();
                 break;
         }
     }
@@ -324,7 +284,20 @@ struct NetworkLayer : public Layer {
         switch (hashString(id)) {}
     }
 
-    LayoutBox get_current_screen() { return role_selector; }
+    std::tuple<std::shared_ptr<UIContext>, LayoutBox> get_current_screen() {
+        if (network_info->missing_username()) {
+            return {username_picker_context, username_picker};
+        }
+
+        if (network_info->missing_role()) {
+            return {role_context, role_selector};
+        }
+
+        if (network_info->has_set_ip()) {
+            draw_connected_screen();
+        }
+        draw_ip_input_screen();
+    }
 
     virtual void onDraw(float dt) override {
         // TODO add an overlay that shows who's currently available
@@ -333,10 +306,12 @@ struct NetworkLayer : public Layer {
         if (MenuState::get().is_not(menu::State::Network)) return;
         ClearBackground(ui_context->active_theme().background);
 
-        elements::begin(ui_context);
+        auto [context, screen] = get_current_screen();
+
+        elements::begin(context);
 
         render_ui(
-            get_current_screen(), WIN_R(),
+            screen, WIN_R(),
             std::bind(&NetworkLayer::process_on_click, *this,
                       std::placeholders::_1),
             std::bind(&NetworkLayer::dataFetcher, *this, std::placeholders::_1),
