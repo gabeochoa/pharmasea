@@ -14,8 +14,8 @@
 inline LayoutBox build_layout_tree(const Node& node) {
     auto root_box = LayoutBox{
         .display_type = node.display(),
-        .style = node.style,
         .node = node,
+        .style = node.style,
     };
 
     for (auto& child : node.children) {

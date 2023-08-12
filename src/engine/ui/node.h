@@ -54,8 +54,8 @@ enum DisplayType {
 };
 
 struct NumericalValue {
-    enum Unit { Pixels = 0, Percentage = 1 } unit = Pixels;
     float data = 0.f;
+    enum Unit { Pixels = 0, Percentage = 1 } unit = Pixels;
 
     float to_f(float parent) const {
         switch (unit) {
@@ -140,6 +140,21 @@ struct Style {
         if (it != values.end()) {
             return std::get<NumericalValue>(it->second).to_f(parent_val);
         }
+        return def.to_f(parent_val);
+    }
+
+    float lookup_f(const std::string& field, const std::string& backup1, const NumericalValue& def,
+                   float parent_val) const {
+        auto it = values.find(field);
+        if (it != values.end()) {
+            return std::get<NumericalValue>(it->second).to_f(parent_val);
+        }
+
+        it = values.find(backup1);
+        if (it != values.end()) {
+            return std::get<NumericalValue>(it->second).to_f(parent_val);
+        }
+
         return def.to_f(parent_val);
     }
 

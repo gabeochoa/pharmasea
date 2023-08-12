@@ -26,12 +26,13 @@ inline bool validate_ip(const std::string& ip) {
 }
 
 struct NetworkLayer : public Layer {
+    std::shared_ptr<network::Info> network_info;
+
     std::shared_ptr<ui::UIContext> ui_context;
 
     LayoutBox role_selector;
     LayoutBox username_picker;
 
-    std::shared_ptr<network::Info> network_info;
     std::string my_ip_address;
     bool should_show_host_ip = false;
 

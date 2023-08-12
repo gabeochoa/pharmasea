@@ -29,7 +29,7 @@ enum struct InternalServerAnnouncement {
 struct Server {
     SteamNetworkingIPAddr address;
     // Note: initialized in `startup()`
-    ISteamNetworkingSockets *interface = nullptr;
+    ISteamNetworkingSockets *network_interface = nullptr;
     HSteamListenSocket listen_sock;
     HSteamNetPollGroup poll_group;
     inline static Server *callback_instance;
@@ -66,12 +66,13 @@ struct Server {
         for (auto it : clients) {
             send_announcement_to_client(it.first, "server shutdown",
                                         InternalServerAnnouncement::Warn);
-            interface->CloseConnection(it.first, 0, "server shutdown", true);
+            network_interface->CloseConnection(it.first, 0, "server shutdown",
+                                               true);
         }
         clients.clear();
-        interface->CloseListenSocket(listen_sock);
+        network_interface->CloseListenSocket(listen_sock);
         listen_sock = k_HSteamListenSocket_Invalid;
-        interface->DestroyPollGroup(poll_group);
+        network_interface->DestroyPollGroup(poll_group);
         poll_group = k_HSteamNetPollGroup_Invalid;
     }
 
@@ -102,7 +103,7 @@ struct Server {
 
     void send_message_to_connection(HSteamNetConnection conn,
                                     const char *buffer, uint32 size) {
-        interface->SendMessageToConnection(conn, buffer, size,
+        network_interface->SendMessageToConnection(conn, buffer, size,
                                            Channel::RELIABLE, nullptr);
         // TODO why does unreliable make it so unreliable...
         // eventually we want the packet to figure out if it should matter or
@@ -117,7 +118,7 @@ struct Server {
         auto poll_incoming_messages = [&]() {
             ISteamNetworkingMessage *incoming_msg = nullptr;
             // TODO Should we run this for more messages?
-            int num_msgs = interface->ReceiveMessagesOnPollGroup(
+            int num_msgs = network_interface->ReceiveMessagesOnPollGroup(
                 poll_group, &incoming_msg, 1 /* num max messages*/);
             if (num_msgs == 0) return;
             if (num_msgs == -1) {
@@ -136,7 +137,7 @@ struct Server {
         };
         auto poll_connection_state_changes = [&]() {
             Server::callback_instance = this;
-            interface->RunCallbacks();
+            network_interface->RunCallbacks();
         };
         poll_incoming_messages();
         poll_connection_state_changes();
@@ -145,7 +146,8 @@ struct Server {
 
     // TODO replace with tl::expected
     void startup() {
-        interface = SteamNetworkingSockets();
+        network_interface = SteamNetworkingSockets();
+        VALIDATE(network_interface != nullptr, "interface should no longer be null");
 
         /// [connection int32] Upper limit of buffered pending bytes to be sent,
         /// if this is reached SendMessage will return k_EResultLimitExceeded
@@ -175,13 +177,13 @@ struct Server {
         opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged,
                    (void *) Server::SteamNetConnectionStatusChangedCallback);
 
-        listen_sock = interface->CreateListenSocketIP(address, 1, &opt);
+        listen_sock = network_interface->CreateListenSocketIP(address, 1, &opt);
         if (listen_sock == k_HSteamListenSocket_Invalid) {
             log_warn("Failed to listen on port {}", address.m_port);
             return;
         }
 
-        poll_group = interface->CreatePollGroup();
+        poll_group = network_interface->CreatePollGroup();
         if (poll_group == k_HSteamNetPollGroup_Invalid) {
             log_warn("(poll group) Failed to listen on port {}",
                      address.m_port);
@@ -256,7 +258,7 @@ struct Server {
         // to finish up.  The reason information do not matter in this
         // case, and we cannot linger because it's already closed on the
         // other end, so we just pass 0's.
-        interface->CloseConnection(info->m_hConn, 0, nullptr, false);
+        network_interface->CloseConnection(info->m_hConn, 0, nullptr, false);
     }
 
     void process_connection_starting(
@@ -271,18 +273,21 @@ struct Server {
 
         // A client is attempting to connect
         // Try to accept the connection.
-        if (interface->AcceptConnection(info->m_hConn) != k_EResultOK) {
+        if (network_interface->AcceptConnection(info->m_hConn) != k_EResultOK) {
             // This could fail.  If the remote host tried to connect,
             // but then disconnected, the connection may already be half
             // closed.  Just destroy whatever we have on our side.
-            interface->CloseConnection(info->m_hConn, 0, nullptr, false);
+            network_interface->CloseConnection(info->m_hConn, 0, nullptr,
+                                               false);
             log_info("Can't accept connection. (It was already closed?)");
             return;
         }
 
         // Assign the poll group
-        if (!interface->SetConnectionPollGroup(info->m_hConn, poll_group)) {
-            interface->CloseConnection(info->m_hConn, 0, nullptr, false);
+        if (!network_interface->SetConnectionPollGroup(info->m_hConn,
+                                                       poll_group)) {
+            network_interface->CloseConnection(info->m_hConn, 0, nullptr,
+                                               false);
             log_info("Failed to set poll group?");
             return;
         }
@@ -324,7 +329,8 @@ struct Server {
         clients[info->m_hConn];
 
         clients[info->m_hConn].client_id = nick_id;
-        interface->SetConnectionName(info->m_hConn,
+        network_interface->SetConnectionName(
+            info->m_hConn,
                                      fmt::format("{}", nick_id).c_str());
 
         // Let everybody else know who they are for now
