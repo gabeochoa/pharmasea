@@ -521,6 +521,7 @@ Job::State DrinkingJob::run_state_working_at_end(
                 create_job_of_type(start, start, JobType::WaitInQueue));
             entity->get<CanPerformJob>().push_onto_queue(jshared);
         } else {
+            // TODO why do they go back to the register before leaving?
             cod.order_state = CanOrderDrink::OrderState::DoneDrinking;
             std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
                 start,

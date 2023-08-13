@@ -17,7 +17,7 @@ struct HandLayer : public Layer {
     virtual void onUpdate(float) override {}
 
     virtual void onDraw(float) override {
-        if (MenuState::s_in_game() && !GameState::s_is_paused()) return;
+        if (MenuState::s_in_game() && !GameState::get().is_paused()) return;
 
         vec2 mouse_pos = ext::get_mouse_position();
         vec2 pos = {mouse_pos.x - 120.f, mouse_pos.y - 20.f};

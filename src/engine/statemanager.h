@@ -114,6 +114,7 @@ enum State {
     InRound = 2,
     Planning = 3,
     Paused = 4,
+    Progression = 5,
 };
 inline std::ostream& operator<<(std::ostream& os, const State& state) {
     os << "Game::State " << magic_enum::enum_name(state);
@@ -137,62 +138,44 @@ struct GameState : public StateManager2<game::State> {
         set(game::State::Paused);
         return read();
     }
-    static game::State s_pause() { return GameState::get().pause(); }
 
     [[nodiscard]] bool in_round() const { return is(game::State::InRound); }
-    [[nodiscard]] static bool s_in_round() {
-        return GameState::get().in_round();
-    }
+    [[nodiscard]] bool in_planning() const { return is(game::State::Planning); }
 
     [[nodiscard]] bool is_paused() const { return is(game::State::Paused); }
-    [[nodiscard]] static bool s_is_paused() {
-        return GameState::get().is_paused();
-    }
 
     [[nodiscard]] bool is_paused_in(game::State s) const {
         return is(game::State::Paused) && previous() == s;
     }
 
-    [[nodiscard]] static bool is_update_state(game::State s) {
-        return s == game::State::Lobby || s == game::State::InRound ||
+    [[nodiscard]] bool is_update_state(game::State s) const {
+        return s == game::State::Lobby ||        //
+               s == game::State::InRound ||      //
+               s == game::State::Progression ||  //
                s == game::State::Planning;
     }
 
-    [[nodiscard]] static bool s_should_update() {
-        const auto s = GameState::get().read();
-        return is_update_state(s);
-    }
+    [[nodiscard]] bool should_update() const { return is_update_state(read()); }
 
     // Basically we want to know if the prev state was an updatable state
     // this is so that if we are paused we can still render whats underneath
-    [[nodiscard]] static bool s_should_prev_update() {
-        const auto s = GameState::get().read();
-        if (s != game::State::Paused) return false;
-        const auto prev = GameState::get().previous();
-        return is_update_state(prev);
+    [[nodiscard]] bool should_prev_update() const {
+        if (read() != game::State::Paused) return false;
+        return is_update_state(previous());
     }
 
-    [[nodiscard]] static bool s_should_draw() {
-        return s_should_update() || s_should_prev_update();
-    }
-
-    [[nodiscard]] bool is_lobby_like() {
+    [[nodiscard]] bool is_lobby_like() const {
         return is(game::State::Lobby);  // TODO this is needed to get collisions
                                         // in lobby mode but breaks game
                                         // furniture loading for some reason
                                         //|| is(game::State::InMenu);
     }
-
-    [[nodiscard]] static bool s_is_lobby_like() {
-        return GameState::get().is_lobby_like();
-    }
-
-    [[nodiscard]] bool is_game_like() {
+    [[nodiscard]] bool is_game_like() const {
         return is(game::State::InRound) || is(game::State::Planning);
     }
 
-    [[nodiscard]] static bool s_is_game_like() {
-        return GameState::get().is_game_like();
+    [[nodiscard]] bool should_render_timer() const {
+        return is(game::State::InRound) || is(game::State::Planning);
     }
 
     game::State toggle_planning() {
@@ -204,15 +187,7 @@ struct GameState : public StateManager2<game::State> {
         }
         return read();
     }
-    static game::State s_toggle_planning() {
-        return GameState::get().toggle_planning();
-    }
 
-    static void s_toggle_to_planning() {
-        return GameState::get().set(game::State::Planning);
-    }
-
-    static void s_toggle_to_inround() {
-        return GameState::get().set(game::State::InRound);
-    }
+    void toggle_to_planning() { return set(game::State::Planning); }
+    void toggle_to_inround() { return set(game::State::InRound); }
 };

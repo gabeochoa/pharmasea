@@ -281,7 +281,7 @@ void make_character_switcher(Entity& character_switcher, vec2 pos) {
 
     character_switcher.addComponent<HasWork>().init(
         [](Entity&, HasWork& hasWork, Entity& person, float dt) {
-            if (!GameState::get().s_is_lobby_like()) return;
+            if (!GameState::get().is_lobby_like()) return;
             if (person.is_missing<UsesCharacterModel>()) return;
             UsesCharacterModel& usesCharacterModel =
                 person.get<UsesCharacterModel>();
@@ -547,7 +547,7 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
         .on_complete([](const Entities& all) {
             // TODO should be lobby only?
             // TODO only for host...
-            GameState::s_toggle_to_planning();
+            GameState::get().toggle_to_planning();
 
             for (std::shared_ptr<Entity> e : all) {
                 if (!e) continue;

@@ -112,7 +112,7 @@ struct HasTimer : public BaseComponent {
     }
 
     [[nodiscard]] bool store_is_closed() const {
-        return round_over() && GameState::s_in_round();
+        return round_over() && GameState::get().in_round();
     }
 
     [[nodiscard]] bool round_over() const { return currentRoundTime <= 0; }

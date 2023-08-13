@@ -1031,12 +1031,12 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
         // log_info("num entities {}", entities.size());
         // TODO do we run game updates during paused?
 
-        if (GameState::s_is_lobby_like()) {
+        if (GameState::get().is_lobby_like()) {
             //
-        } else if (GameState::s_is_game_like()) {
-            if (GameState::s_in_round()) {
+        } else if (GameState::get().is_game_like()) {
+            if (GameState::get().in_round()) {
                 in_round_update(entities, dt);
-            } else {
+            } else if (GameState::get().in_planning()) {
                 planning_update(entities, dt);
             }
             game_like_update(entities, dt);

@@ -13,7 +13,7 @@ inline void render_timer(const Entity& entity, float) {
     switch (ht.type) {
         case HasTimer::Renderer::Round: {
             const bool is_closing = ht.store_is_closed();
-            const bool is_day = GameState::s_in_round() && !is_closing;
+            const bool is_day = GameState::get().in_round() && !is_closing;
 
             const vec2 center = {200.f, 75.f};
 
@@ -123,7 +123,7 @@ inline void render_debug_ui(const Entities& entities, float) {
 
 inline void render_normal(const Entities& entities, float dt) {
     // In game only
-    if (GameState::get().s_is_game_like()) {
+    if (GameState::get().should_render_timer()) {
         for (const auto& entity_ptr : entities) {
             if (!entity_ptr) continue;
             const Entity& entity = *entity_ptr;

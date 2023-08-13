@@ -27,12 +27,12 @@ struct GameDebugLayer : public Layer {
     virtual ~GameDebugLayer() {}
 
     void toggle_to_planning() {
-        GameState::s_toggle_to_planning();
+        GameState::get().toggle_to_planning();
         EntityHelper::invalidatePathCache();
     }
 
     void toggle_to_inround() {
-        GameState::s_toggle_to_inround();
+        GameState::get().toggle_to_inround();
         EntityHelper::invalidatePathCache();
     }
 

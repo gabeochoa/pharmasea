@@ -31,7 +31,7 @@ struct GameLayer : public Layer {
         if (!MenuState::s_in_game()) return false;
         if (KeyMap::get_button(menu::State::Game, InputName::Pause) ==
             event.button) {
-            GameState::s_pause();
+            GameState::get().pause();
             return true;
         }
         return false;
@@ -42,7 +42,7 @@ struct GameLayer : public Layer {
         // Note: You can only pause in game state, in planning no pause
         if (KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
             event.keycode) {
-            GameState::s_pause();
+            GameState::get().pause();
             //  TODO obv need to have this fun on a timer or something instead
             //  of on esc
             // SoundLibrary::get().play_random_match("pa_announcements_");
@@ -65,7 +65,7 @@ struct GameLayer : public Layer {
         TRACY_ZONE_SCOPED;
         if (MenuState::s_in_game()) play_music();
 
-        if (!GameState::s_should_update()) return;
+        if (!GameState::get().should_update()) return;
 
         // Dont quit window on escape
         raylib::SetExitKey(raylib::KEY_NULL);

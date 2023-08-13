@@ -767,7 +767,7 @@ void process_input(const std::shared_ptr<Entity> entity,
                 case InputName::PlayerPickup:
                     // grab_or_drop(entity);
                     {
-                        if (GameState::s_in_round()) {
+                        if (GameState::get().in_round()) {
                             inround::handle_grab_or_drop(entity);
                         } else if (GameState::get().is(game::State::Planning)) {
                             planning::handle_grab_or_drop(entity);
