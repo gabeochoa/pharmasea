@@ -158,7 +158,7 @@ void LevelInfo::generate_progression_map() {
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_trigger_area(
-            entity, progression_origin + vec3{-5, TILESIZE / -2.f, 10}, 8, 3);
+            entity, progression_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3);
         // TODO i dont like this living here but its kinda better than doing
         // another enum in ITA i think
 
@@ -178,7 +178,7 @@ void LevelInfo::generate_progression_map() {
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_trigger_area(
-            entity, progression_origin + vec3{5, TILESIZE / -2.f, 10}, 8, 3);
+            entity, progression_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3);
         // TODO i dont like this living here but its kinda better than doing
         // another enum in ITA i think
 
