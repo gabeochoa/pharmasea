@@ -1133,17 +1133,18 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
 
         if (GameState::get().is_lobby_like()) {
             //
+        }
+
+        else if (GameState::get().is(game::State::Progression)) {
+            progression_update(entities, dt);
         } else if (GameState::get().is_game_like()) {
             if (GameState::get().in_round()) {
                 in_round_update(entities, dt);
             } else if (GameState::get().in_planning()) {
                 planning_update(entities, dt);
-            } else if (GameState::get().is(game::State::Progression)) {
-                progression_update(entities, dt);
             }
             game_like_update(entities, dt);
         }
-
         always_update(entities, dt);
         process_state_change(entities, dt);
     }
@@ -1227,6 +1228,8 @@ void SystemManager::game_like_update(const Entities& entities, float dt) {
         system_manager::run_timer(entity, dt);
         system_manager::process_pnumatic_pipe_pairing(entity, dt);
 
+        // TODO this function handles the map validation code
+        //      rename it
         // TODO these eventually should move into their own functions but
         // for now >:)
         if (check_type(entity, EntityType::Sophie))

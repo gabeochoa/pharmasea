@@ -170,9 +170,13 @@ struct GameState : public StateManager2<game::State> {
                                         // furniture loading for some reason
                                         //|| is(game::State::InMenu);
     }
+
+    // This means whether or not we should run certain things like:
+    // - world timer
+    // - pipe matching
+    // - map validation
     [[nodiscard]] bool is_game_like() const {
-        return is(game::State::InRound) || is(game::State::Planning) ||
-               is(game::State::Progression);
+        return is(game::State::InRound) || is(game::State::Planning);
     }
 
     [[nodiscard]] bool should_render_timer() const {
