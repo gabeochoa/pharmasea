@@ -607,8 +607,59 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
     if (ita.progress() < 1.f) return;
-    IsTriggerArea::CompleteFn cb = ita.get_complete_fn();
-    if (cb) cb(SystemManager::get().oldAll);
+
+    const auto _choose_option = [](int option_chosen) {
+        GameState::get().toggle_to_planning();
+        for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
+            if (!e) continue;
+            if (check_type(*e, EntityType::Player)) {
+                // TODO switch to using some kind of global for these
+                move_player_SERVER_ONLY(*e, {0, 0, 0});
+                continue;
+            }
+
+            if (!check_type(*e, EntityType::Sophie)) continue;
+            if (e->is_missing<IsProgressionManager>()) continue;
+
+            IsProgressionManager& ipm = e->get<IsProgressionManager>();
+            // choose given option
+
+            Drink option = option_chosen == 0 ? ipm.option1 : ipm.option2;
+
+            // Mark the drink unlocked
+            ipm.enabledDrinks |= option;
+            // Unlock any igredients it needs
+            ipm.enabledIngredients |= get_recipe_for_drink(option);
+
+            // TODO spawn any new machines / ingredient sources it needs we
+            // dont already have
+        }
+    };
+
+    switch (ita.type) {
+        case IsTriggerArea::Unset:
+            break;
+
+        case IsTriggerArea::Lobby_PlayGame: {
+            // TODO should be lobby only?
+            // TODO only for host...
+
+            GameState::get().toggle_to_planning();
+
+            for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
+                if (!e) continue;
+                if (!check_type(*e, EntityType::Player)) continue;
+                // TODO switch to using some kind of global for these
+                move_player_SERVER_ONLY(*e, {0, 0, 0});
+            }
+        } break;
+        case IsTriggerArea::Progression_Option1:
+            _choose_option(0);
+            break;
+        case IsTriggerArea::Progression_Option2:
+            _choose_option(1);
+            break;
+    }
 }
 
 void update_dynamic_trigger_area_settings(Entity& entity, float) {

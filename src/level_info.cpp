@@ -54,32 +54,6 @@ void LevelInfo::grab_things() {
     }
 }
 
-// TODO COPYPASTE copied this to system manager...
-void move_player_SERVER_ONLY(Entity& entity, vec3 position) {
-    if (!is_server()) {
-        log_warn(
-            "you are calling a server only function from a client context, "
-            "this is best case a no-op and worst case a visual desync");
-    }
-
-    Transform& transform = entity.get<Transform>();
-    transform.update(position);
-
-    // TODO if we have multiple local players then we need to specify which here
-
-    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
-
-    int client_id = server->get_client_id_for_entity(entity);
-    if (client_id == -1) {
-        log_warn("Tried to find a client id for entity but didnt find one");
-        return;
-    }
-
-    server->send_player_location_packet(
-        client_id, position, static_cast<int>(transform.face_direction()),
-        entity.get<HasName>().name());
-}
-
 void LevelInfo::generate_lobby_map() {
     {
         auto& entity = EntityHelper::createEntity();
@@ -98,63 +72,15 @@ void LevelInfo::generate_lobby_map() {
         furniture::make_trigger_area(
             entity, lobby_origin + vec3{5, TILESIZE / -2.f, 10}, 8, 3,
             IsTriggerArea::Lobby_PlayGame);
-        // TODO this should not pass the text_lookup one but the raw one
-        // and we should transform on render based on the client
-        entity.get<IsTriggerArea>().on_complete([](const Entities& all) {
-            // TODO should be lobby only?
-            // TODO only for host...
-
-            GameState::get().toggle_to_planning();
-
-            for (std::shared_ptr<Entity> e : all) {
-                if (!e) continue;
-                if (!check_type(*e, EntityType::Player)) continue;
-                // TODO switch to using some kind of global for these
-                move_player_SERVER_ONLY(*e, {0, 0, 0});
-            }
-        });
     }
 }
 
 void LevelInfo::generate_progression_map() {
-    const auto _choose_option = [](const Entities& all, int option_chosen) {
-        GameState::get().toggle_to_planning();
-
-        for (std::shared_ptr<Entity> e : all) {
-            if (!e) continue;
-            if (check_type(*e, EntityType::Player)) {
-                // TODO switch to using some kind of global for these
-                move_player_SERVER_ONLY(*e, {0, 0, 0});
-                continue;
-            }
-
-            if (!check_type(*e, EntityType::Sophie)) continue;
-            if (e->is_missing<IsProgressionManager>()) continue;
-
-            IsProgressionManager& ipm = e->get<IsProgressionManager>();
-            // choose given option
-
-            Drink option = option_chosen == 0 ? ipm.option1 : ipm.option2;
-
-            // Mark the drink unlocked
-            ipm.enabledDrinks |= option;
-            // Unlock any igredients it needs
-            ipm.enabledIngredients |= get_recipe_for_drink(option);
-
-            // TODO spawn any new machines / ingredient sources it needs we
-            // dont already have
-        }
-    };
-
-    // option 1
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_trigger_area(
             entity, progression_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3,
             IsTriggerArea::Progression_Option1);
-
-        entity.get<IsTriggerArea>().on_complete(
-            [&_choose_option](const Entities& all) { _choose_option(all, 0); });
     }
 
     {
@@ -162,9 +88,6 @@ void LevelInfo::generate_progression_map() {
         furniture::make_trigger_area(
             entity, progression_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
             IsTriggerArea::Progression_Option2);
-
-        entity.get<IsTriggerArea>().on_complete(
-            [&_choose_option](const Entities& all) { _choose_option(all, 1); });
     }
 }
 
