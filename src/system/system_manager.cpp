@@ -55,6 +55,7 @@
 #include "../entity.h"
 #include "../entityhelper.h"
 #include "../map.h"
+#include "../network/server.h"
 #include "input_process_manager.h"
 #include "job_system.h"
 #include "progression.h"
@@ -62,6 +63,33 @@
 #include "ui_rendering_system.h"
 
 namespace system_manager {
+
+// TODO COPYPASTE also in level_infocpp
+void move_player_SERVER_ONLY(Entity& entity, vec3 position) {
+    if (!is_server()) {
+        log_warn(
+            "you are calling a server only function from a client context, "
+            "this is best case a no-op and worst case a visual desync");
+    }
+
+    Transform& transform = entity.get<Transform>();
+    transform.update(position);
+
+    // TODO if we have multiple local players then we need to specify which here
+
+    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+
+    int client_id = server->get_client_id_for_entity(entity);
+    if (client_id == -1) {
+        log_warn("Tried to find a client id for entity but didnt find one");
+        return;
+    }
+
+    server->send_player_location_packet(
+        client_id, position, static_cast<int>(transform.face_direction()),
+        entity.get<HasName>().name());
+}
+
 void transform_snapper(Entity& entity, float) {
     if (entity.is_missing<Transform>()) return;
     Transform& transform = entity.get<Transform>();
@@ -675,6 +703,14 @@ void run_timer(Entity& entity, float dt) {
         } break;
         case game::State::InRound: {
             GameState::get().set(game::State::Progression);
+            for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
+                if (!e) continue;
+                if (check_type(*e, EntityType::Player)) {
+                    // TODO switch to using global
+                    move_player_SERVER_ONLY(*e, {-50.f, 0, -50.f});
+                    continue;
+                }
+            }
         } break;
         default:
             log_warn("processing round switch timer but no state handler {}",
@@ -754,8 +790,8 @@ void update_sophie(Entity& entity, float) {
             EntityHelper::getFirstMatching([](const Entity& e) -> bool {
                 return check_type(e, EntityType::CustomerSpawner);
             });
-        // TODO we are validating this now, but we shouldnt have to worry about
-        // this in the future
+        // TODO we are validating this now, but we shouldnt have to worry
+        // about this in the future
         VALIDATE(valid(customer_opt),
                  "map needs to have at least one customer spawn point");
         auto& customer = asE(customer_opt);
@@ -781,7 +817,8 @@ void update_sophie(Entity& entity, float) {
         return;
     };
 
-    // doing it this way so that if we wanna make them return bool itll be easy
+    // doing it this way so that if we wanna make them return bool itll be
+    // easy
     typedef std::function<void()> WaitingFn;
 
     std::vector<WaitingFn> fns{
@@ -809,7 +846,8 @@ void reset_empty_work_furniture(Entity& entity, float) {
         return;
     }
 
-    // TODO if its not empty, we have to see if its an item that can be worked
+    // TODO if its not empty, we have to see if its an item that can be
+    // worked
     return;
 }
 
@@ -885,8 +923,8 @@ void process_squirter(Entity& entity, float) {
     // cant squirt into this !
     if (sqCHI.item()->is_missing<IsDrink>()) return;
 
-    // so we got something, lets see if anyone around can give us something to
-    // use
+    // so we got something, lets see if anyone around can give us something
+    // to use
 
     std::shared_ptr<Furniture> closest_furniture =
         EntityHelper::getClosestMatchingEntity<Furniture>(

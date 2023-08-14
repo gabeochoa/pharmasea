@@ -2,9 +2,11 @@
 #include "level_info.h"
 
 #include "camera.h"
+#include "components/is_progression_manager.h"
 #include "components/is_trigger_area.h"
 #include "map_generation.h"
 #include "network/server.h"
+#include "recipe_library.h"
 
 void LevelInfo::update_seed(const std::string& s) {
     log_info("level info update seed {}", s);
@@ -52,22 +54,7 @@ void LevelInfo::grab_things() {
     }
 }
 
-void LevelInfo::ensure_generated_map(const std::string& new_seed) {
-    if (was_generated) return;
-    log_info("generating map with new seed: {}", new_seed);
-    seed = new_seed;
-    was_generated = true;
-
-    // TODO idk which of these i need and which i dont
-    // TODO this will delete lobby...
-    server_entities_DO_NOT_USE.clear();
-    entities.clear();
-    EntityHelper::delete_all_entities();
-
-    generate_lobby_map();
-    generate_in_game_map();
-}
-
+// TODO COPYPASTE copied this to system manager...
 void move_player_SERVER_ONLY(Entity& entity, vec3 position) {
     if (!is_server()) {
         log_warn(
@@ -125,15 +112,86 @@ void LevelInfo::generate_lobby_map() {
                 // TODO should be lobby only?
                 // TODO only for host...
 
-                // TODO NOCOMMIT
-                // GameState::get().toggle_to_planning();
-                GameState::get().set(game::State::Progression);
+                GameState::get().toggle_to_planning();
 
                 for (std::shared_ptr<Entity> e : all) {
                     if (!e) continue;
                     if (!check_type(*e, EntityType::Player)) continue;
+                    // TODO switch to using some kind of global for these
                     move_player_SERVER_ONLY(*e, {0, 0, 0});
                 }
+            });
+    }
+}
+
+void LevelInfo::generate_progression_map() {
+    const auto _choose_option = [](const Entities& all, int option_chosen) {
+        GameState::get().toggle_to_planning();
+
+        for (std::shared_ptr<Entity> e : all) {
+            if (!e) continue;
+            if (check_type(*e, EntityType::Player)) {
+                // TODO switch to using some kind of global for these
+                move_player_SERVER_ONLY(*e, {0, 0, 0});
+                continue;
+            }
+
+            if (!check_type(*e, EntityType::Sophie)) continue;
+            if (e->is_missing<IsProgressionManager>()) continue;
+
+            IsProgressionManager& ipm = e->get<IsProgressionManager>();
+            // choose given option
+
+            Drink option = option_chosen == 0 ? ipm.option1 : ipm.option2;
+
+            // Mark the drink unlocked
+            ipm.enabledDrinks |= option;
+            // Unlock any igredients it needs
+            ipm.enabledIngredients |= get_recipe_for_drink(option);
+
+            // TODO spawn any new machines / ingredient sources it needs we
+            // dont already have
+        }
+    };
+
+    // option 1
+    {
+        auto& entity = EntityHelper::createEntity();
+        furniture::make_trigger_area(
+            entity, progression_origin + vec3{-5, TILESIZE / -2.f, 10}, 8, 3);
+        // TODO i dont like this living here but its kinda better than doing
+        // another enum in ITA i think
+
+        entity
+            .get<IsTriggerArea>()
+            // TODO put actual name
+            .update_title("OPTION 1")
+            // TODO we dont need to hard code these, why not just default to
+            // these
+            .update_max_entrants(1)
+            .update_progress_max(2.f)
+            .on_complete([&_choose_option](const Entities& all) {
+                _choose_option(all, 0);
+            });
+    }
+
+    {
+        auto& entity = EntityHelper::createEntity();
+        furniture::make_trigger_area(
+            entity, progression_origin + vec3{5, TILESIZE / -2.f, 10}, 8, 3);
+        // TODO i dont like this living here but its kinda better than doing
+        // another enum in ITA i think
+
+        entity
+            .get<IsTriggerArea>()
+            // TODO put actual name
+            .update_title("OPTION 2")
+            // TODO we dont need to hard code these, why not just default to
+            // these
+            .update_max_entrants(1)
+            .update_progress_max(2.f)
+            .on_complete([&_choose_option](const Entities& all) {
+                _choose_option(all, 1);
             });
     }
 }
@@ -254,4 +312,21 @@ auto LevelInfo::get_rand_walkable_register() {
         !EntityHelper::isWalkable(location) &&
         !EntityHelper::isWalkable(vec2{location.x, location.y + 1 * TILESIZE}));
     return location;
+}
+
+void LevelInfo::ensure_generated_map(const std::string& new_seed) {
+    if (was_generated) return;
+    log_info("generating map with new seed: {}", new_seed);
+    seed = new_seed;
+    was_generated = true;
+
+    // TODO idk which of these i need and which i dont
+    // TODO this will delete lobby...
+    server_entities_DO_NOT_USE.clear();
+    entities.clear();
+    EntityHelper::delete_all_entities();
+
+    generate_lobby_map();
+    generate_progression_map();
+    generate_in_game_map();
 }

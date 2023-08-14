@@ -53,8 +53,10 @@ struct LevelInfo {
 
    private:
     vec3 lobby_origin = {LOBBY_ORIGIN, 0, LOBBY_ORIGIN};
+    vec3 progression_origin = {PROGRESSION_ORIGIN, 0, PROGRESSION_ORIGIN};
 
     void generate_lobby_map();
+    void generate_progression_map();
     void generate_default_seed();
 
     [[nodiscard]] int gen_rand(int a, int b) {

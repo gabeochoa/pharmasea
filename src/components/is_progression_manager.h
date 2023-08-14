@@ -58,6 +58,7 @@ struct IsProgressionManager : public BaseComponent {
         return overlap == ings;
     }
 
+    // TODO rename function to be more clear
     bool drink_unlocked(Drink drink) const { return enabledDrinks.test(drink); }
 
     // TODO make private
