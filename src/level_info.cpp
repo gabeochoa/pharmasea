@@ -219,10 +219,10 @@ void LevelInfo::ensure_generated_map(const std::string& new_seed) {
     was_generated = true;
 
     // TODO idk which of these i need and which i dont
-    // TODO this will delete lobby...
-    server_entities_DO_NOT_USE.clear();
-    entities.clear();
-    EntityHelper::delete_all_entities();
+    // TODO this will delete lobby...so we cant do it
+    // server_entities_DO_NOT_USE.clear();
+    // entities.clear();
+    // EntityHelper::delete_all_entities();
 
     generate_lobby_map();
     generate_progression_map();

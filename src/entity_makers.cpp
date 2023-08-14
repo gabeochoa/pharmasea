@@ -531,7 +531,7 @@ void make_sophie(Entity& sophie, vec3 pos) {
 
     sophie.addComponent<HasTimer>(HasTimer::Renderer::Round,
                                   round_settings::ROUND_LENGTH_S);
-    sophie.addComponent<IsProgressionManager>();
+    sophie.addComponent<IsProgressionManager>().init();
 }
 
 void make_vomit(Entity& vomit, vec2 pos) {

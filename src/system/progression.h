@@ -40,7 +40,11 @@ inline void collect_upgrade_options(Entity& entity, float dt) {
     {
         for (auto drink : drinks) {
             // skip any already unlocked
-            if (ipm.drink_unlocked(drink)) continue;
+            if (ipm.is_drink_unlocked(drink)) {
+                log_info("already unlocked {} {}", drink,
+                         magic_enum::enum_name<Drink>(drink));
+                continue;
+            }
 
             // We use get_req here because we want to also count any
             // prereqs that we need since those will spawn new machines/items as
@@ -49,8 +53,12 @@ inline void collect_upgrade_options(Entity& entity, float dt) {
 
             // TODO put these in utils somewhere so we can use when checking
             // overlap later
-            IngredientBitSet ing_overlap = (ing & ipm.enabled_ingredients());
-            IngredientBitSet ing_needed = ing ^ (ing_overlap);
+
+            // A:  000100100
+            // B:  000100011
+            // ~B: 111011100 (bitwise negation of B)
+            // C:  000000100 (A & ~B)
+            IngredientBitSet ing_needed = (ing & ~(ipm.enabled_ingredients()));
             size_t num_needed = ing_needed.count();
 
             // add to options in sorted order

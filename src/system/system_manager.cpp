@@ -710,18 +710,25 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 continue;
             }
 
-            if (!check_type(*e, EntityType::Sophie)) continue;
             if (e->is_missing<IsProgressionManager>()) continue;
 
             IsProgressionManager& ipm = e->get<IsProgressionManager>();
             // choose given option
 
+            // reset options so it collections new ones next upgrade round
+            ipm.collectedOptions = false;
+
             Drink option = option_chosen == 0 ? ipm.option1 : ipm.option2;
 
             // Mark the drink unlocked
-            ipm.enabledDrinks |= option;
+            ipm.unlock_drink(option);
             // Unlock any igredients it needs
-            ipm.enabledIngredients |= get_recipe_for_drink(option);
+            auto possibleNewIGs = get_recipe_for_drink(option);
+            bitset_utils::for_each_enabled_bit(
+                possibleNewIGs, [&ipm](size_t index) {
+                    Ingredient ig = magic_enum::enum_value<Ingredient>(index);
+                    ipm.unlock_ingredient(ig);
+                });
 
             // TODO spawn any new machines / ingredient sources it needs we
             // dont already have

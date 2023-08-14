@@ -11,26 +11,27 @@
 struct IsProgressionManager : public BaseComponent {
     virtual ~IsProgressionManager() {}
 
-    IsProgressionManager() {
-        // TODO need to decide if we unblock ingredients and that enables drinks
-        // or if we unlock drinks and that enables ingredients
-        enabledDrinks |= Drink::coke;
-        enabledDrinks |= Drink::rum_and_coke;
+    IsProgressionManager() {}
 
-        enabledIngredients |= Ingredient::Soda;
-        enabledIngredients |= Ingredient::Rum;
-
-        // TODO add progression / level logic
-        // enabledDrinks.set();
+    void init() {
+        unlock_drink(Drink::coke);
+        unlock_ingredient(Ingredient::Soda);
+        log_trace("create: {} {}", enabledDrinks, enabledIngredients);
     }
 
-    auto& unlock_drink(Drink& drink) {
-        enabledDrinks |= drink;
+    IsProgressionManager& unlock_drink(const Drink& drink) {
+        log_trace("unlocking drink {}", magic_enum::enum_name<Drink>(drink));
+        enabledDrinks.set(drink);
+        log_trace("unlock drink: {} {}", enabledDrinks, enabledIngredients);
         return *this;
     }
 
-    auto& unlock_ingredient(Ingredient& ing) {
-        enabledIngredients |= ing;
+    IsProgressionManager& unlock_ingredient(const Ingredient& ing) {
+        log_trace("unlocking ingredient {}",
+                  magic_enum::enum_name<Ingredient>(ing));
+        enabledIngredients.set(ing);
+        log_trace("unlock ingredient: {} {}", enabledDrinks,
+                  enabledIngredients);
         return *this;
     }
 
@@ -40,6 +41,7 @@ struct IsProgressionManager : public BaseComponent {
     }
 
     Drink get_random_drink() const {
+        log_trace("get random: {} {}", enabledDrinks, enabledIngredients);
         int drinkSetBit = bitset_utils::get_random_enabled_bit(enabledDrinks);
         if (drinkSetBit == -1) {
             log_warn("generated {} but we had {} enabled drinks", drinkSetBit,
@@ -58,8 +60,10 @@ struct IsProgressionManager : public BaseComponent {
         return overlap == ings;
     }
 
-    // TODO rename function to be more clear
-    bool drink_unlocked(Drink drink) const { return enabledDrinks.test(drink); }
+    bool is_drink_unlocked(Drink drink) const {
+        size_t index = magic_enum::enum_index<Drink>(drink).value();
+        return enabledDrinks.test(index);
+    }
 
     // TODO make private
     bool isUpgradeRound = true;
