@@ -177,6 +177,8 @@ void LevelInfo::generate_in_game_map() {
         lines[x][y] = generation::REGISTER;
     }
 
+    // TODO we must spawn and validate a soda machine
+
     for (auto line : lines) {
         log_info("{}", line);
     }

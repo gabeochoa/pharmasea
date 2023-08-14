@@ -50,6 +50,12 @@ inline void collect_upgrade_options(Entity& entity, float dt) {
             IngredientBitSet ing_needed = ing ^ (ing_overlap);
             size_t num_needed = ing_needed.count();
 
+            // TODO NUMNEEDED num_needed isnt the most accurate because some
+            // ingredients require other ingredients for example the lemonjuice
+            // requires lemons to also be unlocked need to add that information
+            // to the recipe since we'll need it later anyway for spawning the
+            // new machines
+
             // add to options in sorted order
             {
                 options.push_back(DrinkOption{drink, num_needed});
