@@ -58,4 +58,5 @@ struct SystemManager {
     void game_like_update(const Entities& entity_list, float dt);
     void in_round_update(const Entities& entity_list, float dt);
     void planning_update(const Entities& entity_list, float dt);
+    void progression_update(const Entities& entity_list, float dt);
 };

@@ -512,6 +512,7 @@ void make_soda_machine(Entity& soda_machine, vec2 pos) {
                     EntityFilter::FilterStrength::Requirement));
 }
 
+// TODO what happens if the day ends and you are holding the mop still?
 void make_mop_holder(Entity& mop_holder, vec2 pos) {
     furniture::make_itemcontainer(mop_holder,
                                   DebugOptions{.type = EntityType::MopHolder},
@@ -547,7 +548,10 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
         .on_complete([](const Entities& all) {
             // TODO should be lobby only?
             // TODO only for host...
-            GameState::get().toggle_to_planning();
+
+            // TODO NOCOMMIT
+            // GameState::get().toggle_to_planning();
+            GameState::get().set(game::State::Progression);
 
             for (std::shared_ptr<Entity> e : all) {
                 if (!e) continue;

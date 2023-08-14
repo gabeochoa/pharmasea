@@ -171,7 +171,8 @@ struct GameState : public StateManager2<game::State> {
                                         //|| is(game::State::InMenu);
     }
     [[nodiscard]] bool is_game_like() const {
-        return is(game::State::InRound) || is(game::State::Planning);
+        return is(game::State::InRound) || is(game::State::Planning) ||
+               is(game::State::Progression);
     }
 
     [[nodiscard]] bool should_render_timer() const {

@@ -5,6 +5,7 @@
 #include "../engine/bitset_utils.h"
 //
 #include "../dataclass/ingredient.h"
+#include "../recipe_library.h"
 #include "base_component.h"
 
 struct IsProgressionManager : public BaseComponent {
@@ -48,10 +49,27 @@ struct IsProgressionManager : public BaseComponent {
         return magic_enum::enum_cast<Drink>(drinkSetBit).value();
     }
 
-   private:
+    // checks the current enabled ingredients to see if its possible to
+    // create the drink
+    bool can_create_drink(Drink drink) const {
+        IngredientBitSet ings = get_recipe_for_drink(drink);
+
+        IngredientBitSet overlap = ings & enabledIngredients;
+        return overlap == ings;
+    }
+
+    bool drink_unlocked(Drink drink) const { return enabledDrinks.test(drink); }
+
+    // TODO make private
+    bool isUpgradeRound = true;
+    bool collectedOptions = false;
+    Drink option1;
+    Drink option2;
+
     DrinkSet enabledDrinks;
     IngredientBitSet enabledIngredients;
 
+   private:
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {

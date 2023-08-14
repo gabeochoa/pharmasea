@@ -57,6 +57,7 @@
 #include "../map.h"
 #include "input_process_manager.h"
 #include "job_system.h"
+#include "progression.h"
 #include "rendering_system.h"
 #include "ui_rendering_system.h"
 
@@ -673,7 +674,7 @@ void run_timer(Entity& entity, float dt) {
             GameState::get().set(game::State::InRound);
         } break;
         case game::State::InRound: {
-            GameState::get().set(game::State::Planning);
+            GameState::get().set(game::State::Progression);
         } break;
         default:
             log_warn("processing round switch timer but no state handler {}",
@@ -988,7 +989,7 @@ void reset_customers_that_need_resetting(Entity& entity) {
 
     {
         // TODO eventually read from game settings
-        cod.num_orders_rem = randIn(0, 5);
+        cod.num_orders_rem = randIn(0, 1);
         cod.num_orders_had = 0;
         cod.current_order = progressionManager.get_random_drink();
         cod.order_state = CanOrderDrink::OrderState::Ordering;
@@ -1038,6 +1039,8 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
                 in_round_update(entities, dt);
             } else if (GameState::get().in_planning()) {
                 planning_update(entities, dt);
+            } else if (GameState::get().is(game::State::Progression)) {
+                progression_update(entities, dt);
             }
             game_like_update(entities, dt);
         }
@@ -1166,6 +1169,13 @@ void SystemManager::planning_update(
     for_each(entities, dt, [](std::shared_ptr<Entity> entity_ptr, float dt) {
         Entity& entity = *entity_ptr;
         system_manager::update_held_furniture_position(entity, dt);
+    });
+}
+
+void SystemManager::progression_update(const Entities& entities, float dt) {
+    for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
+        Entity& entity = *e_ptr;
+        system_manager::progression::collect_upgrade_options(entity, dt);
     });
 }
 

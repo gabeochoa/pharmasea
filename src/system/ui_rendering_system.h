@@ -131,7 +131,6 @@ inline void render_normal(const Entities& entities, float dt) {
             render_block_state_change_reason(entity, dt);
         }
     }
-
     // always
     render_networked_players(entities, dt);
 }
