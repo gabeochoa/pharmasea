@@ -2,7 +2,9 @@
 #include "level_info.h"
 
 #include "camera.h"
+#include "components/is_trigger_area.h"
 #include "map_generation.h"
+#include "network/server.h"
 
 void LevelInfo::update_seed(const std::string& s) {
     log_info("level info update seed {}", s);
@@ -66,6 +68,31 @@ void LevelInfo::ensure_generated_map(const std::string& new_seed) {
     generate_in_game_map();
 }
 
+void move_player_SERVER_ONLY(Entity& entity, vec3 position) {
+    if (!is_server()) {
+        log_warn(
+            "you are calling a server only function from a client context, "
+            "this is best case a no-op and worst case a visual desync");
+    }
+
+    Transform& transform = entity.get<Transform>();
+    transform.update(position);
+
+    // TODO if we have multiple local players then we need to specify which here
+
+    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+
+    int client_id = server->get_client_id_for_entity(entity);
+    if (client_id == -1) {
+        log_warn("Tried to find a client id for entity but didnt find one");
+        return;
+    }
+
+    server->send_player_location_packet(
+        client_id, position, static_cast<int>(transform.face_direction()),
+        entity.get<HasName>().name());
+}
+
 void LevelInfo::generate_lobby_map() {
     {
         auto& entity = EntityHelper::createEntity();
@@ -82,8 +109,32 @@ void LevelInfo::generate_lobby_map() {
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_trigger_area(
-            entity, lobby_origin + vec3{5, TILESIZE / -2.f, 10}, 8, 3,
-            text_lookup(strings::i18n::START_GAME));
+            entity, lobby_origin + vec3{5, TILESIZE / -2.f, 10}, 8, 3);
+        // TODO i dont like this living here but its kinda better than doing
+        // another enum in ITA i think
+
+        // TODO this should not pass the text_lookup one but the raw one
+        // and we should transform on render based on the client
+        entity.get<IsTriggerArea>()
+            .update_title(text_lookup(strings::i18n::START_GAME))
+            // TODO we dont need to hard code these, why not just default to
+            // these
+            .update_max_entrants(1)
+            .update_progress_max(2.f)
+            .on_complete([](const Entities& all) {
+                // TODO should be lobby only?
+                // TODO only for host...
+
+                // TODO NOCOMMIT
+                // GameState::get().toggle_to_planning();
+                GameState::get().set(game::State::Progression);
+
+                for (std::shared_ptr<Entity> e : all) {
+                    if (!e) continue;
+                    if (!check_type(*e, EntityType::Player)) continue;
+                    move_player_SERVER_ONLY(*e, {0, 0, 0});
+                }
+            });
     }
 }
 

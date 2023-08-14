@@ -30,7 +30,7 @@ void make_character_switcher(Entity& character_switcher, vec2 pos);
 void make_map_randomizer(Entity&, vec2 pos);
 void make_fast_forward(Entity&, vec2 pos);
 void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
-                       float height, const std::string& title);
+                       float height);
 
 }  // namespace furniture
 

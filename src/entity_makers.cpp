@@ -141,31 +141,6 @@ void make_remote_player(Entity& remote_player, vec3 pos) {
     add_player_components(remote_player);
 }
 
-void move_player_SERVER_ONLY(Entity& entity, vec3 position) {
-    if (!is_server()) {
-        log_warn(
-            "you are calling a server only function from a client context, "
-            "this is best case a no-op and worst case a visual desync");
-    }
-
-    Transform& transform = entity.get<Transform>();
-    transform.update(position);
-
-    // TODO if we have multiple local players then we need to specify which here
-
-    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
-
-    int client_id = server->get_client_id_for_entity(entity);
-    if (client_id == -1) {
-        log_warn("Tried to find a client id for entity but didnt find one");
-        return;
-    }
-
-    server->send_player_location_packet(
-        client_id, position, static_cast<int>(transform.face_direction()),
-        entity.get<HasName>().name());
-}
-
 void update_player_remotely(Entity& entity, float* location,
                             const std::string& username, int facing_direction) {
     entity.get<HasName>().update(username);
@@ -530,7 +505,7 @@ void make_mop_holder(Entity& mop_holder, vec2 pos) {
 }
 
 void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
-                       float height, const std::string& title) {
+                       float height) {
     make_entity(trigger_area, {EntityType::TriggerArea}, pos);
 
     trigger_area.get<Transform>().update_size({
@@ -540,25 +515,7 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
     });
 
     trigger_area.addComponent<SimpleColoredBoxRenderer>().update(PINK, PINK);
-    trigger_area.addComponent<IsTriggerArea>()
-        .update_title(title)
-        // TODO we dont need to hard code these, why not just default to these
-        .update_max_entrants(1)
-        .update_progress_max(2.f)
-        .on_complete([](const Entities& all) {
-            // TODO should be lobby only?
-            // TODO only for host...
-
-            // TODO NOCOMMIT
-            // GameState::get().toggle_to_planning();
-            GameState::get().set(game::State::Progression);
-
-            for (std::shared_ptr<Entity> e : all) {
-                if (!e) continue;
-                if (!check_type(*e, EntityType::Player)) continue;
-                move_player_SERVER_ONLY(*e, {0, 0, 0});
-            }
-        });
+    trigger_area.addComponent<IsTriggerArea>();
 }
 
 void make_blender(Entity& blender, vec2 pos) {
