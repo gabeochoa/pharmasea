@@ -676,6 +676,7 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
     switch (ita.type) {
         case IsTriggerArea::Lobby_PlayGame: {
             ita.update_title(text_lookup(strings::i18n::START_GAME));
+            ita.update_subtitle(text_lookup(strings::i18n::LOADING));
             return;
         } break;
         default:
@@ -700,6 +701,7 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
 
             if (!ipm.collectedOptions) {
                 ita.update_title("(internal)");
+                ita.update_subtitle("(internal)");
                 return;
             }
 
@@ -708,6 +710,8 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
                                : ipm.option2;
             ita.update_title(
                 fmt::format("{}", magic_enum::enum_name<Drink>(option)));
+            ita.update_subtitle(
+                fmt::format("{}", magic_enum::enum_name<Drink>(option)));
             return;
         } break;
         default:
@@ -715,6 +719,7 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
     }
 
     ita.update_title("Not Configured");
+    ita.update_subtitle("Not Configured");
     log_warn(
         "Trying to update trigger area title but type {} not handled anywhere",
         ita.type);

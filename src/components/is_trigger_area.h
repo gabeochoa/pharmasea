@@ -19,6 +19,7 @@ struct IsTriggerArea : public BaseComponent {
     virtual ~IsTriggerArea() {}
 
     [[nodiscard]] const std::string& title() const { return _title; }
+    [[nodiscard]] const std::string& subtitle() const { return _subtitle; }
     [[nodiscard]] bool should_wave() const {
         return has_min_matching_entrants();
     }
@@ -65,6 +66,19 @@ struct IsTriggerArea : public BaseComponent {
         return *this;
     }
 
+    auto& update_subtitle(const std::string& nt) {
+        _subtitle = nt;
+        if ((int) _subtitle.size() > max_title_length) {
+            log_warn(
+                "subtitle for trigger area is too long, max is {} chars, you "
+                "had "
+                "{} ({})",
+                max_title_length, _subtitle.size(), nt);
+            _subtitle.resize(max_title_length);
+        }
+        return *this;
+    }
+
     auto& update_entrants(int ne) {
         current_entrants = ne;
         return *this;
@@ -79,6 +93,7 @@ struct IsTriggerArea : public BaseComponent {
     int wanted_entrants = 1;
     int current_entrants = 0;
     std::string _title;
+    std::string _subtitle;
     int max_title_length = 20;
 
     float completion_time_max = 0.f;
@@ -99,5 +114,6 @@ struct IsTriggerArea : public BaseComponent {
 
         s.value4b(max_title_length);
         s.text1b(_title, max_title_length);
+        s.text1b(_subtitle, max_title_length);
     }
 };

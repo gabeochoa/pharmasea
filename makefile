@@ -82,7 +82,7 @@ todo:
 	{ git grep -niE '(FIXME|TODO)' src/; cat todo.md | grep -e "- \[\s";} 
 
 todoadded: 
-	git log -n 5 --pretty=format:%H | xargs -I {} git diff {} | grep -E "^\+.*TODO"
+	git log -n 10 --pretty=format:%H | xargs -I {} git diff {} | grep -E "^\+.*TODO"
 
 # for shuf you might need to 
 # brew install coreutils

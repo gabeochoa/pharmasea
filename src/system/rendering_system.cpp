@@ -263,7 +263,7 @@ void render_trigger_area(const Entity& entity, float dt) {
         //
         raylib::DrawTextWave3D(
             font,
-            fmt::format("~~{}~~", text_lookup(strings::i18n::LOADING)).c_str(),
+            fmt::format("~~{}~~", text_lookup(ita.subtitle().c_str())).c_str(),
             text_position, fsize,
             4,                      // font spacing
             4,                      // line spacing
