@@ -65,12 +65,29 @@
 
 namespace system_manager {
 
-// TODO COPYPASTE also in level_infocpp
-void move_player_SERVER_ONLY(Entity& entity, vec3 position) {
+void move_player_SERVER_ONLY(Entity& entity, game::State location) {
     if (!is_server()) {
         log_warn(
             "you are calling a server only function from a client context, "
             "this is best case a no-op and worst case a visual desync");
+    }
+
+    vec3 position;
+    switch (location) {
+        case game::Paused:  // fall through
+        case game::InMenu:
+            return;
+            break;
+        case game::Lobby: {
+            position = {LOBBY_ORIGIN, 0, LOBBY_ORIGIN};
+        } break;
+        case game::InRound:  // fall through
+        case game::Planning: {
+            position = {0, 0, 0};
+        } break;
+        case game::Progression: {
+            position = {PROGRESSION_ORIGIN, 0, PROGRESSION_ORIGIN};
+        } break;
     }
 
     Transform& transform = entity.get<Transform>();
@@ -613,8 +630,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
             if (!e) continue;
             if (check_type(*e, EntityType::Player)) {
-                // TODO switch to using some kind of global for these
-                move_player_SERVER_ONLY(*e, {0, 0, 0});
+                move_player_SERVER_ONLY(*e, game::State::Planning);
                 continue;
             }
 
@@ -649,8 +665,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
                 if (!e) continue;
                 if (!check_type(*e, EntityType::Player)) continue;
-                // TODO switch to using some kind of global for these
-                move_player_SERVER_ONLY(*e, {0, 0, 0});
+                move_player_SERVER_ONLY(*e, game::State::Planning);
             }
         } break;
         case IsTriggerArea::Progression_Option1:
@@ -823,8 +838,7 @@ void run_timer(Entity& entity, float dt) {
             for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
                 if (!e) continue;
                 if (check_type(*e, EntityType::Player)) {
-                    // TODO switch to using global
-                    move_player_SERVER_ONLY(*e, {-50.f, 0, -50.f});
+                    move_player_SERVER_ONLY(*e, game::State::Progression);
                     continue;
                 }
             }
