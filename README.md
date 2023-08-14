@@ -55,6 +55,35 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+### alpha_0.23.08.14
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (UI) The first option in a dropdown isnt selectable 
+- (Progression) New machines spawn on top of each other
+- (Lobby) Seed changer disabled for now 
+
+impact
+- More drink options!
+- Add Progression into the game
+    - After each round you get teleported to the progression area,
+    - you can choose which of two drinks to add
+    - if the new drink requires new ingredients we'll spawn them outside for you
+- New Default Map
+    - Much simpler default map which makes progression worth it
+- Floor Triggers now respect selected language
+
+bug fixes
+- Fix issue where i was using |= instead of .set() which caused weird progression issues 
+- Fix issue where spawners werent resetting 
+
+better eng 
+- add util function for checking if any entity of that type exists 
+- add util function for running a function on each enabled bit in a bitset 
+- allow teleporation to only certain locations for now 
+- Refactor trigger system so all code lives in system manager
+- add typename to error messages for library 
+
 ### alpha_0.23.08.08
 
 Known Issues
