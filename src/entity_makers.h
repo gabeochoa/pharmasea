@@ -13,7 +13,8 @@
 
 typedef Entity Furniture;
 
-void convert_to_type(EntityType& entity_type, Entity& entity, vec2 location);
+void convert_to_type(const EntityType& entity_type, Entity& entity,
+                     vec2 location);
 
 void register_all_components();
 void make_remote_player(Entity& remote_player, vec3 pos);

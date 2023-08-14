@@ -363,6 +363,15 @@ struct EntityHelper {
         return matching;
     }
 
+    static bool doesAnyExistWithType(const EntityType& type) {
+        std::vector<std::shared_ptr<Entity>> matching;
+        for (std::shared_ptr<Entity> e : get_entities()) {
+            if (!e) continue;
+            if (check_type(*e, type)) return true;
+        }
+        return false;
+    }
+
     // TODO i think this is slower because we are doing "outside mesh" as
     // outside we should probably have just make some tiles for inside the map
     // ('.' on map for example) and use those to mark where people can walk and

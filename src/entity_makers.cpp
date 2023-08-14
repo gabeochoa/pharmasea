@@ -859,7 +859,8 @@ void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
 
 }  // namespace furniture
 
-void convert_to_type(EntityType& entity_type, Entity& entity, vec2 location) {
+void convert_to_type(const EntityType& entity_type, Entity& entity,
+                     vec2 location) {
     // TODO at some point just change all of these to match
     auto pos = vec::to3(location);
     switch (entity_type) {
