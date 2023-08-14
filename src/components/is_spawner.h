@@ -47,7 +47,10 @@ struct IsSpawner : public BaseComponent {
     }
 
     bool pass_time(float dt) {
-        if (hit_max()) return false;
+        if (hit_max()) {
+            // log_info("hit max spawn {} {}", num_spawned, max_spawned);
+            return false;
+        }
         if (!spawn_fn) {
             log_warn("calling pass_time without a valid spawn function");
             return false;

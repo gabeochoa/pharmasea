@@ -178,6 +178,7 @@ void LevelInfo::generate_in_game_map() {
     }
 
     // TODO we must spawn and validate a soda machine
+    // TODO we must spawn and validate a cup
 
     for (auto line : lines) {
         log_info("{}", line);

@@ -1250,7 +1250,11 @@ void SystemManager::on_game_state_change(game::State new_state,
     // old_state, new_state);
 
     if (old_state == game::State::InRound &&
-        new_state == game::State::Planning) {
+        // We do both states here because we dont always know if its an upgrade
+        // round or not for now these things run on every end of round
+        // but we might need to add a more specific one in the future
+        (new_state == game::State::Progression ||
+         new_state == game::State::Planning)) {
         state_transitioned_round_to_planning = true;
     }
 
