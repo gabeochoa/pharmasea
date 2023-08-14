@@ -658,17 +658,35 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 convert_to_type(et, entity, {8, 8});
 
             } break;
-            case Salt:
-            case MintLeaf:
             case Lemon: {
-                // fruit basket
+                if (EntityHelper::doesAnyExistWithType(
+                        EntityType::PillDispenser)) {
+                    // nothing needed to do
+
+                    // TODO eventually we need to tell the
+                    // fruit_basket to only show the ones
+                    // that are enabled
+                    return;
+                }
+
+                auto et = EntityType::PillDispenser;
+                auto& entity = EntityHelper::createEntity();
+                convert_to_type(et, entity, {8, 8});
             } break;
             case LemonJuice: {
-                // blender
-            } break;
-            case SimpleSyrup:
+                if (EntityHelper::doesAnyExistWithType(EntityType::Blender)) {
+                    // nothing needed to do
+                    return;
+                }
 
-            // TODO implement for these
+                auto et = EntityType::Blender;
+                auto& entity = EntityHelper::createEntity();
+                convert_to_type(et, entity, {8, 8});
+            } break;
+            // TODO implement for these once thye have spawners
+            case Salt:
+            case MintLeaf:
+            case SimpleSyrup:
             case Invalid:
             case IceCubes:
             case IceCrushed:
