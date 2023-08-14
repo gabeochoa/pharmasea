@@ -58,6 +58,7 @@
 #include "../network/server.h"
 #include "input_process_manager.h"
 #include "job_system.h"
+#include "magic_enum/magic_enum.hpp"
 #include "progression.h"
 #include "rendering_system.h"
 #include "ui_rendering_system.h"
@@ -610,7 +611,67 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     if (cb) cb(SystemManager::get().oldAll);
 }
 
+void update_dynamic_trigger_area_settings(Entity& entity, float) {
+    if (entity.is_missing<IsTriggerArea>()) return;
+    IsTriggerArea& ita = entity.get<IsTriggerArea>();
+
+    if (ita.type == IsTriggerArea::Unset) {
+        log_warn("You created a trigger area without a type");
+        ita.update_title("Not Configured");
+        return;
+    }
+
+    // These are the ones that should only change on language update
+    switch (ita.type) {
+        case IsTriggerArea::Lobby_PlayGame: {
+            ita.update_title(text_lookup(strings::i18n::START_GAME));
+            return;
+        } break;
+        default:
+            break;
+    }
+
+    // These are the dynamic ones
+
+    switch (ita.type) {
+        case IsTriggerArea::Progression_Option1:  // fall through
+        case IsTriggerArea::Progression_Option2: {
+            std::shared_ptr<Entity> sophie =
+                EntityHelper::getFirstWithComponent<IsProgressionManager>();
+            if (!sophie) {
+                log_warn(
+                    "trying to update progression options but cant find "
+                    "sophie");
+                return;
+            }
+            const IsProgressionManager& ipm =
+                sophie->get<IsProgressionManager>();
+
+            if (!ipm.collectedOptions) {
+                ita.update_title("(internal)");
+                return;
+            }
+
+            Drink option = ita.type == IsTriggerArea::Progression_Option1
+                               ? ipm.option1
+                               : ipm.option2;
+            ita.update_title(
+                fmt::format("{}", magic_enum::enum_name<Drink>(option)));
+            return;
+        } break;
+        default:
+            break;
+    }
+
+    ita.update_title("Not Configured");
+    log_warn(
+        "Trying to update trigger area title but type {} not handled anywhere",
+        ita.type);
+    return;
+}
+
 void process_trigger_area(Entity& entity, float dt) {
+    update_dynamic_trigger_area_settings(entity, dt);
     count_max_trigger_area_entrants(entity, dt);
     count_trigger_area_entrants(entity, dt);
     update_trigger_area_percent(entity, dt);

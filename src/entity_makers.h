@@ -5,6 +5,7 @@
 #include <string>  // for basic_string
 
 #include "components/has_work.h"
+#include "components/is_trigger_area.h"
 #include "engine/ui_color.h"
 #include "entity.h"   // for Item, DebugOptions, Entity
 #include "raylib.h"   // for Color, PINK
@@ -29,8 +30,9 @@ void make_wall(Entity& wall, vec2 pos, Color c = ui::color::brown);
 void make_character_switcher(Entity& character_switcher, vec2 pos);
 void make_map_randomizer(Entity&, vec2 pos);
 void make_fast_forward(Entity&, vec2 pos);
+// TODO i dont like that we need to include ITA here...
 void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
-                       float height);
+                       float height, IsTriggerArea::Type type);
 
 }  // namespace furniture
 

@@ -505,7 +505,7 @@ void make_mop_holder(Entity& mop_holder, vec2 pos) {
 }
 
 void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
-                       float height) {
+                       float height, IsTriggerArea::Type type) {
     make_entity(trigger_area, {EntityType::TriggerArea}, pos);
 
     trigger_area.get<Transform>().update_size({
@@ -515,7 +515,7 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
     });
 
     trigger_area.addComponent<SimpleColoredBoxRenderer>().update(PINK, PINK);
-    trigger_area.addComponent<IsTriggerArea>();
+    trigger_area.addComponent<IsTriggerArea>(type);
 }
 
 void make_blender(Entity& blender, vec2 pos) {

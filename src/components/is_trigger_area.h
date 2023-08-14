@@ -1,8 +1,21 @@
 #pragma once
 
+#include "../engine/log.h"
 #include "base_component.h"
 
 struct IsTriggerArea : public BaseComponent {
+    enum Type {
+        Unset,
+        Lobby_PlayGame,
+        Progression_Option1,
+        Progression_Option2,
+    } type = Unset;
+
+    IsTriggerArea(Type type)
+        : type(type), wanted_entrants(1), completion_time_max(2.f) {}
+
+    IsTriggerArea() : IsTriggerArea(Unset) {}
+
     virtual ~IsTriggerArea() {}
 
     [[nodiscard]] const std::string& title() const { return _title; }
@@ -45,8 +58,8 @@ struct IsTriggerArea : public BaseComponent {
         if ((int) _title.size() > max_title_length) {
             log_warn(
                 "title for trigger area is too long, max is {} chars, you had "
-                "{}",
-                max_title_length, _title.size());
+                "{} ({})",
+                max_title_length, _title.size(), nt);
             _title.resize(max_title_length);
         }
         return *this;

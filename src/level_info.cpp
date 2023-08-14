@@ -96,31 +96,23 @@ void LevelInfo::generate_lobby_map() {
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_trigger_area(
-            entity, lobby_origin + vec3{5, TILESIZE / -2.f, 10}, 8, 3);
-        // TODO i dont like this living here but its kinda better than doing
-        // another enum in ITA i think
-
+            entity, lobby_origin + vec3{5, TILESIZE / -2.f, 10}, 8, 3,
+            IsTriggerArea::Lobby_PlayGame);
         // TODO this should not pass the text_lookup one but the raw one
         // and we should transform on render based on the client
-        entity.get<IsTriggerArea>()
-            .update_title(text_lookup(strings::i18n::START_GAME))
-            // TODO we dont need to hard code these, why not just default to
-            // these
-            .update_max_entrants(1)
-            .update_progress_max(2.f)
-            .on_complete([](const Entities& all) {
-                // TODO should be lobby only?
-                // TODO only for host...
+        entity.get<IsTriggerArea>().on_complete([](const Entities& all) {
+            // TODO should be lobby only?
+            // TODO only for host...
 
-                GameState::get().toggle_to_planning();
+            GameState::get().toggle_to_planning();
 
-                for (std::shared_ptr<Entity> e : all) {
-                    if (!e) continue;
-                    if (!check_type(*e, EntityType::Player)) continue;
-                    // TODO switch to using some kind of global for these
-                    move_player_SERVER_ONLY(*e, {0, 0, 0});
-                }
-            });
+            for (std::shared_ptr<Entity> e : all) {
+                if (!e) continue;
+                if (!check_type(*e, EntityType::Player)) continue;
+                // TODO switch to using some kind of global for these
+                move_player_SERVER_ONLY(*e, {0, 0, 0});
+            }
+        });
     }
 }
 
@@ -158,41 +150,21 @@ void LevelInfo::generate_progression_map() {
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_trigger_area(
-            entity, progression_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3);
-        // TODO i dont like this living here but its kinda better than doing
-        // another enum in ITA i think
+            entity, progression_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3,
+            IsTriggerArea::Progression_Option1);
 
-        entity
-            .get<IsTriggerArea>()
-            // TODO put actual name
-            .update_title("OPTION 1")
-            // TODO we dont need to hard code these, why not just default to
-            // these
-            .update_max_entrants(1)
-            .update_progress_max(2.f)
-            .on_complete([&_choose_option](const Entities& all) {
-                _choose_option(all, 0);
-            });
+        entity.get<IsTriggerArea>().on_complete(
+            [&_choose_option](const Entities& all) { _choose_option(all, 0); });
     }
 
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_trigger_area(
-            entity, progression_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3);
-        // TODO i dont like this living here but its kinda better than doing
-        // another enum in ITA i think
+            entity, progression_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
+            IsTriggerArea::Progression_Option2);
 
-        entity
-            .get<IsTriggerArea>()
-            // TODO put actual name
-            .update_title("OPTION 2")
-            // TODO we dont need to hard code these, why not just default to
-            // these
-            .update_max_entrants(1)
-            .update_progress_max(2.f)
-            .on_complete([&_choose_option](const Entities& all) {
-                _choose_option(all, 1);
-            });
+        entity.get<IsTriggerArea>().on_complete(
+            [&_choose_option](const Entities& all) { _choose_option(all, 1); });
     }
 }
 
