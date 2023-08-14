@@ -36,4 +36,14 @@ int get_random_enabled_bit(const std::bitset<N>& bitset) {
     return enabled_indices[random_index];
 }
 
+template<size_t N>
+void for_each_enabled_bit(const std::bitset<N>& bitset,
+                          std::function<void(size_t)> cb) {
+    for (size_t i = 0; i < bitset.size(); ++i) {
+        if (bitset.test(i)) {
+            cb(i);
+        }
+    }
+}
+
 };  // namespace bitset_utils
