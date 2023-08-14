@@ -10,6 +10,7 @@ struct Recipe {
     std::string viewer_name;
     std::string icon_name;
     IngredientBitSet ingredients;
+    IngredientBitSet prereqs;
 };
 
 SINGLETON_FWD(RecipeLibrary)
@@ -51,6 +52,11 @@ static std::string get_string_for_drink(Drink drink) {
 
 static IngredientBitSet get_recipe_for_drink(Drink drink) {
     return RecipeLibrary::get().get(get_string_for_drink(drink)).ingredients;
+}
+
+static IngredientBitSet get_req_ingredients_for_drink(Drink drink) {
+    auto recip = RecipeLibrary::get().get(get_string_for_drink(drink));
+    return recip.ingredients | recip.prereqs;
 }
 
 static std::string get_icon_name_for_drink(Drink drink) {

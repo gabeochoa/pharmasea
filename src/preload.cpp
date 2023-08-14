@@ -130,6 +130,22 @@ void Preload::load_drink_recipes() {
                 drink = drink_opt.value();
             }
 
+            IngredientBitSet prereqs;
+            prereqs.reset();
+            if (object.contains("prereqs")) {
+                for (auto ing_name : object["prereqs"]) {
+                    auto ing_str = ing_name.get<std::string>();
+                    std::optional<Ingredient> ing_opt =
+                        magic_enum::enum_cast<Ingredient>(ing_str);
+                    if (!ing_opt.has_value()) {
+                        log_warn("failed to load prereq {} for {}", ing_str,
+                                 base_name);
+                        continue;
+                    }
+                    prereqs |= IngredientBitSet().set(ing_opt.value());
+                }
+            }
+
             RecipeLibrary::get().load(
                 {
                     .drink = drink,
@@ -137,6 +153,7 @@ void Preload::load_drink_recipes() {
                     .viewer_name = object["viewer_name"].get<std::string>(),
                     .icon_name = object["icon_name"].get<std::string>(),
                     .ingredients = ingredients,
+                    .prereqs = prereqs,
                 },
                 "INVALID", base_name.c_str());
 

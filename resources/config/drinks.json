@@ -26,6 +26,9 @@
               "Tequila",
               "LemonJuice", // "LimeJuice",
               "TripleSec"
+          ],
+          "prereqs": [
+              "Lemon"
           ]
       },
       {
@@ -37,6 +40,9 @@
               "LemonJuice", // "CranJuice",
               "LemonJuice", // "LimeJuice",
               "TripleSec"
+          ],
+          "prereqs": [
+              "Lemon"
           ]
       },
       {
@@ -50,6 +56,9 @@
               "Soda", // "Water"
               //"MintLeaf",
               "SimpleSyrup"
+          ],
+          "prereqs": [
+              "Lemon"
           ]
       },
       {
@@ -70,6 +79,9 @@
               "Rum",
               "LemonJuice", // "LimeJuice",
               "SimpleSyrup"
+          ],
+          "prereqs": [
+              "Lemon"
           ]
       },
       {
@@ -80,6 +92,9 @@
               "Rum",
               "LemonJuice", // "PinaJuice",
               "LemonJuice" // "CoconutCream"
+          ],
+          "prereqs": [
+              "Lemon"
           ]
       },
       {
@@ -90,6 +105,9 @@
               "Gin",
               "Soda", // "Tonic",
               "Lemon" //"Lime"
+          ],
+          "prereqs": [
+              "Lemon"
           ]
       },
       {
@@ -100,6 +118,9 @@
               "Whiskey",
               "LemonJuice",
               "SimpleSyrup"
+          ],
+          "prereqs": [
+              "Lemon"
           ]
       },
       {
@@ -133,9 +154,11 @@
           "ingredients": [
               "Vodka",
               "LemonJuice" //"OrangeJuice"
+          ],
+          "prereqs": [
+              "Lemon" // Orange
           ]
       }
-
 
       // Possible other drinks
       // Negroni
