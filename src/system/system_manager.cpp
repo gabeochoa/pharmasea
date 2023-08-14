@@ -620,6 +620,64 @@ void update_trigger_area_percent(Entity& entity, float dt) {
     }
 }
 
+void __spawn_machines_for_newly_unlocked_drink(Drink option) {
+    // TODO today we dont have a way to statically know which machines
+    // provide which ingredients because they are dynamic
+    IngredientBitSet possibleNewIGs = get_req_ingredients_for_drink(option);
+
+    // Because prereqs are handled, we dont need do check for them and can
+    // assume that those bits will handle checking for it
+
+    bitset_utils::for_each_enabled_bit(possibleNewIGs, [](size_t index) {
+        Ingredient ig = magic_enum::enum_value<Ingredient>(index);
+
+        switch (ig) {
+            case Soda: {
+                // Nothing is needed to do for this since
+                // the soda machine is required to play the game
+            } break;
+            case Rum:
+            case Tequila:
+            case Vodka:
+            case Whiskey:
+            case Gin:
+            case TripleSec:
+            case Bitters: {
+                if (EntityHelper::doesAnyExistWithType(
+                        EntityType::MedicineCabinet)) {
+                    // nothing needed to do
+
+                    // TODO eventually we need to tell the
+                    // medicine_cabinet to only show the ones
+                    // that are enabled
+                    return;
+                }
+
+                auto et = EntityType::MedicineCabinet;
+                auto& entity = EntityHelper::createEntity();
+                convert_to_type(et, entity, {8, 8});
+
+            } break;
+            case Salt:
+            case MintLeaf:
+            case Lemon: {
+                // fruit basket
+            } break;
+            case LemonJuice: {
+                // blender
+            } break;
+            case SimpleSyrup:
+
+            // TODO implement for these
+            case Invalid:
+            case IceCubes:
+            case IceCrushed:
+            case LAST_ALC:
+                break;
+        }
+    });
+}
+
 void trigger_cb_on_full_progress(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
@@ -649,63 +707,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
             // TODO spawn any new machines / ingredient sources it needs we
             // dont already have
-
-            // TODO today we dont have a way to statically know which machines
-            // provide which ingredients because they are dynamic
-            {
-                IngredientBitSet possibleNewIGs = get_recipe_for_drink(option);
-
-                bitset_utils::for_each_enabled_bit(
-                    possibleNewIGs, [](size_t index) {
-                        Ingredient ig =
-                            magic_enum::enum_value<Ingredient>(index);
-
-                        switch (ig) {
-                            case Soda: {
-                                // Nothing is needed to do for this since
-                                // the soda machine is required to play the game
-                            } break;
-                            case Rum:
-                            case Tequila:
-                            case Vodka:
-                            case Whiskey:
-                            case Gin:
-                            case TripleSec:
-                            case Bitters: {
-                                if (EntityHelper::doesAnyExistWithType(
-                                        EntityType::MedicineCabinet)) {
-                                    // nothing needed to do
-
-                                    // TODO eventually we need to tell the
-                                    // medicine_cabinet to only show the ones
-                                    // that are enabled
-                                    return;
-                                }
-
-                                auto et = EntityType::MedicineCabinet;
-                                auto& entity = EntityHelper::createEntity();
-                                convert_to_type(et, entity, {8, 8});
-
-                            } break;
-                            case Salt:
-                            case MintLeaf:
-                            case Lemon: {
-                            } break;
-                            case LemonJuice: {
-                                // TODO NUMNEEDED we need a way to mark this
-                                // requires having lemon as well
-                            } break;
-                            case SimpleSyrup:
-
-                            // TODO implement for these
-                            case Invalid:
-                            case IceCubes:
-                            case IceCrushed:
-                            case LAST_ALC:
-                                break;
-                        }
-                    });
-            }
+            __spawn_machines_for_newly_unlocked_drink(option);
         }
     };
 

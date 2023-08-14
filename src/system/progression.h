@@ -42,19 +42,16 @@ inline void collect_upgrade_options(Entity& entity, float dt) {
             // skip any already unlocked
             if (ipm.drink_unlocked(drink)) continue;
 
-            IngredientBitSet ing = get_recipe_for_drink(drink);
+            // We use get_req here because we want to also count any
+            // prereqs that we need since those will spawn new machines/items as
+            // well
+            IngredientBitSet ing = get_req_ingredients_for_drink(drink);
 
             // TODO put these in utils somewhere so we can use when checking
             // overlap later
             IngredientBitSet ing_overlap = (ing & ipm.enabled_ingredients());
             IngredientBitSet ing_needed = ing ^ (ing_overlap);
             size_t num_needed = ing_needed.count();
-
-            // TODO NUMNEEDED num_needed isnt the most accurate because some
-            // ingredients require other ingredients for example the lemonjuice
-            // requires lemons to also be unlocked need to add that information
-            // to the recipe since we'll need it later anyway for spawning the
-            // new machines
 
             // add to options in sorted order
             {
