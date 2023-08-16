@@ -65,6 +65,11 @@ struct IsProgressionManager : public BaseComponent {
         return enabledDrinks.test(index);
     }
 
+    bool is_ingredient_unlocked(Ingredient ingredient) const {
+        size_t index = magic_enum::enum_index<Ingredient>(ingredient).value();
+        return enabledIngredients.test(index);
+    }
+
     // TODO make private
     bool isUpgradeRound = true;
     bool collectedOptions = false;
