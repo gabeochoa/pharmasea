@@ -36,6 +36,7 @@ enum struct EntityType {
     Vomit,
     MopHolder,
     FastForward,
+    Workbench,
 
     //
     // Items
