@@ -82,6 +82,8 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
 
 #include <string>
 
+#include "globals.h"
+
 namespace strings {
 
 constexpr const char* GAME_NAME = "Pub Panic!";

@@ -1,0 +1,101 @@
+<html>
+    <head>
+        <style>
+            body {
+                width: 100%;
+                height: 100%;
+            }
+
+            .spacing {
+                width: 50%;
+                height: 10%;
+            }
+
+            .button {
+                width: 10%;
+                height: 20%;
+                background-color: "Primary";
+            }
+
+            .inset {
+                display: block;
+                padding-left: 10%;
+                height: 100%;
+                width: 100%;
+            }
+
+            .tiny-button {
+                margin-left: 5%;
+                margin-right: 5%;
+                width: 20%;
+                height: 20%;
+                background-color: "Primary";
+            }
+
+            .top-spacing {
+                width: 50%;
+                height: 30%;
+            }
+
+            .button-spacing {
+                height: 5%;
+            }
+
+            .text-field {
+                width: 100%;
+                height: 50%;
+            }
+
+            .username {
+                display: inline;
+                width: 1%;
+            }
+
+            .ipaddr {
+                display: inline;
+                width: 1%;
+            }
+
+            .col {
+                width: 20%;
+            }
+
+            .buttons {
+                width: 100%;
+            }
+
+            .showhideip {
+                width: 30%;
+                height: 20%;
+                background-color: "Primary";
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <div class="top-spacing"></div>
+        <div class="top-spacing"></div>
+        <div class="inset">
+            <div class="col">
+                <div class="username">
+                    <p>Username: </p>
+                    <input class="text-field" type="text-field" id="username" disabled="true" />
+                    <button class="tiny-button" id="Edit">Edit</button>
+                </div>
+                <div class="ipaddr">
+                    <p>Enter IP Address is: </p>
+                    <input class="text-field" type="text-field" id="ipaddr" />
+                    <input class="showhideip" type="checkbox" id="ShowHideIP" label="show_hide_text"/>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="button" id="LoadLastIP">Load Last Used IP</button>
+                <div class="button-spacing"></div>
+                <button class="button" id="Connect">Connect</button>
+                <div class="button-spacing"></div>
+                <button class="button" id="Back">Back</button>
+            </div>
+        </div>
+    </body>
+</html>

@@ -40,12 +40,6 @@ constexpr int MAX_ANNOUNCEMENT_LENGTH = 200;
 constexpr int SERVER_CLIENT_ID = -1;
 constexpr int MAX_INPUTS = 100;
 
-namespace mp_test {
-static int run_init = 0;
-static bool enabled = false;
-static bool is_host = false;
-}  // namespace mp_test
-
 }  // namespace network
 
 namespace round_settings {

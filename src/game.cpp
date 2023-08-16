@@ -7,7 +7,11 @@ long long there_ping = 0;
 long long return_ping = 0;
 }  // namespace network
 
-int main(int argc, char* argv[]) {
+#include "engine/globals.h"
+#include "engine/layer.h"
+#include "engine/ui/ui.h"
+
+int main(int, char* argv[]) {
     process_dev_flags(argv);
 
     tests::run_all();
@@ -23,17 +27,6 @@ int main(int argc, char* argv[]) {
 
     startup();
     defer(Settings::get().write_save_file());
-
-    if (argc > 1) {
-        bool is_test = strcmp(argv[1], "test") == 0;
-        if (is_test) {
-            bool is_host = strcmp(argv[2], "host") == 0;
-            int a = setup_multiplayer_test(is_host);
-            if (a < 0) {
-                return -1;
-            }
-        }
-    }
 
     try {
         App::get().run();

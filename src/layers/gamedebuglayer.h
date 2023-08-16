@@ -106,7 +106,7 @@ struct GameDebugLayer : public Layer {
         if (!MenuState::s_in_game()) return;
     }
 
-    virtual void onDraw(float dt) override {
+    virtual void onDraw(float) override {
         if (!MenuState::s_in_game()) return;
 
         if (!debug_ui_enabled) {
@@ -120,44 +120,5 @@ struct GameDebugLayer : public Layer {
                 "Press = to toggle network debug UI (only works if host)",
                 vec2{200, 100}, 20, 0, RED);
         }
-
-        debug_ui(dt);
-    }
-
-   private:
-    void debug_ui(float dt) {
-        if (!debug_ui_enabled) return;
-        using namespace ui;
-
-        ui_context->begin(dt);
-
-        auto root = ui_context->own(Widget(
-            Size_Px(WIN_WF(), 1.f), Size_Px(WIN_HF(), 1.f), GrowFlags::Row));
-        ui_context->push_parent(root);
-        {
-            auto left_padding = ui_context->own(
-                Widget(Size_Px(100.f, 1.f), Size_Px(WIN_HF(), 1.f)));
-
-            auto content =
-                ui_context->own(Widget({.mode = Children, .strictness = 1.f},
-                                       Size_Pct(1.f, 1.0f), Column));
-
-            padding(*left_padding);
-            div(*content);
-            ui_context->push_parent(content);
-            {
-                auto top_padding = ui_context->own(
-                    Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f)));
-                padding(*top_padding);
-                {  //
-                   // draw_all_debug_ui();
-                }
-                padding(*ui_context->own(
-                    Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f))));
-            }
-            ui_context->pop_parent();
-        }
-        ui_context->pop_parent();
-        ui_context->end(root.get());
     }
 };

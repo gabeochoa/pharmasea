@@ -234,10 +234,6 @@ struct Settings {
 
                 lang_options.push_back(
                     settings::LanguageInfo{.name = name, .filename = filename});
-                // TODO we are adding twice because theres a bug with dropdown
-                // where you cant select option 0
-                lang_options.push_back(
-                    settings::LanguageInfo{.name = name, .filename = filename});
             });
 
         if (lang_options.empty()) {

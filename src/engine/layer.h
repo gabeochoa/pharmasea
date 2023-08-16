@@ -3,6 +3,11 @@
 
 #include "../external_include.h"
 #include "event.h"
+#include "globals.h"
+
+[[nodiscard]] inline raylib::Rectangle WIN_R() {
+    return raylib::Rectangle{0, 0, WIN_WF(), WIN_HF()};
+}
 
 static std::atomic_int s_layer_id;
 struct Layer {

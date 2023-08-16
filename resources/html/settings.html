@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <style>
+            body {
+                width: 100%;
+                height: 100%;
+            }
+
+            .row {
+                display: inline;
+            } 
+
+            p {
+                width: 20%;
+                height: 20%;
+            }
+
+            .button {
+                width: 10%;
+                height: 20%;
+                padding-top: 25%;
+                background-color: "Primary";
+            }
+            .spacing {
+                width: 50%;
+                height: 10%;
+            }
+            .inset {
+                display: block;
+                padding-left: 10%;
+                height: 100%;
+            }
+
+            .checkbox {
+                width: 3%;
+                height: 15%;
+                background-color: "Primary";
+            }
+
+            .range {
+                width: 15%;
+                height: 15%;
+                background-color: "Primary";
+            }
+
+            .dropdown {
+                width: 15%;
+                height: 15%;
+                background-color: "Primary";
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="spacing"></div>
+        <div class="inset">
+            <div class="row">
+                <p>Master Volume</p>
+                <input class="range" type="range" id="MasterVolume"/>
+            </div>
+            <div class="row">
+                <p>Music Volume</p>
+                <input class="range" type="range" id="MusicVolume"/>
+            </div>
+            <div class="row">
+                <p>Resolution</p>
+                <input class="dropdown" type="dropdown" id="ResolutionSwitcher" />
+            </div>
+            <div class="row">
+                <p>Language</p>
+                <input class="dropdown" type="dropdown" id="LanguageSwitcher" />
+            </div>
+            <div class="row">
+                <p>Show Streamer Safe Box</p>
+                <input class="checkbox" type="checkbox" id="StreamerSafeBox"/>
+            </div>
+            <div class="row">
+                <p>Enable Post-Processing Effects</p>
+                <input class="checkbox" type="checkbox" id="PostProcessingEffects"/>
+            </div>
+            <div class="spacing"></div>
+            <div class="spacing"></div>
+            <div class="spacing"></div>
+            <button class="button" id="Back">Back</button>
+        </div>
+    </body>
+</html>

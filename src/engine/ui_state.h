@@ -48,7 +48,10 @@ struct ScrollViewState : public UIState {
     State<float> yoffset;
 };
 
-struct DropdownState : public ToggleState {};
+struct DropdownState : public ToggleState {
+    State<int> selected;
+};
+
 struct CheckboxState : public ToggleState {};
 
 struct ButtonListState : public UIState {

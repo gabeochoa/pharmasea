@@ -279,7 +279,9 @@ struct IUIContextRenderTextures {
 struct IUIContextTheming {
     std::stack<UITheme> themestack;
 
+    // TODO add a way to change the theme without recompile
     virtual void init() { this->push_theme(ui::DEFAULT_THEME); }
+    // virtual void init() { this->push_theme(ui::SEETHROUGH); }
 
     void push_theme(UITheme theme) { themestack.push(theme); }
 

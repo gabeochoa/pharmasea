@@ -101,6 +101,12 @@ static const Color orange_soda = Color{240, 100, 73, 255};
 static const Color isabelline = Color{237, 230, 227, 255};
 static const Color tea_green = Color{195, 232, 189, 255};
 
+static const Color pacific_blue_st = Color{71, 168, 189, 100};
+static const Color oxford_blue_st = Color{12, 27, 51, 255};
+static const Color orange_soda_st = Color{240, 100, 73, 100};
+static const Color isabelline_st = Color{237, 230, 227, 255};
+static const Color tea_green_st = Color{195, 232, 189, 100};
+
 // XKCD Colors
 
 static const Color acid_green = Color{143, 254, 9, 255};

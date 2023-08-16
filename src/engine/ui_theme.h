@@ -74,4 +74,9 @@ static const UITheme GRAYSCALE =
             // TODO is there a better error color?
             color::off_white);
 
+static const UITheme SEETHROUGH =
+    UITheme(color::isabelline_st, color::oxford_blue_st, color::oxford_blue_st,
+            color::pacific_blue_st, color::tea_green_st, color::orange_soda_st,
+            color::orange_soda_st);
+
 }  // namespace ui
