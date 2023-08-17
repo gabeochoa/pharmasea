@@ -1,6 +1,7 @@
 
 
 #include "../components/can_order_drink.h"
+#include "../components/has_speech_bubble.h"
 #include "../components/has_timer.h"
 #include "../components/has_waiting_queue.h"
 #include "../entity.h"
@@ -44,6 +45,9 @@ inline void render_current_register_queue(float dt) {
                         entity.get<DebugName>());
                     continue;
                 }
+
+                // Hide any that arent "visible"
+                if (entity.get<HasSpeechBubble>().disabled()) continue;
 
                 raylib::Texture texture =  //
                     TextureLibrary::get().get(
