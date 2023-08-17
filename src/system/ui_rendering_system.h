@@ -1,10 +1,109 @@
 
 
+#include "../components/can_order_drink.h"
 #include "../components/has_timer.h"
+#include "../components/has_waiting_queue.h"
 #include "../entity.h"
+#include "../entityhelper.h"
 
 namespace system_manager {
 namespace ui {
+
+struct OrderCard {
+    raylib::Texture icon;
+    float time_left;
+    int z_index;
+};
+static std::vector<OrderCard> orders_to_render;
+static float refresh_time = 0.f;
+
+inline void render_current_register_queue(float dt) {
+    refresh_time -= dt;
+    if (refresh_time < 0) {
+        refresh_time = 2.f;
+
+        const auto registers =
+            EntityHelper::getAllWithType(EntityType::Register);
+
+        orders_to_render.clear();
+
+        for (size_t i = 0; i < registers.size(); i++) {
+            auto reg = registers[i];
+            const HasWaitingQueue& hwq = reg->get<HasWaitingQueue>();
+
+            for (size_t index = 0; index < hwq.num_in_queue(); index++) {
+                auto e_ptr = hwq.person(index);
+                if (!e_ptr) {
+                    // log_warn("register {} has null people in line", i);
+                    continue;
+                }
+                Entity& entity = *e_ptr;
+                if (entity.is_missing<CanOrderDrink>()) {
+                    log_warn(
+                        "register {} has people who cant order in line: {}", i,
+                        entity.get<DebugName>());
+                    continue;
+                }
+
+                raylib::Texture texture =  //
+                    TextureLibrary::get().get(
+                        entity.get<CanOrderDrink>().icon_name());
+
+                orders_to_render.emplace_back(OrderCard{texture,
+                                                        // TODO add patience
+                                                        10.f, (int) index});
+            }
+        }
+    }
+
+    int num_queue = (int) orders_to_render.size();
+    int max_num_cards = 10;
+    bool show_see_more = (max_num_cards - num_queue) < 0;
+
+    // Render stuff
+
+    float height = 0.1f * WIN_HF();
+    float width = height * max_num_cards;
+    Rectangle queue_window = {
+        0.2f * WIN_WF(),  //
+        0,                //
+        width,
+        height,           //
+    };
+
+    Rectangle card_rect = {0,       //
+                           0,       //
+                           height,  //
+                           height};
+
+    const auto debug_mode_on =
+        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+    if (debug_mode_on) {
+        raylib::DrawRectangleRounded(
+            queue_window, 0.5f, 8,
+            ::ui::DEFAULT_THEME.from_usage(::ui::theme::Background));
+    }
+
+    for (int i = 0; i < fmin(num_queue, max_num_cards); i++) {
+        if (show_see_more && i == (max_num_cards - 1)) {
+            // TODO render see more
+            continue;
+        }
+
+        auto card_index_rect =
+            Rectangle{queue_window.x + (card_rect.width * i), queue_window.y,
+                      card_rect.width, card_rect.height};
+        raylib::DrawRectangleRounded(
+            card_index_rect, 0.5f, 8,
+            ::ui::DEFAULT_THEME.from_usage(::ui::theme::Primary));
+
+        auto card = orders_to_render[i];
+
+        float scale = 2.f;
+        raylib::DrawTextureEx(card.icon, {card_index_rect.x, card_index_rect.y},
+                              0, scale, WHITE);
+    }
+}
 
 inline void render_timer(const Entity& entity, float) {
     if (entity.is_missing<HasTimer>()) return;
@@ -121,6 +220,8 @@ inline void render_debug_ui(const Entities& entities, float) {
     }
 }
 
+inline void render_current_register_queue(float dt);
+
 inline void render_normal(const Entities& entities, float dt) {
     // In game only
     if (GameState::get().should_render_timer()) {
@@ -131,6 +232,9 @@ inline void render_normal(const Entities& entities, float dt) {
             render_block_state_change_reason(entity, dt);
         }
     }
+    // TODO move into render timer check
+    render_current_register_queue(dt);
+
     // always
     render_networked_players(entities, dt);
 }

@@ -9,11 +9,18 @@ constexpr int max_queue_size = 3;
 struct HasWaitingQueue : public BaseComponent {
     virtual ~HasWaitingQueue() {}
 
+    [[nodiscard]] size_t num_in_queue() const {
+        return max_queue_size - next_line_position;
+    }
     [[nodiscard]] bool is_full() const { return !has_space(); }
     [[nodiscard]] bool has_space() const {
         return next_line_position < max_queue_size;
     }
     [[nodiscard]] std::shared_ptr<Entity> person(int i) {
+        return ppl_in_line[i];
+    }
+
+    [[nodiscard]] const std::shared_ptr<Entity> person(size_t i) const {
         return ppl_in_line[i];
     }
 
@@ -44,5 +51,8 @@ struct HasWaitingQueue : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+
+        s.value4b(next_line_position);
+        s.container(ppl_in_line);
     }
 };
