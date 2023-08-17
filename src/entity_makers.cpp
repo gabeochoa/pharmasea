@@ -436,6 +436,11 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
             const float amt = 2.f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
+                // TODO check if this new item we incremented to is
+                // enabled
+                // i tried to do this by a sophie fetch but that was causing map
+                // generation to fail (silently)
+
                 owner.get<Indexer>().increment();
                 hasWork.reset_pct();
             }
@@ -835,7 +840,10 @@ void make_customer(Entity& customer, vec2 p, bool has_order) {
         // check if there is already vomit in that spot
         .enable_prevent_duplicates()
         // TODO dynamically set these based on num drinks
-        .set_total(2)
+        // TODO only enable this once you start serving alcohol
+        // TODO should we by default give the mop? or should you be able to
+        // clean by hand but slowly?
+        .set_total(0)
         .set_time_between(5.f);
 }
 
