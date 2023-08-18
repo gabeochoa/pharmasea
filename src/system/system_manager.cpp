@@ -1227,6 +1227,12 @@ void reset_customer_spawner_when_leaving_inround(Entity& entity) {
     entity.get<IsSpawner>().reset_num_spawned();
 }
 
+void reset_register_queue_when_leaving_inround(Entity& entity) {
+    if (entity.is_missing<HasWaitingQueue>()) return;
+    HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
+    hwq.clear();
+}
+
 void reset_customers_that_need_resetting(Entity& entity) {
     if (entity.is_missing<CanOrderDrink>()) return;
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
@@ -1339,6 +1345,10 @@ void SystemManager::process_state_change(
             system_manager::reset_customer_spawner_when_leaving_inround(entity);
             system_manager::reset_max_gen_when_after_deletion(entity);
             system_manager::increment_day_count(entity, dt);
+
+            // I think this will only happen when you debug change round while
+            // customers are already in line, but doesnt hurt to reset
+            system_manager::reset_register_queue_when_leaving_inround(entity);
             // TODO reset haswork's
         });
     }

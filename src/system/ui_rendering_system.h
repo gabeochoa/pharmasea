@@ -91,6 +91,7 @@ inline void render_current_register_queue(float dt) {
     for (int i = 0; i < fmin(num_queue, max_num_cards); i++) {
         if (show_see_more && i == (max_num_cards - 1)) {
             // TODO render see more
+            // only will show if you have num_registers > max_num_cards
             continue;
         }
 

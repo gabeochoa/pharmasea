@@ -10,7 +10,7 @@ struct HasWaitingQueue : public BaseComponent {
     virtual ~HasWaitingQueue() {}
 
     [[nodiscard]] size_t num_in_queue() const {
-        return max_queue_size - next_line_position;
+        return max_queue_size - (max_queue_size - next_line_position);
     }
     [[nodiscard]] bool is_full() const { return !has_space(); }
     [[nodiscard]] bool has_space() const {
@@ -22,6 +22,13 @@ struct HasWaitingQueue : public BaseComponent {
 
     [[nodiscard]] const std::shared_ptr<Entity> person(size_t i) const {
         return ppl_in_line[i];
+    }
+
+    void clear() {
+        for (std::size_t i = 0; i < max_queue_size; ++i) {
+            ppl_in_line[i] = nullptr;
+        }
+        next_line_position = 0;
     }
 
     void erase(int index) {
