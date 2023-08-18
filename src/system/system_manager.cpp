@@ -683,10 +683,22 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 auto& entity = EntityHelper::createEntity();
                 convert_to_type(et, entity, {8, 8});
             } break;
+            case SimpleSyrup: {
+                if (EntityHelper::doesAnyExistWithType(
+                        EntityType::SimpleSyrup)) {
+                    // nothing needed to do
+                    return;
+                }
+                // We dont yet have a spawner for this so just place it on the
+                // ground
+                auto et = EntityType::SimpleSyrup;
+                auto& entity = EntityHelper::createEntity();
+                convert_to_type(et, entity, {8, 8});
+
+            } break;
             // TODO implement for these once thye have spawners
             case Salt:
             case MintLeaf:
-            case SimpleSyrup:
             case Invalid:
             case IceCubes:
             case IceCrushed:
