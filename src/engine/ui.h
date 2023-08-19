@@ -703,7 +703,11 @@ inline ElementResult textfield(const Widget& widget,
 
     // editable text field...
 
-    bool is_invalid = false;  // TODO
+    TextfieldValidationDecisionFlag validationFlag =
+        data.validationFunction ? data.validationFunction(state->buffer.asT())
+                                : TextfieldValidationDecisionFlag::None;
+    bool is_invalid = validation_test(validationFlag,
+                                      TextfieldValidationDecisionFlag::Invalid);
 
     focus::active_if_mouse_inside(widget);
     focus::try_to_grab(widget);
@@ -746,11 +750,14 @@ inline ElementResult textfield(const Widget& widget,
         if (focus::matches(widget.id)) {
             // TODO what does this mean
             if (context->keychar != int()) {
-                // TODO check validation
-
-                state->buffer.asT().append(
-                    std::string(1, (char) context->keychar));
-                changed = true;
+                if (validation_test(
+                        validationFlag,
+                        TextfieldValidationDecisionFlag::StopNewInput)) {
+                } else {
+                    state->buffer.asT().append(
+                        std::string(1, (char) context->keychar));
+                    changed = true;
+                }
             }
 
             if (context->pressed(InputName::WidgetBackspace) ||
@@ -769,8 +776,6 @@ inline ElementResult textfield(const Widget& widget,
                     std::string post_paste(state->buffer.asT());
                     post_paste.append(clipboard);
 
-                    // TODO run validation
-
                     // TODO we should paste the amount that fits. but we
                     // dont know what the max length actually is, so we
                     // would need to remove one letter at a time until we
@@ -778,10 +783,9 @@ inline ElementResult textfield(const Widget& widget,
 
                     // TODO we probably should give some kind of visual
                     // error to the user that you cant paste right now
-                    // bool should_append = !validation_test(
-                    // vflag, TextfieldValidationDecisionFlag::StopNewInput);
-
-                    bool should_append = true;
+                    bool should_append = !validation_test(
+                        validationFlag,
+                        TextfieldValidationDecisionFlag::StopNewInput);
 
                     // commit the copy-paste
                     if (should_append) state->buffer.asT() = post_paste;
