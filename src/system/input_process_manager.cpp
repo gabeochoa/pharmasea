@@ -186,6 +186,8 @@ void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
     // Theres no players not in game menu state,
     const menu::State state = menu::State::Game;
 
+    // TODO right now when you press two at the same time you move faster
+    // TODO right now player can only move in 8 directions
     float left, right, up, down;
 
     float key_left = KeyMap::is_event(state, InputName::PlayerLeft);

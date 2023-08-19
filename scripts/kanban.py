@@ -33,9 +33,9 @@ for line in lines:
 ## remove backlog
 
 
-skip_col = ["backlog", "want for mvp"]
+skip_col = ["backlog", "infra changes", "no repro", "done"]
 
-columns = filter(lambda x: x.name not in skip_col, columns)
+columns = [col for col in columns if col.name not in skip_col]
 
 #### now we just output the table
 

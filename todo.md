@@ -6,6 +6,12 @@ kanban-plugin: basic
 
 ## backlog
 
+- [ ] button hover state color change
+- [ ] WARN: need a way to warn that UI elements are offscreen "purpling"
+- [ ] Add "powered by raylib" intro card (and other intro cards) like cat v roomba: https://github.com/raysan5/raylib-games/tree/master/cat_vs_roomba/src
+- [ ] Create Doors
+- [ ] Add a pause menu with textual options
+- [ ] Add system for exporting resources to code for easier binary packaging ([see branch packager](https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html))
 - [ ] Create Nav mesh for "walkability"
 - [ ] Add some way for entities to subscribe to certain keys so we can more easily keep track of what keys are being requested over lifetime
 - [ ] Fix corner walls
@@ -27,61 +33,45 @@ kanban-plugin: basic
 - [ ] Ability to poll a specific folder for new / changed files
 
 
-## want for mvp
+## infra changes
 
-- [ ] Add system for exporting resources to code for easier binary packaging ([see branch packager](https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html))
-- [ ] Add a pause menu with textual options
-- [ ] Create Doors
-- [ ] Add "powered by raylib" intro card (and other intro cards) like cat v roomba: https://github.com/raysan5/raylib-games/tree/master/cat_vs_roomba/src
-- [ ] Better settings page
-- [ ] WARN: need a way to warn that UI elements are offscreen "purpling"
-- [ ] button hover state color change
-- [ ] BUG: When host opens settings, probably dont bring everyone else too
-- [ ] BUG: Hide pause buttons from non-host since they dont really do anything anyway
+- [ ] collision for player to change to cylinder
+- [ ] pressing two movement at the same time while moving camera sometimes feels weird
 - [ ] In pause menu, remap key bindings in layer for arrows keys to choose options
 
 
-## needed to play once
+## design decisions
+
+- [ ] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade
+- [ ] Simple Syrup doesnt dissapear after one use and its kinda the only one that does that…
+- [ ] During planning its hard to know what each machine it, not obvious
+- [ ] Need a recipe book
+- [ ] revamp the names
+- [ ] penalty if you make too much extra? waste too much ingredients
+- [ ] highlight spots on the map where this thing can go
+- [ ] Text doesnt rotate based on the camera
 
 
+## broke
 
-## in progress
+- [ ] Client player cant change settings because menu::State is being overriden by host
+- [ ] Automatically teleport new players when joining InRound / Planning etc
+- [ ] default language is reverse which is confusing
+- [ ] PS4 Controller touchpad causing “mouse camera rotation”<br>clicking the touchpad & analog stick in the opposite direction cam rotates that way
+- [ ] - bug where you cant place the table next to the register<br>- => (i’ve disable bounds checking on placement for now)
+- [ ] at round 3 the people got stuck in line as if there was an invis person at the front
+- [ ] BUG: Hide pause buttons from non-host since they dont really do anything anyway
+- [ ] BUG: When host opens settings, probably dont bring everyone else too
 
-- [ ] diagetic UI to lobby screen
-- [ ] placeholder bottle pill filler
-- [ ] Ability to do different shaders between gaming and menu
-- [ ] Need a build system to output producuction build
 
+## no repro
 
-## blocked
-
-- [ ] dropdown needs scrollbar when subwindow goes offscreen
-- [ ] Support for "windows" or "modals" in ui framework
-- [ ] highlight furniture under selection
+- [ ] cosmopolitan model is invisible
 
 
 ## done
 
-**Complete**
-- [x] pill bottle barrel
-- [x] Magic Enum? https://github.com/Neargye/magic_enum
-- [x] change UI from in world to render-to-texture
-- [x] Add ailments for customers
-- [x] bag box to get paper bags from
-- [x] Put all things that have to be loaded in a single place
-- [x] resolution switcher to settings page
-- [x] Disallow target cube from going outside of bounds
-- [x] Refactor Library to be more generic
-- [x] add diagonal facing direction
-- [x] Add easy-to-use UI buttons
-- [x] Better state management for AI
-- [x] Allow an Entity to pick up / drop an Item
-- [x] Fix A\* algorithm
-- [x] Allow for an Item to be walkable or not (influences Entity movement)
-- [x] Add new target entity that moves via arrows keys / alternative keys
-- [x] Paint front-facing indicator (another cube, different color face, some shape)
-- [x] When Entities change direction, change the front-facing indicator to face the direction they're moving
-- [x] When Entities change direction, change the location of any held item to face the direction they're moving
+- [x] fix trash model location
 
 
 

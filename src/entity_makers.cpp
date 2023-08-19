@@ -679,6 +679,8 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
 void make_simple_syrup(Item& simple_syrup, vec2 pos) {
     make_item(simple_syrup, {.type = EntityType::SimpleSyrup}, pos);
 
+    // TODO right now this is the only ingredient that doesnt have a spawner
+    // but also doesnt get destroyed after one use
     simple_syrup
         .addComponent<AddsIngredient>(
             [](Entity&) { return Ingredient::SimpleSyrup; })

@@ -25,6 +25,10 @@ Consider Looking Into:
 - https://github.com/eyalz800/zpp_bits 
 
 
+Save Files get stored to:  
+- Mac: "/Users/<user>/Library/Application Support/pharmasea/settings.bin" 
+- Windows: My Documents / My Games / Pharmasea/settings.bin
+
 
 Info about the todo chart
 - full raw data is in todo.md and managed by obsidian
@@ -34,18 +38,16 @@ Info about the todo chart
 
 ## TODOs  
 
-|needed to play once|in progress|blocked|done|
-|-------------------|-----------|-------|----|
-| |diagetic UI to lobby screen|dropdown needs scrollbar when subwindow goes offscreen|pill bottle barrel|
-| |placeholder bottle pill filler|Support for "windows" or "modals" in ui framework|Magic Enum? https://github.com/Neargye/magic_enum|
-| |Ability to do different shaders between gaming and menu|highlight furniture under selection|change UI from in world to render-to-texture|
-| |Need a build system to output producuction build| |Add ailments for customers|
-| | | |bag box to get paper bags from|
-| | | |Put all things that have to be loaded in a single place|
-| | | |resolution switcher to settings page|
-| | | |Disallow target cube from going outside of bounds|
-| | | |Refactor Library to be more generic|
-| | | |add diagonal facing direction|
+|design decisions|broke|
+|----------------|-----|
+|hard to tell that a new machine/stockpile has been spawned in after you get an upgrade|Client player cant change settings because menu::State is being overriden by host|
+|Simple Syrup doesnt dissapear after one use and its kinda the only one that does that…|Automatically teleport new players when joining InRound / Planning etc|
+|During planning its hard to know what each machine it, not obvious|default language is reverse which is confusing|
+|Need a recipe book|PS4 Controller touchpad causing “mouse camera rotation”<br>clicking the touchpad & analog stick in the opposite direction cam rotates that way|
+|revamp the names|- bug where you cant place the table next to the register<br>- => (i’ve disable bounds checking on placement for now)|
+|penalty if you make too much extra? waste too much ingredients|at round 3 the people got stuck in line as if there was an invis person at the front|
+|highlight spots on the map where this thing can go|BUG: Hide pause buttons from non-host since they dont really do anything anyway|
+|Text doesnt rotate based on the camera|BUG: When host opens settings, probably dont bring everyone else too|
 
 ## End TODO 
 
