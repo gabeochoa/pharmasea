@@ -11,6 +11,7 @@
 //
 #include "../engine/toastmanager.h"
 #include "../network/network.h"
+#include "../ui.h"
 
 using namespace ui;
 
@@ -96,64 +97,7 @@ struct NetworkLayer : public Layer {
         if (MenuState::get().is_not(menu::State::Network)) return;
         // if we get here, then user clicked "join"
     }
-
-    void draw_username() {
-        auto content = ui::components::mk_row();
-        div(*content);
-        ui_context->push_parent(content);
-        {
-            text(*ui::components::mk_text(),
-                 fmt::format("{}: {}", text_lookup(strings::i18n::USERNAME),
-                             Settings::get().data.username));
-            if (button(*ui::components::mk_icon_button(MK_UUID(id, ROOT_ID)),
-                       text_lookup(strings::i18n::EDIT))) {
-                network_info->unlock_username();
-            }
-        }
-        ui_context->pop_parent();
-    }
-
-    void draw_base_screen() {
-        auto content = ui::components::mk_row();
-        div(*content);
-        ui_context->push_parent(content);
-        {
-            auto col1 = ui::components::mk_column();
-            div(*col1);
-            ui_context->push_parent(col1);
-            {
-                padding(*ui::components::mk_but_pad());
-                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                           text_lookup(strings::i18n::HOST))) {
-                    network_info->set_role(network::Info::Role::s_Host);
-                }
-                padding(*ui::components::mk_but_pad());
-                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                           text_lookup(strings::i18n::JOIN))) {
-                    network_info->set_role(network::Info::Role::s_Client);
-                }
-                padding(*ui::components::mk_but_pad());
-                if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                           text_lookup(strings::i18n::BACK_BUTTON))) {
-                    MenuState::get().clear_history();
-                    MenuState::get().set(menu::State::Root);
-                }
-            }
-            ui_context->pop_parent();
-
-            padding(*ui::components::mk_but_pad());
-
-            auto col2 = ui::components::mk_column();
-            div(*col2);
-            ui_context->push_parent(col2);
-            {
-                //
-                draw_username();
-            }
-            ui_context->pop_parent();
-        }
-        ui_context->pop_parent();
-    }
+    /*
 
     void draw_ip_input_screen() {
         draw_username();
@@ -191,71 +135,6 @@ struct NetworkLayer : public Layer {
         }
     }
 
-    void draw_connected_screen() {
-        auto draw_host_network_info = [&]() {
-            if (network_info->is_host()) {
-                auto content = ui_context->own(
-                    Widget({.mode = Children, .strictness = 1.f},
-                           {.mode = Children, .strictness = 1.f}, Row));
-                div(*content);
-                ui_context->push_parent(content);
-                {
-                    auto ip =
-                        should_show_host_ip ? my_ip_address : "***.***.***.***";
-                    text(*ui::components::mk_text(),
-                         fmt::format("Your IP is: {}", ip));
-                    auto checkbox_widget = ui_context->own(
-                        Widget(MK_UUID(id, ROOT_ID), Size_Px(75.f, 0.5f),
-                               Size_Px(25.f, 1.f)));
-                    std::string show_hide_host_ip_text =
-                        should_show_host_ip
-                            ? text_lookup(strings::i18n::HIDE_IP)
-                            : text_lookup(strings::i18n::SHOW_IP);
-                    if (checkbox(*checkbox_widget, &should_show_host_ip,
-                                 &show_hide_host_ip_text)) {
-                    }
-                    if (button(*ui::components::mk_icon_button(
-                                   MK_UUID(id, ROOT_ID)),
-                               text_lookup(strings::i18n::COPY_IP))) {
-                        ext::set_clipboard_text(my_ip_address.c_str());
-                    }
-                }
-                ui_context->pop_parent();
-            }
-            // TODO add button to edit as long as you arent currently
-            // hosting people?
-            draw_username();
-        };
-
-        for (auto kv : network_info->client->remote_players) {
-            // TODO figure out why there are null rps
-            if (!kv.second) continue;
-            auto player_text = ui_context->own(
-                Widget(MK_UUID_LOOP(id, ROOT_ID, kv.first),
-                       Size_Px(120.f, 0.5f), Size_Px(100.f, 1.f)));
-            text(*player_text,
-                 fmt::format("{}({})", kv.second->get<HasName>().name(),
-                             kv.first));
-        }
-
-        if (network_info->is_host()) {
-            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       text_lookup(strings::i18n::START))) {
-                MenuState::get().set(menu::State::Game);
-                GameState::get().set(game::State::Lobby);
-            }
-            padding(*ui::components::mk_but_pad());
-        }
-
-        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                   text_lookup(strings::i18n::DISCONNECT))) {
-            network_info.reset(new network::Info());
-        }
-
-        padding(*ui::components::mk_but_pad());
-
-        draw_host_network_info();
-    }
 
     void draw_username_picker() {
         auto username_input = ui_context->own(
@@ -288,24 +167,7 @@ struct NetworkLayer : public Layer {
             MenuState::get().go_back();
         }
     }
-
-    void draw_screen_selector_logic() {
-        if (network_info->missing_username()) {
-            draw_username_picker();
-            return;
-        }
-
-        if (network_info->missing_role()) {
-            draw_base_screen();
-            return;
-        }
-
-        if (network_info->has_set_ip()) {
-            draw_connected_screen();
-            return;
-        }
-        draw_ip_input_screen();
-    }
+    */
 
     void handle_announcements() {
         if (!network_info->client) return;
@@ -318,43 +180,299 @@ struct NetworkLayer : public Layer {
         network_info->client->announcements.clear();
     }
 
+    void draw_username_picker(float dt) {
+        ext::clear_background(ui_context->active_theme().background);
+
+        using namespace xui;
+
+        begin(ui_context, dt);
+        int id = 0;
+
+        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+        auto content = rect::tpad(window, 30);
+
+        auto [username, controls] = rect::vsplit(content, 20);
+
+        auto [label, name, lock, back] = rect::hsplit<4>(username);
+
+        text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+             text_lookup(strings::i18n::USERNAME));
+
+        text(xui::Widget{.id = id++, .z_index = 0, .rect = name},
+             Settings::get().data.username);
+
+        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = lock},
+                   text_lookup(strings::i18n::LOCK_IN))) {
+            network_info->lock_in_username();
+        }
+
+        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = back},
+                   text_lookup(strings::i18n::BACK_BUTTON))) {
+            MenuState::get().go_back();
+        }
+
+        end();
+    }
+
+    void draw_role_selector_screen(float dt) {
+        ext::clear_background(ui_context->active_theme().background);
+
+        using namespace xui;
+
+        begin(ui_context, dt);
+        int id = 0;
+
+        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+        auto content = rect::tpad(window, 30);
+        content = rect::bpad(content, 30);
+
+        auto [buttons, username] = rect::vsplit(content, 40);
+
+        // button
+        {
+            auto [host, join, back] =
+                rect::hsplit<3>(rect::rpad(rect::lpad(buttons, 15), 20), 20);
+
+            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = host},
+                       text_lookup(strings::i18n::HOST))) {
+                network_info->set_role(network::Info::Role::s_Host);
+            }
+            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = join},
+                       text_lookup(strings::i18n::JOIN))) {
+                network_info->set_role(network::Info::Role::s_Client);
+            }
+            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = back},
+                       text_lookup(strings::i18n::BACK_BUTTON))) {
+                MenuState::get().clear_history();
+                MenuState::get().set(menu::State::Root);
+            }
+        }
+
+        {
+            username = rect::bpad(username, 30);
+            auto [label, name, edit] =
+                rect::vsplit<3>(rect::rpad(username, 40));
+
+            text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+                 text_lookup(strings::i18n::USERNAME));
+
+            text(xui::Widget{.id = id++, .z_index = 0, .rect = name},
+                 Settings::get().data.username);
+
+            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = edit},
+                       text_lookup(strings::i18n::EDIT))) {
+                network_info->unlock_username();
+            }
+        }
+
+        end();
+    }
+
+    void draw_connected_screen(float dt) {
+        ext::clear_background(ui_context->active_theme().background);
+
+        using namespace xui;
+
+        begin(ui_context, dt);
+        int id = 0;
+
+        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+        auto content = rect::tpad(window, 30);
+        content = rect::rpad(content, 80);
+        content = rect::lpad(content, 20);
+        content = rect::bpad(content, 80);
+
+        auto [connected_players, buttons, ip_addr, username] =
+            rect::hsplit<4>(content);
+
+        // Draw connected players
+        {
+            auto players = rect::hsplit<4>(connected_players);
+
+            text(xui::Widget{.id = id++, .z_index = 0, .rect = players[0]},
+                 Settings::get().data.username);
+
+            /*
+            for (auto kv : network_info->client->remote_players) {
+                // TODO figure out why there are null rps
+                if (!kv.second) continue;
+                auto player_text = ui_context->own(
+                    Widget(MK_UUID_LOOP(id, ROOT_ID, kv.first),
+                           Size_Px(120.f, 0.5f), Size_Px(100.f, 1.f)));
+                text(*player_text,
+                     fmt::format("{}({})", kv.second->get<HasName>().name(),
+                                 kv.first));
+            }
+            */
+        }
+
+        {
+            buttons = rect::rpad(buttons, 30);
+
+            if (network_info->is_host()) {
+                auto [start, disconnect] = rect::hsplit<2>(buttons);
+
+                if (button(xui::Widget{.id = id++, .z_index = 0, .rect = start},
+                           text_lookup(strings::i18n::START))) {
+                    MenuState::get().set(menu::State::Game);
+                    GameState::get().set(game::State::Lobby);
+                }
+                if (button(
+                        xui::Widget{
+                            .id = id++, .z_index = 0, .rect = disconnect},
+                        text_lookup(strings::i18n::DISCONNECT))) {
+                    network_info.reset(new network::Info());
+                }
+            } else {
+                auto disconnect = buttons;
+                if (button(
+                        xui::Widget{
+                            .id = id++, .z_index = 0, .rect = disconnect},
+                        text_lookup(strings::i18n::DISCONNECT))) {
+                    network_info.reset(new network::Info());
+                }
+            }
+        }
+
+        // your ip is .... show copy
+        {
+            ip_addr = rect::bpad(ip_addr, 50);
+            auto [label, control] = rect::vsplit<2>(ip_addr);
+
+            auto ip = should_show_host_ip ? my_ip_address : "***.***.***.***";
+            text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+                 // TODO not translated
+                 fmt::format("Your IP is: {}", ip));
+
+            auto [check, copy] = rect::vsplit<2>(control);
+
+            // TODO default value wont be setup correctly without this
+            // bool sssb = Settings::get().data.show_streamer_safe_box;
+            if (auto result = checkbox(
+                    xui::Widget{.id = id++, .z_index = 0, .rect = check});
+                result) {
+                should_show_host_ip = !should_show_host_ip;
+            }
+
+            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = copy},
+                       text_lookup(strings::i18n::COPY_IP))) {
+                ext::set_clipboard_text(my_ip_address.c_str());
+            }
+        }
+
+        // TODO add button to edit as long as you arent currently
+        // hosting people?
+        draw_username_with_edit(id, username, dt);
+
+        end();
+    }
+
+    void draw_username_with_edit(int& id, Rectangle parent, float dt) {
+        using namespace xui;
+        auto [label, name, edit] = rect::vsplit<3>(parent);
+
+        text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+             text_lookup(strings::i18n::USERNAME));
+
+        text(xui::Widget{.id = id++, .z_index = 0, .rect = name},
+             Settings::get().data.username);
+
+        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = edit},
+                   text_lookup(strings::i18n::EDIT))) {
+            network_info->unlock_username();
+        }
+    }
+
+    void draw_ip_input_screen(float dt) {
+        ext::clear_background(ui_context->active_theme().background);
+
+        using namespace xui;
+
+        begin(ui_context, dt);
+        int id = 0;
+
+        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+        auto content = rect::tpad(window, 30);
+        content = rect::lpad(content, 20);
+        content = rect::rpad(content, 80);
+
+        auto [username, controls] = rect::hsplit(content, 40);
+
+        draw_username_with_edit(id, username, dt);
+
+        // TODO add showhide button
+
+        // IP addr input
+        auto [ip, buttons, back] = rect::hsplit<3>(controls);
+        {
+            auto [label, control] = rect::vsplit<2>(ip);
+
+            text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+                 // TODO translate
+                 "Enter IP Address");
+
+            if (auto result = textfield(
+                    xui::Widget{.id = id++, .z_index = 0, .rect = control},
+                    TextfieldData{network_info->host_ip_address()});
+                result) {
+                network_info->host_ip_address() = result.as<std::string>();
+            }
+        }
+
+        // Buttons
+        {
+            buttons = rect::rpad(buttons, 50);
+            auto [load_ip, connect] = rect::hsplit<2>(buttons);
+
+            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = load_ip},
+                       text_lookup(strings::i18n::LOAD_LAST_IP))) {
+                network_info->host_ip_address() =
+                    Settings::get().last_used_ip();
+            }
+
+            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = connect},
+                       text_lookup(strings::i18n::CONNECT))) {
+                Settings::get().update_last_used_ip_address(
+                    network_info->host_ip_address());
+                network_info->lock_in_ip();
+            }
+        }
+
+        // Back button
+        {
+            back = rect::rpad(back, 50);
+            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = back},
+                       text_lookup(strings::i18n::BACK_BUTTON))) {
+                MenuState::get().go_back();
+            }
+        }
+
+        end();
+    }
+
     virtual void onDraw(float dt) override {
         // TODO add an overlay that shows who's currently available
         // draw_network_overlay();
 
         if (MenuState::get().is_not(menu::State::Network)) return;
 
-        ui_context->begin(dt);
-
-        ClearBackground(ui_context->active_theme().background);
-
-        auto root = ui::components::mk_root();
-        ui_context->push_parent(root);
-        {
-            auto left_padding = ui_context->own(
-                Widget(Size_Px(100.f, 1.f), Size_Px(WIN_HF(), 1.f)));
-
-            auto content = ui_context->own(Widget(
-                {.mode = Children, .strictness = 1.f},
-                {.mode = Percent, .value = 1.f, .strictness = 1.0f}, Column));
-
-            padding(*left_padding);
-            div(*content);
-            ui_context->push_parent(content);
-            {
-                auto top_padding = ui_context->own(
-                    Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f)));
-                padding(*top_padding);
-                {  //
-                    draw_screen_selector_logic();
-                    handle_announcements();
-                }
-                padding(*ui_context->own(
-                    Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f))));
-            }
-            ui_context->pop_parent();
+        if (network_info->missing_username()) {
+            draw_username_picker(dt);
+            return;
         }
-        ui_context->pop_parent();
-        ui_context->end(root.get());
+
+        if (network_info->missing_role()) {
+            draw_role_selector_screen(dt);
+            return;
+        }
+
+        if (network_info->has_set_ip()) {
+            draw_connected_screen(dt);
+            return;
+        }
+
+        draw_ip_input_screen(dt);
+
+        // handle_announcements();
     }
 };
