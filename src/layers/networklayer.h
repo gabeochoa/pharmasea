@@ -97,77 +97,6 @@ struct NetworkLayer : public Layer {
         if (MenuState::get().is_not(menu::State::Network)) return;
         // if we get here, then user clicked "join"
     }
-    /*
-
-    void draw_ip_input_screen() {
-        draw_username();
-        // TODO add show/hide button for the ip address
-        auto ip_address_input = ui_context->own(Widget(
-            MK_UUID(id, ROOT_ID), Size_Px(400.f, 1.f), Size_Px(25.f, 0.5f)));
-        text(*ui::components::mk_text(), text_lookup(strings::i18n::ENTER_IP));
-        // TODO add trimming of whitespace or validate whitespace
-        textfield(*ip_address_input, network_info->host_ip_address(),
-                  [](const std::string& content) {
-                      // xxx.xxx.xxx.xxx
-                      if (content.size() > 15) {
-                          return TextfieldValidationDecisionFlag::StopNewInput;
-                      }
-                      if (validate_ip(content)) {
-                          return TextfieldValidationDecisionFlag::Valid;
-                      }
-                      return TextfieldValidationDecisionFlag::Invalid;
-                  });
-        padding(*ui::components::mk_but_pad());
-        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                   text_lookup(strings::i18n::LOAD_LAST_IP))) {
-            network_info->host_ip_address() = Settings::get().last_used_ip();
-        }
-        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                   text_lookup(strings::i18n::CONNECT))) {
-            Settings::get().update_last_used_ip_address(
-                network_info->host_ip_address());
-            network_info->lock_in_ip();
-        }
-        padding(*ui::components::mk_but_pad());
-        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                   text_lookup(strings::i18n::BACK_BUTTON))) {
-            network_info->unlock_username();
-        }
-    }
-
-
-    void draw_username_picker() {
-        auto username_input = ui_context->own(
-            Widget(MK_UUID(id, ROOT_ID), Size_Px(400.f, 1.f),
-                   {.mode = Pixels, .value = 25.f, .strictness = 0.5f}));
-
-        auto player_text = ui_context->own(
-            Widget({.mode = Pixels, .value = 120.f, .strictness = 0.5f},
-                   Size_Px(100.f, 1.f)));
-
-        text(*player_text, text_lookup(strings::i18n::USERNAME));
-        // TODO theres a problem where it is constantly saving as you type which
-        // might not be expected
-        textfield(*username_input, Settings::get().data.username,
-                  // TODO probably make a "username validation" function
-                  [](const std::string& content) {
-                      if (content.size() >= network::MAX_NAME_LENGTH) {
-                          return TextfieldValidationDecisionFlag::StopNewInput;
-                      }
-                      return TextfieldValidationDecisionFlag::Valid;
-                  });
-        padding(*ui::components::mk_but_pad());
-        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                   text_lookup(strings::i18n::LOCK_IN))) {
-            network_info->lock_in_username();
-        }
-        padding(*ui::components::mk_but_pad());
-        if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                   text_lookup(strings::i18n::BACK_BUTTON))) {
-            MenuState::get().go_back();
-        }
-    }
-    */
 
     void handle_announcements() {
         if (!network_info->client) return;
@@ -183,15 +112,29 @@ struct NetworkLayer : public Layer {
     void draw_username_picker(float) {
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto content = rect::tpad(window, 30);
+        content = rect::lpad(content, 30);
 
-        auto [username, controls] = rect::vsplit(content, 20);
+        auto [username, controls] = rect::hsplit(content, 20);
 
-        auto [label, name, lock, back] = rect::hsplit<4>(username);
+        username = rect::rpad(username, 50);
+        auto [label, name] = rect::hsplit<2>(username);
+
+        controls = rect::tpad(controls, 50);
+        controls = rect::rpad(controls, 30);
+        auto [lock, back] = rect::hsplit<2>(controls, 20);
 
         text(Widget{label}, text_lookup(strings::i18n::USERNAME));
 
         if (auto result = textfield(
-                Widget{name}, TextfieldData{Settings::get().data.username});
+                Widget{name},
+                TextfieldData{Settings::get().data.username,
+                              [](const std::string& content) {
+                                  if (content.size() >=
+                                      network::MAX_NAME_LENGTH)
+                                      return TextfieldValidationDecisionFlag::
+                                          StopNewInput;
+                                  return TextfieldValidationDecisionFlag::Valid;
+                              }});
             result) {
             Settings::get().data.username = result.as<std::string>();
         }
@@ -205,7 +148,7 @@ struct NetworkLayer : public Layer {
         }
     }
 
-    void draw_role_selector_screen(float dt) {
+    void draw_role_selector_screen(float) {
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto content = rect::tpad(window, 30);
         content = rect::bpad(content, 30);
@@ -364,9 +307,21 @@ struct NetworkLayer : public Layer {
 
             text(Widget{label}, text_lookup(strings::i18n::ENTER_IP));
 
-            if (auto result =
-                    textfield(Widget{control},
-                              TextfieldData{network_info->host_ip_address()});
+            if (auto result = textfield(
+                    Widget{control},
+                    TextfieldData{
+                        network_info->host_ip_address(),
+                        [](const std::string& content) {
+                            // xxx.xxx.xxx.xxx
+                            if (content.size() > 15) {
+                                return TextfieldValidationDecisionFlag::
+                                    StopNewInput;
+                            }
+                            if (validate_ip(content)) {
+                                return TextfieldValidationDecisionFlag::Valid;
+                            }
+                            return TextfieldValidationDecisionFlag::Invalid;
+                        }});
                 result) {
                 network_info->host_ip_address() = result.as<std::string>();
             }
@@ -429,9 +384,7 @@ struct NetworkLayer : public Layer {
         using namespace ui;
 
         begin(ui_context, dt);
-
         draw_screen(dt);
-
         end();
 
         handle_announcements();

@@ -201,12 +201,13 @@ struct DropdownData {
 };
 
 struct CheckboxData {
-    bool selected;
-    std::string content;
+    bool selected = false;
+    std::string content = "";
 };
 
 struct TextfieldData {
-    std::string content;
+    std::string content = "";
+    TextFieldValidationFn validationFunction = {};
 };
 
 struct SliderData {
