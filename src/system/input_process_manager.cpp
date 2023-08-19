@@ -334,6 +334,11 @@ void drop_held_furniture(Entity& player) {
 
     bool can_place = EntityHelper::isWalkable(vec::to2(drop_location));
 
+    // TODO right now this doesnt work
+    // you cant place items back where they spawned originally when the map
+    // generated
+    can_place = true;
+
     if (can_place) {
         hf->get<CanBeHeld>().set_is_being_held(false);
         hf->get<Transform>().update(drop_location);
