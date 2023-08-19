@@ -16,8 +16,11 @@ struct IsItem : public BaseComponent {
         BLENDER = 1 << 5,
         SODA_MACHINE = 1 << 6,
         MOP_HOLDER = 1 << 7,
-
+        TRASH = 1 << 8,
     };
+
+    const static HeldBy NON_DESTRUCTIVE =
+        static_cast<HeldBy>(PLAYER | UNKNOWN_FURNITURE);
 
     virtual ~IsItem() {}
 

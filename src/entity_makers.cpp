@@ -416,6 +416,8 @@ void make_squirter(Entity& squ, vec2 pos) {
 
 void make_trash(Entity& trash, vec2 pos) {
     furniture::make_furniture(trash, {EntityType::Trash}, pos);
+
+    trash.get<CanHoldItem>().update_held_by(IsItem::HeldBy::TRASH);
 }
 
 void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
@@ -687,6 +689,8 @@ void make_simple_syrup(Item& simple_syrup, vec2 pos) {
         .addComponent<AddsIngredient>(
             [](Entity&) { return Ingredient::SimpleSyrup; })
         .set_num_uses(-1);
+
+    simple_syrup.get<IsItem>().set_hb_filter(IsItem::NON_DESTRUCTIVE);
 }
 
 void make_lemon(Item& lemon, vec2 pos, int index) {
