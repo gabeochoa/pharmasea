@@ -311,6 +311,15 @@ inline void handle_tabbing(const Widget& widget) {
     last_processed = widget.id;
 }
 
+inline void reset() {
+    focus_id = ROOT_ID;
+    last_processed = ROOT_ID;
+
+    hot_id = ROOT_ID;
+    active_id = ROOT_ID;
+    ids.clear();
+}
+
 inline void begin() {
     mouse_info = get_mouse_info();
     hot_id = ROOT_ID;
@@ -413,7 +422,13 @@ inline void draw_focus_ring(const Widget& widget) {
 }  // namespace internal
 
 inline void begin(std::shared_ptr<ui::UIContext> ui_context, float dt) {
+    bool new_screen = context ? context->id != ui_context->id : true;
     context = ui_context;
+
+    if (new_screen) {
+        focus::reset();
+    }
+
     focus::begin();
     //
     context->begin(dt);

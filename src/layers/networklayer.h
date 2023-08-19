@@ -325,10 +325,10 @@ struct NetworkLayer : public Layer {
 
         // TODO add button to edit as long as you arent currently
         // hosting people?
-        draw_username_with_edit(id, username, dt);
+        draw_username_with_edit(username, dt);
     }
 
-    void draw_username_with_edit(int& id, Rectangle parent, float dt) {
+    void draw_username_with_edit(Rectangle parent, float dt) {
         using namespace ui;
         auto [label, name, edit] = rect::vsplit<3>(parent);
 
@@ -349,7 +349,7 @@ struct NetworkLayer : public Layer {
 
         auto [username, controls] = rect::hsplit(content, 40);
 
-        draw_username_with_edit(id, username, dt);
+        draw_username_with_edit(username, dt);
 
         // TODO add showhide button
 
@@ -390,7 +390,7 @@ struct NetworkLayer : public Layer {
         {
             back = rect::rpad(back, 50);
             if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON))) {
-                MenuState::get().go_back();
+                network_info->unlock_username();
             }
         }
     }

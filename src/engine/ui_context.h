@@ -250,6 +250,7 @@ struct IUIContextTheming {
     }
 };
 
+static std::atomic_int UICONTEXT_ID = 0;
 struct UIContext;
 static std::shared_ptr<UIContext> _uicontext;
 // TODO do we need both _uicontext and globalContext?
@@ -269,7 +270,9 @@ struct UIContext : public IUIContextInputManager,
     }
 
    public:
-    UIContext() { this->init(); }
+    int id = 0;
+
+    UIContext() : id(UICONTEXT_ID++) { this->init(); }
 
     StateManager statemanager;
 
