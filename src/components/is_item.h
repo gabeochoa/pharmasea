@@ -2,55 +2,48 @@
 
 #pragma once
 
+#include "../entity_type.h"
 #include "base_component.h"
 
 struct IsItem : public BaseComponent {
-    enum HeldBy {
-        ALL = -1,
-        NONE = 0,
-        UNKNOWN = 1 << 0,
-        ITEM = 1 << 1,
-        PLAYER = 1 << 2,
-        UNKNOWN_FURNITURE = 1 << 3,
-        CUSTOMER = 1 << 4,
-        BLENDER = 1 << 5,
-        SODA_MACHINE = 1 << 6,
-        MOP_HOLDER = 1 << 7,
-        TRASH = 1 << 8,
-    };
-
-    const static HeldBy NON_DESTRUCTIVE =
-        static_cast<HeldBy>(PLAYER | UNKNOWN_FURNITURE);
-
     virtual ~IsItem() {}
 
-    void set_held_by(HeldBy hb) { held_by = hb; }
+    void set_held_by(EntityType hb) { held_by = hb; }
 
-    [[nodiscard]] bool is_held_by(HeldBy hb = HeldBy::NONE) const {
-        return held_by == hb;
-    }
+    [[nodiscard]] bool is_held_by(EntityType hb) const { return held_by == hb; }
 
-    [[nodiscard]] bool is_not_held_by(HeldBy hb) const {
+    [[nodiscard]] bool is_not_held_by(EntityType hb) const {
         return !is_held_by(hb);
     }
 
-    [[nodiscard]] bool can_be_held_by(HeldBy hb) const {
-        return hb_filter == ALL ? true : hb_filter & hb;
+    [[nodiscard]] bool can_be_held_by(EntityType hb) const {
+        return hb_filter.test(static_cast<int>(hb));
     }
 
-    IsItem& set_hb_filter(HeldBy hb) {
+    IsItem& set_hb_filter(const EntityType& type) {
+        hb_filter.set(static_cast<int>(type));
+        return *this;
+    }
+
+    IsItem& remove_hb_filter(const EntityType& type) {
+        hb_filter.reset(static_cast<int>(type));
+        return *this;
+    }
+
+    IsItem& set_hb_filter(const EntityTypeSet& hb) {
         hb_filter = hb;
         return *this;
     }
 
     [[nodiscard]] bool is_held() const {
         // TODO might need to do something more sophisticated
-        return held_by != HeldBy::NONE;
+        return held_by != EntityType::Unknown;
     }
 
    private:
-    HeldBy held_by = NONE;
-    HeldBy hb_filter = ALL;
+    EntityType held_by = EntityType::Unknown;
+    // Default to all
+    EntityTypeSet hb_filter = EntityTypeSet().set();
 
     friend bitsery::Access;
     template<typename S>

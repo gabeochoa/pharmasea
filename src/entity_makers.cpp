@@ -11,6 +11,7 @@
 #include "engine/ui_color.h"
 #include "engine/util.h"
 #include "entity.h"
+#include "entity_type.h"
 #include "network/server.h"
 //
 #include "components/adds_ingredient.h"
@@ -106,7 +107,7 @@ void add_person_components(Entity& person) {
     });
 
     person.addComponent<CanBeTakenFrom>().update(false);
-    person.addComponent<CanHoldItem>(IsItem::HeldBy::PLAYER);
+    person.addComponent<CanHoldItem>(EntityType::Player);
     person.addComponent<CanBePushed>();
 
     person.addComponent<HasBaseSpeed>().update(10.f);
@@ -217,7 +218,7 @@ void make_furniture(Entity& furniture, const DebugOptions& options, vec2 pos,
     // Walls should not have these
     if (!is_static) {
         furniture.addComponent<IsRotatable>();
-        furniture.addComponent<CanHoldItem>(IsItem::HeldBy::UNKNOWN_FURNITURE);
+        furniture.addComponent<CanHoldItem>(options.type);
         // These two are the heavy ones
         furniture.addComponent<CanBeHeld>();
         furniture.addComponent<CanBeHighlighted>();
@@ -416,8 +417,6 @@ void make_squirter(Entity& squ, vec2 pos) {
 
 void make_trash(Entity& trash, vec2 pos) {
     furniture::make_furniture(trash, {EntityType::Trash}, pos);
-
-    trash.get<CanHoldItem>().update_held_by(IsItem::HeldBy::TRASH);
 }
 
 void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
@@ -483,15 +482,12 @@ void make_soda_machine(Entity& soda_machine, vec2 pos) {
                                   pos, EntityType::SodaSpout);
     soda_machine.addComponent<HasRopeToItem>();
     soda_machine.get<IsItemContainer>().set_max_generations(1);
-    soda_machine.get<CanHoldItem>()
-        .update_held_by(IsItem::HeldBy::SODA_MACHINE)
-        .set_filter(
-            EntityFilter()
-                .set_enabled_flags(EntityFilter::FilterDatumType::Name)
-                .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
-                                           EntityType::SodaSpout)
-                .set_filter_strength(
-                    EntityFilter::FilterStrength::Requirement));
+    soda_machine.get<CanHoldItem>().set_filter(
+        EntityFilter()
+            .set_enabled_flags(EntityFilter::FilterDatumType::Name)
+            .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
+                                       EntityType::SodaSpout)
+            .set_filter_strength(EntityFilter::FilterStrength::Requirement));
 }
 
 // TODO what happens if the day ends and you are holding the mop still?
@@ -500,15 +496,12 @@ void make_mop_holder(Entity& mop_holder, vec2 pos) {
                                   DebugOptions{.type = EntityType::MopHolder},
                                   pos, EntityType::Mop);
     mop_holder.get<IsItemContainer>().set_max_generations(1);
-    mop_holder.get<CanHoldItem>()
-        .update_held_by(IsItem::HeldBy::MOP_HOLDER)
-        .set_filter(
-            EntityFilter()
-                .set_enabled_flags(EntityFilter::FilterDatumType::Name)
-                .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
-                                           EntityType::Mop)
-                .set_filter_strength(
-                    EntityFilter::FilterStrength::Requirement));
+    mop_holder.get<CanHoldItem>().set_filter(
+        EntityFilter()
+            .set_enabled_flags(EntityFilter::FilterDatumType::Name)
+            .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
+                                       EntityType::Mop)
+            .set_filter_strength(EntityFilter::FilterStrength::Requirement));
 }
 
 void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
@@ -529,7 +522,6 @@ void make_blender(Entity& blender, vec2 pos) {
     furniture::make_furniture(blender,
                               DebugOptions{.type = EntityType::Blender}, pos,
                               ui::color::red, ui::color::yellow);
-    blender.get<CanHoldItem>().update_held_by(IsItem::HeldBy::BLENDER);
 }
 
 // This will be a catch all for anything that just needs to get updated
@@ -592,8 +584,9 @@ void make_item(Item& item, const DebugOptions& options, vec2 p) {
 void make_soda_spout(Item& soda_spout, vec2 pos) {
     make_item(soda_spout, {.type = EntityType::SodaSpout}, pos);
 
-    soda_spout.get<IsItem>().set_hb_filter(IsItem::HeldBy::SODA_MACHINE |
-                                           IsItem::HeldBy::PLAYER);
+    soda_spout.get<IsItem>()
+        .set_hb_filter(EntityType::SodaMachine)
+        .set_hb_filter(EntityType::Player);
 
     // TODO :SODAWAND: right now theres no good way to change what is selected
     // in the soda wand, id like to have it automatically figure it out but it
@@ -606,8 +599,9 @@ void make_soda_spout(Item& soda_spout, vec2 pos) {
 void make_mop(Item& mop, vec2 pos) {
     make_item(mop, {.type = EntityType::Mop}, pos);
 
-    mop.get<IsItem>().set_hb_filter(IsItem::HeldBy::MOP_HOLDER |
-                                    IsItem::HeldBy::PLAYER);
+    mop.get<IsItem>()
+        .set_hb_filter(EntityType::MopHolder)
+        .set_hb_filter(EntityType::Player);
 }
 
 // Returns true if item was cleaned up
@@ -690,7 +684,11 @@ void make_simple_syrup(Item& simple_syrup, vec2 pos) {
             [](Entity&) { return Ingredient::SimpleSyrup; })
         .set_num_uses(-1);
 
-    simple_syrup.get<IsItem>().set_hb_filter(IsItem::NON_DESTRUCTIVE);
+    // Since theres only one of these and its inf uses, dont let it get deleted
+    simple_syrup.get<IsItem>()
+        .set_hb_filter(ETS_NON_DESTRUCTIVE)
+        // TODO create a class of objects that "do work"
+        .remove_hb_filter(EntityType::Blender);
 }
 
 void make_lemon(Item& lemon, vec2 pos, int index) {
@@ -748,7 +746,7 @@ void make_lemon(Item& lemon, vec2 pos, int index) {
         // TODO we shouldnt blindly increment type but in this case its
         // okay i guess
 
-        if (ii.is_not_held_by(IsItem::HeldBy::BLENDER)) {
+        if (ii.is_not_held_by(EntityType::Blender)) {
             hasWork.reset_pct();
             return;
         }
@@ -961,6 +959,10 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::Lemon:
         case EntityType::Mop:
             log_warn("{} cant be created through 'convert_to_type'",
+                     entity_type);
+            break;
+        case EntityType::MAX_ENTITY_TYPE:
+            log_warn("{} should not be tried to create at all tbh",
                      entity_type);
             break;
     }

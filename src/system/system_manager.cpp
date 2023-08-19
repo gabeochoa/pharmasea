@@ -1130,7 +1130,7 @@ void process_has_rope(Entity& entity, float) {
     std::shared_ptr<Item> item;
     for (auto p : extended_path) {
         item = EntityHelper::createItem(EntityType::SodaSpout, p);
-        item->get<IsItem>().set_held_by(IsItem::HeldBy::PLAYER);
+        item->get<IsItem>().set_held_by(EntityType::Player);
         item->addComponent<IsSolid>();
         hrti.add(item);
     }

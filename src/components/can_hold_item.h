@@ -13,8 +13,8 @@
 #include "is_item.h"
 
 struct CanHoldItem : public BaseComponent {
-    CanHoldItem() : held_by(IsItem::HeldBy::UNKNOWN), filter(EntityFilter()) {}
-    CanHoldItem(IsItem::HeldBy hb) : held_by(hb), filter(EntityFilter()) {}
+    CanHoldItem() : held_by(EntityType::Unknown), filter(EntityFilter()) {}
+    CanHoldItem(EntityType hb) : held_by(hb), filter(EntityFilter()) {}
 
     virtual ~CanHoldItem() {}
 
@@ -42,7 +42,7 @@ struct CanHoldItem : public BaseComponent {
 
         held_item = item;
         if (held_item) held_item->get<IsItem>().set_held_by(held_by);
-        if (held_item && held_by == IsItem::HeldBy::UNKNOWN) {
+        if (held_item && held_by == EntityType::Unknown) {
             log_warn(
                 "We never had our HeldBy set, so we are holding {}{}  by "
                 "UNKNOWN",
@@ -80,7 +80,7 @@ struct CanHoldItem : public BaseComponent {
         return true;
     }
 
-    CanHoldItem& update_held_by(IsItem::HeldBy hb) {
+    CanHoldItem& update_held_by(EntityType hb) {
         held_by = hb;
         return *this;
     }
@@ -90,7 +90,7 @@ struct CanHoldItem : public BaseComponent {
 
    private:
     std::shared_ptr<Entity> held_item = nullptr;
-    IsItem::HeldBy held_by;
+    EntityType held_by;
     EntityFilter filter;
 
     friend bitsery::Access;

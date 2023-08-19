@@ -40,7 +40,7 @@
         other != nullptr &&
         // Entity is item and held by player
         entity->has<IsItem>() &&
-        entity->get<IsItem>().is_held_by(IsItem::HeldBy::PLAYER) &&
+        entity->get<IsItem>().is_held_by(EntityType::Player) &&
         // Entity is rope
         check_type(*entity, EntityType::SodaSpout) &&
         // we are a player that is holding rope
