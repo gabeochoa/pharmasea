@@ -180,7 +180,7 @@ struct NetworkLayer : public Layer {
         network_info->client->announcements.clear();
     }
 
-    void draw_username_picker(float dt) {
+    void draw_username_picker(float) {
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto content = rect::tpad(window, 30);
 
@@ -190,7 +190,11 @@ struct NetworkLayer : public Layer {
 
         text(Widget{label}, text_lookup(strings::i18n::USERNAME));
 
-        text(Widget{name}, Settings::get().data.username);
+        if (auto result = textfield(
+                Widget{name}, TextfieldData{Settings::get().data.username});
+            result) {
+            Settings::get().data.username = result.as<std::string>();
+        }
 
         if (button(Widget{lock}, text_lookup(strings::i18n::LOCK_IN))) {
             network_info->lock_in_username();
@@ -430,6 +434,6 @@ struct NetworkLayer : public Layer {
 
         end();
 
-        // handle_announcements();
+        handle_announcements();
     }
 };
