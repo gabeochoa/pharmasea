@@ -348,8 +348,12 @@ struct NetworkLayer : public Layer {
 
             // TODO default value wont be setup correctly without this
             // bool sssb = Settings::get().data.show_streamer_safe_box;
+            std::string show_hide_host_ip_text =
+                should_show_host_ip ? text_lookup(strings::i18n::HIDE_IP)
+                                    : text_lookup(strings::i18n::SHOW_IP);
             if (auto result = checkbox(
-                    xui::Widget{.id = id++, .z_index = 0, .rect = check});
+                    xui::Widget{.id = id++, .z_index = 0, .rect = check},
+                    TextfieldData{.content = show_hide_host_ip_text});
                 result) {
                 should_show_host_ip = !should_show_host_ip;
             }
@@ -408,8 +412,7 @@ struct NetworkLayer : public Layer {
             auto [label, control] = rect::vsplit<2>(ip);
 
             text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
-                 // TODO translate
-                 "Enter IP Address");
+                 text_lookup(strings::i18n::ENTER_IP));
 
             if (auto result = textfield(
                     xui::Widget{.id = id++, .z_index = 0, .rect = control},
