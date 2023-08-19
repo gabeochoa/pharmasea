@@ -114,7 +114,7 @@ struct MenuLayer : public Layer {
         ui_context->push_parent(third_col);
         {
             padding(*ui::components::mk_padding(
-                Size_Pct(1.f, 0.f), Size_Px(WIN_HF() - 150.f, 1.f)));
+                Size_Pct(1.f, 0.f), Size_Px(WIN_HF() - 333.f, 1.f)));
 
             auto button = ui::components::mk_button(MK_UUID(id, ROOT_ID),
                                                     Size_Pct(0.05f, 1.f),
@@ -122,6 +122,15 @@ struct MenuLayer : public Layer {
 
             if (image_button(*button, "discord")) {
                 util::open_url(strings::urls::DISCORD);
+            }
+
+            auto button2 = ui::components::mk_button(MK_UUID(id, ROOT_ID),
+                                                     Size_Pct(0.05f, 1.f),
+                                                     Size_Pct(0.075f, 1.f));
+
+            // TODO chose the right color based on the theme
+            if (image_button(*button2, "itch-white")) {
+                util::open_url(strings::urls::ITCH);
             }
         }
         ui_context->pop_parent();

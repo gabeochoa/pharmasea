@@ -243,8 +243,9 @@ constexpr const char* NEXT_ROUND_COUNTDOWN = "Next Round Starting In";
 namespace urls {
 
 constexpr const char* DISCORD = "https://ochoag.com/discord.html";
+constexpr const char* ITCH = "https://ochoag.com/pp-download.html";
 
-}
+}  // namespace urls
 
 }  // namespace strings
 
