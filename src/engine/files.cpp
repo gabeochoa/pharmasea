@@ -44,7 +44,7 @@ bool Files::ensure_game_folder_exists() {
     if (fs::exists(fld)) {
         return true;
     }
-    bool created = fs::create_directory(fld);
+    bool created = fs::create_directories(fld);
     if (created) {
         log_info("Created Game Folder: {}", fld);
         return true;
