@@ -382,6 +382,8 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
         ourCHF.update(closest_furniture);
         ourCHF.furniture()->get<CanBeHeld>().set_is_being_held(true);
 
+        EntityHelper::invalidatePathCache();
+
         // TODO
         // NOTE: we want to remove the furniture ONLY from the nav mesh
         //       when picked up because then AI can walk through,
