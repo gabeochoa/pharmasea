@@ -3,6 +3,7 @@
 
 #include "../engine.h"
 #include "../external_include.h"
+#include "../ui.h"
 
 using namespace ui;
 
@@ -47,53 +48,34 @@ struct BasePauseLayer : public Layer {
         // NOTE: We specifically dont clear background
         // because people are used to pause menu being an overlay
 
-        ui_context->begin(dt);
+        using namespace xui;
+        begin(ui_context, dt);
+        int id = 0;
 
-        auto root = ui_context->own(Widget(
-            Size_Px(WIN_WF(), 1.f), Size_Px(WIN_HF(), 1.f), GrowFlags::Row));
+        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+        auto body = rect::tpad(window, 20);
 
-        ui_context->push_parent(root);
-        {
-            auto left_padding = ui_context->own(
-                Widget(Size_Px(100.f, 1.f), Size_Px(WIN_HF(), 1.f)));
+        auto [continue_button, settings, config, quit] = rect::hsplit<4>(body);
 
-            auto content =
-                ui_context->own(Widget({.mode = Children, .strictness = 1.f},
-                                       Size_Pct(1.f, 1.f), Column));
-
-            padding(*left_padding);
-            div(*content);
-            ui_context->push_parent(content);
-            {
-                auto top_padding = ui_context->own(
-                    Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f)));
-                padding(*top_padding);
-                {
-                    if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                               text_lookup(strings::i18n::CONTINUE))) {
-                        GameState::get().go_back();
-                    }
-                    if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                               text_lookup(strings::i18n::SETTINGS))) {
-                        MenuState::get().set(menu::State::Settings);
-                    }
-                    if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                               "RELOAD CONFIGS")) {
-                        Preload::get().reload_config();
-                    }
-                    if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                               text_lookup(strings::i18n::QUIT))) {
-                        MenuState::get().reset();
-                        GameState::get().reset();
-                    }
-                }
-                padding(*ui_context->own(
-                    Widget(Size_Px(100.f, 1.f), Size_Pct(1.f, 0.f))));
-            }
-            ui_context->pop_parent();
+        if (button(
+                xui::Widget{.id = id++, .z_index = 0, .rect = continue_button},
+                text_lookup(strings::i18n::CONTINUE))) {
+            GameState::get().go_back();
         }
-        ui_context->pop_parent();
-        ui_context->end(root.get());
+        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = settings},
+                   text_lookup(strings::i18n::SETTINGS))) {
+            MenuState::get().set(menu::State::Settings);
+        }
+        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = config},
+                   "RELOAD CONFIGS")) {
+            Preload::get().reload_config();
+        }
+        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = quit},
+                   text_lookup(strings::i18n::QUIT))) {
+            MenuState::get().reset();
+            GameState::get().reset();
+        }
+        end();
     }
 };
 
