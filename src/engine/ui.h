@@ -209,9 +209,14 @@ struct TextfieldData {
     std::string content;
 };
 
+struct SliderData {
+    bool vertical = false;
+    float value = 0.f;
+};
+
 // TODO theoretically this should probably match the types that go into init<>
 typedef std::variant<std::string, bool, float, CheckboxData, TextfieldData,
-                     DropdownData>
+                     SliderData, DropdownData>
     InputDataSource;
 
 static std::atomic_int WIDGET_ID = 0;
@@ -548,11 +553,13 @@ inline ElementResult checkbox(const Widget& widget,
     return ElementResult{state->on.changed_since, state->on};
 }
 
-inline ElementResult slider(const Widget& widget, bool vertical = false) {
+inline ElementResult slider(const Widget& widget, const SliderData& data = {}) {
     // TODO be able to scroll this bar with the scroll wheel
     auto state = context->widget_init<ui::SliderState>(
         ui::MK_UUID(widget.id, widget.id));
+    bool vertical = data.vertical;
     bool changed_previous_frame = state->value.changed_since;
+    state->value = data.value;
     state->value.changed_since = false;
 
     focus::active_if_mouse_inside(widget);

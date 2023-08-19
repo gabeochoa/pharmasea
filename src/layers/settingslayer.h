@@ -106,7 +106,10 @@ struct SettingsLayer : public Layer {
                 control = rect::rpad(control, 30);
 
                 text(Widget{label}, text_lookup(strings::i18n::MASTER_VOLUME));
-                if (auto result = slider(Widget{control}); result) {
+                if (auto result =
+                        slider(Widget{control},
+                               {.value = Settings::get().data.master_volume});
+                    result) {
                     Settings::get().update_master_volume(result.as<float>());
                 }
             }
@@ -116,7 +119,10 @@ struct SettingsLayer : public Layer {
                 control = rect::rpad(control, 30);
 
                 text(Widget{label}, text_lookup(strings::i18n::MUSIC_VOLUME));
-                if (auto result = slider(Widget{control}); result) {
+                if (auto result =
+                        slider(Widget{control},
+                               {.value = Settings::get().data.music_volume});
+                    result) {
                     Settings::get().update_music_volume(result.as<float>());
                 }
             }
