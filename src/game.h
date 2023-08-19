@@ -44,6 +44,8 @@
 #include "layers/toastlayer.h"
 #include "layers/versionlayer.h"
 
+extern ui::UITheme DEFAULT_THEME;
+
 //
 // This one should be last
 #include "./tests/all_tests.h"

@@ -4,10 +4,15 @@
 #include <istream>
 
 #include "dataclass/ingredient.h"
+#include "engine/ui_theme.h"
 #include "recipe_library.h"
 
 int LOG_LEVEL = 2;
 std::vector<std::string> EXAMPLE_MAP;
+
+namespace ui {
+UITheme DEFAULT_THEME = UITheme();
+}
 
 auto Preload::load_json_config_file(
     const char* filename,
@@ -42,14 +47,38 @@ auto Preload::load_json_config_file(
 }
 
 void Preload::load_config() {
-    load_json_config_file("settings.json", [](const nlohmann::json& contents) {
-        LOG_LEVEL = contents.value("LOG_LEVEL", 2);
-        std::cout << "LOG_LEVEL read from file: " << LOG_LEVEL << std::endl;
+    const auto _to_color =
+        [](const nlohmann::basic_json<>::value_type value_type) -> Color {
+        return Color{
+            value_type[0].get<unsigned char>(),
+            value_type[1].get<unsigned char>(),
+            value_type[2].get<unsigned char>(),
+            value_type[3].get<unsigned char>(),
+        };
+    };
 
-        EXAMPLE_MAP = contents["DEFAULT_MAP"];
-        std::cout << "DEFAULT_MAP read from file: " << EXAMPLE_MAP.size()
-                  << std::endl;
-    });
+    load_json_config_file(
+        "settings.json", [_to_color](const nlohmann::json& contents) {
+            LOG_LEVEL = contents.value("LOG_LEVEL", 2);
+            std::cout << "LOG_LEVEL read from file: " << LOG_LEVEL << std::endl;
+
+            EXAMPLE_MAP = contents["DEFAULT_MAP"];
+            std::cout << "DEFAULT_MAP read from file: " << EXAMPLE_MAP.size()
+                      << std::endl;
+
+            const auto theme_name = contents["theme"];
+            const auto themes = contents["themes"];
+
+            const auto theme_data = themes[theme_name];
+
+            ui::DEFAULT_THEME = ui::UITheme(_to_color(theme_data["font"]),  //
+                                            _to_color(theme_data["darkfont"]),
+                                            _to_color(theme_data["background"]),
+                                            _to_color(theme_data["primary"]),
+                                            _to_color(theme_data["secondary"]),
+                                            _to_color(theme_data["accent"]),
+                                            _to_color(theme_data["error"]));
+        });
 }
 
 void Preload::load_models() {

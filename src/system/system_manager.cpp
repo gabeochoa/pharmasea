@@ -63,6 +63,8 @@
 #include "rendering_system.h"
 #include "ui_rendering_system.h"
 
+extern ui::UITheme DEFAULT_THEME;
+
 namespace system_manager {
 
 void move_player_SERVER_ONLY(Entity& entity, game::State location) {
