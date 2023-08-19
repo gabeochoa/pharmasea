@@ -52,9 +52,13 @@ inline raylib::Rectangle expand(const raylib::Rectangle& a, const vec4& b) {
                        a.height + b.y + b.w};
 }
 
-inline std::array<Rectangle, 2> vsplit(const Rectangle& a, float pct) {
+inline std::array<Rectangle, 2> vsplit(const Rectangle& a, float pct,
+                                       float padding_right = 0) {
     float ratio = pct / 100.f;
     Rectangle left = {a.x, a.y, a.width * ratio, a.height};
+    if (padding_right > 0) {
+        left = rpad(left, 100 - padding_right);
+    }
     Rectangle right = {a.x + (a.width * ratio), a.y, a.width * (1.f - ratio),
                        a.height};
     return {left, right};
@@ -93,7 +97,8 @@ inline Rectangle bpad(const Rectangle& r, float pct) {
 }
 
 template<size_t N>
-inline std::array<Rectangle, N> vsplit(const Rectangle& a) {
+inline std::array<Rectangle, N> vsplit(const Rectangle& a,
+                                       float padding_right = 0) {
     std::array<Rectangle, N> rectangles;
     float step = a.width / N;
 
@@ -103,6 +108,9 @@ inline std::array<Rectangle, N> vsplit(const Rectangle& a) {
     float height = a.height;
     for (size_t i = 0; i < N; ++i) {
         rectangles[i] = Rectangle{x, y, width, height};
+        if (padding_right > 0) {
+            rectangles[i] = rect::rpad(rectangles[i], 100 - padding_right);
+        }
         x += step;
         y += 0;
     }
@@ -110,8 +118,9 @@ inline std::array<Rectangle, N> vsplit(const Rectangle& a) {
 }
 
 template<>
-inline std::array<Rectangle, 2> vsplit(const Rectangle& a) {
-    return vsplit(a, 50.f);
+inline std::array<Rectangle, 2> vsplit(const Rectangle& a,
+                                       float padding_right) {
+    return vsplit(a, 50.f, padding_right);
 }
 
 template<size_t N>
@@ -191,11 +200,18 @@ struct DropdownData {
     int initial = 0;
 };
 
+struct CheckboxData {
+    bool selected;
+    std::string content;
+};
+
 struct TextfieldData {
     std::string content;
 };
 
-typedef std::variant<std::string, bool, float, TextfieldData, DropdownData>
+// TODO theoretically this should probably match the types that go into init<>
+typedef std::variant<std::string, bool, float, CheckboxData, TextfieldData,
+                     DropdownData>
     InputDataSource;
 
 struct Widget {
@@ -344,8 +360,6 @@ inline void draw_text(const std::string& content, Rectangle parent, int z_index,
                       ui::theme::Usage color_usage = ui::theme::Usage::Font) {
     callback_registry.register_call(
         [=]() {
-            // context->_draw_text(parent, text_lookup(content.c_str()),
-            // color_usage);
             auto font = Preload::get().font;
             auto rect = parent;
             auto spacing = 0.f;
@@ -495,9 +509,10 @@ inline ElementResult image_button(const Widget& widget,
 }
 
 inline ElementResult checkbox(const Widget& widget,
-                              const TextfieldData& data = {}) {
+                              const CheckboxData& data = {}) {
     auto state = context->widget_init<ui::CheckboxState>(
         ui::MK_UUID(widget.id, widget.id));
+    state->on = data.selected;
     state->on.changed_since = false;
 
     if (button(widget, "", true)) {

@@ -43,7 +43,10 @@ struct AboutLayer : public Layer {
         int id = 0;
 
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+        window = rect::lpad(window, 20);
         auto [info, back] = rect::hsplit<2>(window);
+        back = rect::rpad(back, 50);
+        back = rect::bpad(back, 25);
 
         text(Widget{.id = id++, .z_index = 0, .rect = info},
              text_lookup(strings::ABOUT_INFO));

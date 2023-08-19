@@ -96,6 +96,7 @@ struct SettingsLayer : public Layer {
         content = rect::lpad(content, 10);
 
         auto [rows, footer] = rect::hsplit(content, 80);
+        footer = rect::bpad(footer, 50);
 
         {
             auto [master_vol, music_vol, resolution, language, streamer,
@@ -105,10 +106,10 @@ struct SettingsLayer : public Layer {
                 auto [label, control] = rect::vsplit(master_vol, 30);
                 control = rect::rpad(control, 30);
 
-                text(::Widget{.id = id++, .z_index = 0, .rect = label},
+                text(Widget{.id = id++, .z_index = 0, .rect = label},
                      text_lookup(strings::i18n::MASTER_VOLUME));
                 if (auto result = slider(
-                        ::Widget{.id = id++, .z_index = 0, .rect = control});
+                        Widget{.id = id++, .z_index = 0, .rect = control});
                     result) {
                     Settings::get().update_master_volume(result.as<float>());
                 }
@@ -118,10 +119,10 @@ struct SettingsLayer : public Layer {
                 auto [label, control] = rect::vsplit(music_vol, 30);
                 control = rect::rpad(control, 30);
 
-                text(::Widget{.id = id++, .z_index = 0, .rect = label},
+                text(Widget{.id = id++, .z_index = 0, .rect = label},
                      text_lookup(strings::i18n::MUSIC_VOLUME));
                 if (auto result = slider(
-                        ::Widget{.id = id++, .z_index = 0, .rect = control});
+                        Widget{.id = id++, .z_index = 0, .rect = control});
                     result) {
                     Settings::get().update_music_volume(result.as<float>());
                 }
@@ -173,7 +174,10 @@ struct SettingsLayer : public Layer {
                 // TODO default value wont be setup correctly without this
                 // bool sssb = Settings::get().data.show_streamer_safe_box;
                 if (auto result = checkbox(
-                        ::Widget{.id = id++, .z_index = 0, .rect = control});
+                        Widget{.id = id++, .z_index = 0, .rect = control},
+                        CheckboxData{
+                            .selected =
+                                Settings::get().data.show_streamer_safe_box});
                     result) {
                     Settings::get().update_streamer_safe_box(result.as<bool>());
                 }
@@ -183,13 +187,16 @@ struct SettingsLayer : public Layer {
                 auto [label, control] = rect::vsplit(postprocessing, 30);
                 control = rect::rpad(control, 10);
 
-                text(::Widget{.id = id++, .z_index = 0, .rect = label},
+                text(Widget{.id = id++, .z_index = 0, .rect = label},
                      text_lookup(strings::i18n::ENABLE_PPS));
 
                 // TODO default value wont be setup correctly without this
                 // bool sssb = Settings::get().data.enable_postprocessing;
                 if (auto result = checkbox(
-                        ::Widget{.id = id++, .z_index = 0, .rect = control});
+                        Widget{.id = id++, .z_index = 0, .rect = control},
+                        CheckboxData{
+                            .selected =
+                                Settings::get().data.enable_postprocessing});
                     result) {
                     Settings::get().update_post_processing_enabled(
                         result.as<bool>());
@@ -200,10 +207,9 @@ struct SettingsLayer : public Layer {
         // Footer
         {
             footer = rect::rpad(footer, 30);
-            if (button(::Widget{.id = 4, .z_index = 0, .rect = footer},
+            if (button(Widget{.id = 4, .z_index = 0, .rect = footer},
                        text_lookup(strings::i18n::BACK_BUTTON), true)) {
                 MenuState::get().go_back();
-                App::get().close();
             }
         }
 

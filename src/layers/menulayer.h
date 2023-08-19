@@ -70,7 +70,7 @@ struct MenuLayer : public Layer {
         // Buttons
         {
             auto [rect1, rect2, rect3, rect4] =
-                rect::hsplit<4>(rect::rpad(rect::lpad(body, 15), 25), 20);
+                rect::hsplit<4>(rect::rpad(rect::lpad(body, 15), 15), 20);
 
             if (button(Widget{.id = 1, .z_index = 0, .rect = rect1},
                        text_lookup(strings::i18n::PLAY))) {
@@ -92,8 +92,9 @@ struct MenuLayer : public Layer {
 
         // Ext Buttons
         {
-            auto ext_buttons = rect::rpad(rect::lpad(footer, 80), 95);
-            auto [b1, b2] = rect::vsplit<2>(ext_buttons);
+            auto ext_buttons = rect::rpad(rect::lpad(footer, 80), 90);
+            auto [b1, b2] = rect::vsplit<2>(ext_buttons, 20);
+
             if (image_button(Widget{.id = 5, .z_index = 0, .rect = b1},
                              "discord")) {
                 util::open_url(strings::urls::DISCORD);

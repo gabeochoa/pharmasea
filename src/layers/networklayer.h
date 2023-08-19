@@ -349,7 +349,8 @@ struct NetworkLayer : public Layer {
                                     : text_lookup(strings::i18n::SHOW_IP);
             if (auto result =
                     checkbox(Widget{.id = id++, .z_index = 0, .rect = check},
-                             TextfieldData{.content = show_hide_host_ip_text});
+                             CheckboxData{.selected = should_show_host_ip,
+                                          .content = show_hide_host_ip_text});
                 result) {
                 should_show_host_ip = !should_show_host_ip;
             }
