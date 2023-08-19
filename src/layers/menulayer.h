@@ -4,6 +4,7 @@
 #include "../engine/app.h"
 #include "../engine/util.h"
 #include "../external_include.h"
+#include "../ui.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -42,125 +43,68 @@ struct MenuLayer : public Layer {
         }
     }
 
-    void draw_menu_buttons() {
-        using namespace ui;
-        padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
-                                            Size_Px(WIN_HF(), 1.f)));
-
-        auto content =
-            ui_context->own(Widget({.mode = Children, .strictness = 1.f},
-                                   Size_Pct(1.f, 1.0f), Column));
-        div(*content);
-
-        ui_context->push_parent(content);
-        {
-            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
-                                                Size_Pct(1.f, 0.f)));
-            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       text_lookup(strings::i18n::PLAY))) {
-                MenuState::get().set(menu::State::Network);
-            }
-            padding(*ui::components::mk_but_pad());
-            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       text_lookup(strings::i18n::ABOUT))) {
-                MenuState::get().set(menu::State::About);
-            }
-            padding(*ui::components::mk_but_pad());
-            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       text_lookup(strings::i18n::SETTINGS))) {
-                MenuState::get().set(menu::State::Settings);
-            }
-            padding(*ui::components::mk_but_pad());
-            if (button(*ui::components::mk_button(MK_UUID(id, ROOT_ID)),
-                       text_lookup(strings::i18n::EXIT))) {
-                App::get().close();
-            }
-
-            padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
-                                                Size_Pct(1.f, 0.f)));
-        }
-        ui_context->pop_parent();
-    }
-
-    void draw_title_section() {
-        using namespace ui;
-
-        padding(*ui::components::mk_padding(Size_Px(200.f, 1.f),
-                                            Size_Px(WIN_HF(), 1.f)));
-
-        auto title_card = ui_context->own(Widget(
-            Size_Pct(1.f, 0.f), Size_Px(WIN_HF(), 1.f), GrowFlags::Column));
-        div(*title_card);
-        ui_context->push_parent(title_card);
-        {
-            padding(*ui::components::mk_padding(Size_Pct(1.f, 0.f),
-                                                Size_Px(100.f, 1.f)));
-            auto title_text = ui_context->own(
-                Widget(Size_Pct(1.f, 0.5f), Size_Px(100.f, 1.f)));
-            text(*title_text, strings::GAME_NAME);
-        }
-        ui_context->pop_parent();
-    }
-
-    void draw_external_icons() {
-        using namespace ui;
-
-        padding(*ui::components::mk_padding(Size_Px(500.f, 1.f),
-                                            Size_Px(WIN_HF(), 1.f)));
-
-        auto third_col = ui_context->own(Widget(
-            Size_Pct(1.f, 0.f), Size_Px(WIN_HF(), 1.f), GrowFlags::Column));
-        div(*third_col);
-        ui_context->push_parent(third_col);
-        {
-            padding(*ui::components::mk_padding(
-                Size_Pct(1.f, 0.f), Size_Px(WIN_HF() - 333.f, 1.f)));
-
-            auto button = ui::components::mk_button(MK_UUID(id, ROOT_ID),
-                                                    Size_Pct(0.05f, 1.f),
-                                                    Size_Pct(0.075f, 1.f));
-
-            if (image_button(*button, "discord")) {
-                util::open_url(strings::urls::DISCORD);
-            }
-
-            auto button2 = ui::components::mk_button(MK_UUID(id, ROOT_ID),
-                                                     Size_Pct(0.05f, 1.f),
-                                                     Size_Pct(0.075f, 1.f));
-
-            // TODO chose the right color based on the theme
-            if (image_button(*button2, "itch-white")) {
-                util::open_url(strings::urls::ITCH);
-            }
-        }
-        ui_context->pop_parent();
-    }
-
     virtual void onUpdate(float) override {
-        ZoneScoped;
         if (MenuState::get().is_in_menu()) play_music();
         if (MenuState::get().is_not(menu::State::Root)) return;
-        PROFILE();
         raylib::SetExitKey(raylib::KEY_ESCAPE);
     }
 
     virtual void onDraw(float dt) override {
-        ZoneScoped;
         if (MenuState::get().is_not(menu::State::Root)) return;
-        PROFILE();
         ext::clear_background(ui_context->active_theme().background);
+        using namespace xui;
 
-        ui_context->begin(dt);
+        begin(ui_context, dt);
 
-        auto root = ui::components::mk_root();
+        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+        auto [top, rest] = rect::hsplit(window, 33);
+        auto [body, footer] = rect::hsplit(rest, 66);
 
-        ui_context->push_parent(root);
+        // Title
         {
-            draw_menu_buttons();
-            draw_title_section();
-            draw_external_icons();
+            auto text_loc = rect::lpad(top, 25);
+            text(Widget{.id = 0, .z_index = 0, .rect = text_loc},
+                 text_lookup(strings::GAME_NAME));
         }
-        ui_context->pop_parent();
-        ui_context->end(root.get());
+
+        // Buttons
+        {
+            auto [rect1, rect2, rect3, rect4] =
+                rect::hsplit<4>(rect::rpad(rect::lpad(body, 15), 25));
+
+            if (button(Widget{.id = 1, .z_index = 0, .rect = rect1},
+                       text_lookup(strings::i18n::PLAY))) {
+                MenuState::get().set(menu::State::Network);
+            }
+            if (button(Widget{.id = 2, .z_index = 0, .rect = rect2},
+                       text_lookup(strings::i18n::ABOUT))) {
+                MenuState::get().set(menu::State::About);
+            }
+            if (button(Widget{.id = 3, .z_index = 0, .rect = rect3},
+                       text_lookup(strings::i18n::SETTINGS))) {
+                MenuState::get().set(menu::State::Settings);
+            }
+            if (button(Widget{.id = 4, .z_index = 0, .rect = rect4},
+                       text_lookup(strings::i18n::EXIT))) {
+                App::get().close();
+            }
+        }
+
+        // Ext Buttons
+        {
+            auto ext_buttons = rect::rpad(rect::lpad(footer, 80), 95);
+            auto [b1, b2] = rect::vsplit<2>(ext_buttons);
+            if (image_button(Widget{.id = 5, .z_index = 0, .rect = b1},
+                             "discord")) {
+                util::open_url(strings::urls::DISCORD);
+            }
+            // TODO chose the right color based on the theme
+            if (image_button(Widget{.id = 6, .z_index = 0, .rect = b2},
+                             "itch-white")) {
+                util::open_url(strings::urls::ITCH);
+            }
+        }
+
+        end();
     }
 };
