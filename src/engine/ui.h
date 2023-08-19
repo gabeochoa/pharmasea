@@ -214,10 +214,14 @@ typedef std::variant<std::string, bool, float, CheckboxData, TextfieldData,
                      DropdownData>
     InputDataSource;
 
+static std::atomic_int WIDGET_ID = 0;
+
 struct Widget {
     int id = 0;
     int z_index = 0;
     Rectangle rect = {0, 0, WIN_WF(), WIN_HF()};
+
+    Widget(Rectangle r) : id(WIDGET_ID++), z_index(0), rect(r) {}
 
     Rectangle get_rect() const { return rect; }
 };
@@ -310,6 +314,7 @@ inline void handle_tabbing(const Widget& widget) {
 inline void begin() {
     mouse_info = get_mouse_info();
     hot_id = ROOT_ID;
+    WIDGET_ID = 0;
 }
 
 inline void end() {

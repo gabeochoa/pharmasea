@@ -181,13 +181,6 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_username_picker(float dt) {
-        ext::clear_background(ui_context->active_theme().background);
-
-        using namespace ui;
-
-        begin(ui_context, dt);
-        int id = 0;
-
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto content = rect::tpad(window, 30);
 
@@ -195,33 +188,20 @@ struct NetworkLayer : public Layer {
 
         auto [label, name, lock, back] = rect::hsplit<4>(username);
 
-        text(Widget{.id = id++, .z_index = 0, .rect = label},
-             text_lookup(strings::i18n::USERNAME));
+        text(Widget{label}, text_lookup(strings::i18n::USERNAME));
 
-        text(Widget{.id = id++, .z_index = 0, .rect = name},
-             Settings::get().data.username);
+        text(Widget{name}, Settings::get().data.username);
 
-        if (button(Widget{.id = id++, .z_index = 0, .rect = lock},
-                   text_lookup(strings::i18n::LOCK_IN))) {
+        if (button(Widget{lock}, text_lookup(strings::i18n::LOCK_IN))) {
             network_info->lock_in_username();
         }
 
-        if (button(Widget{.id = id++, .z_index = 0, .rect = back},
-                   text_lookup(strings::i18n::BACK_BUTTON))) {
+        if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON))) {
             MenuState::get().go_back();
         }
-
-        end();
     }
 
     void draw_role_selector_screen(float dt) {
-        ext::clear_background(ui_context->active_theme().background);
-
-        using namespace ui;
-
-        begin(ui_context, dt);
-        int id = 0;
-
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto content = rect::tpad(window, 30);
         content = rect::bpad(content, 30);
@@ -233,16 +213,13 @@ struct NetworkLayer : public Layer {
             auto [host, join, back] =
                 rect::hsplit<3>(rect::rpad(rect::lpad(buttons, 15), 20), 20);
 
-            if (button(Widget{.id = id++, .z_index = 0, .rect = host},
-                       text_lookup(strings::i18n::HOST))) {
+            if (button(Widget{host}, text_lookup(strings::i18n::HOST))) {
                 network_info->set_role(network::Info::Role::s_Host);
             }
-            if (button(Widget{.id = id++, .z_index = 0, .rect = join},
-                       text_lookup(strings::i18n::JOIN))) {
+            if (button(Widget{join}, text_lookup(strings::i18n::JOIN))) {
                 network_info->set_role(network::Info::Role::s_Client);
             }
-            if (button(Widget{.id = id++, .z_index = 0, .rect = back},
-                       text_lookup(strings::i18n::BACK_BUTTON))) {
+            if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON))) {
                 MenuState::get().clear_history();
                 MenuState::get().set(menu::State::Root);
             }
@@ -253,29 +230,17 @@ struct NetworkLayer : public Layer {
             auto [label, name, edit] =
                 rect::vsplit<3>(rect::rpad(username, 40));
 
-            text(Widget{.id = id++, .z_index = 0, .rect = label},
-                 text_lookup(strings::i18n::USERNAME));
+            text(Widget{label}, text_lookup(strings::i18n::USERNAME));
 
-            text(Widget{.id = id++, .z_index = 0, .rect = name},
-                 Settings::get().data.username);
+            text(Widget{name}, Settings::get().data.username);
 
-            if (button(Widget{.id = id++, .z_index = 0, .rect = edit},
-                       text_lookup(strings::i18n::EDIT))) {
+            if (button(Widget{edit}, text_lookup(strings::i18n::EDIT))) {
                 network_info->unlock_username();
             }
         }
-
-        end();
     }
 
     void draw_connected_screen(float dt) {
-        ext::clear_background(ui_context->active_theme().background);
-
-        using namespace ui;
-
-        begin(ui_context, dt);
-        int id = 0;
-
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto content = rect::tpad(window, 30);
         content = rect::rpad(content, 80);
@@ -289,8 +254,7 @@ struct NetworkLayer : public Layer {
         {
             auto players = rect::hsplit<4>(connected_players);
 
-            text(Widget{.id = id++, .z_index = 0, .rect = players[0]},
-                 Settings::get().data.username);
+            text(Widget{players[0]}, Settings::get().data.username);
 
             /*
             for (auto kv : network_info->client->remote_players) {
@@ -312,18 +276,17 @@ struct NetworkLayer : public Layer {
             if (network_info->is_host()) {
                 auto [start, disconnect] = rect::hsplit<2>(buttons);
 
-                if (button(Widget{.id = id++, .z_index = 0, .rect = start},
-                           text_lookup(strings::i18n::START))) {
+                if (button(Widget{start}, text_lookup(strings::i18n::START))) {
                     MenuState::get().set(menu::State::Game);
                     GameState::get().set(game::State::Lobby);
                 }
-                if (button(Widget{.id = id++, .z_index = 0, .rect = disconnect},
+                if (button(Widget{disconnect},
                            text_lookup(strings::i18n::DISCONNECT))) {
                     network_info.reset(new network::Info());
                 }
             } else {
                 auto disconnect = buttons;
-                if (button(Widget{.id = id++, .z_index = 0, .rect = disconnect},
+                if (button(Widget{disconnect},
                            text_lookup(strings::i18n::DISCONNECT))) {
                     network_info.reset(new network::Info());
                 }
@@ -336,7 +299,7 @@ struct NetworkLayer : public Layer {
             auto [label, control] = rect::vsplit<2>(ip_addr);
 
             auto ip = should_show_host_ip ? my_ip_address : "***.***.***.***";
-            text(Widget{.id = id++, .z_index = 0, .rect = label},
+            text(Widget{label},
                  // TODO not translated
                  fmt::format("Your IP is: {}", ip));
 
@@ -348,15 +311,14 @@ struct NetworkLayer : public Layer {
                 should_show_host_ip ? text_lookup(strings::i18n::HIDE_IP)
                                     : text_lookup(strings::i18n::SHOW_IP);
             if (auto result =
-                    checkbox(Widget{.id = id++, .z_index = 0, .rect = check},
+                    checkbox(Widget{check},
                              CheckboxData{.selected = should_show_host_ip,
                                           .content = show_hide_host_ip_text});
                 result) {
                 should_show_host_ip = !should_show_host_ip;
             }
 
-            if (button(Widget{.id = id++, .z_index = 0, .rect = copy},
-                       text_lookup(strings::i18n::COPY_IP))) {
+            if (button(Widget{copy}, text_lookup(strings::i18n::COPY_IP))) {
                 ext::set_clipboard_text(my_ip_address.c_str());
             }
         }
@@ -364,34 +326,22 @@ struct NetworkLayer : public Layer {
         // TODO add button to edit as long as you arent currently
         // hosting people?
         draw_username_with_edit(id, username, dt);
-
-        end();
     }
 
     void draw_username_with_edit(int& id, Rectangle parent, float dt) {
         using namespace ui;
         auto [label, name, edit] = rect::vsplit<3>(parent);
 
-        text(Widget{.id = id++, .z_index = 0, .rect = label},
-             text_lookup(strings::i18n::USERNAME));
+        text(Widget{label}, text_lookup(strings::i18n::USERNAME));
 
-        text(Widget{.id = id++, .z_index = 0, .rect = name},
-             Settings::get().data.username);
+        text(Widget{name}, Settings::get().data.username);
 
-        if (button(Widget{.id = id++, .z_index = 0, .rect = edit},
-                   text_lookup(strings::i18n::EDIT))) {
+        if (button(Widget{edit}, text_lookup(strings::i18n::EDIT))) {
             network_info->unlock_username();
         }
     }
 
     void draw_ip_input_screen(float dt) {
-        ext::clear_background(ui_context->active_theme().background);
-
-        using namespace ui;
-
-        begin(ui_context, dt);
-        int id = 0;
-
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto content = rect::tpad(window, 30);
         content = rect::lpad(content, 20);
@@ -408,11 +358,10 @@ struct NetworkLayer : public Layer {
         {
             auto [label, control] = rect::vsplit<2>(ip);
 
-            text(Widget{.id = id++, .z_index = 0, .rect = label},
-                 text_lookup(strings::i18n::ENTER_IP));
+            text(Widget{label}, text_lookup(strings::i18n::ENTER_IP));
 
             if (auto result =
-                    textfield(Widget{.id = id++, .z_index = 0, .rect = control},
+                    textfield(Widget{control},
                               TextfieldData{network_info->host_ip_address()});
                 result) {
                 network_info->host_ip_address() = result.as<std::string>();
@@ -424,14 +373,13 @@ struct NetworkLayer : public Layer {
             buttons = rect::rpad(buttons, 50);
             auto [load_ip, connect] = rect::hsplit<2>(buttons);
 
-            if (button(Widget{.id = id++, .z_index = 0, .rect = load_ip},
+            if (button(Widget{load_ip},
                        text_lookup(strings::i18n::LOAD_LAST_IP))) {
                 network_info->host_ip_address() =
                     Settings::get().last_used_ip();
             }
 
-            if (button(Widget{.id = id++, .z_index = 0, .rect = connect},
-                       text_lookup(strings::i18n::CONNECT))) {
+            if (button(Widget{connect}, text_lookup(strings::i18n::CONNECT))) {
                 Settings::get().update_last_used_ip_address(
                     network_info->host_ip_address());
                 network_info->lock_in_ip();
@@ -441,21 +389,13 @@ struct NetworkLayer : public Layer {
         // Back button
         {
             back = rect::rpad(back, 50);
-            if (button(Widget{.id = id++, .z_index = 0, .rect = back},
-                       text_lookup(strings::i18n::BACK_BUTTON))) {
+            if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON))) {
                 MenuState::get().go_back();
             }
         }
-
-        end();
     }
 
-    virtual void onDraw(float dt) override {
-        // TODO add an overlay that shows who's currently available
-        // draw_network_overlay();
-
-        if (MenuState::get().is_not(menu::State::Network)) return;
-
+    void draw_screen(float dt) {
         if (network_info->missing_username()) {
             draw_username_picker(dt);
             return;
@@ -472,6 +412,23 @@ struct NetworkLayer : public Layer {
         }
 
         draw_ip_input_screen(dt);
+    }
+
+    virtual void onDraw(float dt) override {
+        // TODO add an overlay that shows who's currently available
+        // draw_network_overlay();
+
+        if (MenuState::get().is_not(menu::State::Network)) return;
+
+        ext::clear_background(ui_context->active_theme().background);
+
+        using namespace ui;
+
+        begin(ui_context, dt);
+
+        draw_screen(dt);
+
+        end();
 
         // handle_announcements();
     }

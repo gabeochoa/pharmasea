@@ -89,7 +89,6 @@ struct SettingsLayer : public Layer {
         ext::clear_background(ui_context->active_theme().background);
 
         begin(ui_context, dt);
-        int id = 0;
 
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto content = rect::tpad(window, 20);
@@ -106,11 +105,8 @@ struct SettingsLayer : public Layer {
                 auto [label, control] = rect::vsplit(master_vol, 30);
                 control = rect::rpad(control, 30);
 
-                text(Widget{.id = id++, .z_index = 0, .rect = label},
-                     text_lookup(strings::i18n::MASTER_VOLUME));
-                if (auto result = slider(
-                        Widget{.id = id++, .z_index = 0, .rect = control});
-                    result) {
+                text(Widget{label}, text_lookup(strings::i18n::MASTER_VOLUME));
+                if (auto result = slider(Widget{control}); result) {
                     Settings::get().update_master_volume(result.as<float>());
                 }
             }
@@ -119,11 +115,8 @@ struct SettingsLayer : public Layer {
                 auto [label, control] = rect::vsplit(music_vol, 30);
                 control = rect::rpad(control, 30);
 
-                text(Widget{.id = id++, .z_index = 0, .rect = label},
-                     text_lookup(strings::i18n::MUSIC_VOLUME));
-                if (auto result = slider(
-                        Widget{.id = id++, .z_index = 0, .rect = control});
-                    result) {
+                text(Widget{label}, text_lookup(strings::i18n::MUSIC_VOLUME));
+                if (auto result = slider(Widget{control}); result) {
                     Settings::get().update_music_volume(result.as<float>());
                 }
             }
@@ -132,10 +125,9 @@ struct SettingsLayer : public Layer {
                 auto [label, control] = rect::vsplit(resolution, 30);
                 control = rect::rpad(control, 30);
 
-                text(Widget{.id = id++, .z_index = 0, .rect = label},
-                     text_lookup(strings::i18n::RESOLUTION));
+                text(Widget{label}, text_lookup(strings::i18n::RESOLUTION));
                 if (auto result = dropdown(
-                        Widget{.id = id++, .z_index = 0, .rect = control},
+                        Widget{control},
                         DropdownData{
                             Settings::get().resolution_options(),
                             Settings::get().get_current_resolution_index(),
@@ -150,10 +142,9 @@ struct SettingsLayer : public Layer {
                 auto [label, control] = rect::vsplit(language, 30);
                 control = rect::rpad(control, 30);
 
-                text(Widget{.id = id++, .z_index = 0, .rect = label},
-                     text_lookup(strings::i18n::LANGUAGE));
+                text(Widget{label}, text_lookup(strings::i18n::LANGUAGE));
                 if (auto result = dropdown(
-                        Widget{.id = id++, .z_index = 0, .rect = control},
+                        Widget{control},
                         DropdownData{
                             Settings::get().language_options(),
                             Settings::get().get_current_language_index(),
@@ -168,13 +159,12 @@ struct SettingsLayer : public Layer {
                 auto [label, control] = rect::vsplit(streamer, 30);
                 control = rect::rpad(control, 10);
 
-                text(Widget{.id = id++, .z_index = 0, .rect = label},
-                     text_lookup(strings::i18n::SHOW_SAFE_BOX));
+                text(Widget{label}, text_lookup(strings::i18n::SHOW_SAFE_BOX));
 
                 // TODO default value wont be setup correctly without this
                 // bool sssb = Settings::get().data.show_streamer_safe_box;
                 if (auto result = checkbox(
-                        Widget{.id = id++, .z_index = 0, .rect = control},
+                        Widget{control},
                         CheckboxData{
                             .selected =
                                 Settings::get().data.show_streamer_safe_box});
@@ -187,13 +177,12 @@ struct SettingsLayer : public Layer {
                 auto [label, control] = rect::vsplit(postprocessing, 30);
                 control = rect::rpad(control, 10);
 
-                text(Widget{.id = id++, .z_index = 0, .rect = label},
-                     text_lookup(strings::i18n::ENABLE_PPS));
+                text(Widget{label}, text_lookup(strings::i18n::ENABLE_PPS));
 
                 // TODO default value wont be setup correctly without this
                 // bool sssb = Settings::get().data.enable_postprocessing;
                 if (auto result = checkbox(
-                        Widget{.id = id++, .z_index = 0, .rect = control},
+                        Widget{control},
                         CheckboxData{
                             .selected =
                                 Settings::get().data.enable_postprocessing});
@@ -207,8 +196,8 @@ struct SettingsLayer : public Layer {
         // Footer
         {
             footer = rect::rpad(footer, 30);
-            if (button(Widget{.id = 4, .z_index = 0, .rect = footer},
-                       text_lookup(strings::i18n::BACK_BUTTON), true)) {
+            if (button(Widget{footer}, text_lookup(strings::i18n::BACK_BUTTON),
+                       true)) {
                 MenuState::get().go_back();
             }
         }

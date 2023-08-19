@@ -50,27 +50,23 @@ struct BasePauseLayer : public Layer {
 
         using namespace ui;
         begin(ui_context, dt);
-        int id = 0;
 
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto body = rect::tpad(window, 20);
 
         auto [continue_button, settings, config, quit] = rect::hsplit<4>(body);
 
-        if (button(Widget{.id = id++, .z_index = 0, .rect = continue_button},
+        if (button(Widget{continue_button},
                    text_lookup(strings::i18n::CONTINUE))) {
             GameState::get().go_back();
         }
-        if (button(Widget{.id = id++, .z_index = 0, .rect = settings},
-                   text_lookup(strings::i18n::SETTINGS))) {
+        if (button(Widget{settings}, text_lookup(strings::i18n::SETTINGS))) {
             MenuState::get().set(menu::State::Settings);
         }
-        if (button(Widget{.id = id++, .z_index = 0, .rect = config},
-                   "RELOAD CONFIGS")) {
+        if (button(Widget{config}, "RELOAD CONFIGS")) {
             Preload::get().reload_config();
         }
-        if (button(Widget{.id = id++, .z_index = 0, .rect = quit},
-                   text_lookup(strings::i18n::QUIT))) {
+        if (button(Widget{quit}, text_lookup(strings::i18n::QUIT))) {
             MenuState::get().reset();
             GameState::get().reset();
         }

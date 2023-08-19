@@ -63,8 +63,7 @@ struct MenuLayer : public Layer {
         // Title
         {
             auto text_loc = rect::lpad(top, 25);
-            text(Widget{.id = 0, .z_index = 0, .rect = text_loc},
-                 text_lookup(strings::GAME_NAME));
+            text(Widget{text_loc}, text_lookup(strings::GAME_NAME));
         }
 
         // Buttons
@@ -72,20 +71,16 @@ struct MenuLayer : public Layer {
             auto [rect1, rect2, rect3, rect4] =
                 rect::hsplit<4>(rect::rpad(rect::lpad(body, 15), 15), 20);
 
-            if (button(Widget{.id = 1, .z_index = 0, .rect = rect1},
-                       text_lookup(strings::i18n::PLAY))) {
+            if (button(Widget{rect1}, text_lookup(strings::i18n::PLAY))) {
                 MenuState::get().set(menu::State::Network);
             }
-            if (button(Widget{.id = 2, .z_index = 0, .rect = rect2},
-                       text_lookup(strings::i18n::ABOUT))) {
+            if (button(Widget{rect2}, text_lookup(strings::i18n::ABOUT))) {
                 MenuState::get().set(menu::State::About);
             }
-            if (button(Widget{.id = 3, .z_index = 0, .rect = rect3},
-                       text_lookup(strings::i18n::SETTINGS))) {
+            if (button(Widget{rect3}, text_lookup(strings::i18n::SETTINGS))) {
                 MenuState::get().set(menu::State::Settings);
             }
-            if (button(Widget{.id = 4, .z_index = 0, .rect = rect4},
-                       text_lookup(strings::i18n::EXIT))) {
+            if (button(Widget{rect4}, text_lookup(strings::i18n::EXIT))) {
                 App::get().close();
             }
         }
@@ -95,13 +90,11 @@ struct MenuLayer : public Layer {
             auto ext_buttons = rect::rpad(rect::lpad(footer, 80), 90);
             auto [b1, b2] = rect::vsplit<2>(ext_buttons, 20);
 
-            if (image_button(Widget{.id = 5, .z_index = 0, .rect = b1},
-                             "discord")) {
+            if (image_button(Widget{b1}, "discord")) {
                 util::open_url(strings::urls::DISCORD);
             }
             // TODO chose the right color based on the theme
-            if (image_button(Widget{.id = 6, .z_index = 0, .rect = b2},
-                             "itch-white")) {
+            if (image_button(Widget{b2}, "itch-white")) {
                 util::open_url(strings::urls::ITCH);
             }
         }

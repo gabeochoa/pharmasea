@@ -40,7 +40,6 @@ struct AboutLayer : public Layer {
         ext::clear_background(ui_context->active_theme().background);
         using namespace ui;
         begin(ui_context, dt);
-        int id = 0;
 
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         window = rect::lpad(window, 20);
@@ -48,10 +47,8 @@ struct AboutLayer : public Layer {
         back = rect::rpad(back, 50);
         back = rect::bpad(back, 25);
 
-        text(Widget{.id = id++, .z_index = 0, .rect = info},
-             text_lookup(strings::ABOUT_INFO));
-        if (button(Widget{.id = id++, .z_index = 0, .rect = back},
-                   text_lookup(strings::i18n::BACK_BUTTON))) {
+        text(Widget{info}, text_lookup(strings::ABOUT_INFO));
+        if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON))) {
             MenuState::get().go_back();
         }
 
