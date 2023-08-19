@@ -1,9 +1,9 @@
 
+#include "../engine/ui.h"
 
 namespace tests {
-#include "../ui.h"
 
-using namespace xui;
+using namespace ui;
 
 void test_vsplits() {
     Rectangle base = {0, 0, 1000, 1000};

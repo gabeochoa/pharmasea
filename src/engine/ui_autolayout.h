@@ -5,6 +5,7 @@
 #include "assert.h"
 #include "log.h"
 #include "ui_widget.h"
+/*
 
 namespace ui {
 namespace autolayout {
@@ -511,3 +512,4 @@ inline void process_widget(Widget* widget) {
 }
 }  // namespace autolayout
 }  // namespace ui
+   */

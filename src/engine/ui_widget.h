@@ -57,6 +57,7 @@ inline std::ostream& operator<<(std::ostream& os, const SizeExpectation& exp) {
     return os;
 }
 
+/*
 struct Widget {
     Widget* me;
     uuid id;
@@ -206,5 +207,6 @@ inline std::ostream& operator<<(std::ostream& os, const Widget& w) {
     os << w.print();
     return os;
 }
+*/
 
 }  // namespace ui

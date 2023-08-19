@@ -202,45 +202,6 @@ struct IUIContextInputManager {
     }
 };
 
-struct IUIContextLastFrame {
-    struct LastFrame {
-        bool was_written_this_frame = false;
-        std::optional<Rectangle> rect;
-    };
-
-    std::map<uuid, LastFrame> last_frame;
-
-    [[nodiscard]] LastFrame get_last_frame(uuid id) const {
-        if (!last_frame.contains(id)) {
-            return LastFrame();
-        }
-        return last_frame.at(id);
-    }
-
-    void write_last_frame(const uuid& id, LastFrame f) {
-        f.was_written_this_frame = true;
-        last_frame[id] = f;
-    }
-
-    void reset_last_frame() {
-        // Cleanup any things that were not written to
-        // this frame
-        auto it = last_frame.begin();
-        while (it != last_frame.end()) {
-            if (!(it->second.was_written_this_frame)) {
-                // note: this must be post increment
-                last_frame.erase(it++);
-                continue;
-            }
-            it++;
-        }
-        //
-        for (auto& kv : last_frame) {
-            kv.second.was_written_this_frame = false;
-        }
-    }
-};
-
 struct IUIContextRenderTextures {
     std::vector<raylib::RenderTexture2D> render_textures;
 
@@ -280,34 +241,13 @@ struct IUIContextTheming {
     std::stack<UITheme> themestack;
 
     virtual void init() { this->push_theme(ui::DEFAULT_THEME); }
-
     void push_theme(UITheme theme) { themestack.push(theme); }
-
     void pop_theme() { themestack.pop(); }
 
     [[nodiscard]] UITheme active_theme() const {
         if (themestack.empty()) return DEFAULT_THEME;
         return themestack.top();
     }
-};
-
-struct IUIContextParentStacking {
-    std::stack<Widget*> parentstack;
-
-    void push_parent(Widget* widget) { parentstack.push(widget); }
-    void pop_parent() { parentstack.pop(); }
-
-    [[nodiscard]] Widget* active_parent() {
-        if (parentstack.empty()) {
-            return nullptr;
-        }
-        return parentstack.top();
-    }
-
-    void push_parent(std::shared_ptr<Widget> widget) {
-        push_parent(widget.get());
-    }
-    void add_child(Widget* child) { active_parent()->add_child(child); }
 };
 
 struct UIContext;
@@ -318,10 +258,8 @@ static std::shared_ptr<UIContext> _uicontext;
 // using this?
 static UIContext* globalContext;
 struct UIContext : public IUIContextInputManager,
-                   public IUIContextLastFrame,
                    public IUIContextRenderTextures,
                    public IUIContextTheming,
-                   public IUIContextParentStacking,
                    public FontSizeCache {
     [[nodiscard]] inline static UIContext* create() { return new UIContext(); }
     [[nodiscard]] inline static UIContext& get() {
@@ -330,100 +268,20 @@ struct UIContext : public IUIContextInputManager,
         return *_uicontext;
     }
 
-   private:
-    std::vector<std::shared_ptr<Widget>> temp_widgets;
-
    public:
     UIContext() { this->init(); }
 
     StateManager statemanager;
-    std::vector<std::shared_ptr<Widget>> internal_roots;
-    std::vector<std::shared_ptr<Widget>> owned_widgets;
-
-    [[nodiscard]] std::shared_ptr<Widget> own(const Widget& widget) {
-        owned_widgets.push_back(std::make_shared<Widget>(widget));
-        return *owned_widgets.rbegin();
-    }
-
-    uuid hot_id;
-    uuid active_id;
-    uuid kb_focus_id;
-    uuid last_processed;
-
-    bool began_and_not_ended = false;
 
     virtual void init() override {
-        began_and_not_ended = false;
-
-        hot_id = ROOT_ID;
-        active_id = ROOT_ID;
-        kb_focus_id = ROOT_ID;
-
         IUIContextInputManager::init();
         IUIContextTheming::init();
         FontSizeCache::init();
     }
 
-    virtual void begin(float dt) override {
-        VALIDATE(!began_and_not_ended,
-                 "You should call end() every frame before calling begin() "
-                 "again ");
-        began_and_not_ended = true;
-
-        IUIContextInputManager::begin(dt);
-
-        globalContext = this;
-        hot_id = ROOT_ID;
-
-        unload_all_render_textures();
-    }
-
-    void end(Widget* tree_root) {
-        autolayout::process_widget(tree_root);
-
-        // tree_root->print_tree();
-        // exit(0);
-
-        render_all();
-        reset_tabbing_if_not_visible(tree_root);
-        //
-        cleanup();
-    }
-
-    [[nodiscard]] bool matching_id_in_tree(uuid& id, Widget* tree_root) {
-        if (tree_root == nullptr) return false;
-        if (tree_root->id == id) return true;
-
-        for (auto child : tree_root->children) {
-            bool matching = matching_id_in_tree(id, child);
-            if (matching) return true;
-        }
-        return false;
-    }
-
-    void reset_tabbing_if_not_visible(Widget* tree_root) {
-        if (kb_focus_id == ROOT_ID) return;
-        if (matching_id_in_tree(kb_focus_id, tree_root)) return;
-        kb_focus_id = ROOT_ID;
-    }
-
     void cleanup() override {
-        began_and_not_ended = false;
-
         globalContext = nullptr;
-        temp_widgets.clear();
-        owned_widgets.clear();
-        reset_last_frame();
-
         IUIContextInputManager::cleanup();
-        // TODO is there some way to move this t input manager?
-        if (mouse_info.leftDown) {
-            if (active_id == ROOT_ID) {
-                active_id = FAKE_ID;
-            }
-        } else {
-            active_id = ROOT_ID;
-        }
     }
 
     template<typename T>
@@ -441,73 +299,6 @@ struct UIContext : public IUIContextInputManager,
     template<typename T>
     [[nodiscard]] std::shared_ptr<T> get_widget_state(const uuid id) {
         return statemanager.get_as<T>(id);
-    }
-
-    std::vector<std::function<void()>> queued_render_calls;
-    void render_all() {
-        for (auto render_call : queued_render_calls) {
-            render_call();
-        }
-        queued_render_calls.clear();
-    }
-
-    void schedule_render_call(std::function<void()> cb) {
-        queued_render_calls.push_back(cb);
-    }
-
-    void _draw_text(Rectangle rect, const std::string& content,
-                    theme::Usage color_usage) {
-        float spacing = 0.f;
-        float font_size =
-            get_font_size(content, rect.width, rect.height, spacing);
-        log_trace("selected font size: {} for {}", font_size, rect);
-        DrawTextEx(font,                                   //
-                   content.c_str(),                        //
-                   {rect.x, rect.y},                       //
-                   font_size, spacing,                     //
-                   active_theme().from_usage(color_usage)  //
-        );
-    }
-
-    void draw_text(Widget* widget, const std::string& content,
-                   theme::Usage color_usage) {
-        if (!widget) return;
-        _draw_text(widget->rect, content, color_usage);
-    }
-
-    void schedule_draw_text(Widget* widget, const std::string& content,
-                            theme::Usage color_usage) {
-        get().schedule_render_call(std::bind(&UIContext::draw_text, this,
-                                             widget, content, color_usage));
-    }
-
-    void draw_widget_rect(Rectangle rect, theme::Usage usage) {
-        DrawRectangleRounded(rect, 0.15f, 4, active_theme().from_usage(usage));
-    }
-
-    void draw_image(const raylib::Texture& texture, vec2 pos,
-                    float rotation = 0.f, float scale = 1.f,
-                    Color tint = WHITE) {
-        raylib::DrawTextureEx(texture, pos, rotation, scale, tint);
-    }
-
-    void draw_widget(Widget widget, theme::Usage usage) {
-        draw_widget_rect(widget.rect, usage);
-    }
-
-    inline vec2 widget_center(vec2 position, vec2 size) const {
-        return position + (size / 2.f);
-    }
-
-    std::shared_ptr<Widget> make_temp_widget(Widget* widget) {
-        std::shared_ptr<Widget> temp(widget);
-        temp_widgets.push_back(temp);
-        return temp;
-    }
-
-    void schedule_render_texture(int rt_id, Rectangle source, vec2 position) {
-        get().schedule_render_call(
-            std::bind(&UIContext::draw_texture, this, rt_id, source, position));
     }
 };
 

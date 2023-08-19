@@ -2,9 +2,9 @@
 
 #include "../engine.h"
 #include "../engine/app.h"
+#include "../engine/ui.h"
 #include "../engine/util.h"
 #include "../external_include.h"
-#include "../ui.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -52,7 +52,7 @@ struct MenuLayer : public Layer {
     virtual void onDraw(float dt) override {
         if (MenuState::get().is_not(menu::State::Root)) return;
         ext::clear_background(ui_context->active_theme().background);
-        using namespace xui;
+        using namespace ui;
 
         begin(ui_context, dt);
 

@@ -6,7 +6,7 @@
 #include "raylib.h"
 //
 #include "../engine.h"
-#include "../ui.h"
+#include "../engine/ui.h"
 
 struct AboutLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -38,16 +38,16 @@ struct AboutLayer : public Layer {
         if (MenuState::get().is_not(menu::State::About)) return;
         raylib::SetExitKey(raylib::KEY_NULL);
         ext::clear_background(ui_context->active_theme().background);
-        using namespace xui;
+        using namespace ui;
         begin(ui_context, dt);
         int id = 0;
 
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto [info, back] = rect::hsplit<2>(window);
 
-        text(xui::Widget{.id = id++, .z_index = 0, .rect = info},
+        text(Widget{.id = id++, .z_index = 0, .rect = info},
              text_lookup(strings::ABOUT_INFO));
-        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = back},
+        if (button(Widget{.id = id++, .z_index = 0, .rect = back},
                    text_lookup(strings::i18n::BACK_BUTTON))) {
             MenuState::get().go_back();
         }

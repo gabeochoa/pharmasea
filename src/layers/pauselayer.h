@@ -2,8 +2,8 @@
 #pragma once
 
 #include "../engine.h"
+#include "../engine/ui.h"
 #include "../external_include.h"
-#include "../ui.h"
 
 using namespace ui;
 
@@ -48,7 +48,7 @@ struct BasePauseLayer : public Layer {
         // NOTE: We specifically dont clear background
         // because people are used to pause menu being an overlay
 
-        using namespace xui;
+        using namespace ui;
         begin(ui_context, dt);
         int id = 0;
 
@@ -57,20 +57,19 @@ struct BasePauseLayer : public Layer {
 
         auto [continue_button, settings, config, quit] = rect::hsplit<4>(body);
 
-        if (button(
-                xui::Widget{.id = id++, .z_index = 0, .rect = continue_button},
-                text_lookup(strings::i18n::CONTINUE))) {
+        if (button(Widget{.id = id++, .z_index = 0, .rect = continue_button},
+                   text_lookup(strings::i18n::CONTINUE))) {
             GameState::get().go_back();
         }
-        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = settings},
+        if (button(Widget{.id = id++, .z_index = 0, .rect = settings},
                    text_lookup(strings::i18n::SETTINGS))) {
             MenuState::get().set(menu::State::Settings);
         }
-        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = config},
+        if (button(Widget{.id = id++, .z_index = 0, .rect = config},
                    "RELOAD CONFIGS")) {
             Preload::get().reload_config();
         }
-        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = quit},
+        if (button(Widget{.id = id++, .z_index = 0, .rect = quit},
                    text_lookup(strings::i18n::QUIT))) {
             MenuState::get().reset();
             GameState::get().reset();

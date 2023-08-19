@@ -10,8 +10,8 @@
 #include "../globals.h"
 //
 #include "../engine/toastmanager.h"
+#include "../engine/ui.h"
 #include "../network/network.h"
-#include "../ui.h"
 
 using namespace ui;
 
@@ -183,7 +183,7 @@ struct NetworkLayer : public Layer {
     void draw_username_picker(float dt) {
         ext::clear_background(ui_context->active_theme().background);
 
-        using namespace xui;
+        using namespace ui;
 
         begin(ui_context, dt);
         int id = 0;
@@ -195,18 +195,18 @@ struct NetworkLayer : public Layer {
 
         auto [label, name, lock, back] = rect::hsplit<4>(username);
 
-        text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+        text(Widget{.id = id++, .z_index = 0, .rect = label},
              text_lookup(strings::i18n::USERNAME));
 
-        text(xui::Widget{.id = id++, .z_index = 0, .rect = name},
+        text(Widget{.id = id++, .z_index = 0, .rect = name},
              Settings::get().data.username);
 
-        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = lock},
+        if (button(Widget{.id = id++, .z_index = 0, .rect = lock},
                    text_lookup(strings::i18n::LOCK_IN))) {
             network_info->lock_in_username();
         }
 
-        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = back},
+        if (button(Widget{.id = id++, .z_index = 0, .rect = back},
                    text_lookup(strings::i18n::BACK_BUTTON))) {
             MenuState::get().go_back();
         }
@@ -217,7 +217,7 @@ struct NetworkLayer : public Layer {
     void draw_role_selector_screen(float dt) {
         ext::clear_background(ui_context->active_theme().background);
 
-        using namespace xui;
+        using namespace ui;
 
         begin(ui_context, dt);
         int id = 0;
@@ -233,15 +233,15 @@ struct NetworkLayer : public Layer {
             auto [host, join, back] =
                 rect::hsplit<3>(rect::rpad(rect::lpad(buttons, 15), 20), 20);
 
-            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = host},
+            if (button(Widget{.id = id++, .z_index = 0, .rect = host},
                        text_lookup(strings::i18n::HOST))) {
                 network_info->set_role(network::Info::Role::s_Host);
             }
-            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = join},
+            if (button(Widget{.id = id++, .z_index = 0, .rect = join},
                        text_lookup(strings::i18n::JOIN))) {
                 network_info->set_role(network::Info::Role::s_Client);
             }
-            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = back},
+            if (button(Widget{.id = id++, .z_index = 0, .rect = back},
                        text_lookup(strings::i18n::BACK_BUTTON))) {
                 MenuState::get().clear_history();
                 MenuState::get().set(menu::State::Root);
@@ -253,13 +253,13 @@ struct NetworkLayer : public Layer {
             auto [label, name, edit] =
                 rect::vsplit<3>(rect::rpad(username, 40));
 
-            text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+            text(Widget{.id = id++, .z_index = 0, .rect = label},
                  text_lookup(strings::i18n::USERNAME));
 
-            text(xui::Widget{.id = id++, .z_index = 0, .rect = name},
+            text(Widget{.id = id++, .z_index = 0, .rect = name},
                  Settings::get().data.username);
 
-            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = edit},
+            if (button(Widget{.id = id++, .z_index = 0, .rect = edit},
                        text_lookup(strings::i18n::EDIT))) {
                 network_info->unlock_username();
             }
@@ -271,7 +271,7 @@ struct NetworkLayer : public Layer {
     void draw_connected_screen(float dt) {
         ext::clear_background(ui_context->active_theme().background);
 
-        using namespace xui;
+        using namespace ui;
 
         begin(ui_context, dt);
         int id = 0;
@@ -289,7 +289,7 @@ struct NetworkLayer : public Layer {
         {
             auto players = rect::hsplit<4>(connected_players);
 
-            text(xui::Widget{.id = id++, .z_index = 0, .rect = players[0]},
+            text(Widget{.id = id++, .z_index = 0, .rect = players[0]},
                  Settings::get().data.username);
 
             /*
@@ -312,23 +312,19 @@ struct NetworkLayer : public Layer {
             if (network_info->is_host()) {
                 auto [start, disconnect] = rect::hsplit<2>(buttons);
 
-                if (button(xui::Widget{.id = id++, .z_index = 0, .rect = start},
+                if (button(Widget{.id = id++, .z_index = 0, .rect = start},
                            text_lookup(strings::i18n::START))) {
                     MenuState::get().set(menu::State::Game);
                     GameState::get().set(game::State::Lobby);
                 }
-                if (button(
-                        xui::Widget{
-                            .id = id++, .z_index = 0, .rect = disconnect},
-                        text_lookup(strings::i18n::DISCONNECT))) {
+                if (button(Widget{.id = id++, .z_index = 0, .rect = disconnect},
+                           text_lookup(strings::i18n::DISCONNECT))) {
                     network_info.reset(new network::Info());
                 }
             } else {
                 auto disconnect = buttons;
-                if (button(
-                        xui::Widget{
-                            .id = id++, .z_index = 0, .rect = disconnect},
-                        text_lookup(strings::i18n::DISCONNECT))) {
+                if (button(Widget{.id = id++, .z_index = 0, .rect = disconnect},
+                           text_lookup(strings::i18n::DISCONNECT))) {
                     network_info.reset(new network::Info());
                 }
             }
@@ -340,7 +336,7 @@ struct NetworkLayer : public Layer {
             auto [label, control] = rect::vsplit<2>(ip_addr);
 
             auto ip = should_show_host_ip ? my_ip_address : "***.***.***.***";
-            text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+            text(Widget{.id = id++, .z_index = 0, .rect = label},
                  // TODO not translated
                  fmt::format("Your IP is: {}", ip));
 
@@ -351,14 +347,14 @@ struct NetworkLayer : public Layer {
             std::string show_hide_host_ip_text =
                 should_show_host_ip ? text_lookup(strings::i18n::HIDE_IP)
                                     : text_lookup(strings::i18n::SHOW_IP);
-            if (auto result = checkbox(
-                    xui::Widget{.id = id++, .z_index = 0, .rect = check},
-                    TextfieldData{.content = show_hide_host_ip_text});
+            if (auto result =
+                    checkbox(Widget{.id = id++, .z_index = 0, .rect = check},
+                             TextfieldData{.content = show_hide_host_ip_text});
                 result) {
                 should_show_host_ip = !should_show_host_ip;
             }
 
-            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = copy},
+            if (button(Widget{.id = id++, .z_index = 0, .rect = copy},
                        text_lookup(strings::i18n::COPY_IP))) {
                 ext::set_clipboard_text(my_ip_address.c_str());
             }
@@ -372,16 +368,16 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_username_with_edit(int& id, Rectangle parent, float dt) {
-        using namespace xui;
+        using namespace ui;
         auto [label, name, edit] = rect::vsplit<3>(parent);
 
-        text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+        text(Widget{.id = id++, .z_index = 0, .rect = label},
              text_lookup(strings::i18n::USERNAME));
 
-        text(xui::Widget{.id = id++, .z_index = 0, .rect = name},
+        text(Widget{.id = id++, .z_index = 0, .rect = name},
              Settings::get().data.username);
 
-        if (button(xui::Widget{.id = id++, .z_index = 0, .rect = edit},
+        if (button(Widget{.id = id++, .z_index = 0, .rect = edit},
                    text_lookup(strings::i18n::EDIT))) {
             network_info->unlock_username();
         }
@@ -390,7 +386,7 @@ struct NetworkLayer : public Layer {
     void draw_ip_input_screen(float dt) {
         ext::clear_background(ui_context->active_theme().background);
 
-        using namespace xui;
+        using namespace ui;
 
         begin(ui_context, dt);
         int id = 0;
@@ -411,12 +407,12 @@ struct NetworkLayer : public Layer {
         {
             auto [label, control] = rect::vsplit<2>(ip);
 
-            text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+            text(Widget{.id = id++, .z_index = 0, .rect = label},
                  text_lookup(strings::i18n::ENTER_IP));
 
-            if (auto result = textfield(
-                    xui::Widget{.id = id++, .z_index = 0, .rect = control},
-                    TextfieldData{network_info->host_ip_address()});
+            if (auto result =
+                    textfield(Widget{.id = id++, .z_index = 0, .rect = control},
+                              TextfieldData{network_info->host_ip_address()});
                 result) {
                 network_info->host_ip_address() = result.as<std::string>();
             }
@@ -427,13 +423,13 @@ struct NetworkLayer : public Layer {
             buttons = rect::rpad(buttons, 50);
             auto [load_ip, connect] = rect::hsplit<2>(buttons);
 
-            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = load_ip},
+            if (button(Widget{.id = id++, .z_index = 0, .rect = load_ip},
                        text_lookup(strings::i18n::LOAD_LAST_IP))) {
                 network_info->host_ip_address() =
                     Settings::get().last_used_ip();
             }
 
-            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = connect},
+            if (button(Widget{.id = id++, .z_index = 0, .rect = connect},
                        text_lookup(strings::i18n::CONNECT))) {
                 Settings::get().update_last_used_ip_address(
                     network_info->host_ip_address());
@@ -444,7 +440,7 @@ struct NetworkLayer : public Layer {
         // Back button
         {
             back = rect::rpad(back, 50);
-            if (button(xui::Widget{.id = id++, .z_index = 0, .rect = back},
+            if (button(Widget{.id = id++, .z_index = 0, .rect = back},
                        text_lookup(strings::i18n::BACK_BUTTON))) {
                 MenuState::get().go_back();
             }
