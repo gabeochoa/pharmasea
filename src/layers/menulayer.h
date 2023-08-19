@@ -70,7 +70,7 @@ struct MenuLayer : public Layer {
         // Buttons
         {
             auto [rect1, rect2, rect3, rect4] =
-                rect::hsplit<4>(rect::rpad(rect::lpad(body, 15), 25));
+                rect::hsplit<4>(rect::rpad(rect::lpad(body, 15), 25), 20);
 
             if (button(Widget{.id = 1, .z_index = 0, .rect = rect1},
                        text_lookup(strings::i18n::PLAY))) {

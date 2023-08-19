@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include "engine/globals.h"
 #include "engine/ui.h"
 #include "engine/ui_context.h"
@@ -9,6 +11,12 @@
 namespace xui {
 
 namespace rect {
+
+inline Rectangle lpad(const Rectangle& r, float pct);
+inline Rectangle rpad(const Rectangle& r, float pct);
+inline Rectangle tpad(const Rectangle& r, float pct);
+inline Rectangle bpad(const Rectangle& r, float pct);
+
 inline raylib::Rectangle expand(const raylib::Rectangle& a, const vec4& b) {
     return (Rectangle){a.x - b.x,            //
                        a.y - b.y,            //
@@ -22,6 +30,38 @@ inline std::array<Rectangle, 2> vsplit(const Rectangle& a, float pct) {
     Rectangle right = {a.x + (a.width * ratio), a.y, a.width * (1.f - ratio),
                        a.height};
     return {left, right};
+}
+
+inline std::array<Rectangle, 2> hsplit(const Rectangle& a, float pct,
+                                       float padding_bottom = 0) {
+    float ratio = pct / 100.f;
+    Rectangle top = {a.x, a.y, a.width, a.height * ratio};
+    if (padding_bottom > 0) {
+        top = bpad(top, 100 - padding_bottom);
+    }
+    Rectangle bottom = {a.x, a.y + (a.height * ratio), a.width,
+                        a.height * (1.f - ratio)};
+    return {top, bottom};
+}
+
+inline Rectangle lpad(const Rectangle& r, float pct) {
+    auto [_, b] = vsplit(r, pct);
+    return b;
+}
+
+inline Rectangle rpad(const Rectangle& r, float pct) {
+    auto [a, _] = vsplit(r, pct);
+    return a;
+}
+
+inline Rectangle tpad(const Rectangle& r, float pct) {
+    auto [_, b] = hsplit(r, pct);
+    return b;
+}
+
+inline Rectangle bpad(const Rectangle& r, float pct) {
+    auto [a, _] = hsplit(r, pct);
+    return a;
 }
 
 template<size_t N>
@@ -46,16 +86,8 @@ std::array<Rectangle, 2> vsplit(const Rectangle& a) {
     return vsplit(a, 50.f);
 }
 
-inline std::array<Rectangle, 2> hsplit(const Rectangle& a, float pct) {
-    float ratio = pct / 100.f;
-    Rectangle top = {a.x, a.y, a.width, a.height * ratio};
-    Rectangle bottom = {a.x, a.y + (a.height * ratio), a.width,
-                        a.height * (1.f - ratio)};
-    return {top, bottom};
-}
-
 template<size_t N>
-std::array<Rectangle, N> hsplit(const Rectangle& a) {
+std::array<Rectangle, N> hsplit(const Rectangle& a, float padding_bottom = 0) {
     std::array<Rectangle, N> rectangles;
     float step = a.height / N;
 
@@ -65,6 +97,9 @@ std::array<Rectangle, N> hsplit(const Rectangle& a) {
     float height = step;
     for (size_t i = 0; i < N; ++i) {
         rectangles[i] = Rectangle{x, y, width, height};
+        if (padding_bottom > 0) {
+            rectangles[i] = rect::bpad(rectangles[i], 100 - padding_bottom);
+        }
         x += 0;
         y += step;
     }
@@ -72,18 +107,8 @@ std::array<Rectangle, N> hsplit(const Rectangle& a) {
 }
 
 template<>
-std::array<Rectangle, 2> hsplit(const Rectangle& a) {
-    return hsplit(a, 50.f);
-}
-
-Rectangle lpad(const Rectangle& r, float pct) {
-    auto [_, b] = vsplit(r, pct);
-    return b;
-}
-
-Rectangle rpad(const Rectangle& r, float pct) {
-    auto [a, _] = vsplit(r, pct);
-    return a;
+std::array<Rectangle, 2> hsplit(const Rectangle& a, float padding_bottom) {
+    return hsplit(a, 50.f, padding_bottom);
 }
 
 }  // namespace rect
@@ -144,7 +169,7 @@ typedef std::variant<std::string, bool, float, TextfieldData, DropdownData>
     InputDataSource;
 
 struct Widget {
-    int id;
+    int id = 0;
     int z_index = 0;
     Rectangle rect = {0, 0, WIN_WF(), WIN_HF()};
 
@@ -292,8 +317,10 @@ inline void draw_text(const std::string& content, Rectangle parent, int z_index,
             // color_usage);
             auto font = Preload::get().font;
             auto rect = parent;
-            auto font_size = 100.f;
-            auto spacing = 1.f;
+            auto spacing = 0.f;
+            // TODO move the generator out of context
+            auto font_size = context->get_font_size(content, rect.width,
+                                                    rect.height, spacing);
 
             DrawTextEx(font,                //
                        content.c_str(),     //
@@ -382,8 +409,8 @@ inline ElementResult button(const Widget& widget,
     focus::handle_tabbing(widget);
 
     if (background) {
-        auto color_usage = ui::theme::Usage::
-            Primary;  // widget.get_usage_color("background-color");
+        // TODO Add way to control color
+        auto color_usage = ui::theme::Usage::Primary;
 
         // TODO add style for 'hover' state
         if (focus::is_hot(widget.id)) {

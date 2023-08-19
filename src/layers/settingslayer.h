@@ -1,9 +1,10 @@
 #pragma once
 
 #include "../engine.h"
+#include "../engine/app.h"
+#include "../engine/settings.h"
 #include "../external_include.h"
-
-using namespace ui;
+#include "../ui.h"
 
 // TODO add support for customizing keymap
 
@@ -53,7 +54,7 @@ struct SettingsLayer : public Layer {
 
     virtual ~SettingsLayer() {}
 
-    bool onKeyPressed(KeyPressedEvent& event) override {
+    virtual bool onKeyPressed(KeyPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Settings)) return false;
 
         //
@@ -70,21 +71,23 @@ struct SettingsLayer : public Layer {
         return ui_context.get()->process_keyevent(event);
     }
 
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
+    virtual bool onGamepadButtonPressed(
+        GamepadButtonPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Settings)) return false;
         return ui_context.get()->process_gamepad_button_event(event);
     }
+    /*
 
     void streamer_safe_box() {
         auto container = ui_context->own(
-            Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
+            ui::Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
 
         div(*container);
         ui_context->push_parent(container);
         {
             text(*ui::components::mk_text(),
                  text_lookup(strings::i18n::SHOW_SAFE_BOX));
-            auto checkbox_widget = ui_context->own(Widget(
+            auto checkbox_widget = ui_context->own(ui::Widget(
                 MK_UUID(id, ROOT_ID), Size_Px(75.f, 0.5f), Size_Px(25.f, 1.f)));
             bool sssb = Settings::get().data.show_streamer_safe_box;
             if (checkbox(*checkbox_widget, &sssb)) {
@@ -96,14 +99,14 @@ struct SettingsLayer : public Layer {
 
     void enable_post_processing() {
         auto container = ui_context->own(
-            Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
+            ui::Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
 
         div(*container);
         ui_context->push_parent(container);
         {
             text(*ui::components::mk_text(),
                  text_lookup(strings::i18n::ENABLE_PPS));
-            auto checkbox_widget = ui_context->own(Widget(
+            auto checkbox_widget = ui_context->own(ui::Widget(
                 MK_UUID(id, ROOT_ID), Size_Px(75.f, 0.5f), Size_Px(25.f, 1.f)));
             bool sssb = Settings::get().data.enable_postprocessing;
             if (checkbox(*checkbox_widget, &sssb)) {
@@ -115,7 +118,7 @@ struct SettingsLayer : public Layer {
 
     void master_volume() {
         auto volume_slider_container = ui_context->own(
-            Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
+            ui::Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
 
         div(*volume_slider_container);
         ui_context->push_parent(volume_slider_container);
@@ -125,7 +128,7 @@ struct SettingsLayer : public Layer {
             padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                                 Size_Px(100.f, 1.f)));
 
-            auto slider_widget = ui_context->own(Widget(
+            auto slider_widget = ui_context->own(ui::Widget(
                 MK_UUID(id, ROOT_ID), Size_Px(100.f, 1.f), Size_Px(30.f, 1.f)));
 
             float* mv = &(Settings::get().data.master_volume);
@@ -138,7 +141,7 @@ struct SettingsLayer : public Layer {
 
     void music_volume() {
         auto volume_slider_container = ui_context->own(
-            Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
+            ui::Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
 
         div(*volume_slider_container);
         ui_context->push_parent(volume_slider_container);
@@ -148,7 +151,7 @@ struct SettingsLayer : public Layer {
             padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                                 Size_Px(100.f, 1.f)));
 
-            auto slider_widget = ui_context->own(Widget(
+            auto slider_widget = ui_context->own(ui::Widget(
                 MK_UUID(id, ROOT_ID), Size_Px(100.f, 1.f), Size_Px(30.f, 1.f)));
 
             float* mv = &(Settings::get().data.music_volume);
@@ -161,7 +164,7 @@ struct SettingsLayer : public Layer {
 
     void resolution_switcher() {
         auto resolution_switcher_container = ui_context->own(
-            Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
+            ui::Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
 
         div(*resolution_switcher_container);
         ui_context->push_parent(resolution_switcher_container);
@@ -171,9 +174,9 @@ struct SettingsLayer : public Layer {
             padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                                 Size_Px(100.f, 1.f)));
 
-            auto dropdown_widget =
-                ui_context->own(Widget({Size_Px(100.f, 1.f), Size_Px(50.f, 1.f),
-                                        GrowFlags::Row | GrowFlags::Column}));
+            auto dropdown_widget = ui_context->own(
+                ui::Widget({Size_Px(100.f, 1.f), Size_Px(50.f, 1.f),
+                            GrowFlags::Row | GrowFlags::Column}));
 
             if (dropdown(*dropdown_widget, Settings::get().resolution_options(),
                          &resolution_dropdown_open,
@@ -188,7 +191,7 @@ struct SettingsLayer : public Layer {
 
     void language_switcher() {
         auto language_switcher_container = ui_context->own(
-            Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
+            ui::Widget({.mode = Children}, {.mode = Children}, GrowFlags::Row));
 
         div(*language_switcher_container);
         ui_context->push_parent(language_switcher_container);
@@ -198,9 +201,9 @@ struct SettingsLayer : public Layer {
             padding(*ui::components::mk_padding(Size_Px(100.f, 1.f),
                                                 Size_Px(100.f, 1.f)));
 
-            auto dropdown_widget =
-                ui_context->own(Widget({Size_Px(100.f, 1.f), Size_Px(50.f, 1.f),
-                                        GrowFlags::Row | GrowFlags::Column}));
+            auto dropdown_widget = ui_context->own(
+                ui::Widget({Size_Px(100.f, 1.f), Size_Px(50.f, 1.f),
+                            GrowFlags::Row | GrowFlags::Column}));
 
             if (dropdown(*dropdown_widget, Settings::get().language_options(),
                          &language_dropdown_open, &language_selected_index)) {
@@ -292,6 +295,7 @@ struct SettingsLayer : public Layer {
 
         ui_context->end(root.get());
     }
+    */
 
     virtual void onUpdate(float) override {
         if (MenuState::get().is_not(menu::State::Settings)) return;
@@ -301,6 +305,128 @@ struct SettingsLayer : public Layer {
     virtual void onDraw(float dt) override {
         if (MenuState::get().is_not(menu::State::Settings)) return;
         ext::clear_background(ui_context->active_theme().background);
-        draw_ui(dt);
+
+        using namespace xui;
+
+        begin(ui_context, dt);
+        int id = 0;
+
+        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+        auto content = rect::tpad(window, 20);
+        content = rect::lpad(content, 10);
+
+        auto [rows, footer] = rect::hsplit(content, 80);
+
+        {
+            auto [master_vol, music_vol, resolution, language, streamer,
+                  postprocessing] = rect::hsplit<6>(rect::bpad(rows, 85), 20);
+
+            {
+                auto [label, control] = rect::vsplit(master_vol, 30);
+                control = rect::rpad(control, 30);
+
+                text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+                     text_lookup(strings::i18n::MASTER_VOLUME));
+                if (auto result = slider(
+                        xui::Widget{.id = id++, .z_index = 0, .rect = control});
+                    result) {
+                    Settings::get().update_master_volume(result.as<float>());
+                }
+            }
+
+            {
+                auto [label, control] = rect::vsplit(music_vol, 30);
+                control = rect::rpad(control, 30);
+
+                text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+                     text_lookup(strings::i18n::MUSIC_VOLUME));
+                if (auto result = slider(
+                        xui::Widget{.id = id++, .z_index = 0, .rect = control});
+                    result) {
+                    Settings::get().update_music_volume(result.as<float>());
+                }
+            }
+
+            {
+                auto [label, control] = rect::vsplit(resolution, 30);
+                control = rect::rpad(control, 30);
+
+                text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+                     text_lookup(strings::i18n::RESOLUTION));
+                if (auto result = dropdown(
+                        xui::Widget{.id = id++, .z_index = 0, .rect = control},
+                        DropdownData{
+                            Settings::get().resolution_options(),
+                            Settings::get().get_current_resolution_index(),
+                        });
+                    result) {
+                    Settings::get().update_resolution_from_index(
+                        result.as<int>());
+                }
+            }
+
+            {
+                auto [label, control] = rect::vsplit(language, 30);
+                control = rect::rpad(control, 30);
+
+                text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+                     text_lookup(strings::i18n::LANGUAGE));
+                if (auto result = dropdown(
+                        xui::Widget{.id = id++, .z_index = 0, .rect = control},
+                        DropdownData{
+                            Settings::get().language_options(),
+                            Settings::get().get_current_language_index(),
+                        });
+                    result) {
+                    Settings::get().update_language_from_index(
+                        result.as<int>());
+                }
+            }
+
+            {
+                auto [label, control] = rect::vsplit(streamer, 30);
+                control = rect::rpad(control, 10);
+
+                text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+                     text_lookup(strings::i18n::SHOW_SAFE_BOX));
+
+                // TODO default value wont be setup correctly without this
+                // bool sssb = Settings::get().data.show_streamer_safe_box;
+                if (auto result = checkbox(
+                        xui::Widget{.id = id++, .z_index = 0, .rect = control});
+                    result) {
+                    Settings::get().update_streamer_safe_box(result.as<bool>());
+                }
+            }
+
+            {
+                auto [label, control] = rect::vsplit(postprocessing, 30);
+                control = rect::rpad(control, 10);
+
+                text(xui::Widget{.id = id++, .z_index = 0, .rect = label},
+                     text_lookup(strings::i18n::ENABLE_PPS));
+
+                // TODO default value wont be setup correctly without this
+                // bool sssb = Settings::get().data.enable_postprocessing;
+                if (auto result = checkbox(
+                        xui::Widget{.id = id++, .z_index = 0, .rect = control});
+                    result) {
+                    Settings::get().update_post_processing_enabled(
+                        result.as<bool>());
+                }
+            }
+        }
+
+        // Footer
+        {
+            footer = rect::rpad(footer, 30);
+            if (button(xui::Widget{.id = 4, .z_index = 0, .rect = footer},
+                       text_lookup(strings::i18n::BACK_BUTTON), true)) {
+                MenuState::get().go_back();
+                App::get().close();
+            }
+        }
+
+        end();
     }
 };
