@@ -160,10 +160,17 @@ struct NetworkLayer : public Layer {
 
         text(Widget{uname}, Settings::get().data.username);
 
-        edit = rect::tpad(edit, 20);
-        edit = rect::bpad(edit, 80);
-        if (button(Widget{edit}, text_lookup(strings::i18n::EDIT))) {
-            network_info->unlock_username();
+        bool show_edit_button =
+            network_info->client
+                ? network_info->client->remote_players.size() <= 1
+                : true;
+
+        if (show_edit_button) {
+            edit = rect::tpad(edit, 20);
+            edit = rect::bpad(edit, 80);
+            if (button(Widget{edit}, text_lookup(strings::i18n::EDIT))) {
+                network_info->unlock_username();
+            }
         }
     }
 
@@ -246,7 +253,7 @@ struct NetworkLayer : public Layer {
         }
 
         // your ip is .... show copy
-        {
+        if (network_info->is_host()) {
             your_ip = rect::lpad(your_ip, 20);
             your_ip = rect::rpad(your_ip, 60);
 
@@ -277,9 +284,6 @@ struct NetworkLayer : public Layer {
             }
         }
 
-        // TODO add button to edit as long as you arent currently
-        // hosting people?
-
         // Even though the ui shows up at the top
         // we dont want the tabbing to be first, so
         // we put it here
@@ -288,17 +292,19 @@ struct NetworkLayer : public Layer {
 
     void draw_ip_input_screen(float dt) {
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto content = rect::tpad(window, 30);
-        content = rect::lpad(content, 20);
-        content = rect::rpad(content, 80);
+        auto [username, body] = rect::hsplit(window, 33);
+        body = rect::lpad(body, 20);
+        body = rect::rpad(body, 80);
 
-        auto [username, controls] = rect::hsplit(content, 40);
+        auto [ip, buttons, back] = rect::hsplit<3>(body, 30);
 
         // TODO add showhide button
-
         // IP addr input
-        auto [ip, buttons, back] = rect::hsplit<3>(controls);
         {
+            ip = rect::tpad(ip, 30);
+            ip = rect::bpad(ip, 30);
+            ip = rect::rpad(ip, 80);
+
             auto [label, control] = rect::vsplit<2>(ip);
 
             text(Widget{label}, text_lookup(strings::i18n::ENTER_IP));
@@ -325,7 +331,9 @@ struct NetworkLayer : public Layer {
 
         // Buttons
         {
-            buttons = rect::rpad(buttons, 50);
+            auto [bs, _a, _b] = rect::vsplit<3>(buttons);
+            buttons = bs;
+
             auto [load_ip, connect] = rect::hsplit<2>(buttons);
 
             if (button(Widget{load_ip},
@@ -343,7 +351,7 @@ struct NetworkLayer : public Layer {
 
         // Back button
         {
-            back = rect::rpad(back, 50);
+            back = rect::rpad(back, 20);
             if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON))) {
                 network_info->unlock_username();
             }
