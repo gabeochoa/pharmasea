@@ -203,7 +203,7 @@ void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
     mop_buddy.get<ModelRenderer>().update_model_name(
         util::convertToSnakeCase(EntityType::MopBuddy));
 
-    mop_buddy.get<HasBaseSpeed>().update(0.5f);
+    mop_buddy.get<HasBaseSpeed>().update(1.5f);
     mop_buddy.get<CanPerformJob>().update(Mopping, Mopping);
     mop_buddy.addComponent<IsItem>().set_hb_filter(EntityType::Player);
 }
