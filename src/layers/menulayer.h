@@ -69,7 +69,7 @@ struct MenuLayer : public Layer {
         // Buttons
         {
             auto [rect1, rect2, rect3, rect4] =
-                rect::hsplit<4>(rect::rpad(rect::lpad(body, 15), 15), 20);
+                rect::hsplit<4>(rect::hpad(body, 15), 20);
 
             if (button(Widget{rect1}, text_lookup(strings::i18n::PLAY))) {
                 MenuState::get().set(menu::State::Network);

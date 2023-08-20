@@ -100,6 +100,14 @@ inline Rectangle bpad(const Rectangle& r, float pct) {
     return a;
 }
 
+inline Rectangle vpad(const Rectangle& r, float pct) {
+    return tpad(bpad(r, pct), pct);
+}
+
+inline Rectangle hpad(const Rectangle& r, float pct) {
+    return rpad(lpad(r, pct), pct);
+}
+
 template<size_t N>
 inline std::array<Rectangle, N> vsplit(const Rectangle& a,
                                        float padding_right = 0) {

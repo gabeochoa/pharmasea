@@ -148,17 +148,37 @@ struct NetworkLayer : public Layer {
         }
     }
 
-    void draw_role_selector_screen(float) {
+    void draw_username_with_edit(Rectangle username, float) {
+        username = rect::lpad(username, 25);
+        username = rect::rpad(username, 75);
+        username = rect::tpad(username, 35);
+        username = rect::bpad(username, 85);
+
+        auto [label, uname, _empty, edit] = rect::vsplit<4>(username, 20);
+
+        text(Widget{label}, text_lookup(strings::i18n::USERNAME));
+
+        text(Widget{uname}, Settings::get().data.username);
+
+        edit = rect::tpad(edit, 20);
+        edit = rect::bpad(edit, 80);
+        if (button(Widget{edit}, text_lookup(strings::i18n::EDIT))) {
+            network_info->unlock_username();
+        }
+    }
+
+    void draw_role_selector_screen(float dt) {
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto content = rect::tpad(window, 30);
-        content = rect::bpad(content, 30);
+        auto [username, content] = rect::hsplit(window, 33);
+        content = rect::bpad(content, 66);
 
-        auto [buttons, username] = rect::vsplit(content, 40);
-
+        auto buttons = content;
         // button
         {
-            auto [host, join, back] =
-                rect::hsplit<3>(rect::rpad(rect::lpad(buttons, 15), 20), 20);
+            buttons = rect::lpad(buttons, 15);
+            buttons = rect::rpad(buttons, 15);
+
+            auto [host, join, _empty, back] = rect::hsplit<4>(buttons, 20);
 
             if (button(Widget{host}, text_lookup(strings::i18n::HOST))) {
                 network_info->set_role(network::Info::Role::s_Host);
@@ -172,57 +192,26 @@ struct NetworkLayer : public Layer {
             }
         }
 
-        {
-            username = rect::bpad(username, 30);
-            auto [label, name, edit] =
-                rect::vsplit<3>(rect::rpad(username, 40));
-
-            text(Widget{label}, text_lookup(strings::i18n::USERNAME));
-
-            text(Widget{name}, Settings::get().data.username);
-
-            if (button(Widget{edit}, text_lookup(strings::i18n::EDIT))) {
-                network_info->unlock_username();
-            }
-        }
+        // Even though the ui shows up at the top
+        // we dont want the tabbing to be first, so
+        // we put it here
+        draw_username_with_edit(username, dt);
     }
 
     void draw_connected_screen(float dt) {
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto content = rect::tpad(window, 30);
-        content = rect::rpad(content, 80);
-        content = rect::lpad(content, 20);
-        content = rect::bpad(content, 80);
+        auto [username, content] = rect::hsplit(window, 33);
 
-        auto [connected_players, buttons, ip_addr, username] =
-            rect::hsplit<4>(content);
+        auto [buttons, your_ip, player_box] = rect::vsplit<3>(content);
 
-        // Draw connected players
+        /// Buttons
         {
-            auto players = rect::hsplit<4>(connected_players);
+            buttons = rect::lpad(buttons, 45);
+            buttons = rect::rpad(buttons, 75);
 
-            text(Widget{players[0]}, Settings::get().data.username);
-
-            /*
-            for (auto kv : network_info->client->remote_players) {
-                // TODO figure out why there are null rps
-                if (!kv.second) continue;
-                auto player_text = ui_context->own(
-                    Widget(MK_UUID_LOOP(id, ROOT_ID, kv.first),
-                           Size_Px(120.f, 0.5f), Size_Px(100.f, 1.f)));
-                text(*player_text,
-                     fmt::format("{}({})", kv.second->get<HasName>().name(),
-                                 kv.first));
-            }
-            */
-        }
-
-        {
-            buttons = rect::rpad(buttons, 30);
+            auto [start, _a, _b, disconnect] = rect::hsplit<4>(buttons, 30);
 
             if (network_info->is_host()) {
-                auto [start, disconnect] = rect::hsplit<2>(buttons);
-
                 if (button(Widget{start}, text_lookup(strings::i18n::START))) {
                     MenuState::get().set(menu::State::Game);
                     GameState::get().set(game::State::Lobby);
@@ -232,7 +221,6 @@ struct NetworkLayer : public Layer {
                     network_info.reset(new network::Info());
                 }
             } else {
-                auto disconnect = buttons;
                 if (button(Widget{disconnect},
                            text_lookup(strings::i18n::DISCONNECT))) {
                     network_info.reset(new network::Info());
@@ -240,17 +228,36 @@ struct NetworkLayer : public Layer {
             }
         }
 
+        {
+            player_box = rect::lpad(player_box, 20);
+            player_box = rect::rpad(player_box, 60);
+
+            auto players = rect::hsplit<4>(player_box, 15);
+
+            int i = 0;
+            for (auto kv : network_info->client->remote_players) {
+                // TODO figure out why there are null rps
+                if (!kv.second) continue;
+
+                text(Widget{players[i++]},
+                     fmt::format("{}({})", kv.second->get<HasName>().name(),
+                                 kv.first));
+            }
+        }
+
         // your ip is .... show copy
         {
-            ip_addr = rect::bpad(ip_addr, 50);
-            auto [label, control] = rect::vsplit<2>(ip_addr);
+            your_ip = rect::lpad(your_ip, 20);
+            your_ip = rect::rpad(your_ip, 60);
+
+            auto [_a, _b, label, control] = rect::hsplit<4>(your_ip, 30);
 
             auto ip = should_show_host_ip ? my_ip_address : "***.***.***.***";
             text(Widget{label},
                  // TODO not translated
                  fmt::format("Your IP is: {}", ip));
 
-            auto [check, copy] = rect::vsplit<2>(control);
+            auto [check, copy] = rect::vsplit<2>(control, 5);
 
             // TODO default value wont be setup correctly without this
             // bool sssb = Settings::get().data.show_streamer_safe_box;
@@ -272,20 +279,11 @@ struct NetworkLayer : public Layer {
 
         // TODO add button to edit as long as you arent currently
         // hosting people?
+
+        // Even though the ui shows up at the top
+        // we dont want the tabbing to be first, so
+        // we put it here
         draw_username_with_edit(username, dt);
-    }
-
-    void draw_username_with_edit(Rectangle parent, float dt) {
-        using namespace ui;
-        auto [label, name, edit] = rect::vsplit<3>(parent);
-
-        text(Widget{label}, text_lookup(strings::i18n::USERNAME));
-
-        text(Widget{name}, Settings::get().data.username);
-
-        if (button(Widget{edit}, text_lookup(strings::i18n::EDIT))) {
-            network_info->unlock_username();
-        }
     }
 
     void draw_ip_input_screen(float dt) {
@@ -295,8 +293,6 @@ struct NetworkLayer : public Layer {
         content = rect::rpad(content, 80);
 
         auto [username, controls] = rect::hsplit(content, 40);
-
-        draw_username_with_edit(username, dt);
 
         // TODO add showhide button
 
@@ -352,6 +348,11 @@ struct NetworkLayer : public Layer {
                 network_info->unlock_username();
             }
         }
+
+        // Even though the ui shows up at the top
+        // we dont want the tabbing to be first, so
+        // we put it here
+        draw_username_with_edit(username, dt);
     }
 
     void draw_screen(float dt) {
