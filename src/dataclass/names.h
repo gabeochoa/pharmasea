@@ -4,7 +4,7 @@
 #include "../engine/random.h"
 #include "../external_include.h"
 
-const std::array<const char*, 40> alcohol_names = {
+const std::array<const char*, 39> alcohol_names = {
     "Martini", "Ale",       "Chardonnay", "Brandy",   "Tequila",  "Lager",
     "Rosé",    "Mojito",    "Whiskey",    "Gin",      "Mimosa",   "Rum",
     "Bourbon", "Shiraz",    "Margarita",  "Merlot",   "Cosmo",    "Aperol",

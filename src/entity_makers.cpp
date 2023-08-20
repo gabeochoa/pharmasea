@@ -96,7 +96,7 @@ void register_all_components() {
 
 void add_entity_components(Entity& entity) { entity.addComponent<Transform>(); }
 
-void add_person_components(Entity& person) {
+void add_person_components(Entity& person, DebugOptions options = {}) {
     // TODO idk why but you spawn under the ground without this
     person.get<Transform>().update_y(0);
     float size_multiplier = 0.75f;
@@ -118,7 +118,9 @@ void add_person_components(Entity& person) {
         person.addComponent<SimpleColoredBoxRenderer>().update(RED, PINK);
     }
 
-    person.addComponent<UsesCharacterModel>();
+    if (options.enableCharacterModel) {
+        person.addComponent<UsesCharacterModel>();
+    }
 }
 
 void make_entity(Entity& entity, const DebugOptions& options,
@@ -187,9 +189,23 @@ void make_player(Entity& player, vec3 p) {
 
 void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
     make_entity(person, options, p);
-    add_person_components(person);
+    add_person_components(person, options);
 
     person.addComponent<CanPerformJob>().update(Wandering, Wandering);
+}
+
+void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
+    make_aiperson(mop_buddy,
+                  DebugOptions{.type = EntityType::MopBuddy,
+                               .enableCharacterModel = false},
+                  vec::to3(pos));
+
+    mop_buddy.get<ModelRenderer>().update_model_name(
+        util::convertToSnakeCase(EntityType::MopBuddy));
+
+    mop_buddy.get<HasBaseSpeed>().update(0.5f);
+    mop_buddy.get<CanPerformJob>().update(Mopping, Mopping);
+    mop_buddy.addComponent<IsItem>().set_hb_filter(EntityType::Player);
 }
 
 // TODO This namespace should probably be "furniture::"
@@ -550,12 +566,17 @@ void make_vomit(Entity& vomit, vec2 pos) {
     vomit.addComponent<HasWork>().init(
         [](Entity& vom, HasWork& hasWork, const Entity& player, float dt) {
             if (GameState::get().is_not(game::State::InRound)) return;
-            const CanHoldItem& playerCHI = player.get<CanHoldItem>();
-            // not holding anything
-            if (playerCHI.empty()) return;
-            std::shared_ptr<Item> item = playerCHI.const_item();
-            // Has to be holding mop
-            if (!check_type(*item, EntityType::Mop)) return;
+
+            // He can mop without holding a mop
+            if (check_type(player, EntityType::MopBuddy)) {
+            } else {
+                const CanHoldItem& playerCHI = player.get<CanHoldItem>();
+                // not holding anything
+                if (playerCHI.empty()) return;
+                std::shared_ptr<Item> item = playerCHI.const_item();
+                // Has to be holding mop
+                if (!check_type(*item, EntityType::Mop)) return;
+            }
 
             const float amt = 1.f;
             hasWork.increase_pct(amt * dt);
@@ -847,8 +868,8 @@ void make_customer(Entity& customer, vec2 p, bool has_order) {
         // TODO only enable this once you start serving alcohol
         // TODO should we by default give the mop? or should you be able to
         // clean by hand but slowly?
-        .set_total(0)
-        .set_time_between(5.f);
+        .set_total(10)
+        .set_time_between(2.f);
 }
 
 namespace furniture {
@@ -951,6 +972,9 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::SimpleSyrup: {
             items::make_simple_syrup(entity, location);
+        } break;
+        case EntityType::MopBuddy: {
+            make_mop_buddy(entity, location);
         } break;
         case EntityType::TriggerArea:
         case EntityType::Vomit:

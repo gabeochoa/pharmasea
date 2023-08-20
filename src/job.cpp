@@ -106,6 +106,9 @@ Job* Job::create_job_of_type(vec2 _start, vec2 _end, JobType job_type) {
         case Leaving:
             job = new LeavingJob(_start, _end);
             break;
+        case Mopping:
+            job = new MoppingJob();
+            break;
         default:
             log_warn(
                 "Trying to replace job with type {}({}) but doesnt have it",
@@ -534,4 +537,58 @@ Job::State DrinkingJob::run_state_working_at_end(
         return (Job::State::Completed);
     }
     return (Job::State::WorkingAtEnd);
+}
+
+Job::State MoppingJob::run_state_initialize(
+    const std::shared_ptr<Entity>& entity, float) {
+    log_warn("starting a new mop job");
+
+    // Find the closest vomit
+    auto closest = EntityHelper::getClosestOfType(entity, EntityType::Vomit);
+
+    if (!closest) {
+        log_warn("Could not find any vomit");
+        // TODO make this function name more generic / obvious its shared
+        WIQ_wait_and_return(entity);
+        return Job::State::Initialize;
+    }
+
+    vom = closest;
+    VALIDATE(vom, "underlying job should contain vomit now");
+
+    start = vom->get<Transform>().as2();
+    end = start;
+
+    system_manager::logging_manager::announce(
+        entity, fmt::format("heading to vomit {}", start));
+
+    return Job::State::HeadingToStart;
+}
+
+Job::State MoppingJob::run_state_working_at_start(
+    const std::shared_ptr<Entity>& entity, float dt) {
+    if (!vom) {
+        system_manager::logging_manager::announce(
+            entity, fmt::format("seems like someone beat me to it"));
+        return (Job::State::HeadingToEnd);
+    }
+
+    HasWork& vomWork = vom->get<HasWork>();
+
+    // do some work
+    vomWork.call(*vom, *entity, dt);
+
+    // check if we did it
+    bool cleaned_up = vom->cleanup;
+
+    if (cleaned_up) {
+        system_manager::logging_manager::announce(
+            entity, fmt::format("i cleaned it up, see ya"));
+        return (Job::State::HeadingToEnd);
+    }
+
+    // otherwise keep working
+    system_manager::logging_manager::announce(entity,
+                                              fmt::format("im cleaning "));
+    return (Job::State::WorkingAtStart);
 }

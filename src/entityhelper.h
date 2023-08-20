@@ -351,6 +351,17 @@ struct EntityHelper {
         return {};
     }
 
+    static std::shared_ptr<Entity> getClosestOfType(
+        const std::shared_ptr<Entity>& entity, const EntityType& type,
+        float range = 100.f) {
+        const Transform& transform = entity->get<Transform>();
+        return EntityHelper::getClosestMatchingEntity<Entity>(
+            transform.as2(), range,
+            [type](const std::shared_ptr<Entity> entity) {
+                return check_type(*entity, type);
+            });
+    }
+
     // TODO does this break the idea of ecs
     // TODO change other debugname filter guys to this
     static std::vector<std::shared_ptr<Entity>> getAllWithType(

@@ -37,6 +37,7 @@ const char FILTERED_GRABBER = 'G';
 const char PIPE = 'p';
 const char MOP_HOLDER = 'm';
 const char FAST_FORWARD = 'f';
+const char MOP_BUDDY = 'B';
 
 const char SOPHIE = 's';
 
@@ -149,6 +150,9 @@ struct helper {
             } break;
             case FAST_FORWARD: {
                 return EntityType::FastForward;
+            } break;
+            case MOP_BUDDY: {
+                return EntityType::MopBuddy;
             } break;
             case 32: {
                 // space

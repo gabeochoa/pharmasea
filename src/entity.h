@@ -183,6 +183,7 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 
 struct DebugOptions {
     EntityType type = EntityType::Unknown;
+    bool enableCharacterModel = true;
 };
 
 typedef std::reference_wrapper<Entity> RefEntity;

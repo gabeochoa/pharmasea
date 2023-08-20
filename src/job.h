@@ -19,6 +19,7 @@ enum JobType {
     Paying,
     Leaving,
     Drinking,
+    Mopping,
 
     MAX_JOB_TYPE,
 };
@@ -233,6 +234,32 @@ struct DrinkingJob : public Job {
         : Job(JobType::Drinking, _start, _end), timeToComplete(ttc) {}
 
     virtual State run_state_working_at_end(
+        const std::shared_ptr<Entity>& entity, float dt) override;
+
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Job>{});
+
+        s.value4b(timePassedInCurrentState);
+        s.value4b(timeToComplete);
+    }
+};
+
+struct MoppingJob : public Job {
+    std::shared_ptr<Entity> vom;
+
+    float timePassedInCurrentState = 0.f;
+    float timeToComplete = 1.f;
+
+    MoppingJob()
+        : Job(JobType::Mopping, vec2{0, 0}, vec2{0, 0}), timeToComplete(1.f) {}
+    MoppingJob(vec2 _start, vec2 _end, float ttc)
+        : Job(JobType::Mopping, _start, _end), timeToComplete(ttc) {}
+
+    virtual State run_state_initialize(const std::shared_ptr<Entity>& entity,
+                                       float dt) override;
+    virtual State run_state_working_at_start(
         const std::shared_ptr<Entity>& entity, float dt) override;
 
     friend bitsery::Access;
