@@ -1,0 +1,110 @@
+msgid "About"
+msgstr "소개"
+
+msgid "Play"
+msgstr "재생"
+
+msgid "Settings"
+msgstr "설정"
+
+msgid "Exit"
+msgstr "종료"
+
+msgid "Back"
+msgstr "뒤로"
+
+msgid "Continue"
+msgstr "계속"
+
+msgid "Quit"
+msgstr "종료"
+
+msgid "Join"
+msgstr "참여"
+
+msgid "Host"
+msgstr "호스트"
+
+msgid "Edit"
+msgstr "편집"
+
+msgid "Start"
+msgstr "시작"
+
+msgid "Disconnect"
+msgstr "연결 해제"
+
+msgid "Username"
+msgstr "사용자 이름"
+
+msgid "Lock-In"
+msgstr "확정"
+
+msgid "Enter IP Address"
+msgstr "IP 주소 입력"
+
+msgid "Load Last Used IP"
+msgstr "최근 사용한 IP 불러오기"
+
+msgid "Connect"
+msgstr "연결"
+
+msgid "Hide"
+msgstr "숨기기"
+
+msgid "Show"
+msgstr "보기"
+
+msgid "Copy"
+msgstr "복사"
+
+msgid "safe zone"
+msgstr "안전 지역"
+
+msgid "Show Streamer Safe Box"
+msgstr "스트리머 안전 박스 보기"
+
+msgid "Enable Post-Processing Shaders"
+msgstr "포스트 프로세싱 셰이더 활성화"
+
+msgid "Master Volume"
+msgstr "마스터 볼륨"
+
+msgid "Music Volume"
+msgstr "음악 볼륨"
+
+msgid "Resolution"
+msgstr "해상도"
+
+msgid "Language"
+msgstr "언어"
+
+msgid "Start Game"
+msgstr "게임 시작"
+
+msgid "Can't close until all customers leave"
+msgstr "모든 고객이 나가기 전까지 문을 닫을 수 없습니다"
+
+msgid "Can't start game until all players drop furniture"
+msgstr "모든 플레이어가 가구를 놓을 때까지 게임을 시작할 수 없습니다"
+
+msgid "Can't start game until there is a path to a register"
+msgstr "레지스터로의 경로가 없을 때까지 게임을 시작할 수 없습니다"
+
+msgid "Can't start game until your bar is all clean"
+msgstr "바가 완전히 청소되지 않을 때까지 게임을 시작할 수 없습니다"
+
+msgid "Loading..."
+msgstr "로딩 중..."
+
+msgid "OPEN"
+msgstr "오픈"
+
+msgid "CLOSING"
+msgstr "닫히는 중"
+
+msgid "CLOSED"
+msgstr "닫힘"
+
+msgid "Next Round Starting In"
+msgstr "다음 라운드 시작까지"

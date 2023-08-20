@@ -1,0 +1,110 @@
+msgid "About"
+msgstr "情報"
+
+msgid "Play"
+msgstr "プレイ"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Exit"
+msgstr "終了"
+
+msgid "Back"
+msgstr "戻る"
+
+msgid "Continue"
+msgstr "続ける"
+
+msgid "Quit"
+msgstr "終了する"
+
+msgid "Join"
+msgstr "参加"
+
+msgid "Host"
+msgstr "ホスト"
+
+msgid "Edit"
+msgstr "編集"
+
+msgid "Start"
+msgstr "開始"
+
+msgid "Disconnect"
+msgstr "切断"
+
+msgid "Username"
+msgstr "ユーザー名"
+
+msgid "Lock-In"
+msgstr "確定"
+
+msgid "Enter IP Address"
+msgstr "IPアドレスを入力"
+
+msgid "Load Last Used IP"
+msgstr "最後に使用したIPをロード"
+
+msgid "Connect"
+msgstr "接続"
+
+msgid "Hide"
+msgstr "非表示"
+
+msgid "Show"
+msgstr "表示"
+
+msgid "Copy"
+msgstr "コピー"
+
+msgid "safe zone"
+msgstr "セーフゾーン"
+
+msgid "Show Streamer Safe Box"
+msgstr "ストリーマーセーフボックスを表示"
+
+msgid "Enable Post-Processing Shaders"
+msgstr "ポストプロセッシングシェーダーを有効にする"
+
+msgid "Master Volume"
+msgstr "マスターボリューム"
+
+msgid "Music Volume"
+msgstr "音楽ボリューム"
+
+msgid "Resolution"
+msgstr "解像度"
+
+msgid "Language"
+msgstr "言語"
+
+msgid "Start Game"
+msgstr "ゲームを開始"
+
+msgid "Can't close until all customers leave"
+msgstr "全ての顧客が退店するまで閉店できません"
+
+msgid "Can't start game until all players drop furniture"
+msgstr "全てのプレイヤーが家具を置くまでゲームを開始できません"
+
+msgid "Can't start game until there is a path to a register"
+msgstr "レジへの経路が存在するまでゲームを開始できません"
+
+msgid "Can't start game until your bar is all clean"
+msgstr "バーが完全に清掃されるまでゲームを開始できません"
+
+msgid "Loading..."
+msgstr "読み込み中..."
+
+msgid "OPEN"
+msgstr "オープン"
+
+msgid "CLOSING"
+msgstr "閉店中"
+
+msgid "CLOSED"
+msgstr "閉店"
+
+msgid "Next Round Starting In"
+msgstr "次のラウンド開始まで"

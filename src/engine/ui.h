@@ -3,7 +3,11 @@
 
 #include "raylib.h"
 //
+#include <codecvt>
+#include <locale>
+
 #include "../preload.h"
+#include "font_util.h"
 #include "texture_library.h"
 #include "ui_autolayout.h"
 #include "ui_color.h"
@@ -380,7 +384,20 @@ inline void draw_text(const std::string& content, Rectangle parent, int z_index,
                       ui::theme::Usage color_usage = ui::theme::Usage::Font) {
     callback_registry.register_call(
         [=]() {
+            // TODO dynamically choose font based on current set language
+            // TODO what happens if the two players are using different
+            // languages
             auto font = Preload::get().font;
+
+            // TODO we also probably want to preload with the set of all strings
+            // so the font is already loaded for strings we know will be there
+            //
+            // then we only have to dynamically fetch for user strings
+            //
+            // load_font_for_string(
+            // content, "./resources/fonts/NotoSansKR.ttf");
+            // content, "./resources/fonts/Sazanami-Hanazono-Mincho.ttf");
+
             auto rect = parent;
             auto spacing = 0.f;
             // TODO move the generator out of context
