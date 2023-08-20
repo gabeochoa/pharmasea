@@ -245,8 +245,14 @@ struct Client {
                     std::get<ClientPacket::GameStateInfo>(packet.msg);
                 // TODO do we need to clear?
                 // Menu::get().clear_history();
-                MenuState::get().set(info.host_menu_state);
-                GameState::get().set(info.host_game_state);
+
+                // We actually only need to do this one
+                if (MenuState::get().read() == menu::State::Network &&
+                    info.host_menu_state == menu::State::Game) {
+                    MenuState::get().set(info.host_menu_state);
+                    GameState::get().set(info.host_game_state);
+                }
+
             } break;
             case ClientPacket::MsgType::PlayerLocation: {
                 ClientPacket::PlayerInfo info =
