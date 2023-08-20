@@ -52,9 +52,11 @@ struct BasePauseLayer : public Layer {
         begin(ui_context, dt);
 
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto body = rect::tpad(window, 20);
+        auto body = rect::bpad(
+            rect::tpad(rect::lpad(rect::rpad(window, 20), 20), 33), 66);
 
-        auto [continue_button, settings, config, quit] = rect::hsplit<4>(body);
+        auto [continue_button, settings, config, quit] =
+            rect::hsplit<4>(body, 20);
 
         if (button(Widget{continue_button},
                    text_lookup(strings::i18n::CONTINUE))) {
