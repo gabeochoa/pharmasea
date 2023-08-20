@@ -31,7 +31,6 @@ enum struct EntityType {
     SodaMachine,
     Cupboard,
     Squirter,
-    Trash,
     FilteredGrabber,
     PnumaticPipe,
     Vomit,
@@ -49,6 +48,9 @@ enum struct EntityType {
     SimpleSyrup,
     Mop,
 
+    // NOTE: Every time you add something above, add a 1 to the number below on
+    Trash,
+
     MAX_ENTITY_TYPE
 };
 
@@ -62,10 +64,10 @@ constexpr EntityTypeSet create_non_destructive() {
         //
         ;
 #else
-    // TODO MSVC doesnt have enough constexpr constructors for bitset 
-    // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset 
+    // TODO MSVC doesnt have enough constexpr constructors for bitset
+    // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset
     // generate number through: https://godbolt.org/z/ef7sTsWb6
-    return 0b11111111111011111111111111111111111;
+    return 0b101111111111111111111111111111111111;
 #endif
 }
 
