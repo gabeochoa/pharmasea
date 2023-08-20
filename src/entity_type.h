@@ -55,11 +55,18 @@ enum struct EntityType {
 using EntityTypeSet = std::bitset<(int) EntityType::MAX_ENTITY_TYPE>;
 
 constexpr EntityTypeSet create_non_destructive() {
+#ifdef __APPLE__
     return EntityTypeSet()
         .set()  //
         .reset(static_cast<int>(EntityType::Trash))
         //
         ;
+#else
+    // TODO MSVC doesnt have enough constexpr constructors for bitset 
+    // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset 
+    // generate number through: https://godbolt.org/z/ef7sTsWb6
+    return 0b11111111111011111111111111111111111;
+#endif
 }
 
 const static EntityTypeSet ETS_NON_DESTRUCTIVE = create_non_destructive();
