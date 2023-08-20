@@ -57,6 +57,35 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+### alpha_0.23.08.19
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (Progression) New machines spawn on top of each other
+- (Lobby) Seed changer disabled for now 
+- (UI) some screens are gonna be ugly for a while
+
+impact
+- we finally got a release build check it out on itch
+    - add link to itch.io in main menu
+- we now have cards at the top to show what drinks to make (only shows person at the front of the reg)
+
+bug fixes
+- Finally fixed this one: (UI) The first option in a dropdown isnt selectable 
+- update trashcan model render location 
+- dont allow simple syrup to get deleted by toilet 
+- turn off place collision checking for now until its fixed 
+- clear pathing cache when picking up furniture 
+- Create all directories needed to store the save file 
+- spawn simple syup when needed for progression
+
+better eng 
+- New UI library 
+- Move theme loading to json config file
+- remove heldby and migrate to entitytype 
+- add util function to check if an ingredient is enabled 
+
+
 ### alpha_0.23.08.14
 
 Known Issues
