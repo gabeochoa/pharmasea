@@ -5,6 +5,7 @@
 #include "../engine/settings.h"
 #include "../engine/ui.h"
 #include "../external_include.h"
+#include "raylib.h"
 
 using namespace ui;
 
@@ -87,12 +88,7 @@ struct SettingsLayer : public Layer {
         raylib::SetExitKey(raylib::KEY_NULL);
     }
 
-    virtual void onDraw(float dt) override {
-        if (MenuState::get().is_not(menu::State::Settings)) return;
-        ext::clear_background(ui_context->active_theme().background);
-
-        begin(ui_context, dt);
-
+    void draw_base_screen(float dt) {
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto content = rect::tpad(window, 20);
         content = rect::lpad(content, 10);
@@ -204,13 +200,157 @@ struct SettingsLayer : public Layer {
 
         // Footer
         {
-            footer = rect::rpad(footer, 30);
-            if (button(Widget{footer}, text_lookup(strings::i18n::BACK_BUTTON),
+            auto [back, controls, _] =
+                rect::vsplit<3>(rect::rpad(footer, 30), 20);
+            if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON),
                        true)) {
                 MenuState::get().go_back();
             }
+            // TODO add string Edit Controls
+            if (button(Widget{controls}, text_lookup(strings::i18n::CONTROLS),
+                       true)) {
+                activeWindow = ActiveWindow::KeyBindings;
+            }
+        }
+    }
+
+    virtual void onDraw(float dt) override {
+        if (MenuState::get().is_not(menu::State::Settings)) return;
+        ext::clear_background(ui_context->active_theme().background);
+
+        begin(ui_context, dt);
+
+        switch (activeWindow) {
+            default:
+            case ActiveWindow::Root:
+                draw_base_screen(dt);
+                break;
+            case ActiveWindow::KeyBindings:
+                draw_keybinding_screen(dt);
+                break;
         }
 
         end();
+    }
+
+    void draw_keybinding_screen(float) {
+        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+        auto content = rect::tpad(window, 20);
+
+        auto [body, footer] = rect::hsplit(content, 80);
+
+        {
+            body = rect::bpad(body, 95);
+            auto [col1, col2] = rect::vsplit<2>(body);
+
+            // These should match
+            col1 = rect::lpad(col1, 20);
+            col1 = rect::rpad(col1, 70);
+            col2 = rect::lpad(col2, 10);
+            col2 = rect::rpad(col2, 80);
+
+            // NOTE: we only draw the first N, each state only has N inputs
+            // today but if you want all then use this
+
+            constexpr int num_inputs = magic_enum::enum_count<InputName>();
+            constexpr int num_per_col = 12;  // (int) (num_inputs / 2.f);
+
+            // we want both cols to look the same so they should always match
+            auto key_rects_1 = rect::hsplit<num_per_col>(col1, 15);
+            auto key_rects_2 = rect::hsplit<num_per_col>(col2, 15);
+
+            const auto _get_label_for_key =
+                [](menu::State state,
+                   InputName name) -> tl::expected<std::string, std::string> {
+                const auto keys = KeyMap::get_valid_keys(state, name);
+                if (keys.empty())
+                    return tl::unexpected("input not used in this state");
+                auto opt_key =
+                    magic_enum::enum_cast<raylib::KeyboardKey>(keys[0]);
+                if (!opt_key.has_value())
+                    return tl::unexpected("no matching keys for this input");
+                raylib::KeyboardKey kbKey = opt_key.value();
+                return std::string(magic_enum::enum_name(kbKey));
+            };
+
+            const auto _get_label_for_gamepad =
+                [](menu::State state,
+                   InputName name) -> tl::expected<std::string, std::string> {
+                const auto button = KeyMap::get_button(state, name);
+                if (button == raylib::GAMEPAD_BUTTON_UNKNOWN)
+                    return tl::unexpected("input not used in this state");
+                return std::string(magic_enum::enum_name(button));
+            };
+
+            const auto _get_label =
+                [=](menu::State state,
+                    InputName name) -> tl::expected<std::string, std::string> {
+                switch (selected_input_type) {
+                    case Keyboard:
+                        return _get_label_for_key(state, name);
+                    case Gamepad:
+                        return _get_label_for_gamepad(state, name);
+                }
+            };
+
+            const auto _keys_for_state =
+                [=](menu::State state, std::array<Rectangle, num_per_col> rects,
+                    int starting_index = 0) {
+                    int rendering_index = 0;
+                    for (int i = starting_index; i < num_inputs; i++) {
+                        const auto kv = keyInputNames[i];
+                        const auto i_label = _get_label(state, kv.first);
+                        if (!i_label.has_value()) {
+                            log_trace("{} => {}", kv.second, i_label.error());
+                            continue;
+                        }
+
+                        auto [label, remap_button] =
+                            rect::vsplit<2>(rects[rendering_index++], 20);
+
+                        text(Widget{label}, std::string(kv.second));
+
+                        if (button(Widget{remap_button}, i_label.value())) {
+                            std::cout << "HI " << kv.second << std::endl;
+                        }
+                    }
+                };
+
+            _keys_for_state(menu::State::UI, key_rects_1);
+            _keys_for_state(menu::State::Game, key_rects_2, 1);
+        }
+
+        // Footer
+        {
+            footer = rect::lpad(footer, 10);
+            footer = rect::bpad(footer, 50);
+
+            auto [back, controls, input_type] =
+                rect::vsplit<3>(rect::rpad(footer, 30), 20);
+            if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON),
+                       true)) {
+                MenuState::get().go_back();
+            }
+            // TODO add string Edit Controls
+            if (button(Widget{controls}, text_lookup(strings::i18n::GENERAL),
+                       true)) {
+                activeWindow = ActiveWindow::Root;
+            }
+
+            if (button(Widget{input_type},
+                       text_lookup(selected_input_type == InputType::Gamepad
+                                       ? strings::i18n::GAMEPAD
+                                       : strings::i18n::KEYBOARD),
+                       true)) {
+                switch (selected_input_type) {
+                    case Keyboard:
+                        selected_input_type = InputType::Gamepad;
+                        break;
+                    case Gamepad:
+                        selected_input_type = InputType::Keyboard;
+                        break;
+                }
+            }
+        }
     }
 };

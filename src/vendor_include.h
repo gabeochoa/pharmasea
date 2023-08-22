@@ -22,6 +22,10 @@
 //
 #include <expected.hpp>
 //
+
+// We redefine the max here because the max keyboardkey is in the 300s
+#undef MAGIC_ENUM_RANGE_MAX
+#define MAGIC_ENUM_RANGE_MAX 400
 #include <magic_enum/magic_enum.hpp>
 // TODO cant use format yet due to no std::format yet (though not even sure what
 // its needed for) #include <magic_enum/magic_enum_format.hpp>
