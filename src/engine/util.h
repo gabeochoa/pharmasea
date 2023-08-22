@@ -2,6 +2,7 @@
 
 //
 #include "log.h"
+//
 #include "../vendor_include.h"
 #define _USE_MATH_DEFINES  // for C++
 #include <math.h>
@@ -107,6 +108,18 @@ inline std::string snake_case(const std::string_view& input) {
         result += ch;
     }
 
+    return result;
+}
+
+inline std::string space_between_caps(const std::string_view& input) {
+    std::string result;
+    for (size_t i = 0; i < input.length(); ++i) {
+        char ch = input[i];
+        if (std::isupper(ch)) {
+            if (i > 0) result += ' ';
+        }
+        result += ch;
+    }
     return result;
 }
 

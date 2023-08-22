@@ -308,7 +308,8 @@ struct SettingsLayer : public Layer {
                         auto [label, remap_button] =
                             rect::vsplit<2>(rects[rendering_index++], 20);
 
-                        text(Widget{label}, std::string(kv.second));
+                        text(Widget{label},
+                             util::space_between_caps(kv.second));
 
                         if (button(Widget{remap_button}, i_label.value())) {
                             std::cout << "HI " << kv.second << std::endl;
