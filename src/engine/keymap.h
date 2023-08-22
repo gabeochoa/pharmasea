@@ -17,6 +17,11 @@
 using raylib::GamepadAxis;
 using raylib::GamepadButton;
 
+enum InputType {
+    Keyboard,
+    Gamepad,
+};
+
 // TODO this needs to not be in engine...
 enum InputName {
     // Shared
@@ -54,10 +59,9 @@ enum InputName {
     ToggleNetworkView,  // DEBUG ONLY
     ToggleLobby,        // DEBUG ONLY
 
-    Last,  // This isnt real its just used to get the right number of bits
 };
 
-typedef std::bitset<InputName::Last> InputSet;
+typedef std::bitset<magic_enum::enum_count<InputName>()> InputSet;
 typedef std::tuple<InputSet, float> UserInput;
 typedef std::vector<UserInput> UserInputs;
 
