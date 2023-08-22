@@ -222,6 +222,11 @@ constexpr const char* MUSIC_VOLUME = "Music Volume";
 constexpr const char* RESOLUTION = "Resolution";
 constexpr const char* LANGUAGE = "Language";
 
+constexpr const char* GENERAL = "General";
+constexpr const char* CONTROLS = "Controls";
+constexpr const char* KEYBOARD = "Keyboard";
+constexpr const char* GAMEPAD = "Gamepad";
+
 // In Game
 constexpr const char* START_GAME = "Start Game";
 constexpr const char* CUSTOMERS_IN_STORE =

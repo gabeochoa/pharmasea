@@ -19,7 +19,10 @@ struct SettingsLayer : public Layer {
     enum ActiveWindow {
         Root = 0,
         KeyBindings = 1,
-    } activeWindow = ActiveWindow::Root;
+    } activeWindow = ActiveWindow::KeyBindings;
+
+    InputType selected_input_type = InputType::Keyboard;
+
     Trie keyBindingTrie;
     std::array<std::pair<InputName, std::string_view>,
                magic_enum::enum_count<InputName>()>

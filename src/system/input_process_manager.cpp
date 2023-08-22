@@ -796,8 +796,8 @@ void process_input(const std::shared_ptr<Entity> entity,
     const InputSet input_set = std::get<0>(input);
     const float frame_dt = std::get<1>(input);
 
-    int i = 0;
-    while (i < InputName::Last) {
+    size_t i = 0;
+    while (i < magic_enum::enum_count<InputName>()) {
         auto input_name = magic_enum::enum_value<InputName>(i);
         bool was_pressed = input_set.test(i);
         if (was_pressed) {

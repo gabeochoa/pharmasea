@@ -39,6 +39,8 @@ enum InputName {
     ValueDown,
     ValueLeft,
     ValueRight,
+    // If you add anything here, you need to
+    // update num_per_col in layers/settings
 
     // Game State
     PlayerForward,
@@ -48,10 +50,7 @@ enum InputName {
     PlayerPickup,
     PlayerRotateFurniture,
     PlayerDoWork,
-    TargetForward,
-    TargetBack,
-    TargetLeft,
-    TargetRight,
+
     //
     ToggleToPlanning,   // DEBUG ONLY
     ToggleToInRound,    // DEBUG ONLY
@@ -433,11 +432,6 @@ struct KeyMap {
             raylib::KEY_ESCAPE,
             raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT,
         };
-
-        game_map[InputName::TargetForward] = {raylib::KEY_UP};
-        game_map[InputName::TargetBack] = {raylib::KEY_DOWN};
-        game_map[InputName::TargetLeft] = {raylib::KEY_LEFT};
-        game_map[InputName::TargetRight] = {raylib::KEY_RIGHT};
 
         game_map[InputName::ToggleToPlanning] = {
             raylib::KEY_P,
