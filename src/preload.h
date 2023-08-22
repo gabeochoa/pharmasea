@@ -89,7 +89,9 @@ struct Preload {
 
     void load_fonts() {
         // Font loading must happen after InitWindow
-        font = load_karmina_regular();
+        // font = load_karmina_regular();
+        font =
+            raylib::LoadFontEx("./resources/fonts/Gaegu-Bold.ttf", 400, 0, 0);
 
         // NOTE if you go back to files, load fonts from install folder, instead
         // of local path
