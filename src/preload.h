@@ -69,11 +69,14 @@ struct Preload {
 
     void reload_config() {
         load_config();
+        load_keymapping();
         load_models();
 
         // drinks use models, so let those load first
         load_drink_recipes();
     }
+
+    void load_keymapping();
 
     void load_translations() {
         // TODO load correct language pack for settings file
@@ -104,6 +107,9 @@ struct Preload {
     auto load_json_config_file(
         const char* filename,
         const std::function<void(nlohmann::json)>& processor);
+    void write_json_config_file(const char* filename,
+                                const nlohmann::json& data);
+    void write_keymap();
     void load_settings_config();
     void load_drink_recipes();
 

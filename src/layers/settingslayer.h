@@ -5,6 +5,7 @@
 #include "../engine/settings.h"
 #include "../engine/ui.h"
 #include "../external_include.h"
+#include "../preload.h"
 #include "raylib.h"
 
 using namespace ui;
@@ -86,6 +87,12 @@ struct SettingsLayer : public Layer {
     virtual void onUpdate(float) override {
         if (MenuState::get().is_not(menu::State::Settings)) return;
         raylib::SetExitKey(raylib::KEY_NULL);
+    }
+
+    void exit_layer() {
+        // TODO when you hit escape also need to call exit_layer
+        Preload::get().write_keymap();
+        MenuState::get().go_back();
     }
 
     void draw_base_screen(float dt) {
@@ -204,7 +211,7 @@ struct SettingsLayer : public Layer {
                 rect::vsplit<3>(rect::rpad(footer, 30), 20);
             if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON),
                        true)) {
-                MenuState::get().go_back();
+                exit_layer();
             }
             // TODO add string Edit Controls
             if (button(Widget{controls}, text_lookup(strings::i18n::CONTROLS),
@@ -285,6 +292,10 @@ struct SettingsLayer : public Layer {
                         return _get_label_for_key(state, name);
                     case Gamepad:
                         return _get_label_for_gamepad(state, name);
+                    case GamepadWithAxis:
+                        // TODO
+                        log_error("idk how to handle axis right now");
+                        break;
                 }
             };
 
@@ -325,7 +336,7 @@ struct SettingsLayer : public Layer {
                 rect::vsplit<3>(rect::rpad(footer, 30), 20);
             if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON),
                        true)) {
-                MenuState::get().go_back();
+                exit_layer();
             }
             // TODO add string Edit Controls
             if (button(Widget{controls}, text_lookup(strings::i18n::GENERAL),
@@ -344,6 +355,8 @@ struct SettingsLayer : public Layer {
                         break;
                     case Gamepad:
                         selected_input_type = InputType::Keyboard;
+                        break;
+                    case GamepadWithAxis:
                         break;
                 }
             }

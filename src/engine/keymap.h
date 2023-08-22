@@ -22,6 +22,7 @@ using raylib::KeyboardKey;
 enum InputType {
     Keyboard,
     Gamepad,
+    GamepadWithAxis,
 };
 
 // TODO this needs to not be in engine...
@@ -78,7 +79,7 @@ struct AnyInputLess {
         if (std::holds_alternative<int>(key)) {
             return std::get<int>(key);
         }
-        if (std::holds_alternative<int>(key)) {
+        if (std::holds_alternative<GamepadAxisWithDir>(key)) {
             const auto axis_with_dir = std::get<GamepadAxisWithDir>(key);
             return 1000 +
                    100 *
@@ -607,5 +608,114 @@ struct KeyMap {
     void load_default_keys() {
         load_game_keys();
         load_ui_keys();
+    }
+
+    nlohmann::json anyinput_to_json(const AnyInput& key) {
+        if (std::holds_alternative<int>(key)) {
+            nlohmann::json data = {
+                //
+                {"type", InputType::Keyboard},
+                {"value", std::get<int>(key)}
+                //
+            };
+            return data;
+        }
+        if (std::holds_alternative<GamepadAxisWithDir>(key)) {
+            GamepadAxisWithDir gwa = std::get<GamepadAxisWithDir>(key);
+            nlohmann::json data = {
+                {"type", InputType::GamepadWithAxis},  //
+                {
+                    "value",
+                    {
+                        //
+                        {"axis", magic_enum::enum_name<GamepadAxis>(gwa.axis)},
+                        {"dir", gwa.dir}
+                        //
+                    }
+                    //
+                }};
+            return data;
+        }
+        if (std::holds_alternative<GamepadButton>(key)) {
+            auto button = std::get<GamepadButton>(key);
+            nlohmann::json data = {
+                //
+                {"type", InputType::Gamepad},  //
+                {"value", magic_enum::enum_name<GamepadButton>(button)}
+                //
+            };
+            return data;
+        }
+        return {};
+    }
+
+    AnyInput json_to_anyinput(const nlohmann::json& json) {
+        int type_as_int = json["type"].get<int>();
+        InputType type = magic_enum::enum_value<InputType>(type_as_int);
+
+        auto jvalue = json["value"];
+
+        switch (type) {
+            case InputType::Keyboard:
+                return jvalue.get<int>();
+            case InputType::Gamepad:
+                return magic_enum::enum_cast<GamepadButton>(
+                           jvalue.get<std::string>())
+                    .value();
+            case InputType::GamepadWithAxis:
+                return GamepadAxisWithDir{
+                    .axis = magic_enum::enum_cast<GamepadAxis>(
+                                jvalue["axis"].get<std::string>())
+                                .value(),
+                    .dir = jvalue["dir"].get<float>()};
+        }
+        log_warn("couldnt find matching AnyInput for json");
+        return jvalue.get<int>();
+    }
+
+   public:
+    nlohmann::json serializeFullMap() {
+        nlohmann::json serializedMap;
+        for (const auto& [state, layerMapping] : mapping) {
+            nlohmann::json stateJson;
+            for (const auto& [inputName, anyInputs] : layerMapping) {
+                nlohmann::json inputArray;
+                for (const AnyInput& anyInput : anyInputs) {
+                    auto val = anyinput_to_json(anyInput);
+                    if (val.empty()) continue;
+                    inputArray.push_back(val);
+                }
+
+                if (inputArray.empty()) continue;
+                stateJson[magic_enum::enum_name<InputName>(inputName)] =
+                    inputArray;
+            }
+
+            if (stateJson.empty()) continue;
+            serializedMap[magic_enum::enum_name<menu::State>(state)] =
+                stateJson;
+        }
+        return serializedMap;
+    }
+
+    // Function to deserialize JSON to FullMap
+    void deserializeFullMap(const nlohmann::json& serializedMap) {
+        for (auto it = serializedMap.begin(); it != serializedMap.end(); ++it) {
+            menu::State state =
+                magic_enum::enum_cast<menu::State>(it.key()).value();
+            LayerMapping layerMapping;
+            for (const auto& [inputNameStr, inputArray] : it.value().items()) {
+                InputName inputName =
+                    magic_enum::enum_cast<InputName>(inputNameStr).value();
+
+                AnyInputs anyInputs;
+                for (const auto& anyInput : inputArray) {
+                    anyInputs.push_back(json_to_anyinput(anyInput));
+                }
+
+                layerMapping[inputName] = anyInputs;
+            }
+            mapping[state] = layerMapping;
+        }
     }
 };

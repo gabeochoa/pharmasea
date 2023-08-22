@@ -1,0 +1,374 @@
+{
+    "Game": {
+        "Pause": [
+            {
+                "type": 0,
+                "value": 256
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_DOWN"
+            }
+        ],
+        "PlayerBack": [
+            {
+                "type": 0,
+                "value": 83
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_DOWN"
+            },
+            {
+                "type": 2,
+                "value": {
+                    "axis": "GAMEPAD_AXIS_LEFT_Y",
+                    "dir": 1.0
+                }
+            }
+        ],
+        "PlayerDoWork": [
+            {
+                "type": 0,
+                "value": 82
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_RIGHT_FACE_LEFT"
+            }
+        ],
+        "PlayerForward": [
+            {
+                "type": 0,
+                "value": 87
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_UP"
+            },
+            {
+                "type": 2,
+                "value": {
+                    "axis": "GAMEPAD_AXIS_LEFT_Y",
+                    "dir": -1.0
+                }
+            }
+        ],
+        "PlayerLeft": [
+            {
+                "type": 0,
+                "value": 65
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_LEFT"
+            },
+            {
+                "type": 2,
+                "value": {
+                    "axis": "GAMEPAD_AXIS_LEFT_X",
+                    "dir": -1.0
+                }
+            }
+        ],
+        "PlayerPickup": [
+            {
+                "type": 0,
+                "value": 32
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_RIGHT_FACE_DOWN"
+            }
+        ],
+        "PlayerRight": [
+            {
+                "type": 0,
+                "value": 68
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_RIGHT"
+            },
+            {
+                "type": 2,
+                "value": {
+                    "axis": "GAMEPAD_AXIS_LEFT_X",
+                    "dir": 1.0
+                }
+            }
+        ],
+        "PlayerRotateFurniture": [
+            {
+                "type": 0,
+                "value": 82
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_RIGHT_FACE_LEFT"
+            }
+        ],
+        "ToggleDebug": [
+            {
+                "type": 0,
+                "value": 92
+            }
+        ],
+        "ToggleLobby": [
+            {
+                "type": 0,
+                "value": 76
+            }
+        ],
+        "ToggleNetworkView": [
+            {
+                "type": 0,
+                "value": 61
+            }
+        ],
+        "ToggleToInRound": [
+            {
+                "type": 0,
+                "value": 79
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_MIDDLE_LEFT"
+            }
+        ],
+        "ToggleToPlanning": [
+            {
+                "type": 0,
+                "value": 80
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_MIDDLE_LEFT"
+            }
+        ]
+    },
+    "Root": {
+        "Pause": [
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_MIDDLE_RIGHT"
+            }
+        ],
+        "ValueDown": [
+            {
+                "type": 0,
+                "value": 264
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_DOWN"
+            }
+        ],
+        "ValueLeft": [
+            {
+                "type": 0,
+                "value": 263
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_LEFT"
+            },
+            {
+                "type": 2,
+                "value": {
+                    "axis": "GAMEPAD_AXIS_LEFT_X",
+                    "dir": -1.0
+                }
+            }
+        ],
+        "ValueRight": [
+            {
+                "type": 0,
+                "value": 262
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_RIGHT"
+            },
+            {
+                "type": 2,
+                "value": {
+                    "axis": "GAMEPAD_AXIS_LEFT_X",
+                    "dir": 1.0
+                }
+            }
+        ],
+        "ValueUp": [
+            {
+                "type": 0,
+                "value": 265
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_UP"
+            }
+        ],
+        "WidgetBack": [
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_UP"
+            }
+        ],
+        "WidgetBackspace": [
+            {
+                "type": 0,
+                "value": 259
+            }
+        ],
+        "WidgetCtrl": [
+            {
+                "type": 0,
+                "value": 343
+            }
+        ],
+        "WidgetMod": [
+            {
+                "type": 0,
+                "value": 340
+            }
+        ],
+        "WidgetNext": [
+            {
+                "type": 0,
+                "value": 258
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_DOWN"
+            }
+        ],
+        "WidgetPaste": [
+            {
+                "type": 0,
+                "value": 86
+            }
+        ],
+        "WidgetPress": [
+            {
+                "type": 0,
+                "value": 257
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_RIGHT_FACE_DOWN"
+            }
+        ]
+    },
+    "UI": {
+        "Pause": [
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_MIDDLE_RIGHT"
+            }
+        ],
+        "ValueDown": [
+            {
+                "type": 0,
+                "value": 264
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_DOWN"
+            }
+        ],
+        "ValueLeft": [
+            {
+                "type": 0,
+                "value": 263
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_LEFT"
+            },
+            {
+                "type": 2,
+                "value": {
+                    "axis": "GAMEPAD_AXIS_LEFT_X",
+                    "dir": -1.0
+                }
+            }
+        ],
+        "ValueRight": [
+            {
+                "type": 0,
+                "value": 262
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_RIGHT"
+            },
+            {
+                "type": 2,
+                "value": {
+                    "axis": "GAMEPAD_AXIS_LEFT_X",
+                    "dir": 1.0
+                }
+            }
+        ],
+        "ValueUp": [
+            {
+                "type": 0,
+                "value": 265
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_UP"
+            }
+        ],
+        "WidgetBack": [
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_UP"
+            }
+        ],
+        "WidgetBackspace": [
+            {
+                "type": 0,
+                "value": 259
+            }
+        ],
+        "WidgetCtrl": [
+            {
+                "type": 0,
+                "value": 343
+            }
+        ],
+        "WidgetMod": [
+            {
+                "type": 0,
+                "value": 340
+            }
+        ],
+        "WidgetNext": [
+            {
+                "type": 0,
+                "value": 258
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_LEFT_FACE_DOWN"
+            }
+        ],
+        "WidgetPaste": [
+            {
+                "type": 0,
+                "value": 86
+            }
+        ],
+        "WidgetPress": [
+            {
+                "type": 0,
+                "value": 257
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_RIGHT_FACE_DOWN"
+            }
+        ]
+    }
+}

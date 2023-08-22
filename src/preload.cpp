@@ -4,6 +4,7 @@
 #include <istream>
 
 #include "dataclass/ingredient.h"
+#include "engine/keymap.h"
 #include "engine/ui_theme.h"
 #include "recipe_library.h"
 
@@ -12,6 +13,33 @@ std::vector<std::string> EXAMPLE_MAP;
 
 namespace ui {
 UITheme DEFAULT_THEME = UITheme();
+}
+
+void Preload::write_json_config_file(const char* filename,
+                                     const nlohmann::json& configJSON) {
+    std::ofstream ofs(filename);
+    if (!ofs.good()) {
+        std::cerr << "write_json_config_file error: Couldn't open file "
+                     "for writing: "
+                  << filename << std::endl;
+        return;
+    }
+
+    log_info("{}", filename);
+
+    ofs << configJSON.dump(4);  // Write the JSON to the file with formatting
+    ofs.close();
+}
+
+void Preload::write_keymap() {
+    std::tuple<const char*, const char*> configFilePath = {
+        strings::settings::CONFIG,
+        strings::settings::KEYMAP_FILE,
+    };
+    auto filename = Files::get().fetch_resource_path(
+        std::get<0>(configFilePath), std::get<1>(configFilePath));
+    this->write_json_config_file(filename.c_str(),
+                                 KeyMap::get().serializeFullMap());
 }
 
 auto Preload::load_json_config_file(
@@ -227,4 +255,11 @@ void Preload::load_textures() {
         log_info("Loaded texture json successfully, {} textures",
                  TextureLibrary::get().size());
     });
+}
+
+void Preload::load_keymapping() {
+    load_json_config_file(strings::settings::KEYMAP_FILE,
+                          [](const nlohmann::json& contents) {
+                              KeyMap::get().deserializeFullMap(contents);
+                          });
 }
