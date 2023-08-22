@@ -350,16 +350,17 @@ struct KeyMap {
         KeyboardKey key = magic_enum::enum_cast<KeyboardKey>(input).value();
         return std::string(magic_enum::enum_name(key));
     }
+
     std::string name_for_button(GamepadButton input) {
         switch (input) {
             case raylib::GAMEPAD_BUTTON_LEFT_FACE_UP:
-                return "DPad Up";
+                return "D-Pad Up";
             case raylib::GAMEPAD_BUTTON_LEFT_FACE_RIGHT:
-                return "DPad Right";
+                return "D-Pad Right";
             case raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN:
-                return "DPad Down";
+                return "D-Pad Down";
             case raylib::GAMEPAD_BUTTON_LEFT_FACE_LEFT:
-                return "DPad Left";
+                return "D-Pad Left";
             case raylib::GAMEPAD_BUTTON_RIGHT_FACE_UP:
                 return "PS3: Triangle, Xbox: Y";
             case raylib::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT:
@@ -378,6 +379,7 @@ struct KeyMap {
                 return std::string(magic_enum::enum_name(input));
         }
     }
+
     std::string name_for_input(AnyInput input) {
         if (!input_to_human_name.contains(input)) {
             std::string value =
