@@ -23,6 +23,12 @@ struct SettingsLayer : public Layer {
         KeyBindings = 1,
     } activeWindow = ActiveWindow::KeyBindings;
 
+    struct KeyBindingPopup {
+        bool show = false;
+        menu::State state;
+        InputName input;
+    } key_binding_popup;
+
     InputType selected_input_type = InputType::Keyboard;
 
     Trie keyBindingTrie;
@@ -241,8 +247,8 @@ struct SettingsLayer : public Layer {
     }
 
     void draw_keybinding_screen(float) {
-        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto content = rect::tpad(window, 20);
+        auto screen = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+        auto content = rect::tpad(screen, 20);
 
         auto [body, footer] = rect::hsplit(content, 80);
 
@@ -317,14 +323,28 @@ struct SettingsLayer : public Layer {
                         text(Widget{label},
                              util::space_between_caps(kv.second));
 
-                        if (button(Widget{remap_button}, i_label.value())) {
-                            std::cout << "HI " << kv.second << std::endl;
+                        if (auto result = checkbox(Widget{remap_button}, CheckboxData{.content=i_label.value()}); result) {
+                        key_binding_popup = KeyBindingPopup {
+                            .show = result.as<bool>(),
+                            .state = state,
+                            .input = kv.first
+                        };
+
                         }
+
                     }
                 };
 
             _keys_for_state(menu::State::UI, key_rects_1);
             _keys_for_state(menu::State::Game, key_rects_2, 1);
+
+            if(key_binding_popup.show){
+                auto [_t, middle, _b] = rect::hsplit<3>(screen);
+                auto [_l, popup, _r] = rect::vsplit<3>(middle);
+                if(auto windowresult = window(Widget{popup, -10}); windowresult){
+                    std::cout << "popup render" << std::endl;
+                }
+            }
         }
 
         // Footer

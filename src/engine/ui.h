@@ -56,6 +56,15 @@ inline raylib::Rectangle expand(const raylib::Rectangle& a, const vec4& b) {
                        a.height + b.y + b.w};
 }
 
+inline Rectangle expand_pct(const Rectangle& a, float pct){
+    return expand(a, {
+            a.width * pct,
+            a.width * pct,
+            a.height * pct,
+            a.height * pct,
+            });
+}
+
 inline std::array<Rectangle, 2> vsplit(const Rectangle& a, float pct,
                                        float padding_right = 0) {
     float ratio = pct / 100.f;
@@ -240,6 +249,7 @@ struct Widget {
     Rectangle rect = {0, 0, WIN_WF(), WIN_HF()};
 
     Widget(Rectangle r) : id(WIDGET_ID++), z_index(0), rect(r) {}
+    Widget(Rectangle r, int z_index) : id(WIDGET_ID++), z_index(z_index), rect(r) {}
 
     Rectangle get_rect() const { return rect; }
 };
@@ -490,6 +500,11 @@ inline ElementResult text(const Widget& widget, const std::string& content,
                         color_usage);
 
     return true;
+}
+
+inline ElementResult window(const Widget& widget){
+    internal::draw_rect(widget.rect, widget.z_index, ui::theme::Secondary);
+    return widget.z_index;
 }
 
 inline ElementResult button(const Widget& widget,
