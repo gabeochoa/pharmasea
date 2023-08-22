@@ -265,12 +265,7 @@ struct SettingsLayer : public Layer {
                 const auto keys = KeyMap::get_valid_keys(state, name);
                 if (keys.empty())
                     return tl::unexpected("input not used in this state");
-                auto opt_key =
-                    magic_enum::enum_cast<raylib::KeyboardKey>(keys[0]);
-                if (!opt_key.has_value())
-                    return tl::unexpected("no matching keys for this input");
-                raylib::KeyboardKey kbKey = opt_key.value();
-                return std::string(magic_enum::enum_name(kbKey));
+                return KeyMap::get().name_for_input(keys[0]);
             };
 
             const auto _get_label_for_gamepad =
@@ -279,7 +274,7 @@ struct SettingsLayer : public Layer {
                 const auto button = KeyMap::get_button(state, name);
                 if (button == raylib::GAMEPAD_BUTTON_UNKNOWN)
                     return tl::unexpected("input not used in this state");
-                return std::string(magic_enum::enum_name(button));
+                return KeyMap::get().name_for_input(button);
             };
 
             const auto _get_label =

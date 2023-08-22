@@ -2,6 +2,7 @@
 #pragma once
 
 #include <tuple>
+#include <unordered_map>
 
 #include "raylib.h"
 //
@@ -16,6 +17,7 @@
 
 using raylib::GamepadAxis;
 using raylib::GamepadButton;
+using raylib::KeyboardKey;
 
 enum InputType {
     Keyboard,
@@ -70,6 +72,31 @@ typedef std::variant<int, GamepadAxisWithDir, GamepadButton> AnyInput;
 typedef std::vector<AnyInput> AnyInputs;
 typedef std::map<InputName, AnyInputs> LayerMapping;
 typedef std::map<menu::State, LayerMapping> FullMap;
+
+struct AnyInputLess {
+    std::size_t to_int(const AnyInput& key) const {
+        if (std::holds_alternative<int>(key)) {
+            return std::get<int>(key);
+        }
+        if (std::holds_alternative<int>(key)) {
+            const auto axis_with_dir = std::get<GamepadAxisWithDir>(key);
+            return 1000 +
+                   100 *
+                       (magic_enum::enum_index<GamepadAxis>(axis_with_dir.axis)
+                            .value()) +
+                   (int) (axis_with_dir.dir);
+        }
+        if (std::holds_alternative<GamepadButton>(key)) {
+            const auto button = std::get<GamepadButton>(key);
+            return 2000 + (size_t) magic_enum::enum_index<GamepadButton>(button)
+                              .value();
+        }
+        return 0;
+    }
+    bool operator()(const AnyInput& lhs, const AnyInput& rhs) const {
+        return to_int(lhs) < to_int(rhs);
+    }
+};
 
 struct MouseInfo {
     vec2 pos;
@@ -319,7 +346,63 @@ struct KeyMap {
         return keys;
     }
 
+    std::string name_for_key(int input) {
+        KeyboardKey key = magic_enum::enum_cast<KeyboardKey>(input).value();
+        return std::string(magic_enum::enum_name(key));
+    }
+    std::string name_for_button(GamepadButton input) {
+        switch (input) {
+            case raylib::GAMEPAD_BUTTON_LEFT_FACE_UP:
+                return "DPad Up";
+            case raylib::GAMEPAD_BUTTON_LEFT_FACE_RIGHT:
+                return "DPad Right";
+            case raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN:
+                return "DPad Down";
+            case raylib::GAMEPAD_BUTTON_LEFT_FACE_LEFT:
+                return "DPad Left";
+            case raylib::GAMEPAD_BUTTON_RIGHT_FACE_UP:
+                return "PS3: Triangle, Xbox: Y";
+            case raylib::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT:
+                return "PS3: Square, Xbox: X";
+            case raylib::GAMEPAD_BUTTON_RIGHT_FACE_DOWN:
+                return "PS3: Cross, Xbox: A";
+            case raylib::GAMEPAD_BUTTON_RIGHT_FACE_LEFT:
+                return "PS3: Circle, Xbox: B";
+            case raylib::GAMEPAD_BUTTON_MIDDLE_LEFT:
+                return "Select";
+            case raylib::GAMEPAD_BUTTON_MIDDLE:
+                return "PS3: PS, Xbox: XBOX";
+            case raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT:
+                return "Start";
+            default:
+                return std::string(magic_enum::enum_name(input));
+        }
+    }
+    std::string name_for_input(AnyInput input) {
+        if (!input_to_human_name.contains(input)) {
+            std::string value =
+                std::visit(util::overloaded{
+                               //
+                               [this](int keycode) -> std::string {
+                                   return name_for_key(keycode);
+                               },
+                               [](GamepadAxisWithDir) -> std::string {
+                                   return std::string("TODO AXIS?");
+                               },
+                               [this](GamepadButton button) -> std::string {
+                                   return name_for_button(button);
+                               },
+                               [](auto) {},
+                           },
+                           input);
+
+            input_to_human_name[input] = value;
+        }
+        return input_to_human_name[input];
+    }
+
    private:
+    std::map<AnyInput, std::string, AnyInputLess> input_to_human_name;
     FullMap mapping;
 
     KeyMap() {
