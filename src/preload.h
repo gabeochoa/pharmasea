@@ -9,6 +9,7 @@
 #include "raylib.h"
 //
 #include "engine/files.h"
+#include "engine/font_library.h"
 #include "engine/model_library.h"
 #include "engine/music_library.h"
 #include "engine/shader_library.h"
@@ -61,6 +62,7 @@ struct Preload {
         ModelLibrary::get().unload_all();
         SoundLibrary::get().unload_all();
         ShaderLibrary::get().unload_all();
+        FontLibrary::get().unload_all();
     }
 
     // Note: Defined in .cpp to avoid LOG_LEVEL violating C++ ODR during
@@ -91,10 +93,22 @@ struct Preload {
     }
 
     void load_fonts() {
+        const auto _load_font_from_name = [](const std::string filename) {
+            auto path = Files::get().fetch_resource_path(
+                strings::settings::FONTS, filename);
+            FontLibrary::get().load({.filename = path.c_str(),
+                                     .size = 400,
+                                     .font_chars = nullptr,
+                                     .glyph_count = 0},
+                                    filename.c_str());
+        };
+
+        _load_font_from_name("Gaegu-Bold.ttf");
+
+        font = FontLibrary::get().get("Gaegu-Bold.ttf");
+
         // Font loading must happen after InitWindow
         // font = load_karmina_regular();
-        font =
-            raylib::LoadFontEx("./resources/fonts/Gaegu-Bold.ttf", 400, 0, 0);
 
         // NOTE if you go back to files, load fonts from install folder, instead
         // of local path

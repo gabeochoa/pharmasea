@@ -138,6 +138,7 @@ constexpr const char* SOUNDS = "sounds";
 constexpr const char* MUSIC = "music";
 constexpr const char* SHADERS = "shaders";
 constexpr const char* CONFIG = "config";
+constexpr const char* FONTS = "fonts";
 
 constexpr const char* KEYMAP_FILE = "keymap.json";
 

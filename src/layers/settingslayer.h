@@ -21,7 +21,7 @@ struct SettingsLayer : public Layer {
     enum ActiveWindow {
         Root = 0,
         KeyBindings = 1,
-    } activeWindow = ActiveWindow::KeyBindings;
+    } activeWindow = ActiveWindow::Root;
 
     struct KeyBindingPopup {
         bool show = false;
