@@ -1,10 +1,12 @@
 
 #pragma once
 
+#include "gamepad_axis_with_dir.h"
 #include "raylib.h"
 //
 #include <codecvt>
 #include <locale>
+#include <variant>
 
 #include "../preload.h"
 #include "font_util.h"
@@ -56,13 +58,13 @@ inline raylib::Rectangle expand(const raylib::Rectangle& a, const vec4& b) {
                        a.height + b.y + b.w};
 }
 
-inline Rectangle expand_pct(const Rectangle& a, float pct){
+inline Rectangle expand_pct(const Rectangle& a, float pct) {
     return expand(a, {
-            a.width * pct,
-            a.width * pct,
-            a.height * pct,
-            a.height * pct,
-            });
+                         a.width * pct,
+                         a.width * pct,
+                         a.height * pct,
+                         a.height * pct,
+                     });
 }
 
 inline std::array<Rectangle, 2> vsplit(const Rectangle& a, float pct,
@@ -249,7 +251,7 @@ struct Widget {
     Rectangle rect = {0, 0, WIN_WF(), WIN_HF()};
 
     Widget(Rectangle r) : id(WIDGET_ID++), z_index(0), rect(r) {}
-    Widget(Rectangle r, int z_index) : id(WIDGET_ID++), z_index(z_index), rect(r) {}
+    Widget(Rectangle r, int z_) : id(WIDGET_ID++), z_index(z_), rect(r) {}
 
     Rectangle get_rect() const { return rect; }
 };
@@ -380,6 +382,7 @@ struct ElementResult {
     ElementResult(bool val, int d) : result(val), data(d) {}
     ElementResult(bool val, float d) : result(val), data(d) {}
     ElementResult(bool val, const std::string& d) : result(val), data(d) {}
+    ElementResult(bool val, const AnyInput& d) : result(val), data(d) {}
 
     template<typename T>
     T as() const {
@@ -390,7 +393,7 @@ struct ElementResult {
 
    private:
     bool result = false;
-    std::variant<bool, int, float, std::string> data = 0;
+    std::variant<bool, int, float, std::string, AnyInput> data = 0;
 };
 
 namespace internal {
@@ -502,9 +505,9 @@ inline ElementResult text(const Widget& widget, const std::string& content,
     return true;
 }
 
-inline ElementResult window(const Widget& widget){
-    internal::draw_rect(widget.rect, widget.z_index, ui::theme::Secondary);
-    return widget.z_index;
+inline ElementResult window(const Widget& widget) {
+    internal::draw_rect(widget.rect, widget.z_index, ui::theme::Primary);
+    return ElementResult{true, widget.z_index - 1};
 }
 
 inline ElementResult button(const Widget& widget,
@@ -591,7 +594,7 @@ inline ElementResult checkbox(const Widget& widget,
 
     text(widget, label);
 
-    return ElementResult{state->on.changed_since, state->on};
+    return ElementResult{state->on.changed_since, (bool) state->on};
 }
 
 inline ElementResult slider(const Widget& widget, const SliderData& data = {}) {
@@ -731,7 +734,51 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
 
     text(widget, data.options[state->selected]);
 
-    return ElementResult{state->selected.changed_since, state->selected};
+    return ElementResult{state->selected.changed_since, (bool) state->selected};
+}
+
+inline ElementResult control_input_field(const Widget& widget,
+                                         const TextfieldData& data = {}) {
+    bool valid = false;
+    AnyInput ai;
+
+    if (focus::matches(widget.id)) {
+        valid = true;
+        ai = context->last_input_pressed();
+
+        if (std::holds_alternative<int>(ai)) {
+            if (std::get<int>(ai) == 0) {
+                valid = false;
+            }
+        } else if (std::holds_alternative<GamepadButton>(ai)) {
+            if (std::get<GamepadButton>(ai) == raylib::GAMEPAD_BUTTON_UNKNOWN) {
+                valid = false;
+            }
+        } else if (std::holds_alternative<GamepadAxisWithDir>(ai)) {
+            log_warn("control_input_field doesnt support gamepad axis");
+            valid = false;
+        }
+        context->clear_last_input();
+    }
+
+    focus::active_if_mouse_inside(widget);
+    focus::try_to_grab(widget);
+    // TODO change focus color based on is invalid...
+    internal::draw_focus_ring(widget);
+    focus::handle_tabbing(widget);
+
+    if (focus::is_mouse_click(widget)) {
+        focus::set(widget.id);
+    }
+
+    internal::draw_rect(widget.get_rect(), widget.z_index,
+                        focus::is_active_and_hot(widget.id)
+                            ? ui::theme::Usage::Secondary
+                            : ui::theme::Usage::Primary);
+
+    text(widget, data.content);
+
+    return ElementResult{valid, ai};
 }
 
 inline ElementResult textfield(const Widget& widget,

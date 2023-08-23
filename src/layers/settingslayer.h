@@ -323,26 +323,48 @@ struct SettingsLayer : public Layer {
                         text(Widget{label},
                              util::space_between_caps(kv.second));
 
-                        if (auto result = checkbox(Widget{remap_button}, CheckboxData{.content=i_label.value()}); result) {
-                        key_binding_popup = KeyBindingPopup {
-                            .show = result.as<bool>(),
-                            .state = state,
-                            .input = kv.first
-                        };
-
+                        if (auto result = checkbox(
+                                Widget{remap_button},
+                                CheckboxData{.content = i_label.value()});
+                            result) {
+                            // TODO disabling popup for now
+                            //
+                            // key_binding_popup =
+                            // KeyBindingPopup{.show = result.as<bool>(),
+                            // .state = state,
+                            // .input = kv.first};
                         }
-
                     }
                 };
 
             _keys_for_state(menu::State::UI, key_rects_1);
             _keys_for_state(menu::State::Game, key_rects_2, 1);
 
-            if(key_binding_popup.show){
+            if (key_binding_popup.show) {
                 auto [_t, middle, _b] = rect::hsplit<3>(screen);
                 auto [_l, popup, _r] = rect::vsplit<3>(middle);
-                if(auto windowresult = window(Widget{popup, -10}); windowresult){
-                    std::cout << "popup render" << std::endl;
+                if (auto windowresult = window(Widget{popup, -10});
+                    windowresult) {
+                    auto [label, input] = rect::hsplit<2>(popup);
+
+                    text(Widget{label, windowresult.as<int>()},
+                         util::space_between_caps(
+                             magic_enum::enum_name(key_binding_popup.input)));
+
+                    auto input_descr = _get_label(key_binding_popup.state,
+                                                  key_binding_popup.input);
+
+                    if (input_descr.has_value()) {
+                        if (auto control_result = control_input_field(
+                                Widget{input, windowresult.as<int>()},
+                                TextfieldData{input_descr.value()});
+                            control_result) {
+                            KeyMap::get().set_mapping(
+                                key_binding_popup.state,
+                                key_binding_popup.input,
+                                control_result.as<AnyInput>());
+                        }
+                    }
                 }
             }
         }

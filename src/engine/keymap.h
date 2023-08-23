@@ -674,6 +674,22 @@ struct KeyMap {
     }
 
    public:
+    void set_mapping(menu::State state, InputName input_name, AnyInput input) {
+        // For now we are just going to clear the old one and write the new
+        // one...
+
+        LayerMapping& state_map = this->get_or_create_layer_map(state);
+
+        auto& input_list = state_map[input_name];
+
+        // TODO only change the one that matches our input type
+        input_list.clear();
+
+        //
+
+        input_list.push_back(input);
+    }
+
     nlohmann::json serializeFullMap() {
         nlohmann::json serializedMap;
         for (const auto& [state, layerMapping] : mapping) {

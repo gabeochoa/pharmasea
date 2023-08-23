@@ -40,7 +40,7 @@ struct IUIContextInputManager {
     }
 
     virtual void cleanup() {
-        // button = GAMEPAD_BUTTON_UNKNOWN;
+        // button = raylib::GAMEPAD_BUTTON_UNKNOWN;
         //
         key = int();
         mod = int();
@@ -55,6 +55,11 @@ struct IUIContextInputManager {
         }
         prevKeyHeldDownTimer = keyHeldDownTimer;
     }
+
+    AnyInput anything_pressed = 0;
+
+    AnyInput last_input_pressed() { return anything_pressed; }
+    void clear_last_input() { anything_pressed = 0; }
 
     MouseInfo mouse_info;
 
@@ -85,6 +90,7 @@ struct IUIContextInputManager {
 
     [[nodiscard]] bool process_keyevent(KeyPressedEvent event) {
         int code = event.keycode;
+        anything_pressed = code;
         if (!KeyMap::does_layer_map_contain_key(STATE, code)) {
             return false;
         }
@@ -108,6 +114,7 @@ struct IUIContextInputManager {
     [[nodiscard]] bool process_gamepad_button_event(
         GamepadButtonPressedEvent event) {
         GamepadButton code = event.button;
+        anything_pressed = code;
         if (!KeyMap::does_layer_map_contain_button(STATE, code)) {
             return false;
         }
@@ -117,6 +124,7 @@ struct IUIContextInputManager {
 
     [[nodiscard]] bool process_gamepad_axis_event(GamepadAxisMovedEvent event) {
         GamepadAxisWithDir info = event.data;
+        anything_pressed = info;
         if (!KeyMap::does_layer_map_contain_axis(STATE, info.axis)) {
             return false;
         }
