@@ -4,15 +4,124 @@
 #include <istream>
 
 #include "dataclass/ingredient.h"
+#include "engine/font_library.h"
 #include "engine/keymap.h"
 #include "engine/ui_theme.h"
 #include "recipe_library.h"
 
 int LOG_LEVEL = 2;
 std::vector<std::string> EXAMPLE_MAP;
+i18n::LocalizationText* localization;
 
 namespace ui {
 UITheme DEFAULT_THEME = UITheme();
+}
+
+void Preload::_load_font_from_name(const std::string& filename,
+                                   const std::string& lang) {
+    auto path =
+        Files::get().fetch_resource_path(strings::settings::FONTS, filename);
+
+    auto translations_path = Files::get().fetch_resource_path(
+        // Note: we are using the po since we just want the strings
+        strings::settings::TRANSLATIONS, fmt::format("{}.po", lang));
+    std::ifstream ifs(translations_path);
+
+    FontLoadingInfo fli{.filename = path.c_str(),
+                        .size = 400,
+                        .font_chars = nullptr,
+                        .glyph_count = 0};
+
+    // if it correctly loaded grab all the characters and load the font for
+    // them
+    if (
+        // Ignore english because i never filled out the po file...
+        lang != "en_us" &&
+        // check to make sure the po file for the language loaded
+        ifs.good()) {
+        std::stringstream buffer;
+        buffer << ifs.rdbuf();
+
+        // TODO :BE: this is a copypaste from font_util.h
+        int codepointCount = 0;
+        int* codepoints =
+            raylib::LoadCodepoints(buffer.str().c_str(), &codepointCount);
+
+        int codepointNoDupsCounts = 0;
+        int* codepointsNoDups = CodepointRemoveDuplicates(
+            codepoints, codepointCount, &codepointNoDupsCounts);
+
+        raylib::UnloadCodepoints(codepoints);
+
+        fli.font_chars = codepointsNoDups;
+        fli.glyph_count = codepointNoDupsCounts;
+    } else {
+        log_warn("failed to open translations po file {} for {}",
+                 translations_path, lang);
+    }
+
+    FontLibrary::get().load(fli, lang.c_str());
+}
+
+const char* Preload::get_font_for_lang(const char* lang_name) {
+    // TODO :BE: eventually load from json config
+    switch (hashString(lang_name)) {
+        case hashString("en_rev"):
+        case hashString("en_us"):
+            return "Gaegu-Bold.ttf";
+        case hashString("ko_kr"):
+            return "NotoSansKR.ttf";
+    }
+    return "Gaegu-Bold.ttf";
+}
+
+void Preload::load_fonts() {
+    // Font loading must happen after InitWindow
+
+    // TODO :BE: load from json
+    std::array<const char*, 3> langs = {
+        "en_us",
+        "en_rev",
+        "ko_kr",
+    };
+
+    for (const auto lang : langs) {
+        _load_font_from_name(get_font_for_lang(lang), lang);
+    }
+
+    // default to en us
+    font = FontLibrary::get().get("en_us");
+
+    // font = load_karmina_regular();
+
+    // NOTE if you go back to files, load fonts from install folder, instead
+    // of local path
+    //
+    // font = LoadFontEx("./resources/fonts/constan.ttf", 96, 0, 0);
+}
+
+void Preload::on_language_change(const char* lang_name, const char* fn) {
+    // Reset localization and reload from file...
+    if (localization) delete localization;
+    localization = new i18n::LocalizationText(fn);
+
+    // During startup we load settings before preload, but that means that
+    // the fonts arent loaded yet.
+    //
+    // So skip loading the font since itll load later
+    if (!FontLibrary::get().contains("en_us")) {
+        log_warn("if you see this not during starting something is wrong");
+        return;
+    }
+
+    if (!FontLibrary::get().contains(lang_name)) {
+        log_warn("Couldnt find a font for {}, using en_us instead", lang_name);
+        font = FontLibrary::get().get("en_us");
+        return;
+    }
+
+    // Once reloaded load correct font for language
+    font = FontLibrary::get().get(lang_name);
 }
 
 void Preload::write_json_config_file(const char* filename,

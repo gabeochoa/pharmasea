@@ -21,6 +21,10 @@ struct FontLibrary {
         return impl.get(name);
     }
 
+    [[nodiscard]] bool contains(const std::string& name) const {
+        return impl.contains(name);
+    }
+
     [[nodiscard]] const raylib::Font& get(const std::string& name) const {
         return impl.get(name);
     }

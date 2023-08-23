@@ -246,6 +246,10 @@ constexpr const char* CLOSING = "CLOSING";
 constexpr const char* CLOSED = "CLOSED";
 constexpr const char* NEXT_ROUND_COUNTDOWN = "Next Round Starting In";
 
+constexpr const char* FAKESTRING_CAPS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
+constexpr const char* FAKESTRING_NAPS = "abcdefghijklmnopqrstuvwxyz ";
+constexpr const char* FAKESTRING_NUMS = "0123456789_-+=/[];,.<>?:";
+
 }  // namespace i18n
 
 namespace urls {

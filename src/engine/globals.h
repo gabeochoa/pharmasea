@@ -40,12 +40,8 @@ template<typename Str>
 static int __WIN_H = 720;
 static int __WIN_W = 1280;
 
-static i18n::LocalizationText* localization;
-static void reload_translations_from_file(const char* fn) {
-    if (localization) delete localization;
-    localization = new i18n::LocalizationText(fn);
-}
-
+// Stored in preload.cpp
+extern i18n::LocalizationText* localization;
 extern int LOG_LEVEL;
 
 [[nodiscard]] inline int WIN_W() { return __WIN_W; }

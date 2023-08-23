@@ -79,6 +79,18 @@ msgstr "noituloseR"
 msgid "Language"
 msgstr "egaugnaL"
 
+msgid "General"
+msgstr "lareneG"
+
+msgid "Controls"
+msgstr "slortnoC"
+
+msgid "Keyboard"
+msgstr "draobyeK"
+
+msgid "Gamepad"
+msgstr "dapemaG"
+
 msgid "Start Game"
 msgstr "emaG tratS"
 
@@ -108,4 +120,13 @@ msgstr "DESOLC"
 
 msgid "Next Round Starting In"
 msgstr "nI gnitratS dnuoR txeN"
+
+msgid "ABCDEFGHIJKLMNOPQRSTUVWXYZ "
+msgstr " ZYXWVUTSRQPONMLKJIHGFEDCBA"
+
+msgid "abcdefghijklmnopqrstuvwxyz "
+msgstr " zyxwvutsrqponmlkjihgfedcba"
+
+msgid "0123456789_-+=/[];,.<>?:"
+msgstr ":?><.,;][/=+-_9876543210"
 

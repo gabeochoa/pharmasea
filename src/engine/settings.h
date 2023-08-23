@@ -264,13 +264,7 @@ struct Settings {
         return _index(data.lang_name);
     }
 
-    void update_language_from_index(int index) {
-        // TODO handle exception
-        auto li = lang_options[index];
-        log_info("Loading updated translations from {}", li.filename);
-        reload_translations_from_file(li.filename.c_str());
-        data.lang_name = li.name;
-    }
+    void update_language_from_index(int index);
 
     void update_language_name(const std::string& l) {
         std::string lang = l;

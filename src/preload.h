@@ -1,6 +1,9 @@
 
 #pragma once
+#include <fstream>
+#include <iostream>
 
+#include "engine/font_util.h"
 #include "engine/globals.h"
 #include "external_include.h"
 //
@@ -84,38 +87,14 @@ struct Preload {
         // TODO :IMPACT: load correct language pack for settings file
         auto path = Files::get().fetch_resource_path(
             strings::settings::TRANSLATIONS, "en_us.mo");
-        reload_translations_from_file(path.c_str());
+        on_language_change("en_us", path.c_str());
     }
 
-    void reload_translations_from_file(const char* fn) {
-        if (localization) delete localization;
-        localization = new i18n::LocalizationText(fn);
-    }
-
-    void load_fonts() {
-        const auto _load_font_from_name = [](const std::string filename) {
-            auto path = Files::get().fetch_resource_path(
-                strings::settings::FONTS, filename);
-            FontLibrary::get().load({.filename = path.c_str(),
-                                     .size = 400,
-                                     .font_chars = nullptr,
-                                     .glyph_count = 0},
-                                    filename.c_str());
-        };
-
-        _load_font_from_name("Gaegu-Bold.ttf");
-
-        font = FontLibrary::get().get("Gaegu-Bold.ttf");
-
-        // Font loading must happen after InitWindow
-        // font = load_karmina_regular();
-
-        // NOTE if you go back to files, load fonts from install folder, instead
-        // of local path
-        //
-        // font = LoadFontEx("./resources/fonts/constan.ttf", 96, 0, 0);
-    }
-
+    void on_language_change(const char* lang_name, const char* fn);
+    void _load_font_from_name(const std::string& filename,
+                              const std::string& lang);
+    const char* get_font_for_lang(const char* lang_name);
+    void load_fonts();
     void load_textures();
     void load_models();
     auto load_json_config_file(
