@@ -13,7 +13,8 @@ constexpr int MAX_SEED_LENGTH = 20;
 extern std::vector<std::string> EXAMPLE_MAP;
 
 static void generate_and_insert_walls(std::string /* seed */) {
-    // TODO generate walls based on seed
+    // TODO :BE: i dont think we use this anymore
+    // TODO :IMPACT: generate walls based on seed
     const auto d_color = (Color){155, 75, 0, 255};
     for (int i = 0; i < MAX_MAP_SIZE; i++) {
         for (int j = 0; j < MAX_MAP_SIZE; j++) {
@@ -80,7 +81,7 @@ struct LevelInfo {
         s.text1b(seed, MAX_SEED_LENGTH);
 
         s.value8b(hashed_seed);
-        // TODO these arent serializable...
+        // TODO :INFRA: these arent serializable...
         // s.object(generator);
         // s.object(dist);
     }

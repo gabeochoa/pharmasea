@@ -25,7 +25,7 @@ struct Map {
     Map() {}
 
     Map(const std::string& _seed) : seed(_seed) {
-        // TODO this is needed for the items to be regenerated
+        // TODO :NOTE: this is needed for the items to be regenerated
         update_seed(seed);
     }
 
@@ -51,7 +51,7 @@ struct Map {
 
     void _onUpdate(std::vector<std::shared_ptr<Entity>> players, float dt) {
         TRACY_ZONE_SCOPED;
-        // TODO add to debug overlay
+        // TODO :BE: add to debug overlay
         // log_info("num items {}", items().size());
 
         game_info.ensure_generated_map(seed);
@@ -60,7 +60,7 @@ struct Map {
 
     void onDraw(float dt) const {
         TRACY_ZONE_SCOPED;
-        // TODO merge this into normal render pipeline
+        // TODO :INFRA: merge this into normal render pipeline
         SystemManager::get().render_entities(
             container_cast(remote_players_NOT_SERIALIZED,
                            "converting sp<RemotePlayer> to sp<Entity> as these "
@@ -73,7 +73,7 @@ struct Map {
     void onDrawUI(float dt) {
         TRACY_ZONE_SCOPED;
 
-        // TODO merge this into normal render pipeline
+        // TODO :INFRA: merge this into normal render pipeline
         SystemManager::get().render_ui(
             container_cast(remote_players_NOT_SERIALIZED,
                            "converting sp<RemotePlayer> to sp<Entity> as these "

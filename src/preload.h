@@ -34,7 +34,7 @@ struct Preload {
     Preload() {
         reload_config();
 
-        // TODO right now these arent reloadable yet but should be soon
+        // TODO :BE: right now these arent reloadable yet but should be soon
         // add support an move them to reload_config()
 
         load_translations();
@@ -79,9 +79,9 @@ struct Preload {
     void load_keymapping();
 
     void load_translations() {
-        // TODO load correct language pack for settings file
+        // TODO :IMPACT: load correct language pack for settings file
         auto path = Files::get().fetch_resource_path(
-            strings::settings::TRANSLATIONS, "en_rev.mo");
+            strings::settings::TRANSLATIONS, "en_us.mo");
         reload_translations_from_file(path.c_str());
     }
 

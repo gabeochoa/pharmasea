@@ -3,7 +3,7 @@
 
 // steam networking uses an "app id" that we dont have
 // also the code isnt written yet :)
-// TODO: add support for steam connections
+// TODO :IMPACT: add support for steam connections
 #include "layers/minimaplayer.h"
 #define BUILD_WITHOUT_STEAM
 
@@ -11,9 +11,8 @@
 // its also defined in:
 // - vendor/tracy/TracyClient.cpp
 // - app.cpp
-// TODO find a way to enable this in the compiler so we dont have to do this
-// #define ENABLE_TRACING 1
-// #include "engine/tracy.h"
+// TODO :INFRA: find a way to enable this in the compiler so we dont have to do
+// this #define ENABLE_TRACING 1 #include "engine/tracy.h"
 #define ZoneScoped
 
 #define ENABLE_DEV_FLAGS 1
@@ -51,14 +50,15 @@ extern ui::UITheme DEFAULT_THEME;
 #include "./tests/all_tests.h"
 
 void startup() {
-    // TODO need to test on lower framerates, there seems to be issues with
-    // network initlization
+    // TODO :INFRA: need to test on lower framerates, there seems to be issues
+    // with network initlization
 
     // Force the app to be created.
     // This unlocks GPU access so we can load textures
     App::create(AppSettings{
         //
-        120,  // TODO setting this to any other number seems ot break the camera
+        120,  // TODO :INFRA: setting this to any other number seems ot break
+              // the camera
               // entity global?
         //
         WIN_W(),

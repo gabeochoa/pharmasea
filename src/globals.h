@@ -14,7 +14,7 @@ constexpr int MAP_H = 33;
 // constexpr int MAP_W = 12;
 // constexpr float WIN_RATIO = WIN_W * 1.f / WIN_H;
 
-// TODO currently astar only supports tiles that are on the grid
+// TODO :INFRA: currently astar only supports tiles that are on the grid
 // if you change this here, then go in there and add support as well
 constexpr float TILESIZE = 1.0f;
 
@@ -30,7 +30,7 @@ static bool ENABLE_MODELS = true;
 static bool ENABLE_SOUND = true;
 static bool TESTS_ONLY = false;
 
-// TODO is there a way for us to move these to engine
+// TODO :BE: is there a way for us to move these to engine
 // and then let the game pass them in or something _while_ staying const?
 // and typed
 namespace network {
@@ -50,10 +50,10 @@ static bool is_host = false;
 
 namespace round_settings {
 
-// TODO how long is a day?
+// TODO :DESIGN: how long is a day?
 constexpr const float ROUND_LENGTH_S = 100.f;
 
-// TODO if we hit the end of the day and didnt spawn everyone...
+// TODO :DESIGN: if we hit the end of the day and didnt spawn everyone...
 // what should we do?
 constexpr const int NUM_CUSTOMERS = 2;
 constexpr const float TIME_BETWEEN_CUSTOMERS_S = 2.f;

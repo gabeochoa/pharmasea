@@ -62,7 +62,7 @@ struct MenuLayer : public Layer {
 
         // Title
         {
-            auto text_loc = rect::lpad(top, 25);
+            auto text_loc = rect::lpad(top, 15);
             text(Widget{text_loc}, text_lookup(strings::GAME_NAME));
         }
 

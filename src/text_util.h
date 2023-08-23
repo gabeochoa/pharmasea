@@ -135,7 +135,7 @@ static void DrawText3D(Font font, const char* text, vec3 position,
 
         if (codepoint == '\n') {
             // NOTE: Fixed line spacing of 1.5 line-height
-            // TODO: Support custom line spacing defined by user
+            // TODO :INFRA: Support custom line spacing defined by user
             textOffsetY += scale + lineSpacing / (float) font.baseSize * scale;
             textOffsetX = 0.0f;
         } else {
@@ -248,7 +248,7 @@ static void DrawTextWave3D(Font font, const char* text, vec3 position,
 
         if (codepoint == '\n') {
             // NOTE: Fixed line spacing of 1.5 line-height
-            // TODO: Support custom line spacing defined by user
+            // TODO :INFRA: Support custom line spacing defined by user
             textOffsetY += scale + lineSpacing / (float) font.baseSize * scale;
             textOffsetX = 0.0f;
             k = 0;

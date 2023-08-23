@@ -39,7 +39,7 @@ using EntityID = int;
 
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
-    // TODO go around and audit id uses
+    // TODO :INFRA: go around and audit id uses
     EntityID id;
 
     ComponentBitSet componentSet;

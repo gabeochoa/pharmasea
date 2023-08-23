@@ -165,11 +165,11 @@ constexpr const char* GAME = "Game";
 constexpr const char* MENU = "Menu";
 constexpr const char* ABOUT = "About";
 
-// TODO translate
+// TODO :IMPACT: translate
 }  // namespace menu
 
 // This is not aligned on purpose
-// TODO add to po file
+// TODO :IMPACT: add to po file
 constexpr const char* ABOUT_INFO = R"(
 A game
 Choice Honey 

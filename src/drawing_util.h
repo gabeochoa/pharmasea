@@ -41,9 +41,9 @@ static void DrawLineStrip2Din3D(const std::vector<vec2>& points, Color color) {
 
 static void DrawRect2Din3D(Vector3 position, float width, float height,
                            Color color = RED) {
-    // TODO this code doesnt work yet,
-    // TODO likely want to add Z rotation so it follows camera (but we cannot
-    // include "cam.h" in here
+    // TODO :NONE: this code doesnt work yet,
+    // TODO :INFRA: likely want to add Z rotation so it follows camera (but we
+    // cannot include "cam.h" in here
     float x = 0.0f;
     float y = 0.0f;
     float z = 0.0f;

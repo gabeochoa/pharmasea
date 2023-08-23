@@ -244,7 +244,7 @@ struct helper {
                 EntityHelper::getFirstMatching([](const Entity& e) -> bool {
                     return check_type(e, EntityType::CustomerSpawner);
                 });
-            // TODO we are validating this now, but we shouldnt have to
+            // TODO :DESIGN: we are validating this now, but we shouldnt have to
             // worry about this in the future
             VALIDATE(valid(customer_opt),
                      "map needs to have at least one customer spawn point");
@@ -253,7 +253,7 @@ struct helper {
             auto reg_opt =
                 EntityHelper::getFirstMatching([&customer](const Entity& e) {
                     if (!check_type(e, EntityType::Register)) return false;
-                    // TODO need a better way to do this
+                    // TODO :INFRA: need a better way to do this
                     // 0 makes sense but is the position of the entity, when
                     // its infront?
                     auto new_path =

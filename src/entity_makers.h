@@ -31,7 +31,7 @@ void make_wall(Entity& wall, vec2 pos, Color c = ui::color::brown);
 void make_character_switcher(Entity& character_switcher, vec2 pos);
 void make_map_randomizer(Entity&, vec2 pos);
 void make_fast_forward(Entity&, vec2 pos);
-// TODO i dont like that we need to include ITA here...
+// TODO :BE: i dont like that we need to include ITA here...
 void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
                        float height, IsTriggerArea::Type type);
 

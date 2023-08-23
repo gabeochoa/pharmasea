@@ -21,7 +21,7 @@
 #include "entity.h"
 #include "entity_makers.h"
 #include "strings.h"
-// TODO eventually move to input manager but for now has to be in here
+// TODO :BE: eventually move to input manager but for now has to be in here
 // to prevent circular includes
 
 // return true if the item has collision and is currently collidable
@@ -54,7 +54,7 @@
         return true;
     }
 
-    // TODO rename this since it no longer makes sense
+    // TODO :BE: rename this since it no longer makes sense
     // if you are a ghost player
     // then you are collidable
     if (entity->has<CanBeGhostPlayer>()) {
@@ -84,7 +84,7 @@ struct EntityHelper {
         return client_entities_DO_NOT_USE;
     }
 
-    // TODO eventually return the entity id or something
+    // TODO :BE: eventually return the entity id or something
     template<typename... TArgs>
     static std::shared_ptr<Entity> createItem(TArgs... args) {
         Entity& e = createEntity();
@@ -191,7 +191,7 @@ struct EntityHelper {
         }
     }
 
-    // TODO delete
+    // TODO :BE: delete
     template<typename T>
     static constexpr std::shared_ptr<T> getFirstMatching(
         std::function<bool(std::shared_ptr<T>)> filter  //
@@ -285,7 +285,7 @@ struct EntityHelper {
                 // this is behind us
                 if (cur_dist < 0) continue;
 
-                // TODO add a snap_as2() function to transform
+                // TODO :BE: add a snap_as2() function to transform
                 if (vec::to2(transform.snap_position()) == vec::snap(tile)) {
                     return current_entity;
                 }
@@ -317,7 +317,7 @@ struct EntityHelper {
     static std::shared_ptr<Entity> getClosestMatchingFurniture(
         const Transform& transform, float range,
         std::function<bool(std::shared_ptr<Furniture>)> filter) {
-        // TODO should this really be using this?
+        // TODO :BE: should this really be using this?
         return EntityHelper::getMatchingEntityInFront<Furniture>(
             transform.as2(), range, transform.face_direction(), filter);
     }
@@ -362,8 +362,7 @@ struct EntityHelper {
             });
     }
 
-    // TODO does this break the idea of ecs
-    // TODO change other debugname filter guys to this
+    // TODO :BE: change other debugname filter guys to this
     static std::vector<std::shared_ptr<Entity>> getAllWithType(
         const EntityType& type) {
         std::vector<std::shared_ptr<Entity>> matching;
@@ -383,8 +382,9 @@ struct EntityHelper {
         return false;
     }
 
-    // TODO i think this is slower because we are doing "outside mesh" as
-    // outside we should probably have just make some tiles for inside the map
+    // TODO :INFRA: i think this is slower because we are doing "outside mesh"
+    // as outside we should probably have just make some tiles for inside the
+    // map
     // ('.' on map for example) and use those to mark where people can walk and
     // where they cant
     // static bool isWalkable_impl(const vec2& pos) {
@@ -400,7 +400,7 @@ struct EntityHelper {
     // return true;
     // }
 
-    // TODO need to invalidate any current valid paths
+    // TODO :PBUG: need to invalidate any current valid paths
     static inline void invalidatePathCacheLocation(vec2 pos) {
         cache_is_walkable.erase(pos);
     }
