@@ -678,7 +678,7 @@ inline ElementResult slider(const Widget& widget, const SliderData& data = {}) {
 inline ElementResult dropdown(const Widget& widget, DropdownData data) {
     if (data.options.empty()) {
         log_warn("the options passed to dropdown were empty");
-        return false;
+        return ElementResult{false, 0};
     }
 
     // TODO when you tab to the dropdown
@@ -734,7 +734,7 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
 
     text(widget, data.options[state->selected]);
 
-    return ElementResult{state->selected.changed_since, (bool) state->selected};
+    return ElementResult{state->selected.changed_since, (int) state->selected};
 }
 
 inline ElementResult control_input_field(const Widget& widget,
