@@ -195,16 +195,20 @@ struct EntityHelper {
         entities.erase(newend, entities.end());
     }
 
-    static void delete_all_entities(bool include_permanent) {
+    static void delete_all_entities_NO_REALLY_I_MEAN_ALL() {
         Entities& entities = get_entities();
+        // just clear the whole thing
+        entities.clear();
+    }
 
+    static void delete_all_entities(bool include_permanent = false) {
         if (include_permanent) {
-            // just clear the whole thing
-            entities.clear();
+            delete_all_entities_NO_REALLY_I_MEAN_ALL();
             return;
         }
 
         // Only delete non perms
+        Entities& entities = get_entities();
 
         auto newend = std::remove_if(
             entities.begin(), entities.end(), [](const auto& entity) {
