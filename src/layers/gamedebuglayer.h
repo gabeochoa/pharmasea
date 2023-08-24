@@ -106,7 +106,7 @@ struct GameDebugLayer : public Layer {
         if (!MenuState::s_in_game()) return;
     }
 
-    virtual void onDraw(float dt) override {
+    virtual void onDraw(float) override {
         if (!MenuState::s_in_game()) return;
 
         if (!debug_ui_enabled) {

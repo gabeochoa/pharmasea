@@ -56,19 +56,19 @@ void LevelInfo::grab_things() {
 
 void LevelInfo::generate_lobby_map() {
     {
-        auto& entity = EntityHelper::createEntity();
+        auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_character_switcher(
             entity, vec::to2(lobby_origin) + vec2{5.f, 5.f});
     }
 
     {
-        auto& entity = EntityHelper::createEntity();
+        auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_map_randomizer(entity,
                                        vec::to2(lobby_origin) + vec2{7.f, 7.f});
     }
 
     {
-        auto& entity = EntityHelper::createEntity();
+        auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
             entity, lobby_origin + vec3{5, TILESIZE / -2.f, 10}, 8, 3,
             IsTriggerArea::Lobby_PlayGame);
@@ -77,14 +77,14 @@ void LevelInfo::generate_lobby_map() {
 
 void LevelInfo::generate_progression_map() {
     {
-        auto& entity = EntityHelper::createEntity();
+        auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
             entity, progression_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3,
             IsTriggerArea::Progression_Option1);
     }
 
     {
-        auto& entity = EntityHelper::createEntity();
+        auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
             entity, progression_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
             IsTriggerArea::Progression_Option2);

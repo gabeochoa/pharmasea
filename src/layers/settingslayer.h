@@ -101,7 +101,7 @@ struct SettingsLayer : public Layer {
         MenuState::get().go_back();
     }
 
-    void draw_base_screen(float dt) {
+    void draw_base_screen(float) {
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto content = rect::tpad(window, 20);
         content = rect::lpad(content, 10);

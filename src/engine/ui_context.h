@@ -296,20 +296,20 @@ struct UIContext : public IUIContextInputManager,
     }
 
     template<typename T>
-    [[nodiscard]] std::shared_ptr<T> widget_init(const uuid id) {
-        std::shared_ptr<T> state = statemanager.getAndCreateIfNone<T>(id);
+    [[nodiscard]] std::shared_ptr<T> widget_init(const uuid& uuid) {
+        std::shared_ptr<T> state = statemanager.getAndCreateIfNone<T>(uuid);
         if (state == nullptr) {
             log_error(
                 "State for id ({}) of wrong type, expected {}. Check to "
                 "make sure your id's are globally unique",
-                std::string(id), type_name<T>());
+                std::string(uuid), type_name<T>());
         }
         return state;
     }
 
     template<typename T>
-    [[nodiscard]] std::shared_ptr<T> get_widget_state(const uuid id) {
-        return statemanager.get_as<T>(id);
+    [[nodiscard]] std::shared_ptr<T> get_widget_state(const uuid& uuid) {
+        return statemanager.get_as<T>(uuid);
     }
 };
 

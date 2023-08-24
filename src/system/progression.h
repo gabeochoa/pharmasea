@@ -7,7 +7,7 @@
 namespace system_manager {
 namespace progression {
 
-inline void collect_upgrade_options(Entity& entity, float dt) {
+inline void collect_upgrade_options(Entity& entity, float) {
     if (entity.is_missing<IsProgressionManager>()) return;
     IsProgressionManager& ipm = entity.get<IsProgressionManager>();
 

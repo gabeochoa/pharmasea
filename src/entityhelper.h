@@ -66,6 +66,8 @@
 typedef std::vector<std::shared_ptr<Entity>> Entities;
 static Entities client_entities_DO_NOT_USE;
 static Entities server_entities_DO_NOT_USE;
+
+static std::set<int> permanant_ids;
 static std::map<vec2, bool> cache_is_walkable;
 
 struct EntityHelper {
@@ -84,6 +86,10 @@ struct EntityHelper {
         return client_entities_DO_NOT_USE;
     }
 
+    struct CreationOptions {
+        bool is_permanent;
+    };
+
     // TODO :BE: eventually return the entity id or something
     template<typename... TArgs>
     static std::shared_ptr<Entity> createItem(TArgs... args) {
@@ -93,12 +99,32 @@ struct EntityHelper {
         return get_entities().back();
     }
 
+    template<typename... TArgs>
+    static std::shared_ptr<Entity> createPermanentItem(TArgs... args) {
+        Entity& e = createPermanentEntity();
+        items::make_item_type(e, std::forward<TArgs>(args)...);
+        // log_info("created a new item {} {} ", e.id, e.get<DebugName>());
+        return get_entities().back();
+    }
+
     static Entity& createEntity() {
+        return createEntityWithOptions({.is_permanent = false});
+    }
+
+    static Entity& createPermanentEntity() {
+        return createEntityWithOptions({.is_permanent = true});
+    }
+
+    static Entity& createEntityWithOptions(const CreationOptions& options) {
         std::shared_ptr<Entity> e(new Entity());
         get_entities().push_back(e);
         // log_info("created a new entity {}", e->id);
 
         invalidatePathCache();
+
+        if (options.is_permanent) {
+            permanant_ids.insert(e->id);
+        }
 
         return *e;
 
@@ -169,9 +195,23 @@ struct EntityHelper {
         entities.erase(newend, entities.end());
     }
 
-    static void delete_all_entities() {
+    static void delete_all_entities(bool include_permanent) {
         Entities& entities = get_entities();
-        entities.clear();
+
+        if (include_permanent) {
+            // just clear the whole thing
+            entities.clear();
+            return;
+        }
+
+        // Only delete non perms
+
+        auto newend = std::remove_if(
+            entities.begin(), entities.end(), [](const auto& entity) {
+                return !permanant_ids.contains(entity->id);
+            });
+
+        entities.erase(newend, entities.end());
     }
 
     enum ForEachFlow {

@@ -47,6 +47,7 @@ struct Entity {
 
     bool cleanup = false;
 
+    Entity() : id(ENTITY_ID_GEN++) {}
     ~Entity();
     Entity(const Entity&) = delete;
     Entity(Entity&& other) noexcept = default;
@@ -155,8 +156,6 @@ struct Entity {
         BaseComponent* comp = componentArray.at(components::get_type_id<T>());
         return *static_cast<T*>(comp);
     }
-
-    Entity() : id(ENTITY_ID_GEN++) {}
 
    private:
     friend bitsery::Access;
