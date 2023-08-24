@@ -2,8 +2,11 @@
 #pragma once
 
 #include <bitset>
+#include <random>
 
 #include "random.h"
+//
+#include "log.h"
 
 namespace bitset_utils {
 template<typename T>
@@ -17,6 +20,25 @@ int index_of_nth_set_bit(const T& bitset, int n) {
         }
     }
     return -1;  // Return -1 if the nth set bit is not found
+}
+
+// TODO :BE: combine this with the other one...
+template<size_t N>
+int get_random_enabled_bit(const std::bitset<N>& bitset,
+                           std::mt19937& generator) {
+    std::vector<int> enabled_indices;
+    for (size_t i = 0; i < bitset.size(); ++i) {
+        if (bitset.test(i)) {
+            enabled_indices.push_back(static_cast<int>(i));
+        }
+    }
+
+    if (enabled_indices.empty()) {
+        // No bits are enabled, return -1 or handle the error as needed.
+        return -1;
+    }
+    int random_index = generator() % (static_cast<int>(enabled_indices.size()));
+    return enabled_indices[random_index];
 }
 
 template<size_t N>

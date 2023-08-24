@@ -43,6 +43,18 @@ static std::vector<vec2> get_neighbors(int i, int j, int step = 1) {
     return ns;
 }
 
+static std::vector<std::pair<int, int>> get_neighbors_i(int i, int j,
+                                                        int step = 1) {
+    std::vector<std::pair<int, int>> ns;
+    forEachNeighbor(
+        i, j,
+        [&](const vec2& v) {
+            ns.push_back({(int) v.x, (int) v.y});
+        },
+        step);
+    return ns;
+}
+
 float constexpr newton_raphson(float x, float cur, float prev) {
     return cur == prev ? cur : newton_raphson(x, 0.5f * (cur + x / cur), cur);
 }

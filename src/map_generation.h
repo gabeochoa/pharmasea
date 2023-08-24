@@ -236,6 +236,9 @@ struct helper {
         validate_exist(EntityType::Register);
         validate_exist(EntityType::CustomerSpawner);
         validate_exist(EntityType::FastForward);
+        validate_exist(EntityType::Cupboard);
+        validate_exist(EntityType::SodaMachine);
+        validate_exist(EntityType::MopHolder);
 
         // ensure customers can make it to the register
         {

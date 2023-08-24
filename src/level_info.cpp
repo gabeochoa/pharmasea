@@ -7,6 +7,7 @@
 #include "map_generation.h"
 #include "network/server.h"
 #include "recipe_library.h"
+#include "vec_util.h"
 
 void LevelInfo::update_seed(const std::string& s) {
     log_info("level info update seed {}", s);
@@ -109,17 +110,52 @@ void LevelInfo::generate_in_game_map() {
     int rows = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
     int cols = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
 
-    const auto get_char = [lines](int i, int j) -> char {
-        if (i < 0) return '.';
-        if (j < 0) return '.';
-        if (i >= (int) lines.size()) return '.';
-        if (j >= (int) lines[i].size()) return '.';
-        return lines[i][j];
+    const auto _is_inside = [lines](int i, int j) -> bool {
+        if (i < 0 || j < 0 || i >= (int) lines.size() ||
+            j >= (int) lines[i].size())
+            return false;
+        return true;
+    };
+
+    const auto get_char = [lines, _is_inside](int i, int j) -> char {
+        if (_is_inside(i, j)) return lines[i][j];
+        return '.';
     };
 
     const auto _is_empty = [get_char, lines](int i, int j) -> bool {
         // TODO probably should allow caller to set default on fail
         return get_char(i, j) == '.';
+    };
+
+    const auto _get_random_empty = [_is_empty, rows, cols,
+                                    this]() -> std::pair<int, int> {
+        int tries = 0;
+        int x;
+        int y;
+        do {
+            x = gen_rand(1, rows - 1);
+            y = gen_rand(1, cols - 1);
+            if (tries++ > 100) {
+                x = 0;
+                y = 0;
+                break;
+            }
+        } while (  //
+            !_is_empty(x, y));
+        return {x, y};
+    };
+
+    const auto _get_empty_neighbor = [_is_empty, this](
+                                         int i, int j) -> std::pair<int, int> {
+        auto ns = vec::get_neighbors_i(i, j);
+        std::shuffle(std::begin(ns), std::end(ns), generator);
+
+        for (auto n : ns) {
+            if (_is_empty(n.first, n.second)) {
+                return n;
+            }
+        }
+        return ns[0];
     };
 
     const auto _get_valid_register_location = [_is_empty, rows, cols,
@@ -171,14 +207,39 @@ void LevelInfo::generate_in_game_map() {
         lines[3][cols + 1] = generation::FAST_FORWARD;
     }
 
-    // place register
+    {
+        auto [x, y] = _get_random_empty();
+        lines[x][y] = generation::MOP_HOLDER;
+    }
+
+    int num_tables = std::min(rows, cols);
+    for (int i = 0; i < num_tables; i++) {
+        auto [x, y] = _get_random_empty();
+        do {
+            // place table
+            lines[x][y] = generation::TABLE;
+            // move over one spot
+            auto p = _get_empty_neighbor(x, y);
+            x = p.first;
+            y = p.second;
+            // was it empty? okay place and go back
+        } while (_is_inside(x, y) && _is_empty(x, y));
+    }
+
+    {
+        // using soda machine here to enforce that we have these two next to
+        // eachother
+        auto [x, y] = _get_valid_register_location();
+        lines[x][y] = generation::SODA_MACHINE;
+        lines[x][y + 1] = generation::CUPBOARD;
+    }
+
+    // place register last so that we guarantee it remains valid
+    // ie the place infront of it isnt full
     {
         auto [x, y] = _get_valid_register_location();
         lines[x][y] = generation::REGISTER;
     }
-
-    // TODO we must spawn and validate a soda machine
-    // TODO we must spawn and validate a cup
 
     for (auto line : lines) {
         log_info("{}", line);

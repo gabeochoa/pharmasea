@@ -6,8 +6,8 @@
 #include "entityhelper.h"
 #include "system/system_manager.h"
 
-constexpr int MIN_MAP_SIZE = 5;
-constexpr int MAX_MAP_SIZE = 20;
+constexpr int MIN_MAP_SIZE = 10;
+constexpr int MAX_MAP_SIZE = 25;
 constexpr int MAX_SEED_LENGTH = 20;
 
 extern std::vector<std::string> EXAMPLE_MAP;

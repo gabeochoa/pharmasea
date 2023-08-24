@@ -1,4 +1,5 @@
 
+/*
 #include "game.h"
 
 namespace network {
@@ -40,5 +41,339 @@ int main(int argc, char* argv[]) {
     } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;
     }
+    return 0;
+}
+*/
+
+#include <bitset>
+#include <deque>
+#include <iostream>
+#include <random>
+#include <string>
+#include <vector>
+
+#include "engine/bitset_utils.h"
+#include "engine/log.h"
+#include "vec_util.h"
+#include "vendor_include.h"
+
+constexpr int NUM_PATTERNS = 3;
+typedef std::bitset<NUM_PATTERNS> Possibilities;
+
+typedef std::pair<int, int> Location;
+typedef std::vector<Location> Locations;
+
+enum Rose { N, S, E, W };
+
+typedef std::vector<Rose> Connections;
+struct Pattern {
+    int id = -1;
+    std::vector<std::string> pat;
+    Connections connections;
+    bool required = false;
+};
+
+const std::array<Pattern, NUM_PATTERNS> patterns = {
+    //
+    //
+    //     IDK why but the pat's need to be
+    //     rotated clockwise 90 degress to match correctly
+    //     ...
+    //
+    //
+    Pattern{.id = 0,
+            .pat =
+                {
+                    "#...#",  //
+                    "#...#",  //
+                    "#####"   //
+                },
+            .connections =
+                {
+                    W,
+                }},
+    //
+    Pattern{.id = 1,
+            .pat =
+                {
+                    "#...#",  //
+                    "#...#",  //
+                    "#...#"   //
+                },
+            .connections =
+                {
+                    W,
+                    E,
+                }},
+    //
+    Pattern{.id = 2,
+            .pat =
+                {
+                    "#####",  //
+                    "#...#",  //
+                    "#...#"   //
+                },
+            .connections =
+                {
+                    E,
+                }},
+    //
+};
+
+struct WaveCollapse {
+    int rows = 5;
+    int cols = 5;
+
+    // represents for each cell what options are still possible
+    std::vector<Possibilities> grid_options;
+
+    // We mark this mutable since its not really what we _mean_ by const
+    mutable std::mt19937 gen;
+    mutable bool is_first_one;
+
+    WaveCollapse() {
+        grid_options =
+            std::vector<Possibilities>(rows * cols, Possibilities().set());
+        gen = std::mt19937((unsigned int) 0);
+        is_first_one = true;
+    }
+
+    void run() {
+        do {
+            auto [x, y] = _find_lowest_entropy();
+            log_info("lowest entropy was {} {}", x, y);
+            if (_collapsed(x, y)) break;
+
+            auto pattern = _choose_pattern(x, y);
+            log_info("selected pattern {} ", pattern.id);
+            _propagate_choice(x, y);
+        } while (_has_non_collapsed());
+    }
+
+    auto _dump() {
+        for (int i = 0; i < rows * cols; i++) {
+            if (i != 0 && i % (rows) == 0) {
+                std::cout << std::endl;
+            }
+
+            if (grid_options[i].count() >= 2) {
+                std::cout << grid_options[i].count();
+            }
+            if (grid_options[i].count() == 1) {
+                int bit =
+                    bitset_utils::get_random_enabled_bit(grid_options[i], gen);
+                std::cout << (char) (bit + 'A');
+            }
+            if (grid_options[i].count() == 0) {
+                std::cout << "_";
+            }
+        }
+        std::cout << std::endl;
+        std::cout << std::endl;
+    };
+
+    auto _photo() {
+        for (int r = 0; r < rows; r++) {
+            for (int i = 0; i < 3; i++) {
+                for (int c = 0; c < cols; c++) {
+                    int bit = bitset_utils::get_random_enabled_bit(
+                        grid_options[r * rows + c], gen);
+                    if (bit == -1) {
+                        std::cout << ".....";
+                    } else {
+                        std::cout << patterns[bit].pat[i];
+                    }
+                    std::cout << " ";
+                }
+                std::cout << std::endl;
+            }
+            std::cout << std::endl;
+        }
+
+        std::cout << std::endl;
+    };
+
+   private:
+    int _gen_rand(int a, int b) const { return a + (gen() % (b - a)); }
+
+    Rose _get_opposite_connection(Rose r) const {
+        switch (r) {
+            case N:
+                return S;
+            case S:
+                return N;
+            case E:
+                return W;
+            case W:
+                return E;
+        }
+    }
+
+    Location _get_relative_loc(Rose r, int x, int y) const {
+        switch (r) {
+            case N:
+                return {x, y - 1};
+            case S:
+                return {x, y + 1};
+            case E:
+                return {x + 1, y};
+            case W:
+                return {x - 1, y};
+        }
+    }
+
+    bool _in_grid(int x, int y) const {
+        return x >= 0 && x < rows && y >= 0 && y < cols;
+    }
+
+    bool _collapsed(int x, int y) const {
+        if (x == -1 || y == -1) return true;
+        return grid_options[x * rows + y].count() == 1;
+    }
+
+    bool _has_non_collapsed() const {
+        for (int i = 0; i < rows * cols; i++) {
+            if (grid_options[i].count() != 1) return true;
+        }
+        return false;
+    }
+
+    Location _find_lowest_entropy() const {
+        if (is_first_one) {
+            is_first_one = false;
+            return {_gen_rand(0, rows), _gen_rand(0, cols)};
+        }
+
+        Location loc{-1, -1};
+        size_t c_max = 1;
+        for (int i = 0; i < rows * cols; i++) {
+            // if you are at max, congrats
+            if (grid_options[i].count() == patterns.size()) {
+                return {i / rows, i % rows};
+            }
+            if (grid_options[i].count() > c_max) {
+                c_max = grid_options[i].count();
+                loc = {i / rows, i % rows};
+            }
+        }
+        return loc;
+    }
+
+    Pattern _choose_pattern(int x, int y) {
+        Possibilities& possibilities = grid_options[(x * rows) + y];
+        if (possibilities.none()) {
+            _dump();
+            log_error("we dont have any options...");
+        }
+        int bit = bitset_utils::get_random_enabled_bit(possibilities, gen);
+        log_info("got random bit {}", bit);
+
+        // Clear all and set the one we selected
+        possibilities.reset();
+        possibilities.set(bit);
+
+        Pattern selected = patterns[bit];
+        return selected;
+    }
+
+    bool _are_patterns_compatible(const Pattern& a, const Pattern& b,
+                                  const Rose& AtoB) const {
+        bool does_a_connect_in_this_direction = false;
+        for (const auto c : a.connections) {
+            if (c == AtoB) {
+                does_a_connect_in_this_direction = true;
+                break;
+            }
+        }
+
+        if (!does_a_connect_in_this_direction) {
+            return false;
+        }
+
+        bool does_b_connect_in_this_direction = false;
+        for (const auto c : b.connections) {
+            if (c == _get_opposite_connection(AtoB)) {
+                does_b_connect_in_this_direction = true;
+                break;
+            }
+        }
+        if (!does_b_connect_in_this_direction) {
+            return false;
+        }
+
+        return true;
+    }
+
+    std::pair<bool, Location> _propagate_in_direction(
+        Rose r, const Location root, const Pattern& root_pattern) {
+        bool changed = false;
+
+        const Location n = _get_relative_loc(r, root.first, root.second);
+        // is there a neighbor here?
+        if (!_in_grid(n.first, n.second)) return {false, n};
+
+        Possibilities& possibilities = grid_options[n.first * rows + n.second];
+
+        // It has no possible patterns left
+        // * TODO revert the previous one?
+        if (possibilities.none()) return {false, n};
+
+        // disable all the neighbor's patterns that dont match us
+        for (size_t bit = 0; bit < possibilities.size(); bit++) {
+            // does this location have this pattern enabled?
+            if (possibilities.test(bit)) {
+                // check to see if it matches us
+                bool compatible =
+                    _are_patterns_compatible(root_pattern, patterns[bit], r);
+
+                // if it doesnt, then disable and add to the list
+                if (!compatible) {
+                    // disable this one since it no longer fits
+                    possibilities.set(bit, false);
+                    changed = true;
+                }
+            }
+        }
+
+        return {changed, n};
+    }
+
+    void _propagate_choice(int root_x, int root_y) {
+        std::deque<Location> q;
+
+        q.push_back({root_x, root_y});
+
+        while (!q.empty()) {
+            _dump();
+            Location root_loc = q.front();
+            auto [x, y] = root_loc;
+            q.pop_front();
+
+            Possibilities& pos = grid_options[(x * rows) + y];
+            if (pos.none()) continue;
+            int bit = bitset_utils::get_random_enabled_bit(pos, gen);
+            const Pattern& collapsed_pattern = patterns[bit];
+
+            // queue up all the neighbors
+            magic_enum::enum_for_each<Rose>([&](auto val) {
+                // if we did disable any, queue them up to propagate
+                auto [changed, n] =
+                    _propagate_in_direction(val, root_loc, collapsed_pattern);
+                if (changed) q.push_back(n);
+            });
+        }
+    }
+};
+
+void wave_collapse() {
+    WaveCollapse wc;
+
+    wc.run();
+    wc._dump();
+    wc._photo();
+}
+
+int main() {
+    wave_collapse();
     return 0;
 }
