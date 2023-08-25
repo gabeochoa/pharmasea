@@ -52,26 +52,75 @@ int main(int argc, char* argv[]) {
 #include <string>
 #include <vector>
 
+#include "engine/assert.h"
 #include "engine/bitset_utils.h"
 #include "engine/log.h"
 #include "vec_util.h"
 #include "vendor_include.h"
 
-constexpr int NUM_PATTERNS = 3;
+constexpr int NUM_PATTERNS = 8;
 typedef std::bitset<NUM_PATTERNS> Possibilities;
 
 typedef std::pair<int, int> Location;
 typedef std::vector<Location> Locations;
 
-enum Rose { N, S, E, W };
+enum Rose { N, E, W, S };
 
-typedef std::vector<Rose> Connections;
+typedef std::set<Rose> Connections;
 struct Pattern {
     int id = -1;
     std::vector<std::string> pat;
     Connections connections;
     bool required = false;
 };
+
+constexpr std::vector<std::string> rotateCounter90Degrees(
+    const std::vector<std::string>& original) {
+    std::vector<std::string> rotated;
+
+    if (original.empty()) {
+        return rotated;  // Return an empty vector if the input is empty
+    }
+
+    size_t rows = original.size();
+    size_t cols = original[0].size();  // Assuming all rows have the same length
+
+    rotated.resize(
+        cols,
+        std::string(rows, ' '));  // Initialize the rotated grid with spaces
+
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            rotated[cols - j - 1][i] = original[i][j];  // Swap i and j indices
+        }
+    }
+
+    return rotated;
+}
+
+constexpr std::vector<std::string> rotate90Degrees(
+    const std::vector<std::string>& original) {
+    std::vector<std::string> rotated;
+
+    if (original.empty()) {
+        return rotated;  // Return an empty vector if the input is empty
+    }
+
+    size_t rows = original.size();
+    size_t cols = original[0].size();  // Assuming all rows have the same length
+
+    rotated.resize(
+        cols,
+        std::string(rows, ' '));  // Initialize the rotated grid with spaces
+
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            rotated[j][rows - i - 1] = original[i][j];
+        }
+    }
+
+    return rotated;
+}
 
 const std::array<Pattern, NUM_PATTERNS> patterns = {
     //
@@ -81,42 +130,145 @@ const std::array<Pattern, NUM_PATTERNS> patterns = {
     //     ...
     //
     //
-    Pattern{.id = 0,
-            .pat =
-                {
-                    "#...#",  //
-                    "#...#",  //
-                    "#####"   //
-                },
-            .connections =
-                {
-                    W,
-                }},
+    Pattern{
+        .id = 0,
+        .pat =
+            {
+                "#####",  //
+                ".....",  //
+                ".....",  //
+                ".....",  //
+                "....."   //
+            },
+        .connections =
+            {
+                E,
+                W,
+                S,
+            }  //
+    },
     //
-    Pattern{.id = 1,
-            .pat =
-                {
-                    "#...#",  //
-                    "#...#",  //
-                    "#...#"   //
-                },
-            .connections =
-                {
-                    W,
-                    E,
-                }},
+    Pattern{
+        .id = 1,
+        .pat =
+            {
+                "....#",  //
+                "....#",  //
+                "....#",  //
+                "....#",  //
+                "....#"   //
+            },
+        .connections =
+            {
+                N,
+                W,
+                S,
+            }  //
+    },
     //
-    Pattern{.id = 2,
-            .pat =
-                {
-                    "#####",  //
-                    "#...#",  //
-                    "#...#"   //
-                },
-            .connections =
-                {
-                    E,
-                }},
+    Pattern{
+        .id = 2,
+        .pat =
+            {
+                ".....",  //
+                ".....",  //
+                ".....",  //
+                ".....",  //
+                "#####"   //
+            },
+        .connections =
+            {
+                N,
+                W,
+                E,
+            }  //
+    },
+    //
+    Pattern{
+        .id = 3,
+        .pat =
+            {
+                "#....",  //
+                "#....",  //
+                "#....",  //
+                "#....",  //
+                "#...."   //
+            },
+        .connections =
+            {
+                N,
+                S,
+                E,
+            }  //
+    },
+    //
+    Pattern{
+        .id = 4,
+        .pat =
+            {
+                "#####",  //
+                "#....",  //
+                "#....",  //
+                "#....",  //
+                "#...."   //
+            },
+        .connections =
+            {
+                S,
+                E,
+            }  //
+    },
+    //
+    Pattern{
+        .id = 5,
+        .pat =
+            {
+                "#####",  //
+                "....#",  //
+                "....#",  //
+                "....#",  //
+                "....#"   //
+            },
+        .connections =
+            {
+                S,
+                W,
+            }  //
+    },
+    //
+    Pattern{
+        .id = 6,
+        .pat =
+            {
+                "....#",  //
+                "....#",  //
+                "....#",  //
+                "....#",  //
+                "#####"   //
+            },
+        .connections =
+            {
+                N,
+                W,
+            }  //
+    },
+    //
+    Pattern{
+        .id = 7,
+        .pat =
+            {
+                "#....",  //
+                "#....",  //
+                "#....",  //
+                "#....",  //
+                "#####"   //
+            },
+        .connections =
+            {
+                N,
+                E,
+            }  //
+    },
     //
 };
 
@@ -138,7 +290,31 @@ struct WaveCollapse {
         is_first_one = true;
     }
 
+    void _dump() {
+        for (int i = 0; i < rows * cols; i++) {
+            if (i != 0 && i % (rows) == 0) {
+                std::cout << std::endl;
+            }
+
+            if (grid_options[i].count() >= 2) {
+                std::cout << (char) (grid_options[i].count() + 'A');
+            }
+            if (grid_options[i].count() == 1) {
+                int bit =
+                    bitset_utils::get_random_enabled_bit(grid_options[i], gen);
+                std::cout << (bit);
+            }
+            if (grid_options[i].count() == 0) {
+                std::cout << "_";
+            }
+        }
+        std::cout << std::endl;
+    }
+
     void run() {
+        _collapse_edges_and_propagate();
+        _dump();
+
         do {
             auto [x, y] = _find_lowest_entropy();
             log_info("lowest entropy was {} {}", x, y);
@@ -150,44 +326,21 @@ struct WaveCollapse {
         } while (_has_non_collapsed());
     }
 
-    auto _dump() {
-        for (int i = 0; i < rows * cols; i++) {
-            if (i != 0 && i % (rows) == 0) {
-                std::cout << std::endl;
-            }
-
-            if (grid_options[i].count() >= 2) {
-                std::cout << grid_options[i].count();
-            }
-            if (grid_options[i].count() == 1) {
-                int bit =
-                    bitset_utils::get_random_enabled_bit(grid_options[i], gen);
-                std::cout << (char) (bit + 'A');
-            }
-            if (grid_options[i].count() == 0) {
-                std::cout << "_";
-            }
-        }
-        std::cout << std::endl;
-        std::cout << std::endl;
-    };
-
     auto _photo() {
         for (int r = 0; r < rows; r++) {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < patterns[0].pat.size(); i++) {
                 for (int c = 0; c < cols; c++) {
                     int bit = bitset_utils::get_random_enabled_bit(
                         grid_options[r * rows + c], gen);
                     if (bit == -1) {
                         std::cout << ".....";
                     } else {
-                        std::cout << patterns[bit].pat[i];
+                        std::cout << (patterns[bit].pat)[i];
                     }
                     std::cout << " ";
                 }
                 std::cout << std::endl;
             }
-            std::cout << std::endl;
         }
 
         std::cout << std::endl;
@@ -212,13 +365,13 @@ struct WaveCollapse {
     Location _get_relative_loc(Rose r, int x, int y) const {
         switch (r) {
             case N:
-                return {x, y - 1};
+                return {x - 1, y - 0};
             case S:
-                return {x, y + 1};
+                return {x + 1, y + 0};
             case E:
-                return {x + 1, y};
+                return {x + 0, y + 1};
             case W:
-                return {x - 1, y};
+                return {x - 0, y - 1};
         }
     }
 
@@ -278,6 +431,8 @@ struct WaveCollapse {
 
     bool _are_patterns_compatible(const Pattern& a, const Pattern& b,
                                   const Rose& AtoB) const {
+        log_info("are_compatible {} {} {}", a.id, b.id,
+                 magic_enum::enum_name(AtoB));
         bool does_a_connect_in_this_direction = false;
         for (const auto c : a.connections) {
             if (c == AtoB) {
@@ -286,9 +441,11 @@ struct WaveCollapse {
             }
         }
 
-        if (!does_a_connect_in_this_direction) {
-            return false;
-        }
+        // if (!does_a_connect_in_this_direction) {
+        // log_info("noaconnect {}, {}, {}", a.id, b.id,
+        // magic_enum::enum_name(AtoB));
+        // return false;
+        // }
 
         bool does_b_connect_in_this_direction = false;
         for (const auto c : b.connections) {
@@ -297,7 +454,21 @@ struct WaveCollapse {
                 break;
             }
         }
-        if (!does_b_connect_in_this_direction) {
+        // if (!does_b_connect_in_this_direction) {
+        // log_info("nobconnect {}, {}, {}", a.id, b.id,
+        // magic_enum::enum_name(AtoB));
+        // return false;
+        // }
+        log_info("true {}, {}, {}", a.id, b.id, magic_enum::enum_name(AtoB));
+
+        if (!does_a_connect_in_this_direction &&
+            !does_b_connect_in_this_direction) {
+            // both fail?
+            return true;
+        }
+
+        if (!does_a_connect_in_this_direction ||
+            !does_b_connect_in_this_direction) {
             return false;
         }
 
@@ -351,7 +522,9 @@ struct WaveCollapse {
 
             Possibilities& pos = grid_options[(x * rows) + y];
             if (pos.none()) continue;
+            if (pos.count() != 1) continue;
             int bit = bitset_utils::get_random_enabled_bit(pos, gen);
+            log_info("collapsed pattern in prop was {}", bit);
             const Pattern& collapsed_pattern = patterns[bit];
 
             // queue up all the neighbors
@@ -361,6 +534,47 @@ struct WaveCollapse {
                     _propagate_in_direction(val, root_loc, collapsed_pattern);
                 if (changed) q.push_back(n);
             });
+        }
+    }
+
+    std::vector<Rose> _get_edges(int x, int y) {
+        std::vector<Rose> edges;
+        if (x == 0) edges.push_back(Rose::N);
+        if (x == rows - 1) edges.push_back(Rose::S);
+        if (y == 0) edges.push_back(Rose::W);
+        if (y == cols - 1) edges.push_back(Rose::E);
+        return edges;
+    }
+
+    void _collapse_edges_and_propagate() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (i == 0 || j == 0 || j == cols - 1 || i == rows - 1) {
+                    // What edge are we on
+                    auto banned_edges = _get_edges(i, j);
+
+                    Possibilities& possibilities = grid_options[i * rows + j];
+                    // disable all the neighbor's patterns that dont match us
+                    for (size_t bit = 0; bit < possibilities.size(); bit++) {
+                        // does this location have this pattern enabled?
+                        if (possibilities.test(bit)) {
+                            // does it use the banned edge?
+                            for (auto edge : banned_edges) {
+                                if (patterns[bit].connections.contains(edge)) {
+                                    possibilities.set(bit, false);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        _dump();
+        std::cout << "collapsed edges, now prop" << std::endl;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                _propagate_choice(i, j);
+            }
         }
     }
 };
