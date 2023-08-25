@@ -73,9 +73,13 @@ struct WaveCollapse {
     Rose _get_opposite_connection(Rose r) const;
     Location _get_relative_loc(Rose r, int x, int y) const;
     bool _in_grid(int x, int y) const;
+    bool _is_edge(int x, int y) const;
     bool _collapsed(int x, int y) const;
     bool _has_non_collapsed() const;
     size_t num_patterns() const;
+    void _validate_patterns();
+    void _place_required();
+    void _propagate_all();
     Location _find_lowest_entropy() const;
     Pattern _choose_pattern(int x, int y);
     bool _are_patterns_compatible(const Pattern& a, const Pattern& b,
@@ -87,7 +91,7 @@ struct WaveCollapse {
 
     std::vector<Rose> _get_edges(int x, int y);
 
-    void _collapse_edges_and_propagate();
+    void _collapse_edges();
 
     void _handle_max_count(int pattern_id, int x, int y);
 };

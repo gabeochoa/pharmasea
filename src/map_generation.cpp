@@ -53,9 +53,74 @@ void WaveCollapse::_dump() {
 
 Patterns& WaveCollapse::patterns() { return MAP_GEN_INFO.patterns; }
 
+void WaveCollapse::_validate_patterns() {
+    // right now the only rule is that anything required needs max_count
+
+    for (auto& pattern : patterns()) {
+        if (pattern.required) {
+            if (pattern.max_count == -1) {
+                pattern.max_count = 1;
+                log_warn(
+                    "You have a required pattern {} with no max count, setting "
+                    "to 1",
+                    pattern.id);
+            }
+        }
+    }
+}
+
+void WaveCollapse::_place_required() {
+    const auto _place_in_map = [&](Pattern& pattern) {
+        // TODO it would be nice to place these randomly instead of just in
+        // order...
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                //
+                if (pattern.edge_only && !_is_edge(i, j)) continue;
+
+                Possibilities& possibilities = grid_options[i * rows + j];
+                // can we hold this pattern at the moment?
+                if (possibilities.test(pattern.id)) {
+                    possibilities.reset();
+                    possibilities.set(pattern.id, true);
+                    pattern.max_count--;
+                    return;
+                }
+            }
+        }
+    };
+
+    for (auto& pattern : patterns()) {
+        if (pattern.required) {
+            _place_in_map(pattern);
+        }
+    }
+}
+
+void WaveCollapse::_propagate_all() {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            _propagate_choice(i, j);
+        }
+    }
+}
+
 void WaveCollapse::run() {
-    _collapse_edges_and_propagate();
+    _validate_patterns();
+    _collapse_edges();
+    {
+        _dump();
+        std::cout << "collapsed edges" << std::endl;
+    }
+    _propagate_all();
+    _place_required();
+    {
+        _dump();
+        std::cout << "placed required" << std::endl;
+    }
+    _propagate_all();
     _dump();
+    std::cout << "completed inital manual placements" << std::endl;
 
     do {
         auto [x, y] = _find_lowest_entropy();
@@ -288,7 +353,7 @@ std::vector<Rose> WaveCollapse::_get_edges(int x, int y) {
 
 // NOTE: we use num_patterns() and not possibilities.size()
 // because generally we are going to have less than max patterns
-void WaveCollapse::_collapse_edges_and_propagate() {
+void WaveCollapse::_collapse_edges() {
     const auto _disable_edge_only = [&](int i, int j) {
         // disable edge only patterns on non edges
         Possibilities& possibilities = grid_options[i * rows + j];
@@ -324,20 +389,17 @@ void WaveCollapse::_collapse_edges_and_propagate() {
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             // not edge
-            if (!(i == 0 || j == 0 || j == cols - 1 || i == rows - 1)) {
+            if (!_is_edge(i, j)) {
                 _disable_edge_only(i, j);
                 continue;
             }
             _remove_banned_edges(i, j);
         }
     }
-    _dump();
-    std::cout << "collapsed edges, now prop" << std::endl;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            _propagate_choice(i, j);
-        }
-    }
+}
+
+bool WaveCollapse::_is_edge(int i, int j) const {
+    return (i == 0 || j == 0 || j == cols - 1 || i == rows - 1);
 }
 
 void WaveCollapse::_handle_max_count(int pattern_id, int x, int y) {
