@@ -7,11 +7,16 @@
 #include "engine/font_library.h"
 #include "engine/keymap.h"
 #include "engine/ui_theme.h"
+#include "map_generation.h"
 #include "recipe_library.h"
 
 int LOG_LEVEL = 2;
 std::vector<std::string> EXAMPLE_MAP;
 i18n::LocalizationText* localization;
+
+namespace wfc {
+MapGenerationInformation MAP_GEN_INFO;
+}
 
 namespace ui {
 UITheme DEFAULT_THEME = UITheme();
@@ -371,4 +376,35 @@ void Preload::load_keymapping() {
                           [](const nlohmann::json& contents) {
                               KeyMap::get().deserializeFullMap(contents);
                           });
+}
+
+void Preload::load_map_generation_info() {
+    using namespace wfc;
+
+    load_json_config_file(
+        "map_generator_input.json", [](const nlohmann::json& contents) {
+            MAP_GEN_INFO.rows = contents["max_rows"].get<int>();
+            MAP_GEN_INFO.cols = contents["max_cols"].get<int>();
+
+            auto jpatterns = contents["patterns"];
+
+            for (auto jpat : jpatterns) {
+                Connections connections;
+                for (auto c : jpat["connections"]) {
+                    connections.insert(
+                        magic_enum::enum_cast<wfc::Rose>(c.get<std::string>())
+                            .value());
+                }
+
+                MAP_GEN_INFO.patterns.emplace_back(Pattern{
+                    .id = jpat["id"].get<int>(),
+                    .pat = jpat["pat"].get<std::vector<std::string>>(),
+                    .connections = connections,
+                    .required = jpat.value("required", false),
+                });
+            }
+
+            log_info("Loaded map generation details containing {} patterns",
+                     MAP_GEN_INFO.patterns.size());
+        });
 }

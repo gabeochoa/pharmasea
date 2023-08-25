@@ -73,6 +73,7 @@ struct Preload {
     void load_config();
 
     void reload_config() {
+        load_map_generation_info();
         load_config();
         load_keymapping();
         load_models();
@@ -81,6 +82,7 @@ struct Preload {
         load_drink_recipes();
     }
 
+    void load_map_generation_info();
     void load_keymapping();
 
     void load_translations() {

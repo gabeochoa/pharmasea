@@ -99,11 +99,26 @@ void LevelInfo::generate_default_seed() {
     EntityHelper::invalidatePathCache();
 }
 
+void generate_in_game_map_wfc() {
+    std::vector<std::string> lines;
+
+    // int rows = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
+    // int cols = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
+    int rows = 5;
+    int cols = 5;
+
+    wfc::WaveCollapse wc(rows, cols);
+    wc.run();
+    wc._dump();
+}
+
 void LevelInfo::generate_in_game_map() {
     if (seed == "default_seed") {
         generate_default_seed();
         return;
     }
+    generate_in_game_map_wfc();
+    return;
 
     std::vector<std::string> lines;
 
