@@ -25,9 +25,9 @@ int index_of_nth_set_bit(const T& bitset, int n) {
 // TODO :BE: combine this with the other one...
 template<size_t N>
 int get_random_enabled_bit(const std::bitset<N>& bitset,
-                           std::mt19937& generator) {
+                           std::mt19937& generator, size_t max_value = N) {
     std::vector<int> enabled_indices;
-    for (size_t i = 0; i < bitset.size(); ++i) {
+    for (size_t i = 0; i < max_value; ++i) {
         if (bitset.test(i)) {
             enabled_indices.push_back(static_cast<int>(i));
         }

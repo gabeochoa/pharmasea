@@ -388,6 +388,7 @@ void Preload::load_map_generation_info() {
 
             auto jpatterns = contents["patterns"];
 
+            int id = 0;
             for (auto jpat : jpatterns) {
                 Connections connections;
                 for (auto c : jpat["connections"]) {
@@ -397,7 +398,7 @@ void Preload::load_map_generation_info() {
                 }
 
                 MAP_GEN_INFO.patterns.emplace_back(Pattern{
-                    .id = jpat["id"].get<int>(),
+                    .id = id++,
                     .pat = jpat["pat"].get<std::vector<std::string>>(),
                     .connections = connections,
                     .required = jpat.value("required", false),

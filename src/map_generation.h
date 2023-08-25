@@ -1,5 +1,6 @@
 
 
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -46,10 +47,43 @@ struct WaveCollapse {
     mutable bool is_first_one;
 
     WaveCollapse(int r, int c) : rows(r), cols(c) {
-        grid_options =
-            std::vector<Possibilities>(rows * cols, Possibilities().set());
+        // We manually only set the num patterns we have
+        // because its likely smaller than MAX_NUM_PATTERNS
+        Possibilities default_val;
+        for (size_t i = 0; i < num_patterns(); i++) {
+            default_val.set(i, true);
+        }
+
+        grid_options = std::vector<Possibilities>(rows * cols, default_val);
         gen = std::mt19937((unsigned int) 0);
         is_first_one = true;
+    }
+
+    std::vector<std::string> get_lines() {
+        std::vector<std::string> lines;
+        std::stringstream temp;
+        for (int r = 0; r < rows; r++) {
+            for (size_t i = 0; i < patterns()[0].pat.size(); i++) {
+                for (int c = 0; c < cols; c++) {
+                    int bit = bitset_utils::get_random_enabled_bit(
+                        grid_options[r * rows + c], gen, num_patterns());
+                    if (bit == -1) {
+                        temp << ".....";
+                    } else {
+                        temp << (patterns()[bit].pat)[i];
+                    }
+                    // ;
+                }
+                lines.push_back(std::string(temp.str()));
+                temp.str(std::string());
+            }
+        }
+
+        for (auto line : lines) {
+            std::cout << line << std::endl;
+        }
+
+        return lines;
     }
 
     void _dump() {
@@ -62,8 +96,8 @@ struct WaveCollapse {
                 std::cout << (char) (grid_options[i].count() + 'A');
             }
             if (grid_options[i].count() == 1) {
-                int bit =
-                    bitset_utils::get_random_enabled_bit(grid_options[i], gen);
+                int bit = bitset_utils::get_random_enabled_bit(
+                    grid_options[i], gen, num_patterns());
                 std::cout << (bit);
             }
             if (grid_options[i].count() == 0) {
@@ -95,13 +129,13 @@ struct WaveCollapse {
             for (size_t i = 0; i < patterns()[0].pat.size(); i++) {
                 for (int c = 0; c < cols; c++) {
                     int bit = bitset_utils::get_random_enabled_bit(
-                        grid_options[r * rows + c], gen);
+                        grid_options[r * rows + c], gen, num_patterns());
                     if (bit == -1) {
                         std::cout << ".....";
                     } else {
                         std::cout << (patterns()[bit].pat)[i];
                     }
-                    std::cout << " ";
+                    std::cout << "";
                 }
                 std::cout << std::endl;
             }
@@ -188,7 +222,8 @@ struct WaveCollapse {
             _dump();
             log_error("we dont have any options...");
         }
-        int bit = bitset_utils::get_random_enabled_bit(possibilities, gen);
+        int bit = bitset_utils::get_random_enabled_bit(possibilities, gen,
+                                                       num_patterns());
         log_info("got random bit {}", bit);
 
         // Clear all and set the one we selected
@@ -246,7 +281,7 @@ struct WaveCollapse {
         if (possibilities.none()) return {false, n};
 
         // disable all the neighbor's patterns that dont match us
-        for (size_t bit = 0; bit < possibilities.size(); bit++) {
+        for (size_t bit = 0; bit < num_patterns(); bit++) {
             // does this location have this pattern enabled?
             if (possibilities.test(bit)) {
                 // check to see if it matches us
@@ -279,7 +314,8 @@ struct WaveCollapse {
             Possibilities& pos = grid_options[(x * rows) + y];
             if (pos.none()) continue;
             if (pos.count() != 1) continue;
-            int bit = bitset_utils::get_random_enabled_bit(pos, gen);
+            int bit =
+                bitset_utils::get_random_enabled_bit(pos, gen, num_patterns());
             // log_info("collapsed pattern in prop was {}", bit);
             const Pattern& collapsed_pattern = patterns()[bit];
 
@@ -302,6 +338,8 @@ struct WaveCollapse {
         return edges;
     }
 
+    // NOTE: we use num_patterns() and not possibilities.size()
+    // because generally we are going to have less than max patterns
     void _collapse_edges_and_propagate() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -311,7 +349,7 @@ struct WaveCollapse {
 
                     Possibilities& possibilities = grid_options[i * rows + j];
                     // disable all the neighbor's patterns that dont match us
-                    for (size_t bit = 0; bit < possibilities.size(); bit++) {
+                    for (size_t bit = 0; bit < num_patterns(); bit++) {
                         // does this location have this pattern enabled?
                         if (possibilities.test(bit)) {
                             // does it use the banned edge?

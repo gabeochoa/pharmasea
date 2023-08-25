@@ -100,8 +100,6 @@ void LevelInfo::generate_default_seed() {
 }
 
 void generate_in_game_map_wfc() {
-    std::vector<std::string> lines;
-
     // int rows = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
     // int cols = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
     int rows = 5;
@@ -109,7 +107,12 @@ void generate_in_game_map_wfc() {
 
     wfc::WaveCollapse wc(rows, cols);
     wc.run();
-    wc._dump();
+    wc._photo();
+
+    generation::helper helper(wc.get_lines());
+    helper.generate();
+    helper.validate();
+    EntityHelper::invalidatePathCache();
 }
 
 void LevelInfo::generate_in_game_map() {
@@ -118,6 +121,7 @@ void LevelInfo::generate_in_game_map() {
         return;
     }
     generate_in_game_map_wfc();
+
     return;
 
     std::vector<std::string> lines;
