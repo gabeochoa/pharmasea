@@ -106,12 +106,26 @@
             "pat": [
                 ".....",
                 ".sCf.",
-                ".m.R.",
-                ".Sd..",
+                ".....",
+                ".....",
                 "....."
             ],
-            "connections": [ "N", "E", "W", "S" ],
+            "connections": [],
             "required": true,
+            "edge_only": true,
+            "max_count": 1
+        },
+        {
+            "pat": [
+                ".....",
+                ".mSd.",
+                ".....",
+                "..R..",
+                "....."
+            ],
+            "connections": [ "N", "E", "W", "S"],
+            "required": true,
+            "edge_only": false,
             "max_count": 1
         },
         {

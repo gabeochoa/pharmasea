@@ -289,26 +289,46 @@ std::vector<Rose> WaveCollapse::_get_edges(int x, int y) {
 // NOTE: we use num_patterns() and not possibilities.size()
 // because generally we are going to have less than max patterns
 void WaveCollapse::_collapse_edges_and_propagate() {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            if (i == 0 || j == 0 || j == cols - 1 || i == rows - 1) {
-                // What edge are we on
-                auto banned_edges = _get_edges(i, j);
+    const auto _disable_edge_only = [&](int i, int j) {
+        // disable edge only patterns on non edges
+        Possibilities& possibilities = grid_options[i * rows + j];
 
-                Possibilities& possibilities = grid_options[i * rows + j];
-                // disable all the neighbor's patterns that dont match us
-                for (size_t bit = 0; bit < num_patterns(); bit++) {
-                    // does this location have this pattern enabled?
-                    if (possibilities.test(bit)) {
-                        // does it use the banned edge?
-                        for (auto edge : banned_edges) {
-                            if (patterns()[bit].connections.contains(edge)) {
-                                possibilities.set(bit, false);
-                            }
-                        }
+        for (size_t bit = 0; bit < num_patterns(); bit++) {
+            const Pattern& pattern = patterns()[bit];
+            if (!pattern.edge_only) continue;
+            if (possibilities.test(bit)) {
+                possibilities.set(bit, false);
+            }
+        }
+    };
+
+    const auto _remove_banned_edges = [&](int i, int j) {
+        // What edge are we on
+        auto banned_edges = _get_edges(i, j);
+
+        Possibilities& possibilities = grid_options[i * rows + j];
+        // disable all the neighbor's patterns that dont match us
+        for (size_t bit = 0; bit < num_patterns(); bit++) {
+            // does this location have this pattern enabled?
+            if (possibilities.test(bit)) {
+                // does it use the banned edge?
+                for (auto edge : banned_edges) {
+                    if (patterns()[bit].connections.contains(edge)) {
+                        possibilities.set(bit, false);
                     }
                 }
             }
+        }
+    };
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            // not edge
+            if (!(i == 0 || j == 0 || j == cols - 1 || i == rows - 1)) {
+                _disable_edge_only(i, j);
+                continue;
+            }
+            _remove_banned_edges(i, j);
         }
     }
     _dump();

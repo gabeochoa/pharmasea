@@ -26,6 +26,7 @@ struct Pattern {
     Connections connections;
     bool required = false;
     int max_count = -1;
+    bool edge_only = false;
 };
 typedef std::vector<Pattern> Patterns;
 
