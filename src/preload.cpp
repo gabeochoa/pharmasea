@@ -402,6 +402,7 @@ void Preload::load_map_generation_info() {
                     .pat = jpat["pat"].get<std::vector<std::string>>(),
                     .connections = connections,
                     .required = jpat.value("required", false),
+                    .max_count = jpat.value("max_count", -1),
                 });
             }
 

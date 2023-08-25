@@ -110,7 +110,9 @@
                 ".Sd..",
                 "....."
             ],
-            "connections": [ "N", "E", "W", "S" ]
+            "connections": [ "N", "E", "W", "S" ],
+            "required": true,
+            "max_count": 1
         },
         {
             "pat": [
