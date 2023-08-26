@@ -21,6 +21,7 @@
   <ItemGroup>
     <None Include="..\README.md" />
     <None Include="..\resources\config\settings.json" />
+    <None Include="..\src\makefile" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\bitsery_include.h" />
@@ -87,7 +88,9 @@
     <ClInclude Include="..\src\engine\detect_program.h" />
     <ClInclude Include="..\src\engine\event.h" />
     <ClInclude Include="..\src\engine\files.h" />
+    <ClInclude Include="..\src\engine\font_library.h" />
     <ClInclude Include="..\src\engine\font_sizer.h" />
+    <ClInclude Include="..\src\engine\font_util.h" />
     <ClInclude Include="..\src\engine\gamepad_axis_with_dir.h" />
     <ClInclude Include="..\src\engine\globals.h" />
     <ClInclude Include="..\src\engine\globals_register.h" />
@@ -130,6 +133,7 @@
     <ClInclude Include="..\src\engine\uuid.h" />
     <ClInclude Include="..\src\entity.h" />
     <ClInclude Include="..\src\entityhelper.h" />
+    <ClInclude Include="..\src\entity_helper.h" />
     <ClInclude Include="..\src\entity_makers.h" />
     <ClInclude Include="..\src\entity_type.h" />
     <ClInclude Include="..\src\external_include.h" />
@@ -186,11 +190,14 @@
     <ClCompile Include="..\src\engine\files.cpp" />
     <ClCompile Include="..\src\engine\globals_register.cpp" />
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
+    <ClCompile Include="..\src\engine\settings.cpp" />
     <ClCompile Include="..\src\entity.cpp" />
+    <ClCompile Include="..\src\entity_helper.cpp" />
     <ClCompile Include="..\src\entity_makers.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\job.cpp" />
     <ClCompile Include="..\src\level_info.cpp" />
+    <ClCompile Include="..\src\map_generation.cpp" />
     <ClCompile Include="..\src\network\server.cpp" />
     <ClCompile Include="..\src\preload.cpp" />
     <ClCompile Include="..\src\system\input_process_manager.cpp" />
