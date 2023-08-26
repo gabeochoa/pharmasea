@@ -228,12 +228,4 @@ void serialize(S& s, OptEntity opt) {
 }
 }  // namespace bitsery
 
-inline bool valid(OptEntity opte) { return opte.has_value(); }
-
-// inline Entity& asE(OptEntity opte) { return opte.asE(); }
-inline OptEntity asOpt(Entity& e) { return std::make_optional(std::ref(e)); }
-
-inline Entity& asE(RefEntity& refe) { return refe.get(); }
-inline RefEntity asRef(Entity& e) { return std::ref(e); }
-
 bool check_type(const Entity& entity, EntityType type);

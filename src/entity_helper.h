@@ -86,7 +86,7 @@ struct EntityHelper {
 
     // TODO exists as a conversion for things that need shared_ptr right now
     static std::shared_ptr<Entity> getEntityAsSharedPtr(OptEntity entity) {
-        if (!valid(entity)) return {};
+        if (!entity) return {};
         for (std::shared_ptr<Entity> current_entity : get_entities()) {
             if (entity->id == current_entity->id) return current_entity;
         }

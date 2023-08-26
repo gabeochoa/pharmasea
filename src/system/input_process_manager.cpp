@@ -91,7 +91,7 @@ void person_update_given_new_pos(int id, Transform& transform,
             // Note: if these are both true, then we definitely dont need to
             // keep going and can break early, otherwise we should check the
             // rest to make sure
-            if (valid(collided_entity_x) && valid(collided_entity_z)) {
+            if (collided_entity_x && collided_entity_z) {
                 return EntityHelper::ForEachFlow::Break;
             }
             return EntityHelper::ForEachFlow::NormalFlow;
@@ -104,10 +104,10 @@ void person_update_given_new_pos(int id, Transform& transform,
             collided_entity_x = {};
             collided_entity_z = {};
         }
-        if (!valid(collided_entity_x)) {
+        if (!collided_entity_x) {
             transform.update_x(new_pos_x.x);
         }
-        if (!valid(collided_entity_z)) {
+        if (!collided_entity_z) {
             transform.update_z(new_pos_z.z);
         }
 
@@ -119,8 +119,8 @@ void person_update_given_new_pos(int id, Transform& transform,
         // around each other
         const float tile_div_push_mod = TILESIZE / directional_push_modifier;
 
-        if (valid(collided_entity_x) || valid(collided_entity_z)) {
-            if (valid(collided_entity_x)) {
+        if (collided_entity_x || collided_entity_z) {
+            if (collided_entity_x) {
                 Entity& entity_x = collided_entity_x.asE();
                 if (entity_x.has<CanBePushed>()) {
                     CanBePushed& cbp = entity_x.get<CanBePushed>();
@@ -141,7 +141,7 @@ void person_update_given_new_pos(int id, Transform& transform,
                     }
                 }
             }
-            if (valid(collided_entity_z)) {
+            if (collided_entity_z) {
                 Entity& entity_z = collided_entity_z.asE();
                 if (entity_z.has<CanBePushed>()) {
                     CanBePushed& cbp = entity_z.get<CanBePushed>();
@@ -178,7 +178,7 @@ bool is_collidable(Entity& entity, OptEntity other) {
 
     if (
         // checking for person update
-        valid(other) &&
+        other &&
         // Entity is item and held by player
         entity.has<IsItem>() &&
         entity.get<IsItem>().is_held_by(EntityType::Player) &&
@@ -324,7 +324,7 @@ void work_furniture(const std::shared_ptr<Entity> player, float frame_dt) {
             return hasWork.has_work();
         });
 
-    if (!valid(match)) return;
+    if (!match) return;
 
     match->get<HasWork>().call(match.asE(), *player, frame_dt);
 }
@@ -343,7 +343,7 @@ void rotate_furniture(const std::shared_ptr<Entity> player) {
             return furniture.template has<IsRotatable>();
         });
 
-    if (!valid(match)) return;
+    if (!match) return;
     match->get<Transform>().rotate_facing_clockwise();
 }
 
@@ -406,7 +406,7 @@ void handle_grab_or_drop(const std::shared_ptr<Entity>& player) {
                 return f.get<CanBeHeld>().is_not_held();
             });
         // no match
-        if (!valid(closest_furniture)) return;
+        if (!closest_furniture) return;
 
         ourCHF.update(EntityHelper::getEntityAsSharedPtr(closest_furniture));
         ourCHF.furniture()->get<CanBeHeld>().set_is_being_held(true);
@@ -696,7 +696,7 @@ void handle_grab(const std::shared_ptr<Entity>& player) {
         });
 
     // nothing found
-    if (!valid(closest_item)) return;
+    if (!closest_item) return;
 
     player->get<CanHoldItem>().update(
         EntityHelper::getEntityAsSharedPtr(closest_item));

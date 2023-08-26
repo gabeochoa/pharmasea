@@ -124,7 +124,7 @@ bool Job::is_at_position(const Entity& entity, vec2 position) {
 
 Entity& Job::get_and_validate_entity(int id) {
     OptEntity opt_e = EntityHelper::getEntityForID(id);
-    VALIDATE(valid(opt_e), "entity with id did not exist");
+    VALIDATE(opt_e, "entity with id did not exist");
     return opt_e.asE();
 }
 
@@ -302,7 +302,7 @@ inline bool WIQ_can_move_up(const Entity& reg, const Entity& customer) {
 void WaitInQueueJob::before_each_job_tick(Entity& entity, float) {
     OptEntity reg = EntityHelper::getEntityForID(reg_id);
     // This runs before init so its possible theres no register at all
-    if (valid(reg)) {
+    if (reg) {
         entity.get<Transform>().turn_to_face_pos(reg->get<Transform>().as2());
     }
 }
@@ -328,7 +328,7 @@ Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
         }
     }
 
-    if (!valid(best_target)) {
+    if (!best_target) {
         log_warn("Could not find a valid register");
         WIQ_wait_and_return(entity);
         return Job::State::Initialize;

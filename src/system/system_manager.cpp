@@ -244,7 +244,7 @@ void highlight_facing_furniture(Entity& entity, float) {
     OptEntity match = EntityHelper::getClosestMatchingFurniture(
         transform, cho.reach(),
         [](Entity& e) { return e.template has<CanBeHighlighted>(); });
-    if (!valid(match)) return;
+    if (!match) return;
 
     match->get<CanBeHighlighted>().update(entity, true);
 }
@@ -1015,7 +1015,7 @@ void update_sophie(Entity& entity, float) {
             });
         // TODO we are validating this now, but we shouldnt have to worry
         // about this in the future
-        VALIDATE(valid(customer_opt),
+        VALIDATE(customer_opt,
                  "map needs to have at least one customer spawn point");
         auto& customer = customer_opt.asE();
 
@@ -1035,7 +1035,7 @@ void update_sophie(Entity& entity, float) {
             });
 
         entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::NoPathToRegister, !valid(reg_opt));
+            HasTimer::WaitingReason::NoPathToRegister, !reg_opt);
 
         return;
     };
@@ -1096,7 +1096,7 @@ void process_has_rope(Entity& entity, float) {
         if (!check_type(*i, EntityType::SodaSpout)) continue;
         player = *e;
     }
-    if (!valid(player)) return;
+    if (!player) return;
 
     auto pos = player->get<Transform>().as2();
 

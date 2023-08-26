@@ -36,7 +36,7 @@ inline void render_current_register_queue(float dt) {
             for (size_t index = 0; index < hwq.num_in_queue(); index++) {
                 EntityID e_id = hwq.person(index);
                 OptEntity opt_e = EntityHelper::getEntityForID(e_id);
-                if (!valid(opt_e)) {
+                if (!opt_e) {
                     // log_warn("register {} has null people in line", i);
                     continue;
                 }
