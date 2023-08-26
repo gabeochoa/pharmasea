@@ -74,10 +74,11 @@ void person_update_given_new_pos(int id, Transform& transform,
             if (id == entity->id) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if (!is_collidable(entity, person)) {
+            if (!system_manager::input_process_manager::is_collidable(entity,
+                                                                      person)) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if (!is_collidable(person)) {
+            if (!system_manager::input_process_manager::is_collidable(person)) {
                 return EntityHelper::ForEachFlow::Continue;
             }
             if (CheckCollisionBoxes(
@@ -178,6 +179,45 @@ void person_update_given_new_pos(int id, Transform& transform,
 }
 
 namespace input_process_manager {
+
+// return true if the item has collision and is currently collidable
+bool is_collidable(std::shared_ptr<Entity> entity,
+                   std::shared_ptr<Entity> other) {
+    if (!entity) return false;
+
+    // by default we disable collisions when you are holding something
+    // since its generally inside your bounding box
+    if (entity->has<CanBeHeld>() && entity->get<CanBeHeld>().is_held()) {
+        return false;
+    }
+
+    if (
+        // checking for person update
+        other != nullptr &&
+        // Entity is item and held by player
+        entity->has<IsItem>() &&
+        entity->get<IsItem>().is_held_by(EntityType::Player) &&
+        // Entity is rope
+        check_type(*entity, EntityType::SodaSpout) &&
+        // we are a player that is holding rope
+        other->has<CanHoldItem>() &&
+        other->get<CanHoldItem>().is_holding_item() &&
+        check_type(*other->get<CanHoldItem>().item(), EntityType::SodaSpout)) {
+        return false;
+    }
+
+    if (entity->has<IsSolid>()) {
+        return true;
+    }
+
+    // TODO :BE: rename this since it no longer makes sense
+    // if you are a ghost player
+    // then you are collidable
+    if (entity->has<CanBeGhostPlayer>()) {
+        return true;
+    }
+    return false;
+}
 
 void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
     if (entity->is_missing<CollectsUserInput>()) return;

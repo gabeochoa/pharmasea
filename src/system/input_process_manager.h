@@ -10,6 +10,9 @@ void person_update_given_new_pos(int id, Transform& transform,
                                  vec3 new_pos_x, vec3 new_pos_z);
 namespace input_process_manager {
 
+[[nodiscard]] bool is_collidable(std::shared_ptr<Entity> entity,
+                                 std::shared_ptr<Entity> other = nullptr);
+
 void collect_user_input(std::shared_ptr<Entity> entity, float dt);
 void process_player_movement_input(std::shared_ptr<Entity> entity, float dt,
                                    InputName input_name, float input_amount);

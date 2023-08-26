@@ -1,5 +1,7 @@
 #include "entity_helper.h"
 
+#include "system/input_process_manager.h"
+
 Entities client_entities_DO_NOT_USE;
 Entities server_entities_DO_NOT_USE;
 
@@ -313,6 +315,58 @@ std::shared_ptr<Entity> EntityHelper::getClosestMatchingEntity(
         }
     }
     return best_so_far;
+}
+
+// TODO :INFRA: i think this is slower because we are doing "outside mesh"
+// as outside we should probably have just make some tiles for inside the
+// map
+// ('.' on map for example) and use those to mark where people can walk and
+// where they cant
+// static bool isWalkable_impl(const vec2& pos) {
+// auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
+// if (!nav) {
+// return true;
+// }
+//
+// for (auto kv : nav->entityShapes) {
+// auto s = kv.second;
+// if (s.inside(pos)) return false;
+// }
+// return true;
+// }
+
+// TODO :PBUG: need to invalidate any current valid paths
+void EntityHelper::invalidatePathCacheLocation(vec2 pos) {
+    cache_is_walkable.erase(pos);
+}
+
+void EntityHelper::invalidatePathCache() { cache_is_walkable.clear(); }
+
+bool EntityHelper::isWalkable(vec2 pos) {
+    TRACY_ZONE_SCOPED;
+    if (!cache_is_walkable.contains(pos)) {
+        bool walkable = isWalkableRawEntities(pos);
+        cache_is_walkable[pos] = walkable;
+    }
+    return cache_is_walkable[pos];
+}
+
+// each target get and path find runs through all entities
+// so this will just get slower and slower over time
+bool EntityHelper::isWalkableRawEntities(const vec2& pos) {
+    TRACY_ZONE_SCOPED;
+    bool hit_impassible_entity = false;
+    forEachEntity([&](auto entity) {
+        if (!system_manager::input_process_manager::is_collidable(entity))
+            return ForEachFlow::Continue;
+        if (vec::distance(entity->template get<Transform>().as2(), pos) <
+            TILESIZE / 2.f) {
+            hit_impassible_entity = true;
+            return ForEachFlow::Break;
+        }
+        return ForEachFlow::Continue;
+    });
+    return !hit_impassible_entity;
 }
 
 #pragma clang diagnostic pop
