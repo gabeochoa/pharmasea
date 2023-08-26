@@ -61,7 +61,6 @@ struct EntityHelper {
 
     static void markIDForCleanup(int e_id);
     static void removeEntity(int e_id);
-    static void removeEntity(std::shared_ptr<Entity> e);
     static void cleanup();
     static void delete_all_entities_NO_REALLY_I_MEAN_ALL();
     static void delete_all_entities(bool include_permanent = false);
@@ -71,9 +70,6 @@ struct EntityHelper {
         Continue = 1,
         Break = 2,
     };
-
-    static void forEachEntityPtr(
-        std::function<ForEachFlow(std::shared_ptr<Entity>&)> cb);
 
     static void forEachEntity(std::function<ForEachFlow(Entity&)> cb);
 

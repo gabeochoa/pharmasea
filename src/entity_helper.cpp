@@ -91,10 +91,6 @@ void EntityHelper::removeEntity(int e_id) {
     entities.erase(newend, entities.end());
 }
 
-void EntityHelper::removeEntity(std::shared_ptr<Entity> e) {
-    EntityHelper::removeEntity(e->id);
-}
-
 //  Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
 // vec2 pos = vec::to2(e->snap_position());
 // Rectangle rect = {
@@ -144,17 +140,6 @@ enum ForEachFlow {
     Continue = 1,
     Break = 2,
 };
-
-void EntityHelper::forEachEntityPtr(
-    std::function<ForEachFlow(std::shared_ptr<Entity>&)> cb) {
-    TRACY_ZONE_SCOPED;
-    for (auto& e : get_entities()) {
-        if (!e) continue;
-        auto fef = cb(e);
-        if (fef == 1) continue;
-        if (fef == 2) break;
-    }
-}
 
 void EntityHelper::forEachEntity(std::function<ForEachFlow(Entity&)> cb) {
     TRACY_ZONE_SCOPED;
