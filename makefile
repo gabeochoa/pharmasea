@@ -34,15 +34,13 @@ GAME_LOG = $(OBJ_DIR)/game.log
 
 # For tracing you have to run the game, and then connect from Tracy-release
 
-all: clear_log $(OUTPUT_EXE)
+
+all: $(OUTPUT_EXE)
 	./$(OUTPUT_EXE) 2>&1 $(GAME_LOG)
 	#./$(OUTPUT_EXE) -t && ./$(OUTPUT_EXE) -g
 
-clear_log:
-	> $(OUTPUT_LOG)
-
 $(OUTPUT_EXE): $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) >>$(OUTPUT_LOG) 2>&1
+	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) 
 
 release: FLAGS=$(RELEASE_FLAGS)
 release: NOFLAGS=
@@ -57,7 +55,7 @@ release: clean all
 
 
 $(OBJ_DIR)/%.o: %.cpp makefile
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -c $< -o $@ -MMD -MF $(@:.o=.d) >>$(OUTPUT_LOG) 2>&1
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -c $< -o $@ -MMD -MF $(@:.o=.d) 
 
 %.d: %.cpp
 	$(MAKEDEPEND)

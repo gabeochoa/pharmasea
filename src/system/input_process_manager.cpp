@@ -580,56 +580,6 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
         return true;
     };
 
-    // TODO is there a time when this function gets called?
-    // i feel like the wrap-around function will handle this case
-    const auto _merge_item_in_hand_into_furniture_item =
-        [&]() -> tl::expected<bool, std::string> {
-        OptEntity opt_closest_furniture =
-            EntityHelper::getClosestMatchingFurniture(
-                player->get<Transform>(), cho.reach(), [&](Entity& f) {
-                    if (f.is_missing<CanHoldItem>()) return false;
-                    CanHoldItem& fCHI = f.get<CanHoldItem>();
-                    // is there something there to merge into?
-                    if (!fCHI.is_holding_item()) return false;
-                    // Grab furniture item
-                    const auto furn_item = fCHI.item();
-                    // Does the item this furniture holds have the
-                    // ability to hold things
-                    if (furn_item->is_missing<CanHoldItem>()) return false;
-                    // Grab the item we are holding...
-                    const auto player_item = player->get<CanHoldItem>().item();
-                    // Can it hold the thing we are holding?
-                    if (!fCHI.can_hold(*player_item, RespectFilter::All))
-                        return false;
-                    return true;
-                });
-
-        // No matching furniture
-        if (!valid(opt_closest_furniture))
-            return tl::unexpected("merge hand into: no matching furniture");
-        Entity& closest_furniture = asE(opt_closest_furniture);
-
-        // TODO need to handle the case where the merged item is not a
-        // valid thing the furniture can hold.
-        //
-        // This happens for example when you merge into a supply cache.
-        // Because the supply can only hold the container and not a
-        // filled one... In this case we should either:
-        // - block the merge
-        // - place the merged item into the player's hand
-
-        CanHoldItem& fCHI = closest_furniture.get<CanHoldItem>();
-
-        std::shared_ptr<Item> f_item = fCHI.item();
-        const auto player_item = player->get<CanHoldItem>().item();
-
-        // Their item eats our item
-        f_item->get<CanHoldItem>().update(player_item);
-        player->get<CanHoldItem>().update(nullptr);
-
-        return true;
-    };
-
     const auto _place_item_onto_furniture =
         [&]() -> tl::expected<bool, std::string> {
         OptEntity opt_closest_furniture =

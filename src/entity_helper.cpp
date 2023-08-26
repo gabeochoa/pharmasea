@@ -184,14 +184,6 @@ OptEntity EntityHelper::getEntityForID(EntityID id) {
     return {};
 }
 
-OptEntity EntityHelper::getClosestOfType(const std::shared_ptr<Entity>& entity,
-                                         const EntityType& type, float range) {
-    const Transform& transform = entity->get<Transform>();
-    return EntityHelper::getClosestMatchingEntity(
-        transform.as2(), range,
-        [type](const RefEntity entity) { return check_type(entity, type); });
-}
-
 OptEntity EntityHelper::getClosestOfType(const Entity& entity,
                                          const EntityType& type, float range) {
     const Transform& transform = entity.get<Transform>();
