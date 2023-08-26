@@ -26,22 +26,22 @@ OUTPUT_EXE := pharmasea.exe
 CXX := clang++
 # CXX := include-what-you-use
 
+OUTPUT_LOG = $(OBJ_DIR)/build.log
+
 .PHONY: all clean
+
 
 # For tracing you have to run the game, and then connect from Tracy-release
 
-
-
-all: $(OUTPUT_EXE)
+all: clear_log $(OUTPUT_EXE)
 	./$(OUTPUT_EXE) 
 	#./$(OUTPUT_EXE) -t && ./$(OUTPUT_EXE) -g
 
+clear_log:
+	> $(OUTPUT_LOG)
+
 $(OUTPUT_EXE): $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) 
-
-
-mp: $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) && ./$(OUTPUT_EXE) test host > host_log & sleep 5;./pharmasea test client
+	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) >>$(OUTPUT_LOG) 2>&1
 
 release: FLAGS=$(RELEASE_FLAGS)
 release: NOFLAGS=
@@ -56,7 +56,7 @@ release: clean all
 
 
 $(OBJ_DIR)/%.o: %.cpp makefile
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -c $< -o $@ -MMD -MF $(@:.o=.d)
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -c $< -o $@ -MMD -MF $(@:.o=.d) >>$(OUTPUT_LOG) 2>&1
 
 %.d: %.cpp
 	$(MAKEDEPEND)
