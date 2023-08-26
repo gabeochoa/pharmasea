@@ -57,6 +57,44 @@ Info about the todo chart
 if youd like to try a specific version, the easiest way is to use gitblame to find the commit the changelog line was added
 and then just checkout that hash (sorry im not doing releases / tags atm) 
 
+I am publishing some releases on itch, you can find the url in the code or build the game and click the itch.io icon. 
+if you need the password join the discord and say hi!
+
+### alpha_0.23.08.25
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (Progression) New machines spawn on top of each other
+- (UI) some screens are gonna be ugly for a while
+- (Game) Roomba guy doesnt like to clean vomit at the customer de-spawn point..
+- (UI) Controls are not remappable in UI 
+- (UI) No reset-to-default state for controls
+
+impact
+- Map generator now uses WaveFunctionCollapse
+    - This should result in some less boxy maps than before
+    - If you want to mess around with it you can edit map_generator_input.json
+- More fonts and other language support
+    - We got a new font that hopefully fits better with the games playful style :)
+    - Due to differences in font and string width, some text might be cut off until you restart the game :$
+- new little roomba guy (hes underneath the pumpkin
+    - Moves slow but cleans up vomit without any help :) 
+- New alcohol based customer names!
+- Added controls view in the settings page
+    - No longer do you have to guess the controls
+    - Controls are not currently remappable in game but you can update the keymap.json manually if you need
+
+bug fixes
+- Fixed this issue; see impact for more info: (Lobby) Seed changer disabled for now 
+- Fixed issue where clients couldnt change settings once in game 
+
+better eng 
+- Categorized some of the todos 
+- Popup window to our UI component library 
+- Font Library to prep for multi-language 
+- Lobby etc are now Perma-entities so we can reenable seed selection 
+
+
 ### alpha_0.23.08.19
 
 Known Issues
