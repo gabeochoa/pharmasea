@@ -65,31 +65,22 @@
 }
 
 typedef std::vector<std::shared_ptr<Entity>> Entities;
-static Entities client_entities_DO_NOT_USE;
-static Entities server_entities_DO_NOT_USE;
+extern Entities client_entities_DO_NOT_USE;
+extern Entities server_entities_DO_NOT_USE;
 
-static std::set<int> permanant_ids;
-static std::map<vec2, bool> cache_is_walkable;
+extern std::set<int> permanant_ids;
+extern std::map<vec2, bool> cache_is_walkable;
 
 struct EntityHelper {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
-    static Entities& get_entities() {
-        if (is_server()) {
-            return server_entities_DO_NOT_USE;
-        }
-        // Right now we only have server/client thread, but in the future if we
-        // have more then we should check these
-
-        // auto client_thread_id =
-        // GLOBALS.get_or_default("client_thread_id", std::thread::id());
-        return client_entities_DO_NOT_USE;
-    }
-
     struct CreationOptions {
         bool is_permanent;
     };
+
+    static Entities& get_entities();
+
+    static Entity& createEntity();
+    static Entity& createPermanentEntity();
+    static Entity& createEntityWithOptions(const CreationOptions& options);
 
     // TODO :BE: eventually return the entity id or something
     template<typename... TArgs>
@@ -108,116 +99,12 @@ struct EntityHelper {
         return get_entities().back();
     }
 
-    static Entity& createEntity() {
-        return createEntityWithOptions({.is_permanent = false});
-    }
-
-    static Entity& createPermanentEntity() {
-        return createEntityWithOptions({.is_permanent = true});
-    }
-
-    static Entity& createEntityWithOptions(const CreationOptions& options) {
-        std::shared_ptr<Entity> e(new Entity());
-        get_entities().push_back(e);
-        // log_info("created a new entity {}", e->id);
-
-        invalidatePathCache();
-
-        if (options.is_permanent) {
-            permanant_ids.insert(e->id);
-        }
-
-        return *e;
-
-        // if (!e->add_to_navmesh()) {
-        // return;
-        // }
-        // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-        // Note: addShape merges shapes next to each other
-        //      this reduces the amount of loops overall
-
-        // nav->addShape(getPolyForEntity(e));
-        // nav->addEntity(e->id, getPolyForEntity(e));
-        // cache_is_walkable.clear();
-    }
-
-    static void markIDForCleanup(int e_id) {
-        auto& entities = get_entities();
-        auto it = entities.begin();
-        while (it != get_entities().end()) {
-            if ((*it)->id == e_id) {
-                (*it)->cleanup = true;
-                break;
-            }
-            it++;
-        }
-    }
-
-    static void removeEntity(int e_id) {
-        // if (e->add_to_navmesh()) {
-        // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-        // nav->removeEntity(e->id);
-        // cache_is_walkable.clear();
-        // }
-
-        auto& entities = get_entities();
-
-        auto newend = std::remove_if(entities.begin(), entities.end(),
-                                     [e_id](const auto& entity) {
-                                         return !entity || entity->id == e_id;
-                                     });
-
-        entities.erase(newend, entities.end());
-    }
-
-    static void removeEntity(std::shared_ptr<Entity> e) {
-        EntityHelper::removeEntity(e->id);
-    }
-
-    // static Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
-    // vec2 pos = vec::to2(e->snap_position());
-    // Rectangle rect = {
-    // pos.x,
-    // pos.y,
-    // TILESIZE,
-    // TILESIZE,
-    // };
-    // return Polygon(rect);
-    // }
-
-    static void cleanup() {
-        // Cleanup entities marked cleanup
-        Entities& entities = get_entities();
-
-        auto newend = std::remove_if(
-            entities.begin(), entities.end(),
-            [](const auto& entity) { return !entity || entity->cleanup; });
-
-        entities.erase(newend, entities.end());
-    }
-
-    static void delete_all_entities_NO_REALLY_I_MEAN_ALL() {
-        Entities& entities = get_entities();
-        // just clear the whole thing
-        entities.clear();
-    }
-
-    static void delete_all_entities(bool include_permanent = false) {
-        if (include_permanent) {
-            delete_all_entities_NO_REALLY_I_MEAN_ALL();
-            return;
-        }
-
-        // Only delete non perms
-        Entities& entities = get_entities();
-
-        auto newend = std::remove_if(
-            entities.begin(), entities.end(), [](const auto& entity) {
-                return !permanant_ids.contains(entity->id);
-            });
-
-        entities.erase(newend, entities.end());
-    }
+    static void markIDForCleanup(int e_id);
+    static void removeEntity(int e_id);
+    static void removeEntity(std::shared_ptr<Entity> e);
+    static void cleanup();
+    static void delete_all_entities_NO_REALLY_I_MEAN_ALL();
+    static void delete_all_entities(bool include_permanent = false);
 
     enum ForEachFlow {
         NormalFlow = 0,
@@ -226,41 +113,9 @@ struct EntityHelper {
     };
 
     static void forEachEntity(
-        std::function<ForEachFlow(std::shared_ptr<Entity>&)> cb) {
-        TRACY_ZONE_SCOPED;
-        for (auto& e : get_entities()) {
-            if (!e) continue;
-            auto fef = cb(e);
-            if (fef == 1) continue;
-            if (fef == 2) break;
-        }
-    }
+        std::function<ForEachFlow(std::shared_ptr<Entity>&)> cb);
 
-    // TODO :BE: delete
-    template<typename T>
-    static constexpr std::shared_ptr<T> getFirstMatching(
-        std::function<bool(std::shared_ptr<T>)> filter  //
-    ) {
-        for (auto& e : get_entities()) {
-            auto s = dynamic_pointer_cast<T>(e);
-            if (!s) continue;
-            if (!filter(s)) continue;
-            return s;
-        }
-        return nullptr;
-    }
-
-    static OptEntity getFirstMatching(std::function<bool(RefEntity)> filter  //
-    ) {
-        for (const auto& e_ptr : get_entities()) {
-            if (!e_ptr) continue;
-            Entity& s = *e_ptr;
-            if (!filter(s)) continue;
-            return s;
-        }
-        return {};
-    }
-
+    // TODO cant move lower
     template<typename T>
     static constexpr std::vector<std::shared_ptr<T>> getFilteredEntitiesInRange(
         vec2 pos, float range,
@@ -278,6 +133,7 @@ struct EntityHelper {
         return matching;
     }
 
+    // TODO cant move lower
     template<typename T>
     static constexpr std::vector<std::shared_ptr<T>> getEntitiesInRange(
         vec2 pos, float range) {
@@ -286,9 +142,44 @@ struct EntityHelper {
                                              [](auto&&) { return true; });
     }
 
+    static OptEntity getFirstMatching(std::function<bool(RefEntity)> filter);
     static std::vector<std::shared_ptr<Entity>> getEntitiesInPosition(
         vec2 pos) {
         return getEntitiesInRange<Entity>(pos, TILESIZE);
+    }
+
+    static std::shared_ptr<Entity> getClosestMatchingFurniture(
+        const Transform& transform, float range,
+        std::function<bool(std::shared_ptr<Furniture>)> filter);
+
+    static std::shared_ptr<Entity> getEntityPtrForID(EntityID id);
+    static OptEntity getEntityForID(EntityID id);
+    static std::shared_ptr<Entity> getClosestOfType(
+        const std::shared_ptr<Entity>& entity, const EntityType& type,
+        float range = 100.f);
+
+    static std::shared_ptr<Entity> getClosestOfType(const Entity& entity,
+                                                    const EntityType& type,
+                                                    float range = 100.f);
+
+    // TODO :BE: change other debugname filter guys to this
+    static std::vector<std::shared_ptr<Entity>> getAllWithType(
+        const EntityType& type);
+
+    static bool doesAnyExistWithType(const EntityType& type);
+
+    // TODO :BE: delete
+    template<typename T>
+    static constexpr std::shared_ptr<T> getFirstMatching(
+        std::function<bool(std::shared_ptr<T>)> filter  //
+    ) {
+        for (auto& e : get_entities()) {
+            auto s = dynamic_pointer_cast<T>(e);
+            if (!s) continue;
+            if (!filter(s)) continue;
+            return s;
+        }
+        return nullptr;
     }
 
     template<typename T>
@@ -359,14 +250,6 @@ struct EntityHelper {
         return best_so_far;
     }
 
-    static std::shared_ptr<Entity> getClosestMatchingFurniture(
-        const Transform& transform, float range,
-        std::function<bool(std::shared_ptr<Furniture>)> filter) {
-        // TODO :BE: should this really be using this?
-        return EntityHelper::getMatchingEntityInFront<Furniture>(
-            transform.as2(), range, transform.face_direction(), filter);
-    }
-
     template<typename T>
     static std::shared_ptr<Entity> getClosestWithComponent(
         const std::shared_ptr<Entity>& entity, float range) {
@@ -394,64 +277,6 @@ struct EntityHelper {
             if (e->has<T>()) return e;
         }
         return {};
-    }
-
-    static std::shared_ptr<Entity> getEntityPtrForID(EntityID id) {
-        for (const auto& e : get_entities()) {
-            if (!e) continue;
-            if (e->id == id) return e;
-        }
-        return {};
-    }
-
-    static OptEntity getEntityForID(EntityID id) {
-        for (const auto& e : get_entities()) {
-            if (!e) continue;
-            if (e->id == id) return *e;
-        }
-        return {};
-    }
-
-    static std::shared_ptr<Entity> getClosestOfType(
-        const std::shared_ptr<Entity>& entity, const EntityType& type,
-        float range = 100.f) {
-        const Transform& transform = entity->get<Transform>();
-        return EntityHelper::getClosestMatchingEntity<Entity>(
-            transform.as2(), range,
-            [type](const std::shared_ptr<Entity> entity) {
-                return check_type(*entity, type);
-            });
-    }
-
-    static std::shared_ptr<Entity> getClosestOfType(const Entity& entity,
-                                                    const EntityType& type,
-                                                    float range = 100.f) {
-        const Transform& transform = entity.get<Transform>();
-        return EntityHelper::getClosestMatchingEntity<Entity>(
-            transform.as2(), range,
-            [type](const std::shared_ptr<Entity> entity) {
-                return check_type(*entity, type);
-            });
-    }
-
-    // TODO :BE: change other debugname filter guys to this
-    static std::vector<std::shared_ptr<Entity>> getAllWithType(
-        const EntityType& type) {
-        std::vector<std::shared_ptr<Entity>> matching;
-        for (std::shared_ptr<Entity> e : get_entities()) {
-            if (!e) continue;
-            if (check_type(*e, type)) matching.push_back(e);
-        }
-        return matching;
-    }
-
-    static bool doesAnyExistWithType(const EntityType& type) {
-        std::vector<std::shared_ptr<Entity>> matching;
-        for (std::shared_ptr<Entity> e : get_entities()) {
-            if (!e) continue;
-            if (check_type(*e, type)) return true;
-        }
-        return false;
     }
 
     // TODO :INFRA: i think this is slower because we are doing "outside mesh"
@@ -504,6 +329,4 @@ struct EntityHelper {
         });
         return !hit_impassible_entity;
     }
-
-#pragma clang diagnostic pop
 };
