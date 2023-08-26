@@ -450,10 +450,10 @@ void backfill_empty_container(const EntityType& match_type, Entity& entity,
     iic.increment();
 
     // create item
-    std::shared_ptr<Item> item =
+    Entity& item =
         EntityHelper::createItem(iic.type(), std::forward<TArgs>(args)...);
 
-    canHold.update(item);
+    canHold.update(EntityHelper::getEntityAsSharedPtr(item));
 }
 
 void process_is_container_and_should_backfill_item(Entity& entity, float) {
@@ -1124,12 +1124,11 @@ void process_has_rope(Entity& entity, float) {
         prev = p;
     }
 
-    std::shared_ptr<Item> item;
     for (auto p : extended_path) {
-        item = EntityHelper::createItem(EntityType::SodaSpout, p);
-        item->get<IsItem>().set_held_by(EntityType::Player);
-        item->addComponent<IsSolid>();
-        hrti.add(item);
+        Entity& item = EntityHelper::createItem(EntityType::SodaSpout, p);
+        item.get<IsItem>().set_held_by(EntityType::Player);
+        item.addComponent<IsSolid>();
+        hrti.add(EntityHelper::getEntityAsSharedPtr(item));
     }
     hrti.mark_generated(pos);
 }

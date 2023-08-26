@@ -42,21 +42,21 @@ struct EntityHelper {
     static Entity& createPermanentEntity();
     static Entity& createEntityWithOptions(const CreationOptions& options);
 
-    // TODO :BE: eventually return the entity id or something
+    // TODO :BE: maybe return the entity id or something
     template<typename... TArgs>
-    static std::shared_ptr<Entity> createItem(TArgs... args) {
+    static RefEntity createItem(TArgs... args) {
         Entity& e = createEntity();
         items::make_item_type(e, std::forward<TArgs>(args)...);
         // log_info("created a new item {} {} ", e.id, e.get<DebugName>());
-        return get_entities().back();
+        return *(get_entities().back());
     }
 
     template<typename... TArgs>
-    static std::shared_ptr<Entity> createPermanentItem(TArgs... args) {
+    static RefEntity createPermanentItem(TArgs... args) {
         Entity& e = createPermanentEntity();
         items::make_item_type(e, std::forward<TArgs>(args)...);
         // log_info("created a new item {} {} ", e.id, e.get<DebugName>());
-        return get_entities().back();
+        return *(get_entities().back());
     }
 
     static void markIDForCleanup(int e_id);
