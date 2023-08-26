@@ -1127,7 +1127,7 @@ void process_has_rope(Entity& entity, float) {
         Entity& item = EntityHelper::createItem(EntityType::SodaSpout, p);
         item.get<IsItem>().set_held_by(EntityType::Player);
         item.addComponent<IsSolid>();
-        hrti.add(EntityHelper::getEntityAsSharedPtr(item));
+        hrti.add(item);
     }
     hrti.mark_generated(pos);
 }

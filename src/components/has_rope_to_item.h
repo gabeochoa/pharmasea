@@ -2,15 +2,17 @@
 
 #pragma once
 
-#include "../entity.h"
+#include "../entity_helper.h"
 #include "base_component.h"
+
+typedef int EntityID;
 
 struct HasRopeToItem : public BaseComponent {
     virtual ~HasRopeToItem() {}
 
     void clear() {
-        for (std::shared_ptr<Item> i : rope) {
-            i->cleanup = true;
+        for (EntityID id : rope) {
+            EntityHelper::markIDForCleanup(id);
         }
         rope.clear();
         rope_length = (int) rope.size();
@@ -23,8 +25,8 @@ struct HasRopeToItem : public BaseComponent {
     }
     [[nodiscard]] bool was_generated() const { return generated; }
 
-    void add(std::shared_ptr<Item> i) {
-        rope.push_back(i);
+    void add(Item& i) {
+        rope.push_back(i.id);
         rope_length = (int) rope.size();
     }
 
@@ -34,7 +36,7 @@ struct HasRopeToItem : public BaseComponent {
     vec2 path_to;
     bool generated = false;
     int rope_length = 0;
-    std::vector<std::shared_ptr<Item>> rope;
+    std::vector<EntityID> rope;
 
     friend bitsery::Access;
     template<typename S>
@@ -45,9 +47,6 @@ struct HasRopeToItem : public BaseComponent {
         s.value1b(generated);
         s.value4b(rope_length);
 
-        s.container(rope, rope_length,
-                    [](S& s2, std::shared_ptr<Entity>& entity) {
-                        s2.ext(entity, bitsery::ext::StdSmartPtr{});
-                    });
+        s.container4b(rope, rope_length);
     }
 };
