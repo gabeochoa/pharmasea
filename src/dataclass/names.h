@@ -4,7 +4,7 @@
 #include "../engine/random.h"
 #include "../external_include.h"
 
-const std::array<const char*, 39> alcohol_names = {
+constexpr std::array<const char*, 39> alcohol_names = {
     "Martini", "Ale",       "Chardonnay", "Brandy",   "Tequila",  "Lager",
     "Rosé",    "Mojito",    "Whiskey",    "Gin",      "Mimosa",   "Rum",
     "Bourbon", "Shiraz",    "Margarita",  "Merlot",   "Cosmo",    "Aperol",
@@ -14,7 +14,7 @@ const std::array<const char*, 39> alcohol_names = {
     "Fernet",  "Sake",      "Jager",
 };
 
-const std::array<const char*, 42> alcy_firsts = {
+constexpr std::array<const char*, 42> alcy_firsts = {
     "Martina", "Al",       "Chardonnay", "Brandy", "Rose",    "Jim",
     "Ron",     "Ben",      "Shira",      "Marge",  "Cosmo",   "Lagertha",
     "April",   "Randy",    "Belinda",    "Julie",  "Renee",   "Sam",
@@ -25,19 +25,47 @@ const std::array<const char*, 42> alcy_firsts = {
 
 };
 
-const std::array<const char*, 19> first_names = {
+constexpr std::array<const char*, 19> first_names = {
     "Buck", "Bark",  "Cleef", "Tuck", "Jack", "Sal",  "Clove",
     "Beef", "Bart",  "Ted",   "Ned",  "Kyle", "Myle", "Mark",
     "Jerk", "Bjork", "Steve", "Stan", "Bran"};
 
-const std::array<const char*, 8> last_names = {"Buckle", "Chuckle", "Stedman",
-                                               "Slick",  "Fischer", "Flipper",
-                                               "Amore",  "Fishman"};
+constexpr std::array<const char*, 8> last_names = {
+    "Buckle",  "Chuckle", "Stedman", "Slick",
+    "Fischer", "Flipper", "Amore",   "Fishman"};
 
 static std::string get_random_name() {
     int first = randIn(0, (int) alcy_firsts.size() - 1);
     int last = randIn(0, (int) alcohol_names.size() - 1);
     return fmt::format("{} {}", alcy_firsts[first], alcohol_names[last]);
+}
+
+static const char* rot13(const char* input) {
+    size_t length = strlen(input);
+    char* result = new char[length + 1];
+
+    for (size_t i = 0; i < length; ++i) {
+        char c = input[i];
+
+        if ('a' <= c && c <= 'z') {
+            // convert to uppercase
+            result[i] = ('A' + (c - 'a' + 13) % 26);
+        } else if ('A' <= c && c <= 'Z') {
+            result[i] = 'A' + (c - 'A' + 13) % 26;
+        } else {
+            result[i] = c;  // Preserve non-alphabetic characters
+        }
+    }
+
+    result[length] = '\0';  // Null-terminate the result string
+    return result;
+}
+
+static std::string get_random_name_rot13() {
+    int first = randIn(0, (int) alcy_firsts.size() - 1);
+    int last = randIn(0, (int) alcohol_names.size() - 1);
+    return fmt::format("{}_{}", rot13(alcy_firsts[first]),
+                       rot13(alcohol_names[last]));
 }
 
 // TODO full names (special customers/doctors?)

@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "components/is_progression_manager.h"
 #include "components/is_trigger_area.h"
+#include "engine/globals.h"
 #include "map_generation.h"
 #include "network/server.h"
 #include "recipe_library.h"
@@ -99,13 +100,14 @@ void LevelInfo::generate_default_seed() {
     EntityHelper::invalidatePathCache();
 }
 
-void generate_in_game_map_wfc() {
+void generate_in_game_map_wfc(const std::string& seed) {
     // int rows = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
     // int cols = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
     int rows = 5;
     int cols = 5;
 
-    wfc::WaveCollapse wc(rows, cols);
+    wfc::WaveCollapse wc(rows, cols,
+                         static_cast<unsigned int>(hashString(seed)));
     wc.run();
     wc._photo();
 
@@ -120,7 +122,7 @@ void LevelInfo::generate_in_game_map() {
         generate_default_seed();
         return;
     }
-    generate_in_game_map_wfc();
+    generate_in_game_map_wfc(seed);
 
     return;
 

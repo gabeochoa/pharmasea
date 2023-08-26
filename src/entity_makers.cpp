@@ -323,7 +323,7 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
         if (hasWork.is_work_complete()) {
             hasWork.reset_pct();
 
-            const auto name = randString(10);
+            const auto name = get_random_name_rot13();
             server->get_map_SERVER_ONLY()->update_seed(name);
         }
         randomizer.get<HasName>().update(server->get_map_SERVER_ONLY()->seed);

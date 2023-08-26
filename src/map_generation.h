@@ -48,7 +48,7 @@ struct WaveCollapse {
     mutable std::mt19937 gen;
     mutable bool is_first_one;
 
-    WaveCollapse(int r, int c) : rows(r), cols(c) {
+    WaveCollapse(int r, int c, unsigned int seed) : rows(r), cols(c) {
         // We manually only set the num patterns we have
         // because its likely smaller than MAX_NUM_PATTERNS
         Possibilities default_val;
@@ -57,7 +57,7 @@ struct WaveCollapse {
         }
 
         grid_options = std::vector<Possibilities>(rows * cols, default_val);
-        gen = std::mt19937((unsigned int) 0);
+        gen = std::mt19937(seed);
         is_first_one = true;
     }
 
