@@ -1,8 +1,10 @@
 
 #include "job.h"
 
+#include "components/can_hold_item.h"
 #include "components/can_order_drink.h"
 #include "components/can_perform_job.h"
+#include "components/debug_name.h"
 #include "components/has_base_speed.h"
 #include "components/has_speech_bubble.h"
 #include "components/has_waiting_queue.h"
@@ -414,8 +416,8 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
         return (Job::State::WorkingAtEnd);
     }
 
-    std::shared_ptr<Item> drink = reg.get<CanHoldItem>().item();
-    if (!drink || !check_type(*drink, EntityType::Drink)) {
+    OptEntity drink = reg.get<CanHoldItem>().held_item();
+    if (!drink || !check_type(drink.asE(), EntityType::Drink)) {
         system_manager::logging_manager::announce(entity, "this isnt a drink");
         WIQ_wait_and_return(entity);
         return (Job::State::WorkingAtEnd);
@@ -440,8 +442,8 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
     canOrderDrink.order_state = CanOrderDrink::OrderState::DrinkingNow;
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
-    ourCHI.update(regCHI.item());
-    regCHI.update(nullptr);
+    ourCHI.update(regCHI.held_item());
+    regCHI.update({});
 
     system_manager::logging_manager::announce(entity, "got it");
     WIQ_leave_line(reg, entity);
@@ -493,8 +495,8 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
         // Done with my drink, delete it
 
         CanHoldItem& chi = entity.get<CanHoldItem>();
-        chi.item()->cleanup = true;
-        chi.update(nullptr);
+        chi.held_item()->cleanup = true;
+        chi.update({});
 
         entity.get<HasSpeechBubble>().off();
 

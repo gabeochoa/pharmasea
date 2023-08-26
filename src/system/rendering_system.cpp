@@ -1,7 +1,10 @@
 
 #include "rendering_system.h"
 
+#include "../components/can_hold_item.h"
 #include "../components/has_client_id.h"
+#include "../components/has_subtype.h"
+#include "../entity_helper.h"
 #include "system_manager.h"
 
 namespace system_manager {

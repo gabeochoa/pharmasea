@@ -246,12 +246,12 @@ void process_table_working(Entity& table, HasWork& hasWork, Entity& player,
     CanHoldItem& tableCHI = table.get<CanHoldItem>();
     if (tableCHI.empty()) return;
 
-    if (!tableCHI.item()->has<HasWork>()) return;
+    if (!tableCHI.held_item()->has<HasWork>()) return;
 
     // TODO add comment on why we have to run the "itemHasWork" and not
     // hasWork.call()
-    HasWork& itemHasWork = tableCHI.item()->get<HasWork>();
-    itemHasWork.call(hasWork, *tableCHI.item(), player, dt);
+    HasWork& itemHasWork = tableCHI.held_item()->get<HasWork>();
+    itemHasWork.call(hasWork, tableCHI.held_item().asE(), player, dt);
 
     return;
 }
@@ -573,9 +573,9 @@ void make_vomit(Entity& vomit, vec2 pos) {
                 const CanHoldItem& playerCHI = player.get<CanHoldItem>();
                 // not holding anything
                 if (playerCHI.empty()) return;
-                std::shared_ptr<Item> item = playerCHI.const_item();
+                OptEntity item = playerCHI.const_item();
                 // Has to be holding mop
-                if (!check_type(*item, EntityType::Mop)) return;
+                if (!check_type(item.asE(), EntityType::Mop)) return;
             }
 
             const float amt = 1.f;
@@ -650,11 +650,11 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
         // not holding anything
         if (playerCHI.empty()) return;
-        std::shared_ptr<Item> item = playerCHI.const_item();
+        OptEntity item = playerCHI.const_item();
         // not holding item that adds ingredients
         if (item->is_missing<AddsIngredient>()) return;
         const AddsIngredient& addsIG = item->get<AddsIngredient>();
-        Ingredient ing = addsIG.get(*item);
+        Ingredient ing = addsIG.get(item.asE());
 
         const IsDrink& isdrink = drink.get<IsDrink>();
         // Already has the ingredient
@@ -665,8 +665,8 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         if (hasWork.is_work_complete()) {
             hasWork.reset_pct();
             bool cleaned_up =
-                _add_ingredient_to_drink_NO_VALIDATION(drink, *item);
-            if (cleaned_up) playerCHI.update(nullptr);
+                _add_ingredient_to_drink_NO_VALIDATION(drink, item.asE());
+            if (cleaned_up) playerCHI.update({});
         }
     };
 

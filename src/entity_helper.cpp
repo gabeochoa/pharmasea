@@ -1,5 +1,19 @@
 #include "entity_helper.h"
 
+#include "assert.h"
+#include "external_include.h"
+//
+#include "components/can_be_ghost_player.h"
+#include "components/can_be_held.h"
+#include "components/debug_name.h"
+#include "components/is_solid.h"
+#include "engine/globals_register.h"
+#include "engine/is_server.h"
+#include "engine/statemanager.h"
+#include "entity_makers.h"
+#include "globals.h"
+#include "job.h"
+#include "strings.h"
 #include "system/input_process_manager.h"
 
 Entities client_entities_DO_NOT_USE;

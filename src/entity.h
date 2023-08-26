@@ -208,6 +208,7 @@ struct OptEntity {
     const Entity* operator->() const { return value(); }
 
     Entity& asE() { return data.value(); }
+    const Entity& asE() const { return data.value(); }
 
     operator RefEntity() { return data.value(); }
     operator RefEntity() const { return data.value(); }
@@ -228,4 +229,5 @@ void serialize(S& s, OptEntity opt) {
 }
 }  // namespace bitsery
 
+// TODO add one that accepts an optentity
 bool check_type(const Entity& entity, EntityType type);
