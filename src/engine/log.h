@@ -72,7 +72,7 @@ inline void log_me(LogLevel level, const char* file, int line,
 
 // TODO implement for windows
 inline void log_me() { std::cout << std::endl; }
-template <typename T, typename... Args>
+template<typename T, typename... Args>
 inline void log_me(const T& arg, const Args&... args) {
     std::cout << arg << " ";
     log_me(args...);

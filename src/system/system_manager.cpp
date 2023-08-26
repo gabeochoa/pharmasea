@@ -1458,7 +1458,7 @@ void SystemManager::progression_update(const Entities& entities, float dt) {
 }
 
 void SystemManager::render_entities(const Entities& entities, float dt) const {
-    const auto debug_mode_on =
+    const bool debug_mode_on =
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
     for_each(entities, dt,
              [debug_mode_on](std::shared_ptr<Entity> entity_ptr, float dt) {

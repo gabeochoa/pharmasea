@@ -4,6 +4,7 @@
 // steam networking uses an "app id" that we dont have
 // also the code isnt written yet :)
 // TODO :IMPACT: add support for steam connections
+#include "engine/log.h"
 #include "layers/minimaplayer.h"
 #define BUILD_WITHOUT_STEAM
 
