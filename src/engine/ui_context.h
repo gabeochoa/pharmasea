@@ -278,6 +278,23 @@ struct UIContext : public IUIContextInputManager,
     }
 
    public:
+    // Scissor info
+    bool should_immediate_draw = false;
+    std::optional<Rectangle> scissor_box;
+
+    void scissor_on(Rectangle r) {
+        should_immediate_draw = true;
+        scissor_box = r;
+        raylib::BeginScissorMode((int) r.x, (int) r.y, (int) r.width,
+                                 (int) r.height);
+    }
+    void scissor_off() {
+        raylib::EndScissorMode();
+        should_immediate_draw = false;
+        scissor_box = {};
+    }
+    //
+
     int id = 0;
 
     UIContext() : id(UICONTEXT_ID++) { this->init(); }

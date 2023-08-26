@@ -67,6 +67,13 @@ inline Rectangle expand_pct(const Rectangle& a, float pct) {
                      });
 }
 
+inline Rectangle offset_y(const Rectangle& a, float y) {
+    return Rectangle{a.x,      //
+                     a.y - y,  //
+                     a.width,  //
+                     a.height};
+}
+
 inline std::array<Rectangle, 2> vsplit(const Rectangle& a, float pct,
                                        float padding_right = 0) {
     float ratio = pct / 100.f;
@@ -175,9 +182,15 @@ inline std::array<Rectangle, 2> hsplit(const Rectangle& a,
 
 }  // namespace rect
 
+static std::shared_ptr<ui::UIContext> context;
+
 class CallbackRegistry {
    public:
     inline void register_call(std::function<void(void)> cb, int z_index = 0) {
+        if (context->should_immediate_draw) {
+            cb();
+            return;
+        }
         callbacks.emplace_back(ScheduledCall{z_index, cb});
         insert_sorted();
     }
@@ -210,7 +223,6 @@ class CallbackRegistry {
     }
 };
 static CallbackRegistry callback_registry;
-static std::shared_ptr<ui::UIContext> context;
 
 inline float calculateScale(const vec2& rect_size, const vec2& image_size) {
     float scale_x = rect_size.x / image_size.x;
@@ -296,8 +308,10 @@ inline bool is_active(int id) { return active_id == id; }
 inline bool is_active_or_hot(int id) { return is_hot(id) || is_active(id); }
 inline bool is_active_and_hot(int id) { return is_hot(id) && is_active(id); }
 
-inline void active_if_mouse_inside(const Widget& widget) {
-    bool inside = is_mouse_inside(widget.get_rect());
+inline void active_if_mouse_inside(const Widget& widget,
+                                   std::optional<Rectangle> view = {}) {
+    bool inside =
+        is_mouse_inside(view.has_value() ? view.value() : widget.get_rect());
     if (inside) {
         set_hot(widget.id);
         if (is_active(ROOT_ID) && mouse_info.leftDown) {
@@ -375,14 +389,22 @@ inline void end() {
 
 }  // namespace focus
 
+struct ScrollWindowResult {
+    Rectangle sv;
+    int z_index;
+};
+
 struct ElementResult {
     // no explicit on purpose
     ElementResult(bool val) : result(val) {}
     ElementResult(bool val, bool d) : result(val), data(d) {}
     ElementResult(bool val, int d) : result(val), data(d) {}
     ElementResult(bool val, float d) : result(val), data(d) {}
+    ElementResult(bool val, Rectangle d) : result(val), data(d) {}
     ElementResult(bool val, const std::string& d) : result(val), data(d) {}
     ElementResult(bool val, const AnyInput& d) : result(val), data(d) {}
+    ElementResult(bool val, const ScrollWindowResult& d)
+        : result(val), data(d) {}
 
     template<typename T>
     T as() const {
@@ -393,10 +415,18 @@ struct ElementResult {
 
    private:
     bool result = false;
-    std::variant<bool, int, float, std::string, AnyInput> data = 0;
+    std::variant<bool, int, float, std::string, AnyInput, Rectangle,
+                 ScrollWindowResult>
+        data = 0;
 };
 
 namespace internal {
+
+inline bool should_exit_early(const Widget& widget) {
+    if (!context->scissor_box.has_value()) return false;
+    return !raylib::CheckCollisionRecs(widget.rect,
+                                       context->scissor_box.value());
+}
 
 // TODO replace with either nothing or using context's
 inline ui::UITheme active_theme() { return ui::DEFAULT_THEME; }
@@ -510,11 +540,45 @@ inline ElementResult window(const Widget& widget) {
     return ElementResult{true, widget.z_index - 1};
 }
 
+inline ElementResult scroll_window(
+    const Widget& widget, Rectangle view,
+    std::function<void(ScrollWindowResult)> children) {
+    //
+    auto state = context->widget_init<ui::ScrollViewState>(
+        ui::MK_UUID(widget.id, widget.id));
+
+    //
+    focus::active_if_mouse_inside(widget, view);
+    if (focus::is_hot(widget.id)) {
+        // log_info("scroll {} yoff {}", context->yscrolled,
+        // state->y_offset.asT());
+        context->yscrolled =
+            fmax(0.f, fmin(widget.rect.height, context->yscrolled));
+        state->y_offset = context->yscrolled;
+    }
+
+    //
+    internal::draw_rect(view, widget.z_index, ui::theme::Secondary);
+    callback_registry.register_call(
+        [=]() {
+            context->scissor_on(view);
+            children(
+                ScrollWindowResult{rect::offset_y(widget.rect, state->y_offset),
+                                   widget.z_index - 1});
+            context->scissor_off();
+        },
+        widget.z_index);
+    return ElementResult{true,
+                         ScrollWindowResult{widget.rect, widget.z_index - 1}};
+}
+
 inline ElementResult button(const Widget& widget,
                             const std::string& content = "",
                             bool background = true) {
     Rectangle rect = widget.get_rect();
 
+    //
+    if (internal::should_exit_early(widget)) return false;
     //
     focus::active_if_mouse_inside(widget);
     focus::try_to_grab(widget);
@@ -552,6 +616,8 @@ inline ElementResult image_button(const Widget& widget,
                                   const std::string& texture_name) {
     Rectangle rect = widget.get_rect();
 
+    if (internal::should_exit_early(widget)) return false;
+    //
     focus::active_if_mouse_inside(widget);
     focus::try_to_grab(widget);
     internal::draw_focus_ring(widget);
@@ -579,6 +645,8 @@ inline ElementResult image_button(const Widget& widget,
 
 inline ElementResult checkbox(const Widget& widget,
                               const CheckboxData& data = {}) {
+    if (internal::should_exit_early(widget)) return false;
+    //
     auto state = context->widget_init<ui::CheckboxState>(
         ui::MK_UUID(widget.id, widget.id));
     state->on = data.selected;
@@ -598,6 +666,8 @@ inline ElementResult checkbox(const Widget& widget,
 }
 
 inline ElementResult slider(const Widget& widget, const SliderData& data = {}) {
+    if (internal::should_exit_early(widget)) return false;
+    //
     // TODO be able to scroll this bar with the scroll wheel
     auto state = context->widget_init<ui::SliderState>(
         ui::MK_UUID(widget.id, widget.id));
@@ -676,6 +746,8 @@ inline ElementResult slider(const Widget& widget, const SliderData& data = {}) {
 }
 
 inline ElementResult dropdown(const Widget& widget, DropdownData data) {
+    if (internal::should_exit_early(widget)) return false;
+    //
     if (data.options.empty()) {
         log_warn("the options passed to dropdown were empty");
         return ElementResult{false, 0};
@@ -739,6 +811,8 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
 
 inline ElementResult control_input_field(const Widget& widget,
                                          const TextfieldData& data = {}) {
+    if (internal::should_exit_early(widget)) return false;
+    //
     bool valid = false;
     AnyInput ai;
 
@@ -783,6 +857,8 @@ inline ElementResult control_input_field(const Widget& widget,
 
 inline ElementResult textfield(const Widget& widget,
                                const TextfieldData& data) {
+    if (internal::should_exit_early(widget)) return false;
+    //
     auto state = context->widget_init<ui::TextfieldState>(
         ui::MK_UUID(widget.id, widget.id));
     state->buffer = data.content;

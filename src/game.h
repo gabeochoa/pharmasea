@@ -42,6 +42,7 @@
 #include "layers/settingslayer.h"
 #include "layers/streamersafelayer.h"
 #include "layers/toastlayer.h"
+#include "layers/uitestlayer.h"
 #include "layers/versionlayer.h"
 
 extern ui::UITheme DEFAULT_THEME;
@@ -108,6 +109,16 @@ void startup() {
     MenuState::get().reset();
     GameState::get().reset();
 
+    if (ENABLE_UI_TEST) {
+        MenuState::get().set(menu::State::UI);
+        Layer* layers[] = {
+            //
+            new UITestLayer(),
+        };
+        for (auto layer : layers) App::get().pushLayer(layer);
+        return;
+    }
+
     Layer* layers[] = {
         //
         new FPSLayer(),
@@ -149,6 +160,7 @@ void process_dev_flags(char* argv[]) {
         ENABLE_MODELS = true;
         ENABLE_SOUND = false;
         network::ENABLE_REMOTE_IP = false;
+        ENABLE_UI_TEST = true;
         return;
     }
 

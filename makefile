@@ -36,8 +36,7 @@ GAME_LOG = $(OBJ_DIR)/game.log
 
 
 all: $(OUTPUT_EXE)
-	./$(OUTPUT_EXE) 2>&1 $(GAME_LOG)
-	#./$(OUTPUT_EXE) -t && ./$(OUTPUT_EXE) -g
+	./$(OUTPUT_EXE) -g 2>&1 $(GAME_LOG)
 
 $(OUTPUT_EXE): $(H_FILES) $(OBJ_FILES) 
 	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) 

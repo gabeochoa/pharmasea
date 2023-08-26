@@ -45,7 +45,7 @@ struct ToggleState : public UIState {
 };
 
 struct ScrollViewState : public UIState {
-    State<float> yoffset;
+    State<float> y_offset;
 };
 
 struct DropdownState : public ToggleState {
