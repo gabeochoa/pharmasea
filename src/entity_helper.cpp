@@ -145,12 +145,22 @@ enum ForEachFlow {
     Break = 2,
 };
 
-void EntityHelper::forEachEntity(
+void EntityHelper::forEachEntityPtr(
     std::function<ForEachFlow(std::shared_ptr<Entity>&)> cb) {
     TRACY_ZONE_SCOPED;
     for (auto& e : get_entities()) {
         if (!e) continue;
         auto fef = cb(e);
+        if (fef == 1) continue;
+        if (fef == 2) break;
+    }
+}
+
+void EntityHelper::forEachEntity(std::function<ForEachFlow(Entity&)> cb) {
+    TRACY_ZONE_SCOPED;
+    for (auto& e : get_entities()) {
+        if (!e) continue;
+        auto fef = cb(*e);
         if (fef == 1) continue;
         if (fef == 2) break;
     }
@@ -331,10 +341,10 @@ bool EntityHelper::isWalkable(vec2 pos) {
 bool EntityHelper::isWalkableRawEntities(const vec2& pos) {
     TRACY_ZONE_SCOPED;
     bool hit_impassible_entity = false;
-    forEachEntity([&](auto entity) {
+    forEachEntity([&](Entity& entity) {
         if (!system_manager::input_process_manager::is_collidable(entity))
             return ForEachFlow::Continue;
-        if (vec::distance(entity->template get<Transform>().as2(), pos) <
+        if (vec::distance(entity.template get<Transform>().as2(), pos) <
             TILESIZE / 2.f) {
             hit_impassible_entity = true;
             return ForEachFlow::Break;

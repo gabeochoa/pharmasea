@@ -72,8 +72,10 @@ struct EntityHelper {
         Break = 2,
     };
 
-    static void forEachEntity(
+    static void forEachEntityPtr(
         std::function<ForEachFlow(std::shared_ptr<Entity>&)> cb);
+
+    static void forEachEntity(std::function<ForEachFlow(Entity&)> cb);
 
     static std::vector<RefEntity> getFilteredEntitiesInRange(
         vec2 pos, float range, std::function<bool(RefEntity)> filter);

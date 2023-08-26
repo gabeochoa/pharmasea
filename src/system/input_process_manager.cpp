@@ -66,35 +66,32 @@ void person_update_given_new_pos(int id, Transform& transform,
         // vertical check
         auto new_bounds_y = get_bounds(new_pos_z, transform.size());
 
-        bool would_collide_x = false;
-        bool would_collide_z = false;
-        std::weak_ptr<Entity> collided_entity_x;
-        std::weak_ptr<Entity> collided_entity_z;
-        EntityHelper::forEachEntity([&](auto entity) {
-            if (id == entity->id) {
+        OptEntity collided_entity_x;
+        OptEntity collided_entity_z;
+        EntityHelper::forEachEntity([&](Entity& entity) {
+            if (id == entity.id) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if (!system_manager::input_process_manager::is_collidable(entity,
-                                                                      person)) {
+            if (!system_manager::input_process_manager::is_collidable(
+                    entity, *person)) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if (!system_manager::input_process_manager::is_collidable(person)) {
+            if (!system_manager::input_process_manager::is_collidable(
+                    *person)) {
                 return EntityHelper::ForEachFlow::Continue;
             }
             if (CheckCollisionBoxes(
-                    new_bounds_x, entity->template get<Transform>().bounds())) {
-                would_collide_x = true;
+                    new_bounds_x, entity.template get<Transform>().bounds())) {
                 collided_entity_x = entity;
             }
             if (CheckCollisionBoxes(
-                    new_bounds_y, entity->template get<Transform>().bounds())) {
-                would_collide_z = true;
+                    new_bounds_y, entity.template get<Transform>().bounds())) {
                 collided_entity_z = entity;
             }
             // Note: if these are both true, then we definitely dont need to
             // keep going and can break early, otherwise we should check the
             // rest to make sure
-            if (would_collide_x && would_collide_z) {
+            if (valid(collided_entity_x) && valid(collided_entity_z)) {
                 return EntityHelper::ForEachFlow::Break;
             }
             return EntityHelper::ForEachFlow::NormalFlow;
@@ -104,13 +101,13 @@ void person_update_given_new_pos(int id, Transform& transform,
         const auto debug_mode_on =
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
         if (debug_mode_on) {
-            would_collide_x = false;
-            would_collide_z = false;
+            collided_entity_x = {};
+            collided_entity_z = {};
         }
-        if (!would_collide_x) {
+        if (!valid(collided_entity_x)) {
             transform.update_x(new_pos_x.x);
         }
-        if (!would_collide_z) {
+        if (!valid(collided_entity_z)) {
             transform.update_z(new_pos_z.z);
         }
 
@@ -122,55 +119,46 @@ void person_update_given_new_pos(int id, Transform& transform,
         // around each other
         const float tile_div_push_mod = TILESIZE / directional_push_modifier;
 
-        if (would_collide_x || would_collide_z) {
-            if (auto entity_x = collided_entity_x.lock()) {
-                // TODO remove this check since we can just put CanBePushed
-                // on the person entity and replace with a has<> check
-                if (auto person_ptr_x = dynamic_cast<Entity*>(entity_x.get())) {
-                    if (entity_x->has<CanBePushed>()) {
-                        CanBePushed& cbp = entity_x->get<CanBePushed>();
-                        const float random_jitter =
-                            randSign() * TILESIZE / 2.0f;
-                        if (facedir_x & Transform::FrontFaceDirection::LEFT) {
-                            cbp.update({
-                                cbp.pushed_force().x + tile_div_push_mod,
-                                cbp.pushed_force().y,
-                                cbp.pushed_force().z + random_jitter,
-                            });
-                        }
-                        if (facedir_x & Transform::FrontFaceDirection::RIGHT) {
-                            cbp.update({
-                                cbp.pushed_force().x - tile_div_push_mod,
-                                cbp.pushed_force().y,
-                                cbp.pushed_force().z + random_jitter,
-                            });
-                        }
+        if (valid(collided_entity_x) || valid(collided_entity_z)) {
+            if (valid(collided_entity_x)) {
+                Entity& entity_x = asE(collided_entity_x);
+                if (entity_x.has<CanBePushed>()) {
+                    CanBePushed& cbp = entity_x.get<CanBePushed>();
+                    const float random_jitter = randSign() * TILESIZE / 2.0f;
+                    if (facedir_x & Transform::FrontFaceDirection::LEFT) {
+                        cbp.update({
+                            cbp.pushed_force().x + tile_div_push_mod,
+                            cbp.pushed_force().y,
+                            cbp.pushed_force().z + random_jitter,
+                        });
+                    }
+                    if (facedir_x & Transform::FrontFaceDirection::RIGHT) {
+                        cbp.update({
+                            cbp.pushed_force().x - tile_div_push_mod,
+                            cbp.pushed_force().y,
+                            cbp.pushed_force().z + random_jitter,
+                        });
                     }
                 }
             }
-            if (auto entity_z = collided_entity_z.lock()) {
-                // TODO remove this check since we can just put CanBePushed
-                // on the person entity and replace with a has<> check
-                if (auto person_ptr_z = dynamic_cast<Entity*>(entity_z.get())) {
-                    if (entity_z->has<CanBePushed>()) {
-                        CanBePushed& cbp = entity_z->get<CanBePushed>();
-                        const float random_jitter =
-                            randSign() * TILESIZE / 2.0f;
-                        if (facedir_z &
-                            Transform::FrontFaceDirection::FORWARD) {
-                            cbp.update({
-                                cbp.pushed_force().x + random_jitter,
-                                cbp.pushed_force().y,
-                                cbp.pushed_force().z + tile_div_push_mod,
-                            });
-                        }
-                        if (facedir_z & Transform::FrontFaceDirection::BACK) {
-                            cbp.update({
-                                cbp.pushed_force().x + random_jitter,
-                                cbp.pushed_force().y,
-                                cbp.pushed_force().z - tile_div_push_mod,
-                            });
-                        }
+            if (valid(collided_entity_z)) {
+                Entity& entity_z = asE(collided_entity_z);
+                if (entity_z.has<CanBePushed>()) {
+                    CanBePushed& cbp = entity_z.get<CanBePushed>();
+                    const float random_jitter = randSign() * TILESIZE / 2.0f;
+                    if (facedir_z & Transform::FrontFaceDirection::FORWARD) {
+                        cbp.update({
+                            cbp.pushed_force().x + random_jitter,
+                            cbp.pushed_force().y,
+                            cbp.pushed_force().z + tile_div_push_mod,
+                        });
+                    }
+                    if (facedir_z & Transform::FrontFaceDirection::BACK) {
+                        cbp.update({
+                            cbp.pushed_force().x + random_jitter,
+                            cbp.pushed_force().y,
+                            cbp.pushed_force().z - tile_div_push_mod,
+                        });
                     }
                 }
             }
@@ -181,39 +169,37 @@ void person_update_given_new_pos(int id, Transform& transform,
 namespace input_process_manager {
 
 // return true if the item has collision and is currently collidable
-bool is_collidable(std::shared_ptr<Entity> entity,
-                   std::shared_ptr<Entity> other) {
-    if (!entity) return false;
-
+bool is_collidable(Entity& entity, OptEntity other) {
     // by default we disable collisions when you are holding something
     // since its generally inside your bounding box
-    if (entity->has<CanBeHeld>() && entity->get<CanBeHeld>().is_held()) {
+    if (entity.has<CanBeHeld>() && entity.get<CanBeHeld>().is_held()) {
         return false;
     }
 
     if (
         // checking for person update
-        other != nullptr &&
+        valid(other) &&
         // Entity is item and held by player
-        entity->has<IsItem>() &&
-        entity->get<IsItem>().is_held_by(EntityType::Player) &&
+        entity.has<IsItem>() &&
+        entity.get<IsItem>().is_held_by(EntityType::Player) &&
         // Entity is rope
-        check_type(*entity, EntityType::SodaSpout) &&
+        check_type(entity, EntityType::SodaSpout) &&
         // we are a player that is holding rope
-        other->has<CanHoldItem>() &&
-        other->get<CanHoldItem>().is_holding_item() &&
-        check_type(*other->get<CanHoldItem>().item(), EntityType::SodaSpout)) {
+        asE(other).has<CanHoldItem>() &&
+        asE(other).get<CanHoldItem>().is_holding_item() &&
+        check_type(*(asE(other).get<CanHoldItem>().item()),
+                   EntityType::SodaSpout)) {
         return false;
     }
 
-    if (entity->has<IsSolid>()) {
+    if (entity.has<IsSolid>()) {
         return true;
     }
 
     // TODO :BE: rename this since it no longer makes sense
     // if you are a ghost player
     // then you are collidable
-    if (entity->has<CanBeGhostPlayer>()) {
+    if (entity.has<CanBeGhostPlayer>()) {
         return true;
     }
     return false;
