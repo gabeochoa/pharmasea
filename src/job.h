@@ -112,6 +112,8 @@ struct Job {
 
     bool has_local_target() const { return local.has_value(); }
 
+    Entity& get_and_validate_entity(int id);
+
    private:
     State _run_job_tick(Entity& entity, float dt) {
         before_each_job_tick(entity, dt);

@@ -17,13 +17,13 @@
 
 [[nodiscard]] std::shared_ptr<Entity> HasWaitingQueue::person(int i) {
     EntityID id = ppl_in_line[i];
-    return EntityHelper::getEntityForID(id);
+    return EntityHelper::getEntityPtrForID(id);
 }
 
 [[nodiscard]] const std::shared_ptr<Entity> HasWaitingQueue::person(
     size_t i) const {
     EntityID id = ppl_in_line[i];
-    return EntityHelper::getEntityForID(id);
+    return EntityHelper::getEntityPtrForID(id);
 }
 
 HasWaitingQueue& HasWaitingQueue::add_customer(const Entity& customer) {
@@ -131,6 +131,12 @@ Job* Job::create_job_of_type(vec2 _start, vec2 _end, JobType job_type) {
 bool Job::is_at_position(const Entity& entity, vec2 position) {
     return vec::distance(entity.get<Transform>().as2(), position) <
            (TILESIZE / 2.f);
+}
+
+Entity& Job::get_and_validate_entity(int id) {
+    OptEntity opt_e = EntityHelper::getEntityForID(id);
+    VALIDATE(valid(opt_e), "entity with id did not exist");
+    return asE(opt_e);
 }
 
 Job::State Job::run_state_heading_to_start(Entity& entity, float dt) {
@@ -305,10 +311,11 @@ inline bool WIQ_can_move_up(const Entity& reg, const Entity& customer) {
 }
 
 void WaitInQueueJob::before_each_job_tick(Entity& entity, float) {
-    std::shared_ptr<Entity> reg = EntityHelper::getEntityForID(reg_id);
+    OptEntity reg = EntityHelper::getEntityForID(reg_id);
     // This runs before init so its possible theres no register at all
-    if (reg) {
-        entity.get<Transform>().turn_to_face_pos(reg->get<Transform>().as2());
+    if (valid(reg)) {
+        entity.get<Transform>().turn_to_face_pos(
+            asE(reg).get<Transform>().as2());
     }
 }
 
@@ -360,9 +367,7 @@ Job::State WaitInQueueJob::run_state_working_at_start(Entity& entity, float) {
     }
 
     VALIDATE(reg_id != -1, "workingatstart job should contain register");
-    std::shared_ptr<Entity> reg_ptr = EntityHelper::getEntityForID(reg_id);
-    VALIDATE(reg_ptr, "workingatstart job should contain register");
-    Entity& reg = *reg_ptr;
+    Entity& reg = get_and_validate_entity(reg_id);
 
     // Check the spot in front of us
     int cur_spot_in_line = WIQ_position_in_line(reg, entity);
@@ -397,9 +402,7 @@ Job::State WaitInQueueJob::run_state_working_at_start(Entity& entity, float) {
 
 Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
     VALIDATE(reg_id != -1, "workingatend job should contain register");
-    std::shared_ptr<Entity> reg_ptr = EntityHelper::getEntityForID(reg_id);
-    VALIDATE(reg_ptr, "workingatedn job should contain register");
-    Entity& reg = *reg_ptr;
+    Entity& reg = get_and_validate_entity(reg_id);
 
     // TODO safer way to do it?
     // we are at the front so turn it on
@@ -561,10 +564,11 @@ Job::State MoppingJob::run_state_initialize(Entity& entity, float) {
 
     VALIDATE(closest, "underlying job should contain vomit now");
     vom_id = closest->id;
-    std::shared_ptr<Entity> vom = EntityHelper::getEntityForID(vom_id);
-    VALIDATE(vom, "underlying job should contain vomit now");
+    OptEntity opt_vom = EntityHelper::getEntityForID(vom_id);
+    VALIDATE(valid(opt_vom), "underlying job should contain vomit now");
+    Entity& vom = asE(opt_vom);
 
-    start = vom->get<Transform>().as2();
+    start = vom.get<Transform>().as2();
     end = start;
 
     system_manager::logging_manager::announce(
@@ -574,21 +578,22 @@ Job::State MoppingJob::run_state_initialize(Entity& entity, float) {
 }
 
 Job::State MoppingJob::run_state_working_at_start(Entity& entity, float dt) {
-    std::shared_ptr<Entity> vom = EntityHelper::getEntityForID(vom_id);
-    VALIDATE(vom, "underlying job should contain vomit now");
-    if (!vom) {
+    VALIDATE(vom_id != -1, "underlying job should contain vomit now");
+
+    OptEntity opt_vom = EntityHelper::getEntityForID(vom_id);
+    if (!valid(opt_vom)) {
         system_manager::logging_manager::announce(
             entity, fmt::format("seems like someone beat me to it"));
         return (Job::State::HeadingToEnd);
     }
-
-    HasWork& vomWork = vom->get<HasWork>();
+    Entity& vom = asE(opt_vom);
+    HasWork& vomWork = vom.get<HasWork>();
 
     // do some work
-    vomWork.call(*vom, entity, dt);
+    vomWork.call(vom, entity, dt);
 
     // check if we did it
-    bool cleaned_up = vom->cleanup;
+    bool cleaned_up = vom.cleanup;
 
     if (cleaned_up) {
         system_manager::logging_manager::announce(

@@ -396,10 +396,18 @@ struct EntityHelper {
         return {};
     }
 
-    static std::shared_ptr<Entity> getEntityForID(EntityID id) {
+    static std::shared_ptr<Entity> getEntityPtrForID(EntityID id) {
         for (const auto& e : get_entities()) {
             if (!e) continue;
             if (e->id == id) return e;
+        }
+        return {};
+    }
+
+    static OptEntity getEntityForID(EntityID id) {
+        for (const auto& e : get_entities()) {
+            if (!e) continue;
+            if (e->id == id) return *e;
         }
         return {};
     }
