@@ -88,7 +88,7 @@ struct EntityHelper {
     static std::shared_ptr<Entity> getEntityAsSharedPtr(OptEntity entity) {
         if (!valid(entity)) return {};
         for (std::shared_ptr<Entity> current_entity : get_entities()) {
-            if (asE(entity).id == current_entity->id) return current_entity;
+            if (entity->id == current_entity->id) return current_entity;
         }
         return {};
     }
@@ -129,11 +129,11 @@ struct EntityHelper {
     }
 
     template<typename T>
-    static std::vector<std::shared_ptr<Entity>> getAllWithComponent() {
-        std::vector<std::shared_ptr<Entity>> matching;
+    static std::vector<RefEntity> getAllWithComponent() {
+        std::vector<RefEntity> matching;
         for (auto& e : get_entities()) {
             if (!e) continue;
-            if (e->has<T>()) matching.push_back(e);
+            if (e->has<T>()) matching.push_back(*e);
         }
         return matching;
     }

@@ -186,7 +186,33 @@ struct DebugOptions {
 };
 
 typedef std::reference_wrapper<Entity> RefEntity;
-typedef std::optional<std::reference_wrapper<Entity>> OptEntity;
+typedef std::optional<std::reference_wrapper<Entity>> OptEntityType;
+
+struct OptEntity {
+    OptEntityType data;
+
+    OptEntity() : data({}) {}
+    OptEntity(OptEntityType opt_e) : data(opt_e) {}
+    OptEntity(RefEntity _e) : data(_e) {}
+    OptEntity(Entity& _e) : data(_e) {}
+
+    bool has_value() const { return data.has_value(); }
+    bool valid() const { return has_value(); }
+
+    Entity* value() { return &(data.value().get()); }
+    Entity* operator*() { return value(); }
+    Entity* operator->() { return value(); }
+
+    const Entity* value() const { return &(data.value().get()); }
+    const Entity* operator*() const { return value(); }
+    const Entity* operator->() const { return value(); }
+
+    Entity& asE() { return data.value(); }
+
+    operator RefEntity() { return data.value(); }
+    operator RefEntity() const { return data.value(); }
+    operator bool() const { return valid(); }
+};
 
 namespace bitsery {
 template<typename S>
@@ -204,7 +230,7 @@ void serialize(S& s, OptEntity opt) {
 
 inline bool valid(OptEntity opte) { return opte.has_value(); }
 
-inline Entity& asE(OptEntity opte) { return opte.value(); }
+// inline Entity& asE(OptEntity opte) { return opte.asE(); }
 inline OptEntity asOpt(Entity& e) { return std::make_optional(std::ref(e)); }
 
 inline Entity& asE(RefEntity& refe) { return refe.get(); }

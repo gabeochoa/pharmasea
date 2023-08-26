@@ -40,7 +40,7 @@ inline void render_current_register_queue(float dt) {
                     // log_warn("register {} has null people in line", i);
                     continue;
                 }
-                Entity& entity = asE(opt_e);
+                Entity& entity = opt_e.asE();
                 if (entity.is_missing<CanOrderDrink>()) {
                     log_warn(
                         "register {} has people who cant order in line: {}", i,

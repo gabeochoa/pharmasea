@@ -334,33 +334,32 @@ struct helper {
         // ensure customers can make it to the register
         {
             // find customer
-            auto customer_opt =
+            OptEntity customer =
                 EntityHelper::getFirstMatching([](const Entity& e) -> bool {
                     return check_type(e, EntityType::CustomerSpawner);
                 });
             // TODO :DESIGN: we are validating this now, but we shouldnt have to
             // worry about this in the future
-            VALIDATE(valid(customer_opt),
+            VALIDATE(customer,
                      "map needs to have at least one customer spawn point");
-            auto& customer = asE(customer_opt);
 
-            auto reg_opt =
+            OptEntity reg =
                 EntityHelper::getFirstMatching([&customer](const Entity& e) {
                     if (!check_type(e, EntityType::Register)) return false;
                     // TODO :INFRA: need a better way to do this
                     // 0 makes sense but is the position of the entity, when
                     // its infront?
                     auto new_path =
-                        astar::find_path(customer.get<Transform>().as2(),
+                        astar::find_path(customer->get<Transform>().as2(),
                                          e.get<Transform>().tile_infront(1),
                                          std::bind(EntityHelper::isWalkable,
                                                    std::placeholders::_1));
                     return new_path.size() > 0;
                 });
 
-            VALIDATE(valid(reg_opt),
-                     "customer should be able to generate a path to the "
-                     "register");
+            VALIDATE(
+                reg,
+                "customer should be able to generate a path to the register");
         }
     }
 };

@@ -125,7 +125,7 @@ bool Job::is_at_position(const Entity& entity, vec2 position) {
 Entity& Job::get_and_validate_entity(int id) {
     OptEntity opt_e = EntityHelper::getEntityForID(id);
     VALIDATE(valid(opt_e), "entity with id did not exist");
-    return asE(opt_e);
+    return opt_e.asE();
 }
 
 Job::State Job::run_state_heading_to_start(Entity& entity, float dt) {
@@ -303,8 +303,7 @@ void WaitInQueueJob::before_each_job_tick(Entity& entity, float) {
     OptEntity reg = EntityHelper::getEntityForID(reg_id);
     // This runs before init so its possible theres no register at all
     if (valid(reg)) {
-        entity.get<Transform>().turn_to_face_pos(
-            asE(reg).get<Transform>().as2());
+        entity.get<Transform>().turn_to_face_pos(reg->get<Transform>().as2());
     }
 }
 
@@ -313,14 +312,14 @@ Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
 
     // Figure out which register to go to...
 
-    std::vector<std::shared_ptr<Entity>> all_registers =
+    std::vector<RefEntity> all_registers =
         EntityHelper::getAllWithComponent<HasWaitingQueue>();
 
     // Find the register with the least people on it
-    std::shared_ptr<Entity> best_target;
+    OptEntity best_target = {};
     int best_pos = -1;
-    for (auto r : all_registers) {
-        HasWaitingQueue& hwq = r->get<HasWaitingQueue>();
+    for (Entity& r : all_registers) {
+        HasWaitingQueue& hwq = r.get<HasWaitingQueue>();
         if (hwq.is_full()) continue;
         int rpos = hwq.get_next_pos();
         if (best_pos == -1 || rpos < best_pos) {
@@ -329,7 +328,7 @@ Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
         }
     }
 
-    if (!best_target) {
+    if (!valid(best_target)) {
         log_warn("Could not find a valid register");
         WIQ_wait_and_return(entity);
         return Job::State::Initialize;
@@ -340,10 +339,10 @@ Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
     // Store into our job data
     reg_id = best_target->id;
 
-    start = WIQ_add_to_queue_and_get_position(*best_target, entity);
+    start = WIQ_add_to_queue_and_get_position(best_target.asE(), entity);
     end = best_target->get<Transform>().tile_infront(1);
 
-    spot_in_line = WIQ_position_in_line(*best_target, entity);
+    spot_in_line = WIQ_position_in_line(best_target.asE(), entity);
 
     VALIDATE(spot_in_line >= 0, "customer should be in line right now");
 
@@ -541,26 +540,21 @@ Job::State MoppingJob::run_state_initialize(Entity& entity, float) {
     log_warn("starting a new mop job");
 
     // Find the closest vomit
-    OptEntity opt_closest =
+    OptEntity closest =
         EntityHelper::getClosestOfType(entity, EntityType::Vomit);
 
-    if (!valid(opt_closest)) {
+    if (!closest) {
         log_warn("Could not find any vomit");
         // TODO make this function name more generic / obvious its shared
         WIQ_wait_and_return(entity);
         return Job::State::Initialize;
     }
 
-    // TODO idk how i feel about this
-    // it seems like this is just doing some validation and probably we should
-    // make it more obvious what code is needed and what is not
-    Entity& closest = asE(opt_closest);
-    vom_id = closest.id;
-    OptEntity opt_vom = EntityHelper::getEntityForID(vom_id);
-    VALIDATE(valid(opt_vom), "underlying job should contain vomit now");
-    Entity& vom = asE(opt_vom);
+    vom_id = closest->id;
+    OptEntity vom = EntityHelper::getEntityForID(vom_id);
+    VALIDATE(vom, "underlying job should contain vomit now");
 
-    start = vom.get<Transform>().as2();
+    start = vom->get<Transform>().as2();
     end = start;
 
     system_manager::logging_manager::announce(
@@ -572,20 +566,19 @@ Job::State MoppingJob::run_state_initialize(Entity& entity, float) {
 Job::State MoppingJob::run_state_working_at_start(Entity& entity, float dt) {
     VALIDATE(vom_id != -1, "underlying job should contain vomit now");
 
-    OptEntity opt_vom = EntityHelper::getEntityForID(vom_id);
-    if (!valid(opt_vom)) {
+    OptEntity vom = EntityHelper::getEntityForID(vom_id);
+    if (!vom) {
         system_manager::logging_manager::announce(
             entity, fmt::format("seems like someone beat me to it"));
         return (Job::State::HeadingToEnd);
     }
-    Entity& vom = asE(opt_vom);
-    HasWork& vomWork = vom.get<HasWork>();
+    HasWork& vomWork = vom->get<HasWork>();
 
     // do some work
-    vomWork.call(vom, entity, dt);
+    vomWork.call(vom.asE(), entity, dt);
 
     // check if we did it
-    bool cleaned_up = vom.cleanup;
+    bool cleaned_up = vom->cleanup;
 
     if (cleaned_up) {
         system_manager::logging_manager::announce(

@@ -246,7 +246,7 @@ void highlight_facing_furniture(Entity& entity, float) {
         [](Entity& e) { return e.template has<CanBeHighlighted>(); });
     if (!valid(match)) return;
 
-    asE(match).get<CanBeHighlighted>().update(entity, true);
+    match->get<CanBeHighlighted>().update(entity, true);
 }
 
 // TODO We need like a temporary storage for this
@@ -310,19 +310,18 @@ void process_conveyer_items(Entity& entity, float dt) {
         return _conveyer_filter(furn);
     };
 
-    OptEntity opt_match =
-        is_ipp ? EntityHelper::getClosestMatchingEntity(
-                     transform.as2(), MAX_SEARCH_RANGE, _ipp_filter)
-               : EntityHelper::getClosestMatchingFurniture(transform, 1.f,
-                                                           _conveyer_filter);
+    OptEntity match = is_ipp
+                          ? EntityHelper::getClosestMatchingEntity(
+                                transform.as2(), MAX_SEARCH_RANGE, _ipp_filter)
+                          : EntityHelper::getClosestMatchingFurniture(
+                                transform, 1.f, _conveyer_filter);
 
     // no match means we can't continue, stay in the middle
-    if (!valid(opt_match)) {
+    if (!match) {
         conveysHeldItem.relative_item_pos = 0.f;
         canBeTakenFrom.update(true);
         return;
     }
-    Entity& match = asE(opt_match);
 
     if (is_ipp) {
         entity.get<IsPnumaticPipe>().recieving = false;
@@ -341,7 +340,7 @@ void process_conveyer_items(Entity& entity, float dt) {
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
-    CanHoldItem& matchCHI = match.get<CanHoldItem>();
+    CanHoldItem& matchCHI = match->get<CanHoldItem>();
     matchCHI.update(ourCHI.item());
 
     ourCHI.update(nullptr);
@@ -350,12 +349,12 @@ void process_conveyer_items(Entity& entity, float dt) {
     // reset so that the next item we get starts from beginning
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
 
-    if (match.has<CanBeTakenFrom>()) {
-        match.get<CanBeTakenFrom>().update(false);
+    if (match->has<CanBeTakenFrom>()) {
+        match->get<CanBeTakenFrom>().update(false);
     }
 
-    if (is_ipp && match.has<IsPnumaticPipe>()) {
-        match.get<IsPnumaticPipe>().recieving = true;
+    if (is_ipp && match->has<IsPnumaticPipe>()) {
+        match->get<IsPnumaticPipe>().recieving = true;
     }
 
     // TODO if we are pushing onto a conveyer, we need to make sure
@@ -411,10 +410,10 @@ void process_grabber_items(Entity& entity, float) {
         });
 
     // No furniture behind us
-    if (!valid(match)) return;
+    if (!match) return;
 
     // Grab from the furniture match
-    CanHoldItem& matchCHI = asE(match).get<CanHoldItem>();
+    CanHoldItem& matchCHI = match->get<CanHoldItem>();
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
     ourCHI.update(matchCHI.item());
@@ -1018,7 +1017,7 @@ void update_sophie(Entity& entity, float) {
         // about this in the future
         VALIDATE(valid(customer_opt),
                  "map needs to have at least one customer spawn point");
-        auto& customer = asE(customer_opt);
+        auto& customer = customer_opt.asE();
 
         // ensure customers can make it to the register
 
@@ -1088,18 +1087,18 @@ void process_has_rope(Entity& entity, float) {
         return;
     }
 
-    OptEntity opt_player;
+    OptEntity player;
     for (const std::shared_ptr<Entity>& e : SystemManager::get().oldAll) {
         if (!e) continue;
         if (!check_type(*e, EntityType::Player)) continue;
         auto i = e->get<CanHoldItem>().item();
         if (!i) continue;
         if (!check_type(*i, EntityType::SodaSpout)) continue;
-        opt_player = *e;
+        player = *e;
     }
-    if (!valid(opt_player)) return;
+    if (!valid(player)) return;
 
-    auto pos = asE(opt_player).get<Transform>().as2();
+    auto pos = player->get<Transform>().as2();
 
     // If we moved more then regenerate
     if (vec::distance(pos, hrti.goal()) > TILESIZE) {
@@ -1149,7 +1148,7 @@ void process_squirter(Entity& entity, float) {
     // so we got something, lets see if anyone around can give us something
     // to use
 
-    OptEntity opt_closest_furniture = EntityHelper::getClosestMatchingEntity(
+    OptEntity closest_furniture = EntityHelper::getClosestMatchingEntity(
         entity.get<Transform>().as2(), 1.25f, [](const Entity& f) {
             if (f.is_missing<CanHoldItem>()) return false;
             const CanHoldItem& fchi = f.get<CanHoldItem>();
@@ -1161,15 +1160,14 @@ void process_squirter(Entity& entity, float) {
             if (!check_type(*item, EntityType::Alcohol)) return false;
             return true;
         });
-    if (!valid(opt_closest_furniture)) return;
-    Entity& closest_furniture = asE(opt_closest_furniture);
+    if (!closest_furniture) return;
 
     std::shared_ptr<Entity> drink = sqCHI.item();
-    std::shared_ptr<Item> item = closest_furniture.get<CanHoldItem>().item();
+    std::shared_ptr<Item> item = closest_furniture->get<CanHoldItem>().item();
 
     bool cleanup = items::_add_ingredient_to_drink_NO_VALIDATION(*drink, *item);
     if (cleanup) {
-        closest_furniture.get<CanHoldItem>().update(nullptr);
+        closest_furniture->get<CanHoldItem>().update(nullptr);
     }
 }
 
@@ -1195,14 +1193,14 @@ void process_pnumatic_pipe_pairing(Entity& entity, float) {
 
     if (ipp.has_pair()) return;
 
-    for (auto other : EntityHelper::getAllWithComponent<IsPnumaticPipe>()) {
-        if (other->cleanup) continue;
-        if (other->id == entity.id) continue;
-        IsPnumaticPipe& otherpp = other->get<IsPnumaticPipe>();
+    for (Entity& other : EntityHelper::getAllWithComponent<IsPnumaticPipe>()) {
+        if (other.cleanup) continue;
+        if (other.id == entity.id) continue;
+        IsPnumaticPipe& otherpp = other.get<IsPnumaticPipe>();
         if (otherpp.has_pair()) continue;
 
         otherpp.paired_id = entity.id;
-        ipp.paired_id = other->id;
+        ipp.paired_id = other.id;
         break;
     }
     // still dont have a pair, we probably just have an odd number
