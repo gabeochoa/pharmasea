@@ -5,6 +5,7 @@
 #include "base_component.h"
 
 constexpr int max_queue_size = 3;
+typedef int EntityID;
 
 struct HasWaitingQueue : public BaseComponent {
     virtual ~HasWaitingQueue() {}
@@ -16,17 +17,16 @@ struct HasWaitingQueue : public BaseComponent {
     [[nodiscard]] bool has_space() const {
         return next_line_position < max_queue_size;
     }
-    [[nodiscard]] std::shared_ptr<Entity> person(int i) {
-        return ppl_in_line[i];
-    }
+    [[nodiscard]] std::shared_ptr<Entity> person(int i);
 
-    [[nodiscard]] const std::shared_ptr<Entity> person(size_t i) const {
-        return ppl_in_line[i];
+    [[nodiscard]] const std::shared_ptr<Entity> person(size_t i) const;
+    [[nodiscard]] bool has_person_in_position(size_t i) const {
+        return (ppl_in_line[i] != -1);
     }
 
     void clear() {
         for (std::size_t i = 0; i < max_queue_size; ++i) {
-            ppl_in_line[i] = nullptr;
+            ppl_in_line[i] = -1;
         }
         next_line_position = 0;
     }
@@ -45,10 +45,10 @@ struct HasWaitingQueue : public BaseComponent {
     // These impl are in job.cpp
     [[nodiscard]] bool matching_id(int id, int i) const;
     [[nodiscard]] int has_matching_person(int id) const;
-    HasWaitingQueue& add_customer(const std::shared_ptr<Entity>& customer);
+    HasWaitingQueue& add_customer(const Entity& customer);
 
    private:
-    std::array<std::shared_ptr<Entity>, max_queue_size> ppl_in_line;
+    std::array<EntityID, max_queue_size> ppl_in_line;
     int next_line_position = 0;
 
     // These impl are in job.cpp
@@ -60,6 +60,6 @@ struct HasWaitingQueue : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         s.value4b(next_line_position);
-        s.container(ppl_in_line);
+        s.container4b(ppl_in_line);
     }
 };

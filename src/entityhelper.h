@@ -20,6 +20,7 @@
 #include "engine/statemanager.h"
 #include "entity.h"
 #include "entity_makers.h"
+#include "job.h"
 #include "strings.h"
 // TODO :BE: eventually move to input manager but for now has to be in here
 // to prevent circular includes
@@ -395,10 +396,29 @@ struct EntityHelper {
         return {};
     }
 
+    static std::shared_ptr<Entity> getEntityForID(EntityID id) {
+        for (const auto& e : get_entities()) {
+            if (!e) continue;
+            if (e->id == id) return e;
+        }
+        return {};
+    }
+
     static std::shared_ptr<Entity> getClosestOfType(
         const std::shared_ptr<Entity>& entity, const EntityType& type,
         float range = 100.f) {
         const Transform& transform = entity->get<Transform>();
+        return EntityHelper::getClosestMatchingEntity<Entity>(
+            transform.as2(), range,
+            [type](const std::shared_ptr<Entity> entity) {
+                return check_type(*entity, type);
+            });
+    }
+
+    static std::shared_ptr<Entity> getClosestOfType(const Entity& entity,
+                                                    const EntityType& type,
+                                                    float range = 100.f) {
+        const Transform& transform = entity.get<Transform>();
         return EntityHelper::getClosestMatchingEntity<Entity>(
             transform.as2(), range,
             [type](const std::shared_ptr<Entity> entity) {

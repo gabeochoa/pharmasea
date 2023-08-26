@@ -70,7 +70,7 @@ struct CanPerformJob : public BaseComponent {
 
     void run_tick(const std::shared_ptr<Entity>& entity, float dt) {
         if (needs_job()) return;
-        current_job->run_job_tick(entity, dt);
+        current_job->run_job_tick(*entity, dt);
     }
 
     void for_each_path_location(std::function<void(vec2)> cb) const {
