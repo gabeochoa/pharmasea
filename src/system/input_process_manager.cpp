@@ -19,7 +19,7 @@
 #include "../components/responds_to_user_input.h"
 #include "../components/transform.h"
 #include "../entity.h"
-#include "../entityhelper.h"
+#include "../entity_helper.h"
 
 namespace system_manager {
 

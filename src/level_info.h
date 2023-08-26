@@ -2,8 +2,8 @@
 #pragma once
 
 #include "entity.h"
+#include "entity_helper.h"
 #include "entity_makers.h"
-#include "entityhelper.h"
 #include "system/system_manager.h"
 
 constexpr int MIN_MAP_SIZE = 10;

@@ -6,7 +6,7 @@
 #include "../components/has_waiting_queue.h"
 #include "../engine/ui.h"
 #include "../entity.h"
-#include "../entityhelper.h"
+#include "../entity_helper.h"
 
 namespace system_manager {
 namespace ui {

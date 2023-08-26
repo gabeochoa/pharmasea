@@ -10,7 +10,7 @@
 #include "../components/has_timer.h"
 #include "../components/transform.h"
 #include "../entity.h"
-#include "../entityhelper.h"
+#include "../entity_helper.h"
 #include "../vendor_include.h"
 #include "logging_system.h"
 

@@ -6,7 +6,7 @@
 
 #include "engine/astar.h"
 #include "engine/bitset_utils.h"
-#include "entityhelper.h"
+#include "entity_helper.h"
 #include "strings.h"
 
 namespace wfc {

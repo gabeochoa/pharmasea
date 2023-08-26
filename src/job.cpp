@@ -11,7 +11,7 @@
 #include "engine/assert.h"
 #include "engine/astar.h"
 #include "entity.h"
-#include "entityhelper.h"
+#include "entity_helper.h"
 #include "globals.h"
 #include "system/logging_system.h"
 

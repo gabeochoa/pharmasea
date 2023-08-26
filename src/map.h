@@ -7,7 +7,7 @@
 #include "engine/log.h"
 #include "external_include.h"
 //
-#include "entityhelper.h"
+#include "entity_helper.h"
 #include "level_info.h"
 #include "system/system_manager.h"
 

@@ -1,7 +1,7 @@
 
 #include "../engine/astar.h"
 #include "../entity.h"
-#include "../entityhelper.h"
+#include "../entity_helper.h"
 #include "../level_info.h"
 #include "../map_generation.h"
 

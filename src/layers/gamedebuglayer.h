@@ -11,7 +11,7 @@
 #include "../camera.h"
 #include "../engine/layer.h"
 #include "../engine/statemanager.h"
-#include "../entityhelper.h"
+#include "../entity_helper.h"
 #include "raylib.h"
 
 struct GameDebugLayer : public Layer {

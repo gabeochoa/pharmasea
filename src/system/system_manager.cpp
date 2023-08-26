@@ -53,7 +53,7 @@
 #include "../engine/astar.h"
 #include "../engine/tracy.h"
 #include "../entity.h"
-#include "../entityhelper.h"
+#include "../entity_helper.h"
 #include "../map.h"
 #include "../network/server.h"
 #include "input_process_manager.h"
