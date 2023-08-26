@@ -293,7 +293,7 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
                               DebugOptions{.type = EntityType::MapRandomizer},
                               pos, ui::color::baby_blue, ui::color::baby_pink);
 
-    map_randomizer.addComponent<HasName>().update("default seed");
+    map_randomizer.addComponent<HasName>().update("");
 
     map_randomizer.get<CanBeHighlighted>().set_on_change(
         [](Entity&, bool is_highlighted) {
