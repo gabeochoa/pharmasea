@@ -176,14 +176,6 @@ OptEntity EntityHelper::getClosestMatchingFurniture(
         transform.as2(), range, transform.face_direction(), filter);
 }
 
-std::shared_ptr<Entity> EntityHelper::getEntityPtrForID(EntityID id) {
-    for (const auto& e : get_entities()) {
-        if (!e) continue;
-        if (e->id == id) return e;
-    }
-    return {};
-}
-
 OptEntity EntityHelper::getEntityForID(EntityID id) {
     for (const auto& e : get_entities()) {
         if (!e) continue;

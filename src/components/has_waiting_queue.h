@@ -17,9 +17,9 @@ struct HasWaitingQueue : public BaseComponent {
     [[nodiscard]] bool has_space() const {
         return next_line_position < max_queue_size;
     }
-    [[nodiscard]] std::shared_ptr<Entity> person(int i);
+    [[nodiscard]] EntityID person(int i) const { return ppl_in_line[i]; }
+    [[nodiscard]] EntityID person(size_t i) const { return ppl_in_line[i]; }
 
-    [[nodiscard]] const std::shared_ptr<Entity> person(size_t i) const;
     [[nodiscard]] bool has_person_in_position(size_t i) const {
         return (ppl_in_line[i] != -1);
     }

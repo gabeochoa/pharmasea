@@ -34,12 +34,13 @@ inline void render_current_register_queue(float dt) {
             const HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
 
             for (size_t index = 0; index < hwq.num_in_queue(); index++) {
-                auto e_ptr = hwq.person(index);
-                if (!e_ptr) {
+                EntityID e_id = hwq.person(index);
+                OptEntity opt_e = EntityHelper::getEntityForID(e_id);
+                if (!valid(opt_e)) {
                     // log_warn("register {} has null people in line", i);
                     continue;
                 }
-                Entity& entity = *e_ptr;
+                Entity& entity = asE(opt_e);
                 if (entity.is_missing<CanOrderDrink>()) {
                     log_warn(
                         "register {} has people who cant order in line: {}", i,

@@ -15,17 +15,6 @@
 #include "globals.h"
 #include "system/logging_system.h"
 
-[[nodiscard]] std::shared_ptr<Entity> HasWaitingQueue::person(int i) {
-    EntityID id = ppl_in_line[i];
-    return EntityHelper::getEntityPtrForID(id);
-}
-
-[[nodiscard]] const std::shared_ptr<Entity> HasWaitingQueue::person(
-    size_t i) const {
-    EntityID id = ppl_in_line[i];
-    return EntityHelper::getEntityPtrForID(id);
-}
-
 HasWaitingQueue& HasWaitingQueue::add_customer(const Entity& customer) {
     log_info("we are adding {} {} to the line in position {}", customer.id,
              customer.get<DebugName>().name(), next_line_position);

@@ -99,7 +99,6 @@ struct EntityHelper {
         const Transform& transform, float range,
         std::function<bool(RefEntity)> filter);
 
-    static std::shared_ptr<Entity> getEntityPtrForID(EntityID id);
     static OptEntity getEntityForID(EntityID id);
     static OptEntity getClosestOfType(const std::shared_ptr<Entity>& entity,
                                       const EntityType& type,
