@@ -312,7 +312,7 @@ void process_conveyer_items(Entity& entity, float dt) {
             return _conveyer_filter(furn);
         };
 
-    auto match = is_ipp ? EntityHelper::getClosestMatchingEntity<Furniture>(
+    auto match = is_ipp ? EntityHelper::getClosestMatchingEntity(
                               transform.as2(), MAX_SEARCH_RANGE, _ipp_filter)
                         : EntityHelper::getClosestMatchingFurniture(
                               transform, 1.f, _conveyer_filter);
@@ -387,7 +387,7 @@ void process_grabber_items(Entity& entity, float) {
 
     auto behind =
         transform.offsetFaceDirection(transform.face_direction(), 180);
-    auto match = EntityHelper::getMatchingEntityInFront<Furniture>(
+    auto match = EntityHelper::getMatchingEntityInFront(
         transform.as2(), 1.f, behind,
         [&entity](std::shared_ptr<Furniture> furn) {
             // cant be us
@@ -1156,7 +1156,7 @@ void process_squirter(Entity& entity, float) {
     // to use
 
     std::shared_ptr<Furniture> closest_furniture =
-        EntityHelper::getClosestMatchingEntity<Furniture>(
+        EntityHelper::getClosestMatchingEntity(
             entity.get<Transform>().as2(), 1.25f,
             [](std::shared_ptr<Furniture> f) {
                 if (f->is_missing<CanHoldItem>()) return false;

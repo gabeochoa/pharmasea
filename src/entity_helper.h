@@ -115,37 +115,32 @@ struct EntityHelper {
     static void forEachEntity(
         std::function<ForEachFlow(std::shared_ptr<Entity>&)> cb);
 
-    // TODO cant move lower
-    template<typename T>
-    static constexpr std::vector<std::shared_ptr<T>> getFilteredEntitiesInRange(
+    static std::vector<std::shared_ptr<Entity>> getFilteredEntitiesInRange(
         vec2 pos, float range,
-        std::function<bool(std::shared_ptr<T>)> filter  //
-    ) {
-        std::vector<std::shared_ptr<T>> matching;
+        std::function<bool(std::shared_ptr<Entity>)> filter) {
+        std::vector<std::shared_ptr<Entity>> matching;
         for (auto& e : get_entities()) {
-            auto s = dynamic_pointer_cast<T>(e);
-            if (!s) continue;
-            if (!filter(s)) continue;
+            if (!e) continue;
+            if (!filter(e)) continue;
             if (vec::distance(pos, e->get<Transform>().as2()) < range) {
-                matching.push_back(s);
+                matching.push_back(e);
             }
         }
         return matching;
     }
 
     // TODO cant move lower
-    template<typename T>
-    static constexpr std::vector<std::shared_ptr<T>> getEntitiesInRange(
+    static std::vector<std::shared_ptr<Entity>> getEntitiesInRange(
         vec2 pos, float range) {
-        std::vector<std::shared_ptr<T>> matching;
-        return getFilteredEntitiesInRange<T>(pos, range,
-                                             [](auto&&) { return true; });
+        std::vector<std::shared_ptr<Entity>> matching;
+        return getFilteredEntitiesInRange(pos, range,
+                                          [](auto&&) { return true; });
     }
 
     static OptEntity getFirstMatching(std::function<bool(RefEntity)> filter);
     static std::vector<std::shared_ptr<Entity>> getEntitiesInPosition(
         vec2 pos) {
-        return getEntitiesInRange<Entity>(pos, TILESIZE);
+        return getEntitiesInRange(pos, TILESIZE);
     }
 
     static std::shared_ptr<Entity> getClosestMatchingFurniture(
@@ -182,12 +177,11 @@ struct EntityHelper {
         return nullptr;
     }
 
-    template<typename T>
-    static std::shared_ptr<T> getMatchingEntityInFront(
-        vec2 pos,                                       //
-        float range,                                    //
-        Transform::FrontFaceDirection direction,        //
-        std::function<bool(std::shared_ptr<T>)> filter  //
+    static std::shared_ptr<Entity> getMatchingEntityInFront(
+        vec2 pos,                                            //
+        float range,                                         //
+        Transform::FrontFaceDirection direction,             //
+        std::function<bool(std::shared_ptr<Entity>)> filter  //
     ) {
         TRACY_ZONE_SCOPED;
         VALIDATE(range > 0,
@@ -231,19 +225,18 @@ struct EntityHelper {
         return {};
     }
 
-    template<typename T>
-    static constexpr std::shared_ptr<T> getClosestMatchingEntity(
-        vec2 pos, float range, std::function<bool(std::shared_ptr<T>)> filter) {
+    static std::shared_ptr<Entity> getClosestMatchingEntity(
+        vec2 pos, float range,
+        std::function<bool(std::shared_ptr<Entity>)> filter) {
         float best_distance = range;
-        std::shared_ptr<T> best_so_far;
+        std::shared_ptr<Entity> best_so_far;
         for (auto& e : get_entities()) {
-            auto s = dynamic_pointer_cast<T>(e);
-            if (!s) continue;
-            if (!filter(s)) continue;
+            if (!e) continue;
+            if (!filter(e)) continue;
             float d = vec::distance(pos, e->get<Transform>().as2());
             if (d > range) continue;
             if (d < best_distance) {
-                best_so_far = s;
+                best_so_far = e;
                 best_distance = d;
             }
         }
@@ -254,7 +247,7 @@ struct EntityHelper {
     static std::shared_ptr<Entity> getClosestWithComponent(
         const std::shared_ptr<Entity>& entity, float range) {
         const Transform& transform = entity->get<Transform>();
-        return EntityHelper::getClosestMatchingEntity<Furniture>(
+        return EntityHelper::getClosestMatchingEntity(
             transform.as2(), range, [](const std::shared_ptr<Entity> entity) {
                 return entity->has<T>();
             });

@@ -170,7 +170,7 @@ std::shared_ptr<Entity> EntityHelper::getClosestMatchingFurniture(
     const Transform& transform, float range,
     std::function<bool(std::shared_ptr<Furniture>)> filter) {
     // TODO :BE: should this really be using this?
-    return EntityHelper::getMatchingEntityInFront<Furniture>(
+    return EntityHelper::getMatchingEntityInFront(
         transform.as2(), range, transform.face_direction(), filter);
 }
 
@@ -194,7 +194,7 @@ std::shared_ptr<Entity> EntityHelper::getClosestOfType(
     const std::shared_ptr<Entity>& entity, const EntityType& type,
     float range) {
     const Transform& transform = entity->get<Transform>();
-    return EntityHelper::getClosestMatchingEntity<Entity>(
+    return EntityHelper::getClosestMatchingEntity(
         transform.as2(), range, [type](const std::shared_ptr<Entity> entity) {
             return check_type(*entity, type);
         });
@@ -204,7 +204,7 @@ std::shared_ptr<Entity> EntityHelper::getClosestOfType(const Entity& entity,
                                                        const EntityType& type,
                                                        float range) {
     const Transform& transform = entity.get<Transform>();
-    return EntityHelper::getClosestMatchingEntity<Entity>(
+    return EntityHelper::getClosestMatchingEntity(
         transform.as2(), range, [type](const std::shared_ptr<Entity> entity) {
             return check_type(*entity, type);
         });

@@ -726,14 +726,13 @@ void handle_grab(const std::shared_ptr<Entity>& player) {
     // Handles the non-furniture grabbing case
     const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
-    std::shared_ptr<Item> closest_item =
-        EntityHelper::getClosestMatchingEntity<Item>(
-            player->get<Transform>().as2(), TILESIZE * cho.reach(),
-            [](const std::shared_ptr<Item> entity) {
-                if (entity->is_missing<IsItem>()) return false;
-                if (entity->get<IsItem>().is_held()) return false;
-                return true;
-            });
+    std::shared_ptr<Item> closest_item = EntityHelper::getClosestMatchingEntity(
+        player->get<Transform>().as2(), TILESIZE * cho.reach(),
+        [](const std::shared_ptr<Item> entity) {
+            if (entity->is_missing<IsItem>()) return false;
+            if (entity->get<IsItem>().is_held()) return false;
+            return true;
+        });
 
     // nothing found
     if (closest_item == nullptr) return;
