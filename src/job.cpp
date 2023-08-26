@@ -552,18 +552,21 @@ Job::State MoppingJob::run_state_initialize(Entity& entity, float) {
     log_warn("starting a new mop job");
 
     // Find the closest vomit
-    std::shared_ptr<Entity> closest =
+    OptEntity opt_closest =
         EntityHelper::getClosestOfType(entity, EntityType::Vomit);
 
-    if (!closest) {
+    if (!valid(opt_closest)) {
         log_warn("Could not find any vomit");
         // TODO make this function name more generic / obvious its shared
         WIQ_wait_and_return(entity);
         return Job::State::Initialize;
     }
 
-    VALIDATE(closest, "underlying job should contain vomit now");
-    vom_id = closest->id;
+    // TODO idk how i feel about this
+    // it seems like this is just doing some validation and probably we should
+    // make it more obvious what code is needed and what is not
+    Entity& closest = asE(opt_closest);
+    vom_id = closest.id;
     OptEntity opt_vom = EntityHelper::getEntityForID(vom_id);
     VALIDATE(valid(opt_vom), "underlying job should contain vomit now");
     Entity& vom = asE(opt_vom);

@@ -168,9 +168,9 @@ OptEntity EntityHelper::getFirstMatching(
     return {};
 }
 
-std::shared_ptr<Entity> EntityHelper::getClosestMatchingFurniture(
+OptEntity EntityHelper::getClosestMatchingFurniture(
     const Transform& transform, float range,
-    std::function<bool(std::shared_ptr<Furniture>)> filter) {
+    std::function<bool(RefEntity)> filter) {
     // TODO :BE: should this really be using this?
     return EntityHelper::getMatchingEntityInFront(
         transform.as2(), range, transform.face_direction(), filter);
@@ -192,33 +192,28 @@ OptEntity EntityHelper::getEntityForID(EntityID id) {
     return {};
 }
 
-std::shared_ptr<Entity> EntityHelper::getClosestOfType(
-    const std::shared_ptr<Entity>& entity, const EntityType& type,
-    float range) {
+OptEntity EntityHelper::getClosestOfType(const std::shared_ptr<Entity>& entity,
+                                         const EntityType& type, float range) {
     const Transform& transform = entity->get<Transform>();
     return EntityHelper::getClosestMatchingEntity(
-        transform.as2(), range, [type](const std::shared_ptr<Entity> entity) {
-            return check_type(*entity, type);
-        });
+        transform.as2(), range,
+        [type](const RefEntity entity) { return check_type(entity, type); });
 }
 
-std::shared_ptr<Entity> EntityHelper::getClosestOfType(const Entity& entity,
-                                                       const EntityType& type,
-                                                       float range) {
+OptEntity EntityHelper::getClosestOfType(const Entity& entity,
+                                         const EntityType& type, float range) {
     const Transform& transform = entity.get<Transform>();
     return EntityHelper::getClosestMatchingEntity(
-        transform.as2(), range, [type](const std::shared_ptr<Entity> entity) {
-            return check_type(*entity, type);
-        });
+        transform.as2(), range,
+        [type](const RefEntity entity) { return check_type(entity, type); });
 }
 
 // TODO :BE: change other debugname filter guys to this
-std::vector<std::shared_ptr<Entity>> EntityHelper::getAllWithType(
-    const EntityType& type) {
-    std::vector<std::shared_ptr<Entity>> matching;
+std::vector<RefEntity> EntityHelper::getAllWithType(const EntityType& type) {
+    std::vector<RefEntity> matching;
     for (std::shared_ptr<Entity> e : get_entities()) {
         if (!e) continue;
-        if (check_type(*e, type)) matching.push_back(e);
+        if (check_type(*e, type)) matching.push_back(*e);
     }
     return matching;
 }
@@ -232,31 +227,28 @@ bool EntityHelper::doesAnyExistWithType(const EntityType& type) {
     return false;
 }
 
-std::vector<std::shared_ptr<Entity>> EntityHelper::getFilteredEntitiesInRange(
-    vec2 pos, float range,
-    std::function<bool(std::shared_ptr<Entity>)> filter) {
-    std::vector<std::shared_ptr<Entity>> matching;
+std::vector<RefEntity> EntityHelper::getFilteredEntitiesInRange(
+    vec2 pos, float range, std::function<bool(RefEntity)> filter) {
+    std::vector<RefEntity> matching;
     for (auto& e : get_entities()) {
         if (!e) continue;
-        if (!filter(e)) continue;
+        if (!filter(*e)) continue;
         if (vec::distance(pos, e->get<Transform>().as2()) < range) {
-            matching.push_back(e);
+            matching.push_back(*e);
         }
     }
     return matching;
 }
 
-std::vector<std::shared_ptr<Entity>> EntityHelper::getEntitiesInRange(
-    vec2 pos, float range) {
-    std::vector<std::shared_ptr<Entity>> matching;
+std::vector<RefEntity> EntityHelper::getEntitiesInRange(vec2 pos, float range) {
     return getFilteredEntitiesInRange(pos, range, [](auto&&) { return true; });
 }
 
-std::shared_ptr<Entity> EntityHelper::getMatchingEntityInFront(
-    vec2 pos,                                            //
-    float range,                                         //
-    Transform::FrontFaceDirection direction,             //
-    std::function<bool(std::shared_ptr<Entity>)> filter  //
+OptEntity EntityHelper::getMatchingEntityInFront(
+    vec2 pos,                                 //
+    float range,                              //
+    Transform::FrontFaceDirection direction,  //
+    std::function<bool(RefEntity)> filter     //
 ) {
     TRACY_ZONE_SCOPED;
     VALIDATE(range > 0,
@@ -269,7 +261,7 @@ std::shared_ptr<Entity> EntityHelper::getMatchingEntityInFront(
 
         for (std::shared_ptr<Entity> current_entity : get_entities()) {
             if (!current_entity) continue;
-            if (!filter(current_entity)) continue;
+            if (!filter(*current_entity)) continue;
 
             // all entitites should have transforms but just in case
             if (current_entity->template is_missing<Transform>()) {
@@ -291,7 +283,7 @@ std::shared_ptr<Entity> EntityHelper::getMatchingEntityInFront(
 
             // TODO :BE: add a snap_as2() function to transform
             if (vec::to2(transform.snap_position()) == vec::snap(tile)) {
-                return current_entity;
+                return *current_entity;
             }
         }
         cur_step++;
@@ -299,18 +291,17 @@ std::shared_ptr<Entity> EntityHelper::getMatchingEntityInFront(
     return {};
 }
 
-std::shared_ptr<Entity> EntityHelper::getClosestMatchingEntity(
-    vec2 pos, float range,
-    std::function<bool(std::shared_ptr<Entity>)> filter) {
+OptEntity EntityHelper::getClosestMatchingEntity(
+    vec2 pos, float range, std::function<bool(RefEntity)> filter) {
     float best_distance = range;
-    std::shared_ptr<Entity> best_so_far;
+    OptEntity best_so_far = {};
     for (auto& e : get_entities()) {
         if (!e) continue;
-        if (!filter(e)) continue;
+        if (!filter(*e)) continue;
         float d = vec::distance(pos, e->get<Transform>().as2());
         if (d > range) continue;
         if (d < best_distance) {
-            best_so_far = e;
+            best_so_far = *e;
             best_distance = d;
         }
     }

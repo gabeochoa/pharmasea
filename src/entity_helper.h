@@ -24,6 +24,7 @@
 #include "strings.h"
 
 typedef std::vector<std::shared_ptr<Entity>> Entities;
+typedef std::vector<RefEntity> RefEntities;
 extern Entities client_entities_DO_NOT_USE;
 extern Entities server_entities_DO_NOT_USE;
 
@@ -74,49 +75,54 @@ struct EntityHelper {
     static void forEachEntity(
         std::function<ForEachFlow(std::shared_ptr<Entity>&)> cb);
 
-    static std::vector<std::shared_ptr<Entity>> getFilteredEntitiesInRange(
-        vec2 pos, float range,
-        std::function<bool(std::shared_ptr<Entity>)> filter);
+    static std::vector<RefEntity> getFilteredEntitiesInRange(
+        vec2 pos, float range, std::function<bool(RefEntity)> filter);
 
-    static std::vector<std::shared_ptr<Entity>> getEntitiesInRange(vec2 pos,
-                                                                   float range);
+    static std::vector<RefEntity> getEntitiesInRange(vec2 pos, float range);
 
     static OptEntity getFirstMatching(std::function<bool(RefEntity)> filter);
-    static std::vector<std::shared_ptr<Entity>> getEntitiesInPosition(
-        vec2 pos) {
+
+    static std::vector<RefEntity> getEntitiesInPosition(vec2 pos) {
         return getEntitiesInRange(pos, TILESIZE);
     }
 
-    static std::shared_ptr<Entity> getClosestMatchingFurniture(
+    // TODO exists as a conversion for things that need shared_ptr right now
+    static std::shared_ptr<Entity> getEntityAsSharedPtr(OptEntity entity) {
+        if (!valid(entity)) return {};
+        for (std::shared_ptr<Entity> current_entity : get_entities()) {
+            if (asE(entity).id == current_entity->id) return current_entity;
+        }
+        return {};
+    }
+
+    static OptEntity getClosestMatchingFurniture(
         const Transform& transform, float range,
-        std::function<bool(std::shared_ptr<Furniture>)> filter);
+        std::function<bool(RefEntity)> filter);
 
     static std::shared_ptr<Entity> getEntityPtrForID(EntityID id);
     static OptEntity getEntityForID(EntityID id);
-    static std::shared_ptr<Entity> getClosestOfType(
-        const std::shared_ptr<Entity>& entity, const EntityType& type,
-        float range = 100.f);
+    static OptEntity getClosestOfType(const std::shared_ptr<Entity>& entity,
+                                      const EntityType& type,
+                                      float range = 100.f);
 
-    static std::shared_ptr<Entity> getClosestOfType(const Entity& entity,
-                                                    const EntityType& type,
-                                                    float range = 100.f);
+    static OptEntity getClosestOfType(const Entity& entity,
+                                      const EntityType& type,
+                                      float range = 100.f);
 
     // TODO :BE: change other debugname filter guys to this
-    static std::vector<std::shared_ptr<Entity>> getAllWithType(
-        const EntityType& type);
+    static std::vector<RefEntity> getAllWithType(const EntityType& type);
 
     static bool doesAnyExistWithType(const EntityType& type);
 
-    static std::shared_ptr<Entity> getMatchingEntityInFront(
-        vec2 pos,                                            //
-        float range,                                         //
-        Transform::FrontFaceDirection direction,             //
-        std::function<bool(std::shared_ptr<Entity>)> filter  //
+    static OptEntity getMatchingEntityInFront(
+        vec2 pos,                                 //
+        float range,                              //
+        Transform::FrontFaceDirection direction,  //
+        std::function<bool(RefEntity)> filter     //
     );
 
-    static std::shared_ptr<Entity> getClosestMatchingEntity(
-        vec2 pos, float range,
-        std::function<bool(std::shared_ptr<Entity>)> filter);
+    static OptEntity getClosestMatchingEntity(
+        vec2 pos, float range, std::function<bool(RefEntity)> filter);
 
     template<typename T>
     static std::shared_ptr<Entity> getClosestWithComponent(

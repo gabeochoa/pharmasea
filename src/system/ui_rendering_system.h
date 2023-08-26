@@ -24,14 +24,14 @@ inline void render_current_register_queue(float dt) {
     if (refresh_time < 0) {
         refresh_time = 2.f;
 
-        const auto registers =
+        const std::vector<RefEntity> registers =
             EntityHelper::getAllWithType(EntityType::Register);
 
         orders_to_render.clear();
 
         for (size_t i = 0; i < registers.size(); i++) {
-            auto reg = registers[i];
-            const HasWaitingQueue& hwq = reg->get<HasWaitingQueue>();
+            Entity& reg = registers[i];
+            const HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
 
             for (size_t index = 0; index < hwq.num_in_queue(); index++) {
                 auto e_ptr = hwq.person(index);

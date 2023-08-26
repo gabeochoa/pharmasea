@@ -241,12 +241,12 @@ void highlight_facing_furniture(Entity& entity, float) {
     // TODO add a player reach component
     const CanHighlightOthers& cho = entity.get<CanHighlightOthers>();
 
-    auto match = EntityHelper::getClosestMatchingFurniture(
+    OptEntity match = EntityHelper::getClosestMatchingFurniture(
         transform, cho.reach(),
-        [](auto e) { return e->template has<CanBeHighlighted>(); });
-    if (!match) return;
+        [](Entity& e) { return e.template has<CanBeHighlighted>(); });
+    if (!valid(match)) return;
 
-    match->get<CanBeHighlighted>().update(entity, true);
+    asE(match).get<CanBeHighlighted>().update(entity, true);
 }
 
 // TODO We need like a temporary storage for this
@@ -285,13 +285,12 @@ void process_conveyer_items(Entity& entity, float dt) {
 
     bool is_ipp = entity.has<IsPnumaticPipe>();
 
-    const auto _conveyer_filter = [&entity,
-                                   &canHold](std::shared_ptr<Furniture> furn) {
+    const auto _conveyer_filter = [&entity, &canHold](Entity& furn) -> bool {
         // cant be us
-        if (entity.id == furn->id) return false;
+        if (entity.id == furn.id) return false;
         // needs to be able to hold something
-        if (furn->is_missing<CanHoldItem>()) return false;
-        const CanHoldItem& furnCHI = furn->get<CanHoldItem>();
+        if (furn.is_missing<CanHoldItem>()) return false;
+        const CanHoldItem& furnCHI = furn.get<CanHoldItem>();
         // has to be empty
         if (furnCHI.is_holding_item()) return false;
         // can this furniture hold the item we are passing?
@@ -302,27 +301,28 @@ void process_conveyer_items(Entity& entity, float dt) {
         return can_hold;
     };
 
-    const auto _ipp_filter =
-        [&entity, _conveyer_filter](std::shared_ptr<Furniture> furn) {
-            // if we are a pnumatic pipe, filter only down to our guy
-            if (furn->is_missing<IsPnumaticPipe>()) return false;
-            const IsPnumaticPipe& mypp = entity.get<IsPnumaticPipe>();
-            if (mypp.paired_id != furn->id) return false;
-            if (mypp.recieving) return false;
-            return _conveyer_filter(furn);
-        };
+    const auto _ipp_filter = [&entity, _conveyer_filter](Entity& furn) -> bool {
+        // if we are a pnumatic pipe, filter only down to our guy
+        if (furn.is_missing<IsPnumaticPipe>()) return false;
+        const IsPnumaticPipe& mypp = entity.get<IsPnumaticPipe>();
+        if (mypp.paired_id != furn.id) return false;
+        if (mypp.recieving) return false;
+        return _conveyer_filter(furn);
+    };
 
-    auto match = is_ipp ? EntityHelper::getClosestMatchingEntity(
-                              transform.as2(), MAX_SEARCH_RANGE, _ipp_filter)
-                        : EntityHelper::getClosestMatchingFurniture(
-                              transform, 1.f, _conveyer_filter);
+    OptEntity opt_match =
+        is_ipp ? EntityHelper::getClosestMatchingEntity(
+                     transform.as2(), MAX_SEARCH_RANGE, _ipp_filter)
+               : EntityHelper::getClosestMatchingFurniture(transform, 1.f,
+                                                           _conveyer_filter);
 
     // no match means we can't continue, stay in the middle
-    if (!match) {
+    if (!valid(opt_match)) {
         conveysHeldItem.relative_item_pos = 0.f;
         canBeTakenFrom.update(true);
         return;
     }
+    Entity& match = asE(opt_match);
 
     if (is_ipp) {
         entity.get<IsPnumaticPipe>().recieving = false;
@@ -341,7 +341,7 @@ void process_conveyer_items(Entity& entity, float dt) {
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
-    CanHoldItem& matchCHI = match->get<CanHoldItem>();
+    CanHoldItem& matchCHI = match.get<CanHoldItem>();
     matchCHI.update(ourCHI.item());
 
     ourCHI.update(nullptr);
@@ -350,12 +350,12 @@ void process_conveyer_items(Entity& entity, float dt) {
     // reset so that the next item we get starts from beginning
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
 
-    if (match->has<CanBeTakenFrom>()) {
-        match->get<CanBeTakenFrom>().update(false);
+    if (match.has<CanBeTakenFrom>()) {
+        match.get<CanBeTakenFrom>().update(false);
     }
 
-    if (is_ipp && match->has<IsPnumaticPipe>()) {
-        match->get<IsPnumaticPipe>().recieving = true;
+    if (is_ipp && match.has<IsPnumaticPipe>()) {
+        match.get<IsPnumaticPipe>().recieving = true;
     }
 
     // TODO if we are pushing onto a conveyer, we need to make sure
@@ -388,13 +388,12 @@ void process_grabber_items(Entity& entity, float) {
     auto behind =
         transform.offsetFaceDirection(transform.face_direction(), 180);
     auto match = EntityHelper::getMatchingEntityInFront(
-        transform.as2(), 1.f, behind,
-        [&entity](std::shared_ptr<Furniture> furn) {
+        transform.as2(), 1.f, behind, [&entity](Entity& furn) {
             // cant be us
-            if (entity.id == furn->id) return false;
+            if (entity.id == furn.id) return false;
             // needs to be able to hold something
-            if (furn->is_missing<CanHoldItem>()) return false;
-            CanHoldItem& furnCHI = furn->get<CanHoldItem>();
+            if (furn.is_missing<CanHoldItem>()) return false;
+            CanHoldItem& furnCHI = furn.get<CanHoldItem>();
             // doesnt have anything
             if (furnCHI.empty()) return false;
 
@@ -407,15 +406,15 @@ void process_grabber_items(Entity& entity, float) {
 
             // We only check CanBe when it exists because everyone else can
             // always be taken from with a grabber
-            if (furn->is_missing<CanBeTakenFrom>()) return true;
-            return furn->get<CanBeTakenFrom>().can_take_from();
+            if (furn.is_missing<CanBeTakenFrom>()) return true;
+            return furn.get<CanBeTakenFrom>().can_take_from();
         });
 
     // No furniture behind us
-    if (!match) return;
+    if (!valid(match)) return;
 
     // Grab from the furniture match
-    CanHoldItem& matchCHI = match->get<CanHoldItem>();
+    CanHoldItem& matchCHI = asE(match).get<CanHoldItem>();
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
     ourCHI.update(matchCHI.item());
@@ -860,10 +859,8 @@ void process_spawner(Entity& entity, float dt) {
 
     bool should_prev_dupes = entity.get<IsSpawner>().prevent_dupes();
     if (should_prev_dupes) {
-        const Entities& ents = EntityHelper::getEntitiesInPosition(pos);
-        for (auto e_ptr : ents) {
-            if (!e_ptr) continue;
-            if (e_ptr->id == entity.id) continue;
+        for (const Entity& e : EntityHelper::getEntitiesInPosition(pos)) {
+            if (e.id == entity.id) continue;
 
             // Other than invalid and Us, is there anything else there?
             // log_info(
@@ -965,11 +962,9 @@ void update_sophie(Entity& entity, float) {
         const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
 
         bool all_gone = true;
-        std::vector<std::shared_ptr<Entity>> customers =
-            EntityHelper::getAllWithType(EntityType::Customer);
-        for (const auto& e : customers) {
-            if (!e) continue;
-            if (vec::distance(e->get<Transform>().as2(), endpos) >
+        for (const Entity& e :
+             EntityHelper::getAllWithType(EntityType::Customer)) {
+            if (vec::distance(e.get<Transform>().as2(), endpos) >
                 TILESIZE * 2.f) {
                 all_gone = false;
                 break;
@@ -1155,28 +1150,27 @@ void process_squirter(Entity& entity, float) {
     // so we got something, lets see if anyone around can give us something
     // to use
 
-    std::shared_ptr<Furniture> closest_furniture =
-        EntityHelper::getClosestMatchingEntity(
-            entity.get<Transform>().as2(), 1.25f,
-            [](std::shared_ptr<Furniture> f) {
-                if (f->is_missing<CanHoldItem>()) return false;
-                const CanHoldItem& fchi = f->get<CanHoldItem>();
-                if (fchi.empty()) return false;
+    OptEntity opt_closest_furniture = EntityHelper::getClosestMatchingEntity(
+        entity.get<Transform>().as2(), 1.25f, [](const Entity& f) {
+            if (f.is_missing<CanHoldItem>()) return false;
+            const CanHoldItem& fchi = f.get<CanHoldItem>();
+            if (fchi.empty()) return false;
 
-                std::shared_ptr<Item> item = fchi.const_item();
+            std::shared_ptr<Item> item = fchi.const_item();
 
-                // TODO should we instead check for <AddsIngredient>?
-                if (!check_type(*item, EntityType::Alcohol)) return false;
-                return true;
-            });
-    if (!closest_furniture) return;
+            // TODO should we instead check for <AddsIngredient>?
+            if (!check_type(*item, EntityType::Alcohol)) return false;
+            return true;
+        });
+    if (!valid(opt_closest_furniture)) return;
+    Entity& closest_furniture = asE(opt_closest_furniture);
 
     std::shared_ptr<Entity> drink = sqCHI.item();
-    std::shared_ptr<Item> item = closest_furniture->get<CanHoldItem>().item();
+    std::shared_ptr<Item> item = closest_furniture.get<CanHoldItem>().item();
 
     bool cleanup = items::_add_ingredient_to_drink_NO_VALIDATION(*drink, *item);
     if (cleanup) {
-        closest_furniture->get<CanHoldItem>().update(nullptr);
+        closest_furniture.get<CanHoldItem>().update(nullptr);
     }
 }
 
