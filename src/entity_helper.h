@@ -117,25 +117,10 @@ struct EntityHelper {
 
     static std::vector<std::shared_ptr<Entity>> getFilteredEntitiesInRange(
         vec2 pos, float range,
-        std::function<bool(std::shared_ptr<Entity>)> filter) {
-        std::vector<std::shared_ptr<Entity>> matching;
-        for (auto& e : get_entities()) {
-            if (!e) continue;
-            if (!filter(e)) continue;
-            if (vec::distance(pos, e->get<Transform>().as2()) < range) {
-                matching.push_back(e);
-            }
-        }
-        return matching;
-    }
+        std::function<bool(std::shared_ptr<Entity>)> filter);
 
-    // TODO cant move lower
-    static std::vector<std::shared_ptr<Entity>> getEntitiesInRange(
-        vec2 pos, float range) {
-        std::vector<std::shared_ptr<Entity>> matching;
-        return getFilteredEntitiesInRange(pos, range,
-                                          [](auto&&) { return true; });
-    }
+    static std::vector<std::shared_ptr<Entity>> getEntitiesInRange(vec2 pos,
+                                                                   float range);
 
     static OptEntity getFirstMatching(std::function<bool(RefEntity)> filter);
     static std::vector<std::shared_ptr<Entity>> getEntitiesInPosition(
@@ -163,85 +148,16 @@ struct EntityHelper {
 
     static bool doesAnyExistWithType(const EntityType& type);
 
-    // TODO :BE: delete
-    template<typename T>
-    static constexpr std::shared_ptr<T> getFirstMatching(
-        std::function<bool(std::shared_ptr<T>)> filter  //
-    ) {
-        for (auto& e : get_entities()) {
-            auto s = dynamic_pointer_cast<T>(e);
-            if (!s) continue;
-            if (!filter(s)) continue;
-            return s;
-        }
-        return nullptr;
-    }
-
     static std::shared_ptr<Entity> getMatchingEntityInFront(
         vec2 pos,                                            //
         float range,                                         //
         Transform::FrontFaceDirection direction,             //
         std::function<bool(std::shared_ptr<Entity>)> filter  //
-    ) {
-        TRACY_ZONE_SCOPED;
-        VALIDATE(range > 0,
-                 fmt::format("range has to be positive but was {}", range));
-
-        int cur_step = 0;
-        int irange = static_cast<int>(range);
-        while (cur_step <= irange) {
-            auto tile =
-                Transform::tile_infront_given_pos(pos, cur_step, direction);
-
-            for (std::shared_ptr<Entity> current_entity : get_entities()) {
-                if (!current_entity) continue;
-                if (!filter(current_entity)) continue;
-
-                // all entitites should have transforms but just in case
-                if (current_entity->template is_missing<Transform>()) {
-                    log_warn("component {} is missing transform",
-                             current_entity->id);
-                    log_error("component {} is missing name",
-                              current_entity->template get<DebugName>().name());
-                    continue;
-                }
-
-                const Transform& transform =
-                    current_entity->template get<Transform>();
-
-                float cur_dist = vec::distance(transform.as2(), tile);
-                // outside reach
-                if (abs(cur_dist) > 1) continue;
-                // this is behind us
-                if (cur_dist < 0) continue;
-
-                // TODO :BE: add a snap_as2() function to transform
-                if (vec::to2(transform.snap_position()) == vec::snap(tile)) {
-                    return current_entity;
-                }
-            }
-            cur_step++;
-        }
-        return {};
-    }
+    );
 
     static std::shared_ptr<Entity> getClosestMatchingEntity(
         vec2 pos, float range,
-        std::function<bool(std::shared_ptr<Entity>)> filter) {
-        float best_distance = range;
-        std::shared_ptr<Entity> best_so_far;
-        for (auto& e : get_entities()) {
-            if (!e) continue;
-            if (!filter(e)) continue;
-            float d = vec::distance(pos, e->get<Transform>().as2());
-            if (d > range) continue;
-            if (d < best_distance) {
-                best_so_far = e;
-                best_distance = d;
-            }
-        }
-        return best_so_far;
-    }
+        std::function<bool(std::shared_ptr<Entity>)> filter);
 
     template<typename T>
     static std::shared_ptr<Entity> getClosestWithComponent(
