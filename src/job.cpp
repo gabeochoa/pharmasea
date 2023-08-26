@@ -506,7 +506,7 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
 
             // get next order
             {
-                std::shared_ptr<Entity> sophie =
+                OptEntity sophie =
                     EntityHelper::getFirstWithComponent<IsProgressionManager>();
                 VALIDATE(sophie, "sophie should exist for sure");
 

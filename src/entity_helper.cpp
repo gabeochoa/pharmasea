@@ -198,7 +198,7 @@ std::vector<RefEntity> EntityHelper::getAllWithType(const EntityType& type) {
 }
 
 bool EntityHelper::doesAnyExistWithType(const EntityType& type) {
-    std::vector<std::shared_ptr<Entity>> matching;
+    std::vector<RefEntity> matching;
     for (std::shared_ptr<Entity> e : get_entities()) {
         if (!e) continue;
         if (check_type(*e, type)) return true;

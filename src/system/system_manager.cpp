@@ -799,7 +799,7 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
     switch (ita.type) {
         case IsTriggerArea::Progression_Option1:  // fall through
         case IsTriggerArea::Progression_Option2: {
-            std::shared_ptr<Entity> sophie =
+            OptEntity sophie =
                 EntityHelper::getFirstWithComponent<IsProgressionManager>();
             if (!sophie) {
                 log_warn(
@@ -1244,7 +1244,7 @@ void reset_customers_that_need_resetting(Entity& entity) {
 
     if (cod.order_state != CanOrderDrink::OrderState::NeedsReset) return;
 
-    std::shared_ptr<Entity> sophie =
+    OptEntity sophie =
         EntityHelper::getFirstWithComponent<IsProgressionManager>();
     VALIDATE(sophie, "sophie should exist for sure");
 

@@ -119,13 +119,12 @@ struct EntityHelper {
         vec2 pos, float range, std::function<bool(RefEntity)> filter);
 
     template<typename T>
-    static std::shared_ptr<Entity> getClosestWithComponent(
-        const std::shared_ptr<Entity>& entity, float range) {
-        const Transform& transform = entity->get<Transform>();
+    static OptEntity getClosestWithComponent(const Entity& entity,
+                                             float range) {
+        const Transform& transform = entity.get<Transform>();
         return EntityHelper::getClosestMatchingEntity(
-            transform.as2(), range, [](const std::shared_ptr<Entity> entity) {
-                return entity->has<T>();
-            });
+            transform.as2(), range,
+            [](const Entity& entity) { return entity.has<T>(); });
     }
 
     template<typename T>
@@ -139,10 +138,10 @@ struct EntityHelper {
     }
 
     template<typename T>
-    static std::shared_ptr<Entity> getFirstWithComponent() {
+    static OptEntity getFirstWithComponent() {
         for (const auto& e : get_entities()) {
             if (!e) continue;
-            if (e->has<T>()) return e;
+            if (e->has<T>()) return *e;
         }
         return {};
     }
