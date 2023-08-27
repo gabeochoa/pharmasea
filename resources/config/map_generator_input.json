@@ -1,94 +1,84 @@
 {
-    "max_rows": 5,
-    "max_cols": 5,
+    "max_rows": 10,
+    "max_cols": 10,
     "patterns": [
         {
+            "id": 0,
             "pat": [
-                "#####",
-                ".....",
-                ".....",
-                ".....",
-                "....."
+                "..",
+                ".."
             ],
+            "connections": [],
+            "any_connection": true
+        },
+        {
+            "pat": [
+                "##",
+                ".."
+            ],
+            "edge_only": true,
             "connections": [ "E", "W", "S" ]
         },
         {
             "pat": [
-                "....#",
-                "....#",
-                "....#",
-                "....#",
-                "....#"
+                ".#",
+                ".#"
             ],
+            "edge_only": true,
             "connections": [ "N", "W", "S" ]
         },
         {
             "pat": [
-                ".....",
-                ".....",
-                ".....",
-                ".....",
-                "#####"
+                "..",
+                "##"
             ],
+            "edge_only": true,
             "connections": [ "N", "W", "E" ]
         },
         {
             "pat": [
-                "#....",
-                "#....",
-                "#....",
-                "#....",
-                "#...."
+                "#.",
+                "#."
             ],
+            "edge_only": true,
             "connections": [ "N", "S", "E" ]
         },
         {
             "pat": [
-                "#####",
-                "#....",
-                "#....",
-                "#....",
-                "#...."
+                "##",
+                "#."
             ],
+            "edge_only": true,
             "connections": [ "S", "E" ]
         },
         {
             "pat": [
-                "#####",
-                "....#",
-                "....#",
-                "....#",
-                "....#"
+                "##",
+                ".#"
             ],
+            "edge_only": true,
             "connections": [ "S", "W" ]
         },
         {
             "pat": [
-                "....#",
-                "....#",
-                "....#",
-                "....#",
-                "#####"
+                ".#",
+                "##"
             ],
+            "edge_only": true,
             "connections": [ "N", "W" ]
         },
         {
             "pat": [
-                "#....",
-                "#....",
-                "#....",
-                "#....",
-                "#####"
+                "#.",
+                "##"
             ],
+            "edge_only": true,
             "connections": [ "N", "E" ]
         },
         {
             "pat": [
-                "##.##",
-                "#...#",
-                ".sCf.",
-                "#...#",
-                "##.##"
+                "C.",
+                "fs"
             ],
             "connections": [],
             "required": true,
@@ -97,11 +87,8 @@
         },
         {
             "pat": [
-                ".....",
-                ".mSd.",
-                "..0..",
-                "..R..",
-                "....."
+                "R.",
+                ".."
             ],
             "connections": [ "N", "E", "W", "S"],
             "required": true,
@@ -110,21 +97,36 @@
         },
         {
             "pat": [
-                ".....",
-                ".....",
-                ".....",
-                ".....",
-                "....."
+                "mS",
+                "0d"
             ],
-            "connections": [ "N", "E", "W", "S"]
+            "connections": [ "N", "E", "W", "S"],
+            "required": true,
+            "edge_only": false,
+            "max_count": 1
         },
         {
             "pat": [
-                ".....",
-                ".....",
-                ".....",
-                ".....",
-                "....."
+                "tt",
+                ".."
+            ],
+            "connections": [],
+            "any_connection": true,
+            "max_count": 7 
+        },
+        {
+            "pat": [
+                "t.",
+                "t."
+            ],
+            "connections": [],
+            "any_connection": true,
+            "max_count": 7 
+        },
+        {
+            "pat": [
+                "..",
+                ".."
             ],
             "connections": [],
             "max_count": 3

@@ -404,6 +404,7 @@ void Preload::load_map_generation_info() {
                     .required = jpat.value("required", false),
                     .max_count = jpat.value("max_count", -1),
                     .edge_only = jpat.value("edge_only", false),
+                    .any_connection = jpat.value("any_connection", false),
                 });
             }
 

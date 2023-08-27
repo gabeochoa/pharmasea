@@ -6,27 +6,6 @@
 namespace wfc {
 size_t WaveCollapse::pat_size() const { return patterns[0].pat.size(); }
 
-void WaveCollapse::_photo() const {
-    std::cout << "PHOTO BOOTH" << std::endl;
-    for (int r = 0; r < rows; r++) {
-        for (size_t i = 0; i < pat_size(); i++) {
-            for (int c = 0; c < cols; c++) {
-                int bit = bitset_utils::get_first_enabled_bit(
-                    grid_options[r * rows + c]);
-                if (bit == -1) {
-                    std::cout << std::string(pat_size(), '.');
-                } else {
-                    std::cout << (patterns[bit].pat)[i];
-                }
-                std::cout << "";
-            }
-            std::cout << std::endl;
-        }
-    }
-
-    std::cout << std::endl;
-};
-
 std::vector<std::string> WaveCollapse::get_lines() {
     bool add_extra_space = false;
 
@@ -40,6 +19,8 @@ std::vector<std::string> WaveCollapse::get_lines() {
                     grid_options[r * rows + c]);
                 if (bit == -1) {
                     temp << std::string(pat_size(), '.');
+                } else if (grid_options[r * rows + c].count() > 1) {
+                    temp << std::string(pat_size(), '?');
                 } else {
                     temp << (patterns[bit].pat)[i];
                 }
@@ -156,7 +137,9 @@ void WaveCollapse::_place_pattern(int x, int y, int pattern_id) {
 
         for (size_t bit = 0; bit < num_patterns(); bit++) {
             const Pattern& pattern = patterns[bit];
+            // inf uses
             if (pattern.max_count == -1) continue;
+            // still has some uses
             if (pattern.max_count != 0) continue;
             if (possibilities.test(bit)) {
                 possibilities.set(bit, false);
@@ -206,6 +189,7 @@ void WaveCollapse::_place_walls() {
         if (!_is_edge(i, j)) return;
 
         for (Pattern& pattern : patterns) {
+            if (!pattern.edge_only) continue;
             if (_eligible_pattern(i, j, pattern.id)) {
                 _place_pattern(i, j, pattern.id);
             }
@@ -249,10 +233,6 @@ void WaveCollapse::_place_required() {
     }
 }
 
-void WaveCollapse::_propagate_all() {
-    for_each_non_collapsed_cell([&](int i, int j) { _propagate_choice(i, j); });
-}
-
 void WaveCollapse::run() {
     const auto _dump_and_print = [&](const std::string& msg) {
         _dump();
@@ -275,27 +255,23 @@ void WaveCollapse::run() {
 
     // place walls after required since there might be required walls
     _place_walls();
-    _dump_and_print("placed walls");
 
-    // force a propagate so we can get started
-    _propagate_all();
     _dump_and_print("completed initial manual placements");
 
     get_lines();
+    log_clean(LogLevel::LOG_INFO, "{}", "starting wfc");
 
-    do {
-        _dump();
-        auto [x, y] = _find_lowest_entropy();
-        log_clean(LogLevel::LOG_INFO, "lowest entropy was {} {}", x, y);
-        if (_collapsed(x, y)) break;
+    // If we filled everything then we are done
+    while (_has_non_collapsed()) {
+        // shuffle the visit order randomly so we dont always just go in order
+        _shuffle_visit_order();
 
-        auto pattern = _choose_pattern(x, y);
-        log_clean(LogLevel::LOG_INFO, "selected pattern {} ", pattern.id);
-        _announce_max_count_chosen(pattern.id, x, y);
-        _propagate_choice(x, y);
-    } while (_has_non_collapsed());
+        // find the one that has the least number of options
+        auto [x, y] = _find_least_choices();
+        _collapse(x, y);
+    }
 
-    _dump();
+    log_clean(LogLevel::LOG_INFO, "{}", "completed wfc");
 }
 
 int WaveCollapse::_gen_rand(int a, int b) const {
@@ -342,65 +318,69 @@ bool WaveCollapse::_collapsed(int x, int y) const {
 }
 
 bool WaveCollapse::_has_non_collapsed() const {
-    return (int) (collapsed.size()) == (rows * cols);
+    return (int) (collapsed.size()) != (rows * cols);
 }
 
 size_t WaveCollapse::num_patterns() const { return patterns.size(); }
 
-Location WaveCollapse::_find_lowest_entropy() const {
-    if (is_first_one) {
-        is_first_one = false;
-        return {_gen_rand(0, rows), _gen_rand(0, cols)};
-    }
+size_t WaveCollapse::num_options(size_t index) const {
+    return grid_options[index].count();
+}
 
+Location WaveCollapse::_find_least_choices() const {
     Location loc{-1, -1};
-    size_t c_max = 1;
+    size_t c_max = 99;
     for (int i : numbers) {
-        // if you are at max, congrats
-        if (grid_options[i].count() == num_patterns()) {
-            return {i / rows, i % rows};
-        }
-        if (grid_options[i].count() > c_max) {
-            c_max = grid_options[i].count();
+        // skip if already collapsed
+        if (_is_collapsed(i)) continue;
+
+        // if you have less options than max,
+        // best option for now
+        if (num_options(i) < c_max) {
+            c_max = num_options(i);
             loc = {i / rows, i % rows};
         }
     }
-    _shuffle_visit_order();
-
     return loc;
 }
 
-Pattern& WaveCollapse::_choose_pattern(int x, int y) {
+bool WaveCollapse::_can_be_trivially_collapsed(int x, int y) const {
+    return num_options(x * rows + y) == 1;
+}
+
+void WaveCollapse::_collapse(int x, int y) {
     Possibilities& possibilities = grid_options[(x * rows) + y];
-    if (possibilities.none()) {
-        _dump();
-        log_error("we dont have any options...");
+
+    if (_can_be_trivially_collapsed(x, y)) {
+        int bit = bitset_utils::get_first_enabled_bit(possibilities);
+
+        Pattern& pattern = patterns[bit];
+        if (pattern.max_count == 0) {
+            log_warn(
+                "we are trivially collapseable to something already at the max "
+                "count");
+            // instead just place pattern 0
+            _place_pattern(x, y, 0);
+            return;
+        }
+        _place_pattern(x, y, bit);
+        return;
     }
 
-    int bit = -1;
-    do {
-        bit = bitset_utils::get_random_enabled_bit(possibilities, gen,
+    // More than one choice...
+    int bit = bitset_utils::get_random_enabled_bit(possibilities, gen,
                                                    num_patterns());
-        if (bit == -1) {
-            _dump();
-            log_error("we dont have any more valid things");
-        }
-        if (!_eligible_pattern(x, y, bit)) {
-            possibilities.set(bit, false);
-            bit = -1;
-        }
 
-    } while (bit == -1);
-    log_clean(LogLevel::LOG_INFO, "got random bit {}", bit);
-
+    // no validation
     _place_pattern(x, y, bit);
-
-    Pattern& selected = patterns[bit];
-    return selected;
+    return;
 }
 
 bool WaveCollapse::_are_patterns_compatible(const Pattern& a, const Pattern& b,
                                             const Rose& AtoB) const {
+    // if either dont care, then we good
+    if (a.any_connection || b.any_connection) return true;
+
     bool does_a_connect_in_this_direction = false;
     for (const auto c : a.connections) {
         if (c == AtoB) {
@@ -429,69 +409,6 @@ bool WaveCollapse::_are_patterns_compatible(const Pattern& a, const Pattern& b,
     }
 
     return true;
-}
-
-std::pair<bool, Location> WaveCollapse::_propagate_in_direction(
-    Rose r, const Location root, const Pattern& root_pattern) {
-    bool changed = false;
-
-    const Location n = _get_relative_loc(r, root.first, root.second);
-    // is there a neighbor here?
-    if (!_in_grid(n.first, n.second)) return {false, n};
-    if (_is_collapsed(n.first * rows + n.second)) return {false, n};
-
-    Possibilities& possibilities = grid_options[n.first * rows + n.second];
-
-    // It has no possible patterns left
-    // * TODO revert the previous one?
-    if (possibilities.none()) return {false, n};
-
-    // disable all the neighbor's patterns that dont match us
-    for (size_t bit = 0; bit < num_patterns(); bit++) {
-        // does this location have this pattern enabled?
-        if (possibilities.test(bit)) {
-            // check to see if it matches us
-            bool compatible =
-                _are_patterns_compatible(root_pattern, patterns[bit], r);
-
-            // if it doesnt, then disable and add to the list
-            if (!compatible) {
-                // disable this one since it no longer fits
-                possibilities.set(bit, false);
-                changed = true;
-            }
-        }
-    }
-
-    return {changed, n};
-}
-
-void WaveCollapse::_propagate_choice(int root_x, int root_y) {
-    std::deque<Location> q;
-
-    q.push_back({root_x, root_y});
-
-    while (!q.empty()) {
-        Location root_loc = q.front();
-        auto [x, y] = root_loc;
-        q.pop_front();
-
-        Possibilities& pos = grid_options[(x * rows) + y];
-        if (pos.none()) continue;
-        if (pos.count() != 1) continue;
-        int bit = bitset_utils::get_first_enabled_bit(pos);
-        // log_clean(LogLevel::LOG_INFO, "collapsed pattern in prop was {}",
-        // bit);
-        const Pattern& collapsed_pattern = patterns[bit];
-
-        // queue up all the neighbors
-        magic_enum::enum_for_each<Rose>([&](auto val) {
-            // if we did disable any, queue them up to propagate
-            auto [changed, n] =
-                _propagate_in_direction(val, root_loc, collapsed_pattern);
-            if (changed) q.push_back(n);
-        });
-    }
 }
 
 std::vector<Rose> WaveCollapse::_get_edges(int x, int y) {
@@ -566,29 +483,6 @@ void WaveCollapse::_initial_cleanup() {
 
 bool WaveCollapse::_is_edge(int i, int j) const {
     return (i == 0 || j == 0 || j == cols - 1 || i == rows - 1);
-}
-
-void WaveCollapse::_announce_max_count_chosen(int pattern_id, int x, int y) {
-    Pattern& pattern = patterns[pattern_id];
-    // infinite uses
-    if (pattern.max_count == -1) return;
-
-    // we just used it
-    pattern.max_count--;
-
-    // still got more uses
-    if (pattern.max_count > 0) return;
-
-    // otherwise no more allowed
-
-    for_each_non_collapsed_cell([&](int i, int j) {
-        // skip the one that brought us here..
-        if (i == x && j == y) return;
-
-        // set it no longer as a possibility
-        Possibilities& possibilities = grid_options[i * rows + j];
-        possibilities.set(pattern_id, false);
-    });
 }
 
 }  // namespace wfc

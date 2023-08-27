@@ -25,6 +25,7 @@ struct Pattern {
     std::vector<std::string> pat;
     Connections connections;
     bool required = false;
+    bool any_connection = false;
     int max_count = -1;
     bool edge_only = false;
 };
@@ -51,7 +52,6 @@ struct WaveCollapse {
     // We mark this mutable since its not really what we _mean_ by const
     mutable std::vector<int> numbers;
     mutable std::mt19937 gen;
-    mutable bool is_first_one;
 
     WaveCollapse(int r, int c, unsigned int seed) : rows(r), cols(c) {
         numbers.resize(rows * cols);
@@ -74,7 +74,6 @@ struct WaveCollapse {
 
         grid_options = std::vector<Possibilities>(rows * cols, default_val);
         gen = std::mt19937(seed);
-        is_first_one = true;
 
         // Random stuff should happen under here
         //
@@ -89,9 +88,13 @@ struct WaveCollapse {
     void _dump() const;
 
     void run();
-    void _photo() const;
 
    private:
+    bool _can_be_trivially_collapsed(int x, int y) const;
+    size_t num_options(size_t index) const;
+    Location _find_least_choices() const;
+    void _collapse(int x, int y);
+
     bool _is_collapsed(int index) const { return collapsed.contains(index); }
     void for_each_cell(std::function<void(int, int)> cb) {
         for (int i = 0; i < rows; i++) {
@@ -138,25 +141,16 @@ struct WaveCollapse {
     void _validate_patterns() const;
     void _place_required();
     void _place_walls();
-    void _propagate_all();
-    Location _find_lowest_entropy() const;
-    Pattern& _choose_pattern(int x, int y);
     bool _are_patterns_compatible(const Pattern& a, const Pattern& b,
                                   const Rose& AtoB) const;
-    std::pair<bool, Location> _propagate_in_direction(
-        Rose r, const Location root, const Pattern& root_pattern);
 
     void _shuffle_visit_order() const {
         std::shuffle(numbers.begin(), numbers.end(), gen);
     }
 
-    void _propagate_choice(int root_x, int root_y);
-
     std::vector<Rose> _get_edges(int x, int y);
 
     void _initial_cleanup();
-
-    void _announce_max_count_chosen(int pattern_id, int x, int y);
 };
 
 }  // namespace wfc
@@ -230,6 +224,8 @@ struct helper {
 
     EntityType convert_character_to_type(char ch) {
         switch (ch) {
+            // TODO these are escaping the map generation
+            case '?':
             case EMPTY:
                 return EntityType::Unknown;
             case 'x':
@@ -322,7 +318,7 @@ struct helper {
     template<typename Func = std::function<Entity&()>>
     void generate_entity_from_character(Func&& create, char ch, vec2 location) {
         // This is not a warning since most maps are made up of '.'s
-        if (ch == EMPTY || ch == 32) return;
+        if (ch == EMPTY || ch == '?' || ch == 32) return;
 
         EntityType et = convert_character_to_type(ch);
 

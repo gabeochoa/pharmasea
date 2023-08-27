@@ -108,7 +108,6 @@ void generate_in_game_map_wfc(const std::string& seed) {
 
     wfc::WaveCollapse wc(static_cast<unsigned int>(hashString(seed)));
     wc.run();
-    wc._photo();
 
     generation::helper helper(wc.get_lines());
     helper.generate();
