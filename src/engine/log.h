@@ -3,7 +3,8 @@
 #pragma once
 
 #include <cassert>
-#include "globals.h" // where LOG_LEVEL is located
+
+#include "globals.h"  // where LOG_LEVEL is located
 
 enum LogLevel {
     LOG_ALOG_ = 0,
@@ -37,8 +38,11 @@ inline const std::string_view level_to_string(LogLevel level) {
 inline void vlog(LogLevel level, const char* file, int line,
                  fmt::string_view format, fmt::format_args args) {
     if ((int) level < LOG_LEVEL) return;
-    const auto file_info =
+    auto file_info =
         fmt::format("{}: {}: {}: ", file, line, level_to_string(level));
+    if (line == -1) {
+        file_info = "";
+    }
     const auto message = fmt::vformat(format, args);
     const auto full_output = fmt::format("{}{}", file_info, message);
     fmt::print("{}", full_output);
@@ -93,6 +97,9 @@ inline void log_me(const T& arg, const Args&... args) {
     if (LogLevel::LOG_ERROR >= LOG_LEVEL)                             \
         log_me(LogLevel::LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__); \
     assert(false)
+
+#define log_clean(level, ...) \
+    if (level >= LOG_LEVEL) log_me(level, "", -1, __VA_ARGS__);
 
 #define log_if(x, ...)                                                    \
     {                                                                     \
