@@ -34,7 +34,7 @@ struct IUIContextInputManager {
     virtual void begin(float dt) {
         mouse_info = get_mouse_info();
         // TODO Should this be more like mousePos?
-        yscrolled += ext::get_mouse_wheel_move();
+        yscrolled = ext::get_mouse_wheel_move();
 
         lastDt = dt;
     }

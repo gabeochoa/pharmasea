@@ -2,6 +2,7 @@
 #pragma once
 
 #include "gamepad_axis_with_dir.h"
+#include "globals.h"
 #include "raylib.h"
 //
 #include <codecvt>
@@ -69,7 +70,7 @@ inline Rectangle expand_pct(const Rectangle& a, float pct) {
 
 inline Rectangle offset_y(const Rectangle& a, float y) {
     return Rectangle{a.x,      //
-                     a.y - y,  //
+                     a.y + y,  //
                      a.width,  //
                      a.height};
 }
@@ -165,7 +166,7 @@ inline std::array<Rectangle, N> hsplit(const Rectangle& a,
     float height = step;
     for (size_t i = 0; i < N; ++i) {
         rectangles[i] = Rectangle{x, y, width, height};
-        if (padding_bottom > 0) {
+        if ((i < (N)) && padding_bottom > 0) {
             rectangles[i] = rect::bpad(rectangles[i], 100 - padding_bottom);
         }
         x += 0;
@@ -535,8 +536,10 @@ inline ElementResult text(const Widget& widget, const std::string& content,
     return true;
 }
 
-inline ElementResult window(const Widget& widget) {
-    internal::draw_rect(widget.rect, widget.z_index, ui::theme::Primary);
+inline ElementResult window(const Widget& widget, bool background = true) {
+    if (background) {
+        internal::draw_rect(widget.rect, widget.z_index, ui::theme::Primary);
+    }
     return ElementResult{true, widget.z_index - 1};
 }
 
@@ -550,15 +553,17 @@ inline ElementResult scroll_window(
     //
     focus::active_if_mouse_inside(widget, view);
     if (focus::is_hot(widget.id)) {
-        // log_info("scroll {} yoff {}", context->yscrolled,
-        // state->y_offset.asT());
-        context->yscrolled =
-            fmax(0.f, fmin(widget.rect.height, context->yscrolled));
-        state->y_offset = context->yscrolled;
+        state->y_offset = state->y_offset + context->yscrolled;
+        // TODO idk if this is a magic number or if it makes sense for some
+        // reason
+        float scale = 1.0f;
+        state->y_offset =
+            fmin(0.f, fmax(-1.f * scale * widget.rect.height, state->y_offset));
     }
 
     //
-    internal::draw_rect(view, widget.z_index, ui::theme::Secondary);
+    // internal::draw_rect(widget.rect, widget.z_index, ui::theme::Accent);
+    // internal::draw_rect(view, widget.z_index, ui::theme::Secondary);
     callback_registry.register_call(
         [=]() {
             context->scissor_on(view);
@@ -591,25 +596,21 @@ inline ElementResult button(const Widget& widget,
 
         // TODO add style for 'hover' state
         if (focus::is_hot(widget.id)) {
+            log_info("button {}", widget.id);
             color_usage = ui::theme::Usage::Accent;
         }
         internal::draw_rect(rect, widget.z_index, color_usage);
     }
 
-    const auto _press_logic = [&]() -> bool {
-        if (focus::matches(widget.id) &&
-            context->pressed(InputName::WidgetPress)) {
-            return true;
-        }
-        if (focus::is_mouse_click(widget)) {
-            return true;
-        }
-        return false;
-    };
-
     text(widget, content);
 
-    return _press_logic();
+    if (focus::matches(widget.id) && context->pressed(InputName::WidgetPress)) {
+        return true;
+    }
+    if (focus::is_mouse_click(widget)) {
+        return true;
+    }
+    return false;
 }
 
 inline ElementResult image_button(const Widget& widget,
@@ -745,7 +746,7 @@ inline ElementResult slider(const Widget& widget, const SliderData& data = {}) {
     return ElementResult{changed_previous_frame, state->value};
 }
 
-inline ElementResult dropdown(const Widget& widget, DropdownData data) {
+inline ElementResult dropdown(const Widget& widget, const DropdownData& data) {
     if (internal::should_exit_early(widget)) return false;
     //
     if (data.options.empty()) {
@@ -753,6 +754,10 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
         return ElementResult{false, 0};
     }
 
+    focus::active_if_mouse_inside(widget);
+    focus::try_to_grab(widget);
+    internal::draw_focus_ring(widget);
+    focus::handle_tabbing(widget);
     // TODO when you tab to the dropdown
     // it would be nice if it opened
 
@@ -769,38 +774,62 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
     // 3. we dont eat the input, so it doesnt break the button_list
     // value up/down
 
-    auto state = context->widget_init<ui::DropdownState>(
-        ui::MK_UUID(widget.id, widget.id));
+    std::shared_ptr<ui::DropdownState> state =
+        context->widget_init<ui::DropdownState>(
+            ui::MK_UUID(widget.id, widget.id));
     state->selected = data.initial;
     state->selected.changed_since = false;
 
-    if (button(widget, "", true)) {
+    log_info(" dropdown id {}", widget.id);
+
+    if (button(Widget{widget.rect, widget.z_index}, "", true)) {
         state->on = !state->on;
     }
 
     if (state->on) {
-        Rectangle rect = widget.get_rect();
-        int i = -1;
-        for (const auto& option : data.options) {
-            rect.y += rect.height;
-            i++;
+        int num_to_render = 4;
 
-            Widget option_widget(widget);
-            // this should be above the button's index
-            option_widget.z_index--;
+        float dropdown_height = (                     //
+            widget.rect.height * (num_to_render - 1)  // 3
+        );
 
-            // Needs to be unique on the screen
-            auto uuid = ui::MK_UUID_LOOP(widget.id, widget.id, i);
-            option_widget.id = (int) (size_t) uuid;
+        auto popup = Rectangle{
+            widget.rect.x,                       // place it in the normal spot
+            widget.rect.y + widget.rect.height,  // start right after the button
+            widget.rect.width,                   // same width
+            dropdown_height};
 
-            option_widget.rect = (Rectangle(rect));
+        if (auto window_result =
+                window(Widget{popup, widget.z_index - 10}, false);
+            window_result) {
+            scroll_window(
+                Widget{popup, window_result.as<int>()}, popup,
+                [=, &state](ScrollWindowResult swr) {
+                    int i = -1;
+                    float p_height = 0.5f * (swr.sv.height / num_to_render);
+                    Rectangle rect(swr.sv);
+                    rect.height = p_height;
+                    for (const auto& option : data.options) {
+                        i++;
 
-            if (button(option_widget)) {
-                state->selected = i;
-                state->on = false;
-            }
+                        Widget option_widget(rect, swr.z_index);
 
-            text(option_widget, option);
+                        // Needs to be unique on the screen
+                        auto uuid = ui::MK_UUID_LOOP(widget.id, widget.id, i);
+                        option_widget.id = (int) (size_t) uuid;
+
+                        if (button(option_widget)) {
+                            log_info("button ");
+                            state->selected = i;
+                            state->on = false;
+                        }
+
+                        text(option_widget, option);
+
+                        //
+                        rect.y += p_height;
+                    }
+                });
         }
     }
 
