@@ -160,7 +160,7 @@ void process_dev_flags(char* argv[]) {
         ENABLE_MODELS = true;
         ENABLE_SOUND = false;
         network::ENABLE_REMOTE_IP = false;
-        ENABLE_UI_TEST = true;
+        // ENABLE_UI_TEST = true;
         return;
     }
 
