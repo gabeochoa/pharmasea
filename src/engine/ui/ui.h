@@ -1,23 +1,24 @@
 
 #pragma once
 
-#include "gamepad_axis_with_dir.h"
+#include "../gamepad_axis_with_dir.h"
 #include "raylib.h"
 //
 #include <codecvt>
 #include <locale>
+#include <string>
 #include <variant>
 
-#include "../preload.h"
-#include "font_util.h"
-#include "texture_library.h"
-#include "ui_autolayout.h"
-#include "ui_color.h"
-#include "ui_context.h"
-#include "ui_state.h"
-#include "ui_theme.h"
-#include "ui_widget.h"
-#include "uuid.h"
+#include "../../preload.h"
+#include "../font_util.h"
+#include "../texture_library.h"
+#include "../uuid.h"
+#include "autolayout.h"
+#include "color.h"
+#include "context.h"
+#include "state.h"
+#include "theme.h"
+#include "widget.h"
 
 namespace ui {
 
@@ -307,6 +308,7 @@ inline bool is_hot(int id) { return hot_id == id; }
 inline bool is_active(int id) { return active_id == id; }
 inline bool is_active_or_hot(int id) { return is_hot(id) || is_active(id); }
 inline bool is_active_and_hot(int id) { return is_hot(id) && is_active(id); }
+inline bool was_last(int id) { return id == last_processed; }
 
 inline void active_if_mouse_inside(const Widget& widget,
                                    std::optional<Rectangle> view = {}) {

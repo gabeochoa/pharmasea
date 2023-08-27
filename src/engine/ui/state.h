@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../std_include.h"
-#include "uuid.h"
+#include "../../std_include.h"
+#include "../uuid.h"
 
 namespace ui {
 

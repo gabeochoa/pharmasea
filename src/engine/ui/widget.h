@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "../std_include.h"
-#include "../vec_util.h"
-#include "log.h"
+#include "../../std_include.h"
+#include "../../vec_util.h"
+#include "../log.h"
+#include "../uuid.h"
 #include "raylib.h"
-#include "uuid.h"
 
 namespace ui {
 

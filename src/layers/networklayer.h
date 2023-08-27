@@ -10,7 +10,7 @@
 #include "../globals.h"
 //
 #include "../engine/toastmanager.h"
-#include "../engine/ui.h"
+#include "../engine/ui/ui.h"
 #include "../network/network.h"
 
 using namespace ui;

@@ -6,7 +6,7 @@
 #include "dataclass/ingredient.h"
 #include "engine/font_library.h"
 #include "engine/keymap.h"
-#include "engine/ui_theme.h"
+#include "engine/ui/theme.h"
 #include "map_generation.h"
 #include "recipe_library.h"
 

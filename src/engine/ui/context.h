@@ -1,23 +1,23 @@
 
 #pragma once
 
-#include "../preload.h"
-#include "../vec_util.h"
-#include "assert.h"
-#include "event.h"
-#include "gamepad_axis_with_dir.h"
-#include "keymap.h"
-#include "log.h"
+#include "../../preload.h"
+#include "../../vec_util.h"
+#include "../assert.h"
+#include "../event.h"
+#include "../gamepad_axis_with_dir.h"
+#include "../keymap.h"
+#include "../log.h"
+#include "../statemanager.h"
+#include "../type_name.h"
 #include "raylib.h"
-#include "statemanager.h"
-#include "type_name.h"
 //
-#include "font_sizer.h"
-#include "ui_autolayout.h"
-#include "ui_state.h"
-#include "ui_theme.h"
-#include "ui_widget.h"
-#include "uuid.h"
+#include "../font_sizer.h"
+#include "../uuid.h"
+#include "autolayout.h"
+#include "state.h"
+#include "theme.h"
+#include "widget.h"
 
 namespace ui {
 

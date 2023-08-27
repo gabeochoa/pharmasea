@@ -6,7 +6,7 @@
 
 #include "components/has_work.h"
 #include "components/is_trigger_area.h"
-#include "engine/ui_color.h"
+#include "engine/ui/color.h"
 #include "entity.h"   // for Item, DebugOptions, Entity
 #include "raylib.h"   // for Color, PINK
 #include "strings.h"  // for GRABBER, CONVEYER, FILTERED_GRABBER

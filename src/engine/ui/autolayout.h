@@ -1,10 +1,10 @@
 
 #pragma once
 
-#include "../vec_util.h"
-#include "assert.h"
-#include "log.h"
-#include "ui_widget.h"
+#include "../../vec_util.h"
+#include "../assert.h"
+#include "../log.h"
+#include "widget.h"
 /*
 
 namespace ui {

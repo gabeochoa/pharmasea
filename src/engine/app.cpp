@@ -4,13 +4,13 @@
 #define ENABLE_TRACING 1
 #include "tracy.h"
 //
+#include "event.h"
 #include "globals_register.h"
 #include "keymap.h"
 #include "raylib.h"
 //
 
 #include "log.h"
-#include "profile.h"
 #include "settings.h"
 #include "shader_library.h"
 

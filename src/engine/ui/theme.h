@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "ui_color.h"
+#include "color.h"
 
 namespace ui {
 
