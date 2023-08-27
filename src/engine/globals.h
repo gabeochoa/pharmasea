@@ -28,11 +28,11 @@ template<typename Str>
     static_assert(sizeof(size_t) == 8,
                   "Only 64-bit size_t is supported for this example.");
     size_t result = 0xcbf29ce484222325;  // FNV offset basis
-    const char* str = toHash;
-    while (*str) {
-        result ^= *str;
+    const char* temp = toHash;
+    while (*temp) {
+        result ^= *temp;
         result *= 1099511628211;  // FNV prime
-        ++str;
+        ++temp;
     }
     return result;
 }

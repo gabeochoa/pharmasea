@@ -45,16 +45,15 @@ struct EntityHelper {
     // TODO :BE: maybe return the entity id or something
     template<typename... TArgs>
     static RefEntity createItem(TArgs... args) {
-        Entity& e = createEntity();
-        items::make_item_type(e, std::forward<TArgs>(args)...);
+        items::make_item_type(createEntity(), std::forward<TArgs>(args)...);
         // log_info("created a new item {} {} ", e.id, e.get<DebugName>());
         return *(get_entities().back());
     }
 
     template<typename... TArgs>
     static RefEntity createPermanentItem(TArgs... args) {
-        Entity& e = createPermanentEntity();
-        items::make_item_type(e, std::forward<TArgs>(args)...);
+        items::make_item_type(createPermanentEntity(),
+                              std::forward<TArgs>(args)...);
         // log_info("created a new item {} {} ", e.id, e.get<DebugName>());
         return *(get_entities().back());
     }

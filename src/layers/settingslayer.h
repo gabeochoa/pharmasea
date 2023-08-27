@@ -25,8 +25,8 @@ struct SettingsLayer : public Layer {
 
     struct KeyBindingPopup {
         bool show = false;
-        menu::State state;
-        InputName input;
+        menu::State state = menu::State::UI;
+        InputName input = InputName::Pause;
     } key_binding_popup;
 
     InputType selected_input_type = InputType::Keyboard;

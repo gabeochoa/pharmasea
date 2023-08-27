@@ -143,7 +143,7 @@ enum ForEachFlow {
 
 void EntityHelper::forEachEntity(std::function<ForEachFlow(Entity&)> cb) {
     TRACY_ZONE_SCOPED;
-    for (auto& e : get_entities()) {
+    for (const auto& e : get_entities()) {
         if (!e) continue;
         auto fef = cb(*e);
         if (fef == 1) continue;
@@ -198,7 +198,6 @@ std::vector<RefEntity> EntityHelper::getAllWithType(const EntityType& type) {
 }
 
 bool EntityHelper::doesAnyExistWithType(const EntityType& type) {
-    std::vector<RefEntity> matching;
     for (std::shared_ptr<Entity> e : get_entities()) {
         if (!e) continue;
         if (check_type(*e, type)) return true;

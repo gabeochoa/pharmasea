@@ -73,8 +73,8 @@ struct IsProgressionManager : public BaseComponent {
     // TODO make private
     bool isUpgradeRound = true;
     bool collectedOptions = false;
-    Drink option1;
-    Drink option2;
+    Drink option1 = coke;
+    Drink option2 = coke;
 
     DrinkSet enabledDrinks;
     IngredientBitSet enabledIngredients;

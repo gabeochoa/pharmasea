@@ -274,10 +274,6 @@ void WaveCollapse::run() {
     log_clean(LogLevel::LOG_INFO, "{}", "completed wfc");
 }
 
-int WaveCollapse::_gen_rand(int a, int b) const {
-    return a + (gen() % (b - a));
-}
-
 Rose WaveCollapse::_get_opposite_connection(Rose r) const {
     switch (r) {
         case N:
@@ -293,28 +289,8 @@ Rose WaveCollapse::_get_opposite_connection(Rose r) const {
     return N;
 }
 
-Location WaveCollapse::_get_relative_loc(Rose r, int x, int y) const {
-    switch (r) {
-        case N:
-            return {x - 1, y - 0};
-        case S:
-            return {x + 1, y + 0};
-        case E:
-            return {x + 0, y + 1};
-        case W:
-            return {x - 0, y - 1};
-    }
-    log_error("How did we get a Rose that wasnt handled in the switch");
-    return {x, y};
-}
-
 bool WaveCollapse::_in_grid(int x, int y) const {
     return x >= 0 && x < rows && y >= 0 && y < cols;
-}
-
-bool WaveCollapse::_collapsed(int x, int y) const {
-    if (x == -1 || y == -1) return true;
-    return collapsed.contains(x * rows + y);
 }
 
 bool WaveCollapse::_has_non_collapsed() const {

@@ -8,10 +8,10 @@
 #include "raylib.h"
 
 namespace network {
-    extern long long total_ping;
-    extern long long there_ping;
-    extern long long return_ping;
-}
+extern long long total_ping;
+extern long long there_ping;
+extern long long return_ping;
+}  // namespace network
 
 using namespace profile;
 struct FPSLayer : public Layer {
@@ -22,10 +22,11 @@ struct FPSLayer : public Layer {
     virtual void onDraw(float) override {
         ext::draw_fps(0, 0);
 
-        const std::string str =
+        const std::string ping_str =
             fmt::format("ping {}ms (to{},from{})", network::total_ping,
                         network::there_ping, network::return_ping);
-        DrawTextEx(Preload::get().font, str.c_str(), vec2{75, 0}, 20, 0, WHITE);
+        DrawTextEx(Preload::get().font, ping_str.c_str(), vec2{75, 0}, 20, 0,
+                   WHITE);
 
         if (GLOBALS.get<bool>("debug_ui_enabled")) {
             std::vector<Sample> pairs;

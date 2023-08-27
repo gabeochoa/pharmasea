@@ -90,12 +90,15 @@ struct WaveCollapse {
     void run();
 
    private:
+    bool _in_grid(int x, int y) const;
+    bool _is_edge(int x, int y) const;
     bool _can_be_trivially_collapsed(int x, int y) const;
+    bool _is_collapsed(int index) const { return collapsed.contains(index); }
+
     size_t num_options(size_t index) const;
     Location _find_least_choices() const;
     void _collapse(int x, int y);
 
-    bool _is_collapsed(int index) const { return collapsed.contains(index); }
     void for_each_cell(std::function<void(int, int)> cb) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -127,13 +130,12 @@ struct WaveCollapse {
         });
     }
 
+    bool _are_patterns_compatible(const Pattern& a, const Pattern& b,
+                                  const Rose& AtoB) const;
+    // if either dont care, then we good
+
     size_t pat_size() const;
-    int _gen_rand(int a, int b) const;
     Rose _get_opposite_connection(Rose r) const;
-    Location _get_relative_loc(Rose r, int x, int y) const;
-    bool _in_grid(int x, int y) const;
-    bool _is_edge(int x, int y) const;
-    bool _collapsed(int x, int y) const;
     bool _eligible_pattern(int x, int y, int pattern_id) const;
     void _place_pattern(int x, int y, int pattern_id);
     bool _has_non_collapsed() const;
@@ -141,8 +143,6 @@ struct WaveCollapse {
     void _validate_patterns() const;
     void _place_required();
     void _place_walls();
-    bool _are_patterns_compatible(const Pattern& a, const Pattern& b,
-                                  const Rose& AtoB) const;
 
     void _shuffle_visit_order() const {
         std::shuffle(numbers.begin(), numbers.end(), gen);

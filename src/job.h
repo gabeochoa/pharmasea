@@ -184,7 +184,7 @@ struct WaitJob : public Job {
 struct WaitInQueueJob : public Job {
     WaitInQueueJob() : Job(JobType::WaitInQueue, vec2{0, 0}, vec2{0, 0}) {}
 
-    EntityID reg_id;
+    EntityID reg_id = -1;
     int spot_in_line = -1;
 
     virtual State run_state_initialize(Entity& entity, float dt) override;
@@ -238,7 +238,7 @@ struct DrinkingJob : public Job {
 };
 
 struct MoppingJob : public Job {
-    EntityID vom_id;
+    EntityID vom_id = -1;
 
     float timePassedInCurrentState = 0.f;
     float timeToComplete = 1.f;
