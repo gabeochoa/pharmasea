@@ -69,7 +69,7 @@ inline Rectangle expand_pct(const Rectangle& a, float pct) {
 
 inline Rectangle offset_y(const Rectangle& a, float y) {
     return Rectangle{a.x,      //
-                     a.y - y,  //
+                     a.y + y,  //
                      a.width,  //
                      a.height};
 }
@@ -550,11 +550,10 @@ inline ElementResult scroll_window(
     //
     focus::active_if_mouse_inside(widget, view);
     if (focus::is_hot(widget.id)) {
-        // log_info("scroll {} yoff {}", context->yscrolled,
-        // state->y_offset.asT());
-        context->yscrolled =
-            fmax(0.f, fmin(widget.rect.height, context->yscrolled));
-        state->y_offset = context->yscrolled;
+        state->y_offset = state->y_offset + context->yscrolled;
+        float scale = 1.0f;
+        state->y_offset =
+            fmin(0.f, fmax(-1.f * scale * widget.rect.height, state->y_offset));
     }
 
     //
