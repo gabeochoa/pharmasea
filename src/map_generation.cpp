@@ -28,7 +28,7 @@ void WaveCollapse::_photo() const {
 };
 
 std::vector<std::string> WaveCollapse::get_lines() {
-    bool add_extra_space = true;
+    bool add_extra_space = false;
 
     std::vector<std::string> lines;
     std::stringstream temp;
@@ -53,31 +53,41 @@ std::vector<std::string> WaveCollapse::get_lines() {
     }
 
     for (auto line : lines) {
-        std::cout << line << std::endl;
+        log_clean(LogLevel::LOG_INFO, "{}", line);
     }
 
     return lines;
 }
 
 void WaveCollapse::_dump() const {
+    std::vector<std::string> lines;
+    std::stringstream temp;
+
     for (int i = 0; i < rows * cols; i++) {
         if (i != 0 && i % (rows) == 0) {
-            std::cout << std::endl;
+            lines.push_back(std::string(temp.str()));
+            temp.str(std::string());
         }
 
         if (grid_options[i].count() >= 2) {
-            std::cout << (grid_options[i].count());
+            temp << (grid_options[i].count());
         }
         if (grid_options[i].count() == 1) {
             int bit = bitset_utils::get_first_enabled_bit(grid_options[i]);
-            std::cout << (char) (bit + 'A');
+            temp << (char) (bit + 'A');
         }
         if (grid_options[i].count() == 0) {
-            std::cout << "_";
+            temp << "_";
         }
-        std::cout << " ";
+        temp << " ";
     }
-    std::cout << std::endl;
+    lines.push_back(std::string(temp.str()));
+    temp.str(std::string());
+    lines.push_back("");
+
+    for (auto line : lines) {
+        log_clean(LogLevel::LOG_INFO, "{}", line);
+    }
 }
 
 bool WaveCollapse::_eligible_pattern(int x, int y, int pattern_id) const {
@@ -105,8 +115,8 @@ bool WaveCollapse::_eligible_pattern(int x, int y, int pattern_id) const {
 
 void WaveCollapse::_place_pattern(int x, int y, int pattern_id) {
     const auto _print_pattern_and_name = [&]() {
-        log_info("Selected Pattern {}({})", pattern_id,
-                 (char) (pattern_id + 'A'));
+        log_clean(LogLevel::LOG_INFO, "Selected Pattern {}({})", pattern_id,
+                  (char) (pattern_id + 'A'));
 
         for (size_t i = 0; i < patterns[pattern_id].pat.size(); i++) {
             for (size_t j = 0; j < patterns[pattern_id].pat[i].size(); j++) {
@@ -246,10 +256,11 @@ void WaveCollapse::_propagate_all() {
 void WaveCollapse::run() {
     const auto _dump_and_print = [&](const std::string& msg) {
         _dump();
-        log_info("{}", msg);
+        log_clean(LogLevel::LOG_INFO, "{}", msg);
     };
 
-    log_info("starting generation with {} rows and {} cols", rows, cols);
+    log_clean(LogLevel::LOG_INFO,
+              "starting generation with {} rows and {} cols", rows, cols);
 
     // double check if we have any common errors with our patterns
     _validate_patterns();
@@ -275,11 +286,11 @@ void WaveCollapse::run() {
     do {
         _dump();
         auto [x, y] = _find_lowest_entropy();
-        log_info("lowest entropy was {} {}", x, y);
+        log_clean(LogLevel::LOG_INFO, "lowest entropy was {} {}", x, y);
         if (_collapsed(x, y)) break;
 
         auto pattern = _choose_pattern(x, y);
-        log_info("selected pattern {} ", pattern.id);
+        log_clean(LogLevel::LOG_INFO, "selected pattern {} ", pattern.id);
         _announce_max_count_chosen(pattern.id, x, y);
         _propagate_choice(x, y);
     } while (_has_non_collapsed());
@@ -380,7 +391,7 @@ Pattern& WaveCollapse::_choose_pattern(int x, int y) {
         }
 
     } while (bit == -1);
-    log_info("got random bit {}", bit);
+    log_clean(LogLevel::LOG_INFO, "got random bit {}", bit);
 
     _place_pattern(x, y, bit);
 
@@ -469,7 +480,8 @@ void WaveCollapse::_propagate_choice(int root_x, int root_y) {
         if (pos.none()) continue;
         if (pos.count() != 1) continue;
         int bit = bitset_utils::get_first_enabled_bit(pos);
-        // log_info("collapsed pattern in prop was {}", bit);
+        // log_clean(LogLevel::LOG_INFO, "collapsed pattern in prop was {}",
+        // bit);
         const Pattern& collapsed_pattern = patterns[bit];
 
         // queue up all the neighbors
