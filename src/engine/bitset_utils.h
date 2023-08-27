@@ -59,6 +59,16 @@ int get_random_enabled_bit(const std::bitset<N>& bitset) {
 }
 
 template<size_t N>
+int get_first_enabled_bit(const std::bitset<N>& bitset) {
+    for (size_t i = 0; i < bitset.size(); ++i) {
+        if (bitset.test(i)) {
+            return (int) i;
+        }
+    }
+    return -1;
+}
+
+template<size_t N>
 void for_each_enabled_bit(const std::bitset<N>& bitset,
                           std::function<void(size_t)> cb) {
     for (size_t i = 0; i < bitset.size(); ++i) {
