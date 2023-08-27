@@ -32,12 +32,16 @@ typedef std::vector<Pattern> Patterns;
 
 struct MapGenerationInformation {
     Patterns patterns;
-    int rows = 5;
-    int cols = 5;
+    int rows = 0;
+    int cols = 0;
 };
 extern MapGenerationInformation MAP_GEN_INFO;
 
 struct WaveCollapse {
+    std::set<int> collapsed;
+
+    Patterns patterns;
+
     int rows;
     int cols;
 
@@ -45,10 +49,22 @@ struct WaveCollapse {
     std::vector<Possibilities> grid_options;
 
     // We mark this mutable since its not really what we _mean_ by const
+    mutable std::vector<int> numbers;
     mutable std::mt19937 gen;
     mutable bool is_first_one;
 
     WaveCollapse(int r, int c, unsigned int seed) : rows(r), cols(c) {
+        numbers.resize(rows * cols);
+        for (int i = 0; i < rows * cols; ++i) numbers[i] = i;
+
+        patterns = Patterns();
+        patterns.reserve(MAP_GEN_INFO.patterns.size());
+        // taking as non-ref to copy the patterns into our object because we
+        // edit them as we generate
+        for (Pattern pattern : MAP_GEN_INFO.patterns) {
+            patterns.push_back(pattern);
+        }
+
         // We manually only set the num patterns we have
         // because its likely smaller than MAX_NUM_PATTERNS
         Possibilities default_val;
@@ -59,41 +75,88 @@ struct WaveCollapse {
         grid_options = std::vector<Possibilities>(rows * cols, default_val);
         gen = std::mt19937(seed);
         is_first_one = true;
+
+        // Random stuff should happen under here
+        //
+
+        _shuffle_visit_order();
     }
 
+    WaveCollapse(unsigned int seed)
+        : WaveCollapse(MAP_GEN_INFO.rows, MAP_GEN_INFO.cols, seed) {}
+
     std::vector<std::string> get_lines();
-    void _dump();
-    Patterns& patterns();
+    void _dump() const;
 
     void run();
-    void _photo();
+    void _photo() const;
 
    private:
+    bool _is_collapsed(int index) const { return collapsed.contains(index); }
+    void for_each_cell(std::function<void(int, int)> cb) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (collapsed.contains(i * rows + j)) continue;
+                cb(i, j);
+            }
+        }
+    }
+    void for_each_non_collapsed_cell(std::function<void(int, int)> cb) {
+        for_each_cell([&](int i, int j) {
+            if (collapsed.contains(i * rows + j)) return;
+            cb(i, j);
+        });
+    }
+
+    void for_each_cell(std::function<void(int, int)> cb) const {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (collapsed.contains(i * rows + j)) continue;
+                cb(i, j);
+            }
+        }
+    }
+
+    void for_each_non_collapsed_cell(std::function<void(int, int)> cb) const {
+        for_each_cell([&](int i, int j) {
+            if (collapsed.contains(i * rows + j)) return;
+            cb(i, j);
+        });
+    }
+
+    size_t pat_size() const;
     int _gen_rand(int a, int b) const;
     Rose _get_opposite_connection(Rose r) const;
     Location _get_relative_loc(Rose r, int x, int y) const;
     bool _in_grid(int x, int y) const;
     bool _is_edge(int x, int y) const;
     bool _collapsed(int x, int y) const;
+    bool _eligible_pattern(int x, int y, int pattern_id) const;
+    void _place_pattern(int x, int y, int pattern_id);
     bool _has_non_collapsed() const;
     size_t num_patterns() const;
-    void _validate_patterns();
+    void _validate_patterns() const;
     void _place_required();
+    void _place_walls();
     void _propagate_all();
     Location _find_lowest_entropy() const;
-    Pattern _choose_pattern(int x, int y);
+    Pattern& _choose_pattern(int x, int y);
     bool _are_patterns_compatible(const Pattern& a, const Pattern& b,
                                   const Rose& AtoB) const;
     std::pair<bool, Location> _propagate_in_direction(
         Rose r, const Location root, const Pattern& root_pattern);
 
+    void _shuffle_visit_order() const {
+        std::shuffle(numbers.begin(), numbers.end(), gen);
+    }
+
     void _propagate_choice(int root_x, int root_y);
 
     std::vector<Rose> _get_edges(int x, int y);
 
-    void _collapse_edges();
+    void _initial_cleanup();
 
-    void _handle_max_count(int pattern_id, int x, int y);
+    void _announce_max_count_chosen(int pattern_id, int x, int y);
 };
 
 }  // namespace wfc

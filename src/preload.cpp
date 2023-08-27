@@ -383,8 +383,8 @@ void Preload::load_map_generation_info() {
 
     load_json_config_file(
         "map_generator_input.json", [](const nlohmann::json& contents) {
-            MAP_GEN_INFO.rows = contents["max_rows"].get<int>();
-            MAP_GEN_INFO.cols = contents["max_cols"].get<int>();
+            MAP_GEN_INFO.rows = contents.value("max_rows", 3);
+            MAP_GEN_INFO.cols = contents.value("max_cols", 3);
 
             auto jpatterns = contents["patterns"];
 

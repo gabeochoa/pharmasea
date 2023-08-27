@@ -24,6 +24,9 @@ int main(int argc, char* argv[]) {
     startup();
     defer(Settings::get().write_save_file());
 
+    // wfc::WaveCollapse wc(static_cast<unsigned
+    // int>(hashString("WVZ_ORYYVAV"))); wc.run(); wc.get_lines(); return 0;
+    //
     if (argc > 1) {
         bool is_test = strcmp(argv[1], "test") == 0;
         if (is_test) {

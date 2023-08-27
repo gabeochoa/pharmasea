@@ -103,11 +103,10 @@ void LevelInfo::generate_default_seed() {
 void generate_in_game_map_wfc(const std::string& seed) {
     // int rows = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
     // int cols = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
-    int rows = 5;
-    int cols = 5;
+    // int rows = 5;
+    // int cols = 5;
 
-    wfc::WaveCollapse wc(rows, cols,
-                         static_cast<unsigned int>(hashString(seed)));
+    wfc::WaveCollapse wc(static_cast<unsigned int>(hashString(seed)));
     wc.run();
     wc._photo();
 
