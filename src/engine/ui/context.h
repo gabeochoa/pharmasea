@@ -19,6 +19,8 @@
 #include "theme.h"
 #include "widget.h"
 
+extern ui::UITheme UI_THEME;
+
 namespace ui {
 
 const menu::State STATE = menu::State::UI;
@@ -245,19 +247,6 @@ struct IUIContextRenderTextures {
     }
 };
 
-struct IUIContextTheming {
-    std::stack<UITheme> themestack;
-
-    virtual void init() { this->push_theme(ui::DEFAULT_THEME); }
-    void push_theme(UITheme theme) { themestack.push(theme); }
-    void pop_theme() { themestack.pop(); }
-
-    [[nodiscard]] UITheme active_theme() const {
-        if (themestack.empty()) return DEFAULT_THEME;
-        return themestack.top();
-    }
-};
-
 static std::atomic_int UICONTEXT_ID = 0;
 struct UIContext;
 static std::shared_ptr<UIContext> _uicontext;
@@ -268,7 +257,6 @@ static std::shared_ptr<UIContext> _uicontext;
 static UIContext* globalContext;
 struct UIContext : public IUIContextInputManager,
                    public IUIContextRenderTextures,
-                   public IUIContextTheming,
                    public FontSizeCache {
     [[nodiscard]] inline static UIContext* create() { return new UIContext(); }
     [[nodiscard]] inline static UIContext& get() {
@@ -303,7 +291,6 @@ struct UIContext : public IUIContextInputManager,
 
     virtual void init() override {
         IUIContextInputManager::init();
-        IUIContextTheming::init();
         FontSizeCache::init();
     }
 

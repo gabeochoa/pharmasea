@@ -388,7 +388,7 @@ struct NetworkLayer : public Layer {
 
         if (MenuState::get().is_not(menu::State::Network)) return;
 
-        ext::clear_background(ui_context->active_theme().background);
+        ext::clear_background(ui::UI_THEME.background);
 
         using namespace ui;
 

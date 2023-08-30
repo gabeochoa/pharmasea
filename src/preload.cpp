@@ -19,7 +19,18 @@ MapGenerationInformation MAP_GEN_INFO;
 }
 
 namespace ui {
-UITheme DEFAULT_THEME = UITheme();
+UITheme UI_THEME = UITheme();
+std::vector<std::string> theme_keys;
+std::map<std::string, UITheme> themes;
+}  // namespace ui
+
+std::vector<std::string> Preload::ui_theme_options() { return ui::theme_keys; }
+
+void Preload::update_ui_theme(const std::string theme) {
+    using namespace ui;
+    if (themes.contains(theme)) {
+        UI_THEME = themes.at(theme);
+    }
 }
 
 void Preload::_load_font_from_name(const std::string& filename,
@@ -199,28 +210,31 @@ void Preload::load_config() {
         };
     };
 
-    load_json_config_file(
-        "settings.json", [_to_color](const nlohmann::json& contents) {
-            LOG_LEVEL = contents.value("LOG_LEVEL", 2);
-            std::cout << "LOG_LEVEL read from file: " << LOG_LEVEL << std::endl;
+    load_json_config_file("settings.json", [&](const nlohmann::json& contents) {
+        LOG_LEVEL = contents.value("LOG_LEVEL", 2);
+        std::cout << "LOG_LEVEL read from file: " << LOG_LEVEL << std::endl;
 
-            EXAMPLE_MAP = contents["DEFAULT_MAP"];
-            std::cout << "DEFAULT_MAP read from file: " << EXAMPLE_MAP.size()
-                      << std::endl;
+        EXAMPLE_MAP = contents["DEFAULT_MAP"];
+        std::cout << "DEFAULT_MAP read from file: " << EXAMPLE_MAP.size()
+                  << std::endl;
 
-            const auto theme_name = contents["theme"];
-            const auto themes = contents["themes"];
+        const auto theme_name = contents["theme"];
+        const auto j_themes = contents["themes"];
 
-            const auto theme_data = themes[theme_name];
-
-            ui::DEFAULT_THEME = ui::UITheme(_to_color(theme_data["font"]),  //
-                                            _to_color(theme_data["darkfont"]),
-                                            _to_color(theme_data["background"]),
-                                            _to_color(theme_data["primary"]),
-                                            _to_color(theme_data["secondary"]),
-                                            _to_color(theme_data["accent"]),
-                                            _to_color(theme_data["error"]));
-        });
+        for (auto& theme_obj : j_themes.get<nlohmann::json::object_t>()) {
+            std::string key = theme_obj.first;
+            auto theme_data = theme_obj.second;
+            ui::themes[key] = ui::UITheme(_to_color(theme_data["font"]),  //
+                                          _to_color(theme_data["darkfont"]),
+                                          _to_color(theme_data["background"]),
+                                          _to_color(theme_data["primary"]),
+                                          _to_color(theme_data["secondary"]),
+                                          _to_color(theme_data["accent"]),
+                                          _to_color(theme_data["error"]));
+            ui::theme_keys.push_back(key);
+        }
+        update_ui_theme(theme_name);
+    });
 }
 
 void Preload::load_models() {

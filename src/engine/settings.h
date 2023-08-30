@@ -49,6 +49,7 @@ struct Data {
     std::string username = "";
     bool enable_postprocessing = true;
     std::string last_ip_joined;
+    std::string ui_theme;
 
    private:
     friend bitsery::Access;
@@ -63,6 +64,7 @@ struct Data {
         s.value1b(enable_postprocessing);
         s.text1b(last_ip_joined, 25);
         s.text1b(lang_name, MAX_LANG_LENGTH);
+        s.text1b(ui_theme, MAX_LANG_LENGTH);
     }
     friend std::ostream& operator<<(std::ostream& os, const Data& data) {
         os << "Settings(" << std::endl;
@@ -76,6 +78,7 @@ struct Data {
         os << "post_processing: " << data.enable_postprocessing << std::endl;
         os << "last ip joined: " << data.last_ip_joined << std::endl;
         os << "lang name: " << data.lang_name << std::endl;
+        os << "ui_theme: " << data.ui_theme << std::endl;
         os << ")" << std::endl;
         return os;
     }
@@ -281,6 +284,11 @@ struct Settings {
         update_language_from_index(_index(lang));
     }
 
+    void update_ui_theme(const std::string& s);
+    std::vector<std::string> get_ui_theme_options();
+    int get_ui_theme_selected_index();
+    void update_theme_from_index(int index);
+
     // Note: Basically once we load the file,
     // we run into an issue where our settings is correct,
     // but the underlying data isnt being used
@@ -301,5 +309,6 @@ struct Settings {
         update_master_volume(data.master_volume);
         update_streamer_safe_box(data.show_streamer_safe_box);
         update_language_name(data.lang_name);
+        update_ui_theme(data.ui_theme);
     }
 };

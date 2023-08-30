@@ -87,7 +87,7 @@ inline void render_current_register_queue(float dt) {
     if (debug_mode_on) {
         raylib::DrawRectangleRounded(
             queue_window, 0.5f, 8,
-            ::ui::DEFAULT_THEME.from_usage(::ui::theme::Background));
+            ::ui::UI_THEME.from_usage(::ui::theme::Background));
     }
 
     for (int i = 0; i < fmin(num_queue, max_num_cards); i++) {
@@ -102,7 +102,7 @@ inline void render_current_register_queue(float dt) {
                       card_rect.width, card_rect.height};
         raylib::DrawRectangleRounded(
             card_index_rect, 0.5f, 8,
-            ::ui::DEFAULT_THEME.from_usage(::ui::theme::Primary));
+            ::ui::UI_THEME.from_usage(::ui::theme::Primary));
 
         auto card = orders_to_render[i];
 
@@ -144,11 +144,9 @@ inline void render_timer(const Entity& entity, float) {
 
             // TODO change to varargs with structured bindings?
             // or colocate with usage
-            Color bg = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Background);
-            Color primary =
-                ::ui::DEFAULT_THEME.from_usage(::ui::theme::Primary);
-            Color font_color =
-                ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
+            Color bg = ::ui::UI_THEME.from_usage(::ui::theme::Background);
+            Color primary = ::ui::UI_THEME.from_usage(::ui::theme::Primary);
+            Color font_color = ::ui::UI_THEME.from_usage(::ui::theme::Font);
 
             raylib::DrawRectangleRounded(
                 {rect_pos.x, rect_pos.y, rect_size.x, rect_size.y}, 0.5f, 8,
@@ -188,7 +186,7 @@ inline void render_block_state_change_reason(const Entity& entity, float) {
 
     //
     auto _render_single_reason = [](const std::string& text, float y) {
-        Color font_color = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
+        Color font_color = ::ui::UI_THEME.from_usage(::ui::theme::Font);
         raylib::DrawTextEx(Preload::get().font, text.c_str(), {200, y}, 75, 0,
                            font_color);
     };
@@ -206,7 +204,7 @@ inline void render_block_state_change_reason(const Entity& entity, float) {
     }
 
     if (ht.block_state_change_reasons.none()) {
-        Color font_color = ::ui::DEFAULT_THEME.from_usage(::ui::theme::Font);
+        Color font_color = ::ui::UI_THEME.from_usage(::ui::theme::Font);
         auto countdown = fmt::format(
             "{}: {}", text_lookup(strings::i18n::NEXT_ROUND_COUNTDOWN),
             (int) ceil(util::trunc(ht.roundSwitchCountdown, 1)));

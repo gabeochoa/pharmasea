@@ -430,8 +430,7 @@ inline bool should_exit_early(const Widget& widget) {
                                        context->scissor_box.value());
 }
 
-// TODO replace with either nothing or using context's
-inline ui::UITheme active_theme() { return ui::DEFAULT_THEME; }
+inline ui::UITheme active_theme() { return ui::UI_THEME; }
 
 inline void draw_text(const std::string& content, Rectangle parent, int z_index,
                       ui::theme::Usage color_usage = ui::theme::Usage::Font) {

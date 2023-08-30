@@ -37,7 +37,7 @@ struct AboutLayer : public Layer {
     virtual void onDraw(float dt) override {
         if (MenuState::get().is_not(menu::State::About)) return;
         raylib::SetExitKey(raylib::KEY_NULL);
-        ext::clear_background(ui_context->active_theme().background);
+        ext::clear_background(ui::UI_THEME.background);
         using namespace ui;
         begin(ui_context, dt);
 

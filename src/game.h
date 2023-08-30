@@ -44,7 +44,9 @@
 #include "layers/uitestlayer.h"
 #include "layers/versionlayer.h"
 
-extern ui::UITheme DEFAULT_THEME;
+extern ui::UITheme UI_THEME;
+extern std::vector<std::string> theme_keys;
+extern std::map<std::string, ui::UITheme> themes;
 
 //
 // This one should be last

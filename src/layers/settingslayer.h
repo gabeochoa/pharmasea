@@ -40,21 +40,9 @@ struct SettingsLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     bool windowSizeDropdownState = false;
     int windowSizeDropdownIndex = 0;
-    bool resolution_dropdown_open = false;
-    int resolution_selected_index = 0;
-
-    bool language_dropdown_open = false;
-    int language_selected_index = 0;
 
     SettingsLayer() : Layer("Settings") {
         ui_context = std::make_shared<ui::UIContext>();
-
-        resolution_selected_index =
-            Settings::get().get_current_resolution_index();
-        if (resolution_selected_index < 0) resolution_selected_index = 0;
-
-        language_selected_index = Settings::get().get_current_language_index();
-        if (language_selected_index < 0) language_selected_index = 0;
 
         keyInputNames = magic_enum::enum_entries<InputName>();
         for (const auto& kv : keyInputNames) {
@@ -110,8 +98,9 @@ struct SettingsLayer : public Layer {
         footer = rect::bpad(footer, 50);
 
         {
-            auto [master_vol, music_vol, resolution, language, streamer,
-                  postprocessing] = rect::hsplit<6>(rect::bpad(rows, 85), 20);
+            auto [master_vol, music_vol, ui_theme, resolution, language,
+                  streamer, postprocessing] =
+                rect::hsplit<7>(rect::bpad(rows, 85), 20);
 
             {
                 auto [label, control] = rect::vsplit(master_vol, 30);
@@ -136,6 +125,23 @@ struct SettingsLayer : public Layer {
                                {.value = Settings::get().data.music_volume});
                     result) {
                     Settings::get().update_music_volume(result.as<float>());
+                }
+            }
+
+            {
+                auto [label, control] = rect::vsplit(ui_theme, 30);
+                control = rect::rpad(control, 30);
+
+                // TODO get updated string
+                text(Widget{label}, text_lookup(strings::i18n::RESOLUTION));
+                if (auto result = dropdown(
+                        Widget{control},
+                        DropdownData{
+                            Settings::get().get_ui_theme_options(),
+                            Settings::get().get_ui_theme_selected_index(),
+                        });
+                    result) {
+                    Settings::get().update_theme_from_index(result.as<int>());
                 }
             }
 
@@ -229,7 +235,7 @@ struct SettingsLayer : public Layer {
 
     virtual void onDraw(float dt) override {
         if (MenuState::get().is_not(menu::State::Settings)) return;
-        ext::clear_background(ui_context->active_theme().background);
+        ext::clear_background(ui::UI_THEME.background);
 
         begin(ui_context, dt);
 

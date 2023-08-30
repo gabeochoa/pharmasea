@@ -67,7 +67,7 @@ struct UITheme {
     }
 };
 
-extern UITheme DEFAULT_THEME;
+extern UITheme UI_THEME;
 static const UITheme GRAYSCALE =
     UITheme(color::white, color::grey, color::grey, color::black,
             color::cool_grey, color::off_white,

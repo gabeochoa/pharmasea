@@ -63,7 +63,7 @@
 #include "rendering_system.h"
 #include "ui_rendering_system.h"
 
-extern ui::UITheme DEFAULT_THEME;
+extern ui::UITheme UI_THEME;
 
 namespace system_manager {
 

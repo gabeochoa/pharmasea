@@ -25,8 +25,8 @@ struct ToastLayer : public Layer, public FontSizeCache {
         float offY = 0.f;
         float spacing = 0.f;
 
-        Color accent = ui::DEFAULT_THEME.from_usage(ui::theme::Accent);
-        Color font_color = ui::DEFAULT_THEME.from_usage(ui::theme::Font);
+        Color accent = ui::UI_THEME.from_usage(ui::theme::Accent);
+        Color font_color = ui::UI_THEME.from_usage(ui::theme::Font);
 
         const auto background_color = [](AnnouncementType type) {
             switch (type) {
@@ -42,7 +42,7 @@ struct ToastLayer : public Layer, public FontSizeCache {
 
         for (auto& toast : TOASTS) {
             Color primary =
-                ui::DEFAULT_THEME.from_usage(background_color(toast.type));
+                ui::UI_THEME.from_usage(background_color(toast.type));
             // TODO interpolate the alpha on these to look nicer, (pop in /
             // pop out)
 
