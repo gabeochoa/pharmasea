@@ -101,6 +101,13 @@ static const Color orange_soda = Color{240, 100, 73, 255};
 static const Color isabelline = Color{237, 230, 227, 255};
 static const Color tea_green = Color{195, 232, 189, 255};
 
+// This is the original xkcd cerulean but i prefer the other one
+// static const Color cerulean = Color{4, 133, 209, 255};
+
+static const Color cerulean = Color{0, 126, 167, 255};
+
+// "secondary": [33, 158, 188, 255], // nice blue but too close to pacific
+
 // XKCD Colors
 
 static const Color acid_green = Color{143, 254, 9, 255};
@@ -256,7 +263,7 @@ static const Color celadon = Color{190, 253, 183, 255};
 static const Color celery = Color{193, 253, 149, 255};
 static const Color cement = Color{165, 163, 145, 255};
 static const Color cerise = Color{222, 12, 98, 255};
-static const Color cerulean = Color{4, 133, 209, 255};
+// static const Color cerulean = Color{4, 133, 209, 255};
 static const Color cerulean_blue = Color{5, 110, 238, 255};
 static const Color charcoal = Color{52, 56, 55, 255};
 static const Color charcoal_grey = Color{60, 65, 66, 255};

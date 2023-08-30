@@ -538,7 +538,7 @@ inline ElementResult text(const Widget& widget, const std::string& content,
 }
 
 inline ElementResult window(const Widget& widget) {
-    internal::draw_rect(widget.rect, widget.z_index, ui::theme::Primary);
+    internal::draw_rect(widget.rect, widget.z_index, ui::theme::Secondary);
     return ElementResult{true, widget.z_index - 1};
 }
 
