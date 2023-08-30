@@ -5,7 +5,6 @@
 // also the code isnt written yet :)
 // TODO :IMPACT: add support for steam connections
 #include "engine/log.h"
-#include "layers/minimaplayer.h"
 #define BUILD_WITHOUT_STEAM
 
 // Enable tracing
@@ -36,9 +35,9 @@
 #include "layers/handlayer.h"
 #include "layers/menulayer.h"
 #include "layers/menustatelayer.h"
-#include "layers/minimaplayer.h"
 #include "layers/networklayer.h"
 #include "layers/pauselayer.h"
+#include "layers/seedmanagerlayer.h"
 #include "layers/settingslayer.h"
 #include "layers/streamersafelayer.h"
 #include "layers/toastlayer.h"
@@ -132,7 +131,7 @@ void startup() {
         new PauseLayer(),
         //
         new GameDebugLayer(),
-        new MinimapLayer(),
+        new SeedManagerLayer(),
         //
         new NetworkLayer(),
         new GameLayer(),
