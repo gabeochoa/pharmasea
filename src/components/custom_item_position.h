@@ -11,6 +11,7 @@ struct CustomHeldItemPosition : public BaseComponent {
         Conveyer,
         ItemHoldingItem,
         PnumaticPipe,
+        Blender,
     } positioner = Positioner::Table;
 
     void init(Positioner p) { positioner = p; }

@@ -177,7 +177,6 @@ const char BLENDER = 'b';
 const char SODA_MACHINE = 'S';
 
 const char CUPBOARD = 'd';
-const char LEMON = 'l';
 const char SIMPLE_SYRUP = 'y';
 const char SQUIRTER = 'q';
 const char TRASH = 'T';
@@ -276,9 +275,6 @@ struct helper {
             } break;
             case CUPBOARD: {
                 return EntityType::Cupboard;
-            } break;
-            case LEMON: {
-                return EntityType::Lemon;
             } break;
             case SIMPLE_SYRUP: {
                 return EntityType::SimpleSyrup;

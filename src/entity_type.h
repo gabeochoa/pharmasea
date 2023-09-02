@@ -45,7 +45,8 @@ enum struct EntityType {
     SodaSpout,
     Drink,
     Alcohol,
-    Lemon,
+    Fruit,
+    FruitJuice,
     SimpleSyrup,
     Mop,
 

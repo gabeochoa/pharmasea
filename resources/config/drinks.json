@@ -24,7 +24,7 @@
           "viewer_name": "Margarita",
           "ingredients": [
               "Tequila",
-              "LemonJuice", // "LimeJuice",
+              "LimeJuice",
               "TripleSec"
           ],
           "prereqs": [
@@ -38,7 +38,7 @@
           "ingredients": [
               "Vodka",
               "LemonJuice", // "CranJuice",
-              "LemonJuice", // "LimeJuice",
+              "LimeJuice",
               "TripleSec"
           ],
           "prereqs": [
@@ -51,7 +51,7 @@
           "viewer_name": "Mojito",
           "ingredients": [
               "Rum",
-              "LemonJuice", // "LimeJuice",
+              "LimeJuice",
               "Soda",
               "Soda", // "Water"
               //"MintLeaf",
@@ -77,7 +77,7 @@
           "viewer_name": "Daiquiri",
           "ingredients": [
               "Rum",
-              "LemonJuice", // "LimeJuice",
+              "LimeJuice",
               "SimpleSyrup"
           ],
           "prereqs": [
@@ -104,7 +104,7 @@
           "ingredients": [
               "Gin",
               "Soda", // "Tonic",
-              "Lemon" //"Lime"
+              "Lime"
           ],
           "prereqs": [
               "Lemon"
@@ -130,7 +130,7 @@
           "ingredients": [
               "Vodka",
               "Soda", // "Tonic",
-              "Lemon" //"Lime"
+              "Lime"
           ]
       },
 
@@ -142,7 +142,7 @@
           "viewer_name": "Moscow Mule",
           "ingredients": [
               "Vodka",
-              "Lemon", //"Lime"
+              "Lime"
               "Soda" // "Ginger Beer",
               // "Ice"
           ]

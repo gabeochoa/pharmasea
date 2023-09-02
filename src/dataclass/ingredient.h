@@ -55,11 +55,6 @@ const std::array<Ingredient, 7> Alcohols = {{
     Bitters,
 }};
 
-// TODO remove and migrate to BlendConvert
-const Ingredient LEMON_START = Ingredient::Lemon;
-const Ingredient LEMON_END = Ingredient::LemonJuice;
-const int NUM_LEMON = (LEMON_END - LEMON_START) + 1;
-
 constexpr std::array<Ingredient, 2> Fruits = {{Lemon, Lime}};
 
 constexpr CEMap<Ingredient, Ingredient, 2> BlendConvert = {{{

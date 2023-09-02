@@ -310,6 +310,22 @@
         },
         {
             "folder": "models/kennynl",
+            "filename": "lime.obj",
+            "library_name": "lime",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "limeHalf.obj",
+            "library_name": "lime_juice",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
             "filename": "lemon.obj",
             "library_name": "lemon",
             "size_scale": 2.0,
@@ -319,7 +335,7 @@
         {
             "folder": "models/kennynl",
             "filename": "lemonHalf.obj",
-            "library_name": "lemon_half",
+            "library_name": "lemon_juice",
             "size_scale": 2.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0

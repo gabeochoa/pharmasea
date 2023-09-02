@@ -8,7 +8,10 @@
 struct IsItem : public BaseComponent {
     virtual ~IsItem() {}
 
-    void set_held_by(EntityType hb) { held_by = hb; }
+    void set_held_by(EntityType hb, int entity_id) {
+        held_by_id = entity_id;
+        held_by = hb;
+    }
 
     [[nodiscard]] bool is_held_by(EntityType hb) const { return held_by == hb; }
 
@@ -40,7 +43,10 @@ struct IsItem : public BaseComponent {
         return held_by != EntityType::Unknown;
     }
 
+    [[nodiscard]] int holder() const { return held_by_id; }
+
    private:
+    int held_by_id = -1;
     EntityType held_by = EntityType::Unknown;
     // Default to all
     EntityTypeSet hb_filter = EntityTypeSet().set();

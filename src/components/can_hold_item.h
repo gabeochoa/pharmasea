@@ -27,7 +27,7 @@ struct CanHoldItem : public BaseComponent {
         return dynamic_pointer_cast<T>(held_item);
     }
 
-    CanHoldItem& update(std::shared_ptr<Entity> item) {
+    CanHoldItem& update(std::shared_ptr<Entity> item, int entity_id) {
         if (held_item != nullptr && !held_item->cleanup &&
             //
             (held_item->has<IsItem>() && !held_item->get<IsItem>().is_held())
@@ -41,7 +41,7 @@ struct CanHoldItem : public BaseComponent {
         }
 
         held_item = item;
-        if (held_item) held_item->get<IsItem>().set_held_by(held_by);
+        if (held_item) held_item->get<IsItem>().set_held_by(held_by, entity_id);
         if (held_item && held_by == EntityType::Unknown) {
             log_warn(
                 "We never had our HeldBy set, so we are holding {}{}  by "
@@ -87,6 +87,7 @@ struct CanHoldItem : public BaseComponent {
 
     [[nodiscard]] EntityFilter& get_filter() { return filter; }
     [[nodiscard]] const EntityFilter& get_filter() const { return filter; }
+    [[nodiscard]] EntityType hb_type() const { return held_by; }
 
    private:
     std::shared_ptr<Entity> held_item = nullptr;
@@ -97,6 +98,7 @@ struct CanHoldItem : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+        s.value4b(held_by);
 
         // TODO we only need these for debug info
         s.ext(held_item, bitsery::ext::StdSmartPtr{});

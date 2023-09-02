@@ -452,9 +452,9 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
         // TODO probably need to have heldby updated here
 
         // Our item takes ownership of the item
-        item_chi.update(item_to_merge);
+        item_chi.update(item_to_merge, item->id);
         // furniture lets go
-        closest_furniture->get<CanHoldItem>().update(nullptr);
+        closest_furniture->get<CanHoldItem>().update(nullptr, -1);
         return true;
     };
 
@@ -521,14 +521,14 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
 
         // TODO probably need to have heldby updated here
         // Their item takes ownership of the item
-        merge_chi.update(playerCHI.item());
+        merge_chi.update(playerCHI.item(), player->id);
 
         // remove the link to the one we were already holding
-        player->get<CanHoldItem>().update(nullptr);
+        player->get<CanHoldItem>().update(nullptr, -1);
         // add the link to the new one
-        player->get<CanHoldItem>().update(item_to_merge);
+        player->get<CanHoldItem>().update(item_to_merge, player->id);
         // furniture can let go
-        closest_furniture->get<CanHoldItem>().update(nullptr);
+        closest_furniture->get<CanHoldItem>().update(nullptr, -1);
         return true;
     };
 
@@ -588,13 +588,13 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
             // if theres nothing there, then we do the normal drop logic
             if (furnCHI.is_holding_item()) {
                 player->get<CanHoldItem>().item()->cleanup = true;
-                player->get<CanHoldItem>().update(nullptr);
+                player->get<CanHoldItem>().update(nullptr, -1);
                 return true;
             }
         }
 
-        furnCHI.update(item);
-        player->get<CanHoldItem>().update(nullptr);
+        furnCHI.update(item, closest_furniture->id);
+        player->get<CanHoldItem>().update(nullptr, -1);
         return true;
     };
 
@@ -646,9 +646,9 @@ void handle_grab(const std::shared_ptr<Entity>& player) {
         // item->get<DebugName>(), closest_furniture->get<DebugName>());
 
         CanHoldItem& playerCHI = player->get<CanHoldItem>();
-        playerCHI.update(item);
+        playerCHI.update(item, player->id);
         item->get<Transform>().update(player->get<Transform>().snap_position());
-        furnCanHold.update(nullptr);
+        furnCanHold.update(nullptr, -1);
         return true;
     };
 
@@ -670,7 +670,7 @@ void handle_grab(const std::shared_ptr<Entity>& player) {
     if (!closest_item) return;
 
     player->get<CanHoldItem>().update(
-        EntityHelper::getEntityAsSharedPtr(closest_item));
+        EntityHelper::getEntityAsSharedPtr(closest_item), player->id);
     return;
 }
 

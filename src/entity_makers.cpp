@@ -470,7 +470,7 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
 
 void make_fruit_basket(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container, {EntityType::PillDispenser}, pos,
-                                  EntityType::Lemon);
+                                  EntityType::Fruit);
 
     // TODO right now lets just worry about lemon first we can come back and
     // handle other fruits later
@@ -541,6 +541,8 @@ void make_blender(Entity& blender, vec2 pos) {
     furniture::make_furniture(blender,
                               DebugOptions{.type = EntityType::Blender}, pos,
                               ui::color::red, ui::color::yellow);
+    blender.get<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::Blender);
 }
 
 // This will be a catch all for anything that just needs to get updated
@@ -669,7 +671,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
             hasWork.reset_pct();
             bool cleaned_up =
                 _add_ingredient_to_drink_NO_VALIDATION(drink, *item);
-            if (cleaned_up) playerCHI.update(nullptr);
+            if (cleaned_up) playerCHI.update(nullptr, -1);
         }
     };
 
@@ -719,60 +721,52 @@ void make_simple_syrup(Item& simple_syrup, vec2 pos) {
         .remove_hb_filter(EntityType::Blender);
 }
 
-void make_lemon(Item& lemon, vec2 pos, int index) {
-    make_item(lemon, {.type = EntityType::Lemon}, pos);
+void make_juice(Item& juice, vec2 pos, Ingredient fruit) {
+    make_item(juice, {.type = EntityType::FruitJuice}, pos);
 
-    // TODO i dont like that you have to remember to do +1 here
-    lemon.addComponent<HasSubtype>(ingredient::LEMON_START,
-                                   ingredient::LEMON_END + 1, index);
+    juice
+        .addComponent<AddsIngredient>([fruit](const Entity&) {
+            return ingredient::BlendConvert.at(fruit);
+        })
+        .set_num_uses(1);
 
-    lemon
-        .addComponent<AddsIngredient>([](const Entity& lemmy) {
-            const HasSubtype& hst = lemmy.get<HasSubtype>();
-            return get_ingredient_from_index(ingredient::LEMON_START +
+    juice.addComponent<HasDynamicModelName>().init(
+        EntityType::FruitJuice, HasDynamicModelName::DynamicType::Subtype,
+        [fruit](const Item&, const std::string&) -> std::string {
+            return util::convertToSnakeCase<Ingredient>(
+                ingredient::BlendConvert.at(fruit));
+        });
+}
+
+void make_fruit(Item& fruit, vec2 pos, int index) {
+    make_item(fruit, {.type = EntityType::Fruit}, pos);
+
+    fruit.addComponent<HasSubtype>(0, ingredient::Fruits.size(), index);
+
+    fruit
+        .addComponent<AddsIngredient>([](const Entity& fruit) {
+            const HasSubtype& hst = fruit.get<HasSubtype>();
+            return get_ingredient_from_index(ingredient::Fruits[0] +
                                              hst.get_type_index());
         })
         .set_num_uses(1);
 
-    lemon.addComponent<HasDynamicModelName>().init(
-        EntityType::Lemon,  //
-        HasDynamicModelName::DynamicType::Subtype,
-        [](const Item& owner, const std::string& base_name) -> std::string {
-            if (owner.is_missing<HasSubtype>()) {
-                log_warn(
-                    "Generating a dynamic model name with a subtype, but your "
-                    "entity doesnt have a subtype {}",
-                    owner.get<DebugName>().name());
-                return base_name;
-            }
+    fruit.addComponent<HasDynamicModelName>().init(
+        EntityType::Fruit, HasDynamicModelName::DynamicType::Subtype,
+        [](const Item& owner, const std::string&) -> std::string {
             const HasSubtype& hst = owner.get<HasSubtype>();
-            Ingredient lemon_type = get_ingredient_from_index(
-                ingredient::LEMON_START + hst.get_type_index());
-            switch (lemon_type) {
-                case Ingredient::Lemon:
-                    return strings::model::LEMON;
-                case Ingredient::LemonJuice:
-                    return strings::model::LEMON_HALF;
-                default:
-                    log_warn("Failed to get matching model for lemon type: {}",
-                             magic_enum::enum_name(lemon_type));
-                    break;
-            }
-            return base_name;
+            Ingredient fruit = ingredient::Fruits[0 + hst.get_type_index()];
+            return util::toLowerCase(magic_enum::enum_name<Ingredient>(fruit));
         });
-
-    lemon.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
-                                          Entity& /*person*/, float dt) {
+    fruit.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
+                                          Entity& /* person */, float dt) {
         if (GameState::get().is_not(game::State::InRound)) return;
         const IsItem& ii = owner.get<IsItem>();
         HasSubtype& hasSubtype = owner.get<HasSubtype>();
-        Ingredient lemon_type = get_ingredient_from_index(
-            ingredient::LEMON_START + hasSubtype.get_type_index());
+        Ingredient fruit_type = ingredient::Fruits[hasSubtype.get_type_index()];
 
-        // Can only handle lemon -> juice right now
-        if (lemon_type != Ingredient::Lemon) return;
-        // TODO we shouldnt blindly increment type but in this case its
-        // okay i guess
+        // Can only handle blendables right now
+        if (!ingredient::BlendConvert.contains(fruit_type)) return;
 
         if (ii.is_not_held_by(EntityType::Blender)) {
             hasWork.reset_pct();
@@ -784,14 +778,27 @@ void make_lemon(Item& lemon, vec2 pos, int index) {
         if (hasWork.is_work_complete()) {
             hasWork.reset_pct();
 
-            const HasDynamicModelName& hDMN = owner.get<HasDynamicModelName>();
-            ModelRenderer& renderer = owner.get<ModelRenderer>();
+            OptEntity blender = EntityHelper::getEntityForID(ii.holder());
+            if (!blender) {
+                log_warn(
+                    "trying to spawn juice but the fruit is not being held by "
+                    "a valid entity");
+                return;
+            }
 
-            hasSubtype.increment_type();
-            renderer.update_model_name(hDMN.fetch(owner));
+            // delete fruit
+            owner.cleanup = true;
+
+            // create juice
+            auto& juice = EntityHelper::createEntity();
+            make_juice(juice, owner.get<Transform>().as2(), fruit_type);
+
+            CanHoldItem& blenderCHI = blender->get<CanHoldItem>();
+            blenderCHI.update(EntityHelper::getEntityAsSharedPtr(juice),
+                              blender->id);
         }
     });
-    lemon.addComponent<ShowsProgressBar>();
+    fruit.addComponent<ShowsProgressBar>();
 }
 
 void make_drink(Item& drink, vec2 pos) {
@@ -825,8 +832,8 @@ void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
             return make_soda_spout(item, pos);
         case EntityType::Alcohol:
             return make_alcohol(item, pos, index);
-        case EntityType::Lemon:
-            return make_lemon(item, pos, index);
+        case EntityType::Fruit:
+            return make_fruit(item, pos, index);
         case EntityType::Drink:
             return make_drink(item, pos);
         case EntityType::Mop:
@@ -987,7 +994,8 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::Drink:
         case EntityType::Alcohol:
         case EntityType::Customer:
-        case EntityType::Lemon:
+        case EntityType::Fruit:
+        case EntityType::FruitJuice:
         case EntityType::Mop:
             log_warn("{} cant be created through 'convert_to_type'",
                      entity_type);
@@ -996,5 +1004,13 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
             log_warn("{} should not be tried to create at all tbh",
                      entity_type);
             break;
+    }
+    if (entity.has<CanHoldItem>()) {
+        if (entity.get<CanHoldItem>().hb_type() == EntityType::Unknown) {
+            log_warn(
+                "Created an entity with canhold item {} but didnt set heldby "
+                "type",
+                entity_type);
+        }
     }
 }

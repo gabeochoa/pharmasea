@@ -18,6 +18,13 @@ struct CEMap {
             throw std::range_error("Not Found");
         }
     }
+
+    [[nodiscard]] constexpr bool contains(const Key &key) const {
+        const auto itr =
+            std::find_if(begin(data), end(data),
+                         [&key](const auto &v) { return v.first == key; });
+        return itr != end(data);
+    }
 };
 
 template<typename Value, std::size_t Size>

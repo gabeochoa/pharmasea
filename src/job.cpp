@@ -440,8 +440,8 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
     canOrderDrink.order_state = CanOrderDrink::OrderState::DrinkingNow;
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
-    ourCHI.update(regCHI.item());
-    regCHI.update(nullptr);
+    ourCHI.update(regCHI.item(), entity.id);
+    regCHI.update(nullptr, -1);
 
     system_manager::logging_manager::announce(entity, "got it");
     WIQ_leave_line(reg, entity);
@@ -494,7 +494,7 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
 
         CanHoldItem& chi = entity.get<CanHoldItem>();
         chi.item()->cleanup = true;
-        chi.update(nullptr);
+        chi.update(nullptr, -1);
 
         entity.get<HasSpeechBubble>().off();
 

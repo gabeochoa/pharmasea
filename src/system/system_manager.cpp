@@ -166,6 +166,10 @@ void update_held_item_position(Entity& entity, float) {
                 new_pos.x += 0;
                 new_pos.y += 0;
                 break;
+            case CustomHeldItemPosition::Positioner::Blender:
+                new_pos.x += 0;
+                new_pos.y += TILESIZE * 2.f;
+                break;
             case CustomHeldItemPosition::Positioner::Conveyer: {
                 if (entity.is_missing<ConveysHeldItem>()) {
                     log_warn(
@@ -340,9 +344,9 @@ void process_conveyer_items(Entity& entity, float dt) {
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
-    matchCHI.update(ourCHI.item());
+    matchCHI.update(ourCHI.item(), entity.id);
 
-    ourCHI.update(nullptr);
+    ourCHI.update(nullptr, -1);
 
     canBeTakenFrom.update(true);  // we are ready to have someone grab from us
     // reset so that the next item we get starts from beginning
@@ -415,8 +419,8 @@ void process_grabber_items(Entity& entity, float) {
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
-    ourCHI.update(matchCHI.item());
-    matchCHI.update(nullptr);
+    ourCHI.update(matchCHI.item(), entity.id);
+    matchCHI.update(nullptr, -1);
 
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
 }
@@ -451,7 +455,7 @@ void backfill_empty_container(const EntityType& match_type, Entity& entity,
     Entity& item =
         EntityHelper::createItem(iic.type(), std::forward<TArgs>(args)...);
 
-    canHold.update(EntityHelper::getEntityAsSharedPtr(item));
+    canHold.update(EntityHelper::getEntityAsSharedPtr(item), entity.id);
 }
 
 void process_is_container_and_should_backfill_item(Entity& entity, float) {
@@ -472,7 +476,7 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
     if (entity.is_missing<Indexer>()) return;
     backfill_empty_container(EntityType::Alcohol, entity, pos,
                              entity.get<Indexer>().value());
-    backfill_empty_container(EntityType::Lemon, entity, pos,
+    backfill_empty_container(EntityType::Fruit, entity, pos,
                              entity.get<Indexer>().value());
     entity.get<Indexer>().mark_change_completed();
 }
@@ -489,13 +493,13 @@ void process_is_container_and_should_update_item(Entity& entity, float) {
     // Delete the currently held item
     if (canHold.is_holding_item()) {
         canHold.item()->cleanup = true;
-        canHold.update(nullptr);
+        canHold.update(nullptr, -1);
     }
 
     auto pos = entity.get<Transform>().as2();
 
     backfill_empty_container(EntityType::Alcohol, entity, pos, indexer.value());
-    backfill_empty_container(EntityType::Lemon, entity, pos,
+    backfill_empty_container(EntityType::Fruit, entity, pos,
                              entity.get<Indexer>().value());
     indexer.mark_change_completed();
 }
@@ -521,7 +525,7 @@ void process_is_indexed_container_holding_incorrect_item(Entity& entity,
 
     if (current_value != item_value) {
         canHold.item()->cleanup = true;
-        canHold.update(nullptr);
+        canHold.update(nullptr, -1);
     }
 }
 
@@ -558,7 +562,7 @@ void delete_held_items_when_leaving_inround(Entity& entity) {
 
     // let go of the item
     item->cleanup = true;
-    canHold.update(nullptr);
+    canHold.update(nullptr, -1);
 }
 
 void reset_max_gen_when_after_deletion(Entity& entity) {
@@ -1129,7 +1133,7 @@ void process_has_rope(Entity& entity, float) {
 
     for (auto p : extended_path) {
         Entity& item = EntityHelper::createItem(EntityType::SodaSpout, p);
-        item.get<IsItem>().set_held_by(EntityType::Player);
+        item.get<IsItem>().set_held_by(EntityType::Player, player->id);
         item.addComponent<IsSolid>();
         hrti.add(item);
     }
@@ -1171,7 +1175,7 @@ void process_squirter(Entity& entity, float) {
 
     bool cleanup = items::_add_ingredient_to_drink_NO_VALIDATION(*drink, *item);
     if (cleanup) {
-        closest_furniture->get<CanHoldItem>().update(nullptr);
+        closest_furniture->get<CanHoldItem>().update(nullptr, -1);
     }
 }
 
@@ -1187,7 +1191,7 @@ void process_trash(Entity& entity, float) {
     if (trashCHI.empty()) return;
 
     trashCHI.item()->cleanup = true;
-    trashCHI.update(nullptr);
+    trashCHI.update(nullptr, -1);
 }
 
 void process_pnumatic_pipe_pairing(Entity& entity, float) {
