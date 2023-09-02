@@ -657,6 +657,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 convert_to_type(et, entity, {8, 8});
 
             } break;
+            case Lime:
             case Lemon: {
                 if (EntityHelper::doesAnyExistWithType(
                         EntityType::PillDispenser)) {
@@ -672,6 +673,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 auto& entity = EntityHelper::createEntity();
                 convert_to_type(et, entity, {8, 8});
             } break;
+            case LimeJuice:
             case LemonJuice: {
                 if (EntityHelper::doesAnyExistWithType(EntityType::Blender)) {
                     // nothing needed to do
@@ -688,8 +690,8 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                     // nothing needed to do
                     return;
                 }
-                // We dont yet have a spawner for this so just place it on the
-                // ground
+                // We dont yet have a spawner for this so just place it on
+                // the ground
                 auto et = EntityType::SimpleSyrup;
                 auto& entity = EntityHelper::createEntity();
                 convert_to_type(et, entity, {8, 8});
@@ -701,7 +703,6 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
             case Invalid:
             case IceCubes:
             case IceCrushed:
-            case LAST_ALC:
                 break;
         }
     });
@@ -831,7 +832,8 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
     ita.update_title("Not Configured");
     ita.update_subtitle("Not Configured");
     log_warn(
-        "Trying to update trigger area title but type {} not handled anywhere",
+        "Trying to update trigger area title but type {} not handled "
+        "anywhere",
         ita.type);
     return;
 }
@@ -862,7 +864,8 @@ void process_spawner(Entity& entity, float dt) {
 
             // Other than invalid and Us, is there anything else there?
             // log_info(
-            // "was ready to spawn but then there was someone there already");
+            // "was ready to spawn but then there was someone there
+            // already");
             return;
         }
     }
@@ -893,14 +896,16 @@ void run_timer(Entity& entity, float dt) {
     const auto _validate_if_round_can_end = [&hastimer = std::as_const(ht)]() {
         switch (GameState::get().read()) {
             case game::State::Planning: {
-                // For this one, we need to wait until everyone drops the things
+                // For this one, we need to wait until everyone drops the
+                // things
                 if (hastimer.read_reason(
                         HasTimer::WaitingReason::HoldingFurniture))
                     return false;
                 return true;
             } break;
             case game::State::InRound: {
-                // For this one, we need to wait until everyone is done leaving
+                // For this one, we need to wait until everyone is done
+                // leaving
                 if (hastimer.read_reason(
                         HasTimer::WaitingReason::CustomersInStore))
                     return false;

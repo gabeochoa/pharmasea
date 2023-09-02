@@ -449,7 +449,7 @@ void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
 void make_medicine_cabinet(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container, {EntityType::MedicineCabinet}, pos,
                                   EntityType::Alcohol);
-    container.addComponent<Indexer>(ingredient::NUM_ALC);
+    container.addComponent<Indexer>(ingredient::Alcohols.size());
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
             if (GameState::get().is_not(game::State::InRound)) return;
@@ -474,18 +474,18 @@ void make_fruit_basket(Entity& container, vec2 pos) {
 
     // TODO right now lets just worry about lemon first we can come back and
     // handle other fruits later
-    container.addComponent<Indexer>(1);
+    container.addComponent<Indexer>(ingredient::Fruits.size());
     //
-    // container.addComponent<HasWork>().init(
-    // [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
-    // const float amt = 2.f;
-    // hasWork.increase_pct(amt * dt);
-    // if (hasWork.is_work_complete()) {
-    // owner.get<Indexer>().increment();
-    // hasWork.reset_pct();
-    // }
-    // });
-    // container.addComponent<ShowsProgressBar>();
+    container.addComponent<HasWork>().init(
+        [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
+            const float amt = 2.f;
+            hasWork.increase_pct(amt * dt);
+            if (hasWork.is_work_complete()) {
+                owner.get<Indexer>().increment();
+                hasWork.reset_pct();
+            }
+        });
+    container.addComponent<ShowsProgressBar>();
 }
 
 void make_cupboard(Entity& cupboard, vec2 pos) {
@@ -679,11 +679,13 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
 void make_alcohol(Item& alc, vec2 pos, int index) {
     make_item(alc, {.type = EntityType::Alcohol}, pos);
 
-    alc.addComponent<HasSubtype>(ingredient::ALC_START, ingredient::ALC_END,
-                                 index);
+    // TODO have to change this to just be 0>size
+    alc.addComponent<HasSubtype>(
+        ingredient::Alcohols[0],
+        ingredient::Alcohols[0] + ingredient::Alcohols.size(), index);
     alc.addComponent<AddsIngredient>([](const Entity& alcohol) {
            const HasSubtype& hst = alcohol.get<HasSubtype>();
-           return get_ingredient_from_index(ingredient::ALC_START +
+           return get_ingredient_from_index(ingredient::Alcohols[0] +
                                             hst.get_type_index());
        })
         // TODO need a place to put the bottles when they are half used and
@@ -695,7 +697,7 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
         [](const Item& owner, const std::string&) -> std::string {
             const HasSubtype& hst = owner.get<HasSubtype>();
             Ingredient bottle = get_ingredient_from_index(
-                ingredient::ALC_START + hst.get_type_index());
+                ingredient::Alcohols[0] + hst.get_type_index());
             return util::toLowerCase(magic_enum::enum_name<Ingredient>(bottle));
         });
 }

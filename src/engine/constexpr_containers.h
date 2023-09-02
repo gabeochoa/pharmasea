@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include <array>
 #include <stdexcept>
 #include <utility>  // for pair

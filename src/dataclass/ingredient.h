@@ -4,6 +4,7 @@
 #include <bitset>
 #include <magic_enum/magic_enum.hpp>
 
+#include "../engine/constexpr_containers.h"
 #include "../engine/random.h"
 
 enum Ingredient {
@@ -30,13 +31,12 @@ enum Ingredient {
     TripleSec,
     // Cointreau, < TripleSec
     Bitters,
-    LAST_ALC,
 
     // Lemon
     Lemon,
     LemonJuice,
-    // Lime, //< lemon
-    // LimeJuice, //< lemonjuice
+    Lime,
+    LimeJuice,
     // CranJuice, //< lemonjuice
     // PinaJuice, //< lemonjuice
     // CoconutCream, //< lemonjuice
@@ -45,13 +45,27 @@ enum Ingredient {
 };
 
 namespace ingredient {
-const Ingredient ALC_START = Ingredient::Rum;
-const Ingredient ALC_END = LAST_ALC;
-const int NUM_ALC = (ALC_END - ALC_START);
+const std::array<Ingredient, 7> Alcohols = {{
+    Rum,
+    Tequila,
+    Vodka,
+    Whiskey,
+    Gin,
+    TripleSec,
+    Bitters,
+}};
 
+// TODO remove and migrate to BlendConvert
 const Ingredient LEMON_START = Ingredient::Lemon;
 const Ingredient LEMON_END = Ingredient::LemonJuice;
 const int NUM_LEMON = (LEMON_END - LEMON_START) + 1;
+
+constexpr std::array<Ingredient, 2> Fruits = {{Lemon, Lime}};
+
+constexpr CEMap<Ingredient, Ingredient, 2> BlendConvert = {{{
+    {Lemon, LemonJuice},
+    {Lime, LimeJuice},
+}}};
 
 }  // namespace ingredient
 
