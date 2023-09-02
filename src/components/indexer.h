@@ -10,6 +10,9 @@ struct Indexer : public BaseComponent {
     virtual ~Indexer() {}
 
     void increment() {
+        if (max_value == 0) return;
+        if (max_value == 1) return;
+
         index = (index + 1) % max_value;
         changed = true;
     }
@@ -24,6 +27,9 @@ struct Indexer : public BaseComponent {
     void mark_change_completed() { changed = false; }
 
     [[nodiscard]] int value() const { return index; }
+    [[nodiscard]] int max() const { return max_value; }
+
+    void update_max(int mx) { max_value = mx; }
 
    private:
     int index;
@@ -36,8 +42,8 @@ struct Indexer : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         s.value4b(index);
+        s.value4b(max_value);
 
-        // s.value4b(max_value);
         // s.value1b(changed);
     }
 };

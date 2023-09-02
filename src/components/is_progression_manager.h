@@ -60,14 +60,18 @@ struct IsProgressionManager : public BaseComponent {
         return overlap == ings;
     }
 
-    bool is_drink_unlocked(Drink drink) const {
+    [[nodiscard]] bool is_drink_unlocked(Drink drink) const {
         size_t index = magic_enum::enum_index<Drink>(drink).value();
         return enabledDrinks.test(index);
     }
 
-    bool is_ingredient_unlocked(Ingredient ingredient) const {
+    [[nodiscard]] bool is_ingredient_unlocked(Ingredient ingredient) const {
         size_t index = magic_enum::enum_index<Ingredient>(ingredient).value();
         return enabledIngredients.test(index);
+    }
+
+    [[nodiscard]] bool is_ingredient_locked(Ingredient ingredient) const {
+        return !is_ingredient_unlocked(ingredient);
     }
 
     // TODO make private

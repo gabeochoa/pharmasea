@@ -453,15 +453,33 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
             if (GameState::get().is_not(game::State::InRound)) return;
+            Indexer& indexer = owner.get<Indexer>();
+            if (indexer.max() < 2) return;
+
             const float amt = 2.f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
-                // TODO check if this new item we incremented to is
-                // enabled
-                // i tried to do this by a sophie fetch but that was causing map
-                // generation to fail (silently)
+                const auto sophie =
+                    EntityHelper::getFirstWithComponent<IsProgressionManager>();
+                if (!sophie) {
+                    log_warn("was unable to fetch progression manager");
+                    return;
+                }
+                const IsProgressionManager& ipp =
+                    sophie->get<IsProgressionManager>();
 
-                owner.get<Indexer>().increment();
+                size_t i = 0;
+                do {
+                    i++;
+                    owner.get<Indexer>().increment();
+                    // TODO will show something even if you dont have it
+                    // unlocked, we just need a way to say "hey theres no
+                    // alcohol unlocked, just skip all of this
+                    if (i > ingredient::Alcohols.size()) break;
+
+                } while (ipp.is_ingredient_locked(
+                    ingredient::Alcohols[owner.get<Indexer>().value()]));
+
                 hasWork.reset_pct();
             }
         });
@@ -481,7 +499,26 @@ void make_fruit_basket(Entity& container, vec2 pos) {
             const float amt = 2.f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
-                owner.get<Indexer>().increment();
+                const auto sophie =
+                    EntityHelper::getFirstWithComponent<IsProgressionManager>();
+                if (!sophie) {
+                    log_warn("was unable to fetch progression manager");
+                    return;
+                }
+                const IsProgressionManager& ipp =
+                    sophie->get<IsProgressionManager>();
+
+                size_t i = 0;
+                do {
+                    i++;
+                    owner.get<Indexer>().increment();
+                    // TODO will show lemon even if you dont have it unlocked,
+                    // we just need a way to say "hey theres no fruits
+                    // unlocked, just skip all of this
+                    if (i > ingredient::Fruits.size()) break;
+                } while (ipp.is_ingredient_locked(
+                    ingredient::Fruits[owner.get<Indexer>().value()]));
+
                 hasWork.reset_pct();
             }
         });
@@ -879,7 +916,7 @@ void make_customer(Entity& customer, vec2 p, bool has_order) {
         // TODO only enable this once you start serving alcohol
         // TODO should we by default give the mop? or should you be able to
         // clean by hand but slowly?
-        .set_total(10)
+        .set_total(1)
         .set_time_between(2.f);
 }
 
