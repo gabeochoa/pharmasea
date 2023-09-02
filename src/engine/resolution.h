@@ -75,6 +75,7 @@ struct ResolutionExplorer {
 
             // Just kinda easier to not support every possible resolution
             if (mode.height < 720 || mode.height > 2160) continue;
+            if (1.77f - (mode.width / (mode.height * 1.f)) > 0.1f) continue;
 
             options.push_back(
                 ResolutionInfo{.width = mode.width, .height = mode.height});
