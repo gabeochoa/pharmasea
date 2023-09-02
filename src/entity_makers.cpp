@@ -270,6 +270,10 @@ void make_character_switcher(Entity& character_switcher, vec2 pos) {
         character_switcher, DebugOptions{.type = EntityType::CharacterSwitcher},
         pos, ui::color::green, ui::color::yellow);
 
+    // TODO add a wayt to let it know to translate
+    character_switcher.addComponent<HasName>().update(
+        strings::i18n::CHARACTER_SWITCHER);
+
     character_switcher.addComponent<HasWork>().init(
         [](Entity&, HasWork& hasWork, Entity& person, float dt) {
             if (!GameState::get().is_lobby_like()) return;
