@@ -228,39 +228,11 @@ void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
     if (camAngle < 0.0f) {
         camAngle += 360.0f;
     }
-    int xang = static_cast<int>(camAngle);
-    // log_warn(" angles {}", xang);
 
-    if (xang >= 135 && xang < 225) {
-        // Default controls
-        left = key_left;
-        right = key_right;
-        down = key_down;
-        up = key_up;
-    } else if (xang >= 45 && xang < 135) {
-        up = key_left;
-        down = key_right;
-        left = key_down;
-        right = key_up;
-    } else if (xang >= 315 || xang <= 45) {
-        left = key_right;
-        right = key_left;
-        up = key_down;
-        down = key_up;
-    } else if (xang >= 225 && xang < 315) {
-        left = key_up;
-        right = key_down;
-        up = key_right;
-        down = key_left;
-    } else {
-        log_warn("reached a camera angle that has no controls enabled: {}",
-                 xang);
-        // Default controls
-        left = 0;
-        right = 0;
-        down = 0;
-        up = 0;
-    }
+    left = key_left;
+    right = key_right;
+    down = key_down;
+    up = key_up;
 
     if (left > 0) cui.write(InputName::PlayerLeft);
     if (right > 0) cui.write(InputName::PlayerRight);
@@ -279,15 +251,16 @@ void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
     if (do_work > 0) cui.write(InputName::PlayerDoWork);
 
     // run the input on the local client
-    system_manager::input_process_manager::process_input(entity,
-                                                         {cui.read(), dt});
+    system_manager::input_process_manager::process_input(
+        entity, {cui.read(), dt, camAngle});
 
     // Actually save the inputs if there were any
-    cui.publish(dt);
+    cui.publish(dt, camAngle);
 }
 
 void process_player_movement_input(std::shared_ptr<Entity> entity, float dt,
-                                   InputName input_name, float input_amount) {
+                                   float cam_angle_deg, InputName input_name,
+                                   float input_amount) {
     if (entity->is_missing<Transform>()) return;
     Transform& transform = entity->get<Transform>();
     std::shared_ptr<Entity> player = dynamic_pointer_cast<Entity>(entity);
@@ -295,17 +268,36 @@ void process_player_movement_input(std::shared_ptr<Entity> entity, float dt,
     if (entity->is_missing<HasBaseSpeed>()) return;
     const HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
 
-    const float speed = hasBaseSpeed.speed() * dt;
-    auto new_position = transform.pos();
+    // Convert camera angle from degrees to radians
+    float cam_angle_rad = util::deg2rad(cam_angle_deg + 90.f);
 
-    if (input_name == InputName::PlayerLeft) {
-        new_position.x -= input_amount * speed;
-    } else if (input_name == InputName::PlayerRight) {
-        new_position.x += input_amount * speed;
-    } else if (input_name == InputName::PlayerForward) {
-        new_position.z -= input_amount * speed;
-    } else if (input_name == InputName::PlayerBack) {
-        new_position.z += input_amount * speed;
+    // Calculate the movement direction based on the camera angle
+    float cos_angle = -1.f * std::cos(cam_angle_rad);
+    float sin_angle = std::sin(cam_angle_rad);
+
+    auto new_position = transform.pos();
+    const float amount = input_amount * hasBaseSpeed.speed() * dt;
+
+    // Implement the logic based on the input_name
+    switch (input_name) {
+        case InputName::PlayerForward:
+            new_position.x += cos_angle * amount;
+            new_position.z += sin_angle * amount;
+            break;
+        case InputName::PlayerBack:
+            new_position.x -= cos_angle * amount;
+            new_position.z -= sin_angle * amount;
+            break;
+        case InputName::PlayerLeft:
+            new_position.x += sin_angle * amount;
+            new_position.z -= cos_angle * amount;
+            break;
+        case InputName::PlayerRight:
+            new_position.x -= sin_angle * amount;
+            new_position.z += cos_angle * amount;
+            break;
+        default:
+            break;
     }
 
     person_update_given_new_pos(entity->id, transform, player, dt, new_position,
@@ -718,14 +710,14 @@ void process_input(const std::shared_ptr<Entity> entity,
                    const UserInput& input) {
     const auto _proc_single_input_name =
         [](const std::shared_ptr<Entity> entity, const InputName& input_name,
-           float frame_dt) {
+           float frame_dt, float cam_angle) {
             switch (input_name) {
                 case InputName::PlayerLeft:
                 case InputName::PlayerRight:
                 case InputName::PlayerForward:
                 case InputName::PlayerBack:
-                    return process_player_movement_input(entity, frame_dt,
-                                                         input_name, 1.f);
+                    return process_player_movement_input(
+                        entity, frame_dt, cam_angle, input_name, 1.f);
                 default:
                     break;
             }
@@ -756,13 +748,14 @@ void process_input(const std::shared_ptr<Entity> entity,
 
     const InputSet input_set = std::get<0>(input);
     const float frame_dt = std::get<1>(input);
+    const float cam_angle = std::get<2>(input);
 
     size_t i = 0;
     while (i < magic_enum::enum_count<InputName>()) {
         auto input_name = magic_enum::enum_value<InputName>(i);
         bool was_pressed = input_set.test(i);
         if (was_pressed) {
-            _proc_single_input_name(entity, input_name, frame_dt);
+            _proc_single_input_name(entity, input_name, frame_dt, cam_angle);
         }
         i++;
     }

@@ -18,9 +18,9 @@ struct CollectsUserInput : public BaseComponent {
         return *this;
     }
 
-    auto& publish(float dt) {
+    auto& publish(float dt, float camAngle) {
         if (pressed.any()) {
-            inputs.push_back({pressed, dt});
+            inputs.push_back({pressed, dt, camAngle});
             reset();
         }
         return *this;

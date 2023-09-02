@@ -64,7 +64,7 @@ enum InputName {
 };
 
 typedef std::bitset<magic_enum::enum_count<InputName>()> InputSet;
-typedef std::tuple<InputSet, float> UserInput;
+typedef std::tuple<InputSet, float, float> UserInput;
 typedef std::vector<UserInput> UserInputs;
 
 // TODO: had a bit of trouble trying to serialize "full map" which
