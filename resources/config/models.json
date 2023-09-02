@@ -342,6 +342,38 @@
         },
         {
             "folder": "models/kennynl",
+            "filename": "coconut.obj",
+            "library_name": "coconut",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "coconutHalf.obj",
+            "library_name": "coconut_cream",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "orange.obj",
+            "library_name": "orange",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "orangeHalf.obj",
+            "library_name": "orange_juice",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
             "filename": "cherries.obj",
             "library_name": "cranberries",
             "size_scale": 2.0,

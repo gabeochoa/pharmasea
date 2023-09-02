@@ -92,10 +92,11 @@
           "ingredients": [
               "Rum",
               "LemonJuice", // "PinaJuice",
-              "LemonJuice" // "CoconutCream"
+              "CoconutCream"
           ],
           "prereqs": [
-              "Lemon"
+              "Lemon",
+              "Cononut"
           ]
       },
       {
@@ -134,9 +135,6 @@
               "Lime"
           ]
       },
-
-      // These dont yet have icons 
-
       {
           "name": "moscow_mule",
           "icon_name": "moscow_mule",
@@ -154,12 +152,15 @@
           "viewer_name": "Screwdriver",
           "ingredients": [
               "Vodka",
-              "LemonJuice" //"OrangeJuice"
+              "OrangeJuice"
           ],
           "prereqs": [
-              "Lemon" // Orange
+              "Orange"
           ]
       }
+
+
+      // These dont yet have icons 
 
       // Possible other drinks
       // Negroni
