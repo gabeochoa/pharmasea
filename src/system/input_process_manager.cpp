@@ -26,35 +26,6 @@ namespace system_manager {
 void person_update_given_new_pos(int id, Transform& transform,
                                  std::shared_ptr<Entity> person, float,
                                  vec3 new_pos_x, vec3 new_pos_z) {
-    int facedir_x = -1;
-    int facedir_z = -1;
-
-    vec3 delta_distance_x = new_pos_x - transform.raw();
-    if (delta_distance_x.x > 0) {
-        facedir_x = Transform::FrontFaceDirection::RIGHT;
-    } else if (delta_distance_x.x < 0) {
-        facedir_x = Transform::FrontFaceDirection::LEFT;
-    }
-
-    vec3 delta_distance_z = new_pos_z - transform.raw();
-    if (delta_distance_z.z > 0) {
-        facedir_z = Transform::FrontFaceDirection::FORWARD;
-    } else if (delta_distance_z.z < 0) {
-        facedir_z = Transform::FrontFaceDirection::BACK;
-    }
-
-    if (facedir_x == -1 && facedir_z == -1) {
-        // do nothing
-    } else if (facedir_x == -1) {
-        transform.update_face_direction(
-            static_cast<Transform::FrontFaceDirection>(facedir_z));
-    } else if (facedir_z == -1) {
-        transform.update_face_direction(
-            static_cast<Transform::FrontFaceDirection>(facedir_x));
-    } else {
-        transform.update_face_direction(
-            static_cast<Transform::FrontFaceDirection>(facedir_x | facedir_z));
-    }
     // TODO if anything spawns in anything else then it cant move,
     // we need some way to handle popping people back to spawn or something if
     // they get stuck
@@ -111,6 +82,9 @@ void person_update_given_new_pos(int id, Transform& transform,
             transform.update_z(new_pos_z.z);
         }
 
+        /*
+         * TODO we arent using this anyway
+
         // This value determines how "far" to impart a push force on the
         // collided entity
         const float directional_push_modifier = 1.0f;
@@ -163,6 +137,7 @@ void person_update_given_new_pos(int id, Transform& transform,
                 }
             }
         }
+        */
     }
 }
 
@@ -283,18 +258,22 @@ void process_player_movement_input(std::shared_ptr<Entity> entity, float dt,
         case InputName::PlayerForward:
             new_position.x += cos_angle * amount;
             new_position.z += sin_angle * amount;
+            transform.update_face_direction(cam_angle_deg);
             break;
         case InputName::PlayerBack:
             new_position.x -= cos_angle * amount;
             new_position.z -= sin_angle * amount;
+            transform.update_face_direction(cam_angle_deg + 180.f);
             break;
         case InputName::PlayerLeft:
             new_position.x += sin_angle * amount;
             new_position.z -= cos_angle * amount;
+            transform.update_face_direction(cam_angle_deg + 90.f);
             break;
         case InputName::PlayerRight:
             new_position.x -= sin_angle * amount;
             new_position.z += cos_angle * amount;
+            transform.update_face_direction(cam_angle_deg - 90.f);
             break;
         default:
             break;

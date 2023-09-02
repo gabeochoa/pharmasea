@@ -28,10 +28,8 @@ void draw_valid_colored_box(const Transform& transform,
         b = ui::color::getHighlighted(b);
     }
 
-    DrawCubeCustom(
-        transform.raw(), transform.sizex(), transform.sizey(),
-        transform.sizez(),
-        transform.FrontFaceDirectionMap.at(transform.face_direction()), f, b);
+    DrawCubeCustom(transform.raw(), transform.sizex(), transform.sizey(),
+                   transform.sizez(), transform.facing, f, b);
 }
 
 void update_character_model_from_index(std::shared_ptr<Entity> entity, float) {
@@ -172,10 +170,7 @@ bool render_model_highlighted(const Entity& entity, float) {
     // TODO this is the exact same code as render_model_normal
     // should be able to fix it
 
-    float rotation_angle =
-        // TODO make this api better
-        180.f + static_cast<int>(transform.FrontFaceDirectionMap.at(
-                    transform.face_direction()));
+    float rotation_angle = 180.f + transform.facing;
 
     DrawModelEx(renderer.model(),
                 {
@@ -200,10 +195,7 @@ bool render_model_normal(const Entity& entity, float) {
 
     const ModelInfo& model_info = renderer.model_info();
 
-    float rotation_angle =
-        // TODO make this api better
-        180.f + static_cast<int>(transform.FrontFaceDirectionMap.at(
-                    transform.face_direction()));
+    float rotation_angle = 180.f + transform.facing;
 
     raylib::DrawModelEx(
         renderer.model(),
@@ -302,9 +294,7 @@ void render_trigger_area(const Entity& entity, float dt) {
             },
             size.x * ita.progress(),        //
             size.y,                         //
-            size.z,
-            transform.FrontFaceDirectionMap.at(transform.face_direction()), RED,
-            RED);
+            size.z, transform.facing, RED, RED);
     }
 
     render_simple_normal(entity, dt);

@@ -233,21 +233,19 @@ void Server::process_player_control_packet(
     //      on every call because (mvt * dt) < epsilon
     //
 
-    send_player_location_packet(
-        incoming_client.client_id, updated_position,
-        static_cast<int>(player->get<Transform>().face_direction()),
-        player->get<HasName>().name());
+    send_player_location_packet(incoming_client.client_id, updated_position,
+                                player->get<Transform>().facing,
+                                player->get<HasName>().name());
 }
 
 void Server::send_player_location_packet(int client_id, const vec3& pos,
-                                         int face_direction,
+                                         float facing,
                                          const std::string& name) {
     ClientPacket player_updated{
         .channel = Channel::UNRELIABLE,
         .client_id = client_id,
         .msg_type = network::ClientPacket::MsgType::PlayerLocation,
-        .msg = network::ClientPacket::PlayerInfo{.facing_direction =
-                                                     face_direction,
+        .msg = network::ClientPacket::PlayerInfo{.facing = facing,
                                                  .location =
                                                      {
                                                          pos.x,

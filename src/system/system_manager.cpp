@@ -105,9 +105,8 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
         return;
     }
 
-    server->send_player_location_packet(
-        client_id, position, static_cast<int>(transform.face_direction()),
-        entity.get<HasName>().name());
+    server->send_player_location_packet(client_id, position, transform.facing,
+                                        entity.get<HasName>().name());
 }
 
 void transform_snapper(Entity& entity, float) {

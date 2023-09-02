@@ -145,15 +145,14 @@ void make_remote_player(Entity& remote_player, vec3 pos) {
 }
 
 void update_player_remotely(Entity& entity, float* location,
-                            const std::string& username, int facing_direction) {
+                            const std::string& username, float facing) {
     entity.get<HasName>().update(username);
 
     Transform& transform = entity.get<Transform>();
     vec3 new_pos = vec3{location[0], location[1], location[2]};
 
     transform.update(new_pos);
-    transform.update_face_direction(
-        static_cast<Transform::FrontFaceDirection>(facing_direction));
+    transform.update_face_direction(facing);
 }
 
 void update_player_rare_remotely(Entity& entity, int model_index,

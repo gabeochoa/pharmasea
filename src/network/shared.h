@@ -163,7 +163,7 @@ struct ClientPacket {
 
     // Player Location
     struct PlayerInfo {
-        int facing_direction = 0;
+        float facing = 0.f;
         float location[3];
         std::string username{};
     };
@@ -208,7 +208,7 @@ inline std::ostream& operator<<(std::ostream& os,
             [&](ClientPacket::PlayerInfo info) {
                 return fmt::format("PlayerInfo( pos({}, {}, {}), facing {})",
                                    info.location[0], info.location[1],
-                                   info.location[2], info.facing_direction);
+                                   info.location[2], info.facing);
             },
             [&](ClientPacket::PlayerLeaveInfo info) {
                 return fmt::format("PlayerLeave({})", info.client_id);
@@ -283,7 +283,7 @@ void serialize(S& s, ClientPacket& packet) {
                   s.value4b(info.location[0]);
                   s.value4b(info.location[1]);
                   s.value4b(info.location[2]);
-                  s.value4b(info.facing_direction);
+                  s.value4b(info.facing);
               },
               [](S& s, ClientPacket::PlayerRareInfo& info) {
                   s.value4b(info.client_id);

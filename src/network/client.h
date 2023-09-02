@@ -167,7 +167,7 @@ struct Client {
         };
 
         auto update_remote_player = [&](int client_id, std::string username,
-                                        float* location, int facing) {
+                                        float* location, float facing) {
             if (!remote_players.contains(client_id)) {
                 log_warn("Remote player doesnt exist but should: {}",
                          client_id);
@@ -258,7 +258,7 @@ struct Client {
                 ClientPacket::PlayerInfo info =
                     std::get<ClientPacket::PlayerInfo>(packet.msg);
                 update_remote_player(packet.client_id, info.username,
-                                     info.location, info.facing_direction);
+                                     info.location, info.facing);
             } break;
             case ClientPacket::MsgType::Map: {
                 ClientPacket::MapInfo info =

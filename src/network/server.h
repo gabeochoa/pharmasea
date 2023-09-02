@@ -23,7 +23,7 @@ struct Server {
 
     //
     void send_player_location_packet(int client_id, const vec3& pos,
-                                     int face_direction,
+                                     float face_direction,
                                      const std::string& name);
     int get_client_id_for_entity(const Entity& entity) {
         for (auto player : players) {

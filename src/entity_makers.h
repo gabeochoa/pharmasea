@@ -19,7 +19,7 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
 void register_all_components();
 void make_remote_player(Entity& remote_player, vec3 pos);
 void update_player_remotely(Entity& entity, float* location,
-                            const std::string& username, int facing_direction);
+                            const std::string& username, float facing);
 void update_player_rare_remotely(Entity& entity, int model_index,
                                  long long last_ping);
 void make_player(Entity& player, vec3 p);

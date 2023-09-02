@@ -36,6 +36,10 @@ struct Transform : public BaseComponent {
         else if (remainder <= -23)
             roundedValue -= 45;
 
+        if (roundedValue >= 360) {
+            roundedValue -= 360;
+        }
+
         return roundedValue;
     }
 
@@ -74,11 +78,8 @@ struct Transform : public BaseComponent {
         sync();
     }
 
-    void update_face_direction(FrontFaceDirection dir) { this->face = dir; }
+    void update_face_direction(float ang) { facing = ang; }
 
-    [[nodiscard]] const FrontFaceDirection& face_direction() const {
-        return this->face;
-    }
     [[nodiscard]] vec2 as2() const { return vec::to2(this->position); }
 
     [[nodiscard]] vec3 raw() const { return this->raw_position; }
@@ -125,9 +126,7 @@ struct Transform : public BaseComponent {
     /*
      * Rotate the facing direction of this entity, clockwise 90 degrees
      * */
-    void rotate_facing_clockwise(int angle = 90) {
-        update_face_direction(offsetFaceDirection(face_direction(), angle));
-    }
+    void rotate_facing_clockwise(int angle = 90) { facing += angle; }
 
     /*
      * Returns the location of the tile `distance` distance in front of the
@@ -153,9 +152,8 @@ struct Transform : public BaseComponent {
      *
      * @returns vec2 the location `distance` tiles ahead
      * */
-    static vec2 tile_infront_given_pos(
-        vec2 tile, int dist,
-        const Transform::Transform::FrontFaceDirection& direction) {
+    static vec2 tile_infront_given_pos(vec2 tile, int dist,
+                                       FrontFaceDirection direction) {
         float distance = static_cast<float>(dist);
 
         if (direction & Transform::FORWARD) {
@@ -183,7 +181,6 @@ struct Transform : public BaseComponent {
         float theta_deg = util::rad2deg(theta_rad);
         // TODO replace with fmod
         float turn_degrees = static_cast<float>((180 - (int) theta_deg) % 360);
-        float facing = FrontFaceDirectionMap.at(face);
         int to_rotate = static_cast<int>((turn_degrees - facing) + 90);
         rotate_facing_clockwise(to_rotate);
     }
@@ -196,10 +193,17 @@ struct Transform : public BaseComponent {
         });
     }
 
+    [[nodiscard]] const FrontFaceDirection& face_direction() const {
+        const auto r = roundToNearest45(static_cast<int>(facing));
+        return DirectionToFrontFaceMap.at(r);
+    }
+
+    // TODO private
+    float facing = 0.f;
+
    private:
     vec2 get_heading() const {
-        const float target_facing_ang =
-            util::deg2rad(FrontFaceDirectionMap.at(face_direction()));
+        const float target_facing_ang = util::deg2rad(facing);
         return vec2{
             cosf(target_facing_ang),
             sinf(target_facing_ang),
@@ -212,7 +216,6 @@ struct Transform : public BaseComponent {
         this->position = this->raw_position;
     }
 
-    FrontFaceDirection face = FrontFaceDirection::FORWARD;
     vec3 _size = {TILESIZE, TILESIZE, TILESIZE};
     vec3 position;
     vec3 raw_position;
@@ -223,7 +226,7 @@ struct Transform : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
         s.object(raw_position);
         s.object(position);
-        s.value4b(face);
+        s.value4b(facing);
         s.object(_size);
     }
 };
