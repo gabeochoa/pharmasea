@@ -342,6 +342,22 @@
         },
         {
             "folder": "models/kennynl",
+            "filename": "cherries.obj",
+            "library_name": "cranberries",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "can.obj",
+            "library_name": "cranberry_juice",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
             "filename": "kitchenBlender.obj",
             "library_name": "blender",
             "size_scale": 7.0,

@@ -28,7 +28,7 @@
               "TripleSec"
           ],
           "prereqs": [
-              "Lemon"
+              "Lime"
           ]
       },
       {
@@ -37,12 +37,13 @@
           "viewer_name": "Cosmopolitan",
           "ingredients": [
               "Vodka",
-              "LemonJuice", // "CranJuice",
+              "CranberryJuice",
               "LimeJuice",
               "TripleSec"
           ],
           "prereqs": [
-              "Lemon"
+              "Lime",
+              "Cranberries"
           ]
       },
       {
@@ -58,7 +59,7 @@
               "SimpleSyrup"
           ],
           "prereqs": [
-              "Lemon"
+              "Lime"
           ]
       },
       {
@@ -81,7 +82,7 @@
               "SimpleSyrup"
           ],
           "prereqs": [
-              "Lemon"
+              "Lime"
           ]
       },
       {
@@ -142,7 +143,7 @@
           "viewer_name": "Moscow Mule",
           "ingredients": [
               "Vodka",
-              "Lime"
+              "Lime",
               "Soda" // "Ginger Beer",
               // "Ice"
           ]
