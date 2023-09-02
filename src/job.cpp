@@ -169,8 +169,8 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
 
         // TODO For now we are just going to let the customer noclip
         if (path_empty()) {
-            log_warn("Forcing customer {} to noclip in order to get valid path",
-                     entity.id);
+            log_warn("Forcing {} {} to noclip in order to get valid path",
+                     entity.get<DebugName>().name(), entity.id);
             auto new_path =
                 astar::find_path(me, goal, [](auto&&) { return true; });
             update_path(new_path);
@@ -180,6 +180,8 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
         }
         // what happens if we get here and the path is still empty?
         VALIDATE(!path_empty(), "path should no longer be empty");
+        log_warn("no pathing even after noclip... {} {} {}=>{}",
+                 entity.get<DebugName>().name(), entity.id, me, goal);
     };
 
     const auto _grab_local_target = [this](const Entity& entity) {
@@ -537,14 +539,14 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
 }
 
 Job::State MoppingJob::run_state_initialize(Entity& entity, float) {
-    log_warn("starting a new mop job");
+    log_trace("starting a new mop job");
 
     // Find the closest vomit
     OptEntity closest =
         EntityHelper::getClosestOfType(entity, EntityType::Vomit);
 
     if (!closest) {
-        log_warn("Could not find any vomit");
+        log_trace("Could not find any vomit");
         // TODO make this function name more generic / obvious its shared
         WIQ_wait_and_return(entity);
         return Job::State::Initialize;

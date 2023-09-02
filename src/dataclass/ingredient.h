@@ -49,7 +49,7 @@ enum Ingredient {
 };
 
 namespace ingredient {
-const std::array<Ingredient, 7> Alcohols = {{
+constexpr std::array<Ingredient, 7> Alcohols = {{
     Rum,
     Tequila,
     Vodka,

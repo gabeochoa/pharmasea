@@ -746,8 +746,7 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
     fruit
         .addComponent<AddsIngredient>([](const Entity& fruit) {
             const HasSubtype& hst = fruit.get<HasSubtype>();
-            return get_ingredient_from_index(ingredient::Fruits[0] +
-                                             hst.get_type_index());
+            return ingredient::Fruits[0 + hst.get_type_index()];
         })
         .set_num_uses(1);
 
