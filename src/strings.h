@@ -126,8 +126,9 @@ const std::array<std::string, 4> character_models = {
 namespace sounds {
 
 constexpr const char* ROBLOX = "roblox";
+constexpr const char* VOMIT = "vom";
 
-}
+}  // namespace sounds
 
 namespace settings {
 

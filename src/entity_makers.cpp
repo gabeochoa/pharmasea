@@ -915,6 +915,7 @@ void make_customer(Entity& customer, vec2 p, bool has_order) {
     customer
         .addComponent<IsSpawner>()  //
         .set_fn(&furniture::make_vomit)
+        .set_spawn_sound(strings::sounds::VOMIT)
         .set_validation_fn([](Entity& entity, vec2) {
             const CanOrderDrink& cod = entity.get<CanOrderDrink>();
             // not vomiting since didnt have anything to drink yet

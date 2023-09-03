@@ -119,6 +119,12 @@ struct Preload {
                 .c_str(),
             strings::sounds::ROBLOX);
 
+        SoundLibrary::get().load(
+            Files::get()
+                .fetch_resource_path(strings::settings::SOUNDS, "vom.wav")
+                .c_str(),
+            strings::sounds::VOMIT);
+
         Files::get().for_resources_in_folder(
             strings::settings::SOUNDS, "pa_announcements",
             [](const std::string& name, const std::string& filename) {

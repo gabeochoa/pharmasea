@@ -887,6 +887,10 @@ void process_spawner(Entity& entity, float dt) {
     auto& new_ent = EntityHelper::createEntity();
     iss.spawn(new_ent, pos);
     iss.post_spawn_reset();
+
+    if (iss.has_spawn_sound()) {
+        SoundLibrary::get().play(iss.get_spawn_sound().c_str());
+    }
 }
 
 void run_timer(Entity& entity, float dt) {
@@ -1293,7 +1297,7 @@ void update_progression(Entity& entity, float) {
 
     if (check_type(entity, EntityType::CustomerSpawner)) {
         // TODO come up with a function to use here
-        const int new_total = (int) fmax(2.f, day_count * 4.f);
+        const int new_total = (int) fmax(2.f, day_count * 2.f);
         const float time_between = round_settings::ROUND_LENGTH_S / new_total;
         log_info("Updating progression, setting new spawn total to {}",
                  new_total);
