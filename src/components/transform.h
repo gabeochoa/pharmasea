@@ -108,7 +108,7 @@ struct Transform : public BaseComponent {
      * Get the bounding box for this entity
      * @returns BoundingBox the box
      * */
-    [[nodiscard]] virtual BoundingBox bounds() const {
+    [[nodiscard]] BoundingBox bounds() const {
         return get_bounds(this->position, this->size());
     }
 
@@ -124,6 +124,25 @@ struct Transform : public BaseComponent {
     bool collides(BoundingBox b) const {
         // TODO fix move to collision component
         return CheckCollisionBoxes(bounds(), b);
+    }
+
+    Rectangle rectangular_bounds() const {
+        return rectangular_bounds(pos(), size());
+    }
+
+    static Rectangle rectangular_bounds(vec3 pos, vec3 size) {
+        return Rectangle{pos.x, pos.z, size.x, size.z};
+    }
+
+    vec3 circular_bounds() const { return circular_bounds(pos(), size()); }
+
+    static vec3 circular_bounds(vec3 pos, vec3 size) {
+        // TODO need to center him?
+        return vec3{
+            pos.x,
+            pos.z,
+            fmax(size.x, size.z),
+        };
     }
 
     /*
