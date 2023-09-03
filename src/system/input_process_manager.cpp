@@ -33,9 +33,11 @@ void person_update_given_new_pos(int id, Transform& transform,
     // TODO this should be a component?
     {
         // horizontal check
-        auto new_bounds_x = get_bounds(new_pos_x, transform.size());
+        auto new_circular_bounds_x =
+            Transform::circular_bounds(new_pos_x, transform.size());
         // vertical check
-        auto new_bounds_y = get_bounds(new_pos_z, transform.size());
+        auto new_circular_bounds_z =
+            Transform::circular_bounds(new_pos_z, transform.size());
 
         OptEntity collided_entity_x;
         OptEntity collided_entity_z;
@@ -51,12 +53,16 @@ void person_update_given_new_pos(int id, Transform& transform,
                     *person)) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if (CheckCollisionBoxes(
-                    new_bounds_x, entity.template get<Transform>().bounds())) {
+            if (CheckCollisionCircleRec(
+                    {new_circular_bounds_x.x, new_circular_bounds_x.y},
+                    new_circular_bounds_x.z,
+                    entity.template get<Transform>().rectangular_bounds())) {
                 collided_entity_x = entity;
             }
-            if (CheckCollisionBoxes(
-                    new_bounds_y, entity.template get<Transform>().bounds())) {
+            if (CheckCollisionCircleRec(
+                    {new_circular_bounds_z.x, new_circular_bounds_z.y},
+                    new_circular_bounds_z.z,
+                    entity.template get<Transform>().rectangular_bounds())) {
                 collided_entity_z = entity;
             }
             // Note: if these are both true, then we definitely dont need to
@@ -68,13 +74,13 @@ void person_update_given_new_pos(int id, Transform& transform,
             return EntityHelper::ForEachFlow::NormalFlow;
         });
 
-        // TODO should probably send this one over the network
         const auto debug_mode_on =
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
         if (debug_mode_on) {
             collided_entity_x = {};
             collided_entity_z = {};
         }
+
         if (!collided_entity_x) {
             transform.update_x(new_pos_x.x);
         }
