@@ -137,12 +137,8 @@ struct Transform : public BaseComponent {
     vec3 circular_bounds() const { return circular_bounds(pos(), size()); }
 
     static vec3 circular_bounds(vec3 pos, vec3 size) {
-        // TODO need to center him?
-        return vec3{
-            pos.x,
-            pos.z,
-            fmax(size.x, size.z),
-        };
+        float radius = fmax(size.x * 0.6f, size.z * 0.6f);
+        return vec3{pos.x, pos.z, radius};
     }
 
     /*

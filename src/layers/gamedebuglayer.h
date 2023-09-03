@@ -16,12 +16,12 @@
 
 struct GameDebugLayer : public Layer {
     bool debug_ui_enabled = false;
-    bool network_ui_enabled = false;
+    bool no_clip_enabled = false;
     std::shared_ptr<ui::UIContext> ui_context;
 
     GameDebugLayer() : Layer(strings::menu::GAME) {
         GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);
-        GLOBALS.set("network_ui_enabled", &network_ui_enabled);
+        GLOBALS.set("no_clip_enabled", &no_clip_enabled);
         ui_context = std::make_shared<ui::UIContext>();
     }
     virtual ~GameDebugLayer() {}
@@ -57,7 +57,7 @@ struct GameDebugLayer : public Layer {
         }
         if (KeyMap::get_button(menu::State::Game,
                                InputName::ToggleNetworkView) == event.button) {
-            network_ui_enabled = !network_ui_enabled;
+            no_clip_enabled = !no_clip_enabled;
             return true;
         }
         return ui_context.get()->process_gamepad_button_event(event);
@@ -85,18 +85,12 @@ struct GameDebugLayer : public Layer {
         if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleDebug) ==
             event.keycode) {
             debug_ui_enabled = !debug_ui_enabled;
-            if (debug_ui_enabled) {
-                raylib::EnableCursor();
-            } else {
-                // raylib::DisableCursor();
-            }
-
             return true;
         }
         if (KeyMap::get_key_code(menu::State::Game,
                                  InputName::ToggleNetworkView) ==
             event.keycode) {
-            network_ui_enabled = !network_ui_enabled;
+            no_clip_enabled = !no_clip_enabled;
             return true;
         }
         return ui_context.get()->process_keyevent(event);
