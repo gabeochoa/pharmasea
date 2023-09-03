@@ -12,6 +12,7 @@ struct IsSpawner : public BaseComponent {
     virtual ~IsSpawner() {}
 
     [[nodiscard]] bool hit_max() const { return num_spawned >= max_spawned; }
+    [[nodiscard]] int get_num_spawned() const { return num_spawned; }
 
     auto& reset_num_spawned() {
         // TODO add max to progression_manager

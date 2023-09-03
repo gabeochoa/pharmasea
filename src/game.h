@@ -34,7 +34,6 @@
 #include "layers/gamelayer.h"
 #include "layers/handlayer.h"
 #include "layers/menulayer.h"
-#include "layers/menustatelayer.h"
 #include "layers/networklayer.h"
 #include "layers/pauselayer.h"
 #include "layers/seedmanagerlayer.h"
@@ -125,7 +124,6 @@ void startup() {
         //
         new FPSLayer(),
         new StreamerSafeLayer(),
-        new MenuStateLayer(),
         new VersionLayer(),
         new ToastLayer(),
         //

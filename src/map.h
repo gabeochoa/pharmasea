@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "components/collects_user_input.h"
 #include "engine.h"
 #include "engine/container_cast.h"
 #include "engine/log.h"
@@ -38,6 +39,15 @@ struct Map {
     void update_seed(const std::string& s) {
         seed = s;
         game_info.update_seed(s);
+    }
+
+    OptEntity get_remote_with_cui() {
+        for (const auto& e : remote_players_NOT_SERIALIZED) {
+            if (e->has<CollectsUserInput>()) {
+                return *e;
+            }
+        }
+        return {};
     }
 
     Entities entities() const { return game_info.entities; }
