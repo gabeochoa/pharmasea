@@ -12,13 +12,15 @@
 #include "system/system_manager.h"
 
 struct Map {
+    // Serialized
     bool showMinimap = false;
-
     LevelInfo game_info;
 
+    // No serialized
     Entities local_players_NOT_SERIALIZED;
     Entities remote_players_NOT_SERIALIZED;
     std::string seed;
+    bool showSeedInputBox = false;
 
     // This gets called on every network frame because
     // the serializer uses the default contructor
@@ -45,6 +47,9 @@ struct Map {
     }
 
     void onUpdateLocalPlayers(float dt) {
+        // TODO for right now the only thing this does is collect input
+        // which we want to turn off until you close the box
+        if (showSeedInputBox) return;
         SystemManager::get().update_local_players(local_players_NOT_SERIALIZED,
                                                   dt);
     }

@@ -9,6 +9,7 @@
 //
 #include "../camera.h"
 #include "../engine.h"
+#include "../engine/layer.h"
 #include "../map.h"
 #include "raylib.h"
 

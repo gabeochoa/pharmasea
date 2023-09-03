@@ -10,18 +10,20 @@
 #include "../camera.h"
 #include "../dataclass/names.h"
 #include "../engine.h"
+#include "../engine/app.h"
 #include "../engine/layer.h"
 #include "../map.h"
+#include "networklayer.h"
 #include "raylib.h"
 
 struct SeedManagerLayer : public Layer {
     std::shared_ptr<GameCam> cam;
     std::shared_ptr<ui::UIContext> ui_context;
-    bool showSeedInputBox = false;
+    Map* map_ptr;
     // We use a temp string because we dont want to touch the real one until the
     // user says Okay
     std::string tempSeed = "";
-    Layer* network;
+    NetworkLayer* network;
 
     SeedManagerLayer()
         : Layer(strings::menu::GAME),
@@ -35,28 +37,38 @@ struct SeedManagerLayer : public Layer {
     virtual ~SeedManagerLayer() {}
 
     bool is_user_host() {
-        if (network != nullptr) {
-            // TODO read from network::Info
+        if (network && network->network_info) {
+            return network->network_info->is_host();
         }
-        return true;
+        return false;
+    }
+
+    bool onCharPressedEvent(CharPressedEvent& event) override {
+        if (GameState::get().is(game::State::Paused)) return false;
+        if (MenuState::get().is_not(menu::State::Game)) return false;
+        if (!is_user_host()) return false;
+        if (!map_ptr) return false;
+
+        return ui_context.get()->process_char_press_event(event);
     }
 
     bool onKeyPressed(KeyPressedEvent& event) override {
         if (GameState::get().is(game::State::Paused)) return false;
         if (MenuState::get().is_not(menu::State::Game)) return false;
         if (!is_user_host()) return false;
+        if (!map_ptr) return false;
 
-        if (showSeedInputBox &&
+        if (map_ptr->showSeedInputBox &&
             KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
                 event.keycode) {
-            showSeedInputBox = false;
+            map_ptr->showSeedInputBox = false;
             return true;
         }
 
-        if (!showSeedInputBox &&
+        if (!map_ptr->showSeedInputBox &&
             KeyMap::get_key_code(menu::State::Game, InputName::PlayerPickup) ==
                 event.keycode) {
-            showSeedInputBox = true;
+            map_ptr->showSeedInputBox = true;
             return true;
         }
 
@@ -64,15 +76,23 @@ struct SeedManagerLayer : public Layer {
     }
 
     virtual void onUpdate(float) override {
-        auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
+        map_ptr = (GLOBALS.get_ptr<Map>(strings::globals::MAP));
         if (!map_ptr) return;
 
-        if (!showSeedInputBox) {
+        if (!map_ptr->showSeedInputBox) {
             tempSeed = map_ptr->seed;
+        }
+
+        if (!network) {
+            for (Layer* layer : App::get().layerstack.layers) {
+                if (layer->name == "Network") {
+                    network = (NetworkLayer*) layer;
+                }
+            }
         }
     }
 
-    void draw_seed_input(Map* map, float dt) {
+    void draw_seed_input(float dt) {
         using namespace ui;
         begin(ui_context, dt);
 
@@ -110,21 +130,21 @@ struct SeedManagerLayer : public Layer {
             // TODO translate
             if (button(Widget{randomize, z_index}, "Randomize", true)) {
                 const auto name = get_random_name_rot13();
-                map->update_seed(name);
-                showSeedInputBox = false;
+                map_ptr->update_seed(name);
+                map_ptr->showSeedInputBox = false;
             }
 
             // TODO translate
             if (button(Widget{select, z_index}, "Save Seed", true)) {
-                map->update_seed(tempSeed);
-                showSeedInputBox = false;
+                map_ptr->update_seed(tempSeed);
+                map_ptr->showSeedInputBox = false;
             }
         }
 
         end();
     }
 
-    void draw_minimap(Map* map_ptr, float dt) {
+    void draw_minimap(float dt) {
         raylib::BeginMode3D((*cam).get());
         {
             raylib::rlTranslatef(-5, 0, 7.f);
@@ -141,15 +161,13 @@ struct SeedManagerLayer : public Layer {
         TRACY_ZONE_SCOPED;
         if (!MenuState::s_in_game()) return;
         if (GameState::get().is(game::State::Paused)) return;
-
-        auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
         if (!map_ptr) return;
 
         // Only show minimap during lobby
         if (!map_ptr->showMinimap) return;
 
-        draw_minimap(map_ptr, dt);
+        draw_minimap(dt);
 
-        if (is_user_host() && showSeedInputBox) draw_seed_input(map_ptr, dt);
+        if (is_user_host() && map_ptr->showSeedInputBox) draw_seed_input(dt);
     }
 };

@@ -132,8 +132,9 @@ void startup() {
         //
         new PauseLayer(),
         //
-        new GameDebugLayer(),
         new SeedManagerLayer(),
+        new GameDebugLayer(),  // putting below seed manager since typing 'o'
+                               // switches modes
         //
         new NetworkLayer(),
         new GameLayer(),

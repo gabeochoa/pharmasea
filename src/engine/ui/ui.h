@@ -916,6 +916,8 @@ inline ElementResult textfield(const Widget& widget,
                 if (validation_test(
                         validationFlag,
                         TextfieldValidationDecisionFlag::StopNewInput)) {
+                    log_warn("tried to type {} but hit validation error",
+                             context->keychar);
                 } else {
                     state->buffer.asT().append(
                         std::string(1, (char) context->keychar));
