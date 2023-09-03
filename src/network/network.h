@@ -64,6 +64,7 @@ struct Info {
                 break;
         }
 
+
         server_thread_id = server_thread.get_id();
         GLOBALS.set("server_thread_id", &server_thread_id);
 
@@ -89,7 +90,9 @@ struct Info {
 
     TriggerOnDt menu_state_tick_trigger = TriggerOnDt(1.0f);
 
-    Info() {}
+    Info() {
+        GLOBALS.set("network_info", this);
+    }
 
     ~Info() {
         desired_role = Role::s_None;

@@ -23,7 +23,6 @@ struct SeedManagerLayer : public Layer {
     // We use a temp string because we dont want to touch the real one until the
     // user says Okay
     std::string tempSeed = "";
-    NetworkLayer* network;
 
     SeedManagerLayer()
         : Layer(strings::menu::GAME),
@@ -37,8 +36,9 @@ struct SeedManagerLayer : public Layer {
     virtual ~SeedManagerLayer() {}
 
     bool is_user_host() {
-        if (network && network->network_info) {
-            return network->network_info->is_host();
+        auto network_info = (GLOBALS.get_ptr<network::Info>("network_info"));
+        if (network_info) {
+            return network_info->is_host();
         }
         return false;
     }
@@ -54,9 +54,13 @@ struct SeedManagerLayer : public Layer {
 
     bool onKeyPressed(KeyPressedEvent& event) override {
         if (GameState::get().is(game::State::Paused)) return false;
+        if (GameState::get().is_not(game::State::Lobby)) return false;
         if (MenuState::get().is_not(menu::State::Game)) return false;
         if (!is_user_host()) return false;
         if (!map_ptr) return false;
+        // We need this check to guarantee that you are near the box
+        // otherwise pressing space will freeze you until you hit esc
+        if (!map_ptr->showMinimap) return;
 
         if (map_ptr->showSeedInputBox &&
             KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
@@ -81,14 +85,6 @@ struct SeedManagerLayer : public Layer {
 
         if (!map_ptr->showSeedInputBox) {
             tempSeed = map_ptr->seed;
-        }
-
-        if (!network) {
-            for (Layer* layer : App::get().layerstack.layers) {
-                if (layer->name == "Network") {
-                    network = (NetworkLayer*) layer;
-                }
-            }
         }
     }
 
@@ -130,13 +126,15 @@ struct SeedManagerLayer : public Layer {
             // TODO translate
             if (button(Widget{randomize, z_index}, "Randomize", true)) {
                 const auto name = get_random_name_rot13();
-                network->network_info->send_updated_seed(name);
+                auto network_info = (GLOBALS.get_ptr<network::Info>("network_info"));
+                network_info->send_updated_seed(name);
                 map_ptr->showSeedInputBox = false;
             }
 
             // TODO translate
             if (button(Widget{select, z_index}, "Save Seed", true)) {
-                network->network_info->send_updated_seed(tempSeed);
+                auto network_info = (GLOBALS.get_ptr<network::Info>("network_info"));
+                network_info->send_updated_seed(tempSeed);
                 map_ptr->showSeedInputBox = false;
             }
         }

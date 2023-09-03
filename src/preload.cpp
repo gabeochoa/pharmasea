@@ -416,9 +416,9 @@ void Preload::load_map_generation_info() {
                     .pat = jpat["pat"].get<std::vector<std::string>>(),
                     .connections = connections,
                     .required = jpat.value("required", false),
+                    .any_connection = jpat.value("any_connection", false),
                     .max_count = jpat.value("max_count", -1),
                     .edge_only = jpat.value("edge_only", false),
-                    .any_connection = jpat.value("any_connection", false),
                 });
             }
 
