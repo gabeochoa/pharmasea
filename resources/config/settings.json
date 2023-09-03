@@ -1,6 +1,6 @@
 {
   "LOG_LEVEL": 2,
-  "DEADZONE": 1.0,
+  "DEADZONE": 0.25,
   "theme": "default",
   "themes" : {
       "grayscale": {
