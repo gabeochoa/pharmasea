@@ -5,6 +5,11 @@
 #include "base_component.h"
 
 struct ShowsProgressBar : public BaseComponent {
+    enum Enabled { Always, Planning, InRound } type;
+
+    ShowsProgressBar() : type(Enabled::Always) {}
+    ShowsProgressBar(Enabled e) : type(e) {}
+
     virtual ~ShowsProgressBar() {}
 
    private:
@@ -12,5 +17,7 @@ struct ShowsProgressBar : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+
+        s.value4b(type);
     }
 };

@@ -266,7 +266,7 @@ void make_table(Entity& table, vec2 pos) {
     table.addComponent<HasWork>().init(std::bind(
         process_table_working, std::placeholders::_1, std::placeholders::_2,
         std::placeholders::_3, std::placeholders::_4));
-    table.addComponent<ShowsProgressBar>();
+    table.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 }
 
 void make_character_switcher(Entity& character_switcher, vec2 pos) {
@@ -292,7 +292,8 @@ void make_character_switcher(Entity& character_switcher, vec2 pos) {
                 usesCharacterModel.increment();
             }
         });
-    character_switcher.addComponent<ShowsProgressBar>();
+    character_switcher.addComponent<ShowsProgressBar>(
+        ShowsProgressBar::Enabled::Always);
 }
 
 void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
@@ -336,7 +337,8 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
         randomizer.get<HasName>().update(server->get_map_SERVER_ONLY()->seed);
     });
 
-    map_randomizer.addComponent<ShowsProgressBar>();
+    map_randomizer.addComponent<ShowsProgressBar>(
+        ShowsProgressBar::Enabled::Always);
 }
 
 void make_fast_forward(Entity& fast_forward, vec2 pos) {
@@ -374,7 +376,8 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
             }
         });
 
-    fast_forward.addComponent<ShowsProgressBar>();
+    fast_forward.addComponent<ShowsProgressBar>(
+        ShowsProgressBar::Enabled::InRound);
 }
 
 void make_wall(Entity& wall, vec2 pos, Color c) {
@@ -490,7 +493,8 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
                 hasWork.reset_pct();
             }
         });
-    container.addComponent<ShowsProgressBar>();
+    container.addComponent<ShowsProgressBar>(
+        ShowsProgressBar::Enabled::InRound);
 }
 
 void make_fruit_basket(Entity& container, vec2 pos) {
@@ -529,7 +533,8 @@ void make_fruit_basket(Entity& container, vec2 pos) {
                 hasWork.reset_pct();
             }
         });
-    container.addComponent<ShowsProgressBar>();
+    container.addComponent<ShowsProgressBar>(
+        ShowsProgressBar::Enabled::InRound);
 }
 
 void make_cupboard(Entity& cupboard, vec2 pos) {
@@ -610,7 +615,7 @@ void make_vomit(Entity& vomit, vec2 pos) {
     vomit.addComponent<CanBeHighlighted>();
 
     // TODO please just add this to has work or something cmon
-    vomit.addComponent<ShowsProgressBar>();
+    vomit.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 
     vomit.addComponent<HasWork>().init(
         [](Entity& vom, HasWork& hasWork, const Entity& player, float dt) {
@@ -845,7 +850,7 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
                               blender->id);
         }
     });
-    fruit.addComponent<ShowsProgressBar>();
+    fruit.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 }
 
 void make_drink(Item& drink, vec2 pos) {
@@ -856,7 +861,7 @@ void make_drink(Item& drink, vec2 pos) {
         process_drink_working, std::placeholders::_1, std::placeholders::_2,
         std::placeholders::_3, std::placeholders::_4));
     // TODO should this just be part of has work?
-    drink.addComponent<ShowsProgressBar>();
+    drink.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 
     drink.addComponent<HasDynamicModelName>().init(
         EntityType::Drink, HasDynamicModelName::DynamicType::Ingredients,
