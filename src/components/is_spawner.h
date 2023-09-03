@@ -13,6 +13,7 @@ struct IsSpawner : public BaseComponent {
 
     [[nodiscard]] bool hit_max() const { return num_spawned >= max_spawned; }
     [[nodiscard]] int get_num_spawned() const { return num_spawned; }
+    [[nodiscard]] int get_max_spawned() const { return max_spawned; }
 
     auto& reset_num_spawned() {
         // TODO add max to progression_manager
@@ -71,6 +72,7 @@ struct IsSpawner : public BaseComponent {
         spawn_fn(entity, pos);
         num_spawned++;
     }
+
     [[nodiscard]] bool validate(Entity& entity, vec2 pos) {
         return validation_spawn_fn ? validation_spawn_fn(entity, pos) : true;
     }
@@ -96,5 +98,11 @@ struct IsSpawner : public BaseComponent {
 
         // We likely dont need to serialize anything because it should be
         // all server side info
+
+        // TODO add macro to only show these for debug builds
+        // Debug only
+
+        s.value4b(num_spawned);
+        s.value4b(max_spawned);
     }
 };

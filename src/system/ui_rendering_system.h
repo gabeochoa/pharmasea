@@ -82,13 +82,14 @@ inline void render_current_register_queue(float dt) {
                            height,  //
                            height};
 
-    const auto debug_mode_on =
-        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-    if (debug_mode_on) {
-        raylib::DrawRectangleRounded(
-            queue_window, 0.5f, 8,
-            ::ui::UI_THEME.from_usage(::ui::theme::Background));
-    }
+    // Disable queue window for now because we dont need to see it
+    // const auto debug_mode_on =
+    // GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+    // if (debug_mode_on) {
+    // raylib::DrawRectangleRounded(
+    // queue_window, 0.5f, 8,
+    // ::ui::UI_THEME.from_usage(::ui::theme::Background));
+    // }
 
     for (int i = 0; i < fmin(num_queue, max_num_cards); i++) {
         if (show_see_more && i == (max_num_cards - 1)) {

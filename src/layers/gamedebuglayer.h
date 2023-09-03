@@ -13,6 +13,7 @@
 #include "../components/can_hold_furniture.h"
 #include "../components/can_hold_item.h"
 #include "../components/collects_user_input.h"
+#include "../components/has_timer.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_spawner.h"
 #include "../engine/layer.h"
@@ -178,12 +179,15 @@ struct GameDebugLayer : public Layer {
                 OptEntity sophie =
                     EntityHelper::getFirstWithComponent<IsProgressionManager>();
                 if (sophie) {
+                    const HasTimer& hasTimer = sophie->get<HasTimer>();
+
                     auto [round_time_div, round_spawn_div, drinks_div,
                           ingredients_div] = rect::hsplit<4>(round_info, 10);
 
                     text(Widget{round_time_div},
-                         fmt::format("Round Length: {}",
-                                     round_settings::ROUND_LENGTH_S));
+                         fmt::format("Round Length: {:.0f}/{}",
+                                     hasTimer.currentRoundTime,
+                                     hasTimer.totalRoundTime));
 
                     {
                         auto [num_spawned, countdown] =
@@ -195,8 +199,9 @@ struct GameDebugLayer : public Layer {
                         Entity& spawner = spawners[0];
                         const IsSpawner& iss = spawner.get<IsSpawner>();
                         text(Widget{num_spawned},
-                             fmt::format("Num Spawned: {} (max? {})",
-                                         iss.get_num_spawned(), iss.hit_max()));
+                             fmt::format("Num Spawned: {} / {}",
+                                         iss.get_num_spawned(),
+                                         iss.get_max_spawned()));
                     }
 
                 } else {
