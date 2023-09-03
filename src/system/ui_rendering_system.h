@@ -181,19 +181,26 @@ inline void render_block_state_change_reason(const Entity& entity, float) {
     const auto debug_mode_on =
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
 
+    float font_size = 75.f;
+
     // if the round isnt over dont need to show anything
     if (ht.currentRoundTime > 0 && !debug_mode_on) return;
 
     //
-    auto _render_single_reason = [](const std::string& text, float y) {
+    auto _render_single_reason = [=](const std::string& text, float y) {
+        float fs = font_size;
         Color font_color = ::ui::UI_THEME.from_usage(::ui::theme::Font);
-        raylib::DrawTextEx(Preload::get().font, text.c_str(), {200, y}, 75, 0,
+        if (text.size() > 30) {
+            fs /= 2.f;
+        }
+        raylib::DrawTextEx(Preload::get().font, text.c_str(), {200.f, y}, fs, 0,
                            font_color);
     };
 
     // TODO handle centering the text better when there are more than one
-    bool has_reasons = ht.block_state_change_reasons.count() > 1;
-    int posy = has_reasons ? 25 : 25;
+    // bool has_reasons = ht.block_state_change_reasons.count() > 1;
+
+    int posy = 200;
     for (int i = 1; i < HasTimer::WaitingReason::WaitingReasonLast; i++) {
         bool enabled = ht.read_reason(i);
 
@@ -208,8 +215,8 @@ inline void render_block_state_change_reason(const Entity& entity, float) {
         auto countdown = fmt::format(
             "{}: {}", text_lookup(strings::i18n::NEXT_ROUND_COUNTDOWN),
             (int) ceil(util::trunc(ht.roundSwitchCountdown, 1)));
-        raylib::DrawTextEx(Preload::get().font, countdown.c_str(), {200, 100},
-                           75, 0, font_color);
+        raylib::DrawTextEx(Preload::get().font, countdown.c_str(), {200.f, 50},
+                           font_size, 0, font_color);
     }
 }
 
