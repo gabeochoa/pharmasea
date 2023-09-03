@@ -282,7 +282,6 @@ void process_player_movement_input(std::shared_ptr<Entity> entity, float dt,
 
     person_update_given_new_pos(entity->id, transform, player, dt,
                                 new_position_x, new_position_z);
-    transform.trunc(2);
 };
 
 void work_furniture(const std::shared_ptr<Entity> player, float frame_dt) {
