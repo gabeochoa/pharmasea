@@ -52,6 +52,26 @@ struct GameLayer : public Layer {
         return false;
     }
 
+    bool onMouseButtonUp(Mouse::MouseButtonUpEvent& event) override {
+        if (!MenuState::s_in_game()) return false;
+        // TODO remove protected ew
+        // TODO better button naming
+        if (event.GetMouseButton() == Mouse::MouseCode::Button0) {
+            raylib::ShowCursor();
+        }
+        return false;
+    }
+
+    bool onMouseButtonDown(Mouse::MouseButtonDownEvent& event) override {
+        if (!MenuState::s_in_game()) return false;
+        // TODO remove protected ew
+        // TODO better button naming
+        if (event.GetMouseButton() == Mouse::MouseCode::Button0) {
+            raylib::HideCursor();
+        }
+        return false;
+    }
+
     void play_music() {
         if (ENABLE_SOUND) {
             auto m = MusicLibrary::get().get(strings::music::SUPERMARKET);
