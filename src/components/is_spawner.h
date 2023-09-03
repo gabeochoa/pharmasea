@@ -18,6 +18,8 @@ struct IsSpawner : public BaseComponent {
     auto& reset_num_spawned() {
         // TODO add max to progression_manager
         num_spawned = 0;
+        // set this to 0 so that the first guy immediately spawns
+        countdown = 0.f;
         return *this;
     }
 
@@ -44,7 +46,7 @@ struct IsSpawner : public BaseComponent {
     // TODO probably need a thing to specify the units
     auto& set_time_between(float s) {
         spread = s;
-        countdown = spread;
+        countdown = 0.f;
         return *this;
     }
 
@@ -58,14 +60,17 @@ struct IsSpawner : public BaseComponent {
             return false;
         }
 
-        countdown -= dt;
         if (countdown <= 0) {
-            // we do += instead of = because
-            // we might overshoot when ffwding
-            countdown += spread;
             return true;
         }
+        countdown -= dt;
         return false;
+    }
+
+    void post_spawn_reset() {
+        // we do += instead of = because
+        // we might overshoot when ffwding
+        countdown += spread;
     }
 
     void spawn(Entity& entity, vec2 pos) {

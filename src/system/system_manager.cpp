@@ -862,14 +862,16 @@ void process_spawner(Entity& entity, float dt) {
     if (entity.is_missing<IsSpawner>()) return;
     vec2 pos = entity.get<Transform>().as2();
 
-    bool is_time_to_spawn = entity.get<IsSpawner>().pass_time(dt);
+    IsSpawner& iss = entity.get<IsSpawner>();
+
+    bool is_time_to_spawn = iss.pass_time(dt);
     if (!is_time_to_spawn) return;
 
     // If there is a validation function check that first
-    bool can_spawn_here_and_now = entity.get<IsSpawner>().validate(entity, pos);
+    bool can_spawn_here_and_now = iss.validate(entity, pos);
     if (!can_spawn_here_and_now) return;
 
-    bool should_prev_dupes = entity.get<IsSpawner>().prevent_dupes();
+    bool should_prev_dupes = iss.prevent_dupes();
     if (should_prev_dupes) {
         for (const Entity& e : EntityHelper::getEntitiesInPosition(pos)) {
             if (e.id == entity.id) continue;
@@ -883,7 +885,8 @@ void process_spawner(Entity& entity, float dt) {
     }
 
     auto& new_ent = EntityHelper::createEntity();
-    entity.get<IsSpawner>().spawn(new_ent, pos);
+    iss.spawn(new_ent, pos);
+    iss.post_spawn_reset();
 }
 
 void run_timer(Entity& entity, float dt) {
@@ -1290,8 +1293,10 @@ void update_progression(Entity& entity, float) {
 
     if (check_type(entity, EntityType::CustomerSpawner)) {
         // TODO come up with a function to use here
-        const int new_total = day_count * 2;
+        const int new_total = (int) fmax(2.f, day_count * 4.f);
         const float time_between = round_settings::ROUND_LENGTH_S / new_total;
+        log_info("Updating progression, setting new spawn total to {}",
+                 new_total);
         entity
             .get<IsSpawner>()  //
             .set_total(new_total)

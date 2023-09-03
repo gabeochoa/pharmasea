@@ -37,3 +37,11 @@ struct CEVector {
         return data[index];
     }
 };
+
+template<typename T, std::size_t Size>
+[[nodiscard]] constexpr bool array_contains(std::array<T, Size> array,
+                                            const T &key) {
+    const auto itr = std::find_if(begin(array), end(array),
+                                  [&key](const auto &v) { return v == key; });
+    return itr != end(array);
+}

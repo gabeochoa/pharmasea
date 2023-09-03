@@ -344,28 +344,31 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
                               DebugOptions{.type = EntityType::FastForward},
                               pos, ui::color::apricot, ui::color::apricot);
 
+    // TODO translate
     fast_forward.addComponent<HasName>().update("Fast-Forward Day");
 
     fast_forward.addComponent<HasWork>().init(
         [](Entity&, HasWork& hasWork, Entity&, float dt) {
-            // TODO why does this not work
-            // std::shared_ptr<Entity> sophie =
-            // (EntityHelper::getAllWithName(EntityType::SOPHIE))[0];
-
             const float amt = 15.f;
 
-            // TODO i dont think the spawner is working correctly
-
-            for (auto e : SystemManager::get().oldAll) {
-                if (check_type(*e, EntityType::Sophie)) {
-                    e->get<HasTimer>().pass_time(amt * dt);
-                }
-                if (check_type(*e, EntityType::CustomerSpawner)) {
-                    e->get<IsSpawner>().pass_time(amt * dt);
+            {
+                auto sophie =
+                    EntityHelper::getFirstWithComponent<IsProgressionManager>();
+                if (sophie) {
+                    HasTimer& ht = sophie->get<HasTimer>();
+                    ht.pass_time(amt * dt);
+                    hasWork.update_pct(1.f - ht.pct());
                 }
             }
 
-            hasWork.increase_pct(dt * 0.05f);
+            // TODO i dont think the spawner is working correctly
+            {
+                auto customer_spawners =
+                    EntityHelper::getAllWithType(EntityType::CustomerSpawner);
+                Entity& spawner = customer_spawners[0];
+                spawner.get<IsSpawner>().pass_time(amt * dt);
+            }
+
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();
             }
@@ -912,20 +915,24 @@ void make_customer(Entity& customer, vec2 p, bool has_order) {
     customer
         .addComponent<IsSpawner>()  //
         .set_fn(&furniture::make_vomit)
-        .set_validation_fn([](const Entity& entity, vec2) {
+        .set_validation_fn([](Entity& entity, vec2) {
             const CanOrderDrink& cod = entity.get<CanOrderDrink>();
             // not vomiting since didnt have anything to drink yet
             if (cod.num_orders_had <= 0) return false;
+            if (cod.num_alcoholic_drinks_had <= 0) return false;
+
+            IsSpawner& vom_spewer = entity.get<IsSpawner>();
+            vom_spewer.set_total(randIn(0, cod.num_alcoholic_drinks_had));
+            vom_spewer.set_time_between(2.f);
+
             return true;
         })
         // check if there is already vomit in that spot
         .enable_prevent_duplicates()
-        // TODO dynamically set these based on num drinks
-        // TODO only enable this once you start serving alcohol
-        // TODO should we by default give the mop? or should you be able to
-        // clean by hand but slowly?
-        .set_total(3)
+        .set_total(0)
         .set_time_between(2.f);
+    // TODO should we by default give the mop? or should you be able to
+    // clean by hand but slowly?
 }
 
 namespace furniture {

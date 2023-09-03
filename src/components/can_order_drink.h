@@ -5,6 +5,7 @@
 #include "bitsery/ext/std_bitset.h"
 //
 #include "../dataclass/ingredient.h"
+#include "../engine/bitset_utils.h"
 #include "../engine/random.h"
 #include "../recipe_library.h"
 #include "base_component.h"
@@ -28,6 +29,17 @@ struct CanOrderDrink : public BaseComponent {
         return get_recipe_for_drink(current_order);
     }
 
+    [[nodiscard]] bool current_order_has_alcohol() const {
+        bool yes = false;
+        bitset_utils::for_each_enabled_bit(recipe(), [&](size_t index) {
+            // TODO add support for flow control
+            if (yes) return;
+            Ingredient ig = magic_enum::enum_value<Ingredient>(index);
+            yes |= array_contains(ingredient::Alcohols, ig);
+        });
+        return yes;
+    }
+
     [[nodiscard]] bool has_order() const {
         return order_state == OrderState::Ordering;
     }
@@ -38,10 +50,21 @@ struct CanOrderDrink : public BaseComponent {
         return get_icon_name_for_drink(current_order);
     }
 
+    void on_order_finished() {
+        num_orders_rem--;
+        num_orders_had++;
+
+        if (current_order_has_alcohol()) {
+            num_alcoholic_drinks_had++;
+        }
+    }
+
     // TODO make private
     int num_orders_rem = -1;
     int num_orders_had = 0;
     Drink current_order;
+
+    int num_alcoholic_drinks_had = 0;
 
    private:
     friend bitsery::Access;
