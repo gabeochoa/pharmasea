@@ -599,9 +599,11 @@ inline ElementResult button(const Widget& widget,
     const auto _press_logic = [&]() -> bool {
         if (focus::matches(widget.id) &&
             context->pressed(InputName::WidgetPress)) {
+            focus::set(widget.id);
             return true;
         }
         if (focus::is_mouse_click(widget)) {
+            focus::set(widget.id);
             return true;
         }
         return false;
@@ -776,6 +778,14 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
 
     if (button(widget, "", true)) {
         state->on = !state->on;
+    }
+
+    if (focus::matches(widget.id)) {
+        state->on = true;
+    }
+
+    if (!focus::matches(widget.id)) {
+        state->on = false;
     }
 
     if (state->on) {
