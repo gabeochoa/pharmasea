@@ -60,7 +60,7 @@ struct SeedManagerLayer : public Layer {
         if (!map_ptr) return false;
         // We need this check to guarantee that you are near the box
         // otherwise pressing space will freeze you until you hit esc
-        if (!map_ptr->showMinimap) return;
+        if (!map_ptr->showMinimap) return false;
 
         if (map_ptr->showSeedInputBox &&
             KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
