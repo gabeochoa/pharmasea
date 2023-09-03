@@ -348,7 +348,7 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
             // std::shared_ptr<Entity> sophie =
             // (EntityHelper::getAllWithName(EntityType::SOPHIE))[0];
 
-            const float amt = 5.f;
+            const float amt = 15.f;
 
             // TODO i dont think the spawner is working correctly
 

@@ -37,9 +37,9 @@ struct Transform : public BaseComponent {
             roundedValue -= 45;
 
         if (roundedValue >= 360) {
-            roundedValue -= 360;
+            roundedValue = roundedValue % 360;
         }
-        if (roundedValue < 0) {
+        while (roundedValue < 0) {
             roundedValue += 360;
         }
 
