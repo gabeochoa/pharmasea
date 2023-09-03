@@ -16,6 +16,8 @@ enum class EventType {
     AppRender,
     MouseButtonPressed,
     MouseButtonReleased,
+    MouseButtonUp,
+    MouseButtonDown,
     MouseMoved,
     MouseScrolled,
     KeyPressed,
@@ -130,3 +132,122 @@ struct GamepadAxisMovedEvent : public Event {
     MACRO_EVENT_TYPE(GamepadAxisMoved)
     MACRO_EVENT_CATEGORY(EventCategoryGamepad | EventCategoryInput)
 };
+
+namespace Mouse {
+enum MouseCode {
+    // From glfw3.h
+    Button0 = 0,
+    Button1 = 1,
+    Button2 = 2,
+    Button3 = 3,
+    Button4 = 4,
+    Button5 = 5,
+    Button6 = 6,
+    Button7 = 7,
+
+    ButtonLast = Button7,
+    ButtonLeft = Button0,
+    ButtonRight = Button1,
+    ButtonMiddle = Button2
+};
+
+class MouseMovedEvent : public Event {
+   public:
+    MouseMovedEvent(const float x, const float y) : mouseX(x), mouseY(y) {}
+
+    float x() const { return mouseX; }
+    float y() const { return mouseY; }
+
+    std::string toString() const override {
+        return fmt::format("MouseMovedEvent: {},{}", mouseX, mouseY);
+    }
+
+    MACRO_EVENT_TYPE(MouseMoved)
+    MACRO_EVENT_CATEGORY(EventCategoryMouse | EventCategoryInput)
+   private:
+    float mouseX, mouseY;
+};
+
+class MouseScrolledEvent : public Event {
+   public:
+    MouseScrolledEvent(const float xOffset, const float yOffset)
+        : XOffset(xOffset), YOffset(yOffset) {}
+
+    float GetXOffset() const { return XOffset; }
+    float GetYOffset() const { return YOffset; }
+
+    std::string toString() const override {
+        return fmt::format("MouseScrolledEvent: {},{}", GetXOffset(),
+                           GetYOffset());
+    }
+
+    MACRO_EVENT_TYPE(MouseScrolled)
+    MACRO_EVENT_CATEGORY(EventCategoryMouse | EventCategoryInput)
+   private:
+    float XOffset, YOffset;
+};
+
+struct MouseButtonEvent : public Event {
+   public:
+    MouseCode GetMouseButton() const { return button; }
+
+    MACRO_EVENT_CATEGORY(EventCategoryMouse | EventCategoryInput |
+                         EventCategoryMouseButton)
+   protected:
+    MouseButtonEvent(const MouseCode b) : button(b) {}
+
+    MouseCode button;
+};
+
+struct MouseButtonPressedEvent : public MouseButtonEvent {
+   public:
+    MouseButtonPressedEvent(const int b)
+        : MouseButtonEvent(static_cast<MouseCode>(b)) {}
+    MouseButtonPressedEvent(const MouseCode b) : MouseButtonEvent(b) {}
+
+    std::string toString() const override {
+        return fmt::format("MouseButtonPressedEvent: {}", button);
+    }
+
+    MACRO_EVENT_TYPE(MouseButtonPressed)
+};
+
+struct MouseButtonReleasedEvent : public MouseButtonEvent {
+   public:
+    MouseButtonReleasedEvent(const int b)
+        : MouseButtonEvent(static_cast<MouseCode>(b)) {}
+    MouseButtonReleasedEvent(const MouseCode b) : MouseButtonEvent(b) {}
+
+    std::string toString() const override {
+        return fmt::format("MouseButtonReleasedEvent: ", button);
+    }
+
+    MACRO_EVENT_TYPE(MouseButtonReleased)
+};
+
+struct MouseButtonUpEvent : public MouseButtonEvent {
+   public:
+    MouseButtonUpEvent(const int b)
+        : MouseButtonEvent(static_cast<MouseCode>(b)) {}
+    MouseButtonUpEvent(const MouseCode b) : MouseButtonEvent(b) {}
+
+    std::string toString() const override {
+        return fmt::format("MouseButtonUpEvent: {}", button);
+    }
+
+    MACRO_EVENT_TYPE(MouseButtonUp)
+};
+
+struct MouseButtonDownEvent : public MouseButtonEvent {
+   public:
+    MouseButtonDownEvent(const int b)
+        : MouseButtonEvent(static_cast<MouseCode>(b)) {}
+    MouseButtonDownEvent(const MouseCode b) : MouseButtonEvent(b) {}
+
+    std::string toString() const override {
+        return fmt::format("MouseButtonDownEvent: ", button);
+    }
+
+    MACRO_EVENT_TYPE(MouseButtonDown)
+};
+}  // namespace Mouse

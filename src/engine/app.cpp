@@ -7,6 +7,7 @@
 #include "event.h"
 #include "globals_register.h"
 #include "keymap.h"
+#include "mouse_map.h"
 #include "raylib.h"
 //
 
@@ -121,6 +122,9 @@ void App::loop(float dt) {
             std::bind(&App::processEvent, this, std::placeholders::_1));
 
         KeyMap::get().forEachCharTyped(
+            std::bind(&App::processEvent, this, std::placeholders::_1));
+
+        MouseMap::get().forEachMouseInput(
             std::bind(&App::processEvent, this, std::placeholders::_1));
     }
     TRACY_FRAME_MARK("app::loop");

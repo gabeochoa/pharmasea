@@ -30,6 +30,19 @@ struct Layer {
             std::bind(&Layer::onGamepadAxisMoved, this, std::placeholders::_1));
         dispatcher.dispatch<CharPressedEvent>(
             std::bind(&Layer::onCharPressedEvent, this, std::placeholders::_1));
+
+        dispatcher.dispatch<Mouse::MouseMovedEvent>(
+            std::bind(&Layer::onMouseMoved, this, std::placeholders::_1));
+        dispatcher.dispatch<Mouse::MouseScrolledEvent>(
+            std::bind(&Layer::onMouseScrolled, this, std::placeholders::_1));
+        dispatcher.dispatch<Mouse::MouseButtonPressedEvent>(std::bind(
+            &Layer::onMouseButtonPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<Mouse::MouseButtonReleasedEvent>(std::bind(
+            &Layer::onMouseButtonReleased, this, std::placeholders::_1));
+        dispatcher.dispatch<Mouse::MouseButtonUpEvent>(
+            std::bind(&Layer::onMouseButtonUp, this, std::placeholders::_1));
+        dispatcher.dispatch<Mouse::MouseButtonDownEvent>(
+            std::bind(&Layer::onMouseButtonDown, this, std::placeholders::_1));
     }
 
     virtual bool onKeyPressed(KeyPressedEvent&) { return false; }
@@ -38,6 +51,19 @@ struct Layer {
     }
     virtual bool onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
     virtual bool onCharPressedEvent(CharPressedEvent&) { return false; }
+
+    virtual bool onMouseMoved(Mouse::MouseMovedEvent&) { return false; }
+    virtual bool onMouseScrolled(Mouse::MouseScrolledEvent&) { return false; }
+    virtual bool onMouseButtonPressed(Mouse::MouseButtonPressedEvent&) {
+        return false;
+    }
+    virtual bool onMouseButtonReleased(Mouse::MouseButtonReleasedEvent&) {
+        return false;
+    }
+    virtual bool onMouseButtonUp(Mouse::MouseButtonUpEvent&) { return false; }
+    virtual bool onMouseButtonDown(Mouse::MouseButtonDownEvent&) {
+        return false;
+    }
 
     [[nodiscard]] const std::string& getname() const { return name; }
 };
