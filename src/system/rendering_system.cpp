@@ -3,7 +3,10 @@
 
 #include "../components/has_client_id.h"
 #include "../components/is_progression_manager.h"
+#include "../engine/ui/theme.h"
 #include "system_manager.h"
+
+extern ui::UITheme UI_THEME;
 
 namespace system_manager {
 namespace render_manager {
@@ -397,22 +400,41 @@ void render_progress_bar(const Entity& entity, float) {
     const HasWork& hasWork = entity.get<HasWork>();
     if (hasWork.dont_show_progres_bar()) return;
 
-    const int length = 20;
-    const int full = hasWork.scale_length(length);
-    const int empty = length - full;
-    DrawFloatingText(                                                     //
-        transform.raw() + vec3({0, TILESIZE, 0}),                         //
-        Preload::get().font,                                              //
-        fmt::format("[{:=>{}}{: >{}}]", "", full, "", empty * 2).c_str()  //
-    );
+    raylib::rlPushMatrix();
+    {
+        vec3 pos = transform.pos();
 
-    // TODO eventually add real rectangle progress bar
-    // auto game_cam = GLOBALS.get<GameCam>("game_cam");
-    // DrawBillboardRec(game_cam.camera, TextureLibrary::get().get("face"),
-    // Rectangle({0, 0, 260, 260}),
-    // this->raw_position + vec3({-(pct_complete * TILESIZE),
-    // TILESIZE * 2, 0}),
-    // {pct_complete * TILESIZE, TILESIZE}, WHITE);
+        raylib::rlTranslatef(pos.x, pos.y, pos.z);
+
+        vec3 size = {
+            TILESIZE,
+            TILESIZE / 3.f,
+            TILESIZE / 10.f,
+        };
+        const float x_size = fmax(0.1f, (hasWork.scale_length(size.x)));
+        const float y_height = 1.75f * TILESIZE;
+
+        Color primary = ui::UI_THEME.from_usage(ui::theme::Usage::Primary);
+        Color background =
+            ui::UI_THEME.from_usage(ui::theme::Usage::Background);
+
+        DrawCubeCustom(
+            {
+                (x_size / 2.f) - (TILESIZE / 4.f),
+                y_height,  //
+                0          //
+            },
+            x_size, size.y, size.z, 0, primary, primary);
+
+        DrawCubeCustom(
+            {
+                (x_size / 2.f) + (TILESIZE / 4.f),
+                y_height,  //
+                0          //
+            },
+            size.x - x_size, size.y, size.z, 0, background, background);
+    }
+    raylib::rlPopMatrix();
 }
 
 }  // namespace render_manager

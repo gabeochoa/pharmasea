@@ -34,6 +34,10 @@ struct HasWork : public BaseComponent {
         return static_cast<int>(pct_work_complete * length);
     }
 
+    [[nodiscard]] float scale_length(float length) const {
+        return pct_work_complete * length;
+    }
+
     typedef std::function<void(Entity& owner, HasWork&, Entity& person,
                                float dt)>
         WorkFn;
