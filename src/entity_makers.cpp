@@ -204,8 +204,10 @@ void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
 
     mop_buddy.get<HasBaseSpeed>().update(1.5f);
     mop_buddy.get<CanPerformJob>().update(Mopping, Mopping);
-    mop_buddy.addComponent<IsItem>().clear_hb_filter().set_hb_filter(
-        EntityType::Player);
+    mop_buddy
+        .addComponent<IsItem>()  //
+        .clear_hb_filter()
+        .set_hb_filter(EntityType::Player);
 }
 
 // TODO This namespace should probably be "furniture::"

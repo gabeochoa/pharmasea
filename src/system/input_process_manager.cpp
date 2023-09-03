@@ -20,6 +20,7 @@
 #include "../components/transform.h"
 #include "../entity.h"
 #include "../entity_helper.h"
+#include "expected.hpp"
 
 namespace system_manager {
 
@@ -402,6 +403,20 @@ namespace inround {
 void handle_drop(const std::shared_ptr<Entity>& player) {
     const CanHighlightOthers& cho = player->get<CanHighlightOthers>();
 
+    const auto _place_special_item_onto_ground =
+        [&]() -> tl::expected<bool, std::string> {
+        std::shared_ptr<Item> item = player->get<CanHoldItem>().item();
+
+        // This is only allowed for special boys
+        if (!check_type(*item, EntityType::MopBuddy))
+            return tl::unexpected("boy was not special");
+
+        // Just drop him wherever we are
+        item->get<IsItem>().set_held_by(EntityType::Unknown, -1);
+        player->get<CanHoldItem>().update(nullptr, -1);
+        return true;
+    };
+
     // This is for example putting a pill into a bag you are holding
     // taking an item and placing it into the container in your hand
     const auto _merge_item_from_furniture_into_hand_item =
@@ -601,6 +616,7 @@ void handle_drop(const std::shared_ptr<Entity>& player) {
     typedef std::function<tl::expected<bool, std::string>()> MergeFunc;
     // NOTE: ORDER MATTERS HERE
     std::vector<MergeFunc> fns{
+        _place_special_item_onto_ground,
         // _merge_item_from_furniture_into_hand_item,
         // _merge_item_from_furniture_around_hand_item,
         // _merge_item_in_hand_into_furniture_item,
