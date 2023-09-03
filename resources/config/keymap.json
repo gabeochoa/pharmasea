@@ -7,13 +7,17 @@
             },
             {
                 "type": 1,
-                "value": "GAMEPAD_BUTTON_LEFT_FACE_DOWN"
+                "value": "GAMEPAD_BUTTON_MIDDLE_RIGHT"
             }
         ],
         "PlayerBack": [
             {
                 "type": 0,
                 "value": 83
+            },
+            {
+                "type": 0,
+                "value": 264
             },
             {
                 "type": 1,
@@ -40,6 +44,10 @@
         "PlayerForward": [
             {
                 "type": 0,
+                "value": 265
+            },
+            {
+                "type": 0,
                 "value": 87
             },
             {
@@ -58,6 +66,10 @@
             {
                 "type": 0,
                 "value": 65
+            },
+            {
+                "type": 0,
+                "value": 263
             },
             {
                 "type": 1,
@@ -85,6 +97,10 @@
             {
                 "type": 0,
                 "value": 68
+            },
+            {
+                "type": 0,
+                "value": 262
             },
             {
                 "type": 1,

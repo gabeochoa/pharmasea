@@ -53,7 +53,10 @@ struct SettingsLayer : public Layer {
         }
     }
 
-    virtual ~SettingsLayer() {}
+    virtual ~SettingsLayer() {
+        // also write the keymap on exit
+        Preload::get().write_keymap();
+    }
 
     virtual bool onKeyPressed(KeyPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Settings)) return false;
