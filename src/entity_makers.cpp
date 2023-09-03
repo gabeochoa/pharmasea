@@ -492,7 +492,7 @@ void make_fruit_basket(Entity& container, vec2 pos) {
 
     // TODO right now lets just worry about lemon first we can come back and
     // handle other fruits later
-    container.addComponent<Indexer>(ingredient::Fruits.size());
+    container.addComponent<Indexer>((int) ingredient::Fruits.size());
     //
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
@@ -720,8 +720,9 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
 
     // TODO have to change this to just be 0>size
     alc.addComponent<HasSubtype>(
-        ingredient::Alcohols[0],
-        ingredient::Alcohols[0] + ingredient::Alcohols.size(), index);
+        (int) ingredient::Alcohols[0],
+        (int) ingredient::Alcohols[0] + (int) ingredient::Alcohols.size(),
+        index);
     alc.addComponent<AddsIngredient>([](const Entity& alcohol) {
            const HasSubtype& hst = alcohol.get<HasSubtype>();
            return get_ingredient_from_index(ingredient::Alcohols[0] +
@@ -778,7 +779,7 @@ void make_juice(Item& juice, vec2 pos, Ingredient fruit) {
 void make_fruit(Item& fruit, vec2 pos, int index) {
     make_item(fruit, {.type = EntityType::Fruit}, pos);
 
-    fruit.addComponent<HasSubtype>(0, ingredient::Fruits.size(), index);
+    fruit.addComponent<HasSubtype>(0, (int) ingredient::Fruits.size(), index);
 
     fruit
         .addComponent<AddsIngredient>([](const Entity& fruit) {
