@@ -46,7 +46,7 @@ struct MouseMap {
     }
     static void forEachMouseButtonDown(std::function<void(Event&)> cb) {
         size_t num_inputs = magic_enum::enum_count<Mouse::MouseCode>();
-        for (int i = 0; i < num_inputs; i++) {
+        for (int i = 0; i < (int) num_inputs; i++) {
             bool down = raylib::IsMouseButtonDown(i);
             if (down) {
                 Mouse::MouseButtonDownEvent* event =
@@ -58,7 +58,7 @@ struct MouseMap {
     }
     static void forEachMouseButtonUp(std::function<void(Event&)> cb) {
         size_t num_inputs = magic_enum::enum_count<Mouse::MouseCode>();
-        for (int i = 0; i < num_inputs; i++) {
+        for (int i = 0; i < (int) num_inputs; i++) {
             bool up = raylib::IsMouseButtonUp(i);
             if (up) {
                 Mouse::MouseButtonUpEvent* event =
