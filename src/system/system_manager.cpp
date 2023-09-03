@@ -1276,6 +1276,30 @@ void reset_customers_that_need_resetting(Entity& entity) {
     }
 }
 
+void update_progression(Entity& entity, float) {
+    if (entity.is_missing<HasProgression>()) return;
+    OptEntity sophie =
+        EntityHelper::getFirstWithComponent<IsProgressionManager>();
+    VALIDATE(sophie, "sophie should exist for sure");
+
+    // const IsProgressionManager& progressionManager =
+    // sophie->get<IsProgressionManager>();
+
+    const HasTimer& hasTimer = sophie->get<HasTimer>();
+    const int day_count = hasTimer.dayCount;
+
+    if (check_type(entity, EntityType::CustomerSpawner)) {
+        // TODO come up with a function to use here
+        const int new_total = day_count * 2;
+        const float time_between = round_settings::ROUND_LENGTH_S / new_total;
+        entity
+            .get<IsSpawner>()  //
+            .set_total(new_total)
+            .set_time_between(time_between);
+        return;
+    }
+}
+
 }  // namespace system_manager
 
 void SystemManager::on_game_state_change(game::State new_state,
@@ -1366,6 +1390,9 @@ void SystemManager::process_state_change(
             system_manager::reset_customer_spawner_when_leaving_inround(entity);
             system_manager::reset_max_gen_when_after_deletion(entity);
             system_manager::increment_day_count(entity, dt);
+
+            // Handle updating all the things that rely on progression
+            system_manager::update_progression(entity, dt);
 
             // I think this will only happen when you debug change round while
             // customers are already in line, but doesnt hurt to reset

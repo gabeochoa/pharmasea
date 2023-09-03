@@ -3,6 +3,7 @@
 
 #include <ranges>
 
+#include "components/has_progression.h"
 #include "components/has_rope_to_item.h"
 #include "components/has_subtype.h"
 #include "components/is_pnumatic_pipe.h"
@@ -69,7 +70,7 @@ void register_all_components() {
         CanOrderDrink,
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
-        HasBaseSpeed, HasRopeToItem,
+        HasBaseSpeed, HasRopeToItem, HasProgression,
         // render
         ShowsProgressBar, ModelRenderer, HasDynamicModelName,
         SimpleColoredBoxRenderer
@@ -938,11 +939,13 @@ void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
                                                                      PINK);
     const auto sfn = std::bind(&make_customer, std::placeholders::_1,
                                std::placeholders::_2, true);
-    customer_spawner
-        .addComponent<IsSpawner>()  //
+
+    customer_spawner.addComponent<IsSpawner>()
         .set_fn(sfn)
-        .set_total(round_settings::NUM_CUSTOMERS)
-        .set_time_between(round_settings::TIME_BETWEEN_CUSTOMERS_S);
+        .set_total(2)
+        .set_time_between(1.f);
+
+    customer_spawner.addComponent<HasProgression>();
 }
 
 }  // namespace furniture

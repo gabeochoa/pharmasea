@@ -54,9 +54,4 @@ namespace round_settings {
 // TODO :DESIGN: how long is a day?
 constexpr const float ROUND_LENGTH_S = 100.f;
 
-// TODO :DESIGN: if we hit the end of the day and didnt spawn everyone...
-// what should we do?
-constexpr const int NUM_CUSTOMERS = 2;
-constexpr const float TIME_BETWEEN_CUSTOMERS_S = 2.f;
-
 }  // namespace round_settings
