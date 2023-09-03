@@ -23,6 +23,11 @@ struct IsItem : public BaseComponent {
         return hb_filter.test(static_cast<int>(hb));
     }
 
+    IsItem& clear_hb_filter() {
+        hb_filter.reset();
+        return *this;
+    }
+
     IsItem& set_hb_filter(const EntityType& type) {
         hb_filter.set(static_cast<int>(type));
         return *this;

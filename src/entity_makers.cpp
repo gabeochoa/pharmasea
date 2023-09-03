@@ -204,7 +204,8 @@ void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
 
     mop_buddy.get<HasBaseSpeed>().update(1.5f);
     mop_buddy.get<CanPerformJob>().update(Mopping, Mopping);
-    mop_buddy.addComponent<IsItem>().set_hb_filter(EntityType::Player);
+    mop_buddy.addComponent<IsItem>().clear_hb_filter().set_hb_filter(
+        EntityType::Player);
 }
 
 // TODO This namespace should probably be "furniture::"
@@ -648,6 +649,7 @@ void make_soda_spout(Item& soda_spout, vec2 pos) {
     make_item(soda_spout, {.type = EntityType::SodaSpout}, pos);
 
     soda_spout.get<IsItem>()
+        .clear_hb_filter()
         .set_hb_filter(EntityType::SodaMachine)
         .set_hb_filter(EntityType::Player);
 
@@ -663,6 +665,7 @@ void make_mop(Item& mop, vec2 pos) {
     make_item(mop, {.type = EntityType::Mop}, pos);
 
     mop.get<IsItem>()
+        .clear_hb_filter()
         .set_hb_filter(EntityType::MopHolder)
         .set_hb_filter(EntityType::Player);
 }
@@ -754,6 +757,7 @@ void make_simple_syrup(Item& simple_syrup, vec2 pos) {
 
     // Since theres only one of these and its inf uses, dont let it get deleted
     simple_syrup.get<IsItem>()
+        .clear_hb_filter()
         .set_hb_filter(ETS_NON_DESTRUCTIVE)
         // TODO create a class of objects that "do work"
         .remove_hb_filter(EntityType::Blender);
