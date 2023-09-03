@@ -19,6 +19,8 @@ using raylib::GamepadAxis;
 using raylib::GamepadButton;
 using raylib::KeyboardKey;
 
+extern float DEADZONE;
+
 enum InputType {
     Keyboard,
     Gamepad,
@@ -448,7 +450,7 @@ struct KeyMap {
         float mvt = ext::get_gamepad_axis_movement(0, axis_with_dir.axis);
         // Note: The 0.25 is how big the deadzone is
         // TODO consider making the deadzone configurable?
-        if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > 0.25f) {
+        if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > DEADZONE) {
             return abs(mvt);
         }
         return 0.f;

@@ -10,6 +10,7 @@
 #include "map_generation.h"
 #include "recipe_library.h"
 
+float DEADZONE = 0.25f;
 int LOG_LEVEL = 2;
 std::vector<std::string> EXAMPLE_MAP;
 i18n::LocalizationText* localization;
@@ -213,6 +214,8 @@ void Preload::load_config() {
     load_json_config_file("settings.json", [&](const nlohmann::json& contents) {
         LOG_LEVEL = contents.value("LOG_LEVEL", 2);
         std::cout << "LOG_LEVEL read from file: " << LOG_LEVEL << std::endl;
+
+        DEADZONE = contents.value("DEADZONE", 0.25f);
 
         EXAMPLE_MAP = contents["DEFAULT_MAP"];
         std::cout << "DEFAULT_MAP read from file: " << EXAMPLE_MAP.size()
