@@ -33,11 +33,9 @@ void person_update_given_new_pos(int id, Transform& transform,
     // TODO this should be a component?
     {
         // horizontal check
-        auto new_circular_bounds_x =
-            Transform::circular_bounds(new_pos_x, transform.size());
+        auto new_bounds_x = get_bounds(new_pos_x, transform.size());
         // vertical check
-        auto new_circular_bounds_z =
-            Transform::circular_bounds(new_pos_z, transform.size());
+        auto new_bounds_y = get_bounds(new_pos_z, transform.size());
 
         OptEntity collided_entity_x;
         OptEntity collided_entity_z;
@@ -53,16 +51,12 @@ void person_update_given_new_pos(int id, Transform& transform,
                     *person)) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if (CheckCollisionCircleRec(
-                    {new_circular_bounds_x.x, new_circular_bounds_x.y},
-                    new_circular_bounds_x.z,
-                    entity.template get<Transform>().rectangular_bounds())) {
+            if (CheckCollisionBoxes(
+                    new_bounds_x, entity.template get<Transform>().bounds())) {
                 collided_entity_x = entity;
             }
-            if (CheckCollisionCircleRec(
-                    {new_circular_bounds_z.x, new_circular_bounds_z.y},
-                    new_circular_bounds_z.z,
-                    entity.template get<Transform>().rectangular_bounds())) {
+            if (CheckCollisionBoxes(
+                    new_bounds_y, entity.template get<Transform>().bounds())) {
                 collided_entity_z = entity;
             }
             // Note: if these are both true, then we definitely dont need to
@@ -75,12 +69,12 @@ void person_update_given_new_pos(int id, Transform& transform,
         });
 
         const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+            GLOBALS.get_or_default<bool>("no_clip_enabled", false);
         if (debug_mode_on) {
             collided_entity_x = {};
             collided_entity_z = {};
         }
-
+        //
         if (!collided_entity_x) {
             transform.update_x(new_pos_x.x);
         }
@@ -256,37 +250,38 @@ void process_player_movement_input(std::shared_ptr<Entity> entity, float dt,
     float cos_angle = -1.f * std::cos(cam_angle_rad);
     float sin_angle = std::sin(cam_angle_rad);
 
-    auto new_position = transform.pos();
+    auto new_position_x = transform.pos();
+    auto new_position_z = transform.pos();
     const float amount = input_amount * hasBaseSpeed.speed() * dt;
 
     // Implement the logic based on the input_name
     switch (input_name) {
         case InputName::PlayerForward:
-            new_position.x += cos_angle * amount;
-            new_position.z += sin_angle * amount;
+            new_position_x.x += cos_angle * amount;
+            new_position_z.z += sin_angle * amount;
             transform.update_face_direction(cam_angle_deg);
             break;
         case InputName::PlayerBack:
-            new_position.x -= cos_angle * amount;
-            new_position.z -= sin_angle * amount;
+            new_position_x.x -= cos_angle * amount;
+            new_position_z.z -= sin_angle * amount;
             transform.update_face_direction(cam_angle_deg + 180.f);
             break;
         case InputName::PlayerLeft:
-            new_position.x += sin_angle * amount;
-            new_position.z -= cos_angle * amount;
+            new_position_x.x += sin_angle * amount;
+            new_position_z.z -= cos_angle * amount;
             transform.update_face_direction(cam_angle_deg + 90.f);
             break;
         case InputName::PlayerRight:
-            new_position.x -= sin_angle * amount;
-            new_position.z += cos_angle * amount;
+            new_position_x.x -= sin_angle * amount;
+            new_position_z.z += cos_angle * amount;
             transform.update_face_direction(cam_angle_deg - 90.f);
             break;
         default:
             break;
     }
 
-    person_update_given_new_pos(entity->id, transform, player, dt, new_position,
-                                new_position);
+    person_update_given_new_pos(entity->id, transform, player, dt,
+                                new_position_x, new_position_z);
     transform.trunc(2);
 };
 

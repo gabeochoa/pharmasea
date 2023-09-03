@@ -78,11 +78,10 @@ bool render_bounding_box(const Entity& entity, float) {
     DrawFloatingText(transform.raw(), Preload::get().font,
                      fmt::format("{}", entity.id).c_str());
 
-    if (check_type(entity, EntityType::RemotePlayer)) {
+    if (false && check_type(entity, EntityType::RemotePlayer)) {
         vec3 circle_bounds = transform.circular_bounds();
-        DrawCylinder(
-            {circle_bounds.x, -1.f * (TILESIZE / 2.f), circle_bounds.y},
-            circle_bounds.z, circle_bounds.z, transform.sizey(), 10, MAROON);
+        DrawSphere({circle_bounds.x, -1.f * (TILESIZE / 2.f), circle_bounds.y},
+                   circle_bounds.z, MAROON);
     } else {
         DrawBoundingBox(transform.bounds(), MAROON);
         Rectangle rect_bounds = transform.rectangular_bounds();
