@@ -91,7 +91,7 @@
           "viewer_name": "Pina Colada",
           "ingredients": [
               "Rum",
-              "LemonJuice", // "PinaJuice",
+              "PinaJuice",
               "CoconutCream"
           ],
           "prereqs": [

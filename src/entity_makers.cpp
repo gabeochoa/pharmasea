@@ -449,7 +449,7 @@ void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
 void make_medicine_cabinet(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container, {EntityType::MedicineCabinet}, pos,
                                   EntityType::Alcohol);
-    container.addComponent<Indexer>(ingredient::Alcohols.size());
+    container.addComponent<Indexer>((int) ingredient::Alcohols.size());
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
             if (GameState::get().is_not(game::State::InRound)) return;

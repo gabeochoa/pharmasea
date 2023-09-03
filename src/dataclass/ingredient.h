@@ -32,7 +32,6 @@ enum Ingredient {
     // Cointreau, < TripleSec
     Bitters,
 
-    // Lemon
     Lemon,
     LemonJuice,
     Lime,
@@ -43,7 +42,8 @@ enum Ingredient {
     CranberryJuice,
     Coconut,
     CoconutCream,
-    // PinaJuice, //< lemonjuice
+    Pineapple,
+    PinaJuice,
 
     SimpleSyrup,
 };
@@ -59,15 +59,16 @@ constexpr std::array<Ingredient, 7> Alcohols = {{
     Bitters,
 }};
 
-constexpr std::array<Ingredient, 5> Fruits = {
-    {Lemon, Lime, Cranberries, Coconut, Orange}};
+constexpr std::array<Ingredient, 6> Fruits = {
+    {Lemon, Lime, Cranberries, Coconut, Orange, Pineapple}};
 
-constexpr CEMap<Ingredient, Ingredient, 5> BlendConvert = {{{
+constexpr CEMap<Ingredient, Ingredient, Fruits.size()> BlendConvert = {{{
     {Lemon, LemonJuice},
     {Lime, LimeJuice},
     {Cranberries, CranberryJuice},
     {Coconut, CoconutCream},
     {Orange, OrangeJuice},
+    {Pineapple, PinaJuice},
 }}};
 
 }  // namespace ingredient

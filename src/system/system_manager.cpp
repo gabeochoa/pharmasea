@@ -661,6 +661,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 convert_to_type(et, entity, {8, 8});
 
             } break;
+            case Pineapple:
             case Orange:
             case Coconut:
             case Cranberries:
@@ -680,6 +681,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 auto& entity = EntityHelper::createEntity();
                 convert_to_type(et, entity, {8, 8});
             } break;
+            case PinaJuice:
             case OrangeJuice:
             case CoconutCream:
             case CranberryJuice:
