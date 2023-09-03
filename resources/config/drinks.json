@@ -157,20 +157,71 @@
           "prereqs": [
               "Orange"
           ]
+      },
+      {
+          "name": "long_island",
+          "icon_name": "long_island",
+          "viewer_name": "Long Island Iced Tea",
+          "ingredients": [
+              "Vodka",
+              "Rum",
+              "Gin",
+              "Tequila",
+              "TripleSec",
+              // "SweetAndSour",
+              "Soda",
+              "Lemon"
+          ]
+      },
+      {
+          "name": "mai_tai",
+          "icon_name": "mai_tai",
+          "viewer_name": "Mai Tai",
+          "ingredients": [
+              "Rum", // white rum 
+              // "Curacao", 
+              "LimeJuice", 
+              "SimpleSurup", // "Sugar", 
+              // "Mint",
+              "Lime"
+          ],
+          "prereqs": [
+              "Lime"
+          ]
+      },
+      // Not enabled in game due to lack of ingredients
+      {
+          "name": "aperol_spritz",
+          "icon_name": "aperol_spritz",
+          "viewer_name": "Aperol Spritz",
+          "ingredients": [
+              "Vodka", // "Aperol",
+              "Vodka", // "Prosecco",
+              "Soda",  // Club Soda
+              "Orange"
+          ]
+      },
+      {
+          "name": "bloody_mary",
+          "icon_name": "bloody_mary",
+          "viewer_name": "Bloody Mary",
+          "ingredients": [
+              "Vodka"
+              // Tomato Juice 
+              // Worcestershire Sauce
+              // Hot Pepper Sauce
+              // Salt and Pepper 
+              // Garnishes (celery / olive)
+          ]
       }
-
-
       // These dont yet have icons 
 
       // Possible other drinks
       // Negroni
       // Espresso Martini
       // Manhattan 
-      // Aperol Spritz
       // Pisco Sour
       // Paloma 
-      // Bloody Mary
-      // Mai Tai 
       // Vesper
       // Caipirinha 
       // Hanky-Panky 
@@ -180,7 +231,6 @@
       // Bellini
       // Sidecar 
       // Irish Coffee
-      // Long Island Ice Tea
 
 
       // Themed ones

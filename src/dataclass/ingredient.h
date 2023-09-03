@@ -93,6 +93,8 @@ enum Drink {
     pina_colada,
     screwdriver,
     moscow_mule,
+    long_island,
+    mai_tai,
 };
 
 using DrinkSet = std::bitset<magic_enum::enum_count<Drink>()>;
