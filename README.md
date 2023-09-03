@@ -60,6 +60,40 @@ and then just checkout that hash (sorry im not doing releases / tags atm)
 I am publishing some releases on itch, you can find the url in the code or build the game and click the itch.io icon. 
 if you need the password join the discord and say hi!
 
+
+### alpha_0.23.09.02
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (Progression) New machines spawn on top of each other
+- (UI) some screens are gonna be ugly for a while
+- (UI) Controls are not remappable in UI 
+- (UI) No reset-to-default state for controls
+- (Game) Roomba guy doesnt like to clean vomit at the customer de-spawn point..
+- (Game) Map generator always makes basically the same map
+
+impact
+- New Fruits (and associated juices)!
+    - Lime / Coconut / Cranberries / Oranges
+- New Drinks!
+    - Screwdriver and Moscow Mule (These suggestions came from viewers like you!) 
+- Press "space" as the host on the seed block to enter your own seed
+- You can now face any direction to your hearts content (it might be harder to play now tho)
+- Added ability to change UI theme in the settings menu 
+    - you can also make your own in config/settings.json
+- new secondary UI color for default theme 
+- Character Switcher now has a label so its more clear what it does
+
+bug fixes
+- Map generator should not spawn anything inside the walls
+
+better eng 
+- UI Library
+    - Added scrollable views
+- Lots of pointers removed and/or migrated to OptEntity framework 
+- Moved entity helper code to cpp
+- Restrict valid resolutions to 16x9 for now
+
 ### alpha_0.23.08.25
 
 Known Issues
