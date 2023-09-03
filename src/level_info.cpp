@@ -11,6 +11,9 @@
 #include "vec_util.h"
 
 void LevelInfo::update_seed(const std::string& s) {
+    // TODO implement this
+    // randomizer.get<HasName>().update(server->get_map_SERVER_ONLY()->seed);
+
     log_info("level info update seed {}", s);
     seed = s;
     hashed_seed = hashString(seed);

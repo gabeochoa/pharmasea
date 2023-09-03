@@ -53,5 +53,6 @@ extern int LOG_LEVEL;
 namespace network {
 // TODO add note for max name length in ui
 constexpr int MAX_NAME_LENGTH = 25;
+constexpr int MAX_SEED_LENGTH = 25;
 static bool ENABLE_REMOTE_IP = false;
 }  // namespace network

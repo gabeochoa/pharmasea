@@ -16,9 +16,12 @@
 
 namespace network {
 
+typedef std::pair<internal::Client_t, std::string> ClientMessage;
+
 struct Server {
     static std::thread start(int port);
     static void queue_packet(const ClientPacket& p);
+    static void forward_packet(const ClientPacket& p);
     static void stop();
 
     //
@@ -37,8 +40,8 @@ struct Server {
     std::shared_ptr<Map> get_map_SERVER_ONLY() { return pharmacy_map; }
 
    private:
-    typedef std::pair<internal::Client_t, std::string> ClientMessage;
     AtomicQueue<ClientMessage> incoming_message_queue;
+    AtomicQueue<ClientPacket> incoming_packet_queue;
     AtomicQueue<ClientPacket> packet_queue;
     std::shared_ptr<internal::Server> server_p;
     std::map<int, std::shared_ptr<Entity>> players;
@@ -78,6 +81,7 @@ struct Server {
     void run();
     void tick(float dt);
     void process_incoming_messages();
+    void process_incoming_packets();
     void process_packet_forwarding();
     void process_map_update(float dt);
     void process_map_sync(float dt);
@@ -100,12 +104,14 @@ struct Server {
                                     const ClientPacket& orig_packet);
     void process_ping_message(const internal::Client_t& incoming_client,
                               const ClientPacket& orig_packet);
+    void process_map_seed_info(const internal::Client_t& incoming_client,
+                               const ClientPacket& orig_packet);
 
     void server_enqueue_message_string(
         const internal::Client_t& incoming_client, const std::string& msg);
 
     void server_process_message_string(const ClientMessage& client_message);
-
+    void server_process_packet(const internal::Client_t&, const ClientPacket&);
     void send_client_packet_to_client(HSteamNetConnection conn,
                                       const ClientPacket& packet);
 

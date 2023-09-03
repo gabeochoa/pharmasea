@@ -110,6 +110,7 @@ struct ClientPacket {
     enum MsgType {
         Announcement,
         Map,
+        MapSeed,
         GameState,
         PlayerControl,
         PlayerJoin,
@@ -132,6 +133,11 @@ struct ClientPacket {
     // Map Info
     struct MapInfo {
         struct Map map;
+    };
+
+    // Map Seed Info
+    struct MapSeedInfo {
+        std::string seed{};
     };
 
     // Game Info
@@ -177,9 +183,9 @@ struct ClientPacket {
     typedef std::variant<
         ClientPacket::AnnouncementInfo, ClientPacket::PlayerControlInfo,
         ClientPacket::PlayerJoinInfo, ClientPacket::GameStateInfo,
-        ClientPacket::MapInfo, ClientPacket::PlayerInfo,
-        ClientPacket::PlayerLeaveInfo, ClientPacket::PlayerRareInfo,
-        ClientPacket::PingInfo>
+        ClientPacket::MapInfo, ClientPacket::MapSeedInfo,
+        ClientPacket::PlayerInfo, ClientPacket::PlayerLeaveInfo,
+        ClientPacket::PlayerRareInfo, ClientPacket::PingInfo>
         Msg;
 
     Msg msg;
@@ -205,6 +211,9 @@ inline std::ostream& operator<<(std::ostream& os,
                                    info.host_menu_state, info.host_game_state);
             },
             [&](ClientPacket::MapInfo) { return std::string("map info"); },
+            [&](ClientPacket::MapSeedInfo s) {
+                return fmt::format("Map Seed: {}", s.seed);
+            },
             [&](ClientPacket::PlayerInfo info) {
                 return fmt::format("PlayerInfo( pos({}, {}, {}), facing {})",
                                    info.location[0], info.location[1],
@@ -219,7 +228,9 @@ inline std::ostream& operator<<(std::ostream& os,
             [&](ClientPacket::PingInfo info) {
                 return fmt::format("Ping({}, {})", info.ping, info.pong);
             },
-            [&](auto) { return std::string(" -- invalid operator<< --"); }},
+            [&](auto) { return std::string(" -- invalid operator<< --"); }}
+        // namespace network
+        ,
         msgtype);
     return os;
 }
@@ -278,6 +289,9 @@ void serialize(S& s, ClientPacket& packet) {
                   s.value4b(info.host_game_state);
               },
               [](S& s, ClientPacket::MapInfo& info) { s.object(info.map); },
+              [](S& s, ClientPacket::MapSeedInfo& info) {
+                  s.text1b(info.seed, MAX_SEED_LENGTH);
+              },
               [](S& s, ClientPacket::PlayerInfo& info) {
                   s.text1b(info.username, MAX_NAME_LENGTH);
                   s.value4b(info.location[0]);

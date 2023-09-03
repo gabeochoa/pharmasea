@@ -130,13 +130,13 @@ struct SeedManagerLayer : public Layer {
             // TODO translate
             if (button(Widget{randomize, z_index}, "Randomize", true)) {
                 const auto name = get_random_name_rot13();
-                map_ptr->update_seed(name);
+                network->network_info->send_updated_seed(name);
                 map_ptr->showSeedInputBox = false;
             }
 
             // TODO translate
             if (button(Widget{select, z_index}, "Save Seed", true)) {
-                map_ptr->update_seed(tempSeed);
+                network->network_info->send_updated_seed(tempSeed);
                 map_ptr->showSeedInputBox = false;
             }
         }

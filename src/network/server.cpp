@@ -16,6 +16,9 @@ std::thread Server::start(int port) {
 }
 
 void Server::queue_packet(const ClientPacket& p) {
+    g_server->incoming_packet_queue.push_back(p);
+}
+void Server::forward_packet(const ClientPacket& p) {
     g_server->packet_queue.push_back(p);
 }
 
@@ -110,6 +113,7 @@ void Server::tick(float dt) {
 
     // network
     process_incoming_messages();
+    process_incoming_packets();
     process_packet_forwarding();
 
     // game
@@ -134,6 +138,16 @@ void Server::process_incoming_messages() {
         log_trace("Incoming Messages {}", incoming_message_queue.size());
         server_process_message_string(incoming_message_queue.front());
         incoming_message_queue.pop_front();
+    }
+}
+
+void Server::process_incoming_packets() {
+    // Check to see if we have any new packets to process
+    while (!incoming_packet_queue.empty()) {
+        log_trace("Incoming Packets {}", incoming_message_queue.size());
+        server_process_packet({.client_id = SERVER_CLIENT_ID},
+                              incoming_packet_queue.front());
+        incoming_packet_queue.pop_front();
     }
 }
 
@@ -420,6 +434,17 @@ void Server::process_ping_message(const internal::Client_t& incoming_client,
     player_match->second->get<HasClientID>().update_ping(pong - info.ping);
 }
 
+void Server::process_map_seed_info(const internal::Client_t&,
+                                   const ClientPacket& orig_packet) {
+    ClientPacket::MapSeedInfo info =
+        std::get<ClientPacket::MapSeedInfo>(orig_packet.msg);
+
+    // TODO eventually validate that the update seed call came from the host
+
+    log_info("process map seed info {}", info.seed);
+    pharmacy_map->update_seed(info.seed);
+}
+
 void Server::server_enqueue_message_string(
     const internal::Client_t& incoming_client, const std::string& msg) {
     incoming_message_queue.push_back(std::make_pair(incoming_client, msg));
@@ -434,7 +459,11 @@ void Server::server_process_message_string(
     const std::string& msg = client_message.second;
 
     const ClientPacket packet = network::deserialize_to_packet(msg);
+    server_process_packet(incoming_client, packet);
+}
 
+void Server::server_process_packet(const internal::Client_t& incoming_client,
+                                   const ClientPacket& packet) {
     // log_info("Server: recieved packet {}", packet.msg_type);
 
     switch (packet.msg_type) {
@@ -452,6 +481,9 @@ void Server::server_process_message_string(
         } break;
         case ClientPacket::MsgType::Ping: {
             return process_ping_message(incoming_client, packet);
+        } break;
+        case ClientPacket::MsgType::MapSeed: {
+            return process_map_seed_info(incoming_client, packet);
         } break;
         // case ClientPacket::MsgType::PlayerRare: {
         // return process_player_rare_packet(incoming_client, packet);

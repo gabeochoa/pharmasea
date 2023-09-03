@@ -134,6 +134,18 @@ struct Info {
                 .host_game_state = GameState::get().read(),
             }),
         });
+        Server::forward_packet(packet);
+    }
+
+    void send_updated_seed(const std::string& seed) {
+        if (!is_host()) return;
+
+        ClientPacket packet{
+            .client_id = SERVER_CLIENT_ID,
+            .msg_type = ClientPacket::MsgType::MapSeed,
+            .msg = ClientPacket::MapSeedInfo{.seed = seed},
+        };
+
         Server::queue_packet(packet);
     }
 
