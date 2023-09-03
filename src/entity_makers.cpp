@@ -917,7 +917,7 @@ void make_customer(Entity& customer, vec2 p, bool has_order) {
         // TODO only enable this once you start serving alcohol
         // TODO should we by default give the mop? or should you be able to
         // clean by hand but slowly?
-        .set_total(1)
+        .set_total(3)
         .set_time_between(2.f);
 }
 

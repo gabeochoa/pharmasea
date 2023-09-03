@@ -250,6 +250,8 @@ struct Client {
                 if (MenuState::get().read() == menu::State::Network &&
                     info.host_menu_state == menu::State::Game) {
                     MenuState::get().set(info.host_menu_state);
+                }
+                if (GameState::get().is_not(game::State::Paused)) {
                     GameState::get().set(info.host_game_state);
                 }
 
