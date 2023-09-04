@@ -68,6 +68,10 @@ inline Rectangle expand_pct(const Rectangle& a, float pct) {
                      });
 }
 
+inline Rectangle expand_px(const Rectangle& a, float px) {
+    return expand(a, {px, px, px, px});
+}
+
 inline Rectangle offset_y(const Rectangle& a, float y) {
     return Rectangle{a.x,      //
                      a.y + y,  //
@@ -529,13 +533,18 @@ inline ElementResult div(const Widget& widget, theme::Usage theme) {
 }
 
 inline ElementResult text(const Widget& widget, const std::string& content,
-                          ui::theme::Usage color_usage = ui::theme::Usage::Font
+                          ui::theme::Usage color_usage = ui::theme::Usage::Font,
+                          bool draw_background = false
 
 ) {
     Rectangle rect = widget.get_rect();
 
     // No need to render if text is empty
     if (content.empty()) return false;
+    if (draw_background)
+        internal::draw_text(text_lookup(content.c_str()),
+                            rect::expand_px(rect, 2.f), widget.z_index,
+                            ui::theme::Usage::DarkFont);
     internal::draw_text(text_lookup(content.c_str()), rect, widget.z_index,
                         color_usage);
 

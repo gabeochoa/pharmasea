@@ -128,52 +128,6 @@ inline void render_timer(const Entity& entity, float) {
     }
 }
 
-inline void render_block_state_change_reason(const Entity& entity, float) {
-    if (entity.is_missing<HasTimer>()) return;
-    const auto& ht = entity.get<HasTimer>();
-
-    const auto debug_mode_on =
-        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-
-    float font_size = 75.f;
-
-    // if the round isnt over dont need to show anything
-    if (ht.currentRoundTime > 0 && !debug_mode_on) return;
-
-    //
-    auto _render_single_reason = [=](const std::string& text, float y) {
-        float fs = font_size;
-        Color font_color = ::ui::UI_THEME.from_usage(::ui::theme::Font);
-        if (text.size() > 30) {
-            fs /= 2.f;
-        }
-        raylib::DrawTextEx(Preload::get().font, text.c_str(), {200.f, y}, fs, 0,
-                           font_color);
-    };
-
-    // TODO handle centering the text better when there are more than one
-    // bool has_reasons = ht.block_state_change_reasons.count() > 1;
-
-    int posy = 200;
-    for (int i = 1; i < HasTimer::WaitingReason::WaitingReasonLast; i++) {
-        bool enabled = ht.read_reason(i);
-
-        if (enabled) {
-            _render_single_reason(ht.text_reason(i), posy);
-            posy += 75;
-        }
-    }
-
-    if (ht.block_state_change_reasons.none()) {
-        Color font_color = ::ui::UI_THEME.from_usage(::ui::theme::Font);
-        auto countdown = fmt::format(
-            "{}: {}", text_lookup(strings::i18n::NEXT_ROUND_COUNTDOWN),
-            (int) ceil(util::trunc(ht.roundSwitchCountdown, 1)));
-        raylib::DrawTextEx(Preload::get().font, countdown.c_str(), {200.f, 50},
-                           font_size, 0, font_color);
-    }
-}
-
 void render_networked_players(const Entities&, float dt);
 
 inline void render_current_register_queue(float dt);
@@ -185,7 +139,6 @@ inline void render_normal(const Entities& entities, float dt) {
             if (!entity_ptr) continue;
             const Entity& entity = *entity_ptr;
             render_timer(entity, dt);
-            render_block_state_change_reason(entity, dt);
         }
     }
     // TODO move into render timer check
