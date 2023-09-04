@@ -460,8 +460,8 @@ namespace system_manager {
 namespace ui {
 
 void render_networked_players(const Entities& entities, float dt) {
-    float x_pos = WIN_WF() - 150;
-    float y_pos = 20.f;
+    float x_pos = WIN_WF() - 170;
+    float y_pos = 75.f;
 
     auto _draw_text = [&](const std::string& str) mutable {
         int size = 20;
