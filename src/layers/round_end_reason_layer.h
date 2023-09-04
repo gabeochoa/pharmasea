@@ -14,19 +14,26 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         return EntityHelper::getFirstWithComponent<HasTimer>();
     }
 
-    virtual bool shouldSkipRender() override {
-        if (!GameState::get().should_render_timer()) return true;
+    virtual bool shouldSkipRender() override { return !shouldRender(); }
+
+    bool shouldRender() {
+        if (!GameState::get().should_render_timer()) return false;
 
         auto entity = get_timer_entity();
-        if (!entity) return true;
+        if (!entity) return false;
         const HasTimer& ht = entity->get<HasTimer>();
-        if (ht.type != HasTimer::Renderer::Round) return true;
+        if (ht.type != HasTimer::Renderer::Round) return false;
 
         const auto debug_mode_on =
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-        // if the round isnt over dont need to show anything
-        if (ht.currentRoundTime > 0 && !debug_mode_on) return true;
+        if (debug_mode_on) return true;
 
+        if (ht.currentRoundTime <= 0) return true;
+
+        if (GameState::get().is(game::State::Planning) &&
+            ht.block_state_change_reasons.any()) {
+            return true;
+        }
         return false;
     }
 
@@ -42,12 +49,6 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         if (!entity) return;
         const HasTimer& ht = entity->get<HasTimer>();
         if (ht.type != HasTimer::Renderer::Round) return;
-        const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-        // if the round isnt over dont need to show anything
-        if (GameState::get().is_not(game::State::Planning) &&
-            ht.currentRoundTime > 0 && !debug_mode_on)
-            return;
 
         if (ht.block_state_change_reasons.none()) {
             text(Widget{content},

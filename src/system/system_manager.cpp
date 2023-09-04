@@ -975,7 +975,11 @@ void update_sophie(Entity& entity, float) {
     const auto debug_mode_on =
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
     const HasTimer& ht = entity.get<HasTimer>();
-    if (ht.currentRoundTime > 0 && !debug_mode_on) return;
+
+    // TODO i dont like that this is copy paste from layers/round_end
+    if (GameState::get().is_not(game::State::Planning) &&
+        ht.currentRoundTime > 0 && !debug_mode_on)
+        return;
 
     // Handle customers finally leaving the store
     auto _customers_in_store = [&entity]() {
@@ -1052,15 +1056,16 @@ void update_sophie(Entity& entity, float) {
                     // TODO need a better way to do this
                     // 0 makes sense but is the position of the entity, when its
                     // infront?
-                    e.get<Transform>().tile_infront(0),
+                    e.get<Transform>().tile_infront(1),
                     std::bind(EntityHelper::isWalkable, std::placeholders::_1));
                 bool to_reg = new_path.size() > 0;
+
                 new_path = astar::find_path(
                     customer.get<Transform>().as2(),
                     // TODO need a better way to do this
                     // 0 makes sense but is the position of the entity, when its
                     // infront?
-                    e.get<Transform>().tile_infront(1),
+                    e.get<Transform>().tile_infront(2),
                     std::bind(EntityHelper::isWalkable, std::placeholders::_1));
                 return to_reg && new_path.size() > 0;
             });

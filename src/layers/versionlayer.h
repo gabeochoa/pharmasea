@@ -23,7 +23,7 @@ struct VersionLayer : public Layer {
                             network::there_ping, network::return_ping);
 
             DrawTextEx(Preload::get().font, ping_str.c_str(),
-                       {WIN_WF() - 200, 50}, 20, 0, WHITE);
+                       {WIN_WF() - 225, 50}, 20, 0, WHITE);
         }
 
         DrawTextEx(Preload::get().font, VERSION.data(), {WIN_WF() - 200, 20},
