@@ -19,9 +19,9 @@
 #include "theme.h"
 #include "widget.h"
 
-extern ui::UITheme UI_THEME;
-
 namespace ui {
+
+extern UITheme UI_THEME;
 
 const menu::State STATE = menu::State::UI;
 

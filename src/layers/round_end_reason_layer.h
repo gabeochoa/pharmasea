@@ -16,8 +16,6 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
     }
 
     virtual bool shouldSkipRender() override {
-        return false;
-
         if (!GameState::get().should_render_timer()) return true;
 
         auto entity = get_timer_entity();

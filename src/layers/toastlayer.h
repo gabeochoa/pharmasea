@@ -6,28 +6,29 @@
 #include "../engine/ui/context.h"
 #include "../external_include.h"
 
-struct ToastLayer : public Layer, public FontSizeCache {
-    ToastLayer() : Layer("Toasts") { FontSizeCache::init(); }
+struct ToastLayer : public BaseGameRendererLayer {
+    std::shared_ptr<ui::UIContext> ui_context;
 
-    const float toastPctHeight = 0.05f;
-    const float toastPctWidth = 0.25f;
-    const float toastPctBottomPadding = 0.01f;
+    ToastLayer() : BaseGameRendererLayer("Toasts") {}
 
     virtual void onUpdate(float dt) override { toasts::update(dt); }
 
-    virtual void onDraw(float) override {
-        // NOTE: no clear since we are toast
-        //
-        if (TOASTS.empty()) return;
+    virtual bool shouldSkipRender() override {
+        if (TOASTS.empty()) return true;
+        return false;
+    }
 
-        const int bot_padd = (int) (WIN_HF() * toastPctBottomPadding);
-        const float toastWidth = (WIN_WF() * toastPctWidth);
-        const float toastHeight = (WIN_HF() * toastPctHeight);
-        float offY = 0.f;
-        float spacing = 0.f;
+    virtual void onDrawUI(float) override {
+        using namespace ui;
+        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
 
-        Color accent = ui::UI_THEME.from_usage(ui::theme::Accent);
-        Color font_color = ui::UI_THEME.from_usage(ui::theme::Font);
+        window = rect::lpad(window, 80);
+        window = rect::rpad(window, 80);
+        window = rect::tpad(window, 10);
+        window = rect::bpad(window, 95);
+
+        const int MX_TOASTS = 10;
+        auto toast_spots = rect::hsplit<MX_TOASTS>(window, 10);
 
         const auto background_color = [](AnnouncementType type) {
             switch (type) {
@@ -41,48 +42,30 @@ struct ToastLayer : public Layer, public FontSizeCache {
             }
         };
 
+        // TODO interpolate the alpha on these to look nicer, (pop in /
+        // pop out)
+
+        Color accent = UI_THEME.from_usage(ui::theme::Accent);
+        int i = MX_TOASTS;
         for (auto& toast : TOASTS) {
-            Color primary =
-                ui::UI_THEME.from_usage(background_color(toast.type));
-            // TODO interpolate the alpha on these to look nicer, (pop in /
-            // pop out)
+            Rectangle spot = toast_spots[i];
+            Color primary = UI_THEME.from_usage(background_color(toast.type));
+            div(Widget{Rectangle{
+                    spot.x,
+                    spot.y + (WIN_HF() * 0.005f),
+                    spot.width * toast.pctOpen,
+                    spot.height,
+                }},
+                accent);
+            div(Widget{spot}, primary);
+            text(Widget{spot}, toast.msg);
 
-            vec2 pos = {
-                WIN_WF() * 0.72f,           //
-                (WIN_HF() * 0.05f) + offY,  //
-            };
-
-            DrawRectangleRounded(
-                Rectangle{
-                    pos.x,        //
-                    pos.y,        //
-                    toastWidth,   //
-                    toastHeight,  //
-                },
-                0.15f, 4, primary);
-
-            DrawRectangleRounded(
-                Rectangle{
-                    pos.x,                         //
-                    pos.y + (toastHeight * 0.9f),  //
-                    toastWidth * toast.pctOpen,    //
-                    toastHeight * 0.1f,            //
-                },
-                0.15f, 4, accent);
-
-            float font_size = get_font_size(std::string(toast.msg), toastWidth,
-                                            toastHeight, spacing);
-            // TODO we really would prefer to wrap the text, but its kinda
-            // hard to do
-            font_size = fmaxf(20.f, font_size);
-
-            // TODO at some point we want to split the text onto different
-            // lines...
-            // https://github.com/emilk/emilib/blob/master/emilib/word_wrap.cpp
-            DrawTextEx(font, std::string(toast.msg).c_str(), pos, font_size,
-                       spacing, font_color);
-
-            offY += (bot_padd + toastHeight);
+            i--;
+            if (i < 0) break;
         }
+
+        // TODO at some point we want to split the text onto different
+        // lines...
+        // https://github.com/emilk/emilib/blob/master/emilib/word_wrap.cpp
     }
 };

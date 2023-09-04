@@ -17,12 +17,14 @@ struct VersionLayer : public Layer {
     virtual void onUpdate(float) override {}
 
     virtual void onDraw(float) override {
-        const std::string ping_str =
-            fmt::format("ping {}ms (to{},from{})", network::total_ping,
-                        network::there_ping, network::return_ping);
+        if (MenuState::get().is(menu::State::Game)) {
+            const std::string ping_str =
+                fmt::format("ping {}ms (to{},from{})", network::total_ping,
+                            network::there_ping, network::return_ping);
 
-        DrawTextEx(Preload::get().font, ping_str.c_str(), {WIN_WF() - 200, 50},
-                   20, 0, WHITE);
+            DrawTextEx(Preload::get().font, ping_str.c_str(),
+                       {WIN_WF() - 200, 50}, 20, 0, WHITE);
+        }
 
         DrawTextEx(Preload::get().font, VERSION.data(), {WIN_WF() - 200, 20},
                    20, 0, WHITE);
