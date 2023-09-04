@@ -110,6 +110,15 @@ struct GameDebugLayer : public Layer {
     virtual void onDraw(float dt) override {
         if (!MenuState::s_in_game()) return;
         if (GameState::get().is(game::State::Paused)) return;
+
+        if (!no_clip_enabled) {
+            DrawTextEx(Preload::get().font, "Press = to enable no-clip",
+                       vec2{200, 90}, 20, 0, BLUE);
+        } else {
+            DrawTextEx(Preload::get().font, "NO CLIP ENABLED", vec2{200, 90},
+                       20, 0, RED);
+        }
+
         if (!debug_ui_enabled) {
             DrawTextEx(Preload::get().font, "Press \\ to toggle debug UI",
                        vec2{200, 70}, 20, 0, RED);
