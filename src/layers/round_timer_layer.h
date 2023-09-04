@@ -42,7 +42,7 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         return std::string(fmt::format("{} {}", status_text, day_text));
     }
 
-    virtual void onDrawUI(float dt) override {
+    virtual void onDrawUI(float) override {
         using namespace ui;
 
         // TODO move to shouldSkip?
@@ -60,11 +60,6 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
             window.x + (window.width / 2.f),
             window.y + (window.height / 2.f),
         };
-
-        _pct += dt * 0.25f;
-        if (_pct >= 1.f) {
-            _pct = 0;
-        }
 
         const bool is_closing = ht.store_is_closed();
         const bool is_day = GameState::get().in_round() && !is_closing;
