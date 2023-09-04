@@ -74,7 +74,7 @@ inline void render_current_register_queue(float dt) {
         0.2f * WIN_WF(),  //
         0,                //
         width,
-        height,           //
+        height,  //
     };
 
     Rectangle card_rect = {0,       //
@@ -119,54 +119,7 @@ inline void render_timer(const Entity& entity, float) {
     auto& ht = entity.get<HasTimer>();
     switch (ht.type) {
         case HasTimer::Renderer::Round: {
-            const bool is_closing = ht.store_is_closed();
-            const bool is_day = GameState::get().in_round() && !is_closing;
-
-            const vec2 center = {200.f, 75.f};
-
-            const float radius = 10;
-            const float r5 = radius * 5;
-            const float angle =
-                util::deg2rad(util::lerp(175, 360, 1 - ht.pct()));
-            const vec2 pos = {
-                center.x + std::cos(angle) * (r5),
-                center.y + std::sin(angle) * (r5),
-            };
-
-            // Hide it when its below the rect
-            if (angle >= M_PI)
-                raylib::DrawCircle((int) pos.x, (int) pos.y, radius,
-                                   is_day ? YELLOW : GRAY);
-
-            const vec2 start = {center.x - r5 - (radius), center.y};
-            const vec2 end = {center.x + r5 + (radius), center.y};
-            vec2 rect_size = {end.x - start.x, 20};
-            vec2 rect_pos = {start.x, start.y - 10};
-
-            // TODO change to varargs with structured bindings?
-            // or colocate with usage
-            Color bg = ::ui::UI_THEME.from_usage(::ui::theme::Background);
-            Color primary = ::ui::UI_THEME.from_usage(::ui::theme::Primary);
-            Color font_color = ::ui::UI_THEME.from_usage(::ui::theme::Font);
-
-            raylib::DrawRectangleRounded(
-                {rect_pos.x, rect_pos.y, rect_size.x, rect_size.y}, 0.5f, 8,
-                is_day ? primary : bg);
-
-            auto status_text =
-                is_day ? text_lookup(strings::i18n::OPEN)
-                       : (is_closing ? text_lookup(strings::i18n::CLOSING)
-                                     : text_lookup(strings::i18n::CLOSED));
-
-            // TODO figure out how to translate strings that have numbers in
-            // them...
-            auto day_text = fmt::format("{} {}", "Day", ht.dayCount);
-
-            raylib::DrawTextEx(
-                Preload::get().font,
-                fmt::format("{} {}", status_text, day_text).c_str(),
-                {rect_pos.x, rect_pos.y - 2}, 20, 0, font_color);
-
+            // Rendered by round_timer_layer.h
         } break;
         default:
             log_warn("you have a timer that we dont know how to render: {}",

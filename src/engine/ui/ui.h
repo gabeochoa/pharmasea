@@ -516,10 +516,16 @@ inline void end() {
     context->cleanup();
 }
 
+// TODO add rounded corners
+
 inline ElementResult div(const Widget& widget, Color c) {
     Rectangle rect = widget.get_rect();
     internal::draw_rect_color(rect, widget.z_index, c);
     return true;
+}
+
+inline ElementResult div(const Widget& widget, theme::Usage theme) {
+    return div(widget, UI_THEME.from_usage(theme));
 }
 
 inline ElementResult text(const Widget& widget, const std::string& content,

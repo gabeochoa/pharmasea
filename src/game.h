@@ -36,6 +36,7 @@
 #include "layers/menulayer.h"
 #include "layers/networklayer.h"
 #include "layers/pauselayer.h"
+#include "layers/round_timer_layer.h"
 #include "layers/seedmanagerlayer.h"
 #include "layers/settingslayer.h"
 #include "layers/streamersafelayer.h"
@@ -131,6 +132,7 @@ void startup() {
         //
         new PauseLayer(),
         //
+        new RoundTimerLayer(),
         new SeedManagerLayer(),
         new GameDebugLayer(),  // putting below seed manager since typing 'o'
                                // switches modes
