@@ -293,9 +293,9 @@ void render_trigger_area(const Entity& entity, float dt) {
                 .c_str(),
             number_position,  //
             fsize / 2.f,
-            4,                // font spacing
-            4,                // line spacing
-            false,            // backface
+            4,      // font spacing
+            4,      // line spacing
+            false,  // backface
             WHITE);
     }
 
@@ -308,8 +308,8 @@ void render_trigger_area(const Entity& entity, float dt) {
                 pos.y + (TILESIZE / 20.f),  //
                 pos.z                       //
             },
-            size.x * ita.progress(),        //
-            size.y,                         //
+            size.x * ita.progress(),  //
+            size.y,                   //
             size.z, transform.facing, RED, RED);
     }
 

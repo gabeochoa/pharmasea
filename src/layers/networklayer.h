@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <memory>
 #include <regex>
 
 #include "../engine.h"
@@ -69,22 +70,22 @@ struct NetworkLayer : public Layer {
 
     bool onCharPressedEvent(CharPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Network)) return false;
-        return ui_context.get()->process_char_press_event(event);
+        return ui_context->process_char_press_event(event);
     }
 
     bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Network)) return false;
-        return ui_context.get()->process_gamepad_axis_event(event);
+        return ui_context->process_gamepad_axis_event(event);
     }
 
     bool onKeyPressed(KeyPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Network)) return false;
-        return ui_context.get()->process_keyevent(event);
+        return ui_context->process_keyevent(event);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Network)) return false;
-        return ui_context.get()->process_gamepad_button_event(event);
+        return ui_context->process_gamepad_button_event(event);
     }
 
     virtual void onUpdate(float dt) override {
@@ -101,7 +102,7 @@ struct NetworkLayer : public Layer {
     void handle_announcements() {
         if (!network_info->client) return;
 
-        for (auto info : network_info->client->announcements) {
+        for (const auto& info : network_info->client->announcements) {
             log_info("Announcement: {}", info.message);
             // TODO add support for other annoucement types
             TOASTS.push_back({.msg = info.message, .timeToShow = 10});
@@ -225,12 +226,12 @@ struct NetworkLayer : public Layer {
                 }
                 if (button(Widget{disconnect},
                            text_lookup(strings::i18n::DISCONNECT))) {
-                    network_info.reset(new network::Info());
+                    network_info = std::make_shared<network::Info>();
                 }
             } else {
                 if (button(Widget{disconnect},
                            text_lookup(strings::i18n::DISCONNECT))) {
-                    network_info.reset(new network::Info());
+                    network_info = std::make_shared<network::Info>();
                 }
             }
         }
@@ -242,7 +243,7 @@ struct NetworkLayer : public Layer {
             auto players = rect::hsplit<4>(player_box, 15);
 
             int i = 0;
-            for (auto kv : network_info->client->remote_players) {
+            for (const auto& kv : network_info->client->remote_players) {
                 // TODO figure out why there are null rps
                 if (!kv.second) continue;
 

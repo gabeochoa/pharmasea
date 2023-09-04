@@ -2,6 +2,8 @@
 #pragma once
 
 #include "../engine.h"
+#include "../engine/layer.h"
+#include "../engine/settings.h"
 #include "../preload.h"
 
 struct StreamerSafeLayer : public Layer {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine.h"
+#include "../engine/layer.h"
 #include "../external_include.h"
 #include "../globals.h"
 #include "../preload.h"

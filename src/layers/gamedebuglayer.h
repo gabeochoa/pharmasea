@@ -67,7 +67,7 @@ struct GameDebugLayer : public Layer {
             no_clip_enabled = !no_clip_enabled;
             return true;
         }
-        return ui_context.get()->process_gamepad_button_event(event);
+        return ui_context->process_gamepad_button_event(event);
     }
 
     bool onKeyPressed(KeyPressedEvent& event) override {
@@ -100,7 +100,7 @@ struct GameDebugLayer : public Layer {
             no_clip_enabled = !no_clip_enabled;
             return true;
         }
-        return ui_context.get()->process_keyevent(event);
+        return ui_context->process_keyevent(event);
     }
 
     virtual void onUpdate(float) override {

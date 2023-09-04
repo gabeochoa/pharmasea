@@ -8,6 +8,9 @@
 #include "../engine/log.h"
 
 namespace network {
+extern long long total_ping;
+extern long long there_ping;
+extern long long return_ping;
 
 struct Client {
     // TODO eventually generate room codes instead of IP address

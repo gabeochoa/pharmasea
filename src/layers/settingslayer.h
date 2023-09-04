@@ -72,13 +72,13 @@ struct SettingsLayer : public Layer {
             MenuState::get().go_back();
             return true;
         }
-        return ui_context.get()->process_keyevent(event);
+        return ui_context->process_keyevent(event);
     }
 
     virtual bool onGamepadButtonPressed(
         GamepadButtonPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Settings)) return false;
-        return ui_context.get()->process_gamepad_button_event(event);
+        return ui_context->process_gamepad_button_event(event);
     }
 
     virtual void onUpdate(float) override {

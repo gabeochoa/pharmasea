@@ -3,6 +3,7 @@
 
 #include "../engine.h"
 #include "../engine/toastmanager.h"
+#include "../engine/ui/context.h"
 #include "../external_include.h"
 
 struct ToastLayer : public Layer, public FontSizeCache {

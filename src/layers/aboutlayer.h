@@ -22,7 +22,7 @@ struct AboutLayer : public Layer {
             MenuState::get().go_back();
             return true;
         }
-        return ui_context.get()->process_keyevent(event);
+        return ui_context->process_keyevent(event);
     }
 
     virtual void onUpdate(float) override {
