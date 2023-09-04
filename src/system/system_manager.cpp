@@ -1047,14 +1047,22 @@ void update_sophie(Entity& entity, float) {
         auto reg_opt =
             EntityHelper::getFirstMatching([&customer](const Entity& e) {
                 if (!check_type(e, EntityType::Register)) return false;
-                // TODO need a better way to do this
-                // 0 makes sense but is the position of the entity, when its
-                // infront?
                 auto new_path = astar::find_path(
                     customer.get<Transform>().as2(),
+                    // TODO need a better way to do this
+                    // 0 makes sense but is the position of the entity, when its
+                    // infront?
+                    e.get<Transform>().tile_infront(0),
+                    std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+                bool to_reg = new_path.size() > 0;
+                new_path = astar::find_path(
+                    customer.get<Transform>().as2(),
+                    // TODO need a better way to do this
+                    // 0 makes sense but is the position of the entity, when its
+                    // infront?
                     e.get<Transform>().tile_infront(1),
                     std::bind(EntityHelper::isWalkable, std::placeholders::_1));
-                return new_path.size() > 0;
+                return to_reg && new_path.size() > 0;
             });
 
         entity.get<HasTimer>().write_reason(

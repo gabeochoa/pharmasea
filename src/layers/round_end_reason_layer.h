@@ -5,7 +5,6 @@
 
 struct RoundEndReasonLayer : public BaseGameRendererLayer {
     std::shared_ptr<ui::UIContext> ui_context;
-    float _pct = 0.f;
 
     RoundEndReasonLayer() : BaseGameRendererLayer("RoundEndReason") {}
 
@@ -46,7 +45,9 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         const auto debug_mode_on =
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
         // if the round isnt over dont need to show anything
-        if (ht.currentRoundTime > 0 && !debug_mode_on) return;
+        if (GameState::get().is_not(game::State::Planning) &&
+            ht.currentRoundTime > 0 && !debug_mode_on)
+            return;
 
         if (ht.block_state_change_reasons.none()) {
             text(Widget{content},

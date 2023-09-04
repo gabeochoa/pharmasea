@@ -324,6 +324,14 @@ Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
         HasWaitingQueue& hwq = r.get<HasWaitingQueue>();
         if (hwq.is_full()) continue;
         int rpos = hwq.get_next_pos();
+
+        // Check to see if we can path to that spot
+        auto end = r.get<Transform>().tile_infront(rpos);
+        auto new_path = astar::find_path(
+            entity.get<Transform>().as2(), end,
+            std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+        if (new_path.empty()) continue;
+
         if (best_pos == -1 || rpos < best_pos) {
             best_target = r;
             best_pos = rpos;
@@ -342,6 +350,7 @@ Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
     reg_id = best_target->id;
 
     start = WIQ_add_to_queue_and_get_position(best_target.asE(), entity);
+    // TODO should be be rpos instead of 1?
     end = best_target->get<Transform>().tile_infront(1);
 
     spot_in_line = WIQ_position_in_line(best_target.asE(), entity);

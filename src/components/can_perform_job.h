@@ -82,6 +82,7 @@ struct CanPerformJob : public BaseComponent {
     }
 
     vec2 job_start() const {
+        // TODO probably need to stay at the customer spawner?
         if (needs_job()) return vec2{0, 0};
         return job().start;
     }
