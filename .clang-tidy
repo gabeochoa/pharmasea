@@ -1,0 +1,22 @@
+Checks: '
+bugprone-*,
+bugprone-macro-parentheses,
+modernize-make-shared,
+performance-*,
+readability-const-return-type,
+readability-container-size-empty,
+readability-inconsistent-declaration-parameter-name,
+readability-redundant-*,
+misc-definitions-in-headers,
+modernize-use-using,
+google-explicit-constructor,hicpp-explicit-conversions,
+llvm-namespace-comment,
+-bugprone-branch-clone,
+-bugprone-narrowing-conversions,
+-bugprone-too-small-loop-variable,
+-performance-inefficient-string-concatenation,
+-facebook-hte-NullableReturn,
+-modernize-use-override
+'
+WarningsAsErrors: ''
+HeaderFilterRegex: '^(?!.*vendor).*'
