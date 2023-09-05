@@ -12,6 +12,42 @@ extern ui::UITheme UI_THEME;
 namespace system_manager {
 namespace render_manager {
 
+void DrawProgressBar(vec3 pos, float pct_full, float height = -1) {
+    Color primary = ui::UI_THEME.from_usage(ui::theme::Usage::Primary);
+    Color background = ui::UI_THEME.from_usage(ui::theme::Usage::Background);
+
+    float y_height = height != -1 ? height : 1.75f * TILESIZE;
+
+    raylib::rlPushMatrix();
+    {
+        raylib::rlTranslatef(pos.x, pos.y, pos.z);
+
+        vec3 size = {
+            TILESIZE,
+            TILESIZE / 3.f,
+            TILESIZE / 10.f,
+        };
+        const float x_size = fmax(0.1f, util::lerp(0, size.x, pct_full));
+
+        DrawCubeCustom(
+            {
+                (x_size / 2.f) - (TILESIZE / 4.f),
+                y_height,  //
+                0          //
+            },
+            x_size, size.y, size.z, 0, primary, primary);
+
+        DrawCubeCustom(
+            {
+                (x_size / 2.f) + (TILESIZE / 4.f),
+                y_height,  //
+                0          //
+            },
+            size.x - x_size, size.y, size.z, 0, background, background);
+    }
+    raylib::rlPopMatrix();
+}
+
 void draw_valid_colored_box(const Transform& transform,
                             const SimpleColoredBoxRenderer& renderer,
                             bool is_highlighted) {
@@ -417,41 +453,7 @@ void render_progress_bar(const Entity& entity, float) {
     const HasWork& hasWork = entity.get<HasWork>();
     if (hasWork.dont_show_progres_bar()) return;
 
-    raylib::rlPushMatrix();
-    {
-        vec3 pos = transform.pos();
-
-        raylib::rlTranslatef(pos.x, pos.y, pos.z);
-
-        vec3 size = {
-            TILESIZE,
-            TILESIZE / 3.f,
-            TILESIZE / 10.f,
-        };
-        const float x_size = fmax(0.1f, (hasWork.scale_length(size.x)));
-        const float y_height = 1.75f * TILESIZE;
-
-        Color primary = ui::UI_THEME.from_usage(ui::theme::Usage::Primary);
-        Color background =
-            ui::UI_THEME.from_usage(ui::theme::Usage::Background);
-
-        DrawCubeCustom(
-            {
-                (x_size / 2.f) - (TILESIZE / 4.f),
-                y_height,  //
-                0          //
-            },
-            x_size, size.y, size.z, 0, primary, primary);
-
-        DrawCubeCustom(
-            {
-                (x_size / 2.f) + (TILESIZE / 4.f),
-                y_height,  //
-                0          //
-            },
-            size.x - x_size, size.y, size.z, 0, background, background);
-    }
-    raylib::rlPopMatrix();
+    DrawProgressBar(transform.pos(), hasWork.scale_length(1.f));
 }
 
 }  // namespace render_manager
