@@ -911,7 +911,7 @@ void make_customer(Entity& customer, vec2 p, bool has_order) {
     // TODO for now, eventually move to customer spawner
     if (has_order) customer.addComponent<CanOrderDrink>();
 
-    customer.addComponent<HasPatience>().update_max(4.f);
+    customer.addComponent<HasPatience>().update_max(20.f);
 
     customer.addComponent<HasSpeechBubble>();
 

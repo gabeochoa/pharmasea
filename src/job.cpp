@@ -4,6 +4,7 @@
 #include "components/can_order_drink.h"
 #include "components/can_perform_job.h"
 #include "components/has_base_speed.h"
+#include "components/has_patience.h"
 #include "components/has_speech_bubble.h"
 #include "components/has_waiting_queue.h"
 #include "components/is_drink.h"
@@ -405,9 +406,14 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
     VALIDATE(reg_id != -1, "workingatend job should contain register");
     Entity& reg = get_and_validate_entity(reg_id);
 
-    // TODO safer way to do it?
-    // we are at the front so turn it on
-    entity.get<HasSpeechBubble>().on();
+    // TODO this logic likely should move to system
+    {
+        // TODO safer way to do it?
+        // we are at the front so turn it on
+        entity.get<HasSpeechBubble>().on();
+        entity.get<HasPatience>().enable();
+    }
+
     CanOrderDrink& canOrderDrink = entity.get<CanOrderDrink>();
 
     if (canOrderDrink.order_state == CanOrderDrink::OrderState::NeedsReset) {
@@ -465,7 +471,14 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
         jshared.reset(create_drinking_job(entity.get<Transform>().as2()));
         entity.get<CanPerformJob>().push_onto_queue(jshared);
     }
-    entity.get<HasSpeechBubble>().off();
+
+    // TODO Should move to system
+    {
+        entity.get<HasSpeechBubble>().off();
+        entity.get<HasPatience>().disable();
+        entity.get<HasPatience>().reset();
+    }
+
     return (Job::State::Completed);
 }
 

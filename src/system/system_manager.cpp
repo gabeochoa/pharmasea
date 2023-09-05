@@ -1326,6 +1326,8 @@ void reduce_impatient_customers(Entity& entity, float dt) {
     if (entity.is_missing<HasPatience>()) return;
     HasPatience& hp = entity.get<HasPatience>();
 
+    if (!hp.should_pass_time()) return;
+
     hp.pass_time(dt);
 
     if (hp.pct() <= 0) hp.reset();
