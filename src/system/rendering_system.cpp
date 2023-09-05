@@ -353,6 +353,15 @@ void render_trigger_area(const Entity& entity, float dt) {
     render_simple_normal(entity, dt);
 }
 
+void render_patience(const Entity& entity, float) {
+    if (entity.is_missing<HasPatience>()) return;
+    const Transform& transform = entity.get<Transform>();
+    const HasPatience& hp = entity.get<HasPatience>();
+    if (hp.pct() >= 1.f) return;
+
+    DrawProgressBar(transform.pos(), hp.pct(), 3.f);
+}
+
 void render_speech_bubble(const Entity& entity, float) {
     if (entity.is_missing<HasSpeechBubble>()) return;
     if (entity.get<HasSpeechBubble>().disabled()) return;
@@ -403,6 +412,7 @@ void render_normal(const Entity& entity, float dt) {
     }
 
     render_speech_bubble(entity, dt);
+    render_patience(entity, dt);
 
     bool used = render_model_normal(entity, dt);
     if (!used) {
