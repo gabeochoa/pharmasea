@@ -34,6 +34,7 @@
 #include "components/has_client_id.h"
 #include "components/has_dynamic_model_name.h"
 #include "components/has_name.h"
+#include "components/has_patience.h"
 #include "components/has_speech_bubble.h"
 #include "components/has_timer.h"
 #include "components/has_waiting_queue.h"
@@ -70,7 +71,7 @@ void register_all_components() {
         CanOrderDrink,
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
-        HasBaseSpeed, HasRopeToItem, HasProgression,
+        HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
         // render
         ShowsProgressBar, ModelRenderer, HasDynamicModelName,
         SimpleColoredBoxRenderer
@@ -909,6 +910,8 @@ void make_customer(Entity& customer, vec2 p, bool has_order) {
 
     // TODO for now, eventually move to customer spawner
     if (has_order) customer.addComponent<CanOrderDrink>();
+
+    customer.addComponent<HasPatience>().update_max(4.f);
 
     customer.addComponent<HasSpeechBubble>();
 

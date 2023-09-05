@@ -23,6 +23,7 @@
 #include "../components/has_client_id.h"
 #include "../components/has_dynamic_model_name.h"
 #include "../components/has_name.h"
+#include "../components/has_patience.h"
 #include "../components/has_progression.h"
 #include "../components/has_rope_to_item.h"
 #include "../components/has_speech_bubble.h"
@@ -70,7 +71,7 @@ struct PolymorphicBaseClass<BaseComponent>
           CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
           CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
           CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid, CanBeHeld,
-          HasProgression, IsRotatable, CanGrabFromOtherFurniture,
+          HasPatience, HasProgression, IsRotatable, CanGrabFromOtherFurniture,
           ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom, IsItemContainer,
           UsesCharacterModel, ShowsProgressBar, DebugName, HasDynamicModelName,
           IsTriggerArea, HasSpeechBubble, Indexer, IsSpawner, HasTimer,

@@ -1322,6 +1322,15 @@ void update_progression(Entity& entity, float) {
     }
 }
 
+void reduce_impatient_customers(Entity& entity, float dt) {
+    if (entity.is_missing<HasPatience>()) return;
+    HasPatience& hp = entity.get<HasPatience>();
+
+    hp.pass_time(dt);
+
+    if (hp.pct() <= 0) hp.reset();
+}
+
 }  // namespace system_manager
 
 void SystemManager::on_game_state_change(game::State new_state,
@@ -1501,6 +1510,7 @@ void SystemManager::in_round_update(
         system_manager::process_squirter(entity, dt);
         system_manager::process_trash(entity, dt);
         system_manager::reset_empty_work_furniture(entity, dt);
+        system_manager::reduce_impatient_customers(entity, dt);
     });
 }
 
