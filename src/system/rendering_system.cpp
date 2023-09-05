@@ -12,11 +12,19 @@ extern ui::UITheme UI_THEME;
 namespace system_manager {
 namespace render_manager {
 
-void DrawProgressBar(vec3 pos, float pct_full, float height = -1) {
+struct ProgressBarConfig {
+    vec3 position = {0, 0, 0};
+    float pct_full = 1.f;
+    float height = -1;
+    float pct_warning = -1.f;
+};
+
+void DrawProgressBar(const ProgressBarConfig& config) {
     Color primary = ui::UI_THEME.from_usage(ui::theme::Usage::Primary);
     Color background = ui::UI_THEME.from_usage(ui::theme::Usage::Background);
 
-    float y_height = height != -1 ? height : 1.75f * TILESIZE;
+    float y_height = config.height != -1 ? config.height : 1.75f * TILESIZE;
+    const vec3 pos = config.position;
 
     raylib::rlPushMatrix();
     {
@@ -27,7 +35,7 @@ void DrawProgressBar(vec3 pos, float pct_full, float height = -1) {
             TILESIZE / 3.f,
             TILESIZE / 10.f,
         };
-        const float x_size = fmax(0.1f, util::lerp(0, size.x, pct_full));
+        const float x_size = fmax(0.1f, util::lerp(0, size.x, config.pct_full));
 
         DrawCubeCustom(
             {
@@ -359,7 +367,10 @@ void render_patience(const Entity& entity, float) {
     const HasPatience& hp = entity.get<HasPatience>();
     if (hp.pct() >= 1.f) return;
 
-    DrawProgressBar(transform.pos(), hp.pct(), 3.f);
+    DrawProgressBar(ProgressBarConfig{.position = transform.pos(),
+                                      .pct_full = hp.pct(),
+                                      .height = 3.f,
+                                      .pct_warning = 0.2f});
 }
 
 void render_speech_bubble(const Entity& entity, float) {
@@ -463,7 +474,10 @@ void render_progress_bar(const Entity& entity, float) {
     const HasWork& hasWork = entity.get<HasWork>();
     if (hasWork.dont_show_progres_bar()) return;
 
-    DrawProgressBar(transform.pos(), hasWork.scale_length(1.f));
+    DrawProgressBar(ProgressBarConfig{
+        .position = transform.pos(),
+        .pct_full = hasWork.scale_length(1.f),
+    });
 }
 
 }  // namespace render_manager
