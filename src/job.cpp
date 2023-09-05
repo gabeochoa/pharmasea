@@ -326,11 +326,13 @@ Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
         int rpos = hwq.get_next_pos();
 
         // Check to see if we can path to that spot
-        auto end = r.get<Transform>().tile_infront(rpos);
-        auto new_path = astar::find_path(
-            entity.get<Transform>().as2(), end,
-            std::bind(EntityHelper::isWalkable, std::placeholders::_1));
-        if (new_path.empty()) continue;
+
+        // TODO causing no valid register to be found
+        // auto end = r.get<Transform>().tile_infront(rpos);
+        // auto new_path = astar::find_path(
+        // entity.get<Transform>().as2(), end,
+        // std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+        // if (new_path.empty()) continue;
 
         if (best_pos == -1 || rpos < best_pos) {
             best_target = r;
