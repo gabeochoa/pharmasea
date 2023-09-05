@@ -46,7 +46,7 @@ struct ToastLayer : public BaseGameRendererLayer {
         // pop out)
 
         Color accent = UI_THEME.from_usage(ui::theme::Accent);
-        int i = MX_TOASTS;
+        int i = MX_TOASTS - 1;
         for (auto& toast : TOASTS) {
             Rectangle spot = toast_spots[i];
             Color primary = UI_THEME.from_usage(background_color(toast.type));

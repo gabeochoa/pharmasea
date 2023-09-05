@@ -309,7 +309,12 @@ void EntityHelper::invalidatePathCacheLocation(vec2 pos) {
     cache_is_walkable.erase(pos);
 }
 
-void EntityHelper::invalidatePathCache() { cache_is_walkable.clear(); }
+void EntityHelper::invalidatePathCache() { 
+    if (!is_server()) {
+        log_warn("client code is trying to invalide path cache");
+        return;
+    }
+    cache_is_walkable.clear(); }
 
 bool EntityHelper::isWalkable(vec2 pos) {
     TRACY_ZONE_SCOPED;
