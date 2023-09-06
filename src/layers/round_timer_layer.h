@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../components/has_timer.h"
 #include "base_game_renderer.h"
 
 struct RoundTimerLayer : public BaseGameRendererLayer {
@@ -55,6 +56,7 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         window = rect::tpad(window, 10);
         window = rect::rpad(window, 20);
         window = rect::bpad(window, 20);
+        window = rect::lpad(window, 10);
 
         const vec2 center = {
             window.x + (window.width / 2.f),
@@ -65,7 +67,7 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         const bool is_day = GameState::get().in_round() && !is_closing;
         const float pct = ht.pct();
 
-        const float radius = 20;
+        const float radius = WIN_WF() / 64.f;
         const float r10 = radius * 6;
         const float angle = util::deg2rad(util::lerp(170, 365, 1 - pct));
         const vec2 pos = {
