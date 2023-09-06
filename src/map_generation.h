@@ -196,9 +196,8 @@ struct helper {
     vec2 z = {0, 0};
 
     helper(const std::vector<std::string>& l) : lines(l) {}
-
-    template<typename Func = std::function<Entity&()>>
-    void generate(Func&& add_to_map = nullptr) {
+    
+    void generate(std::function<Entity&()>&& add_to_map = nullptr) {
         vec2 origin = find_origin();
 
         const auto default_create = []() -> Entity& {

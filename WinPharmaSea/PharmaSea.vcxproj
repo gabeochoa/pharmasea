@@ -21,7 +21,6 @@
   <ItemGroup>
     <None Include="..\README.md" />
     <None Include="..\resources\config\settings.json" />
-    <None Include="..\src\makefile" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\bitsery_include.h" />
@@ -47,6 +46,8 @@
     <ClInclude Include="..\src\components\has_client_id.h" />
     <ClInclude Include="..\src\components\has_dynamic_model_name.h" />
     <ClInclude Include="..\src\components\has_name.h" />
+    <ClInclude Include="..\src\components\has_patience.h" />
+    <ClInclude Include="..\src\components\has_progression.h" />
     <ClInclude Include="..\src\components\has_rope_to_item.h" />
     <ClInclude Include="..\src\components\has_speech_bubble.h" />
     <ClInclude Include="..\src\components\has_subtype.h" />
@@ -101,6 +102,7 @@
     <ClInclude Include="..\src\engine\library.h" />
     <ClInclude Include="..\src\engine\log.h" />
     <ClInclude Include="..\src\engine\model_library.h" />
+    <ClInclude Include="..\src\engine\mouse_map.h" />
     <ClInclude Include="..\src\engine\music_library.h" />
     <ClInclude Include="..\src\engine\navmesh.h" />
     <ClInclude Include="..\src\engine\network\webrequest.h" />
@@ -121,18 +123,21 @@
     <ClInclude Include="..\src\engine\trie.h" />
     <ClInclude Include="..\src\engine\trigger_on_dt.h" />
     <ClInclude Include="..\src\engine\type_name.h" />
-    <ClInclude Include="..\src\engine\ui.h" />
-    <ClInclude Include="..\src\engine\ui_autolayout.h" />
-    <ClInclude Include="..\src\engine\ui_color.h" />
-    <ClInclude Include="..\src\engine\ui_components.h" />
-    <ClInclude Include="..\src\engine\ui_context.h" />
-    <ClInclude Include="..\src\engine\ui_state.h" />
-    <ClInclude Include="..\src\engine\ui_theme.h" />
-    <ClInclude Include="..\src\engine\ui_widget.h" />
+    <ClInclude Include="..\src\engine\ui\autolayout.h" />
+    <ClInclude Include="..\src\engine\ui\callback_registry.h" />
+    <ClInclude Include="..\src\engine\ui\color.h" />
+    <ClInclude Include="..\src\engine\ui\context.h" />
+    <ClInclude Include="..\src\engine\ui\element_result.h" />
+    <ClInclude Include="..\src\engine\ui\focus.h" />
+    <ClInclude Include="..\src\engine\ui\rect.h" />
+    <ClInclude Include="..\src\engine\ui\state.h" />
+    <ClInclude Include="..\src\engine\ui\theme.h" />
+    <ClInclude Include="..\src\engine\ui\ui.h" />
+    <ClInclude Include="..\src\engine\ui\ui_internal.h" />
+    <ClInclude Include="..\src\engine\ui\widget.h" />
     <ClInclude Include="..\src\engine\util.h" />
     <ClInclude Include="..\src\engine\uuid.h" />
     <ClInclude Include="..\src\entity.h" />
-    <ClInclude Include="..\src\entityhelper.h" />
     <ClInclude Include="..\src\entity_helper.h" />
     <ClInclude Include="..\src\entity_makers.h" />
     <ClInclude Include="..\src\entity_type.h" />
@@ -141,17 +146,21 @@
     <ClInclude Include="..\src\globals.h" />
     <ClInclude Include="..\src\job.h" />
     <ClInclude Include="..\src\layers\aboutlayer.h" />
+    <ClInclude Include="..\src\layers\base_game_renderer.h" />
     <ClInclude Include="..\src\layers\fpslayer.h" />
     <ClInclude Include="..\src\layers\gamedebuglayer.h" />
     <ClInclude Include="..\src\layers\gamelayer.h" />
+    <ClInclude Include="..\src\layers\handlayer.h" />
     <ClInclude Include="..\src\layers\menulayer.h" />
-    <ClInclude Include="..\src\layers\menustatelayer.h" />
-    <ClInclude Include="..\src\layers\minimaplayer.h" />
     <ClInclude Include="..\src\layers\networklayer.h" />
     <ClInclude Include="..\src\layers\pauselayer.h" />
+    <ClInclude Include="..\src\layers\round_end_reason_layer.h" />
+    <ClInclude Include="..\src\layers\round_timer_layer.h" />
+    <ClInclude Include="..\src\layers\seedmanagerlayer.h" />
     <ClInclude Include="..\src\layers\settingslayer.h" />
     <ClInclude Include="..\src\layers\streamersafelayer.h" />
     <ClInclude Include="..\src\layers\toastlayer.h" />
+    <ClInclude Include="..\src\layers\uitestlayer.h" />
     <ClInclude Include="..\src\layers\versionlayer.h" />
     <ClInclude Include="..\src\level_info.h" />
     <ClInclude Include="..\src\map.h" />
@@ -171,12 +180,14 @@
     <ClInclude Include="..\src\system\input_process_manager.h" />
     <ClInclude Include="..\src\system\job_system.h" />
     <ClInclude Include="..\src\system\logging_system.h" />
+    <ClInclude Include="..\src\system\progression.h" />
     <ClInclude Include="..\src\system\rendering_system.h" />
     <ClInclude Include="..\src\system\system_manager.h" />
     <ClInclude Include="..\src\system\ui_rendering_system.h" />
     <ClInclude Include="..\src\tests\all_tests.h" />
     <ClInclude Include="..\src\tests\component.h" />
     <ClInclude Include="..\src\tests\lerp_test.h" />
+    <ClInclude Include="..\src\tests\rect_split_tests.h" />
     <ClInclude Include="..\src\tests\size_ents.h" />
     <ClInclude Include="..\src\tests\test_maps.h" />
     <ClInclude Include="..\src\tests\test_pathing.h" />
@@ -228,7 +239,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
