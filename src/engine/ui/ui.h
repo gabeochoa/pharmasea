@@ -305,11 +305,6 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
         return ElementResult{false, 0};
     }
 
-    // TODO when you tab to the dropdown
-    // it would be nice if it opened
-
-    // TODO check if this is still true, theres ltos to check about the tab
-    // states on this, also check backwards tabs
     //
     // TODO right now you can change values through tab or through
     // arrow keys, maybe we should only allow arrows
@@ -326,42 +321,75 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
     state->selected = data.initial;
     state->selected.changed_since = false;
 
+    // if you arrow up out, then tab to previous
+    if (state->focused < 0) {
+        state->on = false;
+        focus::set_previous();
+    }
+
     if (button(widget, "", true)) {
         state->on = !state->on;
     }
 
-    if (focus::matches(widget.id)) {
-        state->on = true;
-    }
-
-    if (!focus::matches(widget.id)) {
-        state->on = false;
-    }
-
-    if (state->on) {
+    std::vector<int> option_ids;
+    std::vector<Widget> option_widgets;
+    {
         Rectangle rect = widget.get_rect();
-        int i = -1;
-        for (const auto& option : data.options) {
+        for (int i = 0; i < (int) data.options.size(); i++) {
             rect.y += rect.height;
-            i++;
-
             Widget option_widget(widget);
             // this should be above the button's index
             option_widget.z_index--;
-
             // Needs to be unique on the screen
             auto uuid = ui::MK_UUID_LOOP(widget.id, widget.id, i);
             option_widget.id = (int) (size_t) uuid;
-
             option_widget.rect = (Rectangle(rect));
+
+            option_widgets.push_back(option_widget);
+            option_ids.push_back(option_widget.id);
+        }
+    }
+
+    bool has_focus = focus::matches(widget.id);
+    for (auto id : option_ids) {
+        has_focus |= focus::matches(id);
+    }
+
+    state->on = has_focus;
+
+    // If you arrow down out, then tab to next item
+    if (state->focused >= (int) data.options.size()) {
+        state->on = false;
+        focus::set(focus::ROOT_ID);
+    }
+
+    if (state->on) {
+        if (context->pressed(InputName::ValueUp)) {
+            state->focused = state->focused - 1;
+        }
+
+        if (context->pressed(InputName::ValueDown)) {
+            state->focused = state->focused + 1;
+        }
+
+        int i = -1;
+        for (const Widget& option_widget : option_widgets) {
+            i++;
+
+            // If this was the one that is selected, set the focus to it
+            if (state->focused == i) {
+                focus::set(option_widget.id);
+            }
 
             if (button(option_widget)) {
                 state->selected = i;
                 state->on = false;
             }
 
-            text(option_widget, option);
+            text(option_widget, data.options[i]);
         }
+    } else {
+        state->focused = state->selected;
     }
 
     text(widget, data.options[state->selected]);

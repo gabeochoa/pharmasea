@@ -37,6 +37,7 @@ inline void try_to_grab(const Widget& widget) {
         set(widget.id);
     }
 }
+inline void set_previous() { focus_id = last_processed; }
 
 inline void set_hot(int id) { hot_id = id; }
 inline void set_active(int id) { active_id = id; }

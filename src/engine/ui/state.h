@@ -49,6 +49,7 @@ struct ScrollViewState : public UIState {
 };
 
 struct DropdownState : public ToggleState {
+    State<int> focused;
     State<int> selected;
 };
 struct CheckboxState : public ToggleState {};
