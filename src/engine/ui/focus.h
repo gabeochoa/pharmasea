@@ -1,6 +1,10 @@
 
 #pragma once
 
+// TODO this is a fake header and is specifically included in a certain order to
+// get includes
+#include <memory>
+
 namespace ui {
 
 static std::shared_ptr<ui::UIContext> context;

@@ -364,6 +364,18 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
     }
 
     if (state->on) {
+        // TODO should tabbing go to the next item? instead of the next option?
+
+        // Note: we do this this way because pressed() eats the input,
+        // so we can merge it with the below unless we switch to no eat
+        if (context->pressed(InputName::WidgetNext)) {
+            if (context->is_held_down(InputName::WidgetMod)) {
+                state->focused = state->focused - 1;
+            } else {
+                state->focused = state->focused + 1;
+            }
+        }
+
         if (context->pressed(InputName::ValueUp)) {
             state->focused = state->focused - 1;
         }
