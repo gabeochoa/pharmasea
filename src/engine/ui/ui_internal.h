@@ -40,9 +40,12 @@ inline void draw_colored_text(const std::string& content, Rectangle parent,
             auto font_size = context->get_font_size(content, rect.width,
                                                     rect.height, spacing);
 
-            //  For accessibility reasons, we want to make sure we are
-            //  drawing text thats larger than 28px @ 1080p
+            // Disable this warning when we are in debug mode since dev facing
+            // UI is okay to be too small at the moment
+
             if (!GLOBALS.get<bool>("debug_ui_enabled")) {
+                //  For accessibility reasons, we want to make sure we are
+                //  drawing text thats larger than 28px @ 1080p
                 float pct_1080 = (WIN_HF() / 1080.f);
                 float min_text_size_px = 28;
                 if (font_size < (min_text_size_px * pct_1080)) {
