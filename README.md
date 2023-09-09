@@ -62,6 +62,104 @@ I am publishing some releases on itch, you can find the url in the code or build
 if you need the password join the discord and say hi!
 
 
+### alpha_0.23.09.09
+
+Known Issues
+- (Progression) New machines spawn on top of each other
+- (UI) some screens are gonna be ugly for a while
+- (UI) Controls are not remappable in UI 
+- (UI) No reset-to-default state for controls
+- (Game) Roomba guy doesnt like to clean vomit at the customer de-spawn point..
+- (Game) Map generator always makes basically the same map
+- (Game) cant pick up roomba in planning 
+- (Game) No way to know if you made the wrong drink 
+- (Game) Can place items where it collides with your body
+
+impact
+- Customers now have patience
+    - Longer timers for more complicated drinks 
+- New Drinks!
+    - Long Island Iced Tea and Mai Tai 
+- New Fruits!
+    - Pineapple and Pinapple Juice 
+- You can now view recipes for your unlocked drinks by holding Tab / Gamepad-Top-Button
+- We now hide the mouse when holding down to move camera (Viewer Suggestion :) )
+- Configure the analog stick deadzone in json now 
+- Can now place and pick up the little mop boy 
+- Better progress bar UI element
+- Can walk around with arrow keys now 
+- Added a sound when people vomit 
+- Moved Round Timer and made it bigger 
+- Added a new validation that will stop Round transitioning when you have overlapping furniture 
+ 
+bug fixes
+- End of Round Timer text should get cut off less than before with new font 
+- Much better collisions, You should get stuck on edges much less now 
+- Fix crash where rotating objects more than 360 could crash game 
+- Added more controller mappings from SDL 
+- Fixed issue where item placement validation wasnt working (soda wand could go anywhere) 
+- hide progress bars when not needed 
+- Fix issue where you could have two dropdowns open at once 
+- Better validation for when register is not pathable 
+- tab between options works again 
+- better arrow key movement for dropdowns 
+- register validation should be way more accurate now
+- Toasts now will fade out 
+
+better eng 
+- Fix some wwarnings
+- Add mouse input events 
+- update debug info to look a little better 
+- move ui into gamedebug layer instead of system/
+- add new component for marking entities needed to update at end of day 
+- move ping and version to top right 
+- add simple clang-tidy setup 
+- add simple color blindness simulator shader 
+- bad but better ui code splitup 
+- add ui to tell when no clip is on 
+- move toasts to bottom right 
+- extract progress bar into helper render function 
+- Updated Windows VC Proj Filters
+- Made it possible to compile with an older windows compiler, avoiding an issue with a compiler bug in platform Windows toolset v143
+- Added debug walkable ui, needs its own controls eventually 
+- Added debug render info for waiting spots on register 
+- Added easings library
+
+### alpha_0.23.08.25
+
+Known Issues
+- (All) movement sucks today with analog stick
+- (Progression) New machines spawn on top of each other
+- (UI) some screens are gonna be ugly for a while
+- (Game) Roomba guy doesnt like to clean vomit at the customer de-spawn point..
+- (UI) Controls are not remappable in UI 
+- (UI) No reset-to-default state for controls
+
+impact
+- Map generator now uses WaveFunctionCollapse
+    - This should result in some less boxy maps than before
+    - If you want to mess around with it you can edit map_generator_input.json
+- More fonts and other language support
+    - We got a new font that hopefully fits better with the games playful style :)
+    - Due to differences in font and string width, some text might be cut off until you restart the game :$
+- new little roomba guy (hes underneath the pumpkin
+    - Moves slow but cleans up vomit without any help :) 
+- New alcohol based customer names!
+- Added controls view in the settings page
+    - No longer do you have to guess the controls
+    - Controls are not currently remappable in game but you can update the keymap.json manually if you need
+
+bug fixes
+- Fixed this issue; see impact for more info: (Lobby) Seed changer disabled for now 
+- Fixed issue where clients couldnt change settings once in game 
+
+better eng 
+- Categorized some of the todos 
+- Popup window to our UI component library 
+- Font Library to prep for multi-language 
+- Lobby etc are now Perma-entities so we can reenable seed selection 
+
+
 ### alpha_0.23.09.02
 
 Known Issues
