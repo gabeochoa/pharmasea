@@ -2,6 +2,11 @@
 
 #include "engine/graphics.h"
 
+namespace reasings {
+// TODO decide if we wnat to use static inline
+#include "reasings.h"
+}  // namespace reasings
+
 #ifdef __APPLE__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
@@ -27,8 +32,8 @@
 #undef MAGIC_ENUM_RANGE_MAX
 #define MAGIC_ENUM_RANGE_MAX 400
 #include <magic_enum/magic_enum.hpp>
-// TODO :INFRA: cant use format yet due to no std::format yet (though not even sure what
-// its needed for) #include <magic_enum/magic_enum_format.hpp>
+// TODO :INFRA: cant use format yet due to no std::format yet (though not even
+// sure what its needed for) #include <magic_enum/magic_enum_format.hpp>
 #include <zpp_bits.h>
 
 #include <magic_enum/magic_enum_fuse.hpp>

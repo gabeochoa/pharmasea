@@ -16,6 +16,7 @@ libraries used:
 - argh (for dev flags) https://github.com/adishavit/argh
 - mo for translations http://number-none.com/blow/code/mo_file/index.html
 - nlomann json for JSON reading / writing https://github.com/nlohmann/json
+- reasings (some easing functions) https://github.com/raylib-extras/reasings
 
 Models from 
 - https://www.kenney.nl/assets?q=3d 

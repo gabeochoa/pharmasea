@@ -66,6 +66,20 @@ inline ElementResult div(const Widget& widget, theme::Usage theme) {
     return div(widget, UI_THEME.from_usage(theme));
 }
 
+// TODO merge with text()
+inline ElementResult colored_text(const Widget& widget,
+                                  const std::string& content, Color c = WHITE) {
+    Rectangle rect = widget.get_rect();
+
+    // No need to render if text is empty
+    if (content.empty()) return false;
+
+    internal::draw_colored_text(text_lookup(content.c_str()), rect,
+                                widget.z_index, c);
+
+    return true;
+}
+
 inline ElementResult text(const Widget& widget, const std::string& content,
                           ui::theme::Usage color_usage = ui::theme::Usage::Font,
                           bool draw_background = false
@@ -364,7 +378,8 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
     }
 
     if (state->on) {
-        // TODO should tabbing go to the next item? instead of the next option?
+        // TODO should tabbing go to the next item? instead of the next
+        // option?
 
         // Note: we do this this way because pressed() eats the input,
         // so we can merge it with the below unless we switch to no eat

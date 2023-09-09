@@ -13,8 +13,8 @@ inline bool should_exit_early(const Widget& widget) {
 
 inline ui::UITheme active_theme() { return ui::UI_THEME; }
 
-inline void draw_text(const std::string& content, Rectangle parent, int z_index,
-                      ui::theme::Usage color_usage = ui::theme::Usage::Font) {
+inline void draw_colored_text(const std::string& content, Rectangle parent,
+                              int z_index, Color color = WHITE) {
     callback_registry.register_call(
         context,
         [=]() {
@@ -42,9 +42,15 @@ inline void draw_text(const std::string& content, Rectangle parent, int z_index,
                        content.c_str(),     //
                        {rect.x, rect.y},    //
                        font_size, spacing,  //
-                       active_theme().from_usage(color_usage));
+                       color);
         },
         z_index);
+}
+
+inline void draw_text(const std::string& content, Rectangle parent, int z_index,
+                      ui::theme::Usage color_usage = ui::theme::Usage::Font) {
+    draw_colored_text(content, parent, z_index,
+                      active_theme().from_usage(color_usage));
 }
 
 inline void draw_rect_color(Rectangle rect, int z_index, Color c) {
