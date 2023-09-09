@@ -1358,6 +1358,15 @@ void reset_customers_that_need_resetting(Entity& entity) {
         cod.current_order = progressionManager.get_random_drink();
         cod.order_state = CanOrderDrink::OrderState::Ordering;
     }
+
+    {
+        // Set the patience based on how many ingredients there are
+        // TODO add a map of ingredient to how long it probably takes to make
+
+        auto recipe = get_recipe_for_drink(cod.current_order);
+        entity.get<HasPatience>().update_max(recipe.count() * 20.f);
+        entity.get<HasPatience>().reset();
+    }
 }
 
 void update_progression(Entity& entity, float) {
