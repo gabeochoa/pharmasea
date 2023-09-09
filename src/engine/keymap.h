@@ -519,6 +519,7 @@ struct KeyMap {
 
         game_map[InputName::ShowRecipeBook] = {
             raylib::KEY_TAB,
+            raylib::GAMEPAD_BUTTON_RIGHT_FACE_UP,
         };
 
         game_map[InputName::Pause] = {
@@ -546,7 +547,6 @@ struct KeyMap {
 
         game_map[InputName::ToggleNetworkView] = {
             raylib::KEY_EQUAL,
-            raylib::GAMEPAD_BUTTON_RIGHT_FACE_UP,
         };
 
         game_map[InputName::ToggleDebugSettings] = {

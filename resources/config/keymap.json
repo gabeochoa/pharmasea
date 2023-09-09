@@ -112,6 +112,10 @@
             {
                 "type": 0,
                 "value": 258
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_RIGHT_FACE_UP"
             }
         ],
         "ToggleDebug": [
@@ -136,10 +140,6 @@
             {
                 "type": 0,
                 "value": 61
-            },
-            {
-                "type": 1,
-                "value": "GAMEPAD_BUTTON_RIGHT_FACE_UP"
             }
         ],
         "ToggleToInRound": [

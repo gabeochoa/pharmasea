@@ -30,13 +30,30 @@ struct RecipeBookLayer : public BaseGameRendererLayer {
     RecipeBookLayer() : BaseGameRendererLayer("RecipeBook") {}
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
+        if (KeyMap::get_button(menu::State::Game, InputName::ShowRecipeBook) ==
+            event.button) {
+            should_show_recipes = !should_show_recipes;
+            return true;
+        }
         // TODO add game buttons for this
         if (!baseShouldRender()) return false;
-        //
-        // if (KeyMap::get_button(menu::State::Game, InputName::Pause) ==
-        // event.button) {
-        // return true;
-        // }
+
+        if (selected_recipe_debounce <= 0 &&
+            KeyMap::get_button(menu::State::UI, InputName::ValueLeft) ==
+                event.button) {
+            selected_recipe = (int) fmax(0, selected_recipe - 1);
+            selected_recipe_debounce = selected_recipe_debounce_reset;
+            return true;
+        }
+        if (selected_recipe_debounce <= 0 &&
+            KeyMap::get_button(menu::State::UI, InputName::ValueRight) ==
+                event.button) {
+            selected_recipe =
+                (int) fmin(num_recipes() - 1, selected_recipe + 1);
+            selected_recipe_debounce = selected_recipe_debounce_reset;
+            return true;
+        }
+
         return ui_context->process_gamepad_button_event(event);
     }
 
