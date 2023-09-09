@@ -94,7 +94,7 @@ struct EntityHelper {
 
     static OptEntity getClosestMatchingFurniture(
         const Transform& transform, float range,
-        std::function<bool(RefEntity)> filter);
+        std::function<bool(RefEntity)>&& filter);
 
     static OptEntity getEntityForID(EntityID id);
 

@@ -1032,6 +1032,42 @@ void update_sophie(Entity& entity, float) {
         return;
     };
 
+    auto _overlapping_furniture = [&]() {
+        // We dont have a way to say "in map" ie user-controllable
+        // vs outside map so we just have to check everything
+
+        // Right now the map is starting at 00 and at most is  -50,-50 to 50,50
+
+        bool has_overlapping = false;
+        for (const std::shared_ptr<Entity>& e : EntityHelper::get_entities()) {
+            auto pos = e->get<Transform>().as2();
+            if (pos.x > 50 || pos.x < -50) continue;
+            if (pos.y > 50 || pos.y < -50) continue;
+
+            for (const std::shared_ptr<Entity>& e2 :
+                 EntityHelper::get_entities()) {
+                if (e2->id == e->id) continue;
+                auto pos2 = e2->get<Transform>().as2();
+                if (pos2.x > 50 || pos2.x < -50) continue;
+                if (pos2.y > 50 || pos2.y < -50) continue;
+
+                if (pos.x == pos2.x && pos.y == pos2.y) {
+                    has_overlapping = true;
+                    break;
+                }
+            }
+
+            if (has_overlapping) {
+                break;
+            }
+        }
+
+        entity.get<HasTimer>().write_reason(
+            HasTimer::WaitingReason::FurnitureOverlapping, has_overlapping);
+
+        return;
+    };
+
     // TODO merge with map generation validation?
     // Run lightweight map validation
     auto _lightweight_map_validation = [&entity]() {
@@ -1058,7 +1094,7 @@ void update_sophie(Entity& entity, float) {
                     // infront?
                     e.get<Transform>().tile_infront(1),
                     std::bind(EntityHelper::isWalkable, std::placeholders::_1));
-                bool to_reg = new_path.size() > 0;
+                bool to_reg = new_path.empty();
 
                 new_path = astar::find_path(
                     customer.get<Transform>().as2(),
@@ -1067,7 +1103,7 @@ void update_sophie(Entity& entity, float) {
                     // infront?
                     e.get<Transform>().tile_infront(2),
                     std::bind(EntityHelper::isWalkable, std::placeholders::_1));
-                return to_reg && new_path.size() > 0;
+                return to_reg && new_path.empty();
             });
 
         entity.get<HasTimer>().write_reason(
@@ -1081,13 +1117,14 @@ void update_sophie(Entity& entity, float) {
     typedef std::function<void()> WaitingFn;
 
     std::vector<WaitingFn> fns{
-        _customers_in_store,
-        _player_holding_furniture,
-        _bar_not_clean,
+        _customers_in_store,        //
+        _player_holding_furniture,  //
+        _bar_not_clean,             //
+        _overlapping_furniture,     //
         _lightweight_map_validation,
     };
 
-    for (auto fn : fns) {
+    for (const auto& fn : fns) {
         fn();
     }
 }

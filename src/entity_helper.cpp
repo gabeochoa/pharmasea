@@ -165,7 +165,7 @@ OptEntity EntityHelper::getFirstMatching(
 
 OptEntity EntityHelper::getClosestMatchingFurniture(
     const Transform& transform, float range,
-    std::function<bool(RefEntity)> filter) {
+    std::function<bool(RefEntity)>&& filter) {
     // TODO :BE: should this really be using this?
     return EntityHelper::getMatchingEntityInFront(
         transform.as2(), range, transform.face_direction(), filter);
@@ -190,7 +190,7 @@ OptEntity EntityHelper::getClosestOfType(const Entity& entity,
 // TODO :BE: change other debugname filter guys to this
 std::vector<RefEntity> EntityHelper::getAllWithType(const EntityType& type) {
     std::vector<RefEntity> matching;
-    for (std::shared_ptr<Entity> e : get_entities()) {
+    for (const std::shared_ptr<Entity>& e : get_entities()) {
         if (!e) continue;
         if (check_type(*e, type)) matching.push_back(*e);
     }
@@ -309,12 +309,13 @@ void EntityHelper::invalidatePathCacheLocation(vec2 pos) {
     cache_is_walkable.erase(pos);
 }
 
-void EntityHelper::invalidatePathCache() { 
+void EntityHelper::invalidatePathCache() {
     if (!is_server()) {
         log_warn("client code is trying to invalide path cache");
         return;
     }
-    cache_is_walkable.clear(); }
+    cache_is_walkable.clear();
+}
 
 bool EntityHelper::isWalkable(vec2 pos) {
     TRACY_ZONE_SCOPED;
