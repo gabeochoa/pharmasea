@@ -405,12 +405,16 @@ void render_waiting_queue(const Entity& entity, float) {
 
     // TODO spelling?
     Color transleucent_green = Color{0, 250, 50, 50};
+    Color transleucent_red = Color{250, 0, 50, 50};
 
     for (size_t i = 0; i < hwq.max_queue_size; i++) {
-        vec3 pos = vec::to3(transform.tile_infront((int) i + 1));
+        vec2 pos2 = transform.tile_infront((int) i + 1);
+        vec3 pos = vec::to3(pos2);
+        bool walkable = EntityHelper::isWalkable(pos2);
         DrawCubeCustom({pos.x, pos.y - (TILESIZE * 0.5f), pos.z}, size.x,
                        size.y / 10.f, size.z, transform.facing,
-                       transleucent_green, transleucent_green);
+                       walkable ? transleucent_green : transleucent_red,
+                       walkable ? transleucent_green : transleucent_red);
     }
 }
 

@@ -1082,35 +1082,57 @@ void update_sophie(Entity& entity, float) {
                  "map needs to have at least one customer spawn point");
         auto& customer = customer_opt.asE();
 
-        // ensure customers can make it to the register
+        int reg_with_no_pathing = 0;
+        int reg_with_bad_spots = 0;
+        std::vector<RefEntity> all_registers =
+            EntityHelper::getAllWithComponent<HasWaitingQueue>();
 
-        // note this will fine the first valid register
-        // its possible they have non valid ones. but as long as they have
-        // at least one working its good
-        auto reg_opt =
-            EntityHelper::getFirstMatching([&customer](const Entity& e) {
-                if (!check_type(e, EntityType::Register)) return false;
-                auto new_path = astar::find_path(
-                    customer.get<Transform>().as2(),
-                    // TODO need a better way to do this
-                    // 0 makes sense but is the position of the entity, when its
-                    // infront?
-                    e.get<Transform>().tile_infront(1),
-                    std::bind(EntityHelper::isWalkable, std::placeholders::_1));
-                bool to_reg = new_path.empty();
+        const auto _has_blocked_spot = [](const Entity& r) {
+            for (int i = 0; i < (int) HasWaitingQueue::max_queue_size; i++) {
+                vec2 pos = r.get<Transform>().tile_infront(i + 1);
+                if (!EntityHelper::isWalkable(pos)) {
+                    return true;
+                }
+            }
+            return false;
+        };
 
-                new_path = astar::find_path(
-                    customer.get<Transform>().as2(),
-                    // TODO need a better way to do this
-                    // 0 makes sense but is the position of the entity, when its
-                    // infront?
-                    e.get<Transform>().tile_infront(2),
-                    std::bind(EntityHelper::isWalkable, std::placeholders::_1));
-                return to_reg && new_path.empty();
-            });
+        for (const Entity& r : all_registers) {
+            if (_has_blocked_spot(r)) {
+                reg_with_bad_spots++;
+            }
+
+            auto new_path = astar::find_path(
+                customer.get<Transform>().as2(),
+                // TODO need a better way to do this
+                // 0 makes sense but is the position of the entity, when its
+                // infront?
+                r.get<Transform>().tile_infront(1),
+                std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+
+            if (new_path.empty()) {
+                reg_with_no_pathing++;
+            }
+        }
+
+        // If every register has a spot that isnt walkable directly, then its
+        // probably not pathable anyway so return false
+        if (reg_with_bad_spots == (int) all_registers.size()) {
+            // TODO maybe we could add a separate error message for this
+            entity.get<HasTimer>().write_reason(
+                HasTimer::WaitingReason::NoPathToRegister, true);
+            return;
+        }
+
+        if (reg_with_no_pathing == (int) all_registers.size()) {
+            // TODO maybe we could add a separate error message for this
+            entity.get<HasTimer>().write_reason(
+                HasTimer::WaitingReason::NoPathToRegister, true);
+            return;
+        }
 
         entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::NoPathToRegister, !reg_opt);
+            HasTimer::WaitingReason::NoPathToRegister, false);
 
         return;
     };
