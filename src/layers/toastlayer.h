@@ -59,10 +59,11 @@ struct ToastLayer : public BaseGameRendererLayer {
 
             float ease = 1 - reasings::EaseExpoIn(toast.timeHasShown, 0.f, 1.f,
                                                   toast.timeToShow);
+            unsigned char alpha = (unsigned char) (255 * ease);
 
-            t_primary.a = (unsigned char) (255 * ease);
-            t_accent.a = (unsigned char) (255 * ease);
-            t_font_color.a = (unsigned char) (255 * ease);
+            t_primary.a = alpha;
+            t_accent.a = alpha;
+            t_font_color.a = alpha;
 
             div(Widget{Rectangle{
                     spot.x,

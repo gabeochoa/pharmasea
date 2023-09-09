@@ -189,13 +189,13 @@ struct DebugOptions {
     bool enableCharacterModel = true;
 };
 
-typedef std::reference_wrapper<Entity> RefEntity;
-typedef std::optional<std::reference_wrapper<Entity>> OptEntityType;
+using RefEntity = std::reference_wrapper<Entity>;
+using OptEntityType = std::optional<std::reference_wrapper<Entity>>;
 
 struct OptEntity {
     OptEntityType data;
 
-    OptEntity() : data({}) {}
+    OptEntity() {}
     OptEntity(OptEntityType opt_e) : data(opt_e) {}
     OptEntity(RefEntity _e) : data(_e) {}
     OptEntity(Entity& _e) : data(_e) {}
