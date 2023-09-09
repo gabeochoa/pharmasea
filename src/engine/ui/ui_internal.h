@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "../globals_register.h"
+
 namespace ui {
 
 namespace internal {
@@ -37,6 +39,21 @@ inline void draw_colored_text(const std::string& content, Rectangle parent,
             // TODO move the generator out of context
             auto font_size = context->get_font_size(content, rect.width,
                                                     rect.height, spacing);
+
+            //  For accessibility reasons, we want to make sure we are
+            //  drawing text thats larger than 28px @ 1080p
+            if (!GLOBALS.get<bool>("debug_ui_enabled")) {
+                float pct_1080 = (WIN_HF() / 1080.f);
+                float min_text_size_px = 28;
+                if (font_size < (min_text_size_px * pct_1080)) {
+                    log_warn(
+                        "Rendering text at {} px which is below our min size "
+                        "for "
+                        "this resolution {}, text was {}",
+                        font_size, (min_text_size_px * pct_1080),
+                        content.c_str());
+                }
+            }
 
             DrawTextEx(font,                //
                        content.c_str(),     //

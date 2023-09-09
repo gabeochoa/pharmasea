@@ -297,10 +297,7 @@ struct Server {
         int nick_id = 10000 + (rand() % 100000);
 
         // Send them a welcome message
-        temp = fmt::format(
-            "Welcome, stranger.  Thou art known to us for now as '{}'; "
-            "upon thine command '/nick' we shall know thee otherwise.",
-            nick_id);
+        temp = fmt::format("Your id is '{}'", nick_id);
         send_announcement_to_client(info->m_hConn, temp,
                                     InternalServerAnnouncement::Info);
 
