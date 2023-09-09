@@ -1040,6 +1040,7 @@ void update_sophie(Entity& entity, float) {
 
         bool has_overlapping = false;
         for (const std::shared_ptr<Entity>& e : EntityHelper::get_entities()) {
+            if (!e->has<IsSolid>()) continue;
             auto pos = e->get<Transform>().as2();
             if (pos.x > 50 || pos.x < -50) continue;
             if (pos.y > 50 || pos.y < -50) continue;
@@ -1047,6 +1048,7 @@ void update_sophie(Entity& entity, float) {
             for (const std::shared_ptr<Entity>& e2 :
                  EntityHelper::get_entities()) {
                 if (e2->id == e->id) continue;
+                if (!e2->has<IsSolid>()) continue;
                 auto pos2 = e2->get<Transform>().as2();
                 if (pos2.x > 50 || pos2.x < -50) continue;
                 if (pos2.y > 50 || pos2.y < -50) continue;
