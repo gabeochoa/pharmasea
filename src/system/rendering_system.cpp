@@ -3,6 +3,7 @@
 
 #include "../components/has_client_id.h"
 #include "../components/has_patience.h"
+#include "../components/has_waiting_queue.h"
 #include "../components/is_progression_manager.h"
 #include "../engine/ui/theme.h"
 #include "system_manager.h"
@@ -395,12 +396,32 @@ void render_speech_bubble(const Entity& entity, float) {
                           raylib::WHITE);
 }
 
+void render_waiting_queue(const Entity& entity, float) {
+    if (entity.is_missing<HasWaitingQueue>()) return;
+    const HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
+
+    const Transform& transform = entity.get<Transform>();
+    vec3 size = transform.size();
+
+    // TODO spelling?
+    Color transleucent_green = Color{0, 250, 50, 50};
+
+    for (size_t i = 0; i < hwq.max_queue_size; i++) {
+        vec3 pos = vec::to3(transform.tile_infront((int) i + 1));
+        DrawCubeCustom({pos.x, pos.y - (TILESIZE * 0.5f), pos.z}, size.x,
+                       size.y / 10.f, size.z, transform.facing,
+                       transleucent_green, transleucent_green);
+    }
+}
+
 // TODO theres two functions called render normal, maybe we should address this
 void render_normal(const Entity& entity, float dt) {
     //  TODO for now while we do dev work render it
     render_debug_subtype(entity, dt);
     render_debug_drink_info(entity, dt);
     render_debug_filter_info(entity, dt);
+
+    render_waiting_queue(entity, dt);
 
     // Ghost player cant render during normal mode
     if (entity.has<CanBeGhostPlayer>() &&

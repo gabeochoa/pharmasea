@@ -4,13 +4,14 @@
 
 #include "base_component.h"
 
-constexpr int max_queue_size = 3;
 typedef int EntityID;
 
 struct HasWaitingQueue : public BaseComponent {
+    static const int max_queue_size = 3;
+
     virtual ~HasWaitingQueue() {}
 
-    [[nodiscard]] size_t num_in_queue() const {
+    [[nodiscard]] int num_in_queue() const {
         return max_queue_size - (max_queue_size - next_line_position);
     }
     [[nodiscard]] bool is_full() const { return !has_space(); }
@@ -25,14 +26,14 @@ struct HasWaitingQueue : public BaseComponent {
     }
 
     void clear() {
-        for (std::size_t i = 0; i < max_queue_size; ++i) {
+        for (int i = 0; i < max_queue_size; ++i) {
             ppl_in_line[i] = -1;
         }
         next_line_position = 0;
     }
 
     void erase(int index) {
-        for (std::size_t i = index; i < max_queue_size - 1; ++i) {
+        for (int i = index; i < max_queue_size - 1; ++i) {
             ppl_in_line[i] = ppl_in_line[i + 1];
         }
         ppl_in_line[max_queue_size - 1] = {};
