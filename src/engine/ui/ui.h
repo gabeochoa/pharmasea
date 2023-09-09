@@ -178,6 +178,19 @@ inline ElementResult button(const Widget& widget,
     return _press_logic();
 }
 
+inline ElementResult image(const Widget& widget,
+                           const std::string& texture_name) {
+    Rectangle rect = widget.get_rect();
+
+    if (internal::should_exit_early(widget)) return false;
+    const raylib::Texture texture = TextureLibrary::get().get(texture_name);
+    const vec2 tex_size = {(float) texture.width, (float) texture.height};
+    const vec2 button_size = {rect.width, rect.height};
+    internal::draw_image({rect.x, rect.y}, texture,
+                         calculateScale(button_size, tex_size), widget.z_index);
+    return true;
+}
+
 inline ElementResult image_button(const Widget& widget,
                                   const std::string& texture_name) {
     Rectangle rect = widget.get_rect();

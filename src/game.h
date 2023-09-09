@@ -36,6 +36,7 @@
 #include "layers/menulayer.h"
 #include "layers/networklayer.h"
 #include "layers/pauselayer.h"
+#include "layers/recipe_book_layer.h"
 #include "layers/round_end_reason_layer.h"
 #include "layers/round_timer_layer.h"
 #include "layers/seedmanagerlayer.h"
@@ -133,6 +134,7 @@ void startup() {
         //
         new PauseLayer(),
         //
+        new RecipeBookLayer(),
         new RoundTimerLayer(),
         new RoundEndReasonLayer(),
         new SeedManagerLayer(),

@@ -55,6 +55,7 @@ enum InputName {
     PlayerPickup,
     PlayerRotateFurniture,
     PlayerDoWork,
+    ShowRecipeBook,
 
     //
     ToggleToPlanning,   // DEBUG ONLY
@@ -469,7 +470,6 @@ struct KeyMap {
         LayerMapping& game_map =
             this->get_or_create_layer_map(menu::State::Game);
         game_map[InputName::PlayerForward] = {
-            raylib::KEY_UP,
             raylib::KEY_W,
             raylib::GAMEPAD_BUTTON_LEFT_FACE_UP,
             GamepadAxisWithDir{
@@ -479,7 +479,6 @@ struct KeyMap {
         };
         game_map[InputName::PlayerBack] = {
             raylib::KEY_S,
-            raylib::KEY_DOWN,
             raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN,
             GamepadAxisWithDir{
                 .axis = raylib::GAMEPAD_AXIS_LEFT_Y,
@@ -488,7 +487,6 @@ struct KeyMap {
         };
         game_map[InputName::PlayerLeft] = {
             raylib::KEY_A,
-            raylib::KEY_LEFT,
             raylib::GAMEPAD_BUTTON_LEFT_FACE_LEFT,
             GamepadAxisWithDir{
                 .axis = raylib::GAMEPAD_AXIS_LEFT_X,
@@ -497,7 +495,6 @@ struct KeyMap {
         };
         game_map[InputName::PlayerRight] = {
             raylib::KEY_D,
-            raylib::KEY_RIGHT,
             raylib::GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
             GamepadAxisWithDir{
                 .axis = raylib::GAMEPAD_AXIS_LEFT_X,
@@ -518,6 +515,10 @@ struct KeyMap {
         game_map[InputName::PlayerDoWork] = {
             raylib::KEY_R,
             raylib::GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
+        };
+
+        game_map[InputName::ShowRecipeBook] = {
+            raylib::KEY_TAB,
         };
 
         game_map[InputName::Pause] = {
@@ -545,6 +546,7 @@ struct KeyMap {
 
         game_map[InputName::ToggleNetworkView] = {
             raylib::KEY_EQUAL,
+            raylib::GAMEPAD_BUTTON_RIGHT_FACE_UP,
         };
     }
 

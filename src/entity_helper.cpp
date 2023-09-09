@@ -321,12 +321,8 @@ void EntityHelper::invalidatePathCache() {
     cache_is_walkable.clear();
 }
 
-std::mutex walkable_mutex;
-
 bool EntityHelper::isWalkable(vec2 pos) {
     TRACY_ZONE_SCOPED;
-    std::lock_guard<std::mutex> lock(walkable_mutex);
-
     if (!cache_is_walkable.contains(pos)) {
         bool walkable = isWalkableRawEntities(pos);
         cache_is_walkable[pos] = walkable;

@@ -33,7 +33,7 @@ inline void render_current_register_queue(float dt) {
             Entity& reg = registers[i];
             const HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
 
-            for (size_t index = 0; index < hwq.num_in_queue(); index++) {
+            for (int index = 0; index < hwq.num_in_queue(); index++) {
                 EntityID e_id = hwq.person(index);
                 OptEntity opt_e = EntityHelper::getEntityForID(e_id);
                 if (!opt_e) {

@@ -16,6 +16,10 @@ struct IsProgressionManager : public BaseComponent {
     void init() {
         unlock_drink(Drink::coke);
         unlock_ingredient(Ingredient::Soda);
+
+        enabledDrinks.set();
+        enabledIngredients.set();
+
         log_trace("create: {} {}", enabledDrinks, enabledIngredients);
     }
 
@@ -88,5 +92,7 @@ struct IsProgressionManager : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+        s.ext(enabledDrinks, bitsery::ext::StdBitset{});
+        s.ext(enabledIngredients, bitsery::ext::StdBitset{});
     }
 };

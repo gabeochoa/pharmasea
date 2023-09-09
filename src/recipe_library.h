@@ -46,6 +46,10 @@ struct RecipeLibrary {
     } impl;
 };
 
+static std::string get_string_for_ingredient(Ingredient ig) {
+    return std::string(magic_enum::enum_name<Ingredient>(ig));
+}
+
 static std::string get_string_for_drink(Drink drink) {
     return std::string(magic_enum::enum_name<Drink>(drink));
 }
