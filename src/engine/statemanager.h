@@ -116,6 +116,7 @@ enum State {
     Paused = 4,
     Progression = 5,
 };
+
 inline std::ostream& operator<<(std::ostream& os, const State& state) {
     os << "Game::State " << magic_enum::enum_name(state);
     return os;

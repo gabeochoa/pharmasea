@@ -120,6 +120,12 @@
                 "value": 92
             }
         ],
+        "ToggleDebugSettings": [
+            {
+                "type": 0,
+                "value": 96
+            }
+        ],
         "ToggleLobby": [
             {
                 "type": 0,

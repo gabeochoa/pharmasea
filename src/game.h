@@ -29,6 +29,7 @@
 #include "engine.h"
 //
 #include "layers/aboutlayer.h"
+#include "layers/debug_settings.h"
 #include "layers/fpslayer.h"
 #include "layers/gamedebuglayer.h"
 #include "layers/gamelayer.h"
@@ -55,7 +56,7 @@ extern std::map<std::string, ui::UITheme> themes;
 // This one should be last
 #include "./tests/all_tests.h"
 
-void startup() {
+inline void startup() {
     // TODO :INFRA: need to test on lower framerates, there seems to be issues
     // with network initlization
 
@@ -128,12 +129,13 @@ void startup() {
         new FPSLayer(),
         new StreamerSafeLayer(),
         new VersionLayer(),
-        new ToastLayer(),
         //
         new HandLayer(),
+        new ToastLayer(),
         //
         new PauseLayer(),
         //
+        new DebugSettingsLayer(),
         new RecipeBookLayer(),
         new RoundTimerLayer(),
         new RoundEndReasonLayer(),

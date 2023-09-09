@@ -57,13 +57,13 @@ enum InputName {
     PlayerDoWork,
     ShowRecipeBook,
 
-    //
-    ToggleToPlanning,   // DEBUG ONLY
-    ToggleToInRound,    // DEBUG ONLY
-    ToggleDebug,        // DEBUG ONLY
-    ToggleNetworkView,  // DEBUG ONLY
-    ToggleLobby,        // DEBUG ONLY
-
+    // Debug Only
+    ToggleToPlanning,
+    ToggleToInRound,
+    ToggleDebug,
+    ToggleNetworkView,
+    ToggleLobby,
+    ToggleDebugSettings,
 };
 
 typedef std::bitset<magic_enum::enum_count<InputName>()> InputSet;
@@ -547,6 +547,10 @@ struct KeyMap {
         game_map[InputName::ToggleNetworkView] = {
             raylib::KEY_EQUAL,
             raylib::GAMEPAD_BUTTON_RIGHT_FACE_UP,
+        };
+
+        game_map[InputName::ToggleDebugSettings] = {
+            raylib::KEY_GRAVE,
         };
     }
 

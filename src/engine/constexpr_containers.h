@@ -10,9 +10,9 @@ struct CEMap {
     std::array<std::pair<Key, Value>, Size> data;
     [[nodiscard]] constexpr Value at(const Key &key) const {
         const auto itr =
-            std::find_if(begin(data), end(data),
+            std::find_if(std::begin(data), std::end(data),
                          [&key](const auto &v) { return v.first == key; });
-        if (itr != end(data)) {
+        if (itr != std::end(data)) {
             return itr->second;
         } else {
             throw std::range_error("Not Found");
@@ -21,10 +21,13 @@ struct CEMap {
 
     [[nodiscard]] constexpr bool contains(const Key &key) const {
         const auto itr =
-            std::find_if(begin(data), end(data),
+            std::find_if(std::begin(data), std::end(data),
                          [&key](const auto &v) { return v.first == key; });
-        return itr != end(data);
+        return itr != std::end(data);
     }
+
+    [[nodiscard]] constexpr auto begin() const { return data.begin(); }
+    [[nodiscard]] constexpr auto end() const { return data.end(); }
 };
 
 template<typename Value, std::size_t Size>
@@ -41,7 +44,7 @@ struct CEVector {
 template<typename T, std::size_t Size>
 [[nodiscard]] constexpr bool array_contains(std::array<T, Size> array,
                                             const T &key) {
-    const auto itr = std::find_if(begin(array), end(array),
+    const auto itr = std::find_if(std::begin(array), std::end(array),
                                   [&key](const auto &v) { return v == key; });
-    return itr != end(array);
+    return itr != std::end(array);
 }
