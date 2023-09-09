@@ -15,6 +15,13 @@
 #include "settings.h"
 #include "shader_library.h"
 
+void App::start_remove_invisible() {
+    auto discard_alpha_shader = ShaderLibrary::get().get("discard_alpha");
+    raylib::BeginShaderMode(discard_alpha_shader);
+}
+
+void App::end_remove_invisible() { raylib::EndShaderMode(); }
+
 void App::start_post_processing() {
     if (!Settings::get().data.enable_postprocessing) return;
     auto post_processing_shader = ShaderLibrary::get().get("post_processing");

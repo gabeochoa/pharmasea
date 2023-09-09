@@ -43,4 +43,7 @@ struct App {
 
     static void start_post_processing();
     static void end_post_processing();
+
+    static void start_remove_invisible();
+    static void end_remove_invisible();
 };

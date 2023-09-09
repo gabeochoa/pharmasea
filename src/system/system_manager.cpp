@@ -1574,15 +1574,16 @@ void SystemManager::progression_update(const Entities& entities, float dt) {
 void SystemManager::render_entities(const Entities& entities, float dt) const {
     const bool debug_mode_on =
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+
+    // debug only
+    system_manager::render_manager::render_walkable_spots(dt);
+
     for_each(entities, dt,
              [debug_mode_on](std::shared_ptr<Entity> entity_ptr, float dt) {
                  const Entity& entity = *entity_ptr;
                  system_manager::render_manager::render(entity, dt,
                                                         debug_mode_on);
              });
-
-    // debug only
-    system_manager::render_manager::render_walkable_spots(dt);
 }
 
 void SystemManager::render_ui(const Entities& entities, float dt) const {

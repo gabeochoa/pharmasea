@@ -153,6 +153,7 @@ struct Preload {
         const std::tuple<const char*, const char*, const char*> shaders[] = {
             {strings::settings::SHADERS, "post_processing.fs",
              "post_processing"},
+            {strings::settings::SHADERS, "discard_alpha.fs", "discard_alpha"},
         };
 
         for (const auto& s : shaders) {
