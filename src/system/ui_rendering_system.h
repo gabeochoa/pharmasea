@@ -130,8 +130,6 @@ inline void render_timer(const Entity& entity, float) {
 
 void render_networked_players(const Entities&, float dt);
 
-inline void render_current_register_queue(float dt);
-
 inline void render_normal(const Entities& entities, float dt) {
     // In game only
     if (GameState::get().should_render_timer()) {

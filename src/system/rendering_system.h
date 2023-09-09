@@ -41,6 +41,7 @@ void render_normal(const Entity& entity, float dt);
 void render_floating_name(const Entity& entity, float);
 void render_progress_bar(const Entity& entity, float);
 void render_waiting_queue(const Entity& entity, float);
+void render_walkable_spots(float);
 
 void render(const Entity&, float, bool);
 

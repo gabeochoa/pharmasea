@@ -501,6 +501,26 @@ void render_progress_bar(const Entity& entity, float) {
     });
 }
 
+void render_walkable_spots(float) {
+    if (!GLOBALS.get<bool>("debug_ui_enabled")) return;
+
+    // TODO spelling?
+    Color transleucent_green = Color{0, 250, 50, 25};
+    Color transleucent_red = Color{250, 0, 50, 25};
+
+    for (int i = -25; i < 25; i++) {
+        for (int j = -25; j < 25; j++) {
+            vec2 pos2 = {(float) i, (float) j};
+            bool walkable = EntityHelper::isWalkable(pos2);
+
+            DrawCubeCustom(vec::to3(pos2), TILESIZE, TILESIZE + TILESIZE / 10.f,
+                           TILESIZE, 0,
+                           walkable ? transleucent_green : transleucent_red,
+                           walkable ? transleucent_green : transleucent_red);
+        }
+    }
+}
+
 }  // namespace render_manager
 }  // namespace system_manager
 

@@ -1084,6 +1084,9 @@ void update_sophie(Entity& entity, float) {
 
         // ensure customers can make it to the register
 
+        // note this will fine the first valid register
+        // its possible they have non valid ones. but as long as they have
+        // at least one working its good
         auto reg_opt =
             EntityHelper::getFirstMatching([&customer](const Entity& e) {
                 if (!check_type(e, EntityType::Register)) return false;
@@ -1577,6 +1580,9 @@ void SystemManager::render_entities(const Entities& entities, float dt) const {
                  system_manager::render_manager::render(entity, dt,
                                                         debug_mode_on);
              });
+
+    // debug only
+    system_manager::render_manager::render_walkable_spots(dt);
 }
 
 void SystemManager::render_ui(const Entities& entities, float dt) const {

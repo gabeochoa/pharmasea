@@ -306,6 +306,10 @@ OptEntity EntityHelper::getClosestMatchingEntity(
 
 // TODO :PBUG: need to invalidate any current valid paths
 void EntityHelper::invalidatePathCacheLocation(vec2 pos) {
+    if (!is_server()) {
+        log_warn("client code is trying to invalide path cache");
+        return;
+    }
     cache_is_walkable.erase(pos);
 }
 
@@ -317,8 +321,12 @@ void EntityHelper::invalidatePathCache() {
     cache_is_walkable.clear();
 }
 
+std::mutex walkable_mutex;
+
 bool EntityHelper::isWalkable(vec2 pos) {
     TRACY_ZONE_SCOPED;
+    std::lock_guard<std::mutex> lock(walkable_mutex);
+
     if (!cache_is_walkable.contains(pos)) {
         bool walkable = isWalkableRawEntities(pos);
         cache_is_walkable[pos] = walkable;
@@ -326,20 +334,23 @@ bool EntityHelper::isWalkable(vec2 pos) {
     return cache_is_walkable[pos];
 }
 
-// each target get and path find runs through all entities
+// each target.get and path_find runs through all entities
 // so this will just get slower and slower over time
 bool EntityHelper::isWalkableRawEntities(const vec2& pos) {
     TRACY_ZONE_SCOPED;
     bool hit_impassible_entity = false;
     forEachEntity([&](Entity& entity) {
+        // Ignore non colliable objects
         if (!system_manager::input_process_manager::is_collidable(entity))
             return ForEachFlow::Continue;
-        if (vec::distance(entity.template get<Transform>().as2(), pos) <
-            TILESIZE / 2.f) {
-            hit_impassible_entity = true;
-            return ForEachFlow::Break;
-        }
-        return ForEachFlow::Continue;
+        // ignore things that are not at this location
+        if (vec::distance(entity.template get<Transform>().as2(), pos) >
+            TILESIZE / 2.f)
+            return ForEachFlow::Continue;
+
+        // is_collidable and inside this square
+        hit_impassible_entity = true;
+        return ForEachFlow::Break;
     });
     return !hit_impassible_entity;
 }
