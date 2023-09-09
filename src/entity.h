@@ -37,6 +37,10 @@ using ComponentArray = std::map<int, BaseComponent*>;
 using Item = Entity;
 using EntityID = int;
 
+// TODO memory? we could keep track of deleted entities and reuse those ids if
+// we wanted to we'd have to be pretty disiplined about clearing people who
+// store ids...
+
 static std::atomic_int ENTITY_ID_GEN = 0;
 struct Entity {
     // TODO :INFRA: go around and audit id uses
