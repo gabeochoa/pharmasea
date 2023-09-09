@@ -105,7 +105,7 @@ struct NetworkLayer : public Layer {
         for (const auto& info : network_info->client->announcements) {
             log_info("Announcement: {}", info.message);
             // TODO add support for other annoucement types
-            TOASTS.push_back({.msg = info.message, .timeToShow = 10});
+            TOASTS.push_back({.msg = info.message, .timeToShow = 5});
         }
         network_info->client->announcements.clear();
     }
