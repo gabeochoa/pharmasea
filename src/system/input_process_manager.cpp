@@ -152,6 +152,12 @@ bool is_collidable(Entity& entity, OptEntity other) {
         return false;
     }
 
+    if (check_type(entity, EntityType::MopBuddy)) {
+        if (other && check_type(other.asE(), EntityType::MopBuddyHolder)) {
+            return false;
+        }
+    }
+
     if (
         // checking for person update
         other &&

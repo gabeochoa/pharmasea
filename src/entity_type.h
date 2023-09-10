@@ -36,6 +36,7 @@ enum struct EntityType {
     Vomit,
     MopHolder,
     FastForward,
+    MopBuddyHolder,
     MopBuddy,
     SimpleSyrupHolder,
 
@@ -73,7 +74,7 @@ constexpr EntityTypeSet create_non_destructive() {
     // TODO :INFRA: MSVC doesnt have enough constexpr constructors for bitset
     // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset
     // generate number through: https://godbolt.org/z/ef7sTsWb6
-    return 0b10111111111111111111111111111111111111;
+    return 0b101111111111111111111111111111111111111;
 #endif
 }
 

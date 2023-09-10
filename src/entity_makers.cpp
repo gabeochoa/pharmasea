@@ -572,7 +572,19 @@ void make_simple_syrup_holder(Entity& simple_syrup_holder, vec2 pos) {
     // normal table if its empty
 }
 
-// TODO what happens if the day ends and you are holding the mop still?
+void make_mopbuddy_holder(Entity& mopbuddy_holder, vec2 pos) {
+    furniture::make_itemcontainer(
+        mopbuddy_holder, DebugOptions{.type = EntityType::MopBuddyHolder}, pos,
+        EntityType::MopBuddy);
+    mopbuddy_holder.get<IsItemContainer>().set_max_generations(1);
+    mopbuddy_holder.get<CanHoldItem>().set_filter(
+        EntityFilter()
+            .set_enabled_flags(EntityFilter::FilterDatumType::Name)
+            .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
+                                       EntityType::MopBuddy)
+            .set_filter_strength(EntityFilter::FilterStrength::Requirement));
+}
+
 void make_mop_holder(Entity& mop_holder, vec2 pos) {
     furniture::make_itemcontainer(mop_holder,
                                   DebugOptions{.type = EntityType::MopHolder},
@@ -904,6 +916,8 @@ void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
             return make_drink(item, pos);
         case EntityType::Mop:
             return make_mop(item, pos);
+        case EntityType::MopBuddy:
+            return make_mop_buddy(item, pos);
         case EntityType::SimpleSyrup:
             return make_simple_syrup(item, pos);
         default:
@@ -1055,6 +1069,9 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::MopHolder: {
             furniture::make_mop_holder(entity, location);
+        } break;
+        case EntityType::MopBuddyHolder: {
+            furniture::make_mopbuddy_holder(entity, location);
         } break;
         case EntityType::FastForward: {
             furniture::make_fast_forward(entity, location);

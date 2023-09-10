@@ -297,7 +297,7 @@ struct helper {
                 return EntityType::FastForward;
             } break;
             case MOP_BUDDY: {
-                return EntityType::MopBuddy;
+                return EntityType::MopBuddyHolder;
             } break;
             case 32: {
                 // space
