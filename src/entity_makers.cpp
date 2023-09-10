@@ -434,8 +434,8 @@ void make_register(Entity& reg, vec2 pos) {
 
 void make_itemcontainer(Entity& container, const DebugOptions& options,
                         vec2 pos, EntityType item_type) {
-    furniture::make_furniture(container, options, pos, ui::color::white,
-                              ui::color::white);
+    furniture::make_furniture(container, options, pos, ui::color::brown,
+                              ui::color::brown);
     container.addComponent<IsItemContainer>(item_type);
 }
 
@@ -557,6 +557,17 @@ void make_soda_machine(Entity& soda_machine, vec2 pos) {
             .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
                                        EntityType::SodaSpout)
             .set_filter_strength(EntityFilter::FilterStrength::Requirement));
+}
+
+void make_simple_syrup_holder(Entity& simple_syrup_holder, vec2 pos) {
+    furniture::make_itemcontainer(
+        simple_syrup_holder,
+        DebugOptions{.type = EntityType::SimpleSyrupHolder}, pos,
+        EntityType::SimpleSyrup);
+
+    simple_syrup_holder.get<IsItemContainer>().set_max_generations(1);
+    // We are not setting a filter because we want this to just act like a
+    // normal table if its empty
 }
 
 // TODO what happens if the day ends and you are holding the mop still?
@@ -891,6 +902,8 @@ void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
             return make_drink(item, pos);
         case EntityType::Mop:
             return make_mop(item, pos);
+        case EntityType::SimpleSyrup:
+            return make_simple_syrup(item, pos);
         default:
             break;
     }
@@ -1043,6 +1056,9 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::FastForward: {
             furniture::make_fast_forward(entity, location);
+        } break;
+        case EntityType::SimpleSyrupHolder: {
+            furniture::make_simple_syrup_holder(entity, location);
         } break;
         case EntityType::SimpleSyrup: {
             items::make_simple_syrup(entity, location);

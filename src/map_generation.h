@@ -196,7 +196,7 @@ struct helper {
     vec2 z = {0, 0};
 
     helper(const std::vector<std::string>& l) : lines(l) {}
-    
+
     void generate(std::function<Entity&()>&& add_to_map = nullptr) {
         vec2 origin = find_origin();
 
@@ -276,7 +276,7 @@ struct helper {
                 return EntityType::Cupboard;
             } break;
             case SIMPLE_SYRUP: {
-                return EntityType::SimpleSyrup;
+                return EntityType::SimpleSyrupHolder;
             } break;
             case SQUIRTER: {
                 return EntityType::Squirter;

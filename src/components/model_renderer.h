@@ -9,8 +9,8 @@
 
 struct ModelRenderer : public BaseComponent {
     ModelRenderer() : model_name("invalid") {}
-    ModelRenderer(const std::string& s) : model_name(s) {}
-    ModelRenderer(const EntityType& type) {
+    explicit ModelRenderer(const std::string& s) : model_name(s) {}
+    explicit ModelRenderer(const EntityType& type) {
         model_name = util::convertToSnakeCase<EntityType>(type);
     }
 
@@ -27,7 +27,7 @@ struct ModelRenderer : public BaseComponent {
     [[nodiscard]] raylib::Model model() const {
         return ModelLibrary::get().get(model_name);
     }
-    [[nodiscard]] const std::string name() const { return model_name; }
+    [[nodiscard]] const std::string& name() const { return model_name; }
 
     void update_model_name(const std::string& new_name) {
         model_name = new_name;

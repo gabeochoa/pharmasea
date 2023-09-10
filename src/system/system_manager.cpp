@@ -472,6 +472,7 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
     backfill_empty_container(EntityType::SodaSpout, entity, pos);
     backfill_empty_container(EntityType::Drink, entity, pos);
     backfill_empty_container(EntityType::Mop, entity, pos);
+    backfill_empty_container(EntityType::SimpleSyrup, entity, pos);
 
     if (entity.is_missing<Indexer>()) return;
     backfill_empty_container(EntityType::Alcohol, entity, pos,

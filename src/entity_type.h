@@ -37,6 +37,7 @@ enum struct EntityType {
     MopHolder,
     FastForward,
     MopBuddy,
+    SimpleSyrupHolder,
 
     //
     // Items
@@ -50,8 +51,11 @@ enum struct EntityType {
     SimpleSyrup,
     Mop,
 
-    // NOTE: Every time you add something above, add a 1 to the number below on
+    // NOTE: Every time you add something above, add a 1 on the right of the
+    // number below
     Trash,
+    // Dont add anything below this, we want trash to be either first or second
+    // first so its easier to track in non-destructive
 
     MAX_ENTITY_TYPE
 };
@@ -69,7 +73,7 @@ constexpr EntityTypeSet create_non_destructive() {
     // TODO :INFRA: MSVC doesnt have enough constexpr constructors for bitset
     // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset
     // generate number through: https://godbolt.org/z/ef7sTsWb6
-    return 0b101111111111111111111111111111111111;
+    return 0b10111111111111111111111111111111111111;
 #endif
 }
 
