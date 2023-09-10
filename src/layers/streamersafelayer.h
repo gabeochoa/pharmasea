@@ -18,6 +18,9 @@ struct StreamerSafeLayer : public Layer {
     virtual void onUpdate(float) override {}
 
     virtual void onDraw(float) override {
+        // Dont draw on the main menu
+        if (MenuState::get().is(menu::State::Root)) return;
+
         if (Settings::get().data.show_streamer_safe_box) {
             int x_pos = WIN_W() - streamer_box_size - streamer_box_padd;
             int y_pos = WIN_H() - streamer_box_size - streamer_box_padd;
