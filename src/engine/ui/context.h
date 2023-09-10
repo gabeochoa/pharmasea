@@ -114,7 +114,7 @@ struct IUIContextInputManager {
     }
 
     [[nodiscard]] bool process_gamepad_button_event(
-        GamepadButtonPressedEvent event) {
+        const GamepadButtonPressedEvent& event) {
         GamepadButton code = event.button;
         anything_pressed = code;
         if (!KeyMap::does_layer_map_contain_button(STATE, code)) {

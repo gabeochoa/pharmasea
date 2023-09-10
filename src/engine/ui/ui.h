@@ -360,29 +360,31 @@ inline ElementResult dropdown(const Widget& widget, DropdownData data) {
 
     std::vector<int> option_ids;
     std::vector<Widget> option_widgets;
-    {
-        Rectangle rect = widget.get_rect();
-        for (int i = 0; i < (int) data.options.size(); i++) {
-            rect.y += rect.height;
-            Widget option_widget(widget);
-            // this should be above the button's index
-            option_widget.z_index--;
-            // Needs to be unique on the screen
-            auto uuid = ui::MK_UUID_LOOP(widget.id, widget.id, i);
-            option_widget.id = (int) (size_t) uuid;
-            option_widget.rect = (Rectangle(rect));
+    if (state->on) {
+        {
+            Rectangle rect = widget.get_rect();
+            for (int i = 0; i < (int) data.options.size(); i++) {
+                rect.y += rect.height;
+                Widget option_widget(widget);
+                // this should be above the button's index
+                option_widget.z_index--;
+                // Needs to be unique on the screen
+                auto uuid = ui::MK_UUID_LOOP(widget.id, widget.id, i);
+                option_widget.id = (int) (size_t) uuid;
+                option_widget.rect = (Rectangle(rect));
 
-            option_widgets.push_back(option_widget);
-            option_ids.push_back(option_widget.id);
+                option_widgets.push_back(option_widget);
+                option_ids.push_back(option_widget.id);
+            }
         }
-    }
 
-    bool has_focus = focus::matches(widget.id);
-    for (auto id : option_ids) {
-        has_focus |= focus::matches(id);
-    }
+        bool has_focus = focus::matches(widget.id);
+        for (auto id : option_ids) {
+            has_focus |= focus::matches(id);
+        }
 
-    state->on = has_focus;
+        state->on = has_focus;
+    }
 
     // If you arrow down out, then tab to next item
     if (state->focused >= (int) data.options.size()) {
