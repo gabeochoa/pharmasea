@@ -549,7 +549,9 @@ void release_mop_buddy_at_start_of_day(Entity& entity) {
 
     // grab yaboi
     std::shared_ptr<Item> item = chi.item();
+
     // let go of the item
+    item->get<IsItem>().set_held_by(EntityType::Unknown, -1);
     chi.update(nullptr, -1);
 }
 
