@@ -550,10 +550,21 @@ void delete_customers_when_leaving_inround(Entity& entity) {
     entity.cleanup = true;
 }
 
+void delete_floating_items_when_leaving_inround(Entity& entity) {
+    if (entity.is_missing<IsItem>()) return;
+
+    const IsItem& ii = entity.get<IsItem>();
+
+    // Its being held by something so we'll get it in the function below
+    if (ii.is_held()) return;
+
+    // mark it for cleanup
+    entity.cleanup = true;
+}
+
 void delete_held_items_when_leaving_inround(Entity& entity) {
     // TODO this doesnt seem to work
     // you keep holding it even after the transition
-
     if (entity.is_missing<CanHoldItem>()) return;
 
     CanHoldItem& canHold = entity.get<CanHoldItem>();
@@ -1482,6 +1493,7 @@ void SystemManager::process_state_change(
         for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
             Entity& entity = *e_ptr;
             // TODO make a namespace for transition functions
+            system_manager::delete_floating_items_when_leaving_inround(entity);
             system_manager::delete_held_items_when_leaving_inround(entity);
             system_manager::delete_customers_when_leaving_inround(entity);
             system_manager::reset_customer_spawner_when_leaving_inround(entity);
