@@ -46,10 +46,11 @@ struct Data {
     float master_volume = 0.5f;
     float music_volume = 0.5f;
     bool show_streamer_safe_box = false;
-    std::string username = "";
+    std::string username;
     bool enable_postprocessing = true;
     std::string last_ip_joined;
     std::string ui_theme;
+    bool snapCameraTo90 = false;
 
    private:
     friend bitsery::Access;
@@ -65,6 +66,7 @@ struct Data {
         s.text1b(last_ip_joined, 25);
         s.text1b(lang_name, MAX_LANG_LENGTH);
         s.text1b(ui_theme, MAX_LANG_LENGTH);
+        s.value1b(snapCameraTo90);
     }
     friend std::ostream& operator<<(std::ostream& os, const Data& data) {
         os << "Settings(" << std::endl;
@@ -79,6 +81,7 @@ struct Data {
         os << "last ip joined: " << data.last_ip_joined << std::endl;
         os << "lang name: " << data.lang_name << std::endl;
         os << "ui_theme: " << data.ui_theme << std::endl;
+        os << "should snap camera: " << data.snapCameraTo90 << std::endl;
         os << ")" << std::endl;
         return os;
     }
@@ -249,7 +252,8 @@ struct Settings {
 
     [[nodiscard]] std::vector<std::string> language_options() {
         std::vector<std::string> options;
-        for (auto li : lang_options) {
+        options.reserve(lang_options.size());
+        for (const auto& li : lang_options) {
             options.push_back(li.name);
         }
         return options;

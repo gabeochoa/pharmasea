@@ -164,6 +164,12 @@
         ]
     },
     "Root": {
+        "MenuBack": [
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_RIGHT_FACE_RIGHT"
+            }
+        ],
         "Pause": [
             {
                 "type": 1,
@@ -276,6 +282,12 @@
         ]
     },
     "UI": {
+        "MenuBack": [
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_RIGHT_FACE_RIGHT"
+            }
+        ],
         "Pause": [
             {
                 "type": 1,

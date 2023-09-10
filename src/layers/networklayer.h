@@ -85,6 +85,13 @@ struct NetworkLayer : public Layer {
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Network)) return false;
+
+        if (KeyMap::get_button(menu::State::UI, InputName::MenuBack) ==
+            event.button) {
+            MenuState::get().go_back();
+            return true;
+        }
+
         return ui_context->process_gamepad_button_event(event);
     }
 

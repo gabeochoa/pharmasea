@@ -78,6 +78,13 @@ struct SettingsLayer : public Layer {
     virtual bool onGamepadButtonPressed(
         GamepadButtonPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Settings)) return false;
+
+        if (KeyMap::get_button(menu::State::UI, InputName::MenuBack) ==
+            event.button) {
+            exit_layer();
+            return true;
+        }
+
         return ui_context->process_gamepad_button_event(event);
     }
 
@@ -102,8 +109,8 @@ struct SettingsLayer : public Layer {
 
         {
             auto [master_vol, music_vol, ui_theme, resolution, language,
-                  streamer, postprocessing] =
-                rect::hsplit<7>(rect::bpad(rows, 85), 20);
+                  streamer, postprocessing, snapCamera] =
+                rect::hsplit<8>(rect::bpad(rows, 85), 20);
 
             {
                 auto [label, control] = rect::vsplit(master_vol, 30);
@@ -216,6 +223,22 @@ struct SettingsLayer : public Layer {
                     result) {
                     Settings::get().update_post_processing_enabled(
                         result.as<bool>());
+                }
+            }
+
+            {
+                auto [label, control] = rect::vsplit(snapCamera, 30);
+                control = rect::rpad(control, 10);
+
+                // TODO Translate
+                text(Widget{label}, "snap camera");
+
+                if (auto result = checkbox(
+                        Widget{control},
+                        CheckboxData{.selected =
+                                         Settings::get().data.snapCameraTo90});
+                    result) {
+                    Settings::get().data.snapCameraTo90 = (result.as<bool>());
                 }
             }
         }

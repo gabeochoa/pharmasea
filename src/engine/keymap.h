@@ -33,6 +33,7 @@ enum InputName {
     Pause,
 
     // UI State
+    MenuBack,
     WidgetNext,
     WidgetBack,
     WidgetMod,
@@ -547,6 +548,7 @@ struct KeyMap {
 
         game_map[InputName::ToggleNetworkView] = {
             raylib::KEY_EQUAL,
+            raylib::GAMEPAD_BUTTON_MIDDLE_LEFT,
         };
 
         game_map[InputName::ToggleDebugSettings] = {
@@ -609,6 +611,7 @@ struct KeyMap {
         };
 
         ui_map[InputName::Pause] = {raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT};
+        ui_map[InputName::MenuBack] = {raylib::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT};
 
         LayerMapping& root_map =
             this->get_or_create_layer_map(menu::State::Root);
