@@ -699,13 +699,11 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
             } break;
             case SimpleSyrup: {
                 if (EntityHelper::doesAnyExistWithType(
-                        EntityType::SimpleSyrup)) {
+                        EntityType::SimpleSyrupHolder)) {
                     // nothing needed to do
                     return;
                 }
-                // We dont yet have a spawner for this so just place it on
-                // the ground
-                auto et = EntityType::SimpleSyrup;
+                auto et = EntityType::SimpleSyrupHolder;
                 auto& entity = EntityHelper::createEntity();
                 convert_to_type(et, entity, {8, 8});
 
