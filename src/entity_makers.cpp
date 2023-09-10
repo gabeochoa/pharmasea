@@ -316,27 +316,28 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
             server->get_map_SERVER_ONLY()->showMinimap = is_highlighted;
         });
 
-    map_randomizer.addComponent<HasWork>().init([](Entity& randomizer,
-                                                   HasWork& hasWork, Entity&,
-                                                   float dt) {
-        if (GameState::get().is_not(game::State::Lobby)) return;
-        if (!is_server()) {
-            log_warn(
-                "you are calling a server only function from a client "
-                "context, this is probably gonna crash");
-        }
-        network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+    map_randomizer.addComponent<HasWork>().init(
+        [](Entity& randomizer, HasWork& hasWork, Entity&, float dt) {
+            if (GameState::get().is_not(game::State::Lobby)) return;
+            if (!is_server()) {
+                log_warn(
+                    "you are calling a server only function from a client "
+                    "context, this is probably gonna crash");
+            }
+            network::Server* server =
+                GLOBALS.get_ptr<network::Server>("server");
 
-        const float amt = 1.5f;
-        hasWork.increase_pct(amt * dt);
-        if (hasWork.is_work_complete()) {
-            hasWork.reset_pct();
+            const float amt = 1.5f;
+            hasWork.increase_pct(amt * dt);
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
 
-            const auto name = get_random_name_rot13();
-            server->get_map_SERVER_ONLY()->update_seed(name);
-        }
-        randomizer.get<HasName>().update(server->get_map_SERVER_ONLY()->seed);
-    });
+                const auto name = get_random_name_rot13();
+                server->get_map_SERVER_ONLY()->update_seed(name);
+            }
+            HasName& hasName = randomizer.get<HasName>();
+            hasName.update(server->get_map_SERVER_ONLY()->seed);
+        });
 
     map_randomizer.addComponent<ShowsProgressBar>(
         ShowsProgressBar::Enabled::Always);
@@ -369,7 +370,8 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
                 auto customer_spawners =
                     EntityHelper::getAllWithType(EntityType::CustomerSpawner);
                 Entity& spawner = customer_spawners[0];
-                spawner.get<IsSpawner>().pass_time(amt * dt);
+                IsSpawner& isp = spawner.get<IsSpawner>();
+                isp.pass_time(amt * dt);
             }
 
             if (hasWork.is_work_complete()) {

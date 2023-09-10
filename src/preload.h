@@ -92,7 +92,7 @@ struct Preload {
         on_language_change("en_us", path.c_str());
     }
 
-    void update_ui_theme(const std::string theme);
+    void update_ui_theme(const std::string& theme);
     std::vector<std::string> ui_theme_options();
 
     void on_language_change(const char* lang_name, const char* fn);

@@ -120,7 +120,7 @@ inline void startup() {
             //
             new UITestLayer(),
         };
-        for (auto layer : layers) App::get().pushLayer(layer);
+        for (auto& layer : layers) App::get().pushLayer(layer);
         return;
     }
 
@@ -149,7 +149,7 @@ inline void startup() {
         new SettingsLayer(),
         new MenuLayer(),
     };
-    for (auto layer : layers) App::get().pushLayer(layer);
+    for (auto& layer : layers) App::get().pushLayer(layer);
 }
 
 int setup_multiplayer_test(bool is_host = false) {

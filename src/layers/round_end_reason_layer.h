@@ -1,11 +1,12 @@
 
 #pragma once
 
+#include "../components/has_timer.h"
+#include "../entity.h"
+#include "../entity_helper.h"
 #include "base_game_renderer.h"
 
 struct RoundEndReasonLayer : public BaseGameRendererLayer {
-    std::shared_ptr<ui::UIContext> ui_context;
-
     RoundEndReasonLayer() : BaseGameRendererLayer("RoundEndReason") {}
 
     virtual ~RoundEndReasonLayer() {}

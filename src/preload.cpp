@@ -27,7 +27,7 @@ std::map<std::string, UITheme> themes;
 
 std::vector<std::string> Preload::ui_theme_options() { return ui::theme_keys; }
 
-void Preload::update_ui_theme(const std::string theme) {
+void Preload::update_ui_theme(const std::string& theme) {
     using namespace ui;
     if (themes.contains(theme)) {
         UI_THEME = themes.at(theme);

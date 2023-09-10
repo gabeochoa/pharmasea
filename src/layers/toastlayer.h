@@ -9,8 +9,6 @@
 #include "reasings.h"
 
 struct ToastLayer : public BaseGameRendererLayer {
-    std::shared_ptr<ui::UIContext> ui_context;
-
     ToastLayer() : BaseGameRendererLayer("Toasts") {}
 
     virtual void onUpdate(float dt) override { toasts::update(dt); }
