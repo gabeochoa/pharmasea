@@ -541,6 +541,18 @@ void handle_autodrop_furniture_when_exiting_planning(Entity& entity) {
     input_process_manager::planning::drop_held_furniture(entity);
 }
 
+void release_mop_buddy_at_start_of_day(Entity& entity) {
+    if (!check_type(entity, EntityType::MopBuddyHolder)) return;
+
+    CanHoldItem& chi = entity.get<CanHoldItem>();
+    if (chi.empty()) return;
+
+    // grab yaboi
+    std::shared_ptr<Item> item = chi.item();
+    // let go of the item
+    chi.update(nullptr, -1);
+}
+
 void delete_customers_when_leaving_inround(Entity& entity) {
     // TODO im thinking this might not be enough if we have
     // robots that can order for people or something
@@ -1516,6 +1528,7 @@ void SystemManager::process_state_change(
             Entity& entity = *e_ptr;
             system_manager::handle_autodrop_furniture_when_exiting_planning(
                 entity);
+            system_manager::release_mop_buddy_at_start_of_day(entity);
         });
     }
 
