@@ -625,7 +625,7 @@ void update_trigger_area_percent(Entity& entity, float dt) {
 }
 
 void __spawn_machines_for_newly_unlocked_drink(Drink option) {
-    // TODO today we dont have a way to statically know which machines
+    // today we dont have a way to statically know which machines
     // provide which ingredients because they are dynamic
     IngredientBitSet possibleNewIGs = get_req_ingredients_for_drink(option);
 
@@ -650,10 +650,6 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 if (EntityHelper::doesAnyExistWithType(
                         EntityType::MedicineCabinet)) {
                     // nothing needed to do
-
-                    // TODO eventually we need to tell the
-                    // medicine_cabinet to only show the ones
-                    // that are enabled
                     return;
                 }
 
@@ -671,10 +667,6 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 if (EntityHelper::doesAnyExistWithType(
                         EntityType::PillDispenser)) {
                     // nothing needed to do
-
-                    // TODO eventually we need to tell the
-                    // fruit_basket to only show the ones
-                    // that are enabled
                     return;
                 }
 
@@ -706,7 +698,6 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 auto et = EntityType::SimpleSyrupHolder;
                 auto& entity = EntityHelper::createEntity();
                 convert_to_type(et, entity, {8, 8});
-
             } break;
             // TODO implement for these once thye have spawners
             case Salt:
@@ -1549,6 +1540,9 @@ void SystemManager::game_like_update(const Entities& entities, float dt) {
         system_manager::run_timer(entity, dt);
         system_manager::process_pnumatic_pipe_pairing(entity, dt);
 
+        system_manager::process_is_container_and_should_backfill_item(entity,
+                                                                      dt);
+
         // TODO this function handles the map validation code
         //      rename it
         // TODO these eventually should move into their own functions but
@@ -1572,8 +1566,6 @@ void SystemManager::in_round_update(
         system_manager::process_pnumatic_pipe_movement(entity, dt);
         // should move all the container functions into its own
         // function?
-        system_manager::process_is_container_and_should_backfill_item(entity,
-                                                                      dt);
         system_manager::process_is_container_and_should_update_item(entity, dt);
         // This one should be after the other container ones
         system_manager::process_is_indexed_container_holding_incorrect_item(

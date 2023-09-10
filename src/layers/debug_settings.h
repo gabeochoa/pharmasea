@@ -169,6 +169,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         if (!debug_ui_enabled) {
             DrawTextEx(Preload::get().font, "Press \\ to toggle debug UI",
                        vec2{200, 70}, 20, 0, RED);
+            return;
         }
 
         using namespace ui;
