@@ -265,12 +265,12 @@ struct NetworkLayer : public Layer {
             your_ip = rect::lpad(your_ip, 20);
             your_ip = rect::rpad(your_ip, 60);
 
-            auto [_a, _b, label, control] = rect::hsplit<4>(your_ip, 30);
+            auto [_a, label, ip_addr, control] = rect::hsplit<4>(your_ip, 30);
 
             auto ip = should_show_host_ip ? my_ip_address : "***.***.***.***";
-            text(Widget{label},
-                 // TODO not translated
-                 fmt::format("Your IP is: {}", ip));
+            // TODO not translated
+            text(Widget{label}, "Your IP is:");
+            text(Widget{ip_addr}, ip);
 
             auto [check, copy] = rect::vsplit<2>(control, 5);
 
